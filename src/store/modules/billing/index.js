@@ -10,7 +10,7 @@ const billing = {
       contracts: [],
       customerId: null,
       customerName: '',
-      transactions: {},
+      transactions: {}
     },
     query: {
       startDate: '',
@@ -19,15 +19,15 @@ const billing = {
       type: '',
       term: '',
       size: 20,
-      page: 1,
+      page: 1
     },
     plans: [],
     billingDashboard: {},
-    tableLoading: false,
+    tableLoading: false
   },
   mutations: mutations,
   actions: actions,
-  getters: getters,
+  getters: getters
 }
 
 export default billing

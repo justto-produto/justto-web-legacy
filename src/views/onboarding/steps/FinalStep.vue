@@ -30,12 +30,12 @@ export default {
   props: {
     isGuest: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
   data() {
     return {
-      showError: false,
+      showError: false
     }
   },
   methods: {
@@ -66,7 +66,7 @@ export default {
         .catch(() => {
           this.showError = true
         })
-    },
-  },
+    }
+  }
 }
 </script>

@@ -17,11 +17,11 @@ describe('Login.vue', () => {
   const router = new VueRouter()
   beforeEach(() => {
     actions = {
-      logout: jest.fn(),
+      logout: jest.fn()
     }
     store = new Vuex.Store({
       actions,
-      namespaced: true,
+      namespaced: true
     })
   })
   it('É um objeto Vue.', () => {

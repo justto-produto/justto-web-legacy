@@ -126,14 +126,14 @@ import { IS_SMALL_WINDOW } from '@/constants/variables'
 export default {
   name: 'JusHeaderMain',
   components: {
-    JusDisputeResume: () => import('@/components/layouts/JusDisputeResume'),
+    JusDisputeResume: () => import('@/components/layouts/JusDisputeResume')
   },
   data() {
     return {
       dispute: '',
       workspacesList: [],
       selectedWorkspace: '',
-      changeWorkspaceDialogVisible: false,
+      changeWorkspaceDialogVisible: false
     }
   },
   computed: {
@@ -158,11 +158,11 @@ export default {
       },
       set(value) {
         this.$store.commit('setGhostMode', value)
-      },
+      }
     },
     avatarSize() {
       return IS_SMALL_WINDOW ? 'mini' : 'sm'
-    },
+    }
   },
   beforeMount() {
     this.getMyWorkspaces()
@@ -173,7 +173,7 @@ export default {
         this.$store.dispatch('logout')
       }, 500)
       const loading = this.$loading({
-        lock: true,
+        lock: true
       })
       setTimeout(() => {
         loading.close()
@@ -201,7 +201,7 @@ export default {
     goToWorkspace(workspace) {
       const loading = this.$loading({
         lock: true,
-        text: 'Alterando Equipe...',
+        text: 'Alterando Equipe...'
       })
       const oldWorkspace = this.$store.getters.workspaceTeamName
       if (workspace.workspace) this.$store.commit('setWorkspace', workspace.workspace)
@@ -223,7 +223,7 @@ export default {
     getMembersAndRedirect() {
       const loading = this.$loading({
         lock: true,
-        text: 'Alterando Equipe...',
+        text: 'Alterando Equipe...'
       })
       const selectedWorkspace = this.workspaces[this.selectedWorkspace]
       if (selectedWorkspace.person) {
@@ -251,8 +251,8 @@ export default {
           reject(error)
         })
       })
-    },
-  },
+    }
+  }
 }
 </script>
 

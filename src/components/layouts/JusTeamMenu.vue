@@ -9,7 +9,8 @@
       >
         <el-tooltip
           :content="member.person.name"
-          placement="right">
+          placement="right"
+        >
           <jus-avatar-user
             :name="member.person.name"
             :active="activePersonsIds.includes(member.person.id)"
@@ -31,12 +32,12 @@ export default {
   computed: {
     ...mapGetters([
       'disputeQuery',
-      'workspaceMembersSorted',
+      'workspaceMembersSorted'
     ]),
 
     activePersonsIds() {
       return this.disputeQuery.persons || []
-    },
+    }
   },
   methods: {
     setFilterPersonId(id, name) {
@@ -47,8 +48,8 @@ export default {
         this.$jusSegment('Filtro por negociador', { description: `Alterado filtro de negociador para ${name}` })
         this.$store.commit('updateDisputeQuery', { key: 'persons', value: [id] })
       }
-    },
-  },
+    }
+  }
 }
 </script>
 

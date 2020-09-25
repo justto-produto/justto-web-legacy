@@ -14,7 +14,7 @@ if (AUTH_TOKEN) {
 const config = {
   baseURL: process.env.VUE_APP_BASE_URL || location.origin,
   timeout: 60 * 11000,
-  headers: {},
+  headers: {}
 }
 
 const _axios = axios.create(config)
@@ -46,7 +46,7 @@ _axios.interceptors.request.use(
   },
   function(error) {
     return Promise.reject(error)
-  },
+  }
 )
 
 _axios.interceptors.response.use(
@@ -68,7 +68,7 @@ _axios.interceptors.response.use(
       store.dispatch('logout')
     }
     return Promise.reject(error)
-  },
+  }
 )
 
 Plugin.install = function(Vue, options) {
@@ -78,13 +78,13 @@ Plugin.install = function(Vue, options) {
     axios: {
       get() {
         return _axios
-      },
+      }
     },
     $axios: {
       get() {
         return _axios
-      },
-    },
+      }
+    }
   })
 }
 

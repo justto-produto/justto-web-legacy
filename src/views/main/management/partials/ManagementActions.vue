@@ -244,16 +244,16 @@ export default {
   props: {
     active: {
       type: Boolean,
-      default: false,
+      default: false
     },
     activeTab: {
       type: String,
-      required: true,
+      required: true
     },
     selectedIds: {
       type: Array,
-      default: () => [],
-    },
+      default: () => []
+    }
   },
   data() {
     return {
@@ -270,7 +270,7 @@ export default {
       unsettledType: '',
       deleteType: '',
       newStrategyId: '',
-      newExpirationDate: '',
+      newExpirationDate: ''
     }
   },
   computed: {
@@ -282,7 +282,7 @@ export default {
       },
       set(ids) {
         this.$emit('update:selectedIds', ids)
-      },
+      }
     },
     actionsList() {
       return [
@@ -298,7 +298,7 @@ export default {
         { name: 'DELETE', tabs: ['0', '1', '2', '3'] },
         { name: 'RESEND_MESSAGE', tabs: ['0', '1', '2', '3'] },
         { name: 'DROP_LAWSUIT', tabs: ['-1'] },
-        { name: 'START_NEGOTIATON', tabs: ['-1'] },
+        { name: 'START_NEGOTIATON', tabs: ['-1'] }
       ]
     },
     strategies() {
@@ -321,10 +321,10 @@ export default {
         return {
           key: member.person.id,
           label: member.person.name,
-          value: member.person.id,
+          value: member.person.id
         }
       })
-    },
+    }
   },
   created() {
     if (!this.disputeStatuses.UNSETTLED || !Object.keys(this.disputeStatuses.UNSETTLED).length) {
@@ -341,7 +341,7 @@ export default {
     doAction(action) {
       const params = {
         type: action.toUpperCase(),
-        disputeIds: this.selectedIds,
+        disputeIds: this.selectedIds
       }
       switch (action) {
         case 'DROP_LAWSUIT':
@@ -375,7 +375,7 @@ export default {
           title: 'Yay!',
           message: 'Ação <strong>' + this.$t('action.' + action.toUpperCase()) + '</strong> realizada com sucesso.',
           type: 'success',
-          dangerouslyUseHTMLString: true,
+          dangerouslyUseHTMLString: true
         })
         // SEGMENT TRACK
         this.$jusSegment(getTracktitleByAction(action, true), { amount: this.selectedIds.length })
@@ -385,7 +385,7 @@ export default {
               title: 'Atenção!',
               message: 'Enviaremos para às contrapartes uma mensagem de encerramento de negociação.',
               type: 'info',
-              duration: 0,
+              duration: 0
             })
           }, 2000)
         }
@@ -413,7 +413,7 @@ export default {
       } else {
         const message = {
           title: this.$options.filters.capitalize(this.$t('action.' + action.toUpperCase())),
-          content: 'Tem certeza que deseja realizar esta ação em lote?',
+          content: 'Tem certeza que deseja realizar esta ação em lote?'
         }
         if (action === 'ENRICH_DISPUTE' &&
             this.$store.getters.disputes.filter(d => this.selectedIds.includes(d.id) &&
@@ -428,7 +428,7 @@ export default {
           confirmButtonText: 'Continuar',
           cancelButtonText: 'Cancelar',
           dangerouslyUseHTMLString: true,
-          cancelButtonClass: 'is-plain',
+          cancelButtonClass: 'is-plain'
         }).then(() => {
           this.doAction(action)
         })
@@ -471,7 +471,7 @@ export default {
             if (currentNegotiatorIndex === -1) {
               multiNegotiatorsList.push({
                 disputes: intersection,
-                negotiators: [negotiator.id],
+                negotiators: [negotiator.id]
               })
             } else {
               multiNegotiatorsList[currentNegotiatorIndex].negotiators.push(negotiator.id)
@@ -488,7 +488,7 @@ export default {
           const { disputes, id } = negotiator
           return {
             disputes,
-            negotiators: [id],
+            negotiators: [id]
           }
         })
 
@@ -508,7 +508,7 @@ export default {
             cancelButtonText: 'Escolher negociadores de cada disputa',
             cancelButtonClass: 'is-plain',
             distinguishCancelAndClose: true,
-            customClass: 'el-message-box--lg',
+            customClass: 'el-message-box--lg'
           }).then(() => {
             this.disputeNegotiators = []
             this.changeNegotiatorDialogVisible = true
@@ -528,7 +528,7 @@ export default {
       const isByGroup = !!this.disputeNegotiatorMap.length
       const params = {
         type: 'CHANGE_NEGOTIATOR',
-        negotiatorsId: this.disputeNegotiators,
+        negotiatorsId: this.disputeNegotiators
       }
       if (this.isSelectedAll) {
         params.allSelected = true
@@ -545,7 +545,7 @@ export default {
           title: 'Yay!',
           message: 'Ação <strong>' + this.$t('action.CHANGE_NEGOTIATOR') + '</strong> realizada com sucesso.',
           type: 'success',
-          dangerouslyUseHTMLString: true,
+          dangerouslyUseHTMLString: true
         })
         // SEGMENT TRACK
         this.$jusSegment(getTracktitleByAction('CHANGE_NEGOTIATOR', true), { amount: this.selectedIds.length })
@@ -563,8 +563,8 @@ export default {
       }).finally(() => {
         this.changeNegotiatorDialogLoading = false
       })
-    },
-  },
+    }
+  }
 }
 </script>
 

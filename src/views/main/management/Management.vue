@@ -6,7 +6,7 @@
     <template slot="main">
       <management-actions
         :active="multiActive"
-        :activeTab="activeTab"
+        :active-tab="activeTab"
         :selected-ids.sync="selectedIds"
         @disputes:clear="clearSelection"
       />
@@ -19,7 +19,8 @@
         >
           <el-tab-pane
             v-if="isJusttoAdmin || workspaceProperties.PRE_NEGOTIATION"
-            name="-1">
+            name="-1"
+          >
             <span slot="label">
               Pré-Negociação
               <!-- <el-badge
@@ -97,12 +98,14 @@
             collapse-tags
             placeholder="UF"
             class="view-management__buttons-select"
-            @change="setUfFilter">
+            @change="setUfFilter"
+          >
             <el-option
               v-for="state in filteredBrazilianStates"
               :key="state.value"
               :label="state.value"
-              :value="state.value">
+              :value="state.value"
+            >
               <span>{{ state.name }}</span>
               <span class="view-management__select-options">{{ state.value }}</span>
             </el-option>
@@ -415,7 +418,7 @@ export default {
     ManagementPrescriptions: () => import('./partials/ManagementPrescriptions'),
     JusImportDialog: () => import('@/components/dialogs/JusImportDialog'),
     JusFilterButton: () => import('@/components/buttons/JusFilterButton'),
-    JusLoader: () => import('@/components/others/JusLoader'),
+    JusLoader: () => import('@/components/others/JusLoader')
   },
   data() {
     return {
@@ -436,7 +439,7 @@ export default {
       showAllNodes: false,
       isExportingProtocol: false,
       filteredBrazilianStates: [],
-      ufFilterValue: [],
+      ufFilterValue: []
     }
   },
   computed: {
@@ -451,7 +454,7 @@ export default {
       hasNew: 'disputeHasNew',
       exportHistory: 'exportHistory',
       loadingDisputes: 'loadingDisputes',
-      workspaceProperties: 'workspaceProperties',
+      workspaceProperties: 'workspaceProperties'
     }),
     columns() {
       if (this.filterQuery || this.showAllNodes) {
@@ -465,7 +468,7 @@ export default {
     },
     activeTab: {
       get() { return this.$store.getters.disputeTab },
-      set(tab) { this.$store.commit('setDisputesTab', tab) },
+      set(tab) { this.$store.commit('setDisputesTab', tab) }
     },
     multiActive() {
       return this.selectedIds.length >= 1
@@ -475,7 +478,7 @@ export default {
     },
     persons() {
       return this.$store.state.disputeModule.query.persons
-    },
+    }
     // term: {
     //   get() {
     //     return this.$store.getters.disputeQueryTerm
@@ -498,7 +501,7 @@ export default {
     },
     filterQuery(val) {
       this.$refs.tree.filter(val)
-    },
+    }
   },
   beforeCreate() {
     this.$store.dispatch('getNotVisualizeds')
@@ -526,7 +529,7 @@ export default {
       Object.keys(response).forEach(key => {
         this.columnsList.push({
           key: key,
-          label: response[key],
+          label: response[key]
         })
       })
     }).finally(() => {
@@ -542,7 +545,7 @@ export default {
       'exportProtocols',
       'getExportColumns',
       'getExportHistory',
-      'getPrescriptions',
+      'getPrescriptions'
     ]),
     ufSearch(value) {
       this.filteredBrazilianStates = filterByTerm(value, this.brazilianStates, 'name', 'value')
@@ -722,8 +725,8 @@ export default {
       // SEGMENT TRACK
       this.$jusSegment('Botão importação rápida')
       this.importDialogVisible = true
-    },
-  },
+    }
+  }
 }
 </script>
 

@@ -15,7 +15,7 @@ const actions = {
     }
     url += 'reload=true'
     return axiosDispatcher({ mutation: 'setDashboardDatasets', url })
-  },
+  }
 }
 
 export default actions

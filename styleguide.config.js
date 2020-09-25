@@ -4,7 +4,7 @@ module.exports = {
   pagePerSection: true,
   ribbon: {
     url: 'https://gitlab.com/Justto/justto-web/wikis/',
-    text: 'Justto Web Wiki',
+    text: 'Justto Web Wiki'
   },
   theme: {
     borderRadius: 6,
@@ -21,32 +21,32 @@ module.exports = {
       // baseBackground: '#2d323b',
       // sidebarBackground: '#ffffff',
       ribbonBackground: '#9461f7',
-      ribbonText: '#fff',
+      ribbonText: '#fff'
     },
     fontFamily: {
-      base: "'Montserrat', sans-serif",
-    },
+      base: "'Montserrat', sans-serif"
+    }
   },
   sections: [
     {
       name: 'Buttons',
-      components: 'src/components/buttons/**/[A-Z]*.vue',
+      components: 'src/components/buttons/**/[A-Z]*.vue'
     },
     {
       name: 'Charts',
-      components: 'src/components/charts/**/[A-Z]*.vue',
+      components: 'src/components/charts/**/[A-Z]*.vue'
     },
     {
       name: 'Images',
-      components: 'src/components/images/**/[A-Z]*.vue',
+      components: 'src/components/images/**/[A-Z]*.vue'
     },
     {
       name: 'Layouts',
-      components: 'src/components/layouts/**/[A-Z]*.vue',
+      components: 'src/components/layouts/**/[A-Z]*.vue'
     },
     {
       name: 'Others',
-      components: 'src/components/others/**/[A-Z]*.vue',
-    },
-  ],
+      components: 'src/components/others/**/[A-Z]*.vue'
+    }
+  ]
 }

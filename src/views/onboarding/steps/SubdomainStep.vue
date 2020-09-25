@@ -51,23 +51,23 @@ export default {
   props: {
     isGuest: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
   data() {
     return {
       isAvailable: false,
       isValid: false,
       subdomainForm: {
-        subdomain: this.$store.state.workspaceModule.subdomain,
+        subdomain: this.$store.state.workspaceModule.subdomain
       },
       subdomainFormRules: {
         subdomain: [
           { required: true, message: 'Campo obrigatório', trigger: 'submit' },
           { validator: validateSubdomainName, trigger: 'change' },
-          { validator: validateSubdomainAvailability, trigger: 'change' },
-        ],
-      },
+          { validator: validateSubdomainAvailability, trigger: 'change' }
+        ]
+      }
     }
   },
   computed: {
@@ -75,12 +75,12 @@ export default {
       if (this.isAvailable) {
         return {
           title: 'Subdomínio disponível.',
-          type: 'success',
+          type: 'success'
         }
       }
       return {
         title: 'Este subdomínio já está em uso.',
-        type: 'error',
+        type: 'error'
       }
     },
     creatingWorkspace() {
@@ -92,15 +92,15 @@ export default {
           return true
         } return false
       } return false
-    },
+    }
   },
   watch: {
     subdomainForm: {
       handler(value) {
         this.subdomainForm.subdomain = value.subdomain.toLowerCase()
       },
-      deep: true,
-    },
+      deep: true
+    }
   },
   methods: {
     submitForm() {
@@ -113,8 +113,8 @@ export default {
           }
         })
       } else this.$emit('onboarding:step:next')
-    },
-  },
+    }
+  }
 }
 </script>
 

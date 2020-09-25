@@ -39,7 +39,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
       axios.put('api/persons/' + params.person.id + '/name', {
-        name: params.person.name,
+        name: params.person.name
       }).then(response => {
         if (params.isEditingLoggedPerson) commit('setLoggedPerson', response.data)
         resolve(response.data)
@@ -80,7 +80,7 @@ const actions = {
           reject(error)
         })
     })
-  },
+  }
 }
 
 export default actions

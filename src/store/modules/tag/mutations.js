@@ -7,7 +7,7 @@ const mutations = {
   },
   setFilteredTags(state, tags) {
     state.filteredTags = tags.content
-  },
+  }
 }
 
 export default mutations

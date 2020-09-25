@@ -15,11 +15,11 @@ describe('JusManagementFilters.vue', () => {
   beforeEach(() => {
     actions = {
       getCampaigns: jest.fn(),
-      getMyStrategies: jest.fn(),
+      getMyStrategies: jest.fn()
     }
     store = new Vuex.Store({
       actions,
-      namespaced: true,
+      namespaced: true
     })
   })
   it('É um objeto Vue.', () => {
@@ -28,8 +28,8 @@ describe('JusManagementFilters.vue', () => {
       localVue,
       propsData: {
         tabIndex: '0',
-        filters: {},
-      },
+        filters: {}
+      }
     })
     expect(wrapper.isVueInstance()).toBe(true)
   })

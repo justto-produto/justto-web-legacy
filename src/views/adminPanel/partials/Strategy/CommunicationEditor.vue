@@ -109,25 +109,25 @@ import { mapGetters, mapActions } from 'vuex'
 export default {
   name: 'CommunicationEditor',
   components: {
-    JusVariablesCard: () => import('@/components/layouts/JusVariablesCard'),
+    JusVariablesCard: () => import('@/components/layouts/JusVariablesCard')
   },
   props: {
     templateToEdit: {
       type: Object,
-      default: null,
+      default: null
     },
     communication: {
       type: Object,
-      required: true,
+      required: true
     },
     strategyId: {
       type: Number,
-      required: true,
+      required: true
     },
     visible: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
 
   },
   data() {
@@ -135,13 +135,13 @@ export default {
       template: {},
       editorDataFroala: '',
       config: {
-        heightMax: 500,
-      },
+        heightMax: 500
+      }
     }
   },
   computed: {
     ...mapGetters({
-      variables: 'getAvaliableVariablesToTemplate',
+      variables: 'getAvaliableVariablesToTemplate'
     }),
     savedAt() {
       const lastUpdate = this.template.updatedAt
@@ -153,8 +153,8 @@ export default {
       },
       set(value) {
         this.$emit('update:visible', value)
-      },
-    },
+      }
+    }
   },
   watch: {
     templateToEdit(current) {
@@ -162,7 +162,7 @@ export default {
         this.template = current
         if (!this.template.title) this.template.title = 'Mensagem da Justto'
       }
-    },
+    }
   },
   methods: {
     ...mapActions(['changeCommunicationTemplate']),
@@ -173,14 +173,14 @@ export default {
         this.$jusNotification({
           type: 'warning',
           title: 'Ops!',
-          message: 'O assunto da mensagem não pode ficar em branco.',
+          message: 'O assunto da mensagem não pode ficar em branco.'
         })
       } else {
         this.template.communicationType = this.communication.type
         this.changeCommunicationTemplate({
           template: this.template,
           communicationId: this.templateToEdit.id,
-          strategyId: this.strategyId,
+          strategyId: this.strategyId
         }).then(response => {
           this.template.updatedAt = response.updatedAt
           this.isVisible = false
@@ -205,8 +205,8 @@ export default {
 
     handleCommunicationRecipient(communication, recipient) {
       this.$emit('change-communication-recipient', { communication, recipient })
-    },
-  },
+    }
+  }
 }
 </script>
 

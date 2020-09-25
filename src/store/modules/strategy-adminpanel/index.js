@@ -15,13 +15,13 @@ const StrategyModule = {
       name: '',
       sort: [
         'active,desc',
-        'name,asc',
-      ],
-    },
+        'name,asc'
+      ]
+    }
   },
   actions,
   getters,
-  mutations,
+  mutations
 }
 
 export default StrategyModule

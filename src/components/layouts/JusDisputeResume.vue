@@ -83,8 +83,8 @@ export default {
   props: {
     dispute: {
       type: Object,
-      default: () => {},
-    },
+      default: () => {}
+    }
   },
   computed: {
     disabled() {
@@ -92,7 +92,7 @@ export default {
     },
     archived() {
       return this.dispute.archived
-    },
+    }
   },
   mounted() {
     try {
@@ -113,8 +113,8 @@ export default {
     },
     click() {
       if (!this.disabled) this.$router.push('/management/dispute/' + this.dispute.id)
-    },
-  },
+    }
+  }
 }
 </script>
 

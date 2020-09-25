@@ -1,7 +1,7 @@
 const imports = {
   state: {
     file: undefined,
-    map: [],
+    map: []
   },
   mutations: {
     setImportsFile(state, file) {
@@ -16,7 +16,7 @@ const imports = {
     },
     removeImportsMap(state, map) {
       state.map = []
-    },
+    }
   },
   actions: {
     getImportsHistory() {
@@ -109,14 +109,14 @@ const imports = {
             reject(error)
           })
       })
-    },
+    }
   },
   getters: {
     importedFileName: state => state.file ? state.file.file_name : null,
     hasImportsFile: state => {
       return state.file !== undefined
-    },
-  },
+    }
+  }
 }
 
 export default imports

@@ -14,20 +14,20 @@ export default {
   props: {
     to: {
       default: '',
-      type: String,
+      type: String
     },
     src: {
       default: '',
-      type: String,
+      type: String
     },
     back: {
       default: false,
-      type: Boolean,
+      type: Boolean
     },
     text: {
       default: '',
-      type: String,
-    },
+      type: String
+    }
   },
   methods: {
     goTo() {
@@ -36,8 +36,8 @@ export default {
       } else if (this.back) {
         this.$router.go(-1)
       } else this.$router.push(this.to)
-    },
-  },
+    }
+  }
 }
 </script>
 

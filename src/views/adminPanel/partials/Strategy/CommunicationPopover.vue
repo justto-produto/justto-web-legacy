@@ -141,27 +141,27 @@ export default {
   props: {
     triggers: {
       type: Object,
-      default: null,
+      default: null
     },
     strategyId: {
       type: Number,
-      required: true,
-    },
+      required: true
+    }
   },
   data() {
     return {
-      editInput: null,
+      editInput: null
     }
   },
   computed: {
     recipient() {
       if (this.triggers.ENGAGEMENT) {
         return {
-          communications: this.triggers.ENGAGEMENT.communications,
+          communications: this.triggers.ENGAGEMENT.communications
         }
       } else {
         return {
-          communications: [],
+          communications: []
         }
       }
     },
@@ -177,14 +177,14 @@ export default {
     },
     emailCount: self => self.recipient.emails,
     recipientName: self => self.recipient.name,
-    smsCount: self => self.recipient.sms,
+    smsCount: self => self.recipient.sms
   },
   methods: {
     ...mapActions([
       'addCommunication',
       'deleteCommunication',
       'editCommunication',
-      'sortCommunications',
+      'sortCommunications'
     ]),
 
     isRecipient: (recipients, recipient) => recipients.includes(recipient),
@@ -227,7 +227,7 @@ export default {
         recipients: [],
         parties: ['CLAIMANT'],
         triggerType: 'ENGAGEMENT',
-        type: communicationType,
+        type: communicationType
       }
 
       this.addCommunication({ newCommunication, strategyId: this.strategyId }).then(response => {
@@ -254,10 +254,10 @@ export default {
       this.$confirm('Tem certeza que deseja fazer isso?', 'Excluir mensagem', {
         confirmButtonText: 'Excluir',
         cancelButtonText: 'Cancelar',
-        type: 'warning',
+        type: 'warning'
       }).then(() => this.deleteCommunication({ communicationId, strategyId: this.strategyId, trigger: 'ENGAGEMENT' }))
-    },
-  },
+    }
+  }
 }
 </script>
 

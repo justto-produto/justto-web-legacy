@@ -6,46 +6,46 @@ const actions = {
   getMyCusomers: () => {
     axiosDispatcher({
       url: 'api/billing/customer/my',
-      mutation: 'setMyCustomers',
+      mutation: 'setMyCustomers'
     })
   },
 
   getAllCustomers: () =>
     axiosDispatcher({
       url: `api/billing/customer/?size=${9999}`,
-      mutation: 'setAllCustomers',
+      mutation: 'setAllCustomers'
     }),
 
   associateCustomer: ({ dispatch, state }, customerId) =>
     axiosDispatcher({
       url: `api/billing/customer/${customerId}/${state.query.workspaceId}`,
-      method: 'patch',
+      method: 'patch'
     }).then(() => dispatch('getMyCusomers')),
 
   addCustomer: ({ dispatch }, customerData) =>
     axiosDispatcher({
       url: 'api/billing/customer',
       method: 'post',
-      data: customerData,
+      data: customerData
     }).then(res => dispatch('associateCustomer', res.id)),
 
   unlinkCustomer: ({ dispatch, state }, customerId) =>
     axiosDispatcher({
       url: `api/billing/customer/${customerId}/${state.query.workspaceId}`,
-      method: 'delete',
+      method: 'delete'
     }).then(() => dispatch('getMyCusomers')),
 
   updateCustomer: ({ dispatch }, customerData) =>
     axiosDispatcher({
       url: `api/billing/customer/${customerData.id}`,
       method: 'patch',
-      data: customerData,
+      data: customerData
     }).then(() => dispatch('getMyCusomers')),
 
   getContracts: ({ state }) => {
     axiosDispatcher({
       url: `api/billing/customer/${state.currentCustomer.customerId}/contract`,
-      mutation: 'setContracts',
+      mutation: 'setContracts'
     })
   },
 
@@ -61,8 +61,8 @@ const actions = {
         startedDate: contract.startedDate,
         status: contract.status,
         tariffs: contract.tariffs,
-        workspaceId: contract.workspaceId,
-      },
+        workspaceId: contract.workspaceId
+      }
     }).then(() => dispatch('getContracts')),
 
   updateContract: ({ dispatch }, { customerId, contract }) =>
@@ -76,13 +76,13 @@ const actions = {
         planId: contract.planId,
         startedDate: contract.startedDate,
         status: contract.status,
-        tariffs: contract.tariffs,
-      },
+        tariffs: contract.tariffs
+      }
     }).then(() => dispatch('getMyCusomers')),
 
   getPlans: () => axiosDispatcher({
     url: 'api/billing/plans',
-    mutation: 'setPlans',
+    mutation: 'setPlans'
   }),
 
   getTransactions: ({ commit, state }, command) => {
@@ -94,12 +94,12 @@ const actions = {
     }
     const query = {
       ...state.query,
-      customerId: state.currentCustomer.customerId,
+      customerId: state.currentCustomer.customerId
     }
 
     return axiosDispatcher({
       url: `api/billing/transaction${queryBuilder(query)}`,
-      mutation: command ? 'pushTransactions' : 'setTransactions',
+      mutation: command ? 'pushTransactions' : 'setTransactions'
     }).finally(() => {
       commit('setTableLoading', false)
     })
@@ -108,12 +108,12 @@ const actions = {
   getBillingDashboard: ({ state }) => {
     const query = {
       ...state.query,
-      customerId: state.currentCustomer.customerId,
+      customerId: state.currentCustomer.customerId
     }
 
     return axiosDispatcher({
       url: `api/billing/dashboard${queryBuilder(query)}`,
-      mutation: 'setBillingDashboard',
+      mutation: 'setBillingDashboard'
     })
   },
 
@@ -155,8 +155,8 @@ const actions = {
       method: 'POST',
       data: {
         ...params,
-        customerId: state.currentCustomer.customerId,
-      },
+        customerId: state.currentCustomer.customerId
+      }
     }).then(() => {
       dispatch('getBillingDashboard')
       const isAfter = moment(params.occurredDate).isAfter(state.query.startDate)
@@ -170,7 +170,7 @@ const actions = {
     return axiosDispatcher({
       url: `api/billing/transaction/manual/${transaction.id}`,
       method: 'PATCH',
-      data: transaction,
+      data: transaction
     }).then(() => {
       dispatch('getTransactions')
       dispatch('getBillingDashboard')
@@ -181,12 +181,12 @@ const actions = {
     return axiosDispatcher({
       url: `api/billing/transaction/${params.id}/cancel`,
       method: 'POST',
-      data: params.data,
+      data: params.data
     }).then(() => {
       dispatch('getBillingDashboard')
       dispatch('getTransactions')
     })
-  },
+  }
 }
 
 export default actions

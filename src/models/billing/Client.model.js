@@ -33,7 +33,7 @@ export class ClientModel {
     contracts = [],
     customerId,
     customerName,
-    transactions,
+    transactions
   }) {
     this._contracts = contracts
     this._customerId = customerId

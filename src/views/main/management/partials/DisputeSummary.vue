@@ -90,20 +90,20 @@ export default {
   props: {
     dispute: {
       default: () => {},
-      type: Object,
+      type: Object
     },
     showScheduled: {
       default: false,
-      type: Boolean,
+      type: Boolean
     },
     unsettledTypes: {
       default: () => {},
-      type: Object,
-    },
+      type: Object
+    }
   },
   data() {
     return {
-      scheduled: false,
+      scheduled: false
     }
   },
   computed: {
@@ -111,7 +111,7 @@ export default {
       return this.dispute.conclusionReasons.length
         ? this.dispute.conclusionReasons[0]
         : ''
-    },
+    }
   },
   watch: {
     showScheduled(value) {
@@ -119,25 +119,25 @@ export default {
     },
     scheduled(value) {
       this.$emit('update:showScheduled', value)
-    },
+    }
   },
   methods: {
     changeReasonStatus() {
       this.$store
         .dispatch('editCaseReason', {
           disputeId: this.dispute.id,
-          reasonValue: this.unsettledTypes[this.unsettledReason],
+          reasonValue: this.unsettledTypes[this.unsettledReason]
         })
         .then(() => {
           this.$jusNotification({
             title: 'Yay!',
             message: 'Motivo de perda alterado com sucesso.',
-            type: 'success',
+            type: 'success'
           })
         })
         .catch((error) => this.$jusNotification({ error }))
-    },
-  },
+    }
+  }
 }
 </script>
 

@@ -31,7 +31,7 @@ export default {
   data() {
     return {
       isCollapsed: true,
-      debounce: '',
+      debounce: ''
     }
   },
   computed: {
@@ -41,8 +41,8 @@ export default {
       },
       set(term) {
         this.$store.commit('updateDisputeQuery', { key: 'term', value: term })
-      },
-    },
+      }
+    }
   },
   watch: {
     term(term) {
@@ -59,7 +59,7 @@ export default {
       } else {
         this.focus()
       }
-    },
+    }
   },
   beforeMount() {
     if (this.term) this.isCollapsed = false
@@ -75,8 +75,8 @@ export default {
     },
     focus() {
       this.$refs.filterInput.focus()
-    },
-  },
+    }
+  }
 }
 </script>
 

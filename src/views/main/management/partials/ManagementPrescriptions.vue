@@ -31,19 +31,19 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'ManagementPrescriptions',
   components: {
-    JusTagsFilter: () => import('@/components/others/JusTagsFilter'),
+    JusTagsFilter: () => import('@/components/others/JusTagsFilter')
   },
   props: {
     activeTab: {
       default: '1',
-      type: String,
-    },
+      type: String
+    }
   },
   computed: {
     ...mapGetters({
       hasPrescription: 'hasPrescription',
-      prescriptions: 'prescriptionsList',
-    }),
+      prescriptions: 'prescriptionsList'
+    })
   },
   methods: {
     handlePrescriptionClick(prescription) {
@@ -65,8 +65,8 @@ export default {
 
     getDisputes() {
       this.$emit('management:getDisputes')
-    },
-  },
+    }
+  }
 }
 </script>
 

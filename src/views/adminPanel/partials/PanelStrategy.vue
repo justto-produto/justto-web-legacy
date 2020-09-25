@@ -84,39 +84,39 @@ export default {
       name: '',
       strategies: [{
         name: 'Estratégia 1',
-        status: 'Ativo',
+        status: 'Ativo'
       }, {
         name: 'Estratégia 2',
-        status: 'Inativo',
+        status: 'Inativo'
       }],
       strategySteps: [{
         id: 0,
         name: 'E-mail',
-        values: ['Template 1', 'Template 2', 'Template 3'],
+        values: ['Template 1', 'Template 2', 'Template 3']
       }, {
         id: 1,
         name: 'SMS',
-        values: ['Template 1', 'Template 2', 'Template 3'],
+        values: ['Template 1', 'Template 2', 'Template 3']
       }, {
         id: 2,
         name: 'Espera',
-        values: ['30 min', '12 horas', '1 dia'],
+        values: ['30 min', '12 horas', '1 dia']
       }],
       steps: [
         {
           id: 0,
           step: 'E-mail',
-          value: 'Template 1',
+          value: 'Template 1'
         }, {
           id: 1,
           step: 'Espera',
-          value: '12 horas',
+          value: '12 horas'
         }, {
           id: 2,
           step: 'SMS',
-          value: 'Template 2',
-        },
-      ],
+          value: 'Template 2'
+        }
+      ]
     }
   },
   computed: {
@@ -130,7 +130,7 @@ export default {
         return this.strategySteps.find(s => s.id === this.selectedStep).values
       }
       return []
-    },
+    }
   },
   methods: {
     editStrategy() {
@@ -143,10 +143,10 @@ export default {
       this.steps.push({
         id: +new Date(),
         step: this.strategySteps.find(s => s.id === this.selectedStep).name,
-        value: this.selectedValue,
+        value: this.selectedValue
       })
-    },
-  },
+    }
+  }
 }
 </script>
 

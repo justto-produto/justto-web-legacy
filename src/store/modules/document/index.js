@@ -5,11 +5,11 @@ import getters from './getters'
 const document = {
   state: {
     availableSigners: [],
-    selectedSigners: [],
+    selectedSigners: []
   },
   mutations: mutations,
   actions: actions,
-  getters: getters,
+  getters: getters
 }
 
 export default document

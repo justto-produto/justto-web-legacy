@@ -23,16 +23,16 @@ describe('JusImportFeedbackCard.vue', () => {
   beforeEach(() => {
     getters = {
       strategyList: jest.fn(),
-      campaignList: jest.fn(),
+      campaignList: jest.fn()
     }
 
     state = {
-      workspaceModule: jest.fn(),
+      workspaceModule: jest.fn()
     }
 
     store = new Vuex.Store({
       getters,
-      state,
+      state
     })
   })
   it('É um objeto Vue.', () => {

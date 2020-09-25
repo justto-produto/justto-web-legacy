@@ -14,7 +14,8 @@
       <div class="jus-user-card__actions">
         <div
           v-if="isJusttoAdmin"
-          class="jus-user-card__actions-row">
+          class="jus-user-card__actions-row"
+        >
           <el-tooltip content="Desassociar cliente da workspace">
             <el-button
               type="danger"
@@ -50,19 +51,19 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'JusUserCard',
   components: {
-    JusTextEditable: () => import('@/components/JusTextEditable/JusTextEditable'),
+    JusTextEditable: () => import('@/components/JusTextEditable/JusTextEditable')
   },
   props: {
     userData: {
       type: Object,
       required: true,
       validator: obj => Object.keys(obj)
-        .map(key => ['name', 'id', 'contractStatus'].includes(key)),
-    },
+        .map(key => ['name', 'id', 'contractStatus'].includes(key))
+    }
   },
   data() {
     return {
-      userDataBind: this.userData,
+      userDataBind: this.userData
     }
   },
   computed: {
@@ -83,12 +84,12 @@ export default {
         default:
           return { label: 'VAZIO', type: 'info' }
       }
-    },
+    }
   },
   watch: {
     userData(current) {
       this.userDataBind = current
-    },
+    }
   },
   methods: {
     emitEditTitle(inputValue) {
@@ -103,8 +104,8 @@ export default {
     },
     emitSeeMore() {
       this.$emit('see-more', this.userDataBind)
-    },
-  },
+    }
+  }
 }
 </script>
 

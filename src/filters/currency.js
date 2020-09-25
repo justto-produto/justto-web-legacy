@@ -6,5 +6,5 @@ Vue.use(VueCurrencyFilter, {
   fractionCount: 2,
   fractionSeparator: ',',
   symbolPosition: 'front',
-  symbolSpacing: true,
+  symbolSpacing: true
 })

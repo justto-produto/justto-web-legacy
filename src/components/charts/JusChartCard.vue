@@ -28,8 +28,8 @@ export default {
   props: {
     data: {
       type: Object,
-      default: () => {},
-    },
+      default: () => {}
+    }
   },
   computed: {
     datasets() {
@@ -60,8 +60,8 @@ export default {
     },
     colors() {
       return this.$store.state.tagModule.colors
-    },
-  },
+    }
+  }
 }
 </script>
 

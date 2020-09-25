@@ -162,7 +162,7 @@
 export default {
   name: 'Login',
   components: {
-    JusSidenavExternal: () => import('@/components/layouts/JusSidenavExternal'),
+    JusSidenavExternal: () => import('@/components/layouts/JusSidenavExternal')
   },
   data() {
     return {
@@ -174,30 +174,30 @@ export default {
       errorMessage: '',
       loginForm: {
         email: '',
-        password: '',
+        password: ''
       },
       rules: {
         email: [
           { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-          { type: 'email', required: true, message: 'Insira um e-mail válido', trigger: ['submit'] },
+          { type: 'email', required: true, message: 'Insira um e-mail válido', trigger: ['submit'] }
         ],
         password: [
-          { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-        ],
+          { required: true, message: 'Campo obrigatório', trigger: 'submit' }
+        ]
       },
       workspaceForm: {
-        selectedWorkspaceIndex: '',
+        selectedWorkspaceIndex: ''
       },
       workspaceRules: {
         selectedWorkspaceIndex:
-        [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
-      },
+        [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
+      }
     }
   },
   computed: {
     passwordType() {
       return this.showPassword ? 'text' : 'password'
-    },
+    }
   },
   beforeMount() {
     if (this.$store.getters.isLoggedIn) {
@@ -286,7 +286,7 @@ export default {
       // SEGMENT TRACK
       this.$jusSegment('Seleção de Workspace', {
         workspace: response.workspace.name,
-        team: response.workspace.teamName,
+        team: response.workspace.teamName
       })
       if (response.workspace) this.$store.commit('setWorkspace', response.workspace)
       if (response.profile) this.$store.commit('setProfile', response.profile)
@@ -323,8 +323,8 @@ export default {
       Tente novamente ou entre em contato com o administrador do sistema.`
       this.showError = true
       this.showLoading = false
-    },
-  },
+    }
+  }
 }
 </script>
 

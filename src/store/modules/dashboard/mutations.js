@@ -16,7 +16,7 @@ const mutations = {
   clearDashboard(state) {
     state.chartsDatasets = []
     state.selectedMemberId = null
-  },
+  }
 }
 
 export default mutations

@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  name: 'PanelDashboard',
+  name: 'PanelDashboard'
 }
 </script>
 

@@ -120,7 +120,7 @@ export default {
       editing: {},
       editable: '',
       newKey: '',
-      newValue: '',
+      newValue: ''
     }
   },
   computed: {
@@ -130,7 +130,7 @@ export default {
         if (!['ERROR_COUT', 'ENRIQUECIDO'].includes(proprieties[0])) {
           list.push({
             key: proprieties[0],
-            value: proprieties[1],
+            value: proprieties[1]
           })
         }
       }
@@ -146,14 +146,14 @@ export default {
       set(proprieties) {
         this.$store.dispatch('putDisputeProprieties', {
           disputeId: this.$store.getters.disputeId,
-          data: proprieties,
+          data: proprieties
         }).finally(() => {
           this.newKey = ''
           this.newValue = ''
           this.loading = false
         })
-      },
-    },
+      }
+    }
   },
   methods: {
     focus(key, index) {
@@ -205,11 +205,11 @@ export default {
         { value: 'VARA' },
         { value: 'SITUACAO' },
         { value: 'TRIBUNAL' },
-        { value: 'ESTADO' },
+        { value: 'ESTADO' }
       ]
       cb(queryString ? keys.filter((key) => (key.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0)) : keys)
-    },
-  },
+    }
+  }
 }
 </script>
 

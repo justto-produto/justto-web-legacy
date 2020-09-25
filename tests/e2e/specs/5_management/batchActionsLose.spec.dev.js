@@ -49,7 +49,7 @@ describe('Justto.App - Gerenciamento: Ação em Lote', function() {
     'Sem interesse no acordo',
     'Encaminhado para arbitragem',
     'Não foi possível realizar contato',
-    'Acordo fechado por terceiros',
+    'Acordo fechado por terceiros'
   ]
 
   motives.forEach((motive) => {

@@ -66,16 +66,16 @@ export default {
   props: {
     isGuest: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
   data() {
     return {
       showError: false,
       oabForm: {
         oab: this.$store.state.workspaceModule.oabNumber ? this.$store.state.workspaceModule.oabNumber : '',
-        state: this.$store.state.workspaceModule.oabState ? this.$store.state.workspaceModule.oabState : '',
-      },
+        state: this.$store.state.workspaceModule.oabState ? this.$store.state.workspaceModule.oabState : ''
+      }
     }
   },
   methods: {
@@ -109,8 +109,8 @@ export default {
         return true
       }
       return false
-    },
-  },
+    }
+  }
 }
 </script>
 

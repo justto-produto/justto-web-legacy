@@ -46,23 +46,23 @@ export default {
   props: {
     isGuest: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
   data() {
     return {
       nameForm: {
-        name: '',
+        name: ''
       },
       nameFormRules: {
-        name: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
-      },
+        name: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
+      }
     }
   },
   computed: {
     creatingWorkspace() {
       return this.$store.getters.creatingWorkspace
-    },
+    }
   },
   mounted() {
     this.nameForm.name = this.creatingWorkspace ? this.$store.state.workspaceModule.name : ''
@@ -76,7 +76,7 @@ export default {
           return false
         }
       })
-    },
-  },
+    }
+  }
 }
 </script>

@@ -18,8 +18,10 @@
       class="management-table el-table--disputes"
       data-testid="dispute-index"
       @cell-mouse-enter="cellMouseEnter"
+      @cell-mouse-leave="cellMouseLeave()"
       @row-click="handleRowClick"
-      @selection-change="handleSelectionChange">
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column
         type="selection"
         width="44px"
@@ -50,7 +52,14 @@
           v-if="scope.row.campaign"
           slot-scope="scope"
         >
-          {{ scope.row.campaign.name | capitalize }}
+          <el-tooltip
+            placement="top-start"
+            :value="actieTooltipDisputeId === scope.row.id"
+            :content="lastAccessFormated(scope.row.id)">
+            <div>
+              {{ scope.row.campaign.name | capitalize }}
+            </div>
+          </el-tooltip>
         </template>
       </el-table-column>
       <el-table-column
@@ -279,21 +288,21 @@ export default {
     JusDisputeActions: () => import('@/components/buttons/JusDisputeActions'),
     JusProtocolDialog: () => import('@/components/dialogs/JusProtocolDialog'),
     InfiniteLoading: () => import('vue-infinite-loading'),
-    JusVexatiousAlert: () => import('@/components/dialogs/JusVexatiousAlert'),
+    JusVexatiousAlert: () => import('@/components/dialogs/JusVexatiousAlert')
   },
   props: {
     activeTab: {
       type: String,
-      default: '0',
+      default: '0'
     },
     selectedIds: {
       type: Array,
-      default: () => [],
+      default: () => []
     },
     loadingDisputes: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
   data() {
     return {
@@ -307,17 +316,23 @@ export default {
       selectedDisputeRoles: [],
       disputeKey: 0,
       responseBoxLoading: false,
+      actieTooltipDisputeId: 0
     }
   },
   computed: {
-    ...mapGetters(['disputeTimeline', 'loading']),
+    ...mapGetters([
+      'disputeTimeline',
+      'loading',
+      'lastAccess'
+    ]),
+
     selectedIdsComp: {
       get() {
         return this.selectedIds
       },
       set(ids) {
         this.$emit('update:selectedIds', ids)
-      },
+      }
     },
     disputes() {
       return this.$store.getters.disputes
@@ -336,14 +351,14 @@ export default {
     },
     tab3() {
       return this.activeTab === '3'
-    },
+    }
   },
   watch: {
     disputes: {
       handler() {
         this.$refs.disputeTable.doLayout()
       },
-      deep: true,
+      deep: true
     },
     loadingDisputes(value) {
       if (!value) {
@@ -352,13 +367,17 @@ export default {
           this.showEmpty = true
         }, 2000)
       }
-    },
+    }
   },
   beforeCreate() {
     this.$store.commit('resetDisputeQueryPage')
   },
   methods: {
-    ...mapActions(['getDisputeTimeline']),
+    ...mapActions([
+      'getDisputeTimeline',
+      'getDisputeLastAccess',
+      'cleanDisputeLastAccess'
+    ]),
 
     hoverDisputeCode(code) {
       if (!this.disputeTimeline[code]) {
@@ -376,8 +395,21 @@ export default {
       })
       this.$jusSegment('Linha do tempo visualizada pelo gerenciamento', { disputeId: dispute.id })
     },
+    lastAccessFormated(disputeId) {
+      if (this.lastAccess[disputeId] && this.lastAccess[disputeId].date) {
+        const time = this.$moment(this.lastAccess[disputeId].date)
+        return `Você acessou esta disputa ${time.fromNow()} - às ${time.format('HH:mm')}`
+      } else {
+        return 'Ainda não sei quando você acessou esta disputa'
+      }
+    },
     cellMouseEnter(row, column, cell, event) {
       this.disputeActionsRow = row.id
+      this.actieTooltipDisputeId = row.id
+      this.getDisputeLastAccess(row.id)
+    },
+    cellMouseLeave() {
+      this.actieTooltipDisputeId = 0
     },
     getDocumentStep: (hasDocument, signStatus) => getDocumentStep(hasDocument, signStatus),
     tableRowClassName({ row, rowIndex }) {
@@ -420,8 +452,8 @@ export default {
           $state.loaded()
         }
       })
-    },
-  },
+    }
+  }
 }
 </script>
 
@@ -558,6 +590,12 @@ export default {
     color: #adadad;
     font-size: 1rem;
   }
+}
+.management-table__tooltip-last-access {
+  height: 1rem;
+  display: flex;
+  align-items: center;
+  background-color: #e3def2;
 }
 .dialog-timeline {
   .dialog-timeline__title {

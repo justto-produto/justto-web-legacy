@@ -16,13 +16,13 @@ export default {
   props: {
     content: {
       default: '',
-      type: String,
+      type: String
     },
     color: {
       default: 'main',
-      type: String,
-    },
-  },
+      type: String
+    }
+  }
 }
 </script>
 
