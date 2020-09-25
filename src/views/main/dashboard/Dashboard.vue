@@ -287,15 +287,22 @@ export default {
   async mounted() {
     await this.getOnboardingStatus()
 
-    if (!this.chartsDatasets.length && this.isCompletedOnboarding) {
-      this.getDashboard()
-    }
+    // this.setOnboardingStatus(false)
+    // this.updateUserPreferences({
+    //   [DASHBOARD_TOUR_STATUS]: false,
+    // })
+
+    // this.updateUserPreferences({
+    //   JUS_TOUR_FUNEL: false,
+    // })
 
     if (!this.hasPersonName) {
       this.isInsertNameOpen = true
     } else {
       this.openOnboardingDialog()
     }
+
+    this.loadDashboard()
 
     if (this.isCompletedOnboarding) {
       this.openDashboardTour()
@@ -428,8 +435,8 @@ export default {
     closeOnboardingDialog() {
       this.isOnboardingDialogOpen = false
       this.setOnboardingStatus(true)
-      this.getDashboard()
       this.openDashboardTour()
+      this.loadDashboard()
     },
     openOnboardingDialog() {
       setTimeout(() => {
@@ -452,6 +459,11 @@ export default {
         [DASHBOARD_TOUR_STATUS]: true,
       })
       this.$router.push({ name: 'management' })
+    },
+    loadDashboard() {
+      if (!this.chartsDatasets.length && this.isCompletedOnboarding && this.isDashboardTourCompleted) {
+        this.getDashboard()
+      }
     },
   },
 }
