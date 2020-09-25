@@ -475,7 +475,7 @@
                 <span class="title">
                   Função:
                   <span
-                    v-if="!isEditingRule && role.party !== 'UNKNOWN'"
+                    v-if="!isToShowChangeParty(role) && !isNegotiator(role)"
                     class="dispute-overview-view__edit-tooltip"
                     @click="handleEditRule()">
                     <el-tooltip
@@ -486,7 +486,7 @@
                   </span>
                 </span>
                 <div
-                  v-if="isEditingRule && role.party !== 'UNKNOWN'"
+                  v-if="isToShowChangeParty(role) && !isNegotiator(role)"
                   class="dispute-overview-view__select-role">
                   <el-select
                     v-model="role.party"
@@ -495,7 +495,7 @@
                     @change="setDisputeParty(role)"
                   >
                     <el-option
-                      v-for="party in disputePartys"
+                      v-for="party in getDisputePartys(role.roles)"
                       :key="party.value"
                       :label="party.label"
                       :value="party.value"
@@ -1736,16 +1736,6 @@ export default {
           label: 'Parte contrária',
         }
       ],
-      disputePartys: [
-        {
-          value: 'RESPONDENT',
-          label: 'Réu',
-        },
-        {
-          value: 'CLAIMANT',
-          label: 'Parte contrária',
-        }
-      ],
       tempRole: {}
     }
   },
@@ -1916,6 +1906,30 @@ export default {
       'getDisputeTimeline',
       'getDisputeProprieties'
     ]),
+
+    isToShowChangeParty({ party, roles }) {
+      return this.isEditingRule && party !== 'UNKNOWN'
+    },
+
+    isNegotiator({ roles }) {
+      return roles.includes('NEGOTIATOR')
+    },
+
+    getDisputePartys(roles) {
+      if (roles.includes('PARTY')) {
+        return [
+          { value: 'RESPONDENT', label: 'Réu' },
+          { value: 'CLAIMANT', label: 'Parte contrária' }
+        ]
+      } else if (roles.includes('LAWYER')) {
+        return [
+          { value: 'RESPONDENT', label: 'Advogado do réu' },
+          { value: 'CLAIMANT', label: 'Advogado da parte contrária' }
+        ]
+      } else {
+        return []
+      }
+    },
 
     handleUnknowParty(role) {
       const { value } = this.dispuesToUnknownParties[this.tempRole]
