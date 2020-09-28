@@ -80,7 +80,7 @@
             name="3"
             label="Com Interação"
           >
-            <span slot="label">Todos</span>
+            <span slot="label">Finalizados</span>
           </el-tab-pane>
         </el-tabs>
         <div class="view-management__buttons">
@@ -647,6 +647,11 @@ export default {
         case '2':
           this.$store.commit('updateDisputeQuery', { key: 'status', value: ['ACCEPTED', 'CHECKOUT'] })
           this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['visualized,asc', 'conclusionDate,asc'] })
+          break
+        case '3':
+          this.$store.commit('addPrescription', 'NEWLY_FINISHED')
+          this.$store.commit('updateDisputeQuery', { key: 'status', value: [] })
+          this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['visualized,asc', 'conclusionDate,asc', 'lastReceivedMessage,asc'] })
           break
         default:
           this.$store.commit('updateDisputeQuery', { key: 'status', value: [] })

@@ -121,7 +121,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="tab1 || tab2"
+        v-if="tab1 || tab2 || tab3"
         label="Interações"
         min-width="140px"
         align="center"
@@ -134,7 +134,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="tab2"
+        v-if="tab2 || tab3"
         label="Minuta"
         width="110px"
         class-name="management-table__row-actions"
@@ -167,7 +167,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="tab || tab0 || tab1 || tab3"
+        v-if="tab || tab0 || tab1"
         :sortable="false"
         prop="expirationDate"
         label="Fim da negociação"
@@ -189,7 +189,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="tab2"
+        v-if="tab2 || tab3"
         :sortable="false"
         label="Valor do acordo"
         prop="disputeDealValue"
@@ -201,7 +201,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="tab2"
+        v-if="tab2 || tab3"
         :sortable="false"
         prop="disputeDealDate"
         label="Data do acordo"
