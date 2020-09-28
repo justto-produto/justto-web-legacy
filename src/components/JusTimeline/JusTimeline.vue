@@ -47,7 +47,7 @@
           </div>
         </li>
         <li
-          v-for="(process, processIndex) in (dispute.lawsuits)"
+          v-for="(process, processIndex) in dispute.lawsuits"
           :key="`process-${processIndex}`"
           class="jus-timeline__list-item"
         >
@@ -86,36 +86,44 @@
               </el-tag>
             </div>
           </div>
-
           <div class="jus-timeline__body">
-            <el-timeline>
-              <el-timeline-item
-                v-for="(movement, eventIndex) in process.movements"
-                v-show="matchFilter(movement.description, searchQuery)"
-                :key="`movement-${eventIndex}`"
-                :timestamp="movement.date"
-                placement="top"
-              >
-                <div class="jus-timeline__body-movement">
-                  <highlight
-                    class="jus-timeline__body-description"
-                    :queries="[searchQuery]"
-                  >
-                    {{ movement.description }}
-                  </highlight>
-                  <div class="jus-timeline__body-tags">
-                    <el-tag
-                      v-for="(tag, tagIndex) in (movement.tags || [])"
-                      :key="`tag-movement-${tagIndex}`"
-                      type="secondary"
-                      size="small"
-                    >
-                      {{ tag }}
-                    </el-tag>
-                  </div>
+            <el-collapse v-model="timelineOpenedItems" >
+              <el-collapse-item :name="processIndex">
+                <div
+                  class="jus-timeline__body-collapse"
+                  slot="title">
+                  {{ timelineOpenedItems.includes(processIndex) ? 'Ocultar' : 'Mostrar' }} andamentos
                 </div>
-              </el-timeline-item>
-            </el-timeline>
+                <el-timeline>
+                  <el-timeline-item
+                    v-for="(movement, eventIndex) in process.movements"
+                    v-show="matchFilter(movement.description, searchQuery)"
+                    :key="`movement-${eventIndex}`"
+                    :timestamp="movement.date"
+                    placement="top"
+                  >
+                    <div class="jus-timeline__body-movement">
+                      <highlight
+                        class="jus-timeline__body-description"
+                        :queries="[searchQuery]"
+                      >
+                        {{ movement.description }}
+                      </highlight>
+                      <div class="jus-timeline__body-tags">
+                        <el-tag
+                          v-for="(tag, tagIndex) in (movement.tags || [])"
+                          :key="`tag-movement-${tagIndex}`"
+                          type="secondary"
+                          size="small"
+                        >
+                          {{ tag }}
+                        </el-tag>
+                      </div>
+                    </div>
+                  </el-timeline-item>
+                </el-timeline>
+              </el-collapse-item>
+            </el-collapse>
           </div>
         </li>
       </ul>
@@ -154,7 +162,8 @@ export default {
   data() {
     return {
       searchQuery: '',
-      showOnlyFiltered: false
+      showOnlyFiltered: false,
+      timelineOpenedItems: []
     }
   },
   computed: {
@@ -289,7 +298,7 @@ export default {
             color: #ADADAD;
           }
           .jus-timeline__header-tags {
-            margin: 8px 8px auto auto;
+            margin: 8px 0px auto auto;
             display: flex;
 
             .jus-timeline__tag {
@@ -301,8 +310,12 @@ export default {
         }
 
         .jus-timeline__body {
-          margin-left: -24px;
-          margin-top: 24px;
+          
+          .jus-timeline__body-collapse {
+            font-size: 14px;
+            margin-top: 0px;
+            color: #ADADAD;
+          }
 
           .jus-timeline__body-tags {
             margin: 8px 8px auto auto;
