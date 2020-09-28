@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import moment from 'moment'
 
 const disputeMutations = {
   setDisputeTimeline(state, { timeline, code }) {
@@ -195,11 +196,14 @@ const disputeMutations = {
   resetExportHistoryPage: (state) => (state.exportHistoryPage = 0),
   setPrescriptionsList: (state, prescriptions) => (state.prescriptionsList = prescriptions),
   setLastAccess: (state, { disputeId, lastAccessTime }) => {
-    state.lastAccess[disputeId] = {
-      date: lastAccessTime,
+    const time = moment(lastAccessTime)
+    const message = lastAccessTime ? `Você acessou esta disputa ${time.fromNow()} - às ${time.format('HH:mm')}` : 'Ainda não sei quando você acessou esta disputa'
+    Vue.set(state.lastAccess, disputeId, {
+      date: message,
       log: new Date()
-    }
-  }
+    })
+  },
+  cleanLastAccess: (state) => (state.lastAccess = {})
 }
 
 export default disputeMutations
