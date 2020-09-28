@@ -189,6 +189,19 @@
         </template>
       </el-table-column>
       <el-table-column
+        v-if="tab0 || tab3"
+        :sortable="false"
+        label="Status"
+        prop="status"
+        align="center"
+        min-width="90px"
+      >
+        <template slot-scope="scope">
+          {{ $t('occurrence.type.' + scope.row.status) | capitalize }}
+          <span v-if="scope.row.paused">(pausada)</span>
+        </template>
+      </el-table-column>
+      <el-table-column
         v-if="tab2 || tab3"
         :sortable="false"
         label="Valor do acordo"
@@ -210,19 +223,6 @@
       >
         <template slot-scope="scope">
           <span v-if="scope.row.disputeDealDate">{{ scope.row.disputeDealDate.dateTime | moment('DD/MM/YY') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="tab0 || tab3"
-        :sortable="false"
-        label="Status"
-        prop="status"
-        align="center"
-        min-width="90px"
-      >
-        <template slot-scope="scope">
-          {{ $t('occurrence.type.' + scope.row.status) | capitalize }}
-          <span v-if="scope.row.paused">(pausada)</span>
         </template>
       </el-table-column>
       <el-table-column
