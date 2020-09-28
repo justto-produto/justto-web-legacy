@@ -358,12 +358,12 @@ export default {
   props: {
     plans: {
       type: Array,
-      default: () => [],
+      default: () => []
     },
     visible: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
   data() {
     return {
@@ -375,17 +375,17 @@ export default {
         monthlySubscriptionFee: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
         planId: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
         startedDate: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
-        status: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+        status: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
       },
       tariffTypes: TARIFF_TYPES,
       newContract: { },
-      hasWorkspace: false,
+      hasWorkspace: false
     }
   },
   computed: {
     ...mapGetters({
       clientData: 'getCurrentCustomer',
-      workspaceId: 'currentWorkspace',
+      workspaceId: 'currentWorkspace'
     }),
     contractStatus: self => self.$t('billing.contract.status'),
     filteredContracts() {
@@ -396,7 +396,7 @@ export default {
       return (filteredContracts.length ? filteredContracts : this.form.contracts).map(contract => ({
         ...contract,
         flags: this.getFlags(contract),
-        customTitle: this.makeContractName(contract),
+        customTitle: this.makeContractName(contract)
       }))
     },
     haveExclusiveContract() {
@@ -410,7 +410,7 @@ export default {
     },
     haveContracts() {
       return this.filteredContracts.length > 0
-    },
+    }
   },
   watch: {
     clientData(current) {
@@ -424,7 +424,7 @@ export default {
           if (!tariffAlreadyExists) {
             contract.tariffs.push({
               type,
-              value: 0,
+              value: 0
             })
           }
         })
@@ -441,7 +441,7 @@ export default {
     visible(current) {
       this.resetNewContract()
       this.isFormVisible = true
-    },
+    }
   },
   beforeMount() {
     this.form = this.clientData
@@ -450,7 +450,7 @@ export default {
   methods: {
     ...mapActions([
       'addContract',
-      'updateContract',
+      'updateContract'
     ]),
     changeHasWorkspaceValue(newValue) {
       this.hasWorkspace = newValue
@@ -482,17 +482,17 @@ export default {
     addNewContract() {
       const {
         form: { customerId },
-        newContract,
+        newContract
       } = this
 
       this.addContract({
         customerId,
-        contract: newContract,
+        contract: newContract
       }).then(() => this.$jusNotification({
         type: 'success',
         title: 'Yay!',
-        message: 'Contrato adicionado com sucesso.',
-      }),
+        message: 'Contrato adicionado com sucesso.'
+      })
       )
 
       this.hideCollapseItems()
@@ -516,14 +516,14 @@ export default {
       const { form } = this
       this.updateContract({
         customerId: form.customerId,
-        contract: contract,
+        contract: contract
       }).then(() => {
         this.hideCollapseItems()
         this.$forceUpdate()
         this.$jusNotification({
           type: 'success',
           title: 'Yay!',
-          message: 'Contrato salvo com sucesso.',
+          message: 'Contrato salvo com sucesso.'
         })
       })
     },
@@ -533,7 +533,7 @@ export default {
      */
     saveContract() {
       const {
-        form,
+        form
       } = this
 
       const formPromises = []
@@ -541,14 +541,14 @@ export default {
       form.contracts.map(contract => {
         formPromises.push(this.updateContract({
           customerId: form.customerId,
-          contract,
+          contract
         }))
       })
 
       Promise.all(formPromises).then(() => this.$jusNotification({
         type: 'success',
         title: 'Yay!',
-        message: 'Contratos editados com sucesso.',
+        message: 'Contratos editados com sucesso.'
       }))
 
       this.closeModal()
@@ -561,14 +561,14 @@ export default {
       if (contract.workspaceId === this.workspaceId) {
         flags.push({
           label: 'Exclusivo desta Workspace',
-          theme: 'info',
+          theme: 'info'
         })
       }
 
       if (contract.status === CONTRACT_STATUS.INACTIVE.key) {
         flags.push({
           ...CONTRACT_STATUS.INACTIVE,
-          theme: 'danger',
+          theme: 'danger'
         })
       }
 
@@ -578,8 +578,8 @@ export default {
       if (this.haveContracts) {
         this.newContract.startedDate = new Date()
       }
-    },
-  },
+    }
+  }
 }
 </script>
 

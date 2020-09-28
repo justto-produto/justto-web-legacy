@@ -55,10 +55,10 @@
           class="el-input__icon"
         />
         <el-option
-          v-for="strategy in strategies"
-          :key="strategy.id"
-          :label="strategy.name"
-          :value="strategy"
+          v-for="optionStrategy in strategies"
+          :key="optionStrategy.id"
+          :label="optionStrategy.name"
+          :value="optionStrategy"
         />
       </el-select>
       <div class="select-strategy__messages">
@@ -154,8 +154,7 @@
             :show-stops="true"
             :marks="marks"
             label="Percentual da primeira proposta sobre a alçada máxima"
-          >
-          </el-slider>
+          />
         </div>
       </div>
       <div class="jus-import-feedback-card__switch">
@@ -224,17 +223,17 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'JusImportFeedbackCard',
   components: {
-    JusEngagementsDialog: () => import('@/components/dialogs/JusEngagementsDialog'),
+    JusEngagementsDialog: () => import('@/components/dialogs/JusEngagementsDialog')
   },
   props: {
     mappedCampaign: {
       type: Object,
-      default: () => {},
+      default: () => {}
     },
     index: {
       type: Number,
-      default: 1,
-    },
+      default: 1
+    }
   },
   data() {
     return {
@@ -260,7 +259,7 @@ export default {
       datePickerOptions: {
         disabledDate(date) {
           return date < new Date()
-        },
+        }
       },
       initialOfferPercentage: 60,
       marks: {
@@ -272,8 +271,8 @@ export default {
         60: '60%',
         70: '70%',
         80: '80%',
-        90: '90%',
-      },
+        90: '90%'
+      }
     }
   },
   computed: {
@@ -303,7 +302,7 @@ export default {
       } else {
         return false
       }
-    },
+    }
   },
   watch: {
     businessHoursEngagement(value) {
@@ -348,7 +347,7 @@ export default {
     },
     deadline(value) {
       this.mappedCampaign.deadline = {
-        dateTime: this.$moment(value).endOf('day').format('YYYY-MM-DD[T]HH:mm:ss[Z]'),
+        dateTime: this.$moment(value).endOf('day').format('YYYY-MM-DD[T]HH:mm:ss[Z]')
       }
     },
     negotiatorIds(value) {
@@ -359,7 +358,7 @@ export default {
     },
     initialOfferPercentage(value) {
       this.mappedCampaign.initialOfferPercentage = value
-    },
+    }
   },
   beforeMount() {
     const preferences = JSON.parse(localStorage.getItem('jusfeedbackpreferences')) || {}
@@ -393,7 +392,7 @@ export default {
         message: `Já existe uma campanha com o nome <strong>${campaignName}</strong>.<br>
         Ao importar novos casos para essa campanha as estratégias de comunicação definidas anteriormente não serão alteradas`,
         confirmButtonText: 'OK',
-        dangerouslyUseHTMLString: true,
+        dangerouslyUseHTMLString: true
       })
     },
 
@@ -426,8 +425,8 @@ export default {
           }
         }
       }
-    },
-  },
+    }
+  }
 }
 </script>
 

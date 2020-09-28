@@ -108,8 +108,8 @@ export default {
   props: {
     data: {
       type: Object,
-      default: () => {},
-    },
+      default: () => {}
+    }
   },
   computed: {
     disputeStatusSummaryWithWarn() {
@@ -130,7 +130,7 @@ export default {
           withAlertFilter: self.data.datasets[1].filter[index],
           total: self.data.datasets[2].data[index],
           totalFilter: self.data.datasets[2].filter[index],
-          statusIndex: index,
+          statusIndex: index
         })
       })
       // disputeStatusSummaryWithWarn.push({
@@ -150,7 +150,7 @@ export default {
     },
     members() {
       return this.$store.state.workspaceModule.members
-    },
+    }
   },
   methods: {
     tooltipName() {
@@ -259,8 +259,8 @@ export default {
         this.$router.push('/management')
         // }
       }
-    },
-  },
+    }
+  }
 }
 </script>
 

@@ -55,7 +55,7 @@ const NotificationMessage = {
       Notification.closeAll()
       Notification(config)
     }
-  },
+  }
 }
 
 Vue.use(NotificationMessage)

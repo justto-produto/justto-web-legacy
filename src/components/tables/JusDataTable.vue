@@ -155,33 +155,33 @@ export default {
   name: 'JusDataTable',
   components: {
     InfiniteLoading: () => import('vue-infinite-loading'),
-    JusFloatActions: () => import('@/components/others/JusFloatActions'),
+    JusFloatActions: () => import('@/components/others/JusFloatActions')
   },
   props: {
     data: {
       type: Array,
-      required: true,
+      required: true
     },
     pagination: {
       type: Object,
       required: false,
-      default: () => {},
+      default: () => {}
     },
     loading: {
       type: Boolean,
-      default: false,
+      default: false
     },
     loadingText: {
       type: String,
-      default: 'Carregando...',
-    },
+      default: 'Carregando...'
+    }
   },
   data() {
     return { }
   },
   computed: {
     ...mapGetters([
-      'isJusttoAdmin',
+      'isJusttoAdmin'
     ]),
 
     availableActions() {
@@ -190,16 +190,16 @@ export default {
           icon: 'edit',
           label: 'Editar lançamento',
           trigger: 'editTransaction',
-          condition: (scope) => (scope.type === 'MANUAL' && this.isJusttoAdmin),
+          condition: (scope) => (scope.type === 'MANUAL' && this.isJusttoAdmin)
         },
         {
           icon: 'trash',
           label: 'Cancelar lançamento',
           trigger: 'cancelTransaction',
-          condition: (scope) => (!!scope.value && this.isJusttoAdmin),
-        },
+          condition: (scope) => (!!scope.value && this.isJusttoAdmin)
+        }
       ]
-    },
+    }
   },
   methods: {
     floatAction(evt) {
@@ -220,8 +220,8 @@ export default {
 
     infiniteHandler($state) {
       this.$emit('infiniteHandler', $state)
-    },
-  },
+    }
+  }
 }
 </script>
 

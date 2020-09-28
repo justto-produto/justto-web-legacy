@@ -94,8 +94,8 @@ export default {
   props: {
     disputeId: {
       type: String,
-      default: '',
-    },
+      default: ''
+    }
   },
   data() {
     return {
@@ -103,13 +103,13 @@ export default {
       noteLoading: 0,
       editDialog: false,
       editDialogLoading: false,
-      newNoteContent: '',
+      newNoteContent: ''
     }
   },
   computed: {
     occurrences() {
       return this.$store.getters.occurrences
-    },
+    }
   },
   mounted() {
     this.$store.commit('clearDisputeOccurrences')
@@ -155,14 +155,14 @@ export default {
       this.editDialogLoading = true
       this.$store.dispatch('editDisputeNote', {
         newNoteContent: newNoteContent,
-        activeOccurrence: this.activeOccurrence,
+        activeOccurrence: this.activeOccurrence
       })
         .then(() => {
           this.editDialog = false
           this.$jusNotification({
             title: 'Yay!',
             message: 'Nota editada com sucesso.',
-            type: 'success',
+            type: 'success'
           })
         }).catch(error => {
           this.$jusNotification({ error })
@@ -175,7 +175,7 @@ export default {
         confirmButtonText: 'OK',
         cancelButtonText: 'Cancelar',
         type: 'warning',
-        cancelButtonClass: 'is-plain',
+        cancelButtonClass: 'is-plain'
       }).then(() => {
         const noteId = occurrence.id
         this.noteLoading = occurrence.id
@@ -186,7 +186,7 @@ export default {
           this.$jusNotification({
             title: 'Yay!',
             message: 'Nota removida com sucesso.',
-            type: 'success',
+            type: 'success'
           })
         }).catch(error => {
           this.$jusNotification({ error })
@@ -194,7 +194,7 @@ export default {
           this.noteLoading = 0
         })
       })
-    },
-  },
+    }
+  }
 }
 </script>

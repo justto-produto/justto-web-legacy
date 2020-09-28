@@ -9,13 +9,13 @@ const dashboardModule = {
       'DISPUTE_AVG_RESPONSE_TIME',
       'DISPUTE_MONETARY_SUMMARIES',
       'DISPUTE_STATUS_SUMMARY_WITH_WARN',
-      'MONITORING_DISPUTE_BY_TIME',
+      'MONITORING_DISPUTE_BY_TIME'
     ],
-    selectedMemberId: null,
+    selectedMemberId: null
   },
   mutations: mutations,
   actions: actions,
-  getters: getters,
+  getters: getters
 }
 
 export default dashboardModule

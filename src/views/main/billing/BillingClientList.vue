@@ -13,7 +13,7 @@
 export default {
   name: 'BillingCLientList',
   components: {
-    ClientGrid: () => import('./partials/ClientGrid'),
-  },
+    ClientGrid: () => import('./partials/ClientGrid')
+  }
 }
 </script>

@@ -35,23 +35,23 @@ export default {
   props: {
     isGuest: {
       type: Boolean,
-      default: false,
+      default: false
     },
     companyName: {
       type: String,
-      default: '',
-    },
+      default: ''
+    }
   },
   computed: {
     name() {
       return this.$store.getters.loggedPersonName
-    },
+    }
   },
   methods: {
     nextStep() {
       this.$emit('onboarding:step:next')
-    },
-  },
+    }
+  }
 }
 </script>
 

@@ -10,8 +10,8 @@ export default {
   props: {
     type: {
       type: String,
-      default: 'info',
-    },
+      default: 'info'
+    }
   },
   computed: {
     typeClass() {
@@ -20,8 +20,8 @@ export default {
       }
 
       return ''
-    },
-  },
+    }
+  }
 }
 </script>
 

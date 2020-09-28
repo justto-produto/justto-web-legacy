@@ -35,11 +35,11 @@ export default {
       search: '',
       users: [{
         name: 'Usuario 1',
-        status: 'Ativo',
+        status: 'Ativo'
       }, {
         name: 'Usiiario 2',
-        status: 'Inativo',
-      }],
+        status: 'Inativo'
+      }]
     }
   },
   computed: {
@@ -47,8 +47,8 @@ export default {
       return this.users.filter(data => {
         return !this.search || data.name.toLowerCase().includes(this.search.toLowerCase())
       })
-    },
-  },
+    }
+  }
 }
 </script>
 

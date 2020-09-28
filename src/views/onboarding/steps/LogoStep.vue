@@ -57,13 +57,13 @@ export default {
   props: {
     isGuest: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
   data() {
     return {
       imageUrl: '',
-      loading: false,
+      loading: false
     }
   },
   methods: {
@@ -87,8 +87,8 @@ export default {
       //   this.$message.error('Avatar picture size can not exceed 2MB!')
       // }
       return isValid // && isLt2M
-    },
-  },
+    }
+  }
 }
 </script>
 

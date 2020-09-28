@@ -8,7 +8,7 @@ const getters = {
   transactions: state => state.currentCustomer.transactions,
   billingDashboard: state => state.billingDashboard,
   tableLoading: state => state.tableLoading,
-  currentWorkspace: state => state.query.workspaceId,
+  currentWorkspace: state => state.query.workspaceId
 }
 
 export default getters

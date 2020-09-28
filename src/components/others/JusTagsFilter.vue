@@ -60,7 +60,7 @@ export default {
         }
         return t
       }).sort((a, b) => a.active === b.active ? 0 : a.active > b.active ? 1 : -1)
-    },
+    }
   },
   methods: {
     filterByTag(tag) {
@@ -69,8 +69,8 @@ export default {
       else currentTags.push(tag.id)
       this.$store.commit('updateDisputeQuery', { key: 'tags', value: currentTags })
       this.$emit('prescriptions:getDisputes')
-    },
-  },
+    }
+  }
 }
 </script>
 

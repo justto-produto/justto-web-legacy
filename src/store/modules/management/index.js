@@ -4,11 +4,11 @@ import actions from './actions'
 
 const ManagementModule = {
   state: {
-    activeOccurrency: {},
+    activeOccurrency: {}
   },
   actions,
   getters,
-  mutations,
+  mutations
 }
 
 export default ManagementModule

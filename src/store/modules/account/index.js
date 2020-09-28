@@ -16,7 +16,7 @@ const account = {
       'gabriel@justto.com.br',
       'guilherme@justto.com.br'
     ],
-    preferences: { tourSteps: {} },
+    preferences: { tourSteps: {} }
   },
   mutations: {
     setToken(state, resp) {
@@ -42,27 +42,27 @@ const account = {
       if (response.id) state.id = response.id
       if (response.name) state.name = response.name
       if (response.email) state.email = response.email
-    },
+    }
     // setUserPreferences: (state, preferences) => (state.preference = preferences),
   },
   actions: {
     myAccount() {
       return axiosDispatcher({
         url: 'api/accounts/my',
-        mutation: 'setUser',
+        mutation: 'setUser'
       })
     },
     register({ commit }, loginForm) {
       return axiosDispatcher({
         url: 'api/accounts/register',
         method: 'POST',
-        data: loginForm,
+        data: loginForm
       })
     },
     activate({ commit }, token) {
       return axiosDispatcher({
         url: `api/accounts/activate/${token}`,
-        method: 'PUT',
+        method: 'PUT'
       })
     },
     login({ commit }, credentials) {
@@ -72,7 +72,7 @@ const account = {
         url: 'api/accounts/token',
         method: 'POST',
         data: credentials,
-        mutation: 'setToken',
+        mutation: 'setToken'
       }).catch(() => {
         localStorage.removeItem('justoken')
       })
@@ -80,7 +80,7 @@ const account = {
     refreshToken({ commit }) {
       return axiosDispatcher({
         url: 'api/accounts/refresh-token',
-        mutation: 'setToken',
+        mutation: 'setToken'
       }).catch(() => {
         localStorage.removeItem('justoken')
       })
@@ -100,30 +100,30 @@ const account = {
     forgotPassword({ _ }, email) {
       return axiosDispatcher({
         url: `api/accounts/reset-password?email=${email}`,
-        method: 'PUT',
+        method: 'PUT'
       })
     },
     resetPassword({ _ }, data) {
       return axiosDispatcher({
         url: `api/accounts/new-password/${data.token}`,
         method: 'PUT',
-        data: { password: data.password },
+        data: { password: data.password }
       })
     },
     updatePassword({ _ }, form) {
       return axiosDispatcher({
         url: 'api/accounts/my/update-password',
         method: 'POST',
-        data: form,
+        data: form
       })
     },
     ensureWorkspaceAccesss({ _ }, workspaceId) {
       return axiosDispatcher({
         url: `api/accounts/workspaces/ensure-workspace-accesss/${workspaceId}`,
         method: 'PATCH',
-        mutation: 'setToken',
+        mutation: 'setToken'
       })
-    },
+    }
     // getUserPreferences({ state }) {
     //   return axiosDispatcher({
     //     url: `api/accounts/preferences/${state.id}`,
@@ -146,8 +146,8 @@ const account = {
     accountId: state => state.id,
     accountEmail: state => state.email,
     isJusttoAdmin: state => isJusttoUser(state.email),
-    isJusttoDev: state => state.devs.indexOf(state.email) !== -1,
-  },
+    isJusttoDev: state => state.devs.indexOf(state.email) !== -1
+  }
 }
 
 export default account

@@ -7,16 +7,16 @@ export default {
   props: {
     data: {
       type: Object,
-      default: () => {},
+      default: () => {}
     },
     options: {
       type: Object,
-      default: () => {},
+      default: () => {}
     },
     stacked: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
   mounted() {
     const opt = this.options
@@ -24,12 +24,12 @@ export default {
       Object.assign(opt, {
         scales: {
           xAxes: [{
-            stacked: true,
+            stacked: true
           }],
           yAxes: [{
-            stacked: true,
-          }],
-        },
+            stacked: true
+          }]
+        }
       })
     }
     this.renderChart(this.data, opt)
@@ -45,7 +45,7 @@ export default {
       //     filter: this.data.datasets[firstPoint._datasetIndex].filter[firstPoint._index]
       //   }
       // }
-    },
-  },
+    }
+  }
 }
 </script>

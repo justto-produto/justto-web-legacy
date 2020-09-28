@@ -66,21 +66,21 @@
 export default {
   name: 'ForgotPassword',
   components: {
-    JusSidenavExternal: () => import('@/components/layouts/JusSidenavExternal'),
+    JusSidenavExternal: () => import('@/components/layouts/JusSidenavExternal')
   },
   data() {
     return {
       showSuccess: false,
       showLoading: false,
       forgotForm: {
-        email: '',
+        email: ''
       },
       rules: {
         email: [
           { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-          { type: 'email', required: true, message: 'Insira um e-mail válido', trigger: ['submit'] },
-        ],
-      },
+          { type: 'email', required: true, message: 'Insira um e-mail válido', trigger: ['submit'] }
+        ]
+      }
     }
   },
   methods: {
@@ -106,8 +106,8 @@ export default {
           return false
         }
       })
-    },
-  },
+    }
+  }
 }
 </script>
 

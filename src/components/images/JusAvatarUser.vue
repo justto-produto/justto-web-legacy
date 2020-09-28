@@ -25,32 +25,32 @@ export default {
   props: {
     src: {
       type: String,
-      default: '',
+      default: ''
     },
     notifications: {
       type: Number,
-      default: undefined,
+      default: undefined
     },
     size: {
       type: String,
-      default: 'md',
+      default: 'md'
     },
     shape: {
       type: String,
-      default: 'square',
+      default: 'square'
     },
     name: {
       type: String,
-      default: '',
+      default: ''
     },
     purple: {
       type: Boolean,
-      default: false,
+      default: false
     },
     active: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
   computed: {
     showAvatar() {
@@ -84,8 +84,8 @@ export default {
     },
     activeClass() {
       return this.active ? 'jus-avatar-user--active' : ''
-    },
-  },
+    }
+  }
 }
 </script>
 

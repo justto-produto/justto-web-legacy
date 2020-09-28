@@ -5,7 +5,7 @@ import getters from './getters'
 const dispute = {
   state: {
     dispute: {
-      id: 0,
+      id: 0
     },
     disputeAttachments: [],
     disputeProprieties: {},
@@ -23,7 +23,7 @@ const dispute = {
       sort: [
         'visualized,asc',
         'lastReceivedMessage,asc',
-        'expirationDate,asc',
+        'expirationDate,asc'
       ],
       campaigns: [],
       strategy: [],
@@ -37,8 +37,9 @@ const dispute = {
       page: 1,
       size: 20,
       term: '',
-      total: 0,
+      total: 0
     },
+    lastAccess: {},
     hasFilters: false,
     statuses: {},
     respondents: [],
@@ -46,11 +47,11 @@ const dispute = {
     exportHistory: {},
     exportHistoryPage: 0,
     prescriptionsList: [],
-    timeline: {},
+    timeline: {}
   },
   mutations: mutations,
   actions: actions,
-  getters: getters,
+  getters: getters
 }
 
 export default dispute

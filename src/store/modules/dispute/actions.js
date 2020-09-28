@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import axiosDispatcher from '@/store/axiosDispatcher.js'
 import { queryBuilder } from '@/utils/jusUtils'
+import moment from 'moment'
 
 // const FileSaver = require('file-saver')
 let removeDebounce = 0
@@ -48,6 +49,27 @@ const disputeActions = {
         })
     })
   },
+  getDisputeLastAccess({ commit, state }, disputeId) {
+    if (state.lastAccess[disputeId]) {
+      const time1 = moment(state.lastAccess[disputeId].log)
+      const time2 = moment(new Date())
+      const dif = time2.diff(time1)
+      if (dif <= 3000) {
+        return
+      }
+    }
+    return axiosDispatcher({
+      url: `api/disputes/${disputeId}/my-last-access`
+    }).then(res => {
+      commit('setLastAccess', {
+        disputeId,
+        lastAccessTime: res ? res.lastAccessed.dateTime : ''
+      })
+    })
+  },
+  cleanDisputeLastAccess({ commit, state }) {
+    commit('cleanLastAccess')
+  },
   linkDisputeBankAccounts({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
@@ -87,7 +109,7 @@ const disputeActions = {
   getDisputeProprieties({ commit }, disputeId) {
     return axiosDispatcher({
       url: `api/disputes/${disputeId}/properties`,
-      mutation: 'setDisputeProprieties',
+      mutation: 'setDisputeProprieties'
     })
   },
   putDisputeProprieties({ commit }, params) {
@@ -95,26 +117,26 @@ const disputeActions = {
       url: `api/disputes/${params.disputeId}/properties`,
       method: 'PUT',
       data: params.data,
-      mutation: 'setDisputeProprieties',
+      mutation: 'setDisputeProprieties'
     })
   },
   getDisputeAttachments({ commit }, disputeId) {
     axiosDispatcher({
       url: `api/office/documents/${disputeId}/attachments`,
-      mutation: 'setDisputeAttachments',
+      mutation: 'setDisputeAttachments'
     })
   },
   uploadAttachment({ commit }, { disputeId, formData }) {
     return axiosDispatcher({
       url: `api/office/disputes/${disputeId}/attachment`,
       method: 'post',
-      data: formData,
+      data: formData
     })
   },
   deleteAttachment({ commit }, { disputeId, documentId }) {
     return axiosDispatcher({
       url: `api/office/disputes/${disputeId}/attachment/${documentId}`,
-      method: 'delete',
+      method: 'delete'
     })
   },
   getDisputes({ commit, state }, command) {
@@ -163,7 +185,7 @@ const disputeActions = {
   exportDisputes({ state, dispatch }, colums) {
     const stringColums = colums.toString()
     return axiosDispatcher({
-      url: `api/disputes/export${queryBuilder(state.query)}fileFormat=CSV&columnToExport=${stringColums}`,
+      url: `api/disputes/export${queryBuilder(state.query)}fileFormat=CSV&columnToExport=${stringColums}`
     }).then(() => { dispatch('getExportHistory') })
     // return new Promise((resolve, reject) => {
     //   const stringColums = colums.toString()
@@ -190,7 +212,7 @@ const disputeActions = {
   getDisputeTimeline({ commit }, disputeCode) {
     commit('showLoading')
     return axiosDispatcher({
-      url: `/api/fusion/lawsuit/timeline/${disputeCode}`,
+      url: `/api/fusion/lawsuit/timeline/${disputeCode}`
     }).then(res => {
       commit('setDisputeTimeline', { timeline: res, code: disputeCode })
     }).catch(() => {
@@ -199,7 +221,7 @@ const disputeActions = {
   },
   exportProtocols({ state }) {
     return axiosDispatcher({
-      url: `api/office/documents/export${queryBuilder(state.query)}`,
+      url: `api/office/documents/export${queryBuilder(state.query)}`
     })
   },
   getExportHistory({ commit, state }, command) {
@@ -207,7 +229,7 @@ const disputeActions = {
     else commit('resetExportHistoryPage')
     axiosDispatcher({
       url: `api/disputes/my/exports?size=10&page=${state.exportHistoryPage}`,
-      mutation: command ? 'pushExportHistory' : 'setExportHistory',
+      mutation: command ? 'pushExportHistory' : 'setExportHistory'
     })
   },
   editRole({ _ }, { disputeId, disputeRole }) {
@@ -271,7 +293,7 @@ const disputeActions = {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
       axios.put('api/disputes/' + params.disputeId + '/update-reason', {
-        reason: params.reasonValue,
+        reason: params.reasonValue
       })
         .then(response => {
           resolve(response.data)
@@ -298,7 +320,7 @@ const disputeActions = {
     return axiosDispatcher({
       url: `api/disputes/actions/batch${queryBuilder(state.query)}`,
       method: 'PUT',
-      data: params,
+      data: params
     })
   },
   sendDisputeNote({ commit }, body) {
@@ -330,7 +352,7 @@ const disputeActions = {
       // eslint-disable-next-line
       axios.put('api/disputes/note/' + note.activeOccurrence.id, {
         note: note.newNoteContent,
-        disputeId: note.activeOccurrence.disputeId,
+        disputeId: note.activeOccurrence.disputeId
       })
         .then(response => {
           resolve(response.data)
@@ -410,7 +432,7 @@ const disputeActions = {
       axios.post('api/disputes/' + params.disputeId + '/offer', {
         attribute: { id: params.objectId },
         role: { id: params.roleId },
-        value: params.value,
+        value: params.value
       })
         .then(response => {
           resolve(response.data)
@@ -456,13 +478,14 @@ const disputeActions = {
   startNegotiation({ _ }, disputeId) {
     return axiosDispatcher({
       url: `/api/disputes/${disputeId}/start-negotiation`,
-      method: 'PATCH',
+      method: 'PATCH'
     })
   },
   disputeSetVisualized({ _ }, params) {
     return axiosDispatcher({
-      url: `api/disputes/${params.disputeId}/visualized?visualized=${params.visualized}&anonymous=${params.anonymous}`,
-      method: 'PATCH',
+      url: `api/disputes/${params.disputeId}/visualized`,
+      params,
+      method: 'PATCH'
     })
   },
   getDisputeOccurrences({ commit, state }, disputeId) {
@@ -543,7 +566,7 @@ const disputeActions = {
         role: { id: params.roleId },
         value: params.value,
         note: params.note,
-        updateUpperRange: params.updateUpperRange,
+        updateUpperRange: params.updateUpperRange
       }).then(response => {
         resolve(response.data)
       }).catch(error => {
@@ -567,18 +590,18 @@ const disputeActions = {
     return axiosDispatcher({
       url: `api/disputes/party/analisis/${documentNumber}`,
       mutation: 'addPartyAnalysis',
-      payload: documentNumber,
+      payload: documentNumber
     })
   },
   getNegotiators({ state, commit, dispatch }, params) {
     return axiosDispatcher({
-      url: `/api/disputes/negotiators/filter${queryBuilder({ ...state.query, ...params })}`,
+      url: `/api/disputes/negotiators/filter${queryBuilder({ ...state.query, ...params })}`
     })
   },
   getPrescriptions: () => axiosDispatcher({
     url: 'api/disputes/prescriptions',
-    mutation: 'setPrescriptionsList',
-  }),
+    mutation: 'setPrescriptionsList'
+  })
 }
 
 export default disputeActions

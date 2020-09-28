@@ -2,8 +2,8 @@ export default {
   name: 'JusElementMarker',
   props: {
     mark: {
-      type: [String, Object],
-    },
+      type: [String, Object]
+    }
   },
   render() {
     const label = typeof this.mark === 'string' ? this.mark : this.mark.label
@@ -12,5 +12,5 @@ export default {
         { label }
       </div>
     )
-  },
+  }
 }

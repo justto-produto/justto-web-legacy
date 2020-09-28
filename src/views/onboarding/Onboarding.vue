@@ -101,7 +101,7 @@ export default {
     WelcomeStep: () => import('./steps/WelcomeStep'),
     TeamNameStep: () => import('./steps/TeamNameStep'),
     InviteStep: () => import('./steps/InviteStep'),
-    FinalStep: () => import('./steps/FinalStep'),
+    FinalStep: () => import('./steps/FinalStep')
   },
   data() {
     return {
@@ -115,8 +115,8 @@ export default {
         direction: 'vertical',
         slidesPerView: 1,
         allowTouchMove: false,
-        initialSlide: 0,
-      },
+        initialSlide: 0
+      }
     }
   },
   computed: {
@@ -149,7 +149,7 @@ export default {
       }
 
       return ''
-    },
+    }
   },
   beforeCreate() {
     this.$store.commit('redirectNewWorkspaceFalse')
@@ -182,16 +182,16 @@ export default {
         Object.assign(this.responses, responseObj)
         this.$store.dispatch('createWorkpace', {
           name: this.responses.team,
-          subDomain: uuidv4(),
+          subDomain: uuidv4()
         }).then(() => {
           this.$store.dispatch('refreshToken').then(() => {
             this.$refs.swiper.swiper.slideNext(800)
             this.$socket.emit('subscribe', {
               headers: {
                 Authorization: this.$store.getters.accountToken,
-                Workspace: this.$store.getters.workspaceSubdomain,
+                Workspace: this.$store.getters.workspaceSubdomain
               },
-              channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/whatsapp',
+              channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/whatsapp'
             })
           }).catch(error => {
             this.$jusNotification({ error })
@@ -206,8 +206,8 @@ export default {
       } else {
         this.$refs.swiper.swiper.slideNext(800)
       }
-    },
-  },
+    }
+  }
 }
 </script>
 

@@ -109,7 +109,7 @@ export default {
     PanelUser: () => import('./partials/PanelUser'),
     PanelMinute: () => import('./partials/PanelMinute'),
     PanelBilling: () => import('./partials/PanelBilling'),
-    PanelStrategy: () => import('./partials/Strategy/PanelStrategy'),
+    PanelStrategy: () => import('./partials/Strategy/PanelStrategy')
   },
   data() {
     return {
@@ -117,11 +117,11 @@ export default {
       left: 12,
       right: 0,
       filterTerm: '',
-      havepermission: ['lucas@justto.com.br', 'kelvin@justto.com.br', 'josewilliam@justto.com.br', 'aline@justto.com.br', 'helio@justto.com.br'],
+      havepermission: ['lucas@justto.com.br', 'kelvin@justto.com.br', 'josewilliam@justto.com.br', 'aline@justto.com.br', 'helio@justto.com.br']
     }
   },
   computed: {
-    ...mapGetters(['accountEmail']),
+    ...mapGetters(['accountEmail'])
   },
   created() {
     setTimeout(function() {
@@ -140,8 +140,8 @@ export default {
     },
     setFilter(value) {
       this.filterTerm = value
-    },
-  },
+    }
+  }
 }
 </script>
 

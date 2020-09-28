@@ -47,7 +47,7 @@ const StrategyMutations = {
   setFilterTerm: (state, term) => (state.strategyQuery.name = term),
   incrementStrategyQueryPage: (state) => (state.strategyQuery.page += 1),
   resetStrategyQueryPage: (state) => (state.strategyQuery.page = 1),
-  setLoadingStrategies: (state, status) => (state.isLoadingStrategies = status),
+  setLoadingStrategies: (state, status) => (state.isLoadingStrategies = status)
 }
 
 export default StrategyMutations

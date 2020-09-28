@@ -106,87 +106,87 @@ export default {
   name: 'JusElementSlider',
   components: {
     JusElementButton,
-    JusElementMarker,
+    JusElementMarker
   },
   mixins: [Emitter],
   inject: {
     elForm: {
-      default: '',
-    },
+      default: ''
+    }
   },
   props: {
     min: {
       type: Number,
-      default: 0,
+      default: 0
     },
     max: {
       type: Number,
-      default: 100,
+      default: 100
     },
     step: {
       type: Number,
-      default: 1,
+      default: 1
     },
     value: {
       type: [Number, Array],
-      default: 0,
+      default: 0
     },
     showInput: {
       type: Boolean,
-      default: false,
+      default: false
     },
     showInputControls: {
       type: Boolean,
-      default: true,
+      default: true
     },
     inputSize: {
       type: String,
-      default: 'small',
+      default: 'small'
     },
     showStops: {
       type: Boolean,
-      default: false,
+      default: false
     },
     showTooltip: {
       type: Boolean,
-      default: true,
+      default: true
     },
     formatTooltip: {
       type: Function,
-      default: undefined,
+      default: undefined
     },
     disabled: {
       type: Boolean,
-      default: false,
+      default: false
     },
     range: {
       type: Boolean,
-      default: false,
+      default: false
     },
     vertical: {
       type: Boolean,
-      default: false,
+      default: false
     },
     height: {
       type: String,
-      default: '',
+      default: ''
     },
     debounce: {
       type: Number,
-      default: 300,
+      default: 300
     },
     label: {
       type: String,
-      default: '',
+      default: ''
     },
     tooltipClass: {
       type: String,
-      default: '',
+      default: ''
     },
     marks: {
       type: Object,
-      default: () => {},
-    },
+      default: () => {}
+    }
   },
   data() {
     return {
@@ -196,7 +196,7 @@ export default {
       secondObj: null,
       oldValue: null,
       dragging: false,
-      sliderSize: 1,
+      sliderSize: 1
     }
   },
   computed: {
@@ -242,7 +242,7 @@ export default {
         .map(point => ({
           point,
           position: (point - this.min) * 100 / (this.max - this.min),
-          mark: this.marks[point],
+          mark: this.marks[point]
         }))
     },
     minValue() {
@@ -313,7 +313,7 @@ export default {
         if (value.mark && !value.mark.details) return value
       }
       return 0
-    },
+    }
   },
   watch: {
     value(val, oldVal) {
@@ -347,7 +347,7 @@ export default {
     },
     max() {
       this.setValues()
-    },
+    }
   },
   mounted() {
     if (this.range) {
@@ -390,7 +390,7 @@ export default {
       }
       return {
         width: barSize,
-        left: barStart,
+        left: barStart
       }
     },
     valueChanged() {
@@ -472,9 +472,9 @@ export default {
     getStopStyle(position, zIndex) {
       return {
         left: position + '%',
-        'z-index': zIndex,
+        'z-index': zIndex
       }
-    },
-  },
+    }
+  }
 }
 </script>

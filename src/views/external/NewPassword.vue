@@ -95,7 +95,7 @@
 export default {
   name: 'NewPassword',
   components: {
-    JusSidenavExternal: () => import('@/components/layouts/JusSidenavExternal'),
+    JusSidenavExternal: () => import('@/components/layouts/JusSidenavExternal')
   },
   data() {
     const validatePassword = (rule, value, callback) => {
@@ -112,17 +112,17 @@ export default {
       token: '',
       newPasswordForm: {
         password: '',
-        confirmPassword: '',
+        confirmPassword: ''
       },
       rules: {
         password: [
-          { required: true, message: 'Campo obrigatório', trigger: 'submit' },
+          { required: true, message: 'Campo obrigatório', trigger: 'submit' }
         ],
         confirmPassword: [
           { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-          { validator: validatePassword, trigger: 'submit' },
-        ],
-      },
+          { validator: validatePassword, trigger: 'submit' }
+        ]
+      }
     }
   },
   beforeCreate() {
@@ -158,8 +158,8 @@ export default {
     },
     switchShowPassword() {
       this.showPassword = !this.showPassword
-    },
-  },
+    }
+  }
 }
 </script>
 

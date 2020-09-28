@@ -51,15 +51,15 @@ export default {
   props: {
     visible: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
   data: () => ({
     isDragging: false,
-    isAttachmentLoading: false,
+    isAttachmentLoading: false
   }),
   computed: {
-    maskIsVisible: self => self.visible || self.isDragging,
+    maskIsVisible: self => self.visible || self.isDragging
   },
   methods: {
     ...mapActions(['uploadAttachment', 'getDisputeAttachments']),
@@ -90,7 +90,7 @@ export default {
         confirmButtonText: 'Continuar',
         cancelButtonText: 'Cancelar',
         cancelButtonClass: 'is-plain',
-        showClose: false,
+        showClose: false
       }).then(() => {
         Object.keys(files).map(fileIndex => this.saveFile(files[fileIndex]))
       }).catch(() => false)
@@ -105,7 +105,7 @@ export default {
       return this.uploadAttachment({
         disputeId,
         formData,
-        file,
+        file
       }).then(() => {
         this.getDisputeAttachments(disputeId).then(() => {
           this.$emit('closeDialog')
@@ -113,7 +113,7 @@ export default {
           this.$jusNotification({
             title: 'Yay!',
             message: 'Anexo(s) adicionado(s) com sucesso',
-            type: 'success',
+            type: 'success'
           })
           this.$jusSegment(segmentLog, { fileName: file.name })
         })
@@ -123,8 +123,8 @@ export default {
         this.$jusNotification({ error })
         this.$jusSegment(`${segmentLog} falhou`, { fileName: file.name })
       })
-    },
-  },
+    }
+  }
 }
 </script>
 

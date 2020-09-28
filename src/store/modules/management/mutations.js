@@ -1,5 +1,5 @@
 const ManagementMutations = {
-  setActiveOccurrency: (state, activeOccurrency) => (state.activeOccurrency = activeOccurrency),
+  setActiveOccurrency: (state, activeOccurrency) => (state.activeOccurrency = activeOccurrency)
 }
 
 export default ManagementMutations

@@ -17,7 +17,7 @@ const alertGetters = {
   },
   findPhoneAlertById: (state) => (entityId) => {
     return state.alerts.filter(d => d.source === 'PHONE' && d.childId === parseInt(entityId))
-  },
+  }
 }
 
 export default alertGetters

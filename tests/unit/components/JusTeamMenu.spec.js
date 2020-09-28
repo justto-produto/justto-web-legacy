@@ -17,11 +17,11 @@ describe('JusTeamMenu.vue', () => {
   let state
   beforeEach(() => {
     state = {
-      workspaceModule: {},
+      workspaceModule: {}
     }
 
     store = new Vuex.Store({
-      state,
+      state
     })
   })
   it('É um objeto Vue.', () => {

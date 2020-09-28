@@ -1,12 +1,14 @@
 <template>
   <div class="last-interactions-table">
     <el-popover
+      v-if="data.lastOutboundInteraction"
       trigger="hover"
       popper-class="el-popover--dark"
       @show="getMessageSummaryHandler(data.lastOutboundInteraction, data.id)"
-      @hide="messageSummary = {}">
+      @hide="messageSummary = {}"
+    >
       <div>
-        <strong>
+        <strong v-if="data.lastOutboundInteraction">
           <jus-icon
             :icon="getInteractionIcon(data.lastOutboundInteraction)"
             is-white
@@ -42,8 +44,8 @@
         </div>
       </span>
       <jus-icon
-        :icon="`status-${data.lastOutboundInteraction.message.parameters.READ_DATE ? 'readed' : 'sent'}`"
         slot="reference"
+        :icon="`status-${data.lastOutboundInteraction.message.parameters.READ_DATE ? 'readed' : 'sent'}`"
       />
     </el-popover>
 
@@ -71,7 +73,7 @@
     >
       <div>
         <div>
-          <strong>
+          <strong v-if="data.lastReceivedMessage">
             <jus-icon
               :icon="getInteractionIcon(data.lastReceivedMessage)"
               is-white
@@ -159,7 +161,8 @@
       :title="`Resposta ao processo ${responseRow.code}`"
       append-to-body
       modal-append-to-body
-      class="last-interactions-table__response-dialog">
+      class="last-interactions-table__response-dialog"
+    >
       <div v-if="Object.keys(responseRow).length">
         <div>
           Negociável até <b>{{ responseRow.expirationDate.dateTime | moment('DD/MM/YY') }}</b>.
@@ -196,18 +199,21 @@
       </div>
       <span
         slot="footer"
-        class="dialog-footer">
+        class="dialog-footer"
+      >
         <el-button
           :disabled="responseBoxLoading"
           plain
-          @click="responseDialogVisible = false">
+          @click="responseDialogVisible = false"
+        >
           Cancelar
         </el-button>
         <el-button
           :loading="responseBoxLoading"
           type="primary"
           icon="el-icon-s-promotion"
-          @click="sendMessage(responseRow)">
+          @click="sendMessage(responseRow)"
+        >
           Enviar
         </el-button>
       </span>
@@ -220,7 +226,7 @@ import { mapActions } from 'vuex'
 import {
   getLastInteraction,
   getInteractionIcon,
-  getLastInteractionTooltip,
+  getLastInteractionTooltip
 } from '@/utils/jusUtils'
 
 import { quillEditor } from 'vue-quill-editor'
@@ -237,6 +243,12 @@ Quill.register(SizeStyle, true)
 export default {
   name: 'ManagementLasrInteractions',
   components: { quillEditor },
+  props: {
+    data: {
+      type: Object,
+      required: true
+    }
+  },
   data() {
     return {
       message: '',
@@ -246,14 +258,8 @@ export default {
       responseBoxVisible: false,
       responseBoxLoading: false,
       responseDialogVisible: false,
-      richMessage: '',
+      richMessage: ''
     }
-  },
-  props: {
-    data: {
-      type: Object,
-      required: true,
-    },
   },
   computed: {
     editorOptions() {
@@ -265,15 +271,15 @@ export default {
             [{ header: 1 }, { header: 2 }],
             [{ list: 'ordered' }, { list: 'bullet' }],
             ['blockquote'],
-            ['clean'],
-          ],
-        },
+            ['clean']
+          ]
+        }
       }
-    },
+    }
   },
   methods: {
     ...mapActions([
-      'getMessageSummary',
+      'getMessageSummary'
     ]),
 
     getMessageSummaryHandler(lastOutboundInteraction, disputeId) {
@@ -330,7 +336,7 @@ export default {
         this.$store.dispatch('send' + dispute.lastReceivedMessage.message.communicationType.toLowerCase(), {
           to: [{ address: dispute.lastReceivedMessage.message.sender }],
           message,
-          disputeId: dispute.id,
+          disputeId: dispute.id
         }).then(() => {
           this.message = ''
           this.richMessage = ''
@@ -339,7 +345,7 @@ export default {
           this.$jusNotification({
             title: 'Yay!',
             message: 'Mensagem enviada com sucesso.',
-            type: 'success',
+            type: 'success'
           })
         }).catch(error => {
           this.$jusNotification({ error })
@@ -348,8 +354,8 @@ export default {
           this.$emit('update:responseBoxLoading', false)
         })
       }
-    },
-  },
+    }
+  }
 }
 </script>
 

@@ -29,12 +29,12 @@ export default {
   props: {
     actions: {
       type: Array,
-      required: true,
+      required: true
     },
     scope: {
       type: Object,
-      required: true,
-    },
+      required: true
+    }
   },
   computed: {
 
@@ -45,11 +45,11 @@ export default {
         eventName: 'JusFloatAction',
         eventProps: {
           trigger,
-          customProps: this.scope,
-        },
+          customProps: this.scope
+        }
       })
-    },
-  },
+    }
+  }
 }
 </script>
 

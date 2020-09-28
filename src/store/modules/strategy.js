@@ -1,11 +1,11 @@
 const strategy = {
   state: {
-    list: [],
+    list: []
   },
   mutations: {
     setImportedStrategies(state, response) {
       state.list = response
-    },
+    }
   },
   actions: {
     getStrategiesList({ commit }) {
@@ -43,15 +43,15 @@ const strategy = {
             reject(error)
           })
       })
-    },
+    }
   },
   getters: {
     strategyList: state => state.list.sort((a, b) => {
       if (a.name < b.name) { return -1 }
       if (a.name > b.name) { return 1 }
       return 0
-    }),
-  },
+    })
+  }
 }
 
 export default strategy

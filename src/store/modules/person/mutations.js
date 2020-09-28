@@ -5,7 +5,7 @@ const mutations = {
   },
   clearLoggedPerson(state) {
     state.loggedPerson = {}
-  },
+  }
 }
 
 export default mutations
