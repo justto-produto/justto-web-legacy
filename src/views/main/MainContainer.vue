@@ -51,17 +51,6 @@
           />
           <span slot="title">Importação</span>
         </el-menu-item>
-        <el-menu-item
-          v-if="isJusttoAdmin || isAdminProfile"
-          index="/billing"
-          data-testid="menu-financial"
-        >
-          <jus-icon
-            icon="coins"
-            class="el-menu__icon"
-          />
-          <span slot="title">Financeiro</span>
-        </el-menu-item>
       </el-menu>
       <div
         v-show="workspaceMembers.length && isAdminProfile"
@@ -108,7 +97,6 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'isJusttoAdmin',
       'isAdminProfile',
       'workspaceMembers'
     ]),

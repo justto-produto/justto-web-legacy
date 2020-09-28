@@ -26,7 +26,7 @@
       </div>
       <div class="jus-header-main__info">
         <el-tooltip
-          v-if="$store.getters.isJusttoAdmin"
+          v-if="isJusttoAdmin"
           content="Modo anônimo"
         >
           <el-switch v-model="ghostMode" />
@@ -55,6 +55,14 @@
             <router-link to="/configuration">
               <el-dropdown-item>
                 Configurações
+              </el-dropdown-item>
+            </router-link>
+            <router-link
+              v-if="isJusttoAdmin || isAdminProfile"
+              to="/billing"
+            >
+              <el-dropdown-item>
+                Financeiro
               </el-dropdown-item>
             </router-link>
             <a
@@ -122,6 +130,7 @@
 
 <script>
 import { IS_SMALL_WINDOW } from '@/constants/variables'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'JusHeaderMain',
@@ -137,12 +146,12 @@ export default {
     }
   },
   computed: {
-    name() {
-      return this.$store.getters.loggedPersonName
-    },
-    teamName() {
-      return this.$store.getters.workspaceTeamName
-    },
+    ...mapGetters({
+      isJusttoAdmin: 'isJusttoAdmin',
+      isAdminProfile: 'isAdminProfile',
+      name: 'loggedPersonName',
+      teamName: 'workspaceTeamName',
+    }),
     appVersion() {
       return process.env.VUE_APP_VERSION
     },
