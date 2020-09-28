@@ -53,7 +53,7 @@
       :loading="showGif < 6"
       type="primary"
       data-testid="submit"
-      @click="$router.push('/management')"
+      @click="goToManagement"
     >
       Continuar
     </el-button>
@@ -90,7 +90,14 @@ export default {
           self.increaseShow()
         }, Math.floor(Math.random() * 2000))
       }
-    }
+    },
+    goToManagement() {
+      this.$store.commit('updateDisputeQuery', { key: 'status', value: ['IMPORTED', 'ENRICHED', 'ENGAGEMENT', 'PENDING'] })
+      this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['expirationDate,asc'] })
+      // this.$store.commit('addPrescription', 'NEWLY_IMPORTED')
+      this.$store.commit('setDisputesTab', '0')
+      this.$router.push('/management')
+    },
   }
 }
 </script>
