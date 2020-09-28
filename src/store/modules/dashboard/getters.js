@@ -6,7 +6,6 @@ const getters = {
     if (datasets) return JSON.parse(JSON.stringify(datasets))
     return {}
   },
-  isCompletedOnboarding: state => state.isCompletedOnboarding,
 }
 
 export default getters

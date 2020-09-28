@@ -38,7 +38,6 @@
           <jus-icon
             icon="management"
             class="el-menu__icon"
-            data-jus-tour="MANAGEMENT_MENU"
           />
           <span slot="title">Gerenciamento</span>
         </el-menu-item>
@@ -93,7 +92,6 @@
 
 <script>
 import { mapGetters } from 'vuex'
-
 export default {
   name: 'MainContainer',
   components: {

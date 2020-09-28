@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import { DASHBOARD_ONBOARDING_STATUS } from '@/constants/preferences'
 
 const mutations = {
   setDashboardDatasets(state, chartsDatasets) {
@@ -17,21 +16,6 @@ const mutations = {
   clearDashboard(state) {
     state.chartsDatasets = []
     state.selectedMemberId = null
-  },
-  setCompletedOnboarding(state, status) {
-    if (status[DASHBOARD_ONBOARDING_STATUS]) {
-      status = status[DASHBOARD_ONBOARDING_STATUS]
-    }
-
-    if (typeof status === 'string') {
-      if (status === 'true') {
-        state.isCompletedOnboarding = true
-      } else {
-        state.isCompletedOnboarding = false
-      }
-    } else {
-      state.isCompletedOnboarding = status
-    }
   },
 }
 

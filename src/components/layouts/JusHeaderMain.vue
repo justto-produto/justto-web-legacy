@@ -29,7 +29,7 @@
           v-if="$store.getters.isJusttoAdmin"
           content="Modo anônimo"
         >
-          <el-switch v-model="isGhostMode" />
+          <el-switch v-model="ghostMode" />
         </el-tooltip>
         <el-dropdown
           trigger="click"
@@ -122,7 +122,6 @@
 
 <script>
 import { IS_SMALL_WINDOW } from '@/constants/variables'
-import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'JusHeaderMain',
@@ -138,24 +137,27 @@ export default {
     }
   },
   computed: {
-    ...mapGetters({
-      name: 'loggedPersonName',
-      teamName: 'workspaceTeamName',  
-      ghostMode: 'ghostMode',
-    }),
-
+    name() {
+      return this.$store.getters.loggedPersonName
+    },
+    teamName() {
+      return this.$store.getters.workspaceTeamName
+    },
     appVersion() {
       return process.env.VUE_APP_VERSION
+    },
+    whatsappStatus() {
+      return this.$store.getters.whatsappStatus
     },
     workspaces() {
       return this.workspacesList.filter(w => w.workspace.id !== this.$store.getters.workspaceId)
     },
-    isGhostMode: {
+    ghostMode: {
       get() {
-        return this.ghostMode
+        return this.$store.getters.ghostMode
       },
       set(value) {
-        this.setGhostMode(value)
+        this.$store.commit('setGhostMode', value)
       },
     },
     avatarSize() {
@@ -166,8 +168,6 @@ export default {
     this.getMyWorkspaces()
   },
   methods: {
-    ...mapActions(['setGhostMode']),
-
     logout() {
       setTimeout(() => {
         this.$store.dispatch('logout')

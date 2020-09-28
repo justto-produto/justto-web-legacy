@@ -51,6 +51,7 @@
     <div class="email-step--status">
       Status:
       <strong>{{ message }}</strong>
+      <JusStatusDot :type="type" />
     </div>
     <el-button
       v-if="!synced"
