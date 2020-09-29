@@ -76,7 +76,7 @@
             :name="scope.row.firstClaimant"
             style="display: flex;"
           />
-          {{ scope.row.firstClaimant }}
+          {{ scope.row.firstClaimant || '-' }}
         </template>
       </el-table-column>
       <el-table-column
@@ -93,7 +93,7 @@
             :alerts="scope.row.firstClaimantLawyerAlerts"
             style="display: flex;"
           />
-          {{ scope.row.firstClaimantLawyer }}
+          {{ scope.row.firstClaimantLawyer || '-' }}
         </template>
       </el-table-column>
       <el-table-column
@@ -105,7 +105,10 @@
         min-width="118px"
       >
         <template slot-scope="scope">
-          {{ scope.row.disputeUpperRange | currency }}
+          <span v-if="scope.row.disputeUpperRange">
+            {{ scope.row.disputeUpperRange | currency }}
+          </span>
+          <span v-else>-</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -142,6 +145,7 @@
       >
         <template slot-scope="scope">
           <el-button
+            v-if="isWonDispute(scope.row.status) || scope.row.hasDocument"
             plain
             size="mini"
             class="management-table__protocol_button"
@@ -150,8 +154,9 @@
             Minuta
             <div :class="'management-table__protocol_button--step-' + getDocumentStep(scope.row.hasDocument, scope.row.signStatus)">
               <span /><span /><span />
-            </div>
+            </div>  
           </el-button>
+          <span v-else>-</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -210,7 +215,10 @@
         width="120px"
       >
         <template slot-scope="scope">
-          {{ scope.row.disputeDealValue | currency }}
+          <span v-if="scope.row.disputeDealValue && isWonDispute(scope.row.status)">
+            {{ scope.row.disputeDealValue | currency }}
+          </span>
+          <span v-else>-</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -222,7 +230,10 @@
         align="center"
       >
         <template slot-scope="scope">
-          <span v-if="scope.row.disputeDealDate">{{ scope.row.disputeDealDate.dateTime | moment('DD/MM/YY') }}</span>
+          <span v-if="scope.row.disputeDealDate && isWonDispute(scope.row.status)">
+            {{ scope.row.disputeDealDate.dateTime | moment('DD/MM/YY') }}
+          </span>
+          <span v-else>-</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -379,6 +390,9 @@ export default {
       'cleanDisputeLastAccess'
     ]),
 
+    isWonDispute(disputeStatus) {
+      return ['SETTLED', 'CHECKOUT', 'ACCEPTED'].includes(disputeStatus)
+    },
     hoverDisputeCode(code) {
       if (!this.disputeTimeline[code]) {
         this.getDisputeTimeline(code)
