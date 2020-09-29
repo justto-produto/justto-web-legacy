@@ -1793,7 +1793,7 @@ export default {
     },
     dispute() {
       return this.$store.getters.dispute
-    },
+    },  
     disputeBankAccounts() {
       return this.$store.getters.disputeBankAccounts
     },
@@ -1890,6 +1890,9 @@ export default {
       if (!newFilteredNamesakes.includes(this.selectedNamesake)) {
         this.selectedNamesake = ''
       }
+    },
+    'dispute.code'() {
+      this.getDisputeTimeline(this.dispute.code)
     },
   },
   created() {
