@@ -37,6 +37,8 @@ const NotificationMessage = {
             default:
               if (config.error.response.data && config.error.response.data.reason) {
                 config.message = config.error.response.data.reason
+              } else if (config.error.response.data && config.error.response.data.fields.error) {
+                config.message = config.error.response.data.fields.error
               } else {
                 config.message = (message && message !== 'No message available.') ? (message + TRY) : (ERROR + TRY)
               }
