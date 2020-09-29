@@ -28,11 +28,11 @@
     <span
       v-if="hasPrescription('NEWLY_IMPORTED')"
       class="management-prescriptions__newly-imported-alert">
-      Disputas importadas recentemente
+      <b>*</b>Disputas importadas recentemente
       <a
         href="#"
         @click="handlePrescriptionClick('NEWLY_IMPORTED')">
-        (click aqui para exibir todas)
+        (click aqui para remover filtro)
       </a>
     </span>
   </div>
@@ -132,9 +132,10 @@ export default {
   }
 
   .management-prescriptions__newly-imported-alert {
-    width: 260px;
+    width: 240px;
     font-size: 13px;
     color: $--color-text-secondary;
+    a { margin-left: 5px; }
   }
 }
 </style>
