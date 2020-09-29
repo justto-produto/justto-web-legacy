@@ -170,7 +170,7 @@
           </el-col> -->
           <!-- RÉU -->
           <el-col
-            v-if="!loading && isAll || isPreNegotiation"
+            v-if="!loading && isFinished || isPreNegotiation"
             :span="12"
           >
             <el-form-item label="Réu">
@@ -300,7 +300,7 @@
           </el-col> -->
           <!-- STATUS -->
           <el-col
-            v-if="isAll"
+            v-if="false"
             :span="24"
           >
             <el-form-item label="Status">
@@ -357,6 +357,7 @@
 
 <script>
 // import { Money } from 'v-money'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'ManagementFilters',
@@ -386,6 +387,14 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      strategies: 'strategyList',
+      campaigns: 'campaignList',
+      respondents: 'respondents',
+      workspaceTags: 'workspaceTags',
+      negotiatorsList: 'workspaceMembers'
+    }),
+
     visibleFilters: {
       get() { return this.visible },
       set(value) {
@@ -414,20 +423,8 @@ export default {
 
       return ''
     },
-    isAll() {
+    isFinished() {
       return this.tabIndex === '3'
-    },
-    strategies() {
-      return this.$store.getters.strategyList
-    },
-    campaigns() {
-      return this.$store.getters.campaignList
-    },
-    respondents() {
-      return this.$store.getters.respondents
-    },
-    workspaceTags() {
-      return this.$store.getters.workspaceTags
     },
     interactions() {
       return [{
@@ -441,9 +438,6 @@ export default {
         value: 'Sistema Justto'
       }]
     },
-    negotiatorsList() {
-      return this.$store.state.workspaceModule.members
-    },
     activeTabLabel() {
       switch (this.tabIndex) {
         case '-1':
@@ -455,10 +449,10 @@ export default {
         case '2':
           return 'Proposta aceita'
         case '3':
+          return 'Finalizados'
+        default:
           return 'Todos'
       }
-
-      return ''
     },
     statuses() {
       return [
@@ -474,7 +468,7 @@ export default {
         'UNSETTLED',
         'REFUSED'
       ]
-    }
+    },
   },
   watch: {
     visibleFilters(value) {

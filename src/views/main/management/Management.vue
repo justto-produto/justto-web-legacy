@@ -80,7 +80,17 @@
             name="3"
             label="Com Interação"
           >
-            <span slot="label">Finalizados</span>
+            <span slot="label">
+              Finalizados
+              <el-badge
+                :hidden="!finishedLenght"
+                :value="finishedLenght"
+                :max="99"
+                data-testid="badge-tab3"
+                type="primary"
+                class="el-badge--absolute"
+              />
+            </span>
           </el-tab-pane>
         </el-tabs>
         <div class="view-management__buttons">
@@ -450,6 +460,7 @@ export default {
       interactionLength: 'disputeNotVisualizedInteration',
       isJusttoAdmin: 'isJusttoAdmin',
       newDealsLength: 'disputeNotVisualizedNewDeal',
+      finishedLenght: 'disputeNotVisualizedFinished',
       hasFilters: 'disputeHasFilters',
       hasNew: 'disputeHasNew',
       exportHistory: 'exportHistory',
