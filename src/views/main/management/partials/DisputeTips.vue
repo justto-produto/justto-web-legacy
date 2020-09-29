@@ -69,18 +69,18 @@ import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'DisputeTips',
   components: {
-    JusProtocolDialog: () => import('@/components/dialogs/JusProtocolDialog'),
+    JusProtocolDialog: () => import('@/components/dialogs/JusProtocolDialog')
   },
   data() {
     return {
       showTips: true,
       protocolDialogVisible: false,
-      document: {},
+      document: {}
     }
   },
   computed: {
     ...mapGetters({
-      dispute: 'dispute',
+      dispute: 'dispute'
     }),
     documentStep() {
       return getDocumentStep(this.dispute.hasDocument, this.dispute.signStatus)
@@ -90,7 +90,7 @@ export default {
     },
     hasDocumentSignURL() {
       return this.document.signedDocument && this.document.signedDocument.signKey
-    },
+    }
   },
   created() {
     if (this.documentStep >= 2) {
@@ -113,10 +113,10 @@ export default {
         message: 'Endereço para assinatura do documento copiado para área de transferência.',
         type: 'info',
         center: true,
-        showClose: true,
+        showClose: true
       })
-    },
-  },
+    }
+  }
 }
 </script>
 

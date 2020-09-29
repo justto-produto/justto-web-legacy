@@ -286,8 +286,8 @@ export default {
   props: {
     filterTerm: {
       type: String,
-      default: '',
-    },
+      default: ''
+    }
   },
   data() {
     return {
@@ -301,14 +301,14 @@ export default {
       users: {},
       userForm: {
         email: '',
-        profile: '',
+        profile: ''
       },
       userRules: {
         email: [
           { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-          { type: 'email', required: true, message: 'Insira um e-mail válido', trigger: ['submit'] },
+          { type: 'email', required: true, message: 'Insira um e-mail válido', trigger: ['submit'] }
         ],
-        profile: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+        profile: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
       },
       workspaceForm: {
         name: '',
@@ -318,14 +318,14 @@ export default {
         vexatiousThreshold: '',
         properties: {
           VEXATIOUS_THRESHOLD: '',
-          VEXATIOUS_TYPE: '',
-        },
+          VEXATIOUS_TYPE: ''
+        }
       },
       workspaceRules: {
-        name: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+        name: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
       },
       debounce: () => {},
-      filterTermDebounced: '',
+      filterTermDebounced: ''
     }
   },
   computed: {
@@ -339,9 +339,9 @@ export default {
         prefix: '',
         suffix: this.workspaceForm.properties.VEXATIOUS_TYPE === 'AVERAGE' ? ' %' : '',
         precision: 0,
-        masked: false,
+        masked: false
       }
-    },
+    }
   },
   watch: {
     filterTerm(current) {
@@ -349,7 +349,7 @@ export default {
       this.debounce = setTimeout(() => {
         this.filterTermDebounced = current
       }, 800)
-    },
+    }
   },
   beforeMount() {
     this.fetchData()
@@ -376,7 +376,7 @@ export default {
       if (!this.users[workspaceId]) {
         this.$store.dispatch('adminWorkspaceUsers', {
           method: 'get',
-          workspaceId: workspaceId,
+          workspaceId: workspaceId
         }).then(response => {
           const usersList = []
           for (const user of response) {
@@ -384,7 +384,7 @@ export default {
               name: user.person.name,
               documentNumber: user.person.documentNumber,
               profile: user.profile,
-              id: user.id,
+              id: user.id
             })
           }
           this.users[workspace.id] = usersList
@@ -399,7 +399,7 @@ export default {
         email: '',
         profile: '',
         workspaceId: workspace.id,
-        workspaceSubdomain: workspace.subDomain,
+        workspaceSubdomain: workspace.subDomain
       }
       this.addUserDialogVisible = true
     },
@@ -412,16 +412,16 @@ export default {
             url: `api/accounts/workspaces/invite-teammates/${this.userForm.workspaceSubdomain}`,
             data: [{
               email: this.userForm.email,
-              profile: this.userForm.profile,
+              profile: this.userForm.profile
             }],
             headers: {
-              Workspace: this.userForm.workspaceSubdomain,
-            },
+              Workspace: this.userForm.workspaceSubdomain
+            }
           }).then(response => {
             this.$jusNotification({
               title: 'Yay!',
               message: 'Convite enviado com sucesso.',
-              type: 'success',
+              type: 'success'
             })
             this.userForm.email = ''
             this.userForm.profile = 'NEGOTIATOR'
@@ -448,13 +448,13 @@ export default {
           const loading = this.$loading({ lock: true })
           this.$store.dispatch('adminWorkspaces', {
             method: 'put',
-            data: this.workspaceForm,
+            data: this.workspaceForm
           }).then(() => {
             this.fetchData()
             this.$jusNotification({
               title: 'Yay!',
               message: 'Equipe editada com sucesso.',
-              type: 'success',
+              type: 'success'
             })
           }).catch(error => {
             this.$jusNotification({ error })
@@ -470,14 +470,14 @@ export default {
         confirmButtonText: 'Remover',
         cancelButtonText: 'Cancelar',
         type: 'warning',
-        cancelButtonClass: 'is-plain',
+        cancelButtonClass: 'is-plain'
       }).then(() => {
         const loading = this.$loading({ lock: true })
         this.$store.dispatch('adminWorkspaces', { method: 'delete', workspaceId }).then(() => {
           this.$jusNotification({
             title: 'Yay!',
             message: 'Equipe removida com sucesso.',
-            type: 'success',
+            type: 'success'
           })
         }).catch(error => {
           this.$jusNotification({ error })
@@ -491,17 +491,17 @@ export default {
         confirmButtonText: 'Remover',
         cancelButtonText: 'Cancelar',
         type: 'warning',
-        cancelButtonClass: 'is-plain',
+        cancelButtonClass: 'is-plain'
       }).then(() => {
         const loading = this.$loading({ lock: true })
         this.$store.dispatch('adminWorkspaceUsers', {
           method: 'delete',
-          userId: userId,
+          userId: userId
         }).then(() => {
           this.$jusNotification({
             title: 'Yay!',
             message: 'Usuário removido com sucesso.',
-            type: 'success',
+            type: 'success'
           })
           delete this.users[workspaceId]
           this.tableKey += 1
@@ -519,7 +519,7 @@ export default {
       if (workspace.name !== this.workspaceNameToEdit) {
         this.$store.dispatch('adminWorkspaces', {
           method: 'put',
-          data: workspace,
+          data: workspace
         })
       }
     },
@@ -527,8 +527,8 @@ export default {
       this.tableKey += 1
       this.workspaceNameToEdit = workspaceName
       this.$nextTick(() => this.$refs['input' + workspaceId].$el.children[0].focus())
-    },
-  },
+    }
+  }
 }
 </script>
 

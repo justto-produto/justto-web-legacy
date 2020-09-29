@@ -100,7 +100,7 @@ export default {
       blackListDialogVisible: false,
       search: '',
       blackListForm: { contact: '' },
-      blackListRules: { contact: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }] },
+      blackListRules: { contact: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }] }
     }
   },
   computed: {
@@ -111,7 +111,7 @@ export default {
         }
         return !this.search || minute.toLowerCase().includes(this.search.toLowerCase())
       })
-    },
+    }
   },
   methods: {
     addBlackList() {
@@ -126,7 +126,7 @@ export default {
             this.$jusNotification({
               title: 'Yay!',
               message: 'Termo adicionado na blackList com sucesso',
-              type: 'success',
+              type: 'success'
             })
           }).catch(error => {
             this.$jusNotification({ error })
@@ -156,16 +156,16 @@ export default {
           } else {
             done()
           }
-        },
+        }
       }).then(() => {
         this.$jusNotification({
           title: 'Yay!',
           message: 'Minuta excluída com sucesso',
-          type: 'success',
+          type: 'success'
         })
       })
-    },
-  },
+    }
+  }
 }
 </script>
 

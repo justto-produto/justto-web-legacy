@@ -1,11 +1,11 @@
 const campaign = {
   state: {
-    list: [],
+    list: []
   },
   mutations: {
     setCampaigns(state, response) {
       state.list = response
-    },
+    }
   },
   actions: {
     getCampaigns({ commit }) {
@@ -44,14 +44,14 @@ const campaign = {
             reject(error)
           })
       })
-    },
+    }
   },
   getters: {
     campaignList: state => state.list.sort((a, b) => {
       if (a < b) return 1
       if (a > b) return -1
       return 0
-    }),
+    })
     // activeCampaigns: (state, getters) => {
     //   let filteredCampaigns = []
     //   for (let dispute of getters.disputes) {
@@ -67,7 +67,7 @@ const campaign = {
     //   })
     //   return new Set(filteredCampaigns)
     // }
-  },
+  }
 }
 
 export default campaign

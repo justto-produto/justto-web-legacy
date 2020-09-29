@@ -15,7 +15,7 @@
       </div>
 
       <div class="strategy-card__name-area">
-        <span style="float: left; margin-right: 5px; vertical-align: center">#{{strategyData.id}}</span>
+        <span style="float: left; margin-right: 5px; vertical-align: center">#{{ strategyData.id }}</span>
         <jus-text-editable
           :value="strategyData.name"
           type="title"
@@ -145,23 +145,23 @@ export default {
   name: 'PanelStrategy',
   components: {
     JusTextEditable,
-    StrategyCommunication,
+    StrategyCommunication
   },
   props: {
     strategy: {
       type: Object,
-      required: true,
+      required: true
     },
     availableWorkspaces: {
       type: Array,
-      default: null,
-    },
+      default: null
+    }
   },
   data() {
     return {
       associatedWorkspaces: this.strategy.workspaces.map(w => w.id),
       defaultStrategyTypes: ['PAYMENT', 'RECOVERY', 'OBLIGATION', 'DISCOUNT'],
-      strategySelections: {},
+      strategySelections: {}
     }
   },
   computed: {
@@ -180,7 +180,7 @@ export default {
     },
     isWorkspacesNull() {
       return !this.associatedWorkspaces.length
-    },
+    }
   },
   methods: {
     changeStrategyData() {
@@ -205,7 +205,7 @@ export default {
         this.$jusNotification({
           title: 'Ops!!',
           message: 'Estratégia com o tipo indenizatório e cobrança não pode existir. Por favor, verifique os tipos desta estratégia.',
-          type: 'warning',
+          type: 'warning'
         })
       }
     },
@@ -231,8 +231,8 @@ export default {
 
     emitDeleteStrategy() {
       this.$emit('deleteStrategy', this.strategyData)
-    },
-  },
+    }
+  }
 }
 </script>
 

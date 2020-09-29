@@ -6,8 +6,8 @@ module.exports = {
       locale: 'pt-br',
       fallbackLocale: 'pt-br',
       localeDir: 'locales',
-      enableInSFC: true,
-    },
+      enableInSFC: true
+    }
   },
   chainWebpack: config => {
     config.plugin('html').tap(args => {
@@ -27,7 +27,7 @@ module.exports = {
     loaderOptions: {
       css: {
         // localIdentName: '[hash:base64:5]',
-      },
-    },
-  },
+      }
+    }
+  }
 }

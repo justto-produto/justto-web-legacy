@@ -19,29 +19,29 @@ export default {
     flow: {
       type: String,
       default: null,
-      validator: val => ['column', 'row'].includes(val),
+      validator: val => ['column', 'row'].includes(val)
     },
     rows: {
       type: Number,
-      default: null,
+      default: null
     },
     columns: {
       type: Number,
-      default: 1,
+      default: 1
     },
     spacing: {
       type: Number,
-      default: 24,
-    },
+      default: 24
+    }
   },
   computed: {
     rowsCount() {
       return this.rows || 'auto-fit'
-    },
+    }
   },
   methods: {
-    toPixel: num => `${num}px`,
-  },
+    toPixel: num => `${num}px`
+  }
 }
 </script>
 

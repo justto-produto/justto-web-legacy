@@ -14,7 +14,7 @@ const mutations = {
   },
   clearTyping(state) {
     state.chat.typing = null
-  },
+  }
 }
 
 export default mutations

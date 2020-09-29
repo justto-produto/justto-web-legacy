@@ -4,7 +4,7 @@
 
 <script>
 export default {
-  name: 'DisputeMessages',
+  name: 'DisputeMessages'
 }
 </script>
 

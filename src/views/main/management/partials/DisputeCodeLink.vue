@@ -1,15 +1,18 @@
 <template>
   <section
     id="dispute-code"
-    class="dispute-code">
+    class="dispute-code"
+  >
     <el-tooltip
       :content="status.text"
-      placement="right">
+      placement="right"
+    >
       <span>
         <el-link
           class="dispute-code__proccess-link"
           :underline="false"
-          @mouseover.native="handleHover">
+          @mouseover.native="handleHover"
+        >
           <div :style="customStyle">
             <span @click="handleClick">
               {{ code }}
@@ -35,12 +38,12 @@ export default {
   props: {
     code: {
       type: String,
-      required: true,
+      required: true
     },
     customStyle: {
       type: Object,
-      default: () => ({}),
-    },
+      default: () => ({})
+    }
   },
   computed: {
     ...mapGetters(['disputeTimeline']),
@@ -52,25 +55,25 @@ export default {
           res = {
             available: true,
             icon: 'el-icon-info',
-            text: 'Abrir Timeline da disputa.',
+            text: 'Abrir Timeline da disputa.'
           }
         } else {
           res = {
             available: false,
             icon: 'el-icon-error',
-            text: 'Disputa não encontrada no TJ.',
+            text: 'Disputa não encontrada no TJ.'
           }
         }
       } else {
         res = {
           available: false,
           icon: 'el-icon-loading',
-          text: 'Carregando dados da disputa.',
+          text: 'Carregando dados da disputa.'
         }
       }
 
       return res
-    },
+    }
   },
   methods: {
     handleHover() {
@@ -87,10 +90,10 @@ export default {
         message: 'Copiado para a área de transferência.',
         type: 'info',
         center: true,
-        showClose: true,
+        showClose: true
       })
-    },
-  },
+    }
+  }
 }
 </script>
 

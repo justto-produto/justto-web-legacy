@@ -26,7 +26,7 @@
       </div>
       <div class="jus-header-main__info">
         <el-tooltip
-          v-if="$store.getters.isJusttoAdmin"
+          v-if="isJusttoAdmin"
           content="Modo anônimo"
         >
           <el-switch v-model="ghostMode" />
@@ -55,6 +55,14 @@
             <router-link to="/configuration">
               <el-dropdown-item>
                 Configurações
+              </el-dropdown-item>
+            </router-link>
+            <router-link
+              v-if="isJusttoAdmin || isAdminProfile"
+              to="/billing"
+            >
+              <el-dropdown-item>
+                Financeiro
               </el-dropdown-item>
             </router-link>
             <a
@@ -122,27 +130,28 @@
 
 <script>
 import { IS_SMALL_WINDOW } from '@/constants/variables'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'JusHeaderMain',
   components: {
-    JusDisputeResume: () => import('@/components/layouts/JusDisputeResume'),
+    JusDisputeResume: () => import('@/components/layouts/JusDisputeResume')
   },
   data() {
     return {
       dispute: '',
       workspacesList: [],
       selectedWorkspace: '',
-      changeWorkspaceDialogVisible: false,
+      changeWorkspaceDialogVisible: false
     }
   },
   computed: {
-    name() {
-      return this.$store.getters.loggedPersonName
-    },
-    teamName() {
-      return this.$store.getters.workspaceTeamName
-    },
+    ...mapGetters({
+      isJusttoAdmin: 'isJusttoAdmin',
+      isAdminProfile: 'isAdminProfile',
+      name: 'loggedPersonName',
+      teamName: 'workspaceTeamName',
+    }),
     appVersion() {
       return process.env.VUE_APP_VERSION
     },
@@ -158,11 +167,11 @@ export default {
       },
       set(value) {
         this.$store.commit('setGhostMode', value)
-      },
+      }
     },
     avatarSize() {
       return IS_SMALL_WINDOW ? 'mini' : 'sm'
-    },
+    }
   },
   beforeMount() {
     this.getMyWorkspaces()
@@ -173,7 +182,7 @@ export default {
         this.$store.dispatch('logout')
       }, 500)
       const loading = this.$loading({
-        lock: true,
+        lock: true
       })
       setTimeout(() => {
         loading.close()
@@ -201,7 +210,7 @@ export default {
     goToWorkspace(workspace) {
       const loading = this.$loading({
         lock: true,
-        text: 'Alterando Equipe...',
+        text: 'Alterando Equipe...'
       })
       const oldWorkspace = this.$store.getters.workspaceTeamName
       if (workspace.workspace) this.$store.commit('setWorkspace', workspace.workspace)
@@ -223,7 +232,7 @@ export default {
     getMembersAndRedirect() {
       const loading = this.$loading({
         lock: true,
-        text: 'Alterando Equipe...',
+        text: 'Alterando Equipe...'
       })
       const selectedWorkspace = this.workspaces[this.selectedWorkspace]
       if (selectedWorkspace.person) {
@@ -251,8 +260,8 @@ export default {
           reject(error)
         })
       })
-    },
-  },
+    }
+  }
 }
 </script>
 

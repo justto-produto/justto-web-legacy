@@ -304,7 +304,8 @@
         <el-form label-position="top">
           <el-form-item
             v-if="isAdminProfile || isJusttoAdmin"
-            label="Nome">
+            label="Nome"
+          >
             <el-input v-model="currentEditMember.person.name" />
           </el-form-item>
           <el-form-item label="Perfil">
@@ -482,7 +483,7 @@ export default {
   directives: { mask },
   components: {
     ConfigurationBlacklist: () => import('./partials/ConfigurationBlacklist'),
-    PanelMinute: () => import('@/views/adminPanel/partials/PanelMinute'),
+    PanelMinute: () => import('@/views/adminPanel/partials/PanelMinute')
   },
   data() {
     return {
@@ -497,25 +498,25 @@ export default {
         newPassword: '',
         newPasswordConfirm: '',
         password: '',
-        phone: '',
+        phone: ''
       },
       profileFormRules: {
         phone: [
           { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-          { validator: validatePhone, message: 'Telefone inválido', trigger: 'submit' },
+          { validator: validatePhone, message: 'Telefone inválido', trigger: 'submit' }
         ],
         password: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
-        newPasswordConfirm: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+        newPasswordConfirm: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
       },
       inviteForm: {
         email: '',
-        profile: 'NEGOTIATOR',
+        profile: 'NEGOTIATOR'
       },
       inviteFormRules: {
         email: [
           { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-          { type: 'email', required: true, message: 'Insira um e-mail válido', trigger: ['submit'] },
-        ],
+          { type: 'email', required: true, message: 'Insira um e-mail válido', trigger: ['submit'] }
+        ]
       },
       syncedEmails: [],
       person: {},
@@ -523,14 +524,14 @@ export default {
       companyName: '',
       currentEditMember: {},
       vexatiousThreshold: '',
-      vexatiousType: '',
+      vexatiousType: ''
     }
   },
   computed: {
     ...mapGetters([
       'isAdminProfile',
       'isJusttoAdmin',
-      'workspaceMembersSorted',
+      'workspaceMembersSorted'
     ]),
     passwordType() {
       return this.showPassword ? 'text' : 'password'
@@ -542,9 +543,9 @@ export default {
         prefix: '',
         suffix: this.vexatiousType === 'AVERAGE' ? ' %' : '',
         precision: 0,
-        masked: false,
+        masked: false
       }
-    },
+    }
   },
   mounted() {
     this.getMembers()
@@ -583,7 +584,7 @@ export default {
         confirmButtonText: 'Criar nova Equipe',
         cancelButtonText: 'Cancelar',
         cancelButtonClass: 'is-plain',
-        type: 'warning',
+        type: 'warning'
       }).then(() => {
         this.$store.commit('redirectNewWorkspaceTrue')
         this.$router.push('onboarding')
@@ -601,7 +602,7 @@ export default {
             this.$jusNotification({
               title: 'Yay!',
               message: 'Nome alterado com sucesso.',
-              type: 'success',
+              type: 'success'
             })
           }).catch(error => {
             this.$jusNotification({ error })
@@ -610,7 +611,7 @@ export default {
         this.$jusNotification({
           title: 'Ops!',
           message: 'Nome precisa conter mais de 3 caracteres.',
-          type: 'warning',
+          type: 'warning'
         })
       }
     },
@@ -622,7 +623,7 @@ export default {
         if (!errorMessage) {
           this.$store.dispatch('setMainPhone', {
             phoneDTO: { number: this.profileForm.phone },
-            personId: this.person.id,
+            personId: this.person.id
           }).then(phoneDTO => {
             const person = JSON.parse(localStorage.getItem('jusperson'))
             person.phones = [phoneDTO]
@@ -631,7 +632,7 @@ export default {
             this.$jusNotification({
               title: 'Yay!',
               message: 'Telefone de contato alterado com sucesso.',
-              type: 'success',
+              type: 'success'
             })
           }).catch(error => {
             this.$jusNotification({ error })
@@ -645,7 +646,7 @@ export default {
           this.$jusNotification({
             title: 'Ops!',
             message: 'Senha precisa conter no mínimo 6 caracteres.',
-            type: 'warning',
+            type: 'warning'
           })
         } else {
           this.profileForm.newPasswordConfirm = ''
@@ -656,7 +657,7 @@ export default {
         this.$jusNotification({
           title: 'Ops!',
           message: 'Senha não pode ficar em branco.',
-          type: 'warning',
+          type: 'warning'
         })
       }
     },
@@ -667,21 +668,21 @@ export default {
             this.$jusNotification({
               title: 'Ops!',
               message: 'Senha de confirmação não corresponde à nova senha.',
-              type: 'warning',
+              type: 'warning'
             })
             return false
           }
           this.loadingUpdatePassword = true
           this.$store.dispatch('updatePassword', {
             password: this.profileForm.newPassword,
-            oldPassword: this.profileForm.password,
+            oldPassword: this.profileForm.password
           }).then(() => {
             // SEGMENT TRACK
             this.$jusSegment('Senha do usuário alterada')
             this.$jusNotification({
               title: 'Yay!',
               message: 'Senha alterada com sucesso.',
-              type: 'success',
+              type: 'success'
             })
             this.profileForm.password = ''
             this.profileForm.newPassword = ''
@@ -700,7 +701,7 @@ export default {
         confirmButtonText: 'Excluir',
         cancelButtonText: 'Cancelar',
         cancelButtonClass: 'is-plain',
-        type: 'warning',
+        type: 'warning'
       }).then(() => {
         this.$store.dispatch('removeWorkspaceMember', id).then(() => {
           // SEGMENT TRACK
@@ -709,7 +710,7 @@ export default {
           this.$jusNotification({
             title: 'Yay!',
             message: 'Usuário removido com sucesso.',
-            type: 'success',
+            type: 'success'
           })
         })
       })
@@ -727,7 +728,7 @@ export default {
         this.$jusNotification({
           title: 'Yay!',
           message: 'Usuário editado com sucesso.',
-          type: 'success',
+          type: 'success'
         })
       }).catch(error => {
         this.$jusNotification({ error })
@@ -740,15 +741,15 @@ export default {
           this.loadingInvite = true
           this.$store.dispatch('inviteTeammates', [{
             email: this.inviteForm.email,
-            profile: this.inviteForm.profile,
+            profile: this.inviteForm.profile
           }]).then(response => {
             this.$jusSegment('Convite de novo membro', {
-              description: `Usuário convidado: ${this.inviteForm.email} como ${this.inviteForm.profile}`,
+              description: `Usuário convidado: ${this.inviteForm.email} como ${this.inviteForm.profile}`
             })
             this.$jusNotification({
               title: 'Yay!',
               message: 'Convite enviado com sucesso.',
-              type: 'success',
+              type: 'success'
             })
             this.dialogInvite = false
             this.inviteForm.email = ''
@@ -760,7 +761,7 @@ export default {
             } else {
               this.$jusNotification({
                 message: 'Este e-mail já está cadastrado como membro de sua equipe. De qualquer forma, enviaremos um e-mail informando sua intenção de adiciona-lo na equipe.',
-                type: 'warning',
+                type: 'warning'
               })
             }
           }).finally(() => {
@@ -776,16 +777,16 @@ export default {
         this.$store.dispatch('editWorkpace', {
           properties: {
             VEXATIOUS_THRESHOLD: (this.vexatiousThreshold || '').toString(),
-            VEXATIOUS_TYPE: (this.vexatiousType || '').toString(),
+            VEXATIOUS_TYPE: (this.vexatiousType || '').toString()
           },
-          name: this.companyName,
+          name: this.companyName
         }).then(() => {
           // SEGMENT TRACK
           this.$jusSegment('Configurações da equipe alterada')
           this.$jusNotification({
             title: 'Yay!',
             message: 'Configurações da equipe alteradas com sucesso.',
-            type: 'success',
+            type: 'success'
           })
         }).catch(error => {
           this.$jusNotification({ error })
@@ -796,7 +797,7 @@ export default {
       if (this.teamName) {
         this.$store.dispatch('changeTeamName', {
           teamName: this.teamName,
-          id: this.$store.getters.workspaceId,
+          id: this.$store.getters.workspaceId
         }).then(() => {
           const workspace = this.$store.getters.workspace
           workspace.teamName = this.teamName
@@ -806,7 +807,7 @@ export default {
           this.$jusNotification({
             title: 'Yay!',
             message: 'Nome da equipe alterado com sucesso.',
-            type: 'success',
+            type: 'success'
           })
         }).catch(error => {
           this.$jusNotification({ error })
@@ -815,7 +816,7 @@ export default {
         this.$jusNotification({
           title: 'Ops!',
           message: 'Nome não pode ficar em branco.',
-          type: 'warning',
+          type: 'warning'
         })
       }
     },
@@ -824,16 +825,16 @@ export default {
         this.$store.dispatch('editWorkpace', {
           properties: {
             VEXATIOUS_THRESHOLD: (this.vexatiousThreshold || '').toString(),
-            VEXATIOUS_TYPE: (this.vexatiousType || '').toString(),
+            VEXATIOUS_TYPE: (this.vexatiousType || '').toString()
           },
-          name: this.companyName,
+          name: this.companyName
         }).then(() => {
           // SEGMENT TRACK
           this.$jusSegment('Nome do escritório/empresa alterado')
           this.$jusNotification({
             title: 'Yay!',
             message: 'Nome do escritório/empresa alterado com sucesso.',
-            type: 'success',
+            type: 'success'
           })
         }).catch(error => {
           this.$jusNotification({ error })
@@ -842,11 +843,11 @@ export default {
         this.$jusNotification({
           title: 'Ops!',
           message: 'Nome não pode ficar em branco.',
-          type: 'warning',
+          type: 'warning'
         })
       }
-    },
-  },
+    }
+  }
 }
 </script>
 

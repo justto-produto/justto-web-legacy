@@ -51,17 +51,6 @@
           />
           <span slot="title">Importação</span>
         </el-menu-item>
-        <el-menu-item
-          v-if="isJusttoAdmin || isAdminProfile"
-          index="/billing"
-          data-testid="menu-financial"
-        >
-          <jus-icon
-            icon="coins"
-            class="el-menu__icon"
-          />
-          <span slot="title">Financeiro</span>
-        </el-menu-item>
       </el-menu>
       <div
         v-show="workspaceMembers.length && isAdminProfile"
@@ -97,20 +86,19 @@ export default {
   components: {
     JusHeaderMain: () => import('@/components/layouts/JusHeaderMain'),
     JusTeamMenu: () => import('@/components/layouts/JusTeamMenu'),
-    VuePerfectScrollbar: () => import('vue-perfect-scrollbar'),
+    VuePerfectScrollbar: () => import('vue-perfect-scrollbar')
   },
   data() {
     return {
       subscriptions: [],
       isCollapse: true,
-      isTeamSectionOpen: false,
+      isTeamSectionOpen: false
     }
   },
   computed: {
     ...mapGetters([
-      'isJusttoAdmin',
       'isAdminProfile',
-      'workspaceMembers',
+      'workspaceMembers'
     ]),
     workspace() {
       return this.$store.getters.workspaceSubdomain
@@ -121,14 +109,14 @@ export default {
     headers() {
       return {
         Authorization: this.$store.getters.accountToken,
-        Workspace: this.workspace,
+        Workspace: this.workspace
       }
-    },
+    }
   },
   watch: {
     workspace(workspace) {
       this.subscribe()
-    },
+    }
   },
   beforeCreate() {
     this.$store.commit('clearDisputeQuery')
@@ -143,7 +131,7 @@ export default {
   sockets: {
     reconnect() {
       this.subscribe()
-    },
+    }
   },
   methods: {
     subscribe() {
@@ -159,8 +147,8 @@ export default {
     },
     toggleOpenTeamSection() {
       this.isTeamSectionOpen = !this.isTeamSectionOpen
-    },
-  },
+    }
+  }
 }
 
 </script>

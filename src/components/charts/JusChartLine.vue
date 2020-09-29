@@ -7,28 +7,28 @@ export default {
   props: {
     data: {
       type: Object,
-      default: () => {},
+      default: () => {}
     },
     options: {
       type: Object,
-      default: () => {},
+      default: () => {}
     },
     legends: {
       type: Boolean,
-      default: true,
+      default: true
     },
     annotation: {
       type: String,
-      default: '',
+      default: ''
     },
     sufix: {
       type: String,
-      default: '',
+      default: ''
     },
     filterable: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
   mounted() {
     const options = Object.assign({}, this.options)
@@ -57,16 +57,16 @@ export default {
         position: 'center',
         enabled: true,
         content: this.annotation,
-        yAdjust: this.getMax() < 24 ? 11 : 0,
-      },
+        yAdjust: this.getMax() < 24 ? 11 : 0
+      }
     }] : []
     // eslint-disable-next-line
     const sufix = this.sufix ? [{
       ticks: {
         callback: (value, index, values) => {
           return value ? `${value} ${self.sufix}` : value
-        },
-      },
+        }
+      }
     }] : []
     this.renderChart(this.data, Object.assign(options, {
       legend: {
@@ -75,10 +75,10 @@ export default {
         labels: {
           boxWidth: 6,
           usePointStyle: true,
-          generateLabels: this.generateLabels,
-        },
+          generateLabels: this.generateLabels
+        }
       },
-      annotation: { annotations: annotation },
+      annotation: { annotations: annotation }
     }))
   },
   methods: {
@@ -92,7 +92,7 @@ export default {
         return {
           label: this.data.labels[firstPoint._index],
           value: this.data.datasets[firstPoint._datasetIndex].data[firstPoint._index],
-          filters,
+          filters
         }
       }
     },
@@ -106,7 +106,7 @@ export default {
             text: dataset.label,
             fillStyle: fill,
             index: i,
-            hidden: false,
+            hidden: false
           }
         })
       } else {
@@ -121,7 +121,7 @@ export default {
         }
       }
       return max
-    },
-  },
+    }
+  }
 }
 </script>

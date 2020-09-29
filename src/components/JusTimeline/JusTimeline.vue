@@ -3,10 +3,12 @@
     v-loading="loading"
     width="65%"
     class="dialog-timeline"
-    :visible.sync="visible">
+    :visible.sync="visible"
+  >
     <div
       slot="title"
-      class="dialog-timeline__title">
+      class="dialog-timeline__title"
+    >
       <span v-if="dispute.lastUpdated">
         Pesquisado em {{ $moment(dispute.lastUpdated).format('DD/MM/YYYY [às] hh:mm') }}
       </span>
@@ -14,10 +16,12 @@
     <el-container
       id="jus-timeline"
       v-loading="loading"
-      class="jus-timeline">
+      class="jus-timeline"
+    >
       <ul
         v-if="!loading && (dispute.lawsuits || []).length"
-        class="jus-timeline__list">
+        class="jus-timeline__list"
+      >
         <li class="jus-timeline__list-search">
           <div class="jus-timeline__filter">
             <el-input
@@ -25,13 +29,15 @@
               class="jus-timeline__filter-input"
               placeholder="Filtrar"
               size="medium"
-              prefix-icon="el-icon-search" />
+              prefix-icon="el-icon-search"
+            />
             <el-checkbox-group
               v-if="searchQuery.length > 0"
               v-model="showOnlyFiltered"
               class="jus-timeline__filter-checkbox"
-              size="small">
-              <el-checkbox-button class="jus-timeline__filter-checkbox-item" >
+              size="small"
+            >
+              <el-checkbox-button class="jus-timeline__filter-checkbox-item">
                 <jus-icon
                   class="jus-timeline__filter-icon"
                   :icon="showOnlyFiltered ? 'filter-white' : 'filter'"
@@ -43,7 +49,8 @@
         <li
           v-for="(process, processIndex) in (dispute.lawsuits)"
           :key="`process-${processIndex}`"
-          class="jus-timeline__list-item">
+          class="jus-timeline__list-item"
+        >
           <div class="jus-timeline__header">
             <div class="jus-timeline__header-title">
               {{ process.description || 1 }}ª Instância -
@@ -51,7 +58,8 @@
                 class="jus-timeline__header-link"
                 target="_blank"
                 :underline="false"
-                @click="openProcessInNewTab(process.url, process.code)">
+                @click="openProcessInNewTab(process.url, process.code)"
+              >
                 {{ process.code }}
                 <sup>
                   <jus-icon
@@ -72,7 +80,8 @@
                 :key="`tag-evento-${flagIndex}`"
                 class="jus-timeline__tag"
                 type="secondary"
-                size="small">
+                size="small"
+              >
                 {{ tag }}
               </el-tag>
             </div>
@@ -99,7 +108,8 @@
                       v-for="(tag, tagIndex) in (movement.tags || [])"
                       :key="`tag-movement-${tagIndex}`"
                       type="secondary"
-                      size="small">
+                      size="small"
+                    >
                       {{ tag }}
                     </el-tag>
                   </div>
@@ -111,7 +121,8 @@
       </ul>
       <div
         v-else
-        class="jus-timeline__empty" >
+        class="jus-timeline__empty"
+      >
         <jusIcon icon="empty-screen-filter" />
         <span class="jus-timeline__empty-label">
           Dados do processo indisponíveis.
@@ -128,28 +139,28 @@ import { normalizeString } from '@/utils/jusUtils'
 export default {
   components: {
     highlight: () => import('vue-text-highlight'),
-    description: () => import('./partials/LawsuitDescription'),
+    description: () => import('./partials/LawsuitDescription')
   },
   props: {
     value: {
       type: Boolean,
-      default: false,
+      default: false
     },
     code: {
       type: String,
-      required: true,
-    },
+      required: true
+    }
   },
   data() {
     return {
       searchQuery: '',
-      showOnlyFiltered: false,
+      showOnlyFiltered: false
     }
   },
   computed: {
     ...mapGetters([
       'loading',
-      'disputeTimeline',
+      'disputeTimeline'
     ]),
 
     dispute() {
@@ -162,8 +173,8 @@ export default {
       },
       set(value) {
         this.$emit('input', false)
-      },
-    },
+      }
+    }
   },
   beforeDestroy() {
     this.searchQuery = ''
@@ -184,11 +195,11 @@ export default {
       this.$jusNotification({
         title: 'Yay!',
         message: 'Código do processo copiado!',
-        type: 'success',
+        type: 'success'
       })
       setTimeout(() => window.open(url), 1500)
-    },
-  },
+    }
+  }
 }
 </script>
 

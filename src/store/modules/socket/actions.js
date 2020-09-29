@@ -11,7 +11,7 @@ const actions = {
           reject(error)
         })
     })
-  },
+  }
   // SOCKET_ADD_ALERT ({ commit }, alert) {
   //   commit('addAlert', alert)
   // },

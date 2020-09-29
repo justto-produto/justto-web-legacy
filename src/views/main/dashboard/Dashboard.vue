@@ -165,7 +165,7 @@ export default {
     JusChartLine: () => import('@/components/charts/JusChartLine'),
     JusChartBar: () => import('@/components/charts/JusChartBar'),
     JusChartCard: () => import('@/components/charts/JusChartCard'),
-    JusChartTable: () => import('@/components/charts/JusChartTable'),
+    JusChartTable: () => import('@/components/charts/JusChartTable')
   },
   data() {
     return {
@@ -175,8 +175,8 @@ export default {
       disputeStatusSummaryWithWarnIsChart: false,
       opt: {
         onClick: this.filter,
-        maintainAspectRatio: false,
-      },
+        maintainAspectRatio: false
+      }
     }
   },
   computed: {
@@ -186,7 +186,7 @@ export default {
       },
       set(memberId) {
         this.$store.commit('setSelectedMemberId', memberId)
-      },
+      }
     },
     disputeAvgResponseTime() {
       let chart = this.$store.getters.getChartsDatasets('DISPUTE_AVG_RESPONSE_TIME')
@@ -221,9 +221,9 @@ export default {
     members() {
       return [
         { person: { id: 0, name: 'Todos os negociadores' } },
-        ...this.$store.state.workspaceModule.members,
+        ...this.$store.state.workspaceModule.members
       ]
-    },
+    }
   },
   created() {
     if (!this.chartsDatasets.length) {
@@ -348,8 +348,8 @@ export default {
         this.$store.commit('setDisputesTab', '3')
         this.$router.push('/management')
       }
-    },
-  },
+    }
+  }
 }
 </script>
 

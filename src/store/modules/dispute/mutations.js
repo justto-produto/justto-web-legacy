@@ -4,7 +4,7 @@ const disputeMutations = {
   setDisputeTimeline(state, { timeline, code }) {
     Vue.set(state.timeline, code, {
       ...timeline,
-      lawsuits: (timeline.lawsuits || []),
+      lawsuits: (timeline.lawsuits || [])
     })
   },
   cleanDisputeTimeline(state) {
@@ -102,7 +102,7 @@ const disputeMutations = {
       page: 1,
       size: 20,
       term: '',
-      total: 0,
+      total: 0
     }
   },
   clearDisputeQueryByTab(state) {
@@ -119,7 +119,7 @@ const disputeMutations = {
       page: 1,
       size: 20,
       term: state.query.term,
-      total: 0,
+      total: 0
     }
   },
   setDisputeHasFilters(state, bol) {
@@ -194,6 +194,12 @@ const disputeMutations = {
   addExportHistoryPage: (state) => (state.exportHistoryPage += 1),
   resetExportHistoryPage: (state) => (state.exportHistoryPage = 0),
   setPrescriptionsList: (state, prescriptions) => (state.prescriptionsList = prescriptions),
+  setLastAccess: (state, { disputeId, lastAccessTime }) => {
+    state.lastAccess[disputeId] = {
+      date: lastAccessTime,
+      log: new Date()
+    }
+  }
 }
 
 export default disputeMutations

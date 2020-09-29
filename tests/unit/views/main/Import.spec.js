@@ -26,25 +26,25 @@ describe('Import.vue', () => {
   beforeEach(() => {
     state = {
       accountModule: {},
-      workspaceModule: {},
+      workspaceModule: {}
     }
 
     actions = {
-      getImportsHistory: jest.fn(),
+      getImportsHistory: jest.fn()
     }
 
     getters = {
     }
 
     mutations = {
-      removeImportsFile: jest.fn(),
+      removeImportsFile: jest.fn()
     }
 
     store = new Vuex.Store({
       actions,
       getters,
       state,
-      mutations,
+      mutations
     })
   })
 
@@ -57,27 +57,27 @@ describe('Import.vue', () => {
     const wrapper = shallowMount(Import, { store, localVue, router })
     expect(wrapper.vm.beforeUpload({
       name: 'teste.xlsx',
-      size: 200000000,
+      size: 200000000
     })).toBe(false)
     expect(wrapper.vm.beforeUpload({
       name: 'teste.xlsx',
-      size: 100,
+      size: 100
     })).toBe(true)
     expect(wrapper.vm.beforeUpload({
       name: 'teste.pdf',
-      size: 100,
+      size: 100
     })).toBe(false)
     expect(wrapper.vm.beforeUpload({
       name: 'teste.exe',
-      size: 100,
+      size: 100
     })).toBe(false)
     expect(wrapper.vm.beforeUpload({
       name: 'teste.xls',
-      size: 100,
+      size: 100
     })).toBe(true)
     expect(wrapper.vm.beforeUpload({
       name: 'teste.csv',
-      size: 100,
+      size: 100
     })).toBe(true)
   })
 })

@@ -12,16 +12,16 @@ export default {
   props: {
     isActive: {
       type: Boolean,
-      default: false,
+      default: false
     },
     isWhite: {
       type: Boolean,
-      default: false,
+      default: false
     },
     icon: {
       type: String,
-      default: '',
-    },
+      default: ''
+    }
   },
   computed: {
     iconPath: function() {
@@ -31,11 +31,11 @@ export default {
           this.icon +
           (this.isActive ? '-active' : '') +
           (this.isWhite ? '-white' : '') +
-          '.svg',
+          '.svg'
         )
       }
       return false
-    },
-  },
+    }
+  }
 }
 </script>
