@@ -1033,7 +1033,7 @@
                   class="el-input__inner"
                   data-testid="bondary-input"
                   @blur.native="checkZeroUpperRange"
-                  @change.native="disputeUpperRangeHasChanged = true"
+                  @change.native="disputeUpperRangeChangedHandler"
                 />
               </el-form-item>
             </el-col>
@@ -1910,6 +1910,12 @@ export default {
       'getDisputeProprieties'
     ]),
 
+    disputeUpperRangeChangedHandler() {
+      this.disputeUpperRangeHasChanged = true
+      if (this.disputeForm.disputeUpperRange > 0) {
+        this.disputeForm.lastOfferValue = this.disputeForm.disputeUpperRange
+      }
+    },
     isToShowChangeParty({ party, roles }) {
       return this.isEditingRule && party !== 'UNKNOWN'
     },
