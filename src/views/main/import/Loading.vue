@@ -94,7 +94,7 @@ export default {
     goToManagement() {
       this.$store.commit('updateDisputeQuery', { key: 'status', value: ['IMPORTED', 'ENRICHED', 'ENGAGEMENT', 'PENDING'] })
       this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['expirationDate,asc'] })
-      // this.$store.commit('addPrescription', 'NEWLY_IMPORTED')
+      this.$store.commit('addPrescription', 'NEWLY_IMPORTED')
       this.$store.commit('setDisputesTab', '0')
       this.$router.push('/management')
     },
