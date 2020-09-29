@@ -26,6 +26,9 @@ const NotificationMessage = {
             case 403:
               config.type = 'warning'
               config.message = message || (DENY + TRY)
+              if (config.error.response.data && config.error.response.data.fields.Error) {
+                config.message = config.error.response.data.fields.Error
+              }
               break
             case 401:
               config.type = 'warning'
@@ -37,8 +40,6 @@ const NotificationMessage = {
             default:
               if (config.error.response.data && config.error.response.data.reason) {
                 config.message = config.error.response.data.reason
-              } else if (config.error.response.data && config.error.response.data.fields.error) {
-                config.message = config.error.response.data.fields.error
               } else {
                 config.message = (message && message !== 'No message available.') ? (message + TRY) : (ERROR + TRY)
               }
