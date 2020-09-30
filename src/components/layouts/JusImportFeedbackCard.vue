@@ -9,26 +9,39 @@
     <el-card :style="'border-left: solid 4px ' + color">
       <el-input
         v-model="respondent"
+        :class="{'has-error': errorFields.includes('respondent')}"
         data-testid="feedback-respondent"
         placeholder="Dê um nome para o seu Réu"
       >
-        <i
-          slot="prefix"
-          :class="respondent === '' ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
-          class="el-input__icon"
-        />
+        <div slot="prefix">
+          <i
+            v-if="errorFields.includes('respondent')"
+            class="el-icon-error el-input__icon has-error-icon" />
+          <i
+            v-else
+            :class="respondent === '' ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
+            class="el-input__icon"
+          />
+        </div>
       </el-input>
       <el-input
         v-model="campaignName"
         class="select-strategy"
+        :validate-event="true"
+        :class="{'has-error': errorFields.includes('name')}"
         data-testid="feedback-campaignName"
         placeholder="Dê um nome para a sua Campanha"
       >
-        <i
-          slot="prefix"
-          :class="campaignName === '' ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
-          class="el-input__icon"
-        />
+        <div slot="prefix">
+          <i
+            v-if="errorFields.includes('name')"
+            class="el-icon-error el-input__icon has-error-icon" />
+          <i
+            v-else
+            :class="campaignName === '' ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
+            class="el-input__icon"
+          />
+        </div>
       </el-input>
       <div class="select-strategy__messages">
         <div v-show="campaignNameDuplicated && campaignName !== ''">
@@ -46,14 +59,20 @@
         clearable
         filterable
         class="select-strategy"
+        :class="{'has-error': errorFields.includes('strategy')}"
         placeholder="Escolha uma estratégia"
         data-testid="feedback-strategy"
       >
-        <i
-          slot="prefix"
-          :class="strategy === '' ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
-          class="el-input__icon"
-        />
+        <div slot="prefix">
+          <i
+            v-if="errorFields.includes('strategy')"
+            class="el-icon-error el-input__icon has-error-icon" />
+          <i
+            v-else
+            :class="strategy === '' ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
+            class="el-input__icon"
+          />
+        </div>
         <el-option
           v-for="optionStrategy in strategies"
           :key="optionStrategy.id"
@@ -89,13 +108,22 @@
         class="jus-import-feedback-card__number"
       >
         <div>
-          <i class="el-icon-circle-check el-input__icon--success" />Data do pagamento
+          <i
+            v-if="errorFields.includes('paymentDeadLine')"
+            class="el-icon-error el-input__icon has-error-icon"
+          />
+          <i
+            v-else
+            class="el-icon-circle-check el-input__icon--success"
+          />
+          Data do pagamento
         </div>
         <div>
           <el-input-number
             v-model="paymentDeadLine"
             :min="1"
             :max="9999"
+            :class="{'has-error': errorFields.includes('paymentDeadLine')}"
             name="payment-deadline"
             controls-position="right"
           />
@@ -106,8 +134,9 @@
       </div>
       <el-date-picker
         v-model="deadline"
-        :prefix-icon="deadline === null ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
+        :prefix-icon="errorFields.includes('deadline') ? 'el-icon-error' : deadline === null ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
         :picker-options="datePickerOptions"
+        :class="{'has-error': errorFields.includes('deadline')}"
         type="date"
         format="dd/MM/yyyy"
         placeholder="Defina a data limite para a negociação"
@@ -119,15 +148,22 @@
         value-key="name"
         size="large"
         multiple
+        filterable
         placeholder="Escolha os negociadores"
         class="select-negotiator"
+        :class="{'has-error': errorFields.includes('negotiatorIds')}"
         data-testid="feedback-negotiators"
       >
-        <i
-          slot="prefix"
-          :class="negotiatorIds.length === 0 ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
-          class="el-input__icon"
-        />
+        <div slot="prefix">
+          <i
+            v-if="errorFields.includes('negotiatorIds')"
+            class="el-icon-error el-input__icon has-error-icon" />
+          <i
+            v-else
+            :class="negotiatorIds.length === 0 ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
+            class="el-input__icon"
+          />
+        </div>
         <el-option
           v-for="item in negotiatorsList"
           :key="item.person.id"
@@ -233,6 +269,10 @@ export default {
     index: {
       type: Number,
       default: 1
+    },
+    errorFields: {
+      type: Array,
+      default: () => []
     }
   },
   data() {
@@ -543,5 +583,32 @@ export default {
 }
 .el-message-box__title {
   text-transform: none;
+}
+
+.has-error {
+  border-color: $--color-danger;
+
+  > .el-input__inner::placeholder {
+    color: $--color-danger;
+  }
+
+  > .el-input {
+
+    > .el-input__inner::placeholder {
+      color: $--color-danger;
+    }
+
+    > .el-input__prefix {
+      color: $--color-danger;
+    }
+  }
+
+  > .el-input__prefix {
+    color: $--color-danger;
+  }
+}
+
+.has-error-icon {
+  color: $--color-danger;
 }
 </style>
