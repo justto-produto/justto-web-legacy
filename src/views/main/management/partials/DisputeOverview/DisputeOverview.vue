@@ -17,6 +17,13 @@
           <i class="el-icon-delete" />
         </el-button>
       </el-tooltip>
+      <span class="dispute-overview-view__subtitle">
+        <dispute-code-link
+          v-if="dispute.code"
+          :code="dispute.code"
+          :custom-style="{ fontSize: '14px', paddingRight: '24px', fontWeight: 'bold', color: '#adadad'}"
+          @openTimeline="openTimelineModal" />
+      </span>
     </h2>
     <el-dialog
       :close-on-click-modal="false"
@@ -1886,7 +1893,10 @@ export default {
       if (!newFilteredNamesakes.includes(this.selectedNamesake)) {
         this.selectedNamesake = ''
       }
-    }
+    },
+    'dispute.code'() {
+      this.getDisputeTimeline(this.dispute.code)
+    },
   },
   created() {
     if (this.disputeStatuses.ARCHIVED) {
