@@ -55,7 +55,7 @@
           <el-tooltip
             placement="top-start"
             :value="actieTooltipDisputeId === scope.row.id"
-            :content="lastAccess[scope.row.id] ? lastAccess[scope.row.id].date : 'Ainda não sei quando você acessou esta disputa'">
+            :content="!!lastAccess[scope.row.id] ? lastAccess[scope.row.id].date : 'Ainda não sei quando você acessou esta disputa'">
             <div>
               {{ scope.row.campaign.name | capitalize }}
             </div>
