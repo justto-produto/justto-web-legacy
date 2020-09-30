@@ -57,7 +57,7 @@
           <el-input
             v-model="template.body"
             type="textarea"
-            maxlength="120"
+            maxlength="600"
             show-word-limit
             placeholder="Edite seu SMS aqui!"
             class="communication-editor__textarea"
