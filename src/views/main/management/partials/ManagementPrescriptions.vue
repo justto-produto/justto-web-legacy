@@ -22,7 +22,19 @@
         </div>
       </el-tooltip>
     </el-button>
+
     <jus-tags-filter @prescriptions:getDisputes="getDisputes" />
+
+    <span
+      v-if="hasPrescription('NEWLY_IMPORTED')"
+      class="management-prescriptions__newly-imported-alert">
+      <b>*</b>Disputas importadas recentemente
+      <a
+        href="#"
+        @click="handlePrescriptionClick('NEWLY_IMPORTED')">
+        (clique aqui para remover filtro)
+      </a>
+    </span>
   </div>
 </template>
 
@@ -71,6 +83,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '@/styles/colors.scss';
+
 .management-prescriptions {
   margin: 6px 192px 6px 0px;
   display: flex;
@@ -115,6 +129,13 @@ export default {
     .management-prescriptions__filter-icon--selected {
       display: inline-block;
     }
+  }
+
+  .management-prescriptions__newly-imported-alert {
+    width: 240px;
+    font-size: 13px;
+    color: $--color-text-secondary;
+    a { margin-left: 5px; }
   }
 }
 </style>

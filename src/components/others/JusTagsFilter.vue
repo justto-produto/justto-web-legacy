@@ -77,6 +77,7 @@ export default {
 <style lang="scss">
 .jus-tags-filter {
   margin-left: 20px;
+  margin-right: 16px;
   display: flex;
   align-items: center;
   &__item {
