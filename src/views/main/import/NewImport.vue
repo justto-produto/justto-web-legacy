@@ -30,6 +30,7 @@
             key="2"
             :mapped-campaigns="mappedCampaigns"
             :campaign-is-mapped="isMapped"
+            :error-fields="errorFields"
           />
         </transition>
       </div>
@@ -76,7 +77,8 @@ export default {
       uploadId: undefined,
       activeStep: 0,
       mappedCampaigns: [],
-      campaignIsMapped: false
+      campaignIsMapped: false,
+      errorFields: []
     }
   },
   computed: {
@@ -120,6 +122,7 @@ export default {
       const promises = []
       for (const mappedCampaign of this.mappedCampaigns) {
         const campaign = JSON.parse(JSON.stringify(mappedCampaign))
+        this.errorFields = this.campaignErrorFields(campaign)
         if (!this.checkValidCampaign(campaign)) {
           allValid = false
         }
@@ -169,6 +172,21 @@ export default {
         skipEnrichment: this.mappedCampaigns[range].skipEnrichment,
         denySavingDeposit: this.mappedCampaigns[range].denySavingDeposit
       }))
+    },
+    campaignErrorFields(campaign) {
+      const validations = [
+        { value: 'respondent', validation: field => !!field.respondent },
+        { value: 'name', validation: field => !!field.name },
+        { value: 'cluster', validation: field => !!field.cluster },
+        { value: 'deadline', validation: field => !!field.deadline && this.$moment(field.deadline.dateTime).isValid() === true },
+        { value: 'paymentDeadLine', validation: field => !!field.paymentDeadLine },
+        { value: 'negotiatorIds', validation: field => !!field.negotiatorIds.length },
+        { value: 'strategy', validation: field => !!field.strategy }
+      ]
+      return validations.filter(validator => {
+        const { value, validation } = validator
+        return !(campaign.hasOwnProperty(value) && validation(campaign))
+      }).map(err => err.value)
     },
     checkValidCampaign(campaign) {
       if (
