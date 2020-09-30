@@ -67,7 +67,7 @@ const disputeActions = {
       })
     })
   },
-  cleanDisputeLastAccess({ commit, state }) {
+  cleanDisputeLastAccess({ commit }) {
     commit('cleanLastAccess')
   },
   linkDisputeBankAccounts({ commit }, params) {
