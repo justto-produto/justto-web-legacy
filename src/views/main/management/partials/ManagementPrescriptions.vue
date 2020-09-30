@@ -32,7 +32,7 @@
       <a
         href="#"
         @click="handlePrescriptionClick('NEWLY_IMPORTED')">
-        (click aqui para remover filtro)
+        (clique aqui para remover filtro)
       </a>
     </span>
   </div>

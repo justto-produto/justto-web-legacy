@@ -61,6 +61,8 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
+
 export default {
   name: 'ImportLoading',
   data() {
@@ -72,6 +74,12 @@ export default {
     this.increaseShow()
   },
   methods: {
+    ...mapMutations([
+      'updateDisputeQuery',
+      'addPrescription',
+      'setDisputesTab',
+    ]),
+
     increaseShow() {
       const self = this
       if (self.showGif === 0) {
@@ -92,10 +100,10 @@ export default {
       }
     },
     goToManagement() {
-      this.$store.commit('updateDisputeQuery', { key: 'status', value: ['IMPORTED', 'ENRICHED', 'ENGAGEMENT', 'PENDING'] })
-      this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['expirationDate,asc'] })
-      this.$store.commit('addPrescription', 'NEWLY_IMPORTED')
-      this.$store.commit('setDisputesTab', '0')
+      this.updateDisputeQuery({ key: 'status', value: ['IMPORTED', 'ENRICHED', 'ENGAGEMENT', 'PENDING'] })
+      this.updateDisputeQuery({ key: 'sort', value: ['expirationDate,asc'] })
+      this.addPrescription('NEWLY_IMPORTED')
+      this.setDisputesTab('0')
       this.$router.push('/management')
     },
   }
