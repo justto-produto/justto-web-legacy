@@ -115,7 +115,8 @@
           <i
             v-else
             class="el-icon-circle-check el-input__icon--success"
-          />Data do pagamento
+          />
+          Data do pagamento
         </div>
         <div>
           <el-input-number
