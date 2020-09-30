@@ -42,6 +42,16 @@
           <span slot="title">Gerenciamento</span>
         </el-menu-item>
         <el-menu-item
+          index="/management/all"
+          data-testid="menu-allDisputes"
+        >
+          <jus-icon
+            icon="full-folder"
+            class="el-menu__icon"
+          />
+          <span slot="title">Todas as disputas</span>
+        </el-menu-item>
+        <el-menu-item
           index="/import"
           data-testid="menu-import"
         >

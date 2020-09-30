@@ -11,7 +11,13 @@
         @disputes:clear="clearSelection"
       />
       <div class="view-management__filters">
+        <span
+          v-if="isManagementAll"
+          class="view-management__title">
+          Todas as disputas
+        </span>
         <el-tabs
+          v-else
           ref="disputeTabs"
           v-model="activeTab"
           :before-leave="handleChangeTab"
@@ -478,6 +484,9 @@ export default {
     },
     persons() {
       return this.$store.state.disputeModule.query.persons
+    },
+    isManagementAll() {
+      return this.$route.name === 'allDisputes'
     }
     // term: {
     //   get() {
@@ -734,6 +743,14 @@ export default {
 @import '@/styles/colors.scss';
 
 .view-management {
+  .view-management__title {
+    height: 40px;
+    margin-bottom: 15px;
+    line-height: 40px;
+    font-size: 20px;
+    font-weight: 500;
+    color: $--color-text-primary;
+  }
   &__filters {
     display: flex;
     justify-content: space-between;
