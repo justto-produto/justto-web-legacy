@@ -110,10 +110,12 @@
         <div>
           <i
             v-if="errorFields.includes('paymentDeadLine')"
-            class="el-icon-error el-input__icon has-error-icon" />
+            class="el-icon-error el-input__icon has-error-icon"
+          />
           <i
             v-else
-            class="el-icon-circle-check el-input__icon--success" />Data do pagamento
+            class="el-icon-circle-check el-input__icon--success"
+          />Data do pagamento
         </div>
         <div>
           <el-input-number
@@ -581,23 +583,30 @@ export default {
 .el-message-box__title {
   text-transform: none;
 }
+
 .has-error {
   border-color: $--color-danger;
+
   > .el-input__inner::placeholder {
     color: $--color-danger;
   }
+
   > .el-input {
+
     > .el-input__inner::placeholder {
       color: $--color-danger;
     }
+
     > .el-input__prefix {
       color: $--color-danger;
     }
   }
+
   > .el-input__prefix {
     color: $--color-danger;
   }
 }
+
 .has-error-icon {
   color: $--color-danger;
 }
