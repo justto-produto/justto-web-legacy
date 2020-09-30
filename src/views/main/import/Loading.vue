@@ -53,7 +53,7 @@
       :loading="showGif < 6"
       type="primary"
       data-testid="submit"
-      @click="$router.push('/management')"
+      @click="goToManagement"
     >
       Continuar
     </el-button>
@@ -61,6 +61,8 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
+
 export default {
   name: 'ImportLoading',
   data() {
@@ -72,6 +74,12 @@ export default {
     this.increaseShow()
   },
   methods: {
+    ...mapMutations([
+      'updateDisputeQuery',
+      'addPrescription',
+      'setDisputesTab',
+    ]),
+
     increaseShow() {
       const self = this
       if (self.showGif === 0) {
@@ -90,7 +98,14 @@ export default {
           self.increaseShow()
         }, Math.floor(Math.random() * 2000))
       }
-    }
+    },
+    goToManagement() {
+      this.updateDisputeQuery({ key: 'status', value: ['IMPORTED', 'ENRICHED', 'ENGAGEMENT', 'PENDING'] })
+      this.updateDisputeQuery({ key: 'sort', value: ['expirationDate,asc'] })
+      this.addPrescription('NEWLY_IMPORTED')
+      this.setDisputesTab('0')
+      this.$router.push('/management')
+    },
   }
 }
 </script>
