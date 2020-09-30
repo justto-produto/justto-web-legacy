@@ -634,9 +634,19 @@ export default {
       }
       switch (action) {
         case 'settled':
-          if (this.dispute.status === 'CHECKOUT' || this.dispute.status === 'ACCEPTED') {
-            this.showDisputeResume('WIN').then(() => {
-              this.doAction(action, message)
+          if (this.dispute.paused) {
+            message = {
+              content: 'A disputa está pausada, deseja retomar negociação para ganhar?',
+              title: 'Retomar negociação'
+            }
+            this.doAction('resume', message).then(() => {
+              if (this.dispute.status === 'CHECKOUT' || this.dispute.status === 'ACCEPTED') {
+                this.showDisputeResume('WIN').then(() => {
+                  this.doAction(action, message)
+                })
+              } else {
+                this.openSettledDialog(action)
+              }
             })
           } else {
             this.openSettledDialog(action)
