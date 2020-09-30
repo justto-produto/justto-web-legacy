@@ -1796,7 +1796,7 @@ export default {
     },
     dispute() {
       return this.$store.getters.dispute
-    },  
+    },
     disputeBankAccounts() {
       return this.$store.getters.disputeBankAccounts
     },
