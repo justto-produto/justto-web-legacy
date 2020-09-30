@@ -649,7 +649,13 @@ export default {
               }
             })
           } else {
-            this.openSettledDialog(action)
+            if (this.dispute.status === 'CHECKOUT' || this.dispute.status === 'ACCEPTED') {
+              this.showDisputeResume('WIN').then(() => {
+                this.doAction(action, message)
+              })
+            } else {
+              this.openSettledDialog(action)
+            }
           }
           break
         case 'unsettled':
