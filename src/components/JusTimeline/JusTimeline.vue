@@ -240,7 +240,7 @@ export default {
         .jus-timeline__filter {
           float: right;
           display: flex;
-          margin: 8px 8px auto auto;
+          margin-top: 8px;
           width: 25%;
 
           .jus-timeline__filter-input {
