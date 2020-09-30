@@ -145,6 +145,7 @@
         value-key="name"
         size="large"
         multiple
+        filterable
         placeholder="Escolha os negociadores"
         class="select-negotiator"
         :class="{'has-error': errorFields.includes('negotiatorIds')}"
