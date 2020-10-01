@@ -34,12 +34,24 @@
         <el-menu-item
           index="/management"
           data-testid="menu-management"
+          @click="setTabQuery('management')"
         >
           <jus-icon
             icon="management"
             class="el-menu__icon"
           />
           <span slot="title">Gerenciamento</span>
+        </el-menu-item>
+        <el-menu-item
+          index="/management/all"
+          data-testid="menu-allDisputes"
+          @click="setTabQuery('allDisputes')"
+        >
+          <jus-icon
+            icon="full-folder"
+            class="el-menu__icon"
+          />
+          <span slot="title">Todas as disputas</span>
         </el-menu-item>
         <el-menu-item
           index="/import"
@@ -147,6 +159,15 @@ export default {
     },
     toggleOpenTeamSection() {
       this.isTeamSectionOpen = !this.isTeamSectionOpen
+    },
+    setTabQuery(target) {
+      this.$store.commit('clearDisputeQuery')
+      this.$store.commit('clearDisputeTab')
+      if (target === 'allDisputes') {
+        this.$store.commit('setDisputesTab', '9')
+        this.$store.commit('updateDisputeQuery', { key: 'status', value: [] })
+        this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['id,desc'] })
+      }
     }
   }
 }

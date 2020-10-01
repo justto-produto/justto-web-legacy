@@ -546,16 +546,20 @@ export default {
         channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.loggedPersonId + '/dispute/' + this.id + '/occurrence'
       })
       this.$store.dispatch('getDispute', this.id).then(dispute => {
-        if (!dispute || dispute.archived) this.$router.push('/management')
+        if (!dispute || dispute.archived) this.backToManagement()
         else this.$store.dispatch('getDisputeTags', this.id)
       }).catch(error => {
         this.$jusNotification({ error })
-        this.$router.push('/management')
+        this.backToManagement()
       }).finally(() => {
         setTimeout(() => {
           this.loadingDispute = false
         }, 500)
       })
+    },
+    backToManagement() {
+      if (this.$store.state.disputeModule.tab === '9') this.$router.push('/management/all')
+      else this.$router.push('/management')
     },
     handleTabClick(tab) {
       if (!['1', '3'].includes(tab.name)) this.activeRoleId = 0

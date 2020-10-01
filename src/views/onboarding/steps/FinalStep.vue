@@ -57,7 +57,7 @@ export default {
               localStorage.setItem('jusworkspace', JSON.stringify(currentWorkspace.workspace))
               localStorage.setItem('jusprofile', currentWorkspace.profile)
               localStorage.setItem('jusperson', JSON.stringify(currentWorkspace.person))
-              this.$router.go('/management')
+              this.$router.go('/import')
             })
             .catch(() => {
               this.showError = true

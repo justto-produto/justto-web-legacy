@@ -103,7 +103,7 @@ export default {
       this.updateDisputeQuery({ key: 'status', value: ['IMPORTED', 'ENRICHED', 'ENGAGEMENT', 'PENDING'] })
       this.updateDisputeQuery({ key: 'sort', value: ['expirationDate,asc'] })
       this.addPrescription('NEWLY_IMPORTED')
-      this.setDisputesTab('0')
+      this.setDisputesTab('1')
       this.$router.push('/management')
     },
   }

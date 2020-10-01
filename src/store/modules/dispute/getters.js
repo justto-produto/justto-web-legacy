@@ -15,7 +15,7 @@ const disputeGetters = {
   disputeTimeline: state => state.timeline,
   exportHistory: state => state.exportHistory,
   respondents: state => state.respondents,
-  filterSummary: state => (disputePhase, summarys) => {
+  filterSummary: _ => (disputePhase, summarys) => {
     const filteredSummarys = summarys.filter(s => s.disputePhase === disputePhase)
     if (filteredSummarys && filteredSummarys.length > 0) {
       let counter = 0
@@ -31,6 +31,9 @@ const disputeGetters = {
   },
   disputeNotVisualizedNewDeal: (state, getters) => {
     return getters.filterSummary('NEW_DEAL', state.summaryNotVisualizeds)
+  },
+  disputeNotVisualizedFinished: (state, getters) => {
+    return getters.filterSummary('FINISHED', state.summaryNotVisualizeds)
   },
   hasPrescription: state => (prescription) => state.query.prescriptions.includes(prescription),
   prescriptionsList: state => state.prescriptionsList,

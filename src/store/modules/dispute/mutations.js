@@ -130,7 +130,7 @@ const disputeMutations = {
     state.tab = tab
   },
   clearDisputeTab(state, tab) {
-    state.tab = '1'
+    state.tab = '2'
   },
   setDisputeOccurrences(state, occurrences) {
     if (occurrences && occurrences.length) state.occurrences = occurrences.reverse()

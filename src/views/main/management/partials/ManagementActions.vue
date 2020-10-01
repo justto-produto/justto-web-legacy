@@ -286,19 +286,19 @@ export default {
     },
     actionsList() {
       return [
-        { name: 'SETTLED', tabs: ['0', '1', '2', '3'] },
-        { name: 'UNSETTLED', tabs: ['0', '1', '2', '3'] },
-        { name: 'PAUSED', tabs: ['0', '1', '2', '3'] },
-        { name: 'RESUME', tabs: ['0', '1', '2', '3'] },
-        { name: 'RESTART_ENGAGEMENT', tabs: ['0', '1', '2', '3'] },
-        { name: 'CHANGE_EXPIRATION_DATE', tabs: ['0', '1', '2', '3'] },
-        { name: 'CHANGE_STRATEGY', tabs: ['0', '1', '2', '3'] },
-        { name: 'CHANGE_NEGOTIATOR', tabs: ['0', '1', '2', '3'] },
-        { name: 'ENRICH_DISPUTE', tabs: ['0', '1', '2', '3'] },
-        { name: 'DELETE', tabs: ['0', '1', '2', '3'] },
-        { name: 'RESEND_MESSAGE', tabs: ['0', '1', '2', '3'] },
-        { name: 'DROP_LAWSUIT', tabs: ['-1'] },
-        { name: 'START_NEGOTIATON', tabs: ['-1'] }
+        { name: 'SETTLED', tabs: ['1', '2', '3', '4'] },
+        { name: 'UNSETTLED', tabs: ['1', '2', '3', '4'] },
+        { name: 'PAUSED', tabs: ['1', '2', '3', '4'] },
+        { name: 'RESUME', tabs: ['1', '2', '3', '4'] },
+        { name: 'RESTART_ENGAGEMENT', tabs: ['1', '2', '3', '4'] },
+        { name: 'CHANGE_EXPIRATION_DATE', tabs: ['1', '2', '3', '4'] },
+        { name: 'CHANGE_STRATEGY', tabs: ['1', '2', '3', '4'] },
+        { name: 'CHANGE_NEGOTIATOR', tabs: ['1', '2', '3', '4'] },
+        { name: 'ENRICH_DISPUTE', tabs: ['1', '2', '3', '4'] },
+        { name: 'DELETE', tabs: ['1', '2', '3', '4'] },
+        { name: 'RESEND_MESSAGE', tabs: ['1', '2', '3', '4'] },
+        { name: 'DROP_LAWSUIT', tabs: ['0'] },
+        { name: 'START_NEGOTIATON', tabs: ['0'] }
       ]
     },
     strategies() {

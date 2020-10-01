@@ -170,7 +170,7 @@
           </el-col> -->
           <!-- RÉU -->
           <el-col
-            v-if="!loading && isAll || isPreNegotiation"
+            v-if="!loading && isFinished || isPreNegotiation"
             :span="12"
           >
             <el-form-item label="Réu">
@@ -357,6 +357,7 @@
 
 <script>
 // import { Money } from 'v-money'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'ManagementFilters',
@@ -370,7 +371,7 @@ export default {
     },
     tabIndex: {
       type: String,
-      default: '0'
+      required: true
     }
   },
   data() {
@@ -386,6 +387,14 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      strategies: 'strategyList',
+      campaigns: 'campaignList',
+      respondents: 'respondents',
+      workspaceTags: 'workspaceTags',
+      negotiatorsList: 'workspaceMembers'
+    }),
+
     visibleFilters: {
       get() { return this.visible },
       set(value) {
@@ -393,41 +402,32 @@ export default {
       }
     },
     isPreNegotiation() {
-      return this.tabIndex === '-1'
-    },
-    isEngagement() {
       return this.tabIndex === '0'
     },
-    isInteration() {
+    isEngagement() {
       return this.tabIndex === '1'
     },
+    isInteration() {
+      return this.tabIndex === '2'
+    },
     isNewAgreements() {
-      return this.tabIndex === '2' || this.tabIndex === '3'
+      return this.tabIndex === '3' || this.tabIndex === '4'
     },
     isNewAgreementsLabel() {
       switch (this.tabIndex) {
-        case '2':
-          return 'Data do acordo'
         case '3':
+          return 'Data do acordo'
+        case '4':
           return 'Data de Finalização (ganho/perdido)'
       }
 
       return ''
     },
+    isFinished() {
+      return this.tabIndex === '4'
+    },
     isAll() {
-      return this.tabIndex === '3'
-    },
-    strategies() {
-      return this.$store.getters.strategyList
-    },
-    campaigns() {
-      return this.$store.getters.campaignList
-    },
-    respondents() {
-      return this.$store.getters.respondents
-    },
-    workspaceTags() {
-      return this.$store.getters.workspaceTags
+      return this.tabIndex === '9'
     },
     interactions() {
       return [{
@@ -441,24 +441,21 @@ export default {
         value: 'Sistema Justto'
       }]
     },
-    negotiatorsList() {
-      return this.$store.state.workspaceModule.members
-    },
     activeTabLabel() {
       switch (this.tabIndex) {
-        case '-1':
-          return 'Pré-Negociação'
         case '0':
-          return 'Sem resposta'
+          return 'Pré-Negociação'
         case '1':
-          return 'Em negociação'
+          return 'Sem resposta'
         case '2':
-          return 'Proposta aceita'
+          return 'Em negociação'
         case '3':
+          return 'Proposta aceita'
+        case '4':
+          return 'Finalizados'
+        default:
           return 'Todos'
       }
-
-      return ''
     },
     statuses() {
       return [
@@ -474,7 +471,7 @@ export default {
         'UNSETTLED',
         'REFUSED'
       ]
-    }
+    },
   },
   watch: {
     visibleFilters(value) {
@@ -526,7 +523,7 @@ export default {
       }
     },
     clearFilters() {
-      if (this.tabIndex === '3') {
+      if (this.tabIndex === '4') {
         this.filters.status = []
       }
       this.clearCampaign()

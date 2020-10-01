@@ -600,7 +600,8 @@ const disputeActions = {
     })
   },
   getPrescriptions: () => axiosDispatcher({
-    url: 'api/disputes/prescriptions',
+    // url: 'api/disputes/prescriptions',
+    url: 'api/disputes/prescriptions-fix-index/1',
     mutation: 'setPrescriptionsList'
   })
 }

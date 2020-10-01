@@ -825,7 +825,8 @@ export default {
         disputeId: this.dispute.id,
         anonymous: false
       }).then(() => {
-        this.$router.push('/management')
+        if (this.$store.state.disputeModule.tab === '9') this.$router.push('/management/all')
+        else this.$router.push('/management')
       }).catch(error => {
         this.$jusNotification({ error })
       })
@@ -841,6 +842,7 @@ export default {
         this.removeDispute({
           disputeId: this.dispute.id, reason: 'DISPUTE_DROPPED'
         }).then(() => {
+          this.setDisputesTab('0')
           if (!this.tableActions) this.$router.push('/management')
         })
       })

@@ -77,6 +77,15 @@ const router = new Router({
           }
         },
         {
+          name: 'allDisputes',
+          path: '/management/all',
+          component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/management/Management'),
+          meta: {
+            trackPage: true,
+            title: 'Justto - Todas as disputas'
+          }
+        },
+        {
           path: 'management/dispute/',
           redirect: {
             name: 'management',

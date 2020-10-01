@@ -11,7 +11,13 @@
         @disputes:clear="clearSelection"
       />
       <div class="view-management__filters">
+        <span
+          v-if="isManagementAll"
+          class="view-management__title">
+          Todas as disputas
+        </span>
         <el-tabs
+          v-else
           ref="disputeTabs"
           v-model="activeTab"
           :before-leave="handleChangeTab"
@@ -19,7 +25,7 @@
         >
           <el-tab-pane
             v-if="isJusttoAdmin || workspaceProperties.PRE_NEGOTIATION"
-            name="-1"
+            name="0"
           >
             <span slot="label">
               Pré-Negociação
@@ -33,7 +39,7 @@
               /> -->
             </span>
           </el-tab-pane>
-          <el-tab-pane name="0">
+          <el-tab-pane name="1">
             <span slot="label">
               Sem resposta
               <el-badge
@@ -46,7 +52,7 @@
               />
             </span>
           </el-tab-pane>
-          <el-tab-pane name="1">
+          <el-tab-pane name="2">
             <span slot="label">
               Em negociação
               <el-badge
@@ -60,7 +66,7 @@
             </span>
           </el-tab-pane>
           <el-tab-pane
-            name="2"
+            name="3"
             label="Com Interação"
             data-testid="tab-pproposal-accepted"
           >
@@ -77,10 +83,20 @@
             </span>
           </el-tab-pane>
           <el-tab-pane
-            name="3"
+            name="4"
             label="Com Interação"
           >
-            <span slot="label">Todos</span>
+            <span slot="label">
+              Finalizados
+              <el-badge
+                :hidden="!finishedLenght"
+                :value="finishedLenght"
+                :max="99"
+                data-testid="badge-tab3"
+                type="primary"
+                class="el-badge--absolute"
+              />
+            </span>
           </el-tab-pane>
         </el-tabs>
         <div class="view-management__buttons">
@@ -450,6 +466,7 @@ export default {
       interactionLength: 'disputeNotVisualizedInteration',
       isJusttoAdmin: 'isJusttoAdmin',
       newDealsLength: 'disputeNotVisualizedNewDeal',
+      finishedLenght: 'disputeNotVisualizedFinished',
       hasFilters: 'disputeHasFilters',
       hasNew: 'disputeHasNew',
       exportHistory: 'exportHistory',
@@ -478,6 +495,9 @@ export default {
     },
     persons() {
       return this.$store.state.disputeModule.query.persons
+    },
+    isManagementAll() {
+      return this.$route.name === 'allDisputes'
     }
     // term: {
     //   get() {
@@ -509,6 +529,13 @@ export default {
   },
   created() {
     const query = this.$route.query
+
+    // console.log(this.$router)
+    if (this.$route.name === 'allDisputes' && this.$store.state.disputeModule.tab !== '9') {
+      this.$store.commit('setDisputesTab', '9')
+      this.$store.commit('updateDisputeQuery', { key: 'status', value: [] })
+      this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['id,desc'] })
+    }
 
     if (Object.keys(query).length) {
       this.$store.commit('clearDisputeQuery')
@@ -629,24 +656,30 @@ export default {
       this.$store.commit('clearDisputes')
       this.$store.commit('clearDisputeQueryByTab')
       this.$store.commit('setDisputeHasFilters', false)
+      console.log(tab)
       // SEGMENT TRACK
       this.$jusSegment(`Navegação na aba ${this.$t('tab.' + tab).toUpperCase()}`)
       switch (tab) {
-        case '-1':
+        case '0':
           this.$store.commit('updateDisputeQuery', { key: 'status', value: ['PRE_NEGOTIATION'] })
           this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['expirationDate,asc'] })
           break
-        case '0':
+        case '1':
           this.$store.commit('updateDisputeQuery', { key: 'status', value: ['IMPORTED', 'ENRICHED', 'ENGAGEMENT', 'PENDING'] })
           this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['expirationDate,asc'] })
           break
-        case '1':
+        case '2':
           this.$store.commit('updateDisputeQuery', { key: 'status', value: ['RUNNING'] })
           this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['visualized,asc', 'lastReceivedMessage,asc', 'expirationDate,asc'] })
           break
-        case '2':
+        case '3':
           this.$store.commit('updateDisputeQuery', { key: 'status', value: ['ACCEPTED', 'CHECKOUT'] })
           this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['visualized,asc', 'conclusionDate,asc'] })
+          break
+        case '4':
+          this.$store.commit('addPrescription', 'NEWLY_FINISHED')
+          this.$store.commit('updateDisputeQuery', { key: 'status', value: [] })
+          this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['visualized,asc', 'conclusionDate,asc', 'lastReceivedMessage,asc'] })
           break
         default:
           this.$store.commit('updateDisputeQuery', { key: 'status', value: [] })
@@ -734,6 +767,14 @@ export default {
 @import '@/styles/colors.scss';
 
 .view-management {
+  .view-management__title {
+    height: 40px;
+    margin-bottom: 15px;
+    line-height: 40px;
+    font-size: 20px;
+    font-weight: 500;
+    color: $--color-text-primary;
+  }
   &__filters {
     display: flex;
     justify-content: space-between;
