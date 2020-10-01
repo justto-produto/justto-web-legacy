@@ -2019,7 +2019,8 @@ export default {
         disputeId: this.dispute.id,
         reason: this.deleteType
       }).then(() => {
-        this.$router.push('/management')
+        if (this.$store.state.disputeModule.tab === '9') this.$router.push('/management/all')
+        else this.$router.push('/management')
       }).catch(error => {
         this.$jusNotification({ error })
       }).finally(() => {

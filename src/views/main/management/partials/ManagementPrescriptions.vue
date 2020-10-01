@@ -47,8 +47,8 @@ export default {
   },
   props: {
     activeTab: {
-      default: '1',
-      type: String
+      type: String,
+      default: '2'
     }
   },
   computed: {

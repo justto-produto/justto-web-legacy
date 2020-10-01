@@ -16,7 +16,7 @@ const dispute = {
     occurrencesSize: 20,
     summaryNearExpirations: [],
     summaryNotVisualizeds: [],
-    tab: '1',
+    tab: '2',
     hasNew: false,
     query: {
       status: ['RUNNING'],

@@ -219,6 +219,7 @@ export default {
       this.$store.dispatch('getWorkspaceMembers')
         .then(() => {
           this.$jusSegment('Troca de time/workspace', { description: `Alterado de ${workspace.workspace.name} para ${oldWorkspace}` })
+          this.setDisputesTab('1')
           this.$router.go('/management')
           this.changeWorkspaceDialogVisible = true
         }).catch(error => {

@@ -346,7 +346,7 @@ export default {
         }
         this.$store.commit('setDisputeHasFilters', true)
         this.$store.commit('setDisputesTab', '9')
-        this.$router.push('allDisputes')
+        this.$router.push('/management/all')
       }
     }
   }

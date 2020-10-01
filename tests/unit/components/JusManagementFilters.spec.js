@@ -27,7 +27,7 @@ describe('JusManagementFilters.vue', () => {
       store,
       localVue,
       propsData: {
-        tabIndex: '0',
+        tabIndex: '2',
         filters: {}
       }
     })
