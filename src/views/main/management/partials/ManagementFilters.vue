@@ -417,6 +417,9 @@ export default {
     isAll() {
       return this.tabIndex === '3'
     },
+    // isAll() {
+    //   return this.tabIndex === '9'
+    // },
     strategies() {
       return this.$store.getters.strategyList
     },

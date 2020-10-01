@@ -360,7 +360,7 @@ export default {
       const type = evt.eventProps.customProps.type
 
       const managementRoute = this.$router.resolve({
-        name: 'management',
+        name: 'allDisputes',
         query: {
           status: [],
           startDate: this.dateRange[0],

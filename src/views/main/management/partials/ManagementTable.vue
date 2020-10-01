@@ -167,7 +167,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="tab || tab0 || tab1 || tab3"
+        v-if="tab || tab0 || tab1 || tab3 || tabAll"
         :sortable="false"
         prop="expirationDate"
         label="Fim da negociação"
@@ -213,7 +213,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="tab0 || tab3"
+        v-if="tab0 || tab3 || tabAll"
         :sortable="false"
         label="Status"
         prop="status"
@@ -351,6 +351,9 @@ export default {
     },
     tab3() {
       return this.activeTab === '3'
+    },
+    tabAll() {
+      return this.activeTab === '9'
     }
   },
   watch: {

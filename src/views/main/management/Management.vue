@@ -519,6 +519,12 @@ export default {
   created() {
     const query = this.$route.query
 
+    if (this.isManagementAll) {
+      this.$store.commit('setDisputeTab', '9')
+      this.$store.commit('updateDisputeQuery', { key: 'status', value: [] })
+      this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['id,desc'] })
+    }
+
     if (Object.keys(query).length) {
       this.$store.commit('clearDisputeQuery')
       this.$store.commit('addPrescription', query.prescription)

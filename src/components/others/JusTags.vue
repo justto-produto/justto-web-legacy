@@ -308,8 +308,8 @@ export default {
       this.$store.commit('clearDisputeQuery')
       this.$store.commit('updateDisputeQuery', { key: 'status', value: [] })
       this.$store.commit('updateDisputeQuery', { key: 'tags', value: [tagId] })
-      this.$store.commit('setDisputesTab', '3')
-      this.$router.push('/management')
+      this.$store.commit('setDisputesTab', '9')
+      this.$router.push('/management/all')
     }
   }
 }
