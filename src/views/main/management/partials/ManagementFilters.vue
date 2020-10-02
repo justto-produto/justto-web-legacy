@@ -300,7 +300,7 @@
           </el-col> -->
           <!-- STATUS -->
           <el-col
-            v-if="isAll"
+            v-if="isFinished || isAll"
             :span="24"
           >
             <el-form-item label="Status">
@@ -458,19 +458,28 @@ export default {
       }
     },
     statuses() {
-      return [
-        'IMPORTED',
-        'ENRICHED',
-        'ENGAGEMENT',
-        'RUNNING',
-        'PENDING',
-        'ACCEPTED',
-        'CHECKOUT',
-        'EXPIRED',
-        'SETTLED',
-        'UNSETTLED',
-        'REFUSED'
-      ]
+      switch (this.tabIndex) {
+        case '4':
+          return [
+            'EXPIRED',
+            'SETTLED',
+            'UNSETTLED',
+          ]
+        default:
+          return [
+            'IMPORTED',
+            'ENRICHED',
+            'ENGAGEMENT',
+            'RUNNING',
+            'PENDING',
+            'ACCEPTED',
+            'CHECKOUT',
+            'EXPIRED',
+            'SETTLED',
+            'UNSETTLED',
+            'REFUSED'
+          ]
+      }
     },
   },
   watch: {
