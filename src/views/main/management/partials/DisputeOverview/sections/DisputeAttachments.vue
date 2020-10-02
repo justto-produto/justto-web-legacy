@@ -208,7 +208,7 @@ export default {
 
   .dispute-attachments__attachment-list {
     overflow-y: auto;
-    height: calc(100% - 116px);
+    height: calc(95% - 116px);
 
     .dispute-attachments__attachment {
       margin-top: 10px;
@@ -253,7 +253,7 @@ export default {
 
   .dispute-attachments__without-attachment {
     text-align: center;
-    height: calc(100% - 116px);
+    height: calc(95% - 116px);
   }
 
   .dispute-attachments__upload-button {
