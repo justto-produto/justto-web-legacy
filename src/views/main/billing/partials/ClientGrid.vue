@@ -213,8 +213,9 @@ export default {
 @import '@/styles/colors.scss';
 
 .client-grid__action-card {
+
   & > .el-card__body {
-    align-items: center;
+    padding: 10px !important;
     background-color: $--color-success-light-5;
     color: mix($--color-black, $--color-success, 50%);
     cursor: pointer;
@@ -222,6 +223,7 @@ export default {
     font-size: 18px;
     font-weight: 700;
     height: 100%;
+    align-items: center;
     justify-content: center;
   }
 

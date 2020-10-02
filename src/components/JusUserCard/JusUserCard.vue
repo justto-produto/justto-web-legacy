@@ -149,9 +149,10 @@ export default {
   }
 
   .jus-user-card__actions {
-    align-items: center;
+    padding: 10px;
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     justify-content: center;
 
     .jus-user-card__actions-row {
