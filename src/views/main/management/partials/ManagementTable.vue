@@ -415,7 +415,6 @@ export default {
     },
     cellMouseEnter(row, column, cell, event) {
       this.disputeActionsRow = row.id
-      console.log(column)
       if (column.property !== 'code') {
         this.getDisputeLastAccess(row.id)
         this.actieTooltipDisputeId = row.id
