@@ -62,5 +62,8 @@ export default {
   strong {
     width: 100%;
   }
+  .el-card--dashed {
+    padding-bottom: 16px;
+  }
 }
 </style>
