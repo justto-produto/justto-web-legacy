@@ -222,7 +222,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="tab0 || tab3"
+        v-if="tab0 || tab2 || tab3"
         :sortable="false"
         prop="disputeDealDate"
         label="Data do acordo"
