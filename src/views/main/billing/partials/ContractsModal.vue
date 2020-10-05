@@ -58,25 +58,6 @@
                 </el-select>
               </el-form-item>
             </el-col>
-
-            <el-col :span="12">
-              <el-form-item
-                label="Início da vigência"
-              >
-                <el-date-picker
-                  v-model="contract.startedDate"
-                  :disabled="isContractInactive(contract)"
-                  placeholder="Início da vigência"
-                  type="date"
-                  format="dd/MM/yyyy"
-                  value-format="yyyy-MM-dd"
-                />
-                <el-form-item />
-              </el-form-item>
-            </el-col>
-          </el-row>
-
-          <el-row :gutter="24">
             <el-col :span="12">
               <el-form-item
                 label="Vencimento"
@@ -96,7 +77,43 @@
                 <el-form-item />
               </el-form-item>
             </el-col>
+          </el-row>
 
+          <!-- Linha 2 -->
+          <el-row :gutter="24">
+            <el-col :span="12">
+              <el-form-item
+                label="Início da vigência"
+              >
+                <el-date-picker
+                  v-model="contract.startedDate"
+                  :disabled="isContractInactive(contract)"
+                  placeholder="Início da vigência"
+                  type="date"
+                  format="dd/MM/yyyy"
+                  value-format="yyyy-MM-dd"
+                />
+                <el-form-item />
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item
+                label="Data do churn"
+              >
+                <el-date-picker
+                  v-model="contract.inactivatedDate"
+                  :disabled="isContractInactive(contract)"
+                  placeholder="Data do churn"
+                  type="date"
+                  format="dd/MM/yyyy"
+                  value-format="yyyy-MM-dd"
+                />
+                <el-form-item />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <!-- Linha 3 -->
+          <el-row :gutter="24">
             <el-col :span="12">
               <el-form-item
                 label="Fechamento"
@@ -114,6 +131,17 @@
                   />
                 </el-select>
                 <el-form-item />
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="Percentual de repasse">
+                <el-input
+                  v-model="contract.onlendingFee"
+                  :disabled="isContractInactive(contract)"
+                  placeholder="Percentual de repasse"
+                >
+                  <template slot="append">.com</template>
+                </el-input>
               </el-form-item>
             </el-col>
           </el-row>
