@@ -212,6 +212,7 @@ export default {
         lock: true,
         text: 'Alterando Equipe...'
       })
+      // loading.close()
       const oldWorkspace = this.$store.getters.workspaceTeamName
       if (workspace.workspace) this.$store.commit('setWorkspace', workspace.workspace)
       if (workspace.profile) this.$store.commit('setProfile', workspace.profile)
@@ -219,7 +220,7 @@ export default {
       this.$store.dispatch('getWorkspaceMembers')
         .then(() => {
           this.$jusSegment('Troca de time/workspace', { description: `Alterado de ${workspace.workspace.name} para ${oldWorkspace}` })
-          this.setDisputesTab('1')
+          this.$store.commit('setDisputesTab', '2')
           this.$router.go('/management')
           this.changeWorkspaceDialogVisible = true
         }).catch(error => {
