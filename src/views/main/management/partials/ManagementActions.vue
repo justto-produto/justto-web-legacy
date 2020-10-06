@@ -4,7 +4,10 @@
       :class="{'active': active}"
       class="management-actions"
     >
-      <div class="management-actions__length">
+      <div
+        v-show="selectedLenghtToShow"
+        class="management-actions__length"
+      >
         <i class="el-icon-check" /> {{ selectedLenghtToShow }}
       </div>
       <div>
