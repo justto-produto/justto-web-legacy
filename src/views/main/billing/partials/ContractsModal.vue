@@ -133,12 +133,15 @@
             </el-col>
             <el-col :span="12">
               <el-form-item label="Percentual de repasse">
-                <input
-                  v-model="contract.onlendingFee"
-                  type="number"
-                  class="el-input__inner"
-                  :step="0.5"
-                >
+                <div class="el-input el-input--suffix">
+                  <input
+                    v-model="contract.onlendingFee"
+                    type="number"
+                    class="el-input__inner custom_input_number"
+                    :step="0.5"
+                  >
+                  <span class="el-input__suffix el-input__suffix-inner">%</span>
+                </div>
               </el-form-item>
             </el-col>
           </el-row>
@@ -688,6 +691,7 @@ export default {
 
 .custom_input_number {
   -moz-appearance: textfield;
+  // text-align: right;
 }
 .custom_input_number::-webkit-outer-spin-button,
 .custom_input_number::-webkit-inner-spin-button {
