@@ -78,7 +78,6 @@
               </el-form-item>
             </el-col>
           </el-row>
-
           <!-- Linha 2 -->
           <el-row :gutter="24">
             <el-col :span="12">
@@ -130,22 +129,20 @@
                     :value="day - 1"
                   />
                 </el-select>
-                <el-form-item />
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="Percentual de repasse">
-                <el-input
+                <input
                   v-model="contract.onlendingFee"
-                  :disabled="isContractInactive(contract)"
-                  placeholder="Percentual de repasse"
+                  type="number"
+                  class="el-input__inner"
+                  :step="0.5"
                 >
-                  <template slot="append">.com</template>
-                </el-input>
               </el-form-item>
             </el-col>
           </el-row>
-
+          <!-- Linha 4 -->
           <el-row :gutter="24">
             <el-col :span="12">
               <el-form-item
@@ -241,24 +238,6 @@
 
             <el-col :span="12">
               <el-form-item
-                prop="startedDate"
-                label="Início da vigência"
-              >
-                <el-date-picker
-                  v-model="newContract.startedDate"
-                  placeholder="Início da vigência"
-                  type="date"
-                  format="dd/MM/yyyy"
-                  value-format="yyyy-MM-dd"
-                />
-                <el-form-item />
-              </el-form-item>
-            </el-col>
-          </el-row>
-
-          <el-row :gutter="24">
-            <el-col :span="12">
-              <el-form-item
                 prop="invoiceDueDays"
                 label="Vencimento"
               >
@@ -276,7 +255,41 @@
                 <el-form-item />
               </el-form-item>
             </el-col>
+          </el-row>
 
+          <el-row :gutter="24">
+            <el-col :span="12">
+              <el-form-item
+                prop="startedDate"
+                label="Início da vigência"
+              >
+                <el-date-picker
+                  v-model="newContract.startedDate"
+                  placeholder="Início da vigência"
+                  type="date"
+                  format="dd/MM/yyyy"
+                  value-format="yyyy-MM-dd"
+                />
+              </el-form-item>
+            </el-col>
+
+            <el-col :span="12">
+              <el-form-item
+                label="Data do churn"
+              >
+                <el-date-picker
+                  v-model="newContract.inactivatedDate"
+                  placeholder="Data do churn"
+                  type="date"
+                  format="dd/MM/yyyy"
+                  value-format="yyyy-MM-dd"
+                />
+                <el-form-item />
+              </el-form-item>
+            </el-col>
+          </el-row>
+
+          <el-row :gutter="24">
             <el-col :span="12">
               <el-form-item
                 prop="invoiceClosingDay"
@@ -296,6 +309,18 @@
                 <el-form-item />
               </el-form-item>
             </el-col>
+
+            <el-col :span="12">
+              <el-form-item label="Percentual de repasse">
+                <input
+                  v-model="newContract.onlendingFee"
+                  type="number"
+                  class="el-input__inner"
+                  :step="0.5"
+                >
+              </el-form-item>
+            </el-col>
+            <!-- Percentual de Repasse -->
           </el-row>
 
           <el-row :gutter="24">
@@ -346,9 +371,7 @@
                 />
               </el-form-item>
             </el-col>
-          </el-row>
 
-          <el-row :gutter="24">
             <el-col>
               <el-form-item>
                 <el-switch
