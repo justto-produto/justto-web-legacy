@@ -14,6 +14,7 @@
         trigger="hover"
         placement="top">
         <div>
+          <div class="jus-tags-filter__item-name">{{ tag.name }}</div>
           <el-button
             :class="{ 'jus-tags-filter__state-button--active': tag.activeType === 'inclusive' }"
             class="jus-tags-filter__state-button"
@@ -266,9 +267,7 @@ export default {
     @include selected-tag($--color-danger, '../../assets/icons/ic-blocked.svg');
   }
 
-  &--round {
-    border-radius: 50%;
-  }
+  &--round {border-radius: 50%;}
 }
 
 .jus-tags-filter__tags-popover {
@@ -289,6 +288,13 @@ export default {
       width: 16px;
       margin-bottom: -2px;
     }
+  }
+
+  .jus-tags-filter__item-name {
+    margin-bottom: 2px;
+    text-align: center;
+    font-weight: bold;
+    color: $--color-text-regular;
   }
 
   // .popper__arrow {
