@@ -29,6 +29,8 @@ const actions = {
     delete query.sort
     delete query.page
     delete query.size
+    delete query.tags
+    delete query.noTags
     return axiosDispatcher({
       method: 'get',
       url: `/api/disputes/tags${queryBuilder(query)}`,
