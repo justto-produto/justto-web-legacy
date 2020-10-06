@@ -25,7 +25,7 @@
       >
         <span>
           <el-button
-            :disabled="action.disabled"
+            :disabled="action.disabled || modalLoading"
             :type="tableActions ? 'text' : ''"
             :plain="!tableActions"
             :data-testid="action.name"

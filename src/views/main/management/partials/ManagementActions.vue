@@ -242,10 +242,6 @@ import { mapGetters, mapActions } from 'vuex'
 export default {
   name: 'ManagementActions',
   props: {
-    active: {
-      type: Boolean,
-      default: false
-    },
     activeTab: {
       type: String,
       required: true
@@ -283,6 +279,9 @@ export default {
       set(ids) {
         this.$emit('update:selectedIds', ids)
       }
+    },
+    active() {
+      return this.selectedIdsComp.length >= 1
     },
     actionsList() {
       return [
@@ -370,7 +369,6 @@ export default {
         this.chooseUnsettledDialogVisible = false
         this.changeStrategyDialogVisible = false
         this.changeExpirationDialogVisible = false
-        this.selectedIdsComp = []
         this.$jusNotification({
           title: 'Yay!',
           message: 'Ação <strong>' + this.$t('action.' + action.toUpperCase()) + '</strong> realizada com sucesso.',
@@ -436,6 +434,7 @@ export default {
     },
     clearSelection() {
       this.$emit('disputes:clear')
+      this.selectedIdsComp = []
     },
     checkDisputeNegotiators() {
       const _ = require('lodash')

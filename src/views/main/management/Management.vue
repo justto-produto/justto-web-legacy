@@ -5,7 +5,6 @@
   >
     <template slot="main">
       <management-actions
-        :active="multiActive"
         :active-tab="activeTab"
         :selected-ids.sync="selectedIds"
         @disputes:clear="clearSelection"
@@ -486,9 +485,6 @@ export default {
     activeTab: {
       get() { return this.$store.getters.disputeTab },
       set(tab) { this.$store.commit('setDisputesTab', tab) }
-    },
-    multiActive() {
-      return this.selectedIds.length >= 1
     },
     disputesTotalLength() {
       return this.$store.getters.disputeQuery.total
