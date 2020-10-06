@@ -312,15 +312,17 @@
 
             <el-col :span="12">
               <el-form-item label="Percentual de repasse">
-                <input
-                  v-model="newContract.onlendingFee"
-                  type="number"
-                  class="el-input__inner"
-                  :step="0.5"
-                >
+                <div class="el-input el-input--suffix">
+                  <input
+                    v-model="newContract.onlendingFee"
+                    type="number"
+                    class="el-input__inner custom_input_number"
+                    :step="0.5"
+                  >
+                  <span class="el-input__suffix el-input__suffix-inner">%</span>
+                </div>
               </el-form-item>
             </el-col>
-            <!-- Percentual de Repasse -->
           </el-row>
 
           <el-row :gutter="24">
@@ -668,6 +670,7 @@ export default {
     }
   }
 }
+
 .is-inactive {
   background-color: #f6f6f6;
   border-color: #e4e7ed;
@@ -682,4 +685,14 @@ export default {
 .transition-none {
   transition: none !important;
 }
+
+.custom_input_number {
+  -moz-appearance: textfield;
+}
+.custom_input_number::-webkit-outer-spin-button,
+.custom_input_number::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 </style>
