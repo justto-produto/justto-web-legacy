@@ -406,11 +406,6 @@
                   size="sm"
                 />
               </el-tooltip>
-              <!-- <el-tooltip
-                v-if="mergedOccurency.interaction.type === 'SCHEDULER'"
-                content="Sou JUSTTINE, seu assistente virtual">
-                <i class="el-icon-question"/>
-              </el-tooltip> -->
             </div>
             <div class="dispute-view-occurrences__card-box">
               <el-card
