@@ -229,7 +229,7 @@
               </el-tooltip>
               <el-tooltip
                 v-if="occurrence.interaction.type === 'SCHEDULER'"
-                content="Sou JUSTTINE, seu assistente virtual">
+                content="Sou JUSTTINE, sua assistente virtual">
                 <i class="el-icon-question"/>
               </el-tooltip>
             </div>
