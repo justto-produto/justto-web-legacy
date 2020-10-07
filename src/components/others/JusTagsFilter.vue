@@ -134,13 +134,13 @@ export default {
         } else if (this.disputeQuery.noTags && this.disputeQuery.noTags.includes(t.id)) {
           t.activeType = 'exclusive'
         } else {
-          t.activeType = 'none'
+          t.activeType = ''
         }
         return t
       }).sort((a, b) => {
-        if (a.activeType === b.activeType) {
+        if (!!a.activeType === !!b.activeType) {
           return 0
-        } else if (a.activeType < b.activeType) {
+        } else if (!!a.activeType > !!b.activeType) {
           return 1
         } else {
           return -1
@@ -152,7 +152,6 @@ export default {
     filterByTag(tag, command) {
       const currentTags = _.cloneDeep(this.disputeQuery.tags || [])
       const currentNoTags = _.cloneDeep(this.disputeQuery.noTags || [])
-      
       switch (command) {
         case 'nextState':
           this.nextState(tag, currentTags, currentNoTags)
