@@ -150,7 +150,7 @@
     </el-popover>
 
     <div v-if="data.lastReceivedMessage && data.lastReceivedMessage.createAt && data.lastReceivedMessage.createAt.dateTime">
-      {{ getLastInteraction(data.lastReceivedMessage.createAt.dateTime) }}
+      {{ getLastInteraction(data.lastInteraction.createAt.dateTime) }}
     </div>
 
     <el-dialog
