@@ -58,25 +58,6 @@
                 </el-select>
               </el-form-item>
             </el-col>
-
-            <el-col :span="12">
-              <el-form-item
-                label="Início da vigência"
-              >
-                <el-date-picker
-                  v-model="contract.startedDate"
-                  :disabled="isContractInactive(contract)"
-                  placeholder="Início da vigência"
-                  type="date"
-                  format="dd/MM/yyyy"
-                  value-format="yyyy-MM-dd"
-                />
-                <el-form-item />
-              </el-form-item>
-            </el-col>
-          </el-row>
-
-          <el-row :gutter="24">
             <el-col :span="12">
               <el-form-item
                 label="Vencimento"
@@ -96,7 +77,42 @@
                 <el-form-item />
               </el-form-item>
             </el-col>
-
+          </el-row>
+          <!-- Linha 2 -->
+          <el-row :gutter="24">
+            <el-col :span="12">
+              <el-form-item
+                label="Início da vigência"
+              >
+                <el-date-picker
+                  v-model="contract.startedDate"
+                  :disabled="isContractInactive(contract)"
+                  placeholder="Início da vigência"
+                  type="date"
+                  format="dd/MM/yyyy"
+                  value-format="yyyy-MM-dd"
+                />
+                <el-form-item />
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item
+                label="Data do churn"
+              >
+                <el-date-picker
+                  v-model="contract.inactivatedDate"
+                  :disabled="isContractInactive(contract)"
+                  placeholder="Data do churn"
+                  type="date"
+                  format="dd/MM/yyyy"
+                  value-format="yyyy-MM-dd"
+                />
+                <el-form-item />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <!-- Linha 3 -->
+          <el-row :gutter="24">
             <el-col :span="12">
               <el-form-item
                 label="Fechamento"
@@ -113,11 +129,23 @@
                     :value="day - 1"
                   />
                 </el-select>
-                <el-form-item />
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="Percentual de repasse">
+                <div class="el-input el-input--suffix">
+                  <input
+                    v-model="contract.onlendingFee"
+                    type="number"
+                    class="el-input__inner custom_input_number"
+                    :step="0.5"
+                  >
+                  <span class="el-input__suffix el-input__suffix-inner">%</span>
+                </div>
               </el-form-item>
             </el-col>
           </el-row>
-
+          <!-- Linha 4 -->
           <el-row :gutter="24">
             <el-col :span="12">
               <el-form-item
@@ -213,24 +241,6 @@
 
             <el-col :span="12">
               <el-form-item
-                prop="startedDate"
-                label="Início da vigência"
-              >
-                <el-date-picker
-                  v-model="newContract.startedDate"
-                  placeholder="Início da vigência"
-                  type="date"
-                  format="dd/MM/yyyy"
-                  value-format="yyyy-MM-dd"
-                />
-                <el-form-item />
-              </el-form-item>
-            </el-col>
-          </el-row>
-
-          <el-row :gutter="24">
-            <el-col :span="12">
-              <el-form-item
                 prop="invoiceDueDays"
                 label="Vencimento"
               >
@@ -248,7 +258,41 @@
                 <el-form-item />
               </el-form-item>
             </el-col>
+          </el-row>
 
+          <el-row :gutter="24">
+            <el-col :span="12">
+              <el-form-item
+                prop="startedDate"
+                label="Início da vigência"
+              >
+                <el-date-picker
+                  v-model="newContract.startedDate"
+                  placeholder="Início da vigência"
+                  type="date"
+                  format="dd/MM/yyyy"
+                  value-format="yyyy-MM-dd"
+                />
+              </el-form-item>
+            </el-col>
+
+            <el-col :span="12">
+              <el-form-item
+                label="Data do churn"
+              >
+                <el-date-picker
+                  v-model="newContract.inactivatedDate"
+                  placeholder="Data do churn"
+                  type="date"
+                  format="dd/MM/yyyy"
+                  value-format="yyyy-MM-dd"
+                />
+                <el-form-item />
+              </el-form-item>
+            </el-col>
+          </el-row>
+
+          <el-row :gutter="24">
             <el-col :span="12">
               <el-form-item
                 prop="invoiceClosingDay"
@@ -266,6 +310,20 @@
                   />
                 </el-select>
                 <el-form-item />
+              </el-form-item>
+            </el-col>
+
+            <el-col :span="12">
+              <el-form-item label="Percentual de repasse">
+                <div class="el-input el-input--suffix">
+                  <input
+                    v-model="newContract.onlendingFee"
+                    type="number"
+                    class="el-input__inner custom_input_number"
+                    :step="0.5"
+                  >
+                  <span class="el-input__suffix el-input__suffix-inner">%</span>
+                </div>
               </el-form-item>
             </el-col>
           </el-row>
@@ -318,9 +376,7 @@
                 />
               </el-form-item>
             </el-col>
-          </el-row>
 
-          <el-row :gutter="24">
             <el-col>
               <el-form-item>
                 <el-switch
@@ -617,6 +673,7 @@ export default {
     }
   }
 }
+
 .is-inactive {
   background-color: #f6f6f6;
   border-color: #e4e7ed;
@@ -631,4 +688,15 @@ export default {
 .transition-none {
   transition: none !important;
 }
+
+.custom_input_number {
+  -moz-appearance: textfield;
+  // text-align: right;
+}
+.custom_input_number::-webkit-outer-spin-button,
+.custom_input_number::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 </style>
