@@ -142,6 +142,7 @@
                     :class="{ 'show-toolbar': messageType === 'email' }"
                     class="dispute-view__quill"
                   >
+                    <!-- placement="top" -->
                     <el-popover
                       v-if="messageType === 'email'"
                       title="Anexar"
@@ -170,6 +171,66 @@
                         <b class="dispute-view__attach-counter">{{ selectedAttachments.length }}x</b>
                       </span>
                     </el-popover>
+
+                    <!-- placement="top" -->
+                    <el-popover
+                      v-if="messageType === 'email'"
+                      title="Respostas rápidas"
+                      trigger="click"
+                      popper-class="dispute-view__templates-popover"
+                      class="dispute-view__templates"
+                    >
+                      <ul
+                        v-if="quickReplyTemplates.length"
+                        class="dispute-view__templates-list">
+                        <li
+                          v-for="template in quickReplyTemplates"
+                          :key="template.template.id"
+                          class="dispute-view__templates-list-item">
+                          <span>
+                            <jus-icon
+                              :icon="template.template.type.toLowerCase()"
+                              class="dispute-view__templates-list-icon"
+                            />
+                            {{ template.template.title }}
+                          </span>
+                          <el-popover
+                            placement="right"
+                            popper-class="dispute-view__templates-option-popover"
+                            class="dispute-view__templates-item-options">
+                            <div>
+                              <i class="el-icon-edit"/> Editar
+                            </div>
+                            <div @click="archiveQuickReplyTemplate(template.template.id)">
+                              <i class="el-icon-delete"/> Excluir
+                            </div>
+                            <div @click="resetQuickReplyTemplate(template.template.id)">
+                              <i class="el-icon-refresh-left"/> Restaurar
+                            </div>
+                            <i
+                              slot="reference"
+                              class="el-icon-more"
+                            />
+                          </el-popover>
+                        </li>
+                      </ul>
+                      <span
+                        v-else
+                        class="dispute-view__templates-list-empty">
+                        Não há templates para esta estratégia
+                      </span>
+                      <el-button
+                        slot="reference"
+                        size="mini"
+                        class="dispute-view__templates-button">
+                        <jus-icon
+                          class="dispute-view__templates-button-icon"
+                          icon="zap"
+                        />
+                        Respostas rápidas
+                      </el-button>
+                    </el-popover>
+
                     <quill-editor
                       ref="messageEditor"
                       :options="editorOptions"
@@ -352,7 +413,8 @@ export default {
       'disputeAttachments',
       'disputeStatuses',
       'isJusttoAdmin',
-      'ghostMode'
+      'ghostMode',
+      'quickReplyTemplates',
     ]),
 
     sendMessageHeightComputed() {
@@ -452,6 +514,7 @@ export default {
       disputeId: this.id,
       anonymous: this.isJusttoAdmin && this.ghostMode
     })
+    this.getQuickReplyTemplates(this.id)
   },
   mounted() {
     setTimeout(() => {
@@ -468,7 +531,10 @@ export default {
   methods: {
     ...mapActions([
       'getDisputeStatuses',
-      'disputeSetVisualized'
+      'disputeSetVisualized',
+      'getQuickReplyTemplates',
+      'resetQuickReplyTemplate',
+      'archiveQuickReplyTemplate'
     ]),
 
     updateWindowHeight() {
@@ -799,7 +865,7 @@ export default {
     .dispute-view__attach {
       position: absolute;
       top: 10px;
-      left: 348px;
+      left: 344px;
       cursor: pointer;
 
       .el-icon-paperclip {
@@ -811,6 +877,26 @@ export default {
       }
 
       &:hover { color: $--color-primary }
+    }
+
+    .dispute-view__templates {
+      position: absolute;
+      top: 6px;
+      left: 384px;
+
+      .dispute-view__templates-button {
+        padding: 6px 8px;
+
+        > span {
+          display: flex;
+          align-items: center;
+        }
+
+        .dispute-view__templates-button-icon {
+          width: 14px;
+          margin-right: 4px;
+        }
+      }
     }
   }
   &__quill-note {
@@ -949,7 +1035,6 @@ export default {
     padding: 8px 12px 8px 10px;
     max-width: 100%;
     height: auto;
-
     &:last-child { margin-bottom: 0 !important }
 
     .el-checkbox__label {
@@ -958,6 +1043,63 @@ export default {
       word-break: break-word !important;
       max-width: calc(100% - 14px);
     }
+  }
+}
+
+.dispute-view__templates-popover {
+  padding: 20px 0;
+
+  .el-popover__title {
+    margin: 0 20px 12px 20px;
+  }
+
+  .dispute-view__templates-list-empty {
+    margin: 0 20px
+  }
+
+  .dispute-view__templates-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    .dispute-view__templates-list-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 20px;
+      margin: 0 0 10px 0 !important;
+      cursor: pointer;
+      &:last-child { margin-bottom: 0 !important }
+
+      .dispute-view__templates-list-icon {
+        margin-right: 8px;
+        margin-bottom: -2px;
+      }
+
+      .dispute-view__templates-item-options {
+        .el-icon-more {
+          margin-left: 8px;
+          cursor: pointer;
+          transform: rotate(90deg);
+          &:hover { color: $--color-primary; }
+        }
+      }
+
+      &:hover {
+        background-color: #fafafa;
+      }
+    }
+  }
+}
+
+.dispute-view__templates-option-popover {
+  padding: 8px 0;
+  width: 100px !important;
+
+  > div {
+    padding: 0 8px;
+    cursor: pointer;
+    &:hover { background-color: #fafafa; }
   }
 }
 </style>
