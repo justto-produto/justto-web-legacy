@@ -1,61 +1,53 @@
 <template lang="html">
   <div class="jus-tags-filter">
-    <!-- <div
+    <el-popover
       v-for="(tag, index) in workspaceTags.slice(-3).reverse()"
       :key="tag.id"
-    > -->
-      <el-popover
-        v-for="(tag, index) in workspaceTags.slice(-3).reverse()"
-        :key="tag.id"
-        :open-delay="400"
-        :style="{ zIndex: workspaceTags.length - index }"
-        popper-class="jus-tags-filter__actions-popover"
-        class="jus-tags-filter__item"
-        trigger="hover"
-        placement="top">
-        <div>
-          <div class="jus-tags-filter__item-name">{{ tag.name }}</div>
-          <el-button
-            :class="{ 'jus-tags-filter__state-button--active': tag.activeType === 'inclusive' }"
-            class="jus-tags-filter__state-button"
-            type="text"
-            @click="filterByTag(tag, 'changeInclusive')">
-            <jus-icon
-              class="jus-tags-filter__state-icon"
-              icon="checked"
-            />
-            Possui esta etiqueta
-          </el-button>
-          <span> | </span>
-          <el-button
-            :class="{ 'jus-tags-filter__state-button--active': tag.activeType === 'exclusive' }"
-            class="jus-tags-filter__state-button"
-            type="text"
-            @click="filterByTag(tag, 'changeExclusive')">
-            Não possui esta etiqueta
-            <jus-icon
-              class="jus-tags-filter__state-icon"
-              icon="blocked"
-            />
-          </el-button>
-        </div>
+      :open-delay="400"
+      :style="{ zIndex: workspaceTags.length - index }"
+      popper-class="jus-tags-filter__actions-popover"
+      class="jus-tags-filter__item"
+      trigger="hover"
+      placement="top">
+      <div>
+        <div class="jus-tags-filter__item-name">{{ tag.name }}</div>
+        <el-button
+          :class="{ 'jus-tags-filter__state-button--active': tag.activeType === 'inclusive' }"
+          class="jus-tags-filter__state-button"
+          type="text"
+          @click="filterByTag(tag, 'changeInclusive')">
+          <jus-icon
+            class="jus-tags-filter__state-icon"
+            icon="checked"
+          />
+          Possui esta etiqueta
+        </el-button>
+        <span> | </span>
+        <el-button
+          :class="{ 'jus-tags-filter__state-button--active': tag.activeType === 'exclusive' }"
+          class="jus-tags-filter__state-button"
+          type="text"
+          @click="filterByTag(tag, 'changeExclusive')">
+          Não possui esta etiqueta
+          <jus-icon
+            class="jus-tags-filter__state-icon"
+            icon="blocked"
+          />
+        </el-button>
+      </div>
 
-        <!-- <el-tooltip :content="tag.name"> -->
-          <el-tag
-            :color="tag.color"
-            :class="{
-              'jus-tags-filter__tag--inclusive-is-active': tag.activeType === 'inclusive',
-              'jus-tags-filter__tag--exclusive-is-active': tag.activeType === 'exclusive'
-            }"
-            class="jus-tags-filter__tag jus-tags-filter__tag--round"
-            slot="reference"
-            @click="filterByTag(tag, 'nextState')"
-          >
-            <i :class="`el-icon-${tag.icon}`" />
-          </el-tag>
-        <!-- </el-tooltip> -->
-      </el-popover>
-    <!-- </div> -->
+      <el-tag
+        :color="tag.color"
+        :class="{
+          'jus-tags-filter__tag--inclusive-is-active': tag.activeType === 'inclusive',
+          'jus-tags-filter__tag--exclusive-is-active': tag.activeType === 'exclusive'
+        }"
+        class="jus-tags-filter__tag jus-tags-filter__tag--round"
+        slot="reference"
+        @click="filterByTag(tag, 'nextState')">
+        <i :class="`el-icon-${tag.icon}`" />
+      </el-tag>
+    </el-popover>
     <el-popover
       v-if="workspaceTags.length > 3"
       placement="bottom"
