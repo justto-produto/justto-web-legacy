@@ -227,9 +227,11 @@
                   size="sm"
                 />
               </el-tooltip>
-              <el-tooltip
-                v-if="occurrence.interaction.type === 'SCHEDULER'"
-                content="Sou JUSTTINE, sua assistente virtual">
+              <el-tooltip v-if="isJusttineMessage(occurrence)">
+                <div slot="content">
+                  Enviei esta mensagem para você, ok?<br/>
+                  Criei ela a partir da estratégia que você definiu na disputa.
+                </div>
                 <i class="el-icon-question"/>
               </el-tooltip>
             </div>
@@ -795,10 +797,8 @@ export default {
 
     buildName(occurrence) {
       if (occurrence.interaction) {
-        if (occurrence.interaction.message &&
-          occurrence.interaction.message.status !== 'PROCESSED_BY_USER' &&
-          occurrence.interaction.direction === 'OUTBOUND') {
-          return 'JUSTTINE'
+        if (this.isJusttineMessage(occurrence)) {
+          return 'Sou JUSTTINE, sua assistente virtual'
         }
         if (occurrence.interaction.type &&
           ['MANUAL_COUNTERPROPOSAL', 'MANUAL_PROPOSAL', 'CLICK'].includes(occurrence.interaction.type) &&
@@ -825,8 +825,12 @@ export default {
       return ''
     },
 
+    isJusttineMessage(occurrence) {
+      return occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.status !== 'PROCESSED_BY_USER' && occurrence.interaction.direction === 'OUTBOUND'
+    },
+
     buildAvatar(occurrence) {
-      if (occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.status !== 'PROCESSED_BY_USER' && occurrence.interaction.direction === 'OUTBOUND') {
+      if (this.isJusttineMessage(occurrence)) {
         return require('@/assets/justtine/profile.png')
       } return ''
     },
