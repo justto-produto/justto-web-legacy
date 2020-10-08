@@ -179,6 +179,7 @@
                       trigger="click"
                       popper-class="dispute-view__templates-popover"
                       class="dispute-view__templates"
+                      @hide="closeTemplateMenu()"
                     >
                       <ul
                         v-if="quickReplyTemplates.length"
@@ -186,7 +187,8 @@
                         <li
                           v-for="template in quickReplyTemplates"
                           :key="template.template.id"
-                          class="dispute-view__templates-list-item">
+                          class="dispute-view__templates-list-item"
+                        >
                           <div
                             class="dispute-view__templates-item-title"
                             @click="inputTemplate(template)">
@@ -201,7 +203,8 @@
                             trigger="manual"
                             placement="right"
                             popper-class="dispute-view__templates-option-popover"
-                            class="dispute-view__templates-item-options">
+                            class="dispute-view__templates-item-options"
+                            @mouseleave="closeTemplateMenu($event, template.template.id)">
                             <div>
                               <i class="el-icon-edit" /> Editar
                             </div>
@@ -212,9 +215,9 @@
                               <i class="el-icon-delete" /> Excluir
                             </div>
                             <el-button
-                              class="dispute-view__templates-item-menu"
                               slot="reference"
                               type="text"
+                              class="dispute-view__templates-item-menu"
                               @click="openTemplateMenu(template.template.id)">
                               <i class="el-icon-more" />
                             </el-button>
@@ -545,11 +548,18 @@ export default {
       'archiveQuickReplyTemplate'
     ]),
 
+    closeTemplateMenu() {
+      this.activeTemplateMenu = null
+    },
+
     openTemplateMenu(templateId) {
       this.activeTemplateMenu = this.activeTemplateMenu === templateId ? null : templateId
     },
     inputTemplate(template) {
-      this.$refs.messageEditor.quill.setText(template.parsed.body)
+      this.closeTemplateMenu()
+      const pattern = /<body[^>]*>((.|[\n\r])*)<\/body>/im
+      const body = pattern.exec()
+      this.$refs.messageEditor.quill.container.firstChild.innerHTML = pattern.exec(body[0])
     },
     updateWindowHeight() {
       this.onDrag(0, this.$refs.sectionMessages.offsetHeight - this.sendMessageHeight)
