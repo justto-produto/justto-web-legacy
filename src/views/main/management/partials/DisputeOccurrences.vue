@@ -794,9 +794,12 @@ export default {
     },
 
     buildName(occurrence) {
-      if (occurrence.interaction.type === 'SCHEDULER') return 'JUSTTINE'
-
       if (occurrence.interaction) {
+        if (occurrence.interaction.message &&
+          occurrence.interaction.message.status !== 'PROCESSED_BY_USER' &&
+          occurrence.interaction.direction === 'OUTBOUND') {
+          return 'JUSTTINE'
+        }
         if (occurrence.interaction.type &&
           ['MANUAL_COUNTERPROPOSAL', 'MANUAL_PROPOSAL', 'CLICK'].includes(occurrence.interaction.type) &&
           occurrence.interaction.properties.USER) {
@@ -823,7 +826,7 @@ export default {
     },
 
     buildAvatar(occurrence) {
-      if (occurrence.interaction.type === 'SCHEDULER') {
+      if (occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.status !== 'PROCESSED_BY_USER' && occurrence.interaction.direction === 'OUTBOUND') {
         return require('@/assets/justtine/profile.png')
       } return ''
     },
