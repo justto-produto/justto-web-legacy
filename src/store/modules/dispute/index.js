@@ -28,6 +28,7 @@ const dispute = {
       campaigns: [],
       strategy: [],
       tags: [],
+      noTags: [],
       persons: [],
       expirationDate: [],
       dealDate: [],
