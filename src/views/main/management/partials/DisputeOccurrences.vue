@@ -46,6 +46,7 @@
               <el-tooltip :content="occurrence.sender">
                 <jus-avatar-user
                   :name="occurrence.sender"
+                  :src="buildAvatar(occurrence)"
                   shape="circle"
                   size="sm"
                 />
@@ -218,13 +219,20 @@
             <div class="dispute-view-occurrences__avatar">
               <el-tooltip
                 :disabled="!buildName(occurrence)"
-                :content="buildName(occurrence)"
-              >
+                :content="buildName(occurrence)">
                 <jus-avatar-user
                   :name="buildName(occurrence)"
+                  :src="buildAvatar(occurrence)"
                   shape="circle"
                   size="sm"
                 />
+              </el-tooltip>
+              <el-tooltip v-if="isJusttineMessage(occurrence)">
+                <div slot="content">
+                  Enviei esta mensagem para você, ok?<br/>
+                  Criei ela a partir da estratégia que você definiu na disputa.
+                </div>
+                <i class="el-icon-question"/>
               </el-tooltip>
             </div>
             <div class="dispute-view-occurrences__card-box">
@@ -392,10 +400,10 @@
             <div class="dispute-view-occurrences__avatar">
               <el-tooltip
                 :disabled="!buildName(mergedOccurency)"
-                :content="buildName(mergedOccurency)"
-              >
+                :content="buildName(mergedOccurency)">
                 <jus-avatar-user
                   :name="buildName(mergedOccurency)"
+                  :src="buildAvatar(mergedOccurency)"
                   shape="circle"
                   size="sm"
                 />
@@ -789,6 +797,9 @@ export default {
 
     buildName(occurrence) {
       if (occurrence.interaction) {
+        if (this.isJusttineMessage(occurrence)) {
+          return 'Sou JUSTTINE, sua assistente virtual'
+        }
         if (occurrence.interaction.type &&
           ['MANUAL_COUNTERPROPOSAL', 'MANUAL_PROPOSAL', 'CLICK'].includes(occurrence.interaction.type) &&
           occurrence.interaction.properties.USER) {
@@ -812,6 +823,16 @@ export default {
         }
       }
       return ''
+    },
+
+    isJusttineMessage(occurrence) {
+      return occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.status !== 'PROCESSED_BY_USER' && occurrence.interaction.direction === 'OUTBOUND'
+    },
+
+    buildAvatar(occurrence) {
+      if (this.isJusttineMessage(occurrence)) {
+        return require('@/assets/justtine/profile.png')
+      } return ''
     },
 
     getOccurrenceMessage(messageId, occurrenceId) {
@@ -1283,6 +1304,10 @@ export default {
     span {
       font-size: 12px;
       margin-top: 4px;
+    }
+    .el-icon-question {
+      margin-top: 2px;
+      color: $--color-text-secondary;
     }
   }
   &__empty {
