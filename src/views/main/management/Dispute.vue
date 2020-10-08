@@ -187,30 +187,37 @@
                           v-for="template in quickReplyTemplates"
                           :key="template.template.id"
                           class="dispute-view__templates-list-item">
-                          <span>
+                          <div
+                            class="dispute-view__templates-item-title"
+                            @click="inputTemplate(template)">
                             <jus-icon
-                              :icon="template.template.type.toLowerCase()"
+                              :icon="template.template.contentType === 'HTML' ? 'email' : 'whatsapp'"
                               class="dispute-view__templates-list-icon"
                             />
                             {{ template.template.title }}
-                          </span>
+                          </div>
                           <el-popover
+                            :value="activeTemplateMenu === template.template.id"
+                            trigger="manual"
                             placement="right"
                             popper-class="dispute-view__templates-option-popover"
                             class="dispute-view__templates-item-options">
                             <div>
-                              <i class="el-icon-edit"/> Editar
+                              <i class="el-icon-edit" /> Editar
                             </div>
-                            <div @click="archiveQuickReplyTemplate(template.template.id)">
-                              <i class="el-icon-delete"/> Excluir
+                            <div @click="resetQuickReplyTemplate({ templateId: template.template.id, disputeId: id }); activeTemplateMenu = null">
+                              <i class="el-icon-refresh-left" /> Restaurar
                             </div>
-                            <div @click="resetQuickReplyTemplate(template.template.id)">
-                              <i class="el-icon-refresh-left"/> Restaurar
+                            <div @click="archiveQuickReplyTemplate(template.template.id); activeTemplateMenu = null">
+                              <i class="el-icon-delete" /> Excluir
                             </div>
-                            <i
+                            <el-button
+                              class="dispute-view__templates-item-menu"
                               slot="reference"
-                              class="el-icon-more"
-                            />
+                              type="text"
+                              @click="openTemplateMenu(template.template.id)">
+                              <i class="el-icon-more" />
+                            </el-button>
                           </el-popover>
                         </li>
                       </ul>
@@ -392,6 +399,7 @@ export default {
       isCollapsed: false,
       directContactAddress: '',
       selectedAttachments: [],
+      activeTemplateMenu: null,
       editorOptions: {
         placeholder: 'Escreva alguma coisa',
         modules: {
@@ -537,6 +545,12 @@ export default {
       'archiveQuickReplyTemplate'
     ]),
 
+    openTemplateMenu(templateId) {
+      this.activeTemplateMenu = this.activeTemplateMenu === templateId ? null : templateId
+    },
+    inputTemplate(template) {
+      this.$refs.messageEditor.quill.setText(template.parsed.body)
+    },
     updateWindowHeight() {
       this.onDrag(0, this.$refs.sectionMessages.offsetHeight - this.sendMessageHeight)
     },
@@ -865,7 +879,7 @@ export default {
     .dispute-view__attach {
       position: absolute;
       top: 10px;
-      left: 344px;
+      left: 348px;
       cursor: pointer;
 
       .el-icon-paperclip {
@@ -882,7 +896,7 @@ export default {
     .dispute-view__templates {
       position: absolute;
       top: 6px;
-      left: 384px;
+      left: 390px;
 
       .dispute-view__templates-button {
         padding: 6px 8px;
@@ -1066,27 +1080,41 @@ export default {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 8px 20px;
-      margin: 0 0 10px 0 !important;
       cursor: pointer;
-      &:last-child { margin-bottom: 0 !important }
 
-      .dispute-view__templates-list-icon {
-        margin-right: 8px;
-        margin-bottom: -2px;
+      .dispute-view__templates-item-title {
+        padding: 8px 20px;
+        flex: 1;
+
+        .dispute-view__templates-list-icon {
+          margin-right: 6px;
+          margin-bottom: -2px;
+        }
       }
 
       .dispute-view__templates-item-options {
-        .el-icon-more {
-          margin-left: 8px;
-          cursor: pointer;
-          transform: rotate(90deg);
-          &:hover { color: $--color-primary; }
+        .dispute-view__templates-item-menu {
+          padding: 0;
+          visibility: hidden;
+          &:focus { visibility: visible; }
+
+          .el-icon-more {
+            color: $--color-text-primary;
+            margin-right: 20px;
+            cursor: pointer;
+            transform: rotate(90deg);
+            &:hover { color: $--color-primary; }
+          }
         }
+
       }
 
       &:hover {
         background-color: #fafafa;
+
+        & .dispute-view__templates-item-menu {
+          visibility: visible;
+        }
       }
     }
   }
@@ -1097,9 +1125,10 @@ export default {
   width: 100px !important;
 
   > div {
-    padding: 0 8px;
+    padding: 2px 8px;
     cursor: pointer;
     &:hover { background-color: #fafafa; }
+    &:nth-child(3) { color: $--color-danger }
   }
 }
 </style>
