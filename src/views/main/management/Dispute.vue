@@ -186,7 +186,7 @@
                         class="dispute-view__templates-list">
                         <li
                           v-for="template in quickReplyTemplates"
-                          :key="template.template.id"
+                          :key="template.template.referenceTemplateId"
                           class="dispute-view__templates-list-item"
                         >
                           <div
@@ -199,26 +199,28 @@
                             {{ template.template.title }}
                           </div>
                           <el-popover
-                            :value="activeTemplateMenu === template.template.id"
+                            :value="activeTemplateMenu === template.template.referenceTemplateId"
                             trigger="manual"
                             placement="right"
                             popper-class="dispute-view__templates-option-popover"
                             class="dispute-view__templates-item-options"
-                            @mouseleave="closeTemplateMenu($event, template.template.id)">
-                            <div>
+                            @mouseleave="closeTemplateMenu($event, template.template.referenceTemplateId)"
+                          >
+                            <div @click="openEditTemplateDialog(template.template)">
                               <i class="el-icon-edit" /> Editar
                             </div>
-                            <div @click="resetQuickReplyTemplate({ templateId: template.template.id, disputeId: id }); activeTemplateMenu = null">
+                            <div @click="resetQuickReplyTemplate({ templateId: template.template.referenceTemplateId, disputeId: id }); activeTemplateMenu = null">
                               <i class="el-icon-refresh-left" /> Restaurar
                             </div>
-                            <div @click="archiveQuickReplyTemplate(template.template.id); activeTemplateMenu = null">
+                            <div @click="archiveQuickReplyTemplate(template.template.referenceTemplateId); activeTemplateMenu = null">
                               <i class="el-icon-delete" /> Excluir
                             </div>
                             <el-button
                               slot="reference"
                               type="text"
                               class="dispute-view__templates-item-menu"
-                              @click="openTemplateMenu(template.template.id)">
+                              @click="openTemplateMenu(template.template.referenceTemplateId)"
+                            >
                               <i class="el-icon-more" />
                             </el-button>
                           </el-popover>
@@ -247,6 +249,20 @@
                       data-testid="email-editor"
                       @focus="$refs.disputeOverview.overviewTab = 'roles'"
                     />
+                    <el-dialog
+                      :visible.sync="editTemplateQuickReply.visible"
+                      append-to-body
+                      width="40%"
+                      @close="closeEditTemplateDialog()"
+                    >
+                      <dispute-quick-reply-editor
+                        :dispute-id="Number(id)"
+                        :template="editTemplateQuickReply.template"
+                        @cancel="closeEditTemplateDialog()"
+                        @input="inputTemplate($event)"
+                        @update="getQuickReplyTemplates(id)"
+                      />
+                    </el-dialog>
                   </div>
                   <div class="dispute-view__send-message-actions">
                     <el-tooltip
@@ -380,6 +396,7 @@ export default {
     DisputeTips: () => import('./partials/DisputeTips'),
     DisputeNegotiation: () => import('./partials/DisputeNegotiation'),
     VueDraggableResizable: () => import('vue-draggable-resizable'),
+    DisputeQuickReplyEditor: () => import('./partials/DisuteQuickReplyEditor'),
     JusDragArea,
     quillEditor
   },
@@ -403,6 +420,10 @@ export default {
       directContactAddress: '',
       selectedAttachments: [],
       activeTemplateMenu: null,
+      editTemplateQuickReply: {
+        visible: false,
+        template: {}
+      },
       editorOptions: {
         placeholder: 'Escreva alguma coisa',
         modules: {
@@ -547,6 +568,18 @@ export default {
       'resetQuickReplyTemplate',
       'archiveQuickReplyTemplate'
     ]),
+    closeEditTemplateDialog() {
+      this.editTemplateQuickReply = {
+        visible: false,
+        template: {}
+      }
+    },
+    openEditTemplateDialog(template) {
+      this.editTemplateQuickReply = {
+        visible: true,
+        template
+      }
+    },
 
     closeTemplateMenu() {
       this.activeTemplateMenu = null
@@ -555,11 +588,19 @@ export default {
     openTemplateMenu(templateId) {
       this.activeTemplateMenu = this.activeTemplateMenu === templateId ? null : templateId
     },
+
+    formatBody(body) {
+      const start = body.indexOf('<body>') + 6
+      const end = body.indexOf('</body>') - 7
+      if (start > 5 && end > 0) {
+        return body.substring(start, end).trim()
+      }
+      return body
+    },
+
     inputTemplate(template) {
       this.closeTemplateMenu()
-      const pattern = /<body[^>]*>((.|[\n\r])*)<\/body>/im
-      const body = pattern.exec()
-      this.$refs.messageEditor.quill.container.firstChild.innerHTML = pattern.exec(body[0])
+      this.$refs.messageEditor.quill.container.firstChild.innerHTML = this.formatBody(template.parsed.body)
     },
     updateWindowHeight() {
       this.onDrag(0, this.$refs.sectionMessages.offsetHeight - this.sendMessageHeight)
@@ -1131,7 +1172,7 @@ export default {
 }
 
 .dispute-view__templates-option-popover {
-  padding: 8px 0;
+  padding: 8px 0 8px 8px;
   width: 100px !important;
 
   > div {
@@ -1140,5 +1181,9 @@ export default {
     &:hover { background-color: #fafafa; }
     &:nth-child(3) { color: $--color-danger }
   }
+}
+
+.dialog_edit_template__container {
+  padding-top: 16px;
 }
 </style>
