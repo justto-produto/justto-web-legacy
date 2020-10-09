@@ -67,9 +67,16 @@ const message = {
     },
     archiveQuickReplyTemplate({ commit }, templateId) {
       return axiosDispatcher({
-        url: `/api/messages/quick-reply/template/${templateId}/archive`,
-        method: 'PATCH'
+        url: `/api/messages/quick-reply/template/${templateId}`,
+        method: 'delete'
       }).then(() => commit('archiveQuickReplyTemplate', templateId))
+    },
+    editTemplate({ _ }, { template, disputeId }) {
+      return axiosDispatcher({
+        url: `/api/messages/quick-reply/${disputeId}/template`,
+        method: 'put',
+        data: template
+      })
     }
   },
   getters: {
