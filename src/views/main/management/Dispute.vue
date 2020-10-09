@@ -212,7 +212,7 @@
                             <div @click="resetQuickReplyTemplate({ templateId: template.template.referenceTemplateId, disputeId: id }); activeTemplateMenu = null">
                               <i class="el-icon-refresh-left" /> Restaurar
                             </div>
-                            <div @click="archiveQuickReplyTemplate(template.template.referenceTemplateId); activeTemplateMenu = null">
+                            <div @click="archiveTemplate(template.template.referenceTemplateId); activeTemplateMenu = null">
                               <i class="el-icon-delete" /> Excluir
                             </div>
                             <el-button
@@ -568,6 +568,10 @@ export default {
       'resetQuickReplyTemplate',
       'archiveQuickReplyTemplate'
     ]),
+    archiveTemplate(templateId) {
+      this.archiveQuickReplyTemplate(templateId)
+      this.getQuickReplyTemplates(this.id)
+    },
     closeEditTemplateDialog() {
       this.editTemplateQuickReply = {
         visible: false,
