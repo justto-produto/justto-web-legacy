@@ -142,6 +142,7 @@
                     :class="{ 'show-toolbar': messageType === 'email' }"
                     class="dispute-view__quill"
                   >
+                    <!-- placement="top" -->
                     <el-popover
                       v-if="messageType === 'email'"
                       title="Anexar"
@@ -170,12 +171,98 @@
                         <b class="dispute-view__attach-counter">{{ selectedAttachments.length }}x</b>
                       </span>
                     </el-popover>
+
+                    <!-- placement="top" -->
+                    <el-popover
+                      v-if="messageType === 'email'"
+                      title="Respostas rápidas"
+                      trigger="click"
+                      popper-class="dispute-view__templates-popover"
+                      class="dispute-view__templates"
+                      @hide="closeTemplateMenu()"
+                    >
+                      <ul
+                        v-if="quickReplyTemplates.length"
+                        class="dispute-view__templates-list">
+                        <li
+                          v-for="template in quickReplyTemplates"
+                          :key="template.template.referenceTemplateId"
+                          class="dispute-view__templates-list-item"
+                        >
+                          <div
+                            class="dispute-view__templates-item-title"
+                            @click="inputTemplate(template)">
+                            <jus-icon
+                              :icon="template.template.contentType === 'HTML' ? 'email' : 'whatsapp'"
+                              class="dispute-view__templates-list-icon"
+                            />
+                            {{ template.template.title }}
+                          </div>
+                          <el-popover
+                            :value="activeTemplateMenu === template.template.referenceTemplateId"
+                            trigger="manual"
+                            placement="right"
+                            popper-class="dispute-view__templates-option-popover"
+                            class="dispute-view__templates-item-options"
+                            @mouseleave="closeTemplateMenu($event, template.template.referenceTemplateId)"
+                          >
+                            <div @click="openEditTemplateDialog(template.template)">
+                              <i class="el-icon-edit" /> Editar
+                            </div>
+                            <div @click="resetQuickReplyTemplate({ templateId: template.template.referenceTemplateId, disputeId: id }); activeTemplateMenu = null">
+                              <i class="el-icon-refresh-left" /> Restaurar
+                            </div>
+                            <div @click="archiveTemplate(template.template.referenceTemplateId); activeTemplateMenu = null">
+                              <i class="el-icon-delete" /> Excluir
+                            </div>
+                            <el-button
+                              slot="reference"
+                              type="text"
+                              class="dispute-view__templates-item-menu"
+                              @click="openTemplateMenu(template.template.referenceTemplateId)"
+                            >
+                              <i class="el-icon-more" />
+                            </el-button>
+                          </el-popover>
+                        </li>
+                      </ul>
+                      <span
+                        v-else
+                        class="dispute-view__templates-list-empty">
+                        Não há templates para esta estratégia
+                      </span>
+                      <el-button
+                        slot="reference"
+                        size="mini"
+                        class="dispute-view__templates-button">
+                        <jus-icon
+                          class="dispute-view__templates-button-icon"
+                          icon="zap"
+                        />
+                        Respostas rápidas
+                      </el-button>
+                    </el-popover>
+
                     <quill-editor
                       ref="messageEditor"
                       :options="editorOptions"
                       data-testid="email-editor"
                       @focus="$refs.disputeOverview.overviewTab = 'roles'"
                     />
+                    <el-dialog
+                      :visible.sync="editTemplateQuickReply.visible"
+                      append-to-body
+                      width="40%"
+                      @close="closeEditTemplateDialog()"
+                    >
+                      <dispute-quick-reply-editor
+                        :dispute-id="Number(id)"
+                        :template="editTemplateQuickReply.template"
+                        @cancel="closeEditTemplateDialog()"
+                        @input="inputTemplate($event)"
+                        @update="getQuickReplyTemplates(id)"
+                      />
+                    </el-dialog>
                   </div>
                   <div class="dispute-view__send-message-actions">
                     <el-tooltip
@@ -309,6 +396,7 @@ export default {
     DisputeTips: () => import('./partials/DisputeTips'),
     DisputeNegotiation: () => import('./partials/DisputeNegotiation'),
     VueDraggableResizable: () => import('vue-draggable-resizable'),
+    DisputeQuickReplyEditor: () => import('./partials/DisuteQuickReplyEditor'),
     JusDragArea,
     quillEditor
   },
@@ -331,6 +419,11 @@ export default {
       isCollapsed: false,
       directContactAddress: '',
       selectedAttachments: [],
+      activeTemplateMenu: null,
+      editTemplateQuickReply: {
+        visible: false,
+        template: {}
+      },
       editorOptions: {
         placeholder: 'Escreva alguma coisa',
         modules: {
@@ -352,7 +445,8 @@ export default {
       'disputeAttachments',
       'disputeStatuses',
       'isJusttoAdmin',
-      'ghostMode'
+      'ghostMode',
+      'quickReplyTemplates',
     ]),
 
     sendMessageHeightComputed() {
@@ -452,6 +546,7 @@ export default {
       disputeId: this.id,
       anonymous: this.isJusttoAdmin && this.ghostMode
     })
+    this.getQuickReplyTemplates(this.id)
   },
   mounted() {
     setTimeout(() => {
@@ -468,9 +563,49 @@ export default {
   methods: {
     ...mapActions([
       'getDisputeStatuses',
-      'disputeSetVisualized'
+      'disputeSetVisualized',
+      'getQuickReplyTemplates',
+      'resetQuickReplyTemplate',
+      'archiveQuickReplyTemplate'
     ]),
+    archiveTemplate(templateId) {
+      this.archiveQuickReplyTemplate(templateId)
+      this.getQuickReplyTemplates(this.id)
+    },
+    closeEditTemplateDialog() {
+      this.editTemplateQuickReply = {
+        visible: false,
+        template: {}
+      }
+    },
+    openEditTemplateDialog(template) {
+      this.editTemplateQuickReply = {
+        visible: true,
+        template
+      }
+    },
 
+    closeTemplateMenu() {
+      this.activeTemplateMenu = null
+    },
+
+    openTemplateMenu(templateId) {
+      this.activeTemplateMenu = this.activeTemplateMenu === templateId ? null : templateId
+    },
+
+    formatBody(body) {
+      const start = body.indexOf('<body>') + 6
+      const end = body.indexOf('</body>') - 7
+      if (start > 5 && end > 0) {
+        return body.substring(start, end).trim()
+      }
+      return body
+    },
+
+    inputTemplate(template) {
+      this.closeTemplateMenu()
+      this.$refs.messageEditor.quill.container.firstChild.innerHTML = this.formatBody(template.parsed.body)
+    },
     updateWindowHeight() {
       this.onDrag(0, this.$refs.sectionMessages.offsetHeight - this.sendMessageHeight)
     },
@@ -812,6 +947,26 @@ export default {
 
       &:hover { color: $--color-primary }
     }
+
+    .dispute-view__templates {
+      position: absolute;
+      top: 6px;
+      left: 390px;
+
+      .dispute-view__templates-button {
+        padding: 6px 8px;
+
+        > span {
+          display: flex;
+          align-items: center;
+        }
+
+        .dispute-view__templates-button-icon {
+          width: 14px;
+          margin-right: 4px;
+        }
+      }
+    }
   }
   &__quill-note {
     height: 100% !important;
@@ -949,7 +1104,6 @@ export default {
     padding: 8px 12px 8px 10px;
     max-width: 100%;
     height: auto;
-
     &:last-child { margin-bottom: 0 !important }
 
     .el-checkbox__label {
@@ -959,5 +1113,81 @@ export default {
       max-width: calc(100% - 14px);
     }
   }
+}
+
+.dispute-view__templates-popover {
+  padding: 20px 0;
+
+  .el-popover__title {
+    margin: 0 20px 12px 20px;
+  }
+
+  .dispute-view__templates-list-empty {
+    margin: 0 20px
+  }
+
+  .dispute-view__templates-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    .dispute-view__templates-list-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+
+      .dispute-view__templates-item-title {
+        padding: 8px 20px;
+        flex: 1;
+
+        .dispute-view__templates-list-icon {
+          margin-right: 6px;
+          margin-bottom: -2px;
+        }
+      }
+
+      .dispute-view__templates-item-options {
+        .dispute-view__templates-item-menu {
+          padding: 0;
+          visibility: hidden;
+          &:focus { visibility: visible; }
+
+          .el-icon-more {
+            color: $--color-text-primary;
+            margin-right: 20px;
+            cursor: pointer;
+            transform: rotate(90deg);
+            &:hover { color: $--color-primary; }
+          }
+        }
+
+      }
+
+      &:hover {
+        background-color: #fafafa;
+
+        & .dispute-view__templates-item-menu {
+          visibility: visible;
+        }
+      }
+    }
+  }
+}
+
+.dispute-view__templates-option-popover {
+  padding: 8px 0 8px 8px;
+  width: 100px !important;
+
+  > div {
+    padding: 2px 8px;
+    cursor: pointer;
+    &:hover { background-color: #fafafa; }
+    &:nth-child(3) { color: $--color-danger }
+  }
+}
+
+.dialog_edit_template__container {
+  padding-top: 16px;
 }
 </style>
