@@ -35,6 +35,9 @@ const disputeGetters = {
   disputeNotVisualizedFinished: (state, getters) => {
     return getters.filterSummary('FINISHED', state.summaryNotVisualizeds)
   },
+  disputeNotVisualizedPreNegotiation: (state, getters) => {
+    return getters.filterSummary('PRE_NEGOTIATION', state.summaryNotVisualizeds)
+  },
   hasPrescription: state => (prescription) => state.query.prescriptions.includes(prescription),
   prescriptionsList: state => state.prescriptionsList,
   partyAnalysisByDocument: state => (documentNumber) => state.partyAnalysis[documentNumber],
