@@ -28,14 +28,14 @@
           >
             <span slot="label">
               Pré-Negociação
-              <!-- <el-badge
-                :hidden="!disputes.length"
-                :value="disputes.length"
+              <el-badge
+                :hidden="!preNegotiationLenght"
+                :value="preNegotiationLenght"
                 :max="99"
                 data-testid="badge-tab-1"
                 type="primary"
                 class="el-badge--absolute"
-              /> -->
+              />
             </span>
           </el-tab-pane>
           <el-tab-pane name="1">
@@ -64,11 +64,7 @@
               />
             </span>
           </el-tab-pane>
-          <el-tab-pane
-            name="3"
-            label="Com Interação"
-            data-testid="tab-pproposal-accepted"
-          >
+          <el-tab-pane name="3">
             <span slot="label">
               Proposta aceita
               <el-badge
@@ -81,11 +77,10 @@
               />
             </span>
           </el-tab-pane>
-          <el-tab-pane
-            name="4"
-            label="Com Interação"
-          >
-            <span slot="label">
+          <el-tab-pane name="4">
+            <span
+              slot="label"
+              :style="finishedLenght ? 'padding-right: 30px;' : ''">
               Finalizados
               <el-badge
                 :hidden="!finishedLenght"
@@ -463,6 +458,7 @@ export default {
       disputes: 'disputes',
       engagementLength: 'disputeNearExpirationsEngajement',
       interactionLength: 'disputeNotVisualizedInteration',
+      preNegotiationLenght: 'disputeNotVisualizedPreNegotiation',
       isJusttoAdmin: 'isJusttoAdmin',
       newDealsLength: 'disputeNotVisualizedNewDeal',
       finishedLenght: 'disputeNotVisualizedFinished',
