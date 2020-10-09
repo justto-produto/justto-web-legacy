@@ -603,7 +603,15 @@ const disputeActions = {
     // url: 'api/disputes/prescriptions',
     url: 'api/disputes/prescriptions-fix-index/1',
     mutation: 'setPrescriptionsList'
-  })
+  }),
+  editTemplate({ _ }, { template, disputeId }) {
+    delete template.id
+    return axiosDispatcher({
+      url: `/api/messages/quick-reply/${disputeId}/template`,
+      method: 'put',
+      data: template
+    })
+  }
 }
 
 export default disputeActions
