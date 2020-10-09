@@ -67,8 +67,8 @@ const message = {
     },
     archiveQuickReplyTemplate({ commit }, templateId) {
       return axiosDispatcher({
-        url: `/api/messages/quick-reply/template/${templateId}`,
-        method: 'delete'
+        url: `/api/messages/quick-reply/template/${templateId}/archive`,
+        method: 'patch'
       }).then(() => commit('archiveQuickReplyTemplate', templateId))
     },
     editTemplate({ _ }, { template, disputeId }) {
