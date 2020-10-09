@@ -80,7 +80,7 @@
           <el-tab-pane name="4">
             <span
               slot="label"
-              :style="finishedLenght ? 'padding-right: 30px;' : ''">
+              :style="!finishedLenght ? '' : finishedLenght > 99 ? 'padding-right: 38px;' : finishedLenght > 9 ? 'padding-right: 30px;' : 'padding-right: 22px;'">
               Finalizados
               <el-badge
                 :hidden="!finishedLenght"
