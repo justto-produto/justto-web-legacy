@@ -255,6 +255,7 @@ export default {
           this.$store.commit('updateDisputeQuery', { key: 'persons', value: [this.selectedMemberId] })
         }
         this.$store.commit('setDisputeHasFilters', true)
+        this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['visualized,asc', 'id,desc'] })
         this.$store.commit('setDisputesTab', '9')
         this.$router.push('/management/all')
         // }
