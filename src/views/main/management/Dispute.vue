@@ -549,6 +549,7 @@ export default {
     this.getQuickReplyTemplates(this.id)
   },
   mounted() {
+    this.getLastInteractions(this.id)
     setTimeout(() => {
       this.disputeOccurrencesKey += 1
       this.y = parseInt(localStorage.getItem('jusoffsetheight')) || this.$refs.sectionMessages.offsetHeight - 208
@@ -563,6 +564,7 @@ export default {
   methods: {
     ...mapActions([
       'getDisputeStatuses',
+      'getLastInteractions',
       'disputeSetVisualized',
       'getQuickReplyTemplates',
       'resetQuickReplyTemplate',

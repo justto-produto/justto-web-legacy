@@ -613,7 +613,11 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['activeOccurrency']),
+    ...mapGetters([
+      'activeOccurrency',
+      'disputeLastInteractions'
+    ]),
+
     datedOccurrences() {
       // APENAS ABA COMUNICAÇÃO
       const self = this
@@ -946,9 +950,10 @@ export default {
 
     showReply(occurrence) {
       if (occurrence.interaction &&
-        occurrence.interaction.message &&
+        ((occurrence.interaction.message &&
         occurrence.interaction.message.communicationType &&
-        ['EMAIL', 'WHATSAPP'].includes(occurrence.interaction.message.communicationType) &&
+        ['EMAIL', 'WHATSAPP'].includes(occurrence.interaction.message.communicationType)) ||
+        (['NEGOTIATOR_PROPOSAL', 'NEGOTIATOR_COUNTERPROSAL'].includes(occurrence.interaction.type) && this.disputeLastInteractions.length)) &&
         occurrence.interaction.direction === 'INBOUND') {
         return true
       }
@@ -956,10 +961,17 @@ export default {
     },
 
     startReply(occurrence) {
-      const sender = occurrence.interaction.message.sender
-      const resume = occurrence.interaction.message.resume
-      const type = occurrence.interaction.message.communicationType
-      this.$emit('dispute:reply', { sender, resume, type })
+      if (['NEGOTIATOR_PROPOSAL', 'NEGOTIATOR_COUNTERPROSAL'].includes(occurrence.interaction.type)) {
+        const sender = this.disputeLastInteractions[0].address
+        const resume = this.buildContent(occurrence)
+        const type = 'email'
+        this.$emit('dispute:reply', { sender, resume, type })
+      } else {
+        const sender = occurrence.interaction.message.sender
+        const resume = occurrence.interaction.message.resume
+        const type = occurrence.interaction.message.communicationType
+        this.$emit('dispute:reply', { sender, resume, type })
+      }
     },
 
     /** @method buildWhatsappStatus
