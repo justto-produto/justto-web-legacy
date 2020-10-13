@@ -12,6 +12,7 @@
           v-if="!workspaces.length"
           ref="loginForm"
           v-loading="showLoading"
+          :element-loading-text="loadingText"
           :model="loginForm"
           :rules="rules"
           label-position="top"
@@ -166,6 +167,8 @@ export default {
   },
   data() {
     return {
+      loadingText: 'Autenticando...',
+      loadingIndex: 0,
       workspaces: [],
       showPassword: false,
       showError: false,
@@ -216,45 +219,39 @@ export default {
     }
   },
   methods: {
+    getErrorMessage() {
+      const messages = [
+        'Aguarde um momento que já iremos lhe autenticar',
+        'O serviço de autenticação de usuários está sendo atualizado para aplicar melhorias e mais segurança',
+        'Atualizando o serviço de autenticação de usuário'
+      ]
+      const msg = messages[this.loadingIndex % 3]
+      this.loadingIndex += 1
+      return msg
+    },
     doLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.showError = false
           this.showLoading = true
+
           this.$store.dispatch('login', this.loginForm)
             .then(() => {
-              this.$store.dispatch('myAccount').then(() => {
-                this.getMyWorkspaces()
-              }).catch(error => {
+              this.$store.dispatch('myAccount').then(this.getMyWorkspaces).catch(error => {
+                console.log('ERROR', error)
                 this.$jusNotification({ error })
                 this.showLoading = false
               })
-
-              // Promise.all([
-              //   this.$store.dispatch('myAccount'),
-              //   getUserWorkspaces
-              // ]).then(responses => {
-              //   // SEGMENT TRACK
-              //   this.$jusSegment('Usuário logado')
-              //   if (responses[1].length > 1) {
-              //     this.showLoading = false
-              //     this.workspaces = responses[1]
-              //   } else if (responses[1].length === 0) {
-              //     this.$router.push('/onboarding')
-              //   } else {
-              //     this.getMembersAndRedirect(responses[1][0])
-              //   }
-              // }).catch(error => {
-              //   this.$jusNotification({ error })
-              //   this.showLoading = false
-              // })
             })
             .catch(error => {
+              localStorage.removeItem('justoken')
               if (error.response && (error.response.status === 401 || error.response.data.code === 'INVALID_CREDENTIALS')) {
                 this.mountError('E-mail não cadastrado ou senha incorreta.')
               } else {
-                this.showLoading = false
-                this.$jusNotification({ error })
+                this.loadingText = this.getErrorMessage()
+                setTimeout(this.doLogin, 6000)
+                // this.showLoading = false
+                // this.$jusNotification({ error })
               }
             })
         } else {
