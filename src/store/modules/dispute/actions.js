@@ -33,6 +33,12 @@ const disputeActions = {
       dispatch('getDisputes', 'update')
     }, 1000)
   },
+  getLastInteractions({ _ }, disputeId) {
+    return axiosDispatcher({
+      url: `/api/disputes/${disputeId}/interaction`,
+      mutation: 'setLastInteractions'
+    })
+  },
   getDispute({ commit, dispatch }, id) {
     return new Promise((resolve, reject) => {
       commit('clearDispute')
