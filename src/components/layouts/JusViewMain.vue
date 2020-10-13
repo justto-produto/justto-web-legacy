@@ -149,6 +149,8 @@ export default {
   }
 
   .jus-main-view__main-card {
+    overflow-y: auto;
+
     .el-card__body {
       @media (max-height: 680px) {
         padding: 10px 10px 0 10px;

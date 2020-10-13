@@ -73,8 +73,6 @@ const account = {
         method: 'POST',
         data: credentials,
         mutation: 'setToken'
-      }).catch(() => {
-        localStorage.removeItem('justoken')
       })
     },
     refreshToken({ commit }) {
