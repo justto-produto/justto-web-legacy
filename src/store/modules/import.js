@@ -1,7 +1,8 @@
 const imports = {
   state: {
     file: undefined,
-    map: []
+    map: [],
+    errorFields: [],
   },
   mutations: {
     setImportsFile(state, file) {
@@ -16,6 +17,12 @@ const imports = {
     },
     removeImportsMap(state, map) {
       state.map = []
+    },
+    setErrorFields(state, fields) {
+      state.errorFields = fields
+    },
+    clearErrorField(state, filed) {
+      state.errorFields = state.errorFields.filter(errorField => errorField !== filed)
     }
   },
   actions: {
@@ -74,7 +81,7 @@ const imports = {
           })
       })
     },
-    uploadImportFile({ commit }, file) {
+    uploadImportFile({ _ }, file) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
         axios.post('api/imports/upload', file)
@@ -109,13 +116,20 @@ const imports = {
             reject(error)
           })
       })
+    },
+    setErrorFields({ commit }, fields) {
+      commit('setErrorFields', fields)
+    },
+    clearErrorField({ commit }, filed) {
+      commit('clearErrorField', filed)
     }
   },
   getters: {
     importedFileName: state => state.file ? state.file.file_name : null,
     hasImportsFile: state => {
       return state.file !== undefined
-    }
+    },
+    errorFields: state => state.errorFields
   }
 }
 

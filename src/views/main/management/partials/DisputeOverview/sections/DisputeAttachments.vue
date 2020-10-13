@@ -135,8 +135,9 @@ export default {
     }
   },
   mounted() {
+    const { id } = this.$route.params
     this.isLoading = true
-    this.getDisputeAttachments(this.disputeId).finally(() => {
+    this.getDisputeAttachments(id).finally(() => {
       this.isLoading = false
     })
   },
