@@ -1,5 +1,7 @@
 <template>
-  <section class="dispute-attachments">
+  <section
+    v-loading="isLoading"
+    class="dispute-attachments">
     <div class="dispute-overview-view__attachment-buttons">
       <el-input
         v-model="attachmentFilterTerm"
@@ -121,7 +123,8 @@ export default {
     return {
       uploadAttacmentDialogVisable: false,
       deleteAttachmentLoading: false,
-      attachmentFilterTerm: ''
+      attachmentFilterTerm: '',
+      isLoading: false
     }
   },
   computed: {
@@ -130,6 +133,12 @@ export default {
     filteredDisputeAttachments() {
       return filterByTerm(this.attachmentFilterTerm, this.disputeAttachments, 'name')
     }
+  },
+  mounted() {
+    this.isLoading = true
+    this.getDisputeAttachments(this.disputeId).finally(() => {
+      this.isLoading = false
+    })
   },
   methods: {
     ...mapActions(['deleteAttachment', 'getDisputeAttachments']),
