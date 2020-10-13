@@ -21,8 +21,9 @@
         <dispute-code-link
           v-if="dispute.code"
           :code="dispute.code"
-          :custom-style="{ fontSize: '14px', paddingRight: '24px', fontWeight: 'bold', color: '#adadad'}"
-          @openTimeline="openTimelineModal" />
+          :custom-style="{ fontSize: '14x', paddingRight: '24px', fontWeight: 'normal', color: '#adadad'}"
+          @openTimeline="openTimelineModal"
+        />
       </span>
     </h2>
     <el-dialog

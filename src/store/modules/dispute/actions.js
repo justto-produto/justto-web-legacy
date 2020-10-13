@@ -37,7 +37,6 @@ const disputeActions = {
     return new Promise((resolve, reject) => {
       commit('clearDispute')
       dispatch('getDisputeProprieties', id)
-      dispatch('getDisputeAttachments', id)
       // eslint-disable-next-line
       axios.get('api/disputes/' + id + '/vm')
         .then(response => {
