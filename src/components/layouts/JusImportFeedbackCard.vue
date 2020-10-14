@@ -12,7 +12,7 @@
         :class="{'has-error': errorFields.includes('respondent')}"
         data-testid="feedback-respondent"
         placeholder="Dê um nome para o seu Réu"
-      >
+        @input="clearErrorField('respondent')">
         <div slot="prefix">
           <i
             v-if="errorFields.includes('respondent')"
@@ -31,7 +31,7 @@
         :class="{'has-error': errorFields.includes('name')}"
         data-testid="feedback-campaignName"
         placeholder="Dê um nome para a sua Campanha"
-      >
+        @input="clearErrorField('name')">
         <div slot="prefix">
           <i
             v-if="errorFields.includes('name')"
@@ -62,7 +62,7 @@
         :class="{'has-error': errorFields.includes('strategy')}"
         placeholder="Escolha uma estratégia"
         data-testid="feedback-strategy"
-      >
+        @input="clearErrorField('strategy')">
         <div slot="prefix">
           <i
             v-if="errorFields.includes('strategy')"
@@ -87,26 +87,9 @@
           </a>
         </div>
       </div>
-      <!-- <div v-if="isPaymentStrategy" class="jus-import-feedback-card__number">
-        <div>
-          <i class="el-icon-circle-check el-input__icon--success" />Data do protocolo
-        </div>
-        <div>
-          <el-input-number
-            v-model="protocolDeadLine"
-            :min="1"
-            :max="9999"
-            name="protocol-deadline"
-            controls-position="right" />
-          <span class="jus-import-feedback-card__sufix">
-            dia(s) corridos após acordo
-          </span>
-        </div>
-      </div> -->
       <div
         v-if="isPaymentStrategy"
-        class="jus-import-feedback-card__number"
-      >
+        class="jus-import-feedback-card__number">
         <div>
           <i
             v-if="errorFields.includes('paymentDeadLine')"
@@ -126,6 +109,7 @@
             :class="{'has-error': errorFields.includes('paymentDeadLine')}"
             name="payment-deadline"
             controls-position="right"
+            @input="clearErrorField('paymentDeadLine')"
           />
           <span class="jus-import-feedback-card__sufix">
             dia(s) corridos após o protocolo
@@ -142,6 +126,7 @@
         placeholder="Defina a data limite para a negociação"
         data-testid="feedback-datapicker"
         value-format="yyyy-MM-dd"
+        @input="clearErrorField('deadline')"
       />
       <el-select
         v-model="negotiatorIds"
@@ -153,7 +138,7 @@
         class="select-negotiator"
         :class="{'has-error': errorFields.includes('negotiatorIds')}"
         data-testid="feedback-negotiators"
-      >
+        @input="clearErrorField('negotiatorIds')">
         <div slot="prefix">
           <i
             v-if="errorFields.includes('negotiatorIds')"
@@ -244,6 +229,7 @@
         <el-switch v-model="denySavingDeposit" />
       </div>
     </el-card>
+
     <jus-engagements-dialog
       :dialog-visible.sync="dialogVisible"
       :strategy-id="strategy.id"
@@ -254,7 +240,7 @@
 
 <script>
 import { normalizeString } from '@/utils/jusUtils'
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'JusImportFeedbackCard',
@@ -269,10 +255,6 @@ export default {
     index: {
       type: Number,
       default: 1
-    },
-    errorFields: {
-      type: Array,
-      default: () => []
     }
   },
   data() {
@@ -316,7 +298,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['isJusttoDev']),
+    ...mapGetters(['isJusttoDev', 'errorFields']),
 
     strategies() {
       const activeSrategies = this.$store.getters.strategyList.filter(s => !s.archived)
@@ -426,6 +408,8 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['clearErrorField']),
+
     showDuplicatedAlert(campaignName) {
       this.$alert('', {
         title: 'Campanhas associadas',

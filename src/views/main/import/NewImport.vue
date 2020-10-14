@@ -30,7 +30,6 @@
             key="2"
             :mapped-campaigns="mappedCampaigns"
             :campaign-is-mapped="isMapped"
-            :error-fields="errorFields"
           />
         </transition>
       </div>
@@ -64,6 +63,7 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
 /* eslint-disable no-prototype-builtins */
 export default {
   name: 'NewImport',
@@ -77,11 +77,12 @@ export default {
       uploadId: undefined,
       activeStep: 0,
       mappedCampaigns: [],
-      campaignIsMapped: false,
-      errorFields: []
+      campaignIsMapped: false
     }
   },
   computed: {
+    ...mapGetters(['errorFields']),
+
     isMapped() {
       return this.campaignIsMapped
     }
@@ -93,6 +94,8 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['setErrorFields']),
+
     nextStep() {
       if (this.activeStep === 1) {
         this.$store.dispatch('mapImportColumns', this.$store.state.importModule.map).then(response => {
@@ -122,7 +125,7 @@ export default {
       const promises = []
       for (const mappedCampaign of this.mappedCampaigns) {
         const campaign = JSON.parse(JSON.stringify(mappedCampaign))
-        this.errorFields = this.campaignErrorFields(campaign)
+        this.setErrorFields(this.campaignErrorFields(campaign))
         if (!this.checkValidCampaign(campaign)) {
           allValid = false
         }

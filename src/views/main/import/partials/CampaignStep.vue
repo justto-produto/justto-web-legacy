@@ -128,7 +128,6 @@
           :key="mappedCampaign.cluster"
           :mapped-campaign.sync="mappedCampaigns[index]"
           :index="index + 1"
-          :error-fields="errorFields"
           data-testid="import-feedback"
         />
       </div>
@@ -149,10 +148,6 @@ export default {
       default: false
     },
     mappedCampaigns: {
-      type: Array,
-      default: () => []
-    },
-    errorFields: {
       type: Array,
       default: () => []
     }
