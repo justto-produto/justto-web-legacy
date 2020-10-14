@@ -758,7 +758,7 @@ export default {
         this.loadingTextarea = true
         this.verifyWhatsappMessage(quillMessage).then(() => {
           const to = []
-          if (this.directContactAddress) {
+          if (this.directContactAddress.length) {
             this.directContactAddress.forEach(email => {
               to.push({ address: email })
             })

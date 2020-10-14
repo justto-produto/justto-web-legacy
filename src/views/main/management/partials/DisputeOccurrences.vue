@@ -954,7 +954,7 @@ export default {
         ((occurrence.interaction.message &&
         occurrence.interaction.message.communicationType &&
         ['EMAIL', 'WHATSAPP'].includes(occurrence.interaction.message.communicationType)) ||
-        (['NEGOTIATOR_PROPOSAL', 'NEGOTIATOR_COUNTERPROSAL'].includes(occurrence.interaction.type) &&
+        (['NEGOTIATOR_PROPOSAL', 'NEGOTIATOR_COUNTERPROSAL', 'NEGOTIATOR_CHECKOUT'].includes(occurrence.interaction.type) &&
         this.disputeLastInteractions.length)) &&
         occurrence.interaction.direction === 'INBOUND') {
         return true
@@ -965,8 +965,6 @@ export default {
     startReply(occurrence) {
       if (['NEGOTIATOR_PROPOSAL', 'NEGOTIATOR_COUNTERPROSAL'].includes(occurrence.interaction.type)) {
         const senders = uniq(this.disputeLastInteractions.map(item => item.address))
-        console.log(senders)
-        // const senders = ['williamvitorino3@gmail.com', 'josewilliam@justto.com.br']
         const resume = this.buildContent(occurrence)
         const type = 'email'
         this.$emit('dispute:reply', { senders, resume, type })
