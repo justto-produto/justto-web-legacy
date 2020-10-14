@@ -183,7 +183,9 @@
         >
           <el-table-column>
             <template slot-scope="scope">
-              {{ scope.row.address }}
+              <span>
+                {{ scope.row.address }}
+              </span>
             </template>
           </el-table-column>
           <el-table-column
@@ -210,6 +212,7 @@
           >
             <el-input
               v-model="newRole.oab"
+              @input="$forceUpdate()"
               @keydown.enter.native="addOab(newRole.personId, newRole.oabs)"
               @blur="addOab(newRole.personId, newRole.oabs)"
             />
@@ -225,8 +228,9 @@
               autocomplete="off"
               placeholder=""
               filterable
+              @input="$forceUpdate()"
               @keydown.enter.native="addOab(newRole.personId, newRole.oabs)"
-              @change="addOab(roleForm.personId, roleForm.oabs)"
+              @change="addOab(newRole.personId, newRole.oabs)"
               @blur="addOab(newRole.personId, newRole.oabs)"
             >
               <el-option
@@ -252,9 +256,9 @@
           class="el-table--list"
         >
           <el-table-column>
-            <template slot-scope="scope">
+            <div slot-scope="scope">
               {{ scope.row.number }} - {{ scope.row.state }}
-            </template>
+            </div>
           </el-table-column>
           <el-table-column
             fixed="right"
@@ -262,14 +266,14 @@
             width="48px"
             class-name="visible"
           >
-            <template slot-scope="scope">
+            <div slot-scope="scope">
               <a
                 href="#"
                 @click.prevent="removeOab(scope.$index)"
               >
                 <jus-icon icon="trash" />
               </a>
-            </template>
+            </div>
           </el-table-column>
         </el-table>
       </div>
@@ -489,7 +493,7 @@ export default {
       this.secondStep = false
       this.disableDocumentNumber = false
     },
-    addOab() {
+    addOab(personId, oabs) {
       let isValid = true
       this.$refs.newRole.validateField(['oab', 'state'], errorMessage => {
         if (errorMessage || !this.newRole.oab || !this.newRole.state) isValid = false
@@ -497,6 +501,8 @@ export default {
       if (isValid) {
         const self = this
         this.newRole.oab = this.newRole.oab.replace(/ /g, '')
+        this.newRole.personId = personId
+        this.newRole.oabs = (oabs || [])
         const isDuplicated = this.newRole.oabs.findIndex(o => o.number === self.newRole.oab && o.state === self.newRole.state)
         if (isDuplicated < 0) {
           this.newRole.oabs.push({
