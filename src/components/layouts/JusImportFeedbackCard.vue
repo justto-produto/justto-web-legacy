@@ -570,29 +570,29 @@ export default {
 }
 
 .has-error {
-  border-color: $--color-danger;
+  border-color: $--color-light-danger;
 
   > .el-input__inner::placeholder {
-    color: $--color-danger;
+    color: $--color-light-danger;
   }
 
   > .el-input {
 
     > .el-input__inner::placeholder {
-      color: $--color-danger;
+      color: $--color-light-danger;
     }
 
     > .el-input__prefix {
-      color: $--color-danger;
+      color: $--color-light-danger;
     }
   }
 
   > .el-input__prefix {
-    color: $--color-danger;
+    color: $--color-light-danger;
   }
 }
 
 .has-error-icon {
-  color: $--color-danger;
+  color: $--color-light-danger;
 }
 </style>
