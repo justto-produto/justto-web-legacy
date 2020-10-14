@@ -963,7 +963,7 @@ export default {
     },
 
     startReply(occurrence) {
-      if (['NEGOTIATOR_PROPOSAL', 'NEGOTIATOR_COUNTERPROSAL'].includes(occurrence.interaction.type)) {
+      if (['NEGOTIATOR_PROPOSAL', 'NEGOTIATOR_COUNTERPROSAL', 'NEGOTIATOR_CHECKOUT'].includes(occurrence.interaction.type)) {
         const senders = uniq(this.disputeLastInteractions.map(item => item.address))
         const resume = this.buildContent(occurrence)
         const type = 'email'
