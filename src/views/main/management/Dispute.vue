@@ -417,7 +417,7 @@ export default {
       activeRoleId: 0,
       activeRole: {},
       isCollapsed: false,
-      directContactAddress: '',
+      directContactAddress: [],
       selectedAttachments: [],
       activeTemplateMenu: null,
       editTemplateQuickReply: {
@@ -497,8 +497,8 @@ export default {
       return this.$store.getters.messageRecentMessages
     },
     selectedContacts() {
-      if (this.directContactAddress) {
-        return [{ id: 0, address: this.directContactAddress }]
+      if (this.directContactAddress.length) {
+        return this.directContactAddress.map(contact => ({ id: 0, address: contact }))
       }
       switch (this.messageType) {
         case 'email':
@@ -627,13 +627,14 @@ export default {
       }, 100)
     },
     startReply(params) {
-      const messageType = params.type.toLowerCase()
+      const { type, resume, senders } = params
+      const messageType = type.toLowerCase()
       this.setMessageType(messageType)
       if (messageType === 'email') {
-        this.$refs.messageEditor.quill.insertText(9999999999, '\n\n___________________\n' + params.resume)
+        this.$refs.messageEditor.quill.insertText(9999999999, '\n\n___________________\n' + resume)
       }
       this.activeRoleId = 0
-      this.directContactAddress = params.sender
+      this.directContactAddress = senders
     },
     setMessageType(type) {
       this.removeReply()
@@ -662,7 +663,7 @@ export default {
       if (params.messageType) this.setMessageType(params.messageType)
     },
     removeReply() {
-      this.directContactAddress = ''
+      this.directContactAddress = []
       const message = this.$refs.messageEditor.quill.getText()
       const messageIndex = message.indexOf('\n\n___________________')
       if (messageIndex !== -1) {
@@ -709,7 +710,7 @@ export default {
     verifyWhatsappMessage(quillMessage) {
       return new Promise((resolve, reject) => {
         if (this.messageType === 'whatsapp') {
-          this.$store.dispatch('canSendWhatsapp', this.directContactAddress || this.selectedContacts[0].number).then(response => {
+          this.$store.dispatch('canSendWhatsapp', this.directContactAddress.length || this.selectedContacts[0].number).then(response => {
             if (response.canSend) {
               if (checkSimilarity(quillMessage, this.recentMessages.map(rm => rm.messageBody), 75)) {
                 this.$jusNotification({
@@ -758,8 +759,8 @@ export default {
         this.verifyWhatsappMessage(quillMessage).then(() => {
           const to = []
           if (this.directContactAddress) {
-            to.push({
-              address: this.directContactAddress
+            this.directContactAddress.forEach(email => {
+              to.push({ address: email })
             })
           } else {
             to.push({
@@ -785,7 +786,7 @@ export default {
           if (this.messageType === 'email') messageData.attachments = this.selectedAttachments
           this.$store.dispatch('send' + this.messageType, messageData).then(() => {
             // SEGMENT TRACK
-            if (this.directContactAddress) {
+            if (this.directContactAddress.length) {
               this.$jusSegment(`Envio de ${this.messageType} via resposta rápida`)
             } else {
               this.$jusSegment(`Envio de ${this.messageType} manual`)
