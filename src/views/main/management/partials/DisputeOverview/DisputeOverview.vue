@@ -354,7 +354,7 @@
                 >
                   <template slot="title">
                     <div>
-                      {{ bankAccount.name || bankAccount.document | cpfCnpjMask }}
+                      {{ bankAccount.name || bankAccount.document | cpfCnpj }}
                       <span>
                         {{ bankAccount.bank }} <span v-if="bankAccount.agency">|</span>
                         {{ bankAccount.agency }} <span v-if="bankAccount.number">|</span>
@@ -369,7 +369,7 @@
                     <span v-show="bankAccount.email">
                       <strong>E-mail:</strong> {{ bankAccount.email }} <br>
                     </span>
-                    <strong>Documento:</strong> {{ bankAccount.document | cpfCnpjMask }} <br>
+                    <strong>Documento:</strong> {{ bankAccount.document | cpfCnpj }} <br>
                     <strong>Banco:</strong> {{ bankAccount.bank }} <br>
                     <strong>Agência:</strong> {{ bankAccount.agency }} <br>
                     <strong>Conta:</strong> {{ bankAccount.number }} <br>
@@ -554,7 +554,7 @@
                 class="dispute-overview-view__info-line"
               >
                 <span class="title">CPF/CNPJ:</span>
-                <span>{{ role.documentNumber | cpfCnpjMask }}</span>
+                <span>{{ role.documentNumber | cpfCnpj }}</span>
               </div>
               <div
                 v-show="role.personProperties.BIRTHDAY"
@@ -585,7 +585,7 @@
                       :open-delay="500"
                     >
                       <span :class="phone.source === 'ENRICHMENT' ? 'dispute-overview-view__is-enriched' : ''">
-                        {{ phone.number | phoneMask }}<span v-if="phone.source === 'ENRICHMENT'">*</span>
+                        {{ phone.number | phoneNumber }}<span v-if="phone.source === 'ENRICHMENT'">*</span>
                       </span>
                     </el-tooltip>
                   </el-radio>
@@ -703,7 +703,7 @@
                       <div v-show="bankAccount.email">
                         <strong>E-mail:</strong> {{ bankAccount.email }}
                       </div>
-                      <div><strong>Documento:</strong> {{ bankAccount.document | cpfCnpjMask }}</div>
+                      <div><strong>Documento:</strong> {{ bankAccount.document | cpfCnpj }}</div>
                       <div><strong>Banco:</strong> {{ bankAccount.bank }}</div>
                       <div><strong>Agência:</strong> {{ bankAccount.agency }}</div>
                       <div><strong>Conta:</strong> {{ bankAccount.number }}</div>
@@ -796,7 +796,7 @@
               Nome: <b>{{ selectedNamesake.name }}</b>
             </div>
             <div v-show="selectedNamesake.document">
-              Documento: <b>{{ selectedNamesake.document | cpfCnpjMask }}</b>
+              Documento: <b>{{ selectedNamesake.document | cpfCnpj }}</b>
             </div>
             <div v-show="selectedNamesake.city">
               Cidade: <b>{{ selectedNamesake.city }}</b>
@@ -860,7 +860,7 @@
             >
               <template slot-scope="scope">
                 <span>
-                  {{ scope.row.document | cpfCnpjMask }}
+                  {{ scope.row.document | cpfCnpj }}
                 </span>
               </template>
             </el-table-column>
@@ -1320,7 +1320,7 @@
             <el-table-column>
               <template slot-scope="scope">
                 <span>
-                  {{ scope.row.number | phoneMask }}
+                  {{ scope.row.number | phoneNumber }}
                 </span>
               </template>
             </el-table-column>
@@ -2381,7 +2381,7 @@ export default {
       this.roleForm = JSON.parse(JSON.stringify(role))
       this.originalRole = JSON.parse(JSON.stringify(role))
       this.roleForm.title = this.buildRoleTitle(role.party, role.roles[0])
-      this.roleForm.documentNumber = this.$options.filters.cpfCnpjMask(this.roleForm.documentNumber)
+      this.roleForm.documentNumber = this.$options.filters.cpfCnpj(this.roleForm.documentNumber)
       this.roleForm.emails = this.roleForm.emails.filter(f => !f.archived)
       this.roleForm.oabs = this.roleForm.oabs.filter(f => !f.archived)
       this.roleForm.phones = this.roleForm.phones.filter(f => !f.archived)

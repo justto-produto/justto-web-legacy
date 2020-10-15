@@ -2,10 +2,11 @@ import Vue from 'vue'
 import App from '@/App.vue'
 import router from './router'
 import store from './store'
+import { validateWorkspace } from '@/utils/validateWorkspace'
+import '@/utils/registerServiceWorker'
 
-// plugin
+// PLUGINS
 import i18n from '@/plugins/vueI18n'
-import '@/plugins/registerServiceWorker'
 import '@/plugins/axios'
 import '@/plugins/element'
 import '@/plugins/awesomeSwiper'
@@ -17,14 +18,14 @@ import '@/plugins/socket'
 import '@/plugins/sentry'
 import '@/plugins/chart'
 
-// filters
+// FILTERS
 import '@/filters/capitalize'
 import '@/filters/currency'
 import '@/filters/firstName'
-import '@/filters/cpfCnpjMask'
-import '@/filters/phoneMask'
+import '@/filters/cpfCnpj'
+import '@/filters/phoneNumber'
 
-// css
+// STYLES
 import '@/styles/core.scss'
 import '@/styles/transitions.scss'
 
@@ -62,8 +63,6 @@ import '@/styles/overrides/upload.scss'
 import '@/styles/perfect-scroll.scss'
 import '@/styles/quill-editor.scss'
 
-// utils
-import { validateWorkspace } from '@/utils/validateWorkspace'
 
 // Global components
 import VueTheMask from 'vue-the-mask'

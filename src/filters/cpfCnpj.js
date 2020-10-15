@@ -1,6 +1,6 @@
 import Vue from 'vue'
 
-Vue.filter('cpfCnpjMask', function(value) {
+Vue.filter('cpfCnpj', function(value) {
   if (!value) return ''
   value = value.toString()
   if (value.includes('.')) return value
