@@ -1,11 +1,8 @@
 const getters = {
   loggedPerson: state => state.loggedPerson,
-  loggedPersonName: state => {
-    return state.loggedPerson.name
-  },
-  loggedPersonId: state => {
-    return state.loggedPerson.id
-  },
+  loggedPersonName: state => state.loggedPerson.name,
+  loggedPersonHasName: state => state.loggedPerson.name && state.loggedPerson.name.length > 2 && !state.loggedPerson.name.includes('@'),
+  loggedPersonId: state => state.loggedPerson.id,
   loggedPersonPhone: state => {
     if (state.loggedPerson.phones) {
       const mainPhone = state.loggedPerson.phones.map(p => {
