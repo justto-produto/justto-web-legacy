@@ -831,7 +831,11 @@ export default {
     },
 
     isJusttineMessage(occurrence) {
-      return occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.status !== 'PROCESSED_BY_USER' && occurrence.interaction.direction === 'OUTBOUND'
+      return occurrence.interaction &&
+      occurrence.interaction.message &&
+      occurrence.interaction.message.status !== 'PROCESSED_BY_USER' &&
+      occurrence.interaction.message.createdBy === 'system' &&
+      occurrence.interaction.direction === 'OUTBOUND'
     },
 
     buildAvatar(occurrence) {
