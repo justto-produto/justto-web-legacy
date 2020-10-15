@@ -20,8 +20,8 @@ import userModule from './modules/user'
 import workspaceModule from './modules/workspace'
 
 // CONSTANTS
-import brazilianStates from './brazilianStates'
-import banksList from '@/utils/banksList'
+import banksList from '@/constants/banksList'
+import brazilianStates from '@/constants/brazilianStates'
 
 Vue.use(Vuex)
 
