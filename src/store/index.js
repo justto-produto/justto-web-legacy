@@ -42,9 +42,9 @@ export default new Vuex.Store({
     brazilianStates: state => state.brazilianStates
   },
   mutations: {
-    showLoading: (state) => state.loading = true,
-    hideLoading: (state) => state.loading = false,
-    setGhostMode: (state, value) => state.ghostMode = value
+    showLoading: (state) => (state.loading = true),
+    hideLoading: (state) => (state.loading = false),
+    setGhostMode: (state, value) => (state.ghostMode = value)
   },
   actions: {
     showLoading({ commit }) {
