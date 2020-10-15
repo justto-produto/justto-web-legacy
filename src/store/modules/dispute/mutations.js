@@ -170,6 +170,9 @@ const disputeMutations = {
       }
     })
   },
+  setLastInteractions(state, lastInteractions) {
+    state.disputeLastInteractions = lastInteractions
+  },
   setDisputeStatuses(state, status) {
     state.statuses[status.label] = status.value
   },

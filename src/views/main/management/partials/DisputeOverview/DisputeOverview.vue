@@ -520,8 +520,8 @@
                 </div>
                 <span
                   v-for="(title, titleIndex) in roleTitleSort(role.roles)"
-                  :key="`${titleIndex}-${title.index}`"
                   v-show="!isEditingRule"
+                  :key="`${titleIndex}-${title.index}`"
                   class="dispute-overview-view__info-line-description">
                   {{ buildRoleTitle(role.party, title) }}
                   <jus-vexatious-alert
@@ -530,7 +530,7 @@
                     :name="role.name"
                   />
                 </span>
-                
+
                 <div
                   v-if="role.party === 'UNKNOWN'"
                   class="dispute-overview-view__select-role">
