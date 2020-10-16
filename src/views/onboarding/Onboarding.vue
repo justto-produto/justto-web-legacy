@@ -38,17 +38,6 @@
               />
             </transition>
           </swiper-slide>
-          <!-- <swiper-slide v-if="!isGuest">
-            <transition name="el-fade-in-linear">
-              <subdomain-step v-if="currentVisible === 'subdomain'" @onboarding:step:next="nextStep" />
-            </transition>
-          </swiper-slide> -->
-          <!-- <swiper-slide>
-            <oab-step @onboarding:step:next="nextStep"/>
-          </swiper-slide> -->
-          <!-- <swiper-slide v-if="!isGuest">
-            <LogoStep @onboarding:step:next="nextStep"/>
-          </swiper-slide> -->
           <swiper-slide v-if="!isGuest">
             <transition name="el-fade-in-linear">
               <invite-step

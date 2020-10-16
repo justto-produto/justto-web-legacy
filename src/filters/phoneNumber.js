@@ -1,6 +1,6 @@
 import Vue from 'vue'
 
-Vue.filter('phoneMask', function(value) {
+Vue.filter('phoneNumber', function(value) {
   if (!value) return ''
   if (!/^\d+$/.test(value)) return value
   const template1 = '(B) C-D'

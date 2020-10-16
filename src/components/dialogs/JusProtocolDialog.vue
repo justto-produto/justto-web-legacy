@@ -118,7 +118,7 @@
               :key="formKey"
               class="subtitle"
             >
-              {{ role.documentNumber | cpfCnpjMask }}
+              {{ role.documentNumber | cpfCnpj }}
             </div>
             <el-form
               v-else
@@ -429,7 +429,7 @@
         />
         <div>
           <b>{{ recipient.name }}</b><br>
-          <b>{{ recipient.documentNumber | cpfCnpjMask }}</b><br>
+          <b>{{ recipient.documentNumber | cpfCnpj }}</b><br>
           {{ recipient.email }}
         </div>
       </div>

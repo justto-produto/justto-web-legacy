@@ -137,7 +137,7 @@
         >
           <el-table-column>
             <template slot-scope="scope">
-              {{ scope.row.number | phoneMask }}
+              {{ scope.row.number | phoneNumber }}
             </template>
           </el-table-column>
           <el-table-column
@@ -460,7 +460,7 @@ export default {
                 cancelButtonClass: 'is-plain'
               }).then(() => {
                 self.newRole.name = response.name
-                if (response.documentNumber) self.newRole.documentNumber = this.$options.filters.cpfCnpjMask(response.documentNumber)
+                if (response.documentNumber) self.newRole.documentNumber = this.$options.filters.cpfCnpj(response.documentNumber)
                 self.newRole.oabs = response.oabs
                 self.emailsList = response.emails
                 self.phonesList = response.phones

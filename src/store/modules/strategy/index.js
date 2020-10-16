@@ -1,14 +1,14 @@
-import mutations from './mutations'
 import actions from './actions'
 import getters from './getters'
+import mutations from './mutations'
 
-const alert = {
+const strategy = {
   state: {
-    alerts: []
+    list: []
   },
   mutations,
   actions,
   getters
 }
 
-export default alert
+export default strategy

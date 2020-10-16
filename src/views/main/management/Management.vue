@@ -454,7 +454,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      brazilianStates: 'getBrazilianStates',
+      brazilianStates: 'brazilianStates',
       disputes: 'disputes',
       engagementLength: 'disputeNearExpirationsEngajement',
       interactionLength: 'disputeNotVisualizedInteration',
