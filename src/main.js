@@ -66,18 +66,16 @@ import '@/styles/overrides/upload.scss'
 import '@/styles/perfect-scroll.scss'
 import '@/styles/quill-editor.scss'
 
-// Global components
+// GLOBAL COMPONENTS
 import JusIcon from '@/components/images/JusIcon'
 import JusAvatarUser from '@/components/images/JusAvatarUser'
 import JusViewMain from '@/components/layouts/JusViewMain'
 import JusButtonBack from '@/components/buttons/JusButtonBack'
-import JusStatusDot from '@/components/others/JusStatusDot'
 
 Vue.component('JusIcon', JusIcon)
 Vue.component('JusAvatarUser', JusAvatarUser)
 Vue.component('JusViewMain', JusViewMain)
 Vue.component('JusButtonBack', JusButtonBack)
-Vue.component('JusStatusDot', JusStatusDot)
 
 Vue.config.productionTip = false
 

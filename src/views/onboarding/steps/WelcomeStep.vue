@@ -1,11 +1,5 @@
 <template>
   <div class="onboarding-step-content onboarding-welcome-step">
-    <!-- <JusLogoCompany
-      v-if="isGuest"
-      src="shostners.jpg"
-      shadow
-      shape="circle"
-      size="xl"/> -->
     <h1>
       <span v-if="name">{{ name }}, b</span><span v-else>B</span>em-vindo(a) a Justto!<br>
       <span v-if="isGuest">
@@ -29,9 +23,6 @@
 
 <script>
 export default {
-  components: {
-    // JusLogoCompany: () => import('@/components/images/JusLogoCompany'),
-  },
   props: {
     isGuest: {
       type: Boolean,
