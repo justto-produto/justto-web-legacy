@@ -659,7 +659,9 @@ export default {
               previous.merged = []
               previous.toDelete = false
             }
-            previous.merged.push(fo)
+            if (!previous.merged.map(i => i.id).includes(fo.id)) {
+              previous.merged.push(fo)
+            }
           } else previousOccurrenceIndex = index
         })
         datedOccurrences[item] = datedOccurrence.filter(fo => !fo.toDelete)
