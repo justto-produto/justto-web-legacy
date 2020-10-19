@@ -229,6 +229,7 @@
               </el-tooltip>
               <el-tooltip v-if="isJusttineMessage(occurrence)">
                 <div slot="content">
+                  Sou JUSTTINE, sua assistente virtual<br />
                   Enviei esta mensagem para você, ok?<br/>
                   Criei ela a partir da estratégia que você definiu na disputa.
                 </div>
@@ -803,7 +804,7 @@ export default {
     buildName(occurrence) {
       if (occurrence.interaction) {
         if (this.isJusttineMessage(occurrence)) {
-          return 'Sou JUSTTINE, sua assistente virtual'
+          return ''
         }
         if (occurrence.interaction.type &&
           ['MANUAL_COUNTERPROPOSAL', 'MANUAL_PROPOSAL', 'CLICK'].includes(occurrence.interaction.type) &&

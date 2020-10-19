@@ -97,7 +97,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="tab0 || tab1"
+        v-if="tab1 || tab2"
         :sortable="false"
         label="Alçada máxima"
         align="center"
@@ -112,7 +112,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="tab0"
+        v-if="tab1"
         :sortable="false"
         label="Valor proposto"
         prop="lastOfferValue"
@@ -124,7 +124,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="tab1 || tab2 || tab3"
+        v-if="tab2 || tab3 || tab4"
         label="Interações"
         min-width="140px"
         align="center"
@@ -137,7 +137,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="tab2 || tab3"
+        v-if="tab3 || tab4"
         label="Minuta"
         width="110px"
         class-name="management-table__row-actions"
@@ -160,7 +160,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="tab1"
+        v-if="tab2"
         :sortable="false"
         label="Contraproposta"
         align="center"
@@ -171,8 +171,21 @@
           {{ scope.row.lastCounterOfferValue | currency }}
         </template>
       </el-table-column>
+
+      <!-- <el-table-column
+        v-if="tab0"
+        :sortable="false"
+        label="Motivo"
+        prop=""
+        min-width="120px"
+      >
+        <template slot-scope="scope">
+          {{ scope.row }}
+        </template>
+      </el-table-column> -->
+
       <el-table-column
-        v-if="tab || tab0 || tab1 || tabAll"
+        v-if="tab0 || tab1 || tab2 || tabAll"
         :sortable="false"
         prop="expirationDate"
         label="Fim da negociação"
@@ -194,7 +207,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="tab0 || tab3 || tabAll"
+        v-if="tab1 || tab4 || tabAll"
         :sortable="false"
         label="Status"
         prop="status"
@@ -207,7 +220,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="tab2 || tab3"
+        v-if="tab3 || tab4"
         :sortable="false"
         label="Valor do acordo"
         prop="disputeDealValue"
@@ -222,7 +235,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="tab2 || tab3 || tabAll"
+        v-if="tab3 || tab4 || tabAll"
         :sortable="false"
         prop="disputeDealDate"
         label="Data do acordo"
@@ -348,19 +361,19 @@ export default {
     disputes() {
       return this.$store.getters.disputes
     },
-    tab() {
+    tab0() {
       return this.activeTab === '0'
     },
-    tab0() {
+    tab1() {
       return this.activeTab === '1'
     },
-    tab1() {
+    tab2() {
       return this.activeTab === '2'
     },
-    tab2() {
+    tab3() {
       return this.activeTab === '3'
     },
-    tab3() {
+    tab4() {
       return this.activeTab === '4'
     },
     tabAll() {
@@ -425,7 +438,7 @@ export default {
     },
     getDocumentStep: (hasDocument, signStatus) => getDocumentStep(hasDocument, signStatus),
     tableRowClassName({ row, rowIndex }) {
-      if (!row.visualized && !this.tab0) {
+      if (!row.visualized && !this.tab1) {
         return 'el-table__row--visualized-row'
       }
     },
