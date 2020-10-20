@@ -1,1 +1,1 @@
-![Image](./ic-accepted-negotiation-white.svg =250x) ic-accepted-negotiation-white.svg
+<img src="./ic-accepted-negotiation-white.svg" height="24">
