@@ -1,1 +1,1 @@
-![image info](./ic-accepted-negotiation-white.svg ic-accepted-negotiation-white.svg)
+![Name Image](./ic-accepted-negotiation-white.svg)
