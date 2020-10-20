@@ -52,6 +52,12 @@
           <span class="lawyer-datail__item-content">
             {{ lawyer.document }}
           </span>
+          <el-tooltip content="Usar este CPF">
+            <jus-icon
+              class="lawyer-datail__item-icon"
+              icon="use-field"
+            />
+          </el-tooltip>
         </li>
         <li
           v-if="lawyer.uf"
@@ -92,6 +98,12 @@
           <span class="lawyer-datail__item-content">
             {{ lawyer.phones }}
           </span>
+          <el-tooltip content="Usar este telefone">
+            <jus-icon
+              class="lawyer-datail__item-icon"
+              icon="use-field"
+            />
+          </el-tooltip>
         </li>
       </ul>
     </div>
@@ -152,8 +164,14 @@ export default {
         }
 
         .lawyer-datail__item-content {
-          font-size: 13px;
+          font-size: 14px;
           text-transform: capitalize !important;
+          word-break: break-word;
+        }
+
+        .lawyer-datail__item-icon {
+          cursor: pointer;
+          height: 12px;
         }
       }
     }
