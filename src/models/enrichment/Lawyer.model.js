@@ -5,7 +5,7 @@ export class Lawyer {
     this.state = state
     this.status = status
     this.organization = organization
-    this.phones = (!phones || phones === 'false') ? null : phones
+    this.phones = phones
     this.address = address
     this.photo = photo
     this.addressComplement = addressComplement
