@@ -1,5 +1,5 @@
-const mutations = {
+const campaignMutations = {
   setCampaigns: (state, response) => (state.list = response)
 }
 
-export default mutations
+export default campaignMutations

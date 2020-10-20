@@ -1,41 +1,26 @@
-const actions = {
+import axiosDispatcher from '@/store/axiosDispatcher'
+
+const campaignsPath = 'api/campaigns'
+
+const campaignActions = {
   getCampaigns({ commit }) {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.get('api/disputes/campaigns')
-        .then(response => {
-          commit('setCampaigns', response.data)
-          resolve(response)
-        })
-        .catch(error => {
-          reject(error)
-        })
+    return axiosDispatcher({
+      url: 'api/disputes/campaigns',
+      mutation: 'setCampaigns'
     })
   },
-  getCampaignByName({ commit }, name) {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.get('api/campaigns/search?name=' + name)
-        .then(response => {
-          resolve(response)
-        })
-        .catch(error => {
-          reject(error)
-        })
+  getCampaignByName({ _ }, name) {
+    return axiosDispatcher({
+      url: `${campaignsPath}/search?name=${name}`
     })
   },
   createCampaign({ commit }, campaign) {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.post('api/campaigns', campaign)
-        .then(response => {
-          resolve(response)
-        })
-        .catch(error => {
-          reject(error)
-        })
+    return axiosDispatcher({
+      url: `${campaignsPath}`,
+      method: 'POST',
+      data: campaign
     })
   }
 }
 
-export default actions
+export default campaignActions

@@ -1,4 +1,4 @@
-const StrategyGetters = {
+const strategyGetters = {
   activeStrategy: state => state.activeStrategy,
   getStrategies: state => state.strategies,
   getAvailableWorkspaces: state => state.availableWorkspaces,
@@ -6,4 +6,4 @@ const StrategyGetters = {
   getStrategiesLoadingStatus: state => state.isLoadingStrategies
 }
 
-export default StrategyGetters
+export default strategyGetters

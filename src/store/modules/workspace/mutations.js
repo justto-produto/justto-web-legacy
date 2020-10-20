@@ -1,6 +1,6 @@
 import Vue from 'vue'
 
-const mutations = {
+const workspaceMutations = {
   redirectNewWorkspaceTrue(state) {
     state.redirectNewWorkspace = true
   },
@@ -56,4 +56,4 @@ const mutations = {
   }
 }
 
-export default mutations
+export default workspaceMutations

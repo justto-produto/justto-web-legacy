@@ -1,6 +1,6 @@
-import { isJusttoUser } from '@/utils/jusUtils'
+import { isJusttoUser } from '@/utils/validations'
 
-const getters = {
+const accountGetters = {
   userPreferences: state => state.preferences,
   accountToken: state => state.token,
   isLoggedIn: state => !!state.token,
@@ -10,4 +10,4 @@ const getters = {
   isJusttoDev: state => state.devs.indexOf(state.email) !== -1
 }
 
-export default getters
+export default accountGetters

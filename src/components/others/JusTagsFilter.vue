@@ -8,14 +8,18 @@
       popper-class="jus-tags-filter__actions-popover"
       class="jus-tags-filter__item"
       trigger="hover"
-      placement="top">
+      placement="top"
+    >
       <div>
-        <div class="jus-tags-filter__item-name">{{ tag.name }}</div>
+        <div class="jus-tags-filter__item-name">
+          {{ tag.name }}
+        </div>
         <el-button
           :class="{ 'jus-tags-filter__state-button--active': tag.activeType === 'inclusive' }"
           class="jus-tags-filter__state-button"
           type="text"
-          @click="filterByTag(tag, 'changeInclusive')">
+          @click="filterByTag(tag, 'changeInclusive')"
+        >
           <jus-icon
             class="jus-tags-filter__state-icon"
             icon="checked"
@@ -27,7 +31,8 @@
           :class="{ 'jus-tags-filter__state-button--active': tag.activeType === 'exclusive' }"
           class="jus-tags-filter__state-button"
           type="text"
-          @click="filterByTag(tag, 'changeExclusive')">
+          @click="filterByTag(tag, 'changeExclusive')"
+        >
           Não possui esta etiqueta
           <jus-icon
             class="jus-tags-filter__state-icon"
@@ -37,14 +42,15 @@
       </div>
 
       <el-tag
+        slot="reference"
         :color="tag.color"
         :class="{
           'jus-tags-filter__tag--inclusive-is-active': tag.activeType === 'inclusive',
           'jus-tags-filter__tag--exclusive-is-active': tag.activeType === 'exclusive'
         }"
         class="jus-tags-filter__tag jus-tags-filter__tag--round"
-        slot="reference"
-        @click="filterByTag(tag, 'nextState')">
+        @click="filterByTag(tag, 'nextState')"
+      >
         <i :class="`el-icon-${tag.icon}`" />
       </el-tag>
     </el-popover>
@@ -62,13 +68,15 @@
           :open-delay="400"
           popper-class="jus-tags-filter__actions-popover"
           trigger="hover"
-          placement="top">
+          placement="top"
+        >
           <div>
             <el-button
               :class="{ 'jus-tags-filter__state-button--active': tag.activeType === 'inclusive' }"
               class="jus-tags-filter__state-button"
               type="text"
-              @click="filterByTag(tag, 'changeInclusive')">
+              @click="filterByTag(tag, 'changeInclusive')"
+            >
               <jus-icon
                 class="jus-tags-filter__state-icon"
                 icon="checked"
@@ -80,7 +88,8 @@
               :class="{ 'jus-tags-filter__state-button--active': tag.activeType === 'exclusive' }"
               class="jus-tags-filter__state-button"
               type="text"
-              @click="filterByTag(tag, 'changeExclusive')">
+              @click="filterByTag(tag, 'changeExclusive')"
+            >
               Não possui esta etiqueta
               <jus-icon
                 class="jus-tags-filter__state-icon"
@@ -89,13 +98,13 @@
             </el-button>
           </div>
           <el-tag
+            slot="reference"
             :color="tag.color"
             :class="{
               'jus-tags-filter__tag--inclusive-is-active': tag.activeType === 'inclusive',
               'jus-tags-filter__tag--exclusive-is-active': tag.activeType === 'exclusive'
             }"
             class="el-tag--etiqueta el-tag--click jus-tags-filter__tag"
-            slot="reference"
           >
             <div @click="filterByTag(tag, 'nextState')">
               <i :class="`el-icon-${tag.icon}`" />
@@ -105,8 +114,8 @@
         </el-popover>
       </div>
       <el-button
-        class="jus-tags-filter__plus-counter-button"
         slot="reference"
+        class="jus-tags-filter__plus-counter-button"
         type="text"
       >
         + {{ workspaceTags.length - 3 }}
@@ -177,9 +186,9 @@ export default {
       if (!currentTags.includes(tag.id) && !currentNoTags.includes(tag.id)) {
         this.setTagFilters(tag, 'changeInclusive', currentTags, currentNoTags)
       } else if (currentTags.includes(tag.id)) {
-        this.setTagFilters(tag, 'changeExclusive', currentTags, currentNoTags)    
+        this.setTagFilters(tag, 'changeExclusive', currentTags, currentNoTags)
       } else if (currentNoTags.includes(tag.id)) {
-        this.unsetTagFilters(tag, currentTags, currentNoTags)    
+        this.unsetTagFilters(tag, currentTags, currentNoTags)
       }
     },
 
@@ -198,7 +207,7 @@ export default {
     unsetTagFilters(tag, currentTags, currentNoTags) {
       currentNoTags = currentNoTags.filter(t => t !== tag.id)
       currentTags = currentTags.filter(t => t !== tag.id)
-      this.updateTagFilters(currentTags, currentNoTags)   
+      this.updateTagFilters(currentTags, currentNoTags)
     },
 
     updateTagFilters(currentTags, currentNoTags) {

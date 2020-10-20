@@ -1,148 +1,110 @@
-import axiosDispatcher from '@/store/axiosDispatcher.js'
+import axiosDispatcher from '@/store/axiosDispatcher'
 
-const actions = {
+const workspacesPath = 'api/workspaces'
+
+const workspaceActions = {
   myWorkspace() {
     return axiosDispatcher({
-      url: 'api/workspaces/my',
+      url: `${workspacesPath}/my`,
       headers: { Workspace: '' }
     })
   },
   getWorkspace({ getters }) {
     return axiosDispatcher({
-      url: `api/workspaces/${getters.workspaceId}`,
+      url: `${workspacesPath}/${getters.workspaceId}`,
       mutation: 'setWorkspace'
     })
   },
-  verifyAvailability({ commit }, subdomain) {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.put('api/workspaces/sub-domain-availability', {subDomain: subdomain})
-        .then(response => {
-          resolve(response.data)
-        }).catch(error => {
-          reject(error)
-        })
+  verifyAvailability({ commit }, subDomain) {
+    return axiosDispatcher({
+      url: `${workspacesPath}/sub-domain-availability`,
+      method: 'PUT',
+      data: { subDomain }
     })
   },
   createWorkpace({ commit }, object) {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.post('api/accounts/workspaces', object)
-        .then(response => {
-          commit('setWorkspace', response.data)
-          resolve(response.data)
-        }).catch(error => {
-          reject(error)
-        })
+    return axiosDispatcher({
+      url: `${workspacesPath}/workspaces`,
+      method: 'POST',
+      data: object,
+      mutation: 'setWorkspace'
     })
   },
   editWorkpace({ commit, state }, params) {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.put('api/workspaces', {
-        id: state.id,
-        teamName: state.teamName,
-        status: state.status,
-        blacklist: state.blackList,
-        name: params.name,
-        properties: params.properties
-      }).then(response => {
-        commit('setWorkspace', response.data)
-        resolve(response.data)
-      }).catch(error => {
-        reject(error)
-      })
+    const data = {
+      id: state.id,
+      teamName: state.teamName,
+      status: state.status,
+      blacklist: state.blackList,
+      name: params.name,
+      properties: params.properties
+    }
+
+    return axiosDispatcher({
+      url: `${workspacesPath}`,
+      method: 'PUT',
+      mutation: 'setWorkspace',
+      data
     })
   },
   changeTeamName({ commit }, data) {
     return axiosDispatcher({
-      url: '/api/workspaces/teamName',
+      url: `${workspacesPath}/teamName`,
       method: 'patch',
       data
     })
   },
   inviteTeammates({ state }, teammates) {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.post('api/accounts/workspaces/invite-teammates/' + state.subdomain, teammates)
-        .then(response => {
-          resolve(response.data)
-        }).catch(error => {
-          reject(error)
-        })
+    return axiosDispatcher({
+      url: `api/accounts/workspaces/invite-teammates/${state.subdomain}`,
+      method: 'POST',
+      data: teammates
     })
   },
   readyWorkspace({ commit }, workspace) {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.put('api/workspaces/ready/' + workspace)
-        .then(response => {
-          resolve(response.data)
-        }).catch(error => {
-          reject(error)
-        })
+    return axiosDispatcher({
+      url: `${workspacesPath}/ready/${workspace}`,
+      method: 'PUT'
     })
   },
   getWorkspaceMembers({ commit, dispatch }) {
     return axiosDispatcher({
-      url: 'api/workspaces/members?size=999&',
+      url: `${workspacesPath}/members?size=999&`,
       mutation: 'setWorkspaceMembers'
     })
   },
   getWorkspaces({ _ }) {
-    return axiosDispatcher({
-      url: 'api/workspaces?size=999&'
-    })
+    return axiosDispatcher({ url: `${workspacesPath}?size=999&` })
   },
   removeWorkspaceMember({ commit }, id) {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.delete('api/workspaces/members/' + id)
-        .then(response => {
-          resolve(response.data)
-        }).catch(error => {
-          reject(error)
-        })
+    return axiosDispatcher({
+      url: `${workspacesPath}/members/${id}`,
+      method: 'DELETE'
     })
   },
   editWorkspaceMember({ commit }, member) {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.put('api/workspaces/members/', member)
-        .then(response => {
-          resolve(response.data)
-        }).catch(error => {
-          reject(error)
-        })
+    return axiosDispatcher({
+      url: `${workspacesPath}/members/`,
+      method: 'PUT',
+      data: member
     })
   },
   syncInbox({ commit }, object) {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.post('api/workspaces/inboxes', object)
-        .then(response => {
-          resolve(response)
-        }).catch(error => {
-          reject(error)
-        })
+    return axiosDispatcher({
+      url: `${workspacesPath}/inboxes`,
+      method: 'POST',
+      data: object
     })
   },
   getMyStrategies({ commit }) {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.get('api/workspaces/strategies')
-        .then(response => {
-          commit('setImportedStrategies', response.data)
-          resolve(response.data)
-        })
-        .catch(error => {
-          reject(error)
-        })
+    return axiosDispatcher({
+      url: `${workspacesPath}/strategies`,
+      mutation: 'setImportedStrategies'
     })
   },
   patchBlackList({ _ }, blackList) {
     return axiosDispatcher({
-      url: 'api/workspaces/blacklist',
+      url: `${workspacesPath}/blacklist`,
       method: 'patch',
       data: blackList
     })
@@ -155,7 +117,7 @@ const actions = {
       axios({
         ...headers,
         ...{
-          url: params.url || `api/workspaces/${params.workspaceId || ''}`,
+          url: params.url || `${workspacesPath}/${params.workspaceId || ''}`,
           method: params.method,
           params: params.params,
           data: params.data
@@ -174,7 +136,7 @@ const actions = {
       const config = {
         ...headers,
         ...{
-          url: params.url || `api/workspaces${params.workspaceId ? '/' + params.workspaceId : ''}/members/${params.userId || ''}`,
+          url: params.url || `${workspacesPath}${params.workspaceId ? '/' + params.workspaceId : ''}/members/${params.userId || ''}`,
           method: params.method,
           params: params.params,
           data: params.data
@@ -190,4 +152,4 @@ const actions = {
   }
 }
 
-export default actions
+export default workspaceActions

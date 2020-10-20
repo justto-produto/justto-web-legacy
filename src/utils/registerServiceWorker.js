@@ -14,7 +14,7 @@ if ('serviceWorker' in navigator) {
       console.log('Content has been cached for offline use.')
     },
     updated() {
-      console.log('Novo conteúdo disponível. Por favor atualize a página.')
+      console.log('New content available. Plese update the page.')
     },
     offline() {
       console.log('No internet connection found. App is running in offline mode.')

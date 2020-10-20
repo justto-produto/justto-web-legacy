@@ -463,7 +463,7 @@ export default {
           return [
             'EXPIRED',
             'SETTLED',
-            'UNSETTLED',
+            'UNSETTLED'
           ]
         default:
           return [
@@ -480,7 +480,7 @@ export default {
             'REFUSED'
           ]
       }
-    },
+    }
   },
   watch: {
     visibleFilters(value) {

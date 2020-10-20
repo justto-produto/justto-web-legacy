@@ -1,9 +1,9 @@
-import axiosDispatcher from '@/store/axiosDispatcher.js'
-import { queryBuilder } from '@/utils/jusUtils'
+import axiosDispatcher from '@/store/axiosDispatcher'
+import { buildQuery } from '@/utils/jusUtils'
 
 const strategyPath = '/api/strategy'
 
-const StrategyActions = {
+const strategyActions = {
   setActiveStrategy: ({ commit, state }, strategyId) => {
     commit('setActiveStrategy', state.activeStrategy === strategyId ? null : strategyId)
   },
@@ -22,13 +22,13 @@ const StrategyActions = {
     }
 
     return axiosDispatcher({
-      url: `${strategyPath}${queryBuilder(state.strategyQuery)}`,
+      url: `${strategyPath}${buildQuery(state.strategyQuery)}`,
       mutation: 'setStrategies'
     }).finally(() => commit('setLoadingStrategies', false))
   },
 
   getAvailableWorkspace: () => axiosDispatcher({
-    url: 'api/strategy/workspace/available',
+    url: `${strategyPath}/workspace/available`,
     mutation: 'setAvailableWorkspace'
   }),
 
@@ -113,4 +113,4 @@ const StrategyActions = {
   }
 }
 
-export default StrategyActions
+export default strategyActions

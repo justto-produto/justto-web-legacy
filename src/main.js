@@ -2,14 +2,14 @@ import Vue from 'vue'
 import App from '@/App.vue'
 import router from './router'
 import store from './store'
-import { validateWorkspace } from '@/utils/validateWorkspace'
+import { validateWorkspace } from '@/utils/validations'
 
 import '@/utils/registerServiceWorker'
 
 // PLUGINS
 import i18n from '@/plugins/vueI18n'
 import '@/plugins/axios'
-import '@/plugins/chart'
+// import '@/plugins/chart'
 import '@/plugins/element'
 import '@/plugins/jusNotification'
 import '@/plugins/jusSegment'

@@ -77,7 +77,7 @@ export default {
     ...mapMutations([
       'updateDisputeQuery',
       'addPrescription',
-      'setDisputesTab',
+      'setDisputesTab'
     ]),
 
     increaseShow() {
@@ -105,7 +105,7 @@ export default {
       this.addPrescription('NEWLY_IMPORTED')
       this.setDisputesTab('1')
       this.$router.push('/management')
-    },
+    }
   }
 }
 </script>

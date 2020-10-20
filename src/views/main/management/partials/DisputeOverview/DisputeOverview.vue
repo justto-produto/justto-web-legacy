@@ -486,17 +486,20 @@
                   <span
                     v-if="!isToShowChangeParty(role) && !isNegotiator(role)"
                     class="dispute-overview-view__edit-tooltip"
-                    @click="handleEditRule()">
+                    @click="handleEditRule()"
+                  >
                     <el-tooltip
                       placement="top"
-                      content="Editar polaridade">
-                      <jus-icon icon="edit"/>
+                      content="Editar polaridade"
+                    >
+                      <jus-icon icon="edit" />
                     </el-tooltip>
                   </span>
                 </span>
                 <div
                   v-if="isToShowChangeParty(role) && !isNegotiator(role)"
-                  class="dispute-overview-view__select-role">
+                  class="dispute-overview-view__select-role"
+                >
                   <el-select
                     v-model="role.party"
                     size="mini"
@@ -512,9 +515,10 @@
                   </el-select>
                   <span
                     class="dispute-overview-view__tooltip-cancel-edit-role"
-                    @click="handleEditRule()">
+                    @click="handleEditRule()"
+                  >
                     <el-tooltip content="Cancelar edição da polaridade">
-                      <i class="el-icon-error"></i>
+                      <i class="el-icon-error" />
                     </el-tooltip>
                   </span>
                 </div>
@@ -522,7 +526,8 @@
                   v-for="(title, titleIndex) in roleTitleSort(role.roles)"
                   v-show="!isEditingRule"
                   :key="`${titleIndex}-${title.index}`"
-                  class="dispute-overview-view__info-line-description">
+                  class="dispute-overview-view__info-line-description"
+                >
                   {{ buildRoleTitle(role.party, title) }}
                   <jus-vexatious-alert
                     v-if="showVexatious(role.personProperties) && !role.roles.includes('NEGOTIATOR')"
@@ -533,7 +538,8 @@
 
                 <div
                   v-if="role.party === 'UNKNOWN'"
-                  class="dispute-overview-view__select-role">
+                  class="dispute-overview-view__select-role"
+                >
                   <el-select
                     v-model="tempRole"
                     size="mini"
@@ -654,10 +660,10 @@
                   :key="`${oab_index}-${oab.id}`"
                   :class="{'is-main': oab.isMain}"
                 >
-                  <el-checkbox
+                  <!-- <el-checkbox
                     v-model="oab.selected"
                     @change="updateDisputeRole(role, 'cna')"
-                  />
+                  /> -->
                   <span>{{ oab.number + '-' + oab.state || '' }}</span>
                   <div class="alerts">
                     <el-tooltip content="OAB inválido">
@@ -1604,7 +1610,7 @@
 
 <script>
 import { getRoles, buildRoleTitle, getRoleIcon } from '@/utils/jusUtils'
-import { validateName, validateCpf, validatePhone, validateZero } from '@/utils/validations'
+import { validateName, validateDocument, validatePhone, validateZero } from '@/utils/validations'
 
 import DisputeAttachments from './sections/DisputeAttachments'
 import { mapGetters, mapActions } from 'vuex'
@@ -1720,7 +1726,7 @@ export default {
         ],
         document: [
           { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-          { validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' }
+          { validator: validateDocument, message: 'CPF/CNPJ inválido.', trigger: 'submit' }
         ],
         bank: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
         agency: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
@@ -1735,16 +1741,12 @@ export default {
       ufFilter: null,
       dispuesToUnknownParties: [
         {
-          value: {
-            party: 'RESPONDENT'
-          },
-          label: 'Réu',
+          value: { party: 'RESPONDENT' },
+          label: 'Réu'
         },
         {
-          value: {
-            party: 'CLAIMANT'
-          },
-          label: 'Parte contrária',
+          value: { party: 'CLAIMANT' },
+          label: 'Parte contrária'
         }
       ],
       tempRole: {}
@@ -1779,7 +1781,7 @@ export default {
     },
     validateDocumentNumber() {
       if (this.documentNumberHasChanged) {
-        return [{ validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' }]
+        return [{ validator: validateDocument, message: 'CPF/CNPJ inválido.', trigger: 'submit' }]
       }
       return []
     },
@@ -1897,7 +1899,7 @@ export default {
     },
     'dispute.code'() {
       this.getDisputeTimeline(this.dispute.code)
-    },
+    }
   },
   created() {
     if (this.disputeStatuses.ARCHIVED) {
@@ -1955,7 +1957,7 @@ export default {
       const { value } = this.dispuesToUnknownParties[this.tempRole]
       const newRole = {
         ...role,
-        party: value.party,
+        party: value.party
       }
       this.$store.dispatch('editRole', {
         disputeId: this.dispute.id,
@@ -1965,7 +1967,7 @@ export default {
         this.$jusNotification({
           title: 'Yay!',
           message: 'Os dados foram alterados com sucesso.',
-          type: 'success',
+          type: 'success'
         })
         this.$forceUpdate()
       }).catch(error => {
@@ -2649,12 +2651,12 @@ export default {
     },
     setDisputeParty(role) {
       this.$jusSegment('Definindo função em participante da disputa', {
-        page: this.$route.name,
+        page: this.$route.name
       })
       this.setDisputeparty({
         disputeId: this.dispute.id,
         disputeRoleId: role.id,
-        disputeParty: role.party,
+        disputeParty: role.party
       })
         .then(() => {
           this.$jusNotification({

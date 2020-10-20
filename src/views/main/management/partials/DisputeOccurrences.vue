@@ -219,7 +219,8 @@
             <div class="dispute-view-occurrences__avatar">
               <el-tooltip
                 :disabled="!buildName(occurrence)"
-                :content="buildName(occurrence)">
+                :content="buildName(occurrence)"
+              >
                 <jus-avatar-user
                   :name="buildName(occurrence)"
                   :src="buildAvatar(occurrence)"
@@ -229,11 +230,11 @@
               </el-tooltip>
               <el-tooltip v-if="isJusttineMessage(occurrence)">
                 <div slot="content">
-                  Sou JUSTTINE, sua assistente virtual<br />
-                  Enviei esta mensagem para você, ok?<br/>
+                  Sou JUSTTINE, sua assistente virtual<br>
+                  Enviei esta mensagem para você, ok?<br>
                   Criei ela a partir da estratégia que você definiu na disputa.
                 </div>
-                <i class="el-icon-question"/>
+                <i class="el-icon-question" />
               </el-tooltip>
             </div>
             <div class="dispute-view-occurrences__card-box">
@@ -401,7 +402,8 @@
             <div class="dispute-view-occurrences__avatar">
               <el-tooltip
                 :disabled="!buildName(mergedOccurency)"
-                :content="buildName(mergedOccurency)">
+                :content="buildName(mergedOccurency)"
+              >
                 <jus-avatar-user
                   :name="buildName(mergedOccurency)"
                   :src="buildAvatar(mergedOccurency)"
@@ -570,7 +572,7 @@
 
 <script>
 import InfiniteLoading from 'vue-infinite-loading'
-import checkSimilarity from '@/utils/levenshtein'
+import { isSimilarStrings } from '@/utils/jusUtils'
 import { mapGetters, mapActions } from 'vuex'
 import { uniq } from 'lodash'
 
@@ -653,7 +655,7 @@ export default {
             similarity = 75
           }
           const previous = datedOccurrence[previousOccurrenceIndex]
-          if (previous && checkSimilarity(this.buildContent(fo), this.buildContent(previous), similarity)) {
+          if (previous && isSimilarStrings(this.buildContent(fo), this.buildContent(previous), similarity)) {
             fo.toDelete = true
             if (!previous.merged) {
               previous.merged = []

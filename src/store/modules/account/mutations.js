@@ -1,6 +1,6 @@
 import Vue from 'vue'
 
-const mutations = {
+const accountMutations = {
   setToken(state, resp) {
     const token = resp.token
     // eslint-disable-next-line
@@ -28,4 +28,4 @@ const mutations = {
   // setUserPreferences: (state, preferences) => (state.preference = preferences),
 }
 
-export default mutations
+export default accountMutations
