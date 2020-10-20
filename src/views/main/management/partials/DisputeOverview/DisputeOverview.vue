@@ -482,7 +482,8 @@
                     :ref="`popover-${role.name}`"
                     popper-class="dispute-overview-view__info-popover-lawyer"
                     :placement="'top-end'"
-                    trigger="click">
+                    trigger="click"
+                    @hide="deactivePopover(`popover-${role.name}`)">
                     <lawyer-detail />
                     <i
                       slot="reference"
@@ -672,7 +673,8 @@
                       :ref="`popover-${oab.number}-${oab.state}`"
                       popper-class="dispute-overview-view__info-popover-lawyer"
                       position="left"
-                      trigger="click">
+                      trigger="click"
+                      @hide="deactivePopover(`popover-${oab.number}-${oab.state}`)">
                       <lawyer-detail />
                       <i
                         slot="reference"
@@ -1949,8 +1951,14 @@ export default {
       'setDisputeparty'
     ]),
 
+    deactivePopover(ref) {
+      this.$refs[ref][0].$el.classList.remove('active-popover')
+    },
+
     searchThisLawyer(lawyer, ref) {
       if (!this.$refs[ref][0].showPopper) {
+        this.$refs[ref][0].$el.classList.add('active-popover')
+        console.log(this.$refs[ref][0].$el)
         this.searchLawyers(lawyer).finally(this.hideSearchLawerLoading)
       }
       this.$forceUpdate()
@@ -2753,6 +2761,11 @@ export default {
   }
   &__info-line {
     line-height: 24px;
+
+    div .active-popover .el-icon-info.el-popover__reference,
+    span span .active-popover .el-icon-info.el-popover__reference {
+      color: $--color-primary;
+    }
 
     div span .el-icon-info.el-popover__reference:hover,
     span span span .el-icon-info.el-popover__reference:hover {
