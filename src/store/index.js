@@ -8,6 +8,7 @@ import campaignModule from './modules/campaign'
 import dashboardModule from './modules/dashboard'
 import disputeModule from './modules/dispute/index'
 import documentModule from './modules/document'
+import enrichmentModule from './modules/enrichment'
 import importModule from './modules/import'
 import managementModule from './modules/management'
 import messageModule from './modules/message'
@@ -36,10 +37,10 @@ export default new Vuex.Store({
     brazilianStates
   },
   getters: {
-    loading: state => state.loading,
-    ghostMode: state => state.ghostMode,
     banksList: state => state.banksList,
-    brazilianStates: state => state.brazilianStates
+    brazilianStates: state => state.brazilianStates,
+    ghostMode: state => state.ghostMode,
+    loading: state => state.loading
   },
   mutations: {
     showLoading: (state) => (state.loading = true),
@@ -65,6 +66,7 @@ export default new Vuex.Store({
     dashboardModule,
     disputeModule,
     documentModule,
+    enrichmentModule,
     importModule,
     managementModule,
     messageModule,

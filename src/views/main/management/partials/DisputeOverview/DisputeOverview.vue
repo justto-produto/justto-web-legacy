@@ -477,6 +477,19 @@
               <div class="dispute-overview-view__info-line">
                 <span class="title">Nome completo:</span>
                 <div>
+                  <el-popover
+                    v-if="role.roles.includes('LAWYER')"
+                    :ref="`popover-${role.name}`"
+                    popper-class="dispute-overview-view__info-popover-lawyer"
+                    :placement="'top-end'"
+                    trigger="click">
+                    <lawyer-detail />
+                    <i
+                      slot="reference"
+                      class="el-icon-info"
+                      @click="searchThisLawyer({ name: role.name, oabs: [] }, `popover-${role.name}`)"
+                    />
+                  </el-popover>
                   {{ role.name }}
                 </div>
               </div>
@@ -490,7 +503,7 @@
                     <el-tooltip
                       placement="top"
                       content="Editar polaridade">
-                      <jus-icon icon="edit"/>
+                      <jus-icon icon="edit" />
                     </el-tooltip>
                   </span>
                 </span>
@@ -514,7 +527,7 @@
                     class="dispute-overview-view__tooltip-cancel-edit-role"
                     @click="handleEditRule()">
                     <el-tooltip content="Cancelar edição da polaridade">
-                      <i class="el-icon-error"></i>
+                      <i class="el-icon-error" />
                     </el-tooltip>
                   </span>
                 </div>
@@ -654,11 +667,21 @@
                   :key="`${oab_index}-${oab.id}`"
                   :class="{'is-main': oab.isMain}"
                 >
-                  <el-checkbox
-                    v-model="oab.selected"
-                    @change="updateDisputeRole(role, 'cna')"
-                  />
-                  <span>{{ oab.number + '-' + oab.state || '' }}</span>
+                  <span>
+                    <el-popover
+                      :ref="`popover-${oab.number}-${oab.state}`"
+                      popper-class="dispute-overview-view__info-popover-lawyer"
+                      position="left"
+                      trigger="click">
+                      <lawyer-detail />
+                      <i
+                        slot="reference"
+                        class="el-icon-info"
+                        @click="searchThisLawyer({...role, oabs: [oab]}, `popover-${oab.number}-${oab.state}`)"
+                      />
+                    </el-popover>
+                    {{ oab.number + '-' + oab.state || '' }}
+                  </span>
                   <div class="alerts">
                     <el-tooltip content="OAB inválido">
                       <jus-icon
@@ -1449,14 +1472,14 @@
             class="el-table--list"
           >
             <el-table-column>
-              <template slot-scope="scope">
+              <section slot-scope="scope">
                 <span>
                   {{ scope.row.name }}
                 </span>
                 <div style="font-size: 12px;">
                   {{ scope.row.bank }} | {{ scope.row.agency }} | {{ scope.row.number }}
                 </div>
-              </template>
+              </section>
             </el-table-column>
             <el-table-column
               fixed="right"
@@ -1464,7 +1487,7 @@
               width="48px"
               class-name="visible"
             >
-              <template slot-scope="scope">
+              <section slot-scope="scope">
                 <el-tooltip
                   :open-delay="500"
                   content="Remover"
@@ -1476,7 +1499,7 @@
                     <jus-icon icon="trash" />
                   </a>
                 </el-tooltip>
-              </template>
+              </section>
             </el-table-column>
           </el-table>
         </el-form>
@@ -1613,12 +1636,13 @@ export default {
   name: 'DisputeOverview',
   components: {
     DisputeAttachments,
-    DisputeCodeLink: () => import('../DisputeCodeLink'),
     DisputeAddRole: () => import('../DisputeAddRole'),
+    DisputeCodeLink: () => import('../DisputeCodeLink'),
     DisputeProprieties: () => import('../DisputeProprieties'),
     JusTags: () => import('@/components/others/JusTags'),
+    JusTimeline: () => import('@/components/JusTimeline/JusTimeline'),
     JusVexatiousAlert: () => import('@/components/dialogs/JusVexatiousAlert'),
-    JusTimeline: () => import('@/components/JusTimeline/JusTimeline')
+    LawyerDetail: () => import('./sections/LawyerDetail')
   },
   props: {
     loading: {
@@ -1752,8 +1776,10 @@ export default {
   },
   computed: {
     ...mapGetters({
+      disputeStatuses: 'disputeStatuses',
       getDisputeProperties: 'disputeProprieties',
-      disputeStatuses: 'disputeStatuses'
+      searchedLawyers: 'searchedLawyers',
+      searchLawyersLoading: 'searchLawyersLoading'
     }),
     canEditBirthday() {
       return this.roleForm.party === 'CLAIMANT' && this.roleForm.personType === 'NATURAL' && this.roleForm.roles && (this.roleForm.roles.includes('LAWYER') || this.roleForm.roles.includes('PARTY'))
@@ -1914,12 +1940,21 @@ export default {
   methods: {
     ...mapActions([
       'getDispute',
-      'removeDispute',
-      'setDisputeparty',
+      'getDisputeProprieties',
       'getDisputeStatuses',
       'getDisputeTimeline',
-      'getDisputeProprieties'
+      'hideSearchLawerLoading',
+      'removeDispute',
+      'searchLawyers',
+      'setDisputeparty'
     ]),
+
+    searchThisLawyer(lawyer, ref) {
+      if (!this.$refs[ref][0].showPopper) {
+        this.searchLawyers(lawyer).finally(this.hideSearchLawerLoading)
+      }
+      this.$forceUpdate()
+    },
 
     disputeUpperRangeChangedHandler() {
       this.disputeUpperRangeHasChanged = true
@@ -2718,17 +2753,25 @@ export default {
   }
   &__info-line {
     line-height: 24px;
+
+    div span .el-icon-info.el-popover__reference:hover,
+    span span span .el-icon-info.el-popover__reference:hover {
+      color: $--color-primary;
+    }
+
     > span:not(.title) {
       margin-left: 12px;
       width: 100%;
       display: flex;
       align-items: flex-start;
+
       > span:not(.jus-vexatious-alert) {
         width: 100%;
         margin: 5px;
         word-break: break-all;
         line-height: 1.2;
       }
+
       .jus-avatar-user {
         margin-right: 4px;
       }
@@ -3084,5 +3127,11 @@ export default {
   .el-input.is-disabled .el-input__inner {
     cursor: not-allowed;
   }
+}
+
+.dispute-overview-view__info-popover-lawyer {
+  border-radius: 16px;
+  padding: 10px;
+  width: 30vw;
 }
 </style>
