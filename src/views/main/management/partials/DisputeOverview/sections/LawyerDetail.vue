@@ -2,6 +2,7 @@
   <section
     id="lawyer-datail"
     v-loading="loading"
+    :element-loading-text="loadingText"
   >
     <div
       v-for="(lawyer, index) in lawyers"
@@ -104,6 +105,11 @@
 import { mapGetters } from 'vuex'
 
 export default {
+  data() {
+    return {
+      loadingText: 'Estamos buscando os dados no CNA, por favor aguarde.'
+    }
+  },
   computed: {
     ...mapGetters({
       loading: 'searchLawyersLoading',
