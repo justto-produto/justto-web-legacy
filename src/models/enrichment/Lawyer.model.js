@@ -1,3 +1,5 @@
+import { isValid } from '@fnando/cpf'
+
 export class Lawyer {
   constructor({ name, oab, state, status, organization, phones, address, photo, addressComplement, addressNumber, relatedPersonName, personTags, dateOfBirth, uf, document, score, city, personType, normalizedName }) {
     this.name = name
@@ -5,7 +7,7 @@ export class Lawyer {
     this.state = state
     this.status = status
     this.organization = organization
-    this.phones = phones
+    this.phones = phones | []
     this.address = address
     this.photo = photo
     this.addressComplement = addressComplement
@@ -14,7 +16,7 @@ export class Lawyer {
     this.personTags = personTags
     this.dateOfBirth = dateOfBirth
     this.uf = uf
-    this.document = document
+    this.document = isValid(document) ? document : ''
     this.score = score
     this.city = city
     this.personType = personType
