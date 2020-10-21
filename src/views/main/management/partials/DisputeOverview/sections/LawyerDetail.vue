@@ -46,6 +46,7 @@
             <jus-icon
               class="lawyer-detail__item-icon"
               icon="use-field"
+              @click="handleUseField('documentNumber', lawyer.document)"
             />
           </el-tooltip>
         </li>
@@ -104,6 +105,7 @@
                 <jus-icon
                   class="lawyer-detail__item-icon"
                   icon="use-field"
+                  @click="handleUseField('phone', phone)"
                 />
               </el-tooltip>
             </div>
@@ -111,7 +113,9 @@
         </li>
       </ul>
     </div>
-    <div v-if="!lawyers.length && !loading">
+    <div
+      v-if="!lawyers.length && !loading"
+      class="lawyer-detail__error">
       Não encontramos dados.
     </div>
   </section>
@@ -131,6 +135,11 @@ export default {
       loading: 'searchLawyersLoading',
       lawyers: 'searchedLawyers'
     })
+  },
+  methods: {
+    handleUseField(field, value) {
+      this.$emit('update', { field, value })
+    }
   }
 }
 </script>
@@ -192,6 +201,15 @@ export default {
         }
       }
     }
+  }
+
+  .lawyer-detail__error {
+    width: 100%;
+    height: 20vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 }
 </style>
