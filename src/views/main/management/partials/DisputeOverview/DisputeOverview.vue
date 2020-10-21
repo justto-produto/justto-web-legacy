@@ -3263,7 +3263,7 @@ export default {
   max-height: 50vh;
 
   .el-loading-parent--relative .el-loading-mask .el-loading-spinner {
-    margin-top: 16px;
+    // margin-top: 16px;
   }
 }
 </style>
