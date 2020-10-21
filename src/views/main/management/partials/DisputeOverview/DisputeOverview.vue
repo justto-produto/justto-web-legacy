@@ -672,7 +672,7 @@
                     <el-popover
                       :ref="`popover-${oab.number}-${oab.state}`"
                       popper-class="dispute-overview-view__info-popover-lawyer"
-                      position="left"
+                      placement="top"
                       trigger="click"
                       @hide="deactivePopover(`popover-${oab.number}-${oab.state}`)">
                       <lawyer-detail />
