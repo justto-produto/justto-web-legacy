@@ -462,8 +462,7 @@
           <el-button
             :loading="loadingInvite"
             type="primary"
-            @click="inviteTeammate"
-          >
+            @click="inviteTeammate">
             Convidar
           </el-button>
         </span>
