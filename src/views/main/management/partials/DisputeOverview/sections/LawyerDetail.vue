@@ -42,13 +42,14 @@
           <span class="lawyer-detail__item-content">
             {{ lawyer.document }}
           </span>
-          <el-tooltip content="Usar este CPF">
-            <jus-icon
-              class="lawyer-detail__item-icon"
-              icon="use-field"
-              @click="handleUseField('documentNumber', lawyer.document)"
-            />
-          </el-tooltip>
+          <span @click="handleUseField('documentNumber', lawyer.document)">
+            <el-tooltip content="Usar este CPF">
+              <jus-icon
+                class="lawyer-detail__item-icon"
+                icon="use-field"
+              />
+            </el-tooltip>
+          </span>
         </li>
         <li
           v-if="lawyer.oab"
@@ -58,6 +59,14 @@
           </span>
           <span class="lawyer-detail__item-content">
             {{ lawyer.oab }}
+            <span @click="handleUseField('oab', { oab: lawyer.oab, state: lawyer.state })">
+              <el-tooltip content="Usar esta OAB">
+                <jus-icon
+                  class="lawyer-detail__item-icon"
+                  icon="use-field"
+                />
+              </el-tooltip>
+            </span>
           </span>
         </li>
         <li
@@ -87,7 +96,9 @@
             Endereço:
           </span>
           <span class="lawyer-detail__item-content">
-            {{ `${lawyer.address} - ${lawyer.addressNumber} - ${ lawyer.addressComplement }`.toLowerCase() }}
+            <span>{{ lawyer.address }}</span>
+            <span v-if="lawyer.addressNumber"> - {{ lawyer.addressNumber }}</span>
+            <span v-if="lawyer.addressComplement"> - {{ lawyer.addressComplement }}</span>
           </span>
         </li>
         <li
@@ -98,16 +109,17 @@
           </span>
           <div class="lawyer-detail__list-content">
             <div
-              v-for="(phone, phoneIndex) in [...lawyer.phones, ...lawyer.phones]"
+              v-for="(phone, phoneIndex) in lawyer.phones"
               :key="phoneIndex">
               {{ phone }}
-              <el-tooltip content="Usar este CPF">
-                <jus-icon
-                  class="lawyer-detail__item-icon"
-                  icon="use-field"
-                  @click="handleUseField('phone', phone)"
-                />
-              </el-tooltip>
+              <span @click="handleUseField('phone', phone)">
+                <el-tooltip content="Usar este telefone">
+                  <jus-icon
+                    class="lawyer-detail__item-icon"
+                    icon="use-field"
+                  />
+                </el-tooltip>
+              </span>
             </div>
           </div>
         </li>
@@ -151,6 +163,11 @@ export default {
   background-color: $--color-white;
   padding: 0px 5px;
 
+  min-height: 20vh;
+  max-height: 35vh;
+  overflow-y: auto;
+  overflow-x: visible;
+
   .lawyer-detail__list {
     display: grid;
     grid-template-columns: 1fr 2fr;
@@ -162,7 +179,8 @@ export default {
       height: 100%;
 
       img {
-        height: 100%;
+        margin: auto 0px;
+        width: 100%;
         border-radius: 24px;
       }
     }
