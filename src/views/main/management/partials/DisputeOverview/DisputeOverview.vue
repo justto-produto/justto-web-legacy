@@ -1956,7 +1956,112 @@ export default {
     ]),
 
     updateDisputeRoleField(disputeRole, { field, value }) {
-      console.log(disputeRole, field, value)
+      if (field === 'oab') {
+        const { number, state } = value
+
+        const alreadyExists = disputeRole.oabs.filter(oab => {
+          return number === oab.number && state === oab.state
+        }).length > 0
+
+        if (!alreadyExists) {
+          this.addNewOab(disputeRole, value)
+        } else {
+          this.$jusNotification({
+            title: 'Yay!',
+            message: 'Este nº de OAB já esta em uso.',
+            type: 'success'
+          })
+        }
+      } else if (field === 'documentNumber') {
+        if (disputeRole.documentNumber !== value) {
+          this.addNewDocumentNumber(disputeRole, value)
+        } else {
+          this.$jusNotification({
+            title: 'Yay!',
+            message: 'Este documento já esta em uso.',
+            type: 'success'
+          })
+        }
+      } else if (field === 'phone') {
+        const alreadyExists = disputeRole.phones.filter(phone => {
+          return phone.number === `55 ${value}`.split(' ').join('')
+        }).length > 0
+        if (!alreadyExists) {
+          this.addNewPhone(disputeRole, value)
+        } else {
+          this.$jusNotification({
+            title: 'Yay!',
+            message: 'Este telefone já esta em uso.',
+            type: 'success'
+          })
+        }
+      }
+    },
+
+    addNewOab(disputeRole, value) {
+      const newRole = {
+        ...disputeRole,
+        oabs: [...disputeRole.oabs, { ...value }]
+      }
+      this.$store.dispatch('editRole', {
+        disputeId: this.dispute.id,
+        disputeRole: newRole
+      }).then(() => {
+        this.getDispute(this.dispute.id)
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Nº de OAB Adicionado.',
+          type: 'success'
+        })
+      }).catch(error => {
+        this.$jusNotification({ error })
+      }).finally(() => {
+        this.$forceUpdate()
+      })
+    },
+
+    addNewDocumentNumber(disputeRole, documentNumber) {
+      const newRole = {
+        ...disputeRole,
+        documentNumber,
+      }
+      this.$store.dispatch('editRole', {
+        disputeId: this.dispute.id,
+        disputeRole: newRole
+      }).then(() => {
+        this.getDispute(this.dispute.id)
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Documento Adicionado.',
+          type: 'success'
+        })
+      }).catch(error => {
+        this.$jusNotification({ error })
+      }).finally(() => {
+        this.$forceUpdate()
+      })
+    },
+
+    addNewPhone(disputeRole, number) {
+      const newRole = {
+        ...disputeRole,
+        phones: [...disputeRole.phones, { number }]
+      }
+      this.$store.dispatch('editRole', {
+        disputeId: this.dispute.id,
+        disputeRole: newRole
+      }).then(() => {
+        this.getDispute(this.dispute.id)
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Telefone Adicionado com sucesso.',
+          type: 'success'
+        })
+      }).catch(error => {
+        this.$jusNotification({ error })
+      }).finally(() => {
+        this.$forceUpdate()
+      })
     },
 
     deactivePopover(ref) {
@@ -2006,7 +2111,7 @@ export default {
       const { value } = this.dispuesToUnknownParties[this.tempRole]
       const newRole = {
         ...role,
-        party: value.party,
+        party: value.party
       }
       this.$store.dispatch('editRole', {
         disputeId: this.dispute.id,
@@ -3155,6 +3260,7 @@ export default {
   padding: 10px;
   width: 35vw;
   min-height: 20vh;
+  max-height: 50vh;
 
   .el-loading-parent--relative .el-loading-mask .el-loading-spinner {
     margin-top: 16px;
