@@ -59,7 +59,7 @@
           </span>
           <span class="lawyer-detail__item-content">
             {{ lawyer.oab }}
-            <span @click="handleUseField('oab', { oab: lawyer.oab, state: lawyer.state })">
+            <span @click="handleUseField('oab', { number: lawyer.oab, state: lawyer.state })">
               <el-tooltip content="Usar esta OAB">
                 <jus-icon
                   class="lawyer-detail__item-icon"
