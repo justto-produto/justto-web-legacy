@@ -484,7 +484,9 @@
                     :placement="'top-end'"
                     trigger="click"
                     @hide="deactivePopover(`popover-${role.name}`)">
-                    <lawyer-detail />
+                    <lawyer-detail
+                      @update="updateDisputeRoleField(role, $event)"
+                    />
                     <i
                       slot="reference"
                       class="el-icon-info"
@@ -675,7 +677,9 @@
                       placement="top"
                       trigger="click"
                       @hide="deactivePopover(`popover-${oab.number}-${oab.state}`)">
-                      <lawyer-detail />
+                      <lawyer-detail
+                        @update="updateDisputeRoleField(role, $event)"
+                      />
                       <i
                         slot="reference"
                         class="el-icon-info"
@@ -1951,6 +1955,10 @@ export default {
       'setDisputeparty'
     ]),
 
+    updateDisputeRoleField(disputeRole, { field, value }) {
+      console.log(disputeRole, field, value)
+    },
+
     deactivePopover(ref) {
       this.$refs[ref][0].$el.classList.remove('active-popover')
     },
@@ -3145,6 +3153,11 @@ export default {
 .dispute-overview-view__info-popover-lawyer {
   border-radius: 16px;
   padding: 10px;
-  width: 30vw;
+  width: 35vw;
+  min-height: 20vh;
+
+  .el-loading-parent--relative .el-loading-mask .el-loading-spinner {
+    margin-top: 16px;
+  }
 }
 </style>
