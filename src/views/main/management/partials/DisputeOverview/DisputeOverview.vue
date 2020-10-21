@@ -973,9 +973,13 @@
                   Deixando <b>selecionada</b> esta opção, <b>sempre</b> iremos enviar mensagens automáticas para o autor.
                 </p>
               </div>
-              <el-switch v-model="disputeForm.awaysContactParty" />
+              <el-switch
+                v-model="disputeForm.awaysContactParty"
+                @input="$forceUpdate()"
+              />
             </el-col>
             <el-col
+              v-if="!disputeForm.awaysContactParty"
               :span="24"
               class="dispute-overview-view__select-switch"
             >
@@ -987,10 +991,10 @@
               </div>
               <el-switch
                 v-model="disputeForm.contactPartyWhenNoLowyer"
-                :disabled="disputeForm.awaysContactParty"
               />
             </el-col>
             <el-col
+              v-if="!disputeForm.awaysContactParty"
               :span="24"
               class="dispute-overview-view__select-switch"
             >
@@ -1002,7 +1006,6 @@
               </div>
               <el-switch
                 v-model="disputeForm.contactPartyWhenInvalidLowyer"
-                :disabled="disputeForm.awaysContactParty"
               />
             </el-col>
           </el-row>

@@ -207,7 +207,9 @@
         </div>
         <el-switch v-model="awaysContactParty" />
       </div>
-      <div class="jus-import-feedback-card__switch">
+      <div
+        v-if="!awaysContactParty"
+        class="jus-import-feedback-card__switch">
         <i class="el-icon-circle-check el-input__icon--success" />
         <div class="content">
           <div>Engajar autor se não tiver advogado</div>
@@ -217,10 +219,11 @@
         </div>
         <el-switch
           v-model="contactPartyWhenNoLowyer"
-          :disabled="awaysContactParty"
         />
       </div>
-      <div class="jus-import-feedback-card__switch">
+      <div
+        v-if="!awaysContactParty"
+        class="jus-import-feedback-card__switch">
         <i class="el-icon-circle-check el-input__icon--success" />
         <div class="content">
           <div>Engajar autor se advogado não possuir contatos válidos para ser engajado</div>
@@ -230,7 +233,6 @@
         </div>
         <el-switch
           v-model="contactPartyWhenInvalidLowyer"
-          :disabled="awaysContactParty"
         />
       </div>
       <div class="jus-import-feedback-card__switch">
