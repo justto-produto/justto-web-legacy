@@ -9,7 +9,6 @@ import '@/utils/registerServiceWorker'
 // PLUGINS
 import i18n from '@/plugins/vueI18n'
 import '@/plugins/axios'
-// import '@/plugins/chart'
 import '@/plugins/element'
 import '@/plugins/jusNotification'
 import '@/plugins/jusSegment'
