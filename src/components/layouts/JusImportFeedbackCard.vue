@@ -217,9 +217,7 @@
             Deixando <b>selecionada</b> esta opção, iremos enviar mensagens para o autor quando não houver advogado constituído.
           </p>
         </div>
-        <el-switch
-          v-model="contactPartyWhenNoLowyer"
-        />
+        <el-switch v-model="contactPartyWhenNoLowyer" />
       </div>
       <div
         v-if="!awaysContactParty"
@@ -231,9 +229,7 @@
             Deixando <b>selecionada</b> esta opção, iremos enviar mensagens para o autor se o <b>advogado não possuir dados válidos</b> para ser contactado.
           </p>
         </div>
-        <el-switch
-          v-model="contactPartyWhenInvalidLowyer"
-        />
+        <el-switch v-model="contactPartyWhenInvalidLowyer" />
       </div>
       <div class="jus-import-feedback-card__switch">
         <i class="el-icon-circle-check el-input__icon--success" />

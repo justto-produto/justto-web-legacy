@@ -969,45 +969,54 @@
             >
               <div class="content">
                 <div>Sempre engajar o autor</div>
-                <p>
-                  Deixando <b>selecionada</b> esta opção, <b>sempre</b> iremos enviar mensagens automáticas para o autor.
-                </p>
+                <p>Deixando <b>selecionada</b> esta opção, <b>sempre</b> iremos enviar mensagens automáticas para o autor.</p>
               </div>
               <el-switch
                 v-model="disputeForm.awaysContactParty"
                 @input="$forceUpdate()"
               />
             </el-col>
-            <el-col
-              v-if="!disputeForm.awaysContactParty"
-              :span="24"
-              class="dispute-overview-view__select-switch"
+            <el-tooltip
+              content="Sempre engaja autor está habilitado"
+              :disabled="!disputeForm.awaysContactParty"
             >
-              <div class="content">
-                <div>Engajar autor se não tiver advogado</div>
-                <p>
-                  Deixando <b>selecionada</b> esta opção, iremos enviar mensagens para o autor quando não houver advogado constituído.
-                </p>
-              </div>
-              <el-switch
-                v-model="disputeForm.contactPartyWhenNoLowyer"
-              />
-            </el-col>
-            <el-col
-              v-if="!disputeForm.awaysContactParty"
-              :span="24"
-              class="dispute-overview-view__select-switch"
+              <el-col
+                :span="24"
+                :style="disputeForm.awaysContactParty ? 'cursor: not-allowed' : ''"
+                class="dispute-overview-view__select-switch"
+              >
+                <div class="content">
+                  <div>Engajar autor se não tiver advogado</div>
+                  <p>
+                    Deixando <b>selecionada</b> esta opção, iremos enviar mensagens para o autor quando não houver advogado constituído.
+                  </p>
+                </div>
+                <el-switch
+                  :disabled="disputeForm.awaysContactParty"
+                  v-model="disputeForm.contactPartyWhenNoLowyer" />
+              </el-col>
+            </el-tooltip>
+            <el-tooltip
+              content="Sempre engaja autor está habilitado"
+              :disabled="!disputeForm.awaysContactParty"
             >
-              <div class="content">
-                <div>Engajar autor se advogado não possuir contatos válidos para ser engajado</div>
-                <p>
-                  Deixando <b>selecionada</b> esta opção, iremos enviar mensagens para o autor se o <b>advogado não possuir dados válidos</b> para ser contactado.
-                </p>
-              </div>
-              <el-switch
-                v-model="disputeForm.contactPartyWhenInvalidLowyer"
-              />
-            </el-col>
+              <el-col
+                :span="24"
+                :style="disputeForm.awaysContactParty ? 'cursor: not-allowed' : ''"
+                class="dispute-overview-view__select-switch"
+              >
+                <div class="content">
+                  <div>Engajar autor se advogado não possuir contatos válidos para ser engajado</div>
+                  <p>
+                    Deixando <b>selecionada</b> esta opção, iremos enviar mensagens para o autor se o <b>advogado não possuir dados válidos</b> para ser contactado.
+                  </p>
+                </div>
+                <el-switch
+                  :disabled="disputeForm.awaysContactParty"
+                  v-model="disputeForm.contactPartyWhenInvalidLowyer"
+                />
+              </el-col>
+            </el-tooltip>
           </el-row>
           <h3>Valor proposto</h3>
           <el-row :gutter="20">
