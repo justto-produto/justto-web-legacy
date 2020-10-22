@@ -55,7 +55,8 @@
           <el-tooltip
             placement="top-start"
             :value="actieTooltipDisputeId === scope.row.id"
-            :content="!!lastAccess[scope.row.id] ? lastAccess[scope.row.id].date : 'Ainda não sei quando você acessou esta disputa'">
+            :content="!!lastAccess[scope.row.id] ? lastAccess[scope.row.id].date : 'Ainda não sei quando você acessou esta disputa'"
+          >
             <div>
               {{ scope.row.campaign.name | capitalize }}
             </div>
@@ -154,7 +155,7 @@
             Minuta
             <div :class="'management-table__protocol_button--step-' + getDocumentStep(scope.row.hasDocument, scope.row.signStatus)">
               <span /><span /><span />
-            </div>  
+            </div>
           </el-button>
           <span v-else>-</span>
         </template>
@@ -171,26 +172,27 @@
           {{ scope.row.lastCounterOfferValue | currency }}
         </template>
       </el-table-column>
-
-      <!-- <el-table-column
+      <el-table-column
         v-if="tab0"
         :sortable="false"
         label="Motivo"
         prop=""
-        min-width="120px"
+        min-width="140px"
       >
         <template slot-scope="scope">
-          {{ scope.row }}
+          <span v-if="scope.row.properties && scope.row.properties['MOTIVO DO INDICATIVO DE SENTENCA']">
+            {{ scope.row.properties['MOTIVO DO INDICATIVO DE SENTENCA'] }}
+          </span>
+          <span v-else>-</span>
         </template>
-      </el-table-column> -->
-
+      </el-table-column>
       <el-table-column
         v-if="tab0 || tab1 || tab2 || tabAll"
         :sortable="false"
         prop="expirationDate"
         label="Fim da negociação"
         align="center"
-        min-width="140px"
+        width="136px"
       >
         <template slot-scope="scope">
           <el-tooltip content="Negociação encerra nos próximos 3 dias">
