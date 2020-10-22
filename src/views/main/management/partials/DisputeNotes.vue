@@ -89,6 +89,7 @@
 </template>
 
 <script>
+import { mapActions, mapGetters, mapMutations } from 'vuex'
 export default {
   name: 'DisputeNotes',
   props: {
@@ -99,7 +100,6 @@ export default {
   },
   data() {
     return {
-      loading: true,
       noteLoading: 0,
       editDialog: false,
       editDialogLoading: false,
@@ -107,19 +107,35 @@ export default {
     }
   },
   computed: {
+    ...mapGetters([
+      'loading'
+    ]),
     occurrences() {
       return this.$store.getters.occurrences
     }
   },
+  watch: {
+    disputeId() {
+      if (this.disputeId) {
+        console.log(this.disputeId)
+        this.init()
+      }
+    }
+  },
   mounted() {
-    this.$store.commit('clearDisputeOccurrences')
-    setTimeout(() => {
-      this.$store.dispatch('getDisputeNotes', this.disputeId).then(() => {
-        this.loading = false
-      })
-    }, 200)
+    this.init()
   },
   methods: {
+    ...mapActions(['getDisputeNotes']),
+    ...mapMutations(['clearDisputeOccurrences']),
+
+    init() {
+      this.clearDisputeOccurrences()
+      setTimeout(() => {
+        this.getDisputeNotes(this.disputeId)
+      }, 200)
+    },
+
     splitModified(description) {
       return description.split(' modificou uma nota. ')
     },
