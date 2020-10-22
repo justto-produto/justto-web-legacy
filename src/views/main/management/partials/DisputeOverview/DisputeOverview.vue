@@ -992,8 +992,9 @@
                   </p>
                 </div>
                 <el-switch
+                  v-model="disputeForm.contactPartyWhenNoLowyer"
                   :disabled="disputeForm.awaysContactParty"
-                  v-model="disputeForm.contactPartyWhenNoLowyer" />
+                />
               </el-col>
             </el-tooltip>
             <el-tooltip
@@ -1012,8 +1013,8 @@
                   </p>
                 </div>
                 <el-switch
-                  :disabled="disputeForm.awaysContactParty"
                   v-model="disputeForm.contactPartyWhenInvalidLowyer"
+                  :disabled="disputeForm.awaysContactParty"
                 />
               </el-col>
             </el-tooltip>

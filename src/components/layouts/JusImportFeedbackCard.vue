@@ -209,7 +209,8 @@
       </div>
       <div
         v-if="!awaysContactParty"
-        class="jus-import-feedback-card__switch">
+        class="jus-import-feedback-card__switch"
+      >
         <i class="el-icon-circle-check el-input__icon--success" />
         <div class="content">
           <div>Engajar autor se não tiver advogado</div>
@@ -221,7 +222,8 @@
       </div>
       <div
         v-if="!awaysContactParty"
-        class="jus-import-feedback-card__switch">
+        class="jus-import-feedback-card__switch"
+      >
         <i class="el-icon-circle-check el-input__icon--success" />
         <div class="content">
           <div>Engajar autor se advogado não possuir contatos válidos para ser engajado</div>
