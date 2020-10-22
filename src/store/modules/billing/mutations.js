@@ -1,4 +1,4 @@
-const mutations = {
+const billingMutations = {
   setAllCustomers: (state, customers) => (state.allCustomers = customers.content),
   setMyCustomers: (state, customers) => (state.myCustomers = customers),
   setCustomer: (state, customerData) => {
@@ -22,4 +22,4 @@ const mutations = {
   resetTransactionsQueryPage: (state) => (state.query.page = 1)
 }
 
-export default mutations
+export default billingMutations

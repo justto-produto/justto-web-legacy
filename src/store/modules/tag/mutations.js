@@ -1,4 +1,4 @@
-const mutations = {
+const tagMutations = {
   setWorkspaceTags(state, tags) {
     state.workspaceTags = tags.content
   },
@@ -10,4 +10,4 @@ const mutations = {
   }
 }
 
-export default mutations
+export default tagMutations

@@ -663,10 +663,10 @@
                   :key="`${oab_index}-${oab.id}`"
                   :class="{'is-main': oab.isMain}"
                 >
-                  <el-checkbox
+                  <!-- <el-checkbox
                     v-model="oab.selected"
                     @change="updateDisputeRole(role, 'cna')"
-                  />
+                  /> -->
                   <span>{{ oab.number + '-' + oab.state || '' }}</span>
                   <div class="alerts">
                     <el-tooltip content="OAB inválido">
@@ -1643,7 +1643,7 @@
 
 <script>
 import { getRoles, buildRoleTitle, getRoleIcon } from '@/utils/jusUtils'
-import { validateName, validateCpf, validatePhone, validateZero } from '@/utils/validations'
+import { validateName, validateDocument, validatePhone, validateZero } from '@/utils/validations'
 
 import DisputeAttachments from './sections/DisputeAttachments'
 import { mapGetters, mapActions } from 'vuex'
@@ -1759,7 +1759,7 @@ export default {
         ],
         document: [
           { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-          { validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' }
+          { validator: validateDocument, message: 'CPF/CNPJ inválido.', trigger: 'submit' }
         ],
         bank: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
         agency: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
@@ -1774,15 +1774,11 @@ export default {
       ufFilter: null,
       dispuesToUnknownParties: [
         {
-          value: {
-            party: 'RESPONDENT'
-          },
+          value: { party: 'RESPONDENT' },
           label: 'Réu'
         },
         {
-          value: {
-            party: 'CLAIMANT'
-          },
+          value: { party: 'CLAIMANT' },
           label: 'Parte contrária'
         }
       ],
@@ -1818,7 +1814,7 @@ export default {
     },
     validateDocumentNumber() {
       if (this.documentNumberHasChanged) {
-        return [{ validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' }]
+        return [{ validator: validateDocument, message: 'CPF/CNPJ inválido.', trigger: 'submit' }]
       }
       return []
     },

@@ -20,6 +20,8 @@
 </template>
 
 <script>
+import { getStringInitials } from '@/utils/jusUtils'
+
 export default {
   name: 'JusAvatarUser',
   props: {
@@ -63,15 +65,7 @@ export default {
       return require('@/assets/icons/ic-user.svg')
     },
     nameInitials() {
-      if (this.name && this.name.trim()) {
-        const split = this.name.split(' ').filter(Boolean)
-        if (split.length > 1) {
-          return split[0].substring(0, 1) + split[split.length - 1].substring(0, 1)
-        } else if (split.length === 1) {
-          return split[0].substring(0, 2)
-        }
-      }
-      return ''
+      return getStringInitials(this.name)
     },
     shapeClass() {
       return 'jus-avatar-user--' + this.shape

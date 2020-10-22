@@ -183,7 +183,8 @@
                     >
                       <ul
                         v-if="quickReplyTemplates.length"
-                        class="dispute-view__templates-list">
+                        class="dispute-view__templates-list"
+                      >
                         <li
                           v-for="template in quickReplyTemplates"
                           :key="template.template.referenceTemplateId"
@@ -191,7 +192,8 @@
                         >
                           <div
                             class="dispute-view__templates-item-title"
-                            @click="inputTemplate(template)">
+                            @click="inputTemplate(template)"
+                          >
                             <jus-icon
                               :icon="template.template.contentType === 'HTML' ? 'email' : 'whatsapp'"
                               class="dispute-view__templates-list-icon"
@@ -228,13 +230,15 @@
                       </ul>
                       <span
                         v-else
-                        class="dispute-view__templates-list-empty">
+                        class="dispute-view__templates-list-empty"
+                      >
                         Não há templates para esta estratégia
                       </span>
                       <el-button
                         slot="reference"
                         size="mini"
-                        class="dispute-view__templates-button">
+                        class="dispute-view__templates-button"
+                      >
                         <jus-icon
                           class="dispute-view__templates-button-icon"
                           icon="zap"
@@ -371,7 +375,7 @@
 </template>
 
 <script>
-import checkSimilarity from '@/utils/levenshtein'
+import { isSimilarStrings } from '@/utils/jusUtils'
 import { mapGetters, mapActions } from 'vuex'
 import { JusDragArea } from '@/components/JusDragArea'
 import { quillEditor } from 'vue-quill-editor'
@@ -446,7 +450,7 @@ export default {
       'disputeStatuses',
       'isJusttoAdmin',
       'ghostMode',
-      'quickReplyTemplates',
+      'quickReplyTemplates'
     ]),
 
     sendMessageHeightComputed() {
@@ -712,7 +716,7 @@ export default {
         if (this.messageType === 'whatsapp') {
           this.$store.dispatch('canSendWhatsapp', this.directContactAddress[0] || this.selectedContacts[0].number).then(response => {
             if (response.canSend) {
-              if (checkSimilarity(quillMessage, this.recentMessages.map(rm => rm.messageBody), 75)) {
+              if (isSimilarStrings(quillMessage, this.recentMessages.map(rm => rm.messageBody), 75)) {
                 this.$jusNotification({
                   title: 'Ops!',
                   message: 'Parece que você enviou uma mensagem parecida recentemente. Devido às políticas de SPAM do WhatsApp, a mensagem não pôde ser enviada.',

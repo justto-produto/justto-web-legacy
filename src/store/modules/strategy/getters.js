@@ -1,4 +1,4 @@
-const getters = {
+const strategyGetters = {
   strategyList: state => state.list.sort((a, b) => {
     if (a.name < b.name) { return -1 }
     if (a.name > b.name) { return 1 }
@@ -6,4 +6,4 @@ const getters = {
   })
 }
 
-export default getters
+export default strategyGetters

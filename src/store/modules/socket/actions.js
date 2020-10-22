@@ -1,15 +1,12 @@
-const actions = {
+import axiosDispatcher from '@/store/axiosDispatcher'
+
+const socketActions = {
   // CHAT
-  sendMessageEvent({ commit }, params) {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.put('api/disputes/' + params.id + '/chat/message', params.data)
-        .then(response => {
-          resolve(response.data)
-        })
-        .catch(error => {
-          reject(error)
-        })
+  sendMessageEvent({ _ }, params) {
+    return axiosDispatcher({
+      url: `api/disputes/${params.id}/chat/message`,
+      method: 'PUT',
+      data: params.data
     })
   }
   // SOCKET_ADD_ALERT ({ commit }, alert) {
@@ -20,4 +17,4 @@ const actions = {
   // }
 }
 
-export default actions
+export default socketActions

@@ -1,4 +1,4 @@
-const mutations = {
+const messageMutations = {
   addMessageResume: (state, messageResume) => (state.messageResumes.push(messageResume)),
   deleteMessageResumeByDisputeId(state, disputeId) {
     const index = state.messageResumes.findIndex(mr => mr.disputeId === disputeId)
@@ -15,4 +15,4 @@ const mutations = {
   }
 }
 
-export default mutations
+export default messageMutations

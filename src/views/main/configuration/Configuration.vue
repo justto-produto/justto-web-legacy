@@ -462,8 +462,7 @@
           <el-button
             :loading="loadingInvite"
             type="primary"
-            @click="inviteTeammate"
-          >
+            @click="inviteTeammate">
             Convidar
           </el-button>
         </span>
@@ -474,9 +473,8 @@
 
 <script>
 import { mask } from 'vue-the-mask'
-import { validatePhone } from '@/utils/validations'
+import { validatePhone, isJusttoUser } from '@/utils/validations'
 import { mapGetters } from 'vuex'
-import { isJusttoUser } from '@/utils/jusUtils'
 
 export default {
   name: 'Configuration',

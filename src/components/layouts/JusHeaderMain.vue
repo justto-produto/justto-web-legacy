@@ -194,7 +194,7 @@ export default {
       }).then(({ value }) => {
         const loggetPersonId = this.$store.getters.loggedPersonId
         this.$store.dispatch('changePersonName', {
-          person: { id: loggetPersonId, name: value }, 
+          person: { id: loggetPersonId, name: value },
           isEditingLoggedPerson: true
         }).then(() => {
           this.$jusNotification({

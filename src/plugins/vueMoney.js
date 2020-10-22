@@ -5,5 +5,5 @@ Vue.use(money, {
   decimal: ',',
   thousands: '.',
   prefix: 'R$ ',
-  precision: 2,
+  precision: 2
 })

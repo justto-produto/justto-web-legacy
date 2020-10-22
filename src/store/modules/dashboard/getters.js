@@ -1,4 +1,4 @@
-const getters = {
+const dashboardGetters = {
   chartsDatasets: state => state.chartsDatasets,
   dashboardSelectedMemberId: state => state.selectedMemberId,
   getChartsDatasets: state => (chartName) => {
@@ -8,4 +8,4 @@ const getters = {
   }
 }
 
-export default getters
+export default dashboardGetters

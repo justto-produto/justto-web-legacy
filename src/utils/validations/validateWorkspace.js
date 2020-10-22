@@ -11,4 +11,4 @@ const validateWorkspace = function() {
   }, 5000)
 }
 
-export { validateWorkspace }
+export default validateWorkspace

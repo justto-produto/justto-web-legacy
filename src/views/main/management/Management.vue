@@ -12,7 +12,8 @@
       <div class="view-management__filters">
         <span
           v-if="isManagementAll"
-          class="view-management__title">
+          class="view-management__title"
+        >
           Todas as disputas
         </span>
         <el-tabs
@@ -80,7 +81,8 @@
           <el-tab-pane name="4">
             <span
               slot="label"
-              :style="!finishedLenght ? '' : finishedLenght > 99 ? 'padding-right: 38px;' : finishedLenght > 9 ? 'padding-right: 30px;' : 'padding-right: 22px;'">
+              :style="!finishedLenght ? '' : finishedLenght > 99 ? 'padding-right: 38px;' : finishedLenght > 9 ? 'padding-right: 30px;' : 'padding-right: 22px;'"
+            >
               Finalizados
               <el-badge
                 :hidden="!finishedLenght"

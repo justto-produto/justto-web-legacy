@@ -1,40 +1,24 @@
-const actions = {
-  getStrategiesList({ commit }) {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.get('api/strategies/list')
-        .then(response => {
-          commit('setImportedStrategies', response.data)
-          resolve(response.data)
-        })
-        .catch(error => {
-          reject(error)
-        })
+import axiosDispatcher from '@/store/axiosDispatcher'
+
+const strategiesPath = 'api/strategies'
+
+const strategyActions = {
+  getStrategiesList({ _ }) {
+    return axiosDispatcher({
+      url: `${strategiesPath}/list`,
+      mutation: 'setImportedStrategies'
     })
   },
-  getStrategyEngagement({ commit }, id) {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.get('api/strategies/' + id + '/engagement')
-        .then(response => {
-          resolve(response.data)
-        })
-        .catch(error => {
-          reject(error)
-        })
-    })
+  getStrategyEngagement({ _ }, id) {
+    return axiosDispatcher({ url: `${strategiesPath}/${id}/engagement` })
   },
-  editStrategyTemplate({ commit }, params) {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.put('api/templates/', params)
-        .then(response => {
-          resolve(response.data)
-        }).catch(error => {
-          reject(error)
-        })
+  editStrategyTemplate({ _ }, params) {
+    return axiosDispatcher({
+      url: 'api/templates/',
+      method: 'PUT',
+      data: params
     })
   }
 }
 
-export default actions
+export default strategyActions

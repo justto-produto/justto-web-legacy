@@ -1,4 +1,4 @@
-const mutations = {
+const personMutations = {
   setLoggedPerson(state, loggedPerson) {
     state.loggedPerson = loggedPerson
     localStorage.setItem('jusperson', JSON.stringify(loggedPerson))
@@ -8,4 +8,4 @@ const mutations = {
   }
 }
 
-export default mutations
+export default personMutations
