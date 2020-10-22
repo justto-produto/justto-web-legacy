@@ -966,7 +966,7 @@ export default {
       if (occurrence.interaction &&
         ((occurrence.interaction.message &&
         occurrence.interaction.message.communicationType &&
-        ['EMAIL', 'WHATSAPP'].includes(occurrence.interaction.message.communicationType)) ||
+        ['EMAIL', 'WHATSAPP', 'NEGOTIATOR_MESSAGE'].includes(occurrence.interaction.message.communicationType)) ||
         (['NEGOTIATOR_PROPOSAL', 'NEGOTIATOR_COUNTERPROSAL', 'NEGOTIATOR_CHECKOUT'].includes(occurrence.interaction.type) &&
         this.disputeLastInteractions.length)) &&
         occurrence.interaction.direction === 'INBOUND') {
@@ -976,17 +976,21 @@ export default {
     },
 
     startReply(occurrence) {
+      let senders, resume, type
       if (['NEGOTIATOR_PROPOSAL', 'NEGOTIATOR_COUNTERPROSAL', 'NEGOTIATOR_CHECKOUT'].includes(occurrence.interaction.type)) {
-        const senders = uniq(this.disputeLastInteractions.map(item => item.address))
-        const resume = this.buildContent(occurrence)
-        const type = 'email'
-        this.$emit('dispute:reply', { senders, resume, type })
+        senders = uniq(this.disputeLastInteractions.map(item => item.address))
+        resume = this.buildContent(occurrence)
+        type = 'email'
+      } else if (['NEGOTIATOR_MESSAGE'].includes(occurrence.interaction.message.communicationType)) {
+        senders = [occurrence.interaction.message.sender]
+        resume = this.buildContent(occurrence)
+        type = 'email'
       } else {
-        const senders = [occurrence.interaction.message.sender]
-        const resume = occurrence.interaction.message.resume
-        const type = occurrence.interaction.message.communicationType
-        this.$emit('dispute:reply', { senders, resume, type })
+        senders = [occurrence.interaction.message.sender]
+        resume = occurrence.interaction.message.resume
+        type = occurrence.interaction.message.communicationType
       }
+      this.$emit('dispute:reply', { senders, resume, type })
     },
 
     /** @method buildWhatsappStatus
