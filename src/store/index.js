@@ -8,6 +8,7 @@ import campaignModule from './modules/campaign'
 import dashboardModule from './modules/dashboard'
 import disputeModule from './modules/dispute/index'
 import documentModule from './modules/document'
+import enrichmentModule from './modules/enrichment'
 import importModule from './modules/import'
 import managementModule from './modules/management'
 import messageModule from './modules/message'
@@ -30,32 +31,32 @@ if (ghostMode) ghostMode = ghostMode === 'true' || ghostMode === true
 
 export default new Vuex.Store({
   state: {
-    loading: false,
-    ghostMode,
     banksList,
-    brazilianStates
+    brazilianStates,
+    ghostMode,
+    loading: false
   },
   getters: {
-    loading: state => state.loading,
-    ghostMode: state => state.ghostMode,
     banksList: state => state.banksList,
-    brazilianStates: state => state.brazilianStates
+    brazilianStates: state => state.brazilianStates,
+    ghostMode: state => state.ghostMode,
+    loading: state => state.loading
   },
   mutations: {
+    setGhostMode: (state, value) => (state.ghostMode = value),
     showLoading: (state) => (state.loading = true),
-    hideLoading: (state) => (state.loading = false),
-    setGhostMode: (state, value) => (state.ghostMode = value)
+    hideLoading: (state) => (state.loading = false)
   },
   actions: {
+    setGhostMode({ commit }, value) {
+      commit('setGhostMode', value)
+      localStorage.setItem('jusghostmode', value)
+    },
     showLoading({ commit }) {
       commit('showLoading')
     },
     hideLoading({ commit }) {
       commit('hideLoading')
-    },
-    setGhostMode({ commit }, value) {
-      commit('setGhostMode', value)
-      localStorage.setItem('jusghostmode', value)
     }
   },
   modules: {
@@ -65,6 +66,7 @@ export default new Vuex.Store({
     dashboardModule,
     disputeModule,
     documentModule,
+    enrichmentModule,
     importModule,
     managementModule,
     messageModule,
