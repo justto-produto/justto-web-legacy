@@ -56,7 +56,7 @@ const documentActions = {
   },
   backDocumentToEditing({ commit }, disputeId) {
     return axiosDispatcher({
-      url: `${documentsPath}${disputeId}/back-to-editing`,
+      url: `${documentsPath}/${disputeId}/back-to-editing`,
       method: 'PATCH'
     })
   },
