@@ -6,28 +6,24 @@ build:
   box: node:latest
   # Steps make up the actions in your pipeline
   # Read more about steps on our dev center:
+  # Teste novo deploy
   # https://devcenter.wercker.com/development/steps/
   steps:
     - script:
       name: Configure project informations
       code: |
-        export PROJECT_NAME=justto-web
+        export PROJECT_NAME=justto-web-homol
         unset VUE_APP_BASE_URL
     - install-packages:
         packages: curl
     - script:
       name: Configure git
-      code: |
-        git config --global user.name "wercker" && git config --global user.email "dev@justto.com.br"
-        git remote set-url origin https://dev%40justto.com.br:hMcF2TEAz6Ec22@github.com/justto-produto/justto-web.git
+      code: git config --global user.name "wercker" && git config --global user.email "dev@justto.com.br"
     - script:
       name: Prepare release branch
       code: |
         git clean -fdx
         git reset --hard
-        git checkout master
-        git pull origin master
-        git merge develop --commit -m "Merge com a develop para release"
     - script:
         name: Run npm i
         code: |
@@ -35,15 +31,9 @@ build:
     - script:
         name: Run npm run release
         code: |
-          npm run release
+          npm run build
           export CURRENT_VERSION=$(node -p "require('./package.json').version")
           echo $CURRENT_VERSION
-    - script:
-        name: Update tag version
-        code: |
-          git add .
-          git commit -m 'Release da versao '${CURRENT_VERSION} || echo 'Nada a commitar.'
-          git push origin master
     - internal/docker-build:
       dockerfile: DockerfileWercker
       image-name: gcr.io/justto-ml/$PROJECT_NAME
@@ -86,3 +76,4 @@ test-e2e:
         dockerfile: Dockerfile-test
         image-name: e2e-test
         tag: e2e-test
+        

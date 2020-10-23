@@ -251,5 +251,5 @@ export default
   { name: 'BANCO NEON', code: '735' },
   { name: 'NUBANK', code: '260' },
   { name: 'XP INVESTIMENTOS', code: '102' },
-  { name: 'BANCO C6 S.A', code: '336' },
+  { name: 'BANCO C6 S.A', code: '336' }
 ]

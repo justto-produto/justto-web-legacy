@@ -1,20 +1,15 @@
-const actions = {
+import axiosDispatcher from '@/store/axiosDispatcher'
+
+const importsPath = 'api/imports'
+
+const importActions = {
   getImportsHistory() {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.get('api/imports/history')
-        .then(response => {
-          resolve(response.data)
-        })
-        .catch(error => {
-          reject(error)
-        })
-    })
+    return axiosDispatcher({ url: `${importsPath}/history` })
   },
   getImportsColumns({ commit, state, dispatch }) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.get('api/imports/' + state.file.id + '/columns')
+      axios.get(`${importsPath}/${state.file.id}/columns`)
         .then(response => {
           if (response.status === 204) {
             setTimeout(function() {
@@ -31,64 +26,30 @@ const actions = {
     })
   },
   getImportsTags({ state }) {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.get('api/imports/' + state.file.id + '/tags')
-        .then(response => {
-          resolve(response.data)
-        })
-        .catch(error => {
-          reject(error)
-        })
-    })
+    return axiosDispatcher({ url: `${importsPath}/${state.file.id}/tags` })
   },
   mapImportColumns({ state }, map) {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.put('api/imports/'+ state.file.id + '/map', map)
-        .then(response => {
-          resolve(response.data)
-        })
-        .catch(error => {
-          reject(error)
-        })
+    return axiosDispatcher({
+      url: `${importsPath}/${state.file.id}/map`,
+      method: 'PUT',
+      data: map
     })
   },
   uploadImportFile({ _ }, file) {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.post('api/imports/upload', file)
-        .then(response => {
-          resolve(response.data)
-        })
-        .catch(error => {
-          reject(error)
-        })
+    return axiosDispatcher({
+      url: `${importsPath}/upload`,
+      method: 'POST',
+      data: file
     })
   },
   startGeneseRunner({ state }) {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.post('api/geneserunner/' + state.file.id + '/start')
-        .then(response => {
-          resolve(response.data)
-        })
-        .catch(error => {
-          reject(error)
-        })
+    return axiosDispatcher({
+      url: `api/geneserunner/${state.file.id}/start`,
+      method: 'POST'
     })
   },
   validateGeneseRunner({ state }) {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.get('api/geneserunner/' + state.file.id + '/validate')
-        .then(response => {
-          resolve(response.data)
-        })
-        .catch(error => {
-          reject(error)
-        })
-    })
+    return axiosDispatcher({ url: `api/geneserunner/${state.file.id}/validate` })
   },
   setErrorFields({ commit }, fields) {
     commit('setErrorFields', fields)
@@ -98,4 +59,4 @@ const actions = {
   }
 }
 
-export default actions
+export default importActions

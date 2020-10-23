@@ -1,9 +1,10 @@
 import { Loading } from 'element-ui'
 
-const showLoading = function() {
+const showUnavailableLoading = function() {
   const currentHour = new Date().getHours()
   const currentMinuts = new Date().getMinutes()
   const systemShouldBeUp = currentHour < 23 && (currentHour >= 8 || (currentHour === 7 && currentMinuts >= 30))
+
   if (!systemShouldBeUp) {
     const loading = Loading.service({
       lock: true,
@@ -19,4 +20,4 @@ const showLoading = function() {
   }
 }
 
-export default showLoading
+export default showUnavailableLoading

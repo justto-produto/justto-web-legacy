@@ -1,4 +1,3 @@
-
 const alertGetters = {
   findDisputeAlertById: (state) => (entityId) => {
     return state.alerts.filter(d => d.source === 'DISPUTE' && d.childId === parseInt(entityId))

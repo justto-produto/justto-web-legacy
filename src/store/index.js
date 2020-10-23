@@ -57,7 +57,7 @@ export default new Vuex.Store({
     setGhostMode({ commit }, value) {
       commit('setGhostMode', value)
       localStorage.setItem('jusghostmode', value)
-    },
+    }
   },
   modules: {
     accountModule,

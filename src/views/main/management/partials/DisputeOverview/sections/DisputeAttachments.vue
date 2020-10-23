@@ -1,7 +1,8 @@
 <template>
   <section
     v-loading="isLoading"
-    class="dispute-attachments">
+    class="dispute-attachments"
+  >
     <div class="dispute-overview-view__attachment-buttons">
       <el-input
         v-model="attachmentFilterTerm"

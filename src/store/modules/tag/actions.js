@@ -1,7 +1,7 @@
 import axiosDispatcher from '@/store/axiosDispatcher.js'
-import { queryBuilder } from '@/utils/jusUtils'
+import { buildQuery } from '@/utils/jusUtils'
 
-const actions = {
+const tagActions = {
   getWorkspaceTags() {
     return axiosDispatcher({
       url: 'api/workspaces/tags',
@@ -33,7 +33,7 @@ const actions = {
     delete query.noTags
     return axiosDispatcher({
       method: 'get',
-      url: `/api/disputes/tags${queryBuilder(query)}`,
+      url: `/api/disputes/tags${buildQuery(query)}`,
       mutation: 'setFilteredTags'
     })
   },
@@ -45,4 +45,4 @@ const actions = {
   }
 }
 
-export default actions
+export default tagActions

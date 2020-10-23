@@ -1,4 +1,4 @@
-const getters = {
+const campaignGetters = {
   campaignList: state => state.list.sort((a, b) => {
     if (a < b) return 1
     if (a > b) return -1
@@ -21,4 +21,4 @@ const getters = {
   // }
 }
 
-export default getters
+export default campaignGetters

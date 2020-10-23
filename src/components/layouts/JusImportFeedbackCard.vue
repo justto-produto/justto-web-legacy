@@ -12,11 +12,13 @@
         :class="{'has-error': errorFields.includes('respondent')}"
         data-testid="feedback-respondent"
         placeholder="Dê um nome para o seu Réu"
-        @input="clearErrorField('respondent')">
+        @input="clearErrorField('respondent')"
+      >
         <div slot="prefix">
           <i
             v-if="errorFields.includes('respondent')"
-            class="el-icon-error el-input__icon has-error-icon" />
+            class="el-icon-error el-input__icon has-error-icon"
+          />
           <i
             v-else
             :class="respondent === '' ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
@@ -31,11 +33,13 @@
         :class="{'has-error': errorFields.includes('name')}"
         data-testid="feedback-campaignName"
         placeholder="Dê um nome para a sua Campanha"
-        @input="clearErrorField('name')">
+        @input="clearErrorField('name')"
+      >
         <div slot="prefix">
           <i
             v-if="errorFields.includes('name')"
-            class="el-icon-error el-input__icon has-error-icon" />
+            class="el-icon-error el-input__icon has-error-icon"
+          />
           <i
             v-else
             :class="campaignName === '' ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
@@ -62,11 +66,13 @@
         :class="{'has-error': errorFields.includes('strategy')}"
         placeholder="Escolha uma estratégia"
         data-testid="feedback-strategy"
-        @input="clearErrorField('strategy')">
+        @input="clearErrorField('strategy')"
+      >
         <div slot="prefix">
           <i
             v-if="errorFields.includes('strategy')"
-            class="el-icon-error el-input__icon has-error-icon" />
+            class="el-icon-error el-input__icon has-error-icon"
+          />
           <i
             v-else
             :class="strategy === '' ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
@@ -89,7 +95,8 @@
       </div>
       <div
         v-if="isPaymentStrategy"
-        class="jus-import-feedback-card__number">
+        class="jus-import-feedback-card__number"
+      >
         <div>
           <i
             v-if="errorFields.includes('paymentDeadLine')"
@@ -138,11 +145,13 @@
         class="select-negotiator"
         :class="{'has-error': errorFields.includes('negotiatorIds')}"
         data-testid="feedback-negotiators"
-        @input="clearErrorField('negotiatorIds')">
+        @input="clearErrorField('negotiatorIds')"
+      >
         <div slot="prefix">
           <i
             v-if="errorFields.includes('negotiatorIds')"
-            class="el-icon-error el-input__icon has-error-icon" />
+            class="el-icon-error el-input__icon has-error-icon"
+          />
           <i
             v-else
             :class="negotiatorIds.length === 0 ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
@@ -191,6 +200,19 @@
       <div class="jus-import-feedback-card__switch">
         <i class="el-icon-circle-check el-input__icon--success" />
         <div class="content">
+          <div>Sempre engajar o autor</div>
+          <p>
+            Deixando <b>selecionada</b> esta opção, <b>sempre</b> iremos enviar mensagens para o autor.
+          </p>
+        </div>
+        <el-switch v-model="awaysContactParty" />
+      </div>
+      <div
+        v-if="!awaysContactParty"
+        class="jus-import-feedback-card__switch"
+      >
+        <i class="el-icon-circle-check el-input__icon--success" />
+        <div class="content">
           <div>Engajar autor se não tiver advogado</div>
           <p>
             Deixando <b>selecionada</b> esta opção, iremos enviar mensagens para o autor quando não houver advogado constituído.
@@ -198,7 +220,10 @@
         </div>
         <el-switch v-model="contactPartyWhenNoLowyer" />
       </div>
-      <div class="jus-import-feedback-card__switch">
+      <div
+        v-if="!awaysContactParty"
+        class="jus-import-feedback-card__switch"
+      >
         <i class="el-icon-circle-check el-input__icon--success" />
         <div class="content">
           <div>Engajar autor se advogado não possuir contatos válidos para ser engajado</div>
@@ -275,6 +300,7 @@ export default {
       negotiatorIds: [],
       businessHoursEngagement: true,
       contactPartyWhenNoLowyer: false,
+      awaysContactParty: false,
       contactPartyWhenInvalidLowyer: false,
       skipEnrichment: false,
       denySavingDeposit: false,
@@ -332,6 +358,9 @@ export default {
     },
     contactPartyWhenNoLowyer(value) {
       this.mappedCampaign.contactPartyWhenNoLowyer = value
+    },
+    awaysContactParty(value) {
+      this.mappedCampaign.awaysContactParty = value
     },
     contactPartyWhenInvalidLowyer(value) {
       this.mappedCampaign.contactPartyWhenInvalidLowyer = value
@@ -393,6 +422,7 @@ export default {
     this.mappedCampaign.businessHoursEngagement = this.businessHoursEngagement
     this.mappedCampaign.contactPartyWhenNoLowyer = this.contactPartyWhenNoLowyer
     this.mappedCampaign.contactPartyWhenInvalidLowyer = this.contactPartyWhenInvalidLowyer
+    this.mappedCampaign.awaysContactParty = this.awaysContactParty
     this.mappedCampaign.skipEnrichment = this.skipEnrichment
     this.mappedCampaign.denySavingDeposit = this.denySavingDeposit
     this.mappedCampaign.paymentDeadLine = this.paymentDeadLine

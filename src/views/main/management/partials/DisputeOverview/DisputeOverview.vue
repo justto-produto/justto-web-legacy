@@ -285,7 +285,10 @@
                 Contactar autor?
                 <div>
                   <i :class="(dispute.contactPartyWhenNoLowyer || dispute.contactPartyWhenInvalidLowyer) ? 'el-icon-check' : 'el-icon-close'" />
-                  <span v-if="dispute.contactPartyWhenNoLowyer && dispute.contactPartyWhenInvalidLowyer">
+                  <span v-if="dispute.awaysContactParty">
+                    Sempre
+                  </span>
+                  <span v-else-if="dispute.contactPartyWhenNoLowyer && dispute.contactPartyWhenInvalidLowyer">
                     Quando não houver advogado ou não for possível contactar o advogado existente
                   </span>
                   <span v-else-if="dispute.contactPartyWhenNoLowyer && !dispute.contactPartyWhenInvalidLowyer">
@@ -420,7 +423,7 @@
               class="dispute-overview-view__role-collapse"
               data-testid="expand-party"
             >
-              <template slot="title">
+              <div slot="title">
                 <i
                   v-if="(showNamesake(role) || showVexatious(role.personProperties)) && !role.roles.includes('NEGOTIATOR') "
                   class="el-icon-warning-outline el-icon-pulse"
@@ -443,7 +446,7 @@
                   </span>
                   {{ role.name }}
                 </div>
-              </template>
+              </div>
               <p
                 v-if="showNamesake(role)"
                 style="margin-top: 0"
@@ -502,7 +505,8 @@
                   <span
                     v-if="!isToShowChangeParty(role) && !isNegotiator(role)"
                     class="dispute-overview-view__edit-tooltip"
-                    @click="handleEditRule()">
+                    @click="handleEditRule()"
+                  >
                     <el-tooltip
                       placement="top"
                       content="Editar polaridade">
@@ -512,7 +516,8 @@
                 </span>
                 <div
                   v-if="isToShowChangeParty(role) && !isNegotiator(role)"
-                  class="dispute-overview-view__select-role">
+                  class="dispute-overview-view__select-role"
+                >
                   <el-select
                     v-model="role.party"
                     size="mini"
@@ -528,7 +533,8 @@
                   </el-select>
                   <span
                     class="dispute-overview-view__tooltip-cancel-edit-role"
-                    @click="handleEditRule()">
+                    @click="handleEditRule()"
+                  >
                     <el-tooltip content="Cancelar edição da polaridade">
                       <i class="el-icon-error" />
                     </el-tooltip>
@@ -538,7 +544,8 @@
                   v-for="(title, titleIndex) in roleTitleSort(role.roles)"
                   v-show="!isEditingRule"
                   :key="`${titleIndex}-${title.index}`"
-                  class="dispute-overview-view__info-line-description">
+                  class="dispute-overview-view__info-line-description"
+                >
                   {{ buildRoleTitle(role.party, title) }}
                   <jus-vexatious-alert
                     v-if="showVexatious(role.personProperties) && !role.roles.includes('NEGOTIATOR')"
@@ -549,7 +556,8 @@
 
                 <div
                   v-if="role.party === 'UNKNOWN'"
-                  class="dispute-overview-view__select-role">
+                  class="dispute-overview-view__select-role"
+                >
                   <el-select
                     v-model="tempRole"
                     size="mini"
@@ -887,11 +895,9 @@
               prop="document"
               width="160px"
             >
-              <template slot-scope="scope">
-                <span>
-                  {{ scope.row.document | cpfCnpj }}
-                </span>
-              </template>
+              <div slot-scope="scope">
+                {{ scope.row.document | cpfCnpj }}
+              </div>
             </el-table-column>
             <el-table-column
               label="Cidade"
@@ -988,25 +994,56 @@
               class="dispute-overview-view__select-switch"
             >
               <div class="content">
-                <div>Engajar autor se não tiver advogado</div>
-                <p>
-                  Deixando <b>selecionada</b> esta opção, iremos enviar mensagens para o autor quando não houver advogado constituído.
-                </p>
+                <div>Sempre engajar o autor</div>
+                <p>Deixando <b>selecionada</b> esta opção, <b>sempre</b> iremos enviar mensagens automáticas para o autor.</p>
               </div>
-              <el-switch v-model="disputeForm.contactPartyWhenNoLowyer" />
+              <el-switch
+                v-model="disputeForm.awaysContactParty"
+                @input="$forceUpdate()"
+              />
             </el-col>
-            <el-col
-              :span="24"
-              class="dispute-overview-view__select-switch"
+            <el-tooltip
+              content="Sempre engaja autor está habilitado"
+              :disabled="!disputeForm.awaysContactParty"
             >
-              <div class="content">
-                <div>Engajar autor se advogado não possuir contatos válidos para ser engajado</div>
-                <p>
-                  Deixando <b>selecionada</b> esta opção, iremos enviar mensagens para o autor se o <b>advogado não possuir dados válidos</b> para ser contactado.
-                </p>
-              </div>
-              <el-switch v-model="disputeForm.contactPartyWhenInvalidLowyer" />
-            </el-col>
+              <el-col
+                :span="24"
+                :style="disputeForm.awaysContactParty ? 'cursor: not-allowed' : ''"
+                class="dispute-overview-view__select-switch"
+              >
+                <div class="content">
+                  <div>Engajar autor se não tiver advogado</div>
+                  <p>
+                    Deixando <b>selecionada</b> esta opção, iremos enviar mensagens para o autor quando não houver advogado constituído.
+                  </p>
+                </div>
+                <el-switch
+                  v-model="disputeForm.contactPartyWhenNoLowyer"
+                  :disabled="disputeForm.awaysContactParty"
+                />
+              </el-col>
+            </el-tooltip>
+            <el-tooltip
+              content="Sempre engaja autor está habilitado"
+              :disabled="!disputeForm.awaysContactParty"
+            >
+              <el-col
+                :span="24"
+                :style="disputeForm.awaysContactParty ? 'cursor: not-allowed' : ''"
+                class="dispute-overview-view__select-switch"
+              >
+                <div class="content">
+                  <div>Engajar autor se advogado não possuir contatos válidos para ser engajado</div>
+                  <p>
+                    Deixando <b>selecionada</b> esta opção, iremos enviar mensagens para o autor se o <b>advogado não possuir dados válidos</b> para ser contactado.
+                  </p>
+                </div>
+                <el-switch
+                  v-model="disputeForm.contactPartyWhenInvalidLowyer"
+                  :disabled="disputeForm.awaysContactParty"
+                />
+              </el-col>
+            </el-tooltip>
           </el-row>
           <h3>Valor proposto</h3>
           <el-row :gutter="20">
@@ -1295,11 +1332,9 @@
             class="el-table--list"
           >
             <el-table-column>
-              <template slot-scope="scope">
-                <span>
-                  {{ scope.row.number + '-' + scope.row.state || '' }}
-                </span>
-              </template>
+              <div slot-scope="scope">
+                {{ scope.row.number + '-' + scope.row.state || '' }}
+              </div>
             </el-table-column>
             <el-table-column
               fixed="right"
@@ -1307,7 +1342,7 @@
               width="48px"
               class-name="visible"
             >
-              <template slot-scope="scope">
+              <div slot-scope="scope">
                 <el-tooltip
                   :open-delay="500"
                   content="Remover"
@@ -1319,7 +1354,7 @@
                     <jus-icon icon="trash" />
                   </a>
                 </el-tooltip>
-              </template>
+              </div>
             </el-table-column>
           </el-table>
           <el-form-item
@@ -1347,11 +1382,9 @@
             class="el-table--list"
           >
             <el-table-column>
-              <template slot-scope="scope">
-                <span>
-                  {{ scope.row.number | phoneNumber }}
-                </span>
-              </template>
+              <div slot-scope="scope">
+                {{ scope.row.number | phoneNumber }}
+              </div>
             </el-table-column>
             <el-table-column
               fixed="right"
@@ -1359,7 +1392,7 @@
               width="114px"
               class-name="visible slot-scope"
             >
-              <template slot-scope="scope">
+              <div slot-scope="scope">
                 <el-tooltip
                   :open-delay="500"
                   :content="scope.row.isMain ? 'Este número receberá mensagens automáticas' : 'Este número não recberá mensagens automáticas'"
@@ -1387,7 +1420,7 @@
                     <jus-icon icon="trash" />
                   </a>
                 </el-tooltip>
-              </template>
+              </div>
             </el-table-column>
           </el-table>
           <el-form-item
@@ -1416,11 +1449,9 @@
             class="el-table--list"
           >
             <el-table-column>
-              <template slot-scope="scope">
-                <span>
-                  {{ scope.row.address }}
-                </span>
-              </template>
+              <span slot-scope="scope">
+                {{ scope.row.address }}
+              </span>
             </el-table-column>
             <el-table-column
               fixed="right"
@@ -1428,7 +1459,7 @@
               width="114px"
               class-name="visible slot-scope"
             >
-              <template slot-scope="scope">
+              <span slot-scope="scope">
                 <el-tooltip
                   :open-delay="500"
                   :content="scope.row.isMain ? 'Este e-mail receberá mensagens automáticas' : 'Este e-mail não recberá mensagens automáticas'"
@@ -1456,7 +1487,7 @@
                     <jus-icon icon="trash" />
                   </a>
                 </el-tooltip>
-              </template>
+              </span>
             </el-table-column>
           </el-table>
           <h4>
@@ -1633,7 +1664,7 @@
 
 <script>
 import { getRoles, buildRoleTitle, getRoleIcon } from '@/utils/jusUtils'
-import { validateName, validateCpf, validatePhone, validateZero } from '@/utils/validations'
+import { validateName, validateDocument, validatePhone, validateZero } from '@/utils/validations'
 
 import DisputeAttachments from './sections/DisputeAttachments'
 import { mapGetters, mapActions } from 'vuex'
@@ -1750,7 +1781,7 @@ export default {
         ],
         document: [
           { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-          { validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' }
+          { validator: validateDocument, message: 'CPF/CNPJ inválido.', trigger: 'submit' }
         ],
         bank: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
         agency: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
@@ -1765,16 +1796,12 @@ export default {
       ufFilter: null,
       dispuesToUnknownParties: [
         {
-          value: {
-            party: 'RESPONDENT'
-          },
-          label: 'Réu',
+          value: { party: 'RESPONDENT' },
+          label: 'Réu'
         },
         {
-          value: {
-            party: 'CLAIMANT'
-          },
-          label: 'Parte contrária',
+          value: { party: 'CLAIMANT' },
+          label: 'Parte contrária'
         }
       ],
       tempRole: {}
@@ -1811,7 +1838,7 @@ export default {
     },
     validateDocumentNumber() {
       if (this.documentNumberHasChanged) {
-        return [{ validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' }]
+        return [{ validator: validateDocument, message: 'CPF/CNPJ inválido.', trigger: 'submit' }]
       }
       return []
     },
@@ -1929,7 +1956,7 @@ export default {
     },
     'dispute.code'() {
       this.getDisputeTimeline(this.dispute.code)
-    },
+    }
   },
   created() {
     if (this.disputeStatuses.ARCHIVED) {
@@ -2023,7 +2050,7 @@ export default {
     addNewDocumentNumber(disputeRole, documentNumber) {
       const newRole = {
         ...disputeRole,
-        documentNumber,
+        documentNumber
       }
       this.$store.dispatch('editRole', {
         disputeId: this.dispute.id,
@@ -2121,7 +2148,7 @@ export default {
         this.$jusNotification({
           title: 'Yay!',
           message: 'Os dados foram alterados com sucesso.',
-          type: 'success',
+          type: 'success'
         })
         this.$forceUpdate()
       }).catch(error => {
@@ -2397,6 +2424,7 @@ export default {
       this.disputeForm.classification = dispute.classification && dispute.classification.name ? dispute.classification.name : ''
       this.disputeForm.contactPartyWhenNoLowyer = dispute.contactPartyWhenNoLowyer
       this.disputeForm.contactPartyWhenInvalidLowyer = dispute.contactPartyWhenInvalidLowyer
+      this.disputeForm.awaysContactParty = dispute.awaysContactParty
       this.disputeForm.denySavingDeposit = dispute.denySavingDeposit
       this.disputeForm.zeroUpperRange = !parseFloat(dispute.disputeUpperRange)
       this.editDisputeDialogVisible = true
@@ -2438,6 +2466,7 @@ export default {
             disputeToEdit.classification = { name: this.disputeForm.classification }
             disputeToEdit.contactPartyWhenNoLowyer = this.disputeForm.contactPartyWhenNoLowyer
             disputeToEdit.contactPartyWhenInvalidLowyer = this.disputeForm.contactPartyWhenInvalidLowyer
+            disputeToEdit.awaysContactParty = this.disputeForm.awaysContactParty
             disputeToEdit.denySavingDeposit = this.disputeForm.denySavingDeposit
             disputeToEdit.lastOfferRoleId = this.selectedNegotiatorId
             disputeToEdit.lastOfferValue = this.disputeForm.lastOfferValue
@@ -2453,6 +2482,7 @@ export default {
             const newDate = disputeToEdit.expirationDate.dateTime
             const contactPartyWhenNoLowyer = this.dispute.contactPartyWhenNoLowyer
             const contactPartyWhenInvalidLowyer = this.dispute.contactPartyWhenInvalidLowyer
+            const awaysContactParty = this.dispute.awaysContactParty
             this.$store.dispatch('editDispute', disputeToEdit).then(() => {
               // SEGMENT TRACK
               this.$jusSegment('Editar disputa', { disputeId: disputeToEdit.id })
@@ -2468,7 +2498,8 @@ export default {
               const isExpirationDateChanged = this.$moment(currentDate).isBefore(this.$moment()) && this.$moment(newDate).isSameOrAfter(this.$moment())
               const contactPartyWhenNoLowyerHasChanged = this.disputeForm.contactPartyWhenNoLowyer !== contactPartyWhenNoLowyer
               const contactPartyWhenInvalidLowyerHasChanged = this.disputeForm.contactPartyWhenInvalidLowyer !== contactPartyWhenInvalidLowyer
-              const contactPartyHasChanged = contactPartyWhenInvalidLowyerHasChanged || contactPartyWhenNoLowyerHasChanged
+              const awaysContactPartyChanged = this.disputeForm.awaysContactParty !== awaysContactParty
+              const contactPartyHasChanged = contactPartyWhenInvalidLowyerHasChanged || contactPartyWhenNoLowyerHasChanged || awaysContactPartyChanged
               const onlyResendMessaged = this.dispute.status === 'RUNNING'
               if (contactPartyHasChanged || isExpirationDateChanged) {
                 const action = onlyResendMessaged ? 'reenviar mensagens automáticas' : 'reiniciar esta disputa'
@@ -2805,12 +2836,12 @@ export default {
     },
     setDisputeParty(role) {
       this.$jusSegment('Definindo função em participante da disputa', {
-        page: this.$route.name,
+        page: this.$route.name
       })
       this.setDisputeparty({
         disputeId: this.dispute.id,
         disputeRoleId: role.id,
-        disputeParty: role.party,
+        disputeParty: role.party
       })
         .then(() => {
           this.$jusNotification({

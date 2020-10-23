@@ -1,6 +1,6 @@
 import Vue from 'vue'
 
-const mutations = {
+const dashboardMutations = {
   setDashboardDatasets(state, chartsDatasets) {
     if (chartsDatasets.length === 1) {
       const chartIndex = state.chartsDatasets.findIndex(c => c.name === chartsDatasets[0].name)
@@ -19,4 +19,4 @@ const mutations = {
   }
 }
 
-export default mutations
+export default dashboardMutations

@@ -1,6 +1,6 @@
 import { ClientModel } from '../../../models/billing/Client.model'
 
-const getters = {
+const billingGetters = {
   getAllCusomers: state => state.allCustomers,
   getMyCusomers: state => state.myCustomers,
   getCurrentCustomer: state => new ClientModel(state.currentCustomer),
@@ -11,4 +11,4 @@ const getters = {
   currentWorkspace: state => state.query.workspaceId
 }
 
-export default getters
+export default billingGetters

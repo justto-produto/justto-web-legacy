@@ -1,4 +1,4 @@
-const getters = {
+const personGetters = {
   loggedPerson: state => state.loggedPerson,
   loggedPersonName: state => state.loggedPerson.name,
   loggedPersonHasName: state => state.loggedPerson.name && state.loggedPerson.name.length > 2 && !state.loggedPerson.name.includes('@'),
@@ -13,4 +13,4 @@ const getters = {
   }
 }
 
-export default getters
+export default personGetters

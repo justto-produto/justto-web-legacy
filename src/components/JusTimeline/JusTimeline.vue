@@ -87,11 +87,12 @@
             </div>
           </div>
           <div class="jus-timeline__body">
-            <el-collapse v-model="timelineOpenedItems" >
+            <el-collapse v-model="timelineOpenedItems">
               <el-collapse-item :name="processIndex">
                 <div
+                  slot="title"
                   class="jus-timeline__body-collapse"
-                  slot="title">
+                >
                   {{ timelineOpenedItems.includes(processIndex) ? 'Ocultar' : 'Mostrar' }} andamentos
                 </div>
                 <el-timeline>
@@ -310,7 +311,7 @@ export default {
         }
 
         .jus-timeline__body {
-          
+
           .jus-timeline__body-collapse {
             font-size: 14px;
             margin-top: 0px;

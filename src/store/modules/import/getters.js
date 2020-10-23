@@ -1,4 +1,4 @@
-const getters = {
+const importGetters = {
   importedFileName: state => state.file ? state.file.file_name : null,
   hasImportsFile: state => {
     return state.file !== undefined
@@ -6,4 +6,4 @@ const getters = {
   errorFields: state => state.errorFields
 }
 
-export default getters
+export default importGetters

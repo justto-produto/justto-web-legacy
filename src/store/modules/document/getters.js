@@ -1,6 +1,6 @@
-const getters = {
+const documentGetters = {
   availableSigners: state => state.availableSigners,
   selectedSigners: state => [...state.selectedSigners]
 }
 
-export default getters
+export default documentGetters

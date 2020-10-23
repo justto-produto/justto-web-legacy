@@ -457,7 +457,7 @@
 </template>
 
 <script>
-import { validateObjectEmail, validateCpf } from '@/utils/validations'
+import { validateObjectEmail, validateDocument } from '@/utils/validations'
 import { IS_SMALL_WINDOW } from '@/constants/variables'
 import * as cpf from '@fnando/cpf'
 import * as cnpj from '@fnando/cnpj'
@@ -517,7 +517,7 @@ export default {
       },
       documentFormRules: {
         document: [
-          { validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' },
+          { validator: validateDocument, message: 'CPF/CNPJ inválido.', trigger: 'submit' },
           { required: true, message: 'Campo obrigatório', trigger: 'submit' }
         ]
       },

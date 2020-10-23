@@ -219,7 +219,8 @@
             <div class="dispute-view-occurrences__avatar">
               <el-tooltip
                 :disabled="!buildName(occurrence)"
-                :content="buildName(occurrence)">
+                :content="buildName(occurrence)"
+              >
                 <jus-avatar-user
                   :name="buildName(occurrence)"
                   :src="buildAvatar(occurrence)"
@@ -229,11 +230,11 @@
               </el-tooltip>
               <el-tooltip v-if="isJusttineMessage(occurrence)">
                 <div slot="content">
-                  Sou JUSTTINE, sua assistente virtual<br />
-                  Enviei esta mensagem para você, ok?<br/>
+                  Sou JUSTTINE, sua assistente virtual<br>
+                  Enviei esta mensagem para você, ok?<br>
                   Criei ela a partir da estratégia que você definiu na disputa.
                 </div>
-                <i class="el-icon-question"/>
+                <i class="el-icon-question" />
               </el-tooltip>
             </div>
             <div class="dispute-view-occurrences__card-box">
@@ -401,7 +402,8 @@
             <div class="dispute-view-occurrences__avatar">
               <el-tooltip
                 :disabled="!buildName(mergedOccurency)"
-                :content="buildName(mergedOccurency)">
+                :content="buildName(mergedOccurency)"
+              >
                 <jus-avatar-user
                   :name="buildName(mergedOccurency)"
                   :src="buildAvatar(mergedOccurency)"
@@ -570,7 +572,7 @@
 
 <script>
 import InfiniteLoading from 'vue-infinite-loading'
-import checkSimilarity from '@/utils/levenshtein'
+import { isSimilarStrings } from '@/utils/jusUtils'
 import { mapGetters, mapActions } from 'vuex'
 import { uniq } from 'lodash'
 
@@ -653,7 +655,7 @@ export default {
             similarity = 75
           }
           const previous = datedOccurrence[previousOccurrenceIndex]
-          if (previous && checkSimilarity(this.buildContent(fo), this.buildContent(previous), similarity)) {
+          if (previous && isSimilarStrings(this.buildContent(fo), this.buildContent(previous), similarity)) {
             fo.toDelete = true
             if (!previous.merged) {
               previous.merged = []
@@ -894,6 +896,12 @@ export default {
           return `
             Proposta realizada por <b>${occurrence.interaction.properties.PERSON_NAME}</b>
             no valor de <b>${occurrence.interaction.properties.VALUE}</b>${occurrence.interaction.properties.NOTE ? ' com a observação: ' + occurrence.interaction.properties.NOTE : ''}.`
+        } else if (['COMMUNICATION'].includes(occurrence.interaction.type) && occurrence.interaction.message && ['NEGOTIATOR_MESSAGE'].includes(occurrence.interaction.message.communicationType)) {
+          if (this.showResume(occurrence)) {
+            return occurrence.interaction.message.resume + '...'
+          } else {
+            return occurrence.interaction.message.resume
+          }
         }
         return occurrence.description
       }
@@ -960,7 +968,7 @@ export default {
       if (occurrence.interaction &&
         ((occurrence.interaction.message &&
         occurrence.interaction.message.communicationType &&
-        ['EMAIL', 'WHATSAPP'].includes(occurrence.interaction.message.communicationType)) ||
+        ['EMAIL', 'WHATSAPP', 'NEGOTIATOR_MESSAGE'].includes(occurrence.interaction.message.communicationType)) ||
         (['NEGOTIATOR_PROPOSAL', 'NEGOTIATOR_COUNTERPROSAL', 'NEGOTIATOR_CHECKOUT'].includes(occurrence.interaction.type) &&
         this.disputeLastInteractions.length)) &&
         occurrence.interaction.direction === 'INBOUND') {
@@ -970,17 +978,21 @@ export default {
     },
 
     startReply(occurrence) {
+      let senders, resume, type
       if (['NEGOTIATOR_PROPOSAL', 'NEGOTIATOR_COUNTERPROSAL', 'NEGOTIATOR_CHECKOUT'].includes(occurrence.interaction.type)) {
-        const senders = uniq(this.disputeLastInteractions.map(item => item.address))
-        const resume = this.buildContent(occurrence)
-        const type = 'email'
-        this.$emit('dispute:reply', { senders, resume, type })
+        senders = uniq(this.disputeLastInteractions.map(item => item.address))
+        resume = this.buildContent(occurrence)
+        type = 'email'
+      } else if (['NEGOTIATOR_MESSAGE'].includes(occurrence.interaction.message.communicationType)) {
+        senders = [occurrence.interaction.message.sender]
+        resume = this.buildContent(occurrence)
+        type = 'email'
       } else {
-        const senders = [occurrence.interaction.message.sender]
-        const resume = occurrence.interaction.message.resume
-        const type = occurrence.interaction.message.communicationType
-        this.$emit('dispute:reply', { senders, resume, type })
+        senders = [occurrence.interaction.message.sender]
+        resume = occurrence.interaction.message.resume
+        type = occurrence.interaction.message.communicationType
       }
+      this.$emit('dispute:reply', { senders, resume, type })
     },
 
     /** @method buildWhatsappStatus

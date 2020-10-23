@@ -120,7 +120,7 @@ Vue.use(VueFroala)
 export default {
   name: 'CommunicationEditor',
   components: {
-    JusVariablesCard: () => import('@/components/layouts/JusVariablesCard'),
+    JusVariablesCard: () => import('@/components/layouts/JusVariablesCard')
   },
   props: {
     templateToEdit: {

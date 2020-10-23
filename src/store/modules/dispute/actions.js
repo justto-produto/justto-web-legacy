@@ -1,10 +1,11 @@
 import Vue from 'vue'
-import axiosDispatcher from '@/store/axiosDispatcher.js'
-import { queryBuilder } from '@/utils/jusUtils'
+import axiosDispatcher from '@/store/axiosDispatcher'
+import { buildQuery } from '@/utils/jusUtils'
 import moment from 'moment'
 
 // const FileSaver = require('file-saver')
 let removeDebounce = 0
+const disputesPath = 'api/disputes'
 
 const disputeActions = {
   SOCKET_ADD_DISPUTE({ commit, state }, disputeChanged) {
@@ -35,7 +36,7 @@ const disputeActions = {
   },
   getLastInteractions({ _ }, disputeId) {
     return axiosDispatcher({
-      url: `/api/disputes/${disputeId}/interaction`,
+      url: `${disputesPath}/${disputeId}/interaction`,
       mutation: 'setLastInteractions'
     })
   },
@@ -44,7 +45,7 @@ const disputeActions = {
       commit('clearDispute')
       dispatch('getDisputeProprieties', id)
       // eslint-disable-next-line
-      axios.get('api/disputes/' + id + '/vm')
+      axios.get(`${disputesPath}/${id}/vm`)
         .then(response => {
           commit('setDispute', response.data)
           resolve(response.data)
@@ -64,7 +65,7 @@ const disputeActions = {
       }
     }
     return axiosDispatcher({
-      url: `api/disputes/${disputeId}/my-last-access`
+      url: `${disputesPath}/${disputeId}/my-last-access`
     }).then(res => {
       commit('setLastAccess', {
         disputeId,
@@ -78,7 +79,7 @@ const disputeActions = {
   linkDisputeBankAccounts({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.post('api/disputes/' + params.disputeId + '/bank-accounts/' + params.bankAccountId)
+      axios.post(`${disputesPath}/${params.disputeId}/bank-accounts/${params.bankAccountId}`)
         .then(() => {
           resolve()
         })
@@ -90,7 +91,7 @@ const disputeActions = {
   unlinkDisputeBankAccounts({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.delete('api/disputes/' + params.disputeId + '/bank-accounts/' + params.bankAccountId)
+      axios.delete(`${disputesPath}/${params.disputeId}/bank-accounts/${params.bankAccountId}`)
         .then(() => {
           resolve()
         })
@@ -102,7 +103,7 @@ const disputeActions = {
   getDisputeDTO({ commit }, id) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.get('api/disputes/' + id)
+      axios.get(`${disputesPath}/${id}`)
         .then(response => {
           resolve(response.data)
         })
@@ -113,13 +114,13 @@ const disputeActions = {
   },
   getDisputeProprieties({ commit }, disputeId) {
     return axiosDispatcher({
-      url: `api/disputes/${disputeId}/properties`,
+      url: `${disputesPath}/${disputeId}/properties`,
       mutation: 'setDisputeProprieties'
     })
   },
   putDisputeProprieties({ commit }, params) {
     return axiosDispatcher({
-      url: `api/disputes/${params.disputeId}/properties`,
+      url: `${disputesPath}/${params.disputeId}/properties`,
       method: 'PUT',
       data: params.data,
       mutation: 'setDisputeProprieties'
@@ -149,7 +150,7 @@ const disputeActions = {
       if (command !== 'nextPage') state.loading = true
       if (command === 'resetPages') commit('resetDisputeQueryPage')
       // eslint-disable-next-line
-      axios.get('api/disputes/filter' + queryBuilder(state.query, command, state.disputes.length)).then(response => {
+      axios.get(`${disputesPath}/filter` + buildQuery(state.query, command, state.disputes.length)).then(response => {
         if (command === 'nextPage') {
           commit('addDisputes', response.data)
         } else {
@@ -166,20 +167,20 @@ const disputeActions = {
       })
     })
   },
-  searchDisputes({ commit }, params) {
+  searchDisputes({ _ }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.get('api/disputes/search?' + params.key + '=' + params.value).then(response => {
+      axios.get(`${disputesPath}/search?${params.key}=${params.value}`).then(response => {
         resolve(response.data)
       }).catch(error => {
         reject(error)
       })
     })
   },
-  getExportColumns({ commit }) {
+  getExportColumns({ _ }) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.get('api/disputes/columns/to-export')
+      axios.get(`${disputesPath}/columns/to-export`)
         .then(response => {
           resolve(response.data)
         }).catch(error => {
@@ -190,12 +191,12 @@ const disputeActions = {
   exportDisputes({ state, dispatch }, colums) {
     const stringColums = colums.toString()
     return axiosDispatcher({
-      url: `api/disputes/export${queryBuilder(state.query)}fileFormat=CSV&columnToExport=${stringColums}`
+      url: `${disputesPath}/export${buildQuery(state.query)}fileFormat=CSV&columnToExport=${stringColums}`
     }).then(() => { dispatch('getExportHistory') })
     // return new Promise((resolve, reject) => {
     //   const stringColums = colums.toString()
     //   // eslint-disable-next-line
-    //   axios.get('api/disputes/export'+ queryBuilder(state.query) + 'fileFormat=CSV&columnToExport=' + stringColums, {
+    //   axios.get('api/disputes/export'+ buildQuery(state.query) + 'fileFormat=CSV&columnToExport=' + stringColums, {
     //     responseType: 'arraybuffer',
     //     ContentType: 'application/json; charset=utf-8',
     //   }).then(response => {
@@ -227,20 +228,20 @@ const disputeActions = {
   },
   exportProtocols({ state }) {
     return axiosDispatcher({
-      url: `api/office/documents/export${queryBuilder(state.query)}`
+      url: `api/office/documents/export${buildQuery(state.query)}`
     })
   },
   getExportHistory({ commit, state }, command) {
     if (command) commit('addExportHistoryPage')
     else commit('resetExportHistoryPage')
     axiosDispatcher({
-      url: `api/disputes/my/exports?size=10&page=${state.exportHistoryPage}`,
+      url: `${disputesPath}/my/exports?size=10&page=${state.exportHistoryPage}`,
       mutation: command ? 'pushExportHistory' : 'setExportHistory'
     })
   },
   editRole({ _ }, { disputeId, disputeRole }) {
     return axiosDispatcher({
-      url: `api/disputes/${disputeId}/dispute-roles`,
+      url: `${disputesPath}/${disputeId}/dispute-roles`,
       method: 'PUT',
       data: disputeRole
     })
@@ -248,7 +249,7 @@ const disputeActions = {
   removeRole({ commit }, role) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.delete('api/disputes/' + role.disputeId + '/role/' + role.roleId, { disputeId: role.disputeId, id: role.roleId })
+      axios.delete(`${disputesPath}/${role.disputeId}/role/${role.roleId}`, { disputeId: role.disputeId, id: role.roleId })
         .then(response => {
           resolve(response.data)
         })
@@ -260,7 +261,7 @@ const disputeActions = {
   setDisputeparty({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.patch('api/disputes/' + params.disputeId + '/dispute-roles/' + params.disputeRoleId + '/' + params.disputeParty)
+      axios.patch(`${disputesPath}/${params.disputeId}/dispute-roles/${params.disputeRoleId}/${params.disputeParty}`)
         .then(response => {
           resolve(response.data)
         })
@@ -272,7 +273,7 @@ const disputeActions = {
   getNotVisualizeds({ commit }) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.get('api/disputes/summary/not-visualized')
+      axios.get(`${disputesPath}/summary/not-visualized`)
         .then(response => {
           commit('setSummaryNotVisualizeds', response.data)
           resolve(response.data)
@@ -285,7 +286,7 @@ const disputeActions = {
   getNearExpirations({ commit }) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.get('api/disputes/summary/near-expiration')
+      axios.get(`${disputesPath}/summary/near-expiration`)
         .then(response => {
           commit('setSummaryNearExpirations', response.data)
           resolve(response.data)
@@ -298,7 +299,7 @@ const disputeActions = {
   editCaseReason({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.put('api/disputes/' + params.disputeId + '/update-reason', {
+      axios.put(`${disputesPath}/${params.disputeId}/update-reason`, {
         reason: params.reasonValue
       })
         .then(response => {
@@ -312,7 +313,7 @@ const disputeActions = {
   getDisputeStatuses({ commit }, status) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.get('api/disputes/outcome-reasons/' + status)
+      axios.get(`${disputesPath}/outcome-reasons/${status}`)
         .then(response => {
           commit('setDisputeStatuses', { label: status, value: response.data })
           resolve(response.data)
@@ -324,7 +325,7 @@ const disputeActions = {
   },
   sendBatchAction({ commit, state }, params) {
     return axiosDispatcher({
-      url: `api/disputes/actions/batch${queryBuilder(state.query)}`,
+      url: `${disputesPath}/actions/batch${buildQuery(state.query)}`,
       method: 'PUT',
       data: params
     })
@@ -332,7 +333,7 @@ const disputeActions = {
   sendDisputeNote({ commit }, body) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.post('api/disputes/' + body.disputeId + '/note', body)
+      axios.post(`${disputesPath}/${body.disputeId}/note`, body)
         .then(response => {
           resolve(response.data)
         })
@@ -344,7 +345,7 @@ const disputeActions = {
   deleteDisputeNote({ commit }, noteId) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.delete('api/disputes/note/' + noteId)
+      axios.delete(`${disputesPath}/note/${noteId}`)
         .then(response => {
           resolve(response.data)
         })
@@ -356,7 +357,7 @@ const disputeActions = {
   editDisputeNote({ commit }, note) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.put('api/disputes/note/' + note.activeOccurrence.id, {
+      axios.put(`${disputesPath}/note/${note.activeOccurrence.id}`, {
         note: note.newNoteContent,
         disputeId: note.activeOccurrence.disputeId
       })
@@ -373,7 +374,7 @@ const disputeActions = {
       let request
       if (params.action === 'restart-engagement' || params.action === 'renegotiate') {
         // eslint-disable-next-line
-        request = axios.patch('api/disputes/' + params.disputeId + '/' + params.action)
+        request = axios.patch(`${disputesPath}/${params.disputeId}/${params.action}`)
       } else if (params.action === 'resend-messages') {
         // eslint-disable-next-line
         request = axios.put('api/messages/resend/' + params.disputeId)
@@ -385,10 +386,10 @@ const disputeActions = {
         request = axios.patch('api/fusion-runner/enrich/' + params.disputeId)
       } else if (params.action === 'edit-negotiators') {
         // eslint-disable-next-line
-        request = axios.put('api/disputes/' + params.disputeId + '/negotiators', { negotiatorsId: params.negotiatorsId })
+        request = axios.put(`${disputesPath}/${params.disputeId}/negotiators`, { negotiatorsId: params.negotiatorsId })
       } else {
         // eslint-disable-next-line
-        request = axios.put('api/disputes/' + params.disputeId + '/' + params.action, params.body)
+        request = axios.put(`${disputesPath}/${params.disputeId}/${params.action}`, params.body)
       }
       request
         .then(response => {
@@ -402,7 +403,7 @@ const disputeActions = {
   restartDisputeRoleEngagement({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.patch('api/disputes/' + params.disputeId + '/restart-engagement/' + params.disputeRoleId)
+      axios.patch(`${disputesPath}/${params.disputeId}/restart-engagement/${params.disputeRoleId}`)
         .then(response => {
           resolve(response.data)
         }).catch(error => {
@@ -413,7 +414,7 @@ const disputeActions = {
   restartEngagementByContact({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.patch('/api/messages/engagement/' + params.disputeId + '/address/' + params.contact)
+      axios.patch(`/api/messages/engagement/${params.disputeId}/address/${params.contact}`)
         .then(response => {
           resolve(response.data)
         }).catch(error => {
@@ -424,7 +425,7 @@ const disputeActions = {
   editDispute({ commit }, dispute) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.put('api/disputes/' + dispute.id + '/update', dispute)
+      axios.put(`${disputesPath}/${dispute.id}/update`, dispute)
         .then(response => {
           resolve(response.data)
         }).catch(error => {
@@ -435,7 +436,7 @@ const disputeActions = {
   editDisputeOffer({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.post('api/disputes/' + params.disputeId + '/offer', {
+      axios.post(`${disputesPath}/${params.disputeId}/offer`, {
         attribute: { id: params.objectId },
         role: { id: params.roleId },
         value: params.value
@@ -450,7 +451,7 @@ const disputeActions = {
   editNegotiators({ commit }, negotiators) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.put('api/disputes/' + negotiators.disputeId + '/negotiators', { negotiatorsId: negotiators.negotiators })
+      axios.put(`${disputesPath}/${negotiators.disputeId}/negotiators`, { negotiatorsId: negotiators.negotiators })
         .then(response => {
           resolve(response.data)
         })
@@ -462,7 +463,7 @@ const disputeActions = {
   editDisputeReason({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.put('api/disputes/' + params.disputeId + '/update-reason/', params.body)
+      axios.put(`${disputesPath}/${params.disputeId}/update-reason/`, params.body)
         .then(response => {
           resolve(response.data)
         }).catch(error => {
@@ -473,7 +474,7 @@ const disputeActions = {
   removeDispute({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.delete(`api/disputes/${params.disputeId}/${params.reason}`)
+      axios.delete(`${disputesPath}/${params.disputeId}/${params.reason}`)
         .then(response => {
           resolve(response.data)
         }).catch(error => {
@@ -483,13 +484,13 @@ const disputeActions = {
   },
   startNegotiation({ _ }, disputeId) {
     return axiosDispatcher({
-      url: `/api/disputes/${disputeId}/start-negotiation`,
+      url: `${disputesPath}disputes/${disputeId}/start-negotiation`,
       method: 'PATCH'
     })
   },
   disputeSetVisualized({ _ }, params) {
     return axiosDispatcher({
-      url: `api/disputes/${params.disputeId}/visualized`,
+      url: `${disputesPath}/${params.disputeId}/visualized`,
       params,
       method: 'PATCH'
     })
@@ -497,7 +498,7 @@ const disputeActions = {
   getDisputeOccurrences({ commit, state }, disputeId) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.get('api/disputes/' + disputeId + '/occurrences?size=' + state.occurrencesSize + '&sort=createdAt,desc&sort=id,desc')
+      axios.get(`${disputesPath}/${disputeId}/occurrences?size=${state.occurrencesSize}&sort=createdAt,desc&sort=id,desc`)
         .then(response => {
           commit('setDisputeOccurrences', response.data.content)
           resolve(response.data)
@@ -509,7 +510,7 @@ const disputeActions = {
   getDisputeCommunications({ commit, state }, disputeId) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.get(`api/disputes/${disputeId}/occurrences/type/INTERACTION?size=${state.occurrencesSize}&sort=createdAt,desc&sort=id,desc`)
+      axios.get(`${disputesPath}/${disputeId}/occurrences/type/INTERACTION?size=${state.occurrencesSize}&sort=createdAt,desc&sort=id,desc`)
         .then(response => {
           commit('setDisputeOccurrences', response.data.content)
           resolve(response.data)
@@ -521,7 +522,7 @@ const disputeActions = {
   getDisputeNotes({ commit, state }, disputeId) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.get('api/disputes/' + disputeId + '/occurrences/type/NOTE')
+      axios.get(`${disputesPath}/${disputeId}/occurrences/type/NOTE`)
         .then(response => {
           commit('setDisputeOccurrences', response.data.content)
           resolve(response.data)
@@ -533,7 +534,7 @@ const disputeActions = {
   loadDisputeOccurrences({ commit }, disputeId) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.put('api/disputes/' + disputeId + '/occurrences/load')
+      axios.put(`${disputesPath}/${disputeId}/occurrences/load`)
         .then(response => {
           resolve(response.data)
         }).catch(error => {
@@ -544,7 +545,7 @@ const disputeActions = {
   getRespondents({ commit, state }) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.get('api/disputes/respondent-names')
+      axios.get(`${disputesPath}/respondent-names`)
         .then(response => {
           commit('setRespondents', response.data)
           resolve(response.data)
@@ -556,7 +557,7 @@ const disputeActions = {
   newDisputeRole({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.post('api/disputes/' + params.disputeId + '/dispute-roles', params.role)
+      axios.post(`${disputesPath}/${params.disputeId}/dispute-roles`, params.role)
         .then(response => {
           resolve(response.data)
         }).catch(error => {
@@ -567,7 +568,7 @@ const disputeActions = {
   sendDisputeCounterProposal({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.post('api/disputes/' + params.disputeId + '/counterproposal', {
+      axios.post(`${disputesPath}/${params.disputeId}/counterproposal`, {
         attribute: { id: params.objectId },
         role: { id: params.roleId },
         value: params.value,
@@ -583,7 +584,7 @@ const disputeActions = {
   getMessageSummary({ commit }, messageId) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.get('api/disputes/interactions/sent-message-summary/' + messageId)
+      axios.get(`${disputesPath}/interactions/sent-message-summary/${messageId}`)
         .then(response => {
           commit('setRespondents', response.data)
           resolve(response.data)
@@ -594,19 +595,19 @@ const disputeActions = {
   },
   getDisputePartyAnalysis({ commit }, documentNumber) {
     return axiosDispatcher({
-      url: `api/disputes/party/analisis/${documentNumber}`,
+      url: `${disputesPath}/party/analisis/${documentNumber}`,
       mutation: 'addPartyAnalysis',
       payload: documentNumber
     })
   },
   getNegotiators({ state, commit, dispatch }, params) {
     return axiosDispatcher({
-      url: `/api/disputes/negotiators/filter${queryBuilder({ ...state.query, ...params })}`
+      url: `${disputesPath}/negotiators/filter${buildQuery({ ...state.query, ...params })}`
     })
   },
   getPrescriptions: () => axiosDispatcher({
     // url: 'api/disputes/prescriptions',
-    url: 'api/disputes/prescriptions-fix-index/1',
+    url: `${disputesPath}/prescriptions-fix-index/1`,
     mutation: 'setPrescriptionsList'
   })
 }
