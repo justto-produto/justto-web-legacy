@@ -108,11 +108,9 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'loading'
-    ]),
-    occurrences() {
-      return this.$store.getters.occurrences
-    }
+      'loading',
+      'occurrences'
+    ])
   },
   watch: {
     disputeId() {
