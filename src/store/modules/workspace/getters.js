@@ -1,6 +1,6 @@
 import { getStringInitials } from '@/utils/jusUtils'
 
-const getters = {
+const workspaceGetters = {
   workspace: state => state,
   hasWorkspace: state => {
     return state.status !== '' && state.status !== 'CREATING'
@@ -29,4 +29,4 @@ const getters = {
   getWorkspaceDefaultSigners: state => state.defaultSigners
 }
 
-export default getters
+export default workspaceGetters

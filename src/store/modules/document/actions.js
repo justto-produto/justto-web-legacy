@@ -1,6 +1,7 @@
 import axiosDispatcher from '@/store/axiosDispatcher.js'
+
 const FileSaver = require('file-saver')
-const documents = 'api/office/documents/'
+const documentsPath = 'api/office/documents'
 
 /**
  * Dispatch Actions
@@ -10,20 +11,20 @@ const documents = 'api/office/documents/'
  * @param {Object, array} data - the params  of request
  */
 
-const actions = {
+const documentActions = {
   getDocumentModels({ commit }) {
-    return axiosDispatcher({ url: documents + 'model' })
+    return axiosDispatcher({ url: `${documentsPath}/model` })
   },
   createDocumentByModel({ commit }, params) {
     return axiosDispatcher({
-      url: documents + params.modelId + '/' + params.disputeId,
+      url: `${documentsPath}/${params.modelId}/${params.disputeId}`,
       method: 'POST'
     })
   },
   getDocumentByDisputeId({ commit }, disputeId) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.get(documents + disputeId)
+      axios.get(`${documentsPath}/${disputeId}`)
         .then(response => {
           if (response.status === 204) {
             resolve(null)
@@ -36,53 +37,53 @@ const actions = {
   },
   setDocumentSigners({ commit }, params) {
     return axiosDispatcher({
-      url: documents + 'signer/' + params.disputeId,
+      url: `${documentsPath}/signer/${params.disputeId}`,
       method: 'POST',
       data: params.recipients
     })
   },
   resendSignersNotification({ commit }, params) {
     return axiosDispatcher({
-      url: documents + 'resend-notification/' + params.disputeId,
+      url: `${documentsPath}/resend-notification/${params.disputeId}`,
       method: 'PUT'
     })
   },
   deleteDocument({ commit }, disputeId) {
     return axiosDispatcher({
-      url: documents + disputeId,
+      url: `${documentsPath}/${disputeId}`,
       method: 'DELETE'
     })
   },
   backDocumentToEditing({ commit }, disputeId) {
     return axiosDispatcher({
-      url: `${documents}${disputeId}/back-to-editing`,
+      url: `${documentsPath}${disputeId}/back-to-editing`,
       method: 'PATCH'
     })
   },
   addModel({ commit }, url) {
     return axiosDispatcher({
-      url: documents + `model?url=${url}`,
+      url: `${documentsPath}/model?url=${url}`,
       method: 'POST',
       data: {}
     })
   },
   editModel({ commit }, model) {
     return axiosDispatcher({
-      url: documents + 'model/',
+      url: `${documentsPath}/model`,
       method: 'PUT',
       data: model
     })
   },
   deleteModel({ commit }, modelId) {
     return axiosDispatcher({
-      url: documents + 'model/' + modelId,
+      url: `${documentsPath}/model/${modelId}`,
       method: 'DELETE'
     })
   },
   downloadDocument({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.get(documents + 'download-signed/' + params.disputeId, {
+      axios.get(`${documentsPath}/download-signed/${params.disputeId}`, {
         responseType: 'arraybuffer'
       }).then(response => {
         const blob = new Blob([response.data], {
@@ -97,11 +98,11 @@ const actions = {
     })
   },
   getDocumentTypes() {
-    return axiosDispatcher({ url: documents + 'model/input/types' })
+    return axiosDispatcher({ url: `${documentsPath}/model/input/types` })
   },
   getDefaultAssigners({ commit }, workspaceId) {
     return axiosDispatcher({
-      url: 'api/office/document/signer',
+      url: `${documentsPath}/signer`,
       mutation: 'createFromDefaultSigners'
     })
   },
@@ -113,4 +114,4 @@ const actions = {
   }
 }
 
-export default actions
+export default documentActions

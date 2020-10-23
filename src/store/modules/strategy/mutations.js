@@ -1,7 +1,7 @@
-const mutations = {
+const strategyMutations = {
   setImportedStrategies(state, response) {
     state.list = response
   }
 }
 
-export default mutations
+export default strategyMutations

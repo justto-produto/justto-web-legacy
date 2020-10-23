@@ -1,4 +1,4 @@
-const UserMutations = {
+const userMutations = {
 }
 
-export default UserMutations
+export default userMutations

@@ -1,5 +1,5 @@
-const ManagementMutations = {
+const managementMutations = {
   setActiveOccurrency: (state, activeOccurrency) => (state.activeOccurrency = activeOccurrency)
 }
 
-export default ManagementMutations
+export default managementMutations

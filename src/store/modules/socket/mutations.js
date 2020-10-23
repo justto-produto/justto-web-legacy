@@ -1,4 +1,4 @@
-const mutations = {
+const socketMutations = {
   // CHAT
   SOCKET_join(state, join) {
     state.chat.join = join
@@ -17,4 +17,4 @@ const mutations = {
   }
 }
 
-export default mutations
+export default socketMutations

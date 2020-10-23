@@ -1,4 +1,4 @@
-const UserActions = {
+const userActions = {
 }
 
-export default UserActions
+export default userActions

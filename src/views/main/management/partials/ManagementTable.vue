@@ -180,8 +180,8 @@
         min-width="140px"
       >
         <template slot-scope="scope">
-          <span v-if="scope.row.properties && scope.row.properties['MOTIVO DO INDICATIVO DE SENTENCA']">
-            {{ scope.row.properties['MOTIVO DO INDICATIVO DE SENTENCA'] }}
+          <span v-if="scope.row.properties && scope.row.properties['MOTIVO PRE NEGOCIACAO']">
+            {{ scope.row.properties['MOTIVO PRE NEGOCIACAO'] }}
           </span>
           <span v-else>-</span>
         </template>

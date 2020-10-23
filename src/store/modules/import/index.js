@@ -6,7 +6,7 @@ const imports = {
   state: {
     file: undefined,
     map: [],
-    errorFields: [],
+    errorFields: []
   },
   mutations,
   actions,

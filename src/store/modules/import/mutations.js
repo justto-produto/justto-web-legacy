@@ -1,4 +1,4 @@
-const mutations = {
+const importMutations = {
   setImportsFile: (state, file) => (state.file = file),
   removeImportsFile(state) {
     state.file = undefined
@@ -10,4 +10,4 @@ const mutations = {
   clearErrorField: (state, filed) => (state.errorFields = state.errorFields.filter(errorField => errorField !== filed))
 }
 
-export default mutations
+export default importMutations

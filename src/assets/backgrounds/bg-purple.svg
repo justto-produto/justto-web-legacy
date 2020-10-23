@@ -1,23 +1,23 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="198" height="128" viewBox="0 0 198 128">
-    <defs>
-        <linearGradient id="c" x1="96.274%" x2="-5.952%" y1="0%" y2="109.551%">
-            <stop offset="0%" stop-color="#9461F7"/>
-            <stop offset="100%" stop-color="#4E00E6"/>
-        </linearGradient>
-        <rect id="a" width="150" height="80" rx="8"/>
-        <filter id="b" width="150.7%" height="195%" x="-25.3%" y="-42.5%" filterUnits="objectBoundingBox">
-            <feOffset dy="4" in="SourceAlpha" result="shadowOffsetOuter1"/>
-            <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="12"/>
-            <feColorMatrix in="shadowBlurOuter1" values="0 0 0 0 0.145098039 0 0 0 0 0.149019608 0 0 0 0 0.368627451 0 0 0 0.06 0"/>
-        </filter>
-    </defs>
-    <g fill="none" fill-rule="evenodd" transform="translate(24 20)">
-        <mask id="d" fill="#fff">
-            <use xlink:href="#a"/>
-        </mask>
-        <use fill="#000" filter="url(#b)" xlink:href="#a"/>
-        <use fill="url(#c)" xlink:href="#a"/>
-        <circle cx="133" cy="52" r="72" fill="#FFF" mask="url(#d)" opacity=".08"/>
-        <circle cx="39.5" cy="123.5" r="72.5" fill="#FFF" mask="url(#d)" opacity=".08"/>
-    </g>
+  <defs>
+    <linearGradient id="c" x1="96.274%" x2="-5.952%" y1="0%" y2="109.551%">
+      <stop offset="0%" stop-color="#9461F7"/>
+      <stop offset="100%" stop-color="#4E00E6"/>
+    </linearGradient>
+    <rect id="a" width="150" height="80" rx="8"/>
+    <filter id="b" width="150.7%" height="195%" x="-25.3%" y="-42.5%" filterUnits="objectBoundingBox">
+      <feOffset dy="4" in="SourceAlpha" result="shadowOffsetOuter1"/>
+      <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="12"/>
+      <feColorMatrix in="shadowBlurOuter1" values="0 0 0 0 0.145098039 0 0 0 0 0.149019608 0 0 0 0 0.368627451 0 0 0 0.06 0"/>
+    </filter>
+  </defs>
+  <g fill="none" fill-rule="evenodd" transform="translate(24 20)">
+    <mask id="d" fill="#fff">
+      <use xlink:href="#a"/>
+    </mask>
+    <use fill="#000" filter="url(#b)" xlink:href="#a"/>
+    <use fill="url(#c)" xlink:href="#a"/>
+    <circle cx="133" cy="52" r="72" fill="#FFF" mask="url(#d)" opacity=".08"/>
+    <circle cx="39.5" cy="123.5" r="72.5" fill="#FFF" mask="url(#d)" opacity=".08"/>
+  </g>
 </svg>

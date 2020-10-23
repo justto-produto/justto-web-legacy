@@ -1,23 +1,25 @@
 import axiosDispatcher from '@/store/axiosDispatcher.js'
 import router from '@/router'
 
-const actions = {
+const accountsPath = 'api/accounts'
+
+const accountActions = {
   myAccount() {
     return axiosDispatcher({
-      url: 'api/accounts/my',
+      url: `${accountsPath}/my`,
       mutation: 'setUser'
     })
   },
   register({ _ }, loginForm) {
     return axiosDispatcher({
-      url: 'api/accounts/register',
+      url: `${accountsPath}/register`,
       method: 'POST',
       data: loginForm
     })
   },
   activate({ _ }, token) {
     return axiosDispatcher({
-      url: `api/accounts/activate/${token}`,
+      url: `${accountsPath}/activate/${token}`,
       method: 'PUT'
     })
   },
@@ -25,7 +27,7 @@ const actions = {
     // eslint-disable-next-line
     delete axios.defaults.headers.common['Workspace']
     return axiosDispatcher({
-      url: 'api/accounts/token',
+      url: `${accountsPath}/token`,
       method: 'POST',
       data: credentials,
       mutation: 'setToken'
@@ -33,7 +35,7 @@ const actions = {
   },
   refreshToken({ _ }) {
     return axiosDispatcher({
-      url: 'api/accounts/refresh-token',
+      url: `${accountsPath}/refresh-token`,
       mutation: 'setToken'
     }).catch(() => {
       localStorage.removeItem('justoken')
@@ -53,40 +55,40 @@ const actions = {
   },
   forgotPassword({ _ }, email) {
     return axiosDispatcher({
-      url: `api/accounts/reset-password?email=${email}`,
+      url: `${accountsPath}/reset-password?email=${email}`,
       method: 'PUT'
     })
   },
   resetPassword({ _ }, data) {
     return axiosDispatcher({
-      url: `api/accounts/new-password/${data.token}`,
+      url: `${accountsPath}/new-password/${data.token}`,
       method: 'PUT',
       data: { password: data.password }
     })
   },
   updatePassword({ _ }, form) {
     return axiosDispatcher({
-      url: 'api/accounts/my/update-password',
+      url: `${accountsPath}/my/update-password`,
       method: 'POST',
       data: form
     })
   },
   ensureWorkspaceAccesss({ _ }, workspaceId) {
     return axiosDispatcher({
-      url: `api/accounts/workspaces/ensure-workspace-accesss/${workspaceId}`,
+      url: `${accountsPath}/workspaces/ensure-workspace-accesss/${workspaceId}`,
       method: 'PATCH',
       mutation: 'setToken'
     })
   }
   // getUserPreferences({ state }) {
   //   return axiosDispatcher({
-  //     url: `api/accounts/preferences/${state.id}`,
+  //     url: `${accountsPath}/preferences/${state.id}`,
   //     mutation: 'setUserPreferences',
   //   })
   // },
   // updateUserPreferences({ state }, preference) {
   //   return axiosDispatcher({
-  //     url: `api/accounts/preferences/${state.id}`,
+  //     url: `${accountsPath}/preferences/${state.id}`,
   //     method: 'PATCH',
   //     data: preference,
   //     mutation: 'setUserPreferences',
@@ -94,4 +96,4 @@ const actions = {
   // },
 }
 
-export default actions
+export default accountActions

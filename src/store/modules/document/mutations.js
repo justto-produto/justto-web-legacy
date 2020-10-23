@@ -1,7 +1,7 @@
 import { SignerModel } from '../../../models/document/Signer.model'
 // import Vue from 'vue'
 
-const mutations = {
+const documentMutations = {
   createFromDisputeRole(state, disputeRole) {
     state.availableSigners.push(new SignerModel(disputeRole))
   },
@@ -14,4 +14,4 @@ const mutations = {
   }
 }
 
-export default mutations
+export default documentMutations

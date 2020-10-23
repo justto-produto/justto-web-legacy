@@ -1,34 +1,4 @@
-import Fuse from 'fuse.js'
 import moment from 'moment'
-
-const queryBuilder = (q, command, disputesLength, noSort) => {
-  let query = '?'
-  for (const [key, value] of Object.entries(q)) {
-    if (['total'].includes(key)) continue
-    if (!value && key !== 'onlyNotVisualized') continue
-    if (Array.isArray(value)) {
-      if (!value.length) continue
-      if (['expirationDate', 'dealDate', 'importingDate'].includes(key)) {
-        const startDate = moment(value[0]).startOf('day').utc().format('YYYY-MM-DD[T]HH:mm:ss[Z]')
-        const endDate = moment(value[1]).endOf('day').utc().format('YYYY-MM-DD[T]HH:mm:ss[Z]')
-        query = `${query}${key}Start=${startDate}&${key}End=${endDate}&`
-      } else {
-        for (const v of value) {
-          query = query + key + '=' + v + '&'
-        }
-      }
-    } else if (noSort) {
-      continue
-    } else if (key === 'page') {
-      query = query + key + '=' + ((command === 'update' ? 1 : value) - 1) + '&'
-    } else if (key === 'size') {
-      query = query + key + '=' + (command === 'update' ? disputesLength : value) + '&'
-    } else {
-      query = query + key + '=' + value + '&'
-    }
-  }
-  return query
-}
 
 const buildRoleTitle = function(party, title) {
   if (party === 'UNKNOWN') {
@@ -94,54 +64,6 @@ const getFirstRole = function(disputeRoles, party, role) {
   if (roles.length === 0) return ''
   else if (roles.length === 1) return roles[0].name
   else return roles[0].name + ' (+ ' + (roles.length - 1) + ')'
-}
-
-const fuseSearchDisputes = function(disputes, term) {
-  const fuse = new Fuse(disputes, {
-    shouldSort: true,
-    tokenize: true,
-    matchAllTokens: true,
-    threshold: 0.1,
-    location: 0,
-    distance: 100,
-    maxPatternLength: 32,
-    minMatchCharLength: 1,
-    keys: [
-      'id',
-      'code',
-      'campaign.name',
-      'disputeRoles.name',
-      'disputeRoles.name',
-      'disputeRoles.documentNumber',
-      'disputeRoles.oabs.number',
-      'campaign.strategy'
-    ]
-  })
-  const list = fuse.search(term)
-  return list
-}
-
-const fuseSearchOccurrences = function(occurrences, term) {
-  const fuse = new Fuse(occurrences, {
-    shouldSort: true,
-    tokenize: true,
-    matchAllTokens: true,
-    threshold: 0.1,
-    location: 0,
-    distance: 100,
-    maxPatternLength: 32,
-    minMatchCharLength: 1,
-    keys: [
-      'description',
-      'status',
-      'interaction.message.title',
-      'interaction.message.parameters.RECEIVER_NAME',
-      'interaction.message.parameters.SENDER_NAME',
-      'interaction.message.parameters.PERSON_NAME'
-    ]
-  })
-  const list = fuse.search(term)
-  return list
 }
 
 const getLastInteraction = function(lastinteractiondate) {
@@ -226,24 +148,6 @@ const getLastInteractionTooltip = function(interaction) {
   }
 }
 
-const isBase64 = function(str) {
-  if (!str) return false
-  if (str === '' || str.trim() === '') return false
-  try {
-    return btoa(atob(str)) === str
-  } catch (err) {
-    return false
-  }
-}
-
-const uuidv4 = function() {
-  return 'xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    // eslint-disable-next-line
-    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8)
-    return v.toString(16)
-  })
-}
-
 const getDocumentStep = function(hasDocument, signStatus) {
   if (hasDocument) {
     if (signStatus) {
@@ -274,44 +178,14 @@ const getTracktitleByAction = function(action, batch) {
   return title
 }
 
-const normalizeString = function(str) {
-  return str ? str.toString().trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '') : ''
-}
-
-const filterByTerm = function(term, array, key1, key2) {
-  term = normalizeString(term)
-  return array ? array.filter(i => normalizeString(i[key1]).includes(term) || normalizeString(i[key2]).includes(term)) : []
-}
-
-const isJusttoUser = (email = '') => email.endsWith('@justto.com.br')
-
-const getStringInitials = (string) => {
-  const stringSplited = string.split(' ').filter(Boolean)
-  if (stringSplited.length >= 2) {
-    return stringSplited[0].substring(0, 1).toLowerCase() +
-      stringSplited[stringSplited.length - 1].substring(0, 1).toLowerCase()
-  } else {
-    return string.substring(0, 2).toLowerCase()
-  }
-}
-
 export {
   buildRoleTitle,
   getRoleIcon,
   getRoles,
   getFirstRole,
-  fuseSearchDisputes,
-  fuseSearchOccurrences,
   getLastInteraction,
   getInteractionIcon,
   getLastInteractionTooltip,
-  isBase64,
-  isJusttoUser,
-  uuidv4,
   getDocumentStep,
-  getTracktitleByAction,
-  queryBuilder,
-  filterByTerm,
-  normalizeString,
-  getStringInitials
+  getTracktitleByAction
 }

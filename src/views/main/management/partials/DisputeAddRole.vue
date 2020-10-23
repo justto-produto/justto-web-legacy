@@ -298,7 +298,7 @@
 </template>
 
 <script>
-import { validateName, validateCpf, validatePhone } from '@/utils/validations'
+import { validateName, validateDocument, validatePhone } from '@/utils/validations'
 
 export default {
   name: 'DisputeAddRole',
@@ -344,9 +344,9 @@ export default {
         ],
         phone: [{ validator: validatePhone, message: 'Telefone inválido', trigger: 'submit' }],
         email: [{ type: 'email', message: 'E-mail inválido', trigger: 'submit' }],
-        documentNumber: [{ validator: validateCpf, message: 'CPF/CNPJ inválido', trigger: 'submit' }],
+        documentNumber: [{ validator: validateDocument, message: 'CPF/CNPJ inválido', trigger: 'submit' }],
         searchDocumentNumber: [
-          { validator: validateCpf, message: 'CPF/CNPJ inválido', trigger: 'submit' },
+          { validator: validateDocument, message: 'CPF/CNPJ inválido', trigger: 'submit' },
           { required: true, message: 'Campo obrigatório', trigger: 'submit' }
         ],
         searchOabNumber: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],

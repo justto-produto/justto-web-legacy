@@ -423,7 +423,7 @@
               class="dispute-overview-view__role-collapse"
               data-testid="expand-party"
             >
-              <template slot="title">
+              <div slot="title">
                 <i
                   v-if="(showNamesake(role) || showVexatious(role.personProperties)) && !role.roles.includes('NEGOTIATOR') "
                   class="el-icon-warning-outline el-icon-pulse"
@@ -446,7 +446,7 @@
                   </span>
                   {{ role.name }}
                 </div>
-              </template>
+              </div>
               <p
                 v-if="showNamesake(role)"
                 style="margin-top: 0"
@@ -480,6 +480,22 @@
               <div class="dispute-overview-view__info-line">
                 <span class="title">Nome completo:</span>
                 <div>
+                  <el-popover
+                    v-if="role.roles.includes('LAWYER')"
+                    :ref="`popover-${role.name}`"
+                    popper-class="dispute-overview-view__info-popover-lawyer"
+                    :placement="'top-end'"
+                    trigger="click"
+                    @hide="deactivePopover(`popover-${role.name}`)">
+                    <lawyer-detail
+                      @update="updateDisputeRoleField(role, $event)"
+                    />
+                    <i
+                      slot="reference"
+                      class="el-icon-info"
+                      @click="searchThisLawyer({ name: role.name, oabs: [] }, `popover-${role.name}`)"
+                    />
+                  </el-popover>
                   {{ role.name }}
                 </div>
               </div>
@@ -493,8 +509,7 @@
                   >
                     <el-tooltip
                       placement="top"
-                      content="Editar polaridade"
-                    >
+                      content="Editar polaridade">
                       <jus-icon icon="edit" />
                     </el-tooltip>
                   </span>
@@ -663,11 +678,24 @@
                   :key="`${oab_index}-${oab.id}`"
                   :class="{'is-main': oab.isMain}"
                 >
-                  <el-checkbox
-                    v-model="oab.selected"
-                    @change="updateDisputeRole(role, 'cna')"
-                  />
-                  <span>{{ oab.number + '-' + oab.state || '' }}</span>
+                  <span>
+                    <el-popover
+                      :ref="`popover-${oab.number}-${oab.state}`"
+                      popper-class="dispute-overview-view__info-popover-lawyer"
+                      placement="top"
+                      trigger="click"
+                      @hide="deactivePopover(`popover-${oab.number}-${oab.state}`)">
+                      <lawyer-detail
+                        @update="updateDisputeRoleField(role, $event)"
+                      />
+                      <i
+                        slot="reference"
+                        class="el-icon-info"
+                        @click="searchThisLawyer({...role, oabs: [oab]}, `popover-${oab.number}-${oab.state}`)"
+                      />
+                    </el-popover>
+                    {{ oab.number + '-' + oab.state || '' }}
+                  </span>
                   <div class="alerts">
                     <el-tooltip content="OAB inválido">
                       <jus-icon
@@ -867,11 +895,9 @@
               prop="document"
               width="160px"
             >
-              <template slot-scope="scope">
-                <span>
-                  {{ scope.row.document | cpfCnpj }}
-                </span>
-              </template>
+              <div slot-scope="scope">
+                {{ scope.row.document | cpfCnpj }}
+              </div>
             </el-table-column>
             <el-table-column
               label="Cidade"
@@ -992,8 +1018,9 @@
                   </p>
                 </div>
                 <el-switch
+                  v-model="disputeForm.contactPartyWhenNoLowyer"
                   :disabled="disputeForm.awaysContactParty"
-                  v-model="disputeForm.contactPartyWhenNoLowyer" />
+                />
               </el-col>
             </el-tooltip>
             <el-tooltip
@@ -1012,8 +1039,8 @@
                   </p>
                 </div>
                 <el-switch
-                  :disabled="disputeForm.awaysContactParty"
                   v-model="disputeForm.contactPartyWhenInvalidLowyer"
+                  :disabled="disputeForm.awaysContactParty"
                 />
               </el-col>
             </el-tooltip>
@@ -1305,11 +1332,9 @@
             class="el-table--list"
           >
             <el-table-column>
-              <template slot-scope="scope">
-                <span>
-                  {{ scope.row.number + '-' + scope.row.state || '' }}
-                </span>
-              </template>
+              <div slot-scope="scope">
+                {{ scope.row.number + '-' + scope.row.state || '' }}
+              </div>
             </el-table-column>
             <el-table-column
               fixed="right"
@@ -1317,7 +1342,7 @@
               width="48px"
               class-name="visible"
             >
-              <template slot-scope="scope">
+              <div slot-scope="scope">
                 <el-tooltip
                   :open-delay="500"
                   content="Remover"
@@ -1329,7 +1354,7 @@
                     <jus-icon icon="trash" />
                   </a>
                 </el-tooltip>
-              </template>
+              </div>
             </el-table-column>
           </el-table>
           <el-form-item
@@ -1357,11 +1382,9 @@
             class="el-table--list"
           >
             <el-table-column>
-              <template slot-scope="scope">
-                <span>
-                  {{ scope.row.number | phoneNumber }}
-                </span>
-              </template>
+              <div slot-scope="scope">
+                {{ scope.row.number | phoneNumber }}
+              </div>
             </el-table-column>
             <el-table-column
               fixed="right"
@@ -1369,7 +1392,7 @@
               width="114px"
               class-name="visible slot-scope"
             >
-              <template slot-scope="scope">
+              <div slot-scope="scope">
                 <el-tooltip
                   :open-delay="500"
                   :content="scope.row.isMain ? 'Este número receberá mensagens automáticas' : 'Este número não recberá mensagens automáticas'"
@@ -1397,7 +1420,7 @@
                     <jus-icon icon="trash" />
                   </a>
                 </el-tooltip>
-              </template>
+              </div>
             </el-table-column>
           </el-table>
           <el-form-item
@@ -1426,11 +1449,9 @@
             class="el-table--list"
           >
             <el-table-column>
-              <template slot-scope="scope">
-                <span>
-                  {{ scope.row.address }}
-                </span>
-              </template>
+              <span slot-scope="scope">
+                {{ scope.row.address }}
+              </span>
             </el-table-column>
             <el-table-column
               fixed="right"
@@ -1438,7 +1459,7 @@
               width="114px"
               class-name="visible slot-scope"
             >
-              <template slot-scope="scope">
+              <span slot-scope="scope">
                 <el-tooltip
                   :open-delay="500"
                   :content="scope.row.isMain ? 'Este e-mail receberá mensagens automáticas' : 'Este e-mail não recberá mensagens automáticas'"
@@ -1466,7 +1487,7 @@
                     <jus-icon icon="trash" />
                   </a>
                 </el-tooltip>
-              </template>
+              </span>
             </el-table-column>
           </el-table>
           <h4>
@@ -1488,14 +1509,14 @@
             class="el-table--list"
           >
             <el-table-column>
-              <template slot-scope="scope">
+              <section slot-scope="scope">
                 <span>
                   {{ scope.row.name }}
                 </span>
                 <div style="font-size: 12px;">
                   {{ scope.row.bank }} | {{ scope.row.agency }} | {{ scope.row.number }}
                 </div>
-              </template>
+              </section>
             </el-table-column>
             <el-table-column
               fixed="right"
@@ -1503,7 +1524,7 @@
               width="48px"
               class-name="visible"
             >
-              <template slot-scope="scope">
+              <section slot-scope="scope">
                 <el-tooltip
                   :open-delay="500"
                   content="Remover"
@@ -1515,7 +1536,7 @@
                     <jus-icon icon="trash" />
                   </a>
                 </el-tooltip>
-              </template>
+              </section>
             </el-table-column>
           </el-table>
         </el-form>
@@ -1643,7 +1664,7 @@
 
 <script>
 import { getRoles, buildRoleTitle, getRoleIcon } from '@/utils/jusUtils'
-import { validateName, validateCpf, validatePhone, validateZero } from '@/utils/validations'
+import { validateName, validateDocument, validatePhone, validateZero } from '@/utils/validations'
 
 import DisputeAttachments from './sections/DisputeAttachments'
 import { mapGetters, mapActions } from 'vuex'
@@ -1652,12 +1673,13 @@ export default {
   name: 'DisputeOverview',
   components: {
     DisputeAttachments,
-    DisputeCodeLink: () => import('../DisputeCodeLink'),
     DisputeAddRole: () => import('../DisputeAddRole'),
+    DisputeCodeLink: () => import('../DisputeCodeLink'),
     DisputeProprieties: () => import('../DisputeProprieties'),
     JusTags: () => import('@/components/others/JusTags'),
+    JusTimeline: () => import('@/components/JusTimeline/JusTimeline'),
     JusVexatiousAlert: () => import('@/components/dialogs/JusVexatiousAlert'),
-    JusTimeline: () => import('@/components/JusTimeline/JusTimeline')
+    LawyerDetail: () => import('./sections/LawyerDetail')
   },
   props: {
     loading: {
@@ -1759,7 +1781,7 @@ export default {
         ],
         document: [
           { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-          { validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' }
+          { validator: validateDocument, message: 'CPF/CNPJ inválido.', trigger: 'submit' }
         ],
         bank: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
         agency: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
@@ -1774,15 +1796,11 @@ export default {
       ufFilter: null,
       dispuesToUnknownParties: [
         {
-          value: {
-            party: 'RESPONDENT'
-          },
+          value: { party: 'RESPONDENT' },
           label: 'Réu'
         },
         {
-          value: {
-            party: 'CLAIMANT'
-          },
+          value: { party: 'CLAIMANT' },
           label: 'Parte contrária'
         }
       ],
@@ -1791,8 +1809,10 @@ export default {
   },
   computed: {
     ...mapGetters({
+      disputeStatuses: 'disputeStatuses',
       getDisputeProperties: 'disputeProprieties',
-      disputeStatuses: 'disputeStatuses'
+      searchedLawyers: 'searchedLawyers',
+      searchLawyersLoading: 'searchLawyersLoading'
     }),
     canEditBirthday() {
       return this.roleForm.party === 'CLAIMANT' && this.roleForm.personType === 'NATURAL' && this.roleForm.roles && (this.roleForm.roles.includes('LAWYER') || this.roleForm.roles.includes('PARTY'))
@@ -1818,7 +1838,7 @@ export default {
     },
     validateDocumentNumber() {
       if (this.documentNumberHasChanged) {
-        return [{ validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' }]
+        return [{ validator: validateDocument, message: 'CPF/CNPJ inválido.', trigger: 'submit' }]
       }
       return []
     },
@@ -1953,12 +1973,124 @@ export default {
   methods: {
     ...mapActions([
       'getDispute',
-      'removeDispute',
-      'setDisputeparty',
+      'getDisputeProprieties',
       'getDisputeStatuses',
       'getDisputeTimeline',
-      'getDisputeProprieties'
+      'hideSearchLawerLoading',
+      'removeDispute',
+      'searchLawyers',
+      'setDisputeparty'
     ]),
+
+    updateDisputeRoleField(disputeRole, { field, value }) {
+      let message = ''
+      if (field === 'oab') {
+        const { number, state } = value
+
+        const alreadyExists = disputeRole.oabs.filter(oab => {
+          return number === oab.number && state === oab.state
+        }).length > 0
+
+        if (!alreadyExists) {
+          this.addNewOab(disputeRole, value)
+        } else {
+          message = 'Este nº de OAB já esta em uso.'
+        }
+      } else if (field === 'documentNumber') {
+        if (disputeRole.documentNumber !== value) {
+          this.addNewDocumentNumber(disputeRole, value)
+        } else {
+          message = 'Este documento já esta em uso.'
+        }
+      } else if (field === 'phone') {
+        const alreadyExists = disputeRole.phones.filter(phone => {
+          return phone.number === `55 ${value}`.split(' ').join('')
+        }).length > 0
+        if (!alreadyExists) {
+          this.addNewPhone(disputeRole, value)
+        } else {
+          message = 'Este telefone já esta em uso.'
+        }
+      }
+      if (message) {
+        this.$jusNotification({
+          title: 'Yay!',
+          message: message,
+          type: 'success'
+        })
+      }
+    },
+
+    addNewOab(disputeRole, value) {
+      const newRole = {
+        ...disputeRole,
+        oabs: [...disputeRole.oabs, { ...value }]
+      }
+      this.$store.dispatch('editRole', {
+        disputeId: this.dispute.id,
+        disputeRole: newRole
+      }).then(() => {
+        this.getDispute(this.dispute.id)
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Nº de OAB Adicionado.',
+          type: 'success'
+        })
+      }).catch(error => {
+        this.$jusNotification({ error })
+      })
+    },
+
+    addNewDocumentNumber(disputeRole, documentNumber) {
+      const newRole = {
+        ...disputeRole,
+        documentNumber
+      }
+      this.$store.dispatch('editRole', {
+        disputeId: this.dispute.id,
+        disputeRole: newRole
+      }).then(() => {
+        this.getDispute(this.dispute.id)
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Documento Adicionado.',
+          type: 'success'
+        })
+      }).catch(error => {
+        this.$jusNotification({ error })
+      })
+    },
+
+    addNewPhone(disputeRole, number) {
+      const newRole = {
+        ...disputeRole,
+        phones: [...disputeRole.phones, { number }]
+      }
+      this.$store.dispatch('editRole', {
+        disputeId: this.dispute.id,
+        disputeRole: newRole
+      }).then(() => {
+        this.getDispute(this.dispute.id)
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Telefone Adicionado com sucesso.',
+          type: 'success'
+        })
+      }).catch(error => {
+        this.$jusNotification({ error })
+      })
+    },
+
+    deactivePopover(ref) {
+      this.$refs[ref][0].$el.classList.remove('active-popover')
+    },
+
+    searchThisLawyer(lawyer, ref) {
+      if (!this.$refs[ref][0].showPopper) {
+        this.$refs[ref][0].$el.classList.add('active-popover')
+        this.searchLawyers(lawyer).finally(this.hideSearchLawerLoading)
+      }
+    },
 
     disputeUpperRangeChangedHandler() {
       this.disputeUpperRangeHasChanged = true
@@ -2761,17 +2893,30 @@ export default {
   }
   &__info-line {
     line-height: 24px;
+
+    div .active-popover .el-icon-info.el-popover__reference,
+    span span .active-popover .el-icon-info.el-popover__reference {
+      color: $--color-primary;
+    }
+
+    div span .el-icon-info.el-popover__reference:hover,
+    span span span .el-icon-info.el-popover__reference:hover {
+      color: $--color-primary;
+    }
+
     > span:not(.title) {
       margin-left: 12px;
       width: 100%;
       display: flex;
       align-items: flex-start;
+
       > span:not(.jus-vexatious-alert) {
         width: 100%;
         margin: 5px;
         word-break: break-all;
         line-height: 1.2;
       }
+
       .jus-avatar-user {
         margin-right: 4px;
       }
@@ -3127,5 +3272,11 @@ export default {
   .el-input.is-disabled .el-input__inner {
     cursor: not-allowed;
   }
+}
+
+.dispute-overview-view__info-popover-lawyer {
+  width: 500px;
+  min-height: 20vh;
+  max-height: 50vh;
 }
 </style>

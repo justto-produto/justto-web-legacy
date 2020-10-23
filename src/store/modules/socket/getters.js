@@ -1,4 +1,4 @@
-const getters = {
+const socketGetters = {
 }
 
-export default getters
+export default socketGetters

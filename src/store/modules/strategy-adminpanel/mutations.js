@@ -3,7 +3,7 @@ import Vue from 'vue'
 const findStrategyIndex = (strategies, strategyId) => strategies.content.findIndex(s => s.id === strategyId)
 const findCommunicationIndex = (communications, communicationId) => communications.findIndex(c => c.id === communicationId)
 
-const StrategyMutations = {
+const strategyMutations = {
   addStrategy: (state, strategy) => (state.strategies.content.push(strategy)),
   deleteStrategy: (state, { strategyId }) => {
     const strategyIndex = findStrategyIndex(state.strategies, strategyId)
@@ -50,4 +50,4 @@ const StrategyMutations = {
   setLoadingStrategies: (state, status) => (state.isLoadingStrategies = status)
 }
 
-export default StrategyMutations
+export default strategyMutations

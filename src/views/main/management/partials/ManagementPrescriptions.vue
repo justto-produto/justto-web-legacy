@@ -27,11 +27,13 @@
 
     <span
       v-if="hasPrescription('NEWLY_IMPORTED')"
-      class="management-prescriptions__newly-imported-alert">
+      class="management-prescriptions__newly-imported-alert"
+    >
       <b>*</b>Disputas importadas recentemente
       <a
         href="#"
-        @click="handlePrescriptionClick('NEWLY_IMPORTED')">
+        @click="handlePrescriptionClick('NEWLY_IMPORTED')"
+      >
         (clique aqui para remover filtro)
       </a>
     </span>

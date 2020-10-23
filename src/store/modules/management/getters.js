@@ -1,5 +1,5 @@
-const ManagementGetters = {
+const managementGetters = {
   activeOccurrency: state => state.activeOccurrency
 }
 
-export default ManagementGetters
+export default managementGetters

@@ -1,6 +1,6 @@
 import axiosDispatcher from '@/store/axiosDispatcher.js'
 
-const actions = {
+const dashboardActions = {
   getDashboard({ state, commit }, chartName) {
     let url = 'api/disputes/dashboard?'
     if (chartName) {
@@ -14,8 +14,12 @@ const actions = {
       url += `memberId=${state.selectedMemberId}&`
     }
     url += 'reload=true'
-    return axiosDispatcher({ mutation: 'setDashboardDatasets', url })
+
+    return axiosDispatcher({
+      url,
+      mutation: 'setDashboardDatasets'
+    })
   }
 }
 
-export default actions
+export default dashboardActions
