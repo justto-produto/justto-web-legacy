@@ -31,10 +31,10 @@ if (ghostMode) ghostMode = ghostMode === 'true' || ghostMode === true
 
 export default new Vuex.Store({
   state: {
-    loading: false,
-    ghostMode,
     banksList,
-    brazilianStates
+    brazilianStates,
+    ghostMode,
+    loading: false
   },
   getters: {
     banksList: state => state.banksList,
@@ -43,20 +43,20 @@ export default new Vuex.Store({
     loading: state => state.loading
   },
   mutations: {
+    setGhostMode: (state, value) => (state.ghostMode = value),
     showLoading: (state) => (state.loading = true),
-    hideLoading: (state) => (state.loading = false),
-    setGhostMode: (state, value) => (state.ghostMode = value)
+    hideLoading: (state) => (state.loading = false)
   },
   actions: {
+    setGhostMode({ commit }, value) {
+      commit('setGhostMode', value)
+      localStorage.setItem('jusghostmode', value)
+    },
     showLoading({ commit }) {
       commit('showLoading')
     },
     hideLoading({ commit }) {
       commit('hideLoading')
-    },
-    setGhostMode({ commit }, value) {
-      commit('setGhostMode', value)
-      localStorage.setItem('jusghostmode', value)
     }
   },
   modules: {
