@@ -1983,6 +1983,7 @@ export default {
     ]),
 
     updateDisputeRoleField(disputeRole, { field, value }) {
+      let message = ''
       if (field === 'oab') {
         const { number, state } = value
 
@@ -1993,21 +1994,13 @@ export default {
         if (!alreadyExists) {
           this.addNewOab(disputeRole, value)
         } else {
-          this.$jusNotification({
-            title: 'Yay!',
-            message: 'Este nº de OAB já esta em uso.',
-            type: 'success'
-          })
+          message = 'Este nº de OAB já esta em uso.'
         }
       } else if (field === 'documentNumber') {
         if (disputeRole.documentNumber !== value) {
           this.addNewDocumentNumber(disputeRole, value)
         } else {
-          this.$jusNotification({
-            title: 'Yay!',
-            message: 'Este documento já esta em uso.',
-            type: 'success'
-          })
+          message = 'Este documento já esta em uso.'
         }
       } else if (field === 'phone') {
         const alreadyExists = disputeRole.phones.filter(phone => {
@@ -2016,12 +2009,15 @@ export default {
         if (!alreadyExists) {
           this.addNewPhone(disputeRole, value)
         } else {
-          this.$jusNotification({
-            title: 'Yay!',
-            message: 'Este telefone já esta em uso.',
-            type: 'success'
-          })
+          message = 'Este telefone já esta em uso.'
         }
+      }
+      if (message) {
+        this.$jusNotification({
+          title: 'Yay!',
+          message: message,
+          type: 'success'
+        })
       }
     },
 
@@ -2042,8 +2038,6 @@ export default {
         })
       }).catch(error => {
         this.$jusNotification({ error })
-      }).finally(() => {
-        this.$forceUpdate()
       })
     },
 
@@ -2064,8 +2058,6 @@ export default {
         })
       }).catch(error => {
         this.$jusNotification({ error })
-      }).finally(() => {
-        this.$forceUpdate()
       })
     },
 
@@ -2086,8 +2078,6 @@ export default {
         })
       }).catch(error => {
         this.$jusNotification({ error })
-      }).finally(() => {
-        this.$forceUpdate()
       })
     },
 
@@ -2098,10 +2088,8 @@ export default {
     searchThisLawyer(lawyer, ref) {
       if (!this.$refs[ref][0].showPopper) {
         this.$refs[ref][0].$el.classList.add('active-popover')
-        console.log(this.$refs[ref][0].$el)
         this.searchLawyers(lawyer).finally(this.hideSearchLawerLoading)
       }
-      this.$forceUpdate()
     },
 
     disputeUpperRangeChangedHandler() {
@@ -3287,14 +3275,8 @@ export default {
 }
 
 .dispute-overview-view__info-popover-lawyer {
-  border-radius: 16px;
-  padding: 10px;
-  width: 35vw;
+  width: 500px;
   min-height: 20vh;
   max-height: 50vh;
-
-  .el-loading-parent--relative .el-loading-mask .el-loading-spinner {
-    // margin-top: 16px;
-  }
 }
 </style>

@@ -181,7 +181,7 @@ export default {
       img {
         margin: auto 0px;
         width: 100%;
-        border-radius: 24px;
+        border-radius: 8px;
       }
     }
 
