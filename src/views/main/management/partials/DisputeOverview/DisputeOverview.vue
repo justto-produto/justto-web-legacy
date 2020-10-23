@@ -1342,7 +1342,7 @@
               width="48px"
               class-name="visible"
             >
-              <div slot-scope="scope">
+              <template slot-scope="scope">
                 <el-tooltip
                   :open-delay="500"
                   content="Remover"
@@ -1354,7 +1354,7 @@
                     <jus-icon icon="trash" />
                   </a>
                 </el-tooltip>
-              </div>
+              </template>
             </el-table-column>
           </el-table>
           <el-form-item
@@ -1392,7 +1392,7 @@
               width="114px"
               class-name="visible slot-scope"
             >
-              <div slot-scope="scope">
+              <template slot-scope="scope">
                 <el-tooltip
                   :open-delay="500"
                   :content="scope.row.isMain ? 'Este número receberá mensagens automáticas' : 'Este número não recberá mensagens automáticas'"
@@ -1420,7 +1420,7 @@
                     <jus-icon icon="trash" />
                   </a>
                 </el-tooltip>
-              </div>
+              </template>
             </el-table-column>
           </el-table>
           <el-form-item
@@ -1459,7 +1459,7 @@
               width="114px"
               class-name="visible slot-scope"
             >
-              <span slot-scope="scope">
+              <template slot-scope="scope">
                 <el-tooltip
                   :open-delay="500"
                   :content="scope.row.isMain ? 'Este e-mail receberá mensagens automáticas' : 'Este e-mail não recberá mensagens automáticas'"
@@ -1487,7 +1487,7 @@
                     <jus-icon icon="trash" />
                   </a>
                 </el-tooltip>
-              </span>
+              </template>
             </el-table-column>
           </el-table>
           <h4>
@@ -1524,7 +1524,7 @@
               width="48px"
               class-name="visible"
             >
-              <section slot-scope="scope">
+              <template slot-scope="scope">
                 <el-tooltip
                   :open-delay="500"
                   content="Remover"
@@ -1536,7 +1536,7 @@
                     <jus-icon icon="trash" />
                   </a>
                 </el-tooltip>
-              </section>
+              </template>
             </el-table-column>
           </el-table>
         </el-form>
