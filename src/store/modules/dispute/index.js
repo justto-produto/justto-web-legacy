@@ -9,6 +9,7 @@ const dispute = {
     },
     disputeLastInteractions: [],
     disputeAttachments: [],
+    loadingAttachments: false,
     disputeProprieties: {},
     loading: false,
     disputes: [],

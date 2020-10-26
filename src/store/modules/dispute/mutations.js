@@ -36,6 +36,13 @@ const disputeMutations = {
   },
   setDisputeAttachments(state, disputeAttachments) {
     state.disputeAttachments = disputeAttachments || []
+    state.loadingAttachments = false
+  },
+  hideLoadingAttachments(state) {
+    state.loadingAttachments = false
+  },
+  showLoadingAttachments(state) {
+    state.loadingAttachments = true
   },
   setDisputeRoles(state, disputeRoles) {
     state.dispute.disputeRoles = disputeRoles
