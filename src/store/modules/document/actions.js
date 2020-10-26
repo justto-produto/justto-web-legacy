@@ -12,16 +12,16 @@ const documentsPath = 'api/office/documents'
  */
 
 const documentActions = {
-  getDocumentModels({ commit }) {
+  getDocumentModels({ _ }) {
     return axiosDispatcher({ url: `${documentsPath}/model` })
   },
-  createDocumentByModel({ commit }, params) {
+  createDocumentByModel({ _ }, params) {
     return axiosDispatcher({
       url: `${documentsPath}/${params.modelId}/${params.disputeId}`,
       method: 'POST'
     })
   },
-  getDocumentByDisputeId({ commit }, disputeId) {
+  getDocumentByDisputeId({ _ }, disputeId) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
       axios.get(`${documentsPath}/${disputeId}`)
@@ -35,52 +35,52 @@ const documentActions = {
         })
     })
   },
-  setDocumentSigners({ commit }, params) {
+  setDocumentSigners({ _ }, params) {
     return axiosDispatcher({
       url: `${documentsPath}/signer/${params.disputeId}`,
       method: 'POST',
       data: params.recipients
     })
   },
-  resendSignersNotification({ commit }, params) {
+  resendSignersNotification({ _ }, params) {
     return axiosDispatcher({
       url: `${documentsPath}/resend-notification/${params.disputeId}`,
       method: 'PUT'
     })
   },
-  deleteDocument({ commit }, disputeId) {
+  deleteDocument({ _ }, disputeId) {
     return axiosDispatcher({
       url: `${documentsPath}/${disputeId}`,
       method: 'DELETE'
     })
   },
-  backDocumentToEditing({ commit }, disputeId) {
+  backDocumentToEditing({ _ }, disputeId) {
     return axiosDispatcher({
       url: `${documentsPath}/${disputeId}/back-to-editing`,
       method: 'PATCH'
     })
   },
-  addModel({ commit }, url) {
+  addModel({ _ }, url) {
     return axiosDispatcher({
       url: `${documentsPath}/model?url=${url}`,
       method: 'POST',
       data: {}
     })
   },
-  editModel({ commit }, model) {
+  editModel({ _ }, model) {
     return axiosDispatcher({
       url: `${documentsPath}/model`,
       method: 'PUT',
       data: model
     })
   },
-  deleteModel({ commit }, modelId) {
+  deleteModel({ _ }, modelId) {
     return axiosDispatcher({
       url: `${documentsPath}/model/${modelId}`,
       method: 'DELETE'
     })
   },
-  downloadDocument({ commit }, params) {
+  downloadDocument({ _ }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
       axios.get(`${documentsPath}/download-signed/${params.disputeId}`, {
@@ -100,7 +100,7 @@ const documentActions = {
   getDocumentTypes() {
     return axiosDispatcher({ url: `${documentsPath}/model/input/types` })
   },
-  getDefaultAssigners({ commit }, workspaceId) {
+  getDefaultAssigners({ _ }) {
     return axiosDispatcher({
       url: `${documentsPath}/signer`,
       mutation: 'createFromDefaultSigners'
