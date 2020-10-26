@@ -7,6 +7,7 @@ const disputeGetters = {
   disputeTab: state => state.tab,
   dispute: state => state.dispute,
   disputeAttachments: state => state.disputeAttachments,
+  loadingAttachments: state => state.loadingAttachments,
   disputeProprieties: state => state.disputeProprieties,
   disputeId: state => state.dispute.id || 0,
   disputeHasFilters: state => state.hasFilters,

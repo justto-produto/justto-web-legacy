@@ -1,6 +1,6 @@
 <template>
   <section
-    v-loading="isLoading"
+    v-loading="loadingAttachments"
     class="dispute-attachments"
   >
     <div class="dispute-overview-view__attachment-buttons">
@@ -22,7 +22,7 @@
 
     <jus-drag-area class="dispute-attachments__drag-area">
       <div
-        v-if="filteredDisputeAttachments.length"
+        v-if="filteredDisputeAttachments.length && !loadingAttachments"
         v-loading="deleteAttachmentLoading"
         class="dispute-attachments__attachment-list"
       >
@@ -62,6 +62,11 @@
             {{ attachmentOrigin(attachment) }} - {{ attachment.createAt.dateTime | moment('DD/MM/YY') }}
           </span>
         </el-card>
+      </div>
+      <div
+        v-else-if="loadingAttachments"
+        class="dispute-attachments__without-attachment">
+        Carregando Anexos
       </div>
       <div
         v-else
@@ -124,26 +129,31 @@ export default {
     return {
       uploadAttacmentDialogVisable: false,
       deleteAttachmentLoading: false,
-      attachmentFilterTerm: '',
-      isLoading: false
+      attachmentFilterTerm: ''
     }
   },
   computed: {
-    ...mapGetters(['disputeAttachments']),
+    ...mapGetters(['disputeAttachments', 'loadingAttachments', 'hideLoadingAttachments']),
 
     filteredDisputeAttachments() {
       return filterByTerm(this.attachmentFilterTerm, this.disputeAttachments, 'name')
     }
   },
+  watch: {
+    disputeId() {
+      this.initState()
+    }
+  },
   mounted() {
-    const { id } = this.$route.params
-    this.isLoading = true
-    this.getDisputeAttachments(id).finally(() => {
-      this.isLoading = false
-    })
+    this.initState()
   },
   methods: {
     ...mapActions(['deleteAttachment', 'getDisputeAttachments']),
+
+    initState() {
+      const { id } = this.$route.params
+      this.getDisputeAttachments(id).finally(this.hideLoadingAttachments)
+    },
 
     enrichDispute() {
       const message = {
