@@ -1,9 +1,8 @@
 import * as Sentry from '@sentry/browser'
-
 import Vue from 'vue'
 import axios from 'axios'
 import store from '@/store'
-import showUnavailableLoading from '@/utils/showUnavailableLoading'
+import { showUnavailableLoading } from '@/utils'
 
 const AUTH_TOKEN = localStorage.justoken
 

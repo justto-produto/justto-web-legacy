@@ -76,7 +76,7 @@
 </template>
 
 <script>
-import { getRoles, getLastInteraction } from '@/utils/jusUtils'
+import { getRoles, getLastInteraction } from '@/utils'
 
 export default {
   name: 'JusDisputeResume',

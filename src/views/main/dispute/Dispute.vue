@@ -375,7 +375,7 @@
 </template>
 
 <script>
-import { isSimilarStrings } from '@/utils/jusUtils'
+import { isSimilarStrings } from '@/utils'
 import { mapGetters, mapActions } from 'vuex'
 import { JusDragArea } from '@/components/JusDragArea'
 import { quillEditor } from 'vue-quill-editor'

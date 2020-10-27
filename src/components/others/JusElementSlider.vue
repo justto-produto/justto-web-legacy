@@ -100,7 +100,7 @@
 import JusElementButton from './JusElementButton.vue'
 import JusElementMarker from './JusElementMarker'
 import Emitter from 'element-ui/src/mixins/emitter'
-import { buildRoleTitle } from '@/utils/jusUtils'
+import { buildRoleTitle } from '@/utils'
 
 export default {
   name: 'JusElementSlider',

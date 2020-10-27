@@ -1663,7 +1663,7 @@
 </template>
 
 <script>
-import { getRoles, buildRoleTitle, getRoleIcon } from '@/utils/jusUtils'
+import { getRoles, buildRoleTitle, getRoleIcon } from '@/utils'
 import { validateName, validateDocument, validatePhone, validateZero } from '@/utils/validations'
 
 import DisputeAttachments from './sections/DisputeAttachments'
@@ -1674,7 +1674,7 @@ export default {
   components: {
     DisputeAttachments,
     DisputeAddRole: () => import('../DisputeAddRole'),
-    DisputeCodeLink: () => import('../DisputeCodeLink'),
+    DisputeCodeLink: () => import('@/components/buttons/DisputeCodeLink'),
     DisputeProprieties: () => import('../DisputeProprieties'),
     JusTags: () => import('@/components/others/JusTags'),
     JusTimeline: () => import('@/components/JusTimeline/JusTimeline'),

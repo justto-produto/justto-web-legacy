@@ -10,7 +10,8 @@ const router = new Router({
       component: () => import(/* webpackChunkName: "mainContainer" */ '@/views/main/MainContainer'),
       meta: {
         requiresAuth: true,
-        trackPage: false
+        trackPage: false,
+        title: 'Justto'
       },
       children: [
         {
@@ -95,7 +96,7 @@ const router = new Router({
         {
           name: 'dispute',
           path: 'management/dispute/:id',
-          component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/management/Dispute'),
+          component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/dispute/Dispute'),
           meta: {
             trackPage: true,
             title: 'Justto - Disputa'

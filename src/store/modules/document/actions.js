@@ -1,4 +1,4 @@
-import axiosDispatcher from '@/store/axiosDispatcher.js'
+import { axiosDispatch } from '@/utils/'
 
 const FileSaver = require('file-saver')
 const documentsPath = 'api/office/documents'
@@ -13,10 +13,10 @@ const documentsPath = 'api/office/documents'
 
 const documentActions = {
   getDocumentModels({ _ }) {
-    return axiosDispatcher({ url: `${documentsPath}/model` })
+    return axiosDispatch({ url: `${documentsPath}/model` })
   },
   createDocumentByModel({ _ }, params) {
-    return axiosDispatcher({
+    return axiosDispatch({
       url: `${documentsPath}/${params.modelId}/${params.disputeId}`,
       method: 'POST'
     })
@@ -36,46 +36,46 @@ const documentActions = {
     })
   },
   setDocumentSigners({ _ }, params) {
-    return axiosDispatcher({
+    return axiosDispatch({
       url: `${documentsPath}/signer/${params.disputeId}`,
       method: 'POST',
       data: params.recipients
     })
   },
   resendSignersNotification({ _ }, params) {
-    return axiosDispatcher({
+    return axiosDispatch({
       url: `${documentsPath}/resend-notification/${params.disputeId}`,
       method: 'PUT'
     })
   },
   deleteDocument({ _ }, disputeId) {
-    return axiosDispatcher({
+    return axiosDispatch({
       url: `${documentsPath}/${disputeId}`,
       method: 'DELETE'
     })
   },
   backDocumentToEditing({ _ }, disputeId) {
-    return axiosDispatcher({
+    return axiosDispatch({
       url: `${documentsPath}/${disputeId}/back-to-editing`,
       method: 'PATCH'
     })
   },
   addModel({ _ }, url) {
-    return axiosDispatcher({
+    return axiosDispatch({
       url: `${documentsPath}/model?url=${url}`,
       method: 'POST',
       data: {}
     })
   },
   editModel({ _ }, model) {
-    return axiosDispatcher({
+    return axiosDispatch({
       url: `${documentsPath}/model`,
       method: 'PUT',
       data: model
     })
   },
   deleteModel({ _ }, modelId) {
-    return axiosDispatcher({
+    return axiosDispatch({
       url: `${documentsPath}/model/${modelId}`,
       method: 'DELETE'
     })
@@ -98,10 +98,10 @@ const documentActions = {
     })
   },
   getDocumentTypes() {
-    return axiosDispatcher({ url: `${documentsPath}/model/input/types` })
+    return axiosDispatch({ url: `${documentsPath}/model/input/types` })
   },
   getDefaultAssigners({ _ }) {
-    return axiosDispatcher({
+    return axiosDispatch({
       url: `${documentsPath}/signer`,
       mutation: 'createFromDefaultSigners'
     })

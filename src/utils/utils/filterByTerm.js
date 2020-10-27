@@ -1,4 +1,4 @@
-import { normalizeString } from '@/utils/jusUtils'
+import { normalizeString } from '@/utils'
 
 const filterByTerm = (term, array, key1, key2) => {
   term = normalizeString(term)

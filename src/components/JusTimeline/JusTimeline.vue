@@ -143,7 +143,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import { normalizeString } from '@/utils/jusUtils'
+import { normalizeString } from '@/utils'
 
 export default {
   components: {

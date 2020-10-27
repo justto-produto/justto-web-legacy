@@ -1,9 +1,9 @@
-import axiosDispatcher from '@/store/axiosDispatcher'
+import { axiosDispatch } from '@/utils'
 
 const socketActions = {
   // CHAT
   sendMessageEvent({ _ }, params) {
-    return axiosDispatcher({
+    return axiosDispatch({
       url: `api/disputes/${params.id}/chat/message`,
       method: 'PUT',
       data: params.data

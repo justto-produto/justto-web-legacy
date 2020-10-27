@@ -278,7 +278,7 @@
 </template>
 
 <script>
-import { getTracktitleByAction } from '@/utils/jusUtils'
+import { getTracktitleByAction } from '@/utils'
 import { mapGetters, mapActions } from 'vuex'
 import CKEditor from 'ckeditor4-vue'
 

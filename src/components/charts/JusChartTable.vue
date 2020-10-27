@@ -115,13 +115,7 @@ export default {
     disputeStatusSummaryWithWarn() {
       const self = this
       const disputeStatusSummaryWithWarn = []
-      // let sumWithoutAlert = 0
-      // let sumWithAlert = 0
-      // let sumTotal = 0
       this.data.labels.forEach((label, index) => {
-        // sumWithoutAlert += self.data.datasets[0].data[index]
-        // sumWithAlert += self.data.datasets[1].data[index]
-        // sumTotal += self.data.datasets[2].data[index]
         disputeStatusSummaryWithWarn.push({
           label,
           withoutAlert: self.data.datasets[0].data[index],
@@ -133,16 +127,6 @@ export default {
           statusIndex: index
         })
       })
-      // disputeStatusSummaryWithWarn.push({
-      //   label: 'TOTAL',
-      //   withoutAlert: sumWithoutAlert,
-      //   // withoutAlertFilter: {}
-      //   withAlert: sumWithAlert,
-      //   // withAlertFilter: {}
-      //   total: sumTotal,
-      //   // totalFilter: {}
-      //   statusIndex: 4
-      // })
       return disputeStatusSummaryWithWarn
     },
     selectedMemberId() {
@@ -172,7 +156,6 @@ export default {
         case 'SEM RESPOSTA':
           return row.withoutAlert + ' disputas' + name + ' ainda não possuem resposta, mas NÃO vão expirar nos próximos 3 dias'
         case 'TOTAL':
-          return 'Clique para ver estas disputas.'
         default:
           return 'Clique para ver estas disputas.'
       }
@@ -181,7 +164,7 @@ export default {
       const name = this.tooltipName() ? this.tooltipName() + ' tem ' : ''
       switch (row.label) {
         case 'PENDENTE':
-          return name + row.withAlert + ' disputas que expiram nos proximos 3 dias e precisam de atenção IMEDIATA'
+          return name + row.withAlert + ' disputas pendentes precisam de atenção IMEDIATA para iniciar negociação'
         case 'PROPOSTA ACEITA':
           return name + row.withAlert + ' disputas precisam gerar o termo de acordo, providenciar sua assinatura, responder uma mensagem da parte ou dar ganho na disputa'
         case 'NEGOCIANDO':
@@ -189,7 +172,6 @@ export default {
         case 'SEM RESPOSTA':
           return name + row.withAlert + ' disputas que ainda não possuem resposta da parte e expiram nos proximos 3 dias, ou que já fazem mais de 7 dias que você iniciou engajamento e precisa reagendar mensagens. Entre em contato manualmente ou reagende as mensagens'
         case 'TOTAL':
-          return 'Clique para ver estas disputas'
         default:
           return 'Clique para ver estas disputas'
       }
@@ -206,7 +188,6 @@ export default {
         case 'SEM RESPOSTA':
           return name + row.total + ' disputas que ainda não possuem respostas. Se já se passaram 1 semana, reinicie o engajamento para aumentar as chances de sucesso.'
         case 'TOTAL':
-          return 'Clique para ver estas disputas.'
         default:
           return 'Clique para ver estas disputas.'
       }
