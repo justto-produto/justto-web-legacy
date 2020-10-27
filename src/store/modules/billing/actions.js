@@ -1,6 +1,6 @@
 import axiosDispatcher from '@/store/axiosDispatcher'
 import moment from 'moment'
-import { buildQuery } from '@/utils/jusUtils'
+import { buildQuery } from '@/utils'
 
 const billingPath = 'api/billing'
 

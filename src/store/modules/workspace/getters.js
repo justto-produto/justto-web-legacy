@@ -1,4 +1,4 @@
-import { getStringInitials } from '@/utils/jusUtils'
+import { getStringInitials } from '@/utils'
 
 const workspaceGetters = {
   workspace: state => state,

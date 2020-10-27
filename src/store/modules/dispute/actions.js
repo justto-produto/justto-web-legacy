@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import axiosDispatcher from '@/store/axiosDispatcher'
-import { buildQuery } from '@/utils/jusUtils'
+import { buildQuery } from '@/utils'
 import moment from 'moment'
 
 // const FileSaver = require('file-saver')

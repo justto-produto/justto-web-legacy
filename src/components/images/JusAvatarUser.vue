@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { getStringInitials } from '@/utils/jusUtils'
+import { getStringInitials } from '@/utils'
 
 export default {
   name: 'JusAvatarUser',

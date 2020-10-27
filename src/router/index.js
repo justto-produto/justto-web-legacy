@@ -96,7 +96,7 @@ const router = new Router({
         {
           name: 'dispute',
           path: 'management/dispute/:id',
-          component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/management/Dispute'),
+          component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/dispute/Dispute'),
           meta: {
             trackPage: true,
             title: 'Justto - Disputa'

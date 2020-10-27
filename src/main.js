@@ -2,9 +2,8 @@ import Vue from 'vue'
 import App from '@/App.vue'
 import router from './router'
 import store from './store'
+import { registerServiceWorker } from '@/utils'
 import { validateWorkspace } from '@/utils/validations'
-
-import '@/utils/registerServiceWorker'
 
 // PLUGINS
 import i18n from '@/plugins/vueI18n'
@@ -77,6 +76,8 @@ Vue.component('JusViewMain', JusViewMain)
 Vue.component('JusButtonBack', JusButtonBack)
 
 Vue.config.productionTip = false
+
+registerServiceWorker()
 
 if (store.getters.workspaceSubdomain) {
   // eslint-disable-next-line

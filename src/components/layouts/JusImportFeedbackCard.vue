@@ -264,7 +264,7 @@
 </template>
 
 <script>
-import { normalizeString } from '@/utils/jusUtils'
+import { normalizeString } from '@/utils'
 import { mapActions, mapGetters } from 'vuex'
 
 export default {
