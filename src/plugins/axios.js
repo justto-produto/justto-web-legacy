@@ -1,5 +1,4 @@
 import * as Sentry from '@sentry/browser'
-
 import Vue from 'vue'
 import axios from 'axios'
 import store from '@/store'

@@ -1,19 +1,19 @@
-import axiosDispatcher from '@/store/axiosDispatcher'
+import { axiosDispatch } from '@/utils'
 
 const personsPath = 'api/persons'
 
 const personActions = {
   getPerson({ _ }, id) {
-    return axiosDispatcher({ url: `${personsPath}/${id}` })
+    return axiosDispatch({ url: `${personsPath}/${id}` })
   },
   refreshPerson({ _ }, id) {
-    return axiosDispatcher({
+    return axiosDispatch({
       url: `${personsPath}/${id}`,
       mutation: 'setLoggedPerson'
     })
   },
   setMainPhone({ _ }, params) {
-    return axiosDispatcher({
+    return axiosDispatch({
       url: `${personsPath}/${params.personId}/phones/main`,
       method: 'POST',
       data: params.phoneDTO
@@ -33,13 +33,13 @@ const personActions = {
     })
   },
   searchPersonByDocument({ _ }, params) {
-    return axiosDispatcher({ url: `api/spider/person/${params.document}` })
+    return axiosDispatch({ url: `api/spider/person/${params.document}` })
   },
   searchPersonByOab({ _ }, params) {
-    return axiosDispatcher({ url: `api/spider/lawyer/${params.oabNumber}/${params.oabStat}` })
+    return axiosDispatch({ url: `api/spider/lawyer/${params.oabNumber}/${params.oabStat}` })
   },
   enrichPerson({ _ }, personId) {
-    return axiosDispatcher({
+    return axiosDispatch({
       url: `api/fusion-runner/enrich/person/${personId}`,
       method: 'PATCH'
     })

@@ -1,58 +1,57 @@
-import axiosDispatcher from '@/store/axiosDispatcher'
 import moment from 'moment'
-import { buildQuery } from '@/utils'
+import { axiosDispatch, buildQuery } from '@/utils'
 
 const billingPath = 'api/billing'
 
 const billingActions = {
   getMyCusomers: () => {
-    axiosDispatcher({
+    axiosDispatch({
       url: `${billingPath}/customer/my`,
       mutation: 'setMyCustomers'
     })
   },
 
   getAllCustomers: () =>
-    axiosDispatcher({
+    axiosDispatch({
       url: `${billingPath}/customer/?size=${9999}`,
       mutation: 'setAllCustomers'
     }),
 
   associateCustomer: ({ dispatch, state }, customerId) =>
-    axiosDispatcher({
+    axiosDispatch({
       url: `${billingPath}/customer/${customerId}/${state.query.workspaceId}`,
       method: 'patch'
     }).then(() => dispatch('getMyCusomers')),
 
   addCustomer: ({ dispatch }, customerData) =>
-    axiosDispatcher({
+    axiosDispatch({
       url: `${billingPath}/customer`,
       method: 'post',
       data: customerData
     }).then(res => dispatch('associateCustomer', res.id)),
 
   unlinkCustomer: ({ dispatch, state }, customerId) =>
-    axiosDispatcher({
+    axiosDispatch({
       url: `${billingPath}/customer/${customerId}/${state.query.workspaceId}`,
       method: 'delete'
     }).then(() => dispatch('getMyCusomers')),
 
   updateCustomer: ({ dispatch }, customerData) =>
-    axiosDispatcher({
+    axiosDispatch({
       url: `${billingPath}/customer/${customerData.id}`,
       method: 'patch',
       data: customerData
     }).then(() => dispatch('getMyCusomers')),
 
   getContracts: ({ state }) => {
-    axiosDispatcher({
+    axiosDispatch({
       url: `${billingPath}/customer/${state.currentCustomer.customerId}/contract`,
       mutation: 'setContracts'
     })
   },
 
-  addContract: ({ dispatch, state }, { customerId, contract }) =>
-    axiosDispatcher({
+  addContract: ({ dispatch }, { customerId, contract }) =>
+    axiosDispatch({
       url: `${billingPath}/customer/${customerId}/contract`,
       method: 'post',
       data: {
@@ -68,7 +67,7 @@ const billingActions = {
     }).then(() => dispatch('getContracts')),
 
   updateContract: ({ dispatch }, { customerId, contract }) =>
-    axiosDispatcher({
+    axiosDispatch({
       url: `${billingPath}/customer/${customerId}/contract/${contract.id}`,
       method: 'patch',
       data: {
@@ -82,7 +81,7 @@ const billingActions = {
       }
     }).then(() => dispatch('getMyCusomers')),
 
-  getPlans: () => axiosDispatcher({
+  getPlans: () => axiosDispatch({
     url: `${billingPath}/plans`,
     mutation: 'setPlans'
   }),
@@ -99,7 +98,7 @@ const billingActions = {
       customerId: state.currentCustomer.customerId
     }
 
-    return axiosDispatcher({
+    return axiosDispatch({
       url: `${billingPath}/transaction${buildQuery(query)}`,
       mutation: command ? 'pushTransactions' : 'setTransactions'
     }).finally(() => {
@@ -113,7 +112,7 @@ const billingActions = {
       customerId: state.currentCustomer.customerId
     }
 
-    return axiosDispatcher({
+    return axiosDispatch({
       url: `${billingPath}/dashboard${buildQuery(query)}`,
       mutation: 'setBillingDashboard'
     })
@@ -152,7 +151,7 @@ const billingActions = {
   },
 
   postTransaction: ({ state, dispatch }, params) => {
-    axiosDispatcher({
+    axiosDispatch({
       url: `${billingPath}/transaction`,
       method: 'POST',
       data: {
@@ -169,7 +168,7 @@ const billingActions = {
   },
 
   patchTransaction: ({ dispatch }, transaction) => {
-    return axiosDispatcher({
+    return axiosDispatch({
       url: `${billingPath}/transaction/manual/${transaction.id}`,
       method: 'PATCH',
       data: transaction
@@ -180,7 +179,7 @@ const billingActions = {
   },
 
   cancelTransaction: ({ dispatch }, params) => {
-    return axiosDispatcher({
+    return axiosDispatch({
       url: `${billingPath}/transaction/${params.id}/cancel`,
       method: 'POST',
       data: params.data

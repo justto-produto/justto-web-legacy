@@ -1,29 +1,29 @@
-import axiosDispatcher from '@/store/axiosDispatcher'
+import { axiosDispatch } from '@/utils'
 
 const workspacesPath = 'api/workspaces'
 
 const workspaceActions = {
   myWorkspace() {
-    return axiosDispatcher({
+    return axiosDispatch({
       url: `${workspacesPath}/my`,
       headers: { Workspace: '' }
     })
   },
   getWorkspace({ getters }) {
-    return axiosDispatcher({
+    return axiosDispatch({
       url: `${workspacesPath}/${getters.workspaceId}`,
       mutation: 'setWorkspace'
     })
   },
   verifyAvailability({ _ }, subDomain) {
-    return axiosDispatcher({
+    return axiosDispatch({
       url: `${workspacesPath}/sub-domain-availability`,
       method: 'PUT',
       data: { subDomain }
     })
   },
   createWorkpace({ _ }, object) {
-    return axiosDispatcher({
+    return axiosDispatch({
       url: `${workspacesPath}`,
       method: 'POST',
       data: object,
@@ -40,7 +40,7 @@ const workspaceActions = {
       properties: params.properties
     }
 
-    return axiosDispatcher({
+    return axiosDispatch({
       url: `${workspacesPath}`,
       method: 'PUT',
       mutation: 'setWorkspace',
@@ -48,62 +48,62 @@ const workspaceActions = {
     })
   },
   changeTeamName({ _ }, data) {
-    return axiosDispatcher({
+    return axiosDispatch({
       url: `${workspacesPath}/teamName`,
       method: 'patch',
       data
     })
   },
   inviteTeammates({ state }, teammates) {
-    return axiosDispatcher({
+    return axiosDispatch({
       url: `api/accounts/workspaces/invite-teammates/${state.subdomain}`,
       method: 'POST',
       data: teammates
     })
   },
   readyWorkspace({ _ }, workspace) {
-    return axiosDispatcher({
+    return axiosDispatch({
       url: `${workspacesPath}/ready/${workspace}`,
       method: 'PUT'
     })
   },
   getWorkspaceMembers({ _ }) {
-    return axiosDispatcher({
+    return axiosDispatch({
       url: `${workspacesPath}/members?size=999&`,
       mutation: 'setWorkspaceMembers'
     })
   },
   getWorkspaces({ _ }) {
-    return axiosDispatcher({ url: `${workspacesPath}?size=999&` })
+    return axiosDispatch({ url: `${workspacesPath}?size=999&` })
   },
   removeWorkspaceMember({ _ }, id) {
-    return axiosDispatcher({
+    return axiosDispatch({
       url: `${workspacesPath}/members/${id}`,
       method: 'DELETE'
     })
   },
   editWorkspaceMember({ _ }, member) {
-    return axiosDispatcher({
+    return axiosDispatch({
       url: `${workspacesPath}/members/`,
       method: 'PUT',
       data: member
     })
   },
   syncInbox({ _ }, object) {
-    return axiosDispatcher({
+    return axiosDispatch({
       url: `${workspacesPath}/inboxes`,
       method: 'POST',
       data: object
     })
   },
   getMyStrategies({ _ }) {
-    return axiosDispatcher({
+    return axiosDispatch({
       url: `${workspacesPath}/strategies`,
       mutation: 'setImportedStrategies'
     })
   },
   patchBlackList({ _ }, blackList) {
-    return axiosDispatcher({
+    return axiosDispatch({
       url: `${workspacesPath}/blacklist`,
       method: 'patch',
       data: blackList

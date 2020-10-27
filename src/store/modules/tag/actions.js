@@ -1,23 +1,22 @@
-import axiosDispatcher from '@/store/axiosDispatcher.js'
-import { buildQuery } from '@/utils'
+import { axiosDispatch, buildQuery } from '@/utils'
 
 const tagActions = {
   getWorkspaceTags() {
-    return axiosDispatcher({
+    return axiosDispatch({
       url: 'api/workspaces/tags',
       mutation: 'setWorkspaceTags',
       params: { size: 9999, sort: 'id,asc' }
     })
   },
   getDisputeTags({ _ }, disputeId) {
-    return axiosDispatcher({
+    return axiosDispatch({
       url: `/api/disputes/${disputeId}/tags`,
       mutation: 'setDisputeTags',
       params: { size: 9999, sort: 'id,desc' }
     })
   },
   editDisputeTags({ _ }, params) {
-    return axiosDispatcher({
+    return axiosDispatch({
       method: 'patch',
       url: `/api/disputes/${params.disputeId}/tags`,
       mutation: 'setDisputeTags',
@@ -31,14 +30,14 @@ const tagActions = {
     delete query.size
     delete query.tags
     delete query.noTags
-    return axiosDispatcher({
+    return axiosDispatch({
       method: 'get',
       url: `/api/disputes/tags${buildQuery(query)}`,
       mutation: 'setFilteredTags'
     })
   },
   deleteTag({ _ }, tagId) {
-    return axiosDispatcher({
+    return axiosDispatch({
       url: `/api/workspaces/tags/${tagId}`,
       method: 'DELETE'
     })
