@@ -206,6 +206,7 @@
             <el-col class="text-right">
               <el-button
                 type="primary"
+                :disabled="saving"
                 @click.native.prevent="saveSingleContract(contract, contractCount)"
               >
                 Salvar
@@ -391,6 +392,7 @@
             <el-col class="text-right">
               <el-button
                 type="primary"
+                :disabled="saving"
                 @click.native.prevent="validateForm"
               >
                 Salvar
@@ -435,7 +437,8 @@ export default {
       },
       tariffTypes: TARIFF_TYPES,
       newContract: { },
-      hasWorkspace: false
+      hasWorkspace: false,
+      saving: false
     }
   },
   computed: {
@@ -536,6 +539,7 @@ export default {
       formRef.validate(isValid => isValid ? this.addNewContract() : false)
     },
     addNewContract() {
+      this.saving = true
       const {
         form: { customerId },
         newContract
@@ -548,8 +552,9 @@ export default {
         type: 'success',
         title: 'Yay!',
         message: 'Contrato adicionado com sucesso.'
+      })).finally(() => {
+        this.saving = false
       })
-      )
 
       this.hideCollapseItems()
     },
@@ -569,6 +574,7 @@ export default {
      * Salva um único contrato
      */
     saveSingleContract(contract, index) {
+      this.saving = true
       const { form } = this
       this.updateContract({
         customerId: form.customerId,
@@ -581,7 +587,7 @@ export default {
           title: 'Yay!',
           message: 'Contrato salvo com sucesso.'
         })
-      })
+      }).finally(() => { this.saving = false })
     },
     /**
      * Salva todos os contratos

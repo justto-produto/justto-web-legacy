@@ -62,7 +62,7 @@ export default {
     maskIsVisible: self => self.visible || self.isDragging
   },
   methods: {
-    ...mapActions(['uploadAttachment', 'getDisputeAttachments']),
+    ...mapActions(['uploadAttachment', 'getDisputeAttachments', 'hideLoadingAttachments']),
     handleDragenter(evt) {
       this.isDragging = true
     },
@@ -122,7 +122,7 @@ export default {
         this.isAttachmentLoading = false
         this.$jusNotification({ error })
         this.$jusSegment(`${segmentLog} falhou`, { fileName: file.name })
-      })
+      }).finally(this.hideLoadingAttachments)
     }
   }
 }

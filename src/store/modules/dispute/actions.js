@@ -127,10 +127,14 @@ const disputeActions = {
     })
   },
   getDisputeAttachments({ commit }, disputeId) {
-    axiosDispatcher({
+    commit('showLoadingAttachments')
+    return axiosDispatcher({
       url: `api/office/documents/${disputeId}/attachments`,
       mutation: 'setDisputeAttachments'
     })
+  },
+  hideLoadingAttachments({ commit }) {
+    commit('hideLoadingAttachments')
   },
   uploadAttachment({ commit }, { disputeId, formData }) {
     return axiosDispatcher({
