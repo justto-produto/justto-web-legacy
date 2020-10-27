@@ -252,9 +252,9 @@
     </el-dialog>
     <el-dialog
       :visible.sync="showBulkMessageDialog"
+      @before-close="cloeBulkMessageDialog()"
       class="dialog__bulk-message"
-      width="50%"
-      :before-close="sendBulkMessage">
+      width="50%">
       <span class="dialog-body__text-info">
         <i class="el-icon-warning" />
         Essa mensagem será enviada para a(s) {{ selectedIdsLength }} disputa(s) selecionada(s)
@@ -266,10 +266,10 @@
         :config="editorConfig"
       />
       <span slot="footer">
-        <el-button @click="showBulkMessageDialog = false">Cancelar</el-button>
+        <el-button @click="cloeBulkMessageDialog()">Cancelar</el-button>
         <el-button
           type="primary"
-          @click="showBulkMessageDialog = false">
+          @click="sendBulkMessage()">
           Enviar
         </el-button>
       </span>
@@ -441,6 +441,10 @@ export default {
         params.allSelected = true
         params.disputeIds = []
       }
+      this.dispatchAction(action, params)
+    },
+
+    dispatchAction(action, params) {
       this.$store.dispatch('sendBatchAction', params).then(response => {
         this.chooseDeleteDialogVisible = false
         this.chooseUnsettledDialogVisible = false
@@ -475,8 +479,19 @@ export default {
       this.showBulkMessageDialog = true
     },
 
+    cloeBulkMessageDialog() {
+      this.showBulkMessageDialog = false
+      this.message = ''
+    },
+
     sendBulkMessage() {
-      console.log('FECHOU MODAL')
+      const { message } = this
+      this.dispatchAction('SEND_MESSAGE', {
+        type: 'SEND_MESSAGE',
+        disputeIds: this.selectedIds,
+        message
+      })
+      this.cloeBulkMessageDialog()
     },
 
     sendBatchAction(action) {
