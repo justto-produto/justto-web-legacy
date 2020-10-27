@@ -1,4 +1,4 @@
-import axiosDispatch from '@/utils'
+import { axiosDispatch } from '@/utils/'
 
 const FileSaver = require('file-saver')
 const documentsPath = 'api/office/documents'

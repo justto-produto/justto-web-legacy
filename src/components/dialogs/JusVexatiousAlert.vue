@@ -17,7 +17,7 @@
     >
       <div v-if="alerts">
         {{ name | firstName }} possui <b>{{ Math.round(alerts.globalTotalValue) }}</b> disputas em nossa plataforma.
-        <span v-if="alerts.globalTotalValue !== alerts.workspaceTotalValue">
+        <span v-if="alerts.globalTotalValue === alerts.workspaceTotalValue">
           Todas elas em sua equipe.
         </span>
         <span v-else>
