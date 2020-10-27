@@ -1,4 +1,4 @@
-import axiosDispatcher from '@/store/axiosDispatcher.js'
+import { axiosDispatch } from '@/utils'
 
 const dashboardActions = {
   getDashboard({ state, commit }, chartName) {
@@ -15,7 +15,7 @@ const dashboardActions = {
     }
     url += 'reload=true'
 
-    return axiosDispatcher({
+    return axiosDispatch({
       url,
       mutation: 'setDashboardDatasets'
     })

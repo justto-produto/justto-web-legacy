@@ -1,21 +1,21 @@
-import axiosDispatcher from '@/store/axiosDispatcher'
+import { axiosDispatch } from '@/utils'
 
 const campaignsPath = 'api/campaigns'
 
 const campaignActions = {
   getCampaigns({ _ }) {
-    return axiosDispatcher({
+    return axiosDispatch({
       url: 'api/disputes/campaigns',
       mutation: 'setCampaigns'
     })
   },
   getCampaignByName({ _ }, name) {
-    return axiosDispatcher({
+    return axiosDispatch({
       url: `${campaignsPath}/search?name=${name}`
     })
   },
   createCampaign({ _ }, campaign) {
-    return axiosDispatcher({
+    return axiosDispatch({
       url: `${campaignsPath}`,
       method: 'POST',
       data: campaign

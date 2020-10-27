@@ -1,24 +1,24 @@
-import axiosDispatcher from '@/store/axiosDispatcher.js'
 import router from '@/router'
+import { axiosDispatch } from '@/utils'
 
 const accountsPath = 'api/accounts'
 
 const accountActions = {
   myAccount() {
-    return axiosDispatcher({
+    return axiosDispatch({
       url: `${accountsPath}/my`,
       mutation: 'setUser'
     })
   },
   register({ _ }, loginForm) {
-    return axiosDispatcher({
+    return axiosDispatch({
       url: `${accountsPath}/register`,
       method: 'POST',
       data: loginForm
     })
   },
   activate({ _ }, token) {
-    return axiosDispatcher({
+    return axiosDispatch({
       url: `${accountsPath}/activate/${token}`,
       method: 'PUT'
     })
@@ -26,7 +26,7 @@ const accountActions = {
   login({ _ }, credentials) {
     // eslint-disable-next-line
     delete axios.defaults.headers.common['Workspace']
-    return axiosDispatcher({
+    return axiosDispatch({
       url: `${accountsPath}/token`,
       method: 'POST',
       data: credentials,
@@ -34,7 +34,7 @@ const accountActions = {
     })
   },
   refreshToken({ _ }) {
-    return axiosDispatcher({
+    return axiosDispatch({
       url: `${accountsPath}/refresh-token`,
       mutation: 'setToken'
     }).catch(() => {
@@ -54,40 +54,40 @@ const accountActions = {
     } else router.push('/login')
   },
   forgotPassword({ _ }, email) {
-    return axiosDispatcher({
+    return axiosDispatch({
       url: `${accountsPath}/reset-password?email=${email}`,
       method: 'PUT'
     })
   },
   resetPassword({ _ }, data) {
-    return axiosDispatcher({
+    return axiosDispatch({
       url: `${accountsPath}/new-password/${data.token}`,
       method: 'PUT',
       data: { password: data.password }
     })
   },
   updatePassword({ _ }, form) {
-    return axiosDispatcher({
+    return axiosDispatch({
       url: `${accountsPath}/my/update-password`,
       method: 'POST',
       data: form
     })
   },
   ensureWorkspaceAccesss({ _ }, workspaceId) {
-    return axiosDispatcher({
+    return axiosDispatch({
       url: `${accountsPath}/workspaces/ensure-workspace-accesss/${workspaceId}`,
       method: 'PATCH',
       mutation: 'setToken'
     })
   }
   // getUserPreferences({ state }) {
-  //   return axiosDispatcher({
+  //   return axiosDispatch({
   //     url: `${accountsPath}/preferences/${state.id}`,
   //     mutation: 'setUserPreferences',
   //   })
   // },
   // updateUserPreferences({ state }, preference) {
-  //   return axiosDispatcher({
+  //   return axiosDispatch({
   //     url: `${accountsPath}/preferences/${state.id}`,
   //     method: 'PATCH',
   //     data: preference,

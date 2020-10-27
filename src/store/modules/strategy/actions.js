@@ -1,19 +1,19 @@
-import axiosDispatcher from '@/store/axiosDispatcher'
+import { axiosDispatch } from '@/utils'
 
 const strategiesPath = 'api/strategies'
 
 const strategyActions = {
   getStrategiesList({ _ }) {
-    return axiosDispatcher({
+    return axiosDispatch({
       url: `${strategiesPath}/list`,
       mutation: 'setImportedStrategies'
     })
   },
   getStrategyEngagement({ _ }, id) {
-    return axiosDispatcher({ url: `${strategiesPath}/${id}/engagement` })
+    return axiosDispatch({ url: `${strategiesPath}/${id}/engagement` })
   },
   editStrategyTemplate({ _ }, params) {
-    return axiosDispatcher({
+    return axiosDispatch({
       url: 'api/templates/',
       method: 'PUT',
       data: params

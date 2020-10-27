@@ -1,4 +1,4 @@
-import axiosDispatcher from '@/store/axiosDispatcher.js'
+import { axiosDispatch } from '@/utils'
 
 export default {
   searchLawyers({ commit }, { oabs, name }) {
@@ -10,7 +10,7 @@ export default {
       state = oabs[0].state
       oabNumber = oabs[0].number
     }
-    return axiosDispatcher({
+    return axiosDispatch({
       url: 'api/fusion-runner/search/lawyer',
       params: { oabNumber, state, name },
       mutation: 'setSearchedLawyers'

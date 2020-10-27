@@ -1,10 +1,10 @@
-import axiosDispatcher from '@/store/axiosDispatcher'
+import { axiosDispatch } from '@/utils'
 
 const importsPath = 'api/imports'
 
 const importActions = {
   getImportsHistory() {
-    return axiosDispatcher({ url: `${importsPath}/history` })
+    return axiosDispatch({ url: `${importsPath}/history` })
   },
   getImportsColumns({ commit, state, dispatch }) {
     return new Promise((resolve, reject) => {
@@ -26,30 +26,30 @@ const importActions = {
     })
   },
   getImportsTags({ state }) {
-    return axiosDispatcher({ url: `${importsPath}/${state.file.id}/tags` })
+    return axiosDispatch({ url: `${importsPath}/${state.file.id}/tags` })
   },
   mapImportColumns({ state }, map) {
-    return axiosDispatcher({
+    return axiosDispatch({
       url: `${importsPath}/${state.file.id}/map`,
       method: 'PUT',
       data: map
     })
   },
   uploadImportFile({ _ }, file) {
-    return axiosDispatcher({
+    return axiosDispatch({
       url: `${importsPath}/upload`,
       method: 'POST',
       data: file
     })
   },
   startGeneseRunner({ state }) {
-    return axiosDispatcher({
+    return axiosDispatch({
       url: `api/geneserunner/${state.file.id}/start`,
       method: 'POST'
     })
   },
   validateGeneseRunner({ state }) {
-    return axiosDispatcher({ url: `api/geneserunner/${state.file.id}/validate` })
+    return axiosDispatch({ url: `api/geneserunner/${state.file.id}/validate` })
   },
   setErrorFields({ commit }, fields) {
     commit('setErrorFields', fields)
