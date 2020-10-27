@@ -260,7 +260,7 @@
         Essa mensagem será enviada para a(s) {{ selectedIdsLength }} disputa(s) selecionada(s)
       </span>
       <ckeditor
-        ref="templateEditor"
+        ref="messageEditor"
         v-model="message"
         class="dialog-body__editor"
         :config="editorConfig"
@@ -414,6 +414,12 @@ export default {
   methods: {
     ...mapActions(['getDisputeStatuses']),
 
+    destroyEditor() {
+      for (const instance of Object.values(window.CKEDITOR.instances)) {
+        instance.destroy()
+      }
+    },
+
     doAction(action) {
       const params = {
         type: action.toUpperCase(),
@@ -482,6 +488,7 @@ export default {
     cloeBulkMessageDialog() {
       this.showBulkMessageDialog = false
       this.message = ''
+      this.destroyEditor()
     },
 
     sendBulkMessage() {
