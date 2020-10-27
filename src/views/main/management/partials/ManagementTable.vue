@@ -302,13 +302,13 @@
 </template>
 
 <script>
-import { getDocumentStep } from '@/utils/jusUtils'
+import { getDocumentStep } from '@/utils'
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'ManagementTable',
   components: {
-    DisputeCodeLink: () => import('./DisputeCodeLink'),
+    DisputeCodeLink: () => import('@/components/buttons/DisputeCodeLink'),
     ManagementLastInteraction: () => import('./ManagementLastInteraction'),
     JusTimeline: () => import('@/components/JusTimeline/JusTimeline'),
     JusDisputeActions: () => import('@/components/buttons/JusDisputeActions'),

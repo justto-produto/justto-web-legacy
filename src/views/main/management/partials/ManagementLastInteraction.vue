@@ -227,7 +227,7 @@ import {
   getLastInteraction,
   getInteractionIcon,
   getLastInteractionTooltip
-} from '@/utils/jusUtils'
+} from '@/utils'
 
 import { quillEditor } from 'vue-quill-editor'
 import 'quill/dist/quill.core.css'

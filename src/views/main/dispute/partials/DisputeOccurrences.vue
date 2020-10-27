@@ -572,7 +572,7 @@
 
 <script>
 import InfiniteLoading from 'vue-infinite-loading'
-import { isSimilarStrings } from '@/utils/jusUtils'
+import { isSimilarStrings } from '@/utils'
 import { mapGetters, mapActions } from 'vuex'
 import { uniq } from 'lodash'
 

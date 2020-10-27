@@ -352,7 +352,7 @@
 </template>
 
 <script>
-import { getRoles } from '@/utils/jusUtils'
+import { getRoles } from '@/utils'
 import { JusDragArea } from '@/components/JusDragArea'
 import { mapActions, mapGetters } from 'vuex'
 

@@ -416,7 +416,7 @@
 </template>
 
 <script>
-import { filterByTerm } from '@/utils/jusUtils'
+import { filterByTerm } from '@/utils'
 import { mapActions, mapGetters } from 'vuex'
 
 const defaultCheckedKeys = ['DISPUTE_CODE', 'EXTERNAL_ID', 'FIRST_CLAIMANT', 'LAWYER_PARTY_NAMES', 'RESPONDENT_NAMES', 'UPPER_RANGE', 'UPPER_RANGE_SAVING_VALUE', 'STATUS', 'CLASSIFICATION', 'DESCRIPTION']

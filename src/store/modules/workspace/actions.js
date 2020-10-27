@@ -15,22 +15,22 @@ const workspaceActions = {
       mutation: 'setWorkspace'
     })
   },
-  verifyAvailability({ commit }, subDomain) {
+  verifyAvailability({ _ }, subDomain) {
     return axiosDispatcher({
       url: `${workspacesPath}/sub-domain-availability`,
       method: 'PUT',
       data: { subDomain }
     })
   },
-  createWorkpace({ commit }, object) {
+  createWorkpace({ _ }, object) {
     return axiosDispatcher({
-      url: `${workspacesPath}/workspaces`,
+      url: `${workspacesPath}`,
       method: 'POST',
       data: object,
       mutation: 'setWorkspace'
     })
   },
-  editWorkpace({ commit, state }, params) {
+  editWorkpace({ state }, params) {
     const data = {
       id: state.id,
       teamName: state.teamName,
@@ -47,7 +47,7 @@ const workspaceActions = {
       data
     })
   },
-  changeTeamName({ commit }, data) {
+  changeTeamName({ _ }, data) {
     return axiosDispatcher({
       url: `${workspacesPath}/teamName`,
       method: 'patch',
@@ -61,13 +61,13 @@ const workspaceActions = {
       data: teammates
     })
   },
-  readyWorkspace({ commit }, workspace) {
+  readyWorkspace({ _ }, workspace) {
     return axiosDispatcher({
       url: `${workspacesPath}/ready/${workspace}`,
       method: 'PUT'
     })
   },
-  getWorkspaceMembers({ commit, dispatch }) {
+  getWorkspaceMembers({ _ }) {
     return axiosDispatcher({
       url: `${workspacesPath}/members?size=999&`,
       mutation: 'setWorkspaceMembers'
@@ -76,27 +76,27 @@ const workspaceActions = {
   getWorkspaces({ _ }) {
     return axiosDispatcher({ url: `${workspacesPath}?size=999&` })
   },
-  removeWorkspaceMember({ commit }, id) {
+  removeWorkspaceMember({ _ }, id) {
     return axiosDispatcher({
       url: `${workspacesPath}/members/${id}`,
       method: 'DELETE'
     })
   },
-  editWorkspaceMember({ commit }, member) {
+  editWorkspaceMember({ _ }, member) {
     return axiosDispatcher({
       url: `${workspacesPath}/members/`,
       method: 'PUT',
       data: member
     })
   },
-  syncInbox({ commit }, object) {
+  syncInbox({ _ }, object) {
     return axiosDispatcher({
       url: `${workspacesPath}/inboxes`,
       method: 'POST',
       data: object
     })
   },
-  getMyStrategies({ commit }) {
+  getMyStrategies({ _ }) {
     return axiosDispatcher({
       url: `${workspacesPath}/strategies`,
       mutation: 'setImportedStrategies'
@@ -109,7 +109,7 @@ const workspaceActions = {
       data: blackList
     })
   },
-  adminWorkspaces({ commit }, params) {
+  adminWorkspaces({ _ }, params) {
     return new Promise((resolve, reject) => {
       const headers = {}
       if (params.headers && Object.keys(params.headers).length) headers.headers = params.headers
@@ -129,7 +129,7 @@ const workspaceActions = {
       })
     })
   },
-  adminWorkspaceUsers({ commit }, params) {
+  adminWorkspaceUsers({ _ }, params) {
     return new Promise((resolve, reject) => {
       const headers = {}
       if (params.headers && Object.keys(params.headers).length) headers.headers = params.headers

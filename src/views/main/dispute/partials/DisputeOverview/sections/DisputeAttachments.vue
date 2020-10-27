@@ -106,7 +106,7 @@
 </template>
 
 <script>
-import { filterByTerm } from '@/utils/jusUtils'
+import { filterByTerm } from '@/utils'
 import { JusDragArea } from '@/components/JusDragArea'
 import { mapGetters, mapActions } from 'vuex'
 

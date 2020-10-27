@@ -1,5 +1,5 @@
 import axiosDispatcher from '@/store/axiosDispatcher'
-import { buildQuery } from '@/utils/jusUtils'
+import { buildQuery } from '@/utils'
 
 const strategyPath = '/api/strategy'
 

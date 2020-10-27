@@ -64,7 +64,7 @@
 </template>
 
 <script>
-import { getDocumentStep } from '@/utils/jusUtils'
+import { getDocumentStep } from '@/utils'
 import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'DisputeTips',

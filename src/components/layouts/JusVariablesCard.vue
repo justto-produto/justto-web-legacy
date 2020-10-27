@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import { filterByTerm } from '@/utils/jusUtils'
+import { filterByTerm } from '@/utils'
 
 export default {
   name: 'JusVariablesCard',
