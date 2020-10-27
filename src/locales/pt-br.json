@@ -171,7 +171,11 @@
     "RENEGOTIATE": "retornar para negociação",
     "EDIT-NEGOTIATORS": "editar negociadores",
     "DROP_LAWSUIT": "confirmar baixa definitiva",
-    "START_NEGOTIATON": "inicar negociação"
+    "START_NEGOTIATON": "inicar negociação",
+    "SEND_BILK_MESSAGE": "Enviar mensagens em massa",
+    "tooltip": {
+      "BULK_COMPOSE_MESSAGE": "Compor mensagem em massa"
+    }
   },
   "fields": {
     "claimantParty": "Parte contrária",
