@@ -177,34 +177,7 @@ export default {
   },
   beforeMount() {
     this.getMyWorkspaces()
-    if (!this.loggedPersonHasName) {
-      const validator = (value) => {
-        if (!value || value.length < 3) return 'Ops, o nome precisa ter mais de duas letras'
-        else if (!value.match(/^[^!@#$%&*(){}[\]/|\\_<>?¢£¬§=+]+$/)) return 'Ops, o nome não pode conter caracteres especiais'
-        else return true
-      }
-      this.$prompt('Por favor, insira seu nome', 'Bem vindo(a)', {
-        confirmButtonText: 'Ok',
-        inputValidator: validator,
-        inputErrorMessage: 'Ops, insira um nome válido',
-        showCancelButton: false,
-        closeOnClickModal: false,
-        closeOnPressEscape: false,
-        showClose: false
-      }).then(({ value }) => {
-        const loggetPersonId = this.$store.getters.loggedPersonId
-        this.$store.dispatch('changePersonName', {
-          person: { id: loggetPersonId, name: value },
-          isEditingLoggedPerson: true
-        }).then(() => {
-          this.$jusNotification({
-            title: 'Yay!',
-            message: 'Nome alterado com sucesso.',
-            type: 'success'
-          })
-        }).catch(error => this.$jusNotification({ error }))
-      })
-    }
+    this.setPersonName()
   },
   methods: {
     ...mapActions(['setGhostMode']),
@@ -255,6 +228,7 @@ export default {
           this.$store.commit('setDisputesTab', '2')
           this.$router.go('/management')
           this.changeWorkspaceDialogVisible = true
+          this.setPersonName()
         }).catch(error => {
           this.$jusNotification({ error })
         }).finally(() => {
@@ -294,6 +268,36 @@ export default {
           reject(error)
         })
       })
+    },
+    setPersonName() {
+      if (!this.loggedPersonHasName) {
+        const validator = (value) => {
+          if (!value || value.length < 3) return 'Ops, o nome precisa ter mais de duas letras'
+          else if (!value.match(/^[^!@#$%&*(){}[\]/|\\_<>?¢£¬§=+]+$/)) return 'Ops, o nome não pode conter caracteres especiais'
+          else return true
+        }
+        this.$prompt('Por favor, insira seu nome', 'Bem vindo(a)', {
+          confirmButtonText: 'Ok',
+          inputValidator: validator,
+          inputErrorMessage: 'Ops, insira um nome válido',
+          showCancelButton: false,
+          closeOnClickModal: false,
+          closeOnPressEscape: false,
+          showClose: false
+        }).then(({ value }) => {
+          const loggetPersonId = this.$store.getters.loggedPersonId
+          this.$store.dispatch('changePersonName', {
+            person: { id: loggetPersonId, name: value },
+            isEditingLoggedPerson: true
+          }).then(() => {
+            this.$jusNotification({
+              title: 'Yay!',
+              message: 'Nome alterado com sucesso.',
+              type: 'success'
+            })
+          }).catch(error => this.$jusNotification({ error }))
+        })
+      }
     }
   }
 }
