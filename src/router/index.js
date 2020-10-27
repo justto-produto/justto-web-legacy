@@ -10,7 +10,8 @@ const router = new Router({
       component: () => import(/* webpackChunkName: "mainContainer" */ '@/views/main/MainContainer'),
       meta: {
         requiresAuth: true,
-        trackPage: false
+        trackPage: false,
+        title: 'Justto'
       },
       children: [
         {
