@@ -133,7 +133,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['disputeAttachments', 'loadingAttachments', 'hideLoadingAttachments']),
+    ...mapGetters(['disputeAttachments', 'loadingAttachments']),
 
     filteredDisputeAttachments() {
       return filterByTerm(this.attachmentFilterTerm, this.disputeAttachments, 'name')
@@ -148,7 +148,7 @@ export default {
     this.initState()
   },
   methods: {
-    ...mapActions(['deleteAttachment', 'getDisputeAttachments']),
+    ...mapActions(['deleteAttachment', 'getDisputeAttachments', 'hideLoadingAttachments']),
 
     initState() {
       const { id } = this.$route.params
