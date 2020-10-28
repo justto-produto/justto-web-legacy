@@ -1,4 +1,4 @@
-import { axiosDispatch } from '@/utils'
+import { axiosDispatch } from '@/utils/'
 
 const personsPath = 'api/persons'
 
