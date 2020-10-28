@@ -101,7 +101,7 @@ export default {
       console.error('Erro em dispute.campaing', this.dispute, error)
     }
     try {
-      if (this.dispute.lastInteraction.createAt.dateTime) {}
+      if (this.dispute.lastInteraction && this.dispute.lastInteraction.createAt.dateTime) {}
     } catch (error) {
       console.error('Erro em dispute.lastInteraction', this.dispute.lastInteraction, error)
     }
