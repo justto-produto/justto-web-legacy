@@ -1,6 +1,9 @@
+import Vue from 'vue'
+
 const personMutations = {
   setLoggedPerson(state, loggedPerson) {
-    state.loggedPerson = loggedPerson
+    Vue.set(state, 'loggedPerson', loggedPerson)
+    // state.loggedPerson = loggedPerson
     localStorage.setItem('jusperson', JSON.stringify(loggedPerson))
   },
   clearLoggedPerson(state) {

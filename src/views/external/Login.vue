@@ -238,7 +238,6 @@ export default {
           this.$store.dispatch('login', this.loginForm)
             .then(() => {
               this.$store.dispatch('myAccount').then(this.getMyWorkspaces).catch(error => {
-                console.log('ERROR', error)
                 this.$jusNotification({ error })
                 this.showLoading = false
               })
@@ -280,6 +279,7 @@ export default {
       })
     },
     getMembersAndRedirect(response) {
+      console.log(response)
       // SEGMENT TRACK
       this.$jusSegment('Seleção de Workspace', {
         workspace: response.workspace.name,
