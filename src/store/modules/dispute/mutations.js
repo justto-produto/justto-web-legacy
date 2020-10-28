@@ -213,7 +213,14 @@ const disputeMutations = {
       log: new Date()
     })
   },
-  cleanLastAccess: (state) => (state.lastAccess = {})
+  cleanLastAccess: (state) => (state.lastAccess = {}),
+  setDisputeRole: (state, disputeRole) => {
+    state.dispute.disputeRoles.map((dr, index) => {
+      if (dr.id === disputeRole.id) {
+        Vue.set(state.dispute.disputeRoles, index, disputeRole)
+      }
+    })
+  }
 }
 
 export default disputeMutations

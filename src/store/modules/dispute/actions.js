@@ -612,7 +612,23 @@ const disputeActions = {
     // url: 'api/disputes/prescriptions',
     url: `${disputesPath}/prescriptions-fix-index/1`,
     mutation: 'setPrescriptionsList'
-  })
+  }),
+  addPhoneToDisputeRole({ _ }, { disputeId, disputeRoleId, value }) {
+    return axiosDispatch({
+      url: `${disputesPath}/${disputeId}/dispute-roles/${disputeRoleId}/add-phone`,
+      method: 'PUT',
+      data: { value },
+      mutation: 'setDisputeRole'
+    })
+  },
+  addOabToDisputeRole({ _ }, { disputeId, disputeRoleId, number, state }) {
+    return axiosDispatch({
+      url: `${disputesPath}/${disputeId}/dispute-roles/${disputeRoleId}/add-oab`,
+      method: 'PUT',
+      data: { number, state },
+      mutation: 'setDisputeRole'
+    })
+  }
 }
 
 export default disputeActions

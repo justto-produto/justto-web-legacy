@@ -1812,7 +1812,9 @@ export default {
       disputeStatuses: 'disputeStatuses',
       getDisputeProperties: 'disputeProprieties',
       searchedLawyers: 'searchedLawyers',
-      searchLawyersLoading: 'searchLawyersLoading'
+      searchLawyersLoading: 'searchLawyersLoading',
+      disputeBankAccounts: 'disputeBankAccounts',
+      dispute: 'dispute'
     }),
     canEditBirthday() {
       return this.roleForm.party === 'CLAIMANT' && this.roleForm.personType === 'NATURAL' && this.roleForm.roles && (this.roleForm.roles.includes('LAWYER') || this.roleForm.roles.includes('PARTY'))
@@ -1853,12 +1855,6 @@ export default {
         return [{ validator: validateZero, message: 'Valor precisa ser acima de 0', trigger: 'submit' }]
       }
       return []
-    },
-    dispute() {
-      return this.$store.getters.dispute
-    },
-    disputeBankAccounts() {
-      return this.$store.getters.disputeBankAccounts
     },
     disputeBankAccountsIds: {
       get() {
@@ -1979,7 +1975,9 @@ export default {
       'hideSearchLawerLoading',
       'removeDispute',
       'searchLawyers',
-      'setDisputeparty'
+      'setDisputeparty',
+      'addPhoneToDisputeRole',
+      'addOabToDisputeRole'
     ]),
 
     updateDisputeRoleField(disputeRole, { field, value }) {
@@ -1992,7 +1990,20 @@ export default {
         }).length > 0
 
         if (!alreadyExists) {
-          this.addNewOab(disputeRole, value)
+          this.addOabToDisputeRole({
+            disputeId: this.dispute.id,
+            disputeRoleId: disputeRole.id,
+            number,
+            state
+          }).then(() => {
+            this.$jusNotification({
+              title: 'Yay!',
+              message: 'Nº de OAB adicionada.',
+              type: 'success'
+            })
+          }).catch(error => {
+            this.$jusNotification({ error })
+          }).finally(this.$forceUpdate)
         } else {
           message = 'Este nº de OAB já esta em uso.'
         }
@@ -2007,7 +2018,19 @@ export default {
           return phone.number === `55 ${value}`.split(' ').join('')
         }).length > 0
         if (!alreadyExists) {
-          this.addNewPhone(disputeRole, value)
+          this.addPhoneToDisputeRole({
+            disputeId: this.dispute.id,
+            disputeRoleId: disputeRole.id,
+            value
+          }).then(() => {
+            this.$jusNotification({
+              title: 'Yay!',
+              message: 'Nº de Telefone adicionada.',
+              type: 'success'
+            })
+          }).catch(error => {
+            this.$jusNotification({ error })
+          }).finally(this.$forceUpdate)
         } else {
           message = 'Este telefone já esta em uso.'
         }
@@ -2019,26 +2042,6 @@ export default {
           type: 'success'
         })
       }
-    },
-
-    addNewOab(disputeRole, value) {
-      const newRole = {
-        ...disputeRole,
-        oabs: [...disputeRole.oabs, { ...value }]
-      }
-      this.$store.dispatch('editRole', {
-        disputeId: this.dispute.id,
-        disputeRole: newRole
-      }).then(() => {
-        this.getDispute(this.dispute.id)
-        this.$jusNotification({
-          title: 'Yay!',
-          message: 'Nº de OAB Adicionado.',
-          type: 'success'
-        })
-      }).catch(error => {
-        this.$jusNotification({ error })
-      })
     },
 
     addNewDocumentNumber(disputeRole, documentNumber) {
@@ -2054,26 +2057,6 @@ export default {
         this.$jusNotification({
           title: 'Yay!',
           message: 'Documento Adicionado.',
-          type: 'success'
-        })
-      }).catch(error => {
-        this.$jusNotification({ error })
-      })
-    },
-
-    addNewPhone(disputeRole, number) {
-      const newRole = {
-        ...disputeRole,
-        phones: [...disputeRole.phones, { number }]
-      }
-      this.$store.dispatch('editRole', {
-        disputeId: this.dispute.id,
-        disputeRole: newRole
-      }).then(() => {
-        this.getDispute(this.dispute.id)
-        this.$jusNotification({
-          title: 'Yay!',
-          message: 'Telefone Adicionado com sucesso.',
           type: 'success'
         })
       }).catch(error => {
