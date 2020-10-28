@@ -94,18 +94,6 @@ export default {
       return this.dispute.archived
     }
   },
-  mounted() {
-    try {
-      if (this.dispute.campaign.strategy) {}
-    } catch (error) {
-      console.error('Erro em dispute.campaing', this.dispute, error)
-    }
-    try {
-      if (this.dispute.lastInteraction && this.dispute.lastInteraction.createAt.dateTime) {}
-    } catch (error) {
-      console.error('Erro em dispute.lastInteraction', this.dispute.lastInteraction, error)
-    }
-  },
   methods: {
     getLastInteraction: (i) => getLastInteraction(i),
     getClaimants(disputeRoles, party, role) {
