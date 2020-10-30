@@ -408,7 +408,10 @@
               <i class="el-icon-user-solid" />
             </el-tooltip>
           </span>
-          <a @click="openAssociationModal()">
+          <a
+            v-if="contactsMetadataCount"
+            @click="openAssociationModal()"
+          >
             {{ $tc('dispute.overview.label.contact-found', contactsMetadataCount, { count: contactsMetadataCount }) }} {{ $t('dispute.overview.label.in-the-attachments') }}
           </a>
           <el-collapse
