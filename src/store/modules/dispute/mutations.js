@@ -26,13 +26,20 @@ const disputeMutations = {
   setDispute(state, disputeVM) {
     state.dispute = disputeVM
   },
-  setDisputeProprieties(state, disputeProprieties) {
+  setDisputeProperty(state, property) {
+    const key = Object.keys(property)[0]
+    Vue.set(state.dispute.properties, key, property[key])
+    Vue.set(state.disputeProperties, key, property[key])
+  },
+  setDisputeProperties(state, disputeProperties) {
     // eslint-disable-next-line no-prototype-builtins
-    if (disputeProprieties.hasOwnProperty('ENRICHED')) {
-      disputeProprieties.ENRIQUECIDO = disputeProprieties.ENRICHED ? 'SIM' : 'NÃO'
-      delete disputeProprieties.ENRICHED
+    if (disputeProperties.hasOwnProperty('ENRICHED')) {
+      disputeProperties.ENRIQUECIDO = disputeProperties.ENRICHED ? 'SIM' : 'NÃO'
+      delete disputeProperties.ENRICHED
     }
-    state.disputeProprieties = disputeProprieties
+    state.disputeProperties = disputeProperties
+    state.dispute.properties = disputeProperties
+    // Vue.set(state.dispute, 'properties', disputeProperties)
   },
   setDisputeAttachments(state, disputeAttachments) {
     state.disputeAttachments = disputeAttachments || []
@@ -50,7 +57,7 @@ const disputeMutations = {
   clearDispute(state) {
     state.dispute = { id: 0 }
     state.disputeAttachments = []
-    state.disputeProprieties = {}
+    state.disputeProperties = {}
   },
   clearDisputeOccurrences(state) {
     state.occurrences.length = 0
@@ -220,6 +227,9 @@ const disputeMutations = {
         Vue.set(state.dispute.disputeRoles, index, disputeRole)
       }
     })
+  },
+  setDisputeMetadata: (state, metadata) => {
+    Vue.set(state, 'metadata', metadata)
   }
 }
 
