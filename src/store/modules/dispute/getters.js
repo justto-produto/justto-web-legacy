@@ -14,7 +14,7 @@ const disputeGetters = {
   disputeStatuses: state => state.statuses,
   disputeHasNew: state => state.hasNew,
   disputeTimeline: state => state.timeline,
-  disputeMetadata: ({ metadata }) => metadata,
+  disputeMetadata: state => state.metadata,
   exportHistory: state => state.exportHistory,
   respondents: state => state.respondents,
   filterSummary: _ => (disputePhase, summarys) => {
