@@ -2,12 +2,12 @@
   <div
     v-loading="loading"
     element-loading-background="rgba(247, 247, 247, 0.7)"
-    class="dispute-proprieties-view"
+    class="dispute-properties-view"
   >
     <div
-      v-for="(propriety, index) in disputeProprietiesList"
+      v-for="(propriety, index) in disputePropertiesList"
       :key="lineKey + index"
-      class="dispute-proprieties-view__line"
+      class="dispute-properties-view__line"
     >
       <div class="edit">
         <!-- KEY -->
@@ -61,8 +61,8 @@
     </div>
     <el-tooltip content="Propriedade não editável">
       <div
-        v-if="disputeProprieties['ENRIQUECIDO']"
-        class="dispute-proprieties-view__line"
+        v-if="disputeProperties['ENRIQUECIDO']"
+        class="dispute-properties-view__line"
       >
         <div class="key">
           <div class="label">
@@ -71,12 +71,12 @@
         </div>
         <div class="value">
           <div class="label">
-            {{ disputeProprieties['ENRIQUECIDO'] }}
+            {{ disputeProperties['ENRIQUECIDO'] }}
           </div>
         </div>
       </div>
     </el-tooltip>
-    <div class="dispute-proprieties-view__line mt20">
+    <div class="dispute-properties-view__line mt20">
       <div class="key">
         <el-autocomplete
           v-model="newKey"
@@ -110,7 +110,7 @@
 
 <script>
 export default {
-  name: 'DisputeProprieties',
+  name: 'DisputeProperties',
   data() {
     return {
       loading: false,
@@ -124,13 +124,13 @@ export default {
     }
   },
   computed: {
-    disputeProprietiesList() {
+    disputePropertiesList() {
       const list = []
-      for (const proprieties of Object.entries(this.disputeProprieties)) {
-        if (!['ERROR_COUT', 'ENRIQUECIDO'].includes(proprieties[0])) {
+      for (const properties of Object.entries(this.disputeProperties)) {
+        if (!['ERROR_COUT', 'ENRIQUECIDO'].includes(properties[0])) {
           list.push({
-            key: proprieties[0],
-            value: proprieties[1]
+            key: properties[0],
+            value: properties[1]
           })
         }
       }
@@ -139,14 +139,16 @@ export default {
         else return a.key > b.key ? 1 : -1
       })
     },
-    disputeProprieties: {
+    disputeProperties: {
       get() {
-        return this.$store.getters.disputeProprieties
+        return this.$store.getters.disputeProperties
       },
-      set(proprieties) {
-        this.$store.dispatch('putDisputeProprieties', {
-          disputeId: this.$store.getters.disputeId,
-          data: proprieties
+      set(properties) {
+        const { id } = this.$route.params
+        console.log('properties', properties)
+        this.$store.dispatch('putDisputeProperties', {
+          disputeId: id,
+          data: properties
         }).finally(() => {
           this.newKey = ''
           this.newValue = ''
@@ -167,10 +169,10 @@ export default {
       this.lineKey += 1
       if (key !== this.editable) {
         this.loading = true
-        const newDisputeProprieties = JSON.parse(JSON.stringify(this.disputeProprieties))
-        newDisputeProprieties[this.editable] = newDisputeProprieties[key]
-        delete newDisputeProprieties[key]
-        this.disputeProprieties = newDisputeProprieties
+        const newDisputeProperties = JSON.parse(JSON.stringify(this.disputeProperties))
+        newDisputeProperties[this.editable] = newDisputeProperties[key]
+        delete newDisputeProperties[key]
+        this.disputeProperties = newDisputeProperties
       }
     },
     blurValue(key, value, index) {
@@ -178,23 +180,24 @@ export default {
       this.lineKey += 1
       if (value !== this.editable) {
         this.loading = true
-        const newDisputeProprieties = JSON.parse(JSON.stringify(this.disputeProprieties))
-        newDisputeProprieties[key] = this.editable
-        this.disputeProprieties = newDisputeProprieties
+        const newDisputeProperties = JSON.parse(JSON.stringify(this.disputeProperties))
+        newDisputeProperties[key] = this.editable
+        this.disputeProperties = newDisputeProperties
       }
     },
     removePropriety(key) {
+      console.log(key)
       this.loading = true
-      const newDisputeProprieties = JSON.parse(JSON.stringify(this.disputeProprieties))
-      delete newDisputeProprieties[key]
-      this.disputeProprieties = newDisputeProprieties
+      const newDisputeProperties = JSON.parse(JSON.stringify(this.disputeProperties))
+      delete newDisputeProperties[key]
+      this.disputeProperties = newDisputeProperties
     },
     newPropriety() {
       if (this.newKey && this.newValue) {
         this.loading = true
-        const newDisputeProprieties = JSON.parse(JSON.stringify(this.disputeProprieties))
-        newDisputeProprieties[this.newKey] = this.newValue
-        this.disputeProprieties = newDisputeProprieties
+        const newDisputeProperties = JSON.parse(JSON.stringify(this.disputeProperties))
+        newDisputeProperties[this.newKey] = this.newValue
+        this.disputeProperties = newDisputeProperties
       }
     },
     getSuggestionsKeys(queryString, cb) {
@@ -214,7 +217,7 @@ export default {
 </script>
 
 <style lang="scss">
-.dispute-proprieties-view {
+.dispute-properties-view {
   padding-top: 10px;
   overflow-y: auto;
   height: calc(100% - 24px);
