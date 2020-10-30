@@ -194,6 +194,7 @@ export default {
       }, 1000)
     },
     search(term, cb) {
+      if (term.length < 3 || !Number(term)) return
       clearTimeout(this.termDebounce)
       this.termDebounce = setTimeout(() => {
         this.$store.dispatch('searchDisputes', { key: 'term', value: term }).then(response => {
