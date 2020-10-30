@@ -122,10 +122,7 @@
                   {{ email.address }}
                 </span>
               </span>
-              <span class="dialog-body__item-arow">
-                <!-- <i class="el-icon-minus" />
-                <i class="el-icon-arrow-right" /> -->
-              </span>
+              <span class="dialog-body__item-arow" />
               <div class="dialog-body__item-select">
                 <el-select
                   v-model="email.associateWith"
@@ -168,6 +165,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 export default {
+  name: 'AssociateContactsModal',
   props: {
     value: {
       required: true,
