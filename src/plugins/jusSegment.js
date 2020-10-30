@@ -3,26 +3,26 @@ import store from '@/store'
 
 const JusSegment = {
   install(Vue, options) {
-    function SegmentLog(event, proprieties) {
+    function SegmentLog(event, properties) {
       this.event = event
-      this.proprieties = proprieties
+      this.properties = properties
     }
     Vue.prototype.$jusSegment = (event, prop) => {
-      const proprieties = {
+      const properties = {
         userId: store.getters.accountEmail,
         workspace: store.getters.workspaceName,
         team: store.getters.workspaceTeamName,
         source: 'front'
       }
-      Object.assign(proprieties, prop)
-      window.analytics.track(event, proprieties, () => {
+      Object.assign(properties, prop)
+      window.analytics.track(event, properties, () => {
         if (process.env.NODE_ENV === 'development') {
-          console.table(new SegmentLog(event, proprieties))
+          console.table(new SegmentLog(event, properties))
         }
       })
     }
     Vue.prototype.$jusSegmentPage = (page) => {
-      const proprieties = {
+      const properties = {
         userId: store.getters.accountEmail,
         workspace: store.getters.workspaceName,
         team: store.getters.workspaceTeamName,
@@ -30,7 +30,7 @@ const JusSegment = {
       }
       window.analytics.page(page, () => {
         if (process.env.NODE_ENV === 'development') {
-          console.table(new SegmentLog(page, proprieties))
+          console.table(new SegmentLog(page, properties))
         }
       })
     }

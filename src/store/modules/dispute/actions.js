@@ -9,6 +9,9 @@ const disputesPath = 'api/disputes'
 const disputeActions = {
   SOCKET_ADD_DISPUTE({ commit, state }, disputeChanged) {
     if (state.dispute.id === disputeChanged.id) {
+      if (!disputeChanged.properties) {
+        disputeChanged.properties = state.dispute.properties
+      }
       state.dispute = disputeChanged
     } else {
       const disputeIndex = state.disputes.findIndex(d => disputeChanged.id === d.id)
@@ -42,7 +45,7 @@ const disputeActions = {
   getDispute({ commit, dispatch }, id) {
     return new Promise((resolve, reject) => {
       commit('clearDispute')
-      dispatch('getDisputeProprieties', id)
+      dispatch('getDisputeProperties', id)
       // eslint-disable-next-line
       axios.get(`${disputesPath}/${id}/vm`)
         .then(response => {
@@ -111,18 +114,18 @@ const disputeActions = {
         })
     })
   },
-  getDisputeProprieties({ commit }, disputeId) {
+  getDisputeProperties({ commit }, disputeId) {
     return axiosDispatch({
       url: `${disputesPath}/${disputeId}/properties`,
-      mutation: 'setDisputeProprieties'
+      mutation: 'setDisputeProperties'
     })
   },
-  putDisputeProprieties({ commit }, params) {
+  putDisputeProperties({ commit }, params) {
     return axiosDispatch({
       url: `${disputesPath}/${params.disputeId}/properties`,
       method: 'PUT',
       data: params.data,
-      mutation: 'setDisputeProprieties'
+      mutation: 'setDisputeProperties'
     })
   },
   getDisputeAttachments({ commit }, disputeId) {
@@ -621,12 +624,34 @@ const disputeActions = {
       mutation: 'setDisputeRole'
     })
   },
+  addEmailToDisputeRole({ _ }, { disputeId, disputeRoleId, value }) {
+    return axiosDispatch({
+      url: `${disputesPath}/${disputeId}/dispute-roles/${disputeRoleId}/add-email`,
+      method: 'PUT',
+      data: { value },
+      mutation: 'setDisputeRole'
+    })
+  },
   addOabToDisputeRole({ _ }, { disputeId, disputeRoleId, number, state }) {
     return axiosDispatch({
       url: `${disputesPath}/${disputeId}/dispute-roles/${disputeRoleId}/add-oab`,
       method: 'PUT',
       data: { number, state },
       mutation: 'setDisputeRole'
+    })
+  },
+  setDisputeProperty({ _ }, { disputeId, key, value }) {
+    return axiosDispatch({
+      url: `${disputesPath}/${disputeId}/properties/${key}`,
+      method: 'PUT',
+      data: { value },
+      mutation: 'setDisputeProperty'
+    })
+  },
+  getDisputeMetadata({ _ }, disputeId) {
+    return axiosDispatch({
+      url: `api/office/documents/dispute/${disputeId}/metadata`,
+      mutation: 'setDisputeMetadata'
     })
   }
 }

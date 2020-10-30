@@ -408,6 +408,12 @@
               <i class="el-icon-user-solid" />
             </el-tooltip>
           </span>
+          <a
+            v-if="contactsMetadataCount"
+            @click="openAssociationModal()"
+          >
+            {{ $tc('dispute.overview.label.contact-found', contactsMetadataCount, { count: contactsMetadataCount }) }} {{ $t('dispute.overview.label.in-the-attachments') }}
+          </a>
           <el-collapse
             ref="roleCollapse"
             v-model="selectedRole"
@@ -794,7 +800,7 @@
           </el-collapse>
         </el-tab-pane>
         <el-tab-pane
-          name="proprieties"
+          name="properties"
           class="dispute-overview-view__tabs-content"
         >
           <span slot="label">
@@ -802,7 +808,7 @@
               <i class="el-icon-s-tools" />
             </el-tooltip>
           </span>
-          <DisputeProprieties />
+          <DisputeProperties />
         </el-tab-pane>
         <el-tab-pane
           name="attachments"
@@ -1658,6 +1664,9 @@
         v-model="disputeTimelineModal"
         :code="dispute.code"
       />
+      <associate-contacts-modal
+        v-model="showAssociateContacts"
+      />
     </div>
   </div>
 </template>
@@ -1675,11 +1684,12 @@ export default {
     DisputeAttachments,
     DisputeAddRole: () => import('../DisputeAddRole'),
     DisputeCodeLink: () => import('@/components/buttons/DisputeCodeLink'),
-    DisputeProprieties: () => import('../DisputeProprieties'),
+    DisputeProperties: () => import('../DisputeProperties'),
     JusTags: () => import('@/components/others/JusTags'),
     JusTimeline: () => import('@/components/JusTimeline/JusTimeline'),
     JusVexatiousAlert: () => import('@/components/dialogs/JusVexatiousAlert'),
-    LawyerDetail: () => import('./sections/LawyerDetail')
+    LawyerDetail: () => import('./sections/LawyerDetail'),
+    AssociateContactsModal: () => import('./sections/AssociateContactsModal')
   },
   props: {
     loading: {
@@ -1810,12 +1820,16 @@ export default {
   computed: {
     ...mapGetters({
       disputeStatuses: 'disputeStatuses',
-      getDisputeProperties: 'disputeProprieties',
       searchedLawyers: 'searchedLawyers',
       searchLawyersLoading: 'searchLawyersLoading',
       disputeBankAccounts: 'disputeBankAccounts',
+      disputeMetadata: 'disputeMetadata',
       dispute: 'dispute'
     }),
+    contactsMetadataCount() {
+      const { phones, emails } = this.disputeMetadata
+      return phones.length + emails.length
+    },
     canEditBirthday() {
       return this.roleForm.party === 'CLAIMANT' && this.roleForm.personType === 'NATURAL' && this.roleForm.roles && (this.roleForm.roles.includes('LAWYER') || this.roleForm.roles.includes('PARTY'))
     },
@@ -1939,6 +1953,27 @@ export default {
     },
     isAccepted() {
       return this.dispute ? ['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(this.dispute.status) : false
+    },
+    showAssociateContacts: {
+      get() {
+        return (
+          this.dispute &&
+          this.dispute.properties &&
+          (
+            !Object.keys(this.dispute.properties).includes('CONTATOS ASSOCIADOS') ||
+            this.dispute.properties['CONTATOS ASSOCIADOS'] === 'NAO'
+          )
+        ) || false
+      },
+      set(flag) {
+        this.setDisputeProperty({
+          disputeId: this.dispute.id,
+          key: 'CONTATOS ASSOCIADOS',
+          value: !flag ? 'SIM' : 'NAO'
+        }).then(() => {
+          this.getDisputeMetadata(this.dispute.id)
+        })
+      }
     }
   },
   watch: {
@@ -1964,12 +1999,12 @@ export default {
     }
   },
   mounted() {
-    this.populateTimeline()
+    this.init()
   },
   methods: {
     ...mapActions([
       'getDispute',
-      'getDisputeProprieties',
+      'getDisputeProperties',
       'getDisputeStatuses',
       'getDisputeTimeline',
       'hideSearchLawerLoading',
@@ -1977,8 +2012,24 @@ export default {
       'searchLawyers',
       'setDisputeparty',
       'addPhoneToDisputeRole',
-      'addOabToDisputeRole'
+      'addOabToDisputeRole',
+      'getDisputeMetadata',
+      'setDisputeProperty'
     ]),
+
+    init() {
+      const { id } = this.$route.params
+      this.getDisputeMetadata(id)
+      this.populateTimeline()
+    },
+
+    openAssociationModal() {
+      this.setDisputeProperty({
+        disputeId: this.dispute.id,
+        key: 'CONTATOS ASSOCIADOS',
+        value: 'NAO'
+      })
+    },
 
     updateDisputeRoleField(disputeRole, { field, value }) {
       let message = ''
@@ -2823,7 +2874,7 @@ export default {
           })
         }).finally(() => {
           this.isEditingRule = false
-          this.getDisputeProprieties(this.dispute.id)
+          this.getDisputeProperties(this.dispute.id)
         })
     }
   }

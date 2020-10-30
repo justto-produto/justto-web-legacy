@@ -204,15 +204,15 @@ router.beforeEach((to, from, next) => {
 
 router.afterEach((to, from) => {
   if (to.matched.some(record => record.meta.trackPage)) {
-    const proprieties = {
+    const properties = {
       userId: Store.getters.accountEmail,
       workspace: Store.getters.workspaceName,
       team: Store.getters.workspaceTeamName,
       source: 'front'
     }
-    window.analytics.page(to.name, proprieties, () => {
+    window.analytics.page(to.name, properties, () => {
       if (process.env.NODE_ENV === 'development') {
-        console.table({ page: to.name, proprieties })
+        console.table({ page: to.name, properties })
       }
     })
   }

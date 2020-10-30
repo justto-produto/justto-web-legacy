@@ -3,6 +3,12 @@
   "test": "teste",
   "isTyping": "está digitando",
   "dispute": {
+    "overview": {
+      "label": {
+        "contact-found": "{count} contato encontado | {count} contatos encontrados",
+        "in-the-attachments": "nos anexos"
+      }
+    },
     "moralDamage": "valor dano moral",
     "negotiatorEmail": "email do negociador",
     "mappedStrategy": "nome da estratégia",
