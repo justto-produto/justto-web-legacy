@@ -527,6 +527,7 @@ export default {
   watch: {
     '$route.params.id': function(id, oldId) {
       this.id = id.toString()
+      this.getDisputeMetadata(this.id)
       this.$socket.emit('unsubscribe', {
         headers: this.socketHeaders,
         channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.loggedPersonId + '/dispute/' + oldId + '/occurrence'
@@ -572,7 +573,8 @@ export default {
       'disputeSetVisualized',
       'getQuickReplyTemplates',
       'resetQuickReplyTemplate',
-      'archiveQuickReplyTemplate'
+      'archiveQuickReplyTemplate',
+      'getDisputeMetadata'
     ]),
     archiveTemplate(templateId) {
       this.archiveQuickReplyTemplate(templateId)
