@@ -249,7 +249,7 @@
           </el-col>
           <!-- MEIO DE INTERAÇÃO -->
           <el-col
-            v-if="isInteration"
+            v-if="isInteration || isAll"
             :span="12"
           >
             <el-form-item label="Meio de interação">
