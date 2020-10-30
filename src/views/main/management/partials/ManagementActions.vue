@@ -21,7 +21,19 @@
             plain
             @click="sendBatchAction(action.name)"
           >
-            {{ $t(`action.${action.name}`) }}
+            <el-tooltip
+              :disabled="!action.tooltip"
+              :content="$t(`action.tooltip.${action.tooltip}` || '')"
+            >
+              <jus-icon
+                v-if="action.icon"
+                :class="action.class"
+                :icon="action.icon"
+              />
+              <span v-else>
+                {{ $t(`action.${action.name}`) }}
+              </span>
+            </el-tooltip>
           </el-button>
         </span>
       </div>
@@ -235,15 +247,43 @@
         </el-button>
       </span>
     </el-dialog>
+    <el-dialog
+      :visible.sync="showBulkMessageDialog"
+      @before-close="closeBulkMessageDialog()"
+      class="dialog__bulk-message"
+      width="50%">
+      <span class="dialog-body__text-info">
+        <i class="el-icon-warning" />
+        Essa mensagem será enviada para a(s) {{ selectedIdsLength }} disputa(s) selecionada(s)
+      </span>
+      <ckeditor
+        ref="messageEditor"
+        v-model="message"
+        class="dialog-body__editor"
+        :config="editorConfig"
+      />
+      <span slot="footer">
+        <el-button @click="closeBulkMessageDialog()">Cancelar</el-button>
+        <el-button
+          type="primary"
+          @click="sendBulkMessage()">
+          Enviar
+        </el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { getTracktitleByAction } from '@/utils'
 import { mapGetters, mapActions } from 'vuex'
+import CKEditor from 'ckeditor4-vue'
 
 export default {
   name: 'ManagementActions',
+  components: {
+    ckeditor: CKEditor.component
+  },
   props: {
     activeTab: {
       type: String,
@@ -256,6 +296,7 @@ export default {
   },
   data() {
     return {
+      showBulkMessageDialog: false,
       chooseUnsettledDialogVisible: false,
       changeStrategyDialogVisible: false,
       changeNegotiatorDialogVisible: false,
@@ -266,14 +307,37 @@ export default {
       disputeNegotiatorMap: [],
       currentDisputeNegotiator: 0,
       allSelectedDisputes: 0,
+      message: '',
       unsettledType: '',
       deleteType: '',
       newStrategyId: '',
-      newExpirationDate: ''
+      newExpirationDate: '',
+      editorConfig: {
+        toolbarGroups: [
+          { name: 'document', groups: ['mode', 'document', 'doctools'] },
+          { name: 'clipboard', groups: ['clipboard', 'undo'] },
+          { name: 'editing', groups: ['find', 'selection', 'spellchecker', 'editing'] },
+          { name: 'forms', groups: ['forms'] },
+          { name: 'basicstyles', groups: ['basicstyles', 'cleanup'] },
+          { name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align', 'bidi', 'paragraph'] },
+          { name: 'links', groups: ['links'] },
+          { name: 'insert', groups: ['insert'] },
+          { name: 'styles', groups: ['styles'] },
+          { name: 'colors', groups: ['colors'] },
+          { name: 'tools', groups: ['tools'] },
+          { name: 'others', groups: ['others'] },
+          { name: 'about', groups: ['about'] }
+        ],
+        removeButtons: 'Save,NewPage,ExportPdf,Preview,Print,PasteFromWord,PasteText,Paste,Redo,Copy,Templates,Cut,Undo,Find,Replace,SelectAll,Scayt,Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,HiddenField,Superscript,Subscript,CopyFormatting,Indent,Outdent,Styles,TextColor,BGColor,Maximize,ShowBlocks,About,Format,Font,FontSize,Iframe,PageBreak,SpecialChar,Smiley,HorizontalRule,Table,Flash,Image,Unlink,Link,Anchor,Language,BidiRtl,BidiLtr,JustifyBlock,JustifyRight,JustifyCenter,JustifyLeft,CreateDiv',
+        removePlugins: 'elementspath,resize'
+      }
     }
   },
   computed: {
-    ...mapGetters(['disputeStatuses']),
+    ...mapGetters({
+      disputeStatuses: 'disputeStatuses',
+      strategies: 'strategyList'
+    }),
 
     selectedIdsComp: {
       get() {
@@ -300,11 +364,15 @@ export default {
         { name: 'DELETE', tabs: ['1', '2', '3', '4', '9'] },
         { name: 'RESEND_MESSAGE', tabs: ['1', '2', '3', '4', '9'] },
         { name: 'DROP_LAWSUIT', tabs: ['0'] },
-        { name: 'START_NEGOTIATON', tabs: ['0'] }
+        { name: 'START_NEGOTIATON', tabs: ['0'] },
+        {
+          name: 'SEND_BILK_MESSAGE',
+          tabs: ['1', '2', '3', '4', '9'],
+          tooltip: 'BULK_COMPOSE_MESSAGE',
+          class: 'icon-in-bulk',
+          icon: 'in-bulk'
+        }
       ]
-    },
-    strategies() {
-      return this.$store.getters.strategyList
     },
     selectedIdsLength() {
       return this.selectedIdsComp.length
@@ -367,6 +435,10 @@ export default {
         params.allSelected = true
         params.disputeIds = []
       }
+      this.dispatchAction(action, params)
+    },
+
+    dispatchAction(action, params) {
       this.$store.dispatch('sendBatchAction', params).then(response => {
         this.chooseDeleteDialogVisible = false
         this.chooseUnsettledDialogVisible = false
@@ -396,6 +468,29 @@ export default {
         this.clearSelection()
       })
     },
+
+    openBulkMessageCompose() {
+      this.showBulkMessageDialog = true
+    },
+
+    closeBulkMessageDialog() {
+      this.showBulkMessageDialog = false
+      this.message = ''
+      for (const instance of Object.values(window.CKEDITOR.instances)) {
+        instance.destroy()
+      }
+    },
+
+    sendBulkMessage() {
+      const { message } = this
+      this.dispatchAction('SEND_MESSAGE', {
+        type: 'SEND_MESSAGE',
+        disputeIds: this.selectedIds,
+        message
+      })
+      this.closeBulkMessageDialog()
+    },
+
     sendBatchAction(action) {
       if (action === 'UNSETTLED') {
         this.chooseUnsettledDialogVisible = true
@@ -411,6 +506,8 @@ export default {
         this.newExpirationDate = ''
       } else if (action === 'CHANGE_NEGOTIATOR') {
         this.checkDisputeNegotiators()
+      } else if (action === 'SEND_BILK_MESSAGE') {
+        this.openBulkMessageCompose()
       } else {
         const message = {
           title: this.$options.filters.capitalize(this.$t('action.' + action.toUpperCase())),
@@ -571,6 +668,24 @@ export default {
 </script>
 
 <style lang="scss">
+@import '@/styles/colors.scss';
+
+.icon-in-bulk {
+  height: 24px;
+}
+
+.dialog__bulk-message {
+  .el-dialog__body {
+    .dialog-body__text-info {
+      color: $--color-primary;
+    }
+
+    .dialog-body__editor {
+      margin-top: 16px;
+      height: 40vh;
+    }
+  }
+}
 .management-actions {
   overflow-x: auto;
   position: absolute;
