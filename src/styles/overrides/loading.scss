@@ -2,11 +2,14 @@
   background: linear-gradient(-45deg, rgba(148, 97, 247, 0.1), rgba(255, 147, 0, 0.1), rgba(148, 97, 247, 0.1), rgba(255, 147, 0, 0.1));
 	background-size: 400% 400%;
 	animation: gradient 15s ease infinite;
+
   .el-loading-text {
     color: white;
     font-size: 24px;
     white-space: pre-line;
+    padding: 0 40px;
   }
+
   svg {
     display: none;
   }
