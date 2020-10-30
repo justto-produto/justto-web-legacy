@@ -22,8 +22,8 @@
             @click="sendBatchAction(action.name)"
           >
             <el-tooltip
-              v-if="action.tooltip"
-              :content="$t(`action.tooltip.${action.tooltip}`)"
+              :disabled="!action.tooltip"
+              :content="$t(`action.tooltip.${action.tooltip}` || '')"
             >
               <jus-icon
                 v-if="action.icon"
@@ -34,9 +34,6 @@
                 {{ $t(`action.${action.name}`) }}
               </span>
             </el-tooltip>
-            <span v-else>
-              {{ $t(`action.${action.name}`) }}
-            </span>
           </el-button>
         </span>
       </div>
@@ -252,7 +249,7 @@
     </el-dialog>
     <el-dialog
       :visible.sync="showBulkMessageDialog"
-      @before-close="cloeBulkMessageDialog()"
+      @before-close="closeBulkMessageDialog()"
       class="dialog__bulk-message"
       width="50%">
       <span class="dialog-body__text-info">
@@ -266,7 +263,7 @@
         :config="editorConfig"
       />
       <span slot="footer">
-        <el-button @click="cloeBulkMessageDialog()">Cancelar</el-button>
+        <el-button @click="closeBulkMessageDialog()">Cancelar</el-button>
         <el-button
           type="primary"
           @click="sendBulkMessage()">
@@ -377,9 +374,6 @@ export default {
         }
       ]
     },
-    // strategies() {
-    //   return this.$store.getters.strategyList
-    // },
     selectedIdsLength() {
       return this.selectedIdsComp.length
     },
@@ -413,12 +407,6 @@ export default {
   },
   methods: {
     ...mapActions(['getDisputeStatuses']),
-
-    destroyEditor() {
-      for (const instance of Object.values(window.CKEDITOR.instances)) {
-        instance.destroy()
-      }
-    },
 
     doAction(action) {
       const params = {
@@ -485,10 +473,12 @@ export default {
       this.showBulkMessageDialog = true
     },
 
-    cloeBulkMessageDialog() {
+    closeBulkMessageDialog() {
       this.showBulkMessageDialog = false
       this.message = ''
-      this.destroyEditor()
+      for (const instance of Object.values(window.CKEDITOR.instances)) {
+        instance.destroy()
+      }
     },
 
     sendBulkMessage() {
@@ -498,7 +488,7 @@ export default {
         disputeIds: this.selectedIds,
         message
       })
-      this.cloeBulkMessageDialog()
+      this.closeBulkMessageDialog()
     },
 
     sendBatchAction(action) {
