@@ -248,10 +248,10 @@
       </span>
     </el-dialog>
     <el-dialog
+      width="50%"
       :visible.sync="showBulkMessageDialog"
-      @before-close="closeBulkMessageDialog()"
       class="dialog__bulk-message"
-      width="50%">
+      @before-close="closeBulkMessageDialog()">
       <span class="dialog-body__text-info">
         <i class="el-icon-warning" />
         Essa mensagem será enviada para a(s) {{ selectedIdsLength }} disputa(s) selecionada(s)
