@@ -13,7 +13,7 @@
         >
           <template slot-scope="{ item }">
             <jus-dispute-resume
-              v-else-if="item.id"
+              v-if="item.id"
               :dispute="item"
             />
             <span
