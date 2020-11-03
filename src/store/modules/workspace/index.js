@@ -7,18 +7,20 @@ const profile = localStorage.getItem('jusprofile') || ''
 
 const workspaceModule = {
   state: {
-    id: workspace.id,
-    name: workspace.name,
-    teamName: workspace.teamName,
-    type: workspace.type,
-    status: workspace.status,
-    subdomain: workspace.subDomain,
-    profile: profile,
-    members: [],
-    redirectNewWorkspace: false,
-    blackList: workspace.blackList,
-    properties: workspace.properties || {},
-    defaultSigners: []
+    workspace: {
+      id: workspace.id,
+      name: workspace.name,
+      teamName: workspace.teamName,
+      type: workspace.type,
+      status: workspace.status,
+      subdomain: workspace.subDomain,
+      profile: profile,
+      members: [],
+      blackList: workspace.blackList,
+      properties: workspace.properties || {},
+      defaultSigners: []
+    },
+    redirectNewWorkspace: false
   },
   mutations: mutations,
   actions: actions,

@@ -159,6 +159,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: 'Dashboard',
   components: {
@@ -180,6 +181,9 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      workspaceMembers: 'workspaceMembersSorted'
+    }),
     selectedMemberId: {
       get() {
         return this.$store.getters.dashboardSelectedMemberId
@@ -221,7 +225,7 @@ export default {
     members() {
       return [
         { person: { id: 0, name: 'Todos os negociadores' } },
-        ...this.$store.state.workspaceModule.members
+        ...this.workspaceMembers
       ]
     }
   },

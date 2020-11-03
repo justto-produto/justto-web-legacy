@@ -1,5 +1,3 @@
-import Vue from 'vue'
-
 const workspaceMutations = {
   redirectNewWorkspaceTrue(state) {
     state.redirectNewWorkspace = true
@@ -11,30 +9,18 @@ const workspaceMutations = {
     if (workspace) {
       // eslint-disable-next-line
       axios.defaults.headers.common['Workspace'] = workspace.subDomain || workspace.subdomain
-
-      const { name, teamName, type, status, id, blackList, properties } = workspace
-      Vue.set(state, {
-        ...state,
-        subdomain: workspace.subDomain,
-        name,
-        teamName,
-        type,
-        status,
-        id,
-        blackList,
-        properties
-      })
+      state.workspace = workspace
       localStorage.setItem('jusworkspace', JSON.stringify(workspace))
     }
   },
   setProfile(state, profile) {
     if (profile) {
-      state.profile = profile
+      state.workspace.profile = profile
       localStorage.setItem('jusprofile', profile)
     }
   },
   clearWorkspace(state) {
-    state = {
+    state.workspace = {
       id: '',
       name: '',
       teamName: '',
@@ -50,9 +36,9 @@ const workspaceMutations = {
     localStorage.removeItem('jusprofile')
     localStorage.removeItem('jusperson')
   },
-  setWorkspaceMembers: (state, members) => (state.members = members.content),
+  setWorkspaceMembers: (state, members) => (state.workspace.members = members.content),
   setBlackList(state, blackList) {
-    if (blackList) state.blackList = blackList
+    if (blackList) state.workspace.blackList = blackList
   }
 }
 
