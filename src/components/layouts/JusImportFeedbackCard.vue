@@ -335,7 +335,7 @@ export default {
       }
     },
     negotiatorsList() {
-      return this.$store.state.workspaceModule.members
+      return this.$store.getters.workspaceMembersSorted
     },
     campaignTitle() {
       return this.campaignName ? this.campaignName : `Campanha ${this.index}`
@@ -381,7 +381,7 @@ export default {
         this.campaignNameDebounce = setTimeout(() => {
           this.$store.dispatch('getCampaignByName', value).then(response => {
             this.campaignNameDuplicated = false
-            response.data.content.forEach(campaign => {
+            response.content.forEach(campaign => {
               if (campaign.name.toLowerCase() === value.toLowerCase()) {
                 this.campaignNameDuplicated = true
               }
