@@ -532,6 +532,11 @@ export default {
       'isJusttoAdmin',
       'workspaceMembersSorted'
     ]),
+    ...mapGetters({
+      workspace: 'workspace',
+      loggedPersonPhone: 'loggedPersonPhone',
+      workspaceProperties: 'workspaceProperties'
+    }),
     passwordType() {
       return this.showPassword ? 'text' : 'password'
     },
@@ -549,11 +554,11 @@ export default {
   mounted() {
     this.getMembers()
     this.person = JSON.parse(JSON.stringify(this.$store.getters.loggedPerson))
-    this.teamName = this.$store.state.workspaceModule.teamName + ''
-    this.companyName = this.$store.state.workspaceModule.name + ''
-    this.vexatiousType = this.$store.getters.workspaceProperties.VEXATIOUS_TYPE
-    this.vexatiousThreshold = this.$store.getters.workspaceProperties.VEXATIOUS_THRESHOLD
-    this.profileForm.phone = this.$store.getters.loggedPersonPhone ? this.$store.getters.loggedPersonPhone.number : ''
+    this.teamName = this.workspace.teamName + ''
+    this.companyName = this.workspace.name + ''
+    this.vexatiousType = this.workspaceProperties.VEXATIOUS_TYPE
+    this.vexatiousThreshold = this.workspaceProperties.VEXATIOUS_THRESHOLD
+    this.profileForm.phone = this.loggedPersonPhone ? this.$store.getters.loggedPersonPhone.number : ''
     if (this.profileForm.phone && this.profileForm.phone.length === 13) {
       this.profileForm.phone = this.profileForm.phone.substr(2)
     } else {

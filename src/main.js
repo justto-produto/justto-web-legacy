@@ -78,7 +78,6 @@ Vue.component('JusButtonBack', JusButtonBack)
 Vue.config.productionTip = false
 
 registerServiceWorker()
-
 if (store.getters.workspaceSubdomain) {
   // eslint-disable-next-line
   axios.defaults.headers.common['Workspace'] = store.getters.workspaceSubdomain
