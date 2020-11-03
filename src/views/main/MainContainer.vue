@@ -65,7 +65,7 @@
         </el-menu-item>
       </el-menu>
       <div
-        v-show="workspaceMembers.length && isAdminProfile"
+        v-show="workspaceMembersSorted.length && isAdminProfile"
         class="jus-team-menu__title"
         :class="{ teamOpen: isTeamSectionOpen }"
         @click="toggleOpenTeamSection"
@@ -110,7 +110,7 @@ export default {
   computed: {
     ...mapGetters([
       'isAdminProfile',
-      'workspaceMembers'
+      'workspaceMembersSorted'
     ]),
     workspace() {
       return this.$store.getters.workspaceSubdomain

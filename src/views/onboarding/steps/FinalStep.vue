@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   props: {
     isGuest: {
@@ -38,22 +39,29 @@ export default {
       showError: false
     }
   },
+  computed: {
+    ...mapGetters({
+      workspace: 'workspace'
+    })
+  },
   methods: {
     readyWorkspace: function() {
       this.showError = false
-      this.$store.dispatch('readyWorkspace', this.$store.state.workspaceModule.subdomain)
+      this.$store.dispatch('readyWorkspace', this.workspace.subDomain)
         .then(() => {
           // eslint-disable-next-line
           delete axios.defaults.headers.common['Workspace']
           this.$store.dispatch('myWorkspace')
             .then(response => {
+              console.log(response, this.workspace)
               const currentWorkspace = response.find(w => {
                 if (w.workspace &&
                   w.workspace.subDomain &&
-                  w.workspace.subDomain === this.$store.getters.workspaceSubdomain) {
+                  w.workspace.subDomain === this.workspace.subDomain) {
                   return true
                 }
               })
+              this.$store.commit('setWorkspace', currentWorkspace.workspace)
               localStorage.setItem('jusworkspace', JSON.stringify(currentWorkspace.workspace))
               localStorage.setItem('jusprofile', currentWorkspace.profile)
               localStorage.setItem('jusperson', JSON.stringify(currentWorkspace.person))

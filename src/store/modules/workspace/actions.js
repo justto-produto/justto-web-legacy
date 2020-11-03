@@ -22,14 +22,6 @@ const workspaceActions = {
       data: { subDomain }
     })
   },
-  createWorkpace({ _ }, object) {
-    return axiosDispatch({
-      url: `${workspacesPath}`,
-      method: 'POST',
-      data: object,
-      mutation: 'setWorkspace'
-    })
-  },
   editWorkpace({ state }, params) {
     const data = {
       id: state.id,
@@ -56,7 +48,7 @@ const workspaceActions = {
   },
   inviteTeammates({ state }, teammates) {
     return axiosDispatch({
-      url: `api/accounts/workspaces/invite-teammates/${state.subdomain}`,
+      url: `api/accounts/workspaces/invite-teammates/${state.workspace.subDomain}`,
       method: 'POST',
       data: teammates
     })

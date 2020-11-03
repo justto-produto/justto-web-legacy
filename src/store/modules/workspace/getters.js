@@ -1,18 +1,18 @@
 import { getStringInitials } from '@/utils'
 
 const workspaceGetters = {
-  workspace: state => state,
+  workspace: state => state.workspace,
   hasWorkspace: state => {
-    return state.status !== '' && state.status !== 'CREATING'
+    return state.workspace.status !== '' && state.workspace.status !== 'CREATING'
   },
-  creatingWorkspace: state => state.status === 'CREATING',
-  workspaceId: state => state.id,
-  workspaceName: state => state.name,
-  workspaceTeamName: state => state.teamName,
-  workspaceSubdomain: state => state.subdomain,
-  workspaceMembers: state => state.members,
+  creatingWorkspace: state => state.workspace.status === 'CREATING',
+  workspaceId: state => state.workspace.id,
+  workspaceName: state => state.workspace.name,
+  workspaceTeamName: state => state.workspace.teamName,
+  workspaceSubdomain: state => state.workspace.subDomain,
+  workspaceMembers: state => state.workspace.members,
   workspaceMembersSorted: state =>
-    state.members
+    state.workspace.members
       .sort((a, b) => {
         const personA = getStringInitials(a.person.name || a.person.email)
         const personB = getStringInitials(b.person.name || b.person.email)
@@ -23,10 +23,10 @@ const workspaceGetters = {
       })
       .filter(r => !r.archived),
   redirectNewWorkspace: state => state.redirectNewWorkspace,
-  isAdminProfile: state => state.profile === 'ADMINISTRATOR',
-  workspaceBlackList: state => state.blackList,
-  workspaceProperties: state => state.properties,
-  getWorkspaceDefaultSigners: state => state.defaultSigners
+  isAdminProfile: state => state.workspace.profile === 'ADMINISTRATOR',
+  workspaceBlackList: state => state.workspace.blackList,
+  workspaceProperties: state => state.workspace.properties,
+  getWorkspaceDefaultSigners: state => state.workspace.defaultSigners
 }
 
 export default workspaceGetters
