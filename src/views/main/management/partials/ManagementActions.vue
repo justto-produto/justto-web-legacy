@@ -257,10 +257,18 @@
         Essa mensagem será enviada para a(s) {{ selectedIdsLength }} disputa(s) selecionada(s)
       </span>
       <ckeditor
+        v-if="showBulkMessageDialog"
+        v-show="editorRedy"
         ref="messageEditor"
         v-model="message"
         class="dialog-body__editor"
         :config="editorConfig"
+        @ready="editorIsRedy()"
+      />
+      <el-container
+        v-if="!editorRedy"
+        v-loading="true"
+        style="width: 100%; height: 40vh;"
       />
       <span slot="footer">
         <el-button @click="closeBulkMessageDialog()">Cancelar</el-button>
@@ -312,6 +320,7 @@ export default {
       deleteType: '',
       newStrategyId: '',
       newExpirationDate: '',
+      editorRedy: false,
       editorConfig: {
         toolbarGroups: [
           { name: 'document', groups: ['mode', 'document', 'doctools'] },
@@ -397,6 +406,7 @@ export default {
     }
   },
   created() {
+    this.editorRedy = false
     if (!this.disputeStatuses.UNSETTLED || !Object.keys(this.disputeStatuses.UNSETTLED).length) {
       this.getDisputeStatuses('UNSETTLED')
     }
@@ -405,8 +415,17 @@ export default {
     }
     this.$store.dispatch('getMyStrategies')
   },
+  beforeDestroy() {
+    this.editorRedy = false
+  },
   methods: {
     ...mapActions(['getDisputeStatuses']),
+
+    editorIsRedy() {
+      setTimeout(() => {
+        this.editorRedy = true
+      }, 250)
+    },
 
     doAction(action) {
       const params = {
@@ -474,6 +493,7 @@ export default {
     },
 
     closeBulkMessageDialog() {
+      this.editorRedy = false
       this.showBulkMessageDialog = false
       this.message = ''
       for (const instance of Object.values(window.CKEDITOR.instances)) {
