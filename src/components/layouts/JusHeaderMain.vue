@@ -12,12 +12,6 @@
           placeholder="Busque aqui as suas disputas"
         >
           <template slot-scope="{ item }">
-            <span
-              v-if="item.id === -1"
-              style="background-color: white;display: block;padding: 0 20px;"
-            >
-              Digite ao menos <strong>três</strong> caracteres válidos...
-            </span>
             <jus-dispute-resume
               v-else-if="item.id"
               :dispute="item"
@@ -201,10 +195,6 @@ export default {
       }, 1000)
     },
     search(term, cb) {
-      if (term.length < 3 || !Number(term)) {
-        cb([{ id: -1 }])
-        return
-      }
       clearTimeout(this.termDebounce)
       this.termDebounce = setTimeout(() => {
         this.$store.dispatch('searchDisputes', { key: 'term', value: term }).then(response => {
