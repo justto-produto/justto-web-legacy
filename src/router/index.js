@@ -21,7 +21,7 @@ const router = new Router({
           component: () => import(/* webpackChunkName: "dashboardIndex" */ '@/views/main/dashboard/Dashboard'),
           meta: {
             trackPage: true,
-            title: 'Justto - Dashboard'
+            title: 'Dashboard'
           }
         },
         {
@@ -30,7 +30,7 @@ const router = new Router({
           component: () => import(/* webpackChunkName: "billingClientList" */ '@/views/main/billing/BillingClientList'),
           meta: {
             trackPage: true,
-            title: 'Justto - Financeiro'
+            title: 'Financeiro'
           }
         },
         {
@@ -39,7 +39,7 @@ const router = new Router({
           component: () => import(/* webpackChunkName: "billingDashboard" */ '@/views/main/billing/BillingDashboard'),
           meta: {
             trackPage: true,
-            title: 'Justto - Financeiro'
+            title: 'Financeiro'
           }
         },
         {
@@ -48,7 +48,7 @@ const router = new Router({
           component: () => import(/* webpackChunkName: "importIndex" */ '@/views/main/import/Import'),
           meta: {
             trackPage: true,
-            title: 'Justto - Importação'
+            title: 'Importação'
           }
         },
         {
@@ -57,7 +57,7 @@ const router = new Router({
           component: () => import(/* webpackChunkName: "importNew" */ '@/views/main/import/NewImport'),
           meta: {
             trackPage: true,
-            title: 'Justto - Nova importação'
+            title: 'Nova importação'
           }
         },
         {
@@ -66,7 +66,7 @@ const router = new Router({
           component: () => import(/* webpackChunkName: "importLoading" */ '@/views/main/import/Loading'),
           meta: {
             trackPage: true,
-            title: 'Justto - Carregando...'
+            title: 'Carregando...'
           }
         },
         {
@@ -75,7 +75,7 @@ const router = new Router({
           component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/management/Management'),
           meta: {
             trackPage: true,
-            title: 'Justto - Gerenciamento'
+            title: 'Gerenciamento'
           }
         },
         {
@@ -84,14 +84,14 @@ const router = new Router({
           component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/management/Management'),
           meta: {
             trackPage: true,
-            title: 'Justto - Todas as disputas'
+            title: 'Todas as disputas'
           }
         },
         {
           path: 'management/dispute/',
           redirect: {
             name: 'management',
-            title: 'Justto - Disputa'
+            title: 'Disputa'
           }
         },
         {
@@ -100,7 +100,7 @@ const router = new Router({
           component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/dispute/Dispute'),
           meta: {
             trackPage: true,
-            title: 'Justto - Disputa'
+            title: 'Disputa'
           }
         },
         {
@@ -109,7 +109,7 @@ const router = new Router({
           component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/configuration/Configuration'),
           meta: {
             trackPage: true,
-            title: 'Justto - Configurações'
+            title: 'Configurações'
           }
         }
       ]
@@ -157,7 +157,7 @@ const router = new Router({
       meta: {
         requiresAuth: true,
         trackPage: true,
-        title: 'Justto - Onboarding'
+        title: 'Onboarding'
       }
     },
     {
@@ -166,7 +166,7 @@ const router = new Router({
       component: () => import(/* webpackChunkName: "adminPanel" */ '@/views/adminPanel/AdminPanel'),
       meta: {
         trackPage: true,
-        title: 'Justto - Configurações do sistema'
+        title: 'Painel administrativo'
       }
     },
     {
@@ -202,7 +202,7 @@ router.beforeEach((to, from, next) => {
   else next()
 })
 
-router.afterEach((to, from) => {
+router.afterEach((to) => {
   if (to.matched.some(record => record.meta.trackPage)) {
     const properties = {
       userId: Store.getters.accountEmail,
