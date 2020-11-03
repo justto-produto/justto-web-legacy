@@ -22,18 +22,20 @@ const workspaceActions = {
       data: { subDomain }
     })
   },
-  editWorkpace({ state }, params) {
-    const data = {
-      id: state.id,
-      teamName: state.teamName,
-      status: state.status,
-      blacklist: state.blackList,
-      name: params.name,
-      properties: params.properties
-    }
-
+  editWorkpaceProperties({ state }, properties) {
+    const workspaceId = state.workspace.id
     return axiosDispatch({
-      url: `${workspacesPath}`,
+      url: `${workspacesPath}/${workspaceId}/properties`,
+      method: 'PUT',
+      mutation: 'setWorkspace',
+      data: properties
+    })
+  },
+  editWorkpace({ state }, workspace) {
+    const { id, teamName, status, name } = state.workspace
+    const data = { id, teamName, status, name, ...workspace }
+    return axiosDispatch({
+      url: `${workspacesPath}/`,
       method: 'PUT',
       mutation: 'setWorkspace',
       data

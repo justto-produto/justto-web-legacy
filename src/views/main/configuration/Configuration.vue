@@ -475,7 +475,7 @@
 <script>
 import { mask } from 'vue-the-mask'
 import { validatePhone, isJusttoUser } from '@/utils/validations'
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'Configuration',
@@ -567,6 +567,11 @@ export default {
     }
   },
   methods: {
+    ...mapActions([
+      'editWorkpace',
+      'editWorkpaceProperties'
+    ]),
+
     isJusttoUser(email) {
       if (email) {
         return isJusttoUser(email)
@@ -778,12 +783,9 @@ export default {
     },
     saveProperties() {
       if (this.vexatiousThreshold && this.vexatiousType) {
-        this.$store.dispatch('editWorkpace', {
-          properties: {
-            VEXATIOUS_THRESHOLD: (this.vexatiousThreshold || '').toString(),
-            VEXATIOUS_TYPE: (this.vexatiousType || '').toString()
-          },
-          name: this.companyName
+        this.editWorkpaceProperties({
+          VEXATIOUS_THRESHOLD: (this.vexatiousThreshold || '').toString(),
+          VEXATIOUS_TYPE: (this.vexatiousType || '').toString()
         }).then(() => {
           // SEGMENT TRACK
           this.$jusSegment('Configurações da equipe alterada')
@@ -826,23 +828,20 @@ export default {
     },
     changeCompanyName() {
       if (this.companyName) {
-        this.$store.dispatch('editWorkpace', {
-          properties: {
-            VEXATIOUS_THRESHOLD: (this.vexatiousThreshold || '').toString(),
-            VEXATIOUS_TYPE: (this.vexatiousType || '').toString()
-          },
+        this.editWorkpace({
           name: this.companyName
-        }).then(() => {
-          // SEGMENT TRACK
-          this.$jusSegment('Nome do escritório/empresa alterado')
-          this.$jusNotification({
-            title: 'Yay!',
-            message: 'Nome do escritório/empresa alterado com sucesso.',
-            type: 'success'
-          })
-        }).catch(error => {
-          this.$jusNotification({ error })
         })
+        // .then(() => {
+        //   // SEGMENT TRACK
+        //   this.$jusSegment('Nome do escritório/empresa alterado')
+        //   this.$jusNotification({
+        //     title: 'Yay!',
+        //     message: 'Nome do escritório/empresa alterado com sucesso.',
+        //     type: 'success'
+        //   })
+        // }).catch(error => {
+        //   this.$jusNotification({ error })
+        // })
       } else {
         this.$jusNotification({
           title: 'Ops!',
