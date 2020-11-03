@@ -22,14 +22,6 @@ const workspaceActions = {
       data: { subDomain }
     })
   },
-  createWorkpace({ _ }, object) {
-    return axiosDispatch({
-      url: `${workspacesPath}`,
-      method: 'POST',
-      data: object,
-      mutation: 'setWorkspace'
-    })
-  },
   editWorkpace({ state }, params) {
     const data = {
       id: state.id,

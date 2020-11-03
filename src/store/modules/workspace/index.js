@@ -13,7 +13,7 @@ const workspaceModule = {
       teamName: workspace.teamName,
       type: workspace.type,
       status: workspace.status,
-      subdomain: workspace.subDomain,
+      subDomain: workspace.subDomain,
       profile: profile,
       members: [],
       blackList: workspace.blackList,

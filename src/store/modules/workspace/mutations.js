@@ -8,7 +8,7 @@ const workspaceMutations = {
   setWorkspace(state, workspace) {
     if (workspace) {
       // eslint-disable-next-line
-      axios.defaults.headers.common['Workspace'] = workspace.subDomain || workspace.subdomain
+      axios.defaults.headers.common['Workspace'] = workspace.subDomain
       state.workspace = workspace
       localStorage.setItem('jusworkspace', JSON.stringify(workspace))
     }
@@ -26,7 +26,7 @@ const workspaceMutations = {
       teamName: '',
       type: '',
       status: '',
-      subdomain: '',
+      subDomain: '',
       profile: '',
       blackList: [],
       members: [],

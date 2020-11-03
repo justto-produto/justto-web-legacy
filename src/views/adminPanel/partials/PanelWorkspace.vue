@@ -413,7 +413,7 @@ export default {
           const loading = this.$loading({ lock: true })
           this.$store.dispatch('adminWorkspaceUsers', {
             method: 'post',
-            url: `api/accounts/workspaces/invite-teammates/${this.workspace.subdomain}`,
+            url: `api/accounts/workspaces/invite-teammates/${this.workspace.subDomain}`,
             data: [{
               email: this.userForm.email,
               profile: this.userForm.profile
