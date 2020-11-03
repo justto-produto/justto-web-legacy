@@ -475,7 +475,7 @@
 <script>
 import { mask } from 'vue-the-mask'
 import { validatePhone, isJusttoUser } from '@/utils/validations'
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'Configuration',
@@ -532,6 +532,11 @@ export default {
       'isJusttoAdmin',
       'workspaceMembersSorted'
     ]),
+    ...mapGetters({
+      workspace: 'workspace',
+      loggedPersonPhone: 'loggedPersonPhone',
+      workspaceProperties: 'workspaceProperties'
+    }),
     passwordType() {
       return this.showPassword ? 'text' : 'password'
     },
@@ -549,11 +554,11 @@ export default {
   mounted() {
     this.getMembers()
     this.person = JSON.parse(JSON.stringify(this.$store.getters.loggedPerson))
-    this.teamName = this.$store.state.workspaceModule.teamName + ''
-    this.companyName = this.$store.state.workspaceModule.name + ''
-    this.vexatiousType = this.$store.getters.workspaceProperties.VEXATIOUS_TYPE
-    this.vexatiousThreshold = this.$store.getters.workspaceProperties.VEXATIOUS_THRESHOLD
-    this.profileForm.phone = this.$store.getters.loggedPersonPhone ? this.$store.getters.loggedPersonPhone.number : ''
+    this.teamName = this.workspace.teamName + ''
+    this.companyName = this.workspace.name + ''
+    this.vexatiousType = this.workspaceProperties.VEXATIOUS_TYPE
+    this.vexatiousThreshold = this.workspaceProperties.VEXATIOUS_THRESHOLD
+    this.profileForm.phone = this.loggedPersonPhone ? this.$store.getters.loggedPersonPhone.number : ''
     if (this.profileForm.phone && this.profileForm.phone.length === 13) {
       this.profileForm.phone = this.profileForm.phone.substr(2)
     } else {
@@ -562,6 +567,11 @@ export default {
     }
   },
   methods: {
+    ...mapActions([
+      'editWorkpace',
+      'editWorkpaceProperties'
+    ]),
+
     isJusttoUser(email) {
       if (email) {
         return isJusttoUser(email)
@@ -773,12 +783,9 @@ export default {
     },
     saveProperties() {
       if (this.vexatiousThreshold && this.vexatiousType) {
-        this.$store.dispatch('editWorkpace', {
-          properties: {
-            VEXATIOUS_THRESHOLD: (this.vexatiousThreshold || '').toString(),
-            VEXATIOUS_TYPE: (this.vexatiousType || '').toString()
-          },
-          name: this.companyName
+        this.editWorkpaceProperties({
+          VEXATIOUS_THRESHOLD: (this.vexatiousThreshold || '').toString(),
+          VEXATIOUS_TYPE: (this.vexatiousType || '').toString()
         }).then(() => {
           // SEGMENT TRACK
           this.$jusSegment('Configurações da equipe alterada')
@@ -821,23 +828,20 @@ export default {
     },
     changeCompanyName() {
       if (this.companyName) {
-        this.$store.dispatch('editWorkpace', {
-          properties: {
-            VEXATIOUS_THRESHOLD: (this.vexatiousThreshold || '').toString(),
-            VEXATIOUS_TYPE: (this.vexatiousType || '').toString()
-          },
+        this.editWorkpace({
           name: this.companyName
-        }).then(() => {
-          // SEGMENT TRACK
-          this.$jusSegment('Nome do escritório/empresa alterado')
-          this.$jusNotification({
-            title: 'Yay!',
-            message: 'Nome do escritório/empresa alterado com sucesso.',
-            type: 'success'
-          })
-        }).catch(error => {
-          this.$jusNotification({ error })
         })
+        // .then(() => {
+        //   // SEGMENT TRACK
+        //   this.$jusSegment('Nome do escritório/empresa alterado')
+        //   this.$jusNotification({
+        //     title: 'Yay!',
+        //     message: 'Nome do escritório/empresa alterado com sucesso.',
+        //     type: 'success'
+        //   })
+        // }).catch(error => {
+        //   this.$jusNotification({ error })
+        // })
       } else {
         this.$jusNotification({
           title: 'Ops!',

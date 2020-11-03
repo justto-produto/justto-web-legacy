@@ -22,26 +22,20 @@ const workspaceActions = {
       data: { subDomain }
     })
   },
-  createWorkpace({ _ }, object) {
+  editWorkpaceProperties({ state }, properties) {
+    const workspaceId = state.workspace.id
     return axiosDispatch({
-      url: `${workspacesPath}`,
-      method: 'POST',
-      data: object,
-      mutation: 'setWorkspace'
+      url: `${workspacesPath}/${workspaceId}/properties`,
+      method: 'PUT',
+      mutation: 'setWorkspace',
+      data: properties
     })
   },
-  editWorkpace({ state }, params) {
-    const data = {
-      id: state.id,
-      teamName: state.teamName,
-      status: state.status,
-      blacklist: state.blackList,
-      name: params.name,
-      properties: params.properties
-    }
-
+  editWorkpace({ state }, workspace) {
+    const { id, teamName, status, name } = state.workspace
+    const data = { id, teamName, status, name, ...workspace }
     return axiosDispatch({
-      url: `${workspacesPath}`,
+      url: `${workspacesPath}/`,
       method: 'PUT',
       mutation: 'setWorkspace',
       data
@@ -56,7 +50,7 @@ const workspaceActions = {
   },
   inviteTeammates({ state }, teammates) {
     return axiosDispatch({
-      url: `api/accounts/workspaces/invite-teammates/${state.subdomain}`,
+      url: `api/accounts/workspaces/invite-teammates/${state.workspace.subDomain}`,
       method: 'POST',
       data: teammates
     })

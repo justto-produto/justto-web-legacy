@@ -280,6 +280,7 @@
 
 <script>
 import { filterByTerm } from '@/utils'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'PanelWorkspace',
@@ -329,6 +330,9 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      workspace: 'workspace'
+    }),
     filteredWorkspaces() {
       return filterByTerm(this.filterTermDebounced, this.workspaces, 'name', 'teamName')
     },
@@ -409,7 +413,7 @@ export default {
           const loading = this.$loading({ lock: true })
           this.$store.dispatch('adminWorkspaceUsers', {
             method: 'post',
-            url: `api/accounts/workspaces/invite-teammates/${this.userForm.workspaceSubdomain}`,
+            url: `api/accounts/workspaces/invite-teammates/${this.workspace.subDomain}`,
             data: [{
               email: this.userForm.email,
               profile: this.userForm.profile

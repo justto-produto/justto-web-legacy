@@ -79,6 +79,14 @@ const accountActions = {
       method: 'PATCH',
       mutation: 'setToken'
     })
+  },
+  createWorkpace({ _ }, object) {
+    return axiosDispatch({
+      url: `${accountsPath}/workspaces`,
+      method: 'POST',
+      data: object,
+      mutation: 'setWorkspace'
+    })
   }
   // getUserPreferences({ state }) {
   //   return axiosDispatch({
