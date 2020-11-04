@@ -42,13 +42,19 @@ const disputeActions = {
       mutation: 'setLastInteractions'
     })
   },
+  updateDisputeData({ dispatch }, id) {
+    dispatch('getDisputeMetadata', id)
+    dispatch('getLastInteractions', id)
+    dispatch('getDisputeProperties', id)
+    dispatch('getDisputeAttachments', id)
+  },
   getDispute({ commit, dispatch }, id) {
     return new Promise((resolve, reject) => {
       commit('clearDispute')
-      dispatch('getDisputeProperties', id)
       // eslint-disable-next-line
       axios.get(`${disputesPath}/${id}/vm`)
         .then(response => {
+          dispatch('updateDisputeData', id)
           commit('setDispute', response.data)
           resolve(response.data)
         })
