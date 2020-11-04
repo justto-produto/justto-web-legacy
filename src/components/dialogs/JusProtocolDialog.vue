@@ -319,7 +319,7 @@
           plain
           @click="visible = false"
         >
-          Cancelar
+          {{ step === 3 ? 'Fechar' : 'Cancelar' }}
         </el-button>
         <el-tooltip
           v-if="document.canEdit && [2, 3, 4].includes(step)"
