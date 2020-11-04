@@ -25,6 +25,7 @@
           <i
             :class="status.icon"
             class="dispute-code__icon"
+            :style="customIconStyle"
           />
         </el-link>
       </span>
@@ -41,6 +42,10 @@ export default {
       required: true
     },
     customStyle: {
+      type: Object,
+      default: () => ({})
+    },
+    customIconStyle: {
       type: Object,
       default: () => ({})
     }
