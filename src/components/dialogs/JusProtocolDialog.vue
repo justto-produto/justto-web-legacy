@@ -621,6 +621,11 @@ export default {
   },
   watch: {
     step() {
+      if (Number(this.step) === 0) {
+        this.step = Number(localStorage.getItem('lastStep'))
+      } else {
+        localStorage.setItem('lastStep', this.step)
+      }
       if (Number(this.step) === 2) {
         this.getDefaultAssigners()
       }
