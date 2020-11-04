@@ -254,7 +254,7 @@
       @before-close="closeBulkMessageDialog()">
       <span class="dialog-body__text-info">
         <i class="el-icon-warning" />
-        Essa mensagem será enviada para a(s) {{ selectedIdsLength }} disputa(s) selecionada(s)
+        Essa mensagem será enviada para a(s) {{ selectedLenghtToShow }} disputa(s) selecionada(s)
       </span>
       <ckeditor
         v-if="showBulkMessageDialog"
@@ -506,6 +506,7 @@ export default {
       this.dispatchAction('SEND_MESSAGE', {
         type: 'SEND_MESSAGE',
         disputeIds: this.selectedIds,
+        allSelected: this.isSelectedAll,
         message
       })
       this.closeBulkMessageDialog()
@@ -702,7 +703,7 @@ export default {
 
     .dialog-body__editor {
       margin-top: 16px;
-      height: 40vh;
+      min-height: 224px;
     }
   }
 }
