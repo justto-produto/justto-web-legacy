@@ -139,11 +139,6 @@ export default {
       return filterByTerm(this.attachmentFilterTerm, this.disputeAttachments, 'name')
     }
   },
-  watch: {
-    disputeId() {
-      this.initState()
-    }
-  },
   mounted() {
     this.initState()
   },
@@ -152,7 +147,7 @@ export default {
 
     initState() {
       const { id } = this.$route.params
-      this.getDisputeAttachments(id).finally(this.hideLoadingAttachments)
+      this.getDisputeAttachments(id)
     },
 
     enrichDispute() {
