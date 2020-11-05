@@ -319,7 +319,7 @@
           plain
           @click="visible = false"
         >
-          Cancelar
+          {{ [3, 4].includes(step) ? 'Fechar' : 'Cancelar' }}
         </el-button>
         <el-tooltip
           v-if="document.canEdit && [2, 3, 4].includes(step)"
@@ -621,6 +621,11 @@ export default {
   },
   watch: {
     step() {
+      if (Number(this.step) === 0) {
+        this.step = Number(localStorage.getItem('lastStep'))
+      } else {
+        localStorage.setItem('lastStep', this.step)
+      }
       if (Number(this.step) === 2) {
         this.getDefaultAssigners()
       }

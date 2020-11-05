@@ -4,10 +4,17 @@
       <el-input v-model="state.title" />
       <ckeditor
         v-if="state.body"
+        v-show="editorRedy"
         ref="templateEditor"
         v-model="state.body"
         class="reply-editor__editor"
         :config="editorConfig"
+        @ready="editorIsRedy()"
+      />
+      <el-container
+        v-if="!editorRedy"
+        v-loading="true"
+        style="width: 100%; height: 40vh;"
       />
     </div>
     <div class="reply-editor__footer">
@@ -58,6 +65,7 @@ export default {
   data() {
     return {
       html: '',
+      editorRedy: false,
       editorConfig: {
         toolbarGroups: [
           { name: 'document', groups: ['mode', 'document', 'doctools'] },
@@ -89,6 +97,7 @@ export default {
     }
   },
   mounted() {
+    this.editorRedy = false
     this.state = { ...this.template, body: this.formatBody() }
   },
   beforeDestroy() {
@@ -102,7 +111,14 @@ export default {
       'hideLoading'
     ]),
 
+    editorIsRedy() {
+      setTimeout(() => {
+        this.editorRedy = true
+      }, 250)
+    },
+
     destroyEditor() {
+      this.editorRedy = false
       for (const instance of Object.values(window.CKEDITOR.instances)) {
         instance.destroy()
       }
@@ -145,10 +161,11 @@ export default {
 
 <style lang="scss" scoped>
 .reply-editor__container {
-  margin-top: 16px;
-  padding-top: 16px;
+  margin: 16px 0px;
+  padding: 16px 0px;
 
   .reply-editor__body {
+    margin-top: 8px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;

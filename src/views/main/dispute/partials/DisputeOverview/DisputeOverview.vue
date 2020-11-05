@@ -21,7 +21,8 @@
         <dispute-code-link
           v-if="dispute.code"
           :code="dispute.code"
-          :custom-style="{ fontSize: '14x', paddingRight: '24px', fontWeight: 'normal', color: '#adadad'}"
+          :custom-style="{ fontSize: '14x', fontWeight: 'normal', color: '#adadad'}"
+          :custom-icon-style="{ paddingRight: '8px' }"
           @openTimeline="openTimelineModal"
         />
       </span>
