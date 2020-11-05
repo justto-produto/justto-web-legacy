@@ -496,7 +496,7 @@ const disputeActions = {
   },
   startNegotiation({ _ }, disputeId) {
     return axiosDispatch({
-      url: `${disputesPath}disputes/${disputeId}/start-negotiation`,
+      url: `${disputesPath}/${disputeId}/start-negotiation`,
       method: 'PATCH'
     })
   },
