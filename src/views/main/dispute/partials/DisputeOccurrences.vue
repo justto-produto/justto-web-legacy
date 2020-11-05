@@ -574,7 +574,7 @@
 import InfiniteLoading from 'vue-infinite-loading'
 import { isSimilarStrings } from '@/utils'
 import { mapGetters, mapActions } from 'vuex'
-import { uniq } from 'lodash'
+// import { uniq } from 'lodash'
 
 export default {
   name: 'DisputeOccurrences',
@@ -969,8 +969,7 @@ export default {
         ((occurrence.interaction.message &&
         occurrence.interaction.message.communicationType &&
         ['EMAIL', 'WHATSAPP', 'NEGOTIATOR_MESSAGE'].includes(occurrence.interaction.message.communicationType)) ||
-        (['NEGOTIATOR_PROPOSAL', 'NEGOTIATOR_COUNTERPROSAL', 'NEGOTIATOR_CHECKOUT'].includes(occurrence.interaction.type) &&
-        this.disputeLastInteractions.length)) &&
+        ['NEGOTIATOR_PROPOSAL', 'NEGOTIATOR_COUNTERPROSAL', 'NEGOTIATOR_CHECKOUT'].includes(occurrence.interaction.type)) &&
         occurrence.interaction.direction === 'INBOUND') {
         return true
       }
@@ -980,13 +979,13 @@ export default {
     startReply(occurrence) {
       let senders, resume, type
       if (['NEGOTIATOR_PROPOSAL', 'NEGOTIATOR_COUNTERPROSAL', 'NEGOTIATOR_CHECKOUT'].includes(occurrence.interaction.type)) {
-        senders = uniq(this.disputeLastInteractions.map(item => item.address))
+        senders = []
         resume = this.buildContent(occurrence)
-        type = 'email'
+        type = 'negotiation'
       } else if (['NEGOTIATOR_MESSAGE'].includes(occurrence.interaction.message.communicationType)) {
-        senders = [occurrence.interaction.message.sender]
+        senders = []
         resume = this.buildContent(occurrence)
-        type = 'email'
+        type = 'negotiation'
       } else {
         senders = [occurrence.interaction.message.sender]
         resume = occurrence.interaction.message.resume
