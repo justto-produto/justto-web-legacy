@@ -103,6 +103,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: 'JusChartTable',
   props: {
@@ -112,6 +113,10 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      members: 'workspaceMembersSorted',
+      selectedMemberId: 'dashboardSelectedMemberId'
+    }),
     disputeStatusSummaryWithWarn() {
       const self = this
       const disputeStatusSummaryWithWarn = []
@@ -128,12 +133,6 @@ export default {
         })
       })
       return disputeStatusSummaryWithWarn
-    },
-    selectedMemberId() {
-      return this.$store.getters.dashboardSelectedMemberId
-    },
-    members() {
-      return this.$store.state.workspaceModule.members
     }
   },
   methods: {
