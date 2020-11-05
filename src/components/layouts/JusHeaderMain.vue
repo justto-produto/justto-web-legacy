@@ -274,7 +274,7 @@ export default {
       if (!this.loggedPersonHasName) {
         const validator = (value) => {
           if (!value || value.length < 3) return 'Ops, o nome precisa ter mais de duas letras'
-          else if (!value.match(/^[^!@#$%&*(){}[\]/|\\_<>?¢£¬§=+]+$/)) return 'Ops, o nome não pode conter caracteres especiais'
+          else if (!value.match(/^[^!@#$%*(){}[\]/|\\_<>?¢£¬§=+]+$/)) return 'Ops, o nome não pode conter caracteres especiais'
           else return true
         }
         this.$prompt('Por favor, insira seu nome', 'Bem vindo(a)', {
