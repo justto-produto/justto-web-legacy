@@ -9,7 +9,7 @@ const workspaceMutations = {
     if (workspace) {
       // eslint-disable-next-line
       axios.defaults.headers.common['Workspace'] = workspace.subDomain
-      state.workspace = workspace
+      state.workspace = { ...state.workspace, workspace }
       localStorage.setItem('jusworkspace', JSON.stringify(workspace))
     }
   },
