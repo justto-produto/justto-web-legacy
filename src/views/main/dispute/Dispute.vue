@@ -527,6 +527,7 @@ export default {
   watch: {
     '$route.params.id': function(id, oldId) {
       this.id = id.toString()
+      this.removeReply()
       this.$socket.emit('unsubscribe', {
         headers: this.socketHeaders,
         channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.loggedPersonId + '/dispute/' + oldId + '/occurrence'
