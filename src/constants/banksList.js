@@ -15,6 +15,7 @@ export default
   { code: '002', name: 'BANCO CENTRAL DO BRASIL' },
   { code: '003', name: 'BANCO DA AMAZONIA S.A' },
   { code: '004', name: 'BANCO DO NORDESTE DO BRASIL S.A' },
+  { code: '084', name: 'COOPERATIVA DE CRÉDITO UNIPRIME' },
   { code: '007', name: 'BANCO NAC DESENV. ECO. SOCIAL S.A' },
   { code: '008', name: 'BANCO MERIDIONAL DO BRASIL' },
   { code: '020', name: 'BANCO DO ESTADO DE ALAGOAS S.A' },
