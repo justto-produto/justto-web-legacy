@@ -12,7 +12,7 @@ const workspaceGetters = {
   workspaceSubdomain: state => state.workspace.subDomain,
   workspaceMembers: state => state.workspace.members,
   workspaceMembersSorted: state =>
-    state.workspace.members
+    (state.workspace.members || [])
       .sort((a, b) => {
         const personA = getStringInitials(a.person.name || a.person.email)
         const personB = getStringInitials(b.person.name || b.person.email)
