@@ -4,10 +4,9 @@ build:
   # Read more about containers on our dev center
   # https://devcenter.wercker.com/overview-and-core-concepts/containers/
   box: 
-    Id: hub.docker.com/node
-    username: $DOCKERHUB_USER
-    password: $DOCKERHUB_PASSWORD
+    Id: gcr.io/justto-ml/node
     tag: latest
+    registry: https://gcr.io
   # Steps make up the actions in your pipeline
   # Read more about steps on our dev center:
   # https://devcenter.wercker.com/development/steps/
