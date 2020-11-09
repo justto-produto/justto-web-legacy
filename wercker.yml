@@ -5,11 +5,10 @@ build:
   # https://devcenter.wercker.com/overview-and-core-concepts/containers/
   box: 
     Id: gcr.io/justto-ml/node
-    username: $USERNAME
-    password: $PASSWORD
+    username: _json_key
+    password: $JUSTTO_ML_KEY
     tag: latest
     registry: https://gcr.io
-    repository: https://gcr.io/justto-ml/node
 
   # Steps make up the actions in your pipeline
   # Read more about steps on our dev center:
@@ -78,9 +77,10 @@ test-e2e:
   # https://devcenter.wercker.com/overview-and-core-concepts/containers/
   box: 
     Id: gcr.io/justto-ml/node
+    username: _json_key
+    password: $JUSTTO_ML_KEY
     tag: latest
     registry: https://gcr.io
-    repository: https://gcr.io/justto-ml/node
 
   # Steps make up the actions in your pipeline
   # Read more about steps on our dev center:
