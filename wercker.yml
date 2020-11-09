@@ -4,7 +4,7 @@ build:
   # Read more about containers on our dev center
   # https://devcenter.wercker.com/overview-and-core-concepts/containers/
   box: 
-    Id: node
+    id: node
     username: $DOCKERHUB_USER
     password: $DOCKERHUB_PASSWORD
     tag: latest
