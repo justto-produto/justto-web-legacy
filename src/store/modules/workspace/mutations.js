@@ -1,3 +1,5 @@
+// import Vue from 'vue'
+
 const workspaceMutations = {
   redirectNewWorkspaceTrue(state) {
     state.redirectNewWorkspace = true
@@ -9,8 +11,13 @@ const workspaceMutations = {
     if (workspace) {
       // eslint-disable-next-line
       axios.defaults.headers.common['Workspace'] = workspace.subDomain
-      const { members } = state.workspace
-      state.workspace = { ...workspace, members }
+      const members = workspace.members ? workspace.members : state.workspace.members
+      const profile = workspace.profile ? workspace.profile : state.workspace.profile
+      state.workspace = {
+        ...workspace,
+        members,
+        profile
+      }
       localStorage.setItem('jusworkspace', JSON.stringify(state.workspace))
     }
   },
