@@ -3,13 +3,12 @@ build:
   # Docker Hub https://hub.docker.com/_/openjdk/
   # Read more about containers on our dev center
   # https://devcenter.wercker.com/overview-and-core-concepts/containers/
-  box: 
-    box:
-      id: quay.io/knuth/golang
-      username: $USERNAME
-      password: $PASSWORD
-      tag: beta
-      registry: quay.io
+  box:
+    id: quay.io/knuth/golang
+    username: $USERNAME
+    password: $PASSWORD
+    tag: beta
+    registry: quay.io
   # Steps make up the actions in your pipeline
   # Read more about steps on our dev center:
   # https://devcenter.wercker.com/development/steps/
