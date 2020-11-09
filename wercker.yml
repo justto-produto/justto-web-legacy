@@ -4,12 +4,12 @@ build:
   # Read more about containers on our dev center
   # https://devcenter.wercker.com/overview-and-core-concepts/containers/
   box: 
-    repository: gcr.io/justto-ml/node
-    tag: latest
-    username: _json_key
-    password: $JUSTTO_ML_KEY
-    registry: https://gcr.io
-
+    box:
+      id: quay.io/knuth/golang
+      username: $USERNAME
+      password: $PASSWORD
+      tag: beta
+      registry: quay.io
   # Steps make up the actions in your pipeline
   # Read more about steps on our dev center:
   # https://devcenter.wercker.com/development/steps/
