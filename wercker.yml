@@ -11,6 +11,7 @@ build:
     username: _json_key
     password: $JUSTTO_ML_KEY
     registry: https://gcr.io
+    aws-secret-key: nao-eh-aws
 
   # Steps make up the actions in your pipeline
   # Read more about steps on our dev center:
@@ -85,6 +86,7 @@ test-e2e:
     username: _json_key
     password: $JUSTTO_ML_KEY
     registry: https://gcr.io
+    aws-secret-key: nao-eh-aws
 
   # Steps make up the actions in your pipeline
   # Read more about steps on our dev center:
