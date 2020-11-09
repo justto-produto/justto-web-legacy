@@ -4,8 +4,6 @@ build:
   # Read more about containers on our dev center
   # https://devcenter.wercker.com/overview-and-core-concepts/containers/
   box: 
-    Id: https://gcr.io/justto-ml/node
-    image-name: gcr.io/justto-ml/node
     repository: gcr.io/justto-ml/node
     tag: latest
     username: _json_key
@@ -78,8 +76,6 @@ test-e2e:
   # Read more about containers on our dev center
   # https://devcenter.wercker.com/overview-and-core-concepts/containers/
   box: 
-    Id: https://gcr.io/justto-ml/node
-    image-name: gcr.io/justto-ml/node
     repository: gcr.io/justto-ml/node
     tag: latest
     username: _json_key
