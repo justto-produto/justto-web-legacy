@@ -4,9 +4,10 @@ build:
   # Read more about containers on our dev center
   # https://devcenter.wercker.com/overview-and-core-concepts/containers/
   box: 
-    Id: node:latest
+    Id: node
     username: $DOCKERHUB_USER
     password: $DOCKERHUB_PASSWORD
+    tag: latest
   # Steps make up the actions in your pipeline
   # Read more about steps on our dev center:
   # https://devcenter.wercker.com/development/steps/
