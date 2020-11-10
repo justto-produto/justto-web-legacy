@@ -441,7 +441,7 @@ export default {
         }
       },
       isDeletingRole: false,
-      deletingRoleText: 'Por favor, aguarde enquanto apagamos a parte...'
+      deletingRoleText: 'Por favor, aguarde enquanto carregamos a disputa...'
     }
   },
   computed: {
@@ -861,6 +861,7 @@ export default {
       }, 2500)
       setTimeout(() => {
         this.isDeletingRole = false
+        this.deletingRoleText = 'Por favor, aguarde enquanto carregamos a disputa...'
       }, 4500)
     }
   }
