@@ -493,7 +493,8 @@
                     popper-class="dispute-overview-view__info-popover-lawyer"
                     :placement="'top-end'"
                     trigger="click"
-                    @hide="deactivePopover(`popover-${role.name}`)">
+                    @hide="deactivePopover(`popover-${role.name}`)"
+                  >
                     <lawyer-detail
                       @update="updateDisputeRoleField(role, $event)"
                     />
@@ -516,7 +517,8 @@
                   >
                     <el-tooltip
                       placement="top"
-                      content="Editar polaridade">
+                      content="Editar polaridade"
+                    >
                       <jus-icon icon="edit" />
                     </el-tooltip>
                   </span>
@@ -691,7 +693,8 @@
                       popper-class="dispute-overview-view__info-popover-lawyer"
                       placement="top"
                       trigger="click"
-                      @hide="deactivePopover(`popover-${oab.number}-${oab.state}`)">
+                      @hide="deactivePopover(`popover-${oab.number}-${oab.state}`)"
+                    >
                       <lawyer-detail
                         @update="updateDisputeRoleField(role, $event)"
                       />
