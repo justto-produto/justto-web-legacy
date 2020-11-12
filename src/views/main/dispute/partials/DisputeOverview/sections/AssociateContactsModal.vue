@@ -197,7 +197,7 @@ export default {
       }).map(({ id, name }) => ({ id, name }))
     },
     toShow() {
-      return this.value && this.emails.length > 0 && this.phones.length > 0
+      return this.value && (this.emails.length > 0 || this.phones.length > 0)
     }
   },
   watch: {

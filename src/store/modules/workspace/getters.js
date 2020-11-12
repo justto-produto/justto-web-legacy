@@ -10,9 +10,17 @@ const workspaceGetters = {
   workspaceName: state => state.workspace.name,
   workspaceTeamName: state => state.workspace.teamName,
   workspaceSubdomain: state => state.workspace.subDomain,
-  workspaceMembers: state => state.workspace.members,
-  workspaceMembersSorted: state =>
-    state.workspace.members
+  workspaceMembers: state => {
+    if (!['be8ee2ed9e984880bcf4f62ed8d6f66a', 'lucasisrael'].includes(state.workspace.subDomain)) {
+      return state.workspace.members.filter(member => {
+        return !!member.accountEmail && !member.accountEmail.includes('@justto.com.br')
+      })
+    } else {
+      return state.workspace.members || []
+    }
+  },
+  workspaceMembersSorted: (_state, getters) =>
+    getters.workspaceMembers
       .sort((a, b) => {
         const personA = getStringInitials(a.person.name || a.person.email)
         const personB = getStringInitials(b.person.name || b.person.email)

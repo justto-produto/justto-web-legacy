@@ -3,7 +3,13 @@ build:
   # Docker Hub https://hub.docker.com/_/openjdk/
   # Read more about containers on our dev center
   # https://devcenter.wercker.com/overview-and-core-concepts/containers/
-  box: node:latest
+  box:
+    id: gcr.io/justto-ml/node
+    username: _json_key
+    password: $JUSTTO_ML_KEY
+    tag: latest
+    registry: gcr.io
+
   # Steps make up the actions in your pipeline
   # Read more about steps on our dev center:
   # https://devcenter.wercker.com/development/steps/
@@ -69,7 +75,13 @@ build:
 test-e2e:
   # Read more about containers on our dev center
   # https://devcenter.wercker.com/overview-and-core-concepts/containers/
-  box: node:latest
+  box:
+    id: gcr.io/justto-ml/node
+    username: _json_key
+    password: $JUSTTO_ML_KEY
+    tag: latest
+    registry: gcr.io
+    
   # Steps make up the actions in your pipeline
   # Read more about steps on our dev center:
   # https://devcenter.wercker.com/development/steps/

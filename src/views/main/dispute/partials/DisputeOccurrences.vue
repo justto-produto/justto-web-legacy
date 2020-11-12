@@ -572,7 +572,7 @@
 
 <script>
 import InfiniteLoading from 'vue-infinite-loading'
-import { isSimilarStrings } from '@/utils'
+import { isSimilarStrings, normalizeString } from '@/utils'
 import { mapGetters, mapActions } from 'vuex'
 import { uniq } from 'lodash'
 
@@ -1028,7 +1028,13 @@ export default {
       } else if (message.status === 'RETRYING') {
         return { icon: 'refresh', message: 'Falha na entrega desta mensagem. Tentando reenviar.' }
       } else if (message.status === 'FAILED') {
-        return { icon: 'alert', message: `Falha na entrega desta mensagem. Detalhes da falha: <i>${message.parameters.FAILED_SEND || 'Desconhecido'}.</i>` }
+        const failed = normalizeString(message.parameters.FAILED_SEND)
+        const msg = normalizeString('WhatsApp não recomenda novo envio sem ter resposta do número')
+        if (failed.includes(msg)) {
+          return { icon: 'alert-active', message: `Falha na entrega desta mensagem. Detalhes da falha: <i>${message.parameters.FAILED_SEND || 'Desconhecido'}.</i>` }
+        } else {
+          return { icon: 'alert', message: `Falha na entrega desta mensagem. Detalhes da falha: <i>${message.parameters.FAILED_SEND || 'Desconhecido'}.</i>` }
+        }
       }
       return null
     },

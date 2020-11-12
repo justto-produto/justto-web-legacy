@@ -117,7 +117,14 @@ export default {
       left: 12,
       right: 0,
       filterTerm: '',
-      havepermission: ['lucas@justto.com.br', 'kelvin@justto.com.br', 'guilherme@justto.com.br', 'josewilliam@justto.com.br', 'aline@justto.com.br', 'helio@justto.com.br']
+      havepermission: [
+        'lucas@justto.com.br',
+        'kelvin@justto.com.br',
+        'guilherme@justto.com.br',
+        'josewilliam@justto.com.br',
+        'aline@justto.com.br',
+        'helio@justto.com.br',
+        'isadora@justto.com.br']
     }
   },
   computed: {

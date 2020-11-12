@@ -441,7 +441,7 @@ export default {
         }
       },
       isDeletingRole: false,
-      deletingRoleText: 'Por favor, aguarde enquanto apagamos a parte...'
+      deletingRoleText: 'Por favor, aguarde enquanto carregamos a disputa...'
     }
   },
   computed: {
@@ -527,6 +527,8 @@ export default {
   watch: {
     '$route.params.id': function(id, oldId) {
       this.id = id.toString()
+      this.removeReply()
+      this.$refs.messageEditor.quill.container.firstChild.innerHTML = ''
       this.$socket.emit('unsubscribe', {
         headers: this.socketHeaders,
         channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.loggedPersonId + '/dispute/' + oldId + '/occurrence'
@@ -859,6 +861,7 @@ export default {
       }, 2500)
       setTimeout(() => {
         this.isDeletingRole = false
+        this.deletingRoleText = 'Por favor, aguarde enquanto carregamos a disputa...'
       }, 4500)
     }
   }
