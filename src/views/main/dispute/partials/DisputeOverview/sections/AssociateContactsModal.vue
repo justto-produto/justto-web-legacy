@@ -23,14 +23,16 @@
             <div
               v-for="(phone, phoneIndex) in phones"
               :key="phoneIndex"
-              class="dialog-body__content-item">
+              class="dialog-body__content-item"
+            >
               <span class="dialog-body__content-item-concainer">
                 <el-popover
                   :ref="`popover-phone-${phoneIndex}`"
                   popper-class="popover__content"
                   class="popover__content-body"
                   placement="top"
-                  trigger="click">
+                  trigger="click"
+                >
                   <div
                     v-for="origin in phone.origins"
                     :key="origin.id"
@@ -42,7 +44,8 @@
                     <a
                       :href="origin.url"
                       target="_blank"
-                      class="popover__content-url">
+                      class="popover__content-url"
+                    >
                       Click aqui para ver o documento
                     </a>
                   </div>
@@ -90,14 +93,16 @@
             <div
               v-for="(email, emailIndex) in emails"
               :key="emailIndex"
-              class="dialog-body__content-item">
+              class="dialog-body__content-item"
+            >
               <span class="dialog-body__content-item-concainer">
                 <el-popover
                   :ref="`popover-email-${emailIndex}`"
                   popper-class="popover__content"
                   class="popover__content-body"
                   placement="top"
-                  trigger="click">
+                  trigger="click"
+                >
                   <div
                     v-for="origin in email.origins"
                     :key="origin.id"
@@ -109,7 +114,8 @@
                     <a
                       :href="origin.url"
                       target="_blank"
-                      class="popover__content-url">
+                      class="popover__content-url"
+                    >
                       Click aqui para ver o documento
                     </a>
                   </div>
@@ -345,8 +351,8 @@ export default {
                 position: absolute;
                 display: inline-block;
                 vertical-align: middle;
-                width: 0; 
-                height: 0; 
+                width: 0;
+                height: 0;
                 border-top: 8px solid transparent;
                 border-bottom: 8px solid transparent;
                 border-left: 8px solid $--color-primary;

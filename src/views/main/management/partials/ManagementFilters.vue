@@ -300,7 +300,7 @@
           </el-col> -->
           <!-- STATUS -->
           <el-col
-            v-if="isFinished || isAll"
+            v-if="isFinished || isEngagement || isAll"
             :span="24"
           >
             <el-form-item label="Status">
@@ -464,6 +464,13 @@ export default {
             'EXPIRED',
             'SETTLED',
             'UNSETTLED'
+          ]
+        case '1':
+          return [
+            'IMPORTED',
+            'PENDING',
+            'ENRICHED',
+            'ENGAGEMENT'
           ]
         default:
           return [

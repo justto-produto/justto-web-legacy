@@ -251,7 +251,8 @@
       width="50%"
       :visible.sync="showBulkMessageDialog"
       class="dialog__bulk-message"
-      @before-close="closeBulkMessageDialog()">
+      @before-close="closeBulkMessageDialog()"
+    >
       <span class="dialog-body__text-info">
         <i class="el-icon-warning" />
         Essa mensagem será enviada para a(s) {{ selectedLenghtToShow }} disputa(s) selecionada(s)
@@ -274,7 +275,8 @@
         <el-button @click="closeBulkMessageDialog()">Cancelar</el-button>
         <el-button
           type="primary"
-          @click="sendBulkMessage()">
+          @click="sendBulkMessage()"
+        >
           Enviar
         </el-button>
       </span>

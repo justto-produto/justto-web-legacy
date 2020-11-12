@@ -7,7 +7,8 @@
     <div
       v-for="(lawyer, index) in lawyers"
       :key="index"
-      class="lawyer-detail__list">
+      class="lawyer-detail__list"
+    >
       <span class="lawyer-detail__list-image">
         <img
           :src="`data:image/png;base64,${lawyer.photo}`"
@@ -25,7 +26,8 @@
         </li>
         <li
           v-if="lawyer.organization && lawyer.organization !== 'false'"
-          class="lawyer-detail__list-item">
+          class="lawyer-detail__list-item"
+        >
           <span class="lawyer-detail__item-title">
             Organização:
           </span>
@@ -35,7 +37,8 @@
         </li>
         <li
           v-if="lawyer.document"
-          class="lawyer-detail__list-item">
+          class="lawyer-detail__list-item"
+        >
           <span class="lawyer-detail__item-title">
             CPF:
           </span>
@@ -53,7 +56,8 @@
         </li>
         <li
           v-if="lawyer.oab"
-          class="lawyer-detail__list-item">
+          class="lawyer-detail__list-item"
+        >
           <span class="lawyer-detail__item-title">
             Nº da OAB:
           </span>
@@ -71,7 +75,8 @@
         </li>
         <li
           v-if="lawyer.uf"
-          class="lawyer-detail__list-item">
+          class="lawyer-detail__list-item"
+        >
           <span class="lawyer-detail__item-title">
             Estado:
           </span>
@@ -81,7 +86,8 @@
         </li>
         <li
           v-if="lawyer.status"
-          class="lawyer-detail__list-item">
+          class="lawyer-detail__list-item"
+        >
           <span class="lawyer-detail__item-title">
             Situação:
           </span>
@@ -91,7 +97,8 @@
         </li>
         <li
           v-if="lawyer.address"
-          class="lawyer-detail__list-item">
+          class="lawyer-detail__list-item"
+        >
           <span class="lawyer-detail__item-title">
             Endereço:
           </span>
@@ -103,14 +110,16 @@
         </li>
         <li
           v-if="lawyer.phones.length"
-          class="lawyer-detail__list-item">
+          class="lawyer-detail__list-item"
+        >
           <span class="lawyer-detail__item-title">
             Telefones:
           </span>
           <div class="lawyer-detail__list-content">
             <div
               v-for="(phone, phoneIndex) in lawyer.phones"
-              :key="phoneIndex">
+              :key="phoneIndex"
+            >
               {{ phone }}
               <span @click="handleUseField('phone', phone)">
                 <el-tooltip content="Usar este telefone">
@@ -127,7 +136,8 @@
     </div>
     <div
       v-if="!lawyers.length && !loading"
-      class="lawyer-detail__error">
+      class="lawyer-detail__error"
+    >
       Não encontramos dados.
     </div>
   </section>

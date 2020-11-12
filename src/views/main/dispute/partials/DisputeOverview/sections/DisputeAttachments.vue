@@ -65,7 +65,8 @@
       </div>
       <div
         v-else-if="loadingAttachments"
-        class="dispute-attachments__without-attachment">
+        class="dispute-attachments__without-attachment"
+      >
         Carregando Anexos
       </div>
       <div
