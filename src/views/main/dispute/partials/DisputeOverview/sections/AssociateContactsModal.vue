@@ -192,7 +192,7 @@ export default {
       dispute: 'dispute'
     }),
     disputeRoles() {
-      return this.dispute.disputeRoles.filter(({ id, name, party, roles }) => {
+      return (this.dispute.disputeRoles || []).filter(({ id, name, party, roles }) => {
         return party === 'CLAIMANT' && (roles.includes('PARTY') || roles.includes('LAWYER'))
       }).map(({ id, name }) => ({ id, name }))
     },
