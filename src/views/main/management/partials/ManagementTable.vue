@@ -72,12 +72,24 @@
       >
         <template slot-scope="scope">
           <jus-vexatious-alert
-            v-if="scope.row.firstClaimantAlerts && scope.row.firstClaimantAlerts.length"
+            v-if="(scope.row.firstClaimantAlerts && scope.row.firstClaimantAlerts.length)"
             :document-number="scope.row.firstClaimantDocumentNumber"
             :name="scope.row.firstClaimant"
-            style="display: flex;"
+            style="display: flex; align-items: center;"
           />
-          {{ scope.row.firstClaimant || '-' }}
+          <nav>
+            <el-tooltip
+              v-if="scope.row.firstClaimant"
+              :content="`${$options.filters.capitalize(scope.row.firstClaimant.toLowerCase().split(' ')[0])} está online`"
+            >
+              <jus-icon
+                v-if="scope.row.firstClaimantStatus === 'ONLINE'"
+                icon="online"
+                style="height: 8px; width: 8px;"
+              />
+            </el-tooltip>
+            {{ scope.row.firstClaimant || '-' }}
+          </nav>
         </template>
       </el-table-column>
       <el-table-column
@@ -94,7 +106,19 @@
             :alerts="scope.row.firstClaimantLawyerAlerts"
             style="display: flex;"
           />
-          {{ scope.row.firstClaimantLawyer || '-' }}
+          <nav>
+            <el-tooltip
+              v-if="scope.row.firstClaimantLawyer"
+              :content="`${$options.filters.capitalize(scope.row.firstClaimantLawyer.toLowerCase().split(' ')[0])} está online`">
+              <jus-icon
+                v-if="scope.row.firstClaimantLawyerStatus === 'ONLINE'"
+                icon="online"
+                style="height: 8px; width: 8px;"
+              />
+            </el-tooltip>
+            {{ scope.row.firstClaimantLawyer || '-' }}
+          </nav>
+          <!-- {{ firstClaimantLawyerStatus ? 'ONLINE' : 'OFFLINE' }} -->
         </template>
       </el-table-column>
       <el-table-column
