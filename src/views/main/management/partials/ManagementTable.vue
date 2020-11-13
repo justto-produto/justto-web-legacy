@@ -72,17 +72,23 @@
       >
         <template slot-scope="scope">
           <jus-vexatious-alert
-            v-if="(scope.row.firstClaimantAlerts && scope.row.firstClaimantAlerts.length) || true"
+            v-if="(scope.row.firstClaimantAlerts && scope.row.firstClaimantAlerts.length)"
             :document-number="scope.row.firstClaimantDocumentNumber"
             :name="scope.row.firstClaimant"
-            style="display: flex;"
+            style="display: flex; align-items: center;"
           />
-          <nav @click="handleRowClick(scope.row, {}, $event)">
+          <nav>
+            <el-tooltip
+              v-if="scope.row.firstClaimant"
+              :content="`${$options.filters.capitalize(scope.row.firstClaimant.toLowerCase().split(' ')[0])} está online`"
+            >
+              <jus-icon
+                v-if="scope.row.firstClaimantStatus === 'ONLINE'"
+                icon="online"
+                style="height: 8px; width: 8px;"
+              />
+            </el-tooltip>
             {{ scope.row.firstClaimant || '-' }}
-            <i
-              class="el-icon-success"
-              style="color: #28B463;"
-            />
           </nav>
         </template>
       </el-table-column>
@@ -100,7 +106,18 @@
             :alerts="scope.row.firstClaimantLawyerAlerts"
             style="display: flex;"
           />
-          {{ scope.row.firstClaimantLawyer || '-' }}
+          <nav>
+            <el-tooltip
+              v-if="scope.row.firstClaimantLawyer"
+              :content="`${$options.filters.capitalize(scope.row.firstClaimantLawyer.toLowerCase().split(' ')[0])} está online`">
+              <jus-icon
+                v-if="scope.row.firstClaimantLawyerStatus === 'ONLINE'"
+                icon="online"
+                style="height: 8px; width: 8px;"
+              />
+            </el-tooltip>
+            {{ scope.row.firstClaimantLawyer || '-' }}
+          </nav>
           <!-- {{ firstClaimantLawyerStatus ? 'ONLINE' : 'OFFLINE' }} -->
         </template>
       </el-table-column>

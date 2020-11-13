@@ -451,6 +451,15 @@
                       <i :class="getRoleIcon(role.party, r)" />
                     </el-tooltip>
                   </span>
+                  <el-tooltip
+                    v-if="role.name && role.online"
+                    :content="`${$options.filters.capitalize(role.name.toLowerCase().split(' ')[0])} está online`"
+                  >
+                    <jus-icon
+                      icon="online"
+                      style="width: 10px; margin: 19px 0px; margin-left: 8px;"
+                    />
+                  </el-tooltip>
                   {{ role.name }}
                 </div>
               </div>
