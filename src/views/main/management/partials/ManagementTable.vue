@@ -72,12 +72,18 @@
       >
         <template slot-scope="scope">
           <jus-vexatious-alert
-            v-if="scope.row.firstClaimantAlerts && scope.row.firstClaimantAlerts.length"
+            v-if="(scope.row.firstClaimantAlerts && scope.row.firstClaimantAlerts.length) || true"
             :document-number="scope.row.firstClaimantDocumentNumber"
             :name="scope.row.firstClaimant"
             style="display: flex;"
           />
-          {{ scope.row.firstClaimant || '-' }}
+          <nav @click="handleRowClick(scope.row, {}, $event)">
+            {{ scope.row.firstClaimant || '-' }}
+            <i
+              class="el-icon-success"
+              style="color: #28B463;"
+            />
+          </nav>
         </template>
       </el-table-column>
       <el-table-column
@@ -95,6 +101,7 @@
             style="display: flex;"
           />
           {{ scope.row.firstClaimantLawyer || '-' }}
+          <!-- {{ firstClaimantLawyerStatus ? 'ONLINE' : 'OFFLINE' }} -->
         </template>
       </el-table-column>
       <el-table-column
