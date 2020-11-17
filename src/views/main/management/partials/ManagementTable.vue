@@ -109,7 +109,8 @@
           <nav>
             <el-tooltip
               v-if="scope.row.firstClaimantLawyer"
-              :content="`${$options.filters.capitalize(scope.row.firstClaimantLawyer.toLowerCase().split(' ')[0])} está online`">
+              :content="`${$options.filters.capitalize(scope.row.firstClaimantLawyer.toLowerCase().split(' ')[0])} está online`"
+            >
               <jus-icon
                 v-if="scope.row.firstClaimantLawyerStatus === 'ONLINE'"
                 icon="online"
