@@ -460,7 +460,7 @@
 import { validateObjectEmail, validateDocument } from '@/utils/validations'
 import { IS_SMALL_WINDOW } from '@/constants/variables'
 import * as cpf from '@fnando/cpf'
-import * as cnpj from '@fnando/cnpj'
+// import * as cnpj from '@fnando/cnpj'
 import { mapActions, mapGetters } from 'vuex'
 import { concat } from 'lodash'
 
@@ -675,8 +675,8 @@ export default {
     stripDoc(doc) {
       if (cpf.isValid(doc)) {
         return cpf.strip(doc)
-      } else if (cnpj.isValid(doc)) {
-        return cnpj.strip(doc)
+      // } else if (cnpj.isValid(doc)) {
+      //   return cnpj.strip(doc)
       } else {
         return ''
       }
@@ -705,7 +705,8 @@ export default {
       return this.defaultsDocuments.includes(this.stripDoc(doc))
     },
     isValidCpfOrCnpj(value) {
-      return cpf.isValid(value) || cnpj.isValid(value)
+      return cpf.isValid(value)
+      // || cnpj.isValid(value)
     },
     openDocumentInNewTab() {
       const url = `https://assinador.juristas.com.br/private/documents/${this.document.signedDocument.signKey}`
