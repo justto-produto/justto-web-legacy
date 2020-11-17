@@ -271,7 +271,7 @@ export default {
       })
     },
     setPersonName() {
-      if (!this.loggedPersonHasName) {
+      if (!this.loggedPersonHasName && this.$route.meta.requiresAuth) {
         const validator = (value) => {
           if (!value || value.length < 3) return 'Ops, o nome precisa ter mais de duas letras'
           else if (!value.match(/^[^!@#$%*(){}[\]/|\\_<>?¢£¬§=+]+$/)) return 'Ops, o nome não pode conter caracteres especiais'
