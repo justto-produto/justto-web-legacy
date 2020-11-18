@@ -10,7 +10,8 @@ const personGetters = {
       })
       return mainPhone[0] || state.loggedPerson.phones[0] || null
     }
-  }
+  },
+  onlineDocuments: state => state.onlineDocuments
 }
 
 export default personGetters
