@@ -87,8 +87,6 @@
                 :class="{ 'dispute-view-occurrences__log-canceled': occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.status === 'CANCELED'}"
                 class="dispute-view-occurrences__log-icon"
               >
-                <!-- {{ buildIcon(occurrence) }} -->
-                <!-- {{ occurrence.interaction }} -->
                 <jus-icon
                   :icon="buildIcon(occurrence)"
                   :class="buildIcon(occurrence)"
@@ -245,6 +243,15 @@
                 data-testid="message-box"
               >
                 <div>
+                  <div
+                    v-if="canShowFullMessage(occurrence) && !showResume(occurrence)"
+                    style="text-align: right;">
+                    <a
+                      href="#"
+                      data-testid="hide-email"
+                      @click.prevent="hideFullMessage(occurrence.id)"
+                    > ver menos</a>
+                  </div>
                   <span>
                     <span
                       :ref="getMessageRef(occurrence)"
@@ -421,6 +428,15 @@
               >
                 <div>
                   <span>
+                    <div
+                      v-if="canShowFullMessage(mergedOccurency) && !showResume(mergedOccurency)"
+                      style="text-align: right;">
+                      <a
+                        href="#"
+                        data-testid="hide-email"
+                        @click.prevent="hideFullMessage(mergedOccurency.id)"
+                      > ver menos</a>
+                    </div>
                     <span
                       :ref="getMessageRef(mergedOccurency)"
                       v-html="buildContent(mergedOccurency)"
@@ -738,6 +754,12 @@ export default {
       this.showFullMessageList.push(occurrenceId)
     },
 
+    hideFullMessage(occurrenceId) {
+      if (this.showFullMessageList.pop(occurrenceId)) {
+        delete this.fullMessageBank[occurrenceId]
+      }
+    },
+
     showMessageDialog(messageId) {
       this.messageDialogVisible = true
       this.message = ''
@@ -923,12 +945,16 @@ export default {
       return occurrence.description
     },
 
-    showResume(occurrence) {
-      if (!this.showFullMessageList.includes(occurrence.id) &&
-        occurrence.interaction &&
+    canShowFullMessage(occurrence) {
+      return (occurrence.interaction &&
         occurrence.interaction.message &&
         occurrence.interaction.message.resume &&
-        occurrence.interaction.message.resume.length >= 140) {
+        occurrence.interaction.message.resume.length >= 140)
+    },
+
+    showResume(occurrence) {
+      if (!this.showFullMessageList.includes(occurrence.id) &&
+        this.canShowFullMessage(occurrence)) {
         return true
       }
       return false
