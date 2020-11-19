@@ -621,8 +621,9 @@ export default {
   },
   watch: {
     step() {
-      if (Number(this.step) === 0) {
+      if (Number(this.step) === 4) {
         this.step = Number(localStorage.getItem('lastStep'))
+        this.getDocument()
       } else {
         localStorage.setItem('lastStep', this.step)
       }
@@ -984,6 +985,8 @@ export default {
             message: 'Minuta excluída com sucesso',
             type: 'success'
           })
+          this.step = 0
+          // this.getDocument()
         }).catch(error => {
           this.$jusNotification({ error })
         }).finally(() => {
