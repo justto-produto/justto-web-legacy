@@ -6,7 +6,8 @@ const person = JSON.parse(localStorage.getItem('jusperson')) || {}
 
 const personModule = {
   state: {
-    loggedPerson: person
+    loggedPerson: person,
+    onlineDocuments: {}
   },
   mutations: mutations,
   actions: actions,

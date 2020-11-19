@@ -83,7 +83,7 @@
               :content="`${$options.filters.capitalize(scope.row.firstClaimant.toLowerCase().split(' ')[0])} está online`"
             >
               <jus-icon
-                v-if="scope.row.firstClaimantStatus === 'ONLINE'"
+                v-if="onlineDocuments[scope.row.firstClaimantDocumentNumber] === 'ONLINE'"
                 icon="online"
                 style="height: 8px; width: 8px;"
               />
@@ -112,7 +112,12 @@
               :content="`${$options.filters.capitalize(scope.row.firstClaimantLawyer.toLowerCase().split(' ')[0])} está online`"
             >
               <jus-icon
-                v-if="scope.row.firstClaimantLawyerStatus === 'ONLINE'"
+                v-if="onlineDocuments[scope.row.firstClaimantLawyerDocumentNumber] === 'ONLINE'"
+                icon="online"
+                style="height: 8px; width: 8px;"
+              />
+              <jus-icon
+                v-else-if="onlineDocuments[scope.row.firstClaimantLawyerOab] === 'ONLINE'"
                 icon="online"
                 style="height: 8px; width: 8px;"
               />
@@ -374,7 +379,8 @@ export default {
     ...mapGetters([
       'disputeTimeline',
       'loading',
-      'lastAccess'
+      'lastAccess',
+      'onlineDocuments'
     ]),
 
     selectedIdsComp: {
