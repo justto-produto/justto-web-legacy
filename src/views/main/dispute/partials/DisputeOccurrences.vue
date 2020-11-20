@@ -629,6 +629,14 @@ export default {
           value: 'UNKNOWN',
           label: 'Desconhecido'
         }
+      ],
+      negotiatorTypes: [
+        'NEGOTIATOR_ACCESS',
+        'NEGOTIATOR_PROPOSAL',
+        'NEGOTIATOR_COUNTERPROSAL',
+        'NEGOTIATOR_CHECKOUT',
+        'NEGOTIATOR_ACCEPTED',
+        'NEGOTIATOR_REJECTED'
       ]
     }
   },
@@ -995,7 +1003,7 @@ export default {
         ((occurrence.interaction.message &&
         occurrence.interaction.message.communicationType &&
         ['EMAIL', 'WHATSAPP', 'NEGOTIATOR_MESSAGE'].includes(occurrence.interaction.message.communicationType)) ||
-        (['NEGOTIATOR_PROPOSAL', 'NEGOTIATOR_COUNTERPROSAL', 'NEGOTIATOR_CHECKOUT'].includes(occurrence.interaction.type) &&
+        (this.negotiatorTypes.includes(occurrence.interaction.type) &&
         this.disputeLastInteractions.length)) &&
         occurrence.interaction.direction === 'INBOUND') {
         return true
@@ -1003,18 +1011,26 @@ export default {
       return false
     },
 
+    isNegotiatorMessage(occurrence) {
+      return this.negotiatorTypes.includes(occurrence.interaction.type) ||
+        ['NEGOTIATOR_MESSAGE'].includes(occurrence.interaction.message.communicationType)
+    },
+
     startReply(occurrence) {
+      console.log(occurrence)
       let senders, resume, type
-      if (['NEGOTIATOR_PROPOSAL', 'NEGOTIATOR_COUNTERPROSAL', 'NEGOTIATOR_CHECKOUT'].includes(occurrence.interaction.type)) {
-        senders = uniq(this.disputeLastInteractions.map(item => item.address))
-        resume = this.buildContent(occurrence)
-        type = 'email'
-      } else if (['NEGOTIATOR_MESSAGE'].includes(occurrence.interaction.message.communicationType)) {
+      if (occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.sender) {
         senders = [occurrence.interaction.message.sender]
+      } else {
+        senders = uniq(this.disputeLastInteractions.map(item => item.address))
+      }
+      if (
+        this.negotiatorTypes.includes(occurrence.interaction.type) ||
+        ['NEGOTIATOR_MESSAGE'].includes(occurrence.interaction.message.communicationType)
+      ) {
         resume = this.buildContent(occurrence)
         type = 'email'
       } else {
-        senders = [occurrence.interaction.message.sender]
         resume = occurrence.interaction.message.resume
         type = occurrence.interaction.message.communicationType
       }
@@ -1037,7 +1053,7 @@ export default {
       if (message.status.startsWith('PROCESSED')) {
         const sendDate = message.parameters && message.parameters.SEND_DATE ? message.parameters.SEND_DATE : this.$moment(executionDateTime.dateTime).format('DD/MM/YYYY HH:mm')
         const receiverDate = message.parameters ? message.parameters.RECEIVER_DATE : ''
-        const readDate = message.parameters ? message.parameters.READ_DATE : ''
+        const readDate = message.parameters ? this.$moment(message.parameters.READ_DATE).format('DD/MM/YYYY HH:mm') : ''
         let icon = 'status-sent'
         let msg = `Enviado em ${sendDate}.`
         if (receiverDate) {
