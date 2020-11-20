@@ -1003,7 +1003,7 @@ export default {
         ((occurrence.interaction.message &&
         occurrence.interaction.message.communicationType &&
         ['EMAIL', 'WHATSAPP', 'NEGOTIATOR_MESSAGE'].includes(occurrence.interaction.message.communicationType)) ||
-        (this.negotiatorTypes.includes(occurrence.interaction.type) &&
+        (this.negotiatorTypes.includes(occurrence.interaction.type) ||
         this.disputeLastInteractions.length)) &&
         occurrence.interaction.direction === 'INBOUND') {
         return true
