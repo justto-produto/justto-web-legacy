@@ -639,7 +639,7 @@ export default {
       const { type, resume, senders } = params
       const messageType = type.toLowerCase()
       this.setMessageType(messageType)
-      if (['email', 'negotiation'].includes(messageType)) {
+      if (['email'].includes(messageType)) {
         this.$refs.messageEditor.quill.insertText(9999999999, '\n\n___________________\n' + resume)
       }
       this.activeRoleId = 0
