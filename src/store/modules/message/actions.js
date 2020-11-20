@@ -20,6 +20,14 @@ const messageActions = {
       data: data
     })
   },
+  sendNegotiator({ _ }, params) {
+    const { disputeId, data } = params
+    return axiosDispatch({
+      url: `api/negotiations/${disputeId}/messages`,
+      method: 'POST',
+      data
+    })
+  },
   getOccurrenceMessage({ _ }, messageId) {
     return axiosDispatch({
       url: `${messagesPath}/${messageId}`

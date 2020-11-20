@@ -450,7 +450,8 @@ export default {
       'disputeStatuses',
       'isJusttoAdmin',
       'ghostMode',
-      'quickReplyTemplates'
+      'quickReplyTemplates',
+      'loggedPersonId'
     ]),
 
     sendMessageHeightComputed() {
@@ -575,7 +576,8 @@ export default {
       'getQuickReplyTemplates',
       'resetQuickReplyTemplate',
       'archiveQuickReplyTemplate',
-      'getDisputeMetadata'
+      'getDisputeMetadata',
+      'sendNegotiator'
     ]),
     archiveTemplate(templateId) {
       this.archiveQuickReplyTemplate(templateId)
@@ -637,7 +639,7 @@ export default {
       const { type, resume, senders } = params
       const messageType = type.toLowerCase()
       this.setMessageType(messageType)
-      if (messageType === 'email') {
+      if (['email', 'negotiation'].includes(messageType)) {
         this.$refs.messageEditor.quill.insertText(9999999999, '\n\n___________________\n' + resume)
       }
       this.activeRoleId = 0
@@ -758,6 +760,34 @@ export default {
     sendMessage() {
       if (!this.$refs.messageEditor.quill.getText().trim()) {
         return false
+      }
+      if (this.messageType === 'negotiation') {
+        const role = this.dispute.disputeRoles.find(role => {
+          return role.roles.includes('NEGOTIATOR')
+        })
+        this.loadingTextarea = true
+        this.sendNegotiator({
+          disputeId: this.id,
+          data: {
+            message: this.$refs.messageEditor.quill.getText(),
+            roleId: role.id,
+            email: role.emails[0].address
+          }
+        }).then(() => {
+          setTimeout(function() {
+            this.$refs.messageEditor.quill.deleteText(0, 9999999999)
+          }.bind(this), 200)
+          this.$jusNotification({
+            title: 'Yay!',
+            message: 'Mensagem enviado com sucesso.',
+            type: 'success'
+          })
+        }).catch(error => {
+          this.$jusNotification({ error })
+        }).finally(() => {
+          this.loadingTextarea = false
+        })
+        return
       }
       const quillMessage = this.messageType === 'email'
         ? this.$refs.messageEditor.quill.container.firstChild.innerHTML : this.$refs.messageEditor.quill.getText()
