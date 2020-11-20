@@ -1024,16 +1024,14 @@ export default {
       } else {
         senders = uniq(this.disputeLastInteractions.map(item => item.address))
       }
-      if (
-        this.negotiatorTypes.includes(occurrence.interaction.type) ||
-        ['NEGOTIATOR_MESSAGE'].includes(occurrence.interaction.message.communicationType)
-      ) {
+      if (this.isNegotiatorMessage(occurrence)) {
         resume = this.buildContent(occurrence)
-        type = 'email'
+        type = 'negotiation'
       } else {
         resume = occurrence.interaction.message.resume
         type = occurrence.interaction.message.communicationType
       }
+      console.log({ senders, resume, type })
       this.$emit('dispute:reply', { senders, resume, type })
     },
 
