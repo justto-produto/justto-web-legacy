@@ -129,6 +129,51 @@
               </el-form>
               <br>
               <el-form label-position="top">
+                <h3>Configurações da Pré-Negociação</h3>
+
+                <el-form-item
+                  class="pre-negotiation-select"
+                >
+                  <el-switch v-model="workspacePreNegotiation.preNegotiation" />
+                  <span>
+                    Pré-negociação
+                  </span>
+                  <el-popover
+                    popper-class="popover-info-prenegotiation"
+                    placement="top"
+                    width="300"
+                    trigger="click"
+                  >
+                    <p>
+                      Pré negociação é um recurso que busca por indicativo de baixa de processos nos casos que você importou para evitar que você negocie casos extintos. Ao detectar, o sistema irá solicitar que você confirme que deseja iniciar a negociação.
+                    </p>
+                    <i
+                      slot="reference"
+                      class="el-icon-warning"
+                    />
+                  </el-popover>
+                </el-form-item>
+
+                <!-- <el-form-item label="Palavras a serem detectadas para classificar como pré negociação">
+                  <el-select
+                    v-model="workspacePreNegotiation.keyWords"
+                    multiple
+                    filterable
+                    allow-create
+                    default-first-option
+                  />
+                </el-form-item>
+
+                <el-form-item label="Limite de valor do processo para classificar como pré negociação">
+                  <money
+                    v-model="workspacePreNegotiation.limitValue"
+                    class="el-input__inner"
+                    maxlength="16"
+                  />
+                </el-form-item> -->
+              </el-form>
+
+              <el-form label-position="top">
                 <h3>Configurações gerais da Equipe</h3>
                 <el-form-item label="Como detectar possíveis ofensores em sua carteira?">
                   <el-select v-model="vexatiousType">
@@ -523,7 +568,12 @@ export default {
       companyName: '',
       currentEditMember: {},
       vexatiousThreshold: '',
-      vexatiousType: ''
+      vexatiousType: '',
+      workspacePreNegotiation: {
+        preNegotiation: false,
+        keyWords: [],
+        limitValue: 0
+      }
     }
   },
   computed: {
@@ -549,6 +599,34 @@ export default {
         precision: 0,
         masked: false
       }
+    },
+    preNegotiationAlreadyEnebled() {
+      return this.workspaceProperties['PRE_NEGOTIATION'] && this.workspaceProperties['PRE_NEGOTIATION'] === 'true'
+    }
+  },
+  watch: {
+    workspaceProperties() {
+      this.workspacePreNegotiation.preNegotiation = this.preNegotiationAlreadyEnebled
+    },
+    'workspacePreNegotiation.preNegotiation'() {
+      if (this.workspacePreNegotiation.preNegotiation && !this.preNegotiationAlreadyEnebled) {
+        const title = 'Esta funcionalidade irá gerar custos adicionais.'
+        const message = `
+        Se você tem alguma dúvida de seu funcionamento, converse com seu Key Account antes.
+        <br/><br/>
+        Tem certeza que deseja ativar a pré-negociação?
+        `
+        this.$confirm(message, title, {
+          confirmButtonText: 'Sim',
+          cancelButtonText: 'Não',
+          showClose: false,
+          dangerouslyUseHTMLString: true
+        }).then(() => {
+          this.workspacePreNegotiation.preNegotiation = true
+        }).catch(() => {
+          this.workspacePreNegotiation.preNegotiation = false
+        })
+      }
     }
   },
   mounted() {
@@ -565,6 +643,7 @@ export default {
       // eslint-disable-next-line no-self-assign
       this.profileForm.phone = this.profileForm.phone
     }
+    this.workspacePreNegotiation.preNegotiation = this.workspaceProperties['PRE_NEGOTIATION'] && this.workspaceProperties['PRE_NEGOTIATION'] === 'true'
   },
   methods: {
     ...mapActions([
@@ -782,22 +861,27 @@ export default {
       })
     },
     saveProperties() {
+      const req = {
+        PRE_NEGOTIATION: this.workspacePreNegotiation.preNegotiation
+      }
       if (this.vexatiousThreshold && this.vexatiousType) {
-        this.editWorkpaceProperties({
+        Object.assign(req, {
           VEXATIOUS_THRESHOLD: (this.vexatiousThreshold || '').toString(),
           VEXATIOUS_TYPE: (this.vexatiousType || '').toString()
-        }).then(() => {
-          // SEGMENT TRACK
-          this.$jusSegment('Configurações da equipe alterada')
-          this.$jusNotification({
-            title: 'Yay!',
-            message: 'Configurações da equipe alteradas com sucesso.',
-            type: 'success'
-          })
-        }).catch(error => {
-          this.$jusNotification({ error })
         })
       }
+
+      this.editWorkpaceProperties(req).then(() => {
+        // SEGMENT TRACK
+        this.$jusSegment('Configurações da equipe alterada')
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Configurações da equipe alteradas com sucesso.',
+          type: 'success'
+        })
+      }).catch(error => {
+        this.$jusNotification({ error })
+      })
     },
     changeTeamName() {
       if (this.teamName) {
@@ -855,6 +939,36 @@ export default {
 </script>
 
 <style lang="scss">
+@import '@/styles/colors.scss';
+
+.pre-negotiation-select {
+  display: flex;
+  align-items: center;
+
+  span {
+    margin: 0px 2px;
+  }
+}
+
+.popover-info-prenegotiation {
+  padding: 8px;
+
+  p {
+    margin: 0px;
+    word-break: break-word;
+  }
+}
+
+.el-icon-warning {
+  color: $--color-primary;
+  cursor: pointer;
+  font-size: 16px;
+
+  &:hover {
+    color: $--color-primary-light-1;
+  }
+}
+
 .configuration-view {
   .el-tab-pane {
     margin: auto;
