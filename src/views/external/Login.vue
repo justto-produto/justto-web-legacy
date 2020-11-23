@@ -126,6 +126,7 @@
               filterable
               data-testid="select-workspace"
             >
+              <!-- v-show="!w.person" -->
               <el-option
                 v-for="(w, index) in workspaces"
                 :key="index"
@@ -279,7 +280,6 @@ export default {
       })
     },
     getMembersAndRedirect(response) {
-      console.log(response)
       // SEGMENT TRACK
       this.$jusSegment('Seleção de Workspace', {
         workspace: response.workspace.name,
@@ -287,7 +287,9 @@ export default {
       })
       if (response.workspace) this.$store.commit('setWorkspace', response.workspace)
       if (response.profile) this.$store.commit('setProfile', response.profile)
-      if (response.person) this.$store.commit('setLoggedPerson', response.person)
+      if (response.person) {
+        this.$store.commit('setLoggedPerson', response.person)
+      }
       this.$store.dispatch('getWorkspaceMembers')
         .then(() => {
           this.$router.push('/')
@@ -303,8 +305,10 @@ export default {
           if (selectedWorkspace.person) {
             this.getMembersAndRedirect(selectedWorkspace)
           } else {
-            this.$store.dispatch('ensureWorkspaceAccesss', selectedWorkspace.workspace.id).then(() => {
+            this.$store.dispatch('ensureWorkspaceAccesss', selectedWorkspace.workspace.id).then((res) => {
+              this.$store.commit('setToken', res)
               this.getMyWorkspaces().then((response) => {
+                console.log(response)
                 this.getMembersAndRedirect(selectedWorkspace)
               })
             })
