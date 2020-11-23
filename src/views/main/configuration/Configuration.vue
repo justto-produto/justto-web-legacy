@@ -599,11 +599,34 @@ export default {
         precision: 0,
         masked: false
       }
+    },
+    preNegotiationAlreadyEnebled() {
+      return this.workspaceProperties['PRE_NEGOTIATION'] && this.workspaceProperties['PRE_NEGOTIATION'] === 'true'
     }
   },
   watch: {
     workspaceProperties() {
-      this.workspacePreNegotiation.preNegotiation = this.workspaceProperties['PRE_NEGOTIATION'] && this.workspaceProperties['PRE_NEGOTIATION'] === 'true'
+      this.workspacePreNegotiation.preNegotiation = this.preNegotiationAlreadyEnebled
+    },
+    'workspacePreNegotiation.preNegotiation'() {
+      if (this.workspacePreNegotiation.preNegotiation && !this.preNegotiationAlreadyEnebled) {
+        const title = 'Esta funcionalidade irá gerar custos adicionais.'
+        const message = `
+        Se você tem alguma dúvida de seu funcionamento, converse com seu Key Account antes.
+        <br/><br/>
+        Tem certeza que deseja ativar a pré-negociação?
+        `
+        this.$confirm(message, title, {
+          confirmButtonText: 'Sim',
+          cancelButtonText: 'Não',
+          showClose: false,
+          dangerouslyUseHTMLString: true
+        }).then(() => {
+          this.workspacePreNegotiation.preNegotiation = true
+        }).catch(() => {
+          this.workspacePreNegotiation.preNegotiation = false
+        })
+      }
     }
   },
   mounted() {
