@@ -9,7 +9,6 @@ const documentMutations = {
     state.availableSigners = defaulSigners.map(signer => new SignerModel(signer))
   },
   setSelectedSigners(state, signers) {
-    console.log(signers)
     state.selectedSigners = signers.map(signer => new SignerModel({ ...signer, defaultSigner: signer.party !== 'CLAIMANT' }))
   }
 }

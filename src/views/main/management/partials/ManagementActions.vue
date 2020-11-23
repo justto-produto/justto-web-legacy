@@ -616,10 +616,6 @@ export default {
 
         const fullNegotiatorsList = multiNegotiatorsList.concat(disputeNegotiatorList)
 
-        console.log(multiNegotiatorsList)
-        console.log(disputeNegotiatorList)
-        console.log(fullNegotiatorsList)
-
         if (fullNegotiatorsList.length === 1) {
           this.disputeNegotiators = fullNegotiatorsList[0].negotiators
           this.changeNegotiatorDialogVisible = true
