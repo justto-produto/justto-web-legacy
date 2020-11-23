@@ -153,7 +153,8 @@
                     />
                   </el-popover>
                 </el-form-item>
-                <el-form-item label="Palavras a serem detectadas para classificar como pré negociação">
+
+                <!-- <el-form-item label="Palavras a serem detectadas para classificar como pré negociação">
                   <el-select
                     v-model="workspacePreNegotiation.keyWords"
                     multiple
@@ -162,13 +163,14 @@
                     default-first-option
                   />
                 </el-form-item>
+
                 <el-form-item label="Limite de valor do processo para classificar como pré negociação">
                   <money
                     v-model="workspacePreNegotiation.limitValue"
                     class="el-input__inner"
                     maxlength="16"
                   />
-                </el-form-item>
+                </el-form-item> -->
               </el-form>
 
               <el-form label-position="top">
@@ -568,7 +570,7 @@ export default {
       vexatiousThreshold: '',
       vexatiousType: '',
       workspacePreNegotiation: {
-        preNegotiation: true,
+        preNegotiation: false,
         keyWords: [],
         limitValue: 0
       }
@@ -599,6 +601,11 @@ export default {
       }
     }
   },
+  watch: {
+    workspaceProperties() {
+      this.workspacePreNegotiation.preNegotiation = this.workspaceProperties['PRE_NEGOTIATION'] && this.workspaceProperties['PRE_NEGOTIATION'] === 'true'
+    }
+  },
   mounted() {
     this.getMembers()
     this.person = JSON.parse(JSON.stringify(this.$store.getters.loggedPerson))
@@ -613,6 +620,7 @@ export default {
       // eslint-disable-next-line no-self-assign
       this.profileForm.phone = this.profileForm.phone
     }
+    this.workspacePreNegotiation.preNegotiation = this.workspaceProperties['PRE_NEGOTIATION'] && this.workspaceProperties['PRE_NEGOTIATION'] === 'true'
   },
   methods: {
     ...mapActions([
@@ -830,22 +838,27 @@ export default {
       })
     },
     saveProperties() {
+      const req = {
+        PRE_NEGOTIATION: this.workspacePreNegotiation.preNegotiation
+      }
       if (this.vexatiousThreshold && this.vexatiousType) {
-        this.editWorkpaceProperties({
+        Object.assign(req, {
           VEXATIOUS_THRESHOLD: (this.vexatiousThreshold || '').toString(),
           VEXATIOUS_TYPE: (this.vexatiousType || '').toString()
-        }).then(() => {
-          // SEGMENT TRACK
-          this.$jusSegment('Configurações da equipe alterada')
-          this.$jusNotification({
-            title: 'Yay!',
-            message: 'Configurações da equipe alteradas com sucesso.',
-            type: 'success'
-          })
-        }).catch(error => {
-          this.$jusNotification({ error })
         })
       }
+
+      this.editWorkpaceProperties(req).then(() => {
+        // SEGMENT TRACK
+        this.$jusSegment('Configurações da equipe alterada')
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Configurações da equipe alteradas com sucesso.',
+          type: 'success'
+        })
+      }).catch(error => {
+        this.$jusNotification({ error })
+      })
     },
     changeTeamName() {
       if (this.teamName) {
