@@ -169,7 +169,23 @@ const disputeActions = {
           commit('setDisputes', response.data)
           commit('disputeSetHasNew', false)
         }
-
+        commit('clearOnlineDocs')
+        const onlineDocs = []
+        response.data.content.map(dispute => {
+          if (dispute.firstClaimantStatus === 'ONLINE') {
+            onlineDocs.push({
+              documentNumber: dispute.firstClaimantDocumentNumber,
+              online: true
+            })
+          }
+          if (dispute.firstClaimantLawyerStatus === 'ONLINE') {
+            onlineDocs.push({
+              documentNumber: dispute.firstClaimantLawyerDocumentNumber || dispute.firstClaimantLawyerOab,
+              online: true
+            })
+          }
+        })
+        commit('setOnlineDocs', onlineDocs)
         resolve(response.data)
       }).catch(error => {
         commit('clearDisputes')

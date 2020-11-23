@@ -278,7 +278,7 @@
               <span class="title">Configurações:</span>
               <span class="configurations">
                 Enriquecer automaticamente na importação?
-                <div><i :class="dispute.skipEnrichment ? 'el-icon-check' : 'el-icon-close'" /> {{ dispute.skipEnrichment ? 'Sim' : 'Não ' }}</div>
+                <div><i :class="!dispute.skipEnrichment ? 'el-icon-check' : 'el-icon-close'" /> {{ !dispute.skipEnrichment ? 'Sim' : 'Não ' }}</div>
                 Somente depósito em conta-corrente?
                 <div><i :class="dispute.denySavingDeposit ? 'el-icon-check' : 'el-icon-close'" /> {{ dispute.denySavingDeposit ? 'Sim' : 'Não ' }}</div>
                 Mensagens somente em horário comercial?
@@ -451,15 +451,26 @@
                       <i :class="getRoleIcon(role.party, r)" />
                     </el-tooltip>
                   </span>
-                  <el-tooltip
-                    v-if="role.name && role.online"
-                    :content="`${$options.filters.capitalize(role.name.toLowerCase().split(' ')[0])} está online`"
-                  >
-                    <jus-icon
-                      icon="online"
-                      style="width: 10px; margin: 19px 0px; margin-left: 8px;"
-                    />
-                  </el-tooltip>
+                  <span v-if="role.name">
+                    <el-tooltip
+                      v-if="onlineDocuments[role.documentNumber] === 'ONLINE'"
+                      :content="`${$options.filters.capitalize(role.name.toLowerCase().split(' ')[0])} está online`"
+                    >
+                      <jus-icon
+                        icon="online"
+                        style="width: 10px; margin: 19px 0px; margin-left: 8px;"
+                      />
+                    </el-tooltip>
+                    <el-tooltip
+                      v-else-if="oabs.filter(oab => onlineDocuments[`${oab.number}-${oab.state}`] === 'ONLINE').length"
+                      :content="`${$options.filters.capitalize(role.name.toLowerCase().split(' ')[0])} está online`"
+                    >
+                      <jus-icon
+                        icon="online"
+                        style="width: 10px; margin: 19px 0px; margin-left: 8px;"
+                      />
+                    </el-tooltip>
+                  </span>
                   {{ role.name }}
                 </div>
               </div>
@@ -1817,7 +1828,8 @@ export default {
       searchLawyersLoading: 'searchLawyersLoading',
       disputeBankAccounts: 'disputeBankAccounts',
       disputeMetadata: 'disputeMetadata',
-      dispute: 'dispute'
+      dispute: 'dispute',
+      onlineDocuments: 'onlineDocuments'
     }),
     contactsMetadataCount() {
       const { phones, emails } = this.disputeMetadata

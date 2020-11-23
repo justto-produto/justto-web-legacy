@@ -153,6 +153,7 @@ export default {
         // this.subscriptions.push({ headers: this.headers, channel: '/topic/' + this.workspace + '/whatsapp' })
         this.subscriptions.push({ headers: this.headers, channel: '/topic/' + this.workspace + '/' + this.personId + '/dispute' })
         this.subscriptions.push({ headers: this.headers, channel: '/topic/' + this.workspace + '/alert' })
+        this.subscriptions.push({ headers: this.headers, channel: `/topic/${this.workspace}/person-status` })
         this.subscriptions.push({ headers: this.headers, channel: '/topic/' + this.workspace + '/' + this.personId + '/dispute/summary' })
         this.subscriptions.forEach(s => this.$socket.emit('subscribe', s))
       }

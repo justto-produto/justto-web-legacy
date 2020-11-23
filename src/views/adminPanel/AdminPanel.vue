@@ -125,7 +125,8 @@ export default {
         'aline@justto.com.br',
         'helio@justto.com.br',
         'isadora@justto.com.br',
-        'daniel@justto.com.br'
+        'daniel@justto.com.br',
+        'deivid@justto.com.br'
       ]
     }
   },

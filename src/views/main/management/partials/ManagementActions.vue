@@ -23,7 +23,7 @@
           >
             <el-tooltip
               :disabled="!action.tooltip"
-              :content="$t(`action.tooltip.${action.tooltip}` || '')"
+              :content="action.tooltip ? $t(`action.tooltip.${action.tooltip}`) : ''"
             >
               <jus-icon
                 v-if="action.icon"
