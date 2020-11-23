@@ -115,7 +115,6 @@ export default {
   watch: {
     disputeId() {
       if (this.disputeId) {
-        console.log(this.disputeId)
         this.init()
       }
     }

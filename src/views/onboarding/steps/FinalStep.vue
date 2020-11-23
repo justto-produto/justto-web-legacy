@@ -53,7 +53,6 @@ export default {
           delete axios.defaults.headers.common['Workspace']
           this.$store.dispatch('myWorkspace')
             .then(response => {
-              console.log(response, this.workspace)
               const currentWorkspace = response.find(w => {
                 if (w.workspace &&
                   w.workspace.subDomain &&
