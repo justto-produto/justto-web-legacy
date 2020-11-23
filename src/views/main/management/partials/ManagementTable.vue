@@ -372,7 +372,8 @@ export default {
       selectedDisputeRoles: [],
       disputeKey: 0,
       responseBoxLoading: false,
-      actieTooltipDisputeId: 0
+      actieTooltipDisputeId: 0,
+      lastAccessTooltipTimeout: () => {}
     }
   },
   computed: {
@@ -462,11 +463,15 @@ export default {
     cellMouseEnter(row, column, cell, event) {
       this.disputeActionsRow = row.id
       if (column.property !== 'code') {
-        this.getDisputeLastAccess(row.id)
-        this.actieTooltipDisputeId = row.id
+        this.lastAccessTooltipTimeout = setTimeout(() => {
+          this.getDisputeLastAccess(row.id).then(() => {
+            this.actieTooltipDisputeId = row.id
+          })
+        }, 600)
       }
     },
     cellMouseLeave() {
+      clearTimeout(this.lastAccessTooltipTimeout)
       this.actieTooltipDisputeId = 0
     },
     getDocumentStep: (hasDocument, signStatus) => getDocumentStep(hasDocument, signStatus),
