@@ -290,6 +290,7 @@
             v-if="disputeActionsRow === scope.row.id"
             :dispute="scope.row"
             table-actions
+            @open:newtab="addHighlight(scope.row.id)"
           />
         </template>
       </el-table-column>
@@ -372,7 +373,8 @@ export default {
       selectedDisputeRoles: [],
       disputeKey: 0,
       responseBoxLoading: false,
-      actieTooltipDisputeId: 0
+      actieTooltipDisputeId: 0,
+      activeDisputeIds: []
     }
   },
   computed: {
@@ -433,12 +435,19 @@ export default {
     this.$store.commit('resetDisputeQueryPage')
     this.$store.dispatch('cleanDisputeLastAccess')
   },
+  mounted() {
+    this.activeDisputeIds = []
+  },
   methods: {
     ...mapActions([
       'getDisputeTimeline',
       'getDisputeLastAccess',
       'cleanDisputeLastAccess'
     ]),
+
+    addHighlight(id) {
+      this.activeDisputeIds.push(id)
+    },
 
     isWonDispute(disputeStatus) {
       return ['SETTLED', 'CHECKOUT', 'ACCEPTED'].includes(disputeStatus)
@@ -449,13 +458,14 @@ export default {
       }
     },
     openTimelineModal(dispute) {
-      const { code } = dispute
+      const { code, id } = dispute
       if (!this.disputeTimeline[code] || this.disputeTimeline[code].lawsuits.length === 0) {
         return
       }
       this.currentDisputeCode = code
       this.$nextTick(() => {
         this.disputeTimelineModal = true
+        this.addHighlight(id)
       })
       this.$jusSegment('Linha do tempo visualizada pelo gerenciamento', { disputeId: dispute.id })
     },
@@ -471,9 +481,14 @@ export default {
     },
     getDocumentStep: (hasDocument, signStatus) => getDocumentStep(hasDocument, signStatus),
     tableRowClassName({ row, rowIndex }) {
+      let className = ''
       if (!row.visualized && !this.tab1) {
-        return 'el-table__row--visualized-row'
+        className += ' el-table__row--visualized-row'
       }
+      if (this.activeDisputeIds.includes(row.id)) {
+        className += ' el-table__row--highlighted'
+      }
+      return className
     },
     handleRowClick(row, column, event) {
       if (row.id && !['IMG', 'SPAN', 'BUTTON', 'I'].includes(event.target.tagName)) {
@@ -516,6 +531,12 @@ export default {
 </script>
 
 <style lang="scss">
+@import '@/styles/colors.scss';
+
+.el-table__row--highlighted {
+  background-color: $--color-info-lighter !important;
+}
+
 .management-table__container {
   height: calc(100% - 114px);
 
