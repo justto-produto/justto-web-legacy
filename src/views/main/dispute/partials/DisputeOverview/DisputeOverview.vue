@@ -1362,17 +1362,12 @@
               class-name="visible"
             >
               <template slot-scope="scope">
-                <el-tooltip
-                  :open-delay="500"
-                  content="Remover"
+                <a
+                  href="#"
+                  @click.prevent="removeOab(scope.$index)"
                 >
-                  <a
-                    href="#"
-                    @click.prevent="removeOab(scope.$index)"
-                  >
-                    <jus-icon icon="trash" />
-                  </a>
-                </el-tooltip>
+                  <jus-icon icon="trash" />
+                </a>
               </template>
             </el-table-column>
           </el-table>
@@ -1428,17 +1423,12 @@
                     <el-switch v-model="scope.row.isMain" />
                   </span>
                 </el-tooltip>
-                <el-tooltip
-                  :open-delay="500"
-                  content="Remover"
+                <a
+                  href="#"
+                  @click.prevent="removePhone(scope.$index)"
                 >
-                  <a
-                    href="#"
-                    @click.prevent="removePhone(scope.$index)"
-                  >
-                    <jus-icon icon="trash" />
-                  </a>
-                </el-tooltip>
+                  <jus-icon icon="trash" />
+                </a>
               </template>
             </el-table-column>
           </el-table>
@@ -1495,17 +1485,12 @@
                     <el-switch v-model="scope.row.isMain" />
                   </span>
                 </el-tooltip>
-                <el-tooltip
-                  :open-delay="500"
-                  content="Remover"
+                <a
+                  href="#"
+                  @click.prevent="removeEmail(scope.$index)"
                 >
-                  <a
-                    href="#"
-                    @click.prevent="removeEmail(scope.$index)"
-                  >
-                    <jus-icon icon="trash" />
-                  </a>
-                </el-tooltip>
+                  <jus-icon icon="trash" />
+                </a>
               </template>
             </el-table-column>
           </el-table>
@@ -1544,17 +1529,12 @@
               class-name="visible"
             >
               <template slot-scope="scope">
-                <el-tooltip
-                  :open-delay="500"
-                  content="Remover"
+                <a
+                  href="#"
+                  @click.prevent="removeBankData(scope.$index, scope.row.id)"
                 >
-                  <a
-                    href="#"
-                    @click.prevent="removeBankData(scope.$index, scope.row.id)"
-                  >
-                    <jus-icon icon="trash" />
-                  </a>
-                </el-tooltip>
+                  <jus-icon icon="trash" />
+                </a>
               </template>
             </el-table-column>
           </el-table>
@@ -1984,6 +1964,7 @@ export default {
           key: 'CONTATOS ASSOCIADOS',
           value: !flag ? 'SIM' : 'NAO'
         }).then(() => {
+          this.overviewTab = 'roles'
           this.getDisputeMetadata(this.dispute.id)
         })
       }

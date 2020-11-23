@@ -11,16 +11,14 @@
       size="small"
       @click="handlePrescriptionClick(prescription.prescription)"
     >
-      <el-tooltip :content="`Filtrar por ${prescription.description}`">
-        <div>
-          <jus-icon
-            :class="{ 'management-prescriptions__filter-icon--selected' : hasPrescription(prescription.prescription) }"
-            class="management-prescriptions__filter-icon"
-            icon="filter"
-          />
-          {{ prescription.description | capitalize }}
-        </div>
-      </el-tooltip>
+      <div>
+        <jus-icon
+          :class="{ 'management-prescriptions__filter-icon--selected' : hasPrescription(prescription.prescription) }"
+          class="management-prescriptions__filter-icon"
+          icon="filter"
+        />
+        {{ prescription.description | capitalize }}
+      </div>
     </el-button>
 
     <jus-tags-filter @prescriptions:getDisputes="getDisputes" />
