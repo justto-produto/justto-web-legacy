@@ -126,7 +126,6 @@
               filterable
               data-testid="select-workspace"
             >
-              <!-- v-show="!w.person" -->
               <el-option
                 v-for="(w, index) in workspaces"
                 :key="index"
@@ -308,8 +307,7 @@ export default {
             this.$store.dispatch('ensureWorkspaceAccesss', selectedWorkspace.workspace.id).then((res) => {
               this.$store.commit('setToken', res)
               this.getMyWorkspaces().then((response) => {
-                console.log(response)
-                this.getMembersAndRedirect(selectedWorkspace)
+                this.getMembersAndRedirect(response[this.workspaceForm.selectedWorkspaceIndex])
               })
             })
           }
