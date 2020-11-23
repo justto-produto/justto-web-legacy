@@ -199,7 +199,7 @@
         min-width="120px"
       >
         <template slot-scope="scope">
-          {{ scope.row.lastCounterOfferValue | currency }}
+          {{ (scope.row.lastCounterOfferValue || scope.row.lastOfferValue) | currency }}
         </template>
       </el-table-column>
       <el-table-column
