@@ -126,11 +126,11 @@ const disputeActions = {
       mutation: 'setDisputeProperties'
     })
   },
-  putDisputeProperties({ commit }, params) {
+  putDisputeProperties({ _ }, { disputeId, data }) {
     return axiosDispatch({
-      url: `${disputesPath}/${params.disputeId}/properties`,
+      url: `${disputesPath}/${disputeId}/properties`,
       method: 'PUT',
-      data: params.data,
+      data,
       mutation: 'setDisputeProperties'
     })
   },
