@@ -149,7 +149,7 @@
                     </p>
                     <i
                       slot="reference"
-                      class="el-icon-warning"
+                      class="pre-negotiation-icon el-icon-warning"
                     />
                   </el-popover>
                 </el-form-item>
@@ -959,7 +959,7 @@ export default {
   }
 }
 
-.el-icon-warning {
+.pre-negotiation-icon.el-icon-warning {
   color: $--color-primary;
   cursor: pointer;
   font-size: 16px;
