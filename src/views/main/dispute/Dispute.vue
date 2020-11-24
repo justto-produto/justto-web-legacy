@@ -456,7 +456,8 @@ export default {
       'isJusttoAdmin',
       'ghostMode',
       'quickReplyTemplates',
-      'loggedPersonId'
+      'loggedPersonId',
+      'workspaceSubdomain'
     ]),
 
     sendMessageHeightComputed() {
@@ -537,10 +538,7 @@ export default {
       if (this.$refs.messageEditor) {
         this.$refs.messageEditor.quill.container.firstChild.innerHTML = ''
       }
-      this.$socket.emit('unsubscribe', {
-        headers: this.socketHeaders,
-        channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.loggedPersonId + '/dispute/' + oldId + '/occurrence'
-      })
+      this.socketAction('unsubscribe', oldId)
       this.unsubscribeOccurrences(oldId)
       this.fetchData()
       this.disputeOccurrencesKey += 1
@@ -690,19 +688,21 @@ export default {
         this.$refs.messageEditor.quill.setText(message.substring(messageIndex, 0))
       }
     },
+    socketAction(action, id) {
+      if (this.workspaceSubdomain && this.loggedPersonId) {
+        this.$socket.emit(action, {
+          headers: this.socketHeaders,
+          channel: '/topic/' + this.workspaceSubdomain + '/' + this.loggedPersonId + '/dispute/' + id + '/occurrence'
+        })
+      }
+    },
     unsubscribeOccurrences(id) {
       this.$store.commit('clearDisputeOccurrences')
-      this.$socket.emit('unsubscribe', {
-        headers: this.socketHeaders,
-        channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.loggedPersonId + '/dispute/' + id + '/occurrence'
-      })
+      this.socketAction('unsubscribe', id)
     },
     fetchData() {
       this.loadingDispute = true
-      this.$socket.emit('subscribe', {
-        headers: this.socketHeaders,
-        channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.loggedPersonId + '/dispute/' + this.id + '/occurrence'
-      })
+      this.socketAction('subscribe', this.id)
       this.$store.dispatch('getDispute', this.id).then(dispute => {
         if (!dispute || dispute.archived) this.backToManagement()
         else this.$store.dispatch('getDisputeTags', this.id)
