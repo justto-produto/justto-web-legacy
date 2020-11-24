@@ -103,7 +103,7 @@ const disputeMutations = {
       status: ['RUNNING'],
       sort: [
         'visualized,asc',
-        'lastInboundInteraction.createdAt,asc',
+        'lastInboundInteraction.createdAt,desc',
         'conclusionDate,asc'
       ],
       campaigns: [],
