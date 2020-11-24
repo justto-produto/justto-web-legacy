@@ -776,13 +776,16 @@ export default {
         const role = this.dispute.disputeRoles.find(role => {
           return role.roles.includes('NEGOTIATOR')
         })
+        const to = this.selectedContacts.filter(contact => {
+          return !!contact.address
+        }).map(contact => contact.address)
         this.loadingTextarea = true
         this.sendNegotiator({
           disputeId: this.id,
           data: {
             message: this.$refs.messageEditor.quill.getText(),
             roleId: role.id,
-            email: role.emails[0].address
+            email: to[0] || ''
           }
         }).then(() => {
           setTimeout(function() {
