@@ -534,7 +534,9 @@ export default {
     '$route.params.id': function(id, oldId) {
       this.id = id.toString()
       this.removeReply()
-      this.$refs.messageEditor.quill.container.firstChild.innerHTML = ''
+      if (this.$refs.messageEditor) {
+        this.$refs.messageEditor.quill.container.firstChild.innerHTML = ''
+      }
       this.$socket.emit('unsubscribe', {
         headers: this.socketHeaders,
         channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.loggedPersonId + '/dispute/' + oldId + '/occurrence'
@@ -642,6 +644,9 @@ export default {
       }, 100)
     },
     startReply(params) {
+      if (this.$refs.messageEditor) {
+        this.$refs.messageEditor.quill.container.firstChild.innerHTML = ''
+      }
       const { type, resume, senders } = params
       const messageType = type.toLowerCase()
       this.setMessageType(messageType)
