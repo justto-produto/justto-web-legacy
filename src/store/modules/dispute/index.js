@@ -25,7 +25,7 @@ const dispute = {
       status: ['RUNNING'],
       sort: [
         'visualized,asc',
-        'lastInboundInteraction.createdAt,asc',
+        'lastInboundInteraction.createdAt,desc',
         'expirationDate,asc'
       ],
       campaigns: [],
