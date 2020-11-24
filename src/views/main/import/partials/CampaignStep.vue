@@ -186,7 +186,6 @@ export default {
       this.loadingStrategies = true
       this.showLoading()
       for (const round in [0, 1, 2, 3, 4]) {
-        console.log('Esperando', round * 3000)
         await new Promise((resolve) => setTimeout(resolve, round * 3000))
         if (this.loading) {
           this.getMyStrategies().then(this.hideLoading).catch(() => {

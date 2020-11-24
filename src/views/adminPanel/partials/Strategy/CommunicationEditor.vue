@@ -179,7 +179,6 @@ export default {
     ...mapActions(['changeCommunicationTemplate']),
 
     saveTemplate() {
-      console.log(this.template)
       if (!this.template.title) {
         this.$jusNotification({
           type: 'warning',

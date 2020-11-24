@@ -1017,7 +1017,6 @@ export default {
     },
 
     startReply(occurrence) {
-      console.log(occurrence)
       let senders, resume, type
       if (occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.sender) {
         senders = [occurrence.interaction.message.sender]
@@ -1031,7 +1030,6 @@ export default {
         resume = occurrence.interaction.message.resume
         type = occurrence.interaction.message.communicationType
       }
-      console.log({ senders, resume, type })
       this.$emit('dispute:reply', { senders, resume, type })
     },
 

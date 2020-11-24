@@ -145,7 +145,6 @@ export default {
       },
       set(properties) {
         const { id } = this.$route.params
-        console.log('properties', properties)
         this.$store.dispatch('putDisputeProperties', {
           disputeId: id,
           data: properties
@@ -186,7 +185,6 @@ export default {
       }
     },
     removePropriety(key) {
-      console.log(key)
       this.loading = true
       const newDisputeProperties = JSON.parse(JSON.stringify(this.disputeProperties))
       delete newDisputeProperties[key]
