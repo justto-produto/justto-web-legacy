@@ -70,7 +70,7 @@
               <div class="dispute-view__quick-reply">
                 <!-- Respostas rápidas -->
                 <el-popover
-                  v-if="typingTab === '1' && selectedContacts.length"
+                  v-if="typingTab === '1'"
                   title="Respostas rápidas"
                   trigger="click"
                   placement="top"
@@ -131,6 +131,11 @@
                   >
                     Não há templates para esta estratégia
                   </span>
+                  <!-- <el-tooltip
+                    content="Respostas rápidas"
+                    placement="top"
+                    :disabled="!isSmall"
+                  > -->
                   <el-button
                     slot="reference"
                     size="mini"
@@ -140,8 +145,11 @@
                       class="dispute-view__templates-button-icon"
                       icon="zap"
                     />
-                    Respostas rápidas
+                    <span v-show="!isSmall">
+                      Respostas rápidas
+                    </span>
                   </el-button>
+                  <!-- </el-tooltip> -->
                 </el-popover>
               </div>
               <div
@@ -412,6 +420,7 @@ export default {
   data() {
     return {
       y: 0,
+      width: null,
       dragDebounce: 0,
       sendMessageHeight: 208,
       id: 0,
@@ -459,6 +468,10 @@ export default {
       'loggedPersonId',
       'workspaceSubdomain'
     ]),
+
+    isSmall() {
+      return this.width < 840 && this.selectedContacts.length > 0
+    },
 
     sendMessageHeightComputed() {
       switch (this.typingTab) {
@@ -565,6 +578,7 @@ export default {
     this.getLastInteractions(this.id)
     setTimeout(() => {
       this.disputeOccurrencesKey += 1
+      this.width = this.$refs.sectionMessages.offsetWidth
       this.y = parseInt(localStorage.getItem('jusoffsetheight')) || this.$refs.sectionMessages.offsetHeight - 208
     }, 800)
     window.addEventListener('resize', this.updateWindowHeight)
@@ -624,6 +638,7 @@ export default {
       this.$refs.messageEditor.quill.container.firstChild.innerHTML = this.formatBody(template.parsed.body)
     },
     updateWindowHeight() {
+      this.width = this.$refs.sectionMessages.offsetWidth
       this.onDrag(0, this.$refs.sectionMessages.offsetHeight - this.sendMessageHeight)
     },
     onDrag(x, y) {
@@ -960,16 +975,17 @@ export default {
       display: none;
     }
     .dispute-view__send-container {
+      // background: red;
       display: flex;
       align-items: center;
       justify-content: space-between;
 
       position: absolute;
       right: 0;
-      left: 40%;
+      left: 325px;
       padding: 8px 14px;
 
-      gap: 40px;
+      // gap: 40px;
 
       .dispute-view__quick-reply {
         display: flex;
