@@ -397,7 +397,6 @@ import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
 
-import VueScreenSize from 'vue-screen-size'
 import Quill from 'quill'
 const SizeStyle = Quill.import('attributors/style/size')
 const AlignStyle = Quill.import('attributors/style/align')
@@ -418,7 +417,6 @@ export default {
     JusDragArea,
     quillEditor
   },
-  mixins: [VueScreenSize.VueScreenSizeMixin],
   data() {
     return {
       y: 0,
