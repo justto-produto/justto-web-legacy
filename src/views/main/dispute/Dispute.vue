@@ -664,7 +664,14 @@ export default {
       const messageType = type.toLowerCase()
       this.setMessageType(messageType)
       if (['email'].includes(messageType)) {
-        this.$refs.messageEditor.quill.insertText(9999999999, '\n\n___________________\n' + resume)
+        const { quill } = this.$refs.messageEditor
+        const peviewText = quill.getText()
+        const peviewResume = `\n\n\n___________________\n${resume}`
+        quill.setContents([
+          { insert: peviewText },
+          { insert: peviewResume }
+        ])
+        // quill.insertText(0, peviewText + '\n\n\n\n___________________\n' + resume)
       }
       this.activeRoleId = 0
       this.directContactAddress = senders
