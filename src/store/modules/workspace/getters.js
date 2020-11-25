@@ -34,7 +34,8 @@ const workspaceGetters = {
   isAdminProfile: state => state.workspace.profile === 'ADMINISTRATOR',
   workspaceBlackList: state => state.workspace.blackList,
   workspaceProperties: state => state.workspace.properties,
-  getWorkspaceDefaultSigners: state => state.workspace.defaultSigners
+  getWorkspaceDefaultSigners: state => state.workspace.defaultSigners,
+  getPreNegotiation: state => state.workspace.preNegotiation
 }
 
 export default workspaceGetters
