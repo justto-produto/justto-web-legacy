@@ -145,7 +145,7 @@
                     trigger="click"
                   >
                     <p>
-                      Pré negociação é um recurso que busca por indicativo de baixa de processos nos casos que você importou para evitar que você negocie casos extintos. Ao detectar, o sistema irá solicitar que você confirme que deseja iniciar a negociação.
+                      <b>Pré negociação</b> é um recurso que busca por indicativo de baixa de processos nos casos que você importou para evitar que você negocie casos extintos. Ao detectar, o sistema irá solicitar que você confirme que deseja iniciar a negociação.
                     </p>
                     <i
                       slot="reference"
@@ -154,7 +154,9 @@
                   </el-popover>
                 </el-form-item>
 
-                <!-- <el-form-item label="Palavras a serem detectadas para classificar como pré negociação">
+                <el-form-item
+                  v-if="workspacePreNegotiation.preNegotiation"
+                  label="Palavras a serem detectadas para classificar como pré negociação">
                   <el-select
                     v-model="workspacePreNegotiation.keyWords"
                     multiple
@@ -164,13 +166,15 @@
                   />
                 </el-form-item>
 
-                <el-form-item label="Limite de valor do processo para classificar como pré negociação">
+                <el-form-item
+                  v-if="workspacePreNegotiation.preNegotiation"
+                  label="Limite de valor do processo para classificar como pré negociação">
                   <money
                     v-model="workspacePreNegotiation.limitValue"
                     class="el-input__inner"
                     maxlength="16"
                   />
-                </el-form-item> -->
+                </el-form-item>
               </el-form>
 
               <el-form label-position="top">
@@ -577,15 +581,14 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([
-      'isAdminProfile',
-      'isJusttoAdmin',
-      'workspaceMembersSorted'
-    ]),
     ...mapGetters({
       workspace: 'workspace',
+      isAdminProfile: 'isAdminProfile',
+      isJusttoAdmin: 'isJusttoAdmin',
       loggedPersonPhone: 'loggedPersonPhone',
-      workspaceProperties: 'workspaceProperties'
+      workspaceProperties: 'workspaceProperties',
+      workspaceMembersSorted: 'workspaceMembersSorted',
+      preNegotiation: 'getPreNegotiation'
     }),
     passwordType() {
       return this.showPassword ? 'text' : 'password'
@@ -601,7 +604,7 @@ export default {
       }
     },
     preNegotiationAlreadyEnebled() {
-      return this.workspaceProperties['PRE_NEGOTIATION'] && this.workspaceProperties['PRE_NEGOTIATION'] === 'true'
+      return this.workspaceProperties.PRE_NEGOTIATION && this.workspaceProperties.PRE_NEGOTIATION === 'true'
     }
   },
   watch: {
@@ -612,7 +615,7 @@ export default {
       if (this.workspacePreNegotiation.preNegotiation && !this.preNegotiationAlreadyEnebled) {
         const title = 'Esta funcionalidade irá gerar custos adicionais.'
         const message = `
-        Se você tem alguma dúvida de seu funcionamento, converse com seu Key Account antes.
+        Se você tem alguma dúvida de seu funcionamento, converse com seu <i>Key Account</i> antes.
         <br/><br/>
         Tem certeza que deseja ativar a pré-negociação?
         `
@@ -623,6 +626,7 @@ export default {
           dangerouslyUseHTMLString: true
         }).then(() => {
           this.workspacePreNegotiation.preNegotiation = true
+          this.saveProperties()
         }).catch(() => {
           this.workspacePreNegotiation.preNegotiation = false
         })
@@ -643,13 +647,28 @@ export default {
       // eslint-disable-next-line no-self-assign
       this.profileForm.phone = this.profileForm.phone
     }
-    this.workspacePreNegotiation.preNegotiation = this.workspaceProperties['PRE_NEGOTIATION'] && this.workspaceProperties['PRE_NEGOTIATION'] === 'true'
+    this.workspacePreNegotiation.preNegotiation = this.workspaceProperties.PRE_NEGOTIATION && this.workspaceProperties.PRE_NEGOTIATION === 'true'
+
+    this.initPreNegotiation()
   },
   methods: {
     ...mapActions([
       'editWorkpace',
-      'editWorkpaceProperties'
+      'editWorkpaceProperties',
+      'getPreNegotiationLimitValue',
+      'getWorkspacePreNegotiationKeywords',
+      'putPreNegotiationLimitValue',
+      'putWorkspacePreNegotiationKeywords'
     ]),
+
+    initPreNegotiation() {
+      Promise.all([
+        this.getWorkspacePreNegotiationKeywords(),
+        this.getPreNegotiationLimitValue()
+      ]).then(() => {
+        Object.assign(this.workspacePreNegotiation, this.preNegotiation)
+      })
+    },
 
     isJusttoUser(email) {
       if (email) {
@@ -861,17 +880,22 @@ export default {
       })
     },
     saveProperties() {
-      const req = {
+      const request = {
         PRE_NEGOTIATION: this.workspacePreNegotiation.preNegotiation
       }
+      const { limitValue, keyWords } = this.workspacePreNegotiation
       if (this.vexatiousThreshold && this.vexatiousType) {
-        Object.assign(req, {
+        Object.assign(request, {
           VEXATIOUS_THRESHOLD: (this.vexatiousThreshold || '').toString(),
           VEXATIOUS_TYPE: (this.vexatiousType || '').toString()
         })
       }
 
-      this.editWorkpaceProperties(req).then(() => {
+      Promise.all([
+        this.editWorkpaceProperties(request),
+        this.putPreNegotiationLimitValue(limitValue),
+        this.putWorkspacePreNegotiationKeywords(keyWords)
+      ]).then(() => {
         // SEGMENT TRACK
         this.$jusSegment('Configurações da equipe alterada')
         this.$jusNotification({
@@ -954,7 +978,7 @@ export default {
   padding: 8px;
 
   p {
-    margin: 0px;
+    margin: 4px 8px;
     word-break: break-word;
   }
 }
