@@ -18,7 +18,11 @@ const workspaceModule = {
       members: [],
       blackList: workspace.blackList,
       properties: workspace.properties || {},
-      defaultSigners: []
+      defaultSigners: [],
+      preNegotiation: {
+        limitValue: 0,
+        keyWords: []
+      }
     },
     redirectNewWorkspace: false
   },

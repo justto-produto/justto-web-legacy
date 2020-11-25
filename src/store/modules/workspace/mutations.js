@@ -13,10 +13,12 @@ const workspaceMutations = {
       axios.defaults.headers.common['Workspace'] = workspace.subDomain
       const members = workspace.members ? workspace.members : state.workspace.members
       const profile = workspace.profile ? workspace.profile : state.workspace.profile
+      const preNegotiation = workspace.preNegotiation || state.workspace.preNegotiation
       state.workspace = {
         ...workspace,
         members,
-        profile
+        profile,
+        preNegotiation
       }
       localStorage.setItem('jusworkspace', JSON.stringify(state.workspace))
     }
@@ -38,7 +40,11 @@ const workspaceMutations = {
       profile: '',
       blackList: [],
       members: [],
-      properties: {}
+      properties: {},
+      preNegotiation: {
+        limitValue: 0,
+        keywords: []
+      }
     }
     localStorage.removeItem('jusworkspace')
     localStorage.removeItem('jusprofile')
@@ -47,6 +53,12 @@ const workspaceMutations = {
   setWorkspaceMembers: (state, members) => (state.workspace.members = members.content),
   setBlackList(state, blackList) {
     if (blackList) state.workspace.blackList = blackList
+  },
+  setPreNegotiationKeywords(state, keywords) {
+    state.workspace.preNegotiation.keyWords = keywords
+  },
+  setPreNegotiationLimitValue(state, value) {
+    state.workspace.preNegotiation.limitValue = Number(value)
   }
 }
 
