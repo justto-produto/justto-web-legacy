@@ -721,6 +721,8 @@ export default {
       this.$store.dispatch('getDispute', this.id).then(dispute => {
         if (!dispute || dispute.archived) this.backToManagement()
         else this.$store.dispatch('getDisputeTags', this.id)
+      }).then(() => {
+        this.$jusSegment('Disputa Visualizada', { disputeId: this.dispute.id })
       }).catch(error => {
         this.$jusNotification({ error })
         this.backToManagement()
