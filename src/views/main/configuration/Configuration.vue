@@ -893,7 +893,7 @@ export default {
 
       Promise.all([
         this.editWorkpaceProperties(request),
-        this.putPreNegotiationLimitValue(limitValue),
+        this.putPreNegotiationLimitValue(request.PRE_NEGOTIATION ? limitValue : 0),
         this.putWorkspacePreNegotiationKeywords(keyWords)
       ]).then(() => {
         // SEGMENT TRACK
