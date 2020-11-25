@@ -141,22 +141,20 @@
             >
               <span class="title">Status:</span>
               <el-tooltip
-                v-if="dispute.status === 'PENDING'"
-                content="Faltam dados de contato da parte ou do advogado da parte"
-              >
+                :disabled="!statusTooltip()"
+                popper-class="info-line__status-tooltip">
+                <span
+                  slot="content"
+                  v-html="statusTooltip()"
+                />
                 <span data-testid="overview-status">
-                  {{ $t('occurrence.type.' + dispute.status) | capitalize }}
-                  <el-tooltip content="Selecione">
-                    <span class="el-icon-question" />
-                  </el-tooltip>
+                  <span>{{ $t('occurrence.type.' + dispute.status) | capitalize }}</span>
+                  <span v-if="dispute.paused">(pausada)</span>
+                  <span
+                    v-if="statusTooltip()"
+                    class="el-icon-question" />
                 </span>
               </el-tooltip>
-              <span v-else>
-                <span data-testid="overview-status">
-                  {{ $t('occurrence.type.' + dispute.status) | capitalize }}
-                  <span v-if="dispute.paused">(pausada)</span>
-                </span>
-              </span>
             </div>
             <div
               class="dispute-overview-view__info-line"
@@ -2121,6 +2119,17 @@ export default {
       })
     },
 
+    statusTooltip() {
+      const { dispute } = this
+      if (dispute.status === 'PRE_NEGOTIATION') {
+        return dispute.properties['MOTIVO PRE NEGOCIACAO']
+      } else if (dispute.status === 'PENDING') {
+        return 'Faltam dados de contato da parte ou do advogado da parte'
+      } else {
+        return ''
+      }
+    },
+
     deactivePopover(ref) {
       this.$refs[ref][0].$el.classList.remove('active-popover')
     },
@@ -3318,5 +3327,9 @@ export default {
   width: 500px;
   min-height: 20vh;
   max-height: 50vh;
+}
+
+.info-line__status-tooltip {
+  max-width: 400px;
 }
 </style>
