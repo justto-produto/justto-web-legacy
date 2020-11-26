@@ -25,7 +25,8 @@ const messageActions = {
     return axiosDispatch({
       url: `api/negotiations/${disputeId}/messages`,
       method: 'POST',
-      data
+      data,
+      mutation: 'SOCKET_ADD_OCCURRENCE'
     })
   },
   getOccurrenceMessage({ _ }, messageId) {
