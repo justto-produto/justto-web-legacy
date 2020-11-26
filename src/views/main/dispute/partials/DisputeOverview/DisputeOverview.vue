@@ -460,7 +460,7 @@
                       />
                     </el-tooltip>
                     <el-tooltip
-                      v-else-if="oabs.filter(oab => onlineDocuments[`${oab.number}-${oab.state}`] === 'ONLINE').length"
+                      v-else-if="role.oabs.filter(oab => onlineDocuments[`${oab.number}-${oab.state}`] === 'ONLINE').length"
                       :content="`${$options.filters.capitalize(role.name.toLowerCase().split(' ')[0])} está online`"
                     >
                       <jus-icon
