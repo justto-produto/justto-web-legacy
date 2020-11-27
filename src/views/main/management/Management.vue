@@ -524,7 +524,6 @@ export default {
   created() {
     const query = this.$route.query
 
-    // console.log(this.$router)
     if (this.$route.name === 'allDisputes' && this.$store.state.disputeModule.tab !== '9') {
       this.$store.commit('setDisputesTab', '9')
       this.$store.commit('updateDisputeQuery', { key: 'status', value: [] })
@@ -650,7 +649,6 @@ export default {
       this.$store.commit('clearDisputes')
       this.$store.commit('clearDisputeQueryByTab')
       this.$store.commit('setDisputeHasFilters', false)
-      console.log(tab)
       // SEGMENT TRACK
       this.$jusSegment(`Navegação na aba ${this.$t('tab.' + tab).toUpperCase()}`)
       switch (tab) {
@@ -664,7 +662,7 @@ export default {
           break
         case '2':
           this.$store.commit('updateDisputeQuery', { key: 'status', value: ['RUNNING'] })
-          this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['visualized,asc', 'lastInboundInteraction.createdAt,asc', 'expirationDate,asc'] })
+          this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['visualized,asc', 'lastInboundInteraction.createdAt,desc', 'expirationDate,asc'] })
           break
         case '3':
           this.$store.commit('updateDisputeQuery', { key: 'status', value: ['ACCEPTED', 'CHECKOUT'] })

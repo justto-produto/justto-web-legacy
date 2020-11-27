@@ -143,6 +143,36 @@ const workspaceActions = {
         reject(error)
       })
     })
+  },
+  putWorkspacePreNegotiationKeywords({ getters }, keywords) {
+    const { workspaceId } = getters
+    return axiosDispatch({
+      url: `${workspacesPath}/${workspaceId}/pre-negotiation-keywords`,
+      method: 'PUT',
+      data: keywords
+    })
+  },
+  getWorkspacePreNegotiationKeywords({ getters }) {
+    const { workspaceId } = getters
+    return axiosDispatch({
+      url: `${workspacesPath}/${workspaceId}/pre-negotiation-keywords`,
+      mutation: 'setPreNegotiationKeywords'
+    })
+  },
+  putPreNegotiationLimitValue({ getters }, value) {
+    const { workspaceId } = getters
+    return axiosDispatch({
+      url: `${workspacesPath}/${workspaceId}/pre-negotiation-limit-value`,
+      method: 'PUT',
+      data: { value }
+    })
+  },
+  getPreNegotiationLimitValue({ getters }) {
+    const { workspaceId } = getters
+    return axiosDispatch({
+      url: `${workspacesPath}/${workspaceId}/pre-negotiation-limit-value`,
+      mutation: 'setPreNegotiationLimitValue'
+    })
   }
 }
 

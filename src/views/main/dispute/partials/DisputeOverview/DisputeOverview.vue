@@ -141,22 +141,20 @@
             >
               <span class="title">Status:</span>
               <el-tooltip
-                v-if="dispute.status === 'PENDING'"
-                content="Faltam dados de contato da parte ou do advogado da parte"
-              >
+                :disabled="!statusTooltip()"
+                popper-class="info-line__status-tooltip">
+                <span
+                  slot="content"
+                  v-html="statusTooltip()"
+                />
                 <span data-testid="overview-status">
-                  {{ $t('occurrence.type.' + dispute.status) | capitalize }}
-                  <el-tooltip content="Selecione">
-                    <span class="el-icon-question" />
-                  </el-tooltip>
+                  <span>{{ $t('occurrence.type.' + dispute.status) | capitalize }}</span>
+                  <span v-if="dispute.paused">(pausada)</span>
+                  <span
+                    v-if="statusTooltip()"
+                    class="el-icon-question" />
                 </span>
               </el-tooltip>
-              <span v-else>
-                <span data-testid="overview-status">
-                  {{ $t('occurrence.type.' + dispute.status) | capitalize }}
-                  <span v-if="dispute.paused">(pausada)</span>
-                </span>
-              </span>
             </div>
             <div
               class="dispute-overview-view__info-line"
@@ -278,11 +276,11 @@
               <span class="title">Configurações:</span>
               <span class="configurations">
                 Enriquecer automaticamente na importação?
-                <div><i :class="!dispute.skipEnrichment ? 'el-icon-check' : 'el-icon-close'" /> {{ !dispute.skipEnrichment ? 'Sim' : 'Não ' }}</div>
+                <div><i :class="dispute.skipEnrichment ? 'el-icon-close' : 'el-icon-check'" /> {{ dispute.skipEnrichment ? 'Não' : 'Sim' }}</div>
                 Somente depósito em conta-corrente?
                 <div><i :class="dispute.denySavingDeposit ? 'el-icon-check' : 'el-icon-close'" /> {{ dispute.denySavingDeposit ? 'Sim' : 'Não ' }}</div>
                 Mensagens somente em horário comercial?
-                <div><i :class="dispute.businessHoursEngagement ? 'el-icon-close' : 'el-icon-check'" /> {{ dispute.businessHoursEngagement ? 'Não' : 'Sim' }}</div>
+                <div><i :class="dispute.businessHoursEngagement ? 'el-icon-check' : 'el-icon-close'" /> {{ dispute.businessHoursEngagement ? 'Sim' : 'Não' }}</div>
                 Contactar autor?
                 <div>
                   <i :class="(dispute.contactPartyWhenNoLowyer || dispute.contactPartyWhenInvalidLowyer) ? 'el-icon-check' : 'el-icon-close'" />
@@ -462,7 +460,7 @@
                       />
                     </el-tooltip>
                     <el-tooltip
-                      v-else-if="oabs.filter(oab => onlineDocuments[`${oab.number}-${oab.state}`] === 'ONLINE').length"
+                      v-else-if="role.oabs.filter(oab => onlineDocuments[`${oab.number}-${oab.state}`] === 'ONLINE').length"
                       :content="`${$options.filters.capitalize(role.name.toLowerCase().split(' ')[0])} está online`"
                     >
                       <jus-icon
@@ -1373,17 +1371,12 @@
               class-name="visible"
             >
               <template slot-scope="scope">
-                <el-tooltip
-                  :open-delay="500"
-                  content="Remover"
+                <a
+                  href="#"
+                  @click.prevent="removeOab(scope.$index)"
                 >
-                  <a
-                    href="#"
-                    @click.prevent="removeOab(scope.$index)"
-                  >
-                    <jus-icon icon="trash" />
-                  </a>
-                </el-tooltip>
+                  <jus-icon icon="trash" />
+                </a>
               </template>
             </el-table-column>
           </el-table>
@@ -1439,17 +1432,12 @@
                     <el-switch v-model="scope.row.isMain" />
                   </span>
                 </el-tooltip>
-                <el-tooltip
-                  :open-delay="500"
-                  content="Remover"
+                <a
+                  href="#"
+                  @click.prevent="removePhone(scope.$index)"
                 >
-                  <a
-                    href="#"
-                    @click.prevent="removePhone(scope.$index)"
-                  >
-                    <jus-icon icon="trash" />
-                  </a>
-                </el-tooltip>
+                  <jus-icon icon="trash" />
+                </a>
               </template>
             </el-table-column>
           </el-table>
@@ -1506,17 +1494,12 @@
                     <el-switch v-model="scope.row.isMain" />
                   </span>
                 </el-tooltip>
-                <el-tooltip
-                  :open-delay="500"
-                  content="Remover"
+                <a
+                  href="#"
+                  @click.prevent="removeEmail(scope.$index)"
                 >
-                  <a
-                    href="#"
-                    @click.prevent="removeEmail(scope.$index)"
-                  >
-                    <jus-icon icon="trash" />
-                  </a>
-                </el-tooltip>
+                  <jus-icon icon="trash" />
+                </a>
               </template>
             </el-table-column>
           </el-table>
@@ -1555,17 +1538,12 @@
               class-name="visible"
             >
               <template slot-scope="scope">
-                <el-tooltip
-                  :open-delay="500"
-                  content="Remover"
+                <a
+                  href="#"
+                  @click.prevent="removeBankData(scope.$index, scope.row.id)"
                 >
-                  <a
-                    href="#"
-                    @click.prevent="removeBankData(scope.$index, scope.row.id)"
-                  >
-                    <jus-icon icon="trash" />
-                  </a>
-                </el-tooltip>
+                  <jus-icon icon="trash" />
+                </a>
               </template>
             </el-table-column>
           </el-table>
@@ -1996,6 +1974,7 @@ export default {
           key: 'CONTATOS ASSOCIADOS',
           value: !flag ? 'SIM' : 'NAO'
         }).then(() => {
+          this.overviewTab = 'roles'
           this.getDisputeMetadata(this.dispute.id)
         })
       }
@@ -2138,6 +2117,17 @@ export default {
       }).catch(error => {
         this.$jusNotification({ error })
       })
+    },
+
+    statusTooltip() {
+      const { dispute } = this
+      if (dispute.status === 'PRE_NEGOTIATION') {
+        return dispute.properties['MOTIVO PRE NEGOCIACAO']
+      } else if (dispute.status === 'PENDING') {
+        return 'Faltam dados de contato da parte ou do advogado da parte'
+      } else {
+        return ''
+      }
     },
 
     deactivePopover(ref) {
@@ -3337,5 +3327,9 @@ export default {
   width: 500px;
   min-height: 20vh;
   max-height: 50vh;
+}
+
+.info-line__status-tooltip {
+  max-width: 400px;
 }
 </style>

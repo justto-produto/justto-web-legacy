@@ -4,7 +4,6 @@ const personsPath = 'api/persons'
 
 const personActions = {
   SOCKET_REFRESH_PERSON_STATUS({ commit }, document) {
-    console.log('REFRESH_PERSON_STATUS', document)
     commit('setOnlineDocs', [document])
   },
   getPerson({ _ }, id) {

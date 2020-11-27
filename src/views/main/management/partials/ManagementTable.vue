@@ -210,9 +210,15 @@
         min-width="140px"
       >
         <template slot-scope="scope">
-          <span v-if="scope.row.properties && scope.row.properties['MOTIVO PRE NEGOCIACAO']">
-            {{ scope.row.properties['MOTIVO PRE NEGOCIACAO'] }}
-          </span>
+          <el-tooltip
+            v-if="scope.row.properties && scope.row.properties['PALAVRAS PRE NEGOCIACAO'] && scope.row.properties['MOTIVO PRE NEGOCIACAO']"
+            :open-delay="600"
+            popper-class="management-table__prenegotiation-tooltip">
+            <span slot="content" v-html="scope.row.properties['MOTIVO PRE NEGOCIACAO']" />
+            <span>
+              {{ scope.row.properties['PALAVRAS PRE NEGOCIACAO'].split(',').join(', ').replace(/[\[\]]/gi, '') }}
+            </span>
+          </el-tooltip>
           <span v-else>-</span>
         </template>
       </el-table-column>
@@ -375,6 +381,7 @@ export default {
       responseBoxLoading: false,
       actieTooltipDisputeId: 0,
       activeDisputeIds: []
+      lastAccessTooltipTimeout: () => {}
     }
   },
   computed: {
@@ -472,11 +479,15 @@ export default {
     cellMouseEnter(row, column, cell, event) {
       this.disputeActionsRow = row.id
       if (column.property !== 'code') {
-        this.getDisputeLastAccess(row.id)
-        this.actieTooltipDisputeId = row.id
+        this.lastAccessTooltipTimeout = setTimeout(() => {
+          this.getDisputeLastAccess(row.id).then(() => {
+            this.actieTooltipDisputeId = row.id
+          })
+        }, 600)
       }
     },
     cellMouseLeave() {
+      clearTimeout(this.lastAccessTooltipTimeout)
       this.actieTooltipDisputeId = 0
     },
     getDocumentStep: (hasDocument, signStatus) => getDocumentStep(hasDocument, signStatus),
@@ -689,5 +700,9 @@ export default {
   .el-dialog__body {
     margin-top: 0px;
   }
+}
+
+.management-table__prenegotiation-tooltip {
+  max-width: 400px;
 }
 </style>

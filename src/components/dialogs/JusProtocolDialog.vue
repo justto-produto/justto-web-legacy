@@ -108,7 +108,7 @@
               </div>
             </span>
             <div
-              v-if="role.party"
+              v-if="role.party && role.roles.length"
               class="subtitle"
             >
               {{ $t('fields.' + role.party.toLocaleLowerCase() + role.roles[0].charAt(0).toUpperCase() + role.roles[0].slice(1).toLocaleLowerCase()) }}

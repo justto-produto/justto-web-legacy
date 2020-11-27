@@ -3,17 +3,15 @@
     :class="tableActions ? 'jus-dispute-actions--table' : 'jus-dispute-actions--dispute'"
     class="jus-dispute-actions"
   >
-    <el-tooltip
+    <router-link
       v-if="!tableActions"
-      content="Voltar"
+      to="/management"
     >
-      <router-link to="/management">
-        <jus-icon
-          class="jus-dispute-actions__back-button"
-          icon="back"
-        />
-      </router-link>
-    </el-tooltip>
+      <jus-icon
+        class="jus-dispute-actions__back-button"
+        icon="back"
+      />
+    </router-link>
 
     <span
       v-for="action in actionsList"

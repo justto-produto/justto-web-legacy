@@ -289,7 +289,7 @@
                       <a
                         href="#"
                         data-testid="show-email"
-                        @click.prevent="showFullMessage(occurrence.id)"
+                        @click.prevent="showFullMessage(occurrence.id, occurrence.interaction.message.messageId || false)"
                       > ver mais</a>
                     </span>
                     <span
@@ -459,7 +459,7 @@
                       <a
                         href="#"
                         data-testid="show-email"
-                        @click.prevent="showFullMessage(mergedOccurency.id)"
+                        @click.prevent="showFullMessage(mergedOccurency.id, mergedOccurency.interaction.message.messageId || false)"
                       > ver mais</a>
                     </span>
                     <span
@@ -613,7 +613,6 @@ export default {
       messageDialogVisible: false,
       showFullMessageList: [],
       fullMessageBank: {},
-      hideMessageBank: {},
       infiniteId: +new Date(),
       handlePartyId: {},
       disputePartys: [
@@ -758,8 +757,11 @@ export default {
       })
     },
 
-    showFullMessage(occurrenceId) {
+    showFullMessage(occurrenceId, messageId = false) {
       this.showFullMessageList.push(occurrenceId)
+      if (messageId) {
+        this.getOccurrenceMessage(messageId, occurrenceId)
+      }
     },
 
     hideFullMessage(occurrenceId) {
@@ -880,11 +882,13 @@ export default {
     },
 
     getOccurrenceMessage(messageId, occurrenceId) {
-      this.$store.dispatch('getOccurrenceMessage', messageId).then(message => {
-        const ref = this.$refs[occurrenceId]
-        ref[0].innerHTML = message.content
-        this.fullMessageBank[occurrenceId] = message.content
-      })
+      if (!Object.keys(this.fullMessageBank).includes(occurrenceId)) {
+        this.$store.dispatch('getOccurrenceMessage', messageId).then(message => {
+          const ref = this.$refs[occurrenceId]
+          ref[0].innerHTML = message.content
+          this.fullMessageBank[occurrenceId] = message.content
+        })
+      }
     },
 
     buildLogContent(occurrence) {
@@ -938,7 +942,7 @@ export default {
       if (occurrence.id && Object.keys(this.fullMessageBank).includes(occurrence.id.toString())) {
         return this.fullMessageBank[occurrence.id]
       }
-      if (this.showFullMessageList.includes(occurrence.id)) {
+      if (this.showFullMessageList.includes(occurrence.id) && !Object.keys(this.fullMessageBank).includes(occurrence.id)) {
         this.getOccurrenceMessage(occurrence.interaction.message.messageId, occurrence.id)
         return ''
       }
@@ -1017,7 +1021,6 @@ export default {
     },
 
     startReply(occurrence) {
-      console.log(occurrence)
       let senders, resume, type
       if (occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.sender) {
         senders = [occurrence.interaction.message.sender]
@@ -1031,7 +1034,6 @@ export default {
         resume = occurrence.interaction.message.resume
         type = occurrence.interaction.message.communicationType
       }
-      console.log({ senders, resume, type })
       this.$emit('dispute:reply', { senders, resume, type })
     },
 

@@ -109,9 +109,7 @@ export default {
       'setActiveStrategy'
     ]),
     handlePopoverClick() {
-      console.log(this.openedPopover)
       this.openedPopover = !this.openedPopover
-      console.log(this.openedPopover)
     },
     handleEditTemplate(communication) {
       this.getCommunicationTemplate({ communicationId: communication.id, strategyId: this.strategyId }).then(response => {
@@ -121,7 +119,6 @@ export default {
       })
     },
     handleEditCommunication(params) {
-      console.log(params)
       this.$refs.communicationsPopover.handleCommunicationRecipient(params.communication, params.recipient)
     },
 

@@ -66,57 +66,144 @@
             :style="{ height: sendMessageHeightComputed }"
             class="dispute-view__send-message"
           >
-            <div
-              v-show="selectedContacts && selectedContacts.length && typingTab === '1'"
-              class="dispute-view__send-to"
-            >
-              Destinatário(s):
-              <span
-                v-for="(selected, index) in selectedContacts"
-                :key="selected.id"
-              >
-                <span v-if="index === 0">
-                  <span v-if="selected.number">{{ selected.number | phoneNumber }}</span>
-                  <span v-else-if="selected.address">{{ selected.address | phoneNumber }}</span>
-                </span>
-              </span>
-              <el-tooltip v-if="selectedContacts.length > 1">
-                <div slot="content">
-                  <span
-                    v-for="(selected, index) in selectedContacts"
-                    :key="selected.id"
+            <div class="dispute-view__send-container">
+              <div class="dispute-view__quick-reply">
+                <!-- Respostas rápidas -->
+                <el-popover
+                  v-if="typingTab === '1'"
+                  title="Respostas rápidas"
+                  trigger="click"
+                  placement="top"
+                  popper-class="dispute-view__templates-popover"
+                  class="dispute-view__templates"
+                  @hide="closeTemplateMenu()"
+                >
+                  <ul
+                    v-if="quickReplyTemplates.length"
+                    class="dispute-view__templates-list"
                   >
-                    <span v-if="index !== 0">
-                      <div v-if="selected.number">
+                    <li
+                      v-for="template in quickReplyTemplates"
+                      :key="template.template.referenceTemplateId"
+                      class="dispute-view__templates-list-item"
+                    >
+                      <div
+                        class="dispute-view__templates-item-title"
+                        @click="inputTemplate(template)"
+                      >
                         <jus-icon
-                          icon="phone"
-                          is-white
-                          style="width: 14px;vertical-align: top;"
+                          :icon="template.template.contentType === 'HTML' ? 'email' : 'whatsapp'"
+                          class="dispute-view__templates-list-icon"
                         />
-                        {{ selected.number | phoneNumber }}
+                        {{ template.template.title }}
                       </div>
-                      <div v-else-if="selected.address">
-                        <jus-icon
-                          icon="email"
-                          is-white
-                          style="width: 14px;vertical-align: top;"
-                        />
-                        {{ selected.address }}
-                      </div>
-                    </span>
+                      <el-popover
+                        :value="activeTemplateMenu === template.template.referenceTemplateId"
+                        trigger="manual"
+                        placement="right"
+                        popper-class="dispute-view__templates-option-popover"
+                        class="dispute-view__templates-item-options"
+                        @mouseleave="closeTemplateMenu($event, template.template.referenceTemplateId)"
+                      >
+                        <div @click="openEditTemplateDialog(template.template)">
+                          <i class="el-icon-edit" /> Editar
+                        </div>
+                        <div @click="resetQuickReplyTemplate({ templateId: template.template.referenceTemplateId, disputeId: id }); activeTemplateMenu = null">
+                          <i class="el-icon-refresh-left" /> Restaurar
+                        </div>
+                        <div @click="archiveTemplate(template.template.referenceTemplateId); activeTemplateMenu = null">
+                          <i class="el-icon-delete" /> Excluir
+                        </div>
+                        <el-button
+                          slot="reference"
+                          type="text"
+                          class="dispute-view__templates-item-menu"
+                          @click="openTemplateMenu(template.template.referenceTemplateId)"
+                        >
+                          <i class="el-icon-more" />
+                        </el-button>
+                      </el-popover>
+                    </li>
+                  </ul>
+                  <span
+                    v-else
+                    class="dispute-view__templates-list-empty"
+                  >
+                    Não há templates para esta estratégia
                   </span>
-                </div>
-                <span>
-                  (+ {{ selectedContacts.length - 1 }})
+                  <!-- <el-tooltip
+                    content="Respostas rápidas"
+                    placement="top"
+                    :disabled="!isSmall"
+                  > -->
+                  <el-button
+                    slot="reference"
+                    size="mini"
+                    class="dispute-view__templates-button"
+                  >
+                    <jus-icon
+                      class="dispute-view__templates-button-icon"
+                      icon="zap"
+                    />
+                    <span v-show="!isSmall">
+                      Respostas rápidas
+                    </span>
+                  </el-button>
+                  <!-- </el-tooltip> -->
+                </el-popover>
+              </div>
+              <div
+                v-show="selectedContacts && selectedContacts.length && typingTab === '1'"
+                class="dispute-view__send-to"
+              >
+                Destinatário(s):
+                <span
+                  v-for="(selected, index) in selectedContacts"
+                  :key="selected.id"
+                >
+                  <span v-if="index === 0">
+                    <span v-if="selected.number">{{ selected.number | phoneNumber }}</span>
+                    <span v-else-if="selected.address">{{ selected.address | phoneNumber }}</span>
+                  </span>
                 </span>
-              </el-tooltip>
-              <el-tooltip :content="`Você está enviando um ${messageType}`">
-                <jus-icon
-                  :is-active="true"
-                  :icon="messageType"
-                  class="dispute-view__send-to-icon"
-                />
-              </el-tooltip>
+                <el-tooltip v-if="selectedContacts.length > 1">
+                  <div slot="content">
+                    <span
+                      v-for="(selected, index) in selectedContacts"
+                      :key="selected.id"
+                    >
+                      <span v-if="index !== 0">
+                        <div v-if="selected.number">
+                          <jus-icon
+                            icon="phone"
+                            is-white
+                            style="width: 14px;vertical-align: top;"
+                          />
+                          {{ selected.number | phoneNumber }}
+                        </div>
+                        <div v-else-if="selected.address">
+                          <jus-icon
+                            icon="email"
+                            is-white
+                            style="width: 14px;vertical-align: top;"
+                          />
+                          {{ selected.address }}
+                        </div>
+                      </span>
+                    </span>
+                  </div>
+                  <span>
+                    (+ {{ selectedContacts.length - 1 }})
+                  </span>
+                </el-tooltip>
+                <el-tooltip :content="`Você está enviando um ${messageType}`">
+                  <jus-icon
+                    :is-active="true"
+                    :icon="messageType"
+                    class="dispute-view__send-to-icon"
+                  />
+                </el-tooltip>
+              </div>
             </div>
             <el-tabs
               ref="messageTab"
@@ -173,80 +260,6 @@
                     </el-popover>
 
                     <!-- placement="top" -->
-                    <el-popover
-                      v-if="messageType === 'email'"
-                      title="Respostas rápidas"
-                      trigger="click"
-                      popper-class="dispute-view__templates-popover"
-                      class="dispute-view__templates"
-                      @hide="closeTemplateMenu()"
-                    >
-                      <ul
-                        v-if="quickReplyTemplates.length"
-                        class="dispute-view__templates-list"
-                      >
-                        <li
-                          v-for="template in quickReplyTemplates"
-                          :key="template.template.referenceTemplateId"
-                          class="dispute-view__templates-list-item"
-                        >
-                          <div
-                            class="dispute-view__templates-item-title"
-                            @click="inputTemplate(template)"
-                          >
-                            <jus-icon
-                              :icon="template.template.contentType === 'HTML' ? 'email' : 'whatsapp'"
-                              class="dispute-view__templates-list-icon"
-                            />
-                            {{ template.template.title }}
-                          </div>
-                          <el-popover
-                            :value="activeTemplateMenu === template.template.referenceTemplateId"
-                            trigger="manual"
-                            placement="right"
-                            popper-class="dispute-view__templates-option-popover"
-                            class="dispute-view__templates-item-options"
-                            @mouseleave="closeTemplateMenu($event, template.template.referenceTemplateId)"
-                          >
-                            <div @click="openEditTemplateDialog(template.template)">
-                              <i class="el-icon-edit" /> Editar
-                            </div>
-                            <div @click="resetQuickReplyTemplate({ templateId: template.template.referenceTemplateId, disputeId: id }); activeTemplateMenu = null">
-                              <i class="el-icon-refresh-left" /> Restaurar
-                            </div>
-                            <div @click="archiveTemplate(template.template.referenceTemplateId); activeTemplateMenu = null">
-                              <i class="el-icon-delete" /> Excluir
-                            </div>
-                            <el-button
-                              slot="reference"
-                              type="text"
-                              class="dispute-view__templates-item-menu"
-                              @click="openTemplateMenu(template.template.referenceTemplateId)"
-                            >
-                              <i class="el-icon-more" />
-                            </el-button>
-                          </el-popover>
-                        </li>
-                      </ul>
-                      <span
-                        v-else
-                        class="dispute-view__templates-list-empty"
-                      >
-                        Não há templates para esta estratégia
-                      </span>
-                      <el-button
-                        slot="reference"
-                        size="mini"
-                        class="dispute-view__templates-button"
-                      >
-                        <jus-icon
-                          class="dispute-view__templates-button-icon"
-                          icon="zap"
-                        />
-                        Respostas rápidas
-                      </el-button>
-                    </el-popover>
-
                     <quill-editor
                       ref="messageEditor"
                       :options="editorOptions"
@@ -407,6 +420,7 @@ export default {
   data() {
     return {
       y: 0,
+      width: null,
       dragDebounce: 0,
       sendMessageHeight: 208,
       id: 0,
@@ -451,8 +465,13 @@ export default {
       'isJusttoAdmin',
       'ghostMode',
       'quickReplyTemplates',
-      'loggedPersonId'
+      'loggedPersonId',
+      'workspaceSubdomain'
     ]),
+
+    isSmall() {
+      return this.width < 840 && this.selectedContacts.length > 0
+    },
 
     sendMessageHeightComputed() {
       switch (this.typingTab) {
@@ -529,17 +548,17 @@ export default {
     '$route.params.id': function(id, oldId) {
       this.id = id.toString()
       this.removeReply()
-      this.$refs.messageEditor.quill.container.firstChild.innerHTML = ''
-      this.$socket.emit('unsubscribe', {
-        headers: this.socketHeaders,
-        channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.loggedPersonId + '/dispute/' + oldId + '/occurrence'
-      })
+      if (this.$refs.messageEditor) {
+        this.$refs.messageEditor.quill.container.firstChild.innerHTML = ''
+      }
+      this.socketAction('unsubscribe', oldId)
       this.unsubscribeOccurrences(oldId)
       this.fetchData()
       this.disputeOccurrencesKey += 1
     },
     y(y) {
-      this.sendMessageHeight = this.$refs.sectionMessages.offsetHeight - this.y
+      const height = this.$refs.sectionMessages.offsetHeight - this.y
+      this.sendMessageHeight = height >= 0 ? height : this.sendMessageHeight
     }
   },
   created() {
@@ -559,6 +578,7 @@ export default {
     this.getLastInteractions(this.id)
     setTimeout(() => {
       this.disputeOccurrencesKey += 1
+      this.width = this.$refs.sectionMessages.offsetWidth
       this.y = parseInt(localStorage.getItem('jusoffsetheight')) || this.$refs.sectionMessages.offsetHeight - 208
     }, 800)
     window.addEventListener('resize', this.updateWindowHeight)
@@ -618,6 +638,7 @@ export default {
       this.$refs.messageEditor.quill.container.firstChild.innerHTML = this.formatBody(template.parsed.body)
     },
     updateWindowHeight() {
+      this.width = this.$refs.sectionMessages.offsetWidth
       this.onDrag(0, this.$refs.sectionMessages.offsetHeight - this.sendMessageHeight)
     },
     onDrag(x, y) {
@@ -636,11 +657,21 @@ export default {
       }, 100)
     },
     startReply(params) {
+      if (this.$refs.messageEditor) {
+        this.$refs.messageEditor.quill.container.firstChild.innerHTML = ''
+      }
       const { type, resume, senders } = params
       const messageType = type.toLowerCase()
       this.setMessageType(messageType)
       if (['email'].includes(messageType)) {
-        this.$refs.messageEditor.quill.insertText(9999999999, '\n\n___________________\n' + resume)
+        const { quill } = this.$refs.messageEditor
+        const peviewText = quill.getText()
+        const peviewResume = `\n\n\n___________________\n${resume}`
+        quill.setContents([
+          { insert: peviewText },
+          { insert: peviewResume }
+        ])
+        // quill.insertText(0, peviewText + '\n\n\n\n___________________\n' + resume)
       }
       this.activeRoleId = 0
       this.directContactAddress = senders
@@ -679,22 +710,26 @@ export default {
         this.$refs.messageEditor.quill.setText(message.substring(messageIndex, 0))
       }
     },
+    socketAction(action, id) {
+      if (this.workspaceSubdomain && this.loggedPersonId) {
+        this.$socket.emit(action, {
+          headers: this.socketHeaders,
+          channel: '/topic/' + this.workspaceSubdomain + '/' + this.loggedPersonId + '/dispute/' + id + '/occurrence'
+        })
+      }
+    },
     unsubscribeOccurrences(id) {
       this.$store.commit('clearDisputeOccurrences')
-      this.$socket.emit('unsubscribe', {
-        headers: this.socketHeaders,
-        channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.loggedPersonId + '/dispute/' + id + '/occurrence'
-      })
+      this.socketAction('unsubscribe', id)
     },
     fetchData() {
       this.loadingDispute = true
-      this.$socket.emit('subscribe', {
-        headers: this.socketHeaders,
-        channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.loggedPersonId + '/dispute/' + this.id + '/occurrence'
-      })
+      this.socketAction('subscribe', this.id)
       this.$store.dispatch('getDispute', this.id).then(dispute => {
         if (!dispute || dispute.archived) this.backToManagement()
         else this.$store.dispatch('getDisputeTags', this.id)
+      }).then(() => {
+        this.$jusSegment('Disputa Visualizada', { disputeId: this.dispute.id })
       }).catch(error => {
         this.$jusNotification({ error })
         this.backToManagement()
@@ -765,13 +800,16 @@ export default {
         const role = this.dispute.disputeRoles.find(role => {
           return role.roles.includes('NEGOTIATOR')
         })
+        const to = this.selectedContacts.filter(contact => {
+          return !!contact.address
+        }).map(contact => contact.address)
         this.loadingTextarea = true
         this.sendNegotiator({
           disputeId: this.id,
           data: {
             message: this.$refs.messageEditor.quill.getText(),
             roleId: role.id,
-            email: role.emails[0].address
+            email: to[0] || ''
           }
         }).then(() => {
           setTimeout(function() {
@@ -911,6 +949,7 @@ export default {
   &__send-message {
     position: relative;
     border-top: 1px solid #eeeeee;
+
     .el-tabs__header {
       width: fit-content;
       padding: 0 20px;
@@ -944,9 +983,27 @@ export default {
     .ql-toolbar {
       display: none;
     }
-    .dispute-view__send-to {
+    .dispute-view__send-container {
+      // background: red;
       display: flex;
       align-items: center;
+      justify-content: space-between;
+
+      position: absolute;
+      right: 0;
+      left: 325px;
+      padding: 8px 14px;
+
+      // gap: 40px;
+
+      .dispute-view__quick-reply {
+        display: flex;
+        align-items: center;
+      }
+      .dispute-view__send-to {
+        display: flex;
+        align-items: center;
+      }
     }
     .dispute-view__send-to-icon {
       margin-left: 8px;
@@ -1003,8 +1060,9 @@ export default {
         }
 
         .dispute-view__templates-button-icon {
-          width: 14px;
-          margin-right: 4px;
+          width: 10px !important;
+          margin: 0px;
+          // margin-right: 4px;
         }
       }
     }
@@ -1097,11 +1155,11 @@ export default {
       }
     }
   }
-  &__send-to {
-    position: absolute;
-    right: 0;
-    padding: 15px 14px;
-  }
+  // &__send-to {
+  //   position: absolute;
+  //   right: 0;
+  //   padding: 15px 14px;
+  // }
   .el-input-group__append {
     border-color: #9462f7;
     background-color: #9462f7;
@@ -1154,6 +1212,11 @@ export default {
       max-width: calc(100% - 14px);
     }
   }
+}
+
+.dispute-view__templates-button-icon {
+  width: 10px;
+  height: 10px;
 }
 
 .dispute-view__templates-popover {
