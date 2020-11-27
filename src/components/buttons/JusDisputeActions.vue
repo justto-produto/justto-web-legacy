@@ -106,6 +106,19 @@
             </el-form-item>
           </el-col>
         </el-row>
+        <el-row :hutter="20">
+          <el-form-item
+            label="Nota:"
+          >
+            <el-input
+              v-model="counterOfferForm.note"
+              class="dialog__textarea-note"
+              type="textarea"
+              :rows="4"
+              placeholder="Informe uma nota"
+            />
+          </el-form-item>
+        </el-row>
       </el-form>
       <span slot="footer">
         <el-button
@@ -197,6 +210,18 @@
             </el-form-item>
           </el-col>
         </el-row>
+      </el-form>
+      <el-form>
+        <el-form-item
+          label="Nota:"
+        >
+          <el-input
+            v-model="counterOfferForm.note"
+            type="textarea"
+            :rows="4"
+            placeholder="Informe uma nota"
+          />
+        </el-form-item>
       </el-form>
       <span slot="footer">
         <el-button
@@ -625,6 +650,11 @@ export default {
       'startNegotiation'
     ]),
 
+    // TODO: Transformar isso em um util
+    scapeHtml(text) {
+      return text.replace(/(<([^>]+)>)/gi, '')
+    },
+
     disputeAction(action, additionParams) {
       let message = {
         content: 'Tem certeza que deseja realizar esta ação?',
@@ -664,11 +694,17 @@ export default {
           if (this.isInsufficientUpperRange) {
             this.disputeAction('send-counterproposal')
           } else {
-            additionParams = { body: { reason: this.disputeStatuses.UNSETTLED[this.unsettledType] } }
+            additionParams = {
+              body: {
+                reason: this.disputeStatuses.UNSETTLED[this.unsettledType],
+                note: this.scapeHtml(this.counterOfferForm.note)
+              }
+            }
             this.doAction('unsettled', message, additionParams).then(() => {
               this.chooseUnsettledDialogVisible = false
             }).finally(() => {
               this.unsettledType = null
+              this.closeCounterProposalModal()
             })
           }
           break
@@ -744,24 +780,29 @@ export default {
         case 'send-counterproposal':
           if (this.unsettledType === 'INSUFFICIENT_UPPER_RANGE') {
             this.sendCounterproposal().then(() => {
-              additionParams = { body: { reason: this.disputeStatuses.UNSETTLED[this.unsettledType] } }
+              additionParams = {
+                body: {
+                  reason: this.disputeStatuses.UNSETTLED[this.unsettledType],
+                  note: this.scapeHtml(this.counterOfferForm.note)
+                }
+              }
               this.doAction('unsettled', message, additionParams).then(() => {
                 this.chooseUnsettledDialogVisible = false
               }).finally(() => {
                 this.unsettledType = null
               })
-            })
+            }).finally(this.closeCounterProposalModal)
           } else if (additionParams) {
             this.checkCounterproposal('WIN').then(() => {
               if (this.checkUpperRangeCounterOffer) {
-                this.sendCounterproposal(additionParams)
+                this.sendCounterproposal(additionParams).then().finally(this.closeCounterProposalModal)
               } else {
-                this.sendCounterproposal()
+                this.sendCounterproposal().then().finally(this.closeCounterProposalModal)
               }
             })
           } else {
             this.checkCounterproposal('COUNTERPROPOSAL').then(() => {
-              this.sendCounterproposal()
+              this.sendCounterproposal().then().finally(this.closeCounterProposalModal)
             })
           }
           break
@@ -773,6 +814,10 @@ export default {
           break
       }
     },
+    closeCounterProposalModal() {
+      this.counterOfferForm.note = ''
+      this.settledDialogVisible = false
+    },
     doAction(action, message, additionParams) {
       return new Promise((resolve, reject) => {
         this.$confirm(message.content, message.title, {
@@ -783,7 +828,7 @@ export default {
           showClose: false
         }).then(() => {
           this.modalLoading = true
-          let params = { action: action, disputeId: this.dispute.id }
+          let params = { action: action, disputeId: this.dispute.id, body: { note: this.counterOfferForm.note } }
           if (additionParams) params = { ...params, ...additionParams }
           this.sendDisputeAction(params).then(() => {
             resolve()
@@ -934,7 +979,7 @@ export default {
                 objectId: disputeToEdit.objects[0].id,
                 value: this.counterOfferForm.lastCounterOfferValue.toString(),
                 roleId: this.counterOfferForm.selectedRoleId,
-                note: this.counterOfferForm.note,
+                note: this.scapeHtml(this.counterOfferForm.note),
                 updateUpperRange: updateUpperRange || false
               }).then(() => {
                 if (this.counterOfferForm.note) {
@@ -1003,15 +1048,17 @@ export default {
           h('p', null, [
             h('b', null, 'Valor do acordo: '),
             h('span', null, this.$options.filters.currency(this.counterOfferForm.lastCounterOfferValue || this.dispute.disputeDealValue))
-          ])
+          ]),
+          h('b', { style: 'margin-top: 16px' }, 'Nota:')
         ]
         actionType = actionType === 'ACCEPT' ? 'Fechar acordo' : 'Ganhar'
-        this.$confirm(h('div', null, detailsMessage), actionType, {
+        this.$prompt(h('div', null, detailsMessage), actionType, {
           confirmButtonText: 'Continuar',
           cancelButtonText: 'Cancelar',
           cancelButtonClass: 'is-plain',
           showClose: false
-        }).then(() => {
+        }).then(({ value }) => {
+          this.counterOfferForm.note = this.scapeHtml(value)
           resolve()
         }).catch(e => {
           reject(e)
@@ -1023,6 +1070,19 @@ export default {
 </script>
 
 <style lang="scss">
+.el-dialog__wrapper {
+  div {
+    .el-dialog__body {
+      .dialog__textarea-note {
+        margin: 8px 0px;
+      }
+    }
+    .el-dialog__footer {
+      margin-top: 8px;
+    }
+  }
+}
+
 .jus-dispute-actions {
   &__choose-unsettled-dialog {
     .el-message-box__content {
