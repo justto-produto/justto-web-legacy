@@ -471,6 +471,11 @@ export default {
       }, 250)
     },
 
+    // TODO: Transformar isso em um util
+    scapeHtml(text) {
+      return text.replace(/(<([^>]+)>)/gi, '')
+    },
+
     doAction(action) {
       const params = {
         type: action.toUpperCase(),
@@ -494,12 +499,12 @@ export default {
           if (this.unsettledType) {
             Object.assign(params, {
               unsettledReasons: { [this.unsettledType]: this.disputeStatuses.UNSETTLED[this.unsettledType] },
-              note: this.note
+              note: this.scapeHtml(this.note)
             })
           }
           break
         case 'SETTLED':
-          Object.assign(params, { note: this.note })
+          Object.assign(params, { note: this.scapeHtml(this.note) })
       }
       if (this.isSelectedAll) {
         params.allSelected = true

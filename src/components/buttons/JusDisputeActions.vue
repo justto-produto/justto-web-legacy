@@ -650,6 +650,11 @@ export default {
       'startNegotiation'
     ]),
 
+    // TODO: Transformar isso em um util
+    scapeHtml(text) {
+      return text.replace(/(<([^>]+)>)/gi, '')
+    },
+
     disputeAction(action, additionParams) {
       let message = {
         content: 'Tem certeza que deseja realizar esta ação?',
@@ -692,7 +697,7 @@ export default {
             additionParams = {
               body: {
                 reason: this.disputeStatuses.UNSETTLED[this.unsettledType],
-                note: this.counterOfferForm.note
+                note: this.scapeHtml(this.counterOfferForm.note)
               }
             }
             this.doAction('unsettled', message, additionParams).then(() => {
@@ -778,7 +783,7 @@ export default {
               additionParams = {
                 body: {
                   reason: this.disputeStatuses.UNSETTLED[this.unsettledType],
-                  note: this.counterOfferForm.note
+                  note: this.scapeHtml(this.counterOfferForm.note)
                 }
               }
               this.doAction('unsettled', message, additionParams).then(() => {
@@ -973,7 +978,7 @@ export default {
                 objectId: disputeToEdit.objects[0].id,
                 value: this.counterOfferForm.lastCounterOfferValue.toString(),
                 roleId: this.counterOfferForm.selectedRoleId,
-                note: this.counterOfferForm.note,
+                note: this.scapeHtml(this.counterOfferForm.note),
                 updateUpperRange: updateUpperRange || false
               }).then(() => {
                 if (this.counterOfferForm.note) {
@@ -1052,7 +1057,7 @@ export default {
           cancelButtonClass: 'is-plain',
           showClose: false
         }).then(({ value }) => {
-          this.counterOfferForm.note = value
+          this.counterOfferForm.note = this.scapeHtml(value)
           resolve()
         }).catch(e => {
           reject(e)
