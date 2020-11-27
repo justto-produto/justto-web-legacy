@@ -44,6 +44,37 @@
     </div>
     <el-dialog
       :close-on-click-modal="false"
+      :visible.sync="chooseSettledDialogVisible"
+      title="Ganhar"
+      class="management-actions__dialog"
+      width="460px"
+      data-testid="unsettled-dialog"
+    >
+      <div>
+        <label>Nota:</label>
+        <el-input
+          v-model="note"
+          placeholder="Insira uma nota."
+          type="textarea"
+          :row="8"
+        />
+      </div>
+      <span slot="footer">
+        <el-button
+          plain
+          @click="chooseSettledDialogVisible = false"
+        >Cancelar</el-button>
+        <el-button
+          type="primary"
+          class="confirm-action-unsettled"
+          @click.prevent="doAction('SETTLED')"
+        >
+          Continuar
+        </el-button>
+      </span>
+    </el-dialog>
+    <el-dialog
+      :close-on-click-modal="false"
       :visible.sync="chooseUnsettledDialogVisible"
       title="Perder"
       class="management-actions__dialog"
@@ -71,6 +102,15 @@
           :value="index"
         />
       </el-select>
+      <div style="margin: 8px 0px;">
+        <label>Notas:</label>
+        <el-input
+          v-model="note"
+          placeholder="Insira uma nota."
+          type="textarea"
+          :row="4"
+        />
+      </div>
       <span slot="footer">
         <el-button
           plain
@@ -307,6 +347,7 @@ export default {
   data() {
     return {
       showBulkMessageDialog: false,
+      chooseSettledDialogVisible: false,
       chooseUnsettledDialogVisible: false,
       changeStrategyDialogVisible: false,
       changeNegotiatorDialogVisible: false,
@@ -318,6 +359,7 @@ export default {
       currentDisputeNegotiator: 0,
       allSelectedDisputes: 0,
       message: '',
+      note: '',
       unsettledType: '',
       deleteType: '',
       newStrategyId: '',
@@ -449,8 +491,15 @@ export default {
           if (this.deleteType) params.reasonKey = this.deleteType
           break
         case 'UNSETTLED':
-          if (this.unsettledType) params.unsettledReasons = { [this.unsettledType]: this.disputeStatuses.UNSETTLED[this.unsettledType] }
+          if (this.unsettledType) {
+            Object.assign(params, {
+              unsettledReasons: { [this.unsettledType]: this.disputeStatuses.UNSETTLED[this.unsettledType] },
+              note: this.note
+            })
+          }
           break
+        case 'SETTLED':
+          Object.assign(params, { note: this.note })
       }
       if (this.isSelectedAll) {
         params.allSelected = true
@@ -462,6 +511,7 @@ export default {
     dispatchAction(action, params) {
       this.$store.dispatch('sendBatchAction', params).then(response => {
         this.chooseDeleteDialogVisible = false
+        this.chooseSettledDialogVisible = false
         this.chooseUnsettledDialogVisible = false
         this.changeStrategyDialogVisible = false
         this.changeExpirationDialogVisible = false
@@ -518,6 +568,10 @@ export default {
       if (action === 'UNSETTLED') {
         this.chooseUnsettledDialogVisible = true
         this.unsettledType = ''
+        this.note = ''
+      } else if (action === 'SETTLED') {
+        this.chooseSettledDialogVisible = true
+        this.note = ''
       } else if (action === 'DELETE') {
         this.chooseDeleteDialogVisible = true
         this.deleteType = ''
@@ -536,6 +590,13 @@ export default {
           title: this.$options.filters.capitalize(this.$t('action.' + action.toUpperCase())),
           content: 'Tem certeza que deseja realizar esta ação em lote?'
         }
+        const configs = {
+          confirmButtonClass: 'confirm-action-btn',
+          confirmButtonText: 'Continuar',
+          cancelButtonText: 'Cancelar',
+          dangerouslyUseHTMLString: true,
+          cancelButtonClass: 'is-plain'
+        }
         if (action === 'ENRICH_DISPUTE' &&
             this.$store.getters.disputes.filter(d => this.selectedIds.includes(d.id) &&
             ['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(d.status)).length) {
@@ -544,13 +605,7 @@ export default {
           foram finalizadas. Este processo irá agendar novamente as mensagens
           para as partes quando finalizado. Você deseja enriquecer mesmo assim?`
         }
-        this.$confirm(message.content, message.title, {
-          confirmButtonClass: 'confirm-action-btn',
-          confirmButtonText: 'Continuar',
-          cancelButtonText: 'Cancelar',
-          dangerouslyUseHTMLString: true,
-          cancelButtonClass: 'is-plain'
-        }).then(() => {
+        this.$confirm(message.content, message.title, configs).then(() => {
           this.doAction(action)
         })
       }
