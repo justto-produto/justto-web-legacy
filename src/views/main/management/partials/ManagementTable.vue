@@ -380,7 +380,7 @@ export default {
       disputeKey: 0,
       responseBoxLoading: false,
       actieTooltipDisputeId: 0,
-      activeDisputeIds: []
+      activeDisputeIds: [],
       lastAccessTooltipTimeout: () => {}
     }
   },
