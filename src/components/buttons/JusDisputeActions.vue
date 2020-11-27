@@ -852,6 +852,7 @@ export default {
     openNewTab() {
       const routeData = this.$router.resolve({ name: 'dispute', params: { id: this.dispute.id } })
       window.open(routeData.href, '_blank')
+      this.$emit('open:newtab')
     },
     togleCollapsed() {
       this.collapsed = !this.collapsed
