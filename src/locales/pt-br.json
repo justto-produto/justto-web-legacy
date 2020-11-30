@@ -42,6 +42,9 @@
       "FINISHED": "finalizado",
       "PROCESSING": "processando",
       "QUEUE": "aguardando"
+    },
+    "labels": {
+      "note": "Notas da conclusão (opcional)"
     }
   },
   "triggers": {
