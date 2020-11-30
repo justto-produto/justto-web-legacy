@@ -245,7 +245,8 @@
                 <div>
                   <div
                     v-if="canShowFullMessage(occurrence) && !showResume(occurrence)"
-                    style="text-align: right;">
+                    style="text-align: right;"
+                  >
                     <a
                       href="#"
                       data-testid="hide-email"
@@ -390,7 +391,10 @@
                   href="#"
                   @click.prevent="startReply(occurrence)"
                 >
-                  <jus-icon icon="reply" />
+                  <jus-icon
+                    icon="reply"
+                    style="position: styck;"
+                  />
                 </a>
               </el-tooltip>
             </div>
@@ -1468,6 +1472,10 @@ export default {
   &__side-icon {
     align-self: center;
     margin-bottom: 22px;
+    position: sticky;
+    top: 8px;
+    bottom: 8px;
+
     img {
       width: 20px;
     }
