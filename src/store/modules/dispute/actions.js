@@ -408,7 +408,7 @@ const disputeActions = {
         request = axios.put('api/messages/resend/' + params.disputeId)
       } else if (params.action === 'settled' && params.value) {
         // eslint-disable-next-line
-        request = axios.put(`api/disputes/${params.disputeId}/settled?value=${params.value}`)
+        request = axios.put(`api/disputes/${params.disputeId}/settled?value=${params.value}`, params.body)
       } else if (params.action === 'enrich') {
         // eslint-disable-next-line
         request = axios.patch('api/fusion-runner/enrich/' + params.disputeId)
