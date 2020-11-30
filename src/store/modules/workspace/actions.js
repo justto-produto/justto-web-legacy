@@ -92,7 +92,7 @@ const workspaceActions = {
   },
   getMyStrategies({ _ }) {
     return axiosDispatch({
-      url: 'api/strategy',
+      url: 'api/workspaces/strategies',
       mutation: 'setImportedStrategies'
     })
   },
