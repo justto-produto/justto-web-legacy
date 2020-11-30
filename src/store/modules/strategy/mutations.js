@@ -1,6 +1,6 @@
 const strategyMutations = {
   setImportedStrategies(state, response) {
-    state.list = response.content
+    state.list = response.content || response
   }
 }
 
