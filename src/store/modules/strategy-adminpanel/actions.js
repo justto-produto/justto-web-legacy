@@ -32,7 +32,7 @@ const strategyActions = {
   }),
 
   addStrategy: ({ _ }, strategy) => axiosDispatch({
-    url: `${strategyPath}?size=200`,
+    url: `${strategyPath}`,
     method: 'POST',
     data: strategy,
     mutation: 'addStrategy'
