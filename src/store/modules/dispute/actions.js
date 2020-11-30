@@ -163,15 +163,19 @@ const disputeActions = {
       if (command === 'resetPages') commit('resetDisputeQueryPage')
       // eslint-disable-next-line
       axios.get(`${disputesPath}/filter` + buildQuery(state.query, command, state.disputes.length)).then(response => {
+        const dispute = {
+          ...response.data,
+          content: response.data.content.filter(d => !!d)
+        }
         if (command === 'nextPage') {
-          commit('addDisputes', response.data)
+          commit('addDisputes', dispute)
         } else {
-          commit('setDisputes', response.data)
+          commit('setDisputes', dispute)
           commit('disputeSetHasNew', false)
         }
         commit('clearOnlineDocs')
         const onlineDocs = []
-        response.data.content.map(dispute => {
+        dispute.content.map(dispute => {
           if (dispute.firstClaimantStatus === 'ONLINE') {
             onlineDocs.push({
               documentNumber: dispute.firstClaimantDocumentNumber,
