@@ -442,8 +442,8 @@ export default {
     this.$store.commit('resetDisputeQueryPage')
     this.$store.dispatch('cleanDisputeLastAccess')
   },
-  mounted() {
-    this.activeDisputeIds = []
+  beforeMount() {
+    this.clearHighlight()
   },
   methods: {
     ...mapActions([
@@ -454,6 +454,10 @@ export default {
 
     addHighlight(id) {
       this.activeDisputeIds.push(id)
+    },
+
+    clearHighlight() {
+      this.activeDisputeIds = []
     },
 
     isWonDispute(disputeStatus) {
@@ -503,7 +507,11 @@ export default {
     },
     handleRowClick(row, column, event) {
       if (row.id && !['IMG', 'SPAN', 'BUTTON', 'I'].includes(event.target.tagName)) {
-        this.$router.push({ name: 'dispute', params: { id: row.id } })
+        if (event.ctrlKey) {
+          window.open(`/#/management/dispute/${row.id}`, '_blank')
+        } else {
+          this.$router.push({ name: 'dispute', params: { id: row.id } })
+        }
       }
     },
     clearSelection() {

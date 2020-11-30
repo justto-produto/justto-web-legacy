@@ -644,6 +644,7 @@ export default {
       this.$refs.managementTable.clearSelection()
     },
     handleChangeTab(tab) {
+      this.$refs.managementTable.clearHighlight()
       this.$refs.managementTable.showEmpty = false
       this.ufFilterValue = []
       this.$store.commit('clearDisputes')

@@ -76,7 +76,7 @@
           </div>
         </el-col>
         <el-col
-          v-loading="loading === true || loading === 'DISPUTE_AVG_RESPONSE_TIME'"
+          v-loading="loading === true || loading === 'DISPUTE_MONETARY_SUMMARIES'"
           :md="10"
           :sm="24"
           class="dashboard-view__graph"
