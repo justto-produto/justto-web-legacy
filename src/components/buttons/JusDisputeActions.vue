@@ -107,17 +107,19 @@
           </el-col>
         </el-row>
         <el-row :hutter="20">
-          <el-form-item
-            label="Nota:"
-          >
-            <el-input
-              v-model="counterOfferForm.note"
-              class="dialog__textarea-note"
-              type="textarea"
-              :rows="4"
-              placeholder="Informe uma nota"
-            />
-          </el-form-item>
+          <el-form>
+            <el-form-item
+              :label="`${$t('dispute.labels.note')}:`"
+            >
+              <el-input
+                v-model="counterOfferForm.note"
+                class="dialog__textarea-note"
+                type="textarea"
+                :rows="4"
+                placeholder="Informe uma nota"
+              />
+            </el-form-item>
+          </el-form>
         </el-row>
       </el-form>
       <span slot="footer">
@@ -213,7 +215,7 @@
       </el-form>
       <el-form>
         <el-form-item
-          label="Nota:"
+          :label="`${$t('dispute.labels.note')}:`"
         >
           <el-input
             v-model="counterOfferForm.note"
@@ -1049,7 +1051,7 @@ export default {
             h('b', null, 'Valor do acordo: '),
             h('span', null, this.$options.filters.currency(this.counterOfferForm.lastCounterOfferValue || this.dispute.disputeDealValue))
           ]),
-          h('b', { style: 'margin-top: 16px' }, 'Nota:')
+          h('b', { style: 'margin-top: 16px' }, `${this.$t('dispute.labels.note')}:`)
         ]
         actionType = actionType === 'ACCEPT' ? 'Fechar acordo' : 'Ganhar'
         this.$prompt(h('div', null, detailsMessage), actionType, {

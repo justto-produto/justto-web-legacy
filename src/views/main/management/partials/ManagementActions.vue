@@ -51,7 +51,7 @@
       data-testid="unsettled-dialog"
     >
       <div>
-        <label>Nota:</label>
+        <label>{{ $t('dispute.labels.note') }}:</label>
         <el-input
           v-model="note"
           placeholder="Insira uma nota."
@@ -103,7 +103,7 @@
         />
       </el-select>
       <div style="margin: 8px 0px;">
-        <label>Notas:</label>
+        <label>{{ $t('dispute.labels.note') }}:</label>
         <el-input
           v-model="note"
           placeholder="Insira uma nota."
