@@ -457,7 +457,8 @@ export default {
     if (!this.disputeStatuses.ARCHIVED || !Object.keys(this.disputeStatuses.ARCHIVED).length) {
       this.getDisputeStatuses('ARCHIVED')
     }
-    this.$store.dispatch('getStrategiesList')
+    // this.$store.dispatch('getStrategiesList')
+    this.$store.dispatch('getMyStrategies')
   },
   beforeDestroy() {
     this.editorRedy = false
