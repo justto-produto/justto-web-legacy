@@ -247,9 +247,13 @@ export default {
       if (selectedWorkspace.person) {
         this.goToWorkspace(selectedWorkspace)
       } else {
-        this.$store.dispatch('ensureWorkspaceAccesss', selectedWorkspace.workspace.id).then(() => {
-          this.getMyWorkspaces().then((response) => {
-            this.goToWorkspace(selectedWorkspace)
+        this.$store.dispatch('ensureWorkspaceAccesss', selectedWorkspace.workspace.id).then((res) => {
+          this.$store.commit('setToken', res)
+          this.getMyWorkspaces().then(response => {
+            const updatedWorkspace = response.find(el => {
+              return el.workspace.id === selectedWorkspace.workspace.id
+            })
+            this.goToWorkspace(updatedWorkspace)
           }).finally(() => {
             setTimeout(() => {
               loading.close()
@@ -260,14 +264,15 @@ export default {
     },
     getMyWorkspaces() {
       return new Promise((resolve, reject) => {
-        this.$store.dispatch('myWorkspace').then(response => {
-          this.workspacesList = response
-        }).then(response => {
-          resolve(response)
-        }).catch(error => {
-          this.$jusNotification({ error })
-          reject(error)
-        })
+        this.$store.dispatch('myWorkspace')
+          .then(response => {
+            this.workspacesList = response
+            resolve(response)
+          })
+          .catch(error => {
+            this.$jusNotification({ error })
+            reject(error)
+          })
       })
     },
     setPersonName() {
