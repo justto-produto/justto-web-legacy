@@ -237,6 +237,39 @@
             </div>
             <div class="dispute-view-occurrences__card-box">
               <el-card
+                v-if="occurrence.interaction.type === 'ATTACHMENT'"
+                :class="(occurrence.interaction ? occurrence.interaction.type : '') + ' ' + buildCommunicationType(occurrence) + ' ' + (occurrence.interaction && occurrence.interaction.message ? occurrence.interaction.message.status : '')"
+                shadow="never"
+                class="dispute-view-occurrences__card"
+                style="padding-bottom: 8px;"
+              >
+                <div>
+                  <span style="text-transform: capitalize;">
+                    {{ occurrence.properties.SENDER_NAME.toLowerCase() }}
+                  </span>
+                  enviou
+                  <el-badge
+                    is-dot
+                  >
+                    <span
+                      style="cursor: pointer; text-decoration: underline;"
+                      @click="downloadAttachment(occurrence.properties.FILE_URL)">
+                      {{ $t(`dispute.occurrence.attachment.type.${occurrence.properties.FILE_TYPE}`) }}
+                    </span>
+                  </el-badge>
+                  como anexo
+                  <el-button
+                    round
+                    plain
+                    size="mini"
+                    type="primary"
+                    icon="el-icon-download"
+                    @click="downloadAttachment(occurrence.properties.FILE_URL)"
+                  />
+                </div>
+              </el-card>
+              <el-card
+                v-else
                 :class="(occurrence.interaction ? occurrence.interaction.type : '') + ' ' + buildCommunicationType(occurrence) + ' ' + (occurrence.interaction && occurrence.interaction.message ? occurrence.interaction.message.status : '')"
                 shadow="never"
                 class="dispute-view-occurrences__card"
@@ -717,6 +750,10 @@ export default {
   methods: {
     ...mapActions(['setActiveactiveOccurrency']),
 
+    downloadAttachment(url) {
+      window.open(url, '_blank')
+    },
+
     getIconIsMerged(occurrency) {
       return this.activeOccurrency.id === occurrency.id ? 'el-icon-arrow-up' : 'el-icon-arrow-down'
     },
@@ -1005,11 +1042,12 @@ export default {
       }
       return typeClass
     },
-
+    // occurrence.interaction.type === 'ATTACHMENT'
     showReply(occurrence) {
       if (occurrence.interaction &&
         ((occurrence.interaction.message &&
         occurrence.interaction.message.communicationType &&
+        !['ATTACHMENT'].includes(occurrence.interaction.type) &&
         ['EMAIL', 'WHATSAPP', 'NEGOTIATOR_MESSAGE'].includes(occurrence.interaction.message.communicationType)) ||
         (this.negotiatorTypes.includes(occurrence.interaction.type) ||
         this.disputeLastInteractions.length)) &&
