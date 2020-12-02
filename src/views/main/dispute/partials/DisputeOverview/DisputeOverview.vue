@@ -1959,7 +1959,7 @@ export default {
     },
     showAssociateContacts: {
       get() {
-        return (
+        const condition = (
           this.dispute &&
           this.dispute.properties &&
           (
@@ -1967,6 +1967,7 @@ export default {
             this.dispute.properties['CONTATOS ASSOCIADOS'] === 'NAO'
           )
         ) || false
+        return condition
       },
       set(flag) {
         this.setDisputeProperty({
@@ -1974,7 +1975,7 @@ export default {
           key: 'CONTATOS ASSOCIADOS',
           value: !flag ? 'SIM' : 'NAO'
         }).then(() => {
-          this.overviewTab = 'roles'
+          this.checkTabByAssociatedContractValue(flag)
           this.getDisputeMetadata(this.dispute.id)
         })
       }
@@ -2025,6 +2026,7 @@ export default {
       const { id } = this.$route.params
       this.getDisputeMetadata(id)
       this.populateTimeline()
+      this.checkTabByAssociatedContractValue()
     },
 
     openAssociationModal() {
@@ -2096,6 +2098,12 @@ export default {
           message: message,
           type: 'success'
         })
+      }
+    },
+
+    checkTabByAssociatedContractValue(flag = false) {
+      if (this.showAssociateContacts || flag) {
+        this.overviewTab = 'roles'
       }
     },
 
