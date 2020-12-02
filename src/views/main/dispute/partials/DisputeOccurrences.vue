@@ -248,15 +248,12 @@
                     {{ occurrence.properties.SENDER_NAME.toLowerCase() }}
                   </span>
                   enviou
-                  <el-badge
-                    is-dot
-                  >
-                    <span
-                      style="cursor: pointer; text-decoration: underline;"
-                      @click="downloadAttachment(occurrence.properties.FILE_URL)">
-                      {{ $t(`dispute.occurrence.attachment.type.${occurrence.properties.FILE_TYPE}`) }}
-                    </span>
-                  </el-badge>
+                  {{ $t(`dispute.occurrence.attachment.type.${occurrence.properties.FILE_TYPE}`) }}
+                  <span
+                    style="cursor: pointer; text-decoration: underline;"
+                    @click="downloadAttachment(occurrence.properties.FILE_URL)">
+                    ({{ occurrence.properties.FILE_NAME }})
+                  </span>
                   como anexo
                   <el-button
                     round
