@@ -102,6 +102,7 @@
               :key="workspace.id"
               :value="index"
               :label="workspace.workspace.teamName"
+              :disabled="workspace.workspace.id == loggedWorkspaceId"
               data-testid="select-workspace"
             />
           </el-select>
@@ -153,7 +154,8 @@ export default {
       ghostMode: 'ghostMode',
       name: 'loggedPersonName',
       teamName: 'workspaceTeamName',
-      loggedPersonHasName: 'loggedPersonHasName'
+      loggedPersonHasName: 'loggedPersonHasName',
+      loggedWorkspaceId: 'workspaceId'
     }),
     appVersion() {
       return process.env.VUE_APP_VERSION
@@ -162,7 +164,7 @@ export default {
       return this.$store.getters.whatsappStatus
     },
     workspaces() {
-      return this.workspacesList.filter(w => w.workspace.id !== this.$store.getters.workspaceId)
+      return this.workspacesList// .filter(w => w.workspace.id !== this.$store.getters.workspaceId)
     },
     isGhostMode: {
       get() {
