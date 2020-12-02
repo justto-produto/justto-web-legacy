@@ -9,6 +9,18 @@
         "in-the-attachments": "nos anexos"
       }
     },
+    "occurrence": {
+      "attachment": {
+        "type": {
+          "ZIP": "um arquivo compactado",
+          "IMAGE": "uma imagem",
+          "PDF": "um PDF",
+          "DOC": "um documento Word",
+          "XLS": "uma planilha",
+          "OUTRO": "um arquivo"
+        }
+      }
+    },
     "moralDamage": "valor dano moral",
     "negotiatorEmail": "email do negociador",
     "mappedStrategy": "nome da estratégia",
