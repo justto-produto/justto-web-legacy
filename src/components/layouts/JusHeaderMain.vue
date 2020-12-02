@@ -102,6 +102,7 @@
               :key="workspace.id"
               :value="index"
               :label="workspace.workspace.teamName"
+              :disabled="workspace.workspace.id == loggedWorkspaceId"
               data-testid="select-workspace"
             />
           </el-select>
@@ -153,7 +154,8 @@ export default {
       ghostMode: 'ghostMode',
       name: 'loggedPersonName',
       teamName: 'workspaceTeamName',
-      loggedPersonHasName: 'loggedPersonHasName'
+      loggedPersonHasName: 'loggedPersonHasName',
+      loggedWorkspaceId: 'workspaceId'
     }),
     appVersion() {
       return process.env.VUE_APP_VERSION
@@ -162,7 +164,7 @@ export default {
       return this.$store.getters.whatsappStatus
     },
     workspaces() {
-      return this.workspacesList.filter(w => w.workspace.id !== this.$store.getters.workspaceId)
+      return this.workspacesList// .filter(w => w.workspace.id !== this.$store.getters.workspaceId)
     },
     isGhostMode: {
       get() {
@@ -226,13 +228,15 @@ export default {
       this.$store.dispatch('getWorkspaceMembers')
         .then(() => {
           this.$jusSegment('Troca de time/workspace', { description: `Alterado de ${workspace.workspace.name} para ${oldWorkspace}` })
-          this.$store.commit('setDisputesTab', '2')
-          this.$router.go('/management')
-          this.changeWorkspaceDialogVisible = true
+          // this.$store.commit('setDisputesTab', '2')
+          if (this.$route.params && this.$route.params.id) {
+            this.$router.push('/management')
+          }
           this.setPersonName()
         }).catch(error => {
           this.$jusNotification({ error })
         }).finally(() => {
+          this.changeWorkspaceDialogVisible = false
           setTimeout(() => {
             loading.close()
           }, 1000)
