@@ -228,9 +228,11 @@ export default {
       this.$store.dispatch('getWorkspaceMembers')
         .then(() => {
           this.$jusSegment('Troca de time/workspace', { description: `Alterado de ${workspace.workspace.name} para ${oldWorkspace}` })
-          // this.$store.commit('setDisputesTab', '2')
           if (this.$route.params && this.$route.params.id) {
+            this.$store.commit('setDisputesTab', '2')
             this.$router.push('/management')
+          } else {
+            this.$root.$emit('change-workspace')
           }
           this.setPersonName()
         }).catch(error => {
