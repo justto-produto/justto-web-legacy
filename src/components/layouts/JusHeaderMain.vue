@@ -242,6 +242,7 @@ export default {
           setTimeout(() => {
             loading.close()
           }, 1000)
+          location.reload()
         })
     },
     getMembersAndRedirect() {
