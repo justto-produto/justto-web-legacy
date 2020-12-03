@@ -116,17 +116,21 @@ export default {
     }
   },
   beforeMount() {
-    this.$store.dispatch('getImportsHistory').then(response => {
-      if (response && response.length) {
-        this.importsHistory = response.sort(function(a, b) {
-          if (a.id < b.id) return 1
-          if (a.id > b.id) return -1
-          return 0
-        })
-      }
-    })
+    this.init()
+    this.$root.$on('change-workspace', this.init)
   },
   methods: {
+    init() {
+      this.$store.dispatch('getImportsHistory').then(response => {
+        if (response && response.length) {
+          this.importsHistory = response.sort(function(a, b) {
+            if (a.id < b.id) return 1
+            if (a.id > b.id) return -1
+            return 0
+          })
+        }
+      })
+    },
     setStatusIcon(status) {
       switch (status) {
         case 'FINISHED':

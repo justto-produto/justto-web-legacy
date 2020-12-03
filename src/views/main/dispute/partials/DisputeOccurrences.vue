@@ -999,7 +999,7 @@ export default {
       return (occurrence.interaction &&
         occurrence.interaction.message &&
         occurrence.interaction.message.resume &&
-        occurrence.interaction.message.resume.length >= 140)
+        occurrence.interaction.message.resume.length >= 100)
     },
 
     showResume(occurrence) {
