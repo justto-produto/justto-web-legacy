@@ -5,7 +5,8 @@ import getters from './getters'
 const dispute = {
   state: {
     dispute: {
-      id: 0
+      id: 0,
+      properties: []
     },
     disputeLastInteractions: [],
     disputeAttachments: [],
@@ -43,6 +44,7 @@ const dispute = {
       term: '',
       total: 0
     },
+    recentPrescriptions: JSON.parse(localStorage.getItem('jusrecentprescriptions')) || {},
     lastAccess: {},
     hasFilters: false,
     statuses: {},
