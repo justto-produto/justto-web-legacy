@@ -22,6 +22,7 @@
     </el-button>
 
     <el-popover
+      v-if="showHiddelPrescriptions"
       placement="bottom"
       width="400"
       popper-class="management-prescriptions__prescriptions-popover"
@@ -133,6 +134,10 @@ export default {
 
     hiddenPrescriptions() {
       return this.prescriptions.filter(p => !this.mainPrescription.includes(p.prescription))
+    },
+
+    showHiddelPrescriptions() {
+      return this.hiddenPrescriptions.filter(p => p.tabs.includes(parseInt(this.activeTab, 10))).length
     }
   },
   methods: {
