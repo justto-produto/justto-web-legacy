@@ -1,3 +1,5 @@
+import moment from 'moment'
+
 const disputeGetters = {
   loadingDisputes: state => state.loading,
   disputes: state => state.disputes,
@@ -41,6 +43,9 @@ const disputeGetters = {
     return getters.filterSummary('PRE_NEGOTIATION', state.summaryNotVisualizeds)
   },
   hasPrescription: state => (prescription) => state.query.prescriptions.includes(prescription),
+  getRecentPrescriptions: ({ recentPrescriptions }) => {
+    return Object.keys(recentPrescriptions).filter(p => moment(new Date()).diff(recentPrescriptions[p], 'days') < 1)
+  },
   prescriptionsList: state => state.prescriptionsList,
   partyAnalysisByDocument: state => (documentNumber) => state.partyAnalysis[documentNumber],
   lastAccess: state => state.lastAccess,
