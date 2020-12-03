@@ -236,35 +236,13 @@
               </el-tooltip>
             </div>
             <div class="dispute-view-occurrences__card-box">
-              <el-card
+              <attachment-occurrence
                 v-if="occurrence.interaction.type === 'ATTACHMENT'"
+                :value="occurrence"
                 :class="(occurrence.interaction ? occurrence.interaction.type : '') + ' ' + buildCommunicationType(occurrence) + ' ' + (occurrence.interaction && occurrence.interaction.message ? occurrence.interaction.message.status : '')"
                 shadow="never"
                 class="dispute-view-occurrences__card"
-                style="padding-bottom: 8px;"
-              >
-                <div>
-                  <span style="text-transform: capitalize;">
-                    {{ occurrence.properties.SENDER_NAME.toLowerCase() }}
-                  </span>
-                  enviou
-                  {{ $t(`dispute.occurrence.attachment.type.${occurrence.properties.FILE_TYPE}`) }}
-                  <span
-                    style="cursor: pointer; text-decoration: underline;"
-                    @click="downloadAttachment(occurrence.properties.FILE_URL)">
-                    ({{ occurrence.properties.FILE_NAME }})
-                  </span>
-                  como anexo
-                  <el-button
-                    round
-                    plain
-                    size="mini"
-                    type="primary"
-                    icon="el-icon-download"
-                    @click="downloadAttachment(occurrence.properties.FILE_URL)"
-                  />
-                </div>
-              </el-card>
+              />
               <el-card
                 v-else
                 :class="(occurrence.interaction ? occurrence.interaction.type : '') + ' ' + buildCommunicationType(occurrence) + ' ' + (occurrence.interaction && occurrence.interaction.message ? occurrence.interaction.message.status : '')"
@@ -454,7 +432,15 @@
               </el-tooltip>
             </div>
             <div class="dispute-view-occurrences__card-box">
+              <attachment-occurrence
+                v-if="mergedOccurency.interaction.type === 'ATTACHMENT'"
+                :value="mergedOccurency"
+                :class="(mergedOccurency.interaction ? mergedOccurency.interaction.type : '') + ' ' + buildCommunicationType(mergedOccurency) + ' ' + (mergedOccurency.interaction && mergedOccurency.interaction.message ? mergedOccurency.interaction.message.status : '')"
+                shadow="never"
+                class="dispute-view-occurrences__card"
+              />
               <el-card
+                v-else
                 :class="(mergedOccurency.interaction ? mergedOccurency.interaction.type : '') + ' ' + buildCommunicationType(mergedOccurency) + ' ' + (mergedOccurency.interaction && mergedOccurency.interaction.message ? mergedOccurency.interaction.message.status : '')"
                 shadow="never"
                 class="dispute-view-occurrences__card"
@@ -628,7 +614,10 @@ import { uniq } from 'lodash'
 
 export default {
   name: 'DisputeOccurrences',
-  components: { InfiniteLoading },
+  components: {
+    InfiniteLoading,
+    AttachmentOccurrence: () => import('./partials/AttachmentOccurrence')
+  },
   props: {
     disputeId: {
       type: String,
@@ -746,10 +735,6 @@ export default {
   },
   methods: {
     ...mapActions(['setActiveactiveOccurrency']),
-
-    downloadAttachment(url) {
-      window.open(url, '_blank')
-    },
 
     getIconIsMerged(occurrency) {
       return this.activeOccurrency.id === occurrency.id ? 'el-icon-arrow-up' : 'el-icon-arrow-down'
