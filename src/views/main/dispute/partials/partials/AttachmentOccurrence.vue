@@ -55,6 +55,8 @@ export default {
 @import '@/styles/colors.scss';
 
 .attachment__card {
+  padding-bottom: 10px;
+
   .attachment__container {
     display: flex;
     flex-direction: row;
@@ -83,9 +85,6 @@ export default {
 
     .attachment__file-download {
       cursor: pointer;
-      // font-weight: 500;
-      // color: $--color-primary;
-      // text-decoration: underline;
       align-self: center;
     }
   }
