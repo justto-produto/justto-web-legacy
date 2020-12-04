@@ -682,7 +682,7 @@ export default {
             similarity = 75
           }
           const previous = datedOccurrence[previousOccurrenceIndex]
-          if (previous && isSimilarStrings(this.buildContent(fo), this.buildContent(previous), similarity)) {
+          if (previous && isSimilarStrings(this.buildContent(fo), this.buildContent(previous), similarity) && fo.interaction.direction === previous.interaction.direction) {
             fo.toDelete = true
             if (!previous.merged) {
               previous.merged = []
