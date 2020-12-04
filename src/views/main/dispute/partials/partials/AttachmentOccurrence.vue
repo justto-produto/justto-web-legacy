@@ -1,27 +1,27 @@
 <template>
   <el-card
-    style="padding-bottom: 8px;"
+    class="attachment__card"
   >
-    <div>
-      <span style="text-transform: capitalize;">
+    <div
+      v-if="occurrence.properties"
+      class="attachment__container"
+    >
+      <span class="attachment__sender-name">
         {{ occurrence.properties.SENDER_NAME.toLowerCase() }}
       </span>
       enviou
       {{ $t(`dispute.occurrence.attachment.type.${occurrence.properties.FILE_TYPE}`) }}
-      <span
-        style="cursor: pointer; text-decoration: underline;"
+      (<span
+        class="attachment__file-name"
         @click="downloadAttachment(occurrence.properties.FILE_URL)">
-        ({{ occurrence.properties.FILE_NAME }})
+        {{ occurrence.properties.FILE_NAME }}
+      </span>)
+      como anexo.
+      <span
+        class="attachment__file-download"
+        @click="downloadAttachment(occurrence.properties.FILE_URL)">
+        Baixar
       </span>
-      como anexo
-      <el-button
-        round
-        plain
-        size="mini"
-        type="primary"
-        icon="el-icon-download"
-        @click="downloadAttachment(occurrence.properties.FILE_URL)"
-      />
     </div>
   </el-card>
 </template>
@@ -47,6 +47,33 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
+@import '@/styles/colors.scss';
 
+.attachment__card {
+  padding-bottom: 8px;
+
+  .attachment__container {
+    .attachment__sender-name {
+      text-transform: capitalize;
+    }
+
+    .attachment__file-name {
+      cursor: pointer;
+      font-weight: bold;
+      color: $--color-primary;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    .attachment__file-download {
+      cursor: pointer;
+      font-weight: 500;
+      color: $--color-primary;
+      text-decoration: underline;
+    }
+  }
+}
 </style>
