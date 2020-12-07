@@ -3,7 +3,6 @@
     <el-dialog
       v-loading="loading"
       :visible.sync="toShow"
-      :show-close="false"
       title="Encontramos dados de contatos na inicial da disputa"
       width="50%"
       @close="skip()"
@@ -327,7 +326,7 @@ export default {
     .dialog-body {
       .dialog-body__title {
         display: flex;
-        justify-content: center;
+        justify-content: flex-start;
         font-size: 16px;
       }
       .dialog-body__content {
