@@ -151,7 +151,8 @@ const disputeActions = {
       data: formData
     })
   },
-  deleteAttachment({ commit }, { disputeId, documentId }) {
+  deleteAttachment({ commit, dispatch }, { disputeId, documentId }) {
+    commit('showLoadingAttachments')
     return axiosDispatch({
       url: `api/office/disputes/${disputeId}/attachment/${documentId}`,
       method: 'delete'

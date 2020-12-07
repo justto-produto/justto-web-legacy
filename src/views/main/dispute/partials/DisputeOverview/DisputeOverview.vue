@@ -428,7 +428,9 @@
               class="dispute-overview-view__role-collapse"
               data-testid="expand-party"
             >
-              <div slot="title">
+              <div
+                class="dispute-overview-view__person-title"
+                slot="title">
                 <i
                   v-if="(showNamesake(role) || showVexatious(role.personProperties)) && !role.roles.includes('NEGOTIATOR') "
                   class="el-icon-warning-outline el-icon-pulse"
@@ -2901,11 +2903,15 @@ export default {
 
 .dispute-overview-view {
   height: 100%;
+  max-height: 100%;
   overflow: hidden;
   position: relative;
+  display: flex;
+  flex-direction:column;
 
   .dispute-overview-view__loading {
-    height: 100%;
+    flex: 1;
+    overflow-y: hidden;
 
     .dispute-overview-view__timeline {
       .dispute-overview-view__timeline-title {
@@ -2938,7 +2944,9 @@ export default {
   }
   &__tabs-content {
     overflow-y: auto;
+    overflow-x: hidden;
     height: 100%;
+    padding-right: 4px;
   }
   &__info-line {
     line-height: 24px;
@@ -3138,10 +3146,12 @@ export default {
       margin-top: 20px;
     }
   }
+  &__person-title { width: calc(100% - 16px); }
   &__name {
     font-weight: 500;
     white-space: nowrap;
     overflow: hidden;
+    width: 100%;
     text-overflow: ellipsis;
   }
   &__see-more {
