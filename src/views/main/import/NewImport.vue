@@ -182,7 +182,6 @@ export default {
         { value: 'name', validation: field => !!field.name },
         { value: 'cluster', validation: field => !!field.cluster },
         { value: 'deadline', validation: field => !!field.deadline && this.$moment(field.deadline.dateTime).isValid() === true },
-        { value: 'paymentDeadLine', validation: field => !!field.paymentDeadLine },
         { value: 'negotiatorIds', validation: field => !!field.negotiatorIds.length },
         { value: 'strategy', validation: field => !!field.strategy }
       ]
@@ -201,10 +200,6 @@ export default {
         !!campaign.cluster &&
         campaign.hasOwnProperty('deadline') &&
         !!campaign.deadline &&
-        // campaign.hasOwnProperty('protocolDeadLine') &&
-        // !!campaign.protocolDeadLine &&
-        campaign.hasOwnProperty('paymentDeadLine') &&
-        !!campaign.paymentDeadLine &&
         campaign.hasOwnProperty('negotiatorIds') &&
         !!campaign.negotiatorIds &&
         campaign.negotiatorIds.length > 0 &&

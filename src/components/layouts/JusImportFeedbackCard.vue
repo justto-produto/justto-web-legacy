@@ -99,11 +99,6 @@
       >
         <div>
           <i
-            v-if="errorFields.includes('paymentDeadLine')"
-            class="el-icon-error el-input__icon has-error-icon"
-          />
-          <i
-            v-else
             class="el-icon-circle-check el-input__icon--success"
           />
           Data do pagamento
@@ -111,12 +106,9 @@
         <div>
           <el-input-number
             v-model="paymentDeadLine"
-            :min="1"
             :max="9999"
-            :class="{'has-error': errorFields.includes('paymentDeadLine')}"
             name="payment-deadline"
             controls-position="right"
-            @input="clearErrorField('paymentDeadLine')"
           />
           <span class="jus-import-feedback-card__sufix">
             dia(s) corridos após o protocolo
@@ -288,7 +280,7 @@ export default {
       initialCampaignName: '',
       mappedName: '',
       respondent: '',
-      paymentDeadLine: 1,
+      paymentDeadLine: 0,
       campaignName: '',
       campaignTimeout: null,
       campaignNameDebounce: 0,
