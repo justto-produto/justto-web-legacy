@@ -17,8 +17,14 @@
         <span class="attachment__file-name">
           {{ occurrence.properties.FILE_NAME }}
         </span>
-        <span class="attachment__file-sender-name">
-          {{ occurrence.properties.SENDER_NAME }}
+        <span
+          v-if="occurrence.properties.FILE_SIZE"
+          class="attachment__file-size"
+        >
+          {{ occurrence.properties.FILE_SIZE }} Mb
+        </span>
+        <span v-else>
+          -
         </span>
       </span>
       <span
