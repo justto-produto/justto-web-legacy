@@ -866,6 +866,11 @@ export default {
           return ''
         }
         if (occurrence.interaction.type &&
+        ['ATTACHMENT'].includes(occurrence.interaction.type)
+        ) {
+          return occurrence.properties.SENDER_NAME
+        }
+        if (occurrence.interaction.type &&
           ['MANUAL_COUNTERPROPOSAL', 'MANUAL_PROPOSAL', 'CLICK'].includes(occurrence.interaction.type) &&
           occurrence.interaction.properties.USER) {
           return occurrence.interaction.properties.USER.toUpperCase()
