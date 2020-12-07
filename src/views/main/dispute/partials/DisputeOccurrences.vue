@@ -682,7 +682,7 @@ export default {
             similarity = 75
           }
           const previous = datedOccurrence[previousOccurrenceIndex]
-          if (previous && isSimilarStrings(this.buildContent(fo), this.buildContent(previous), similarity)) {
+          if (previous && isSimilarStrings(this.buildContent(fo), this.buildContent(previous), similarity) && (fo.interaction && previous.interaction && fo.interaction.direction === previous.interaction.direction)) {
             fo.toDelete = true
             if (!previous.merged) {
               previous.merged = []
@@ -965,7 +965,7 @@ export default {
       return (occurrence.interaction &&
         occurrence.interaction.message &&
         occurrence.interaction.message.resume &&
-        occurrence.interaction.message.resume.length >= 140)
+        occurrence.interaction.message.resume.length >= 100)
     },
 
     showResume(occurrence) {

@@ -5,8 +5,7 @@
       :visible.sync="toShow"
       title="Encontramos dados de contatos na inicial da disputa"
       width="50%"
-      :show-close="false"
-      center
+      @close="skip()"
     >
       <div class="dialog-body">
         <div class="dialog-body__title">
@@ -158,6 +157,11 @@
         slot="footer"
       >
         <el-button
+          @click="skip()"
+        >
+          Associar mais tarde
+        </el-button>
+        <el-button
           type="primary"
           @click="submit()"
         >
@@ -196,8 +200,13 @@ export default {
         return party === 'CLAIMANT' && (roles.includes('PARTY') || roles.includes('LAWYER'))
       }).map(({ id, name }) => ({ id, name }))
     },
-    toShow() {
-      return this.value && (this.emails.length > 0 || this.phones.length > 0)
+    toShow: {
+      get() {
+        return this.value && (this.emails.length > 0 || this.phones.length > 0)
+      },
+      set(value) {
+        console.log(value)
+      }
     }
   },
   watch: {
@@ -209,7 +218,11 @@ export default {
     this.update()
   },
   methods: {
-    ...mapActions(['addPhoneToDisputeRole', 'addEmailToDisputeRole']),
+    ...mapActions([
+      'addPhoneToDisputeRole',
+      'addEmailToDisputeRole',
+      'setDisputeProperty'
+    ]),
 
     update() {
       function setAssociated(contact) {
@@ -220,6 +233,10 @@ export default {
       }
       this.emails = this.metadata.emails.map(setAssociated)
       this.phones = this.metadata.phones.map(setAssociated)
+    },
+
+    skip() {
+      this.$emit('input', 'MAIS TARDE')
     },
 
     submit() {
@@ -260,7 +277,7 @@ export default {
       Promise.all(promisses).then(() => {
         this.loading = false
       }).finally(() => {
-        this.$emit('input', !this.toShow)
+        this.$emit('input', !this.toShow ? 'NAO' : 'SIM')
       })
     }
   }
@@ -309,7 +326,7 @@ export default {
     .dialog-body {
       .dialog-body__title {
         display: flex;
-        justify-content: center;
+        justify-content: flex-start;
         font-size: 16px;
       }
       .dialog-body__content {

@@ -204,6 +204,10 @@ const disputeMutations = {
     state.query.prescriptions.splice(state.query.prescriptions.indexOf(prescription), 1)
     state.query.page = 1
   },
+  setRecentPrescription(state, prescription) {
+    Vue.set(state.recentPrescriptions, prescription, new Date())
+    localStorage.setItem('jusrecentprescriptions', JSON.stringify(state.recentPrescriptions))
+  },
   addPartyAnalysis(state, analysis) {
     state.partyAnalysis[analysis.payload] = analysis.data
   },

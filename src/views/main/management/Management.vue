@@ -521,43 +521,11 @@ export default {
     this.$store.dispatch('getNotVisualizeds')
     this.$store.dispatch('getNearExpirations')
   },
-  created() {
-    const query = this.$route.query
-
-    if (this.$route.name === 'allDisputes' && this.$store.state.disputeModule.tab !== '9') {
-      this.$store.commit('setDisputesTab', '9')
-      this.$store.commit('updateDisputeQuery', { key: 'status', value: [] })
-      this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['id,desc'] })
-    }
-
-    if (Object.keys(query).length) {
-      this.$store.commit('clearDisputeQuery')
-      this.$store.commit('addPrescription', query.prescription)
-      this.$store.commit('updateDisputeQuery', { key: 'status', value: query.status || [] })
-      this.$store.commit('updateDisputeQuery', { key: 'startDate', value: query.startDate })
-      this.$store.commit('updateDisputeQuery', { key: 'finishDate', value: query.finishDate })
-      this.$store.commit('updateDisputeQuery', { key: 'transactionType', value: query.transactionType })
-      this.$store.commit('setDisputeHasFilters', query.disputeHasFilters)
-      this.$store.commit('setDisputesTab', query.disputeTab)
-    }
-
-    this.getDisputes()
-    this.getPrescriptions()
-  },
+  // created() {
+  // },
   mounted() {
-    this.getExportColumns().then(response => {
-      Object.keys(response).forEach(key => {
-        this.columnsList.push({
-          key: key,
-          label: response[key]
-        })
-      })
-    }).finally(() => {
-      this.filteredNodes = this.columns
-      this.checkedNodes = this.columns.length
-    })
-
-    this.filteredBrazilianStates = this.brazilianStates
+    this.init()
+    this.$root.$on('change-workspace', this.init)
   },
   methods: {
     ...mapActions([
@@ -567,6 +535,43 @@ export default {
       'getExportHistory',
       'getPrescriptions'
     ]),
+    init() {
+      const query = this.$route.query
+
+      if (this.$route.name === 'allDisputes' && this.$store.state.disputeModule.tab !== '9') {
+        this.$store.commit('setDisputesTab', '9')
+        this.$store.commit('updateDisputeQuery', { key: 'status', value: [] })
+        this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['id,desc'] })
+      }
+
+      if (Object.keys(query).length) {
+        this.$store.commit('clearDisputeQuery')
+        this.$store.commit('addPrescription', query.prescription)
+        this.$store.commit('updateDisputeQuery', { key: 'status', value: query.status || [] })
+        this.$store.commit('updateDisputeQuery', { key: 'startDate', value: query.startDate })
+        this.$store.commit('updateDisputeQuery', { key: 'finishDate', value: query.finishDate })
+        this.$store.commit('updateDisputeQuery', { key: 'transactionType', value: query.transactionType })
+        this.$store.commit('setDisputeHasFilters', query.disputeHasFilters)
+        this.$store.commit('setDisputesTab', query.disputeTab)
+      }
+
+      this.getDisputes()
+      this.getPrescriptions()
+
+      this.getExportColumns().then(response => {
+        Object.keys(response).forEach(key => {
+          this.columnsList.push({
+            key: key,
+            label: response[key]
+          })
+        })
+      }).finally(() => {
+        this.filteredNodes = this.columns
+        this.checkedNodes = this.columns.length
+      })
+
+      this.filteredBrazilianStates = this.brazilianStates
+    },
     ufSearch(value) {
       this.filteredBrazilianStates = filterByTerm(value, this.brazilianStates, 'name', 'value')
     },

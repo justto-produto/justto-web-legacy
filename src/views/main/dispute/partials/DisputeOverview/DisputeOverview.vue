@@ -1961,7 +1961,7 @@ export default {
     },
     showAssociateContacts: {
       get() {
-        return (
+        const condition = (
           this.dispute &&
           this.dispute.properties &&
           (
@@ -1969,14 +1969,15 @@ export default {
             this.dispute.properties['CONTATOS ASSOCIADOS'] === 'NAO'
           )
         ) || false
+        return condition
       },
-      set(flag) {
+      set(value) {
         this.setDisputeProperty({
           disputeId: this.dispute.id,
           key: 'CONTATOS ASSOCIADOS',
-          value: !flag ? 'SIM' : 'NAO'
+          value
         }).then(() => {
-          this.overviewTab = 'roles'
+          this.checkTabByAssociatedContractValue()
           this.getDisputeMetadata(this.dispute.id)
         })
       }
@@ -1993,6 +1994,9 @@ export default {
     },
     'dispute.code'() {
       this.getDisputeTimeline(this.dispute.code)
+    },
+    showAssociateContacts() {
+      this.checkTabByAssociatedContractValue(this.showAssociateContacts)
     }
   },
   created() {
@@ -2025,8 +2029,13 @@ export default {
 
     init() {
       const { id } = this.$route.params
-      this.getDisputeMetadata(id)
+      this.getDisputeMetadata(id).then(() => {
+        if (this.dispute.properties['CONTATOS ASSOCIADOS']) {
+          this.showAssociateContacts = 'NAO'
+        }
+      })
       this.populateTimeline()
+      this.checkTabByAssociatedContractValue()
     },
 
     openAssociationModal() {
@@ -2098,6 +2107,12 @@ export default {
           message: message,
           type: 'success'
         })
+      }
+    },
+
+    checkTabByAssociatedContractValue(flag = false) {
+      if (this.showAssociateContacts || flag) {
+        this.overviewTab = 'roles'
       }
     },
 
