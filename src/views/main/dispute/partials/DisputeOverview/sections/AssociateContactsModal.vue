@@ -6,6 +6,7 @@
       :show-close="false"
       title="Encontramos dados de contatos na inicial da disputa"
       width="50%"
+      @close="skip()"
     >
       <div class="dialog-body">
         <div class="dialog-body__title">
