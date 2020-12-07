@@ -1969,13 +1969,13 @@ export default {
         ) || false
         return condition
       },
-      set(flag) {
+      set(value) {
         this.setDisputeProperty({
           disputeId: this.dispute.id,
           key: 'CONTATOS ASSOCIADOS',
-          value: !flag ? 'SIM' : 'NAO'
+          value
         }).then(() => {
-          this.checkTabByAssociatedContractValue(flag)
+          this.checkTabByAssociatedContractValue()
           this.getDisputeMetadata(this.dispute.id)
         })
       }
@@ -1992,6 +1992,9 @@ export default {
     },
     'dispute.code'() {
       this.getDisputeTimeline(this.dispute.code)
+    },
+    showAssociateContacts() {
+      this.checkTabByAssociatedContractValue(this.showAssociateContacts)
     }
   },
   created() {
@@ -2024,7 +2027,11 @@ export default {
 
     init() {
       const { id } = this.$route.params
-      this.getDisputeMetadata(id)
+      this.getDisputeMetadata(id).then(() => {
+        if (this.dispute.properties['CONTATOS ASSOCIADOS']) {
+          this.showAssociateContacts = 'NAO'
+        }
+      })
       this.populateTimeline()
       this.checkTabByAssociatedContractValue()
     },
