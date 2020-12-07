@@ -50,14 +50,12 @@
         </div>
       </div>
       <!-- ACTION -->
-      <el-tooltip content="Remover propriedade">
-        <el-link
-          :underline="false"
-          type="danger"
-          icon="el-icon-delete"
-          @click="removePropriety(propriety.key)"
-        />
-      </el-tooltip>
+      <el-link
+        :underline="false"
+        type="danger"
+        icon="el-icon-delete"
+        @click="removePropriety(propriety.key)"
+      />
     </div>
     <el-tooltip content="Propriedade não editável">
       <div
@@ -218,7 +216,8 @@ export default {
 .dispute-properties-view {
   padding-top: 10px;
   overflow-y: auto;
-  height: calc(100% - 24px);
+  height: 100%;
+  padding-right: 4px;
   &__line {
     display: flex;
     // flex-direction: column;

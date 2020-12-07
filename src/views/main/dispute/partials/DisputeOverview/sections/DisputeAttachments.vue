@@ -3,27 +3,26 @@
     v-loading="loadingAttachments"
     class="dispute-attachments"
   >
-    <div class="dispute-overview-view__attachment-buttons">
-      <el-input
-        v-model="attachmentFilterTerm"
-        clearable
-        placeholder="Busque por anexos"
-        prefix-icon="el-icon-search"
-      />
-      <el-tooltip content="Atualizar anexos">
-        <el-button
-          plain
-          @click="enrichDispute"
-        >
-          <jus-icon icon="refresh" />
-        </el-button>
-      </el-tooltip>
-    </div>
 
     <jus-drag-area class="dispute-attachments__drag-area">
+      <div class="dispute-overview-view__attachment-buttons">
+        <el-input
+          v-model="attachmentFilterTerm"
+          clearable
+          placeholder="Busque por anexos"
+          prefix-icon="el-icon-search"
+        />
+        <el-tooltip content="Atualizar anexos">
+          <el-button
+            plain
+            @click="enrichDispute"
+          >
+            <jus-icon icon="refresh" />
+          </el-button>
+        </el-tooltip>
+      </div>
       <div
         v-if="filteredDisputeAttachments.length && !loadingAttachments"
-        v-loading="deleteAttachmentLoading"
         class="dispute-attachments__attachment-list"
       >
         <el-card
@@ -49,13 +48,11 @@
                   @click="copyUrl(attachment.url)"
                 />
               </el-tooltip>
-              <el-tooltip content="Remover anexo">
-                <i
-                  v-if="!attachment.enriched"
-                  class="el-icon el-icon-delete"
-                  @click="removeAttachment(attachment)"
-                />
-              </el-tooltip>
+              <i
+                v-if="!attachment.enriched"
+                class="el-icon el-icon-delete"
+                @click="removeAttachment(attachment)"
+              />
             </div>
           </div>
           <span class="dispute-overview-view__attachment-details">
@@ -78,7 +75,7 @@
 
       <div class="dispute-attachments__upload-button">
         <el-button
-          :disabled="deleteAttachmentLoading"
+          :disabled="loadingAttachments"
           type="primary"
           size="medium"
           icon="el-icon-upload"
@@ -129,7 +126,6 @@ export default {
   data() {
     return {
       uploadAttacmentDialogVisable: false,
-      deleteAttachmentLoading: false,
       attachmentFilterTerm: ''
     }
   },
@@ -188,18 +184,24 @@ export default {
     },
 
     removeAttachment(attachment) {
-      this.deleteAttachmentLoading = true
-      this.deleteAttachment({
-        disputeId: attachment.disputeId,
-        documentId: attachment.id
+      this.$confirm('O anexo será deletado permanentemente. Tem certeza que deja fazer isso?', 'Excluir anexo', {
+        confirmButtonText: 'Excluir',
+        cancelButtonText: 'Cancelar',
+        type: 'warning'
       }).then(() => {
-        this.getDisputeAttachments(attachment.disputeId).then(() => {
-          this.deleteAttachmentLoading = false
-          this.$jusNotification({
-            title: 'Yay!',
-            message: 'Anexo removido com sucesso',
-            type: 'success'
-          })
+        this.deleteAttachment({
+          disputeId: attachment.disputeId,
+          documentId: attachment.id
+        }).then(() => {
+          this.getDisputeAttachments(attachment.disputeId)
+            .then(() => {
+              this.$jusNotification({
+                title: 'Yay!',
+                message: 'Anexo removido com sucesso',
+                type: 'success'
+              })
+            })
+            .finally(() => (this.hideLoadingAttachments()))
         })
       })
     },
@@ -223,9 +225,14 @@ export default {
     margin-bottom: 10px;
   }
 
+  .dispute-attachments__drag-area {
+    display: flex;
+    flex-direction: column;
+  }
+
   .dispute-attachments__attachment-list {
     overflow-y: auto;
-    height: calc(95% - 116px);
+    flex: 1;
 
     .dispute-attachments__attachment {
       margin-top: 10px;
