@@ -1011,9 +1011,6 @@ export default {
     },
 
     buildHour(occurrence) {
-      // if (occurrence.executionDateTime) {
-      //   return this.$moment(occurrence.executionDateTime.dateTime).format('HH:mm')
-      // }
       return this.$moment(occurrence.createAt.dateTime).format('HH:mm')
     },
 
@@ -1029,7 +1026,6 @@ export default {
       }
       return typeClass
     },
-    // occurrence.interaction.type === 'ATTACHMENT'
     showReply(occurrence) {
       if (occurrence.interaction &&
         ((occurrence.interaction.message &&

@@ -38,6 +38,7 @@
 
 <script>
 export default {
+  name: 'AttachmentOccurrence',
   props: {
     value: {
       type: Object,
