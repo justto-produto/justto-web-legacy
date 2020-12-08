@@ -236,7 +236,15 @@
               </el-tooltip>
             </div>
             <div class="dispute-view-occurrences__card-box">
+              <attachment-occurrence
+                v-if="occurrence.interaction.type === 'ATTACHMENT'"
+                :value="occurrence"
+                :class="(occurrence.interaction ? occurrence.interaction.type : '') + ' ' + buildCommunicationType(occurrence) + ' ' + (occurrence.interaction && occurrence.interaction.message ? occurrence.interaction.message.status : '')"
+                shadow="never"
+                class="dispute-view-occurrences__card"
+              />
               <el-card
+                v-else
                 :class="(occurrence.interaction ? occurrence.interaction.type : '') + ' ' + buildCommunicationType(occurrence) + ' ' + (occurrence.interaction && occurrence.interaction.message ? occurrence.interaction.message.status : '')"
                 shadow="never"
                 class="dispute-view-occurrences__card"
@@ -424,7 +432,15 @@
               </el-tooltip>
             </div>
             <div class="dispute-view-occurrences__card-box">
+              <attachment-occurrence
+                v-if="mergedOccurency.interaction.type === 'ATTACHMENT'"
+                :value="mergedOccurency"
+                :class="(mergedOccurency.interaction ? mergedOccurency.interaction.type : '') + ' ' + buildCommunicationType(mergedOccurency) + ' ' + (mergedOccurency.interaction && mergedOccurency.interaction.message ? mergedOccurency.interaction.message.status : '')"
+                shadow="never"
+                class="dispute-view-occurrences__card"
+              />
               <el-card
+                v-else
                 :class="(mergedOccurency.interaction ? mergedOccurency.interaction.type : '') + ' ' + buildCommunicationType(mergedOccurency) + ' ' + (mergedOccurency.interaction && mergedOccurency.interaction.message ? mergedOccurency.interaction.message.status : '')"
                 shadow="never"
                 class="dispute-view-occurrences__card"
@@ -598,7 +614,10 @@ import { uniq } from 'lodash'
 
 export default {
   name: 'DisputeOccurrences',
-  components: { InfiniteLoading },
+  components: {
+    InfiniteLoading,
+    AttachmentOccurrence: () => import('./partials/AttachmentOccurrence')
+  },
   props: {
     disputeId: {
       type: String,
@@ -847,6 +866,11 @@ export default {
           return ''
         }
         if (occurrence.interaction.type &&
+        ['ATTACHMENT'].includes(occurrence.interaction.type)
+        ) {
+          return occurrence.properties.SENDER_NAME
+        }
+        if (occurrence.interaction.type &&
           ['MANUAL_COUNTERPROPOSAL', 'MANUAL_PROPOSAL', 'CLICK'].includes(occurrence.interaction.type) &&
           occurrence.interaction.properties.USER) {
           return occurrence.interaction.properties.USER.toUpperCase()
@@ -987,9 +1011,6 @@ export default {
     },
 
     buildHour(occurrence) {
-      // if (occurrence.executionDateTime) {
-      //   return this.$moment(occurrence.executionDateTime.dateTime).format('HH:mm')
-      // }
       return this.$moment(occurrence.createAt.dateTime).format('HH:mm')
     },
 
@@ -1005,11 +1026,11 @@ export default {
       }
       return typeClass
     },
-
     showReply(occurrence) {
       if (occurrence.interaction &&
         ((occurrence.interaction.message &&
         occurrence.interaction.message.communicationType &&
+        !['ATTACHMENT'].includes(occurrence.interaction.type) &&
         ['EMAIL', 'WHATSAPP', 'NEGOTIATOR_MESSAGE'].includes(occurrence.interaction.message.communicationType)) ||
         (this.negotiatorTypes.includes(occurrence.interaction.type) ||
         this.disputeLastInteractions.length)) &&
