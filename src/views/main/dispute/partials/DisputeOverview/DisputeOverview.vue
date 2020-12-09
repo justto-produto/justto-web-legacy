@@ -512,6 +512,7 @@
                 <span class="title">Nome completo:</span>
                 <div>
                   <span
+                    v-if="role.party === 'CLAIMANT'"
                     class="dispute-overview-view__negotiator-icon"
                     @click="sendMessageToNegotiator(role)"
                   >
