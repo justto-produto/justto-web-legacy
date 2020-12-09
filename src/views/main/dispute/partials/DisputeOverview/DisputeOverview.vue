@@ -1002,6 +1002,7 @@
                 label="Estratégia"
                 prop="disputeStrategy"
               >
+                <!-- {{ isValidStrategie }} -->
                 <el-select
                   v-model="selectedStrategyId"
                   placeholder="Escolha a nova estratégia"
@@ -1013,6 +1014,14 @@
                     :key="`${strategy.id}-${index}`"
                     :label="strategy.name"
                     :value="strategy.id"
+                    :disabled="strategy.disabled || false"
+                  />
+                  <el-option
+                    v-if="!isValidStrategie"
+                    :value="dispute.strategyId"
+                    label="A estratégia utilizada não está mais disponível para uso"
+                    selected
+                    disabled
                   />
                 </el-select>
               </el-form-item>
@@ -1893,6 +1902,9 @@ export default {
     strategies() {
       return this.$store.getters.strategyList
     },
+    isValidStrategie() {
+      return (this.strategies || []).map(s => s.id).includes(this.dispute.strategyId)
+    },
     computedDescription() {
       if (this.dispute.description && this.dispute.description.length > 140) {
         if (this.descriptionCollapse) {
@@ -2456,7 +2468,7 @@ export default {
         this.$nextTick(() => {
           this.selectedStrategyId = this.dispute.strategyId
           if (!this.strategies.map(s => s.id).includes(this.dispute.strategyId)) {
-            this.strategies.push({ id: this.dispute.strategyId, name: 'A estratégia utilizada não está mais disponível para uso' })
+            this.strategies.push({ id: this.dispute.strategyId, name: 'A estratégia utilizada não está mais disponível para uso', disabled: true })
           }
         })
       })
