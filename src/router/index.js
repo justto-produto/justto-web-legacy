@@ -20,6 +20,7 @@ const router = new Router({
           path: '/',
           component: () => import(/* webpackChunkName: "dashboardIndex" */ '@/views/main/dashboard/Dashboard'),
           meta: {
+            requiresAuth: true,
             trackPage: true,
             title: 'Dashboard'
           }
@@ -29,6 +30,7 @@ const router = new Router({
           path: '/billing',
           component: () => import(/* webpackChunkName: "billingClientList" */ '@/views/main/billing/BillingClientList'),
           meta: {
+            requiresAuth: true,
             trackPage: true,
             title: 'Financeiro'
           }
@@ -38,6 +40,7 @@ const router = new Router({
           path: '/billing/:customerId',
           component: () => import(/* webpackChunkName: "billingDashboard" */ '@/views/main/billing/BillingDashboard'),
           meta: {
+            requiresAuth: true,
             trackPage: true,
             title: 'Financeiro'
           }
@@ -47,6 +50,7 @@ const router = new Router({
           path: 'import',
           component: () => import(/* webpackChunkName: "importIndex" */ '@/views/main/import/Import'),
           meta: {
+            requiresAuth: true,
             trackPage: true,
             title: 'Importação'
           }
@@ -56,6 +60,7 @@ const router = new Router({
           path: 'import/new',
           component: () => import(/* webpackChunkName: "importNew" */ '@/views/main/import/NewImport'),
           meta: {
+            requiresAuth: true,
             trackPage: true,
             title: 'Nova importação'
           }
@@ -65,6 +70,7 @@ const router = new Router({
           path: 'import/loading',
           component: () => import(/* webpackChunkName: "importLoading" */ '@/views/main/import/Loading'),
           meta: {
+            requiresAuth: true,
             trackPage: true,
             title: 'Carregando...'
           }
@@ -74,6 +80,7 @@ const router = new Router({
           path: '/management',
           component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/management/Management'),
           meta: {
+            requiresAuth: true,
             trackPage: true,
             title: 'Gerenciamento'
           }
@@ -83,6 +90,7 @@ const router = new Router({
           path: '/management/all',
           component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/management/Management'),
           meta: {
+            requiresAuth: true,
             trackPage: true,
             title: 'Todas as disputas'
           }
@@ -99,6 +107,7 @@ const router = new Router({
           path: 'management/dispute/:id',
           component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/dispute/Dispute'),
           meta: {
+            requiresAuth: true,
             trackPage: true,
             title: 'Disputa'
           }
@@ -108,6 +117,7 @@ const router = new Router({
           path: 'configuration',
           component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/configuration/Configuration'),
           meta: {
+            requiresAuth: true,
             trackPage: true,
             title: 'Configurações'
           }
@@ -119,6 +129,7 @@ const router = new Router({
       path: '/login',
       component: () => import(/* webpackChunkName: "externalIndex" */ '@/views/external/Login'),
       meta: {
+        requiresAuth: false,
         trackPage: true,
         title: 'Justto - Login'
       }
@@ -128,6 +139,7 @@ const router = new Router({
       path: '/register',
       component: () => import(/* webpackChunkName: "register" */ '@/views/external/Register'),
       meta: {
+        requiresAuth: false,
         trackPage: true,
         title: 'Justto - Cadastre-se'
       }
@@ -137,6 +149,7 @@ const router = new Router({
       path: '/forgot-password',
       component: () => import(/* webpackChunkName: "forgotPassword" */ '@/views/external/ForgotPassword'),
       meta: {
+        requiresAuth: false,
         trackPage: true,
         title: 'Justto - Recuperar senha'
       }
@@ -146,6 +159,7 @@ const router = new Router({
       path: '/new-password/:token',
       component: () => import(/* webpackChunkName: "newPassword" */ '@/views/external/NewPassword'),
       meta: {
+        requiresAuth: false,
         trackPage: true,
         title: 'Justto - Nova senha'
       }
@@ -165,6 +179,7 @@ const router = new Router({
       path: '/admin-panel',
       component: () => import(/* webpackChunkName: "adminPanel" */ '@/views/adminPanel/AdminPanel'),
       meta: {
+        requiresAuth: true,
         trackPage: true,
         title: 'Painel administrativo'
       }
