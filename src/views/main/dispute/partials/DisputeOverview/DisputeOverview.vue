@@ -2991,9 +2991,16 @@ export default {
     line-height: 24px;
 
     .dispute-overview-view__negotiator-icon {
+      visibility: hidden;
+
       .icon {
         cursor: pointer;
         height: 12px;
+      }
+    }
+    &:hover {
+      .dispute-overview-view__negotiator-icon {
+        visibility: visible;
       }
     }
 
