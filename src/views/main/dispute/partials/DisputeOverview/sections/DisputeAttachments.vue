@@ -201,6 +201,7 @@ export default {
                 type: 'success'
               })
             })
+            .catch(error => (this.$jusNotification({ error })))
             .finally(() => (this.hideLoadingAttachments()))
         })
       })
