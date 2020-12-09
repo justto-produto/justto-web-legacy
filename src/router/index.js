@@ -179,7 +179,7 @@ const router = new Router({
       path: '/admin-panel',
       component: () => import(/* webpackChunkName: "adminPanel" */ '@/views/adminPanel/AdminPanel'),
       meta: {
-        requiresAuth: true,
+        requiresAuth: false,
         trackPage: true,
         title: 'Painel administrativo'
       }
