@@ -429,8 +429,9 @@
               data-testid="expand-party"
             >
               <div
+                slot="title"
                 class="dispute-overview-view__person-title"
-                slot="title">
+              >
                 <i
                   v-if="(showNamesake(role) || showVexatious(role.personProperties)) && !role.roles.includes('NEGOTIATOR') "
                   class="el-icon-warning-outline el-icon-pulse"
@@ -451,7 +452,10 @@
                       <i :class="getRoleIcon(role.party, r)" />
                     </el-tooltip>
                   </span>
-                  <span v-if="role.name">
+                  <span
+                    v-if="role.name"
+                    @click="sendMessageToNegotiator(role)"
+                  >
                     <el-tooltip
                       v-if="onlineDocuments[role.documentNumber] === 'ONLINE'"
                       :content="`${$options.filters.capitalize(role.name.toLowerCase().split(' ')[0])} está online`"
@@ -507,6 +511,19 @@
               <div class="dispute-overview-view__info-line">
                 <span class="title">Nome completo:</span>
                 <div>
+                  <span
+                    class="dispute-overview-view__negotiator-icon"
+                    @click="sendMessageToNegotiator(role)"
+                  >
+                    <el-tooltip
+                      content="Chat do portal de comunicação da Justto"
+                    >
+                      <jus-icon
+                        class="icon"
+                        icon="justto-active"
+                      />
+                    </el-tooltip>
+                  </span>
                   <el-popover
                     v-if="role.roles.includes('LAWYER')"
                     :ref="`popover-${role.name}`"
@@ -2038,6 +2055,12 @@ export default {
       this.checkTabByAssociatedContractValue()
     },
 
+    sendMessageToNegotiator(role) {
+      const roleId = role.id
+      const email = role.emails.find(email => !email.archived && email.isValid && email.isMain).address || ''
+      this.$emit('activeNegotiator', { roleId, email })
+    },
+
     openAssociationModal() {
       this.setDisputeProperty({
         disputeId: this.dispute.id,
@@ -2965,6 +2988,13 @@ export default {
   }
   &__info-line {
     line-height: 24px;
+
+    .dispute-overview-view__negotiator-icon {
+      .icon {
+        cursor: pointer;
+        height: 12px;
+      }
+    }
 
     div .active-popover .el-icon-info.el-popover__reference,
     span span .active-popover .el-icon-info.el-popover__reference {

@@ -53,6 +53,7 @@
       <div slot="content">
         <negotiator-interaction
           :value="data"
+          :dialog-visibility.sync="canShowDialogReplyEditor"
         >
           <div slot="condition">
             <span v-if="!!data.lastNegotiatorAccess">
@@ -227,6 +228,11 @@
         </el-button>
       </span>
     </el-dialog>
+
+    <negotiator-activeReply
+      :visible.sync="canShowDialogReplyEditor"
+      :dispute="data"
+    />
   </div>
 </template>
 
@@ -253,7 +259,8 @@ export default {
   name: 'ManagementLasrInteractions',
   components: {
     quillEditor,
-    NegotiatorInteraction: () => import('./NegotiatorInteraction')
+    NegotiatorInteraction: () => import('./partials/NegotiatorInteraction'),
+    NegotiatorActiveReply: () => import('./partials/NegotiatorActiveReply')
   },
   props: {
     data: {
@@ -270,7 +277,9 @@ export default {
       responseBoxVisible: false,
       responseBoxLoading: false,
       responseDialogVisible: false,
-      richMessage: ''
+      canShowDialogReplyEditor: false,
+      richMessage: '',
+      replyMessage: ''
     }
   },
   computed: {

@@ -30,16 +30,17 @@
       v-else
       class="negotiator-interaction__reply-container"
     >
-      <!-- <el-button
+      <el-button
         class="reply-container__expand-button"
         type="text"
         size="mini"
         icon="el-icon-top-right"
+        @click="handleVisibilityEditor()"
       >
         Expandir
-      </el-button> -->
+      </el-button>
       <el-input
-        v-model="replyMessage"
+        v-model="messageDialogReplyEditor"
         type="textarea"
         rows="4"
         placeholder="Escreva alguma coisa"
@@ -65,32 +66,40 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import store from '@/store'
+
 export default {
   props: {
     value: {
       type: Object,
+      required: true
+    },
+    dialogVisibility: {
+      type: Boolean,
       required: true
     }
   },
   data() {
     return {
       canShowReplyEditor: false,
-      replyMessage: ''
+      messageDialogReplyEditor: ''
     }
   },
   computed: {
     dispute() {
       return this.value
+    },
+    canShowDialogReplyEditor() {
+      return this.dialogVisibility
     }
   },
   methods: {
-    ...mapActions([
-      'sendNegotiator',
-      'getLastInteractions'
-    ]),
     showReplyEditor(flag = !this.canShowReplyEditor) {
       this.canShowReplyEditor = flag
+    },
+    handleVisibilityEditor(flag = !this.dialogVisibility) {
+      this.showReplyEditor(false)
+      this.$emit('update:dialog-visibility', flag)
     },
     async sendMessage() {
       const disputeId = this.dispute.id
@@ -103,8 +112,8 @@ export default {
         // TODO: Pegar o email do lastNegotiatorAccess.properties
         email = lastReceivedMessage.properties.PERSON_NAME || ''
       } else {
-        await this.getLastInteractions(disputeId).then((interactions) => {
-          email = interactions[0] || ''
+        await store.dispatch('getLastInteractions', disputeId).then(interactions => {
+          email = interactions[0].address || ''
         })
       }
       /**
@@ -114,11 +123,22 @@ export default {
         return role.roleNameNegotiator
       }).id
       const data = {
-        message: this.replyMessage,
+        message: this.messageDialogReplyEditor,
         roleId,
         email
       }
-      this.sendNegotiator({ disputeId, data })
+      store.dispatch('sendNegotiator', { disputeId, data }).then(() => {
+        this.messageDialogReplyEditor = ''
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Mensagem enviada com sucesso!',
+          type: 'success'
+        })
+      }).catch(error => {
+        this.$jusNotification({ error })
+      }).finally(() => {
+        this.handleVisibilityEditor(false)
+      })
     }
   }
 }
