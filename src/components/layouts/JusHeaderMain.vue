@@ -154,6 +154,7 @@ export default {
       ghostMode: 'ghostMode',
       name: 'loggedPersonName',
       teamName: 'workspaceTeamName',
+      loggedPerson: 'loggedPerson',
       loggedPersonHasName: 'loggedPersonHasName',
       loggedWorkspaceId: 'workspaceId'
     }),
@@ -176,6 +177,13 @@ export default {
     },
     avatarSize() {
       return IS_SMALL_WINDOW ? 'mini' : 'sm'
+    }
+  },
+  watch: {
+    loggedPersonHasName() {
+      if (!this.loggedPersonHasName) {
+        this.setPersonName()
+      }
     }
   },
   beforeMount() {
