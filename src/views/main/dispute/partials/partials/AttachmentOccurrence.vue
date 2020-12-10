@@ -1,10 +1,11 @@
 <template>
   <el-card
+    shadow="never"
     class="attachment__card red"
     :class="`${occurrence.properties.FILE_TYPE || ''}`"
   >
     <div
-      v-if="occurrence.properties"
+      v-if="occurrence.properties && available"
       class="attachment__container"
     >
       <jus-icon
@@ -33,6 +34,13 @@
         <i class="el-icon-download" />
       </span>
     </div>
+    <div
+      v-else
+      class="attachment__deleted"
+    >
+      <i class="el-icon-warning" />
+      Anexo removido.
+    </div>
   </el-card>
 </template>
 
@@ -48,6 +56,10 @@ export default {
   computed: {
     occurrence() {
       return this.value
+    },
+
+    available() {
+      return this.$store.getters.disputeAttachments.map(attach => attach.url).includes(this.occurrence.properties.FILE_URL)
     }
   },
   methods: {
@@ -93,6 +105,14 @@ export default {
     .attachment__file-download {
       cursor: pointer;
       align-self: center;
+    }
+  }
+  .attachment__deleted {
+    color: $--color-primary;
+    font-weight: 500;
+
+    .el-icon-warning {
+      color: $--color-secondary;
     }
   }
 
