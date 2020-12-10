@@ -193,17 +193,16 @@ export default {
           disputeId: attachment.disputeId,
           documentId: attachment.id
         }).then(() => {
-          this.getDisputeAttachments(attachment.disputeId)
-            .then(() => {
-              this.$jusNotification({
-                title: 'Yay!',
-                message: 'Anexo removido com sucesso',
-                type: 'success'
-              })
+          this.getDisputeAttachments(attachment.disputeId).then(() => {
+            this.$jusNotification({
+              title: 'Yay!',
+              message: 'Anexo removido com sucesso',
+              type: 'success'
             })
-            .catch(error => (this.$jusNotification({ error })))
-            .finally(() => (this.hideLoadingAttachments()))
-        })
+          })
+        }).catch(error => {
+          this.$jusNotification({ error })
+        }).finally(this.hideLoadingAttachments)
       })
     },
 
