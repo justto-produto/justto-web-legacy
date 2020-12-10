@@ -382,6 +382,7 @@
         @fetch-data="fetchData"
         @updateActiveRole="updateActiveRole"
         @removeRole="removeRole"
+        @activeNegotiator="setNegotiatorActive"
       />
     </template>
   </JusViewMain>
@@ -599,6 +600,11 @@ export default {
       'getDisputeMetadata',
       'sendNegotiator'
     ]),
+    setNegotiatorActive(params) {
+      this.setMessageType('negotiation')
+      this.activeRoleId = params.roleId
+      this.directContactAddress = [params.email]
+    },
     archiveTemplate(templateId) {
       this.archiveQuickReplyTemplate(templateId)
       this.getQuickReplyTemplates(this.id)
