@@ -16,7 +16,7 @@
       >
         <i class="icon el-icon-info" />
         O réu <span class="alert-container__name">{{ dispute.firstClaimant.toLowerCase() }}</span>
-        está <span class="alert-container__status">{{ dispute.firstClaimantStatus || "OFFLINE" }}</span> no momento.
+        está <span class="alert-container__status">{{ dispute.firstClaimantStatus || 'OFFLINE' }}</span> no momento.
       </span>
       <span
         v-if="dispute.firstClaimantLawyer"
@@ -24,7 +24,7 @@
       >
         <i class="icon el-icon-info" />
         O advogado <span class="alert-container__name">{{ dispute.firstClaimantLawyer }}</span>
-        está <span class="alert-container__status">{{ dispute.firstClaimantLawyerStatus || "OFFLINE" }}</span> no momento.
+        está <span class="alert-container__status">{{ dispute.firstClaimantLawyerStatus || 'OFFLINE' }}</span> no momento.
       </span>
       <span class="alert-container__message">
         Envie uma mensagem pelo chat de comunicação da Justto.
