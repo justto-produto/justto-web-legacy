@@ -49,7 +49,7 @@
                 />
               </el-tooltip>
               <i
-                v-if="!attachment.enriched"
+                v-if="!attachment.enriched && attachment.direction !== 'INBOUND'"
                 class="el-icon el-icon-delete"
                 @click="removeAttachment(attachment)"
               />
