@@ -1,10 +1,11 @@
 <template>
   <el-card
+    shadow="never"
     class="attachment__card red"
     :class="`${occurrence.properties.FILE_TYPE || ''}`"
   >
     <div
-      v-if="occurrence.properties"
+      v-if="occurrence.properties && available"
       class="attachment__container"
     >
       <jus-icon
@@ -21,7 +22,7 @@
           v-if="occurrence.properties.FILE_SIZE"
           class="attachment__file-size"
         >
-          {{ occurrence.properties.FILE_SIZE }} Mb
+          {{ occurrence.properties.FILE_SIZE | sizeFormat }}
         </span>
         <span v-else>
           -
@@ -33,12 +34,29 @@
         <i class="el-icon-download" />
       </span>
     </div>
+    <div
+      v-else
+      class="attachment__deleted"
+    >
+      <i class="el-icon-warning" />
+      Anexo removido.
+    </div>
   </el-card>
 </template>
 
 <script>
 export default {
   name: 'AttachmentOccurrence',
+  filters: {
+    sizeFormat: (size) => {
+      const kb = size / 1024
+      const mb = kb / 1024
+
+      if (mb >= 1) return `${mb.toFixed(2)} Mb`
+      else if (kb >= 1) return `${kb.toFixed(2)} Kb`
+      else return `${size} bytes`
+    }
+  },
   props: {
     value: {
       type: Object,
@@ -48,6 +66,10 @@ export default {
   computed: {
     occurrence() {
       return this.value
+    },
+
+    available() {
+      return this.$store.getters.disputeAttachments.map(attach => attach.url).includes(this.occurrence.properties.FILE_URL)
     }
   },
   methods: {
@@ -93,6 +115,14 @@ export default {
     .attachment__file-download {
       cursor: pointer;
       align-self: center;
+    }
+  }
+  .attachment__deleted {
+    color: $--color-primary;
+    font-weight: 500;
+
+    .el-icon-warning {
+      color: $--color-secondary;
     }
   }
 
