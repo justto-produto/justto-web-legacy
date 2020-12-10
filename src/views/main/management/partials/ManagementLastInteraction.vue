@@ -51,12 +51,22 @@
 
     <el-tooltip>
       <div slot="content">
-        <span v-if="!!data.lastNegotiatorAccess">
-          Último acesso ao sistema Justto: <strong>{{ data.lastNegotiatorAccess.createAt.dateTime | moment('DD/MM/YYYY [às] HH:mm') }}</strong>
-        </span>
-        <span v-else>
-          Ainda não houve acesso ao sistema Justto de Negociação
-        </span>
+        <negotiator-interaction
+          :value="data"
+          :dialog-visibility.sync="canShowDialogReplyEditor"
+        >
+          <div slot="condition">
+            <span v-if="!!data.lastNegotiatorAccess">
+              <span>
+                Último acesso ao sistema Justto: <strong>{{ data.lastNegotiatorAccess.createAt.dateTime | moment('DD/MM/YYYY [às] HH:mm') }}</strong>
+              </span>
+
+            </span>
+            <span v-else>
+              Ainda não houve acesso ao sistema Justto de Negociação
+            </span>
+          </div>
+        </negotiator-interaction>
       </div>
       <jus-icon
         :is-active="!!data.lastNegotiatorAccess"
@@ -218,6 +228,11 @@
         </el-button>
       </span>
     </el-dialog>
+
+    <negotiator-activeReply
+      :visible.sync="canShowDialogReplyEditor"
+      :dispute="data"
+    />
   </div>
 </template>
 
@@ -242,7 +257,11 @@ Quill.register(SizeStyle, true)
 
 export default {
   name: 'ManagementLasrInteractions',
-  components: { quillEditor },
+  components: {
+    quillEditor,
+    NegotiatorInteraction: () => import('./partials/NegotiatorInteraction'),
+    NegotiatorActiveReply: () => import('./partials/NegotiatorActiveReply')
+  },
   props: {
     data: {
       type: Object,
@@ -258,7 +277,9 @@ export default {
       responseBoxVisible: false,
       responseBoxLoading: false,
       responseDialogVisible: false,
-      richMessage: ''
+      canShowDialogReplyEditor: false,
+      richMessage: '',
+      replyMessage: ''
     }
   },
   computed: {
