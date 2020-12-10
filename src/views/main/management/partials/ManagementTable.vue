@@ -77,9 +77,10 @@
             :name="scope.row.firstClaimant"
             style="display: flex; align-items: center;"
           />
-          <nav>
+          <div>
             <el-tooltip
               v-if="scope.row.firstClaimant"
+              class="online-icon"
               :content="`${$options.filters.capitalize(scope.row.firstClaimant.toLowerCase().split(' ')[0])} está online`"
             >
               <jus-icon
@@ -89,7 +90,7 @@
               />
             </el-tooltip>
             {{ scope.row.firstClaimant || '-' }}
-          </nav>
+          </div>
         </template>
       </el-table-column>
       <el-table-column
@@ -335,6 +336,11 @@
       v-model="disputeTimelineModal"
       :code="currentDisputeCode"
     />
+    <negotiator-activeReply
+      v-if="Object.keys(activeDispute).length"
+      :visible.sync="canShowDialogReplyEditor"
+      :dispute="activeDispute"
+    />
   </div>
 </template>
 
@@ -345,6 +351,7 @@ import { mapGetters, mapActions } from 'vuex'
 export default {
   name: 'ManagementTable',
   components: {
+    NegotiatorActiveReply: () => import('./partials/NegotiatorActiveReply'),
     DisputeCodeLink: () => import('@/components/buttons/DisputeCodeLink'),
     ManagementLastInteraction: () => import('./ManagementLastInteraction'),
     JusTimeline: () => import('@/components/JusTimeline/JusTimeline'),
@@ -381,6 +388,8 @@ export default {
       responseBoxLoading: false,
       actieTooltipDisputeId: 0,
       activeDisputeIds: [],
+      canShowDialogReplyEditor: false,
+      activeDispute: {},
       lastAccessTooltipTimeout: () => {}
     }
   },
@@ -436,6 +445,11 @@ export default {
           this.showEmpty = true
         }, 2000)
       }
+    },
+    canShowDialogReplyEditor() {
+      if (!this.canShowDialogReplyEditor) {
+        this.activeDispute = {}
+      }
     }
   },
   beforeCreate() {
@@ -451,6 +465,11 @@ export default {
       'getDisputeLastAccess',
       'cleanDisputeLastAccess'
     ]),
+
+    openActiveMessageModal(dispute) {
+      this.activeDispute = dispute
+      this.canShowDialogReplyEditor = true
+    },
 
     addHighlight(id) {
       this.activeDisputeIds.push(id)
@@ -506,7 +525,10 @@ export default {
       return className
     },
     handleRowClick(row, column, event) {
-      if (row.id && !['IMG', 'SPAN', 'BUTTON', 'I'].includes(event.target.tagName)) {
+      console.log(event)
+      if (!event.ctrlKey && column.property === 'firstClaimant' && event.target.className.split(' ').includes('online-icon')) {
+        this.openActiveMessageModal(row)
+      } else if (row.id && !['IMG', 'SPAN', 'BUTTON', 'I'].includes(event.target.tagName)) {
         if (event.ctrlKey) {
           window.open(`/#/management/dispute/${row.id}`, '_blank')
         } else {
