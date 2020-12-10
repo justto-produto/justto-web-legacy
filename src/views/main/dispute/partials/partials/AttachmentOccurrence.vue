@@ -22,7 +22,7 @@
           v-if="occurrence.properties.FILE_SIZE"
           class="attachment__file-size"
         >
-          {{ occurrence.properties.FILE_SIZE }} Mb
+          {{ occurrence.properties.FILE_SIZE | sizeFormat }}
         </span>
         <span v-else>
           -
@@ -47,6 +47,16 @@
 <script>
 export default {
   name: 'AttachmentOccurrence',
+  filters: {
+    sizeFormat: (size) => {
+      const kb = size / 1024
+      const mb = kb / 1024
+
+      if (mb >= 1) return `${mb.toFixed(2)} Mb`
+      else if (kb >= 1) return `${kb.toFixed(2)} Kb`
+      else return `${size} bytes`
+    }
+  },
   props: {
     value: {
       type: Object,
