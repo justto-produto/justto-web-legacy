@@ -106,6 +106,7 @@
         <div>
           <el-input-number
             v-model="paymentDeadLine"
+            :min="0"
             :max="9999"
             name="payment-deadline"
             controls-position="right"
