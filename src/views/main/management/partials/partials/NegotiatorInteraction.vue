@@ -6,7 +6,7 @@
         v-if="dispute.firstClaimant"
         class="alert-container__first-claimant"
       >
-        O réu <span class="alert-container__name">{{ dispute.firstClaimant.toLowerCase() }}</span>
+        A parte <span class="alert-container__name">{{ dispute.firstClaimant.toLowerCase() }}</span>
         está <span class="alert-container__status">{{ dispute.firstClaimantStatus || "OFFLINE" }}</span> no momento.
       </span>
       <span
