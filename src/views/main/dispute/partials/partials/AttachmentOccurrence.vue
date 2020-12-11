@@ -69,7 +69,7 @@ export default {
     },
 
     available() {
-      return this.$store.getters.disputeAttachments.map(attach => attach.url).includes(this.occurrence.properties.FILE_URL)
+      return this.$store.getters.disputeAttachments.map(({ url }) => decodeURI(url)).includes(this.occurrence.properties.FILE_URL)
     }
   },
   methods: {
