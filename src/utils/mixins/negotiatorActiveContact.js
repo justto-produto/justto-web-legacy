@@ -34,7 +34,7 @@ export default {
         email = lastReceivedMessage.properties.PERSON_NAME || ''
       } else {
         await this.getLastInteractions(disputeId).then((interactions) => {
-          email = interactions[0].address || ''
+          email = interactions.length ? interactions[0].address || '' : ''
         })
       }
       /**
