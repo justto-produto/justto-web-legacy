@@ -113,7 +113,7 @@ export default {
         email = lastReceivedMessage.properties.PERSON_NAME || ''
       } else {
         await store.dispatch('getLastInteractions', disputeId).then(interactions => {
-          email = interactions[0].address || ''
+          email = interactions.length ? interactions[0].address || '' : ''
         })
       }
       /**
