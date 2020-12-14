@@ -4,7 +4,8 @@ import mutations from './mutations'
 
 const strategy = {
   state: {
-    list: []
+    list: [],
+    importationList: []
   },
   mutations,
   actions,
