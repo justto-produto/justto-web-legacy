@@ -163,7 +163,12 @@
                 >
                   <span v-if="index === 0">
                     <span v-if="selected.number">{{ selected.number | phoneNumber }}</span>
-                    <span v-else-if="selected.address">{{ selected.address | phoneNumber }}</span>
+                    <span v-else-if="selected.address">
+                      {{ selected.address | phoneNumber }}
+                    </span>
+                    <span v-else-if="messageType === 'negotiation'">
+                      Portal Justto
+                    </span>
                   </span>
                 </span>
                 <el-tooltip v-if="selectedContacts.length > 1">
@@ -196,7 +201,15 @@
                     (+ {{ selectedContacts.length - 1 }})
                   </span>
                 </el-tooltip>
-                <el-tooltip :content="`Você está enviando um ${messageType}`">
+                <el-tooltip>
+                  <span slot="content">
+                    <span v-if="messageType === 'negotiation'">
+                      Você está enviando mensagem para o Portal de comunicação Justto.
+                    </span>
+                    <span v-else>
+                      Você está enviando um ${messageType}
+                    </span>
+                  </span>
                   <jus-icon
                     :is-active="true"
                     :icon="messageType"
@@ -1000,8 +1013,6 @@ export default {
       left: 325px;
       padding: 8px 14px;
 
-      // gap: 40px;
-
       .dispute-view__quick-reply {
         display: flex;
         align-items: center;
@@ -1009,10 +1020,10 @@ export default {
       .dispute-view__send-to {
         display: flex;
         align-items: center;
+        gap: 8px;
       }
     }
     .dispute-view__send-to-icon {
-      margin-left: 8px;
       width: 20px;
     }
   }
