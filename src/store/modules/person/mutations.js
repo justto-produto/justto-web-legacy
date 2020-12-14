@@ -10,22 +10,17 @@ const personMutations = {
   },
   setOnlineDocs(state, documents) {
     documents.map(doc => {
-      if (doc.documentNumber) {
-        if (doc.online) {
-          state.onlineDocuments[doc.documentNumber] = 'ONLINE'
-        } else {
-          if (state.onlineDocuments[doc.documentNumber]) {
-            delete state.onlineDocuments[doc.documentNumber]
-          }
-        }
-      } if (doc.oab) {
-        if (doc.online) {
-          state.onlineDocuments[doc.oab] = 'ONLINE'
-        } else {
-          if (state.onlineDocuments[doc.oab]) {
-            delete state.onlineDocuments[doc.oab]
-          }
-        }
+      /** Validação do CPF/CNPJ */
+      if (doc.documentNumber && doc.online) {
+        Vue.set(state.onlineDocuments, doc.documentNumber, 'ONLINE')
+      } else if (state.onlineDocuments[doc.documentNumber]) {
+        Vue.delete(state.onlineDocuments, doc.documentNumber)
+      }
+      /** Validação da OAB */
+      if (doc.oab && doc.online) {
+        Vue.set(state.onlineDocuments, doc.oab, 'ONLINE')
+      } else if (state.onlineDocuments[doc.oab]) {
+        Vue.delete(state.onlineDocuments, doc.oab)
       }
     })
   },
