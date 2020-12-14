@@ -99,7 +99,7 @@ const workspaceActions = {
   getMyStrategiesLite({ _ }) {
     return axiosDispatch({
       url: 'api/strategies/v1',
-      mutation: 'setImportedStrategies'
+      mutation: 'setImportedStrategiesLite'
     })
   },
   patchBlackList({ _ }, blackList) {
