@@ -3016,17 +3016,16 @@ export default {
       text-transform: capitalize;
       cursor: pointer;
       display: flex;
-      align-items: center !important;
       gap: 8px;
 
       .icon {
-        height: 12px;
+        margin-top: 4px;
+        height: 16px;
       }
 
       .text {
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        overflow: hidden;
+        margin: 4px 0px 0px !important;
+        word-break: break-word;
       }
     }
 
