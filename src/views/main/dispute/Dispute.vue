@@ -201,7 +201,15 @@
                     (+ {{ selectedContacts.length - 1 }})
                   </span>
                 </el-tooltip>
-                <el-tooltip :content="`Você está enviando um ${messageType}`">
+                <el-tooltip>
+                  <span slot="content">
+                    <span v-if="messageType === 'negotiation'">
+                      Você está enviando mensagem para o Portal de comunicação Justto.
+                    </span>
+                    <span v-else>
+                      Você está enviando um ${messageType}
+                    </span>
+                  </span>
                   <jus-icon
                     :is-active="true"
                     :icon="messageType"
@@ -1004,8 +1012,6 @@ export default {
       right: 0;
       left: 325px;
       padding: 8px 14px;
-
-      // gap: 40px;
 
       .dispute-view__quick-reply {
         display: flex;
