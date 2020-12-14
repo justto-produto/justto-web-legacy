@@ -163,7 +163,12 @@
                 >
                   <span v-if="index === 0">
                     <span v-if="selected.number">{{ selected.number | phoneNumber }}</span>
-                    <span v-else-if="selected.address">{{ selected.address | phoneNumber }}</span>
+                    <span v-else-if="selected.address">
+                      {{ selected.address | phoneNumber }}
+                    </span>
+                    <span v-else-if="messageType === 'negotiation'">
+                      Portal Justto
+                    </span>
                   </span>
                 </span>
                 <el-tooltip v-if="selectedContacts.length > 1">
@@ -1009,10 +1014,10 @@ export default {
       .dispute-view__send-to {
         display: flex;
         align-items: center;
+        gap: 8px;
       }
     }
     .dispute-view__send-to-icon {
-      margin-left: 8px;
       width: 20px;
     }
   }

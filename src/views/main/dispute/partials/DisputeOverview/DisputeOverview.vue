@@ -457,7 +457,7 @@
                     @click="sendMessageToNegotiator(role)"
                   >
                     <el-tooltip
-                      v-if="onlineDocuments[role.documentNumber] === 'ONLINE'"
+                      v-if="onlineList.includes(role.documentNumber)"
                       :content="`${$options.filters.capitalize(role.name.toLowerCase().split(' ')[0])} está online`"
                     >
                       <jus-icon
@@ -466,7 +466,7 @@
                       />
                     </el-tooltip>
                     <el-tooltip
-                      v-else-if="role.oabs.filter(oab => onlineDocuments[`${oab.number}-${oab.state}`] === 'ONLINE').length"
+                      v-else-if="role.oabs.filter(oab => onlineList.includes(`${oab.number}-${oab.state}`)).length"
                       :content="`${$options.filters.capitalize(role.name.toLowerCase().split(' ')[0])} está online`"
                     >
                       <jus-icon
@@ -511,20 +511,6 @@
               <div class="dispute-overview-view__info-line">
                 <span class="title">Nome completo:</span>
                 <div>
-                  <span
-                    v-if="role.party === 'CLAIMANT'"
-                    class="dispute-overview-view__negotiator-icon"
-                    @click="sendMessageToNegotiator(role)"
-                  >
-                    <el-tooltip
-                      content="Chat do portal de comunicação da Justto"
-                    >
-                      <jus-icon
-                        class="icon"
-                        icon="justto-active"
-                      />
-                    </el-tooltip>
-                  </span>
                   <el-popover
                     v-if="role.roles.includes('LAWYER')"
                     :ref="`popover-${role.name}`"
@@ -633,6 +619,25 @@
               >
                 <span class="title">Data de nascimento:</span>
                 <span>{{ role.personProperties.BIRTHDAY | moment('DD/MM/YYYY') }}</span>
+              </div>
+              <div
+                v-show="role.party === 'CLAIMANT'"
+                class="dispute-overview-view__info-line"
+              >
+                <span class="title">Portal de comunicação Justto:</span>
+                <span
+                  v-if="role.party === 'CLAIMANT'"
+                  class="dispute-overview-view__negotiator-icon"
+                  @click="sendMessageToNegotiator(role)"
+                >
+                  <jus-icon
+                    class="icon"
+                    icon="send"
+                  />
+                  <span class="text">
+                    {{ role.name.toLowerCase() }}
+                  </span>
+                </span>
               </div>
               <div
                 v-show="role.phones.length"
@@ -1020,7 +1025,6 @@
                 label="Estratégia"
                 prop="disputeStrategy"
               >
-                <!-- {{ isValidStrategie }} -->
                 <el-select
                   v-model="selectedStrategyId"
                   placeholder="Escolha a nova estratégia"
@@ -1853,11 +1857,13 @@ export default {
       disputeStatuses: 'disputeStatuses',
       searchedLawyers: 'searchedLawyers',
       searchLawyersLoading: 'searchLawyersLoading',
-      disputeBankAccounts: 'disputeBankAccounts',
       disputeMetadata: 'disputeMetadata',
       dispute: 'dispute',
       onlineDocuments: 'onlineDocuments'
     }),
+    onlineList() {
+      return Object.keys(this.onlineDocuments) || []
+    },
     contactsMetadataCount() {
       const { phones, emails } = this.disputeMetadata
       return phones.length + emails.length
@@ -2070,8 +2076,11 @@ export default {
 
     sendMessageToNegotiator(role) {
       const roleId = role.id
-      const email = role.emails.find(email => !email.archived && email.isValid && email.isMain).address || ''
-      this.$emit('activeNegotiator', { roleId, email })
+      const email = role.emails.find(email => !email.archived && email.isValid && email.isMain) || 'não tem'
+      this.$emit('activeNegotiator', {
+        roleId,
+        email: email ? email.address : email
+      })
     },
 
     openAssociationModal() {
@@ -3003,16 +3012,21 @@ export default {
     line-height: 24px;
 
     .dispute-overview-view__negotiator-icon {
-      visibility: hidden;
+      font-weight: 500;
+      text-transform: capitalize;
+      cursor: pointer;
+      display: flex;
+      align-items: center !important;
+      gap: 8px;
 
       .icon {
-        cursor: pointer;
         height: 12px;
       }
-    }
-    &:hover {
-      .dispute-overview-view__negotiator-icon {
-        visibility: visible;
+
+      .text {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
       }
     }
 
