@@ -36,7 +36,7 @@
         <template slot-scope="scope">
           <dispute-code-link
             :code="scope.row.code"
-            :custom-style="{ fontWeight: !scope.row.visualized ? 'bold' : 'normal'}"
+            :custom-style="{ fontWeight: (!scope.row.visualized && !['1'].includes(activeTab))? 'bold' : 'normal'}"
             @hoverDisputeCode="hoverDisputeCode(scope.row.code)"
             @openTimeline="openTimelineModal(scope.row)"
           />
