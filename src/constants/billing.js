@@ -1,8 +1,4 @@
 export const TARIFF_TYPES = Object.freeze({
-  LAWSUIT_DROPPED: {
-    label: 'Indicativo de baixa',
-    defaultValue: 3
-  },
   IMPORTED_DISPUTE: {
     label: 'Importação',
     defaultValue: 0
@@ -18,6 +14,10 @@ export const TARIFF_TYPES = Object.freeze({
   SETTLED_DISPUTE: {
     label: 'Acordo fechado',
     defaultValue: 300
+  },
+  LAWSUIT_DROPPED: {
+    label: 'Pré negociação',
+    defaultValue: 3
   }
 })
 
