@@ -690,7 +690,6 @@ export default {
           { insert: peviewText },
           { insert: peviewResume }
         ])
-        // quill.insertText(0, peviewText + '\n\n\n\n___________________\n' + resume)
       }
       this.activeRoleId = 0
       this.directContactAddress = senders
@@ -699,6 +698,7 @@ export default {
       this.removeReply()
       this.messageType = ''
       this.messageType = type
+      this.handleTabClick({ name: '1' })
       this.$nextTick(() => this.$refs.messageEditor.quill.focus())
     },
     updateActiveRole(params) {
@@ -762,10 +762,10 @@ export default {
       if (this.$store.state.disputeModule.tab === '9') this.$router.push('/management/all')
       else this.$router.push('/management')
     },
-    handleTabClick(tab) {
-      if (!['1', '3'].includes(tab.name)) this.activeRoleId = 0
-      this.typingTab = tab.name
-      localStorage.setItem('jusoccurrencestab', tab.name)
+    handleTabClick({ name }) {
+      if (!['1', '3'].includes(name)) this.activeRoleId = 0
+      this.typingTab = name
+      localStorage.setItem('jusoccurrencestab', name)
     },
     handleBeforeLeaveTabs() {
       this.$store.commit('clearOccurrencesSize')
