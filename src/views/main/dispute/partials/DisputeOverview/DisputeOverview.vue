@@ -2000,19 +2000,17 @@ export default {
         const condition = (
           this.dispute &&
           this.dispute.properties &&
-          (
-            !Object.keys(this.dispute.properties).includes('CONTATOS ASSOCIADOS') ||
-            this.dispute.properties['CONTATOS ASSOCIADOS'] === 'NAO'
-          )
+          Object.keys(this.dispute.properties).includes('CONTATOS ASSOCIADOS') &&
+          this.dispute.properties['CONTATOS ASSOCIADOS'] === 'NAO'
         ) || false
         return condition
       },
       set(value) {
-        this.setDisputeProperty({
-          disputeId: this.dispute.id,
-          key: 'CONTATOS ASSOCIADOS',
-          value
-        }).then(() => {
+        const promisses = []
+        if (value) {
+          promisses.push(this.setDisputeProperty({ disputeId: this.dispute.id, key: 'CONTATOS ASSOCIADOS', value }))
+        }
+        Promise.all(promisses).then(() => {
           this.checkTabByAssociatedContractValue()
           this.getDisputeMetadata(this.dispute.id)
         })
@@ -2066,8 +2064,19 @@ export default {
     init() {
       const { id } = this.$route.params
       this.getDisputeMetadata(id).then(() => {
-        if (this.dispute.properties['CONTATOS ASSOCIADOS']) {
-          this.showAssociateContacts = 'NAO'
+        // if (this.dispute.properties['CONTATOS ASSOCIADOS'] !== 'SIM') {
+        //   this.showAssociateContacts = 'NAO'
+        // }
+        switch (this.dispute.properties['CONTATOS ASSOCIADOS']) {
+          case 'MAIS TARDE':
+            this.showAssociateContacts = 'NAO'
+            break
+          case 'NAO':
+          case 'SIM':
+            break
+          default:
+            this.showAssociateContacts = 'NAO'
+            break
         }
       })
       this.populateTimeline()
