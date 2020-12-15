@@ -156,16 +156,22 @@
       <span
         slot="footer"
       >
-        <el-button
-          @click="skip()"
-        >
+        <el-button @click="skip('MAIS TARDE')">
           Associar mais tarde
         </el-button>
         <el-button
+          v-if="hasAssociations"
           type="primary"
           @click="submit()"
         >
-          Tudo pronto!
+          Salvar associações
+        </el-button>
+        <el-button
+          v-else
+          type="primary"
+          @click="skip('SIM')"
+        >
+          Ignorar
         </el-button>
       </span>
     </el-dialog>
@@ -207,6 +213,15 @@ export default {
       set(value) {
         console.log(value)
       }
+    },
+    hasAssociations() {
+      const phones = this.phones.filter(phone => {
+        return !!phone.associateWith
+      }).length
+      const email = this.emails.filter(email => {
+        return !!email.associateWith
+      }).length
+      return (phones + email) > 0
     }
   },
   watch: {
@@ -235,8 +250,8 @@ export default {
       this.phones = this.metadata.phones.map(setAssociated)
     },
 
-    skip() {
-      this.$emit('input', 'MAIS TARDE')
+    skip(label) {
+      this.$emit('input', label)
     },
 
     submit() {
