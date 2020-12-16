@@ -69,7 +69,8 @@
     "INTERACTION": "interação na disputa",
     "MANUAL": "valor manual",
     "SETTLED_DISPUTE": "acordo fechado",
-    "SUBSCRIPTION": "assinatura"
+    "SUBSCRIPTION": "assinatura",
+    "PRE-NREGOTIATION": "pré negociação"
   },
   "prescription": {
     "ONLY_SMS_ENGAGEMENT": "somente SMS",
