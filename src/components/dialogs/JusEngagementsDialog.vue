@@ -46,14 +46,6 @@
               <div v-if="step.template">
                 <h3>{{ step.template.title }}</h3>
                 <span v-html="step.template.body" />
-                <!-- <el-button
-                  v-if="$store.getters.isJusttoAdmin"
-                  plain
-                  style="margin: 12px auto; display: block"
-                  @click="openEditDialog(step)"
-                >
-                  Editar template
-                </el-button> -->
               </div>
               <div
                 v-else
