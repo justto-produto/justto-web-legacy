@@ -1859,7 +1859,8 @@ export default {
       searchLawyersLoading: 'searchLawyersLoading',
       disputeMetadata: 'disputeMetadata',
       dispute: 'dispute',
-      onlineDocuments: 'onlineDocuments'
+      onlineDocuments: 'onlineDocuments',
+      strategies: 'strategyListImport'
     }),
     onlineList() {
       return Object.keys(this.onlineDocuments) || []
@@ -1922,9 +1923,6 @@ export default {
     selectedRole: {
       get() { return this.activeRoleId },
       set(newSelectedRole) { this.$emit('update:activeRoleId', newSelectedRole || 0) }
-    },
-    strategies() {
-      return this.$store.getters.strategyList
     },
     isValidStrategie() {
       return (this.strategies || []).map(s => s.id).includes(this.dispute.strategyId)
@@ -2506,7 +2504,7 @@ export default {
       this.disputeUpperRangeHasChanged = false
       this.lastOfferValueHasChanged = false
       this.documentNumberHasChanged = false
-      this.$store.dispatch('getMyStrategies').finally(() => {
+      this.$store.dispatch('getMyStrategiesLite').finally(() => {
         this.$nextTick(() => {
           this.selectedStrategyId = this.dispute.strategyId
           if (!this.strategies.map(s => s.id).includes(this.dispute.strategyId)) {
