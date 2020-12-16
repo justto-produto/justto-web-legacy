@@ -19,35 +19,47 @@
       </p>
       <el-collapse
         v-else
+        ref="collapse"
         v-loading="$store.state.loading"
         class="jus-engagements-dialog__engagement el-collapse--bordered"
       >
         <div
-          v-for="step in strategyEngagements"
+          v-for="step in strategy.communications"
           :key="step.id"
         >
-          <div v-if="!step.archived">
+          <div
+            v-if="!step.archived"
+            @click="getTemplates(step)"
+          >
             <div
-              v-if="step.communicationType != 'DELAY'"
+              v-if="step.type != 'DELAY'"
               class="jus-engagements-dialog__step"
             >
               Envio
             </div>
-            <el-collapse-item v-if="step.communicationType !== 'DELAY'">
+            <el-collapse-item
+              v-if="step.type !== 'DELAY'"
+            >
               <template slot="title">
-                <jus-icon :icon="getIcon(step.communicationType)" /> {{ step.name | capitalize }}
+                <jus-icon :icon="getIcon(step.type)" /> {{ step.name | capitalize }}
               </template>
               <div v-if="step.template">
                 <h3>{{ step.template.title }}</h3>
                 <span v-html="step.template.body" />
-                <el-button
+                <!-- <el-button
                   v-if="$store.getters.isJusttoAdmin"
                   plain
                   style="margin: 12px auto; display: block"
                   @click="openEditDialog(step)"
                 >
                   Editar template
-                </el-button>
+                </el-button> -->
+              </div>
+              <div
+                v-else
+                class="jus-engagements-dialog__step-loading"
+              >
+                <i class="el-icon-loading" />
               </div>
             </el-collapse-item>
             <div
@@ -55,7 +67,7 @@
               class="jus-engagements-dialog__wait"
             >
               <jus-icon
-                :icon="getIcon(step.communicationType)"
+                :icon="getIcon(step.type)"
                 is-active
               /> {{ step.name }}
             </div>
@@ -117,6 +129,7 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'JusEngagementsDialog',
   props: {
@@ -124,9 +137,9 @@ export default {
       type: Boolean,
       default: false
     },
-    strategyId: {
-      type: Number,
-      default: 0
+    value: {
+      type: Object,
+      required: true
     },
     isManual: {
       type: Boolean,
@@ -136,7 +149,6 @@ export default {
   data() {
     return {
       dialog: false,
-      strategyEngagements: [],
       communication: '',
       editDialog: false,
       editDialogLoading: false,
@@ -144,18 +156,37 @@ export default {
       preview: false
     }
   },
+  computed: {
+    ...mapGetters({
+      strategies: 'strategyListImport'
+    }),
+    strategy() {
+      return this.strategies.find(el => {
+        return el.id === this.value.id
+      }) || { communications: [] }
+    },
+    strategyId() {
+      return this.value.id
+    }
+  },
   watch: {
     dialogVisible(value) {
-      if (value) {
-        this.dialog = value
-        if (!this.isManual) this.getEngagements()
-      }
+      // if (value) {
+      this.dialog = value
+      if (!this.isManual) this.getEngagements()
+      // }
     },
     dialog(value) {
-      if (!value) this.$emit('update:dialogVisible', value)
+      this.$emit('update:dialogVisible', value)
     }
   },
   methods: {
+    ...mapActions([
+      'getStrategyCommunicationTemplate',
+      'getStrategyEngagementLite',
+      'showLoading',
+      'hideLoading'
+    ]),
     openEditDialog(step) {
       this.preview = false
       this.editDialog = true
@@ -183,8 +214,8 @@ export default {
         this.editDialogLoading = false
       })
     },
-    getIcon(communicationType) {
-      switch (communicationType) {
+    getIcon(type) {
+      switch (type) {
         case 'WHATSAPP':
           return 'whatsapp'
         case 'EMAIL':
@@ -198,14 +229,22 @@ export default {
       }
     },
     getEngagements() {
-      this.$store.dispatch('showLoading')
-      this.$store.dispatch('getStrategyEngagement', this.strategyId).then(response => {
-        this.strategyEngagements = response.communications
-        this.$store.dispatch('hideLoading')
+      this.showLoading()
+      this.getStrategyEngagementLite(this.strategyId).then(response => {
+        this.$forceUpdate()
       }).catch(error => {
         this.$jusNotification({ error })
-        this.$store.dispatch('hideLoading')
-      })
+      }).finally(this.hideLoading)
+    },
+    getTemplates({ id }) {
+      if (this.$refs.collapse.activeNames.length) {
+        this.getStrategyCommunicationTemplate({
+          strategyId: this.strategyId,
+          comunicationId: id
+        }).then(() => {
+          this.$forceUpdate()
+        })
+      }
     }
   }
 }
@@ -213,6 +252,12 @@ export default {
 
 <style lang="scss">
 @import '@/styles/colors.scss';
+
+.jus-engagements-dialog__step-loading {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
 
 .jus-engagements-dialog {
   &__step {
