@@ -163,10 +163,8 @@ export default {
   },
   watch: {
     dialogVisible(value) {
-      // if (value) {
       this.dialog = value
       if (!this.isManual) this.getEngagements()
-      // }
     },
     dialog(value) {
       this.$emit('update:dialogVisible', value)
