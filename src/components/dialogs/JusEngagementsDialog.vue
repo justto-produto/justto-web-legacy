@@ -41,7 +41,8 @@
               v-if="step.type !== 'DELAY'"
             >
               <template slot="title">
-                <jus-icon :icon="getIcon(step.type)" /> {{ step.name | capitalize }}
+                <jus-icon :icon="getIcon(step.type)" />
+                {{ step.name | capitalize }}
               </template>
               <div v-if="step.template">
                 <h3>{{ step.template.title }}</h3>
