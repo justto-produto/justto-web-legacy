@@ -37,9 +37,7 @@
             >
               Envio
             </div>
-            <el-collapse-item
-              v-if="step.type !== 'DELAY'"
-            >
+            <el-collapse-item v-if="step.type !== 'DELAY'">
               <template slot="title">
                 <jus-icon :icon="getIcon(step.type)" />
                 {{ step.name | capitalize }}
