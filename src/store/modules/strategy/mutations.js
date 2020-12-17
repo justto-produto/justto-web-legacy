@@ -17,6 +17,7 @@ const strategyMutations = {
       }
     })
   },
+
   setStrategyCommunicationTemplate(state, { data, payload }) {
     const { strategyId, comunicationId } = payload
 
