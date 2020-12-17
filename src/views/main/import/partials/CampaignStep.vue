@@ -189,7 +189,6 @@ export default {
     ...mapActions([
       'showLoading',
       'hideLoading',
-      // 'getMyStrategies',
       'getMyStrategiesLite'
     ]),
     async getStrategies() {
