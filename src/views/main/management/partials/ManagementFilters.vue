@@ -82,35 +82,6 @@
               />
             </el-form-item>
           </el-col>
-          <!-- ÚLTIMA INTERAÇÃO -->
-          <!-- <el-col v-if="isInteration" :span="12">
-            <el-form-item label="Última interação">
-              <el-date-picker
-                v-model="filters.lastInteractionDate"
-                type="daterange"
-                align="right"
-                format="dd/MM/yyyy"
-                unlink-panels
-                range-separator="-"
-                start-placeholder="Data inicial"
-                end-placeholder="Data final"
-                @change="clearLastInteractionDate" />
-            </el-form-item>
-          </el-col> -->
-          <!-- STATUS -->
-          <!-- <el-col v-if="isEngagement" :span="12">
-            <el-form-item label="Status" class="management-filters__switch">
-              <div>
-                <div>Pausadas</div>
-                <el-switch v-model="filters.status" active-value="PAUSED" :inactive-value="false"/>
-              </div>
-              <el-radio-group v-model="filters.status">
-                paused">Pausadas
-                active">Ativos
-              </el-radio-group>
-            </el-form-item>
-          </el-col> -->
-          <!-- FIM DA NEGOCIAÇÃO -->
           <el-col :span="12">
             <el-form-item label="Data limite para negociar">
               <el-date-picker
@@ -146,29 +117,6 @@
               />
             </el-form-item>
           </el-col>
-          <!-- TAGS -->
-          <!-- <el-col :span="12">
-            <el-form-item label="Etiquetas">
-              <el-select
-                v-model="filters.tags"
-                filterable
-                data-testid="filter-strategy"
-                placeholder="Selecione uma opção"
-                @clear="clearTags">
-                <el-option
-                  v-for="tag in workspaceTags"
-                  :key="tag.id"
-                  :label="tag.name"
-                  :value="tag.id">
-                  <el-tag :color="tag.color" class="el-tag--etiqueta el-tag--etiqueta-select">
-                    <i :class="`el-icon-${tag.icon}`"/>
-                    {{ tag.name }}
-                  </el-tag>
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </el-col> -->
-          <!-- RÉU -->
           <el-col
             v-if="!loading && isFinished || isPreNegotiation"
             :span="12"
@@ -269,36 +217,6 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <!-- ESTADO -->
-          <!-- <el-col :span="12">
-            <el-form-item label="Estado">
-              <el-select
-                v-model="filters.disputestate"
-                placeholder="Selecione uma opção"
-                @clear="clearDisputestate">
-                <el-option v-for="state in $store.state.brazilianStates" :key="state.value" :value="state.value"/>
-              </el-select>
-            </el-form-item>
-          </el-col>  -->
-          <!-- VALOR INICIAL DO ACORDO -->
-          <!-- <el-col v-if="isNewAgreements" :span="12">
-            <el-form-item label="Valor inicial do acordo">
-              <div class="el-input">
-                <money v-model="filters.disputeDealValue" v-bind="money" class="el-input__inner" />
-              </div>
-            </el-form-item>
-          </el-col> -->
-          <!-- VALOR FINAL DO ACORDO -->
-          <!-- <el-col v-if="isNewAgreements" :span="24">
-            <el-form-item label="Valor final do acordo">
-              <el-slider
-                v-model="filters.value9"
-                range
-                :max="10000">
-              </el-slider>
-            </el-form-item>
-          </el-col> -->
-          <!-- STATUS -->
           <el-col
             v-if="isFinished || isEngagement || isAll"
             :span="24"
@@ -315,27 +233,6 @@
               </el-checkbox-group>
             </el-form-item>
           </el-col>
-          <!-- NEGOCIADORES -->
-          <!-- <el-col :span="24">
-            <el-form-item label="Negociadores">
-              <el-select
-                v-model="filters['negotiators.f3']"
-                value-key="name"
-                size="large"
-                placeholder="Escolha os negociadores">
-                <el-option
-                  v-for="item in negotiatorsList"
-                  :key="item.person.id"
-                  :label="item.person.name"
-                  :value="item.person.id">
-                  <jus-avatar-user
-                    :name="item.person.name" shape="circle"
-                    size="xs" style="vertical-align: middle" />
-                  <span style="vertical-align: middle;margin-left: 10px;">{{ item.person.name }}</span>
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </el-col> -->
         </el-row>
       </el-form>
     </div>
@@ -356,14 +253,10 @@
 </template>
 
 <script>
-// import { Money } from 'v-money'
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'ManagementFilters',
-  // components: {
-  //   Money
-  // },
   props: {
     visible: {
       type: Boolean,
@@ -378,17 +271,11 @@ export default {
     return {
       loading: false,
       filters: {}
-      // money: {
-      //   decimal: ',',
-      //   thousands: '.',
-      //   prefix: 'R$ ',
-      //   precision: 0
-      // }
     }
   },
   computed: {
     ...mapGetters({
-      strategies: 'strategyList',
+      strategies: 'strategyListImport',
       campaigns: 'campaignList',
       respondents: 'respondents',
       workspaceTags: 'workspaceTags',
@@ -501,7 +388,7 @@ export default {
       this.loading = true
       Promise.all([
         this.$store.dispatch('getCampaigns'),
-        this.$store.dispatch('getMyStrategies'),
+        this.$store.dispatch('getMyStrategiesLite'),
         this.$store.dispatch('getRespondents'),
         this.$store.dispatch('getWorkspaceTags')
       ]).finally(responses => {
@@ -576,9 +463,6 @@ export default {
     clearCampaign() {
       this.filters.campaigns = []
     },
-    // clearDisputestate () {
-    //   delete this.filters.disputestate
-    // },
     changeDealDate(value) {
       if (value) {
         this.filters.dealDate = value
