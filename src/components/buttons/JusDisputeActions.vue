@@ -803,24 +803,8 @@ export default {
               }
             })
           } else {
-            this.checkCounterproposal('COUNTERPROPOSAL').then(() => {
-              this.$confirm(`
-              <small>*Ao clicar em <strong>majorar</strong>, a disputa será alterada para <strong>Acordo Aceito</strong>.</small>
-              <br/>
-              <small>*Ao clicar em <strong>Não majorar</strong>, somente será feita a contraproposta, sem alterações no status da disputa.</small>
-              `, 'Majorar a alçada máxima?', {
-                distinguishCancelAndClose: true,
-                dangerouslyUseHTMLString: true,
-                closeOnClickModal: false,
-                closeOnPressEscape: false,
-                showClose: false,
-                confirmButtonText: 'Não majorar',
-                cancelButtonText: 'Majorar'
-              }).then(res => {
-                this.sendCounterproposal(false).then().finally(this.closeCounterProposalModal)
-              }).catch(() => {
-                this.sendCounterproposal(true).then().finally(this.closeCounterProposalModal)
-              })
+            this.checkCounterproposal('COUNTERPROPOSAL').then((updateUpperRange) => {
+              this.sendCounterproposal(updateUpperRange).then().finally(this.closeCounterProposalModal)
             })
           }
           break
@@ -963,28 +947,64 @@ export default {
     checkCounterproposal(actionType) {
       return new Promise((resolve, reject) => {
         this.$refs.counterOfferForm.validate(valid => {
+          console.log(this.$refs.counterOfferForm)
           if (valid) {
             if (this.checkUpperRangeCounterOffer) {
               const winTxt = 'O valor inserido <b>irá mojorar</b> alçada máxima. Deseja continuar?'
-              const dontWinText = `
-              <p>Valor de contraproposta é maior que alçada máxima</p>
-              <br/>
-              <!-- <p>Ao clicar em continuar, <strong>o valor da ALÇADA MÁXIMA SERÁ MAJORADO</strong> para o valor inserido!</p>
-              <br/> -->
-              <p>Deseja continuar?</p>
-              `
-              actionType = actionType === 'WIN' ? winTxt : dontWinText
-              this.$confirm(actionType, 'Atenção!', {
-                confirmButtonText: 'Continuar',
-                cancelButtonText: 'Cancelar',
-                cancelButtonClass: 'is-plain',
-                dangerouslyUseHTMLString: true,
-                showClose: false
-              }).then(() => {
-                resolve()
-              }).catch(e => {
-                reject(e)
-              })
+              if (actionType === 'WIN') {
+                this.$confirm(winTxt, 'Atenção!', {
+                  confirmButtonText: 'Continuar',
+                  cancelButtonText: 'Cancelar',
+                  cancelButtonClass: 'is-plain',
+                  dangerouslyUseHTMLString: true,
+                  showClose: false
+                }).then(resolve).catch(e => {
+                  reject(e)
+                })
+              } else {
+                const tag = this.$createElement
+                this.$confirm(tag('div', null, [
+                  tag('p', null, 'Valor da contraproposta é maior que o da alçada máxima!'),
+                  tag('br', null, ''),
+                  tag('p', null, [
+                    tag('span', { style: { color: '#FF4B54' } }, '*'),
+                    tag('small', null, [
+                      'Ao clicar em ',
+                      tag('strong', null, 'Majorar'),
+                      ', será feita a ',
+                      tag('strong', null, 'contraproposta'),
+                      ', a ',
+                      tag('strong', null, 'alçada máxima'),
+                      ' será majorada para o ',
+                      tag('strong', null, 'valor'),
+                      ' da contraproposta e a disputa será alterada para ',
+                      tag('strong', null, 'Proposta Aceita'),
+                      '.'
+                    ])
+                  ]),
+                  tag('br', null, ''),
+                  tag('p', null, [
+                    tag('span', { style: { color: '#FF4B54' } }, '*'),
+                    tag('small', null, [
+                      'Ao clicar em ',
+                      tag('strong', null, 'Não majorar'),
+                      ', somente será feita a contraproposta, sem alterações no status da disputa.'
+                    ])
+                  ])
+                ]), 'Majorar a alçada máxima?', {
+                  distinguishCancelAndClose: true,
+                  dangerouslyUseHTMLString: true,
+                  closeOnClickModal: false,
+                  closeOnPressEscape: false,
+                  showClose: false,
+                  confirmButtonText: 'Não majorar',
+                  cancelButtonText: 'Majorar'
+                }).then(() => {
+                  resolve(false)
+                }).catch(() => {
+                  resolve(true)
+                })
+              }
             } else {
               resolve()
             }
