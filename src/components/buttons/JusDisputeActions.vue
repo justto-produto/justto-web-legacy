@@ -804,7 +804,23 @@ export default {
             })
           } else {
             this.checkCounterproposal('COUNTERPROPOSAL').then(() => {
-              this.sendCounterproposal().then().finally(this.closeCounterProposalModal)
+              this.$confirm(`
+              <small>*Ao clicar em <strong>majorar</strong>, a disputa será alterada para <strong>Acordo Aceito</strong>.</small>
+              <br/>
+              <small>*Ao clicar em <strong>Não majorar</strong>, somente será feita a contraproposta, sem alterações no status da disputa.</small>
+              `, 'Majorar a alçada máxima?', {
+                distinguishCancelAndClose: true,
+                dangerouslyUseHTMLString: true,
+                closeOnClickModal: false,
+                closeOnPressEscape: false,
+                showClose: false,
+                confirmButtonText: 'Não majorar',
+                cancelButtonText: 'Majorar'
+              }).then(res => {
+                this.sendCounterproposal(false).then().finally(this.closeCounterProposalModal)
+              }).catch(() => {
+                this.sendCounterproposal(true).then().finally(this.closeCounterProposalModal)
+              })
             })
           }
           break
@@ -949,7 +965,15 @@ export default {
         this.$refs.counterOfferForm.validate(valid => {
           if (valid) {
             if (this.checkUpperRangeCounterOffer) {
-              actionType = actionType === 'WIN' ? 'O valor inserido <b>irá mojorar</b> alçada máxima. Deseja continuar?' : 'Valor de contraproposta é maior que alçada máxima, deseja continuar?'
+              const winTxt = 'O valor inserido <b>irá mojorar</b> alçada máxima. Deseja continuar?'
+              const dontWinText = `
+              <p>Valor de contraproposta é maior que alçada máxima</p>
+              <br/>
+              <!-- <p>Ao clicar em continuar, <strong>o valor da ALÇADA MÁXIMA SERÁ MAJORADO</strong> para o valor inserido!</p>
+              <br/> -->
+              <p>Deseja continuar?</p>
+              `
+              actionType = actionType === 'WIN' ? winTxt : dontWinText
               this.$confirm(actionType, 'Atenção!', {
                 confirmButtonText: 'Continuar',
                 cancelButtonText: 'Cancelar',
