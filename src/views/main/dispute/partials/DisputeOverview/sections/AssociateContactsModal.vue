@@ -3,6 +3,7 @@
     <el-dialog
       v-loading="loading"
       :visible.sync="toShow"
+      :close-on-click-modal="false"
       title="Encontramos dados de contatos na inicial da disputa"
       width="50%"
       @close="skip()"
@@ -250,7 +251,7 @@ export default {
       this.phones = this.metadata.phones.map(setAssociated)
     },
 
-    skip(label) {
+    skip(label = 'MAIS TARDE') {
       this.$emit('input', label)
     },
 
