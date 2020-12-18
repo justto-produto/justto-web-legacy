@@ -570,6 +570,10 @@ export default {
       this.fetchData()
       this.disputeOccurrencesKey += 1
     },
+    typingTab() {
+      const { id } = this.$route.params
+      this.getLastInteractions(id)
+    },
     y(y) {
       const height = this.$refs.sectionMessages.offsetHeight - this.y
       this.sendMessageHeight = height >= 0 ? height : this.sendMessageHeight
