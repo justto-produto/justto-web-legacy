@@ -89,7 +89,7 @@
       <div class="select-strategy__messages">
         <div v-show="!!strategy.id">
           <a @click.prevent="openDialogEngagement">
-            Ver estratégia de engajamento das partes {{ dialogVisible }}
+            Ver estratégia de engajamento das partes
           </a>
         </div>
       </div>

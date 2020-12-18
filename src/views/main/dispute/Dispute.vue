@@ -207,7 +207,7 @@
                       Você está enviando mensagem para o Portal de comunicação Justto.
                     </span>
                     <span v-else>
-                      Você está enviando um ${messageType}
+                      Você está enviando um {{ messageType }}
                     </span>
                   </span>
                   <jus-icon
