@@ -1104,7 +1104,7 @@ export default {
           cancelButtonClass: 'is-plain',
           showClose: false
         }).then(({ value }) => {
-          this.counterOfferForm.note = this.scapeHtml(value)
+          this.counterOfferForm.note = value ? this.scapeHtml(value) : ''
           resolve()
         }).catch(e => {
           reject(e)
