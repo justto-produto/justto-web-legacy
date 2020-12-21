@@ -18,10 +18,13 @@
       />
     </el-tag>
     <el-popover
+      v-if="showPopover"
+      ref="main-popover"
       v-model="visible"
       width="310"
       trigger="manual"
       popper-class="jus-tags__popover"
+      :placement="placement"
       @show="getTags"
       @hide="resetFields"
     >
@@ -171,10 +174,14 @@ export default {
       showForm: false,
       tagForm: {
         name: '', color: '', icon: ''
-      }
+      },
+      showPopover: true
     }
   },
   computed: {
+    placement() {
+      return this.$store.getters.windowHeight >= 580 ? 'bottom' : this.$store.getters.windowHeight >= 520 ? 'left' : 'top'
+    },
     disputeTags: {
       get() {
         return this.$store.getters.disputeTags
@@ -206,6 +213,15 @@ export default {
     },
     icons() {
       return this.$store.state.tagModule.icons
+    }
+  },
+  watch: {
+    placement() {
+      this.showPopover = false
+      this.visible = false
+      this.$nextTick(() => {
+        this.showPopover = true
+      })
     }
   },
   mounted() {

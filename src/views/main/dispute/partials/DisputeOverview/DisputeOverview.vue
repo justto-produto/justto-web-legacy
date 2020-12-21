@@ -632,7 +632,7 @@
                 >
                   <jus-icon
                     class="icon"
-                    icon="send"
+                    icon="negotiation"
                   />
                   <span class="text">
                     {{ role.name.toLowerCase() }}
