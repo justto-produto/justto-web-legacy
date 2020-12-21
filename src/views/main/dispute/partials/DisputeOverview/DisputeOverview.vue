@@ -3021,6 +3021,7 @@ export default {
     .dispute-overview-view__negotiator-icon {
       font-weight: 500;
       text-transform: capitalize;
+      word-break: break-word;
       cursor: pointer;
       display: flex;
       gap: 8px;
@@ -3032,7 +3033,7 @@ export default {
 
       .text {
         margin: 4px 0px 0px !important;
-        word-break: break-word;
+        word-break: break-word !important;
       }
     }
 
