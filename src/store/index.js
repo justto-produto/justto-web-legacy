@@ -34,18 +34,21 @@ export default new Vuex.Store({
     banksList,
     brazilianStates,
     ghostMode,
-    loading: false
+    loading: false,
+    windowHeight: 0
   },
   getters: {
     banksList: state => state.banksList,
     brazilianStates: state => state.brazilianStates,
     ghostMode: state => state.ghostMode,
-    loading: state => state.loading
+    loading: state => state.loading,
+    windowHeight: state => state.windowHeight
   },
   mutations: {
     setGhostMode: (state, value) => (state.ghostMode = value),
     showLoading: (state) => (state.loading = true),
-    hideLoading: (state) => (state.loading = false)
+    hideLoading: (state) => (state.loading = false),
+    setHeight: (state, value) => (state.windowHeight = value)
   },
   actions: {
     setGhostMode({ commit }, value) {
@@ -57,6 +60,9 @@ export default new Vuex.Store({
     },
     hideLoading({ commit }) {
       commit('hideLoading')
+    },
+    setHeight({ commit }, value) {
+      commit('setHeight', value)
     }
   },
   modules: {
