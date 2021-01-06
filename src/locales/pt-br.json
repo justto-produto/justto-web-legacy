@@ -221,6 +221,10 @@
     }
   },
   "import" : {
+    "label": {
+      "business-day": "Dia útil | Dias úteis",
+      "after-the-protocol": "Após o protocolo | Após os protocolos"
+    },
     "status" : {
       "IN_QUEUE" : "falha na importação",
       "READY" : "em processamento",

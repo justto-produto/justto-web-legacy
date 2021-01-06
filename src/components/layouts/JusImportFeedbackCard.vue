@@ -112,7 +112,7 @@
             controls-position="right"
           />
           <span class="jus-import-feedback-card__sufix">
-            dia(s) corridos após o protocolo
+            {{ $tc('import.label.business-day', 2) }} {{ $tc('import.label.business-day', 1).toLowerCase() }}
           </span>
         </div>
       </div>
