@@ -1701,6 +1701,7 @@
       />
       <associate-contacts-modal
         v-model="showAssociateContacts"
+        :current="dispute.properties['CONTATOS ASSOCIADOS']"
       />
     </div>
   </div>
@@ -1998,8 +1999,10 @@ export default {
         const condition = (
           this.dispute &&
           this.dispute.properties &&
-          Object.keys(this.dispute.properties).includes('CONTATOS ASSOCIADOS') &&
-          this.dispute.properties['CONTATOS ASSOCIADOS'] === 'NAO'
+          (
+            !Object.keys(this.dispute.properties).includes('CONTATOS ASSOCIADOS') ||
+            ['NAO'].includes(this.dispute.properties['CONTATOS ASSOCIADOS'])
+          )
         ) || false
         return condition
       },
@@ -2070,10 +2073,12 @@ export default {
             this.showAssociateContacts = 'NAO'
             break
           case 'NAO':
+            this.showAssociateContacts = 'NAO'
+            break
           case 'SIM':
+            this.showAssociateContacts = 'SIM'
             break
           default:
-            this.showAssociateContacts = 'NAO'
             break
         }
       })
