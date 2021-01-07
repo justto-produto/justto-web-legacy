@@ -383,7 +383,7 @@
           </div>
           <el-tooltip
             :disabled="dispute.status !== 'PRE_NEGOTIATION'"
-            content="Disputas em pré negiciação não podem ser editadas"
+            content="Disputas em pré negociação não podem ser editadas"
           >
             <div class="dispute-overview-view__actions">
               <el-button
@@ -773,7 +773,7 @@
                 <el-tooltip
                   :disabled="dispute.status !== 'PRE_NEGOTIATION'"
                   placement="left"
-                  content="Disputas em pré negiciação não podem ser editadas"
+                  content="Disputas em pré negociação não podem ser editadas"
                 >
                   <el-checkbox-group
                     v-model="disputeBankAccountsIds"
@@ -804,7 +804,7 @@
               </div>
               <el-tooltip
                 :disabled="dispute.status !== 'PRE_NEGOTIATION'"
-                content="Disputas em pré negiciação não podem ser editadas"
+                content="Disputas em pré negociação não podem ser editadas"
               >
                 <div
                   v-if="!role.roles.includes('NEGOTIATOR')"
@@ -830,7 +830,7 @@
             </el-collapse-item>
             <el-tooltip
               :disabled="dispute.status !== 'PRE_NEGOTIATION'"
-              content="Disputas em pré negiciação não podem ser editadas"
+              content="Disputas em pré negociação não podem ser editadas"
             >
               <span>
                 <el-button
