@@ -15,30 +15,20 @@ class Phone extends PersonData {
 }
 
 class Email extends PersonData {
-  constructor({ address = '' }) {
+  constructor({ address }) {
     this.address = address
   }
 }
 
 class Oab extends PersonData {
-  constructor({ number, state = '' }) {
+  constructor({ number, state }) {
     this.number = number
     this.state = state
   }
 }
 
-export class DisputeOverviewRolesVm {
-  constructor({
-    personId = null,
-    name = '',
-    documentNumber,
-    personType,
-    party,
-    roles = [],
-    phones = [],
-    emails = [],
-    oabs = []
-  }) {
+export class DisputeOverviewPartiesVm {
+  constructor({ personId, name, documentNumber, personType, party, roles, phones, emails, oabs }) {
     this.personId = personId
     this.name = name
     this.alias

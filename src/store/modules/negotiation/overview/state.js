@@ -1,17 +1,17 @@
 const classesPath = '@/modules/negotiations/overview'
-import Overview from `${classesPath}/DisputeOverviewInfoVm`
-import OverviewInfo from `${classesPath}/DisputeOverviewRolesVm`
-import OverviewRoles from `${classesPath}/DisputeOverviewInfoVm`
-import OverviewAttachments from `${classesPath}/DisputeOverviewAttachmentsVm`
-import OverviewProperties from `${classesPath}/DisputeOverviewPropertiesVm`
+import DisputeOverview from `${classesPath}/DisputeOverviewInfoVm`
+import DisputeOverviewInfo from `${classesPath}/DisputeOverviewInfoVm`
+import DisputeOverviewParties from `${classesPath}/DisputeOverviewPartiesVm`
+import DisputeOverviewProperties from `${classesPath}/DisputeOverviewPropertiesVm`
+import DisputeOverviewAttachments from `${classesPath}/DisputeOverviewAttachmentsVm`
 
 const overviewState = {
   state: {
-    overview: new Overview(),
-    overviewInfo: new OverviewInfo(),
-    overviewRoles: new OverviewRoles(),
-    overviewAttachments: new OverviewAttachments(),
-    overviewProperties: new OverviewProperties(),
+    disputeOverview: new DisputeOverview(),
+    disputeOverviewInfo: new DisputeOverviewInfo(),
+    disputeOverviewParties: new DisputeOverviewParties(),
+    disputeOverviewAttachments: new DisputeOverviewAttachments(),
+    disputeOverviewProperties: new DisputeOverviewProperties(),
   }
 }
 
