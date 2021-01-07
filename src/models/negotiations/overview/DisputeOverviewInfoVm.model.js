@@ -6,26 +6,7 @@ class Classification {
 }
 
 export class DisputeOverviewInfoVm {
-  constructor({
-    id,
-    strategyId,
-    contactPartyWhenInvalidLowyer,
-    contactPartyWhenNoLowyer,
-    businessHoursEngagement,
-    alwaysContactParty,
-    skipEnrichment,
-    denySavingDeposit,
-    ownerProposalRoleId,
-    requestedValue,
-    materialDamageValue,
-    moralDamageValue,
-    internalIdentification,
-    provisionedValue,
-    campaign,
-    importDate,
-    expirationDate,
-    classification
-  }) {
+  constructor({ id, strategyId, contactPartyWhenInvalidLowyer, contactPartyWhenNoLowyer, businessHoursEngagement, alwaysContactParty, skipEnrichment, denySavingDeposit, ownerProposalRoleId, requestedValue, materialDamageValue, moralDamageValue, internalIdentification, provisionedValue, campaign, importDate, expirationDate, classification }) {
     this.id = id
     this.strategyId = strategyId
     this.contactPartyWhenInvalidLowyer = contactPartyWhenInvalidLowyer
