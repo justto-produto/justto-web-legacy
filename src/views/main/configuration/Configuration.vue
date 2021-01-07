@@ -136,7 +136,7 @@
                 >
                   <el-switch v-model="workspacePreNegotiation.preNegotiation" />
                   <span>
-                    Pré negiciação
+                    Pré negociação
                   </span>
                   <el-popover
                     popper-class="popover-info-prenegotiation"
@@ -617,7 +617,7 @@ export default {
         const message = `
         Se você tem alguma dúvida de seu funcionamento, converse com seu <i>Key Account</i> antes.
         <br/><br/>
-        Tem certeza que deseja ativar a pré negiciação?
+        Tem certeza que deseja ativar a pré negociação?
         `
         this.$confirm(message, title, {
           confirmButtonText: 'Sim',

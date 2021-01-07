@@ -520,7 +520,7 @@ export default {
     loadingText() {
       return this.isPaused
         ? 'Disputa pausada. Retome a disputa para enviar mensagens'
-        : 'Disputa em pré negiciação. Inicie a disputa para enviar mensagens'
+        : 'Disputa em pré negociação. Inicie a disputa para enviar mensagens'
     },
     isFavorite() {
       return this.dispute ? this.dispute.favorite : false
