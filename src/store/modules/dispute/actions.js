@@ -54,6 +54,24 @@ const disputeActions = {
       // eslint-disable-next-line
       axios.get(`${disputesPath}/${id}/vm`)
         .then(response => {
+          const onlineDocs = []
+          response.data.disputeRoles.forEach(role => {
+            if (role.online) {
+              if (role.documentNumber) {
+                onlineDocs.push({
+                  documentNumber: role.documentNumber,
+                  online: true
+                })
+              } else if (role.oabs.length) {
+                const oab = role.oabs[0]
+                onlineDocs.push({
+                  documentNumber: `${oab.number}-${oab.state}`,
+                  online: true
+                })
+              }
+            }
+          })
+          commit('setOnlineDocs', onlineDocs)
           dispatch('updateDisputeData', id)
           commit('setDispute', response.data)
           resolve(response.data)

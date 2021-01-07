@@ -1078,7 +1078,7 @@ export default {
       if (message.status.startsWith('PROCESSED')) {
         const sendDate = message.parameters && message.parameters.SEND_DATE ? message.parameters.SEND_DATE : this.$moment(executionDateTime.dateTime).format('DD/MM/YYYY HH:mm')
         const receiverDate = message.parameters ? message.parameters.RECEIVER_DATE : ''
-        const readDate = message.parameters ? this.$moment(message.parameters.READ_DATE).format('DD/MM/YYYY HH:mm') : ''
+        const readDate = (message.parameters && message.parameters.READ_DATE) ? this.$moment(message.parameters.READ_DATE).format('DD/MM/YYYY HH:mm') : ''
         let icon = 'status-sent'
         let msg = `Enviado em ${sendDate}.`
         if (receiverDate) {

@@ -632,7 +632,7 @@
                 >
                   <jus-icon
                     class="icon"
-                    icon="send"
+                    icon="negotiation"
                   />
                   <span class="text">
                     {{ role.name.toLowerCase() }}
@@ -1701,6 +1701,7 @@
       />
       <associate-contacts-modal
         v-model="showAssociateContacts"
+        :current="dispute.properties['CONTATOS ASSOCIADOS']"
       />
     </div>
   </div>
@@ -1859,7 +1860,8 @@ export default {
       searchLawyersLoading: 'searchLawyersLoading',
       disputeMetadata: 'disputeMetadata',
       dispute: 'dispute',
-      onlineDocuments: 'onlineDocuments'
+      onlineDocuments: 'onlineDocuments',
+      strategies: 'strategyListImport'
     }),
     onlineList() {
       return Object.keys(this.onlineDocuments) || []
@@ -1922,9 +1924,6 @@ export default {
     selectedRole: {
       get() { return this.activeRoleId },
       set(newSelectedRole) { this.$emit('update:activeRoleId', newSelectedRole || 0) }
-    },
-    strategies() {
-      return this.$store.getters.strategyList
     },
     isValidStrategie() {
       return (this.strategies || []).map(s => s.id).includes(this.dispute.strategyId)
@@ -2000,8 +1999,10 @@ export default {
         const condition = (
           this.dispute &&
           this.dispute.properties &&
-          Object.keys(this.dispute.properties).includes('CONTATOS ASSOCIADOS') &&
-          this.dispute.properties['CONTATOS ASSOCIADOS'] === 'NAO'
+          (
+            !Object.keys(this.dispute.properties).includes('CONTATOS ASSOCIADOS') ||
+            ['NAO'].includes(this.dispute.properties['CONTATOS ASSOCIADOS'])
+          )
         ) || false
         return condition
       },
@@ -2072,10 +2073,12 @@ export default {
             this.showAssociateContacts = 'NAO'
             break
           case 'NAO':
+            this.showAssociateContacts = 'NAO'
+            break
           case 'SIM':
+            this.showAssociateContacts = 'SIM'
             break
           default:
-            this.showAssociateContacts = 'NAO'
             break
         }
       })
@@ -2506,7 +2509,7 @@ export default {
       this.disputeUpperRangeHasChanged = false
       this.lastOfferValueHasChanged = false
       this.documentNumberHasChanged = false
-      this.$store.dispatch('getMyStrategies').finally(() => {
+      this.$store.dispatch('getMyStrategiesLite').finally(() => {
         this.$nextTick(() => {
           this.selectedStrategyId = this.dispute.strategyId
           if (!this.strategies.map(s => s.id).includes(this.dispute.strategyId)) {
@@ -3023,6 +3026,7 @@ export default {
     .dispute-overview-view__negotiator-icon {
       font-weight: 500;
       text-transform: capitalize;
+      word-break: break-word;
       cursor: pointer;
       display: flex;
       gap: 8px;
@@ -3034,7 +3038,7 @@ export default {
 
       .text {
         margin: 4px 0px 0px !important;
-        word-break: break-word;
+        word-break: break-word !important;
       }
     }
 

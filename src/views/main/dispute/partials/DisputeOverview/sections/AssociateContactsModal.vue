@@ -3,9 +3,11 @@
     <el-dialog
       v-loading="loading"
       :visible.sync="toShow"
+      :close-on-click-modal="false"
+      destroy-on-close
       title="Encontramos dados de contatos na inicial da disputa"
       width="50%"
-      @close="skip()"
+      :before-close="handleBeforeClose"
     >
       <div class="dialog-body">
         <div class="dialog-body__title">
@@ -187,6 +189,11 @@ export default {
       required: true,
       type: Boolean,
       default: false
+    },
+    current: {
+      required: true,
+      type: [String, Boolean],
+      default: false
     }
   },
   data() {
@@ -211,7 +218,7 @@ export default {
         return this.value && (this.emails.length > 0 || this.phones.length > 0)
       },
       set(value) {
-        console.log(value)
+        // console.log(value)
       }
     },
     hasAssociations() {
@@ -238,6 +245,13 @@ export default {
       'addEmailToDisputeRole',
       'setDisputeProperty'
     ]),
+
+    handleBeforeClose(done) {
+      if (!this.current) {
+        this.skip('MAIS TARDE')
+      }
+      done()
+    },
 
     update() {
       function setAssociated(contact) {
@@ -292,7 +306,7 @@ export default {
       Promise.all(promisses).then(() => {
         this.loading = false
       }).finally(() => {
-        this.$emit('input', !this.toShow ? 'NAO' : 'SIM')
+        this.$emit('input', 'SIM')
       })
     }
   }

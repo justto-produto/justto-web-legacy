@@ -29,6 +29,7 @@
               icon="el-icon-plus"
               native-type="submit"
               data-testid="submit-teammember"
+              @click="addTeamMember('teamMembersForm')"
             />
           </el-input>
         </el-form-item>

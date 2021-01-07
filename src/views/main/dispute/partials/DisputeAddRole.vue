@@ -64,7 +64,7 @@
               >
                 <el-select
                   v-model="newRole.searchOabState"
-                  placeholder=""
+                  autocomplete="off"
                   filterable
                 >
                   <el-option
@@ -226,7 +226,6 @@
               v-model="newRole.state"
               :default-first-option="true"
               autocomplete="off"
-              placeholder=""
               filterable
               @input="$forceUpdate()"
               @keydown.enter.native="addOab(newRole.personId, newRole.oabs)"

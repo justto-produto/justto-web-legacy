@@ -803,8 +803,8 @@ export default {
               }
             })
           } else {
-            this.checkCounterproposal('COUNTERPROPOSAL').then(() => {
-              this.sendCounterproposal().then().finally(this.closeCounterProposalModal)
+            this.checkCounterproposal('COUNTERPROPOSAL').then((updateUpperRange) => {
+              this.sendCounterproposal(updateUpperRange).then().finally(this.closeCounterProposalModal)
             })
           }
           break
@@ -947,20 +947,64 @@ export default {
     checkCounterproposal(actionType) {
       return new Promise((resolve, reject) => {
         this.$refs.counterOfferForm.validate(valid => {
+          console.log(this.$refs.counterOfferForm)
           if (valid) {
             if (this.checkUpperRangeCounterOffer) {
-              actionType = actionType === 'WIN' ? 'O valor inserido <b>irá mojorar</b> alçada máxima. Deseja continuar?' : 'Valor de contraproposta é maior que alçada máxima, deseja continuar?'
-              this.$confirm(actionType, 'Atenção!', {
-                confirmButtonText: 'Continuar',
-                cancelButtonText: 'Cancelar',
-                cancelButtonClass: 'is-plain',
-                dangerouslyUseHTMLString: true,
-                showClose: false
-              }).then(() => {
-                resolve()
-              }).catch(e => {
-                reject(e)
-              })
+              const winTxt = 'O valor inserido <b>irá mojorar</b> alçada máxima. Deseja continuar?'
+              if (actionType === 'WIN') {
+                this.$confirm(winTxt, 'Atenção!', {
+                  confirmButtonText: 'Continuar',
+                  cancelButtonText: 'Cancelar',
+                  cancelButtonClass: 'is-plain',
+                  dangerouslyUseHTMLString: true,
+                  showClose: false
+                }).then(resolve).catch(e => {
+                  reject(e)
+                })
+              } else {
+                const tag = this.$createElement
+                this.$confirm(tag('div', null, [
+                  tag('p', null, 'Valor da contraproposta é maior que o da alçada máxima!'),
+                  tag('br', null, ''),
+                  tag('p', null, [
+                    tag('span', { style: { color: '#FF4B54' } }, '*'),
+                    tag('small', null, [
+                      'Ao clicar em ',
+                      tag('strong', null, 'Majorar'),
+                      ', será feita a ',
+                      tag('strong', null, 'contraproposta'),
+                      ', a ',
+                      tag('strong', null, 'alçada máxima'),
+                      ' será majorada para o ',
+                      tag('strong', null, 'valor'),
+                      ' da contraproposta e a disputa será alterada para ',
+                      tag('strong', null, 'Proposta Aceita'),
+                      '.'
+                    ])
+                  ]),
+                  tag('br', null, ''),
+                  tag('p', null, [
+                    tag('span', { style: { color: '#FF4B54' } }, '*'),
+                    tag('small', null, [
+                      'Ao clicar em ',
+                      tag('strong', null, 'Não majorar'),
+                      ', somente será feita a contraproposta, sem alterações no status da disputa.'
+                    ])
+                  ])
+                ]), 'Majorar a alçada máxima?', {
+                  distinguishCancelAndClose: true,
+                  dangerouslyUseHTMLString: true,
+                  closeOnClickModal: false,
+                  closeOnPressEscape: false,
+                  showClose: false,
+                  confirmButtonText: 'Não majorar',
+                  cancelButtonText: 'Majorar'
+                }).then(() => {
+                  resolve(false)
+                }).catch(() => {
+                  resolve(true)
+                })
+              }
             } else {
               resolve()
             }
@@ -1060,7 +1104,7 @@ export default {
           cancelButtonClass: 'is-plain',
           showClose: false
         }).then(({ value }) => {
-          this.counterOfferForm.note = this.scapeHtml(value)
+          this.counterOfferForm.note = value ? this.scapeHtml(value) : ''
           resolve()
         }).catch(e => {
           reject(e)

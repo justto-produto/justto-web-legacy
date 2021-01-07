@@ -207,14 +207,14 @@
                       Você está enviando mensagem para o Portal de comunicação Justto.
                     </span>
                     <span v-else>
-                      Você está enviando um ${messageType}
+                      Você está enviando um {{ messageType }}
                     </span>
                   </span>
                   <jus-icon
-                    :is-active="true"
                     :icon="messageType"
                     class="dispute-view__send-to-icon"
                   />
+                  {{ messageType }}
                 </el-tooltip>
               </div>
             </div>
@@ -570,8 +570,13 @@ export default {
       this.fetchData()
       this.disputeOccurrencesKey += 1
     },
+    typingTab() {
+      const { id } = this.$route.params
+      this.getLastInteractions(id)
+    },
     y(y) {
       const height = this.$refs.sectionMessages.offsetHeight - this.y
+      this.setHeight(window.document.getElementById('app').clientHeight)
       this.sendMessageHeight = height >= 0 ? height : this.sendMessageHeight
     }
   },
@@ -596,6 +601,7 @@ export default {
       this.y = parseInt(localStorage.getItem('jusoffsetheight')) || this.$refs.sectionMessages.offsetHeight - 208
     }, 800)
     window.addEventListener('resize', this.updateWindowHeight)
+    this.setHeight(window.document.getElementById('app').clientHeight)
     this.typingTab = localStorage.getItem('jusoccurrencestab') || '1'
   },
   beforeDestroy() {
@@ -611,7 +617,8 @@ export default {
       'resetQuickReplyTemplate',
       'archiveQuickReplyTemplate',
       'getDisputeMetadata',
-      'sendNegotiator'
+      'sendNegotiator',
+      'setHeight'
     ]),
     setNegotiatorActive(params) {
       this.setMessageType('negotiation')

@@ -75,7 +75,7 @@
           />
           <i
             v-else
-            :class="strategy === '' ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
+            :class="!strategy.id ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
             class="el-input__icon"
           />
         </div>
@@ -87,8 +87,8 @@
         />
       </el-select>
       <div class="select-strategy__messages">
-        <div v-show="strategy !== ''">
-          <a @click.prevent="dialogVisible = true">
+        <div v-show="!!strategy.id">
+          <a @click.prevent="openDialogEngagement">
             Ver estratégia de engajamento das partes
           </a>
         </div>
@@ -112,7 +112,7 @@
             controls-position="right"
           />
           <span class="jus-import-feedback-card__sufix">
-            dia(s) corridos após o protocolo
+            {{ $tc('import.label.business-day', 2) }} {{ $tc('import.label.business-day', 1).toLowerCase() }}
           </span>
         </div>
       </div>
@@ -249,8 +249,8 @@
     </el-card>
 
     <jus-engagements-dialog
+      v-model="strategy"
       :dialog-visible.sync="dialogVisible"
-      :strategy-id="strategy.id"
       :is-manual="strategy.triggerType === 'MANUAL'"
     />
   </div>
@@ -286,7 +286,7 @@ export default {
       campaignTimeout: null,
       campaignNameDebounce: 0,
       campaignNameDuplicated: false,
-      strategy: '',
+      strategy: { communications: [] },
       strategyId: '',
       dialogVisible: false,
       deadline: null,
@@ -317,10 +317,14 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['isJusttoDev', 'errorFields']),
+    ...mapGetters([
+      'isJusttoDev',
+      'errorFields',
+      'strategyListImport'
+    ]),
 
     strategies() {
-      const activeSrategies = this.$store.getters.strategyList.filter(s => !s.archived)
+      const activeSrategies = this.strategyListImport.filter(s => !s.archived)
       if (this.isJusttoDev) {
         return activeSrategies
       } else {
@@ -386,6 +390,9 @@ export default {
       }
     },
     strategy(value) {
+      if ([null, undefined].includes(value.communications)) {
+        this.strategy.communications = []
+      }
       this.mappedCampaign.strategy = value.name
       this.mappedCampaign.strategyId = value.id
     },
@@ -432,6 +439,13 @@ export default {
   },
   methods: {
     ...mapActions(['clearErrorField']),
+
+    openDialogEngagement(_event) {
+      this.dialogVisible = false
+      this.$nextTick(() => {
+        this.dialogVisible = true
+      })
+    },
 
     showDuplicatedAlert(campaignName) {
       this.$alert('', {
