@@ -2033,11 +2033,10 @@ export default {
     showAssociateContacts() {
       this.checkTabByAssociatedContractValue(this.showAssociateContacts)
     },
-    dispute() {
+    dispute(newew, old) {
       const { id } = this.$route.params
       this.getDisputeMetadata(id).then(() => {
-        if (this.dispute && this.dispute.properties) {
-          console.log('Modal de Associar Contatos')
+        if (newew.properties && !old.properties) {
           switch (this.dispute.properties['CONTATOS ASSOCIADOS']) {
             case 'MAIS TARDE':
               this.showAssociateContacts = 'NAO'
