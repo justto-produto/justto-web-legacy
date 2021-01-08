@@ -2032,6 +2032,27 @@ export default {
     },
     showAssociateContacts() {
       this.checkTabByAssociatedContractValue(this.showAssociateContacts)
+    },
+    dispute() {
+      const { id } = this.$route.params
+      this.getDisputeMetadata(id).then(() => {
+        if (this.dispute && this.dispute.properties) {
+          console.log('Modal de Associar Contatos')
+          switch (this.dispute.properties['CONTATOS ASSOCIADOS']) {
+            case 'MAIS TARDE':
+              this.showAssociateContacts = 'NAO'
+              break
+            case 'NAO':
+              this.showAssociateContacts = 'NAO'
+              break
+            case 'SIM':
+              this.showAssociateContacts = 'SIM'
+              break
+            default:
+              break
+          }
+        }
+      })
     }
   },
   created() {
@@ -2063,25 +2084,6 @@ export default {
     ]),
 
     init() {
-      const { id } = this.$route.params
-      this.getDisputeMetadata(id).then(() => {
-        // if (this.dispute.properties['CONTATOS ASSOCIADOS'] !== 'SIM') {
-        //   this.showAssociateContacts = 'NAO'
-        // }
-        switch (this.dispute.properties['CONTATOS ASSOCIADOS']) {
-          case 'MAIS TARDE':
-            this.showAssociateContacts = 'NAO'
-            break
-          case 'NAO':
-            this.showAssociateContacts = 'NAO'
-            break
-          case 'SIM':
-            this.showAssociateContacts = 'SIM'
-            break
-          default:
-            break
-        }
-      })
       this.populateTimeline()
       this.checkTabByAssociatedContractValue()
     },
