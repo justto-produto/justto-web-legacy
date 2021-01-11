@@ -14,7 +14,7 @@
           <jus-avatar-user
             :name="member.person.name"
             :active="activePersonsIds.includes(member.person.id)"
-            size="sm"
+            size="xs"
             shape="circle"
             class="el-menu__avatar"
           />
@@ -58,10 +58,10 @@ export default {
   text-align: center;
   &__title {
     text-align: center;
-    margin: 80px 0 20px;
+    margin: 24px 0 20px;
 
     @media (max-height: 680px) {
-      margin: 40px 0 10px;
+      margin: 16px 0 10px;
     }
   }
   &__members {
