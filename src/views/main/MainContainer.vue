@@ -67,14 +67,11 @@
       <div
         v-show="workspaceMembersSorted.length && isAdminProfile"
         class="jus-team-menu__title"
-        :class="{ teamOpen: isTeamSectionOpen }"
         @click="toggleOpenTeamSection"
       >
-        TIME
-        <jus-icon
-          class="menu-title__icon"
-          :icon="isTeamSectionOpen ? 'arrow-down' : 'arrow-up'"
-        />
+        <span class="avatar-menu__title">
+          TIME
+        </span>
       </div>
       <vue-perfect-scrollbar v-if="isAdminProfile">
         <jus-team-menu />
@@ -104,7 +101,7 @@ export default {
     return {
       subscriptions: [],
       isCollapse: true,
-      isTeamSectionOpen: false
+      isTeamSectionOpen: true
     }
   },
   computed: {
@@ -176,7 +173,16 @@ export default {
 </script>
 
 <style lang="scss">
+.el-menu-item {
+  height: 32px !important;
+}
+
+.avatar-menu__title {
+  font-size: 12px;
+}
+
 .container-aside {
+  width: 32px;
   background-color: #fff;
   box-shadow: 0 4px 24px 0 rgba(37, 38, 94, 0.1);
   z-index: 2;
@@ -219,14 +225,6 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-
-  &.teamOpen {
-    margin-top: 0;
-  }
-
-  .menu-title__icon {
-    margin-left: 3px;
-  }
 }
 
 .aside__menu {
