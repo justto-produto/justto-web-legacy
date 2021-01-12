@@ -73,9 +73,7 @@
           TIME
         </span>
       </div>
-      <vue-perfect-scrollbar v-if="isAdminProfile">
-        <jus-team-menu />
-      </vue-perfect-scrollbar>
+      <jus-team-menu v-if="isAdminProfile" />
     </el-aside>
     <el-container direction="vertical">
       <jus-header-main />
@@ -94,8 +92,7 @@ export default {
   name: 'MainContainer',
   components: {
     JusHeaderMain: () => import('@/components/layouts/JusHeaderMain'),
-    JusTeamMenu: () => import('@/components/layouts/JusTeamMenu'),
-    VuePerfectScrollbar: () => import('vue-perfect-scrollbar')
+    JusTeamMenu: () => import('@/components/layouts/JusTeamMenu')
   },
   data() {
     return {
@@ -182,6 +179,7 @@ export default {
 }
 
 .container-aside {
+  overflow-y: hidden;
   width: 32px;
   background-color: #fff;
   box-shadow: 0 4px 24px 0 rgba(37, 38, 94, 0.1);

@@ -14,7 +14,7 @@
           <jus-avatar-user
             :name="member.person.name"
             :active="activePersonsIds.includes(member.person.id)"
-            size="xs"
+            size="sm"
             shape="circle"
             class="el-menu__avatar"
           />
@@ -56,6 +56,8 @@ export default {
 <style lang="scss">
 .jus-team-menu {
   text-align: center;
+  overflow-y: auto;
+
   &__title {
     text-align: center;
     margin: 24px 0 20px;

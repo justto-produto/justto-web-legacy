@@ -14,6 +14,8 @@ body, html, #app, section:not(.ps-container) {
   height: 100%;
   margin: 0;
   background-color: $--background-color-base;
+  scrollbar-color: lightgray white;
+  scrollbar-width: 6px;
 }
 h1 {
   font-size: 30px;
@@ -161,5 +163,24 @@ a {
   }
   50% {
     transform: scaleX(1)
+  }
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  border-radius: 1rem;
+}
+::-webkit-scrollbar-button {
+  display: none;
+}
+::-webkit-scrollbar-track-piece {
+  border-radius: 1rem;
+}
+::-webkit-scrollbar-thumb {
+  background-color: mix(white, lightgray, 50);
+  border-radius: 1rem;
+
+  &:hover {
+    background: lightgray;
   }
 }
