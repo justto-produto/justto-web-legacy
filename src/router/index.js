@@ -117,6 +117,7 @@ const router = new Router({
           path: 'negotiation/',
           component: () => import(/* webpackChunkName: "negotiationIndex" */ '@/views/main/negotiation/Negotiation'),
           meta: {
+            hideFullHeader: true,
             requiresAuth: true,
             trackPage: true,
             title: 'Negociação'
@@ -124,9 +125,10 @@ const router = new Router({
           children: [
             {
               name: 'ticket',
-              path: 'negotiation/:id',
+              path: ':id',
               component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/negotiation/partials/Ticket'),
               meta: {
+                hideFullHeader: true,
                 requiresAuth: true,
                 trackPage: true,
                 title: 'Negociação'
