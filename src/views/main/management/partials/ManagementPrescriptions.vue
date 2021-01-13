@@ -27,7 +27,8 @@
       width="400"
       popper-class="management-prescriptions__prescriptions-popover"
       class="management-prescriptions__popover-trigger"
-      trigger="click">
+      trigger="click"
+    >
       <el-button
         v-for="prescription in hiddenPrescriptions"
         v-show="prescription.tabs.includes(parseInt(activeTab, 10))"
@@ -50,7 +51,8 @@
       </el-button>
       <el-button
         slot="reference"
-        size="small">
+        size="small"
+      >
         <JusIcon
           class="management-prescriptions__popover-icon"
           icon="zap"
@@ -97,7 +99,7 @@ export default {
 
     mainPrescription() {
       return [
-        'BILLING_TRANSACTION', 
+        'BILLING_TRANSACTION',
         'DOCUMENT_WAITING_SIGNATURES',
         //  'ENGAGEMENT',
         'ENGAGEMENT_WARN',
@@ -124,7 +126,7 @@ export default {
         'DOCUMENT_SIGNED',
         'NO_PLAINTIFF_LAWYER',
         'OFFLINE_PERSON',
-        'NEWLY_IMPORTED',
+        'NEWLY_IMPORTED'
       ]
     },
 

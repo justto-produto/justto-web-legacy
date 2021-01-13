@@ -1,19 +1,13 @@
 import { axiosDispatch } from '@/utils/'
 
-const ticketsPath = '/disputes/v2'
+const ticketsApi = '/api/disputes/v2'
 
 const overviewActions = {
-  getEngagementTickets() {
+  getTickets(tab) {
     return axiosDispatch({
-      url: `${ticketsPath}/engagement`,
-      mutation: 'setEngagementTickets'
-    })
-  },
-
-  getCommunicationTickets() {
-    return axiosDispatch({
-      url: `${ticketsPath}/communication`,
-      mutation: 'setCommunicationTickes'
+      url: `${ticketsApi}/filter?status=RUNNING`,
+      mutation: 'setCommunicationTickets'
+      // mutation: tab ? 'setEngagementTickets' : 'setCommunicationsTickets'
     })
   }
 }
