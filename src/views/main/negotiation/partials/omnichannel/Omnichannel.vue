@@ -1,6 +1,7 @@
 <template>
-  <section>
-    <Occurrences />
+  <section class="omnichanel-negotiation">
+    Omnichanel
+    <!-- <Occurrences /> -->
   </section>
 </template>
 
@@ -8,11 +9,15 @@
 export default {
   name: 'Omnichannel',
   components: {
-    Occurrences: () => import('./Occurrences')
+    // Occurrences: () => import('./Occurrences')
   }
 }
 </script>
 
-<style lang="sass" scoped>
-
+<style lang="scss" scoped>
+.omnichanel-negotiation {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 </style>
