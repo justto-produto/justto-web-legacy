@@ -182,6 +182,8 @@ export default {
     justify-content: center;
     align-items: center;
     font-weight: 400;
+    font-size: 14px;
+    font-weight: 600;
   }
   &__notifications {
     min-width: 15px;
