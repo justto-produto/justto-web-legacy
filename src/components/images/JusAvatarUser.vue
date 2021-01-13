@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="purpleClass + ' ' + sizeClass + ' ' + shapeClass + ' ' + activeClass"
+    :class="`${purpleClass} ${sizeClass} ${shapeClass} ${activeClass}`"
     class="jus-avatar-user"
   >
     <img

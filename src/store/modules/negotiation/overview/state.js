@@ -1,18 +1,15 @@
-const classesPath = '@/modules/negotiations/overview'
-import DisputeOverview from `${classesPath}/DisputeOverviewInfoVm`
-import DisputeOverviewInfo from `${classesPath}/DisputeOverviewInfoVm`
-import DisputeOverviewParties from `${classesPath}/DisputeOverviewPartiesVm`
-import DisputeOverviewProperties from `${classesPath}/DisputeOverviewPropertiesVm`
-import DisputeOverviewAttachments from `${classesPath}/DisputeOverviewAttachmentsVm`
+// import TicketOverview from '@/models/negotiations/overview/TicketOverviewVm'
+// import TicketOverviewInfo from '@/models/negotiations/overview/TicketOverviewInfoVm'
+// import TicketOverviewParties from '@/models/negotiations/overview/TicketOverviewPartiesVm'
+// import TicketOverviewProperties from '@/models/negotiations/overview/TicketOverviewPropertiesVm'
+// import TicketOverviewAttachments from '@/models/negotiations/overview/TicketOverviewAttachmentsVm'
 
 const overviewState = {
-  state: {
-    disputeOverview: new DisputeOverview(),
-    disputeOverviewInfo: new DisputeOverviewInfo(),
-    disputeOverviewParties: new DisputeOverviewParties(),
-    disputeOverviewAttachments: new DisputeOverviewAttachments(),
-    disputeOverviewProperties: new DisputeOverviewProperties(),
-  }
+  disputeOverview: {},
+  disputeOverviewInfo: {},
+  disputeOverviewParties: {},
+  disputeOverviewProperties: {},
+  disputeOverviewAttachments: {}
 }
 
 export default overviewState

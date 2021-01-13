@@ -152,7 +152,7 @@ export default {
       config: {
         heightMax: 500
       },
-      editorRedy: false,
+      editorRedy: false
     }
   },
   computed: {

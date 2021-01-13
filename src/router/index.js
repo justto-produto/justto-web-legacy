@@ -113,6 +113,28 @@ const router = new Router({
           }
         },
         {
+          name: 'negotiation',
+          path: 'negotiation/',
+          component: () => import(/* webpackChunkName: "negotiationIndex" */ '@/views/main/negotiation/Negotiation'),
+          meta: {
+            requiresAuth: true,
+            trackPage: true,
+            title: 'Negociação'
+          },
+          children: [
+            {
+              name: 'ticket',
+              path: 'negotiation/:id',
+              component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/negotiation/partials/Ticket'),
+              meta: {
+                requiresAuth: true,
+                trackPage: true,
+                title: 'Negociação'
+              }
+            }
+          ]
+        },
+        {
           name: 'configuration',
           path: 'configuration',
           component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/configuration/Configuration'),

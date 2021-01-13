@@ -16,13 +16,7 @@
       class="body"
     >
       <div v-if="alerts">
-        {{ name | firstName }} possui <b>{{ Math.round(alerts.globalTotalValue) }}</b> disputas em nossa plataforma.
-        <span v-if="alerts.globalTotalValue === alerts.workspaceTotalValue">
-          Todas elas em sua equipe.
-        </span>
-        <span v-else>
-          <b>{{ Math.round(alerts.workspaceTotalValue) }}</b> delas somente em sua equipe.
-        </span>
+        {{ name | firstName }} possui <b>{{ Math.round(alerts.workspaceTotalValue) }}</b> disputas em sua equipe.
       </div>
     </div>
     <jus-icon

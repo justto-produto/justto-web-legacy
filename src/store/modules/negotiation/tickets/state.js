@@ -1,8 +1,7 @@
 const ticketsState = {
-  state: {
-    tickets: [],
-    ticketsMap: {}
-  }
+  tickets: {},
+  ticketsMap: {},
+  filtersQuery: {}
 }
 
 export default ticketsState

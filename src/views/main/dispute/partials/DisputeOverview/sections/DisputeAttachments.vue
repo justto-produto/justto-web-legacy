@@ -3,7 +3,6 @@
     v-loading="loadingAttachments"
     class="dispute-attachments"
   >
-
     <jus-drag-area class="dispute-attachments__drag-area">
       <div class="dispute-overview-view__attachment-buttons">
         <el-input

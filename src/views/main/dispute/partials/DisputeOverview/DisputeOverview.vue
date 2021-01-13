@@ -142,7 +142,8 @@
               <span class="title">Status:</span>
               <el-tooltip
                 :disabled="!statusTooltip()"
-                popper-class="info-line__status-tooltip">
+                popper-class="info-line__status-tooltip"
+              >
                 <span
                   slot="content"
                   v-html="statusTooltip()"
@@ -152,7 +153,8 @@
                   <span v-if="dispute.paused">(pausada)</span>
                   <span
                     v-if="statusTooltip()"
-                    class="el-icon-question" />
+                    class="el-icon-question"
+                  />
                 </span>
               </el-tooltip>
             </div>

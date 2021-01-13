@@ -1,13 +1,13 @@
-class Classification {
+class ClassificationVm {
   constructor({ name, details }) {
     this.name = name
-    this.details = details.map(detail => new Classification(detail))
+    this.details = details.map(detail => new ClassificationVm(detail))
   }
 }
 
 export class DisputeOverviewInfoVm {
-  constructor({ id, strategyId, contactPartyWhenInvalidLowyer, contactPartyWhenNoLowyer, businessHoursEngagement, alwaysContactParty, skipEnrichment, denySavingDeposit, ownerProposalRoleId, requestedValue, materialDamageValue, moralDamageValue, internalIdentification, provisionedValue, campaign, importDate, expirationDate, classification }) {
-    this.id = id
+  constructor({ disputeId, strategyId, contactPartyWhenInvalidLowyer, contactPartyWhenNoLowyer, businessHoursEngagement, alwaysContactParty, skipEnrichment, denySavingDeposit, ownerProposalRoleId, requestedValue, materialDamageValue, moralDamageValue, internalIdentification, provisionedValue, campaign, importDate, expirationDate, classification }) {
+    this.disputeId = disputeId
     this.strategyId = strategyId
     this.contactPartyWhenInvalidLowyer = contactPartyWhenInvalidLowyer
     this.contactPartyWhenNoLowyer = contactPartyWhenNoLowyer
@@ -24,6 +24,6 @@ export class DisputeOverviewInfoVm {
     this.campaign = campaign
     this.importDate = importDate
     this.expirationDate = expirationDate
-    this.classification = new Classification(classification)
+    this.classification = new ClassificationVm(classification)
   }
 }
