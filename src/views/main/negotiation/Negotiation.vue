@@ -23,7 +23,7 @@ export default {
 .negotiations-container {
   display: grid;
   grid-template-columns: 1fr 2fr;
-  grid-template-rows: 100%;
+  grid-template-rows: 100vh;
 }
 
 </style>
