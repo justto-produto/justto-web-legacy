@@ -120,7 +120,10 @@ export default {
 
   &.jus-avatar-user--xs {
     font-size: 8px;
+
     img, span {
+      font-weight: normal;
+      font-size: 10px;
       width: 1.75rem;
       height: 1.75rem;
     }
@@ -128,19 +131,26 @@ export default {
   &.jus-avatar-user--sm {
     width: 3rem;
     height: 3rem;
+
     img, span {
+      font-size: 14px;
+      font-weight: 600;
       width: 100%;
       height: 100%
     }
   }
   &.jus-avatar-user--md {
     img, span {
+      font-size: 14px;
+      font-weight: 600;
       width: 5.75rem;
       height: 5.75rem;
     }
   }
   &.jus-avatar-user--lg {
     img, span {
+      font-size: 14px;
+      font-weight: 600;
       width: 8.5rem;
       height: 8.5rem;
     }
@@ -182,8 +192,6 @@ export default {
     justify-content: center;
     align-items: center;
     font-weight: 400;
-    font-size: 14px;
-    font-weight: 600;
   }
   &__notifications {
     min-width: 15px;
