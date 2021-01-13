@@ -2036,9 +2036,10 @@ export default {
       this.checkTabByAssociatedContractValue(this.showAssociateContacts)
     },
     dispute(newew, old) {
-      const { id } = this.$route.params
-      this.getDisputeMetadata(id).then(() => {
-        if (newew.properties && !old.properties) {
+      console.log('OLD', old)
+      if ((!old || !old.id) && newew.properties) {
+        const { id } = this.$route.params
+        this.getDisputeMetadata(id).then(() => {
           switch (this.dispute.properties['CONTATOS ASSOCIADOS']) {
             case 'MAIS TARDE':
               this.showAssociateContacts = 'NAO'
@@ -2052,8 +2053,8 @@ export default {
             default:
               break
           }
-        }
-      })
+        })
+      }
     }
   },
   created() {
