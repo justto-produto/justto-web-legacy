@@ -16,6 +16,11 @@
     >
       {{ notifications }}
     </span>
+    <div
+      v-if="status"
+      class="circle"
+      :class="`${status}`"
+    />
   </div>
 </template>
 
@@ -42,6 +47,10 @@ export default {
       default: 'square'
     },
     name: {
+      type: String,
+      default: ''
+    },
+    status: {
       type: String,
       default: ''
     },
@@ -84,6 +93,26 @@ export default {
 </script>
 
 <style lang="scss">
+
+.circle {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 10px;
+  height: 10px;
+  border-radius: 1rem;
+}
+
+.ONLINE {
+  border: solid white 1.5px;
+  background-color: #5fc84b;
+}
+
+.OFFLINE {
+  border: solid white 1.5px;
+  background-color: #ec595a;
+}
+
 .jus-avatar-user {
   position: relative;
   display: inline-flex;
