@@ -1,5 +1,5 @@
 <template>
-  <section class="omnichannel-negotiation">
+  <section class="omnichannel-container">
     OMNICHANNEL VAI SER AQUI
     <!-- <Occurrences /> -->
   </section>
@@ -15,7 +15,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.omnichannel-negotiation {
+.omnichannel-container {
   display: flex;
   justify-content: center;
   align-items: center;

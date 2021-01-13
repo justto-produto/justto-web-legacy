@@ -1,5 +1,10 @@
 <template>
-  <aside />
+  <section
+    id="overviewOmnichanelNegotiatorContainer"
+    class="overview-container"
+  >
+    OVERVIEW VAI SER AQUI
+  </section>
 </template>
 
 <script>
@@ -8,6 +13,10 @@ export default {
 }
 </script>
 
-<style lang="sass" scoped>
-
+<style lang="scss" scoped>
+.overview-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 </style>
