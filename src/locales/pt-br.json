@@ -333,5 +333,18 @@
         "INACTIVE": "Inativo"
       }
     }
+  },
+  "negotiation": {
+    "ticket": {
+      "omnichannel": {
+        "editor": {
+          "tab": {
+            "message": "Mensagem | Mensagens",
+            "note": "Nota | Notas",
+            "occurrence": "Ocorrência | Ocorrências"
+          }
+        }
+      }
+    }
   }
 }
