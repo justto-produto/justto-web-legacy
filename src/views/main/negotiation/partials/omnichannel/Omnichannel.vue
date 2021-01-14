@@ -16,6 +16,7 @@ export default {
 
 <style lang="scss" scoped>
 .omnichannel-container {
+  background-color: transparent;
   display: flex;
   justify-content: center;
   align-items: center;

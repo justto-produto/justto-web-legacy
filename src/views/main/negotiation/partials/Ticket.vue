@@ -29,14 +29,22 @@ $header-height: 40px;
 $omnichannel-height: calc(100vh - 40px);
 
 .ticket-container {
+  background-color: white;
   display: grid;
   grid-template-columns: 2fr 1fr;
   grid-template-rows: 100vh;
 
   .ticket-omnichannel {
+    background-color: transparent;
+    margin-top: 6px;
+    border: solid #f7f7f7 2px;
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: $header-height $omnichannel-height;
+  }
+
+  .ticket-overview {
+    background-color: transparent;
   }
 }
 </style>
