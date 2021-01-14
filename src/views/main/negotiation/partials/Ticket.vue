@@ -37,7 +37,8 @@ $omnichannel-height: calc(100vh - 40px);
   .ticket-omnichannel {
     background-color: transparent;
     margin-top: 6px;
-    border: solid #f7f7f7 2px;
+    border: solid whitesmoke 2px;
+    border-radius: 6px;
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: $header-height $omnichannel-height;
