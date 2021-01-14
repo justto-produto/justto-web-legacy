@@ -25,14 +25,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$header-height: 40px;
-$omnichannel-height: calc(100vh - 40px);
-
 .ticket-container {
   background-color: white;
   display: grid;
   grid-template-columns: 2fr 1fr;
-  grid-template-rows: 100vh;
+  grid-template-rows: 99vh;
 
   .ticket-omnichannel {
     background-color: transparent;
@@ -41,7 +38,7 @@ $omnichannel-height: calc(100vh - 40px);
     border-radius: 6px;
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: $header-height $omnichannel-height;
+    grid-template-rows: 40px calc(100% - 40px - 6px - 2px);
   }
 
   .ticket-overview {
