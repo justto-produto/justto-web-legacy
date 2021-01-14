@@ -7,6 +7,15 @@ const omnichannelMutations = {
     if (Object.values(EDITOR_TABS).includes(tab)) {
       Vue.set(state, 'activeTab', tab)
     }
+  },
+  setEditorReady: (state, isReady) => {
+    Vue.set(state.editor, 'ready', isReady)
+  },
+  setEditorText: (state, text) => {
+    Vue.set(state.editor, 'text', text)
+  },
+  setMessageType: (state, type) => {
+    Vue.set(state.editor, 'messageType', type)
   }
 }
 
