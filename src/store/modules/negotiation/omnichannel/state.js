@@ -21,11 +21,12 @@ const omnichannelMutations = {
         { name: 'others', groups: ['others'] },
         { name: 'about', groups: ['about'] }
       ],
-      removeButtons: 'Source,Save,NewPage,ExportPdf,Preview,Print,Templates,Cut,Copy,Paste,PasteFromWord,Find,Replace,SelectAll,Scayt,HiddenField,Button,Textarea,TextField,CreateDiv,Language,BidiRtl,BidiLtr,Anchor,Flash,Form,Smiley,SpecialChar,PageBreak,Iframe,BGColor,Maximize,About,ShowBlocks,HorizontalRule,TextColor,Indent,Outdent,JustifyLeft,JustifyCenter,JustifyRight,JustifyBlock,Styles,Format,Font,FontSize,Unlink,Link',
+      removeButtons: 'Source,Save,NewPage,ExportPdf,Preview,Print,Templates,Cut,Copy,Paste,PasteFromWord,Find,Replace,SelectAll,Scayt,HiddenField,Button,Textarea,TextField,CreateDiv,Language,BidiRtl,BidiLtr,Anchor,Flash,Form,Smiley,SpecialChar,PageBreak,Iframe,BGColor,Maximize,About,ShowBlocks,HorizontalRule,TextColor,Indent,Outdent,JustifyLeft,JustifyCenter,JustifyRight,JustifyBlock,Styles,Format,Font,FontSize,Unlink,Link,Subscript,Superscript,Strike,Copy,Paste,PasteText',
       removePlugins: 'elementspath,resize'
     },
     ready: false,
-    text: 'Texto do editor',
+    messageText: 'Texto do editor',
+    noteText: 'Editor de Notas',
     messageType: 'email'
   }
 }
