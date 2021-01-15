@@ -16,9 +16,10 @@
     />
     <el-input
       v-else
-      :value="editorText"
+      :value="editorTextScaped"
       type="textarea"
-      :rows="4"
+      resize="none"
+      :autosize="{ minRows: 5 }"
       @input="setEditorText"
     />
     <span class="messages-container__send-message-button">
@@ -26,7 +27,7 @@
         type="primary"
         size="mini"
       >
-        Enviar Mensagem
+        Enviar mensagem
       </el-button>
     </span>
   </section>
@@ -45,10 +46,11 @@ export default {
   },
   computed: {
     ...mapGetters({
-      editorConfig: 'getEditorConfig',
+      editorTextScaped: 'getEditorTextScaped',
+      messageType: 'getEditorMessageType',
       getEditorReady: 'getEditorReady',
-      editorText: 'getEditorText',
-      messageType: 'getEditorMessageType'
+      editorConfig: 'getEditorConfig',
+      editorText: 'getEditorText'
     }),
     editorReady: {
       get() {
@@ -88,20 +90,26 @@ export default {
 .messages-container {
   padding: 6px;
 
-  .cke_top {
+  .cke_top, .cke_contents, .cke_reset, .cke_inner {
     border: none;
+    background-color: transparent !important;
   }
-  .cke.cke_chrome {
+
+  .cke.cke_chrome, .el-textarea__inner {
     border: solid 2px whitesmoke;
     margin: 0px;
-    border-radius: 6px;
+    border-radius: 12px;
   }
 }
 </style>
 
 <style lang="scss" scoped>
 .messages-container {
-  background-color: transparent;
+  background-color: transparent !important;
+
+  .messages-container__editor {
+    background-color: transparent !important;
+  }
 
   .messages-container__send-message-button {
     margin-top: 6px;
