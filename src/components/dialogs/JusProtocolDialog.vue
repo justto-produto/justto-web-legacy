@@ -1088,8 +1088,7 @@ export default {
       margin-top: 12px;
     }
     p {
-      margin-top: -14px;
-      margin-bottom: 32px;
+      margin-top: 8px 0px;
     }
 
     .jus-protocol-dialog__send-title {
