@@ -8,25 +8,26 @@ const omnichannelMutations = {
       height: '12vh',
       toolbarGroups: [
         { name: 'basicstyles', groups: ['basicstyles', 'cleanup'] },
-        { name: 'clipboard', groups: ['clipboard', 'undo'] },
-        { name: 'styles', groups: ['styles'] },
-        { name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align', 'bidi', 'paragraph'] },
-        { name: 'forms', groups: ['forms'] },
-        { name: 'insert', groups: ['insert'] },
-        { name: 'links', groups: ['links'] },
-        { name: 'document', groups: ['mode', 'document', 'doctools'] },
-        { name: 'editing', groups: ['find', 'selection', 'spellchecker', 'editing'] },
         { name: 'colors', groups: ['colors'] },
+        { name: 'paragraph', groups: ['align', 'list', 'indent', 'blocks', 'bidi', 'paragraph'] },
+        { name: 'document', groups: ['doctools', 'mode', 'document'] },
+        { name: 'clipboard', groups: ['undo', 'clipboard'] },
+        { name: 'editing', groups: ['find', 'selection', 'spellchecker', 'editing'] },
+        { name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align'] },
+        { name: 'forms', groups: ['forms'] },
+        { name: 'links', groups: ['links'] },
+        { name: 'insert', groups: ['insert'] },
+        { name: 'styles', groups: ['styles'] },
         { name: 'tools', groups: ['tools'] },
         { name: 'others', groups: ['others'] },
         { name: 'about', groups: ['about'] }
       ],
-      removeButtons: 'Source,Save,NewPage,ExportPdf,Preview,Print,Templates,Cut,Copy,Paste,PasteFromWord,Find,Replace,SelectAll,Scayt,HiddenField,Button,Textarea,TextField,CreateDiv,Language,BidiRtl,BidiLtr,Anchor,Flash,Form,Smiley,SpecialChar,PageBreak,Iframe,BGColor,Maximize,About,ShowBlocks,HorizontalRule,TextColor,Indent,Outdent,JustifyLeft,JustifyCenter,JustifyRight,JustifyBlock,Styles,Format,Font,FontSize,Unlink,Link,Subscript,Superscript,Strike,Copy,Paste,PasteText',
+      removeButtons: 'Source,Save,NewPage,ExportPdf,Preview,Print,PasteFromWord,PasteText,Paste,Copy,Cut,Find,Replace,SelectAll,Scayt,Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,HiddenField,BGColor,Maximize,About,Styles,ShowBlocks,Format,Font,FontSize,Iframe,PageBreak,SpecialChar,Smiley,HorizontalRule,Table,Flash,Image,Anchor,Unlink,Link,BidiLtr,BidiRtl,Language,CreateDiv,Blockquote,Outdent,NumberedList,BulletedList,CopyFormatting,Strike,Subscript,Superscript,Undo,Redo,Templates,Indent,Undo,Redo',
       removePlugins: 'elementspath,resize'
     },
     ready: false,
-    messageText: 'Texto do editor',
-    noteText: 'Editor de Notas',
+    messageText: '',
+    noteText: '',
     messageType: 'email'
   }
 }
