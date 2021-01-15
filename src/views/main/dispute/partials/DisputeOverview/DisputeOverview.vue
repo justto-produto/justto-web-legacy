@@ -278,7 +278,7 @@
               <span class="title">Configurações:</span>
               <span class="configurations">
                 Enriquecer automaticamente na importação?
-                <div><i :class="dispute.campaign.skipEnrichment ? 'el-icon-close' : 'el-icon-check'" /> {{ dispute.campaign.skipEnrichment ? 'Não' : 'Sim' }}</div>
+                <div><i :class="dispute.campaign && dispute.campaign.skipEnrichment ? 'el-icon-close' : 'el-icon-check'" /> {{ dispute.campaign.skipEnrichment ? 'Não' : 'Sim' }}</div>
                 Somente depósito em conta-corrente?
                 <div><i :class="dispute.campaign.denySavingDeposit ? 'el-icon-check' : 'el-icon-close'" /> {{ dispute.campaign.denySavingDeposit ? 'Sim' : 'Não ' }}</div>
                 Mensagens somente em horário comercial?
