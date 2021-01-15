@@ -1,5 +1,6 @@
 <template>
   <section id="negotiation-empty-ticket">
+    <jus-icon icon="hand-click" />
     <span>
       Selecione ao lado um caso
     </span>
