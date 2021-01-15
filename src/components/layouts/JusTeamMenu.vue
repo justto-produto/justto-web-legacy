@@ -54,12 +54,14 @@ export default {
 <style lang="scss">
 .jus-team-menu {
   text-align: center;
+  overflow-y: auto;
+
   &__title {
     text-align: center;
     margin: 32px 0 12px;
 
     @media (max-height: 680px) {
-      margin: 40px 0 10px;
+      margin: 16px 0 10px;
     }
   }
   &__members {
