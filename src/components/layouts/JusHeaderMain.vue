@@ -1,6 +1,9 @@
 <template>
   <div>
-    <el-header class="jus-header-main">
+    <el-header
+      v-if="!$route.meta.hideFullHeader"
+      class="jus-header-main"
+    >
       <div class="jus-header-main__search">
         <el-autocomplete
           v-model="dispute"

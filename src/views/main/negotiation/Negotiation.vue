@@ -24,7 +24,7 @@ export default {
 
 .negotiations-container {
   display: grid;
-  grid-template-columns: 1fr 2fr;
+  grid-template-columns: 400px 2fr;
   grid-template-rows: 100vh;
   background-color: $--color-white;
   overflow-x: hidden;
