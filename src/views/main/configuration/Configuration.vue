@@ -156,7 +156,8 @@
 
                 <el-form-item
                   v-if="workspacePreNegotiation.preNegotiation"
-                  label="Palavras a serem detectadas para classificar como pré negociação">
+                  label="Palavras a serem detectadas para classificar como pré negociação"
+                >
                   <el-select
                     v-model="workspacePreNegotiation.keyWords"
                     multiple
@@ -168,7 +169,8 @@
 
                 <el-form-item
                   v-if="workspacePreNegotiation.preNegotiation"
-                  label="Limite de valor do processo para classificar como pré negociação">
+                  label="Limite de valor do processo para classificar como pré negociação"
+                >
                   <money
                     v-model="workspacePreNegotiation.limitValue"
                     class="el-input__inner"

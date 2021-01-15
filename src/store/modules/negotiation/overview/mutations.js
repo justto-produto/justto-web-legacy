@@ -1,16 +1,15 @@
-const classesPath = '@/modules/negotiations/overview'
-import DisputeOverview from `${classesPath}/DisputeOverviewInfoVm`
-import DisputeOverviewInfo from `${classesPath}/DisputeOverviewInfoVm`
-import DisputeOverviewParties from `${classesPath}/DisputeOverviewPartiesVm`
-import DisputeOverviewProperties from `${classesPath}/DisputeOverviewPropertiesVm`
-import DisputeOverviewAttachments from `${classesPath}/DisputeOverviewAttachmentsVm`
+// import TicketOverview from '@/models/negotiations/overview/TicketOverviewVm'
+// import TicketOverviewInfo from '@/models/negotiations/overview/TicketOverviewInfoVm'
+// import TicketOverviewParties from '@/models/negotiations/overview/TicketOverviewPartiesVm'
+// import TicketOverviewProperties from '@/models/negotiations/overview/TicketOverviewPropertiesVm'
+// import TicketOverviewAttachments from '@/models/negotiations/overview/TicketOverviewAttachmentsVm'
 
 const overviewMutations = {
-  setDisputeOverview: ({ disputeOverview }, params) => (disputeOverview = new DisputeOverview(params)),
-  setDisputeOverviewInfo: ({ disputeOverviewInfo }, params) => (disputeOverviewInfo = new DisputeOverviewInfo(params)),
-  setDisputeOverviewParties: ({ disputeOverviewParties }, params) => (disputeOverviewParties = new DisputeOverviewParties(params)),
-  setDisputeOverviewProperties: ({ disputeOverviewParties }, params) => (disputeOverviewParties = new DisputeOverviewProperties(params)),
-  setDisputeOverviewAttachments: ({ disputeOverviewAttachments }, params) => (disputeOverviewAttachments = new DisputeOverviewAttachments(params))
+  setDisputeOverview: ({ disputeOverview }, params) => (disputeOverview = params),
+  setDisputeOverviewInfo: ({ disputeOverviewInfo }, params) => (disputeOverviewInfo = params),
+  setDisputeOverviewParties: ({ disputeOverviewParties }, params) => (disputeOverviewParties = params),
+  setDisputeOverviewProperties: ({ disputeOverviewParties }, params) => (disputeOverviewParties = params),
+  setDisputeOverviewAttachments: ({ disputeOverviewAttachments }, params) => (disputeOverviewAttachments = params)
 }
 
 export default overviewMutations

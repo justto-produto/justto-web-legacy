@@ -1,7 +1,8 @@
 const ticketsState = {
-  state: {
-    tickets: [],
-    ticketsMap: {}
+  tickets: {},
+  ticketsMap: {},
+  ticketsQuery: {
+    status: ['RUNNING'],
   }
 }
 
