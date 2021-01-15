@@ -1,20 +1,17 @@
-import { axiosDispatch } from '@/utils/'
+import { axiosDispatch, buildQuery } from '@/utils/'
 
-const ticketsPath = '/disputes/v2'
+const ticketsApi = '/api/disputes/v2'
 
 const overviewActions = {
-  getEngagementTickets() {
+  getTickets({ state }) {
     return axiosDispatch({
-      url: `${ticketsPath}/engagement`,
-      mutation: 'setEngagementTickets'
+      url: `${ticketsApi}/filter${buildQuery(state.ticketsQuery)}`,
+      mutation: 'setCommunicationTickets'
+      // mutation: tab ? 'setEngagementTickets' : 'setCommunicationsTickets'
     })
   },
-
-  getCommunicationTickets() {
-    return axiosDispatch({
-      url: `${ticketsPath}/communication`,
-      mutation: 'setCommunicationTickes'
-    })
+  setTicketsQuery({ commit }, params) {
+    commit('setTicketsQuery', params)
   }
 }
 

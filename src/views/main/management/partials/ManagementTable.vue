@@ -214,8 +214,12 @@
           <el-tooltip
             v-if="scope.row.properties && scope.row.properties['PALAVRAS PRE NEGOCIACAO'] && scope.row.properties['MOTIVO PRE NEGOCIACAO']"
             :open-delay="600"
-            popper-class="management-table__prenegotiation-tooltip">
-            <span slot="content" v-html="scope.row.properties['MOTIVO PRE NEGOCIACAO']" />
+            popper-class="management-table__prenegotiation-tooltip"
+          >
+            <span
+              slot="content"
+              v-html="scope.row.properties['MOTIVO PRE NEGOCIACAO']"
+            />
             <span>
               {{ scope.row.properties['PALAVRAS PRE NEGOCIACAO'].split(',').join(', ').replace(/[\[\]]/gi, '') }}
             </span>

@@ -1,10 +1,10 @@
-const classesPath = '@/modules/negotiations/tickets'
-import TicketCommunicationItem from `${classesPath}/TicketCommunicationItem`
-import TicketEngagementItem from `${classesPath}/TicketEngagementItem`
+// import TicketCommunicationItem from '@/models/negotiations/tickets/TicketCommunicationItemVm'
+// import TicketEngagementItem from '@/models/negotiations/tickets/TicketEngagementItemVm'
 
 const ticketsMutations = {
-  setCommunicationTickets: ({ tickets }, params) => (tickets = new TicketCommunicationItem(params)),
-  setEngagementTickets: ({ tickets }, params) => (tickets = new TicketEngagementItem(params))
+  setCommunicationTickets: (state, params) => (state.tickets = params),
+  setEngagementTickets: ({ tickets }, params) => (tickets = params),
+  setTicketsQuery: ({ ticketsQuery }, { key, value }) => (ticketsQuery[key] = value)
 }
 
 export default ticketsMutations

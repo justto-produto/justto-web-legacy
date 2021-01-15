@@ -1,22 +1,32 @@
+.el-menu--main-menu {
+  margin-top: 16px;
+
+  @media (max-height: 640px) {
+    margin-top: 40px;
+  }
+}
+
 .el-menu--team-menu {
   height: 100%;
 }
 
 .el-menu--main-menu, .el-menu--team-menu {
   .el-menu-item {
-    height: 64px;
-    line-height: 32px;
-    // width: 64px;
-    margin: 4px 0px;
-
+    height: 58px;
+    line-height: 58px;
+    width: 58px;
+    padding: 0 18px !important;
+    .el-tooltip {
+      padding: 0 18px !important;
+    }
     &.is-active {
       border-left: 3px solid #7c4cf3 !important;
-      padding-left: 17px !important;
+      padding-left: 15px !important;
       color: #323c47 !important;
       font-weight: 500 !important;
       background-color: #f6f6f6 !important;
       .el-tooltip {
-        padding: 0 17px !important;
+        padding: 0 15px !important;
       }
     }
   }
@@ -33,6 +43,10 @@
       }
     }
   }
+}
+
+.el-menu--collapse {
+  width: 58px;
 }
 
 .el-menu{

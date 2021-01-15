@@ -142,7 +142,8 @@
               <span class="title">Status:</span>
               <el-tooltip
                 :disabled="!statusTooltip()"
-                popper-class="info-line__status-tooltip">
+                popper-class="info-line__status-tooltip"
+              >
                 <span
                   slot="content"
                   v-html="statusTooltip()"
@@ -152,7 +153,8 @@
                   <span v-if="dispute.paused">(pausada)</span>
                   <span
                     v-if="statusTooltip()"
-                    class="el-icon-question" />
+                    class="el-icon-question"
+                  />
                 </span>
               </el-tooltip>
             </div>
@@ -276,11 +278,11 @@
               <span class="title">Configurações:</span>
               <span class="configurations">
                 Enriquecer automaticamente na importação?
-                <div><i :class="dispute.skipEnrichment ? 'el-icon-close' : 'el-icon-check'" /> {{ dispute.skipEnrichment ? 'Não' : 'Sim' }}</div>
+                <div><i :class="dispute.campaign.skipEnrichment ? 'el-icon-close' : 'el-icon-check'" /> {{ dispute.campaign.skipEnrichment ? 'Não' : 'Sim' }}</div>
                 Somente depósito em conta-corrente?
-                <div><i :class="dispute.denySavingDeposit ? 'el-icon-check' : 'el-icon-close'" /> {{ dispute.denySavingDeposit ? 'Sim' : 'Não ' }}</div>
+                <div><i :class="dispute.campaign.denySavingDeposit ? 'el-icon-check' : 'el-icon-close'" /> {{ dispute.campaign.denySavingDeposit ? 'Sim' : 'Não ' }}</div>
                 Mensagens somente em horário comercial?
-                <div><i :class="dispute.businessHoursEngagement ? 'el-icon-check' : 'el-icon-close'" /> {{ dispute.businessHoursEngagement ? 'Sim' : 'Não' }}</div>
+                <div><i :class="dispute.campaign.businessHoursEngagement ? 'el-icon-check' : 'el-icon-close'" /> {{ dispute.campaign.businessHoursEngagement ? 'Sim' : 'Não' }}</div>
                 Contactar autor?
                 <div>
                   <i :class="(dispute.contactPartyWhenNoLowyer || dispute.contactPartyWhenInvalidLowyer) ? 'el-icon-check' : 'el-icon-close'" />
@@ -2034,9 +2036,10 @@ export default {
       this.checkTabByAssociatedContractValue(this.showAssociateContacts)
     },
     dispute(newew, old) {
-      const { id } = this.$route.params
-      this.getDisputeMetadata(id).then(() => {
-        if (newew.properties && !old.properties) {
+      console.log('OLD', old)
+      if ((!old || !old.id) && newew.properties) {
+        const { id } = this.$route.params
+        this.getDisputeMetadata(id).then(() => {
           switch (this.dispute.properties['CONTATOS ASSOCIADOS']) {
             case 'MAIS TARDE':
               this.showAssociateContacts = 'NAO'
@@ -2050,8 +2053,8 @@ export default {
             default:
               break
           }
-        }
-      })
+        })
+      }
     }
   },
   created() {

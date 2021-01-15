@@ -4,35 +4,35 @@ const overviewApi = '/disputes/v2'
 const officeApi = '/office'
 
 const overviewActions = {
-  getDisputeOverview() {
+  getDisputeOverview(disputeId) {
     return axiosDispatch({
       url: `${overviewApi}/${disputeId}`,
       mutation: 'setDisputeOverview'
     })
   },
 
-  getDisputeOverviewInfo() {
+  getDisputeOverviewInfo(disputeId) {
     return axiosDispatch({
       url: `${overviewApi}/${disputeId}/info`,
       mutation: 'setDisputeOverviewInfo'
     })
   },
 
-  getDisputeOverviewParties() {
+  getDisputeOverviewParties(disputeId) {
     return axiosDispatch({
       url: `${overviewApi}/${disputeId}/parties`,
       mutation: 'setDisputeOverviewParties'
     })
   },
 
-  getDisputeOverviewProperties() {
+  getDisputeOverviewProperties(disputeId) {
     return axiosDispatch({
       url: `${overviewApi}/${disputeId}/properties`,
       mutation: 'setDisputeOverviewProperties'
     })
   },
 
-  getDisputeOverviewAttachments() {
+  getDisputeOverviewAttachments(disputeId) {
     return axiosDispatch({
       url: `${officeApi}/disputes/${disputeId}/attachments`,
       mutation: 'setDisputeOverviewAttachments'

@@ -159,7 +159,6 @@
         >
           <jus-avatar-user
             :name="item.person.name"
-            shape="circle"
             size="xs"
             style="vertical-align: middle"
           />

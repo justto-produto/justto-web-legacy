@@ -14,8 +14,6 @@
           <jus-avatar-user
             :name="member.person.name"
             :active="activePersonsIds.includes(member.person.id)"
-            size="sm"
-            shape="circle"
             class="el-menu__avatar"
           />
         </el-tooltip>
@@ -60,7 +58,7 @@ export default {
 
   &__title {
     text-align: center;
-    margin: 24px 0 20px;
+    margin: 32px 0 12px;
 
     @media (max-height: 680px) {
       margin: 16px 0 10px;
