@@ -17,6 +17,11 @@
     <span v-else>
       {{ nameInitials }}
     </span>
+    <div
+      v-if="status"
+      class="circle"
+      :class="`${status}`"
+    />
   </div>
 </template>
 
@@ -71,6 +76,25 @@ export default {
 <style lang="scss">
 @import '@/styles/colors.scss';
 
+.circle {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 10px;
+  height: 10px;
+  border-radius: 1rem;
+}
+
+.ONLINE {
+  border: solid white 1.5px;
+  background-color: #5fc84b;
+}
+
+.OFFLINE {
+  border: solid white 1.5px;
+  background-color: #ec595a;
+}
+
 .jus-avatar-user {
   position: relative;
   display: inline-flex;
@@ -108,7 +132,10 @@ export default {
 
   &.jus-avatar-user--xs {
     font-size: 8px;
+
     img, span {
+      font-weight: normal;
+      font-size: 10px;
       width: 1.75rem;
       height: 1.75rem;
     }
@@ -116,7 +143,10 @@ export default {
   &.jus-avatar-user--sm {
     width: 3rem;
     height: 3rem;
+
     img, span {
+      font-size: 14px;
+      font-weight: 600;
       width: 100%;
       height: 100%
     }
@@ -125,8 +155,32 @@ export default {
     width: 3.5rem;
     height: 3.5rem;
     img, span {
+      font-size: 14px;
+      font-weight: 600;
+      width: 5.75rem;
+      height: 5.75rem;
+    }
+  }
+  &.jus-avatar-user--lg {
+    img, span {
+      font-size: 14px;
+      font-weight: 600;
+      width: 8.5rem;
+      height: 8.5rem;
+    }
+  }
+  &.jus-avatar-user--square {
+    border-radius: 4px;
+    img, span {
+      border-radius: 4px;
+    }
+  }
+  &.jus-avatar-user--circle {
+    border-radius: 50%;
+    img, span {
+      border-radius: 50%;
       width: 100%;
-      height: 100%
+      height: 100%;
     }
   }
   &.jus-avatar-user--mini {

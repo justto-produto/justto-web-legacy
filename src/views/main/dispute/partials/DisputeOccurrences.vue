@@ -47,6 +47,9 @@
                 <jus-avatar-user
                   :name="occurrence.sender"
                   :src="buildAvatar(occurrence)"
+                  :purple="occurrence.interaction && occurrence.interaction.direction === 'INBOUND'"
+                  shape="circle"
+                  size="sm"
                 />
               </el-tooltip>
             </div>
@@ -220,6 +223,10 @@
                 <jus-avatar-user
                   :name="buildName(occurrence)"
                   :src="buildAvatar(occurrence)"
+                  :purple="occurrence.interaction && occurrence.interaction.direction === 'INBOUND'"
+                  :status="''"
+                  shape="circle"
+                  size="sm"
                 />
               </el-tooltip>
               <el-tooltip v-if="isJusttineMessage(occurrence)">
@@ -422,6 +429,9 @@
                 <jus-avatar-user
                   :name="buildName(mergedOccurency)"
                   :src="buildAvatar(mergedOccurency)"
+                  :purple="occurrence.interaction && occurrence.interaction.direction === 'INBOUND'"
+                  shape="circle"
+                  size="sm"
                 />
               </el-tooltip>
             </div>
@@ -662,6 +672,17 @@ export default {
       'activeOccurrency',
       'disputeLastInteractions'
     ]),
+
+    onlineEmails() {
+      let emails = []
+      this.dispute.disputeRoles.map(role => {
+        console.log(Object.keys(this.onlineDocuments), role.documentNumber)
+        if (Object.keys(this.onlineDocuments).includes(role.documentNumber)) {
+          emails = [...emails, ...role.emails.filter(email => !!email.isMain).map(email => email.address)]
+        }
+      })
+      return emails
+    },
 
     datedOccurrences() {
       // APENAS ABA COMUNICAÇÃO
