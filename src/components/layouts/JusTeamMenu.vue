@@ -14,8 +14,6 @@
           <jus-avatar-user
             :name="member.person.name"
             :active="activePersonsIds.includes(member.person.id)"
-            size="sm"
-            shape="circle"
             class="el-menu__avatar"
           />
         </el-tooltip>

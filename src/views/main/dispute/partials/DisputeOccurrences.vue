@@ -47,8 +47,6 @@
                 <jus-avatar-user
                   :name="occurrence.sender"
                   :src="buildAvatar(occurrence)"
-                  shape="circle"
-                  size="sm"
                 />
               </el-tooltip>
             </div>
@@ -222,8 +220,6 @@
                 <jus-avatar-user
                   :name="buildName(occurrence)"
                   :src="buildAvatar(occurrence)"
-                  shape="circle"
-                  size="sm"
                 />
               </el-tooltip>
               <el-tooltip v-if="isJusttineMessage(occurrence)">
@@ -426,8 +422,6 @@
                 <jus-avatar-user
                   :name="buildName(mergedOccurency)"
                   :src="buildAvatar(mergedOccurency)"
-                  shape="circle"
-                  size="sm"
                 />
               </el-tooltip>
             </div>

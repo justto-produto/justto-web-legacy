@@ -124,7 +124,7 @@ const router = new Router({
           children: [
             {
               name: 'ticket',
-              path: 'negotiation/:id',
+              path: ':id',
               component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/negotiation/partials/Ticket'),
               meta: {
                 requiresAuth: true,

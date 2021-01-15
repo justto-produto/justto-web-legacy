@@ -1,11 +1,13 @@
 <template>
-  <header>
+  <header class="tickets-header-container">
     <el-autocomplete
       v-model="searchTerm"
       :min="3"
       :trigger-on-focus="false"
       :fetch-suggestions="search"
       :debounce="800"
+      size="small"
+      class="tickets-header-container__input"
       prefix-icon="el-icon-search"
       popper-class=""
       placeholder="Busque suas disputas"
@@ -37,6 +39,12 @@ export default {
 }
 </script>
 
-<style lang="sass" scoped>
+<style lang="scss" scoped>
+.tickets-header-container {
+  padding: 18px;
 
+  .tickets-header-container__input {
+    width: 100%;
+  }
+}
 </style>
