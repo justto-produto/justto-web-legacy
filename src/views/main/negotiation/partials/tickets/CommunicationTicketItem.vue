@@ -5,9 +5,8 @@
     @click="hangleSelectTicket">
     <JusAvatarUser
       :name="ticket.plaintiff.name"
-      :online="ticket.plaintiff.status === 'ONLINE'"
+      :status="ticket.plaintiff.status"
       class="communication-ticket-item-container__avatar"
-      shape="circle"
       size="md"
       shadow
       purple
@@ -87,10 +86,10 @@ export default {
     // &:after {
     //   content: '';
     //   position: absolute;
-    //   display: block;
+    //   display: flex;
     //   transform: translateY(-50%);
     //   top: 50%;
-    //   right: -10px;
+    //   right: -5px;
     //   width: 0;
     //   height: 0;
     //   z-index: 99;
