@@ -15,7 +15,7 @@
         :label="tab.label">
         <component
           :is="tab.component.name"
-          v-if="tab.component"
+          v-if="tab.component && activeTab === tab.name"
         />
       </el-tab-pane>
     </el-tabs>
@@ -91,6 +91,14 @@ export default {
 <style lang="scss">
 .el-tabs__header {
   margin-bottom: 0px !important;
+}
+.editor-container {
+  .el-tabs__item {
+    padding: 0 18px !important;
+  }
+  .el-tabs__nav-wrap:after {
+    display: none;
+  }
 }
 </style>
 
