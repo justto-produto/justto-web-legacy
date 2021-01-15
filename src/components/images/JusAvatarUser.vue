@@ -5,7 +5,8 @@
       {
         'jus-avatar-user--shadow': shadow,
         'jus-avatar-user--purple': purple,
-        'jus-avatar-user--online': online,
+        'jus-avatar-user--online': status === 'ONLINE',
+        'jus-avatar-user--offline': status === 'OFFLINE',
       }
     ]"
     class="jus-avatar-user"
@@ -17,11 +18,6 @@
     <span v-else>
       {{ nameInitials }}
     </span>
-    <div
-      v-if="status"
-      class="circle"
-      :class="`${status}`"
-    />
   </div>
 </template>
 
@@ -51,9 +47,9 @@ export default {
       type: Boolean,
       default: false
     },
-    online: {
-      type: Boolean,
-      default: false,
+    status: {
+      type: String,
+      default: '',
     }
   },
   computed: {
@@ -123,9 +119,22 @@ export default {
     display: inline-block;
     width: 12px;
     height: 12px;
-    bottom: 0;
-    right: 0;
-    background: green;
+    bottom: -2px;
+    right: -2px;
+    background: $--color-success;
+    border-radius: 50%;
+    border: solid 1px #fff;
+  }
+
+  &.jus-avatar-user--offline:after {
+    content: '';
+    position: absolute;
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    bottom: -2px;
+    right: -2px;
+    background: $--color-danger;
     border-radius: 50%;
     border: solid 1px #fff;
   }
