@@ -10,8 +10,12 @@
         :key="tab.name"
         :name="tab.name"
         :label="tab.label"
+        class="tickets-container__tab-pane"
+        stretch
         lazy>
-        <ul v-if="activeTab === tab.name">
+        <ul
+          v-if="activeTab === tab.name"
+          class="tickets-container__list">
           <component
             :is="tab.component"
             v-for="ticket in tickets.content"
@@ -44,6 +48,11 @@ export default {
     tabs() {
       return [
         {
+          label: 'Pré negociação',
+          name: 'pre-negotiation',
+          component: 'EngagementTicketItem',
+        },
+        {
           label: 'Sem resposta',
           name: 'engagement',
           component: 'EngagementTicketItem'
@@ -57,6 +66,11 @@ export default {
           label: 'Proposta aceita',
           name: 'accepted',
           component: 'CommunicationTicketItem'
+        },
+        {
+          label: 'Finalizados',
+          name: 'finished',
+          component: 'CommunicationTicketItem'
         }
       ]
     }
@@ -66,24 +80,35 @@ export default {
   },
   methods: {
     ...mapActions([
-      'getTickets'
+      'getTickets',
+      'setTicketsQuery'
     ]),
 
-    handleChangeTab(tab, event) {
-      console.log(tab, event)
-      let filter = ''
-      switch (tab) {
+    handleChangeTab(tab) {
+      switch (tab.name) {
+        case 'pre-negotiation':
+          this.setTicketsQuery({ key: 'status', value: ['PRE_NEGOTIATION'] })
+          // this.setTicketsQuery({ key: 'sort', value: [] })
+          break
         case 'engagement':
-          filter = 'engagement'
+          this.setTicketsQuery({ key: 'status', value: ['IMPORTED', 'ENRICHED', 'ENGAGEMENT', 'PENDING'] })
+          // this.setTicketsQuery({ key: 'sort', value: [] })
           break
         case 'running':
-          filter = 'running'
+          this.setTicketsQuery({ key: 'status', value: ['RUNNING'] })
+          // this.setTicketsQuery({ key: 'sort', value: [] })
           break
         case 'accepted':
-          filter = 'accepted'
+          this.setTicketsQuery({ key: 'status', value: ['ACCEPTED', 'CHECKOUT'] })
+          // this.setTicketsQuery({ key: 'sort', value: [] })
+          break
+        case 'finished':
+          this.setTicketsQuery({ key: 'status', value: ['IMPORTED', 'ENRICHED', 'ENGAGEMENT', 'PENDING'] })
+          // this.setTicketsQuery({ key: 'sort', value: ['id,desc'] })
           break
       }
-      this.getTickets(filter)
+
+      this.getTickets()
     }
   }
 }
@@ -92,5 +117,25 @@ export default {
 <style lang="scss" scoped>
 .tickets-container {
   background-color: #fff;
+  max-width: 400px;
+
+  .tickets-container__list {
+    list-style: none;
+    margin: 0 ;
+    padding: 0;
+    overflow: auto;
+  }
+}
+</style>
+
+<style lang="scss">
+.tickets-container {
+  .el-tabs__item {
+    padding: 0 12px !important;
+  }
+
+  .el-tabs__nav-wrap:after {
+    display: none;
+  }
 }
 </style>

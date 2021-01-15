@@ -21,10 +21,11 @@ import '@/plugins/vueTheMask'
 
 // FILTERS
 import '@/filters/capitalize'
-import '@/filters/currency'
 import '@/filters/cpfCnpj'
+import '@/filters/currency'
 import '@/filters/firstName'
 import '@/filters/phoneNumber'
+import '@/filters/resumedName'
 
 // STYLES
 import '@/styles/core.scss'

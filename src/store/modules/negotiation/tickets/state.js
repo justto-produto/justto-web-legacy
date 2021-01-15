@@ -1,7 +1,9 @@
 const ticketsState = {
   tickets: {},
   ticketsMap: {},
-  filtersQuery: {}
+  ticketsQuery: {
+    status: ['RUNNING'],
+  }
 }
 
 export default ticketsState

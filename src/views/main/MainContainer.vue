@@ -199,7 +199,7 @@ export default {
   }
   &.aside-logo--colapsed {
     padding: 18px 0;
-    width: 64px;
+    width: 58px;
     text-align: center;
     .aside-logo__icon {
       margin: 20px 0 0;
@@ -219,13 +219,15 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 13px;
 
   &.teamOpen {
     margin-top: 0;
   }
 
   .menu-title__icon {
-    margin-left: 3px;
+    margin-top: 2px;
+    margin-left: 2px;
   }
 }
 
