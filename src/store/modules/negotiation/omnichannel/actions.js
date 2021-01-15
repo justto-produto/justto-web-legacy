@@ -2,11 +2,14 @@ const omnichannelActions = {
   setActiveTab({ commit }, tab) {
     commit('setActiveTab', tab)
   },
-  setEditorReady({ commit }, value) {
-    commit('setEditorReady', value)
+  setEditorReady({ commit }, isRedy) {
+    commit('setEditorReady', isRedy)
   },
-  setEditorText({ commit }, text) {
-    commit('setEditorText', text)
+  setEditorText({ commit }, message) {
+    commit('setEditorText', message)
+  },
+  setNoteEditorText({ commit }, note) {
+    commit('setNoteEditorText', note)
   },
   setMessageType({ commit }, type) {
     commit('setMessageType', type)

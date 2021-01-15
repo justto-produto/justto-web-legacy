@@ -12,7 +12,10 @@ const omnichannelMutations = {
     Vue.set(state.editor, 'ready', isReady)
   },
   setEditorText: (state, text) => {
-    Vue.set(state.editor, 'text', text)
+    Vue.set(state.editor, 'messageText', text)
+  },
+  setNoteEditorText: (state, text) => {
+    Vue.set(state.editor, 'noteText', text)
   },
   setMessageType: (state, type) => {
     Vue.set(state.editor, 'messageType', type)
