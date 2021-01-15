@@ -47,7 +47,7 @@
                 <jus-avatar-user
                   :name="occurrence.sender"
                   :src="buildAvatar(occurrence)"
-                  :purple="occurrence.interaction && occurrence.interaction.direction === 'INBOUND'"
+                  :purple="occurrence(occurrence)"
                   shape="circle"
                   size="sm"
                 />
@@ -223,7 +223,7 @@
                 <jus-avatar-user
                   :name="buildName(occurrence)"
                   :src="buildAvatar(occurrence)"
-                  :purple="occurrence.interaction && occurrence.interaction.direction === 'INBOUND'"
+                  :purple="buildColor(occurrence)"
                   :status="''"
                   shape="circle"
                   size="sm"
@@ -429,7 +429,7 @@
                 <jus-avatar-user
                   :name="buildName(mergedOccurency)"
                   :src="buildAvatar(mergedOccurency)"
-                  :purple="occurrence.interaction && occurrence.interaction.direction === 'INBOUND'"
+                  :purple="buildColor(mergedOccurency)"
                   shape="circle"
                   size="sm"
                 />
@@ -751,7 +751,12 @@ export default {
   },
   methods: {
     ...mapActions(['setActiveactiveOccurrency']),
-
+    
+    buildColor(occurrence) {
+      return occurrence && occurrence.interaction &&
+        occurrence.interaction.direction === 'INBOUND' &&
+        !['MANUAL_COUNTERPROPOSAL'].includes(occurrence.interaction.type)
+    },
     getIconIsMerged(occurrency) {
       return this.activeOccurrency.id === occurrency.id ? 'el-icon-arrow-up' : 'el-icon-arrow-down'
     },
