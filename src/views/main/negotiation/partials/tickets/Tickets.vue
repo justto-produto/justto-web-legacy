@@ -123,15 +123,30 @@ export default {
     list-style: none;
     margin: 0 ;
     padding: 0;
-    overflow: auto;
   }
 }
 </style>
 
 <style lang="scss">
+@import '@/styles/colors.scss';
+
 .tickets-container {
+  .el-tabs__header {
+    padding: 0 12px;
+
+    .el-tabs__nav-prev, .el-tabs__nav-next {
+      font-size: 18px !important;
+      &.is-disabled { color: $--color-primary !important; }
+    }
+  }
   .el-tabs__item {
     padding: 0 12px !important;
+    &:first-child {
+      padding-left: 6px !important;
+    }
+    &:last-child {
+      padding-right: 6px !important;
+    }
   }
 
   .el-tabs__nav-wrap:after {
