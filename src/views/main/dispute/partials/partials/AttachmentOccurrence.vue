@@ -14,7 +14,8 @@
       />
       <span
         class="attachment__file"
-        @click="downloadAttachment(occurrence.properties.FILE_URL)">
+        @click="downloadAttachment(occurrence.properties.FILE_URL)"
+      >
         <span class="attachment__file-name">
           {{ occurrence.properties.FILE_NAME }}
         </span>
@@ -30,7 +31,8 @@
       </span>
       <span
         class="attachment__file-download"
-        @click="downloadAttachment(occurrence.properties.FILE_URL)">
+        @click="downloadAttachment(occurrence.properties.FILE_URL)"
+      >
         <i class="el-icon-download" />
       </span>
     </div>

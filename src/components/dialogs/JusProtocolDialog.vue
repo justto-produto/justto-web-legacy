@@ -268,11 +268,7 @@
             :key="index"
             class="jus-protocol-dialog__status"
           >
-            <jus-avatar-user
-              :name="signer.name"
-              size="sm"
-              shape="circle"
-            />
+            <jus-avatar-user :name="signer.name" />
             <div class="jus-protocol-dialog__status-role">
               {{ signer.name }}<br>
               {{ signer.email }}
@@ -422,11 +418,7 @@
         :key="recipient.name"
         class="jus-protocol-dialog__confirm-recipients"
       >
-        <jus-avatar-user
-          :name="recipient.name"
-          size="sm"
-          shape="circle"
-        />
+        <jus-avatar-user :name="recipient.name" />
         <div>
           <b>{{ recipient.name }}</b><br>
           <b>{{ recipient.documentNumber | cpfCnpj }}</b><br>
@@ -1096,8 +1088,7 @@ export default {
       margin-top: 12px;
     }
     p {
-      margin-top: -14px;
-      margin-bottom: 32px;
+      margin-top: 8px 0px;
     }
 
     .jus-protocol-dialog__send-title {

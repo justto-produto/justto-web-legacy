@@ -1,4 +1,4 @@
-import TicketItemVm from './TicketItemVm.model'
+import TicketItemVm from './TicketItemVm'
 
 class LastRecivedMessageVm {
   constructor({ dateTime, message }) {
@@ -9,6 +9,7 @@ class LastRecivedMessageVm {
 
 export class TicketCommunication extends TicketItemVm {
   constructor({ lastRecivedMessage }) {
+    super()
     this.lastRecivedMessage = new LastRecivedMessageVm(lastRecivedMessage)
   }
 }

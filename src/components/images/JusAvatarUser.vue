@@ -1,6 +1,13 @@
 <template>
   <div
-    :class="purpleClass + ' ' + sizeClass + ' ' + shapeClass + ' ' + activeClass"
+    :class="[
+      `jus-avatar-user--${size}`,
+      {
+        'jus-avatar-user--shadow': shadow,
+        'jus-avatar-user--purple': purple,
+        'jus-avatar-user--online': online,
+      }
+    ]"
     class="jus-avatar-user"
   >
     <img
@@ -8,13 +15,7 @@
       :src="avatarSrc"
     >
     <span v-else>
-      {{ nameInitials.toUpperCase() }}
-    </span>
-    <span
-      v-if="notifications > 0 && size === 'sm'"
-      class="jus-avatar-user__notifications"
-    >
-      {{ notifications }}
+      {{ nameInitials }}
     </span>
     <div
       v-if="status"
@@ -34,65 +35,46 @@ export default {
       type: String,
       default: ''
     },
-    notifications: {
-      type: Number,
-      default: undefined
-    },
-    size: {
-      type: String,
-      default: 'md'
-    },
-    shape: {
-      type: String,
-      default: 'square'
-    },
     name: {
       type: String,
       default: ''
     },
-    status: {
+    size: {
       type: String,
-      default: ''
+      default: 'sm'
     },
     purple: {
       type: Boolean,
       default: false
     },
-    active: {
+    shadow: {
       type: Boolean,
       default: false
+    },
+    online: {
+      type: Boolean,
+      default: false,
     }
   },
   computed: {
     showAvatar() {
       if (this.src) return true
-      if (this.name && this.name.trim()) return false
-      return true
+      else if (this.name && this.name.trim()) return false
+      else return true
     },
     avatarSrc() {
       if (this.src) return this.src
       return require('@/assets/icons/ic-user.svg')
     },
     nameInitials() {
-      return getStringInitials(this.name)
-    },
-    shapeClass() {
-      return 'jus-avatar-user--' + this.shape
-    },
-    sizeClass() {
-      return 'jus-avatar-user--' + this.size
-    },
-    purpleClass() {
-      return this.purple ? 'jus-avatar-user--purple' : ''
-    },
-    activeClass() {
-      return this.active ? 'jus-avatar-user--active' : ''
+      return getStringInitials(this.name).toUpperCase() 
     }
   }
 }
 </script>
 
 <style lang="scss">
+@import '@/styles/colors.scss';
 
 .circle {
   position: absolute;
@@ -116,7 +98,37 @@ export default {
 .jus-avatar-user {
   position: relative;
   display: inline-flex;
-  border: 2px solid #ffffff00;
+  border-radius: 50%;
+
+  img {
+    border-radius: 50%;
+    object-fit: cover;
+    background-color: #f2f2f2;
+  }
+
+  span {
+    display: inline-flex !important;
+    visibility: visible !important;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-weight: 400;
+    border-radius: 50%;
+    background-color: #ff9300;
+  }
+
+  &.jus-avatar-user--online:after {
+    content: '';
+    position: absolute;
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    bottom: 0;
+    right: 0;
+    background: green;
+    border-radius: 50%;
+    border: solid 1px #fff;
+  }
 
   &.jus-avatar-user--xs {
     font-size: 8px;
@@ -140,6 +152,8 @@ export default {
     }
   }
   &.jus-avatar-user--md {
+    width: 3.5rem;
+    height: 3.5rem;
     img, span {
       font-size: 14px;
       font-weight: 600;
@@ -165,10 +179,9 @@ export default {
     border-radius: 50%;
     img, span {
       border-radius: 50%;
+      width: 100%;
+      height: 100%;
     }
-  }
-  &.jus-avatar-user--purple span {
-    background-color: #9f6cf8;
   }
   &.jus-avatar-user--mini {
     vertical-align: top;
@@ -176,40 +189,13 @@ export default {
     img, span {
       width: 1.4rem;
       height: 1.4rem;
-      border-radius: 50%;
     }
   }
-  img {
-    object-fit: cover;
-    border-radius: 6px;
-    background-color: #f2f2f2;
+  &.jus-avatar-user--purple span {
+    background-color: $--color-primary;
   }
-  span {
-    background-color: #ff9300;
-    visibility: visible !important;
-    color: white;
-    display: inline-flex !important;
-    justify-content: center;
-    align-items: center;
-    font-weight: 400;
-  }
-  &__notifications {
-    min-width: 15px;
-    min-height: 15px;
-    line-height: 15px;
-    padding: 1px;
-    font-size: 12px;
-    background-color: #ff4b54;
-    position: absolute;
-    color: #fff;
-    border-radius: 4px;
-    text-align: center;
-    top: 12px;
-    left: -9px;
-  }
-  &--active {
-    border: 2px solid #9f6cf8;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
+  &.jus-avatar-user--shadow {
+    box-shadow: 0 0 8px 2px rgba(175, 175, 175, 0.4);
   }
 }
 </style>

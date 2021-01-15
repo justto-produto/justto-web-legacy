@@ -454,7 +454,8 @@
                   <span>
                     <div
                       v-if="canShowFullMessage(mergedOccurency) && !showResume(mergedOccurency)"
-                      style="text-align: right;">
+                      style="text-align: right;"
+                    >
                       <a
                         href="#"
                         data-testid="hide-email"
