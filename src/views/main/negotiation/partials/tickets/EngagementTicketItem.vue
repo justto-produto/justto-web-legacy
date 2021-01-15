@@ -6,7 +6,6 @@
     <JusAvatarUser
       :name="ticket.plaintiff.name"
       class="communication-ticket-item-container__avatar"
-      shape="circle"
       size="md"
       shadow
     />
@@ -80,8 +79,8 @@ export default {
   }
 
   &--active {
-    background-color: $--color-primary-light-9;
-    border-left: 3px solid $--color-primary;
+    background-color: $--color-secondary-light-9;
+    border-left: 3px solid $--color-secondary;
     // &:after {
     //   content: '';
     //   position: absolute;
@@ -100,7 +99,7 @@ export default {
 
   .communication-ticket-item-container__avatar {
     align-self: center;
-    // width: 49px;
+    width: 49px;
   }
 
   .communication-ticket-item-container__resume {
