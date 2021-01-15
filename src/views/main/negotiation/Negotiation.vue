@@ -27,18 +27,12 @@ export default {
   grid-template-columns: 1fr 2fr;
   grid-template-rows: 100vh;
   background-color: $--color-white;
-
-  .negotiations-container__ticket {
-    background-color: $--color-white;
-    margin-left: 12px;
-  }
-
-  .negotiations-container__tickets {
-    background-color: $--color-white;
-    -webkit-box-shadow: 6px 0px 10px 0px whitesmoke;
-    -moz-box-shadow: 6px 0px 10px 0px whitesmoke;
-    box-shadow: 6px 0px 10px 0px whitesmoke;
-  }
+  overflow-x: hidden;
 }
+</style>
 
+<style lang="scss">
+.el-main {
+  overflow-x: hidden;
+}
 </style>

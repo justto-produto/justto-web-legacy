@@ -118,7 +118,6 @@ export default {
 .tickets-container {
   background-color: #fff;
   max-width: 400px;
-  overflow: hidden;
 
   .tickets-container__list {
     list-style: none;

@@ -56,7 +56,7 @@ export default {
   text-align: center;
   &__title {
     text-align: center;
-    margin: 80px 0 20px;
+    margin: 32px 0 12px;
 
     @media (max-height: 680px) {
       margin: 40px 0 10px;
