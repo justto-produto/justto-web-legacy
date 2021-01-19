@@ -2,20 +2,22 @@
   <li
     :class="{ 'communication-ticket-item-container--active': isActive }"
     class="communication-ticket-item-container"
-    @click="hangleSelectTicket">
+    @click="hangleSelectTicket"
+  >
     <JusAvatarUser
       :name="ticket.plaintiff.name"
       class="communication-ticket-item-container__avatar"
       size="md"
       shadow
+      purple
     />
     <div class="communication-ticket-item-container__resume">
       <div class="communication-ticket-item-container__parties">
         <span class="communication-ticket-item-container__plaintiff">
-          {{ ticket.negotiatorName | resumedName }}
+          {{ ticket.plaintiff.name | resumedName }}
         </span>
         <span class="communication-ticket-item-container__negotiator">
-          > {{ ticket.plaintiff.name | resumedName }}
+          &lt; {{ ticket.negotiatorName | resumedName }}
         </span>
       </div>
       <div class="communication-ticket-item-container__message">
@@ -79,8 +81,8 @@ export default {
   }
 
   &--active {
-    background-color: $--color-secondary-light-9;
-    border-left: 3px solid $--color-secondary;
+    background-color: $--color-primary-light-9;
+    border-left: 3px solid $--color-primary;
     // &:after {
     //   content: '';
     //   position: absolute;
@@ -110,7 +112,7 @@ export default {
       margin-bottom: 6px;
 
       .communication-ticket-item-container__plaintiff {
-        color: $--color-secondary;
+        color: $--color-primary;
         font-weight: 700;
         font-size: 16px;
       }
@@ -123,7 +125,7 @@ export default {
     .communication-ticket-item-container__message {
       margin-bottom: 6px;
       // white-space: nowrap;
-      // text-overflow: ellipsis;      
+      // text-overflow: ellipsis;
       // overflow: hidden;
     }
   }

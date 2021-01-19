@@ -100,7 +100,12 @@ export default {
       return getRoles(disputeRoles, party, role)
     },
     click() {
-      if (!this.disabled) this.$router.push('/management/dispute/' + this.dispute.id)
+      if (!this.disabled) {
+        this.$emit('click', {
+          disputeId: this.dispute.id,
+          disputeStatus: this.dispute.status
+        })
+      }
     }
   }
 }

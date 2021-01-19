@@ -18,6 +18,7 @@
             <jus-dispute-resume
               v-if="item.id"
               :dispute="item"
+              @click="goToDispute"
             />
             <span
               v-else
@@ -220,6 +221,9 @@ export default {
           }
         })
       }, 800)
+    },
+    goToDispute({ disputeId }) {
+      this.$router.push(`/management/dispute/${disputeId}`)
     },
     changeWorkspace() {
       this.getMyWorkspaces()
