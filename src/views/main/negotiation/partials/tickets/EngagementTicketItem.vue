@@ -72,10 +72,6 @@ export default {
   border-bottom: 1px solid $--light-gray;
   cursor: pointer;
 
-  &:first-child {
-    border-top: 1px solid $--light-gray;
-  }
-
   &:hover:not(.communication-ticket-item-container--active) {
     background-color: $--light-gray;
   }

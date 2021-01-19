@@ -1,8 +1,14 @@
 <template>
   <main class="negotiations-container">
-    <Tickets class="negotiations-container__tickets" />
+    <Tickets
+      :class="$route.params.id ? 'hide-section' : ''"
+      class="negotiations-container__tickets"
+    />
 
-    <section class="negotiations-container__ticket">
+    <section
+      :class="!$route.params.id ? 'hide-section' : ''"
+      class="negotiations-container__ticket"
+    >
       <router-view v-if="$route.params.id" />
       <EmptyTicket v-else />
     </section>
@@ -23,16 +29,38 @@ export default {
 @import '@/styles/colors.scss';
 
 .negotiations-container {
-  display: grid;
-  grid-template-columns: 400px 2fr;
-  grid-template-rows: 100vh;
-  background-color: $--color-white;
-  overflow-x: hidden;
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+
+  .negotiations-container__tickets {
+    width: 400px;
+  }
+
+  .negotiations-container__ticket {
+    flex: 1;
+  }
+}
+
+@media (max-width: 900px) {
+  .negotiations-container {
+    .hide-section {
+      display: none;
+    }
+
+    .negotiations-container__tickets {
+      width: 100%;
+    }
+
+    .negotiations-container__ticket {
+      width: 100%;
+    }
+  }
 }
 </style>
 
 <style lang="scss">
 .el-main {
-  overflow-x: hidden;
+  overflow: hidden;
 }
 </style>
