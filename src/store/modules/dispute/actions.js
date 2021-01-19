@@ -241,30 +241,10 @@ const disputeActions = {
   },
   exportDisputes({ state, dispatch }, colums) {
     const stringColums = colums.toString()
+    localStorage.setItem('jusexportcolumns', JSON.stringify(colums))
     return axiosDispatch({
       url: `${disputesPath}/export${buildQuery(state.query)}fileFormat=CSV&columnToExport=${stringColums}`
     }).then(() => { dispatch('getExportHistory') })
-    // return new Promise((resolve, reject) => {
-    //   const stringColums = colums.toString()
-    //   // eslint-disable-next-line
-    //   axios.get('api/disputes/export'+ buildQuery(state.query) + 'fileFormat=CSV&columnToExport=' + stringColums, {
-    //     responseType: 'arraybuffer',
-    //     ContentType: 'application/json; charset=utf-8',
-    //   }).then(response => {
-    //     // const blob = new Blob([
-    //     //   new Uint8Array([0xEF, 0xBB, 0xBF]),
-    //     //   response.data,
-    //     // ], {
-    //     //   type: 'text/plain;charset=utf-8',
-    //     // })
-    //     // const fileName = new Date().getTime() + '.csv'
-    //     // FileSaver.saveAs(blob, fileName)
-    //     dispatch('getExportHistory')
-    //     resolve(response)
-    //   }).catch(error => {
-    //     reject(error)
-    //   })
-    // })
   },
   getDisputeTimeline({ commit }, disputeCode) {
     if (!disputeCode) return
