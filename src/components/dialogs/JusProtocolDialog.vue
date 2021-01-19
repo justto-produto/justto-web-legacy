@@ -528,6 +528,10 @@ export default {
         return list.find(item => item.documentNumber === doc) || { emails: [] }
       }
 
+      function filterValidEmails(emails) {
+        return emails.filter(email => email.archived === false)
+      }
+
       function concatEmails(list1, list2) {
         const emails = concat(list1, list2)
         const res = []
@@ -548,7 +552,7 @@ export default {
         return {
           ...role,
           show: false,
-          emails: concatEmails(role.emails, getObjectByDoc(role.documentNumber, this.defaultSigners).emails)
+          emails: filterValidEmails(concatEmails(role.emails, getObjectByDoc(role.documentNumber, this.defaultSigners).emails))
         }
       })
       return [...roles, ...signers]
