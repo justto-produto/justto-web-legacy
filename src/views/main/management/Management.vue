@@ -686,10 +686,15 @@ export default {
       this.getDisputes()
     },
     showExportDisputesDialog() {
+      const jusexportcolumns = JSON.parse(localStorage.getItem('jusexportcolumns') || '[]')
       this.getExportHistory()
       this.exportDisputesDialog = true
       this.$nextTick(() => {
-        this.$refs.tree.setCheckedKeys(this.columns.map(c => c.key))
+        if (jusexportcolumns && jusexportcolumns.length) {
+          this.$refs.tree.setCheckedKeys(jusexportcolumns)
+        } else {
+          this.$refs.tree.setCheckedKeys(this.columns.map(c => c.key))
+        }
         this.handlerChangeTree('', { checkedKeys: this.$refs.tree.getCheckedKeys() })
       })
     },
