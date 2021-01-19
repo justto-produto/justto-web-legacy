@@ -50,6 +50,13 @@ _axios.interceptors.request.use(
 
 _axios.interceptors.response.use(
   function(response) {
+    if (response.status !== 401 && response.headers && response.headers.authorization) {
+      const token = response.headers.authorization
+      localStorage.removeItem('justoken')
+      localStorage.setItem('justoken', token)
+      Vue.delete(axios.defaults.headers.common, 'Authorization')
+      Vue.set(axios.defaults.headers.common, 'Authorization', token)
+    }
     if (response.status === 204 && response.config && response.config.__isRetryRequest) {
       response.config.__isRetryRequest = false
       setTimeout(function() {

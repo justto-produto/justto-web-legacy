@@ -4,21 +4,22 @@
       v-model="searchTerm"
       :min="3"
       :trigger-on-focus="false"
-      :fetch-suggestions="search"
+      :fetch-suggestions="handleInput"
       :debounce="800"
       size="small"
       class="tickets-header-container__input"
       prefix-icon="el-icon-search"
-      popper-class=""
+      popper-class="tickets-header-container__popover"
       placeholder="Busque suas disputas"
     >
       <template slot-scope="{ item }">
-        <jus-dispute-resume
+        <JusDisputeResume
           v-if="item.id"
           :dispute="item"
+          @click="goToTicket"
         />
         <span v-else>
-          Não foram encontradas disputas para esta busca. Tente buscar pelo número do processo.
+          Não foram encontradas disputas para esta busca.
         </span>
       </template>
     </el-autocomplete>
@@ -26,14 +27,38 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
   name: 'TicketsHeader',
+  components: {
+    JusDisputeResume: () => import('@/components/layouts/JusDisputeResume')
+  },
   data: () => ({
-    searchTerm: ''
+    searchTerm: '',
+    debounce: setTimeout()
   }),
   methods: {
-    handleInput() {
+    ...mapActions([
+      'searchDisputes'
+    ]),
 
+    handleInput(term, cb) {
+      clearTimeout(this.debounce)
+
+      this.debounce = setTimeout(() => {
+        this.searchDisputes({ key: 'term', value: term })
+          .then(response => {
+            this.$jusSegment('Busca global de disputas', { description: `Termo utilizado: ${term}` })
+            if (response.length) cb(response)
+            else cb([{}])
+          })
+      }, 800)
+    },
+
+    goToTicket({ disputeId, disputeStatus }) {
+      this.$router.push(`/negotiation/${disputeId}`)
+      this.$emit('set-tab', disputeStatus)
     }
   }
 }
@@ -46,5 +71,14 @@ export default {
   .tickets-header-container__input {
     width: 100%;
   }
+}
+</style>
+
+<style lang="scss">
+.el-autocomplete-suggestion.el-popper {
+  width: calc(100% - ((48px + 18px) * 2) ) !important;
+}
+.tickets-header-container__popover {
+
 }
 </style>
