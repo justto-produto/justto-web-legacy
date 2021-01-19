@@ -21,11 +21,14 @@ const accountMutations = {
     state.token = ''
   },
   setUser(state, response) {
-    if (response.id) state.id = response.id
-    if (response.name) state.name = response.name
-    if (response.email) state.email = response.email
+    const { id, name, email } = response
+    if (id) Vue.set(state, 'id', id)
+    if (name) Vue.set(state, 'name', name)
+    if (email) {
+      localStorage.setItem('loggedEmail', email)
+      Vue.set(state, 'email', email)
+    }
   }
-  // setUserPreferences: (state, preferences) => (state.preference = preferences),
 }
 
 export default accountMutations
