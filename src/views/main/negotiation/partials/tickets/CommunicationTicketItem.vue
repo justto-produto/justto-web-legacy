@@ -2,7 +2,8 @@
   <li
     :class="{ 'communication-ticket-item-container--active': isActive }"
     class="communication-ticket-item-container"
-    @click="hangleSelectTicket">
+    @click="hangleSelectTicket"
+  >
     <JusAvatarUser
       :name="ticket.plaintiff.name"
       :status="ticket.plaintiff.status"
@@ -14,10 +15,10 @@
     <div class="communication-ticket-item-container__resume">
       <div class="communication-ticket-item-container__parties">
         <span class="communication-ticket-item-container__plaintiff">
-          {{ ticket.plaintiff.name | resumedName }}  
+          {{ ticket.plaintiff.name | resumedName }}
         </span>
         <span class="communication-ticket-item-container__negotiator">
-          > {{ ticket.negotiatorName | resumedName }}
+          &gt; {{ ticket.negotiatorName | resumedName }}
         </span>
       </div>
       <div class="communication-ticket-item-container__message">
@@ -125,7 +126,7 @@ export default {
     .communication-ticket-item-container__message {
       margin-bottom: 6px;
       // white-space: nowrap;
-      // text-overflow: ellipsis;      
+      // text-overflow: ellipsis;
       // overflow: hidden;
     }
   }

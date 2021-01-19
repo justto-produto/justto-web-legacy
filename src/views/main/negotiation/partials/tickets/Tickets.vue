@@ -1,10 +1,11 @@
 <template>
   <nav class="tickets-container">
-    <TicketsHeader />
+    <TicketsHeader @set-tab="handleSetTab" />
 
     <el-tabs
       v-model="activeTab"
-      @tab-click="handleChangeTab">
+      @tab-click="handleChangeTab"
+    >
       <el-tab-pane
         v-for="tab in tabs"
         :key="tab.name"
@@ -12,15 +13,18 @@
         :label="tab.label"
         class="tickets-container__tab-pane"
         stretch
-        lazy>
+        lazy
+      >
         <ul
           v-if="activeTab === tab.name"
-          class="tickets-container__list">
+          class="tickets-container__list"
+        >
           <component
             :is="tab.component"
             v-for="ticket in tickets.content"
             :key="ticket.disputeId"
-            :ticket="ticket" />
+            :ticket="ticket"
+          />
         </ul>
       </el-tab-pane>
     </el-tabs>
@@ -50,7 +54,7 @@ export default {
         {
           label: 'Pré negociação',
           name: 'pre-negotiation',
-          component: 'EngagementTicketItem',
+          component: 'EngagementTicketItem'
         },
         {
           label: 'Sem resposta',
@@ -85,6 +89,10 @@ export default {
     ]),
 
     handleChangeTab(tab) {
+      this.setTicketsQuery({ key: 'status', value: [] })
+      this.setTicketsQuery({ key: 'prescription', value: [] })
+      this.setTicketsQuery({ key: 'sort', value: [] })
+
       switch (tab.name) {
         case 'pre-negotiation':
           this.setTicketsQuery({ key: 'status', value: ['PRE_NEGOTIATION'] })
@@ -103,12 +111,38 @@ export default {
           // this.setTicketsQuery({ key: 'sort', value: [] })
           break
         case 'finished':
-          this.setTicketsQuery({ key: 'status', value: ['IMPORTED', 'ENRICHED', 'ENGAGEMENT', 'PENDING'] })
+          this.setTicketsQuery({ key: 'prescription', value: ['NEWLY_FINISHED'] })
           // this.setTicketsQuery({ key: 'sort', value: ['id,desc'] })
           break
       }
 
       this.getTickets()
+    },
+
+    handleSetTab(disputeStatus) {
+      switch (disputeStatus) {
+        case 'PRE_NEGOTIATION':
+          this.activeTab = 'pre-negotiation'
+          break
+        case 'IMPORTED':
+        case 'ENRICHED':
+        case 'ENGAGEMENT':
+        case 'PENDING':
+          this.activeTab = 'engagement'
+          break
+        case 'RUNNING':
+          this.activeTab = 'running'
+          break
+        case 'ACCEPTED':
+        case 'CHECKOUT':
+          this.activeTab = 'accepted'
+          break
+        case '':
+          this.activeTab = 'finished'
+          break
+      }
+
+      this.handleChangeTab({ name: this.activeTab })
     }
   }
 }
