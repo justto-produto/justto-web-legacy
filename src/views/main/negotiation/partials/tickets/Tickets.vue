@@ -159,6 +159,12 @@ export default {
     padding: 0;
   }
 }
+
+@media (max-width: 900px) {
+  .tickets-container {
+    max-width: 100%;
+  }
+}
 </style>
 
 <style lang="scss">
@@ -166,7 +172,9 @@ export default {
 
 .tickets-container {
   .el-tabs__header {
-    padding: 0 12px;
+    padding: 0px 12px 12px;
+    margin: 0;
+    border-bottom: 2px solid $--light-gray;
 
     .el-tabs__nav-prev, .el-tabs__nav-next {
       font-size: 18px !important;
@@ -185,6 +193,15 @@ export default {
 
   .el-tabs__nav-wrap:after {
     display: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .tickets-container {
+    .el-tabs__header {
+      padding: 12px;
+      border-top: 2px solid $--light-gray;
+    }
   }
 }
 </style>
