@@ -529,7 +529,9 @@ export default {
       }
 
       function filterValidEmails(emails) {
-        return emails.filter(email => email.archived === false)
+        return emails.filter(email => (
+          (email.archived === false && email.isMain && email.isValid) ||
+          email.canDelete))
       }
 
       function concatEmails(list1, list2) {
