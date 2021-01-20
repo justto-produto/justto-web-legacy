@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="jus-team-menu">
     <div class="jus-team-menu__members">
       <a

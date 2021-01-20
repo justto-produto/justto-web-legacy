@@ -4,6 +4,7 @@
       `jus-avatar-user--${size}`,
       {
         'jus-avatar-user--shadow': shadow,
+        'jus-avatar-user--active': active,
         'jus-avatar-user--purple': purple,
         'jus-avatar-user--status': status,
         'jus-avatar-user--online': status === 'ONLINE',
@@ -45,6 +46,10 @@ export default {
       default: false
     },
     shadow: {
+      type: Boolean,
+      default: false
+    },
+    active: {
       type: Boolean,
       default: false
     },
@@ -98,7 +103,7 @@ export default {
     border-radius: 50%;
     background-color: #ff9300;
   }
-  
+
   &.jus-avatar-user--purple {
     span {
       background-color: $--color-primary;
@@ -109,6 +114,11 @@ export default {
     img, span {
       box-shadow: 0 0 8px 2px rgba(175, 175, 175, 0.4);
     }
+  }
+
+  &.jus-avatar-user--active {
+    border: 2px solid #9f6cf8;
+    box-shadow: 0 0 8px 2px rgba(175, 175, 175, 0.4);
   }
 
   &.jus-avatar-user--status:after {
