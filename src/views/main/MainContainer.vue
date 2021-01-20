@@ -4,125 +4,129 @@
       class="container-aside"
       width="auto"
     >
-      <div
-        :class="{'aside-logo--colapsed': isCollapse}"
-        class="aside-logo"
-      >
+      <div class="container-aside__logo">
         <router-link to="/">
-          <img
-            class="aside-logo__logo"
-            src="@/assets/logo-small.svg"
-          >
+          <img src="@/assets/logo-small.svg">
         </router-link>
       </div>
+
       <el-menu
         ref="sideMenu"
-        class="el-menu--main-menu aside__menu"
-        :class="{ teamOpen: isTeamSectionOpen }"
-        :collapse-transition="false"
-        :collapse="isCollapse"
+        class="container-aside__menu el-menu--main-menu"
+        :class="{ 'container-aside__menu--collapsed': isTeamSectionExpanded }"
         :default-active="$route.path"
+        collapse
         router
       >
-        <el-menu-item index="/">
-          <jus-icon
-            icon="dashboard"
-            class="el-menu__icon"
-          />
-          <span slot="title">Dashboard</span>
-        </el-menu-item>
         <el-menu-item
-          index="/management"
-          data-testid="menu-management"
-          @click="setTabQuery('management')"
+          v-for="menuItem in menuItems"
+          :key="menuItem.index"
+          :index="menuItem.index"
+          @click="menuItem.action"
         >
-          <jus-icon
-            icon="management"
-            class="el-menu__icon"
+          <JusIcon
+            :icon="menuItem.icon"
+            class=""
           />
-          <span slot="title">Gerenciamento</span>
-        </el-menu-item>
-        <el-menu-item
-          index="/management/all"
-          data-testid="menu-allDisputes"
-          @click="setTabQuery('allDisputes')"
-        >
-          <jus-icon
-            icon="full-folder"
-            class="el-menu__icon"
-          />
-          <span slot="title">Todas as disputas</span>
-        </el-menu-item>
-        <el-menu-item
-          index="/import"
-          data-testid="menu-import"
-        >
-          <jus-icon
-            icon="import"
-            class="el-menu__icon"
-          />
-          <span slot="title">Importação</span>
+          <span slot="title">
+            {{ menuItem.title }}
+          </span>
         </el-menu-item>
       </el-menu>
-      <div
-        v-show="workspaceMembersSorted.length && isAdminProfile"
-        class="jus-team-menu__title"
-        :class="{ teamOpen: isTeamSectionOpen }"
-        @click="toggleOpenTeamSection"
-      >
-        TIME
-        <jus-icon
-          class="menu-title__icon"
-          :icon="isTeamSectionOpen ? 'arrow-down' : 'arrow-up'"
-        />
-      </div>
-      <vue-perfect-scrollbar v-if="isAdminProfile">
-        <jus-team-menu />
-      </vue-perfect-scrollbar>
+
+      <JusTeamMenu
+        v-if="isAdminProfile"
+        :is-team-section-expanded="isTeamSectionExpanded"
+        class="container-aside__team"
+        @toggle-expand-team-section="toggleExpandTeamSection"
+      />
     </el-aside>
+
     <el-container direction="vertical">
-      <jus-header-main />
+      <JusHeaderMain />
+
       <el-main>
         <transition name="fade">
           <router-view />
         </transition>
       </el-main>
     </el-container>
+
+    <!-- <el-footer>
+      <el-menu
+        ref="sideMenu"
+        :default-active="$route.path"
+        mode="horizontal"
+        class="el-menu--main-menu"
+        router
+      >
+        <el-menu-item
+          v-for="menuItem in menuItems"
+          :key="menuItem.index"
+          :index="menuItem.index"
+          @click="menuItem.action"
+        >
+          <JusIcon
+            :icon="menuItem.icon"
+            class="el-menu__icon"
+          />
+        </el-menu-item>
+      </el-menu>
+    </el-footer> -->
   </el-container>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+
 export default {
   name: 'MainContainer',
   components: {
     JusHeaderMain: () => import('@/components/layouts/JusHeaderMain'),
-    JusTeamMenu: () => import('@/components/layouts/JusTeamMenu'),
-    VuePerfectScrollbar: () => import('vue-perfect-scrollbar')
+    JusTeamMenu: () => import('@/components/layouts/JusTeamMenu')
   },
   data() {
     return {
       subscriptions: [],
-      isCollapse: true,
-      isTeamSectionOpen: false
+      isTeamSectionExpanded: false
     }
   },
   computed: {
-    ...mapGetters([
-      'isAdminProfile',
-      'workspaceMembersSorted'
-    ]),
-    workspace() {
-      return this.$store.getters.workspaceSubdomain
-    },
-    personId() {
-      return this.$store.getters.loggedPersonId
-    },
-    headers() {
-      return {
-        Authorization: this.$store.getters.accountToken,
-        Workspace: this.workspace
-      }
+    ...mapGetters({
+      isAdminProfile: 'isAdminProfile',
+      workspaceMembersSorted: 'workspaceMembersSorted',
+      workspace: 'workspaceSubdomain',
+      personId: 'loggedPersonId',
+      authorization: 'accountToken'
+    }),
+
+    menuItems() {
+      return [
+        {
+          index: '/',
+          title: 'Dashboard',
+          icon: 'dashboard',
+          action: () => {}
+        },
+        {
+          index: '/management',
+          title: 'Gerenciamento',
+          icon: 'management',
+          action: () => this.setTabQuery('management')
+        },
+        {
+          index: '/management/all',
+          title: 'Todas as disputas',
+          icon: 'full-folder',
+          action: () => this.setTabQuery('allDisputes')
+        },
+        {
+          index: '/import',
+          title: 'Importação',
+          icon: 'import',
+          action: () => {}
+        }
+      ]
     }
   },
   watch: {
@@ -148,19 +152,25 @@ export default {
   methods: {
     subscribe() {
       if (this.workspace) {
-        this.subscriptions.forEach(s => this.$socket.emit('unsubscribe', s))
+        const headers = {
+          Authorization: this.authorization,
+          Workspace: this.workspace
+        }
+        const baseUrl = `/topic/${this.workspace}`
+
+        this.subscriptions.forEach(subscription => this.$socket.emit('unsubscribe', subscription))
         this.subscriptions.length = 0
-        // this.subscriptions.push({ headers: this.headers, channel: '/topic/' + this.workspace + '/whatsapp' })
-        this.subscriptions.push({ headers: this.headers, channel: '/topic/' + this.workspace + '/' + this.personId + '/dispute' })
-        this.subscriptions.push({ headers: this.headers, channel: '/topic/' + this.workspace + '/alert' })
-        this.subscriptions.push({ headers: this.headers, channel: `/topic/${this.workspace}/person-status` })
-        this.subscriptions.push({ headers: this.headers, channel: '/topic/' + this.workspace + '/' + this.personId + '/dispute/summary' })
-        this.subscriptions.forEach(s => this.$socket.emit('subscribe', s))
+
+        this.subscriptions.push({ headers, channel: `${baseUrl}/alert` })
+        // this.subscriptions.push({ headers, channel: `${baseUrl}/whatsapp` })
+        this.subscriptions.push({ headers, channel: `${baseUrl}/person-status` })
+        this.subscriptions.push({ headers, channel: `${baseUrl}/${this.personId}/dispute` })
+        this.subscriptions.push({ headers, channel: `${baseUrl}/${this.personId}/dispute/summary` })
+
+        this.subscriptions.forEach(subscription => this.$socket.emit('subscribe', subscription))
       }
     },
-    toggleOpenTeamSection() {
-      this.isTeamSectionOpen = !this.isTeamSectionOpen
-    },
+
     setTabQuery(target) {
       this.$store.commit('clearDisputeQuery')
       this.$store.commit('clearDisputeTab')
@@ -169,6 +179,10 @@ export default {
         this.$store.commit('updateDisputeQuery', { key: 'status', value: [] })
         this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['id,desc'] })
       }
+    },
+
+    toggleExpandTeamSection() {
+      this.isTeamSectionExpanded = !this.isTeamSectionExpanded
     }
   }
 }
@@ -176,71 +190,40 @@ export default {
 </script>
 
 <style lang="scss">
+@import '@/styles/colors.scss';
+
 .container-aside {
-  background-color: #fff;
+  background-color: $--color-white;
   box-shadow: 0 4px 24px 0 rgba(37, 38, 94, 0.1);
   z-index: 2;
-  overflow-x: hidden;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-}
 
-.aside-logo {
-  padding: 40px 20px;
-  width: 280px;
-  top: 0px;
-  left: 0px;
-  z-index: 1;
-  background-color: #ffffff;
-  &:not(.aside-logo--colapsed) {
-    .aside-logo__icon{
-      float: right;
-    }
-  }
-  &.aside-logo--colapsed {
-    padding: 18px 0;
+  .container-aside__logo {
     width: 58px;
+    height: 58px;
+    padding: 18px;
     text-align: center;
-    .aside-logo__icon {
-      margin: 20px 0 0;
-      display: block;
+  }
+
+  .container-aside__team {
+    flex: 1;
+    overflow: hidden;
+  }
+
+  .container-aside__menu {
+    .el-menu-item { transition: all 0.3s; }
+
+    &.container-aside__menu--collapsed {
+      .el-menu-item { overflow: hidden; height: 0; }
     }
   }
 }
 
-.aside-logo__logo {
-  z-index: 2;
-  height: 24px;
-  vertical-align: middle;
-}
-
-.jus-team-menu__title {
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-
-  &.teamOpen {
-    margin-top: 0;
-  }
-
-  .menu-title__icon {
-    margin-top: 2px;
-    margin-left: 2px;
-  }
-}
-
-.aside__menu {
-  li {
-    transition: all 0.3s;
-  }
-
-  &.teamOpen {
-    li {
-      overflow: hidden;
-      height: 0;
-    }
+@media (max-width: 900px) {
+  .container-aside {
+    display: none;
   }
 }
 </style>

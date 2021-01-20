@@ -32,6 +32,28 @@
   }
 }
 
+@media (max-width: 900px) {
+  .el-menu--main-menu {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex !important;
+    justify-content: space-around !important;
+    .el-menu-item {
+      width: 25%;
+      text-align: center;
+      &.is-active {
+        border-left: none !important;
+        padding-left: 18px !important;
+        .el-tooltip {
+          padding: 0 18px !important;
+        }
+      }
+    }
+  }
+}
+
 .el-menu--team-menu {
   .el-menu-item {
     .el-tooltip {
@@ -74,3 +96,4 @@
 .el-menu-item:focus {
   background-color: #00000000 !important;
 }
+
