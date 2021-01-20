@@ -86,6 +86,43 @@ export default {
 }
 </script>
 
+<style lang="scss" scoped>
+.messages-container {
+  background-color: transparent !important;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+
+  .messages-container__editor {
+    background-color: transparent !important;
+    margin: 6px;
+    flex: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .messages-container__send-message-button {
+    margin-top: 6px;
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+
+@media (max-width: 900px) {
+  .messages-container {
+
+    .messages-container__send-message-button {
+      margin-top: 6px;
+
+      .el-button {
+        width: 100%;
+        border-radius: 0;
+      }
+    }
+  }
+}
+</style>
+
 <style lang="scss">
 .messages-container {
   padding: 6px;
@@ -99,22 +136,6 @@ export default {
     border: solid 2px whitesmoke;
     margin: 0px;
     border-radius: 12px;
-  }
-}
-</style>
-
-<style lang="scss" scoped>
-.messages-container {
-  background-color: transparent !important;
-
-  .messages-container__editor {
-    background-color: transparent !important;
-  }
-
-  .messages-container__send-message-button {
-    margin-top: 6px;
-    display: flex;
-    justify-content: flex-end;
   }
 }
 </style>

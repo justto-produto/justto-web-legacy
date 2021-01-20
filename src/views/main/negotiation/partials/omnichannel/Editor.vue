@@ -93,6 +93,9 @@ export default {
   margin-bottom: 0px !important;
 }
 .editor-container {
+  .editor-container__tabs {
+    flex: 1;
+  }
   .el-tabs__item {
     padding: 0 18px !important;
   }

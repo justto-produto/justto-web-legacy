@@ -1,25 +1,38 @@
-<template lang="html">
-  <div class="jus-team-menu">
-    <div class="jus-team-menu__members">
-      <a
-        v-for="member in workspaceMembersSorted"
-        :key="member.id + '-' + member.personId"
-        class="jus-team-menu__member"
-        @click.prevent="setFilterPersonId(member.person.id, member.person.name)"
-      >
-        <el-tooltip
-          :content="member.person.name"
-          placement="right"
+<template>
+  <section class="jus-team-menu">
+    <span
+      class="jus-team-menu__title"
+      @click="$emit('toggle-expand-team-section')"
+    >
+      TIME
+      <JusIcon
+        class="jus-team-menu__title-icon"
+        :icon="isTeamSectionExpanded ? 'arrow-down' : 'arrow-up'"
+      />
+    </span>
+
+    <vue-perfect-scrollbar>
+      <div class="jus-team-menu__members">
+        <a
+          v-for="member in workspaceMembersSorted"
+          :key="member.id"
+          class="jus-team-menu__member"
+          @click.prevent="setFilterPersonId(member.person.id, member.person.name)"
         >
-          <jus-avatar-user
-            :name="member.person.name"
-            :active="activePersonsIds.includes(member.person.id)"
-            class="el-menu__avatar"
-          />
-        </el-tooltip>
-      </a>
-    </div>
-  </div>
+          <el-tooltip
+            :content="member.person.name"
+            placement="right"
+          >
+            <JusAvatarUser
+              :name="member.person.name"
+              :active="activePersonsIds.includes(member.person.id)"
+              class="el-menu__avatar"
+            />
+          </el-tooltip>
+        </a>
+      </div>
+    </vue-perfect-scrollbar>
+  </section>
 </template>
 
 <script>
@@ -27,6 +40,15 @@ import { mapGetters } from 'vuex'
 
 export default {
   name: 'JusTeamMenu',
+  components: {
+    VuePerfectScrollbar: () => import('vue-perfect-scrollbar')
+  },
+  props: {
+    isTeamSectionExpanded: {
+      type: Boolean,
+      default: false
+    }
+  },
   computed: {
     ...mapGetters([
       'disputeQuery',
@@ -51,23 +73,35 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .jus-team-menu {
+  display: flex;
+  flex-direction: column;
   text-align: center;
-  &__title {
-    text-align: center;
-    margin: 32px 0 12px;
+  margin-top: 32px;
 
-    @media (max-height: 680px) {
-      margin: 40px 0 10px;
+  .jus-team-menu__title {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+    font-size: 13px;
+
+    .jus-team-menu__title-icon {
+      margin-top: 2px;
+      margin-left: 2px;
     }
   }
-  &__members {
+
+  .jus-team-menu__members {
+    flex: 1;
     display: flex;
     flex-direction: column;
   }
-  &__member {
-    padding: 8px 0px;
+
+  .jus-team-menu__member {
+    padding: 6px 0px;
   }
 }
 </style>
