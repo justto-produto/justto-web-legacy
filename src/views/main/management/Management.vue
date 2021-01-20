@@ -424,6 +424,7 @@ const defaultCheckedKeys = ['DISPUTE_CODE', 'EXTERNAL_ID', 'FIRST_CLAIMANT', 'LA
 export default {
   name: 'Management',
   components: {
+    InfiniteLoading: () => import('vue-infinite-loading'),
     ManagementFilters: () => import('./partials/ManagementFilters'),
     ManagementTable: () => import('./partials/ManagementTable'),
     ManagementActions: () => import('./partials/ManagementActions'),
@@ -493,23 +494,8 @@ export default {
     isManagementAll() {
       return this.$route.name === 'allDisputes'
     }
-    // term: {
-    //   get() {
-    //     return this.$store.getters.disputeQueryTerm
-    //   },
-    //   set(term) {
-    //     this.$store.commit('updateDisputeQuery', { key: 'term', value: term })
-    //   },
-    // },
   },
   watch: {
-    // term(term) {
-    //   clearTimeout(this.termDebounce)
-    //   this.termDebounce = setTimeout(() => {
-    //     this.$jusSegment('Busca de disputas na tabela do gerenciamento', { description: `Termo utilizado: ${term}` })
-    //     this.getDisputes()
-    //   }, 800)
-    // },
     persons() {
       this.getDisputes()
     },
@@ -521,8 +507,6 @@ export default {
     this.$store.dispatch('getNotVisualizeds')
     this.$store.dispatch('getNearExpirations')
   },
-  // created() {
-  // },
   mounted() {
     this.init()
     this.$root.$on('change-workspace', this.init)
@@ -533,7 +517,8 @@ export default {
       'exportProtocols',
       'getExportColumns',
       'getExportHistory',
-      'getPrescriptions'
+      'getPrescriptions',
+      'getAccountProperty'
     ]),
     init() {
       const query = this.$route.query
@@ -686,15 +671,20 @@ export default {
       this.getDisputes()
     },
     showExportDisputesDialog() {
-      const jusexportcolumns = JSON.parse(localStorage.getItem('jusexportcolumns') || '[]')
-      this.getExportHistory()
       this.exportDisputesDialog = true
-      this.$nextTick(() => {
-        if (jusexportcolumns && jusexportcolumns.length) {
+      this.getAccountProperty('JUS_EXPORT_COLUMNS').then(res => {
+        if (res && res.JUS_EXPORT_COLUMNS) {
+          const jusexportcolumns = res.JUS_EXPORT_COLUMNS.split(',')
           this.$refs.tree.setCheckedKeys(jusexportcolumns)
         } else {
           this.$refs.tree.setCheckedKeys(this.columns.map(c => c.key))
         }
+      }).finally(() => {
+        console.log('finally', this.$refs.tree.getCheckedKeys())
+      })
+      this.getExportHistory()
+      this.$nextTick(() => {
+        console.log('$nextTick', 'handlerChangeTree', this.$refs.tree.getCheckedKeys())
         this.handlerChangeTree('', { checkedKeys: this.$refs.tree.getCheckedKeys() })
       })
     },

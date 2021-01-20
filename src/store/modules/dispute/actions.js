@@ -241,7 +241,9 @@ const disputeActions = {
   },
   exportDisputes({ state, dispatch }, colums) {
     const stringColums = colums.toString()
-    localStorage.setItem('jusexportcolumns', JSON.stringify(colums))
+    dispatch('setAccountProperty', {
+      JUS_EXPORT_COLUMNS: stringColums
+    })
     return axiosDispatch({
       url: `${disputesPath}/export${buildQuery(state.query)}fileFormat=CSV&columnToExport=${stringColums}`
     }).then(() => { dispatch('getExportHistory') })
