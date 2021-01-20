@@ -55,7 +55,7 @@ export default {
     },
     status: {
       type: String,
-      default: '',
+      default: ''
     }
   },
   computed: {
@@ -69,7 +69,7 @@ export default {
       return require('@/assets/icons/ic-user.svg')
     },
     nameInitials() {
-      return getStringInitials(this.name).toUpperCase() 
+      return getStringInitials(this.name).toUpperCase()
     }
   }
 }
@@ -161,6 +161,5 @@ export default {
     width: 1.4rem;
     height: 1.4rem;
   }
- 
 }
 </style>

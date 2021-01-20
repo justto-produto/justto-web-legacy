@@ -87,6 +87,19 @@ const accountActions = {
       data: object,
       mutation: 'setWorkspace'
     })
+  },
+  setAccountProperty({ _ }, data) {
+    return axiosDispatch({
+      url: `${accountsPath}/my/property`,
+      method: 'PUT',
+      data
+    })
+  },
+  getAccountProperty({ _ }, property) {
+    return axiosDispatch({
+      url: `${accountsPath}/my/property/${property}`,
+      method: 'GET'
+    })
   }
   // getUserPreferences({ state }) {
   //   return axiosDispatch({
