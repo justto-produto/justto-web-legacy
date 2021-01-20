@@ -679,12 +679,9 @@ export default {
         } else {
           this.$refs.tree.setCheckedKeys(this.columns.map(c => c.key))
         }
-      }).finally(() => {
-        console.log('finally', this.$refs.tree.getCheckedKeys())
       })
       this.getExportHistory()
       this.$nextTick(() => {
-        console.log('$nextTick', 'handlerChangeTree', this.$refs.tree.getCheckedKeys())
         this.handlerChangeTree('', { checkedKeys: this.$refs.tree.getCheckedKeys() })
       })
     },
