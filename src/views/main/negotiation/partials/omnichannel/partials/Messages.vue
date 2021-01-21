@@ -9,8 +9,8 @@
       v-show="editorReady"
       ref="messageEditor"
       :value="editorText"
-      class="messages-container__editor"
       :config="editorConfig"
+      class="messages-container__editor"
       @ready="setEditorReady(true)"
       @input="setEditorText"
     />
@@ -22,10 +22,10 @@
       :autosize="{ minRows: 5 }"
       @input="setEditorText"
     />
-    <span class="messages-container__send-message-button">
+    <span class="messages-container__button">
       <el-button
         type="primary"
-        size="mini"
+        size="small"
       >
         Enviar mensagem
       </el-button>
@@ -89,31 +89,31 @@ export default {
 <style lang="scss" scoped>
 .messages-container {
   background-color: transparent !important;
-  padding: 0;
+  padding: 6px;
   display: flex;
   flex-direction: column;
 
   .messages-container__editor {
     background-color: transparent !important;
-    margin: 6px;
-    flex: 100%;
-    display: flex;
-    flex-direction: column;
+    margin: 0px;
   }
 
-  .messages-container__send-message-button {
-    margin-top: 6px;
+  .messages-container__button {
     display: flex;
     justify-content: flex-end;
+    margin-top: 6px;
   }
 }
 
 @media (max-width: 900px) {
   .messages-container {
+    padding: 0;
 
-    .messages-container__send-message-button {
-      margin-top: 6px;
+    .messages-container__editor {
+      margin: 6px;
+    }
 
+    .messages-container__button {
       .el-button {
         width: 100%;
         border-radius: 0;
@@ -124,18 +124,23 @@ export default {
 </style>
 
 <style lang="scss">
-.messages-container {
-  padding: 6px;
+@import '@/styles/colors.scss';
 
-  .cke_top, .cke_contents, .cke_reset, .cke_inner {
-    border: none;
-    background-color: transparent !important;
-  }
+.messages-container {
+  .cke_top { border: none; }
 
   .cke.cke_chrome, .el-textarea__inner {
-    border: solid 2px whitesmoke;
-    margin: 0px;
-    border-radius: 12px;
+    border: 2px solid $--light-gray;
+    border-radius: 6px;
+  }
+}
+
+@media (max-width: 900px) {
+  .messages-container {
+    .el-textarea__inner {
+      width: calc(100% - 12px);
+      margin: 6px;
+    }
   }
 }
 </style>

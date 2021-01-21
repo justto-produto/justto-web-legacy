@@ -3,8 +3,18 @@
     id="overviewOmnichanelNegotiatorContainer"
     class="overview-container"
   >
-    <header-user-menu class="overview-container__header" />
-    OVERVIEW VAI SER AQUI
+    <span
+      class="overview-container__button"
+      @click="$emit('toggle-show-overview')"
+    >
+      aaa
+    </span>
+
+    <HeaderUserMenu class="overview-container__header" />
+
+    <article class="overview-container__data">
+      OVERVIEW AQUI
+    </article>
   </section>
 </template>
 
@@ -19,21 +29,33 @@ export default {
 
 <style lang="scss" scoped>
 .overview-container {
-  padding: 6px;
   background-color: transparent;
+  padding: 6px;
+  // display: flex;
+  // flex-direction: column;
+  position: relative;
   display: grid;
   grid-template-columns: 100%;
-  grid-template-rows: 60px calc(100vh - 60px);
+  grid-template-rows: 60px calc(100vh - 66px);
 
-  @media (max-height: 680px) {
-    height: 40px;
-    grid-template-rows: 40px calc(100vh - 40px);
+  .overview-container__button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: -10px;
+
+  // @media (max-height: 680px) {
+  //   height: 40px;
+  //   grid-template-rows: 40px calc(100vh - 40px);
+  // }
   }
-
-  &__header {
-    display: flex;
-    justify-self: center;
-    align-items: center;
+  .overview-container__header {
+    // display: flex;
+    // justify-self: center;
+    // align-items: center;
+  }
+  .overview-container__data {
+    flex: 1;
   }
 }
 </style>

@@ -9,10 +9,11 @@
       @tab-click="setTab"
     >
       <el-tab-pane
-        v-for="(tab, tabIndex) in tabs"
-        :key="tabIndex"
+        v-for="tab in tabs"
+        :key="tab.name"
         :name="tab.name"
-        :label="tab.label">
+        :label="tab.label"
+      >
         <component
           :is="tab.component.name"
           v-if="tab.component && activeTab === tab.name"

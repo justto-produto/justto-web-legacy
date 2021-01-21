@@ -181,6 +181,8 @@ export default {
   background-color: transparent;
   z-index: 1;
   display: flex;
+  justify-content: center;
+  // align-items: center;
 
   .el-switch {
     margin-right: 20px;
