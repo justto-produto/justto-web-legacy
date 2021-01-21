@@ -9,29 +9,53 @@
     >
       aaa
     </span>
-    OVERVIEW VAI SER AQUI
+
+    <HeaderUserMenu class="overview-container__header" />
+
+    <article class="overview-container__data">
+      OVERVIEW AQUI
+    </article>
   </section>
 </template>
 
 <script>
 export default {
-  name: 'Overview'
+  name: 'Overview',
+  components: {
+    HeaderUserMenu: () => import('@/components/menus/HeaderUserMenu')
+  }
 }
 </script>
 
 <style lang="scss" scoped>
 .overview-container {
   background-color: transparent;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  padding: 6px;
+  // display: flex;
+  // flex-direction: column;
   position: relative;
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: 60px calc(100vh - 66px);
 
   .overview-container__button {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
     left: -10px;
+
+  // @media (max-height: 680px) {
+  //   height: 40px;
+  //   grid-template-rows: 40px calc(100vh - 40px);
+  // }
+  }
+  .overview-container__header {
+    // display: flex;
+    // justify-self: center;
+    // align-items: center;
+  }
+  .overview-container__data {
+    flex: 1;
   }
 }
 </style>
