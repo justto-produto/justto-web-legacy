@@ -7,7 +7,7 @@
       class="overview-container__button"
       @click="$emit('toggle-show-overview')"
     >
-      aaa
+      aqui
     </span>
 
     <HeaderUserMenu class="overview-container__header" />
@@ -31,8 +31,6 @@ export default {
 .overview-container {
   background-color: transparent;
   padding: 6px;
-  // display: flex;
-  // flex-direction: column;
   position: relative;
   display: grid;
   grid-template-columns: 100%;
@@ -43,17 +41,18 @@ export default {
     top: 50%;
     transform: translateY(-50%);
     left: -10px;
+  }
 
-  // @media (max-height: 680px) {
-  //   height: 40px;
-  //   grid-template-rows: 40px calc(100vh - 40px);
-  // }
+  @media (max-height: 680px) {
+    grid-template-rows: 40px calc(100vh - 46px);
   }
-  .overview-container__header {
-    // display: flex;
-    // justify-self: center;
-    // align-items: center;
+
+  &__header {
+    display: flex;
+    justify-self: center;
+    align-items: center;
   }
+
   .overview-container__data {
     flex: 1;
   }
