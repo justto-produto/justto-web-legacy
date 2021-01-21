@@ -1,7 +1,8 @@
 <template>
   <section
     id="notesTabEditorOmnichannelNegotiation"
-    class="notes-container">
+    class="notes-container"
+  >
     <ckeditor
       v-show="editorReady"
       ref="noteEditor"
@@ -11,10 +12,10 @@
       @ready="setEditorReady(true)"
       @input="setNoteEditorText"
     />
-    <span class="notes-container__send-message-button">
+    <span class="notes-container__button">
       <el-button
         type="primary"
-        size="mini"
+        size="small"
       >
         Salvar nota
       </el-button>
@@ -47,7 +48,7 @@ export default {
       set(value) {
         this.setEditorReady(value)
       }
-    },
+    }
   },
   beforeDestroy() {
     this.destroyEditor()
@@ -69,30 +70,52 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .notes-container {
+  background-color: transparent !important;
   padding: 6px;
+  display: flex;
+  flex-direction: column;
 
-  .cke_top {
-    border: none;
+  .notes-container__editor {
+    background-color: transparent !important;
+    margin: 0px;
   }
 
-  .cke.cke_chrome {
-    border: solid 2px whitesmoke;
-    margin: 0px;
-    border-radius: 6px;
+  .notes-container__button {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 6px;
+  }
+}
+
+@media (max-width: 900px) {
+  .notes-container {
+    padding: 0;
+
+    .notes-container__editor {
+      margin: 6px;
+    }
+
+    .notes-container__button {
+      .el-button {
+        width: 100%;
+        border-radius: 0;
+      }
+    }
   }
 }
 </style>
 
-<style lang="scss" scoped>
-.notes-container {
-  background-color: transparent;
+<style lang="scss">
+@import '@/styles/colors.scss';
 
-  .notes-container__send-message-button {
-    margin-top: 6px;
-    display: flex;
-    justify-content: flex-end;
+.notes-container {
+  .cke_top { border: none; }
+
+  .cke.cke_chrome {
+    border: 2px solid $--light-gray;
+    border-radius: 6px;
   }
 }
 </style>

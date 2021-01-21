@@ -172,9 +172,10 @@ export default {
 
 .tickets-container {
   .el-tabs__header {
-    padding: 0px 12px 12px;
+    padding: 12px;
     margin: 0;
     border-bottom: 2px solid $--light-gray;
+    border-top: 2px solid $--light-gray;
 
     .el-tabs__nav-prev, .el-tabs__nav-next {
       font-size: 18px !important;
@@ -193,15 +194,6 @@ export default {
 
   .el-tabs__nav-wrap:after {
     display: none;
-  }
-}
-
-@media (max-width: 900px) {
-  .tickets-container {
-    .el-tabs__header {
-      padding: 12px;
-      border-top: 2px solid $--light-gray;
-    }
   }
 }
 </style>

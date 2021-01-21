@@ -68,24 +68,11 @@ export default {
 @import '@/styles/colors.scss';
 
 .tickets-header-container {
-  padding: 18px;
+  padding: 0;
 
   .tickets-header-container__input {
+    padding: 12px;
     width: 100%;
-  }
-}
-
-@media (max-width: 900px) {
- .tickets-header-container {
-    padding: 0;
-
-    .tickets-header-container__input {
-      padding: 12px;
-
-      .el-input__inner {
-        border: none !important;
-      }
-    }
   }
 }
 </style>
@@ -97,18 +84,17 @@ export default {
   }
 }
 
+.tickets-header-container {
+  .tickets-header-container__input {
+    .el-input__inner {
+      border: none !important;
+    }
+  }
+}
 @media (max-width: 900px) {
   .tickets-header-container__popover {
     .el-autocomplete-suggestion.el-popper {
       width: calc(100% - (12px * 2)) !important;
-    }
-  }
-
- .tickets-header-container {
-    .tickets-header-container__input {
-      .el-input__inner {
-        border: none !important;
-      }
     }
   }
 }

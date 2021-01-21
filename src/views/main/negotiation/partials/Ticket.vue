@@ -3,12 +3,16 @@
     id="ticket-negotiation-container"
     class="ticket-container"
   >
-    <section class="ticket-omnichannel">
-      <ticket-header class="ticket-negotiation__header" />
-      <omnichannel class="ticket-negotiation__omnichannel" />
+    <section class="ticket-container__omnichannel">
+      <TicketHeader />
+      <Omnichannel />
     </section>
-    <section class="ticket-overview">
-      <overview class="ticket-negotiation__overview" />
+
+    <section
+      class="ticket-container__overview"
+      :class=" { 'ticket-container__overview--active': showOverview }"
+    >
+      <Overview @toggle-show-overview="toggleShowOverview" />
     </section>
   </section>
 </template>
@@ -20,29 +24,61 @@ export default {
     Omnichannel: () => import('./omnichannel/Omnichannel'),
     Overview: () => import('./overview/Overview'),
     TicketHeader: () => import('./TicketHeader')
+  },
+  data: () => ({
+    showOverview: false
+  }),
+  methods: {
+    toggleShowOverview() {
+      this.showOverview = !this.showOverview
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+@import '@/styles/colors.scss';
+
 .ticket-container {
   background-color: white;
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  grid-template-rows: 99vh;
+  display: flex;
+  position: relative;
 
-  .ticket-omnichannel {
+  .ticket-container__omnichannel {
     background-color: transparent;
-    margin-top: 6px;
-    border: solid whitesmoke 2px;
-    border-radius: 6px;
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 40px calc(100% - 40px - 6px - 2px);
+    display: flex;
+    flex-direction: column;
+    flex: 1;
   }
 
-  .ticket-overview {
-    background-color: transparent;
+  .ticket-container__overview {
+    width: 320px;
+    background-color: $--light-gray;
+    border-left: 1px solid $--light-gray;
+    transition: .6s cubic-bezier(0.19, 1, 0.22, 1);
   }
 }
+
+@media (max-width: 1200px) {
+  .ticket-container {
+    overflow-x: hidden;
+
+    .ticket-container__overview {
+      z-index: 99;
+      position: absolute;
+      right: 0;
+      transform: translateX(100%);
+      &--active { transform: translateX(0); }
+    }
+  }
+}
+
+@media (max-width: 900px) {
+  .ticket-container {
+    .ticket-container__overview {
+      width: calc(100% - 48px);
+    }
+  }
+}
+
 </style>
