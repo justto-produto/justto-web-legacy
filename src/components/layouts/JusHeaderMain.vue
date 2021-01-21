@@ -29,185 +29,22 @@
           </template>
         </el-autocomplete>
       </div>
-      <div class="jus-header-main__info">
-        <el-tooltip
-          v-if="isJusttoAdmin"
-          content="Modo anônimo"
-        >
-          <el-switch v-model="isGhostMode" />
-        </el-tooltip>
-        <el-dropdown
-          trigger="click"
-          placement="bottom-start"
-        >
-          <span class="el-dropdown-link">
-            <jus-avatar-user
-              :name="name"
-              :size="avatarSize"
-            />
-            <div class="jus-header-main__name">
-              <div style="text-transform: capitalize;">
-                {{ name }}
-              </div>
-              <span>{{ teamName }}</span>
-            </div>
-            <jus-icon icon="expand-dropdown" />
-          </span>
-          <el-dropdown-menu slot="dropdown">
-            <div class="jus-header-main__version">
-              Versão {{ appVersion }}
-            </div>
-            <router-link to="/configuration">
-              <el-dropdown-item>
-                Configurações
-              </el-dropdown-item>
-            </router-link>
-            <router-link
-              v-if="isJusttoAdmin || isAdminProfile"
-              to="/billing"
-            >
-              <el-dropdown-item>
-                Financeiro
-              </el-dropdown-item>
-            </router-link>
-            <a
-              v-if="workspaces.length"
-              href="#"
-              @click.prevent="changeWorkspace"
-            >
-              <el-dropdown-item>
-                Alterar equipe
-              </el-dropdown-item>
-            </a>
-            <a
-              href="#"
-              @click="logout()"
-            >
-              <el-dropdown-item divided>
-                Sair
-              </el-dropdown-item>
-            </a>
-          </el-dropdown-menu>
-        </el-dropdown>
-        <el-dialog
-          :close-on-click-modal="false"
-          :visible.sync="changeWorkspaceDialogVisible"
-          title="Alterar Equipe"
-          width="40%"
-        >
-          <el-select
-            v-model="selectedWorkspace"
-            placeholder="Selecione"
-            filterable
-            data-testid="select-workspace"
-          >
-            <el-option
-              v-for="(workspace, index) in workspaces"
-              :key="workspace.id"
-              :value="index"
-              :label="workspace.workspace.teamName"
-              :disabled="workspace.workspace.id == loggedWorkspaceId"
-              data-testid="select-workspace"
-            />
-          </el-select>
-          <span
-            slot="footer"
-            class="dialog-footer"
-          >
-            <el-button
-              plain
-              @click="changeWorkspaceDialogVisible = false"
-            >
-              Cancelar
-            </el-button>
-            <el-button
-              :disabled="selectedWorkspace === ''"
-              type="primary"
-              @click="getMembersAndRedirect"
-            >
-              Alterar
-            </el-button>
-          </span>
-        </el-dialog>
-      </div>
+      <header-user-menu class="jus-header-main__info" />
     </el-header>
   </div>
 </template>
 
 <script>
-import { IS_SMALL_WINDOW } from '@/constants/variables'
-import { mapGetters, mapActions } from 'vuex'
-
 export default {
   name: 'JusHeaderMain',
   components: {
-    JusDisputeResume: () => import('@/components/layouts/JusDisputeResume')
+    JusDisputeResume: () => import('@/components/layouts/JusDisputeResume'),
+    HeaderUserMenu: () => import('@/components/menus/HeaderUserMenu')
   },
-  data() {
-    return {
-      dispute: '',
-      workspacesList: [],
-      selectedWorkspace: '',
-      changeWorkspaceDialogVisible: false
-    }
-  },
-  computed: {
-    ...mapGetters({
-      isJusttoAdmin: 'isJusttoAdmin',
-      isAdminProfile: 'isAdminProfile',
-      ghostMode: 'ghostMode',
-      name: 'loggedPersonName',
-      teamName: 'workspaceTeamName',
-      loggedPerson: 'loggedPerson',
-      loggedPersonHasName: 'loggedPersonHasName',
-      loggedWorkspaceId: 'workspaceId'
-    }),
-    appVersion() {
-      return process.env.VUE_APP_VERSION
-    },
-    whatsappStatus() {
-      return this.$store.getters.whatsappStatus
-    },
-    workspaces() {
-      return this.workspacesList// .filter(w => w.workspace.id !== this.$store.getters.workspaceId)
-    },
-    isGhostMode: {
-      get() {
-        return this.ghostMode
-      },
-      set(value) {
-        this.setGhostMode(value)
-      }
-    },
-    avatarSize() {
-      return IS_SMALL_WINDOW ? 'mini' : 'sm'
-    }
-  },
-  watch: {
-    loggedPersonHasName() {
-      if (!this.loggedPersonHasName) {
-        this.setPersonName()
-      }
-    }
-  },
-  beforeMount() {
-    this.getMyWorkspaces()
-    this.setPersonName()
-  },
+  data: () => ({
+    dispute: ''
+  }),
   methods: {
-    ...mapActions(['setGhostMode']),
-
-    logout() {
-      setTimeout(() => {
-        this.$store.dispatch('logout')
-      }, 500)
-      const loading = this.$loading({
-        lock: true
-      })
-      setTimeout(() => {
-        loading.close()
-      }, 1000)
-    },
     search(term, cb) {
       clearTimeout(this.termDebounce)
       this.termDebounce = setTimeout(() => {
@@ -222,110 +59,9 @@ export default {
         })
       }, 800)
     },
+
     goToDispute({ disputeId }) {
       this.$router.push(`/management/dispute/${disputeId}`)
-    },
-    changeWorkspace() {
-      this.getMyWorkspaces()
-      this.selectedWorkspace = ''
-      this.changeWorkspaceDialogVisible = true
-    },
-    goToWorkspace(workspace) {
-      const loading = this.$loading({
-        lock: true,
-        text: 'Alterando Equipe...'
-      })
-      // loading.close()
-      const oldWorkspace = this.$store.getters.workspaceTeamName
-      if (workspace.workspace) this.$store.commit('setWorkspace', workspace.workspace)
-      if (workspace.profile) this.$store.commit('setProfile', workspace.profile)
-      if (workspace.person) this.$store.commit('setLoggedPerson', workspace.person)
-      this.$store.dispatch('getWorkspaceMembers')
-        .then(() => {
-          this.$jusSegment('Troca de time/workspace', { description: `Alterado de ${workspace.workspace.name} para ${oldWorkspace}` })
-          if (this.$route.params && this.$route.params.id) {
-            this.$store.commit('setDisputesTab', '2')
-            this.$router.push('/management')
-          } else {
-            this.$root.$emit('change-workspace')
-          }
-          this.setPersonName()
-        }).catch(error => {
-          this.$jusNotification({ error })
-        }).finally(() => {
-          this.changeWorkspaceDialogVisible = false
-          setTimeout(() => {
-            loading.close()
-          }, 1000)
-          location.reload()
-        })
-    },
-    getMembersAndRedirect() {
-      const loading = this.$loading({
-        lock: true,
-        text: 'Alterando Equipe...'
-      })
-      const selectedWorkspace = this.workspaces[this.selectedWorkspace]
-      if (selectedWorkspace.person) {
-        this.goToWorkspace(selectedWorkspace)
-      } else {
-        this.$store.dispatch('ensureWorkspaceAccesss', selectedWorkspace.workspace.id).then((res) => {
-          this.$store.commit('setToken', res)
-          this.getMyWorkspaces().then(response => {
-            const updatedWorkspace = response.find(el => {
-              return el.workspace.id === selectedWorkspace.workspace.id
-            })
-            this.goToWorkspace(updatedWorkspace)
-          }).finally(() => {
-            setTimeout(() => {
-              loading.close()
-            }, 1000)
-          })
-        })
-      }
-    },
-    getMyWorkspaces() {
-      return new Promise((resolve, reject) => {
-        this.$store.dispatch('myWorkspace')
-          .then(response => {
-            this.workspacesList = response
-            resolve(response)
-          })
-          .catch(error => {
-            this.$jusNotification({ error })
-            reject(error)
-          })
-      })
-    },
-    setPersonName() {
-      if (!this.loggedPersonHasName && this.$route.meta.requiresAuth && this.$route.name !== 'login') {
-        const validator = (value) => {
-          if (!value || value.length < 3) return 'Ops, o nome precisa ter mais de duas letras'
-          else if (!value.match(/^[^!@#$%*(){}[\]/|\\_<>?¢£¬§=+]+$/)) return 'Ops, o nome não pode conter caracteres especiais'
-          else return true
-        }
-        this.$prompt('Por favor, insira seu nome', 'Bem vindo(a)', {
-          confirmButtonText: 'Ok',
-          inputValidator: validator,
-          inputErrorMessage: 'Ops, insira um nome válido',
-          showCancelButton: false,
-          closeOnClickModal: false,
-          closeOnPressEscape: false,
-          showClose: false
-        }).then(({ value }) => {
-          const loggetPersonId = this.$store.getters.loggedPersonId
-          this.$store.dispatch('changePersonName', {
-            person: { id: loggetPersonId, name: value },
-            isEditingLoggedPerson: true
-          }).then(() => {
-            this.$jusNotification({
-              title: 'Yay!',
-              message: 'Nome alterado com sucesso.',
-              type: 'success'
-            })
-          }).catch(error => this.$jusNotification({ error }))
-        })
-      }
     }
   }
 }
