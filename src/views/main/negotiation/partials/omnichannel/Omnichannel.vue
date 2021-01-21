@@ -1,10 +1,7 @@
 <template>
   <section class="omnichannel-container">
-    <occurrences class="omnichannel-container__occurrences" />
-    <Editor
-      class="omnichannel-container__editor"
-      :size.sync="editorSize"
-    />
+    <Occurrences class="omnichannel-container__occurrences" />
+    <Editor class="omnichannel-container__editor" />
   </section>
 </template>
 
