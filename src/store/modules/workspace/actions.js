@@ -6,7 +6,8 @@ const workspaceActions = {
   myWorkspace() {
     return axiosDispatch({
       url: `${workspacesPath}/my`,
-      headers: { Workspace: '' }
+      headers: { Workspace: '' },
+      mutation: 'setUserWorkspaces'
     })
   },
   getWorkspace({ getters }) {
