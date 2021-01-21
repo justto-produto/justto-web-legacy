@@ -182,7 +182,7 @@ export default {
   z-index: 1;
   display: flex;
   justify-content: center;
-  // align-items: center;
+  align-items: center;
 
   .el-switch {
     margin-right: 20px;
