@@ -34,7 +34,8 @@ const UserModule = {
       OS: {
         name: detectOSName()
       }
-    }
+    },
+    workspaces: []
   },
   actions,
   getters,
