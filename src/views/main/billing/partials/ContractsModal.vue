@@ -573,7 +573,7 @@ export default {
     /**
      * Salva um único contrato
      */
-    saveSingleContract(contract, index) {
+    saveSingleContract(contract, _index) {
       this.saving = true
       const { form } = this
       this.updateContract({

@@ -66,20 +66,33 @@ const billingActions = {
       }
     }).then(() => dispatch('getContracts')),
 
-  updateContract: ({ dispatch }, { customerId, contract }) =>
-    axiosDispatch({
-      url: `${billingPath}/customer/${customerId}/contract/${contract.id}`,
+  updateContract: ({ dispatch }, { customerId, contract }) => {
+    const {
+      id,
+      planId,
+      status,
+      tariffs,
+      startedDate,
+      onlendingFee,
+      invoiceDueDays,
+      invoiceClosingDay,
+      monthlySubscriptionFee
+    } = contract
+    return axiosDispatch({
+      url: `${billingPath}/customer/${customerId}/contract/${id}`,
       method: 'patch',
       data: {
-        invoiceClosingDay: contract.invoiceClosingDay,
-        invoiceDueDays: contract.invoiceDueDays,
-        monthlySubscriptionFee: contract.monthlySubscriptionFee,
-        planId: contract.planId,
-        startedDate: contract.startedDate,
-        status: contract.status,
-        tariffs: contract.tariffs
+        onlendingFee,
+        invoiceClosingDay,
+        invoiceDueDays,
+        monthlySubscriptionFee,
+        planId,
+        startedDate,
+        status,
+        tariffs
       }
-    }).then(() => dispatch('getMyCusomers')),
+    }).then(() => dispatch('getMyCusomers'))
+  },
 
   getPlans: () => axiosDispatch({
     url: `${billingPath}/plans`,
