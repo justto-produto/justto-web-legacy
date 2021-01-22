@@ -3,16 +3,15 @@
     id="overviewOmnichanelNegotiatorContainer"
     class="overview-container"
   >
-    <span
-      class="overview-container__button"
+    <i
+      :class="{ 'overview-container__button--active': showOverview }"
+      class="overview-container__button el-icon-arrow-left el-icon-arrow-left"
       @click="$emit('toggle-show-overview')"
-    >
-      aqui
-    </span>
+    />
 
     <HeaderUserMenu class="overview-container__header" />
 
-    <article class="overview-container__data">
+    <article class="overview-container__info">
       OVERVIEW AQUI
     </article>
   </section>
@@ -23,38 +22,49 @@ export default {
   name: 'Overview',
   components: {
     HeaderUserMenu: () => import('@/components/menus/HeaderUserMenu')
+  },
+  props: {
+    showOverview: {
+      type: Boolean,
+      required: true
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+@import '@/styles/colors.scss';
+
 .overview-container {
   background-color: transparent;
-  padding: 6px;
   position: relative;
-  display: grid;
-  grid-template-columns: 100%;
-  grid-template-rows: 60px calc(100vh - 66px);
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
 
   .overview-container__button {
+    transform: translateY(-50%);
     position: absolute;
     top: 50%;
-    transform: translateY(-50%);
-    left: -10px;
+    left: -18px;
+    font-size: 18px;
+    transition: .6s;
+    &--active { transform: rotate(180deg); }
   }
 
-  @media (max-height: 680px) {
-    grid-template-rows: 40px calc(100vh - 46px);
-  }
-
-  &__header {
+  .overview-container__info {
     display: flex;
-    justify-self: center;
     align-items: center;
-  }
-
-  .overview-container__data {
+    justify-content: center;
     flex: 1;
+  }
+}
+
+@media (max-width: 900px) {
+  .overview-container {
+    .overview-container__header {
+      display: none;
+    }
   }
 }
 </style>

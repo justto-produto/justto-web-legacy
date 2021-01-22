@@ -31,10 +31,9 @@ export default {
 .negotiations-container {
   display: flex;
   height: 100vh;
-  // overflow: hidden;
 
   .negotiations-container__tickets {
-    width: 380px;
+    width: 360px;
     border-right: 1px solid $--light-gray;
   }
 
@@ -58,10 +57,4 @@ export default {
     }
   }
 }
-</style>
-
-<style lang="scss">
-// .el-main {
-//   overflow: hidden;
-// }
 </style>

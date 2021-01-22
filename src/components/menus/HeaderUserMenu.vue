@@ -179,7 +179,7 @@ export default {
 <style lang="scss" scoped>
 .usermenu-container {
   background-color: transparent;
-  z-index: 1;
+  height: auto;
   display: flex;
   justify-content: center;
   align-items: center;

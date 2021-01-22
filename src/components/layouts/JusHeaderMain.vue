@@ -1,45 +1,26 @@
 <template>
-  <div>
-    <el-header
-      v-if="!$route.meta.hideFullHeader"
-      class="jus-header-main"
+  <el-header
+    :class=" { 'jus-header-main--hidden': $route.meta.hideFullHeader }"
+    class="jus-header-main">
+    <i
+      class="jus-header-main__back el-icon-arrow-left"
+      @click="$router.push('/negotiation')"
+    />
+    <TicketsHeader class="jus-header-main__search" />
+    <img
+      class="jus-header-main__logo"
+      src="@/assets/logo-small.svg"
     >
-      <div class="jus-header-main__search">
-        <el-autocomplete
-          v-model="dispute"
-          :min="3"
-          :trigger-on-focus="false"
-          :fetch-suggestions="search"
-          :debounce="800"
-          popper-class="jus-header-main__autocomplete"
-          placeholder="Busque aqui as suas disputas"
-        >
-          <template slot-scope="{ item }">
-            <jus-dispute-resume
-              v-if="item.id"
-              :dispute="item"
-              @click="goToDispute"
-            />
-            <span
-              v-else
-              style="background-color: white;display: block;padding: 0 20px;"
-            >
-              Não foram encontradas disputas para esta busca. Tente buscar pelo número do processo.
-            </span>
-          </template>
-        </el-autocomplete>
-      </div>
-      <header-user-menu class="jus-header-main__info" />
-    </el-header>
-  </div>
+    <HeaderUserMenu class="jus-header-main__menu" />
+  </el-header>
 </template>
 
 <script>
 export default {
   name: 'JusHeaderMain',
   components: {
-    JusDisputeResume: () => import('@/components/layouts/JusDisputeResume'),
-    HeaderUserMenu: () => import('@/components/menus/HeaderUserMenu')
+    HeaderUserMenu: () => import('@/components/menus/HeaderUserMenu'),
+    TicketsHeader: () => import('@/views/main/negotiation/partials/tickets/TicketsHeader')
   },
   data: () => ({
     dispute: ''
@@ -74,89 +55,49 @@ export default {
   z-index: 1;
   display: flex;
 
+  &--hidden {
+    @media (min-width: 900px) {
+      display: none;
+    }
+  }
+
   @media (max-height: 680px) {
     height: 40px !important;
   }
 
-  &__version {
-    margin: 6px 20px 12px 20px;
-    color: #adadad;
-    font-size: 12px;
+  .jus-header-main__back,
+  .jus-header-main__logo {
+    display: none;
   }
-  &__title {
-    margin-left: 20px;
-    font-weight: 500;
-    a {
-      margin-right: 20px;
-    }
-  }
-  &__search {
-    display: flex;
-    width: 100%;
-    .el-autocomplete {
-      width: 100%;
-      input {
-        border: 0;
-        outline: 0;
-        height: 58px;
-        font-size: 16px;
-        opacity: .75;
 
-        @media (max-height: 680px) {
-          height: 40px;
-        }
-      }
-    }
+  .jus-header-main__search {
+    flex: 1;
   }
-  &__info {
-    display: flex;
-    align-items: center;
-    .el-switch {
-      margin-right: 20px;
-    }
-    .el-dropdown-link {
-      display: flex;
-      align-items: center;
-      margin: 8px 0;
+
+  .jus-header-main__menu {
+    width: auto;
+  }
+}
+
+@media (max-width: 900px) {
+  .jus-header-main {
+    justify-content: space-between;
+
+    .jus-header-main__back {
+      display: inline-block;
+      font-size: 24px;
+      margin-right: 6px;
+      align-self: center;
       cursor: pointer;
+    }
 
-      @media (max-height: 680px) {
-        margin: 2px 0;
-      }
+    .jus-header-main__search {
+      display: none;
     }
-  }
-  &__name {
-    margin: 0 20px 0 10px;
-    div {
-      white-space: nowrap;
-      font-weight: 600;
+
+    .jus-header-main__logo {
+      display: inline-block;
     }
-    span {
-      font-size: 12px;
-      color: #666666;
-      white-space: nowrap;
-    }
-  }
-  &__autocomplete li {
-    cursor: default;
-    padding: 0;
-  }
-  &__whatsapp {
-    position: relative;
-    margin: auto;
-    margin-right: 14px;
-    img {
-      width: 28px;
-    }
-    .el-icon-warning {
-      position: absolute;
-      right: -4px;
-      bottom: 1px;
-    }
-  }
-  .el-select {
-    width: 100%;
-    margin: 20px 0;
   }
 }
 </style>

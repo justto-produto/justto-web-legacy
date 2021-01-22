@@ -38,6 +38,12 @@ export default {
     searchTerm: '',
     debounce: setTimeout()
   }),
+  props: {
+    targetPath: {
+      type: String,
+      default: 'dispute'
+    }
+  },
   methods: {
     ...mapActions([
       'searchDisputes'
@@ -57,7 +63,7 @@ export default {
     },
 
     goToTicket({ disputeId, disputeStatus }) {
-      this.$router.push(`/negotiation/${disputeId}`)
+      this.$router.push(`/${this.targetPath}/${disputeId}`)
       this.$emit('set-tab', disputeStatus)
     }
   }
