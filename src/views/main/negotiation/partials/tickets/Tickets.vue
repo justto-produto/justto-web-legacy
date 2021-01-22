@@ -1,6 +1,8 @@
 <template>
   <nav class="tickets-container">
-    <TicketsHeader @set-tab="handleSetTab" />
+    <TicketsHeader
+      target-path="negotiation"
+      @set-tab="handleSetTab" />
 
     <el-tabs
       v-model="activeTab"

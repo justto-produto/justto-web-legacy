@@ -4,10 +4,6 @@
     class="ticket-header-container"
   >
     <article class="ticket-header-container__title">
-      <i
-        class="ticket-header-container__icon-back el-icon-arrow-left"
-        @click="$router.push('/negotiation')"
-      />
       <span class="ticket-header-container__process-code">
         Processo:
         <JusTimeline code="123456987456" />
@@ -41,13 +37,6 @@ export default {
   .ticket-header-container__title {
     display: flex;
     align-items: center;
-
-    .ticket-header-container__icon-back {
-      cursor: pointer;
-      display: none;
-      font-size: 24px;
-      margin-right: 6px;
-    }
   }
 
   .ticket-header-container__process-code {
