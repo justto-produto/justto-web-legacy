@@ -75,6 +75,7 @@ export default {
 
 <style lang="scss" scoped>
 .jus-team-menu {
+  background-color: transparent;
   display: flex;
   flex-direction: column;
   text-align: center;
