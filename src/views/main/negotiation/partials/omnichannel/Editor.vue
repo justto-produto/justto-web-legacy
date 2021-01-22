@@ -32,25 +32,10 @@ export default {
     messages: () => import('./partials/Messages'),
     notes: () => import('./partials/Notes')
   },
-  props: {
-    size: {
-      type: String,
-      default: 'NORMAL'
-    }
-  },
   computed: {
     ...mapGetters({
       activeTab: 'getActiveTab'
     }),
-
-    height: {
-      get() {
-        return this.size
-      },
-      set(size) {
-        this.$emit('update:size', size)
-      }
-    },
 
     tabs() {
       return [
