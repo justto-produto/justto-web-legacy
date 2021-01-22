@@ -291,7 +291,11 @@ export default {
       }
       this.$store.dispatch('getWorkspaceMembers')
         .then(() => {
-          this.$router.push('/')
+          if (window.innerWidth <= 900) {
+            this.$router.push('/negotiation')
+          } else {
+            this.$router.push('/')
+          }
         }).catch(error => {
           console.error(error)
           this.mountError()
