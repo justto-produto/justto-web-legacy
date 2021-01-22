@@ -12,7 +12,10 @@
       class="ticket-container__overview"
       :class=" { 'ticket-container__overview--active': showOverview }"
     >
-      <Overview @toggle-show-overview="toggleShowOverview" />
+      <Overview
+        :show-overview="showOverview"
+        @toggle-show-overview="toggleShowOverview"
+      />
     </section>
   </section>
 </template>
@@ -52,7 +55,7 @@ export default {
   }
 
   .ticket-container__overview {
-    width: 320px;
+    width: 300px;
     background-color: $--light-gray;
     border-left: 1px solid $--light-gray;
     transition: .6s cubic-bezier(0.19, 1, 0.22, 1);

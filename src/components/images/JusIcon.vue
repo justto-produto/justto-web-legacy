@@ -3,6 +3,7 @@
     v-if="iconPath"
     :src="iconPath"
     draggable="false"
+    @click="$emit('click')"
   >
 </template>
 
