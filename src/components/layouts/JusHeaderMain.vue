@@ -1,7 +1,8 @@
 <template>
   <el-header
     :class=" { 'jus-header-main--hidden': $route.meta.hideFullHeader }"
-    class="jus-header-main">
+    class="jus-header-main"
+  >
     <i
       class="jus-header-main__back el-icon-arrow-left"
       @click="$router.push('/negotiation')"

@@ -34,16 +34,16 @@ export default {
   components: {
     JusDisputeResume: () => import('@/components/layouts/JusDisputeResume')
   },
-  data: () => ({
-    searchTerm: '',
-    debounce: setTimeout()
-  }),
   props: {
     targetPath: {
       type: String,
       default: 'dispute'
     }
   },
+  data: () => ({
+    searchTerm: '',
+    debounce: setTimeout()
+  }),
   methods: {
     ...mapActions([
       'searchDisputes'
