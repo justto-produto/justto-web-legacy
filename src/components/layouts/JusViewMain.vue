@@ -153,7 +153,7 @@ export default {
 
     .el-card__body {
       @media (max-height: 680px) {
-        padding: 10px 10px 0 10px;
+        padding: 10px;
       }
     }
   }
