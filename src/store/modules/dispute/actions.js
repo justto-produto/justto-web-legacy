@@ -680,6 +680,12 @@ const disputeActions = {
       url: `api/office/documents/dispute/${disputeId}/metadata`,
       mutation: 'setDisputeMetadata'
     })
+  },
+  getFinishedDisputesCount({ state }, disputeIds) {
+    return axiosDispatch({
+      url: `/api/disputes/count-finished/${buildQuery({ ...state.query, disputeIds })}`,
+      mutation: 'setDisputeMetadata'
+    })
   }
 }
 
