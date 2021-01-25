@@ -34,16 +34,16 @@ export default {
   components: {
     JusDisputeResume: () => import('@/components/layouts/JusDisputeResume')
   },
-  data: () => ({
-    searchTerm: '',
-    debounce: setTimeout()
-  }),
   props: {
     targetPath: {
       type: String,
       default: 'management/dispute'
     }
   },
+  data: () => ({
+    searchTerm: '',
+    debounce: setTimeout()
+  }),
   methods: {
     ...mapActions([
       'searchDisputes'
@@ -79,6 +79,14 @@ export default {
   .tickets-header-container__input {
     padding: 12px;
     width: 100%;
+  }
+}
+
+@media (max-height: 680px) {
+  .tickets-header-container {
+    .tickets-header-container__input {
+      padding: 5px;
+    }
   }
 }
 </style>
