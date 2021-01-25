@@ -71,7 +71,7 @@ export default {
     },
 
     available() {
-      return this.$store.getters.disputeAttachments.map(({ url }) => decodeURI(url)).includes(this.occurrence.properties.FILE_URL)
+      return this.occurrence && this.occurrence.interaction && !this.occurrence.interaction.archived
     }
   },
   methods: {
