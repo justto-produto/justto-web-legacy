@@ -41,7 +41,7 @@ export default {
   props: {
     targetPath: {
       type: String,
-      default: 'dispute'
+      default: 'management/dispute'
     }
   },
   methods: {
