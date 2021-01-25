@@ -37,7 +37,7 @@ export default {
   props: {
     targetPath: {
       type: String,
-      default: 'dispute'
+      default: 'management/dispute'
     }
   },
   data: () => ({
@@ -79,6 +79,14 @@ export default {
   .tickets-header-container__input {
     padding: 12px;
     width: 100%;
+  }
+}
+
+@media (max-height: 680px) {
+  .tickets-header-container {
+    .tickets-header-container__input {
+      padding: 5px;
+    }
   }
 }
 </style>

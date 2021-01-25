@@ -64,6 +64,7 @@ export default {
 
   @media (max-height: 680px) {
     height: 40px !important;
+    padding-left: 0px;
   }
 
   .jus-header-main__back,
