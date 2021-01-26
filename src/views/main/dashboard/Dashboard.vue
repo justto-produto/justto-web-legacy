@@ -233,7 +233,6 @@ export default {
     if (!this.chartsDatasets.length) {
       this.getDashboard()
     }
-    this.$root.$on('change-workspace', this.getDashboard)
   },
   methods: {
     getDashboard() {

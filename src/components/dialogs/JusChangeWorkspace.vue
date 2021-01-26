@@ -89,18 +89,17 @@ export default {
       if (workspace.person) {
         this.$store.commit('setLoggedPerson', workspace.person)
       }
-      if (this.$route.params && this.$route.params.id) {
-        this.$store.commit('setDisputesTab', '2')
-        this.$router.push('/management')
-      }
       this.$store.dispatch('getWorkspaceMembers')
         .then(() => {
           this.$jusSegment('Troca de time/workspace', { description: `Alterado de ${workspace.workspace.name} para ${oldWorkspace}` })
-          this.$root.$emit('change-workspace')
           this.setPersonName()
         }).catch(error => {
           this.$jusNotification({ error })
         }).finally(() => {
+          if (this.$route.params && this.$route.params.id) {
+            this.$store.commit('setDisputesTab', '2')
+            this.$router.push('/management')
+          }
           this.isVisible = false
           setTimeout(() => {
             loading.close()
