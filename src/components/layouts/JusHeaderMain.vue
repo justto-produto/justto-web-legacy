@@ -99,6 +99,7 @@ export default {
 
     .jus-header-main__logo {
       display: inline-block;
+      padding: 6px 0px;
     }
   }
 }
