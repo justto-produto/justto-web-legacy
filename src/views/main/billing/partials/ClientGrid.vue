@@ -88,7 +88,6 @@ export default {
   },
   created() {
     this.init()
-    this.$root.$on('change-workspace', this.init)
   },
   methods: {
     ...mapActions([
