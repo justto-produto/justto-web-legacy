@@ -13,7 +13,7 @@ html {
 body, html, #app, section:not(.ps-container) {
   height: 100%;
   margin: 0;
-  background-color: $--background-color-base;
+  background-color: $--background-color-white;
 }
 h1 {
   font-size: 30px;
@@ -161,5 +161,19 @@ a {
   }
   50% {
     transform: scaleX(1)
+  }
+}
+
+.show-only-sm {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .show-only-sm {
+    display: block;
+  }
+
+  .show-only-md {
+    display: none;
   }
 }
