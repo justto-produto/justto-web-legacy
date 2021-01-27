@@ -19,6 +19,10 @@ const omnichannelMutations = {
   },
   setMessageType: (state, type) => {
     Vue.set(state.editor, 'messageType', type)
+  },
+  setOccurrences: (state, { content }) => {
+    // TODO: Validar duplicidade/sobrescrita de ocorrências.
+    Vue.set(state.occurrences, 'list', content)
   }
 }
 
