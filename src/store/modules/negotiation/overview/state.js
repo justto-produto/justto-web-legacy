@@ -5,11 +5,11 @@
 // import TicketOverviewAttachments from '@/models/negotiations/overview/TicketOverviewAttachmentsVm'
 
 const overviewState = {
-  disputeOverview: {},
-  disputeOverviewInfo: {},
-  disputeOverviewParties: {},
-  disputeOverviewProperties: {},
-  disputeOverviewAttachments: {}
+  ticketOverview: {},
+  ticketOverviewInfo: {},
+  ticketOverviewParties: {},
+  ticketOverviewProperties: {},
+  ticketOverviewAttachments: {}
 }
 
 export default overviewState

@@ -200,6 +200,24 @@
       "BULK_COMPOSE_MESSAGE": "Compor mensagem em massa"
     }
   },
+  "actions": {
+    "SETTLED": "ganhar | aceitar acordo",
+    "UNSETTLED": "perder",
+    "SET_UNREAD": "marcar como não lido",
+    "RESUME": "retomar negociação",
+    "PAUSE": "pausar negociação",
+    "MANUAL_COUNTERPROPOSAL": "contraproposta manual",
+    "RESTART_ENGAGEMENT": "reiniciar disputa",
+    "RESEND_MESSAGES": "reenviar mensagens automáticas",
+    "CANCEL_MESSAGES": "cancelar mensagens agendadas",
+    "CHANGE_NEGOTIATORS": "trocar negociadores",
+    "ENRICH": "enriquecer disputa",
+    "RENEGOTIATE": "retornar para negociação",
+    "UPLOAD_ATTACHMENT": "enviar anexo",
+    "DROP_LAWSUIT": "confirmar baixa definitiva",
+    "START_NEGOTIATION": "iniciar negociação",
+    "DELETE_DOCUMENT": "excluír documento"
+  },
   "fields": {
     "claimantParty": "Parte contrária",
     "claimantLawyer": "Advogado(a) da parte",

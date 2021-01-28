@@ -6,17 +6,27 @@
     <article class="ticket-header-container__title">
       <span class="ticket-header-container__process-code">
         Processo:
-        <JusTimeline code="123456987456" />
+        <JusTimeline :code="ticket.code" />
       </span>
     </article>
+
+    <TicketActions :ticket="ticket" />
   </section>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'TicketHeader',
   components: {
-    JusTimeline: () => import('@/components/JusTimeline/JusTimeline')
+    JusTimeline: () => import('@/components/JusTimeline/JusTimeline'),
+    TicketActions: () => import('./TicketActions')
+  },
+  computed: {
+    ...mapGetters({
+      ticket: 'getTicketOverview'
+    })
   }
 }
 </script>
