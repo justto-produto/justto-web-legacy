@@ -31,6 +31,7 @@ export default {
 .negotiations-container {
   display: flex;
   height: 100vh;
+  overflow-y: hidden;
 
   .negotiations-container__tickets {
     width: 360px;

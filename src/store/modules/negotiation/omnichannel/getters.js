@@ -1,5 +1,11 @@
 import { stripHtml } from '@/utils'
 
+const mapTabOccurrenceType = {
+  MESSAGES: 'INTERACTION',
+  NOTES: 'NOTE',
+  OCCURRENCES: 'LOG'
+}
+
 const omnichannelGetters = {
   getActiveTab: state => (state.activeTab),
   getEditorConfig: state => (state.editor.configs),
@@ -7,7 +13,12 @@ const omnichannelGetters = {
   getEditorText: state => (state.editor.messageText),
   getNoteEditorText: state => (state.editor.noteText),
   getEditorTextScaped: state => stripHtml(state.editor.messageText),
-  getEditorMessageType: state => (state.editor.messageType)
+  getEditorMessageType: state => (state.editor.messageType),
+  getOccurrencesList: state => (state.occurrences.list),
+  getOccurrencesFilter: state => ({
+    ...state.occurrences.filter,
+    type: mapTabOccurrenceType[state.activeTab]
+  })
 }
 
 export default omnichannelGetters
