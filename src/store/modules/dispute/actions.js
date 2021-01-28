@@ -515,12 +515,6 @@ const disputeActions = {
         })
     })
   },
-  startNegotiation({ _ }, disputeId) {
-    return axiosDispatch({
-      url: `${disputesPath}/${disputeId}/start-negotiation`,
-      method: 'PATCH'
-    })
-  },
   disputeSetVisualized({ _ }, params) {
     return axiosDispatch({
       url: `${disputesPath}/${params.disputeId}/visualized`,

@@ -21,6 +21,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
   name: 'Ticket',
   components: {
@@ -31,7 +33,22 @@ export default {
   data: () => ({
     showOverview: false
   }),
+  watch: {
+    '$route.params.id'() {
+      this.fetchData()
+    }
+  },
+  beforeMount() {
+    this.fetchData()
+  },
+
   methods: {
+    ...mapActions(['getTicketOverview']),
+
+    fetchData() {
+      this.getTicketOverview(this.$route.params.id)
+    },
+
     toggleShowOverview() {
       this.showOverview = !this.showOverview
     }

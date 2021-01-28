@@ -1,9 +1,9 @@
 const overviewGetters = {
-  getDisputeOverview: ({ disputeOverview }) => disputeOverview,
-  getDisputeOverviewInfo: ({ disputeOverviewInfo }) => disputeOverviewInfo,
-  getDisputeOverviewParties: ({ disputeOverviewParties }) => disputeOverviewParties,
-  getDisputeOverviewProperties: ({ disputeOverviewProperties }) => disputeOverviewProperties,
-  getDisputeOverviewAttachments: ({ disputeOverviewAttachments }) => disputeOverviewAttachments
+  getTicketOverview: ({ ticketOverview }) => ticketOverview,
+  getTicketOverviewInfo: ({ ticketOverviewInfo }) => ticketOverviewInfo,
+  getTicketOverviewParties: ({ ticketOverviewParties }) => ticketOverviewParties,
+  getTicketOverviewProperties: ({ ticketOverviewProperties }) => ticketOverviewProperties,
+  getTicketOverviewAttachments: ({ ticketOverviewAttachments }) => ticketOverviewAttachments
 }
 
 export default overviewGetters

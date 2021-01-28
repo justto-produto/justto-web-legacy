@@ -30,6 +30,12 @@
         "allowCoexistStyle": true
       }
     ],
+    "vue/no-use-v-if-with-v-for": [
+      "error",
+      {
+        "allowUsingIterationVar": true
+      }
+    ],
     "vue/no-textarea-mustache": "error",
     "vue/no-unused-vars": "error",
     "vue/require-valid-default-prop": "error",
