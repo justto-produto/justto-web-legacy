@@ -2,7 +2,6 @@
   <article class="ticket-actions">
     <el-button
       v-for="action in actionsList.filter(a => a.isDynamic)"
-      v-if="action.isVisible"
       :key="action.name"
       class="ticket-actions__dynamic-buttons ticket-actions__buttons"
       @click="action.method(action.name)"
@@ -23,7 +22,6 @@
       <ul class="ticket-actions__actions-list">
         <li
           v-for="action in actionsList"
-          v-if="action.isVisible"
           :key="action.name"
           :class="{ 'ticket-actions__list-item--hidden': action.isDynamic }"
           class="ticket-actions__list-item"
@@ -121,8 +119,8 @@ export default {
           isVisible: !this.isPreNegotiation
         },
         {
-          name: 'CHANGE_NEGOTIATORS',
-          method: (action) => this.handleChangeNegotiators(action),
+          name: 'EDIT_NEGOTIATORS',
+          method: (action) => this.handleEditNegotiators(action),
           isVisible: !this.isPreNegotiation
         },
         {
@@ -228,7 +226,7 @@ export default {
 
       const settledTicket = () => {
         if (status === 'CHECKOUT' || status === 'ACCEPTED') {
-          this.$refs.dialogActions.openTicketResumeDialog('WIN')
+          this.$refs.dialogActions.openTicketResumeDialog(action, 'WIN')
         } else {
           this.$refs.dialogActions.openOfferDialog(action)
         }
@@ -307,8 +305,8 @@ export default {
         )
     },
 
-    handleChangeNegotiators() {
-
+    handleEditNegotiators(action) {
+      this.$refs.dialogActions.openEditNegotiatorsDialog(action)
     },
 
     handleEnrich(action) {
