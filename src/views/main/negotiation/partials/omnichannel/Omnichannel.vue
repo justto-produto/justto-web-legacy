@@ -9,7 +9,7 @@
 export default {
   name: 'Omnichannel',
   components: {
-    Occurrences: () => import('./Occurrences'),
+    Occurrences: () => import('./occurrences/Occurrences'),
     Editor: () => import('./Editor')
   }
 }

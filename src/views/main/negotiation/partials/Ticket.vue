@@ -46,6 +46,7 @@ export default {
   background-color: white;
   display: flex;
   position: relative;
+  overflow-y: visible;
 
   .ticket-container__omnichannel {
     background-color: transparent;
