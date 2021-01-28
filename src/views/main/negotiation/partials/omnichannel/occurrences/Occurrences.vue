@@ -47,5 +47,6 @@ export default {
 .occurrences-container {
   display: flex;
   flex-direction: column-reverse;
+  overflow-y: auto;
 }
 </style>
