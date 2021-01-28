@@ -23,6 +23,11 @@ export default {
   display: flex;
   flex-direction: column;
 
+  .omnichannel-container__occurrences {
+    height: auto;
+    padding: 6px 0px;
+  }
+
   .omnichannel-container__editor {
     border-top: 2px solid $--light-gray;
     height: auto;
