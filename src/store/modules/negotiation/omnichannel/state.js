@@ -2,6 +2,13 @@ import EDITOR_CONSTANTS from '@/constants/editor'
 
 const omnichannelMutations = {
   activeTab: EDITOR_CONSTANTS.MESSAGES,
+  occurrences: {
+    filter: {
+      page: 0,
+      size: 20
+    },
+    list: []
+  },
   editor: {
     configs: {
       uiColor: '#FFFFFF',

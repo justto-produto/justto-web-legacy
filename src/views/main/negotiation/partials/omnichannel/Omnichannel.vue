@@ -9,7 +9,7 @@
 export default {
   name: 'Omnichannel',
   components: {
-    Occurrences: () => import('./Occurrences'),
+    Occurrences: () => import('./occurrences/Occurrences'),
     Editor: () => import('./Editor')
   }
 }
@@ -22,6 +22,11 @@ export default {
   background-color: transparent;
   display: flex;
   flex-direction: column;
+
+  .omnichannel-container__occurrences {
+    height: auto;
+    padding: 6px 0px;
+  }
 
   .omnichannel-container__editor {
     border-top: 2px solid $--light-gray;

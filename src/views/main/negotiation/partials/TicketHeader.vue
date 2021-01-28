@@ -56,6 +56,12 @@ export default {
   }
 }
 
+@media (max-height: 680px) {
+  .ticket-header-container {
+    height: 40px;
+  }
+}
+
 @media (max-width: 900px) {
   .ticket-header-container {
     .ticket-header-container__title {
