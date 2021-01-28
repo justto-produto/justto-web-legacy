@@ -7,7 +7,7 @@
     </div>
     <div
       class="interaction-container__balloon"
-      :class="interaction.direction">
+      :class="`${interaction.direction} ballon-${messageType}`">
       <div class="interaction-container__balloon-avatar show-only-sm">
         <JusAvatarUser v-bind="avatarProps" />
       </div>
@@ -37,11 +37,30 @@ export default {
     type() {
       return this.value.interaction.type.split('_')[0]
     },
+    messageType() {
+      const mapCommunicationTypes = {
+        EMAIL: 'email',
+        WHATSAPP: 'whatsapp',
+        NEGOTIATOR_MESSAGE: 'negotiatior'
+      }
+      if (this.interaction?.message?.communicationType) {
+        const { communicationType } = this.interaction.message
+        if (Object.keys(mapCommunicationTypes).includes(communicationType)) {
+          return mapCommunicationTypes[communicationType]
+        }
+      }
+      return 'default'
+    },
     interaction() {
       return this.value.interaction
     },
     personName() {
-      return this.interaction.properties.PERSON_NAME
+      if (this.interaction?.properties?.PERSON_NAME) {
+        return this.interaction.properties.PERSON_NAME
+      } else if (this.interaction?.message?.parameters?.SENDER_NAME) {
+        return this.interaction.message.parameters.SENDER_NAME
+      }
+      return ''
     },
     isInboundInteraction() {
       return this.interaction.direction === 'INBOUND'
@@ -88,6 +107,7 @@ export default {
   .interaction-container__balloon {
     background: #FFFFFF 0% 0% no-repeat padding-box;
     box-shadow: 0px 3px 6px #47454526;
+    max-width: 80%;
     border-radius: 18px;
     padding: 12px;
 
@@ -102,6 +122,23 @@ export default {
     &.OUTBOUND {
       flex-direction: row-reverse;
     }
+
+    &.ballon-email {
+      border-color: #DFF4FE;
+    }
+
+    &.ballon-default {
+      border-color: #DFF4FE;
+    }
+
+    &.ballon-negotiatior {
+      border-color: #FF9300;
+    }
+
+    &.ballon-whatsapp {
+      border-color: #85eb94;
+    }
   }
+
 }
 </style>
