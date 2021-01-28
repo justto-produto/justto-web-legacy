@@ -1920,7 +1920,9 @@ export default {
         return []
       },
       set(bankAccountIds) {
-        this.updateDisputeBankAccounts(bankAccountIds)
+        if (bankAccountIds.length) {
+          this.updateDisputeBankAccounts(bankAccountIds)
+        }
       }
     },
     selectedRole: {
@@ -2788,6 +2790,8 @@ export default {
             }).slice(-hasNewBankAccount).map(ba => ba.id)
             this.disputeBankAccountsIds = ([...this.disputeBankAccountsIds, ...newBankAccounts])
             // this.updateDisputeBankAccounts(newBankAccount.id)
+          }).finally(() => {
+            this.linkBankAccountLoading = false
           })
         }
         this.editRoleDialogVisible = false
