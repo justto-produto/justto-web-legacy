@@ -16,18 +16,27 @@
     >
       <span class="el-dropdown-link">
         <jus-avatar-user
+          class="md"
           :name="name"
           :size="avatarSize"
         />
-        <div class="usermenu-container__name">
+        <div class="usermenu-container__name md">
           <div style="text-transform: capitalize;">
             {{ name }}
           </div>
           <span>{{ teamName }}</span>
         </div>
-        <jus-icon icon="expand-dropdown" />
+        <span class="sm">
+          <jus-icon icon="menu-hamburger" />
+        </span>
       </span>
       <el-dropdown-menu slot="dropdown">
+        <div style="text-transform: capitalize; text-align: center;">
+          {{ name }}
+        </div>
+        <!-- <div class="usermenu-container__version">
+          {{ teamName }}
+        </div> -->
         <div class="usermenu-container__version">
           Versão {{ appVersion }}
         </div>
@@ -187,16 +196,22 @@ export default {
   .el-switch {
     margin-right: 20px;
   }
+
   .el-dropdown-link {
     display: flex;
     align-items: center;
     margin: 8px 0;
     cursor: pointer;
 
+    .sm {
+      display: none;
+    }
+
     @media (max-height: 680px) {
       margin: 2px 0;
     }
   }
+
   &__version {
     margin: 6px 20px 12px 20px;
     color: #adadad;
@@ -212,6 +227,19 @@ export default {
       font-size: 12px;
       color: #666666;
       white-space: nowrap;
+    }
+  }
+}
+@media (max-width: 900px) {
+  .usermenu-container {
+    .el-switch { display: none;}
+    .el-dropdown-link {
+      .md {
+        display: none;
+      }
+      .sm {
+        display: flex;
+      }
     }
   }
 }

@@ -117,7 +117,6 @@ export default {
   },
   beforeMount() {
     this.init()
-    this.$root.$on('change-workspace', this.init)
   },
   methods: {
     init() {

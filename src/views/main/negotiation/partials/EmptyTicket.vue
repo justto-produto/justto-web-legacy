@@ -4,7 +4,7 @@
     class="empty-ticket-container"
   >
     <jus-icon
-      icon="hand-click"
+      icon="empty-ticket-state"
       class="empty-ticket-container__icon"
     />
     <span class="empty-ticket-container__text">
@@ -12,6 +12,16 @@
     </span>
   </section>
 </template>
+
+<script>
+import EmptyTicket from '@/assets/icons/ic-empty-ticket-state.svg'
+
+export default {
+  data: () => ({
+    src: EmptyTicket
+  })
+}
+</script>
 
 <style lang="scss" scoped>
 @import '@/styles/colors.scss';
@@ -24,6 +34,7 @@
   color: $--color-primary;
   font-weight: 500;
   font-size: 40px;
+  gap: 24px;
 
   &__text{
     text-align: center;

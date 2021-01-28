@@ -1465,9 +1465,10 @@ export default {
     width: fit-content;
     background-color: transparent;
     border: none;
+    z-index: 10;
+
     .el-card__body {
       box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
-      padding: 10px;
     }
   }
   .el-dialog__body {

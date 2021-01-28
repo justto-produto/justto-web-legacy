@@ -509,7 +509,6 @@ export default {
   },
   mounted() {
     this.init()
-    this.$root.$on('change-workspace', this.init)
   },
   methods: {
     ...mapActions([

@@ -50,21 +50,34 @@ const billingActions = {
     })
   },
 
-  addContract: ({ dispatch }, { customerId, contract }) =>
-    axiosDispatch({
+  addContract: ({ dispatch }, { customerId, contract }) => {
+    const {
+      planId,
+      status,
+      tariffs,
+      startedDate,
+      workspaceId,
+      onlendingFee,
+      invoiceDueDays,
+      invoiceClosingDay,
+      monthlySubscriptionFee
+    } = contract
+    return axiosDispatch({
       url: `${billingPath}/customer/${customerId}/contract`,
-      method: 'post',
+      method: 'POST',
       data: {
-        invoiceClosingDay: contract.invoiceClosingDay,
-        invoiceDueDays: contract.invoiceDueDays,
-        monthlySubscriptionFee: contract.monthlySubscriptionFee,
-        planId: contract.planId,
-        startedDate: contract.startedDate,
-        status: contract.status,
-        tariffs: contract.tariffs,
-        workspaceId: contract.workspaceId
+        planId,
+        status,
+        tariffs,
+        startedDate,
+        workspaceId,
+        onlendingFee,
+        invoiceDueDays,
+        invoiceClosingDay,
+        monthlySubscriptionFee
       }
-    }).then(() => dispatch('getContracts')),
+    }).then(() => dispatch('getContracts'))
+  },
 
   updateContract: ({ dispatch }, { customerId, contract }) => {
     const {
