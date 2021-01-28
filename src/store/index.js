@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 
 // MODULES
 import accountModule from './modules/account'
+import actionsModules from './modules/actions'
 import billingModule from './modules/billing'
 import campaignModule from './modules/campaign'
 import dashboardModule from './modules/dashboard'
@@ -70,6 +71,7 @@ export default new Vuex.Store({
   },
   modules: {
     accountModule,
+    actionsModules,
     billingModule,
     campaignModule,
     dashboardModule,

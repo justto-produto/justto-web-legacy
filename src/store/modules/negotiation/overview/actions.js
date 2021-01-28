@@ -1,41 +1,41 @@
 import { axiosDispatch } from '@/utils/'
 
-const overviewApi = '/disputes/v2'
-const officeApi = '/office'
+const overviewApi = '/api/disputes/v2'
+const officeApi = '/api/office'
 
 const overviewActions = {
-  getDisputeOverview(disputeId) {
+  getTicketOverview({ _ }, disputeId) {
     return axiosDispatch({
       url: `${overviewApi}/${disputeId}`,
-      mutation: 'setDisputeOverview'
+      mutation: 'setTicketOverview'
     })
   },
 
-  getDisputeOverviewInfo(disputeId) {
+  getTicketOverviewInfo({ _ }, disputeId) {
     return axiosDispatch({
       url: `${overviewApi}/${disputeId}/info`,
-      mutation: 'setDisputeOverviewInfo'
+      mutation: 'setTicketOverviewInfo'
     })
   },
 
-  getDisputeOverviewParties(disputeId) {
+  getTicketOverviewParties({ _ }, disputeId) {
     return axiosDispatch({
       url: `${overviewApi}/${disputeId}/parties`,
-      mutation: 'setDisputeOverviewParties'
+      mutation: 'setTicketOverviewParties'
     })
   },
 
-  getDisputeOverviewProperties(disputeId) {
+  getTicketOverviewProperties({ _ }, disputeId) {
     return axiosDispatch({
       url: `${overviewApi}/${disputeId}/properties`,
-      mutation: 'setDisputeOverviewProperties'
+      mutation: 'setTicketOverviewProperties'
     })
   },
 
-  getDisputeOverviewAttachments(disputeId) {
+  getTicketOverviewAttachments({ _ }, disputeId) {
     return axiosDispatch({
       url: `${officeApi}/disputes/${disputeId}/attachments`,
-      mutation: 'setDisputeOverviewAttachments'
+      mutation: 'setTicketOverviewAttachments'
     })
   }
 }
