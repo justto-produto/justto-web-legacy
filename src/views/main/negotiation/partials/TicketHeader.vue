@@ -74,9 +74,9 @@ export default {
     }
   }
 
-  .ticket-header-container__actions {
-    min-width: 260px;
-  }
+  // .ticket-header-container__actions {
+  //   min-width: 260px;
+  // }
 }
 
 @media (max-width: 900px) {
