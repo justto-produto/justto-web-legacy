@@ -2115,7 +2115,7 @@ export default {
         const { number, state } = value
 
         const alreadyExists = disputeRole.oabs.filter(oab => {
-          return number === oab.number && state === oab.state
+          return number === oab.number && state === oab.state && !oab.archived
         }).length > 0
 
         if (!alreadyExists) {
