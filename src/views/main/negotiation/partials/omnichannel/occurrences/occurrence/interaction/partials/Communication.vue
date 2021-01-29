@@ -13,7 +13,8 @@
       </span>
       <span
         v-if="!isValidName"
-        class="communication-container__email-contact">
+        class="communication-container__email-contact"
+      >
         &lt;{{ contact }}&gt;
       </span>
     </div>
@@ -24,6 +25,7 @@
 
     <div class="communication-container__about">
       {{ sendDate[sendStatus] }}
+      •
       <JusIcon
         v-if="sendStatus && !directionIn"
         class="communication-container__about-icon"
