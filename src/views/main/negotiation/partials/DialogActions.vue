@@ -70,10 +70,10 @@
                 style="width: 100%;"
               >
                 <el-option
-                  v-for="claimant in ticketRoles"
-                  :key="claimant.id"
-                  :value="claimant.id"
-                  :label="claimant.name"
+                  v-for="partie in ticketParties"
+                  :key="partie.disputeRoleId"
+                  :value="partie.disputeRoleId"
+                  :label="partie.name"
                 />
               </el-select>
             </el-form-item>
@@ -232,7 +232,7 @@
           v-model="editNegotiatorsForm"
           :titles="['Equipe', 'Disputa']"
           :button-texts="['Remover', 'Adicionar']"
-          :data="workspaceNegotiators"
+          :data="workspaceMembers"
           filter-placeholder="Buscar"
           filterable
         />
@@ -256,7 +256,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'DialogActions',
   props: {
@@ -287,6 +287,11 @@ export default {
     editNegotiatorsForm: []
   }),
   computed: {
+    ...mapGetters({
+      ticketParties: 'getTicketOverviewParties',
+      workspaceMembers: 'workspaceMembers'
+    }),
+
     ticketRoles() {
       return [{ name: 'teste', id: 1 }, { name: 'teste2', id: 2 }]
     },
@@ -376,6 +381,7 @@ export default {
     },
 
     openEditNegotiatorsDialog(action) {
+      this.editNegotiatorsForm = this.ticketParties
       this.editNegotiatorsDialogVisible = true
     },
 

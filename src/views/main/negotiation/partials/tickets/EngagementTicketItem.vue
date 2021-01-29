@@ -21,7 +21,7 @@
         </span>
       </div>
       <div class="communication-ticket-item-container__message">
-        {{ ticket.pendingReason }}
+        {{ ticket.pendingReason || $t(`dispute.status.${ticket.status}`) }}
       </div>
     </div>
     <!-- <span class="communication-ticket-item-container__time">
