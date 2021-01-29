@@ -56,6 +56,10 @@ export default {
       return this.value.interaction
     },
     personName() {
+      if (this.type === 'MANUAL') {
+        return this.interaction?.properties?.USER
+      }
+
       if (this.interaction?.properties?.PERSON_NAME) {
         return this.interaction.properties.PERSON_NAME
       } else if (this.interaction?.message?.parameters?.SENDER_NAME) {
@@ -70,7 +74,7 @@ export default {
       return {
         name: this.personName,
         size: 'md',
-        purple: this.isInboundInteraction
+        purple: this.isInboundInteraction && this.type !== 'MANUAL'
       }
     }
   }
@@ -105,7 +109,12 @@ export default {
     }
   }
 
+  &.MANUAL {
+    flex-direction: row-reverse;
+  }
+
   .interaction-container__balloon {
+    overflow-x: hidden;
     background: #FFFFFF 0% 0% no-repeat padding-box;
     box-shadow: 0px 3px 6px #47454526;
     max-width: 80%;
@@ -125,10 +134,6 @@ export default {
     }
 
     &.ballon-email {
-      border-color: #DFF4FE;
-    }
-
-    &.ballon-default {
       border-color: #DFF4FE;
     }
 
