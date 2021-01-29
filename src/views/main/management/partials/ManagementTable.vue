@@ -398,12 +398,12 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([
-      'disputeTimeline',
-      'loading',
-      'lastAccess',
-      'onlineDocuments'
-    ]),
+    ...mapGetters({
+      disputeTimeline: 'getDisputesTimeline',
+      loading: 'loading',
+      lastAccess: 'lastAccess',
+      onlineDocuments: 'onlineDocuments'
+    }),
 
     selectedIdsComp: {
       get() {
