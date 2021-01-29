@@ -11,13 +11,17 @@
       <span class="communication-container__email-person">
         {{ person }}
       </span>
-      <span class="communication-container__email-contact">
+      <span
+        v-if="!isValidName"
+        class="communication-container__email-contact">
         &lt;{{ contact }}&gt;
       </span>
     </div>
+
     <div class="communication-container__message">
       {{ text }}
     </div>
+
     <div class="communication-container__about">
       {{ sendDate[sendStatus] }}
       <JusIcon
@@ -68,16 +72,24 @@ export default {
     },
 
     person() {
-      return this.interaction.message.parameters[this.directionIn ? 'SENDER_NAME' : 'RECEIVER_NAME']
+      const name = this.interaction.message.parameters[this.directionIn ? 'SENDER_NAME' : 'RECEIVER_NAME']
+      return name
+    },
+
+    isValidName() {
+      const regex = new RegExp('(([^<>()\\[\\]\\\\.,;:\\s@"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@"]+)*)|(".+"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,24}))')
+      return regex.test(this.person)
     },
 
     sendDate() {
       const first = (first) => (first ? first.split(' ')[0] : '')
+      const defaultDate = this.interaction?.updateAt?.dateTime ? this.interaction.updateAt.dateTime : this.interaction.createAt.dateTime
 
       return {
         sent: first(this.interaction?.message?.parameters?.SEND_DATE),
         readed: first(this.interaction?.message?.parameters?.READ_DATE),
-        recived: first(this.interaction?.message?.parameters?.RECEIVER_DATE)
+        recived: first(this.interaction?.message?.parameters?.RECEIVER_DATE),
+        default: this.$moment(defaultDate).format('DD/MM/YY[ às ]HH:mm')
       }
     },
 
@@ -89,7 +101,7 @@ export default {
       } else if (this.sendDate.sent) {
         return 'sent'
       } else {
-        return ''
+        return 'default'
       }
     },
 
@@ -137,11 +149,11 @@ export default {
     font: normal normal normal 15px/18px Proxima Nova;
     color: #9A9797;
 
-    /* margin-bottom: 6px;
+    margin-bottom: 6px;
     width: max-content;
     white-space: nowrap;
     text-overflow: ellipsis;
-    overflow: hidden; */
+    overflow: hidden;
 
     .communication-container__email-icon {
       width: 16px;
