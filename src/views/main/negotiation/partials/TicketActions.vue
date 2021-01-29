@@ -152,7 +152,7 @@ export default {
           isVisible: this.isPreNegotiation,
           isDynamic: true
         }
-      ]
+      ].filter(action => action.isVisible)
     },
     isPreNegotiation() {
       const { status } = this.ticket
@@ -389,6 +389,7 @@ export default {
 .ticket-actions {
   .ticket-actions__buttons {
     padding: 10px;
+    border-radius: 6px;
 
     .ticket-actions__icons {
       width: 22px;
@@ -406,11 +407,6 @@ export default {
     .ticket-actions__dynamic-buttons {
       display: none;
     }
-  }
-}
-
-@media (min-width: 900px) {
-  .ticket-actions {
     .ticket-actions__more-actions {
       &--hidden { display: none }
     }
