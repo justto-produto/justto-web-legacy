@@ -618,8 +618,14 @@ export default {
       this.selectedIdsComp = []
     },
     checkFinishedDisputes(action, message, configs) {
-      this.getFinishedDisputesCount(this.selectedIdsComp).then(response => {
-        message.content = `Voce possui ${response.value} disputas finalizadas que estão selecionadas e irao reiniciar. Tem certeza que deseja realizar esta ação?`
+      const req = {
+        allSelected: this.isSelectedAll,
+        disputeIds: !this.isSelectedAll ? this.selectedIdsComp : []
+      }
+      this.getFinishedDisputesCount(req).then(response => {
+        if (response.value > 0) {
+          message.content = `Voce possui ${response.value} disputas finalizadas que estão selecionadas e irao reiniciar. Tem certeza que deseja realizar esta ação?`
+        }
         this.$confirm(message.content, message.title, configs).then(() => {
           this.doAction(action)
         })

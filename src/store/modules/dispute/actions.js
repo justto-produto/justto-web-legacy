@@ -681,9 +681,9 @@ const disputeActions = {
       mutation: 'setDisputeMetadata'
     })
   },
-  getFinishedDisputesCount({ state }, disputeIds) {
+  getFinishedDisputesCount({ state }, { disputeIds, allSelected }) {
     return axiosDispatch({
-      url: `/api/disputes/count-finished/${buildQuery({ ...state.query, disputeIds })}`,
+      url: `/api/disputes/count-finished/${buildQuery({ ...state.query, disputeIds, allSelected })}`,
       mutation: 'setDisputeMetadata'
     })
   }
