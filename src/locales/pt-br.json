@@ -210,7 +210,7 @@
     "RESTART_ENGAGEMENT": "reiniciar disputa",
     "RESEND_MESSAGES": "reenviar mensagens automáticas",
     "CANCEL_MESSAGES": "cancelar mensagens agendadas",
-    "CHANGE_NEGOTIATORS": "trocar negociadores",
+    "EDIT_NEGOTIATORS": "trocar negociadores",
     "ENRICH": "enriquecer disputa",
     "RENEGOTIATE": "retornar para negociação",
     "UPLOAD_ATTACHMENT": "enviar anexo",
