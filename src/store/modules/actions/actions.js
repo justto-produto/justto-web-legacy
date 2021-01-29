@@ -45,12 +45,13 @@ const actionsActions = {
   },
 
   sendTicketAction({ _ }, params) {
-    let { disputeId, action } = params
+    let { disputeId, action, payload } = params
     action = action.toLowerCase()
 
     return axiosDispatch({
       url: `${disputesPath}/${disputeId}/${action}`,
-      method: 'PUT'
+      method: 'PUT',
+      data: payload
     })
   },
 
@@ -68,6 +69,16 @@ const actionsActions = {
     return axiosDispatch({
       url: `${disputesPath}/${disputeId}/start-negotiation`,
       method: 'PATCH'
+    })
+  },
+
+  sendOffer({ _ }, params) {
+    const { disputeId, payload } = params
+
+    return axiosDispatch({
+      url: `${disputesPath}/${disputeId}/counterproposal`,
+      method: 'POST',
+      data: payload
     })
   }
 }

@@ -119,8 +119,8 @@ export default {
           isVisible: !this.isPreNegotiation
         },
         {
-          name: 'CHANGE_NEGOTIATORS',
-          method: (action) => this.handleChangeNegotiators(action),
+          name: 'EDIT_NEGOTIATORS',
+          method: (action) => this.handleEditNegotiators(action),
           isVisible: !this.isPreNegotiation
         },
         {
@@ -226,7 +226,7 @@ export default {
 
       const settledTicket = () => {
         if (status === 'CHECKOUT' || status === 'ACCEPTED') {
-          this.$refs.dialogActions.openTicketResumeDialog('WIN')
+          this.$refs.dialogActions.openTicketResumeDialog(action, 'WIN')
         } else {
           this.$refs.dialogActions.openOfferDialog(action)
         }
@@ -305,8 +305,8 @@ export default {
         )
     },
 
-    handleChangeNegotiators() {
-
+    handleEditNegotiators(action) {
+      this.$refs.dialogActions.openEditNegotiatorsDialog(action)
     },
 
     handleEnrich(action) {
