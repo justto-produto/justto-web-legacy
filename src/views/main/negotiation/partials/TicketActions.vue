@@ -1,8 +1,7 @@
 <template>
   <article class="ticket-actions">
     <el-button
-      v-for="action in actionsList.filter(a => a.isDynamic)"
-      v-if="action.isVisible"
+      v-for="action in actionsList.filter(a => a.isDynamic && a.isVisible)"
       :key="action.name"
       class="ticket-actions__dynamic-buttons ticket-actions__buttons"
       @click="action.method(action.name)"
@@ -23,7 +22,6 @@
       <ul class="ticket-actions__actions-list">
         <li
           v-for="action in actionsList"
-          v-if="action.isVisible"
           :key="action.name"
           :class="{ 'ticket-actions__list-item--hidden': action.isDynamic }"
           class="ticket-actions__list-item"
@@ -154,7 +152,7 @@ export default {
           isVisible: this.isPreNegotiation,
           isDynamic: true
         }
-      ]
+      ].filter(action => action.isVisible)
     },
     isPreNegotiation() {
       const { status } = this.ticket
