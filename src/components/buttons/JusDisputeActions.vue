@@ -472,7 +472,7 @@ export default {
         {
           name: 'restart-engagement',
           icon: 'refresh',
-          condition: () => !this.isPreNegotiation,
+          condition: () => this.canRestartEngagement,
           action: () => this.disputeAction('restart-engagement'),
           tooltip: 'Reiniciar disputa'
         },
@@ -583,6 +583,9 @@ export default {
     },
     canMoveToRunning() {
       return this.dispute && this.dispute.status && ['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(this.dispute.status) && !this.isPreNegotiation
+    },
+    canRestartEngagement() {
+      return this.dispute && this.dispute.status && !['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(this.dispute.status) && !this.isPreNegotiation
     },
     isPreNegotiation() {
       return this.dispute.status === 'PRE_NEGOTIATION'

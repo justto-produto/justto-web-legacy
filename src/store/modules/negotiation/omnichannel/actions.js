@@ -32,7 +32,7 @@ const omnichannelActions = {
       mutation: 'setOccurrences',
       params
     })
-  },
+  }
 }
 
 export default omnichannelActions

@@ -14,7 +14,8 @@
       </div>
       <div
         class="ticket-header-container__overview-link"
-        @click="handleShowOverview">
+        @click="handleShowOverview"
+      >
         <span class="ticket-header-container__additional-info">Informações adicinais</span>
         <i class="ticket-header-container__additional-info-icon el-icon-arrow-right" />
       </div>

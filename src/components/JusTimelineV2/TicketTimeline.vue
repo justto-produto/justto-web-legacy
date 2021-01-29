@@ -2,10 +2,12 @@
   <el-dialog
     :visible.sync="visible"
     append-to-body
-    class="jus-timeline">
+    class="jus-timeline"
+  >
     <div
       slot="title"
-      class="jus-timeline__title">
+      class="jus-timeline__title"
+    >
       <span v-if="dispute.lastUpdated">
         Pesquisado em {{ $moment(dispute.lastUpdated).format('DD/MM/YYYY [às] hh:mm') }}
       </span>
@@ -14,49 +16,58 @@
     <section
       v-for="lawsuit in dispute.lawsuits"
       :key="lawsuit.description"
-      class="jus-timeline__lawsuit">
+      class="jus-timeline__lawsuit"
+    >
       <a
         class="jus-timeline__lawsuit-title"
-        @click="openProcessInNewTab(lawsuit.url, lawsuit.code)">
+        @click="openProcessInNewTab(lawsuit.url, lawsuit.code)"
+      >
         {{ lawsuit.description }}ª Instância - {{ lawsuit.code }}
         <jus-icon
           icon="external-link"
-          class="jus-timeline__lawsuit-title-icon" />
+          class="jus-timeline__lawsuit-title-icon"
+        />
       </a>
 
       <article class="jus-timeline__lawsuit-resume">
         <el-row :gutter="8">
           <el-col
             :span="12"
-            class="jus-timeline__lawsuit-info">
+            class="jus-timeline__lawsuit-info"
+          >
             <span class="jus-timeline__lawsuit-info-title">Distribuído em</span>
             <span class="jus-timeline__lawsuit-info-text">{{ lawsuit.date || '---' }}</span>
           </el-col>
           <el-col
             :span="12"
-            class="jus-timeline__lawsuit-info">
+            class="jus-timeline__lawsuit-info"
+          >
             <span class="jus-timeline__lawsuit-info-title">Área</span>
             <span class="jus-timeline__lawsuit-info-text">{{ lawsuit.area || '---' }}</span>
           </el-col>
           <el-col
             :span="12"
-            class="jus-timeline__lawsuit-info">
+            class="jus-timeline__lawsuit-info"
+          >
             <span class="jus-timeline__lawsuit-info-title">Origem</span>
             <span class="jus-timeline__lawsuit-info-text">{{ lawsuit.source || '---' }}</span>
           </el-col>
           <el-col
             :span="12"
-            class="jus-timeline__lawsuit-info">
+            class="jus-timeline__lawsuit-info"
+          >
             <span class="jus-timeline__lawsuit-info-title">Documentos</span>
             <a
               :class="{ 'jus-timeline__lawsuit-info-link': !(lawsuit.urlDocuments && lawsuit.urlDocuments.length)}"
               :href="lawsuit.urlDocuments && lawsuit.urlDocuments.length ? lawsuit.urlDocuments[0] : '#'"
-              :underline="false">
+              :underline="false"
+            >
               {{ lawsuit.urlDocuments && lawsuit.urlDocuments.length ? 'Baixar' : '---' }}
               <jus-icon
                 v-if="lawsuit.urlDocuments && lawsuit.urlDocuments.length"
                 class="jus-timeline__document-download"
-                icon="download-sheet" />
+                icon="download-sheet"
+              />
             </a>
           </el-col>
         </el-row>
@@ -64,30 +75,36 @@
         <el-row :gutter="8">
           <el-col
             :span="24"
-            class="jus-timeline__lawsuit-info">
+            class="jus-timeline__lawsuit-info"
+          >
             <span class="jus-timeline__lawsuit-info-title">Parte(s)</span>
             <el-collapse>
               <el-collapse-item
                 v-for="(party, partyIndex) in lawsuit.parties"
-                :key="`party-${partyIndex}`">
+                :key="`party-${partyIndex}`"
+              >
                 <div
                   slot="title"
-                  class="jus-timeline__lawsuit-info-collapse-title">
+                  class="jus-timeline__lawsuit-info-collapse-title"
+                >
                   {{ party.name || '---' }}
                 </div>
                 <div
                   v-if="party.type"
-                  class="jus-timeline__lawsuit-info-collapse-text">
+                  class="jus-timeline__lawsuit-info-collapse-text"
+                >
                   <b>Tipo:</b> {{ party.type || '---' }}
                 </div>
                 <div
                   v-if="party.profile"
-                  class="jus-timeline__lawsuit-info-collapse-text">
+                  class="jus-timeline__lawsuit-info-collapse-text"
+                >
                   <b>Polo:</b> {{ party.profile || '---' }}
                 </div>
                 <div
                   v-if="party.document"
-                  class="jus-timeline__lawsuit-info-collapse-text">
+                  class="jus-timeline__lawsuit-info-collapse-text"
+                >
                   <b>Documento:</b> {{ party.document || '---' }}
                 </div>
               </el-collapse-item>
@@ -95,25 +112,30 @@
           </el-col>
           <el-col
             :span="24"
-            class="jus-timeline__lawsuit-info">
+            class="jus-timeline__lawsuit-info"
+          >
             <span class="jus-timeline__lawsuit-info-title">Advogado(s)</span>
             <el-collapse>
               <el-collapse-item
                 v-for="(lawyer, lawyerIndex) in lawsuit.lawyers"
-                :key="`lawyer-${lawyerIndex}`">
+                :key="`lawyer-${lawyerIndex}`"
+              >
                 <div
                   slot="title"
-                  class="jus-timeline__lawsuit-info-collapse-title">
+                  class="jus-timeline__lawsuit-info-collapse-title"
+                >
                   {{ lawyer.name || '---' }}
                 </div>
                 <div
                   v-if="lawyer.oab"
-                  class="jus-timeline__lawsuit-info-collapse-text">
+                  class="jus-timeline__lawsuit-info-collapse-text"
+                >
                   <b>OAB:</b> {{ lawyer.oab || '---' }}
                 </div>
                 <div
                   v-if="lawyer.partyName"
-                  class="jus-timeline__lawsuit-info-collapse-text">
+                  class="jus-timeline__lawsuit-info-collapse-text"
+                >
                   <b>Parte:</b> {{ lawyer.partyName | capitalize }}
                 </div>
               </el-collapse-item>
@@ -126,7 +148,8 @@
         <el-tag
           v-for="(tag, flagIndex) in lawsuit.tags"
           :key="`tag-${flagIndex}`"
-          size="small">
+          size="small"
+        >
           {{ tag }}
         </el-tag>
       </article>
@@ -143,7 +166,8 @@
                 v-show="matchFilter(movement.description, queryTerm)"
                 :key="`movement-${movementIndex}`"
                 :timestamp="movement.date"
-                placement="top">
+                placement="top"
+              >
                 <highlight :queries="[queryTerm]">
                   {{ movement.description }}
                 </highlight>
@@ -151,7 +175,8 @@
                 <el-tag
                   v-for="(tag, tagIndex) in (movement.tags || [])"
                   :key="`movement-tag-${tagIndex}`"
-                  size="small">
+                  size="small"
+                >
                   {{ tag }}
                 </el-tag>
               </el-timeline-item>

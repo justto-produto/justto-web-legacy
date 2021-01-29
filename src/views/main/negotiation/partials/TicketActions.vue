@@ -182,6 +182,10 @@ export default {
       const { isPreNegotiation, ticket } = this
       return !ticket.paused && !isPreNegotiation
     },
+    canRestartEngagement() {
+      const { isPreNegotiation, ticket } = this
+      return ticket.status && !['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(ticket.status) && !isPreNegotiation
+    },
     canResendMessages() {
       const { isPreNegotiation, ticket } = this
       return ticket.status && ticket.status === 'RUNNING' && !isPreNegotiation

@@ -3,19 +3,23 @@
     <el-tooltip :content="timelineStatus.text">
       <div
         class="jus-dispute-code__container"
-        @mouseover="handleHover">
+        @mouseover="handleHover"
+      >
         <span
           class="jus-dispute-code__link"
-          @click="handleClick">
-            {{ code }}
+          @click="handleClick"
+        >
+          {{ code }}
         </span>
         <span class="jus-dispute-code__icons">
           <i
             class="jus-dispute-code__icon el-icon-copy-document"
-            @click.stop="copyProccessCode" />
+            @click.stop="copyProccessCode"
+          />
           <i
             :class="timelineStatus.icon"
-            class="jus-dispute-code__icon" />
+            class="jus-dispute-code__icon"
+          />
         </span>
       </div>
     </el-tooltip>
@@ -23,7 +27,8 @@
     <TicketTimeline
       v-if="disputesTimeline[code]"
       v-model="showTimelineDialog"
-      :code="code" />
+      :code="code"
+    />
   </article>
 </template>
 
@@ -48,11 +53,6 @@ export default {
   data: () => ({
     showTimelineDialog: false
   }),
-  beforeMount() {
-    if (this.getBeforMount) {
-      this.getDisputeTimeline(this.code)
-    }
-  },
   computed: {
     ...mapGetters({
       disputesTimeline: 'getDisputesTimeline'
@@ -87,6 +87,11 @@ export default {
   watch: {
     'code'(current) {
       this.getDisputeTimeline(current)
+    }
+  },
+  beforeMount() {
+    if (this.getBeforMount) {
+      this.getDisputeTimeline(this.code)
     }
   },
   methods: {
