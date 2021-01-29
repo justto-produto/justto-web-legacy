@@ -1,13 +1,15 @@
 <template>
   <section
     class="interaction-container"
-    :class="`${interaction.direction} ${type}`">
+    :class="`${interaction.direction} ${type}`"
+  >
     <div class="interaction-container__out-avatar show-only-md">
       <JusAvatarUser v-bind="avatarProps" />
     </div>
     <div
       class="interaction-container__balloon"
-      :class="`${interaction.direction} ballon-${messageType}`">
+      :class="`${interaction.direction} ballon-${messageType}`"
+    >
       <div class="interaction-container__balloon-avatar show-only-sm">
         <JusAvatarUser v-bind="avatarProps" />
       </div>
