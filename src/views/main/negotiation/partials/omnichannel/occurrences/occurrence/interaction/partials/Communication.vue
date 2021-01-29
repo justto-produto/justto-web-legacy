@@ -16,14 +16,28 @@
       </span>
     </div>
     <div class="communication-container__message">
-      {{ interaction.message.resume }}
+      {{ text }}
     </div>
     <div class="communication-container__about">
       {{ sendDate[sendStatus] }}
       <JusIcon
+        v-if="sendStatus && !directionIn"
         class="communication-container__about-icon"
         :icon="`status-${sendStatus}`"
       />
+      <el-tooltip>
+        <div
+          slot="content"
+          style="max-width: 400px; text-align: justify;"
+        >
+          <span v-html="hasError" />
+        </div>
+        <JusIcon
+          v-if="hasError"
+          class="communication-container__about-icon"
+          icon="alert"
+        />
+      </el-tooltip>
     </div>
   </section>
 </template>
@@ -40,27 +54,33 @@ export default {
     interaction() {
       return this.value
     },
+
     directionIn() {
       return this.interaction.direction === 'INBOUND'
     },
+
     prefix() {
       return this.directionIn ? 'de' : 'para'
     },
+
     contact() {
       return this.interaction.message[this.directionIn ? 'sender' : 'receiver']
     },
+
     person() {
       return this.interaction.message.parameters[this.directionIn ? 'SENDER_NAME' : 'RECEIVER_NAME']
     },
+
     sendDate() {
       const first = (first) => (first ? first.split(' ')[0] : '')
 
-      const sent = first(this.interaction?.message?.parameters?.SEND_DATE)
-      const readed = first(this.interaction?.message?.parameters?.READ_DATE)
-      const recived = first(this.interaction?.message?.parameters?.RECEIVER_DATE)
-
-      return { sent, readed, recived }
+      return {
+        sent: first(this.interaction?.message?.parameters?.SEND_DATE),
+        readed: first(this.interaction?.message?.parameters?.READ_DATE),
+        recived: first(this.interaction?.message?.parameters?.RECEIVER_DATE)
+      }
     },
+
     sendStatus() {
       if (this.sendDate.readed) {
         return 'readed'
@@ -69,9 +89,10 @@ export default {
       } else if (this.sendDate.sent) {
         return 'sent'
       } else {
-        return 'clock'
+        return ''
       }
     },
+
     messageType() {
       const mapCommunicationTypes = {
         EMAIL: 'email',
@@ -86,13 +107,28 @@ export default {
       }
       return 'email'
     },
+
+    text() {
+      if (this.interaction?.message?.resume) {
+        return this.interaction.message.resume
+      } else if (this.interaction?.message?.parameters?.SUBJECT) {
+        return this.interaction?.message?.parameters?.SUBJECT
+      }
+
+      return ''
+    },
+
+    hasError() {
+      return this.interaction?.message?.parameters?.FAILED_SEND
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-
 .communication-container {
+  overflow: hidden;
+
   .communication-container__email {
     display: flex;
     align-items: center;
@@ -101,7 +137,11 @@ export default {
     font: normal normal normal 15px/18px Proxima Nova;
     color: #9A9797;
 
-    margin-bottom: 6px;
+    /* margin-bottom: 6px;
+    width: max-content;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden; */
 
     .communication-container__email-icon {
       width: 16px;

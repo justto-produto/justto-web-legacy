@@ -25,7 +25,8 @@
 export default {
   components: {
     COMMUNICATION: () => import('./partials/Communication'),
-    NEGOTIATOR: () => import('./partials/Negotiator')
+    NEGOTIATOR: () => import('./partials/Negotiator'),
+    MANUAL: () => import('./partials/Manual')
   },
   props: {
     value: {
@@ -132,7 +133,7 @@ export default {
     }
 
     &.ballon-negotiatior {
-      border-color: #FF9300;
+      border-color: #f4be72;
     }
 
     &.ballon-whatsapp {

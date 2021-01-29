@@ -35,6 +35,7 @@ export default {
   }),
   watch: {
     '$route.params.id'() {
+      window.location.reload()
       this.fetchData()
     }
   },
