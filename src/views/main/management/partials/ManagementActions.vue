@@ -463,7 +463,10 @@ export default {
     this.editorRedy = false
   },
   methods: {
-    ...mapActions(['getDisputeStatuses']),
+    ...mapActions([
+      'getDisputeStatuses',
+      'getFinishedDisputesCount'
+    ]),
 
     editorIsRedy() {
       setTimeout(() => {
@@ -570,6 +573,18 @@ export default {
     },
 
     sendBatchAction(action) {
+      const message = {
+        title: this.$options.filters.capitalize(this.$t('action.' + action.toUpperCase())),
+        content: 'Tem certeza que deseja realizar esta ação em lote?'
+      }
+      const configs = {
+        confirmButtonClass: 'confirm-action-btn',
+        confirmButtonText: 'Continuar',
+        cancelButtonText: 'Cancelar',
+        dangerouslyUseHTMLString: true,
+        cancelButtonClass: 'is-plain'
+      }
+
       if (action === 'UNSETTLED') {
         this.chooseUnsettledDialogVisible = true
         this.unsettledType = ''
@@ -586,30 +601,13 @@ export default {
       } else if (action === 'CHANGE_EXPIRATION_DATE') {
         this.changeExpirationDialogVisible = true
         this.newExpirationDate = ''
+      } else if (action === 'RESTART_ENGAGEMENT') {
+        this.checkFinishedDisputes(action, message, configs)
       } else if (action === 'CHANGE_NEGOTIATOR') {
         this.checkDisputeNegotiators()
       } else if (action === 'SEND_BILK_MESSAGE') {
         this.openBulkMessageCompose()
       } else {
-        const message = {
-          title: this.$options.filters.capitalize(this.$t('action.' + action.toUpperCase())),
-          content: 'Tem certeza que deseja realizar esta ação em lote?'
-        }
-        const configs = {
-          confirmButtonClass: 'confirm-action-btn',
-          confirmButtonText: 'Continuar',
-          cancelButtonText: 'Cancelar',
-          dangerouslyUseHTMLString: true,
-          cancelButtonClass: 'is-plain'
-        }
-        if (action === 'ENRICH_DISPUTE' &&
-            this.$store.getters.disputes.filter(d => this.selectedIds.includes(d.id) &&
-            ['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(d.status)).length) {
-          message.title = 'Atenção!'
-          message.content = `Você está solicitando o <b>ENRIQUECIMENTO</b> de disputas que já
-          foram finalizadas. Este processo irá agendar novamente as mensagens
-          para as partes quando finalizado. Você deseja enriquecer mesmo assim?`
-        }
         this.$confirm(message.content, message.title, configs).then(() => {
           this.doAction(action)
         })
@@ -618,6 +616,20 @@ export default {
     clearSelection() {
       this.$emit('disputes:clear')
       this.selectedIdsComp = []
+    },
+    checkFinishedDisputes(action, message, configs) {
+      const req = {
+        allSelected: this.isSelectedAll,
+        disputeIds: !this.isSelectedAll ? this.selectedIdsComp : []
+      }
+      this.getFinishedDisputesCount(req).then(response => {
+        if (response.value > 0) {
+          message.content = `Voce possui ${response.value} disputas finalizadas que estão selecionadas e irao reiniciar. Tem certeza que deseja realizar esta ação?`
+        }
+        this.$confirm(message.content, message.title, configs).then(() => {
+          this.doAction(action)
+        })
+      })
     },
     checkDisputeNegotiators() {
       const _ = require('lodash')
