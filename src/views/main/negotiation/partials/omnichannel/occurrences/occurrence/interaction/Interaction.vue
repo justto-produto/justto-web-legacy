@@ -1,13 +1,15 @@
 <template>
   <section
     class="interaction-container"
-    :class="`${interaction.direction} ${type}`">
+    :class="`${interaction.direction} ${type}`"
+  >
     <div class="interaction-container__out-avatar show-only-md">
       <JusAvatarUser v-bind="avatarProps" />
     </div>
     <div
       class="interaction-container__balloon"
-      :class="`${interaction.direction} ballon-${messageType}`">
+      :class="`${interaction.direction} ballon-${messageType}`"
+    >
       <div class="interaction-container__balloon-avatar show-only-sm">
         <JusAvatarUser v-bind="avatarProps" />
       </div>
@@ -25,7 +27,8 @@
 export default {
   components: {
     COMMUNICATION: () => import('./partials/Communication'),
-    NEGOTIATOR: () => import('./partials/Negotiator')
+    NEGOTIATOR: () => import('./partials/Negotiator'),
+    MANUAL: () => import('./partials/Manual')
   },
   props: {
     value: {
@@ -55,6 +58,10 @@ export default {
       return this.value.interaction
     },
     personName() {
+      if (this.type === 'MANUAL') {
+        return this.interaction?.properties?.USER
+      }
+
       if (this.interaction?.properties?.PERSON_NAME) {
         return this.interaction.properties.PERSON_NAME
       } else if (this.interaction?.message?.parameters?.SENDER_NAME) {
@@ -69,7 +76,7 @@ export default {
       return {
         name: this.personName,
         size: 'md',
-        purple: this.isInboundInteraction
+        purple: this.isInboundInteraction && this.type !== 'MANUAL'
       }
     }
   }
@@ -104,7 +111,12 @@ export default {
     }
   }
 
+  &.MANUAL {
+    flex-direction: row-reverse;
+  }
+
   .interaction-container__balloon {
+    overflow-x: hidden;
     background: #FFFFFF 0% 0% no-repeat padding-box;
     box-shadow: 0px 3px 6px #47454526;
     max-width: 80%;
@@ -127,12 +139,8 @@ export default {
       border-color: #DFF4FE;
     }
 
-    &.ballon-default {
-      border-color: #DFF4FE;
-    }
-
     &.ballon-negotiatior {
-      border-color: #FF9300;
+      border-color: #f4be72;
     }
 
     &.ballon-whatsapp {

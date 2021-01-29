@@ -20,9 +20,11 @@ export default {
       const { PERSON_NAME, VALUE, NOTE } = this.interaction.properties
       switch (this.interaction.type) {
         case 'NEGOTIATOR_COUNTERPROSAL':
+          return `Contraproposta realizada por <strong>${PERSON_NAME}</strong>, no valor de <strong>${VALUE}</strong>, com a nota: ${NOTE}`
+        case 'NEGOTIATOR_PROSAL':
           return `Proposta realizada por <strong>${PERSON_NAME}</strong>, no valor de <strong>${VALUE}</strong>, com a nota: ${NOTE}`
         default:
-          return 'Deu preguiça'
+          return ''
       }
     }
   }
