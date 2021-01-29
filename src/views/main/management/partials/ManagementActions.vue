@@ -409,7 +409,7 @@ export default {
         { name: 'UNSETTLED', tabs: ['1', '2', '3', '4', '9'] },
         { name: 'PAUSED', tabs: ['1', '2', '3', '4', '9'] },
         { name: 'RESUME', tabs: ['1', '2', '3', '4', '9'] },
-        { name: 'RESTART_ENGAGEMENT', tabs: ['1', '2', '3', '4', '9'] },
+        { name: 'RESTART_ENGAGEMENT', tabs: ['1', '2', '4', '9'] },
         { name: 'CHANGE_EXPIRATION_DATE', tabs: ['1', '2', '3', '4', '9'] },
         { name: 'CHANGE_STRATEGY', tabs: ['1', '2', '3', '4', '9'] },
         { name: 'CHANGE_NEGOTIATOR', tabs: ['1', '2', '3', '4', '9'] },
@@ -620,7 +620,7 @@ export default {
     checkFinishedDisputes(action, message, configs) {
       const req = {
         allSelected: this.isSelectedAll,
-        disputeIds: !this.isSelectedAll ? this.selectedIdsComp : []
+        id: !this.isSelectedAll ? this.selectedIdsComp : []
       }
       this.getFinishedDisputesCount(req).then(response => {
         if (response.value > 0) {

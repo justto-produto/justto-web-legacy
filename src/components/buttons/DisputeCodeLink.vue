@@ -51,11 +51,13 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['disputeTimeline']),
+    ...mapGetters({
+      disputeTimeline: 'getDisputesTimeline'
+    }),
 
     status() {
       let res = {}
-      if (this.disputeTimeline[this.code]) {
+      if (this.disputeTimeline && this.disputeTimeline[this.code]) {
         if (this.disputeTimeline[this.code].lawsuits.length) {
           res = {
             available: true,
@@ -84,11 +86,13 @@ export default {
     handleHover() {
       this.$emit('hoverDisputeCode')
     },
+
     handleClick() {
       if (this.status.available) {
         this.$emit('openTimeline')
       }
     },
+
     copyProccessCode() {
       navigator.clipboard.writeText(this.code)
       this.$message({
