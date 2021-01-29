@@ -391,6 +391,10 @@ export default {
 @import '@/styles/colors.scss';
 
 .ticket-actions {
+  display: flex;
+  justify-content: flex-end;
+  min-width: 260px;
+
   .ticket-actions__buttons {
     padding: 10px;
     border-radius: 6px;
@@ -408,6 +412,8 @@ export default {
 
 @media (max-width: 900px) {
   .ticket-actions {
+    min-width: 44px;
+
     .ticket-actions__dynamic-buttons {
       display: none;
     }

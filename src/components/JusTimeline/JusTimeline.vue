@@ -168,13 +168,13 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([
-      'loading',
-      'disputeTimeline'
-    ]),
+    ...mapGetters({
+      loading: 'loading',
+      disputesTimeline: 'getDisputesTimeline'
+    }),
 
     dispute() {
-      return this.disputeTimeline[this.code]
+      return this.disputesTimeline[this.code] || { lawsuits: [] }
     },
 
     visible: {
