@@ -1,13 +1,13 @@
 <template>
   <section class="dialog-actions">
     <el-dialog
+      :title="offerDialogTitle"
       :visible.sync="offerDialogVisible"
       :show-close="false"
       :close-on-click-modal="false"
       :close-on-press-escape="false"
       append-to-body
       width="600px"
-      title="Contraproposta manual"
       class="dialog-actions__manual-offer"
     >
       <el-form
@@ -292,10 +292,6 @@ export default {
       workspaceMembers: 'workspaceMembers'
     }),
 
-    ticketRoles() {
-      return [{ name: 'teste', id: 1 }, { name: 'teste2', id: 2 }]
-    },
-
     isInsufficientUpperRange() {
       const { unsettledType, ticket } = this
 
@@ -344,6 +340,18 @@ export default {
           value: this.$options.filters.currency(plaintiffProposal.value)
         }
       ]
+    },
+
+    offerDialogTitle() {
+      switch (this.offerFormType) {
+        case 'SETTLED':
+          return 'Fechar acordo'
+        case 'UNSETTLED':
+          return 'Perder'
+        case 'MANUAL_COUNTERPROPOSAL':
+        default:
+          return 'Contraproposta manual'
+      }
     }
   },
   methods: {
@@ -393,6 +401,7 @@ export default {
 
     handleDialogAction() {
       const { offerFormType } = this
+
       switch (offerFormType) {
         case 'MANUAL_COUNTERPROPOSAL':
           this.handleManualOffer(offerFormType)
