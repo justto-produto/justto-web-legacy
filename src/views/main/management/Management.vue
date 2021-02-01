@@ -452,7 +452,8 @@ export default {
       showAllNodes: false,
       isExportingProtocol: false,
       filteredBrazilianStates: [],
-      ufFilterValue: []
+      ufFilterValue: [],
+      exportedColumns: []
     }
   },
   computed: {
@@ -472,7 +473,9 @@ export default {
       workspaceProperties: 'workspaceProperties'
     }),
     columns() {
-      if (this.filterQuery || this.showAllNodes) {
+      if (this.exportedColumns.length && !this.showAllNodes) {
+        return this.exportedColumns
+      } else if (this.filterQuery || this.showAllNodes) {
         return this.columnsList
       } else {
         return this.columnsList.filter(n => defaultCheckedKeys.includes(n.key))
@@ -673,8 +676,9 @@ export default {
       this.exportDisputesDialog = true
       this.getAccountProperty('JUS_EXPORT_COLUMNS').then(res => {
         if (res && res.JUS_EXPORT_COLUMNS) {
-          const jusexportcolumns = res.JUS_EXPORT_COLUMNS.split(',')
-          this.$refs.tree.setCheckedKeys(jusexportcolumns)
+          const columns = res.JUS_EXPORT_COLUMNS.split(',')
+          this.exportedColumns = this.columnsList.filter(item => columns.includes(item.key))
+          this.$refs.tree.setCheckedKeys(columns)
         } else {
           this.$refs.tree.setCheckedKeys(this.columns.map(c => c.key))
         }
