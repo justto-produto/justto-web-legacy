@@ -556,10 +556,10 @@ export default {
         },
         {
           name: 'favorite',
-          icon: this.dispute.favorite ? 'golden-star' : 'star',
+          icon: this.dispute.favorite ? 'offices-tower-active' : 'offices-tower',
           condition: () => !this.isPreNegotiation,
           action: () => this.disputeAction(this.dispute.favorite ? 'disfavor' : 'favorite'),
-          tooltip: this.dispute.favorite ? 'Desmarcar como favorito' : 'Marcar como favorito'
+          tooltip: 'Aguardando análise da empresa (réu)'
         }
       ]
     },

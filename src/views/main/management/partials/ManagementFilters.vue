@@ -3,6 +3,7 @@
     :close-on-click-modal="false"
     :visible.sync="visibleFilters"
     @open="restoreFilters()"
+    width="650px"
   >
     <template slot="title">
       <h2>Filtrar {{ activeTabLabel }}</h2>
@@ -148,7 +149,7 @@
             >
               <div>
                 <div>
-                  <jus-icon icon="star" /> Somente favoritas
+                  <jus-icon icon="offices-tower" /> Aguardando análise da empresa
                 </div>
                 <el-switch
                   v-model="filters.onlyFavorite"
@@ -331,17 +332,17 @@ export default {
     activeTabLabel() {
       switch (this.tabIndex) {
         case '0':
-          return 'Pré-Negociação'
+          return 'pré-Negociação'
         case '1':
-          return 'Sem resposta'
+          return 'sem resposta'
         case '2':
-          return 'Em negociação'
+          return 'em negociação'
         case '3':
-          return 'Proposta aceita'
+          return 'proposta aceita'
         case '4':
-          return 'Finalizados'
+          return 'finalizados'
         default:
-          return 'Todos'
+          return 'todos'
       }
     },
     statuses() {
