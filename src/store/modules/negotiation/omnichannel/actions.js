@@ -26,7 +26,10 @@ const omnichannelActions = {
     commit('setMessageType', type)
   },
   getOccurrences({ getters }, disputeId) {
-    const params = getters.getOccurrencesFilter
+    const params = {
+      ...getters.getOccurrencesFilter,
+      type: getters.getOccurrencesFilter.type === 'LOG' ? null : getters.getOccurrencesFilter.type
+    }
     return axiosDispatch({
       url: `${baseUrl}/${disputeId}/occurrences`,
       mutation: 'setOccurrences',
