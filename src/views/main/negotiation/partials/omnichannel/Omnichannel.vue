@@ -24,6 +24,7 @@ export default {
   .omnichannel-container__occurrences {
     padding: 6px 0px;
     flex: 1;
+    display: block;
   }
 }
 </style>
