@@ -49,10 +49,12 @@ export default {
   },
   methods: {
     hangleSelectTicket() {
-      this.$router.push({
-        name: 'ticket',
-        params: { id: this.ticket.disputeId }
-      })
+      if (!this.isActive) {
+        this.$router.push({
+          name: 'ticket',
+          params: { id: this.ticket.disputeId }
+        })
+      }
     },
     getLastInteraction(time) {
       return getLastInteraction(time)

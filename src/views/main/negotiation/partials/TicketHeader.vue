@@ -44,7 +44,7 @@ export default {
   },
   methods: {
     handleShowOverview() {
-
+      this.$emit('toggle-show-overview')
     }
   }
 }
@@ -54,7 +54,6 @@ export default {
 @import '@/styles/colors.scss';
 
 .ticket-header-container {
-  background-color: transparent;
   display: flex;
   justify-content: space-between;
   align-items: center;

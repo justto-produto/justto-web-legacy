@@ -2,8 +2,8 @@
   <el-dialog
     :close-on-click-modal="false"
     :visible.sync="visibleFilters"
-    @open="restoreFilters()"
     width="650px"
+    @open="restoreFilters()"
   >
     <template slot="title">
       <h2>Filtrar {{ activeTabLabel }}</h2>

@@ -88,13 +88,11 @@ export default {
 
 <style lang="scss" scoped>
 .messages-container {
-  background-color: transparent !important;
   padding: 6px;
   display: flex;
   flex-direction: column;
 
   .messages-container__editor {
-    background-color: transparent !important;
     margin: 0px;
   }
 
