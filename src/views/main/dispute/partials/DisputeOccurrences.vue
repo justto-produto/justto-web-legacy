@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <ul
     v-chat-scroll="{always: false, smooth: true, scrollonremoved: true }"
     class="dispute-view-occurrences"
@@ -867,7 +867,8 @@ export default {
         if (occurrence.description.toLowerCase().includes('disputa alterada para perdido')) return 'lose'
         if (occurrence.description.toLowerCase().includes('reiniciou o engajamento')) return 'refresh'
         if (occurrence.description.toLowerCase().includes('disputa retomada')) return 'start-again'
-        if (occurrence.description.toLowerCase().includes('disputa marcada como favorita')) return 'star'
+        if (occurrence.description.toLowerCase().includes('disputa marcada como em análise pela empresa')) return 'offices-tower-active'
+        if (occurrence.description.toLowerCase().includes('disputa desmarcada como em análise pela empresa')) return 'offices-tower'
         if (occurrence.description.toLowerCase().includes('disputa expirou')) return 'calendar-clock'
         if (occurrence.description.toLowerCase().includes('disputa expirada')) return 'calendar-clock'
       }
@@ -1316,7 +1317,7 @@ export default {
       }
     }
     .el-card__body {
-      padding: 10px 20px;
+      padding: 10px 10px;
       word-break: break-word;
       strong {
         margin-bottom: 8px;
@@ -1367,7 +1368,7 @@ export default {
     margin: 20px 20px 0;
     border: none;
     .el-card__body {
-      padding: 8px 20px;
+      padding: 8px 10px;
       word-break: break-word;
       text-align: center;
       br:first-child {
@@ -1414,7 +1415,7 @@ export default {
     width: 100%;
     flex-direction: row-reverse;
     .el-card__body {
-      padding: 8px 20px;
+      padding: 8px 10px;
       word-break: break-word;
       background-color: #f6f1ff;
     }
@@ -1456,7 +1457,7 @@ export default {
     + .dispute-view-occurrences__occurrence {
       margin-top: -12px;
     }
-    padding: 4px;
+
     position: sticky;
     top: 12px;
     margin: auto;
@@ -1468,6 +1469,7 @@ export default {
     z-index: 10;
 
     .el-card__body {
+      padding: 10px !important;
       box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
     }
   }

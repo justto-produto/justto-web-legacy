@@ -159,8 +159,8 @@
       "UNSETTLED": "perdido",
       "RUNNING": "em negociação",
       "EXPIRED": "expirado",
-      "FAVORITE": "favoritar",
-      "DISFAVOR": "desfavoritar",
+      "FAVORITE": "Aguardar análise da empresa",
+      "DISFAVOR": "Desmarcar aguardar análise da empresa",
       "PRE_NEGOTIATION": "pre-negociação"
     }
   },
@@ -181,8 +181,8 @@
     "DELETE": "excluir",
     "PAUSED": "pausar",
     "RESUME": "retomar",
-    "FAVORITE": "favoritar",
-    "DISFAVOR": "desfavoritar",
+    "FAVORITE": "Aguardar análise da empresa",
+    "DISFAVOR": "Desmarcar aguardar análise da empresa",
     "ENRICH": "enriquecer",
     "ENRICH_DISPUTE": "enriquecer",
     "CHANGE_NEGOTIATOR": "negociadores",
