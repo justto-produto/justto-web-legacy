@@ -3,11 +3,23 @@
     id="occurrencesOmnichanelNegotiation"
     class="occurrences-container"
   >
-    <Occurrence
-      v-for="(occurrence, occurrenceIndex) in occurrences"
-      :key="`occurrence-${occurrenceIndex}`"
-      :value="occurrence"
-    />
+    <div
+      v-for="(occurrenceContainer, occurrenceContainerIndex) in occurrences"
+      :key="`occurrence-container-${occurrenceContainerIndex}`"
+      class="occurrences-container__occurrences"
+    >
+      <span class="occurrences-container__occurrences-date">
+        <span>
+          {{ $moment(occurrenceContainer.date).format('DD/MM/YYYY') }}
+        </span>
+      </span>
+      <Occurrence
+        v-for="(occurrence, occurrenceIndex) in occurrenceContainer.occurrences"
+        :key="`occurrence-container-${occurrenceIndex}`"
+        :value="occurrence"
+        class="occurrences-container__occurrences-item"
+      />
+    </div>
   </section>
 </template>
 
@@ -46,7 +58,28 @@ export default {
 
 .occurrences-container {
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
+  justify-content: flex-end;
   overflow-y: auto;
+
+  .occurrences-container__occurrences {
+    display: flex;
+    flex-direction: column;
+
+    .occurrences-container__occurrences-date {
+      top: 10px;
+      text-align: center;
+      z-index: 10;
+      position: -webkit-sticky;
+      position: sticky;
+
+      margin: 18px 0px 10px;
+
+      span {
+        background-color: #e3f5ff;
+        padding: 10px;
+      }
+    }
+  }
 }
 </style>
