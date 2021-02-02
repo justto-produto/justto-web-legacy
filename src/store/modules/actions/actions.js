@@ -3,6 +3,14 @@ import { axiosDispatch } from '@/utils'
 const disputesPath = 'api/disputes'
 
 const actionsActions = {
+  getOutcomeReasons({ _ }, action) {
+    return axiosDispatch({
+      url: `${disputesPath}/outcome-reasons/${action}`,
+      mutation: 'setOutcomeReasons',
+      payload: action
+    })
+  },
+
   setVisualized({ _ }, params) {
     const { disputeId } = params
 
