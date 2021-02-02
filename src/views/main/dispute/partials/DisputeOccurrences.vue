@@ -867,7 +867,8 @@ export default {
         if (occurrence.description.toLowerCase().includes('disputa alterada para perdido')) return 'lose'
         if (occurrence.description.toLowerCase().includes('reiniciou o engajamento')) return 'refresh'
         if (occurrence.description.toLowerCase().includes('disputa retomada')) return 'start-again'
-        if (occurrence.description.toLowerCase().includes('disputa marcada como favorita')) return 'star'
+        if (occurrence.description.toLowerCase().includes('disputa marcada como em análise pela empresa')) return 'offices-tower-active'
+        if (occurrence.description.toLowerCase().includes('disputa desmarcada como em análise pela empresa')) return 'offices-tower'
         if (occurrence.description.toLowerCase().includes('disputa expirou')) return 'calendar-clock'
         if (occurrence.description.toLowerCase().includes('disputa expirada')) return 'calendar-clock'
       }

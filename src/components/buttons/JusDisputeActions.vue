@@ -559,7 +559,7 @@ export default {
           icon: this.dispute.favorite ? 'offices-tower-active' : 'offices-tower',
           condition: () => !this.isPreNegotiation,
           action: () => this.disputeAction(this.dispute.favorite ? 'disfavor' : 'favorite'),
-          tooltip: 'Aguardando análise da empresa (réu)'
+          tooltip: `${this.$t('action.FAVORITE')} (${this.$t('fields.respondentParty')})`
         }
       ]
     },
