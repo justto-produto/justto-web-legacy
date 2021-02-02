@@ -5,7 +5,7 @@
       v-html="text"
     />
     <span class="communication-container__contact">
-      {{ interaction.createAt.dateTime | moment('DD/MM/YY[ às ]HH:mm') }}
+      {{ interaction.createAt.dateTime | moment('HH:mm') }}
     </span>
   </section>
 </template>
@@ -34,6 +34,9 @@ export default {
 .manual-container {
   display: flex;
   flex-direction: column;
+
+  overflow-y: hidden;
+  margin: 12px;
 
   .communication-container__contact {
     display: flex;
