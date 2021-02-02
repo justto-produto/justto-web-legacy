@@ -59,6 +59,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   padding: 12px;
+  height: auto;
 
   .ticket-header-container__title {
     display: flex;
@@ -71,18 +72,6 @@ export default {
 
     .ticket-header-container__overview-link {
       display: none;
-    }
-  }
-
-  // .ticket-header-container__actions {
-  //   min-width: 260px;
-  // }
-}
-
-@media (max-width: 900px) {
-  .ticket-header-container {
-    .ticket-header-container__actions {
-      min-width: 44px;
     }
   }
 }

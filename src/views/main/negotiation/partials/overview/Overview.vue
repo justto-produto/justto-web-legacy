@@ -49,7 +49,7 @@ export default {
     left: -18px;
     font-size: 18px;
     transition: .6s;
-    &--active { transform: rotate(180deg); }
+    &--active { transform: rotate(180deg) translateY(50%); }
   }
 
   .overview-container__info {
