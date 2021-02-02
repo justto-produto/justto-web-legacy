@@ -751,7 +751,7 @@ export default {
   },
   methods: {
     ...mapActions(['setActiveactiveOccurrency']),
-    
+
     buildColor(occurrence) {
       return occurrence && occurrence.interaction &&
         occurrence.interaction.direction === 'INBOUND' &&
