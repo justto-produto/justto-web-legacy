@@ -27,8 +27,9 @@
 export default {
   components: {
     COMMUNICATION: () => import('./partials/Communication'),
+    ATTACHMENT: () => import('@/views/main/dispute/partials/partials/AttachmentOccurrence'),
     NEGOTIATOR: () => import('./partials/Negotiator'),
-    MANUAL: () => import('./partials/Manual')
+    MANUAL: () => import('./partials/Manual'),
   },
   props: {
     value: {
@@ -107,7 +108,7 @@ export default {
 
   &.NEGOTIATOR, &.MANUAL {
     .interaction-container__balloon {
-      border: 1px solid #FFC5A5;
+      border: 5px solid #FFC5A5;
     }
   }
 
@@ -121,7 +122,7 @@ export default {
     box-shadow: 0px 3px 6px #47454526;
     max-width: 80%;
     border-radius: 18px;
-    padding: 12px;
+    overflow-y: hidden;
 
     display: flex;
     flex-direction: row;
@@ -140,11 +141,11 @@ export default {
     }
 
     &.ballon-negotiatior {
-      border-color: #f4be72;
+      border-color: #FFC5A5;
     }
 
     &.ballon-whatsapp {
-      border-color: #85eb94;
+      border-color: #a3f4c3;
     }
   }
 
