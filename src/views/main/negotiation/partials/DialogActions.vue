@@ -31,10 +31,10 @@
                 style="width: 100%;"
               >
                 <el-option
-                  v-for="type in []"
-                  :key="type"
-                  :value="type"
-                  :label="$t(`unsettled-types.${type}`)"
+                  v-for="(label, key) in unsettledOutcomeReasons"
+                  :key="key"
+                  :value="key"
+                  :label="label"
                 />
               </el-select>
             </el-form-item>
@@ -289,11 +289,14 @@ export default {
   computed: {
     ...mapGetters({
       ticketParties: 'getTicketOverviewParties',
-      workspaceMembers: 'workspaceMembers'
+      workspaceMembers: 'workspaceMembers',
+      outcomeReasons: 'getOutcomeReasons'
+
     }),
 
     isInsufficientUpperRange() {
-      const { unsettledType, ticket } = this
+      const { offerForm, ticket } = this
+      const { unsettledType } = offerForm
 
       return ticket &&
         unsettledType &&
@@ -352,10 +355,22 @@ export default {
         default:
           return 'Contraproposta manual'
       }
+    },
+
+    unsettledOutcomeReasons() {
+      return this.outcomeReasons.UNSETTLED
+    }
+  },
+  beforeMount() {
+    const { unsettledOutcomeReasons } = this
+
+    if (!unsettledOutcomeReasons || !Object.keys(unsettledOutcomeReasons).length) {
+      this.getOutcomeReasons('UNSETTLED')
     }
   },
   methods: {
     ...mapActions([
+      'getOutcomeReasons',
       'sendTicketAction',
       'sendOffer'
     ]),
@@ -382,7 +397,6 @@ export default {
       this.offerForm.roleId = action === 'MANUAL_COUNTERPROPOSAL' ? null : this.ticket.plaintiffProposal.id
       this.offerForm.value = ''
       this.offerForm.note = ''
-
       this.offerFormType = action
       this.offerDialogVisible = true
       if (this.$refs.offerForm) this.$refs.offerForm.clearValidate()
@@ -465,9 +479,10 @@ export default {
     },
 
     handleUnsettled() {
-      const { disputeId } = this.ticket
-      const { note, unsettledType } = this.offerForm
-      const payload = { note, reason: unsettledType }
+      const { ticket, offerForm, unsettledOutcomeReasons } = this
+      const { note, unsettledType } = offerForm
+      const { disputeId } = ticket
+      const payload = { note, reason: unsettledOutcomeReasons[unsettledType] }
       const action = 'UNSETTLED'
 
       if (this.isInsufficientUpperRange) {
