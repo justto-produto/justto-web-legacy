@@ -70,7 +70,7 @@
                 style="width: 100%;"
               >
                 <el-option
-                  v-for="partie in ticketParties"
+                  v-for="partie in ticketPlaintiffs"
                   :key="partie.disputeRoleId"
                   :value="partie.disputeRoleId"
                   :label="partie.name"
@@ -359,6 +359,14 @@ export default {
 
     unsettledOutcomeReasons() {
       return this.outcomeReasons.UNSETTLED
+    },
+
+    ticketPlaintiffs() {
+      return this.ticketParties.filter(part => part.polarity === 'CLAIMANT')
+    },
+
+    ticketNegotiators() {
+      return this.ticketParties.filter(part => part.roles.includes('NEGOTIATOR'))
     }
   },
   beforeMount() {
@@ -393,8 +401,17 @@ export default {
     },
 
     openOfferDialog(action) {
+      const { ticketPlaintiffs } = this
+      const { plaintiffProposal } = this.ticket
+
+      let roleId
+      if (ticketPlaintiffs.length) roleId = ticketPlaintiffs[0].disputeRoleId
+      else if (action === 'MANUAL_COUNTERPROPOSAL') roleId = null
+      else if (plaintiffProposal) roleId = plaintiffProposal.id
+      else roleId = null
+
       this.offerForm.unsettledType = ''
-      this.offerForm.roleId = action === 'MANUAL_COUNTERPROPOSAL' ? null : this.ticket.plaintiffProposal.id
+      this.offerForm.roleId = roleId
       this.offerForm.value = ''
       this.offerForm.note = ''
       this.offerFormType = action
@@ -403,7 +420,7 @@ export default {
     },
 
     openEditNegotiatorsDialog(action) {
-      this.editNegotiatorsForm = this.ticketParties
+      this.editNegotiatorsForm = this.ticketNegotiators
       this.editNegotiatorsDialogVisible = true
     },
 

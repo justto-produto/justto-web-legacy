@@ -72,13 +72,11 @@ export default {
 
 <style lang="scss" scoped>
 .notes-container {
-  background-color: transparent !important;
   padding: 6px;
   display: flex;
   flex-direction: column;
 
   .notes-container__editor {
-    background-color: transparent !important;
     margin: 0px;
   }
 

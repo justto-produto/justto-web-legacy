@@ -4,7 +4,7 @@
     class="ticket-container"
   >
     <section class="ticket-container__omnichannel">
-      <TicketHeader />
+      <TicketHeader @toggle-show-overview="toggleShowOverview" />
       <Omnichannel />
     </section>
 
@@ -72,7 +72,6 @@ export default {
   position: relative;
 
   .ticket-container__omnichannel {
-    background-color: transparent;
     display: flex;
     flex-direction: column;
     flex: 1;

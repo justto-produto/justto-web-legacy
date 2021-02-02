@@ -187,7 +187,7 @@ export default {
 
 <style lang="scss" scoped>
 .usermenu-container {
-  background-color: transparent;
+  background-color: transparent; // REMOVER
   height: auto;
   display: flex;
   justify-content: center;

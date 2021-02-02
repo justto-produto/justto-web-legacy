@@ -36,7 +36,7 @@ export default {
 @import '@/styles/colors.scss';
 
 .overview-container {
-  background-color: transparent;
+  background-color: $--light-gray;
   position: relative;
   padding: 6px;
   display: flex;

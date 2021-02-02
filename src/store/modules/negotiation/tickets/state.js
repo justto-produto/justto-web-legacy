@@ -2,7 +2,7 @@ const ticketsState = {
   tickets: {},
   ticketsMap: {},
   ticketsQuery: {
-    status: ['RUNNING'],
+    status: ['RUNNING']
   }
 }
 
