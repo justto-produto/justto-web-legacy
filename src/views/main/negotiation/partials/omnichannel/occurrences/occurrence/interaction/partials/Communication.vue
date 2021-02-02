@@ -25,7 +25,9 @@
 
     <div class="communication-container__about">
       {{ sendDate[sendStatus] }}
-      •
+      <span v-if="sendStatus && !directionIn">
+        •
+      </span>
       <JusIcon
         v-if="sendStatus && !directionIn"
         class="communication-container__about-icon"
@@ -49,6 +51,8 @@
 </template>
 
 <script>
+import { isSimilarStrings } from '@/utils'
+
 export default {
   props: {
     value: {
@@ -79,8 +83,7 @@ export default {
     },
 
     isValidName() {
-      const regex = new RegExp('(([^<>()\\[\\]\\\\.,;:\\s@"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@"]+)*)|(".+"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,24}))')
-      return regex.test(this.person)
+      return isSimilarStrings(this.person, this.contact, 75)
     },
 
     sendDate() {
@@ -91,7 +94,7 @@ export default {
         sent: first(this.interaction?.message?.parameters?.SEND_DATE),
         readed: first(this.interaction?.message?.parameters?.READ_DATE),
         recived: first(this.interaction?.message?.parameters?.RECEIVER_DATE),
-        default: this.$moment(defaultDate).format('DD/MM/YY[ às ]HH:mm')
+        default: this.$moment(defaultDate).format('HH:mm')
       }
     },
 
@@ -141,7 +144,8 @@ export default {
 
 <style lang="scss" scoped>
 .communication-container {
-  overflow: hidden;
+  overflow-y: hidden;
+  margin: 12px;
 
   .communication-container__email {
     display: flex;
