@@ -170,6 +170,7 @@ export default {
   .communication-container__about {
     display: flex;
     justify-content: flex-end;
+    align-items: center;
     gap: 6px;
 
     font: normal normal normal 15px/18px Proxima Nova;
