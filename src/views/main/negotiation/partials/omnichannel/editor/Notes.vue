@@ -1,33 +1,23 @@
 <template>
   <section
-    id="messagesTabEditorOmnichannelNegotiation"
-    v-loading="showCKEditor && !editorReady"
-    class="messages-container"
+    id="notesTabEditorOmnichannelNegotiation"
+    class="notes-container"
   >
     <ckeditor
-      v-if="showCKEditor"
       v-show="editorReady"
-      ref="messageEditor"
+      ref="noteEditor"
       :value="editorText"
+      class="notes-container__editor"
       :config="editorConfig"
-      class="messages-container__editor"
       @ready="setEditorReady(true)"
-      @input="setEditorText"
+      @input="setNoteEditorText"
     />
-    <el-input
-      v-else
-      :value="editorTextScaped"
-      type="textarea"
-      resize="none"
-      :autosize="{ minRows: 5 }"
-      @input="setEditorText"
-    />
-    <span class="messages-container__button">
+    <span class="notes-container__button">
       <el-button
         type="primary"
         size="small"
       >
-        Enviar mensagem
+        Salvar nota
       </el-button>
     </span>
   </section>
@@ -46,12 +36,11 @@ export default {
   },
   computed: {
     ...mapGetters({
-      editorTextScaped: 'getEditorTextScaped',
-      messageType: 'getEditorMessageType',
       getEditorReady: 'getEditorReady',
       editorConfig: 'getEditorConfig',
-      editorText: 'getEditorText'
+      editorText: 'getNoteEditorText'
     }),
+
     editorReady: {
       get() {
         return this.getEditorReady
@@ -59,12 +48,6 @@ export default {
       set(value) {
         this.setEditorReady(value)
       }
-    },
-    body() {
-      return this.editorText
-    },
-    showCKEditor() {
-      return !['sms', 'whatsapp'].includes(this.messageType)
     }
   },
   beforeDestroy() {
@@ -73,7 +56,7 @@ export default {
   methods: {
     ...mapActions([
       'setEditorReady',
-      'setEditorText'
+      'setNoteEditorText'
     ]),
 
     destroyEditor() {
@@ -83,22 +66,21 @@ export default {
       }
     }
   }
+
 }
 </script>
 
 <style lang="scss" scoped>
-.messages-container {
-  background-color: transparent !important;
+.notes-container {
   padding: 6px;
   display: flex;
   flex-direction: column;
 
-  .messages-container__editor {
-    background-color: transparent !important;
+  .notes-container__editor {
     margin: 0px;
   }
 
-  .messages-container__button {
+  .notes-container__button {
     display: flex;
     justify-content: flex-end;
     margin-top: 6px;
@@ -106,14 +88,14 @@ export default {
 }
 
 @media (max-width: 900px) {
-  .messages-container {
+  .notes-container {
     padding: 0;
 
-    .messages-container__editor {
+    .notes-container__editor {
       margin: 6px;
     }
 
-    .messages-container__button {
+    .notes-container__button {
       .el-button {
         width: 100%;
         border-radius: 0;
@@ -126,21 +108,12 @@ export default {
 <style lang="scss">
 @import '@/styles/colors.scss';
 
-.messages-container {
+.notes-container {
   .cke_top { border: none; }
 
-  .cke.cke_chrome, .el-textarea__inner {
+  .cke.cke_chrome {
     border: 2px solid $--light-gray;
     border-radius: 6px;
-  }
-}
-
-@media (max-width: 900px) {
-  .messages-container {
-    .el-textarea__inner {
-      width: calc(100% - 12px);
-      margin: 6px;
-    }
   }
 }
 </style>

@@ -29,8 +29,8 @@ import EDITOR_CONSTANTS from '@/constants/editor'
 
 export default {
   components: {
-    messages: () => import('./partials/Messages'),
-    notes: () => import('./partials/Notes')
+    messages: () => import('./Messages'),
+    notes: () => import('./Notes')
   },
   computed: {
     ...mapGetters({
@@ -74,6 +74,15 @@ export default {
 }
 </script>
 
+<style lang="scss" scoped>
+@import '@/styles/colors.scss';
+
+.editor-container {
+  border-top: 2px solid $--light-gray;
+  height: auto;
+}
+</style>
+
 <style lang="scss">
 .el-tabs__header {
   margin-bottom: 0px !important;
@@ -88,13 +97,5 @@ export default {
   .el-tabs__nav-wrap:after {
     display: none;
   }
-}
-</style>
-
-<style lang="scss" scoped>
-
-.editor-container {
-  background-color: transparent;
-  height: 100vh;
 }
 </style>

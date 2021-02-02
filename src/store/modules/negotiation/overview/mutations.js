@@ -8,7 +8,7 @@ import Vue from 'vue'
 const overviewMutations = {
   setTicketOverview: (state, params) => (Vue.set(state, 'ticketOverview', params)),
   setTicketOverviewInfo: ({ ticketOverviewInfo }, params) => (ticketOverviewInfo = params),
-  setTicketOverviewParties: ({ ticketOverviewParties }, params) => (ticketOverviewParties = params),
+  setTicketOverviewParties: (state, params) => (Vue.set(state, 'ticketOverviewParties', params)),
   setTicketOverviewProperties: ({ ticketOverviewParties }, params) => (ticketOverviewParties = params),
   setTicketOverviewAttachments: ({ ticketOverviewAttachments }, params) => (ticketOverviewAttachments = params)
 }
