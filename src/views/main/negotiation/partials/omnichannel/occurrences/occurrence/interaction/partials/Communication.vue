@@ -20,16 +20,28 @@
     </div>
 
     <div class="communication-container__message">
-      {{ text }}
+      <span
+        v-if="!canShowFullMessage && !isSmallText"
+        class="communication-container__message-link"
+        @click="deleteFullMessage(interaction.message.messageId)">
+        Ver menos
+      </span>
+      <span v-html="message" />
+      <span
+        v-if="canShowFullMessage"
+        class="communication-container__message-link"
+        @click="getFullMessage(interaction.message.messageId)">
+        Ver mais
+      </span>
     </div>
 
     <div class="communication-container__about">
       {{ sendDate[sendStatus] }}
-      <span v-if="sendStatus && !directionIn">
+      <span v-if="sendStatus !== 'default' && !directionIn">
         •
       </span>
       <JusIcon
-        v-if="sendStatus && !directionIn"
+        v-if="sendStatus !== 'default' && !directionIn"
         class="communication-container__about-icon"
         :icon="`status-${sendStatus}`"
       />
@@ -52,6 +64,7 @@
 
 <script>
 import { isSimilarStrings } from '@/utils'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   props: {
@@ -61,6 +74,10 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      fullMessages: 'getFullMessages'
+    }),
+
     interaction() {
       return this.value
     },
@@ -131,18 +148,40 @@ export default {
       } else if (this.interaction?.message?.parameters?.SUBJECT) {
         return this.interaction?.message?.parameters?.SUBJECT
       }
-
       return ''
+    },
+
+    message() {
+      const { messageId } = this.interaction.message
+      return this.fullMessages[messageId] || this.text
+    },
+
+    isSmallText() {
+      return this.text.length < 100
+    },
+
+    canShowFullMessage() {
+      const { messageId } = this.interaction.message
+
+      return !this.isSmallText && !Object.keys(this.fullMessages).includes(String(messageId))
     },
 
     hasError() {
       return this.interaction?.message?.parameters?.FAILED_SEND
     }
+  },
+  methods: {
+    ...mapActions([
+      'deleteFullMessage',
+      'getFullMessage'
+    ])
   }
 }
 </script>
 
 <style lang="scss" scoped>
+@import '@/styles/colors.scss';
+
 .communication-container {
   overflow-y: hidden;
   margin: 12px;
@@ -152,7 +191,7 @@ export default {
     align-items: center;
     gap: 6px;
 
-    font: normal normal normal 15px/18px Proxima Nova;
+    /* font: normal normal normal 15px/18px Proxima Nova; */
     color: #9A9797;
 
     margin-bottom: 6px;
@@ -167,8 +206,17 @@ export default {
   }
 
   .communication-container__message {
-    font: normal normal normal 18px/22px Proxima Nova;
+    font-size: 16px;
     color: #3C3B3B;
+
+    /* margin-left: 6px; */
+
+    .communication-container__message-link {
+      cursor: pointer;
+      font-size: 12px;
+      text-decoration: underline;
+      color: $--color-primary;
+    }
   }
 
   .communication-container__about {
@@ -177,7 +225,7 @@ export default {
     align-items: center;
     gap: 6px;
 
-    font: normal normal normal 15px/18px Proxima Nova;
+    font-size: 12px;
     color: #9A9797;
 
     .communication-container__about-icon {
@@ -188,14 +236,8 @@ export default {
 
 @media (max-height: 680px) {
   .communication-container {
-    .communication-container__email {
-      font: normal normal normal 12px/12px Proxima Nova;
-    }
     .communication-container__message {
-      font: normal normal normal 16px/18px Proxima Nova;
-    }
-    .communication-container__about {
-      font: normal normal normal 12px/12px Proxima Nova;
+      font-size: 14px;
     }
   }
 }

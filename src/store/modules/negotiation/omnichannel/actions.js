@@ -35,6 +35,18 @@ const omnichannelActions = {
       mutation: 'setOccurrences',
       params
     })
+  },
+  getFullMessage({ _ }, messageId) {
+    const messagesPath = 'api/messages'
+    if (messageId) {
+      return axiosDispatch({
+        url: `${messagesPath}/${messageId}`,
+        mutation: 'addFullMessage'
+      })
+    }
+  },
+  deleteFullMessage({ commit }, messageId) {
+    commit('removeFullMessage', messageId)
   }
 }
 

@@ -128,6 +128,10 @@ export default {
     flex-direction: row;
     gap: 16px;
 
+    .interaction-container__balloon-content {
+      width: 100%;
+    }
+
     &.INBOUND {
       flex-direction: row;
     }
