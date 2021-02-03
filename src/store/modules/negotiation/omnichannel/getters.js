@@ -18,7 +18,8 @@ const omnichannelGetters = {
   getOccurrencesFilter: state => ({
     ...state.occurrences.filter,
     type: mapTabOccurrenceType[state.activeTab]
-  })
+  }),
+  getFullMessages: state => (state.occurrences.fullMessages)
 }
 
 export default omnichannelGetters
