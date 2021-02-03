@@ -6,402 +6,451 @@
     class="contracts-modal"
     width="50%"
   >
-    <el-form
-      v-if="form"
-      ref="contractForm"
-      :model="newContract"
-      :rules="formRules"
-    >
-      <el-collapse
-        ref="mainCollapse"
-        accordion
-        class="transition-none"
-        @item-click="resetNewContract"
+    <div v-loading="saving">
+      <el-form
+        v-if="form"
+        ref="contractForm"
+        :model="newContract"
+        :rules="formRules"
       >
-        <el-collapse-item
-          v-for="(contract, contractCount) in filteredContracts"
-          :key="contractCount"
-          :name="contractCount"
+        <el-collapse
+          ref="mainCollapse"
+          accordion
           class="transition-none"
+          @item-click="resetNewContract"
         >
-          <template #title>
-            <span>{{ contract.customTitle }}</span>
-            <el-tag
-              v-for="(flag, i) in contract.flags"
-              :key="i"
-              :type="flag.theme"
-              effect="dark"
-              size="mini"
-              class="contract-modal__flag transition-none"
-            >
-              {{ flag.label }}
-            </el-tag>
-          </template>
-          <!-- Campos do formulário -->
-          <el-row :gutter="24">
-            <el-col :span="12">
-              <el-form-item
-                label="Status"
-              >
-                <el-select
-                  v-if="!!form.contracts.length"
-                  v-model="contract.status"
-                  :disabled="isContractInactive(contract)"
-                  placeholder="Ex.: Ativo"
-                >
-                  <el-option
-                    v-for="(status, key, index) in contractStatus"
-                    :key="index"
-                    :label="status"
-                    :value="key"
-                  />
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item
-                label="Vencimento"
-              >
-                <el-select
-                  v-model="contract.invoiceDueDays"
-                  :disabled="isContractInactive(contract)"
-                  placeholder="Dia do mês"
-                >
-                  <el-option
-                    v-for="(day, dayCount) in 29"
-                    :key="dayCount - 1"
-                    :label="day - 1"
-                    :value="day - 1"
-                  />
-                </el-select>
-                <el-form-item />
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <!-- Linha 2 -->
-          <el-row :gutter="24">
-            <el-col :span="12">
-              <el-form-item
-                label="Início da vigência"
-              >
-                <el-date-picker
-                  v-model="contract.startedDate"
-                  :disabled="isContractInactive(contract)"
-                  placeholder="Início da vigência"
-                  type="date"
-                  format="dd/MM/yyyy"
-                  value-format="yyyy-MM-dd"
-                />
-                <el-form-item />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item
-                label="Data do churn"
-              >
-                <el-date-picker
-                  v-model="contract.inactivatedDate"
-                  :disabled="isContractInactive(contract)"
-                  placeholder="Data do churn"
-                  type="date"
-                  format="dd/MM/yyyy"
-                  value-format="yyyy-MM-dd"
-                />
-                <el-form-item />
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <!-- Linha 3 -->
-          <el-row :gutter="24">
-            <el-col :span="12">
-              <el-form-item
-                label="Fechamento"
-              >
-                <el-select
-                  v-model="contract.invoiceClosingDay"
-                  :disabled="isContractInactive(contract)"
-                  placeholder="Dia do mês"
-                >
-                  <el-option
-                    v-for="(day, dayCount) in 29"
-                    :key="dayCount - 1"
-                    :label="day - 1"
-                    :value="day - 1"
-                  />
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="Percentual de repasse">
-                <div class="el-input el-input--suffix">
-                  <input
-                    v-model="contract.onlendingFee"
-                    type="number"
-                    class="el-input__inner custom_input_number"
-                    :step="0.5"
-                  >
-                  <span class="el-input__suffix el-input__suffix-inner">%</span>
-                </div>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <!-- Linha 4 -->
-          <el-row :gutter="24">
-            <el-col :span="12">
-              <el-form-item
-                label="Plano"
-              >
-                <el-select
-                  v-model="contract.planId"
-                  :disabled="isContractInactive(contract)"
-                  placeholder="Plano"
-                >
-                  <el-option
-                    v-for="(plan, index) in plans"
-                    :key="index"
-                    :value="plan.id"
-                    :label="plan.name"
-                  />
-                </el-select>
-                <el-form-item />
-              </el-form-item>
-            </el-col>
-
-            <el-col :span="12">
-              <el-form-item
-                label="Mensalidade"
-              >
-                <money
-                  v-model="contract.monthlySubscriptionFee"
-                  :disabled="isContractInactive(contract)"
-                  :class="{'is-inactive': isContractInactive(contract)}"
-                  class="el-input__inner"
-                />
-                <el-form-item />
-              </el-form-item>
-            </el-col>
-          </el-row>
-
-          <!-- 4 últimos campos de baixo do formulário -->
-          <el-row :gutter="24">
-            <el-col
-              v-for="(tariffValue, tariffKey, tariffCount) in tariffTypes"
-              :key="tariffCount"
-              :span="12"
-            >
-              <el-form-item :label="tariffValue.label">
-                <money
-                  v-model="contract.tariffs[getTariffIndex(contract, tariffKey)].value"
-                  :disabled="isContractInactive(contract)"
-                  :readonly="isContractInactive(contract)"
-                  :class="{'is-inactive': isContractInactive(contract)}"
-                  class="el-input__inner"
-                />
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row
-            :gutter="24"
+          <el-collapse-item
+            v-for="(contract, contractCount) in filteredContracts"
+            :key="contractCount"
+            :name="contractCount"
+            class="transition-none"
           >
-            <el-col class="text-right">
-              <el-button
-                type="primary"
-                :disabled="saving"
-                @click.native.prevent="saveSingleContract(contract, contractCount)"
+            <template #title>
+              <span>{{ contract.customTitle }}</span>
+              <el-tag
+                v-for="(flag, i) in contract.flags"
+                :key="i"
+                :type="flag.theme"
+                effect="dark"
+                size="mini"
+                class="contract-modal__flag transition-none"
               >
-                Salvar
-              </el-button>
-            </el-col>
-          </el-row>
-        </el-collapse-item>
-
-        <!-- Novo Contrato -->
-        <el-collapse-item
-          name="newContract"
-          title="Novo contrato"
-        >
-          <el-row :gutter="24">
-            <el-col :span="12">
-              <el-form-item
-                prop="status"
-                label="Status"
-              >
-                <el-select
-                  v-model="newContract.status"
-                  placeholder="Ex.: Ativo"
+                {{ flag.label }}
+              </el-tag>
+            </template>
+            <!-- Campos do formulário -->
+            <el-row :gutter="24">
+              <el-col :span="12">
+                <el-form-item
+                  label="Status"
                 >
-                  <el-option
-                    v-for="(status, key, index) in contractStatus"
-                    :key="index"
-                    :label="status"
-                    :value="key"
-                  />
-                </el-select>
-              </el-form-item>
-            </el-col>
-
-            <el-col :span="12">
-              <el-form-item
-                prop="invoiceDueDays"
-                label="Vencimento"
-              >
-                <el-select
-                  v-model="newContract.invoiceDueDays"
-                  placeholder="Dia do mês"
-                >
-                  <el-option
-                    v-for="(day, dayCount) in 29"
-                    :key="dayCount - 1"
-                    :label="day - 1"
-                    :value="day - 1"
-                  />
-                </el-select>
-                <el-form-item />
-              </el-form-item>
-            </el-col>
-          </el-row>
-
-          <el-row :gutter="24">
-            <el-col :span="12">
-              <el-form-item
-                prop="startedDate"
-                label="Início da vigência"
-              >
-                <el-date-picker
-                  v-model="newContract.startedDate"
-                  placeholder="Início da vigência"
-                  type="date"
-                  format="dd/MM/yyyy"
-                  value-format="yyyy-MM-dd"
-                />
-              </el-form-item>
-            </el-col>
-
-            <el-col :span="12">
-              <el-form-item
-                label="Data do churn"
-              >
-                <el-date-picker
-                  v-model="newContract.inactivatedDate"
-                  placeholder="Data do churn"
-                  type="date"
-                  format="dd/MM/yyyy"
-                  value-format="yyyy-MM-dd"
-                />
-                <el-form-item />
-              </el-form-item>
-            </el-col>
-          </el-row>
-
-          <el-row :gutter="24">
-            <el-col :span="12">
-              <el-form-item
-                prop="invoiceClosingDay"
-                label="Fechamento"
-              >
-                <el-select
-                  v-model="newContract.invoiceClosingDay"
-                  placeholder="Dia do mês"
-                >
-                  <el-option
-                    v-for="(day, dayCount) in 29"
-                    :key="dayCount - 1"
-                    :label="day - 1"
-                    :value="day - 1"
-                  />
-                </el-select>
-                <el-form-item />
-              </el-form-item>
-            </el-col>
-
-            <el-col :span="12">
-              <el-form-item label="Percentual de repasse">
-                <div class="el-input el-input--suffix">
-                  <input
-                    v-model="newContract.onlendingFee"
-                    type="number"
-                    class="el-input__inner custom_input_number"
-                    :step="0.5"
+                  <el-select
+                    v-if="!!form.contracts.length"
+                    v-model="contract.status"
+                    :disabled="isContractInactive(contract)"
+                    placeholder="Ex.: Ativo"
                   >
-                  <span class="el-input__suffix el-input__suffix-inner">%</span>
-                </div>
-              </el-form-item>
-            </el-col>
-          </el-row>
-
-          <el-row :gutter="24">
-            <el-col :span="12">
-              <el-form-item
-                prop="planId"
-                label="Plano"
-              >
-                <el-select
-                  v-model="newContract.planId"
-                  placeholder="Plano"
+                    <el-option
+                      v-for="(status, key, index) in contractStatus"
+                      :key="index"
+                      :label="status"
+                      :value="key"
+                    />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item
+                  label="Dias para vencimento da fatura"
                 >
-                  <el-option
-                    v-for="(plan, index) in plans"
-                    :key="index"
-                    :value="plan.id"
-                    :label="plan.name"
+                  <!-- <el-select
+                    v-model="contract.invoiceDueDays"
+                    :disabled="isContractInactive(contract)"
+                    placeholder="Dia do mês"
+                  >
+                    <el-option
+                      v-for="(day, dayCount) in 29"
+                      :key="dayCount - 1"
+                      :label="day - 1"
+                      :value="day - 1"
+                    />
+                  </el-select> -->
+                  <el-input-number
+                    v-model="contract.invoiceDueDays"
+                    :disabled="isContractInactive(contract)"
+                    :min="0"
+                    :max="60"
+                    :step="1"
+                    step-strictly
+                    controls-position="right"
                   />
-                </el-select>
-                <el-form-item />
-              </el-form-item>
-            </el-col>
 
-            <el-col :span="12">
-              <el-form-item
-                prop="monthlySubscriptionFee"
-                label="Mensalidade"
+                  <el-form-item />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <!-- Linha 2 -->
+            <el-row :gutter="24">
+              <el-col :span="12">
+                <el-form-item
+                  label="Início da vigência"
+                >
+                  <el-date-picker
+                    v-model="contract.startedDate"
+                    :disabled="isContractInactive(contract)"
+                    placeholder="Início da vigência"
+                    type="date"
+                    format="dd/MM/yyyy"
+                    value-format="yyyy-MM-dd"
+                  />
+                  <el-form-item />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item
+                  label="Data do churn"
+                >
+                  <el-date-picker
+                    v-model="contract.inactivatedDate"
+                    :disabled="isContractInactive(contract)"
+                    placeholder="Data do churn"
+                    type="date"
+                    format="dd/MM/yyyy"
+                    value-format="yyyy-MM-dd"
+                  />
+                  <el-form-item />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <!-- Linha 3 -->
+            <el-row :gutter="24">
+              <el-col :span="12">
+                <el-form-item
+                  label="Dia de fechamento"
+                >
+                  <!-- <el-select
+                    v-model="contract.invoiceClosingDay"
+                    :disabled="isContractInactive(contract)"
+                    placeholder="Dia do mês"
+                  >
+                    <el-option
+                      v-for="(day, dayCount) in 29"
+                      :key="dayCount - 1"
+                      :label="day - 1"
+                      :value="day - 1"
+                    />
+                  </el-select> -->
+                  <el-input-number
+                    v-model="contract.invoiceClosingDay"
+                    :min="1"
+                    :max="31"
+                    step-strictly
+                    controls-position="right"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="Percentual de repasse">
+                  <!-- <div class="el-input el-input--suffix">
+                    <input
+                      v-model="contract.onlendingFee"
+                      type="number"
+                      class="el-input__inner custom_input_number"
+                      :step="0.5"
+                    >
+                    <span class="el-input__suffix el-input__suffix-inner">%</span>
+                  </div> -->
+                  <el-input-number
+                    v-model="contract.onlendingFee"
+                    :min="1"
+                    :max="100"
+                    step-strictly
+                    controls-position="right"
+                  />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <!-- Linha 4 -->
+            <el-row :gutter="24">
+              <el-col :span="12">
+                <el-form-item
+                  label="Plano"
+                >
+                  <el-select
+                    v-model="contract.planId"
+                    :disabled="isContractInactive(contract)"
+                    placeholder="Plano"
+                  >
+                    <el-option
+                      v-for="(plan, index) in plans"
+                      :key="index"
+                      :value="plan.id"
+                      :label="plan.name"
+                    />
+                  </el-select>
+                  <el-form-item />
+                </el-form-item>
+              </el-col>
+
+              <el-col :span="12">
+                <el-form-item
+                  label="Mensalidade"
+                >
+                  <money
+                    v-model="contract.monthlySubscriptionFee"
+                    :disabled="isContractInactive(contract)"
+                    :class="{'is-inactive': isContractInactive(contract)}"
+                    class="el-input__inner"
+                  />
+                  <el-form-item />
+                </el-form-item>
+              </el-col>
+            </el-row>
+
+            <!-- 4 últimos campos de baixo do formulário -->
+            <el-row :gutter="24">
+              <el-col
+                v-for="(tariffValue, tariffKey, tariffCount) in tariffTypes"
+                :key="tariffCount"
+                :span="12"
               >
-                <money
-                  v-model="newContract.monthlySubscriptionFee"
-                  class="el-input__inner"
-                />
-                <el-form-item />
-              </el-form-item>
-            </el-col>
-          </el-row>
-
-          <el-row :gutter="24">
-            <el-col
-              v-for="(tariff, tariffCount) in newContract.tariffs"
-              :key="tariffCount"
-              :span="12"
+                <el-form-item :label="tariffValue.label">
+                  <money
+                    v-model="contract.tariffs[getTariffIndex(contract, tariffKey)].value"
+                    :disabled="isContractInactive(contract)"
+                    :readonly="isContractInactive(contract)"
+                    :class="{'is-inactive': isContractInactive(contract)}"
+                    class="el-input__inner"
+                  />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row
+              :gutter="24"
             >
-              <el-form-item :label="tariffTypes[tariff.type].label">
-                <money
-                  v-model="tariff.value"
-                  class="el-input__inner"
-                />
-              </el-form-item>
-            </el-col>
+              <el-col class="text-right">
+                <el-button
+                  type="primary"
+                  :disabled="saving"
+                  @click.native.prevent="saveSingleContract(contract, contractCount)"
+                >
+                  Salvar
+                </el-button>
+              </el-col>
+            </el-row>
+          </el-collapse-item>
 
-            <el-col>
-              <el-form-item>
-                <el-switch
-                  v-model="hasWorkspace"
-                  :disabled="haveExclusiveContract"
-                  active-text="Exclusivo desta workspace"
-                />
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col class="text-right">
-              <el-button
-                type="primary"
-                :disabled="saving"
-                @click.native.prevent="validateForm"
+          <!-- Novo Contrato -->
+          <el-collapse-item
+            name="newContract"
+            title="Novo contrato"
+          >
+            <el-row :gutter="24">
+              <el-col :span="12">
+                <el-form-item
+                  prop="status"
+                  label="Status"
+                >
+                  <el-select
+                    v-model="newContract.status"
+                    placeholder="Ex.: Ativo"
+                  >
+                    <el-option
+                      v-for="(status, key, index) in contractStatus"
+                      :key="index"
+                      :label="status"
+                      :value="key"
+                    />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+
+              <el-col :span="12">
+                <el-form-item
+                  prop="invoiceDueDays"
+                  label="Dias para vencimento da fatura"
+                >
+                  <!-- <el-select
+                    v-model="newContract.invoiceDueDays"
+                    placeholder="Dia do mês"
+                  >
+                    <el-option
+                      v-for="(day, dayCount) in 29"
+                      :key="dayCount - 1"
+                      :label="day - 1"
+                      :value="day - 1"
+                    />
+                  </el-select> -->
+                  <el-input-number
+                    v-model="newContract.invoiceDueDays"
+                    :min="0"
+                    :max="60"
+                    :step="1"
+                    step-strictly
+                    controls-position="right"
+                  />
+                  <el-form-item />
+                </el-form-item>
+              </el-col>
+            </el-row>
+
+            <el-row :gutter="24">
+              <el-col :span="12">
+                <el-form-item
+                  prop="startedDate"
+                  label="Início da vigência"
+                >
+                  <el-date-picker
+                    v-model="newContract.startedDate"
+                    placeholder="Início da vigência"
+                    type="date"
+                    format="dd/MM/yyyy"
+                    value-format="yyyy-MM-dd"
+                  />
+                </el-form-item>
+              </el-col>
+
+              <el-col :span="12">
+                <el-form-item
+                  label="Data do churn"
+                >
+                  <el-date-picker
+                    v-model="newContract.inactivatedDate"
+                    placeholder="Data do churn"
+                    type="date"
+                    format="dd/MM/yyyy"
+                    value-format="yyyy-MM-dd"
+                  />
+                  <el-form-item />
+                </el-form-item>
+              </el-col>
+            </el-row>
+
+            <el-row :gutter="24">
+              <el-col :span="12">
+                <el-form-item
+                  prop="invoiceClosingDay"
+                  label="Dia de fechamento"
+                >
+                  <!-- <el-select
+                    v-model="newContract.invoiceClosingDay"
+                    placeholder="Dia do mês"
+                  >
+                    <el-option
+                      v-for="(day, dayCount) in 29"
+                      :key="dayCount - 1"
+                      :label="day - 1"
+                      :value="day - 1"
+                    />
+                  </el-select> -->
+                  <el-input-number
+                    v-model="newContract.invoiceClosingDay"
+                    :min="1"
+                    :max="31"
+                    step-strictly
+                    controls-position="right"
+                  />
+                  <el-form-item />
+                </el-form-item>
+              </el-col>
+
+              <el-col :span="12">
+                <el-form-item label="Percentual de repasse">
+                  <!-- <div class="el-input el-input--suffix">
+                    <input
+                      v-model="newContract.onlendingFee"
+                      type="number"
+                      class="el-input__inner custom_input_number"
+                      :step="0.5"
+                    >
+                    <span class="el-input__suffix el-input__suffix-inner">%</span>
+                  </div> -->
+                  <el-input-number
+                    v-model="newContract.onlendingFee"
+                    :min="1"
+                    :max="100"
+                    :precision="2"
+                    :step="0.1"
+                    controls-position="right"
+                  />
+                </el-form-item>
+              </el-col>
+            </el-row>
+
+            <el-row :gutter="24">
+              <el-col :span="12">
+                <el-form-item
+                  prop="planId"
+                  label="Plano"
+                >
+                  <el-select
+                    v-model="newContract.planId"
+                    placeholder="Plano"
+                  >
+                    <el-option
+                      v-for="(plan, index) in plans"
+                      :key="index"
+                      :value="plan.id"
+                      :label="plan.name"
+                    />
+                  </el-select>
+                  <el-form-item />
+                </el-form-item>
+              </el-col>
+
+              <el-col :span="12">
+                <el-form-item
+                  prop="monthlySubscriptionFee"
+                  label="Mensalidade"
+                >
+                  <money
+                    v-model="newContract.monthlySubscriptionFee"
+                    class="el-input__inner"
+                  />
+                  <el-form-item />
+                </el-form-item>
+              </el-col>
+            </el-row>
+
+            <el-row :gutter="24">
+              <el-col
+                v-for="(tariff, tariffCount) in newContract.tariffs"
+                :key="tariffCount"
+                :span="12"
               >
-                Salvar
-              </el-button>
-            </el-col>
-          </el-row>
-        </el-collapse-item>
-      </el-collapse>
-    </el-form>
+                <el-form-item :label="tariffTypes[tariff.type].label">
+                  <money
+                    v-model="tariff.value"
+                    class="el-input__inner"
+                  />
+                </el-form-item>
+              </el-col>
+
+              <el-col>
+                <el-form-item>
+                  <el-switch
+                    v-model="hasWorkspace"
+                    :disabled="haveExclusiveContract"
+                    active-text="Exclusivo desta workspace"
+                  />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col class="text-right">
+                <el-button
+                  type="primary"
+                  :disabled="saving"
+                  @click.native.prevent="validateForm"
+                >
+                  Salvar
+                </el-button>
+              </el-col>
+            </el-row>
+          </el-collapse-item>
+        </el-collapse>
+      </el-form>
+    </div>
   </el-dialog>
 </template>
 
@@ -425,7 +474,7 @@ export default {
   },
   data() {
     return {
-      form: { },
+      form: {},
       isFormVisible: false,
       formRules: {
         invoiceClosingDay: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
@@ -436,7 +485,7 @@ export default {
         status: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
       },
       tariffTypes: TARIFF_TYPES,
-      newContract: { },
+      newContract: {},
       hasWorkspace: false,
       saving: false
     }
@@ -552,7 +601,9 @@ export default {
         type: 'success',
         title: 'Yay!',
         message: 'Contrato adicionado com sucesso.'
-      })).finally(() => {
+      })).catch(error => {
+        this.$jusNotification({ error })
+      }).finally(() => {
         this.saving = false
       })
 
@@ -587,33 +638,11 @@ export default {
           title: 'Yay!',
           message: 'Contrato salvo com sucesso.'
         })
-      }).finally(() => { this.saving = false })
-    },
-    /**
-     * Salva todos os contratos
-     * @deprecated
-     */
-    saveContract() {
-      const {
-        form
-      } = this
-
-      const formPromises = []
-
-      form.contracts.map(contract => {
-        formPromises.push(this.updateContract({
-          customerId: form.customerId,
-          contract
-        }))
+      }).catch(error => {
+        this.$jusNotification({ error })
+      }).finally(() => {
+        this.saving = false
       })
-
-      Promise.all(formPromises).then(() => this.$jusNotification({
-        type: 'success',
-        title: 'Yay!',
-        message: 'Contratos editados com sucesso.'
-      }))
-
-      this.closeModal()
     },
     closeModal() {
       this.isFormVisible = false
