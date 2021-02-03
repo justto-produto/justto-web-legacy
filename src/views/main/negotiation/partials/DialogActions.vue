@@ -14,6 +14,7 @@
         ref="offerForm"
         :model="offerForm"
         :rules="offerFormRules"
+        :disabled="modalLoading"
         label-position="top"
       >
         <el-row
@@ -49,11 +50,14 @@
               label="Valor:"
               prop="value"
             >
-              <money
-                v-model="offerForm.value"
-                maxlength="16"
-                class="el-input__inner"
-              />
+              <div :class="{ 'el-input is-disabled': modalLoading }">
+                <money
+                  v-model="offerForm.value"
+                  :disabled="modalLoading"
+                  maxlength="16"
+                  class="el-input__inner"
+                />
+              </div>
             </el-form-item>
           </el-col>
           <el-col
@@ -94,12 +98,15 @@
       </el-form>
       <div slot="footer">
         <el-button
+          :disabled="modalLoading"
           plain
           @click="offerDialogVisible = false"
         >
           Cancelar
         </el-button>
         <el-button
+          v-loading="modalLoading"
+          :disabled="modalLoading"
           type="primary"
           @click.prevent="handleDialogAction"
         >
@@ -109,6 +116,7 @@
     </el-dialog>
 
     <el-dialog
+      v-loading="modalLoading"
       :visible.sync="ticketResumeDialogVisible"
       :show-close="false"
       :close-on-click-modal="false"
@@ -135,6 +143,7 @@
         ref="offerForm"
         :model="offerForm"
         :rules="offerFormRules"
+        :disabled="modalLoading"
         label-position="top"
       >
         <el-form-item
@@ -150,12 +159,15 @@
       </el-form>
       <div slot="footer">
         <el-button
+          :disabled="modalLoading"
           plain
           @click="ticketResumeDialogVisible = false"
         >
           Cancelar
         </el-button>
         <el-button
+          v-loading="modalLoading"
+          :disabled="modalLoading"
           type="primary"
           @click.prevent="handleSettled"
         >
@@ -165,6 +177,7 @@
     </el-dialog>
 
     <el-dialog
+      v-loading="modalLoading"
       :visible.sync="confirmIncreaseUpperrangeDialogVisible"
       :show-close="false"
       :close-on-click-modal="false"
@@ -193,6 +206,7 @@
       </div>
       <div slot="footer">
         <el-button
+          :disabled="modalLoading"
           plain
           @click="confirmIncreaseUpperrangeDialogVisible = false"
         >
@@ -200,14 +214,18 @@
         </el-button>
         <el-button
           v-if="!isSettledIncreaseAlertType"
+          v-loading="modalLoading"
+          :disabled="modalLoading"
           plain
-          @click.prevent="sendManualOffer(true)"
+          @click.prevent="handleIncreaseManualOffer(isSettledIncreaseAlertType)"
         >
           Majorar
         </el-button>
         <el-button
+          v-loading="modalLoading"
+          :disabled="modalLoading"
           type="primary"
-          @click.prevent="sendManualOffer(isSettledIncreaseAlertType)"
+          @click.prevent="handleIncreaseManualOffer(isSettledIncreaseAlertType)"
         >
           {{ isSettledIncreaseAlertType ? 'Majorar' : 'Não majorar' }}
         </el-button>
@@ -215,40 +233,45 @@
     </el-dialog>
 
     <el-dialog
+      v-loading="modalLoading"
       :visible.sync="editNegotiatorsDialogVisible"
       :show-close="false"
       :close-on-click-modal="false"
       :close-on-press-escape="false"
       append-to-body
       width="604px"
-      title="Editar negociadores da disputa"
+      title="Editar negociadores"
       class="dialog-actions__increase-alert"
     >
       <el-form
         ref="editNegotiatorsForm"
         label-position="top"
+        :disabled="modalLoading"
       >
         <el-transfer
           v-model="editNegotiatorsForm"
           :titles="['Equipe', 'Disputa']"
           :button-texts="['Remover', 'Adicionar']"
-          :data="workspaceMembers"
+          :data="mappedWorkspaceMembers"
           filter-placeholder="Buscar"
           filterable
         />
       </el-form>
       <div slot="footer">
         <el-button
+          :disabled="modalLoading"
           plain
           @click="editNegotiatorsDialogVisible = false"
         >
           Cancelar
         </el-button>
         <el-button
+          v-loading="modalLoading"
+          :disabled="modalLoading"
           type="primary"
           @click.prevent="handleEditNegotiators"
         >
-          Editar dados
+          Trocar negociadores
         </el-button>
       </div>
     </el-dialog>
@@ -266,6 +289,7 @@ export default {
     }
   },
   data: () => ({
+    modalLoading: false,
     offerDialogVisible: false,
     offerFormType: 'MANUAL_COUNTERPROPOSAL',
     offerForm: {
@@ -367,6 +391,18 @@ export default {
 
     ticketNegotiators() {
       return this.ticketParties.filter(part => part.roles.includes('NEGOTIATOR'))
+    },
+
+    mappedWorkspaceMembers() {
+      return this.workspaceMembers.map(member => {
+        const { id, name } = member.person
+
+        return {
+          key: id,
+          label: name,
+          value: id
+        }
+      })
     }
   },
   beforeMount() {
@@ -400,6 +436,22 @@ export default {
       })
     },
 
+    concludeAction(action, disputeId, param = false) {
+      const message = this.$tc(`actions.feedback.${action}`, param)
+
+      this.$jusNotification({
+        message: `${message} com sucesso.`,
+        title: 'Yay!',
+        type: 'success'
+      })
+      this.$jusSegment(message, { disputeId })
+
+      this.offerDialogVisible = false
+      this.ticketResumeDialogVisible = false
+      this.editNegotiatorsDialogVisible = false
+      this.confirmIncreaseUpperrangeDialogVisible = false
+    },
+
     openOfferDialog(action) {
       const { ticketPlaintiffs } = this
       const { plaintiffProposal } = this.ticket
@@ -420,7 +472,7 @@ export default {
     },
 
     openEditNegotiatorsDialog(action) {
-      this.editNegotiatorsForm = this.ticketNegotiators
+      this.editNegotiatorsForm = this.ticketNegotiators.map(negotiator => negotiator.personId)
       this.editNegotiatorsDialogVisible = true
     },
 
@@ -447,52 +499,85 @@ export default {
     },
 
     handleManualOffer(action) {
+      const { disputeId } = this.ticket
+
       this.validateOfferForm()
         .then(() => {
           if (this.offerForm.value > this.ticket.upperRange) {
             this.isSettledIncreaseAlertType = action === 'SETTLED'
             this.confirmIncreaseUpperrangeDialogVisible = true
           } else {
-            this.confirmAction()
-              .then(() => this.sendManualOffer())
+            this.confirmAction(action)
+              .then(() => {
+                this.modalLoading = true
+                this.sendManualOffer()
+                  .then(success => this.concludeAction(action, disputeId, true))
+                  .catch(error => this.$jusNotification({ error }))
+                  .finally(() => (this.modalLoading = false))
+              })
           }
         })
+    },
+
+    handleIncreaseManualOffer(updateUpperRange = false) {
+      const { offerFormType } = this
+      const { disputeId } = this.ticket
+
+      this.modalLoading = true
+      this.sendManualOffer(updateUpperRange)
+        .then(success => this.concludeAction(offerFormType, disputeId, updateUpperRange))
+        .catch(error => this.$jusNotification({ error }))
+        .finally(() => (this.modalLoading = false))
     },
 
     sendManualOffer(updateUpperRange = false) {
       return new Promise((resolve, reject) => {
         const { disputeId } = this.ticket
-        const { value, roleId, note } = this.offerForm
-        const payload = {
-          // attribute,
-          value,
-          note,
-          roleId,
-          updateUpperRange
-        }
 
-        this.sendOffer({ disputeId, payload })
-          .then(success => resolve(success))
+        // TODO: Remover getDisputDTO, e parametro atribute
+        this.$store.dispatch('getDisputeDTO', disputeId)
+          .then(disputeToEdit => {
+            const { value, roleId, note } = this.offerForm
+            const payload = {
+              attribute: { id: disputeToEdit.objects[0].id },
+              value: value.toString(),
+              note,
+              role: { id: roleId },
+              updateUpperRange
+            }
+
+            this.sendOffer({ disputeId, payload })
+              .then(success => resolve(success))
+              .catch(error => reject(error))
+          })
           .catch(error => reject(error))
       })
     },
 
     handleEditNegotiators() {
       const { disputeId } = this.ticket
+      const payload = { negotiatorsId: this.editNegotiatorsForm }
       const action = 'EDIT_NEGOTIATORS'
-      const payload = {
-        negotiatorsId: this.editNegotiatorsForm
-      }
 
+      this.modalLoading = true
       this.sendTicketAction({ disputeId, action, payload })
+        .then(success => this.concludeAction(action, disputeId))
+        .catch(error => this.$jusNotification({ error }))
+        .finally(() => (this.modalLoading = false))
     },
 
     handleSettled() {
       const { disputeId } = this.ticket
       const action = 'SETTLED'
 
-      this.confirmAction()
-        .then(() => this.sendTicketAction({ disputeId, action }))
+      this.confirmAction(action)
+        .then(() => {
+          this.modalLoading = true
+          this.sendTicketAction({ disputeId, action })
+            .then(success => this.concludeAction(action, disputeId))
+            .catch(error => this.$jusNotification({ error }))
+            .finally(() => (this.modalLoading = false))
+        })
     },
 
     handleUnsettled() {
@@ -504,14 +589,30 @@ export default {
 
       if (this.isInsufficientUpperRange) {
         this.validateOfferForm()
-          .then(() => this.confirmAction()
-            .then(() => this.sendManualOffer()
-              .then(() => this.sendTicketAction({ disputeId, action, payload }))
-            )
+          .then(() => this.confirmAction(action)
+            .then(() => {
+              this.modalLoading = true
+              this.sendManualOffer()
+                .then(() => this.sendTicketAction({ disputeId, action, payload })
+                  .then(success => this.concludeAction(action, disputeId))
+                  .catch(error => this.$jusNotification({ error }))
+                  .finally(() => (this.modalLoading = false))
+                )
+                .catch(error => {
+                  this.$jusNotification({ error })
+                  this.modalLoading = false
+                })
+            })
           )
       } else {
-        this.confirmAction()
-          .then(() => this.sendTicketAction({ disputeId, action, payload }))
+        this.confirmAction(action)
+          .then(() => {
+            this.modalLoading = true
+            this.sendTicketAction({ disputeId, action, payload })
+              .then(success => this.concludeAction(action, disputeId))
+              .catch(error => this.$jusNotification({ error }))
+              .finally(() => (this.modalLoading = false))
+          })
       }
     },
 
@@ -523,22 +624,6 @@ export default {
         })
       })
     }
-
-    // sendCounterproposal(updateUpperRange) {
-    //     this.$store.dispatch('getDisputeDTO', this.dispute.id).then(disputeToEdit => {
-    //       this.$store.dispatch('sendDisputeCounterProposal')
-    //         .then(() => {
-    //           if (this.counterOfferForm.note) {
-    //             const people = this.disputeClaimants.filter(d => d.id === this.counterOfferForm.selectedRoleId)[0]
-    //             const note = '<b>Contraproposta manual no valor de ' + this.$options.filters.currency(this.counterOfferForm.lastCounterOfferValue) + ', realizada por ' + people.name + ', com a nota:</b> <br/>' + this.counterOfferForm.note
-    //             this.sendDisputeNote({
-    //               note,
-    //               disputeId: this.dispute.id
-    //             })
-    //           }
-    //         })
-    //     })
-    // }
   }
 }
 </script>

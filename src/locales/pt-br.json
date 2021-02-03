@@ -216,7 +216,25 @@
     "UPLOAD_ATTACHMENT": "enviar anexo",
     "DROP_LAWSUIT": "confirmar baixa definitiva",
     "START_NEGOTIATION": "iniciar negociação",
-    "DELETE_DOCUMENT": "excluír documento"
+    "DELETE_DOCUMENT": "excluír documento",
+    "feedback": {
+      "SETTLED": "disputa <b>ganha</b> | proposta aceita",
+      "UNSETTLED": "disputa <b>perdida</b>",
+      "SET_UNREAD": "disputa <b>marcada como não lida</b>",
+      "RESUME": "disputa <b>retomada</b>",
+      "PAUSE": "disputa <b>pausada</b>",
+      "MANUAL_COUNTERPROPOSAL": "contraproposta manual realizada | alçada máxima <b>majorada</b>. A disputa foi movida para <b>proposta aceita</b>",
+      "RESTART_ENGAGEMENT": "disputa <b>reiniciada</b>",
+      "RESEND_MESSAGES": "<b>mensagens automáticas reenviadas</b>",
+      "CANCEL_MESSAGES": "<b>mensagens canceladas</b>",
+      "EDIT_NEGOTIATORS": "negociadores alterados",
+      "ENRICH": "dispute <b>enriquecida</b>",
+      "RENEGOTIATE": "disputa <b>retornada para negociação</b>",
+      "UPLOAD_ATTACHMENT": "",
+      "DROP_LAWSUIT": "<b>baixa definitiva</b>",
+      "START_NEGOTIATION": "<b>negociação iniciada</b>",
+      "DELETE_DOCUMENT": "<b>minuta excluida</b>"
+    }
   },
   "fields": {
     "claimantParty": "Parte contrária",
