@@ -7,7 +7,8 @@ const omnichannelMutations = {
       page: 0,
       size: 20
     },
-    list: []
+    list: [],
+    fullMessages: {}
   },
   editor: {
     configs: {
