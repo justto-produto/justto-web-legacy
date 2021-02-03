@@ -225,6 +225,17 @@ export default {
       })
     },
 
+    concludeAction(action, disputeId) {
+      const message = this.$tc(`actions.feedback.${action}`)
+
+      this.$jusNotification({
+        message: `${message} com sucesso.`,
+        title: 'Yay!',
+        type: 'success'
+      })
+      this.$jusSegment(message, { disputeId })
+    },
+
     handleSettled(action) {
       const { paused, status } = this.ticket
 
@@ -238,7 +249,8 @@ export default {
 
       if (paused) {
         const message = 'A disputa está pausada, deseja retomar negociação para ganhar?'
-        this.handlePauseResume('RESUME', message).then(() => settledTicket())
+        this.handlePauseResume('RESUME', message)
+          .then(() => settledTicket())
       } else {
         settledTicket()
       }
@@ -264,16 +276,31 @@ export default {
       const { disputeId } = this.ticket
 
       this.setVisualized({ disputeId, visualized: false, anonymous: false })
-        .then(() => this.$router.push('/negotiation'))
+        .then(() => {
+          this.concludeAction(action, disputeId)
+          this.$router.push('/negotiation')
+        })
+        .catch(error => {
+          this.$jusNotification({ error })
+        })
     },
 
     handlePauseResume(action = 'RESUME', customMessage) {
       const { disputeId } = this.ticket
 
-      this.confirmAction(action, customMessage)
-        .then(() => this.sendTicketAction({ disputeId, action })
-          .then(() => this.$jusSegment('Disputa pausada', { disputeId }))
-        )
+      return new Promise((resolve, reject) => {
+        this.confirmAction(action, customMessage)
+          .then(() => this.sendTicketAction({ disputeId, action })
+            .then(() => {
+              this.concludeAction(action, disputeId)
+              resolve()
+            })
+            .catch(error => {
+              this.$jusNotification({ error })
+              reject(error)
+            })
+          )
+      })
     },
 
     handleRestartEngagement(action) {
@@ -282,7 +309,8 @@ export default {
       this.handleManualStrategy(action)
         .then(() => this.confirmAction(action)
           .then(() => this.revertStatus({ disputeId, action })
-            .then(() => this.$jusSegment('Engajamento reiniciado', { disputeId }))
+            .then(() => this.concludeAction(action, disputeId))
+            .catch(error => this.$jusNotification({ error }))
           )
         )
     },
@@ -293,7 +321,8 @@ export default {
       this.handleManualStrategy(action)
         .then(() => this.confirmAction(action)
           .then(() => this.resendMessages({ disputeId, action })
-            .then(() => this.$jusSegment('Mensagens reenviadas', { disputeId }))
+            .then(() => this.concludeAction(action, disputeId))
+            .catch(error => this.$jusNotification({ error }))
           )
         )
     },
@@ -304,7 +333,8 @@ export default {
       this.handleManualStrategy(action)
         .then(() => this.confirmAction(action)
           .then(() => this.cancelMessages({ disputeId, action })
-            .then(() => this.$jusSegment('Mensagens canceladas', { disputeId }))
+            .then(() => this.concludeAction(action, disputeId))
+            .catch(error => this.$jusNotification({ error }))
           )
         )
     },
@@ -318,9 +348,11 @@ export default {
 
       this.confirmAction(action)
         .then(() => this.enrichTicket(disputeId)
-          .then(() => this.$jusSegment('Disputa enriquecida manualmente', { disputeId }))
+          .then(() => this.concludeAction(action, disputeId))
+          .catch(error => this.$jusNotification({ error }))
         )
     },
+
     handleRenegotiate(action) {
       const { disputeId, hasDraft } = this.ticket
 
@@ -331,8 +363,15 @@ export default {
               const confirmMessage = 'Esta disputa possui documento gerado, deseja exclui-lo?'
 
               this.confirmAction('DELETE_DOCUMENT', confirmMessage)
-                .then(() => this.deleteDocument(disputeId))
+                .then(() => this.deleteDocument(disputeId)
+                  .then(() => this.concludeAction('DELETE_DOCUMENT', disputeId))
+                  .catch(error => this.$jusNotification({ error }))
+                )
             }
+            this.concludeAction(action, disputeId)
+          })
+          .catch(error => {
+            this.$jusNotification({ error })
           })
         )
     },
@@ -349,8 +388,11 @@ export default {
         .then(() => {
           this.deleteTicket({ disputeId, reason: 'DISPUTE_DROPPED' })
             .then(() => {
+              this.concludeAction(action, disputeId)
               this.$router.push('/negotiation')
-              this.$jusSegment('Baixa definitiva na disputa', { disputeId })
+            })
+            .catch(error => {
+              this.$jusNotification({ error })
             })
         })
     },
@@ -360,23 +402,24 @@ export default {
 
       this.confirmAction(action)
         .then(() => this.startNegotiation(disputeId)
-          .then(() => this.$jusSegment('Negociação iniciada na disputa', { disputeId }))
+          .then(() => this.concludeAction(action, disputeId))
+          .catch(error => this.$jusNotification({ error }))
         )
     },
 
     handleManualStrategy(action) {
-      return new Promise((resolve, reject) => {
-        const { isManual } = this.ticket.strategy
-        const title = this.$options.filters.capitalize(this.$t(`actions.${action}`))
-        const message = 'Esta disputa está com uma estratégia de <b>engajamento manual</b>. Se deseja realizar engajamento automático, edite a disputa e escolha uma estratégia de engajamento adequada'
-        const options = {
-          title,
-          confirmButtonText: 'OK',
-          dangerouslyUseHTMLString: true,
-          showClose: false
-        }
-        const error = new Error('A estratégia dessa disputa é manual. Mude a estratégial para poder reiniciar disputa, reiniciar engajamento ou cancelar mensagens')
+      const { isManual } = this.ticket.strategy
+      const title = this.$options.filters.capitalize(this.$t(`actions.${action}`))
+      const message = 'Esta disputa está com uma estratégia de <b>engajamento manual</b>. Se deseja realizar engajamento automático, edite a disputa e escolha uma estratégia de engajamento adequada'
+      const options = {
+        title,
+        confirmButtonText: 'OK',
+        dangerouslyUseHTMLString: true,
+        showClose: false
+      }
+      const error = new Error('A estratégia dessa disputa é manual. Mude a estratégial para poder reiniciar disputa, reiniciar engajamento ou cancelar mensagens')
 
+      return new Promise((resolve, reject) => {
         if (isManual) {
           this.$alert(message, options)
           reject(error)
