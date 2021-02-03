@@ -283,20 +283,20 @@
                 <div><i :class="dispute.campaign.denySavingDeposit ? 'el-icon-check' : 'el-icon-close'" /> {{ dispute.campaign.denySavingDeposit ? 'Sim' : 'Não ' }}</div>
                 Mensagens somente em horário comercial?
                 <div><i :class="dispute.campaign.businessHoursEngagement ? 'el-icon-check' : 'el-icon-close'" /> {{ dispute.campaign.businessHoursEngagement ? 'Sim' : 'Não' }}</div>
-                Contactar autor?
+                Contatar autor?
                 <div>
                   <i :class="(dispute.contactPartyWhenNoLowyer || dispute.contactPartyWhenInvalidLowyer) ? 'el-icon-check' : 'el-icon-close'" />
                   <span v-if="dispute.awaysContactParty">
                     Sempre
                   </span>
                   <span v-else-if="dispute.contactPartyWhenNoLowyer && dispute.contactPartyWhenInvalidLowyer">
-                    Quando não houver advogado ou não for possível contactar o advogado existente
+                    Quando não houver advogado ou não for possível contatar o advogado existente
                   </span>
                   <span v-else-if="dispute.contactPartyWhenNoLowyer && !dispute.contactPartyWhenInvalidLowyer">
                     Somente quando não houver advogado constituído
                   </span>
                   <span v-else-if="!dispute.contactPartyWhenNoLowyer && dispute.contactPartyWhenInvalidLowyer">
-                    Somente quando não for possível contactar o advogado existente
+                    Somente quando não for possível contatar o advogado existente
                   </span>
                   <span v-else>
                     Nunca
