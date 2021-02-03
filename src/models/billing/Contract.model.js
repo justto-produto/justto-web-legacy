@@ -19,10 +19,10 @@ export class ContractModel {
   constructor(
     {
       id,
-      status,
-      startedDate = '1970-01-01',
-      invoiceDueDays = 0,
-      invoiceClosingDay = 0,
+      status = 'ACTIVE',
+      startedDate = '',
+      invoiceDueDays = 10,
+      invoiceClosingDay = 1,
       plan,
       monthlySubscriptionFee,
       tariffs = []
