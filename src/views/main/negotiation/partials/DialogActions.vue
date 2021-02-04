@@ -116,7 +116,6 @@
     </el-dialog>
 
     <el-dialog
-      v-loading="modalLoading"
       :visible.sync="ticketResumeDialogVisible"
       :show-close="false"
       :close-on-click-modal="false"
@@ -177,7 +176,6 @@
     </el-dialog>
 
     <el-dialog
-      v-loading="modalLoading"
       :visible.sync="confirmIncreaseUpperrangeDialogVisible"
       :show-close="false"
       :close-on-click-modal="false"
@@ -233,7 +231,6 @@
     </el-dialog>
 
     <el-dialog
-      v-loading="modalLoading"
       :visible.sync="editNegotiatorsDialogVisible"
       :show-close="false"
       :close-on-click-modal="false"
@@ -275,11 +272,25 @@
         </el-button>
       </div>
     </el-dialog>
+
+    <el-dialog
+      v-loading="modalLoading"
+      :visible.sync="attachmentDialogVisible"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      append-to-body
+      width="600px"
+      title="Enviar anexo"
+      class="dialog-actions__increase-alert"
+    >
+      <span />
+    </el-dialog>
   </section>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+
 export default {
   name: 'DialogActions',
   props: {
@@ -303,12 +314,13 @@ export default {
       value: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
       roleId: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
     },
+    isSettledIncreaseAlertType: false,
     ticketResumeDialogVisible: false,
     ticketResumeType: 'Ganhar',
-    confirmIncreaseUpperrangeDialogVisible: false,
-    isSettledIncreaseAlertType: false,
     editNegotiatorsDialogVisible: false,
-    editNegotiatorsForm: []
+    editNegotiatorsForm: [],
+    confirmIncreaseUpperrangeDialogVisible: false,
+    attachmentDialogVisible: false
   }),
   computed: {
     ...mapGetters({
@@ -480,6 +492,10 @@ export default {
       this.offerFormType = action
       this.ticketResumeType = actionType === 'WIN' ? 'Ganhar' : 'Fechar acordo'
       this.ticketResumeDialogVisible = true
+    },
+
+    openAttachmentDialog(action) {
+      this.attachmentDialogVisible = true
     },
 
     handleDialogAction() {

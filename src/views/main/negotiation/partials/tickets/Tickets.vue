@@ -6,6 +6,7 @@
     />
     <el-tabs
       v-model="activeTab"
+      class="tickets-container__tabs"
       @tab-click="handleChangeTab"
     >
       <el-tab-pane
@@ -17,17 +18,19 @@
         stretch
         lazy
       >
-        <ul
-          v-if="activeTab === tab.name"
-          class="tickets-container__list"
-        >
-          <component
-            :is="tab.component"
-            v-for="ticket in tickets.content"
-            :key="ticket.disputeId"
-            :ticket="ticket"
-          />
-        </ul>
+        <vue-perfect-scrollbar>
+          <ul
+            v-if="activeTab === tab.name"
+            class="tickets-container__list"
+          >
+            <component
+              :is="tab.component"
+              v-for="ticket in tickets.content"
+              :key="ticket.disputeId"
+              :ticket="ticket"
+            />
+          </ul>
+        </vue-perfect-scrollbar>
       </el-tab-pane>
     </el-tabs>
   </nav>
@@ -41,7 +44,8 @@ export default {
   components: {
     EngagementTicketItem: () => import('./EngagementTicketItem'),
     CommunicationTicketItem: () => import('./CommunicationTicketItem'),
-    TicketsHeader: () => import('./TicketsHeader')
+    TicketsHeader: () => import('./TicketsHeader'),
+    VuePerfectScrollbar: () => import('vue-perfect-scrollbar')
   },
   data: () => ({
     activeTab: 'running'
@@ -151,20 +155,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.tickets-container {
-  background-color: #fff;
-  max-width: 400px;
+@import '@/styles/colors.scss';
 
+.tickets-container {
   .tickets-container__list {
     list-style: none;
     margin: 0 ;
     padding: 0;
-  }
-}
-
-@media (max-width: 900px) {
-  .tickets-container {
-    max-width: 100%;
   }
 }
 </style>
@@ -184,14 +181,11 @@ export default {
       &.is-disabled { color: $--color-primary !important; }
     }
   }
+
   .el-tabs__item {
     padding: 0 12px !important;
-    &:first-child {
-      padding-left: 6px !important;
-    }
-    &:last-child {
-      padding-right: 6px !important;
-    }
+    &:first-child { padding-left: 6px !important; }
+    &:last-child { padding-right: 6px !important; }
   }
 
   .el-tabs__nav-wrap:after {

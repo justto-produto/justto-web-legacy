@@ -67,7 +67,6 @@ export default {
 @import '@/styles/colors.scss';
 
 .ticket-container {
-  background-color: white;
   display: flex;
   position: relative;
 
@@ -90,8 +89,8 @@ export default {
     overflow-x: hidden;
 
     .ticket-container__overview {
-      z-index: 99;
       position: absolute;
+      z-index: 99;
       right: 0;
       transform: translateX(100%);
       &--active { transform: translateX(0); }
