@@ -36,7 +36,7 @@
     </div>
 
     <div class="communication-container__about">
-      {{ sendDate[sendStatus] | moment('HH:mm') }}
+      {{ sendDate[sendStatus] }}
       <span v-if="sendStatus !== 'default' && !directionIn">
         •
       </span>
@@ -104,14 +104,14 @@ export default {
     },
 
     sendDate() {
-      const first = (first) => (first ? first.split(' ')[0] : '')
+      const first = (first) => (first ? first.split(' ')[1] : '')
       const defaultDate = this.interaction?.updateAt?.dateTime ? this.interaction.updateAt.dateTime : this.interaction.createAt.dateTime
 
       return {
         sent: first(this.interaction?.message?.parameters?.SEND_DATE),
         readed: first(this.interaction?.message?.parameters?.READ_DATE),
         recived: first(this.interaction?.message?.parameters?.RECEIVER_DATE),
-        default: defaultDate
+        default: this.$moment(defaultDate).format('HH:mm')
       }
     },
 
@@ -183,8 +183,9 @@ export default {
 @import '@/styles/colors.scss';
 
 .communication-container {
-  overflow-y: hidden;
-  margin: 12px;
+  overflow: hidden;
+  margin: 12px 12px 6px;
+  padding: 0px;
 
   .communication-container__email {
     display: flex;
