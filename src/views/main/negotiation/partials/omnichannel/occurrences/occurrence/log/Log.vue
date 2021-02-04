@@ -8,17 +8,18 @@
           :icon="leftIcon"
         />
         <span v-html="text" />
-      </span>
-      <span class="log-container__occurrence-about">
-        <!-- TODO: Quando implementar a data flutuante, deixar mostrando só a hora aqui. -->
-        {{ time | moment('DD/MM/YY[ às ]HH:mm') }}
-        •
-        <el-tooltip :content="status.tooltip">
-          <jus-icon
-            class="log-container__occurrence-about-icon"
-            :icon="status.icon"
-          />
-        </el-tooltip>
+        <span class="log-container__occurrence-about">
+          <span class="log-container__occurrence-about-time">
+            {{ time | moment('HH:mm') }}
+          </span>
+          •
+          <el-tooltip :content="status.tooltip">
+            <jus-icon
+              class="log-container__occurrence-about-icon"
+              :icon="status.icon"
+            />
+          </el-tooltip>
+        </span>
       </span>
     </span>
   </section>
@@ -37,6 +38,11 @@ export default {
       return this.value
     },
     text() {
+      if (this.occurrence.type === 'INTERACTION') {
+        if (this.occurrence.interaction.type === 'NEGOTIATOR_ACCESS') {
+          return 'Disputa visualizada'
+        }
+      }
       return this.occurrence.description
     },
     time() {
@@ -54,29 +60,27 @@ export default {
       }
     },
     leftIcon() {
-      if (this.text.toLowerCase().includes('disputa dada como ganha')) {
+      const text = this.text.toLowerCase()
+      if (text.includes('disputa dada como ganha')) {
         return 'win'
-      }
-      if (this.text.toLowerCase().includes('disputa pausada')) {
+      } else if (text.includes('disputa pausada')) {
         return 'pause'
-      }
-      if (this.text.toLowerCase().includes('disputa alterada para perdido')) {
+      } else if (text.includes('disputa alterada para perdido')) {
         return 'lose'
-      }
-      if (this.text.toLowerCase().includes('reiniciou o engajamento')) {
+      } else if (text.includes('reiniciou o engajamento')) {
         return 'refresh'
-      }
-      if (this.text.toLowerCase().includes('disputa retomada')) {
+      } else if (text.includes('disputa retomada')) {
         return 'start-again'
-      }
-      if (this.text.toLowerCase().includes('disputa marcada como favorita')) {
+      } else if (text.includes('disputa marcada como favorita')) {
         return 'star'
-      }
-      if (this.text.toLowerCase().includes('disputa expirou')) {
+      } else if (text.includes('disputa expirou')) {
         return 'calendar-clock'
-      }
-      if (this.text.toLowerCase().includes('disputa expirada')) {
+      } else if (text.includes('disputa expirada')) {
         return 'calendar-clock'
+      } else if (text.includes('leitura na mensagem')) {
+        return 'eye'
+      } else if (text.includes('disputa visualizada')) {
+        return 'justto'
       }
       return false
     }
@@ -100,7 +104,11 @@ export default {
     flex-direction: column;
 
     .log-container__occurrence-text {
+      display: flex;
       align-self: center;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
       text-align: center;
 
       .log-container__occurrence-text-icon {
@@ -109,11 +117,15 @@ export default {
     }
 
     .log-container__occurrence-about {
-      font-size: 12px;
+      font-size: 11px;
       align-self: flex-end;
       display: flex;
       gap: 6px;
       align-items: flex-end;
+
+      .log-container__occurrence-about-time {
+        word-break: keep-all;
+      }
 
       .log-container__occurrence-about-icon {
         width: 14px;

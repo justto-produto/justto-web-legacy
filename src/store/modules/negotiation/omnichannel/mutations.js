@@ -22,7 +22,8 @@ const omnichannelMutations = {
   },
   setOccurrences: (state, { content }) => {
     // TODO: Validar duplicidade/sobrescrita de ocorrências.
-    Vue.set(state.occurrences, 'list', content)
+    const occurrences = content.map(el => ({ ...el, occurrences: el.occurrences.reverse() })).reverse()
+    Vue.set(state.occurrences, 'list', occurrences)
   },
   addFullMessage: (state, { id, content }) => {
     Vue.set(state.occurrences.fullMessages, id, content)

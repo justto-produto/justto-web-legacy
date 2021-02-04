@@ -104,7 +104,7 @@ export default {
     },
 
     sendDate() {
-      const first = (first) => (first ? first.split(' ')[0] : '')
+      const first = (first) => (first ? first.split(' ')[1] : '')
       const defaultDate = this.interaction?.updateAt?.dateTime ? this.interaction.updateAt.dateTime : this.interaction.createAt.dateTime
 
       return {
@@ -183,8 +183,9 @@ export default {
 @import '@/styles/colors.scss';
 
 .communication-container {
-  overflow-y: hidden;
-  margin: 12px;
+  overflow: hidden;
+  margin: 12px 12px 6px;
+  padding: 0px;
 
   .communication-container__email {
     display: flex;

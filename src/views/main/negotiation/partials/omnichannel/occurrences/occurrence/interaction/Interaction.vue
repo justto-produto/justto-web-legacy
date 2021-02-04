@@ -29,7 +29,7 @@ export default {
     COMMUNICATION: () => import('./partials/Communication'),
     ATTACHMENT: () => import('@/views/main/dispute/partials/partials/AttachmentOccurrence'),
     NEGOTIATOR: () => import('./partials/Negotiator'),
-    MANUAL: () => import('./partials/Manual'),
+    MANUAL: () => import('./partials/Manual')
   },
   props: {
     value: {
