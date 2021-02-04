@@ -9,7 +9,9 @@
         />
         <span v-html="text" />
         <span class="log-container__occurrence-about">
-          {{ time | moment('HH:mm') }}
+          <span class="log-container__occurrence-about-time">
+            {{ time | moment('HH:mm') }}
+          </span>
           •
           <el-tooltip :content="status.tooltip">
             <jus-icon
@@ -107,6 +109,7 @@ export default {
       justify-content: center;
       align-items: center;
       gap: 6px;
+      text-align: center;
 
       .log-container__occurrence-text-icon {
         width: 14px;
@@ -119,6 +122,10 @@ export default {
       display: flex;
       gap: 6px;
       align-items: flex-end;
+
+      .log-container__occurrence-about-time {
+        word-break: keep-all;
+      }
 
       .log-container__occurrence-about-icon {
         width: 14px;
