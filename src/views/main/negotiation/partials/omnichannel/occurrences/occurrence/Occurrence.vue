@@ -36,13 +36,20 @@ export default {
     },
     component() {
       const mapType = {
-        LOG: ['LOG', 'VISUALIZATION'],
+        LOG: [
+          'LOG',
+          'VISUALIZATION',
+          'SCHEDULER',
+          'CLICK',
+          'VISUALIZATION',
+          'NEGOTIATOR_ACCESS'
+        ],
         NOTE: ['NOTE'],
         SUMMARY: ['SUMMARY'],
         INTERACTION: ['INTERACTION']
       }
       const occurrenceType = this.occurrency.type
-      const interactionType = this.occurrency.interaction.type
+      const interactionType = this.occurrency.interaction?.type || 'LOG'
       return Object.keys(mapType).find(key => (mapType[key].includes(occurrenceType) || mapType[key].includes(interactionType)))
     }
   }
