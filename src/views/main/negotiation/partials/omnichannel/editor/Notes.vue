@@ -31,9 +31,6 @@ export default {
   components: {
     ckeditor: CKEditor.component
   },
-  data() {
-    return { }
-  },
   computed: {
     ...mapGetters({
       getEditorReady: 'getEditorReady',

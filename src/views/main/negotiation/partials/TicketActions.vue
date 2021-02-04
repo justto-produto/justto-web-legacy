@@ -50,6 +50,7 @@
 
 <script>
 import { mapActions } from 'vuex'
+
 export default {
   name: 'TicketActions',
   components: {
@@ -376,8 +377,8 @@ export default {
         )
     },
 
-    handleUploadAttachment() {
-
+    handleUploadAttachment(action) {
+      this.$refs.dialogActions.openAttachmentDialog(action)
     },
 
     handleDropLawsuit(action) {

@@ -2,7 +2,7 @@ import { axiosDispatch } from '@/utils'
 
 import route from '@/router'
 
-const baseUrl = 'api/disputes/v2'
+const disputeApi = 'api/disputes/v2'
 
 const omnichannelActions = {
   setActiveTab({ commit, dispatch }, tab) {
@@ -31,7 +31,7 @@ const omnichannelActions = {
       type: getters.getOccurrencesFilter.type === 'LOG' ? null : getters.getOccurrencesFilter.type
     }
     return axiosDispatch({
-      url: `${baseUrl}/${disputeId}/occurrences`,
+      url: `${disputeApi}/${disputeId}/occurrences`,
       mutation: 'setOccurrences',
       params
     })
@@ -47,6 +47,23 @@ const omnichannelActions = {
   },
   deleteFullMessage({ commit }, messageId) {
     commit('removeFullMessage', messageId)
+  },
+
+  deleteTicketNote({ _ }, id) {
+    return axiosDispatch({
+      url: `${disputeApi}/note/${id}`,
+      method: 'DELETE'
+    })
+  },
+
+  saveTicketNote({ _ }, params) {
+    const { disputeId, id, note } = params
+
+    return axiosDispatch({
+      url: `${disputeApi}/note/${id}`,
+      method: 'PUT',
+      data: { disputeId, note }
+    })
   }
 }
 

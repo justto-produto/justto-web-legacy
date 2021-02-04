@@ -1,12 +1,12 @@
 <template>
   <main class="negotiations-container">
     <Tickets
-      :class="$route.params.id ? 'hide-section' : ''"
+      :class="{ 'hide-section': $route.params.id }"
       class="negotiations-container__tickets"
     />
 
     <section
-      :class="!$route.params.id ? 'hide-section' : ''"
+      :class="{ 'hide-section': !$route.params.id }"
       class="negotiations-container__ticket"
     >
       <router-view v-if="$route.params.id" />
@@ -30,8 +30,8 @@ export default {
 
 .negotiations-container {
   display: flex;
-  height: 100vh;
   overflow-y: hidden;
+  flex: 1;
 
   .negotiations-container__tickets {
     width: 360px;
@@ -51,10 +51,13 @@ export default {
 
     .negotiations-container__tickets {
       width: 100%;
+      max-width: 100%;
+      border-right: none;
     }
 
     .negotiations-container__ticket {
       width: 100%;
+      max-width: 100%;
     }
   }
 }

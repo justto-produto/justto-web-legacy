@@ -41,8 +41,9 @@ export default {
         SUMMARY: ['SUMMARY'],
         INTERACTION: ['INTERACTION']
       }
-      const occurrenceType = this.occurrency.type
-      const interactionType = this.occurrency.interaction.type
+      const { occurrency } = this
+      const occurrenceType = occurrency.type
+      const interactionType = occurrency.interaction ? occurrency.interaction.type : ''
       return Object.keys(mapType).find(key => (mapType[key].includes(occurrenceType) || mapType[key].includes(interactionType)))
     }
   }

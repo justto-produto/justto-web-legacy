@@ -191,6 +191,11 @@ export default {
 
 <style lang="scss">
 @import '@/styles/colors.scss';
+.el-container.is-vertical {
+  .el-main {
+    display: flex;
+  }
+}
 
 .container-aside {
   background-color: $--color-white;
