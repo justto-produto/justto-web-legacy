@@ -36,7 +36,7 @@
     </div>
 
     <div class="communication-container__about">
-      {{ sendDate[sendStatus] }}
+      {{ sendDate[sendStatus] | moment('HH:mm') }}
       <span v-if="sendStatus !== 'default' && !directionIn">
         •
       </span>
@@ -111,7 +111,7 @@ export default {
         sent: first(this.interaction?.message?.parameters?.SEND_DATE),
         readed: first(this.interaction?.message?.parameters?.READ_DATE),
         recived: first(this.interaction?.message?.parameters?.RECEIVER_DATE),
-        default: this.$moment(defaultDate).format('HH:mm')
+        default: defaultDate
       }
     },
 

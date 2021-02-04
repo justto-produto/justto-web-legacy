@@ -19,6 +19,7 @@ export default {
 .omnichannel-container {
   display: flex;
   flex-direction: column;
+  max-height: 89vh;
 
   .omnichannel-container__occurrences {
     padding: 6px 0px;
