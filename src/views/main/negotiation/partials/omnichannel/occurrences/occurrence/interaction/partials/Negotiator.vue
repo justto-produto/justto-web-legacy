@@ -19,18 +19,33 @@ export default {
     message() {
       const { currency } = this.$options.filters
       const { PERSON_NAME, VALUE, NOTE, BANK_INFO } = this.interaction.properties
+      let text = `<b>${this.interaction.type}</b>`
       switch (this.interaction.type) {
         case 'NEGOTIATOR_COUNTERPROSAL':
-          return `Contraproposta realizada por <b>${PERSON_NAME}</b>, no valor de <b>${currency(VALUE)}</b>, com a nota: ${NOTE}`
+          text = `Contraproposta realizada por <b>${PERSON_NAME}</b>, no valor de <b>${currency(VALUE)}</b>`
+          if (NOTE) {
+            text += `, com a nota: ${NOTE}`
+          } else {
+            text += '.'
+          }
+          break
         case 'NEGOTIATOR_PROSAL':
-          return `Proposta realizada por <b>${PERSON_NAME}</b>, no valor de <b>${currency(VALUE)}</b>, com a nota: ${NOTE}`
+          text = `Proposta realizada por <b>${PERSON_NAME}</b>, no valor de <b>${currency(VALUE)}</b>`
+          if (NOTE) {
+            text += `, com a nota: ${NOTE}`
+          } else {
+            text += '.'
+          }
+          break
         case 'NEGOTIATOR_ACCEPTED':
-          return `Proposta no valor de <b>${currency(VALUE)}</b> foi aceita através do portal de negociações da JUSTTO por <b>${PERSON_NAME}</b>`
+          text = `Proposta no valor de <b>${currency(VALUE)}</b> foi aceita através do portal de negociações da JUSTTO por <b>${PERSON_NAME}</b>`
+          break
         case 'NEGOTIATOR_CHECKOUT':
-          return `<b>Dados Bancários</b>:</br>${BANK_INFO}`.replaceAll(',', '</br>')
-        default:
-          return `<b>${this.interaction.type}</b>`
+          text = `<b>Dados Bancários</b>:</br>${BANK_INFO}`.replaceAll(',', '</br>')
+          break
       }
+
+      return text
     }
   }
 }
