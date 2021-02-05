@@ -44,7 +44,8 @@ export default {
     COMMUNICATION: () => import('./partials/Communication'),
     ATTACHMENT: () => import('@/views/main/dispute/partials/partials/AttachmentOccurrence'),
     NEGOTIATOR: () => import('./partials/Negotiator'),
-    MANUAL: () => import('./partials/Manual')
+    MANUAL: () => import('./partials/Manual'),
+    SCHEDULER: () => import('./partials/Scheduler')
   },
   props: {
     value: {
@@ -111,7 +112,7 @@ export default {
         direction === 'INBOUND' &&
         (
           (!['ATTACHMENT'].includes(type) && ['EMAIL', 'WHATSAPP', 'NEGOTIATOR_MESSAGE'].includes(message?.communicationType)) ||
-          (negotiatorTypes.includes(type) || this.disputeLastInteractions.length)
+          (negotiatorTypes.includes(type) || (this.disputeLastInteractions || []).length)
         )
       )
     }
@@ -143,6 +144,12 @@ export default {
   &.COMMUNICATION {
     .interaction-container__balloon {
       border: 5px solid #DFF4FE;
+    }
+  }
+
+  &.SCHEDULER {
+    .interaction-container__balloon {
+      border: 5px dotted #DFF4FE;
     }
   }
 

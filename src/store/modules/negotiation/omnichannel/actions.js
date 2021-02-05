@@ -60,7 +60,7 @@ const omnichannelActions = {
     const { disputeId, id, note } = params
 
     return axiosDispatch({
-      url: `${disputeApi}/note/${id}`,
+      url: `api/disputes/note/${id}`,
       method: 'PUT',
       data: { disputeId, note }
     })
