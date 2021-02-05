@@ -507,13 +507,12 @@ export default {
         flags: this.getFlags(contract),
         customTitle: this.makeContractName(contract)
       }))
-      // eslint-disable-next-line
-      this.allFilteredContracts = allFilteredContracts
+      this.changeAllFilteredContracts(allFilteredContracts)
       return allFilteredContracts
     },
     haveExclusiveContract() {
       const { newContract } = this
-      const conditional = this.filteredContracts.some(c => c.workspaceIdNull === false)
+      const conditional = this.filteredContracts.some(c => c.workspaceId !== null)
       this.changeHasWorkspaceValue(conditional)
       conditional
         ? newContract.workspaceId = this.workspaceId
@@ -566,6 +565,9 @@ export default {
     ]),
     changeHasWorkspaceValue(newValue) {
       this.hasWorkspace = newValue
+    },
+    changeAllFilteredContracts(newValue) {
+      this.allFilteredContracts = newValue
     },
     resetNewContract() {
       const tariffs = []
