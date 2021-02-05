@@ -469,7 +469,7 @@ export default {
       const { plaintiffProposal } = this.ticket
 
       let roleId
-      if (ticketPlaintiffs.length) roleId = ticketPlaintiffs[0].disputeRoleId
+      if (ticketPlaintiffs.length === 1) roleId = ticketPlaintiffs[0].disputeRoleId
       else if (action === 'MANUAL_COUNTERPROPOSAL') roleId = null
       else if (plaintiffProposal) roleId = plaintiffProposal.id
       else roleId = null
