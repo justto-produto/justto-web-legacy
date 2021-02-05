@@ -760,6 +760,8 @@ export default {
 @import '@/styles/colors.scss';
 
 .view-management {
+  width: 100vw;
+
   .view-management__title {
     height: 40px;
     margin-bottom: 15px;
