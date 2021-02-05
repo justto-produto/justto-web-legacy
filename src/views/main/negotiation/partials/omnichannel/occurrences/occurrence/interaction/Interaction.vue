@@ -20,10 +20,25 @@
         />
       </div>
     </div>
+    <jus-icon
+      v-if="showReply"
+      class="interaction-container__reply-icon"
+      icon="reply"
+      @click="reply"
+    />
   </section>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+const negotiatorTypes = [
+  'NEGOTIATOR_ACCESS',
+  'NEGOTIATOR_PROPOSAL',
+  'NEGOTIATOR_COUNTERPROSAL',
+  'NEGOTIATOR_CHECKOUT',
+  'NEGOTIATOR_ACCEPTED',
+  'NEGOTIATOR_REJECTED'
+]
 export default {
   components: {
     COMMUNICATION: () => import('./partials/Communication'),
@@ -38,9 +53,14 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      lastInteraction: 'disputeLastInteractions'
+    }),
+
     type() {
       return this.value.interaction.type.split('_')[0]
     },
+
     messageType() {
       const mapCommunicationTypes = {
         EMAIL: 'email',
@@ -55,9 +75,11 @@ export default {
       }
       return 'default'
     },
+
     interaction() {
       return this.value.interaction
     },
+
     personName() {
       if (this.type === 'MANUAL') {
         return this.interaction?.properties?.USER
@@ -70,15 +92,33 @@ export default {
       }
       return ''
     },
+
     isInboundInteraction() {
       return this.interaction.direction === 'INBOUND'
     },
+
     avatarProps() {
       return {
         name: this.personName,
         size: 'md',
         purple: this.isInboundInteraction && this.type !== 'MANUAL'
       }
+    },
+
+    showReply() {
+      const { type, direction, message } = this.interaction
+      return (
+        direction === 'INBOUND' &&
+        (
+          (!['ATTACHMENT'].includes(type) && ['EMAIL', 'WHATSAPP', 'NEGOTIATOR_MESSAGE'].includes(message?.communicationType)) ||
+          (negotiatorTypes.includes(type) || this.disputeLastInteractions.length)
+        )
+      )
+    }
+  },
+  methods: {
+    reply(_event) {
+      window.alert('RESPONDER')
     }
   }
 }
@@ -87,7 +127,7 @@ export default {
 <style lang="scss" scoped>
 .interaction-container {
   display: flex;
-  gap: 16px;
+  gap: 6px;
 
   height: auto;
   margin: 10px 24px 0px 24px;
@@ -128,6 +168,10 @@ export default {
     flex-direction: row;
     gap: 16px;
 
+    .interaction-container__balloon-avatar {
+      margin: 6px;
+    }
+
     .interaction-container__balloon-content {
       width: 100%;
     }
@@ -151,6 +195,11 @@ export default {
     &.ballon-whatsapp {
       border-color: #a3f4c3;
     }
+  }
+
+  .interaction-container__reply-icon {
+    width: 20px;
+    cursor: pointer;
   }
 
 }

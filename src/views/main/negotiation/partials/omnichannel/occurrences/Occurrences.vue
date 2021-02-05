@@ -1,8 +1,26 @@
 <template>
   <section
     id="occurrencesOmnichanelNegotiation"
+    ref="occurrence-root"
     class="occurrences-container"
   >
+    <InfiniteLoading
+      :identifier="infiniteId"
+      :distance="10"
+      spinner="spiral"
+      direction="top"
+      @infinite="loadOccurrences">
+      <div
+        slot="no-more"
+      >
+        Início das ocorrências
+      </div>
+      <div
+        slot="no-results"
+      >
+        Início das ocorrências
+      </div>
+    </InfiniteLoading>
     <div
       v-for="(occurrenceContainer, occurrenceContainerIndex) in occurrences"
       :key="`occurrence-container-${occurrenceContainerIndex}`"
@@ -27,14 +45,30 @@
 import { mapActions, mapGetters } from 'vuex'
 export default {
   components: {
-    Occurrence: () => import('./occurrence/Occurrence')
+    Occurrence: () => import('./occurrence/Occurrence'),
+    InfiniteLoading: () => import('vue-infinite-loading')
   },
+  data: () => ({
+    infiniteId: +new Date()
+  }),
   computed: {
     ...mapGetters({
+      activeTab: 'getActiveTab',
       filter: 'getOccurrencesFilter',
       occurrences: 'getOccurrencesList',
       messageType: 'getEditorMessageType'
-    })
+    }),
+    id: {
+      get() {
+        return this.$route.params.id
+      }
+    }
+  },
+  watch: {
+    activeTab() {
+      this.infiniteId += 1
+      this.goToChatBottom()
+    }
   },
   // TODO: Validar a troca de ticket.
   mounted() {
@@ -45,9 +79,27 @@ export default {
       'setMessageType',
       'getOccurrences'
     ]),
+
     init() {
-      const { id } = this.$route.params
-      this.getOccurrences(id)
+      this.goToChatBottom()
+    },
+
+    loadOccurrences($state) {
+      this.getOccurrences(this.id).then(response => {
+        if (response.last) {
+          $state.complete()
+        } else {
+          $state.loaded()
+          this.$store.commit('setUpOccurrencesSize')
+        }
+      })
+    },
+
+    goToChatBottom() {
+      setTimeout(() => {
+        const height = this.$refs['occurrence-root'].scrollHeight
+        this.$refs['occurrence-root'].scroll(0, height)
+      }, 500)
     }
   }
 }
@@ -61,6 +113,11 @@ export default {
   flex-direction: column;
   justify-content: flex-end;
   overflow-y: auto;
+
+  .infinite-loading-container > .infinite-status-prompt > div {
+    color: #979797 !important;
+    font-style: italic;
+  }
 
   .occurrences-container__occurrences {
     display: flex;
