@@ -8,18 +8,20 @@
           :icon="leftIcon"
         />
         <span v-html="text" />
-        <span class="log-container__occurrence-about">
-          <span class="log-container__occurrence-about-time">
-            {{ time | moment('HH:mm') }}
-          </span>
-          •
-          <el-tooltip :content="status.tooltip">
-            <jus-icon
-              class="log-container__occurrence-about-icon"
-              :icon="status.icon"
-            />
-          </el-tooltip>
+      </span>
+      <span class="log-container__occurrence-about">
+        <span class="log-container__occurrence-about-time">
+          {{ time | moment('HH:mm') }}
         </span>
+        <span v-if="status.icon">
+          •
+        </span>
+        <el-tooltip :content="status.tooltip">
+          <jus-icon
+            class="log-container__occurrence-about-icon"
+            :icon="status.icon"
+          />
+        </el-tooltip>
       </span>
     </span>
   </section>
@@ -38,12 +40,11 @@ export default {
       return this.value
     },
     text() {
-      if (this.occurrence.type === 'INTERACTION') {
-        if (this.occurrence.interaction.type === 'NEGOTIATOR_ACCESS') {
-          return 'Disputa visualizada'
-        }
+      let text = this.occurrence.description
+      if (this.occurrence?.type === 'INTERACTION' && this.occurrence?.interaction?.type === 'NEGOTIATOR_ACCESS') {
+        text = 'Disputa visualizada'
       }
-      return this.occurrence.description
+      return text + '<div style="width: 56px; visibility: hidden;">.</div>'
     },
     time() {
       if (this.occurrence?.updateAt?.dateTime) {
@@ -55,10 +56,11 @@ export default {
     },
     status() {
       return {
-        icon: this.occurrence?.status.toLowerCase(),
+        icon: this.occurrence?.status?.toLowerCase() || '',
         tooltip: 'No momento desta ocorrência, esta disputa estava ' + this.$t('dispute.status.' + this.occurrence?.status)
       }
     },
+
     leftIcon() {
       const text = this.text.toLowerCase()
       if (text.includes('disputa dada como ganha')) {
@@ -112,11 +114,13 @@ export default {
       text-align: center;
 
       .log-container__occurrence-text-icon {
+        align-self: flex-start;
         width: 14px;
       }
     }
 
     .log-container__occurrence-about {
+      margin-top: -12px;
       font-size: 11px;
       align-self: flex-end;
       display: flex;
