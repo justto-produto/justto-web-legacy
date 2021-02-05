@@ -12,7 +12,6 @@
       v-model="editorModel"
       class="reply-editor__editor"
       :config="editorConfig"
-      @ready="editorIsRedy()"
     />
     <div slot="footer">
       <el-button
@@ -79,6 +78,7 @@ export default {
     },
 
     handleConfirm() {
+      this.dialogVisible = false
       this.$emit('confirm', this.editorModel)
     },
 

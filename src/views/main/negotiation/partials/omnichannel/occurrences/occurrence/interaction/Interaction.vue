@@ -112,7 +112,7 @@ export default {
         direction === 'INBOUND' &&
         (
           (!['ATTACHMENT'].includes(type) && ['EMAIL', 'WHATSAPP', 'NEGOTIATOR_MESSAGE'].includes(message?.communicationType)) ||
-          (negotiatorTypes.includes(type) || this.disputeLastInteractions.length)
+          (negotiatorTypes.includes(type) || (this.disputeLastInteractions || []).length)
         )
       )
     }

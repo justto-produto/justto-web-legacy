@@ -68,7 +68,10 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['deleteTicketNote']),
+    ...mapActions([
+      'deleteTicketNote',
+      'saveTicketNote'
+    ]),
 
     concludeAction(message, disputeId) {
       this.$jusNotification({
@@ -90,7 +93,10 @@ export default {
       this.saveTicketNote({ disputeId, id, note })
         .then(() => this.concludeAction('Nota editada', disputeId))
         .catch(error => this.$jusNotification({ error }))
-        .finally(() => (this.isLoadingNote = false))
+        .finally(() => {
+          this.isLoadingNote = false
+          this.closeEditorDialog()
+        })
     },
 
     removeNote() {
