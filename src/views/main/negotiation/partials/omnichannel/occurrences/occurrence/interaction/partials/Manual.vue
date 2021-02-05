@@ -35,7 +35,7 @@ export default {
   display: flex;
   flex-direction: column;
 
-  overflow-y: hidden;
+  overflow: hidden;
   margin: 12px;
 
   .communication-container__contact {
