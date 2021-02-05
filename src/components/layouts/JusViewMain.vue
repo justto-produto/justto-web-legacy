@@ -83,6 +83,8 @@ export default {
 .jus-main-view {
   height: 100%;
   min-width: 1024px;
+  width: 100vw;
+
   // &__title {
   //   margin: 20px 20px 0px 24px;
   //   h1 {
