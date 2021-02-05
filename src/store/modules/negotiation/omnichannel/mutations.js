@@ -25,6 +25,10 @@ const omnichannelMutations = {
     const occurrences = content.map(el => ({ ...el, occurrences: el.occurrences.reverse() })).reverse()
     Vue.set(state.occurrences, 'list', occurrences)
   },
+  setUpOccurrencesSize: (state) => {
+    state.occurrences.filter.size += 10
+    console.log('state.occurrences.filter.size', state.occurrences.filter.size)
+  },
   addFullMessage: (state, { id, content }) => {
     Vue.set(state.occurrences.fullMessages, id, content)
   },
