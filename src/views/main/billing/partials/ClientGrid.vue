@@ -1,8 +1,6 @@
 <template>
   <div class="client-grid">
-    <jus-grid
-      :columns="4"
-    >
+    <jus-grid :columns="4">
       <jus-user-card
         v-for="(user, index) in custumerList"
         :key="index"
