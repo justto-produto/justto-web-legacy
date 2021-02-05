@@ -36,15 +36,14 @@ export default {
     },
     component() {
       const mapType = {
+        NOTE: ['NOTE'],
         LOG: [
           'LOG',
           'VISUALIZATION',
-          'SCHEDULER',
           'CLICK',
           'VISUALIZATION',
           'NEGOTIATOR_ACCESS'
         ],
-        NOTE: ['NOTE'],
         SUMMARY: ['SUMMARY'],
         INTERACTION: ['INTERACTION']
       }
