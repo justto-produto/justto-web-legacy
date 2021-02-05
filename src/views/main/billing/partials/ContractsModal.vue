@@ -20,7 +20,7 @@
           @item-click="resetNewContract"
         >
           <el-collapse-item
-            v-for="(contract, contractCount) in filteredContracts"
+            v-for="(contract, contractCount) in allFilteredContracts"
             :key="contractCount"
             :name="contractCount"
             class="transition-none"
@@ -486,6 +486,7 @@ export default {
       },
       tariffTypes: TARIFF_TYPES,
       newContract: {},
+      allFilteredContracts: {},
       hasWorkspace: false,
       saving: false
     }
@@ -501,11 +502,14 @@ export default {
         .filter(contract => contract.status === CONTRACT_STATUS.ACTIVE.key || contract.status === CONTRACT_STATUS.INACTIVE.key)
 
       // filteredContracts
-      return (filteredContracts.length ? filteredContracts : this.form.contracts).map(contract => ({
+      const allFilteredContracts = (filteredContracts.length ? filteredContracts : this.form.contracts).map(contract => ({
         ...contract,
         flags: this.getFlags(contract),
         customTitle: this.makeContractName(contract)
       }))
+      // eslint-disable-next-line
+      this.allFilteredContracts = allFilteredContracts
+      return allFilteredContracts
     },
     haveExclusiveContract() {
       const { newContract } = this
