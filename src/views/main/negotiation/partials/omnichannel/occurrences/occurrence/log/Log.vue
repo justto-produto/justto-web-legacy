@@ -1,14 +1,24 @@
 <template>
   <section class="log-container">
-    <span class="log-container__occurrence">
+    <span
+      class="log-container__occurrence"
+      :class="{ 'summary': isSummary }">
       <span class="log-container__occurrence-text">
         <jus-icon
           v-if="leftIcon"
           class="log-container__occurrence-text-icon"
           :icon="leftIcon"
         />
-        <span v-html="text" />
+        <span
+          class="log-container__occurrence-text-content"
+          v-html="text"
+        />
+        <span
+          class="log-container__occurrence-text-text-summary"
+          v-html="summary"
+        />
       </span>
+      <!-- <span v-html="summary" /> -->
       <span class="log-container__occurrence-about">
         <span class="log-container__occurrence-about-time">
           {{ time | moment('HH:mm') }}
@@ -39,6 +49,7 @@ export default {
     occurrence() {
       return this.value
     },
+
     text() {
       let text = this.occurrence.description
       if (this.occurrence?.type === 'INTERACTION' && this.occurrence?.interaction?.type === 'NEGOTIATOR_ACCESS') {
@@ -46,6 +57,29 @@ export default {
       }
       return text + '<div style="width: 56px; visibility: hidden;">.</div>'
     },
+
+    isSummary() {
+      return this.occurrence?.properties?.ENGAGEMENT === 'SUMMARY'
+    },
+
+    summary() {
+      let res = ''
+      if (this.occurrence?.properties?.SUMMARY_EMAIL_QUANTITY) {
+        const { SUMMARY_EMAIL_QUANTITY } = this.occurrence?.properties
+        const messagePlural = Number(SUMMARY_EMAIL_QUANTITY) > 1 ? 'Mensagens' : 'Mensagem'
+        res += `<span>${SUMMARY_EMAIL_QUANTITY} ${messagePlural} de Email foram agendada(s).</span>`
+      } if (this.occurrence?.properties?.SUMMARY_WHATSAPP_QUANTITY) {
+        const { SUMMARY_WHATSAPP_QUANTITY } = this.occurrence?.properties
+        const messagePlural = Number(SUMMARY_WHATSAPP_QUANTITY) > 1 ? 'Mensagens' : 'Mensagem'
+        res += `<span>${this.occurrence?.properties?.SUMMARY_WHATSAPP_QUANTITY} ${messagePlural} de WhatsApp foram agendada(s).</span>`
+      } if (this.occurrence?.properties?.SUMMARY_SMS_QUANTITY) {
+        const { SUMMARY_SMS_QUANTITY } = this.occurrence?.properties
+        const messagePlural = Number(SUMMARY_SMS_QUANTITY) > 1 ? 'Mensagens' : 'Mensagem'
+        res += `<span>${this.occurrence?.properties?.SUMMARY_SMS_QUANTITY} ${messagePlural} de SMS foram agendada(s).</span>`
+      }
+      return res
+    },
+
     time() {
       if (this.occurrence?.updateAt?.dateTime) {
         return this.occurrence?.updateAt?.dateTime
@@ -54,6 +88,7 @@ export default {
       }
       return ''
     },
+
     status() {
       return {
         icon: this.occurrence?.status?.toLowerCase() || '',
@@ -104,6 +139,32 @@ export default {
 
     display: flex;
     flex-direction: column;
+
+    &.summary {
+      background-color: #fff;
+      border: 5px solid #fff4cc;
+
+      .log-container__occurrence-text {
+        display: flex;
+        flex-direction: column;
+
+        .log-container__occurrence-text-content {
+          color: #f19737;
+          font-weight: bold;
+        }
+
+        .log-container__occurrence-text-text-summary {
+          display: flex;
+          flex-direction: column;
+
+          align-items: flex-start;
+        }
+      }
+
+      .log-container__occurrence-about {
+        margin-top: 6px;
+      }
+    }
 
     .log-container__occurrence-text {
       display: flex;
