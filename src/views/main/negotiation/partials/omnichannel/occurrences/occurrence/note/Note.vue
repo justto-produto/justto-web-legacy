@@ -128,32 +128,38 @@ export default {
 <style lang="scss" scoped>
 @import '@/styles/colors.scss';
 
-.note-container {
-  .note-container__header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 6px 12px;
-    background-color: #efe7ff;
+article {
+  display: flex;
+  flex-direction: row-reverse;
+  margin: 10px 24px 0px;
 
-    .note-container__header-icon {
-      margin-left: 6px;
-      cursor: pointer;
-      &:hover { color: $--color-text-regular; }
+  .note-container {
+    .note-container__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 12px;
+      background-color: #efe7ff;
+
+      .note-container__header-icon {
+        margin-left: 6px;
+        cursor: pointer;
+        &:hover { color: $--color-text-regular; }
+      }
     }
-  }
 
-  .note-container__body {
-    background-color: #f6f1ff;
-    padding: 12px;
-    position: relative;
+    .note-container__body {
+      background-color: #f6f1ff;
+      padding: 12px;
+      position: relative;
 
-    .note-container__body-time {
-      position: absolute;
-      right: 12px;
-      bottom: 6px;
-      font-size: 13px;
-      color: $--color-text-secondary;
+      .note-container__body-time {
+        position: absolute;
+        right: 12px;
+        bottom: 6px;
+        font-size: 13px;
+        color: $--color-text-secondary;
+      }
     }
   }
 }

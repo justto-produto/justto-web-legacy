@@ -27,7 +27,6 @@ export default {
       default: () => ({})
     }
   },
-  data: () => ({ }),
   computed: {
     occurrency: {
       get() {
@@ -54,6 +53,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-</style>

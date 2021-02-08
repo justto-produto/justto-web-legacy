@@ -384,7 +384,7 @@ export default {
     offerDialogTitle() {
       switch (this.offerFormType) {
         case 'SETTLED':
-          return 'Fechar acordo'
+          return 'Aceitar acordo'
         case 'UNSETTLED':
           return 'Perder'
         case 'MANUAL_COUNTERPROPOSAL':
@@ -490,7 +490,7 @@ export default {
 
     openTicketResumeDialog(action, actionType) {
       this.offerFormType = action
-      this.ticketResumeType = actionType === 'WIN' ? 'Ganhar' : 'Fechar acordo'
+      this.ticketResumeType = actionType === 'WIN' ? 'Ganhar' : 'Aceitar acordo'
       this.ticketResumeDialogVisible = true
     },
 
