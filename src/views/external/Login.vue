@@ -87,13 +87,18 @@
               data-testid="use-terms"
               href="https://justto.com.br/termos-de-uso/"
               target="_blank"
-            > Termos de Uso</a> e com os
+            > Termos de Uso</a>, com os
             <a
               data-testid="contract-terms"
               href="https://justto.com.br/termos-de-contratacao/"
               target="_blank"
-            >Termos Gerais de Contratação.</a>
-            <br><br>
+            >Termos Gerais de Contratação</a> e a
+            <a
+              data-testid="contract-terms"
+              href="https://justto.com.br/poilitica-privacidade/"
+              target="_blank"
+            >Política de Privacidade</a>.
+            <br>
             Não possui conta?
             <a
               href="register"

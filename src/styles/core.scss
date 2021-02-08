@@ -123,6 +123,20 @@ a {
 .text-right {
   text-align: right;
 }
+
+.show-right-icon .hidden-icon { transform: translateX(-50%); }
+.show-left-icon .hidden-icon { transform: translateX(50%); }
+.show-right-icon,
+.show-left-icon {
+  .hidden-icon {
+    transition: .2s ease-out all;
+    opacity: 0;
+  }
+  &:hover .hidden-icon {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
 @keyframes dots {
   0%, 20% {
     color: rgba(0,0,0,0);
@@ -169,6 +183,15 @@ a {
 }
 
 @media (max-width: 900px) {
+  .show-right-icon,
+  .show-left-icon {
+    .hidden-icon {
+      transform: translateX(0);
+      transition: none;
+      opacity: 1;
+    }
+  }
+
   .show-only-sm {
     display: block;
   }

@@ -1,24 +1,27 @@
 <template>
   <article class="jus-dispute-code">
-    <el-tooltip :content="timelineStatus.text">
+    <el-tooltip
+      :open-delay="800"
+      :content="timelineStatus.text"
+    >
       <div
-        class="jus-dispute-code__container"
+        class="jus-dispute-code__container show-right-icon"
         @mouseover="handleHover"
       >
         <span
           class="jus-dispute-code__link"
           @click="handleClick"
         >
-          {{ code }}
+          {{ code.trim() }}
         </span>
         <span class="jus-dispute-code__icons">
           <i
-            class="jus-dispute-code__icon el-icon-copy-document"
-            @click.stop="copyProccessCode"
-          />
-          <i
             :class="timelineStatus.icon"
             class="jus-dispute-code__icon"
+          />
+          <i
+            class="jus-dispute-code__icon el-icon-copy-document hidden-icon"
+            @click.stop="copyProccessCode"
           />
         </span>
       </div>
@@ -141,7 +144,6 @@ export default {
 
   .jus-dispute-code__icon {
     margin-left: 4px;
-    &.el-icon-copy-document { margin-left: 0; }
     &.el-icon-info { color: $--color-primary; }
     &.el-icon-error { color: $--color-danger; }
     &.el-icon-loading { color: $--color-text-secondary; }

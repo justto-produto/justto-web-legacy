@@ -92,7 +92,6 @@ export default {
       this.$store.dispatch('getWorkspaceMembers')
         .then(() => {
           this.$jusSegment('Troca de time/workspace', { description: `Alterado de ${workspace.workspace.name} para ${oldWorkspace}` })
-          this.setPersonName()
         }).catch(error => {
           this.$jusNotification({ error })
         }).finally(() => {

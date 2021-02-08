@@ -529,12 +529,12 @@ export default {
       return className
     },
     handleRowClick(row, column, event) {
-      console.log(event)
-      if (!event.ctrlKey && column.property === 'firstClaimant' && event.target.className.split(' ').includes('online-icon')) {
+      if (!event.ctrlKey && !event.metaKey && column.property === 'firstClaimant' && event.target.className.split(' ').includes('online-icon')) {
         this.openActiveMessageModal(row)
       } else if (row.id && !['IMG', 'SPAN', 'BUTTON', 'I'].includes(event.target.tagName)) {
-        if (event.ctrlKey) {
+        if (event.ctrlKey || event.metaKey) {
           window.open(`/#/management/dispute/${row.id}`, '_blank')
+          this.addHighlight(row.id)
         } else {
           this.$router.push({ name: 'dispute', params: { id: row.id } })
         }
