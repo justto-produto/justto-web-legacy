@@ -1098,7 +1098,7 @@
                 <div class="content">
                   <div>Engajar autor se advogado não possuir contatos válidos para ser engajado</div>
                   <p>
-                    Deixando <b>selecionada</b> esta opção, iremos enviar mensagens para o autor se o <b>advogado não possuir dados válidos</b> para ser contactado.
+                    Deixando <b>selecionada</b> esta opção, iremos enviar mensagens para o autor se o <b>advogado não possuir dados válidos</b> para ser contatado.
                   </p>
                 </div>
                 <el-switch
