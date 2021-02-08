@@ -79,7 +79,7 @@
                     v-model="contract.invoiceDueDays"
                     :disabled="isContractInactive(contract)"
                     :min="0"
-                    :max="60"
+                    :max="90"
                     :step="1"
                     step-strictly
                     controls-position="right"
@@ -284,7 +284,7 @@
                   <el-input-number
                     v-model="newContract.invoiceDueDays"
                     :min="0"
-                    :max="60"
+                    :max="90"
                     :step="1"
                     step-strictly
                     controls-position="right"
