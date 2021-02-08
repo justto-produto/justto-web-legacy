@@ -8,7 +8,7 @@
     </div>
     <div
       class="interaction-container__balloon"
-      :class="`${interaction.direction} ballon-${messageType}`"
+      :class="`${interaction.direction} ${type} ballon-${messageType}`"
     >
       <div class="interaction-container__balloon-avatar show-only-sm">
         <JusAvatarUser v-bind="avatarProps" />
@@ -143,19 +143,19 @@ export default {
 
   &.COMMUNICATION {
     .interaction-container__balloon {
-      border: 5px solid #DFF4FE;
+      border: 3px solid #DFF4FE;
     }
   }
 
   &.SCHEDULER {
     .interaction-container__balloon {
-      border: 5px dotted #DFF4FE;
+      border: 3px dotted #DFF4FE;
     }
   }
 
   &.NEGOTIATOR, &.MANUAL {
     .interaction-container__balloon {
-      border: 5px solid #FFC5A5;
+      border: 3px solid #FFC5A5;
     }
   }
 
@@ -166,14 +166,12 @@ export default {
   .interaction-container__balloon {
     overflow-x: hidden;
     background: #FFFFFF 0% 0% no-repeat padding-box;
-    box-shadow: 0px 3px 6px #47454526;
     max-width: 80%;
-    border-radius: 18px;
+    border-radius: 10px;
     overflow-y: hidden;
 
     display: flex;
     flex-direction: row;
-    gap: 16px;
 
     .interaction-container__balloon-avatar {
       margin: 6px;
@@ -188,6 +186,10 @@ export default {
     }
 
     &.OUTBOUND {
+      flex-direction: row-reverse;
+    }
+
+    &.MANUAL {
       flex-direction: row-reverse;
     }
 
