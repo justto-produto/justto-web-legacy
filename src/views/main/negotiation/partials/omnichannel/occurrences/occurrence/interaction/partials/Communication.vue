@@ -11,7 +11,7 @@
         {{ prefix }}
       </span>
       <span
-        v-if="!isValidName && person"
+        v-if="!isSimilarName && person"
         class="communication-container__email-person">
         {{ person }}
       </span>
@@ -19,9 +19,9 @@
         v-if="contact"
         class="communication-container__email-contact"
         @click="copyEmail">
-        <span v-if="!isValidName">&lt;</span>
+        <span v-if="!isSimilarName && person">&lt;</span>
         {{ contact }}
-        <span v-if="!isValidName">&gt;</span>
+        <span v-if="!isSimilarName && person">&gt;</span>
       </span>
     </div>
 
@@ -106,7 +106,7 @@ export default {
       // return name
     },
 
-    isValidName() {
+    isSimilarName() {
       return isSimilarStrings(this.person, this.contact, 75)
     },
 
