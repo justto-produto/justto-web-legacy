@@ -197,6 +197,10 @@ export default {
       border-color: #DFF4FE;
     }
 
+    &.ballon-sms {
+      border-color: #ECECEC;
+    }
+
     &.ballon-negotiatior {
       border-color: #FFC5A5;
     }
