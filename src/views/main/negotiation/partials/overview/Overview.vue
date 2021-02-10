@@ -9,25 +9,40 @@
       @click="$emit('toggle-show-overview')"
     />
 
-    <HeaderUserMenu class="overview-container__header" />
+    <HeaderUserMenu />
 
-    <article class="overview-container__info">
-      OVERVIEW AQUI
-    </article>
+    <h1 style="margin: 0">
+      #{{ ticket.disputeId }}
+    </h1>
+
+    <OverviewOffers :ticket="ticket" />
+
+    <OverviewObf :ticket="ticket" />
+
+    <OverviewTabs />
   </section>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: 'Overview',
   components: {
-    HeaderUserMenu: () => import('@/components/menus/HeaderUserMenu')
+    HeaderUserMenu: () => import('@/components/menus/HeaderUserMenu'),
+    OverviewOffers: () => import('./OverviewOffers'),
+    OverviewObf: () => import('./OverviewObf'),
+    OverviewTabs: () => import('./OverviewTabs')
   },
   props: {
     showOverview: {
       type: Boolean,
       required: true
     }
+  },
+  computed: {
+    ...mapGetters({
+      ticket: 'getTicketOverview'
+    })
   }
 }
 </script>
@@ -36,11 +51,11 @@ export default {
 @import '@/styles/colors.scss';
 
 .overview-container {
-  background-color: $--light-gray;
   position: relative;
-  padding: 6px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
+  gap: 24px;
 
   .overview-container__button {
     transform: translateY(-50%);
@@ -50,13 +65,6 @@ export default {
     font-size: 18px;
     transition: .6s;
     &--active { transform: rotate(180deg) translateY(50%); }
-  }
-
-  .overview-container__info {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex: 1;
   }
 }
 

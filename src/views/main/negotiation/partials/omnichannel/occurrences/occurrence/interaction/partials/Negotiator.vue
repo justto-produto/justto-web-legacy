@@ -29,7 +29,7 @@ export default {
             text += '.'
           }
           break
-        case 'NEGOTIATOR_PROSAL':
+        case 'NEGOTIATOR_PROPOSAL':
           text = `Proposta realizada por <b>${PERSON_NAME}</b>, no valor de <b>${currency(VALUE)}</b>`
           if (NOTE) {
             text += `, com a nota: ${NOTE}`

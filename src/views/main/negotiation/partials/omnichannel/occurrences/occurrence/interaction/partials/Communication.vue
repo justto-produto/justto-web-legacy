@@ -5,17 +5,23 @@
         class="communication-container__email-icon"
         :icon="messageType"
       />
-      <span class="communication-container__email-prefix">
+      <span
+        v-if="contact"
+        class="communication-container__email-prefix">
         {{ prefix }}
       </span>
-      <span class="communication-container__email-person">
+      <span
+        v-if="!isSimilarName && person"
+        class="communication-container__email-person">
         {{ person }}
       </span>
       <span
-        v-if="!isValidName"
+        v-if="contact"
         class="communication-container__email-contact"
-      >
-        &lt;{{ contact }}&gt;
+        @click="copyEmail">
+        <span v-if="!isSimilarName && person">&lt;</span>
+        {{ contact }}
+        <span v-if="!isSimilarName && person">&gt;</span>
       </span>
     </div>
 
@@ -96,10 +102,11 @@ export default {
 
     person() {
       const name = this.interaction.message.parameters[this.directionIn ? 'SENDER_NAME' : 'RECEIVER_NAME']
-      return name
+      return this.$options.filters.resumedName(name || '')
+      // return name
     },
 
-    isValidName() {
+    isSimilarName() {
       return isSimilarStrings(this.person, this.contact, 75)
     },
 
@@ -174,7 +181,18 @@ export default {
     ...mapActions([
       'deleteFullMessage',
       'getFullMessage'
-    ])
+    ]),
+    copyEmail(_event) {
+      if (this.contact) {
+        navigator.clipboard.writeText(this.contact)
+        this.$message({
+          message: 'Copiado para a área de transferência.',
+          type: 'info',
+          center: true,
+          showClose: true
+        })
+      }
+    }
   }
 }
 </script>
@@ -192,7 +210,6 @@ export default {
     align-items: center;
     gap: 6px;
 
-    /* font: normal normal normal 15px/18px Proxima Nova; */
     color: #9A9797;
 
     margin-bottom: 6px;
@@ -200,6 +217,11 @@ export default {
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+
+    .communication-container__email-contact {
+      display: inherit;
+      cursor: copy;
+    }
 
     .communication-container__email-icon {
       width: 16px;
