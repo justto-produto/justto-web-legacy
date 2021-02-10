@@ -124,17 +124,21 @@ a {
   text-align: right;
 }
 
-.show-right-icon .hidden-icon { transform: translateX(-50%); }
+.show-right-icon .hidden-icon { transform: translateX(-50%); } 
 .show-left-icon .hidden-icon { transform: translateX(50%); }
 .show-right-icon,
 .show-left-icon {
   .hidden-icon {
+    cursor: pointer;
     transition: .2s ease-out all;
     opacity: 0;
+    position: relative;
   }
-  &:hover .hidden-icon {
-    transform: translateX(0);
-    opacity: 1;
+  &:hover {
+    .hidden-icon {
+      transform: translateX(0);
+      opacity: 1;
+    }
   }
 }
 @keyframes dots {

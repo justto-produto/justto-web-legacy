@@ -84,6 +84,7 @@ export default {
 @media (max-width: 900px) {
   .jus-header-main {
     justify-content: space-between;
+    align-items: center;
 
     .jus-header-main__back {
       display: inline-block;
@@ -99,8 +100,13 @@ export default {
 
     .jus-header-main__logo {
       display: inline-block;
-      padding: 6px 0px;
     }
   }
 }
+
+// @media (max-height: 900px) {
+//   .jus-header-main {
+//     height: 40px !important;
+//   }
+// }
 </style>

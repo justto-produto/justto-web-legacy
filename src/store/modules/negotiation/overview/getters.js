@@ -3,7 +3,8 @@ const overviewGetters = {
   getTicketOverviewInfo: ({ ticketOverviewInfo }) => ticketOverviewInfo,
   getTicketOverviewParties: ({ ticketOverviewParties }) => ticketOverviewParties,
   getTicketOverviewProperties: ({ ticketOverviewProperties }) => ticketOverviewProperties,
-  getTicketOverviewAttachments: ({ ticketOverviewAttachments }) => ticketOverviewAttachments
+  getTicketOverviewAttachments: ({ ticketOverviewAttachments }) => ticketOverviewAttachments,
+  getTicketOverviewActiveTab: ({ ticketOverviewActiveTab }) => ticketOverviewActiveTab
 }
 
 export default overviewGetters

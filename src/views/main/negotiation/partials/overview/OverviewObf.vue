@@ -8,11 +8,25 @@
     </label>
 
     <textarea
+      v-if="isEditing || value"
       id="obf"
-      v-model="obf"
+      ref="oabTextarea"
+      v-model="descriptionModel"
       class="overview-obf__textarea"
+      @blur="hideTextarea"
     />
-    <span class="overview-obf__textarea--shadow" />
+    <span
+      v-if="isEditing || value"
+      class="overview-obf__textarea--shadow"
+    />
+
+    <a
+      v-if="!isEditing && !value"
+      class="overview-obf__link"
+      @click="showTextarea"
+    >
+      Clique para adicionar
+    </a>
   </section>
 </template>
 
@@ -20,14 +34,33 @@
 export default {
   name: 'OverviewObf',
   props: {
-    ticket: {
-      type: Object,
-      required: true
+    value: {
+      type: String,
+      default: ''
     }
   },
   data: () => ({
-    obf: 'Mussum Ipsum, cacilds vidis litro abertis. Tá deprimidis, eu conheço uma cachacis que pode alegrar sua vidis. Posuere libero varius. Nullam a nisl ut ante blandit hendrerit. Aenean sit amet nisi. Admodum accumsan disputationi eu sit. Vide electram sadipscing et per. Diuretics paradis num copo é motivis de denguis.'
-  })
+    isEditing: false
+  }),
+  computed: {
+    descriptionModel: {
+      get() {
+        return this.value
+      },
+      set(value) {
+        this.$emit('input', value)
+      }
+    }
+  },
+  methods: {
+    showTextarea() {
+      this.isEditing = true
+      this.$nextTick(() => this.$refs.oabTextarea.focus())
+    },
+    hideTextarea() {
+      this.isEditing = false
+    }
+  }
 }
 </script>
 
@@ -50,13 +83,12 @@ export default {
     background-color: $--color-white;
     padding: 0 3px;
     font-size: 13px;
-
   }
 
   .overview-obf__textarea {
     border: none;
     width: 100%;
-    height: 120px;
+    height: 100px;
     line-height: 20px;
     color: $--color-text-regular;
     resize: none;
@@ -65,6 +97,15 @@ export default {
     &:focus ~ .overview-obf__textarea--shadow {
       opacity: 0;
       visibility: hidden;
+    }
+  }
+
+  .overview-obf__link {
+    color: $--color-text-secondary;
+    display: block;
+    transition: .2s ease-out color;
+    &:hover {
+      color: $--color-text-regular;
     }
   }
 
@@ -84,6 +125,14 @@ export default {
     .overview-obf__textarea--shadow {
       opacity: 0;
       visibility: hidden;
+    }
+  }
+}
+
+@media (max-width: 900px) {
+  .overview-obf {
+    .overview-obf__textarea--shadow {
+      display: none;
     }
   }
 }

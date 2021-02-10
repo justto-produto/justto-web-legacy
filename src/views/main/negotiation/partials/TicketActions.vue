@@ -6,7 +6,7 @@
       class="ticket-actions__dynamic-buttons ticket-actions__buttons"
       @click="action.method(action.name)"
     >
-      <el-tooltip :content="$options.filters.capitalize($tc(`actions.${action.name}`, action.label))">
+      <el-tooltip :content="$options.filters.capitalize($tc(`actions.${action.name}`, action.label).name)">
         <JusIcon
           :icon="action.icon"
           class="ticket-actions__icons"
@@ -27,7 +27,7 @@
           class="ticket-actions__list-item"
           @click="action.method(action.name)"
         >
-          {{ $tc(`actions.${action.name}`, action.label) | capitalize }}
+          {{ $tc(`actions.${action.name}`, action.label).name | capitalize }}
         </li>
       </ul>
       <el-button
@@ -210,7 +210,7 @@ export default {
     ]),
 
     confirmAction(action, message = 'Tem certeza que deseja realizar está ação?') {
-      const title = this.$options.filters.capitalize(this.$t(`actions.${action}`))
+      const title = this.$options.filters.capitalize(this.$t(`actions.${action}`).name)
       const options = {
         confirmButtonText: 'Continuar',
         cancelButtonText: 'Cancelar',
@@ -227,7 +227,7 @@ export default {
     },
 
     concludeAction(action, disputeId) {
-      const message = this.$tc(`actions.feedback.${action}`)
+      const message = this.$tc(`actions.${action}`)['feedback-message']
 
       this.$jusNotification({
         message: `${message} com sucesso.`,
@@ -410,7 +410,7 @@ export default {
 
     handleManualStrategy(action) {
       const { isManual } = this.ticket.strategy
-      const title = this.$options.filters.capitalize(this.$t(`actions.${action}`))
+      const title = this.$options.filters.capitalize(this.$t(`actions.${action}`).name)
       const message = 'Esta disputa está com uma estratégia de <b>engajamento manual</b>. Se deseja realizar engajamento automático, edite a disputa e escolha uma estratégia de engajamento adequada'
       const options = {
         title,

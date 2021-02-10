@@ -35,7 +35,6 @@ export default {
   }),
   watch: {
     '$route.params.id'() {
-      window.location.reload()
       this.fetchData()
     }
   },
@@ -43,16 +42,11 @@ export default {
     this.fetchData()
   },
   methods: {
-    ...mapActions([
-      'getTicketOverview',
-      'getTicketOverviewParties'
-    ]),
+    ...mapActions(['getTicketOverview']),
 
     fetchData() {
       const disputeId = this.$route.params.id
-
       this.getTicketOverview(disputeId)
-      this.getTicketOverviewParties(disputeId)
     },
 
     toggleShowOverview() {
@@ -77,7 +71,6 @@ export default {
 
   .ticket-container__overview {
     width: 300px;
-    background-color: $--light-gray;
     border-left: 1px solid $--light-gray;
     transition: .6s cubic-bezier(0.19, 1, 0.22, 1);
   }
@@ -97,7 +90,7 @@ export default {
   }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 600px) {
   .ticket-container {
     .ticket-container__overview {
       width: calc(100% - 48px);

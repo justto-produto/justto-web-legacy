@@ -2,6 +2,7 @@
   <el-tabs
     v-model="activeTab"
     class="overview-tabs"
+    @tab-click="updateTab"
   >
     <el-tab-pane name="parties">
       <i
@@ -35,11 +36,46 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
+
 export default {
   name: 'OverviewTabs',
   data: () => ({
     activeTab: 'parties'
-  })
+  }),
+  computed: {
+    ...mapGetters({
+      ticketOverviewActiveTab: 'getTicketOverviewActiveTab'
+    }),
+    disputeId() {
+      return this.$route.params.id
+    }
+  },
+  watch: {
+    'disputeId'(disputeId) {
+      this.updateTab({ name: this.activeTab })
+      this.getTicketOverviewParties(this.disputeId)
+    }
+  },
+  beforeMount() {
+    this.activeTab = this.ticketOverviewActiveTab
+    this.getTicketOverviewParties(this.disputeId)
+  },
+  methods: {
+    ...mapActions([
+      'getTicketOverviewInfo',
+      'getTicketOverviewParties',
+      'getTicketOverviewProperties',
+      'getTicketOverviewAttachments',
+      'updateTicketOverviewActiveTab'
+    ]),
+
+    updateTab({ name }) {
+      const action = 'getTicketOverview' + this.$options.filters.capitalize(name)
+      this.updateTicketOverviewActiveTab(name)
+      this[action](this.disputeId)
+    }
+  }
 }
 </script>
 

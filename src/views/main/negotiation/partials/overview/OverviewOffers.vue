@@ -5,7 +5,11 @@
         Proposta da parte
       </div>
       <div>
-        <span class="overview-offers__proposal-value">{{ plaintiffProposal.value | currency }}</span>
+        <CurrencyInlieEditor
+          v-model="plaintiffProposal.value"
+          class="overview-offers__proposal-value"
+        />
+        <!-- <span class="overview-offers__proposal-value">{{ plaintiffProposal.value | currency }}</span> -->
       </div>
     </article>
     <article class="overview-offers__proposal overview-offers__proposal--defendant">
@@ -15,7 +19,7 @@
       </div>
       <div>
         Max:
-        <span class="overview-offers__proposal-value">{{ ticket.upperRange | currency }}</span>
+        <span class="overview-offers__proposal-value">{{ upperRange | currency }}</span>
       </div>
     </article>
   </section>
@@ -24,18 +28,21 @@
 <script>
 export default {
   name: 'OverviewOffers',
-  props: {
-    ticket: {
-      type: Object,
-      required: true
-    }
+  components: {
+    CurrencyInlieEditor: () => import('@/components/inputs/CurrencyInlieEditor')
   },
-  computed: {
-    defendantProposal() {
-      return this.ticket.defendantProposal
+  props: {
+    defendantProposal: {
+      type: Object,
+      default: () => ({})
     },
-    plaintiffProposal() {
-      return this.ticket.plaintiffProposal
+    plaintiffProposal: {
+      type: Object,
+      default: () => ({})
+    },
+    upperRange: {
+      type: Number,
+      default: 0
     }
   }
 }
