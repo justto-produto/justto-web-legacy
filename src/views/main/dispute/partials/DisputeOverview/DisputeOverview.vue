@@ -120,12 +120,12 @@
               />
             </div>
             <div
-              v-if="dispute.campaign"
+              v-if="campaign"
               class="dispute-overview-view__info-line"
               data-testid="dispute-infoline"
             >
               <span class="title">Campanha:</span>
-              <span>{{ dispute.campaign.name }}</span>
+              <span>{{ campaign.name }}</span>
             </div>
             <div
               v-if="dispute.strategyName"
@@ -1865,6 +1865,9 @@ export default {
       onlineDocuments: 'onlineDocuments',
       strategies: 'strategyListImport'
     }),
+    campaign() {
+      return this.dispute?.campaign
+    },
     skipEnrichment() {
       return this.dispute?.campaign?.skipEnrichment
     },
