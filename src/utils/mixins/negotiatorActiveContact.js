@@ -22,7 +22,6 @@ export default {
     ]),
 
     async sendMessage() {
-      console.log('sendMessage')
       const disputeId = this.dispute.id
       const { lastReceivedMessage } = this.dispute
       let email = ''

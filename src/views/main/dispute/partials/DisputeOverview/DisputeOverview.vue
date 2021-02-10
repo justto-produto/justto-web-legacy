@@ -2038,7 +2038,6 @@ export default {
       this.checkTabByAssociatedContractValue(this.showAssociateContacts)
     },
     dispute(newew, old) {
-      console.log('OLD', old)
       if ((!old || !old.id) && newew.properties) {
         const { id } = this.$route.params
         this.getDisputeMetadata(id).then(() => {

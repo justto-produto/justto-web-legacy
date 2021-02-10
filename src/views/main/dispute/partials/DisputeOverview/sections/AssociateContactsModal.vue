@@ -213,13 +213,8 @@ export default {
         return party === 'CLAIMANT' && (roles.includes('PARTY') || roles.includes('LAWYER'))
       }).map(({ id, name }) => ({ id, name }))
     },
-    toShow: {
-      get() {
-        return this.value && (this.emails.length > 0 || this.phones.length > 0)
-      },
-      set(value) {
-        // console.log(value)
-      }
+    toShow() {
+      return this.value && (this.emails.length > 0 || this.phones.length > 0)
     },
     hasAssociations() {
       const phones = this.phones.filter(phone => {

@@ -676,7 +676,6 @@ export default {
     onlineEmails() {
       let emails = []
       this.dispute.disputeRoles.map(role => {
-        console.log(Object.keys(this.onlineDocuments), role.documentNumber)
         if (Object.keys(this.onlineDocuments).includes(role.documentNumber)) {
           emails = [...emails, ...role.emails.filter(email => !!email.isMain).map(email => email.address)]
         }
