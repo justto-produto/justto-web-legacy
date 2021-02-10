@@ -239,7 +239,7 @@
                 >
                   <div
                     v-if="validName"
-                    :class="{ 'show-toolbar': messageType === 'email' }"
+                    :class="{ 'show-toolbar': ['email', 'negotiation'].includes(messageType)}"
                     class="dispute-view__quill"
                   >
                     <!-- placement="top" -->

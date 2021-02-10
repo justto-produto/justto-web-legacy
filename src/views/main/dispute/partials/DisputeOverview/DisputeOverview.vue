@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="dispute-overview-view">
     <h2
       class="dispute-overview-view__title"
@@ -2096,7 +2096,7 @@ export default {
 
     sendMessageToNegotiator(role) {
       const roleId = role.id
-      const email = role.emails.find(email => !email.archived && email.isValid && email.isMain) || 'não tem'
+      const email = role.emails.find(email => !email.archived && email.isValid && email.isMain) || ''
       this.$emit('activeNegotiator', {
         roleId,
         email: email ? email.address : email
