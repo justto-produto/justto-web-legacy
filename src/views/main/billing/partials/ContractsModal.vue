@@ -142,7 +142,7 @@
                   </el-select> -->
                   <el-input-number
                     v-model="contract.invoiceClosingDay"
-                    :min="1"
+                    :min="0"
                     :max="31"
                     step-strictly
                     controls-position="right"

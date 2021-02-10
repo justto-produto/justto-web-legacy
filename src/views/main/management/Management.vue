@@ -678,7 +678,11 @@ export default {
         if (res && res.JUS_EXPORT_COLUMNS) {
           const columns = res.JUS_EXPORT_COLUMNS.split(',')
           this.exportedColumns = this.columnsList.filter(item => columns.includes(item.key))
-          this.$refs.tree.setCheckedKeys(columns)
+          this.$nextTick(() => {
+            this.$refs.tree.setCheckedKeys(columns)
+            this.checkedNodes = columns.length
+            this.isSelectedAllColumns = true
+          })
         } else {
           this.$refs.tree.setCheckedKeys(this.columns.map(c => c.key))
         }
