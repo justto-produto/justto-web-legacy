@@ -950,7 +950,6 @@ export default {
     checkCounterproposal(actionType) {
       return new Promise((resolve, reject) => {
         this.$refs.counterOfferForm.validate(valid => {
-          console.log(this.$refs.counterOfferForm)
           if (valid) {
             if (this.checkUpperRangeCounterOffer) {
               const winTxt = 'O valor inserido <b>irá mojorar</b> alçada máxima. Deseja continuar?'
