@@ -139,6 +139,7 @@ export default {
   }
 
   .jus-dispute-code__link {
+    display: inline-block;
     text-decoration: underline;
   }
 

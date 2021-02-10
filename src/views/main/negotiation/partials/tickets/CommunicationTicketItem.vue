@@ -22,11 +22,11 @@
         </span>
       </div>
       <div class="communication-ticket-item-container__message">
-        {{ ticket.lastReceivedMessage.message }}
+        {{ ticket.lastInboundInteraction.message }}
       </div>
     </div>
     <span class="communication-ticket-item-container__time">
-      {{ getLastInteraction(ticket.lastReceivedMessage.dateTime.dateTime) }}
+      {{ getLastInteraction(ticket.lastInboundInteraction.dateTime.dateTime) }}
     </span>
   </li>
 </template>

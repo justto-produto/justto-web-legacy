@@ -42,7 +42,6 @@ export default {
   beforeMount() {
     this.fetchData()
   },
-
   methods: {
     ...mapActions([
       'getTicketOverview',
