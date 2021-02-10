@@ -239,7 +239,7 @@
                 >
                   <div
                     v-if="validName"
-                    :class="{ 'show-toolbar': messageType === 'email' }"
+                    :class="{ 'show-toolbar': ['email', 'negotiation'].includes(messageType)}"
                     class="dispute-view__quill"
                   >
                     <!-- placement="top" -->
@@ -1035,7 +1035,7 @@ export default {
     }
   }
   &__quill {
-    height: calc(100% - 44px);
+    height: calc(100% - 32px);
     position: relative;
     &.show-toolbar {
       .ql-toolbar {
@@ -1044,9 +1044,11 @@ export default {
     }
 
     .quill-editor {
-      height: calc(100% - 8px);
+      height: 100%;
       .ql-container {
         margin-bottom: 0;
+        height: 100%;
+
         .ql-editor {
           padding: 0 !important;
         }

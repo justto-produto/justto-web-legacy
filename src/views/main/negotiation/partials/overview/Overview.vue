@@ -9,7 +9,7 @@
       @click="$emit('toggle-show-overview')"
     />
 
-    <HeaderUserMenu />
+    <HeaderUserMenu class="overview-container__menu" />
 
     <h1 style="margin: 0">
       #{{ ticket.disputeId }}
@@ -72,6 +72,16 @@ export default {
     font-size: 18px;
     transition: .6s;
     &--active { transform: rotate(180deg) translateY(50%); }
+  }
+}
+
+@media (max-height: 680px) {
+  .overview-container {
+    padding: 6px 24px !important;
+
+    .overview-container__menu {
+      height: 40px !important;
+    }
   }
 }
 

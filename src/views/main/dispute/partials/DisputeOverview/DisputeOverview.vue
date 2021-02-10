@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="dispute-overview-view">
     <h2
       class="dispute-overview-view__title"
@@ -120,12 +120,12 @@
               />
             </div>
             <div
-              v-if="dispute.campaign"
+              v-if="campaign"
               class="dispute-overview-view__info-line"
               data-testid="dispute-infoline"
             >
               <span class="title">Campanha:</span>
-              <span>{{ dispute.campaign.name }}</span>
+              <span>{{ campaign.name }}</span>
             </div>
             <div
               v-if="dispute.strategyName"
@@ -278,7 +278,7 @@
               <span class="title">Configurações:</span>
               <span class="configurations">
                 Enriquecer automaticamente na importação?
-                <div><i :class="dispute.campaign && dispute.campaign.skipEnrichment ? 'el-icon-close' : 'el-icon-check'" /> {{ dispute.campaign.skipEnrichment ? 'Não' : 'Sim' }}</div>
+                <div><i :class="skipEnrichment ? 'el-icon-close' : 'el-icon-check'" /> {{ skipEnrichment ? 'Não' : 'Sim' }}</div>
                 Somente depósito em conta-corrente?
                 <div><i :class="dispute.campaign.denySavingDeposit ? 'el-icon-check' : 'el-icon-close'" /> {{ dispute.campaign.denySavingDeposit ? 'Sim' : 'Não ' }}</div>
                 Mensagens somente em horário comercial?
@@ -1865,6 +1865,12 @@ export default {
       onlineDocuments: 'onlineDocuments',
       strategies: 'strategyListImport'
     }),
+    campaign() {
+      return this.dispute?.campaign
+    },
+    skipEnrichment() {
+      return this.dispute?.campaign?.skipEnrichment
+    },
     onlineList() {
       return Object.keys(this.onlineDocuments) || []
     },
@@ -2038,7 +2044,6 @@ export default {
       this.checkTabByAssociatedContractValue(this.showAssociateContacts)
     },
     dispute(newew, old) {
-      console.log('OLD', old)
       if ((!old || !old.id) && newew.properties) {
         const { id } = this.$route.params
         this.getDisputeMetadata(id).then(() => {
@@ -2094,7 +2099,7 @@ export default {
 
     sendMessageToNegotiator(role) {
       const roleId = role.id
-      const email = role.emails.find(email => !email.archived && email.isValid && email.isMain) || 'não tem'
+      const email = role.emails.find(email => !email.archived && email.isValid && email.isMain) || ''
       this.$emit('activeNegotiator', {
         roleId,
         email: email ? email.address : email

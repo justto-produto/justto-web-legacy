@@ -200,8 +200,6 @@ export default {
       }
     },
     editorRedy() {
-      console.log(this.$refs['editor-fieldset'].clientHeight)
-      console.log(this.$refs.edit)
       this.$refs.edit.config.height = this.$refs['editor-fieldset'].clientHeight
       this.$forceUpdate()
     }

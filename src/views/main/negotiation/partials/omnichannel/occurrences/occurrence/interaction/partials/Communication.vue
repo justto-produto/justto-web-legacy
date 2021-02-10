@@ -202,7 +202,7 @@ export default {
 
 .communication-container {
   overflow: hidden;
-  margin: 12px 12px 6px;
+  margin: 6px;
   padding: 0px;
 
   .communication-container__email {
