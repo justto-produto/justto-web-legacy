@@ -37,6 +37,10 @@ const overviewActions = {
       url: `${officeApi}/disputes/${disputeId}/attachments`,
       mutation: 'setTicketOverviewAttachments'
     })
+  },
+
+  updateTicketOverviewActiveTab({ commit }, activeTab) {
+    commit('updateTicketOverviewActiveTab', activeTab)
   }
 }
 

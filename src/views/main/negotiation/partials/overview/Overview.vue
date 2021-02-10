@@ -15,9 +15,16 @@
       #{{ ticket.disputeId }}
     </h1>
 
-    <OverviewOffers :ticket="ticket" />
+    <OverviewOffers
+      :defendant-proposal="ticket.defendantProposal"
+      :plaintiff-proposal="ticket.plaintiffProposal"
+      :upper-range="ticket.upperRange"
+    />
 
-    <OverviewObf :ticket="ticket" />
+    <OverviewObf
+      v-if="ticket.strategy.isObrigacaoFazer"
+      v-model="ticket.description"
+    />
 
     <OverviewTabs />
   </section>

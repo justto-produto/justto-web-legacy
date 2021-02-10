@@ -14,7 +14,7 @@
         >
           {{ code.trim() }}
         </span>
-        <span class="jus-dispute-code__icons">
+        <span>
           <i
             :class="timelineStatus.icon"
             class="jus-dispute-code__icon"

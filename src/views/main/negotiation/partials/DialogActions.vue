@@ -398,11 +398,11 @@ export default {
     },
 
     ticketPlaintiffs() {
-      return this.ticketParties.filter(part => part.polarity === 'CLAIMANT')
+      return this.ticketParties?.filter(part => part.polarity === 'CLAIMANT')
     },
 
     ticketNegotiators() {
-      return this.ticketParties.filter(part => part.roles.includes('NEGOTIATOR'))
+      return this.ticketParties?.filter(part => part.roles.includes('NEGOTIATOR'))
     },
 
     mappedWorkspaceMembers() {

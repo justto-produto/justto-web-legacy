@@ -201,39 +201,114 @@
     }
   },
   "actions": {
-    "SETTLED": "ganhar | aceitar acordo",
-    "UNSETTLED": "perder",
-    "SET_UNREAD": "marcar como não lido",
-    "RESUME": "retomar negociação",
-    "PAUSE": "pausar negociação",
-    "MANUAL_COUNTERPROPOSAL": "contraproposta manual",
-    "RESTART_ENGAGEMENT": "reiniciar disputa",
-    "RESEND_MESSAGES": "reenviar mensagens automáticas",
-    "CANCEL_MESSAGES": "cancelar mensagens agendadas",
-    "EDIT_NEGOTIATORS": "trocar negociadores",
-    "ENRICH": "enriquecer disputa",
-    "RENEGOTIATE": "retornar para negociação",
-    "UPLOAD_ATTACHMENT": "enviar anexo",
-    "DROP_LAWSUIT": "confirmar baixa definitiva",
-    "START_NEGOTIATION": "iniciar negociação",
-    "DELETE_DOCUMENT": "excluír documento",
-    "feedback": {
-      "SETTLED": "disputa <b>ganha</b> | proposta aceita",
-      "UNSETTLED": "disputa <b>perdida</b>",
-      "SET_UNREAD": "disputa <b>marcada como não lida</b>",
-      "RESUME": "disputa <b>retomada</b>",
-      "PAUSE": "disputa <b>pausada</b>",
-      "MANUAL_COUNTERPROPOSAL": "contraproposta manual realizada | alçada máxima <b>majorada</b>. A disputa foi movida para <b>proposta aceita</b>",
-      "RESTART_ENGAGEMENT": "disputa <b>reiniciada</b>",
-      "RESEND_MESSAGES": "<b>mensagens automáticas reenviadas</b>",
-      "CANCEL_MESSAGES": "<b>mensagens canceladas</b>",
-      "EDIT_NEGOTIATORS": "negociadores alterados",
-      "ENRICH": "dispute <b>enriquecida</b>",
-      "RENEGOTIATE": "disputa <b>retornada para negociação</b>",
-      "UPLOAD_ATTACHMENT": "",
-      "DROP_LAWSUIT": "<b>baixa definitiva</b>",
-      "START_NEGOTIATION": "<b>negociação iniciada</b>",
-      "DELETE_DOCUMENT": "<b>minuta excluida</b>"
+    "SETTLED": {
+      "name": "ganhar | aceitar acordo",
+      "feedback-message": "disputa <b>ganha</b> | proposta aceita"
+    },
+    "UNSETTLED": {
+      "name": "perder",
+      "feedback-message": "disputa <b>perdida</b>"
+    },
+    "SET_UNREAD": {
+      "name": "marcar como não lido",
+      "feedback-message": "disputa <b>marcada como não lida</b>"
+    },
+    "RESUME": {
+      "name": "retomar negociação",
+      "feedback-message": "disputa <b>retomada</b>"
+    },
+    "PAUSE": {
+      "name": "pausar negociação",
+      "feedback-message": "disputa <b>pausada</b>"
+    },
+    "MANUAL_COUNTERPROPOSAL": {
+      "name": "contraproposta manual",
+      "feedback-message": "contraproposta manual realizada | alçada máxima <b>majorada</b>. A disputa foi movida para <b>proposta aceita</b>"
+    },
+    "RESTART_ENGAGEMENT": {
+      "name": "reiniciar disputa",
+      "feedback-message": "disputa <b>reiniciada</b>"
+    },
+    "RESEND_MESSAGES": {
+      "name": "reenviar mensagens automáticas",
+      "feedback-message": "<b>mensagens automáticas reenviadas</b>"
+    },
+    "CANCEL_MESSAGES": {
+      "name": "cancelar mensagens agendadas",
+      "feedback-message": "<b>mensagens canceladas</b>"
+    },
+    "EDIT_NEGOTIATORS": {
+      "name": "trocar negociadores",
+      "feedback-message": "negociadores alterados"
+    },
+    "ENRICH": {
+      "name": "enriquecer disputa",
+      "feedback-message": "dispute <b>enriquecida</b>"
+    },
+    "RENEGOTIATE": {
+      "name": "retornar para negociação",
+      "feedback-message": "disputa <b>retornada para negociação</b>"
+    },
+    "UPLOAD_ATTACHMENT": {
+      "name": "enviar anexo",
+      "feedback-message": ""
+    },
+    "DROP_LAWSUIT": {
+      "name": "confirmar baixa definitiva",
+      "feedback-message": "<b>baixa definitiva</b>"
+    },
+    "START_NEGOTIATION": {
+      "name": "iniciar negociação",
+      "feedback-message": "<b>negociação iniciada</b>"
+    },
+    "DELETE_DOCUMENT": {
+      "name": "excluír documento",
+      "feedback-message": "<b>minuta excluida</b>"
+    }
+  },
+  "interaction-types": {
+    "COMMUNICATION": {
+      "message": ""
+    },
+    "ATTACHMENT": {
+      "icon": "attachment",
+      "message": "Novo anexo recebido"
+    },
+    "CLICK": {
+      "icon": "click",
+      "message": "Abriu um link do email"
+    },
+    "VISUALIZATION": {
+      "icon": "eye",
+      "message": "vsualização no email"
+    },
+    "MANUAL_PROPOSAL": {
+      "icon": "exchange",
+      "message": "Fez uma proposta"
+    },
+    "MANUAL_COUNTERPROPOSAL": {
+      "icon": "exchange",
+      "message": "Fez uma contraproposta"
+    },
+    "NEGOTIATOR_ACCESS": {
+      "icon": "justto",
+      "message": "Acesso no portal"
+    },
+    "NEGOTIATOR_PROPOSAL": {
+      "icon": "justto",
+      "message": "Nova proposta no portal"
+    },
+    "NEGOTIATOR_COUNTERPROSAL": {
+      "icon": "justto",
+      "message": "Nova contraproposta no portal"
+    },
+    "NEGOTIATOR_CHECKOUT": {
+      "icon": "justto",
+      "message": "Aceitou proposta no portal"
+    },
+    "NEGOTIATOR_ACCEPTED": {
+      "icon": "justto",
+      "message": "Informou dados bancários"
     }
   },
   "fields": {

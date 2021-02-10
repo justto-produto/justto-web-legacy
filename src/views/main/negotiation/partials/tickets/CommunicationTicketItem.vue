@@ -22,7 +22,12 @@
         </span>
       </div>
       <div class="communication-ticket-item-container__message">
-        {{ ticket.lastInboundInteraction.message }}
+        <JusIcon
+          v-if="lastInboundInteraction.icon"
+          :icon="lastInboundInteraction.icon"
+          class="communication-ticket-item-container__message-icon"
+        />
+        {{ lastInboundInteraction.message }}
       </div>
     </div>
     <span class="communication-ticket-item-container__time">
@@ -44,7 +49,19 @@ export default {
   },
   computed: {
     isActive() {
-      return this.$route.params.id === this.ticket.disputeId
+      return Number(this.$route.params.id) === this.ticket.disputeId
+    },
+    lastInboundInteraction() {
+      const { type, message } = this.ticket.lastInboundInteraction
+
+      if (type === 'COMMUNICATION' && message) {
+        return { message }
+      } else {
+        return {
+          icon: this.$t(`interaction-types.${type}`).icon,
+          message: this.$t(`interaction-types.${type}`).message
+        }
+      }
     }
   },
   methods: {
@@ -122,10 +139,18 @@ export default {
     }
 
     .communication-ticket-item-container__message {
+      display: flex;
+      align-items: center;
       margin-bottom: 6px;
       // white-space: nowrap;
       // text-overflow: ellipsis;
       // overflow: hidden;
+
+      .communication-ticket-item-container__message-icon {
+        width: 16px;
+        height: 16px;
+        margin-right: 6px;
+      }
     }
   }
 

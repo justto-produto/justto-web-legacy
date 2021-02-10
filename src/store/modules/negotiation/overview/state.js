@@ -9,7 +9,8 @@ const overviewState = {
   ticketOverviewInfo: {},
   ticketOverviewParties: {},
   ticketOverviewProperties: {},
-  ticketOverviewAttachments: {}
+  ticketOverviewAttachments: {},
+  ticketOverviewActiveTab: 'parties'
 }
 
 export default overviewState
