@@ -53,7 +53,7 @@ export default {
       clearTimeout(this.debounce)
 
       this.debounce = setTimeout(() => {
-        this.searchDisputes({ key: 'term', value: term })
+        this.searchDisputes({ key: 'term', value: term.trim() })
           .then(response => {
             this.$jusSegment('Busca global de disputas', { description: `Termo utilizado: ${term}` })
             if (response.length) cb(response)
