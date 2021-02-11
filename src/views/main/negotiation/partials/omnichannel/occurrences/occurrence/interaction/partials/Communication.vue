@@ -7,18 +7,21 @@
       />
       <span
         v-if="contact"
-        class="communication-container__email-prefix">
+        class="communication-container__email-prefix"
+      >
         {{ prefix }}
       </span>
       <span
         v-if="!isSimilarName && person"
-        class="communication-container__email-person">
+        class="communication-container__email-person"
+      >
         {{ person }}
       </span>
       <span
         v-if="contact"
         class="communication-container__email-contact"
-        @click="copyEmail">
+        @click="copyEmail"
+      >
         <span v-if="!isSimilarName && person">&lt;</span>
         {{ contact }}
         <span v-if="!isSimilarName && person">&gt;</span>
@@ -29,14 +32,16 @@
       <span
         v-if="!canShowFullMessage && !isSmallText"
         class="communication-container__message-link"
-        @click="deleteFullMessage(interaction.message.messageId)">
+        @click="deleteFullMessage(interaction.message.messageId)"
+      >
         Ver menos
       </span>
       <span v-html="message" />
       <span
         v-if="canShowFullMessage"
         class="communication-container__message-link"
-        @click="getFullMessage(interaction.message.messageId)">
+        @click="getFullMessage(interaction.message.messageId)"
+      >
         Ver mais
       </span>
     </div>
