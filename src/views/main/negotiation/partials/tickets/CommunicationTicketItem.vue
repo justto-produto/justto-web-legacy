@@ -58,8 +58,8 @@ export default {
         return { message }
       } else {
         return {
-          icon: this.$t(`interaction-types.${type}`).icon,
-          message: this.$t(`interaction-types.${type}`).message
+          icon: this.$t(`interaction-types.${type}.icon`),
+          message: this.$options.filters.capitalize(this.$t(`interaction-types.${type}.message`))
         }
       }
     }
