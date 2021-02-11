@@ -239,7 +239,7 @@
                 >
                   <div
                     v-if="validName"
-                    :class="{ 'show-toolbar': ['email', 'negotiation'].includes(messageType)}"
+                    :class="{ 'show-toolbar small-container': ['email', 'negotiation'].includes(messageType)}"
                     class="dispute-view__quill"
                   >
                     <!-- placement="top" -->
@@ -1010,7 +1010,6 @@ export default {
       display: none;
     }
     .dispute-view__send-container {
-      // background: red;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -1037,14 +1036,10 @@ export default {
   &__quill {
     height: calc(100% - 32px);
     position: relative;
-    &.show-toolbar {
-      .ql-toolbar {
-        display: inherit;
-      }
-    }
 
     .quill-editor {
       height: 100%;
+
       .ql-container {
         margin-bottom: 0;
         height: 100%;
@@ -1052,6 +1047,20 @@ export default {
         .ql-editor {
           padding: 0 !important;
         }
+      }
+    }
+
+    &.show-toolbar {
+      .ql-toolbar {
+        display: inherit;
+
+        @media (max-height: 680px) {
+          padding-bottom: 0px;
+        }
+      }
+
+      .quill-editor > .ql-container {
+        height: calc(100% - 32px) !important;
       }
     }
 
@@ -1088,21 +1097,24 @@ export default {
         .dispute-view__templates-button-icon {
           width: 10px !important;
           margin: 0px;
-          // margin-right: 4px;
         }
       }
     }
   }
+
   &__quill-note {
     height: 100% !important;
+
     .ql-container {
       height: calc(100% - 20px);
       margin: 0 !important;
     }
   }
+
   &__show-scheduled {
     margin-top: 10px;
   }
+
   &__send-message-box {
     margin: 10px;
     margin-top: 20px;
@@ -1119,7 +1131,11 @@ export default {
     }
   }
   &__send-message-actions {
-    margin-top: 8px;
+    margin-top: 6px;
+    @media (max-height: 680px) {
+      margin-top: 0px;
+    }
+
     display: flex;
     justify-content: flex-end;
     align-items: flex-end;
