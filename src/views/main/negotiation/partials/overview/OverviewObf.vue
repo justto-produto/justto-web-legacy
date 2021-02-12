@@ -11,9 +11,10 @@
       v-if="isEditing || value"
       id="obf"
       ref="oabTextarea"
-      v-model="descriptionModel"
+      v-model="description"
       class="overview-obf__textarea"
       @blur="hideTextarea"
+      @input="saveObf"
     />
     <span
       v-if="isEditing || value"
@@ -31,6 +32,9 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+const debounce = require('lodash/debounce')
+
 export default {
   name: 'OverviewObf',
   props: {
@@ -40,26 +44,40 @@ export default {
     }
   },
   data: () => ({
-    isEditing: false
+    isEditing: false,
+    model: ''
   }),
   computed: {
-    descriptionModel: {
+    description: {
       get() {
-        return this.value
+        return this.model || this.value
       },
       set(value) {
-        this.$emit('input', value)
+        this.model = value
       }
+    },
+    disputeId() {
+      return Number(this.$route.params.id)
     }
   },
   methods: {
+    ...mapActions(['setTicketOverview']),
+
     showTextarea() {
       this.isEditing = true
       this.$nextTick(() => this.$refs.oabTextarea.focus())
     },
+
     hideTextarea() {
       this.isEditing = false
-    }
+    },
+
+    saveObf: debounce(function() {
+      const { description, disputeId } = this
+      const data = { description }
+
+      this.setTicketOverview({ data, disputeId })
+    }, 800)
   }
 }
 </script>

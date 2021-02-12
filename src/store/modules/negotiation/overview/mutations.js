@@ -11,7 +11,7 @@ const overviewMutations = {
   setTicketOverviewParties: (state, params) => (Vue.set(state, 'ticketOverviewParties', params)),
   setTicketOverviewProperties: ({ ticketOverviewParties }, params) => (ticketOverviewParties = params),
   setTicketOverviewAttachments: ({ ticketOverviewAttachments }, params) => (ticketOverviewAttachments = params),
-  updateTicketOverviewActiveTab: (state, activeTab) => (Vue.set(state, 'ticketOverviewActiveTab', activeTab))
+  setLastTicketOffers: (state, params) => (Vue.set(state, 'lastTicketOffers', params))
 }
 
 export default overviewMutations

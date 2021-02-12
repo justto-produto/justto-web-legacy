@@ -42,11 +42,15 @@ export default {
     this.fetchData()
   },
   methods: {
-    ...mapActions(['getTicketOverview']),
+    ...mapActions([
+      'getTicketOverview',
+      'getLastTicketOffers'
+    ]),
 
     fetchData() {
       const disputeId = this.$route.params.id
       this.getTicketOverview(disputeId)
+      this.getLastTicketOffers(disputeId)
     },
 
     toggleShowOverview() {

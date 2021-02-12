@@ -1713,13 +1713,12 @@
 import { getRoles, buildRoleTitle, getRoleIcon } from '@/utils'
 import { validateName, validateDocument, validatePhone, validateZero } from '@/utils/validations'
 
-import DisputeAttachments from './sections/DisputeAttachments'
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'DisputeOverview',
   components: {
-    DisputeAttachments,
+    DisputeAttachments: () => import('./sections/DisputeAttachments'),
     DisputeAddRole: () => import('../DisputeAddRole'),
     DisputeCodeLink: () => import('@/components/buttons/DisputeCodeLink'),
     DisputeProperties: () => import('../DisputeProperties'),

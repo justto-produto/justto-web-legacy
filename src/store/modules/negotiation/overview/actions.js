@@ -39,8 +39,21 @@ const overviewActions = {
     })
   },
 
-  updateTicketOverviewActiveTab({ commit }, activeTab) {
-    commit('updateTicketOverviewActiveTab', activeTab)
+  getLastTicketOffers({ _ }, disputeId) {
+    return axiosDispatch({
+      url: `${disputeApi}/${disputeId}/last-dispute-offer`,
+      mutation: 'setLastTicketOffers'
+    })
+  },
+
+  setTicketOverview({ _ }, params) {
+    const { data, disputeId } = params
+
+    return axiosDispatch({
+      url: `${disputeApi}/${disputeId}`,
+      method: 'PATCH',
+      data
+    })
   }
 }
 

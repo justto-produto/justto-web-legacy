@@ -2,22 +2,30 @@
   <div class="currency-inline-editor">
     <span
       v-if="!isEditing"
-      class="show-right-icon"
+      class="currency-inline-editor__value"
     >
-      {{ vModel | currency }}
-      <i
-        class="el-icon-edit hidden-icon"
-        @click="enebleEdit"
-      />
-      <!-- <i class="el-icon-check request-succes" /> -->
-      <!-- <i class="el-icon-close request-fail" /> -->
+      <span class="currency-inline-editor__inner">
+        {{ vModel | currency }}
+      </span>
+      <span class="currency-inline-editor__icons">
+        <i
+          class="currency-inline-editor__icon el-icon-copy-document"
+          @click="copyValue"
+        />
+        <i
+          class="currency-inline-editor__icon el-icon-edit hidden-icon"
+          @click="enableEdit"
+        />
+      </span>
     </span>
+
     <money
       v-else
       id="currencyInput"
       ref="currencyInput"
       v-model="vModel"
-      class="currency-inline-editor__inner"
+      :class="{ 'currency-inline-editor__input--align-right': iconSide === 'left' }"
+      class="currency-inline-editor__input"
       maxlength="16"
       @blur.native="disableEdit"
     />
@@ -31,6 +39,10 @@ export default {
     value: {
       type: Number,
       default: 0
+    },
+    iconSide: {
+      type: String,
+      default: 'right'
     }
   },
   data: () => ({
@@ -48,17 +60,23 @@ export default {
       }
     }
   },
+  watch: {
+    'value'(newValue) {
+      this.model = newValue
+    }
+  },
   methods: {
-    enebleEdit() {
+    enableEdit() {
       this.isEditing = true
       this.$nextTick(() => document.getElementById('currencyInput').focus())
     },
     disableEdit() {
       this.isEditing = false
-      this.updateValue()
+      if (this.model !== this.value) this.$emit('change', this.vModel)
     },
-    updateValue() {
-      // this.$emit('change', this.vModel)
+    copyValue() {
+      const formattedValue = new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2 }).format(this.vModel)
+      navigator.clipboard.writeText(formattedValue)
     }
   }
 }
@@ -68,23 +86,45 @@ export default {
 @import '@/styles/colors.scss';
 
 .currency-inline-editor {
-  display: flex;
+  display: inline-block;
 
-  .currency-inline-editor__input {
+  .currency-inline-editor__value {
     position: relative;
 
-    .currency-inline-editor__icon {
-      cursor: pointer;
-      transition: .2s ease-out all;
+    &:hover {
+      .currency-inline-editor__inner { opacity: .25; }
+      .currency-inline-editor__icons { opacity: 1; }
+    }
 
+    & > * { transition: .2s ease-out all; }
+
+    .currency-inline-editor__inner {
+      cursor: default;
+      user-select: none;
+    }
+
+    .currency-inline-editor__icons {
+      background-image: linear-gradient(to left, rgba(255, 255, 255, 145) 55%, rgba(255, 255, 255, 0) );
+      position: absolute;
+      opacity: 0;
+      right: 0;
+      padding-left: 6px;
+
+      .currency-inline-editor__icon {
+        transition: .2s ease-out all;
+        cursor: pointer;
+        margin-left: 3px;
+        &:hover { color: $--color-primary; }
+      }
     }
   }
 
-  .currency-inline-editor__inner {
+  .currency-inline-editor__input {
     border: none;
     padding: 0;
-    width: calc(100% - 82px);
+    width: 100%;
     font-size: inherit;
+    &--align-right { text-align: right; }
   }
 
   .request-succes {
