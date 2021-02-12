@@ -7,42 +7,113 @@
       <div>
         <CurrencyInlieEditor
           v-model="plaintiffProposal.value"
-          class="overview-offers__proposal-value"
+          class="overview-offers__proposal-value overview-offers__proposal-value--full-line"
+          @change="updatePlaintiffProposal"
         />
-        <!-- <span class="overview-offers__proposal-value">{{ plaintiffProposal.value | currency }}</span> -->
       </div>
     </article>
     <article class="overview-offers__proposal overview-offers__proposal--defendant">
       <div>
-        Proposta:
-        <span class="overview-offers__proposal-value">{{ defendantProposal.value | currency }}</span>
+        <span>Proposta: </span>
+        <CurrencyInlieEditor
+          v-model="defendantProposal.value"
+          icon-side="left"
+          class="overview-offers__proposal-value"
+          @change="updateDefendantProposal"
+        />
       </div>
       <div>
-        Max:
-        <span class="overview-offers__proposal-value">{{ upperRange | currency }}</span>
+        <span>Máx: </span>
+        <CurrencyInlieEditor
+          v-model="upperRange"
+          icon-side="left"
+          class="overview-offers__proposal-value"
+          @change="updateUpperRange"
+        />
       </div>
     </article>
   </section>
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
+
 export default {
   name: 'OverviewOffers',
   components: {
     CurrencyInlieEditor: () => import('@/components/inputs/CurrencyInlieEditor')
   },
   props: {
-    defendantProposal: {
+    plaintiffProposal: {
       type: Object,
       default: () => ({})
     },
-    plaintiffProposal: {
+    defendantProposal: {
       type: Object,
       default: () => ({})
     },
     upperRange: {
       type: Number,
       default: 0
+    }
+  },
+  computed: {
+    ...mapGetters({
+      ticketParties: 'getTicketOverviewParties'
+    }),
+
+    disputeId() {
+      return Number(this.$route.params.id)
+    }
+  },
+  methods: {
+    ...mapActions([
+      'sendOffer',
+      'setTicketOverview'
+    ]),
+
+    updatePlaintiffProposal(value) {
+      const { disputeId, plaintiffProposal } = this
+      const { roleId } = plaintiffProposal
+
+      const ticketPlaintiffs = this.ticketParties.filter(party => party.polarity === 'CLAIMANT')
+      const ticketPlaintiffLawyer = ticketPlaintiffs.filter(party => party.roles.includes('LAWYER'))[0]
+      const ticketPlaintiffParty = ticketPlaintiffs.filter(party => party.roles.includes('PARTY'))[0]
+
+      const data = {
+        roleid: roleId || (ticketPlaintiffLawyer?.disputeRoleId || ticketPlaintiffParty?.disputeRoleId),
+        value,
+        note: '',
+        updateUpperRage: false
+      }
+
+      this.sendOffer({ data, disputeId })
+    },
+
+    updateDefendantProposal(value) {
+      const { disputeId, plaintiffProposal } = this
+      const { roleId } = plaintiffProposal
+
+      const disputeNegotiator = this.ticketParties.filter(party => {
+        party.polarity === 'RESPONDENT' &&
+        party.roles.includes('NEGOTIATOR')
+      })[0]
+
+      const data = {
+        roleid: roleId || disputeNegotiator.disputeRoleId,
+        value,
+        note: '',
+        updateUpperRage: false
+      }
+
+      this.sendOffer({ data, disputeId })
+    },
+
+    updateUpperRange(upperRange) {
+      const { disputeId } = this
+      const data = { upperRange }
+
+      this.setTicketOverview({ data, disputeId })
     }
   }
 }
@@ -63,7 +134,10 @@ export default {
     .overview-offers__proposal-value {
       font-size: 20px;
       font-weight: 400;
-
+      max-width: calc(100% - 82px);
+      &--full-line {
+        max-width: 100% !important;
+      }
     }
 
     & > div:last-child { margin-top: 3px;}

@@ -124,23 +124,31 @@ a {
   text-align: right;
 }
 
-.show-right-icon .hidden-icon { transform: translateX(-50%); } 
-.show-left-icon .hidden-icon { transform: translateX(50%); }
+.show-right-icon {
+  .hidden-icon { right: 0; transform: translateX(50%); }
+  &:hover .hidden-icon { transform: translateX(100%); }
+} 
+.show-left-icon {
+  .hidden-icon { left: 0; transform: translateX(-50%); }
+  &:hover .hidden-icon { transform: translateX(-100%); }
+}
 .show-right-icon,
 .show-left-icon {
+  position: relative;
+
   .hidden-icon {
     cursor: pointer;
     transition: .2s ease-out all;
     opacity: 0;
-    position: relative;
+    position: absolute;
+    padding: 2px 3px;
+    // margin-top: 3px;
   }
-  &:hover {
-    .hidden-icon {
-      transform: translateX(0);
-      opacity: 1;
-    }
-  }
+  &:hover .hidden-icon {
+    opacity: 1;
+  }  
 }
+
 @keyframes dots {
   0%, 20% {
     color: rgba(0,0,0,0);

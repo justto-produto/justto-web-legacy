@@ -16,8 +16,8 @@
     </h1>
 
     <OverviewOffers
-      :defendant-proposal="ticket.defendantProposal"
-      :plaintiff-proposal="ticket.plaintiffProposal"
+      :defendant-proposal="lastOffers.defendantProposal"
+      :plaintiff-proposal="lastOffers.plaintiffProposal"
       :upper-range="ticket.upperRange"
     />
 
@@ -32,6 +32,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+
 export default {
   name: 'Overview',
   components: {
@@ -48,7 +49,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      ticket: 'getTicketOverview'
+      ticket: 'getTicketOverview',
+      lastOffers: 'getLastTicketOffers'
     })
   }
 }

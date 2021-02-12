@@ -554,15 +554,9 @@ export default {
         this.$store.dispatch('getDisputeDTO', disputeId)
           .then(disputeToEdit => {
             const { value, roleId, note } = this.offerForm
-            const payload = {
-              attribute: { id: disputeToEdit.objects[0].id },
-              value: value.toString(),
-              note,
-              role: { id: roleId },
-              updateUpperRange
-            }
+            const data = { value, note, roleId, updateUpperRange }
 
-            this.sendOffer({ disputeId, payload })
+            this.sendOffer({ disputeId, data })
               .then(success => resolve(success))
               .catch(error => reject(error))
           })
@@ -572,11 +566,11 @@ export default {
 
     handleEditNegotiators() {
       const { disputeId } = this.ticket
-      const payload = { negotiatorsId: this.editNegotiatorsForm }
+      const data = { negotiatorsId: this.editNegotiatorsForm }
       const action = 'EDIT_NEGOTIATORS'
 
       this.modalLoading = true
-      this.sendTicketAction({ disputeId, action, payload })
+      this.sendTicketAction({ disputeId, action, data })
         .then(success => this.concludeAction(action, disputeId))
         .catch(error => this.$jusNotification({ error }))
         .finally(() => (this.modalLoading = false))

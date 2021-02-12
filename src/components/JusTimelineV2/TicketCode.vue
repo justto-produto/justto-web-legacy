@@ -135,6 +135,7 @@ export default {
   .jus-dispute-code__link,
   .jus-dispute-code__icon {
     cursor: pointer;
+    transition: .2s ease-out;
     &:hover { color: $--color-primary; }
   }
 

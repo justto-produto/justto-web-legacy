@@ -23,42 +23,47 @@
         slot="label"
         class="el-icon-setting"
       />
-      Propriedades
+      <!-- <DisputeProperties /> -->
     </el-tab-pane>
     <el-tab-pane name="attachments">
       <i
         slot="label"
         class="el-icon-paperclip"
       />
-      Anexos
+      <!-- <DisputeAttachments
+        :is-accepted="false"
+        :dispute-id="disputeId"
+      /> -->
     </el-tab-pane>
   </el-tabs>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'OverviewTabs',
   data: () => ({
-    activeTab: 'parties'
+    activeTab: 'parties',
+    loadedTabs: ['parties']
   }),
+  // components: {
+  //   DisputeProperties: () => import('@/views/main/dispute/partials/DisputeProperties'),
+  //   DisputeAttachments: () => import('@/views/main/dispute/partials/DisputeOverview/sections/DisputeAttachments'),
+  // },
   computed: {
-    ...mapGetters({
-      ticketOverviewActiveTab: 'getTicketOverviewActiveTab'
-    }),
     disputeId() {
-      return this.$route.params.id
+      return Number(this.$route.params.id)
     }
   },
   watch: {
     'disputeId'(disputeId) {
+      this.loadedTabs = ['parties']
       this.updateTab({ name: this.activeTab })
       this.getTicketOverviewParties(this.disputeId)
     }
   },
   beforeMount() {
-    this.activeTab = this.ticketOverviewActiveTab
     this.getTicketOverviewParties(this.disputeId)
   },
   methods: {
@@ -71,9 +76,12 @@ export default {
     ]),
 
     updateTab({ name }) {
+      const { disputeId, loadedTabs } = this
       const action = 'getTicketOverview' + this.$options.filters.capitalize(name)
-      this.updateTicketOverviewActiveTab(name)
-      this[action](this.disputeId)
+
+      if (!loadedTabs.includes(name)) {
+        this[action](disputeId).then(() => loadedTabs.push(name))
+      }
     }
   }
 }
