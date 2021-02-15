@@ -22,9 +22,13 @@
         />
         <div class="usermenu-container__name md">
           <div style="text-transform: capitalize;">
-            {{ name }}
+            {{ name | resumedName }}
           </div>
-          <span>{{ teamName }}</span>
+          <span
+            class="usermenu-container__name__team-name"
+            :class="{ 'use-marquee-animation': isLargeTeamName, 'large-team-name-container': !isJusttoAdmin}">
+            {{ teamName }}
+          </span>
         </div>
         <span class="sm">
           <jus-icon icon="menu-hamburger" />
@@ -105,6 +109,9 @@ export default {
     }),
     appVersion() {
       return process.env.VUE_APP_VERSION
+    },
+    isLargeTeamName() {
+      return this.teamName.length > 20
     },
     isGhostMode: {
       get() {
@@ -218,18 +225,46 @@ export default {
     font-size: 12px;
   }
   &__name {
-    margin: 0 20px 0 10px;
+    margin: 0 10px 0 10px;
+    overflow-x: hidden;
     div {
       white-space: nowrap;
       font-weight: 600;
     }
-    span {
+
+    .usermenu-container__name__team-name {
       font-size: 12px;
       color: #666666;
+      max-width: 180px;
+      display: inline-block;
+      text-overflow: ellipsis;
       white-space: nowrap;
+      overflow-x: hidden;
+      vertical-align: top;
+    }
+
+    .large-team-name-container {
+      max-width: 250px;
+    }
+
+    .use-marquee-animation:hover {
+      display: inline-block;
+      overflow-x: visible;
+      animation: marquee 5s linear infinite;
     }
   }
 }
+
+/* Make it move */
+@keyframes marquee {
+  10% {
+    transform: translateX(0);
+  }
+  90% {
+    transform: translateX(-100%);
+  }
+}
+
 @media (max-width: 900px) {
   .usermenu-container {
     .el-switch { display: none;}
