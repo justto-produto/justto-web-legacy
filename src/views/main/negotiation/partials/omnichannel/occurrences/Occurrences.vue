@@ -68,6 +68,9 @@ export default {
     activeTab() {
       this.infiniteId += 1
       this.goToChatBottom()
+    },
+    '$route.params.id'() {
+      this.getOccurrences(this.id)
     }
   },
   // TODO: Validar a troca de ticket.
