@@ -36,7 +36,7 @@
       </span>
       <el-dropdown-menu slot="dropdown">
         <div style="text-transform: capitalize; text-align: center;">
-          {{ name }}
+          {{ name | resumedName }}
         </div>
         <!-- <div class="usermenu-container__version">
           {{ teamName }}
