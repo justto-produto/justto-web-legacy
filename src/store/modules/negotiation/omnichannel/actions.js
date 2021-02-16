@@ -67,9 +67,9 @@ const omnichannelActions = {
     })
   },
 
-  getSummaryOccurrecies({ _ }, { disputeId, type, summaryRoleId, summaryOccurrenceId }) {
+  getSummaryOccurrecies({ _ }, { disputeId, communicationType, summaryRoleId, summaryOccurrenceId }) {
     return axiosDispatch({
-      url: `${disputeApi}/${disputeId}/occurrences?type=${type}&summary-role-id=${summaryRoleId}&summary-occurrence-id=${summaryOccurrenceId}`
+      url: `${disputeApi}/${disputeId}/occurrences?communication-type=${communicationType}&summary-role-id=${summaryRoleId}&summary-occurrence-id=${summaryOccurrenceId}`
     })
   }
 }
