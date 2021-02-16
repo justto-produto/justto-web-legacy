@@ -128,18 +128,6 @@
                 <el-form-item
                   label="Dia de fechamento"
                 >
-                  <!-- <el-select
-                    v-model="contract.invoiceClosingDay"
-                    :disabled="isContractInactive(contract)"
-                    placeholder="Dia do mês"
-                  >
-                    <el-option
-                      v-for="(day, dayCount) in 29"
-                      :key="dayCount - 1"
-                      :label="day - 1"
-                      :value="day - 1"
-                    />
-                  </el-select> -->
                   <el-input-number
                     v-model="contract.invoiceClosingDay"
                     :min="0"
@@ -149,29 +137,6 @@
                   />
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
-                <el-form-item label="Percentual de repasse">
-                  <!-- <div class="el-input el-input--suffix">
-                    <input
-                      v-model="contract.onlendingFee"
-                      type="number"
-                      class="el-input__inner custom_input_number"
-                      :step="0.5"
-                    >
-                    <span class="el-input__suffix el-input__suffix-inner">%</span>
-                  </div> -->
-                  <el-input-number
-                    v-model="contract.onlendingFee"
-                    :min="1"
-                    :max="100"
-                    step-strictly
-                    controls-position="right"
-                  />
-                </el-form-item>
-              </el-col>
-            </el-row>
-            <!-- Linha 4 -->
-            <el-row :gutter="24">
               <el-col :span="12">
                 <el-form-item
                   label="Plano"
@@ -189,6 +154,38 @@
                     />
                   </el-select>
                   <el-form-item />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <!-- Linha 4 -->
+            <el-row :gutter="24">
+              <el-col
+                v-if="contract.planId === 6"
+                :span="6"
+              >
+                <el-form-item label="Percentual de repasse">
+                  <el-input-number
+                    v-model="contract.onlendingFee"
+                    :min="0"
+                    :max="100"
+                    step-strictly
+                    controls-position="right"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col
+                v-if="contract.planId === 6"
+                :span="6"
+              >
+                <el-form-item label="Taxas sobre valor bruto">
+                  <el-input-number
+                    v-model="contract.grossValueTax"
+                    :min="0"
+                    :max="100"
+                    :precision="3"
+                    :step="0.1"
+                    controls-position="right"
+                  />
                 </el-form-item>
               </el-col>
 
@@ -270,17 +267,6 @@
                   prop="invoiceDueDays"
                   label="Dias para vencimento da fatura"
                 >
-                  <!-- <el-select
-                    v-model="newContract.invoiceDueDays"
-                    placeholder="Dia do mês"
-                  >
-                    <el-option
-                      v-for="(day, dayCount) in 29"
-                      :key="dayCount - 1"
-                      :label="day - 1"
-                      :value="day - 1"
-                    />
-                  </el-select> -->
                   <el-input-number
                     v-model="newContract.invoiceDueDays"
                     :min="0"
@@ -332,20 +318,9 @@
                   prop="invoiceClosingDay"
                   label="Dia de fechamento"
                 >
-                  <!-- <el-select
-                    v-model="newContract.invoiceClosingDay"
-                    placeholder="Dia do mês"
-                  >
-                    <el-option
-                      v-for="(day, dayCount) in 29"
-                      :key="dayCount - 1"
-                      :label="day - 1"
-                      :value="day - 1"
-                    />
-                  </el-select> -->
                   <el-input-number
                     v-model="newContract.invoiceClosingDay"
-                    :min="1"
+                    :min="0"
                     :max="31"
                     step-strictly
                     controls-position="right"
@@ -354,30 +329,6 @@
                 </el-form-item>
               </el-col>
 
-              <el-col :span="12">
-                <el-form-item label="Percentual de repasse">
-                  <!-- <div class="el-input el-input--suffix">
-                    <input
-                      v-model="newContract.onlendingFee"
-                      type="number"
-                      class="el-input__inner custom_input_number"
-                      :step="0.5"
-                    >
-                    <span class="el-input__suffix el-input__suffix-inner">%</span>
-                  </div> -->
-                  <el-input-number
-                    v-model="newContract.onlendingFee"
-                    :min="1"
-                    :max="100"
-                    :precision="2"
-                    :step="0.1"
-                    controls-position="right"
-                  />
-                </el-form-item>
-              </el-col>
-            </el-row>
-
-            <el-row :gutter="24">
               <el-col :span="12">
                 <el-form-item
                   prop="planId"
@@ -395,6 +346,39 @@
                     />
                   </el-select>
                   <el-form-item />
+                </el-form-item>
+              </el-col>
+            </el-row>
+
+            <el-row :gutter="24">
+              <el-col
+                v-if="newContract.planId === 6"
+                :span="6"
+              >
+                <el-form-item label="Percentual de repasse">
+                  <el-input-number
+                    v-model="newContract.onlendingFee"
+                    :min="0"
+                    :max="100"
+                    :precision="2"
+                    :step="0.1"
+                    controls-position="right"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col
+                v-if="newContract.planId === 6"
+                :span="6"
+              >
+                <el-form-item label="Taxas sobre valor bruto">
+                  <el-input-number
+                    v-model="newContract.grossValueTax"
+                    :min="0"
+                    :max="100"
+                    :precision="3"
+                    :step="0.1"
+                    controls-position="right"
+                  />
                 </el-form-item>
               </el-col>
 

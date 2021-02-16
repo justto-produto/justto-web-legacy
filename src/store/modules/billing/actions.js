@@ -60,7 +60,8 @@ const billingActions = {
       onlendingFee,
       invoiceDueDays,
       invoiceClosingDay,
-      monthlySubscriptionFee
+      monthlySubscriptionFee,
+	  grossValueTax
     } = contract
     return axiosDispatch({
       url: `${billingPath}/customer/${customerId}/contract`,
@@ -74,7 +75,8 @@ const billingActions = {
         onlendingFee,
         invoiceDueDays,
         invoiceClosingDay,
-        monthlySubscriptionFee
+        monthlySubscriptionFee,
+        grossValueTax
       }
     }).then(() => dispatch('getContracts'))
   },
@@ -89,7 +91,8 @@ const billingActions = {
       onlendingFee,
       invoiceDueDays,
       invoiceClosingDay,
-      monthlySubscriptionFee
+      monthlySubscriptionFee,
+	  grossValueTax
     } = contract
     return axiosDispatch({
       url: `${billingPath}/customer/${customerId}/contract/${id}`,
@@ -102,6 +105,7 @@ const billingActions = {
         planId,
         startedDate,
         status,
+        grossValueTax,
         tariffs
       }
     }).then(() => dispatch('getMyCusomers'))
