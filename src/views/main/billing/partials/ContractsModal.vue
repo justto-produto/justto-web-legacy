@@ -370,7 +370,8 @@
             <el-row :gutter="24">
               <el-col
                 v-if="newContract.planId === 6"
-                :span="12">
+                :span="12"
+              >
                 <el-form-item label="Percentual de repasse">
                   <el-input-number
                     v-model="newContract.onlendingFee"
@@ -384,7 +385,8 @@
               </el-col>
               <el-col
                 v-if="newContract.planId === 6"
-                :span="12">
+                :span="12"
+              >
                 <el-form-item label="Taxas sobre valor bruto">
                   <el-input-number
                     v-model="newContract.grossValueTax"
