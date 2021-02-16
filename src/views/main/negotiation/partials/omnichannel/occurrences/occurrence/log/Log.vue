@@ -162,14 +162,14 @@ export default {
   methods: {
     ...mapActions(['getSummaryOccurrecies']),
 
-    seeMore(type, summaryRoleId) {
-      // disputeId, type, summaryRoleId, summaryOccurrenceId
+    seeMore(communicationType, summaryRoleId) {
+      // disputeId, communicationType, summaryRoleId, summaryOccurrenceId
       const disputeId = this.$route.params.id
       const summaryOccurrenceId = this.occurrence.id
       this.getSummaryOccurrecies({
-        type,
         disputeId,
         summaryRoleId,
+        communicationType,
         summaryOccurrenceId
       })
     }
