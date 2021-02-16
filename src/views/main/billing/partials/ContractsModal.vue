@@ -159,9 +159,24 @@
             </el-row>
             <!-- Linha 4 -->
             <el-row :gutter="24">
+              <el-col :span="24">
+                <el-form-item
+                  label="Mensalidade"
+                >
+                  <money
+                    v-model="contract.monthlySubscriptionFee"
+                    :disabled="isContractInactive(contract)"
+                    :class="{'is-inactive': isContractInactive(contract)}"
+                    class="el-input__inner"
+                  />
+                  <el-form-item />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="24">
               <el-col
                 v-if="contract.planId === 6"
-                :span="6"
+                :span="12"
               >
                 <el-form-item label="Percentual de repasse">
                   <el-input-number
@@ -173,9 +188,10 @@
                   />
                 </el-form-item>
               </el-col>
+
               <el-col
                 v-if="contract.planId === 6"
-                :span="6"
+                :span="12"
               >
                 <el-form-item label="Taxas sobre valor bruto">
                   <el-input-number
@@ -186,20 +202,6 @@
                     :step="0.1"
                     controls-position="right"
                   />
-                </el-form-item>
-              </el-col>
-
-              <el-col :span="12">
-                <el-form-item
-                  label="Mensalidade"
-                >
-                  <money
-                    v-model="contract.monthlySubscriptionFee"
-                    :disabled="isContractInactive(contract)"
-                    :class="{'is-inactive': isContractInactive(contract)}"
-                    class="el-input__inner"
-                  />
-                  <el-form-item />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -351,10 +353,24 @@
             </el-row>
 
             <el-row :gutter="24">
+              <el-col :span="24">
+                <el-form-item
+                  prop="monthlySubscriptionFee"
+                  label="Mensalidade"
+                >
+                  <money
+                    v-model="newContract.monthlySubscriptionFee"
+                    class="el-input__inner"
+                  />
+                  <el-form-item />
+                </el-form-item>
+              </el-col>
+            </el-row>
+
+            <el-row :gutter="24">
               <el-col
                 v-if="newContract.planId === 6"
-                :span="6"
-              >
+                :span="12">
                 <el-form-item label="Percentual de repasse">
                   <el-input-number
                     v-model="newContract.onlendingFee"
@@ -368,8 +384,7 @@
               </el-col>
               <el-col
                 v-if="newContract.planId === 6"
-                :span="6"
-              >
+                :span="12">
                 <el-form-item label="Taxas sobre valor bruto">
                   <el-input-number
                     v-model="newContract.grossValueTax"
@@ -379,19 +394,6 @@
                     :step="0.1"
                     controls-position="right"
                   />
-                </el-form-item>
-              </el-col>
-
-              <el-col :span="12">
-                <el-form-item
-                  prop="monthlySubscriptionFee"
-                  label="Mensalidade"
-                >
-                  <money
-                    v-model="newContract.monthlySubscriptionFee"
-                    class="el-input__inner"
-                  />
-                  <el-form-item />
                 </el-form-item>
               </el-col>
             </el-row>
