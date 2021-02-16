@@ -26,7 +26,8 @@
           </div>
           <span
             class="usermenu-container__name__team-name"
-            :class="{ 'use-marquee-animation': isLargeTeamName, 'large-team-name-container': !isJusttoAdmin}">
+            :class="{ 'use-marquee-animation': isLargeTeamName, 'large-team-name-container': !isJusttoAdmin}"
+          >
             {{ teamName }}
           </span>
         </div>

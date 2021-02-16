@@ -58,10 +58,10 @@ const billingActions = {
       startedDate,
       workspaceId,
       onlendingFee,
+      grossValueTax,
       invoiceDueDays,
       invoiceClosingDay,
-      monthlySubscriptionFee,
-	  grossValueTax
+      monthlySubscriptionFee
     } = contract
     return axiosDispatch({
       url: `${billingPath}/customer/${customerId}/contract`,
@@ -73,10 +73,10 @@ const billingActions = {
         startedDate,
         workspaceId,
         onlendingFee,
+        grossValueTax,
         invoiceDueDays,
         invoiceClosingDay,
-        monthlySubscriptionFee,
-        grossValueTax
+        monthlySubscriptionFee
       }
     }).then(() => dispatch('getContracts'))
   },
@@ -89,24 +89,24 @@ const billingActions = {
       tariffs,
       startedDate,
       onlendingFee,
+      grossValueTax,
       invoiceDueDays,
       invoiceClosingDay,
-      monthlySubscriptionFee,
-	  grossValueTax
+      monthlySubscriptionFee
     } = contract
     return axiosDispatch({
       url: `${billingPath}/customer/${customerId}/contract/${id}`,
       method: 'patch',
       data: {
-        onlendingFee,
-        invoiceClosingDay,
-        invoiceDueDays,
-        monthlySubscriptionFee,
         planId,
-        startedDate,
         status,
+        tariffs,
+        startedDate,
+        onlendingFee,
         grossValueTax,
-        tariffs
+        invoiceDueDays,
+        invoiceClosingDay,
+        monthlySubscriptionFee
       }
     }).then(() => dispatch('getMyCusomers'))
   },
