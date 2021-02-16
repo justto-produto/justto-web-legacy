@@ -98,13 +98,6 @@
               href="https://justto.com.br/poilitica-privacidade/"
               target="_blank"
             >Política de Privacidade</a>.
-            <br>
-            Não possui conta?
-            <a
-              href="register"
-              data-testid="register"
-              @click.prevent="$router.push('register')"
-            >Cadastre-se agora mesmo.</a>
           </el-row>
         </el-form>
         <el-form
