@@ -58,6 +58,7 @@ const billingActions = {
       startedDate,
       workspaceId,
       onlendingFee,
+      grossValueTax,
       invoiceDueDays,
       invoiceClosingDay,
       monthlySubscriptionFee
@@ -72,6 +73,7 @@ const billingActions = {
         startedDate,
         workspaceId,
         onlendingFee,
+        grossValueTax,
         invoiceDueDays,
         invoiceClosingDay,
         monthlySubscriptionFee
@@ -87,6 +89,7 @@ const billingActions = {
       tariffs,
       startedDate,
       onlendingFee,
+      grossValueTax,
       invoiceDueDays,
       invoiceClosingDay,
       monthlySubscriptionFee
@@ -95,14 +98,15 @@ const billingActions = {
       url: `${billingPath}/customer/${customerId}/contract/${id}`,
       method: 'patch',
       data: {
-        onlendingFee,
-        invoiceClosingDay,
-        invoiceDueDays,
-        monthlySubscriptionFee,
         planId,
-        startedDate,
         status,
-        tariffs
+        tariffs,
+        startedDate,
+        onlendingFee,
+        grossValueTax,
+        invoiceDueDays,
+        invoiceClosingDay,
+        monthlySubscriptionFee
       }
     }).then(() => dispatch('getMyCusomers'))
   },

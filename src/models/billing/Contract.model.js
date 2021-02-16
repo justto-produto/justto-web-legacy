@@ -22,7 +22,8 @@ export class ContractModel {
       status = 'ACTIVE',
       startedDate = '',
       invoiceDueDays = 10,
-      invoiceClosingDay = 1,
+      invoiceClosingDay = 0,
+      grossValueTax = 0,
       plan,
       monthlySubscriptionFee,
       tariffs = []
@@ -35,6 +36,7 @@ export class ContractModel {
     this._plan = plan
     this._monthlySubscriptionFee = monthlySubscriptionFee
     this._tariffs = tariffs
+    this._grossValueTax = grossValueTax
   }
 
   get id() {
@@ -95,5 +97,13 @@ export class ContractModel {
 
   set tariffs(tariffs) {
     this._tariffs = tariffs
+  }
+
+  get grossValueTax() {
+    return this._grossValueTax
+  }
+
+  set grossValueTax(grossValueTax) {
+    this._grossValueTax = grossValueTax
   }
 }
