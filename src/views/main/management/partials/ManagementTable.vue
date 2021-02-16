@@ -361,7 +361,7 @@ export default {
       } else if (!disputeUpperRange && lastOfferValue) {
         return lastOfferValue
       } else {
-        return lastOfferValue
+        return 0
       }
     }
   },
