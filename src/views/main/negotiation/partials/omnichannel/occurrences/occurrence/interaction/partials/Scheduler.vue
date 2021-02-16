@@ -4,14 +4,16 @@
       <span
         v-if="!canShowFullMessage && !isSmallText"
         class="scheduler-container__message-link"
-        @click="deleteFullMessage(interaction.message.messageId)">
+        @click="deleteFullMessage(interaction.message.messageId)"
+      >
         Ver menos
       </span>
       <span v-html="message" />
       <span
         v-if="canShowFullMessage"
         class="scheduler-container__message-link"
-        @click="getFullMessage(interaction.message.messageId)">
+        @click="getFullMessage(interaction.message.messageId)"
+      >
         Ver mais
       </span>
     </div>

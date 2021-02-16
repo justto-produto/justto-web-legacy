@@ -9,7 +9,8 @@
       :distance="10"
       spinner="spiral"
       direction="top"
-      @infinite="loadOccurrences">
+      @infinite="loadOccurrences"
+    >
       <div
         slot="no-more"
       >
