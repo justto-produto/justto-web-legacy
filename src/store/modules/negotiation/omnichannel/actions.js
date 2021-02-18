@@ -32,7 +32,7 @@ const omnichannelActions = {
       type: getters.getOccurrencesFilter.type === 'LOG' ? null : getters.getOccurrencesFilter.type
     }
     return axiosDispatch({
-      url: `https://d065254a2f01.ngrok.io/${disputeApi}/${disputeId}/occurrences`,
+      url: `${disputeApi}/${disputeId}/occurrences`,
       mutation: 'setOccurrences',
       params
     })
@@ -75,7 +75,7 @@ const omnichannelActions = {
     }
     if (!keys[communicationType].includes(summaryOccurrenceId)) {
       return axiosDispatch({
-        url: `https://d065254a2f01.ngrok.io/${disputeApi}/${disputeId}/occurrences`,
+        url: `${disputeApi}/${disputeId}/occurrences`,
         params: {
           summaryRoleId,
           communicationType,
