@@ -2,23 +2,73 @@
   <section class="log-container">
     <span
       class="log-container__occurrence"
-      :class="{ 'summary': isSummary }">
+      :class="{ 'summary': isSummary }"
+    >
       <span class="log-container__occurrence-text">
         <jus-icon
           v-if="leftIcon"
-          class="log-container__occurrence-text-icon"
+          class="log-container__occurrence-text__icon"
           :icon="leftIcon"
         />
         <span
-          class="log-container__occurrence-text-content"
+          class="log-container__occurrence-text__content"
           v-html="text"
         />
         <span
-          class="log-container__occurrence-text-text-summary"
-          v-html="summary"
-        />
+          v-if="isSummary"
+          class="log-container__occurrence-text__summary"
+        >
+          <span
+            v-for="(summary, sIndex) in summaryDetail"
+            :key="sIndex"
+            class="log-container__occurrence-text__summary-iterator"
+          >
+            <span
+              v-if="summary.email"
+              class="log-container__occurrence-text__summary-iterator-item"
+            >
+              {{ summary.email }} {{ summary.email > 1 ? 'E-mails foram agendados para' : 'E-mail foi agendado para' }}  {{ summary.personName | resumedName }}
+              <span
+                class="log-container__occurrence-text__summary-iterator-item__see-more"
+                @click="seeMore('EMAIL', summary.disputeRoleId)"
+              >
+                &#40;
+                Ver e-mails
+                &#41;
+              </span>
+            </span>
+            <span
+              v-if="summary.whatsApp"
+              class="log-container__occurrence-text__summary-iterator-item"
+            >
+              {{ summary.whatsApp }} {{ summary.whatsApp > 1 ? 'Mensagens de WhatsApp foram agendadas para' : 'Mensagem de WhatsApp foi agendada para' }}  {{ summary.personName | resumedName }}
+              <span
+                class="log-container__occurrence-text__summary-iterator-item__see-more"
+                @click="seeMore('WHATSAPP', summary.disputeRoleId)"
+              >
+                &#40;
+                Ver whats
+                &#41;
+              </span>
+            </span>
+            <span
+              v-if="summary.sms"
+              class="log-container__occurrence-text__summary-iterator-item"
+            >
+              {{ summary.sms }} {{ summary.sms > 1 ? 'Mensagens  de texto foram agendadas para' : 'Mensagem de texto foi agendada para' }}  {{ summary.personName | resumedName }}
+              <span
+                class="log-container__occurrence-text__summary-iterator-item__see-more"
+                @click="seeMore('SMS', summary.disputeRoleId)"
+              >
+                &#40;
+                Ver sms
+                &#41;
+              </span>
+            </span>
+          </span>
+        </span>
       </span>
-      <!-- <span v-html="summary" /> -->
+
       <span class="log-container__occurrence-about">
         <span class="log-container__occurrence-about-time">
           {{ time | moment('HH:mm') }}
@@ -38,6 +88,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 export default {
   props: {
     value: {
@@ -62,22 +113,8 @@ export default {
       return this.occurrence?.properties?.ENGAGEMENT === 'SUMMARY'
     },
 
-    summary() {
-      let res = ''
-      if (this.occurrence?.properties?.SUMMARY_EMAIL_QUANTITY) {
-        const { SUMMARY_EMAIL_QUANTITY } = this.occurrence?.properties
-        const messagePlural = Number(SUMMARY_EMAIL_QUANTITY) > 1 ? 'Mensagens' : 'Mensagem'
-        res += `<span>${SUMMARY_EMAIL_QUANTITY} ${messagePlural} de Email foram agendada(s).</span>`
-      } if (this.occurrence?.properties?.SUMMARY_WHATSAPP_QUANTITY) {
-        const { SUMMARY_WHATSAPP_QUANTITY } = this.occurrence?.properties
-        const messagePlural = Number(SUMMARY_WHATSAPP_QUANTITY) > 1 ? 'Mensagens' : 'Mensagem'
-        res += `<span>${this.occurrence?.properties?.SUMMARY_WHATSAPP_QUANTITY} ${messagePlural} de WhatsApp foram agendada(s).</span>`
-      } if (this.occurrence?.properties?.SUMMARY_SMS_QUANTITY) {
-        const { SUMMARY_SMS_QUANTITY } = this.occurrence?.properties
-        const messagePlural = Number(SUMMARY_SMS_QUANTITY) > 1 ? 'Mensagens' : 'Mensagem'
-        res += `<span>${this.occurrence?.properties?.SUMMARY_SMS_QUANTITY} ${messagePlural} de SMS foram agendada(s).</span>`
-      }
-      return res
+    summaryDetail() {
+      return JSON.parse(this.occurrence?.properties?.SUMMARY_DETAIL)
     },
 
     time() {
@@ -121,11 +158,28 @@ export default {
       }
       return false
     }
+  },
+  methods: {
+    ...mapActions(['getSummaryOccurrecies']),
+
+    seeMore(communicationType, summaryRoleId) {
+      // disputeId, communicationType, summaryRoleId, summaryOccurrenceId
+      const disputeId = this.$route.params.id
+      const summaryOccurrenceId = this.occurrence.id
+      this.getSummaryOccurrecies({
+        disputeId,
+        summaryRoleId,
+        communicationType,
+        summaryOccurrenceId
+      })
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+@import '@/styles/colors.scss';
+
 .log-container {
   display: flex;
   justify-content: center;
@@ -147,18 +201,42 @@ export default {
       .log-container__occurrence-text {
         display: flex;
         flex-direction: column;
+        align-items: flex-start;
 
-        .log-container__occurrence-text-content {
+        .log-container__occurrence-text__content {
           color: #f19737;
           font-weight: bold;
         }
 
-        .log-container__occurrence-text-text-summary {
+        .log-container__occurrence-text__summary {
+          .log-container__occurrence-text__summary-iterator {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+
+            .log-container__occurrence-text__summary-iterator-item {
+              display: flex;
+              flex-direction: row;
+              gap: 2px;
+
+              .log-container__occurrence-text__summary-iterator-item__see-more {
+                color: $--color-primary;
+                font-size: 12px;
+                cursor: pointer;
+                display: flex;
+                align-items: flex-end;
+                text-decoration: underline;
+              }
+            }
+          }
+        }
+
+        /*.log-container__occurrence-text-text-summary {
           display: flex;
           flex-direction: column;
 
           align-items: flex-start;
-        }
+        }*/
       }
 
       .log-container__occurrence-about {

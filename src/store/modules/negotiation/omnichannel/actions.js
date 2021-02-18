@@ -25,7 +25,8 @@ const omnichannelActions = {
   setMessageType({ commit }, type) {
     commit('setMessageType', type)
   },
-  getOccurrences({ getters }, disputeId) {
+  getOccurrences({ getters, commit }, disputeId) {
+    commit('setOccurrences', { content: [] })
     const params = {
       ...getters.getOccurrencesFilter,
       type: getters.getOccurrencesFilter.type === 'LOG' ? null : getters.getOccurrencesFilter.type
@@ -63,6 +64,12 @@ const omnichannelActions = {
       url: `api/disputes/note/${id}`,
       method: 'PUT',
       data: { disputeId, note }
+    })
+  },
+
+  getSummaryOccurrecies({ _ }, { disputeId, communicationType, summaryRoleId, summaryOccurrenceId }) {
+    return axiosDispatch({
+      url: `${disputeApi}/${disputeId}/occurrences?communication-type=${communicationType}&summary-role-id=${summaryRoleId}&summary-occurrence-id=${summaryOccurrenceId}`
     })
   }
 }

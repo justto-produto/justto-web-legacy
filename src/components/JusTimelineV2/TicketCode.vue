@@ -12,7 +12,7 @@
           class="jus-dispute-code__link"
           @click="handleClick"
         >
-          {{ code.trim() }}
+          {{ code.trim() }}{{ timelineState }}
         </span>
         <span>
           <i
@@ -37,6 +37,8 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+
+import brazilianStates from '@/constants/brazilianStates'
 
 export default {
   name: 'JusDisputeCode',
@@ -65,8 +67,18 @@ export default {
       return this.disputesTimeline[this.code] || { lawsuits: [] }
     },
 
+    timelineState() {
+      if (this.currentDiputeTimeline?.lawsuits?.length) {
+        const { source } = this.currentDiputeTimeline.lawsuits[0]
+        const state = brazilianStates.find(({ value }) => source.includes(value)).value
+        return `/${state}`
+      }
+
+      return ''
+    },
+
     timelineStatus() {
-      if (this.currentDiputeTimeline.lawsuits.length) {
+      if (this.currentDiputeTimeline?.lawsuits?.length) {
         return {
           available: true,
           icon: 'el-icon-info',

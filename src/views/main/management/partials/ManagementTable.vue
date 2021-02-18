@@ -194,13 +194,13 @@
       <el-table-column
         v-if="tab2"
         :sortable="false"
-        label="Contraproposta"
+        label="Proposta da parte"
         align="center"
         prop="lastCounterOfferValue"
         min-width="120px"
       >
         <template slot-scope="scope">
-          {{ scope.row.lastCounterOfferValue | currency }}
+          {{ scope.row | counterProposal | currency }}
         </template>
       </el-table-column>
       <el-table-column
@@ -354,6 +354,17 @@ import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'ManagementTable',
+  filters: {
+    counterProposal: function({ lastCounterOfferValue, disputeUpperRange, lastOfferValue }) {
+      if (lastCounterOfferValue) {
+        return lastCounterOfferValue
+      } else if (!disputeUpperRange && lastOfferValue) {
+        return lastOfferValue
+      } else {
+        return 0
+      }
+    }
+  },
   components: {
     NegotiatorActiveReply: () => import('./partials/NegotiatorActiveReply'),
     DisputeCodeLink: () => import('@/components/buttons/DisputeCodeLink'),
