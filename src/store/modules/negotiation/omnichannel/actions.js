@@ -32,7 +32,7 @@ const omnichannelActions = {
       type: getters.getOccurrencesFilter.type === 'LOG' ? null : getters.getOccurrencesFilter.type
     }
     return axiosDispatch({
-      url: `${disputeApi}/${disputeId}/occurrences`,
+      url: `https://d065254a2f01.ngrok.io/${disputeApi}/${disputeId}/occurrences`,
       mutation: 'setOccurrences',
       params
     })
@@ -67,10 +67,29 @@ const omnichannelActions = {
     })
   },
 
-  getSummaryOccurrecies({ _ }, { disputeId, communicationType, summaryRoleId, summaryOccurrenceId }) {
-    return axiosDispatch({
-      url: `${disputeApi}/${disputeId}/occurrences?communication-type=${communicationType}&summary-role-id=${summaryRoleId}&summary-occurrence-id=${summaryOccurrenceId}`
-    })
+  getSummaryOccurrecies({ getters, commit }, { disputeId, communicationType, summaryRoleId, summaryOccurrenceId }) {
+    const keys = getters.getOccurrencesSummaryKeys
+    const payload = {
+      type: communicationType,
+      occurrenceId: summaryOccurrenceId
+    }
+    if (!keys[communicationType].includes(summaryOccurrenceId)) {
+      return axiosDispatch({
+        url: `https://d065254a2f01.ngrok.io/${disputeApi}/${disputeId}/occurrences`,
+        params: {
+          summaryRoleId,
+          communicationType,
+          summaryOccurrenceId
+        },
+        mutation: 'addSumary',
+        payload
+      })
+    } else {
+      return new Promise((resolve, reject) => {
+        commit('cleanSumary', payload)
+        resolve()
+      })
+    }
   }
 }
 

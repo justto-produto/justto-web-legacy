@@ -8,6 +8,11 @@ const omnichannelMutations = {
       size: 20
     },
     list: [],
+    summary: {
+      SMS: {},
+      EMAIL: {},
+      WHATSAPP: {}
+    },
     fullMessages: {}
   },
   editor: {
