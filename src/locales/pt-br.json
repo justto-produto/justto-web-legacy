@@ -280,7 +280,7 @@
     },
     "VISUALIZATION": {
       "icon": "eye",
-      "message": "vsualização no email"
+      "message": "visualização no email"
     },
     "MANUAL_PROPOSAL": {
       "icon": "exchange",
@@ -480,6 +480,13 @@
             "message": "Mensagem | Mensagens",
             "note": "Nota | Notas",
             "occurrence": "Ocorrência | Ocorrências"
+          }
+        },
+        "occurrence": {
+          "summary": {
+            "count-email": "e-mail foi agendado para | e-mails foram agendados para",
+            "count-whatsapp": "mensagem de whatsapp foi agendada para | mensagens de whatsspp foram agendadas para",
+            "count-sms": "mensagem de texto foi agendada para | mensagens de texto foram agendadas para"
           }
         }
       }
