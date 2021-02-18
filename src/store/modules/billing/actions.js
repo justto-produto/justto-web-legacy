@@ -60,6 +60,7 @@ const billingActions = {
       onlendingFee,
       grossValueTax,
       invoiceDueDays,
+      inactivatedDate,
       invoiceClosingDay,
       monthlySubscriptionFee
     } = contract
@@ -75,6 +76,7 @@ const billingActions = {
         onlendingFee,
         grossValueTax,
         invoiceDueDays,
+        inactivatedDate,
         invoiceClosingDay,
         monthlySubscriptionFee
       }
@@ -91,6 +93,7 @@ const billingActions = {
       onlendingFee,
       grossValueTax,
       invoiceDueDays,
+      inactivatedDate,
       invoiceClosingDay,
       monthlySubscriptionFee
     } = contract
@@ -105,6 +108,7 @@ const billingActions = {
         onlendingFee,
         grossValueTax,
         invoiceDueDays,
+        inactivatedDate,
         invoiceClosingDay,
         monthlySubscriptionFee
       }
