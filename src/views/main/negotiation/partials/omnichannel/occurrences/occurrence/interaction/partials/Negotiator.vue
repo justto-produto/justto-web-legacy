@@ -41,7 +41,7 @@ export default {
           text = `Proposta no valor de <b>${currency(VALUE)}</b> foi aceita através do portal de negociações da JUSTTO por <b>${PERSON_NAME}</b>`
           break
         case 'NEGOTIATOR_CHECKOUT':
-          text = `<b>Dados Bancários</b>:</br>${BANK_INFO}`.replaceAll(',', '</br>')
+          text = (`<b>Dados Bancários</b>:</br>${BANK_INFO}` || '').replaceAll(',', '</br>')
           break
       }
 
