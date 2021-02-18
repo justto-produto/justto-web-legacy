@@ -14,7 +14,7 @@
       v-model="description"
       class="overview-obf__textarea"
       @blur="hideTextarea"
-      @input="saveObf"
+      @input="updateDescription"
     />
     <span
       v-if="isEditing || value"
@@ -50,7 +50,7 @@ export default {
   computed: {
     description: {
       get() {
-        return this.model || this.value
+        return this.isEditing ? this.model : this.value
       },
       set(value) {
         this.model = value
@@ -64,6 +64,7 @@ export default {
     ...mapActions(['setTicketOverview']),
 
     showTextarea() {
+      this.model = this.value
       this.isEditing = true
       this.$nextTick(() => this.$refs.oabTextarea.focus())
     },
@@ -72,7 +73,7 @@ export default {
       this.isEditing = false
     },
 
-    saveObf: debounce(function() {
+    updateDescription: debounce(function() {
       const { description, disputeId } = this
       const data = { description }
 

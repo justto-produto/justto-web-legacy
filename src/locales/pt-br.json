@@ -311,6 +311,33 @@
       "message": "Informou dados bancários"
     }
   },
+  "roles": {
+    "PARTY": {
+      "RESPONDENT": "réu",
+      "CLAIMANT": "autor",
+      "UNKNOWN": "parte desconhecida"
+    },
+    "LAWYER": {
+      "RESPONDENT": "advogado do réu",
+      "CLAIMANT": "advogado do autor",
+      "UNKNOWN": "advogado desconhecido"
+    },
+    "NEGOTIATOR": {
+      "RESPONDENT": "negociador",
+      "CLAIMANT": "negociador",
+      "UNKNOWN": "negociador desconhecido"
+    },
+    "OWN_CAUSE": {
+      "RESPONDENT": "advogado em causa própria",
+      "CLAIMANT": "advogado em causa própria",
+      "UNKNOWN": "causa própria"
+    },
+    "UNKNOWN": {
+      "RESPONDENT": "função indefinida",
+      "CLAIMANT": "função indefinida",
+      "UNKNOWN": "função indefinida"
+    }
+  },
   "fields": {
     "claimantParty": "Parte contrária",
     "claimantLawyer": "Advogado(a) da parte",

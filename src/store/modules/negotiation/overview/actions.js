@@ -25,6 +25,14 @@ const overviewActions = {
     })
   },
 
+  getTicketOverviewParty({ _ }, { disputeId, disputeRoleId }) {
+    return axiosDispatch({
+      url: `${disputeApi}/${disputeId}/parties/${disputeRoleId}`,
+      mutation: 'setTicketOverviewParty',
+      payload: disputeRoleId
+    })
+  },
+
   getTicketOverviewProperties({ _ }, disputeId) {
     return axiosDispatch({
       url: `${disputeApi}/${disputeId}/properties`,
