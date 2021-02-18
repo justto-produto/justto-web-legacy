@@ -27,13 +27,20 @@
               v-if="summary.email"
               class="log-container__occurrence-text__summary-iterator-item"
             >
-              {{ summary.email }} {{ summary.email > 1 ? 'E-mails foram agendados para' : 'E-mail foi agendado para' }}  {{ summary.personName | resumedName }}
+              {{ summary.email }} {{ $tc('negotiation.ticket.omnichannel.occurrence.summary.count-email', summary.email) }} {{ summary.personName | resumedName }}
+              <i
+                v-if="loading === 'EMAIL'"
+                class="el-icon-loading"
+              />
               <span
+                v-else
                 class="log-container__occurrence-text__summary-iterator-item__see-more"
                 @click="seeMore('EMAIL', summary.disputeRoleId)"
               >
                 &#40;
-                Ver e-mails
+                <span>
+                  {{ seeEmails ? 'ver' : 'esconder' }} e-mails
+                </span>
                 &#41;
               </span>
             </span>
@@ -41,13 +48,19 @@
               v-if="summary.whatsApp"
               class="log-container__occurrence-text__summary-iterator-item"
             >
-              {{ summary.whatsApp }} {{ summary.whatsApp > 1 ? 'Mensagens de WhatsApp foram agendadas para' : 'Mensagem de WhatsApp foi agendada para' }}  {{ summary.personName | resumedName }}
+              {{ summary.whatsApp }} {{ $tc('negotiation.ticket.omnichannel.occurrence.summary.count-whatsapp', summary.whatsApp) }} {{ summary.personName | resumedName }}
               <span
                 class="log-container__occurrence-text__summary-iterator-item__see-more"
                 @click="seeMore('WHATSAPP', summary.disputeRoleId)"
               >
                 &#40;
-                Ver whats
+                <i
+                  v-if="loading === 'WHATSAPP'"
+                  class="el-icon-loading"
+                />
+                <span v-else>
+                  {{ seeEmails ? 'ver' : 'esconder' }} whats
+                </span>
                 &#41;
               </span>
             </span>
@@ -55,17 +68,27 @@
               v-if="summary.sms"
               class="log-container__occurrence-text__summary-iterator-item"
             >
-              {{ summary.sms }} {{ summary.sms > 1 ? 'Mensagens  de texto foram agendadas para' : 'Mensagem de texto foi agendada para' }}  {{ summary.personName | resumedName }}
+              {{ summary.sms }} {{ $tc('negotiation.ticket.omnichannel.occurrence.summary.count-sms', summary.sms) }} {{ summary.personName | resumedName }}
               <span
                 class="log-container__occurrence-text__summary-iterator-item__see-more"
                 @click="seeMore('SMS', summary.disputeRoleId)"
               >
                 &#40;
-                Ver sms
+                <i
+                  v-if="loading === 'SMS'"
+                  class="el-icon-loading"
+                />
+                <span v-else>
+                  {{ seeEmails ? 'ver' : 'esconder' }} sms
+                </span>
                 &#41;
               </span>
             </span>
           </span>
+          <span
+            v-if="!summaryDetail.length && oldSummary.length"
+            v-html="oldSummary"
+          />
         </span>
       </span>
 
@@ -88,7 +111,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 export default {
   props: {
     value: {
@@ -96,9 +119,29 @@ export default {
       required: true
     }
   },
+  data: () => ({
+    loading: ''
+  }),
+
   computed: {
+    ...mapGetters({
+      occurrencesSummary: 'getOccurrencesSummary'
+    }),
+
     occurrence() {
       return this.value
+    },
+
+    seeEmails() {
+      return !Object.keys(this.occurrencesSummary.EMAIL).includes(String(this.occurrence.id))
+    },
+
+    seeWhats() {
+      return !Object.keys(this.occurrencesSummary.WHATSAPP).includes(String(this.occurrence.id))
+    },
+
+    seeSms() {
+      return !Object.keys(this.occurrencesSummary.SMS).includes(String(this.occurrence.id))
     },
 
     text() {
@@ -111,6 +154,24 @@ export default {
 
     isSummary() {
       return this.occurrence?.properties?.ENGAGEMENT === 'SUMMARY'
+    },
+
+    oldSummary() {
+      let res = ''
+      if (this.occurrence?.properties?.SUMMARY_EMAIL_QUANTITY) {
+        const { SUMMARY_EMAIL_QUANTITY } = this.occurrence?.properties
+        const messagePlural = Number(SUMMARY_EMAIL_QUANTITY) > 1 ? 'Mensagens' : 'Mensagem'
+        res += `<span>${SUMMARY_EMAIL_QUANTITY} ${messagePlural} de Email foram agendada(s).</span>`
+      } if (this.occurrence?.properties?.SUMMARY_WHATSAPP_QUANTITY) {
+        const { SUMMARY_WHATSAPP_QUANTITY } = this.occurrence?.properties
+        const messagePlural = Number(SUMMARY_WHATSAPP_QUANTITY) > 1 ? 'Mensagens' : 'Mensagem'
+        res += `<span>${this.occurrence?.properties?.SUMMARY_WHATSAPP_QUANTITY} ${messagePlural} de WhatsApp foram agendada(s).</span>`
+      } if (this.occurrence?.properties?.SUMMARY_SMS_QUANTITY) {
+        const { SUMMARY_SMS_QUANTITY } = this.occurrence?.properties
+        const messagePlural = Number(SUMMARY_SMS_QUANTITY) > 1 ? 'Mensagens' : 'Mensagem'
+        res += `<span>${this.occurrence?.properties?.SUMMARY_SMS_QUANTITY} ${messagePlural} de SMS foram agendada(s).</span>`
+      }
+      return res
     },
 
     summaryDetail() {
@@ -159,19 +220,20 @@ export default {
       return false
     }
   },
+
   methods: {
     ...mapActions(['getSummaryOccurrecies']),
 
     seeMore(communicationType, summaryRoleId) {
-      // disputeId, communicationType, summaryRoleId, summaryOccurrenceId
       const disputeId = this.$route.params.id
       const summaryOccurrenceId = this.occurrence.id
+      this.loading = communicationType
       this.getSummaryOccurrecies({
         disputeId,
         summaryRoleId,
         communicationType,
         summaryOccurrenceId
-      })
+      }).then(() => (this.loading = '')).finally(() => (this.loading = ''))
     }
   }
 }
@@ -196,7 +258,7 @@ export default {
 
     &.summary {
       background-color: #fff;
-      border: 5px solid #fff4cc;
+      border: 3px solid #fff4cc;
 
       .log-container__occurrence-text {
         display: flex;
