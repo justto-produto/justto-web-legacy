@@ -149,7 +149,7 @@ export default {
     &--defendant {
       border-right: 3px solid $--color-secondary;
       text-align: right;
-      margin-top: 18px;
+      margin-top: 16px;
     }
   }
 }

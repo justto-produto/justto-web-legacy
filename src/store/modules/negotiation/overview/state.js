@@ -7,9 +7,9 @@
 const overviewState = {
   ticketOverview: {},
   ticketOverviewInfo: {},
-  ticketOverviewParties: {},
+  ticketOverviewParties: [],
   ticketOverviewProperties: {},
-  ticketOverviewAttachments: {},
+  ticketOverviewAttachments: [],
   lastTicketOffers: {}
 }
 

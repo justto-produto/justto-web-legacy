@@ -26,6 +26,7 @@ import '@/filters/currency'
 import '@/filters/firstName'
 import '@/filters/phoneNumber'
 import '@/filters/resumedName'
+import '@/filters/ownName'
 
 // STYLES
 import '@/styles/core.scss'

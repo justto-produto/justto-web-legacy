@@ -7,10 +7,19 @@ import Vue from 'vue'
 
 const overviewMutations = {
   setTicketOverview: (state, params) => (Vue.set(state, 'ticketOverview', params)),
-  setTicketOverviewInfo: ({ ticketOverviewInfo }, params) => (ticketOverviewInfo = params),
+  setTicketOverviewInfo: (state, params) => (Vue.set(state, 'ticketOverviewInfo', params)),
   setTicketOverviewParties: (state, params) => (Vue.set(state, 'ticketOverviewParties', params)),
-  setTicketOverviewProperties: ({ ticketOverviewParties }, params) => (ticketOverviewParties = params),
-  setTicketOverviewAttachments: ({ ticketOverviewAttachments }, params) => (ticketOverviewAttachments = params),
+  setTicketOverviewParty: ({ ticketOverviewParties }, params) => {
+    const { data, payload } = params
+    const partyIndex = ticketOverviewParties.findIndex(party => party.disputeRoleId === payload)
+    const partyToSet = ticketOverviewParties[partyIndex]
+
+    Vue.set(partyToSet, 'emails', data.emails)
+    Vue.set(partyToSet, 'prones', data.phones)
+    Vue.set(partyToSet, 'oabs', data.oabs)
+  },
+  setTicketOverviewProperties: (state, params) => (Vue.set(state, 'ticketOverviewProperties', params)),
+  setTicketOverviewAttachments: (state, params) => (Vue.set(state, 'ticketOverviewAttachments', params)),
   setLastTicketOffers: (state, params) => (Vue.set(state, 'lastTicketOffers', params))
 }
 

@@ -4,36 +4,45 @@
     class="overview-tabs"
     @tab-click="updateTab"
   >
-    <el-tab-pane name="parties">
+    <el-tab-pane
+      name="parties"
+      lazy
+    >
       <i
         slot="label"
         class="el-icon-user"
       />
-      Partes
+      <OverviewParties />
     </el-tab-pane>
-    <el-tab-pane name="info">
+    <el-tab-pane
+      name="info"
+      lazy
+    >
       <i
         slot="label"
         class="el-icon-warning-outline"
       />
       Informações
     </el-tab-pane>
-    <el-tab-pane name="properties">
+    <el-tab-pane
+      name="properties"
+      lazy
+    >
       <i
         slot="label"
         class="el-icon-setting"
       />
-      <!-- <DisputeProperties /> -->
+      <OverviewProperties />
     </el-tab-pane>
-    <el-tab-pane name="attachments">
+    <el-tab-pane
+      name="attachments"
+      lazy
+    >
       <i
         slot="label"
         class="el-icon-paperclip"
       />
-      <!-- <DisputeAttachments
-        :is-accepted="false"
-        :dispute-id="disputeId"
-      /> -->
+      <OverviewAttachments />
     </el-tab-pane>
   </el-tabs>
 </template>
@@ -43,14 +52,15 @@ import { mapActions } from 'vuex'
 
 export default {
   name: 'OverviewTabs',
+  components: {
+    OverviewAttachments: () => import('./OverviewTabs/OverviewAttachments'),
+    OverviewProperties: () => import('./OverviewTabs/OverviewProperties'),
+    OverviewParties: () => import('./OverviewTabs/OverviewParties')
+  },
   data: () => ({
     activeTab: 'parties',
     loadedTabs: ['parties']
   }),
-  // components: {
-  //   DisputeProperties: () => import('@/views/main/dispute/partials/DisputeProperties'),
-  //   DisputeAttachments: () => import('@/views/main/dispute/partials/DisputeOverview/sections/DisputeAttachments'),
-  // },
   computed: {
     disputeId() {
       return Number(this.$route.params.id)
@@ -89,13 +99,28 @@ export default {
 
 <style lang="scss">
 .overview-tabs {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  .el-tabs__content {
+    overflow: hidden;
+    flex: 1;
+
+    .el-tab-pane {
+      height: 100%;
+      padding: 12px 0;
+    }
+  }
+
   .el-tabs__header {
     .el-tabs__nav {
       width: 100%;
 
       .el-tabs__item {
         font-size: 20px;
-        padding: 0 6px !important;
+        padding: 0 !important;
         width: 25% !important;
         text-align: center;
       }

@@ -327,7 +327,6 @@ export default {
       ticketParties: 'getTicketOverviewParties',
       workspaceMembers: 'workspaceMembers',
       outcomeReasons: 'getOutcomeReasons'
-
     }),
 
     isInsufficientUpperRange() {

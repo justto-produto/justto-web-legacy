@@ -61,10 +61,10 @@ export default {
 
 .overview-container {
   position: relative;
-  padding: 24px;
+  padding: 0 20px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 20px;
 
   .overview-container__button {
     transform: translateY(-50%);

@@ -74,9 +74,10 @@ export default {
   }
 
   .ticket-container__overview {
-    width: 300px;
+    width: 310px;
     border-left: 1px solid $--light-gray;
     transition: .6s cubic-bezier(0.19, 1, 0.22, 1);
+    // &--active { width: 0; }
   }
 }
 
@@ -89,7 +90,10 @@ export default {
       z-index: 99;
       right: 0;
       transform: translateX(100%);
-      &--active { transform: translateX(0); }
+      width: 300px;
+      &--active {
+        transform: translateX(0);
+      }
     }
   }
 }

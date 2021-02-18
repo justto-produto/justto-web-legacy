@@ -47,32 +47,29 @@ export default {
   },
   data: () => ({
     isEditing: false,
-    model: 0,
-    feedback: ''
+    model: 0
   }),
   computed: {
     vModel: {
       get() {
-        return this.model || this.value
+        return this.isEditing ? this.model : this.value
       },
       set(value) {
         this.model = value
       }
     }
   },
-  watch: {
-    'value'(newValue) {
-      this.model = newValue
-    }
-  },
   methods: {
     enableEdit() {
+      this.model = this.value
       this.isEditing = true
       this.$nextTick(() => document.getElementById('currencyInput').focus())
     },
     disableEdit() {
+      if (this.model !== this.value) {
+        this.$emit('change', this.vModel)
+      }
       this.isEditing = false
-      if (this.model !== this.value) this.$emit('change', this.vModel)
     },
     copyValue() {
       const formattedValue = new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2 }).format(this.vModel)
@@ -104,16 +101,16 @@ export default {
     }
 
     .currency-inline-editor__icons {
-      background-image: linear-gradient(to left, rgba(255, 255, 255, 145) 55%, rgba(255, 255, 255, 0) );
+      background-image: linear-gradient(to left, rgba(255, 255, 255, 145) 45%, rgba(255, 255, 255, 0) );
       position: absolute;
       opacity: 0;
       right: 0;
-      padding-left: 6px;
+      padding-left: 10px;
 
       .currency-inline-editor__icon {
-        transition: .2s ease-out all;
         cursor: pointer;
         margin-left: 3px;
+        transition: .2s ease-out all;
         &:hover { color: $--color-primary; }
       }
     }
@@ -127,12 +124,12 @@ export default {
     &--align-right { text-align: right; }
   }
 
-  .request-succes {
-    color: $--color-primary;
-  }
+  // .request-succes {
+  //   color: $--color-primary;
+  // }
 
-  .request-fail {
-    color: $--color-danger;
-  }
+  // .request-fail {
+  //   color: $--color-danger;
+  // }
 }
 </style>
