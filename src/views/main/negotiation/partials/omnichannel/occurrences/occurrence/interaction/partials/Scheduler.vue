@@ -1,5 +1,16 @@
 <template>
   <section class="scheduler-container">
+    <span
+      v-if="to"
+      class="scheduler-container__contact"
+    >
+      para
+      <span
+        class="scheduler-container__contact-address"
+        @click="copyEmail">
+        {{ to }}
+      </span>
+    </span>
     <div class="scheduler-container__message">
       <span
         v-if="!canShowFullMessage && !isSmallText"
@@ -57,6 +68,10 @@ export default {
       return this.interaction.direction === 'INBOUND'
     },
 
+    to() {
+      return this.interaction.message.receiver || false
+    },
+
     sendDate() {
       const first = (first) => (first ? first.split(' ')[1] : '')
       const defaultDate = this.interaction?.updateAt?.dateTime ? this.interaction.updateAt.dateTime : this.interaction.createAt.dateTime
@@ -105,7 +120,19 @@ export default {
     ...mapActions([
       'deleteFullMessage',
       'getFullMessage'
-    ])
+    ]),
+
+    copyEmail(_event) {
+      if (this.to) {
+        navigator.clipboard.writeText(this.to)
+        this.$message({
+          message: 'E-mail copiado para a área de transferência.',
+          type: 'info',
+          center: true,
+          showClose: true
+        })
+      }
+    }
   }
 }
 </script>
@@ -125,11 +152,21 @@ export default {
       font-size: 12px;
       text-decoration: underline;
       color: $--color-primary;
+      display: inline-block;
+      margin-left: 6px;
     }
   }
 
   .scheduler-container__status {
     font-style: italic;
+  }
+
+  .scheduler-container__contact {
+    color: #9A9797;
+
+    .scheduler-container__contact-address {
+      cursor: copy;
+    }
   }
 }
 </style>
