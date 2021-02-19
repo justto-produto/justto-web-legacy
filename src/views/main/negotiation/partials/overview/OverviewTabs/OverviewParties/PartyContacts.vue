@@ -8,7 +8,7 @@
       :filter="filter"
       can-delete
       class="party-contacts__infoline-data"
-      @change="updateContact"
+      @change="updateContact(contact.id, $event)"
       @delete="removeContact(contact.id)"
     />
     <a
@@ -62,11 +62,11 @@ export default {
     toggleContactsVisible() {
       this.isAllContactsVisible = !this.isAllContactsVisible
     },
-    updateContact(contactValue) {
-      console.log(contactValue)
+    updateContact(contactId, contactValue) {
+      this.$emit('change', contactId, contactValue)
     },
     removeContact(contactId) {
-      console.log(contactId)
+      this.$emit('delete', contactId)
     }
   }
 }

@@ -1,6 +1,7 @@
 import { axiosDispatch } from '@/utils/'
 
 const disputeApi = '/api/disputes/v2'
+const disputeApiLegacy = '/api/disputes'
 const officeApi = '/api/office'
 
 const overviewActions = {
@@ -61,6 +62,44 @@ const overviewActions = {
       url: `${disputeApi}/${disputeId}`,
       method: 'PATCH',
       data
+    })
+  },
+
+  setTicketOverviewParty({ _ }, params) {
+    const { disputeId, data } = params
+
+    return axiosDispatch({
+      url: `${disputeApiLegacy}/${disputeId}/dispute-roles`,
+      method: 'PUT',
+      data
+    })
+  },
+
+  setTicketOverviewPartyPolarity({ _ }, params) {
+    const { disputeId, roleId, rolePolarity } = params
+
+    return axiosDispatch({
+      url: `${disputeApiLegacy}/${disputeId}/dispute-roles/${roleId}/${rolePolarity}`,
+      method: 'PATCH'
+    })
+  },
+
+  deleteTicketOverviewPartyContact({ _ }, params) {
+    const { disputeId, roleId, contactId, contactType } = params
+
+    return axiosDispatch({
+      url: `${disputeApiLegacy}/${disputeId}/dispute-roles/${roleId}/${contactType}/${contactId}`,
+      method: 'DELETE'
+    })
+  },
+
+  setTicketOverviewPartyContact({ _ }, params) {
+    const { disputeId, roleId, contactType, contactData } = params
+
+    return axiosDispatch({
+      url: `${disputeApiLegacy}/${disputeId}/dispute-roles/${roleId}/${contactType}`,
+      method: 'PUT',
+      data: contactData
     })
   }
 }
