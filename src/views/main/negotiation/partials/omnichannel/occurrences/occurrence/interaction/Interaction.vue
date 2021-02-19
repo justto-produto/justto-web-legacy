@@ -3,16 +3,16 @@
     class="interaction-container"
     :class="`${interaction.direction} ${type}`"
   >
-    <div class="interaction-container__out-avatar show-only-md">
+    <!-- <div class="interaction-container__out-avatar show-only-md">
       <JusAvatarUser v-bind="avatarProps" />
-    </div>
+    </div> -->
     <div
       class="interaction-container__balloon"
-      :class="`${interaction.direction} ${type} ballon-${messageType}`"
+      :class="`${interaction.direction}`"
     >
-      <div class="interaction-container__balloon-avatar show-only-sm">
+      <!-- <div class="interaction-container__balloon-avatar show-only-sm">
         <JusAvatarUser v-bind="avatarProps" />
-      </div>
+      </div> -->
       <div class="interaction-container__balloon-content">
         <component
           :is="type"
@@ -144,7 +144,7 @@ export default {
 
   &.COMMUNICATION {
     .interaction-container__balloon {
-      border: 3px solid #DFF4FE;
+      /* border: 3px solid #DFF4FE; */
     }
   }
 
@@ -156,7 +156,8 @@ export default {
 
   &.NEGOTIATOR, &.MANUAL {
     .interaction-container__balloon {
-      border: 3px solid #FFC5A5;
+      /* border: 3px solid #FFC5A5; */
+      background-color: white !important;
     }
   }
 
@@ -166,10 +167,12 @@ export default {
 
   .interaction-container__balloon {
     overflow-x: hidden;
-    background: #FFFFFF 0% 0% no-repeat padding-box;
     max-width: 80%;
-    border-radius: 10px;
+    border-radius: 6px;
     overflow-y: hidden;
+    border: none;
+    box-shadow: 0px 3px 6px #00000029;
+    margin-bottom: 6px;
 
     display: flex;
     flex-direction: row;
@@ -184,6 +187,7 @@ export default {
 
     &.INBOUND {
       flex-direction: row;
+      background: #D1DBE27E;
     }
 
     &.OUTBOUND {
