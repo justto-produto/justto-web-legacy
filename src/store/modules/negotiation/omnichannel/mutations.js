@@ -28,6 +28,13 @@ const omnichannelMutations = {
   setUpOccurrencesSize: (state) => {
     state.occurrences.filter.size += 10
   },
+  addSumary: (state, { payload, data }) => {
+    const { occurrenceId, type } = payload
+    Vue.set(state.occurrences.summary[type], occurrenceId, data.content)
+  },
+  cleanSumary: (state, { type, occurrenceId }) => {
+    Vue.delete(state.occurrences.summary[type], occurrenceId)
+  },
   addFullMessage: (state, { id, content }) => {
     Vue.set(state.occurrences.fullMessages, id, content)
   },

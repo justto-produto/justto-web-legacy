@@ -117,6 +117,7 @@ export default {
   flex-direction: column;
   justify-content: flex-end;
   overflow-y: auto;
+  max-height: 85vh;
 
   .infinite-loading-container > .infinite-status-prompt > div {
     color: #979797 !important;
