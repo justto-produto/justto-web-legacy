@@ -114,25 +114,6 @@
         :value="interaction"
         :hide-content="summaryOccurrenceIndex > 0"
       />
-      <!-- <span
-        v-for="summaryType in summaryTypes"
-        v-show="isSummary"
-        :key="`summaryType-${summaryType}`"
-        class="log-container__summary-types"
-      >
-        <span
-          v-for="(summaryItem, summaryIndex) in (summaryOccurrences[summaryType][occurrence.id] || [])"
-          :key="`summaryItem-${summaryIndex}`"
-          class="log-container__summary-item"
-        >
-          <Scheduler
-            v-for="({ interaction }, summaryOccurrenceIndex) in summaryItem.occurrences"
-            :key="`summary-${summaryIndex}-occurrence-${summaryOccurrenceIndex}`"
-            class="log-container__occurrence summary log-container__summary-scheduler"
-            :value="interaction"
-          />
-        </span>
-      </span> -->
     </span>
   </section>
 </template>
