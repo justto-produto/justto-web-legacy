@@ -78,10 +78,14 @@ export default {
     },
 
     concatedPartiesOabs() {
-      return this.ticketParties
+      const filteredOabs = this.ticketParties
         .filter(party => party.oabs && party.oabs.length)
-        .map(party => party.oabs.map(oab => oab.number + oab.state))
-        .reduce((acc, cur, index) => index === 0 ? cur : [...acc, ...cur])
+
+      if (filteredOabs.length) {
+        return filteredOabs
+          .map(party => party.oabs.map(oab => oab.number + oab.state))
+          .reduce((acc, cur) => [...acc, ...cur])
+      } else return []
     }
   },
   watch: {
