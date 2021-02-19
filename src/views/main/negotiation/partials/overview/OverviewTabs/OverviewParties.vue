@@ -31,6 +31,13 @@
     >
       Cadastrar parte
     </el-button>
+
+    <DisputeAddRole
+      :visible.sync="newPartyDialogVisible"
+      :dispute-id="disputeId"
+      :document-numbers="concatedPartiesDocumentNumbers"
+      :oabs="concatedPartiesOabs"
+    />
   </section>
 </template>
 
@@ -40,12 +47,14 @@ import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'OverviewParties',
   components: {
-    PartyResumed: () => import('./OverviewParties/PartyResumed')
+    PartyResumed: () => import('./OverviewParties/PartyResumed'),
+    DisputeAddRole: () => import('@/views/main/dispute/partials/DisputeAddRole')
   },
   data: () => ({
     activeCollapseItem: null,
     isAllPartiesVisible: false,
-    loadedCollapseItems: []
+    loadedCollapseItems: [],
+    newPartyDialogVisible: false
   }),
   computed: {
     ...mapGetters({
@@ -60,6 +69,19 @@ export default {
 
     disputeId() {
       return Number(this.$route.params.id)
+    },
+
+    concatedPartiesDocumentNumbers() {
+      return this.ticketParties
+        .filter(party => party.documentNumber)
+        .map(party => party.documentNumber)
+    },
+
+    concatedPartiesOabs() {
+      return this.ticketParties
+        .filter(party => party.oabs && party.oabs.length)
+        .map(party => party.oabs.map(oab => oab.number + oab.state))
+        .reduce((acc, cur) => [...acc, ...cur])
     }
   },
   watch: {
@@ -86,7 +108,7 @@ export default {
     },
 
     addParty() {
-
+      this.newPartyDialogVisible = true
     }
   }
 }

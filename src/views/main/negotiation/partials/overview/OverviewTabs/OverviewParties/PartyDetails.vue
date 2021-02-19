@@ -48,6 +48,8 @@
           '+## (##) ####-####',
           '+## (##) #####-####'
         ]"
+        @change="(...args)=>updateContacts(...args, 'phone')"
+        @delete="removeContact($event, 'phone')"
       />
     </div>
     <div
@@ -58,6 +60,8 @@
       <PartyContacts
         :contacts="party.emails"
         model="address"
+        @change="(...args)=>updateContacts(...args, 'email')"
+        @delete="removeContact($event, 'email')"
       />
     </div>
     <div
@@ -73,12 +77,15 @@
           '##d.###/AA',
           '##.###/AA',
         ]"
+        @change="(...args)=>updateContacts(...args, 'oab')"
+        @delete="removeContact($event, 'oab')"
       />
     </div>
   </article>
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 export default {
   name: 'PartyDetails',
   components: {
@@ -93,6 +100,10 @@ export default {
     }
   },
   computed: {
+    disputeId() {
+      return Number(this.$route.params.id)
+    },
+
     documentType() {
       return this.party.documentNumber?.length <= 14 ? 'CPF' : 'CNPJ'
     },
@@ -126,32 +137,69 @@ export default {
     }
   },
   methods: {
-    updateName(value) {
-      console.log(value)
+    ...mapActions([
+      'deleteTicketOverviewPartyContact',
+      'setTicketOverviewPartyContact',
+      'setTicketOverviewParty',
+      'setTicketOverviewPartyPolarity'
+    ]),
+    updatePolarity(rolePolarity) {
+      const params = {
+        disputeId: this.disputeId,
+        roleId: this.party.disputeRoleId,
+        rolePolarity
+      }
+
+      this.setTicketOverviewPartyPolarity(params)
     },
-    updatePolarity(value) {
-      console.log(value)
+    updateName(value) {
+      const { disputeId, party } = this
+      const data = party
+      data.name = value
+
+      console.log(data)
+      this.setTicketOverviewParty({ disputeId, data })
     },
     updateDocument(value) {
-      console.log(value)
+      const { disputeId, party } = this
+      const data = party
+      data.documentNumber = value
+
+      console.log(data)
+      this.setTicketOverviewParty({ disputeId, data })
     },
-    updatePhone(value) {
-      console.log(value)
+    addContact(contactValue, contactType) {
+      const { disputeId, party } = this
+      const params = {
+        roleId: party.disputeRoleId,
+        disputeId,
+        contactType,
+        contactData: { value: contactValue }
+      }
+
+      if (contactType === 'oab') {
+        delete params.contactData.value
+        const oabSplited = contactValue.split('/')
+        params.contactData.number = oabSplited[0]
+        params.contactData.state = oabSplited[1]
+      }
+
+      this.setTicketOverviewPartyContact(params)
     },
-    updateEmail(value) {
-      console.log(value)
+    updateContacts(contactId, contactValue, contactType) {
+      this.removeContact(contactId, contactType)
+      this.addContact(contactValue, contactType)
     },
-    updateOab(value) {
-      console.log(value)
-    },
-    removePhone(proneId) {
-      console.log(proneId)
-    },
-    removeEmail(emailId) {
-      console.log(emailId)
-    },
-    removeOab(oabId) {
-      console.log(oabId)
+    removeContact(contactId, contactType) {
+      const { disputeId, party } = this
+      const params = {
+        roleId: party.disputeRoleId,
+        disputeId,
+        contactId,
+        contactType
+      }
+
+      this.deleteTicketOverviewPartyContact(params)
     }
   }
 }
