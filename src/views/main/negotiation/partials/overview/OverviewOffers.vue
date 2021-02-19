@@ -6,9 +6,9 @@
       </div>
       <div>
         <CurrencyInlieEditor
-          v-model="plaintiffProposal.value"
+          v-model="plaintiffOffer.value"
           class="overview-offers__proposal-value overview-offers__proposal-value--full-line"
-          @change="updatePlaintiffProposal"
+          @change="updatePlaintiffOffer"
         />
       </div>
     </article>
@@ -16,10 +16,10 @@
       <div>
         <span>Proposta: </span>
         <CurrencyInlieEditor
-          v-model="defendantProposal.value"
+          v-model="defendantOffer.value"
           icon-side="left"
           class="overview-offers__proposal-value"
-          @change="updateDefendantProposal"
+          @change="updateDefendantOffer"
         />
       </div>
       <div>
@@ -44,11 +44,11 @@ export default {
     CurrencyInlieEditor: () => import('@/components/inputs/CurrencyInlieEditor')
   },
   props: {
-    plaintiffProposal: {
+    plaintiffOffer: {
       type: Object,
       default: () => ({})
     },
-    defendantProposal: {
+    defendantOffer: {
       type: Object,
       default: () => ({})
     },
@@ -72,9 +72,9 @@ export default {
       'setTicketOverview'
     ]),
 
-    updatePlaintiffProposal(value) {
-      const { disputeId, plaintiffProposal } = this
-      const { roleId } = plaintiffProposal
+    updatePlaintiffOffer(value) {
+      const { disputeId, plaintiffOffer } = this
+      const { roleId } = plaintiffOffer
 
       const ticketPlaintiffs = this.ticketParties.filter(party => party.polarity === 'CLAIMANT')
       const ticketPlaintiffLawyer = ticketPlaintiffs.filter(party => party.roles.includes('LAWYER'))[0]
@@ -90,9 +90,9 @@ export default {
       this.sendOffer({ data, disputeId })
     },
 
-    updateDefendantProposal(value) {
-      const { disputeId, plaintiffProposal } = this
-      const { roleId } = plaintiffProposal
+    updateDefendantOffer(value) {
+      const { disputeId, defendantOffer } = this
+      const { roleId } = defendantOffer
 
       const disputeNegotiator = this.ticketParties.filter(party => {
         party.polarity === 'RESPONDENT' &&

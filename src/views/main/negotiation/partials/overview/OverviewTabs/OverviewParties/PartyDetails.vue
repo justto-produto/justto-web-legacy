@@ -154,18 +154,16 @@ export default {
     },
     updateName(value) {
       const { disputeId, party } = this
-      const data = party
+      const data = party.legacyDto
       data.name = value
 
-      console.log(data)
       this.setTicketOverviewParty({ disputeId, data })
     },
     updateDocument(value) {
       const { disputeId, party } = this
-      const data = party
+      const data = party.legacyDto
       data.documentNumber = value
 
-      console.log(data)
       this.setTicketOverviewParty({ disputeId, data })
     },
     addContact(contactValue, contactType) {

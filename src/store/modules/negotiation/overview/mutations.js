@@ -17,6 +17,7 @@ const overviewMutations = {
     Vue.set(partyToSet, 'emails', data.emails)
     Vue.set(partyToSet, 'phones', data.phones)
     Vue.set(partyToSet, 'oabs', data.oabs)
+    Vue.set(partyToSet, 'legacyDto', data) // TODO: Remover essa merda aqui
   },
   setTicketOverviewProperties: (state, params) => (Vue.set(state, 'ticketOverviewProperties', params)),
   setTicketOverviewAttachments: (state, params) => (Vue.set(state, 'ticketOverviewAttachments', params)),

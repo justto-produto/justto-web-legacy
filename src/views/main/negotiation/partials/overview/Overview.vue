@@ -16,8 +16,8 @@
     </h1>
 
     <OverviewOffers
-      :defendant-proposal="lastOffers.defendantProposal"
-      :plaintiff-proposal="lastOffers.plaintiffProposal"
+      :defendant-offer="lastOffers.defendantOffer"
+      :plaintiff-offer="lastOffers.plaintiffOffer"
       :upper-range="ticket.upperRange"
     />
 

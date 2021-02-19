@@ -145,7 +145,7 @@ export default {
       const mapCommunicationTypes = {
         EMAIL: 'email',
         WHATSAPP: 'whatsapp',
-        NEGOTIATOR_MESSAGE: 'negotiatior'
+        NEGOTIATOR_MESSAGE: 'negotiator-message-2'
       }
       if (this.interaction?.message?.communicationType) {
         const { communicationType } = this.interaction.message
