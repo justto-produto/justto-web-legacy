@@ -67,7 +67,7 @@ export default {
       const mapCommunicationTypes = {
         EMAIL: 'email',
         WHATSAPP: 'whatsapp',
-        NEGOTIATOR_MESSAGE: 'negotiatior',
+        NEGOTIATOR_MESSAGE: 'negotiator-message-2',
         SMS: 'sms'
       }
       if (this.interaction?.message?.communicationType) {
@@ -207,7 +207,7 @@ export default {
       border-color: #ECECEC;
     }
 
-    &.ballon-negotiatior {
+    &.ballon-negotiator-message-2 {
       border-color: #FFC5A5;
     }
 

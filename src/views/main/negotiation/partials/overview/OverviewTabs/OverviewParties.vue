@@ -81,7 +81,7 @@ export default {
       return this.ticketParties
         .filter(party => party.oabs && party.oabs.length)
         .map(party => party.oabs.map(oab => oab.number + oab.state))
-        .reduce((acc, cur) => [...acc, ...cur])
+        .reduce((acc, cur, index) => index === 0 ? cur : [...acc, ...cur])
     }
   },
   watch: {
