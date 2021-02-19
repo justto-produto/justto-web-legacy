@@ -15,7 +15,7 @@ const overviewMutations = {
     const partyToSet = ticketOverviewParties[partyIndex]
 
     Vue.set(partyToSet, 'emails', data.emails)
-    Vue.set(partyToSet, 'prones', data.phones)
+    Vue.set(partyToSet, 'phones', data.phones)
     Vue.set(partyToSet, 'oabs', data.oabs)
   },
   setTicketOverviewProperties: (state, params) => (Vue.set(state, 'ticketOverviewProperties', params)),

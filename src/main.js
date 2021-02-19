@@ -27,6 +27,7 @@ import '@/filters/firstName'
 import '@/filters/phoneNumber'
 import '@/filters/resumedName'
 import '@/filters/ownName'
+import '@/filters/oab'
 
 // STYLES
 import '@/styles/core.scss'

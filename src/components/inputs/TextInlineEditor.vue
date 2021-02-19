@@ -16,6 +16,11 @@
           class="text-inline-editor__icon el-icon-edit"
           @click="enableEdit"
         />
+        <i
+          v-if="canDelete"
+          class="text-inline-editor__icon el-icon-delete"
+          @click="deletElement"
+        />
       </span>
     </div>
 
@@ -45,6 +50,10 @@ export default {
     mask: {
       type: [Array, String],
       default: () => 'X'.repeat(255)
+    },
+    canDelete: {
+      type: Boolean,
+      default: false
     }
   },
   data: () => ({
@@ -67,13 +76,17 @@ export default {
         d: { pattern: /[0-9ABDENPabdenp]/, transform: v => v.toUpperCase() },
         Z: { pattern: /[0-9a-zA-Z]/, transform: v => v.toUpperCase() },
         z: { pattern: /[0-9a-zA-Z]/, transform: v => v.toLowerCase() },
-        X: { pattern: /./, transform: v => v.toUpperCase() },
-        x: { pattern: /./, transform: v => v.toLowerCase() },
+        X: { pattern: /./ },
         A: { pattern: /[a-zA-Z]/, transform: v => v.toUpperCase() },
         a: { pattern: /[a-zA-Z]/, transform: v => v.toLowerCase() },
         '!': { escape: true }
       }
     },
+    // unmaskedVModel() {
+    //   const gerRep = new RegExp(this.mask)
+    //   console.log(gerRep)
+    //   return this.vModel.replace(gerRep, '')
+    // },
     filteredVModel() {
       const { filter, vModel } = this
 
@@ -99,6 +112,9 @@ export default {
     },
     copyValue() {
       navigator.clipboard.writeText(this.vModel)
+    },
+    deletElement() {
+      this.$emit('delete')
     }
   }
 }
@@ -129,13 +145,16 @@ export default {
       opacity: 0;
       right: 0;
       top: 0;
-      padding-left: 10px;
+      padding-left: 30px;
 
       .text-inline-editor__icon {
         cursor: pointer;
         margin-left: 3px;
         transition: .2s ease-out all;
-        &:hover { color: $--color-primary; }
+        &:hover {
+          color: $--color-primary;
+          &.el-icon-delete { color: $--color-danger; }
+        }
       }
     }
   }
