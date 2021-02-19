@@ -63,15 +63,19 @@ export default {
     value: {
       type: Object,
       required: true
+    },
+    occurrence: {
+      type: Object,
+      required: true
     }
   },
   computed: {
-    occurrence() {
+    interaction() {
       return this.value
     },
 
     available() {
-      return this.occurrence && this.occurrence.interaction && !this.occurrence.interaction.archived
+      return !this.interaction.archived
     }
   },
   methods: {

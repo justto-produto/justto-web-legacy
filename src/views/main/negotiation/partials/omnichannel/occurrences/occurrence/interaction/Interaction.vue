@@ -17,6 +17,7 @@
         <component
           :is="type"
           :value="interaction"
+          :occurrence="value"
         />
       </div>
     </div>
