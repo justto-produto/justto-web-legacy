@@ -1,6 +1,6 @@
 <template>
   <section class="overview-attachments">
-    <jus-drag-area class="overview-attachments__drag-area">
+    <JusDragArea class="overview-attachments__drag-area">
       <el-input
         v-model="filterTerm"
         clearable
@@ -59,7 +59,7 @@
         type="primary"
         size="medium"
         icon="el-icon-upload"
-        @click="handleAttachmentDialogVisable()"
+        @click="handleAttachmentDialogVisable"
       >
         Adicionar anexos
       </el-button>
@@ -73,12 +73,12 @@
         width="600px"
         data-testid="upload-file-dialog"
       >
-        <jus-drag-area
+        <JusDragArea
           visible
           @closeDialog="handleAttachmentDialogVisable()"
         />
       </el-dialog>
-    </jus-drag-area>
+    </JusDragArea>
   </section>
 </template>
 

@@ -81,8 +81,6 @@ export default {
 @import '@/styles/colors.scss';
 
 .select-inline-editor {
-  // display: inline-block;
-
   .select-inline-editor__value {
     position: relative;
 
@@ -95,7 +93,6 @@ export default {
 
     .select-inline-editor__inner {
       cursor: default;
-      // user-select: none;
     }
 
     .select-inline-editor__icons {
