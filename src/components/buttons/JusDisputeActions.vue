@@ -702,6 +702,7 @@ export default {
             additionParams = {
               body: {
                 reason: this.disputeStatuses.UNSETTLED[this.unsettledType],
+                conclusionNote: this.scapeHtml(this.counterOfferForm.note),
                 note: this.scapeHtml(this.counterOfferForm.note)
               }
             }
