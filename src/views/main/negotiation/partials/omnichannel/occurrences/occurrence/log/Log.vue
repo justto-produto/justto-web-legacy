@@ -112,6 +112,7 @@
         :key="`summary-occurrence-${summaryOccurrenceIndex}`"
         class="log-container__occurrence summary log-container__summary-scheduler"
         :value="interaction"
+        :hide-content="summaryOccurrenceIndex > 0"
       />
       <!-- <span
         v-for="summaryType in summaryTypes"

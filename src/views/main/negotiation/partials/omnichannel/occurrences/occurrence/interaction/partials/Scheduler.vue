@@ -11,7 +11,9 @@
         {{ to }}
       </span>
     </span>
-    <div class="scheduler-container__message">
+    <div
+      v-if="!hideContent"
+      class="scheduler-container__message">
       <span
         v-if="!canShowFullMessage && !isSmallText"
         class="scheduler-container__message-link"
@@ -30,17 +32,24 @@
     </div>
     <div class="scheduler-container__status">
       <br>
-      <i
+      <!-- <i
         :class="{ 'el-icon-close': status === 'CANCELED', 'clock': status === 'WAITING'}"
         style="width: 14px;margin-bottom: -1.2px;"
-      />
+      /> -->
       <span v-if="status === 'CANCELED'">
+        <i class="el-icon-close" />
         Mensagem automática agendada foi <strong>CANCELADA</strong>.
       </span>
       <span v-else-if="status === 'WAITING'">
+        <i class="clock" />
         Mensagem agendada para
         {{ interaction.message.scheduledTime.dateTime | moment('DD/MM[ às ]HH:mm') }}
         que ainda não foi entregue.
+      </span>
+      <span v-else>
+        <i class="el-icon-check" />
+        Mensagem agendada foi entregue em
+        {{ interaction.message.scheduledTime.dateTime | moment('DD/MM[ às ]HH:mm') }}
       </span>
     </div>
   </section>
@@ -53,6 +62,10 @@ export default {
     value: {
       type: Object,
       required: true
+    },
+    hideContent: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
