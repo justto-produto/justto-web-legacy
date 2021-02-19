@@ -24,6 +24,7 @@ export class ContractModel {
       invoiceDueDays = 10,
       invoiceClosingDay = 0,
       grossValueTax = 0,
+      onlendingFee = 0,
       plan,
       monthlySubscriptionFee,
       tariffs = []
@@ -37,6 +38,7 @@ export class ContractModel {
     this._monthlySubscriptionFee = monthlySubscriptionFee
     this._tariffs = tariffs
     this._grossValueTax = grossValueTax
+    this._onlendingFee = onlendingFee
   }
 
   get id() {
@@ -105,5 +107,13 @@ export class ContractModel {
 
   set grossValueTax(grossValueTax) {
     this._grossValueTax = grossValueTax
+  }
+
+  get onlendingFee() {
+    return this._onlendingFee
+  }
+
+  set onlendingFee(onlendingFee) {
+    this._onlendingFee = onlendingFee
   }
 }
