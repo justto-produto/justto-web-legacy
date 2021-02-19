@@ -4,33 +4,15 @@
       :is="component"
       :value="occurrency"
     />
-    <span
-      v-for="summaryType in summaryTypes"
-      :key="`summaryType-${summaryType}`"
-    >
-      <span
-        v-for="(summaryItem, summaryIndex) in (summary[summaryType][occurrency.id] || [])"
-        :key="`summaryItem-${summaryIndex}`"
-      >
-        <Occurrency
-          v-for="(occurrence, occurrenceIndex) in summaryItem.occurrences"
-          :key="`summary-${summaryIndex}-occurrence-${occurrenceIndex}`"
-          :value="occurrence"
-        />
-      </span>
-    </span>
   </section>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-
 export default {
   name: 'Occurrency',
   components: {
     LOG: () => import('./log/Log'),
     NOTE: () => import('./note/Note'),
-    SUMMARY: () => import('./summary/Summary'),
     INTERACTION: () => import('./interaction/Interaction')
   },
   props: {
@@ -44,12 +26,9 @@ export default {
     }
   },
   data: () => ({
-    summaryTypes: ['EMAIL', 'WHATSAPP', 'SMS'],
+    summaryTypes: ['EMAIL', 'WHATSAPP', 'SMS']
   }),
   computed: {
-    ...mapGetters({
-      summary: 'getOccurrencesSummary'
-    }),
     occurrency: {
       get() {
         return this.value

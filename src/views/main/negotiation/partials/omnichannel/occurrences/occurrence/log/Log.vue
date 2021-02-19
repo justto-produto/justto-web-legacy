@@ -59,7 +59,7 @@
                   class="el-icon-loading"
                 />
                 <span v-else>
-                  {{ seeEmails ? 'ver' : 'esconder' }} whats
+                  {{ seeWhats ? 'ver' : 'esconder' }} whats
                 </span>
                 &#41;
               </span>
@@ -79,7 +79,7 @@
                   class="el-icon-loading"
                 />
                 <span v-else>
-                  {{ seeEmails ? 'ver' : 'esconder' }} sms
+                  {{ seeSms ? 'ver' : 'esconder' }} sms
                 </span>
                 &#41;
               </span>
@@ -106,6 +106,33 @@
           />
         </el-tooltip>
       </span>
+
+      <Scheduler
+        v-for="({ interaction }, summaryOccurrenceIndex) in groupedOccurrences"
+        :key="`summary-occurrence-${summaryOccurrenceIndex}`"
+        class="log-container__occurrence summary log-container__summary-scheduler"
+        :value="interaction"
+        :hide-content="summaryOccurrenceIndex > 0"
+      />
+      <!-- <span
+        v-for="summaryType in summaryTypes"
+        v-show="isSummary"
+        :key="`summaryType-${summaryType}`"
+        class="log-container__summary-types"
+      >
+        <span
+          v-for="(summaryItem, summaryIndex) in (summaryOccurrences[summaryType][occurrence.id] || [])"
+          :key="`summaryItem-${summaryIndex}`"
+          class="log-container__summary-item"
+        >
+          <Scheduler
+            v-for="({ interaction }, summaryOccurrenceIndex) in summaryItem.occurrences"
+            :key="`summary-${summaryIndex}-occurrence-${summaryOccurrenceIndex}`"
+            class="log-container__occurrence summary log-container__summary-scheduler"
+            :value="interaction"
+          />
+        </span>
+      </span> -->
     </span>
   </section>
 </template>
@@ -113,6 +140,9 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 export default {
+  components: {
+    Scheduler: () => import('../interaction/partials/Scheduler')
+  },
   props: {
     value: {
       type: Object,
@@ -120,28 +150,45 @@ export default {
     }
   },
   data: () => ({
-    loading: ''
+    loading: '',
+    summaryTypes: ['EMAIL', 'WHATSAPP', 'SMS']
   }),
 
   computed: {
     ...mapGetters({
-      occurrencesSummary: 'getOccurrencesSummary'
+      summaryKeys: 'getOccurrencesSummaryKeys',
+      summaryOccurrences: 'getOccurrencesSummary'
     }),
 
     occurrence() {
       return this.value
     },
 
+    groupedOccurrences() {
+      let list = []
+      const { id } = this.occurrence
+
+      this.summaryTypes.forEach(type => {
+        if (this.summaryKeys[type].includes(id)) {
+          this.summaryOccurrences[type][id].forEach(({ occurrences }) => {
+            list = [...list, ...occurrences]
+          })
+        }
+      })
+
+      return list
+    },
+
     seeEmails() {
-      return !Object.keys(this.occurrencesSummary.EMAIL).includes(String(this.occurrence.id))
+      return !this.summaryKeys.EMAIL.includes(this.occurrence.id)
     },
 
     seeWhats() {
-      return !Object.keys(this.occurrencesSummary.WHATSAPP).includes(String(this.occurrence.id))
+      return !this.summaryKeys.WHATSAPP.includes(this.occurrence.id)
     },
 
     seeSms() {
-      return !Object.keys(this.occurrencesSummary.SMS).includes(String(this.occurrence.id))
+      return !this.summaryKeys.SMS.includes(this.occurrence.id)
     },
 
     text() {
@@ -245,18 +292,22 @@ export default {
 .log-container {
   display: flex;
   justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  margin: 10px;
+  gap: 0px;
 
   .log-container__occurrence {
     background-color: #fff4cc;
     word-break: break-word;
     border-radius: 8px;
-    padding: 10px;
-    margin: 10px;
+    padding: 10px 0px 0px;
 
     display: flex;
     flex-direction: column;
 
     &.summary {
+      max-width: 80%;
       background-color: #fff;
       border: 3px solid #fff4cc;
 
@@ -264,6 +315,7 @@ export default {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
+        padding: 0px 10px;
 
         .log-container__occurrence-text__content {
           color: #f19737;
@@ -292,17 +344,10 @@ export default {
             }
           }
         }
-
-        /*.log-container__occurrence-text-text-summary {
-          display: flex;
-          flex-direction: column;
-
-          align-items: flex-start;
-        }*/
       }
 
       .log-container__occurrence-about {
-        margin-top: 6px;
+        margin: 6px 10px;
       }
     }
 
@@ -335,6 +380,17 @@ export default {
       .log-container__occurrence-about-icon {
         width: 14px;
       }
+    }
+
+    .log-container__summary-scheduler {
+      border-right: none;
+      border-bottom: none;
+      border-left: none;
+      margin: 0px;
+      padding: 10px;
+      border-radius: 0px;
+      max-width: 100%;
+      width: 100%;
     }
   }
 }

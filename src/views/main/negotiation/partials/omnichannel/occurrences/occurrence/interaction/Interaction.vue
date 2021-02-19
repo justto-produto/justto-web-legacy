@@ -166,7 +166,6 @@ export default {
 
   .interaction-container__balloon {
     overflow-x: hidden;
-    background: #FFFFFF 0% 0% no-repeat padding-box;
     max-width: 80%;
     border-radius: 10px;
     overflow-y: hidden;
