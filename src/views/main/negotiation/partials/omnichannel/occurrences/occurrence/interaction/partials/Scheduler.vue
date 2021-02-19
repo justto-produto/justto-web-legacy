@@ -32,16 +32,15 @@
     </div>
     <div class="scheduler-container__status">
       <br>
-      <!-- <i
-        :class="{ 'el-icon-close': status === 'CANCELED', 'clock': status === 'WAITING'}"
-        style="width: 14px;margin-bottom: -1.2px;"
-      /> -->
       <span v-if="status === 'CANCELED'">
         <i class="el-icon-close" />
         Mensagem automática agendada foi <strong>CANCELADA</strong>.
       </span>
       <span v-else-if="status === 'WAITING'">
-        <i class="clock" />
+        <jus-icon
+          icon="clock"
+          style="width: 12px;"
+        />
         Mensagem agendada para
         {{ interaction.message.scheduledTime.dateTime | moment('DD/MM[ às ]HH:mm') }}
         que ainda não foi entregue.
