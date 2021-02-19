@@ -40,7 +40,7 @@ export default {
   name: 'TextInlieEditor',
   props: {
     value: {
-      type: String,
+      type: [String, Number],
       default: ''
     },
     filter: {
