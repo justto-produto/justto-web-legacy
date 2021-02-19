@@ -32,6 +32,7 @@ export default {
 
 <style lang="scss" scoped>
 .manual-container {
+  background-color: transparent;
   display: flex;
   flex-direction: column;
 

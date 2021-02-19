@@ -153,6 +153,7 @@ export default {
 @import '@/styles/colors.scss';
 
 .scheduler-container {
+  background-color: transparent;
   margin: 12px;
 
   .scheduler-container__message {

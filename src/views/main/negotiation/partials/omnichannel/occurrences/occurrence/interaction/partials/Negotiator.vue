@@ -53,6 +53,7 @@ export default {
 
 <style lang="scss" scoped>
 .negotiator-container {
+  background-color: transparent;
   overflow-y: hidden;
   margin: 12px;
 }

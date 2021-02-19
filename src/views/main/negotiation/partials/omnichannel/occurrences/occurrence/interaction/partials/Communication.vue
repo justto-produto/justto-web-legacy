@@ -1,6 +1,8 @@
 <template>
   <section class="communication-container">
-    <div class="communication-container__email">
+    <div
+      class="communication-container__email"
+      :class="directionIn ? 'INBOUND' : 'OUTBOUND'">
       <JusIcon
         class="communication-container__email-icon"
         :icon="messageType"
@@ -206,6 +208,7 @@ export default {
 @import '@/styles/colors.scss';
 
 .communication-container {
+  background-color: transparent;
   overflow: hidden;
   margin: 6px;
   padding: 0px;
@@ -216,12 +219,21 @@ export default {
     gap: 6px;
 
     color: #9A9797;
+    font-weight: 600;
 
     margin-bottom: 6px;
     width: max-content;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+
+    &.INBOUND {
+      color: #424242;
+    }
+
+    &.OUTBOUND {
+      color: #FF9300;
+    }
 
     .communication-container__email-contact {
       display: inherit;

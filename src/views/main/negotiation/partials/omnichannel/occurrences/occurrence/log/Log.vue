@@ -2,7 +2,7 @@
   <section class="log-container">
     <span
       class="log-container__occurrence"
-      :class="{ 'summary': isSummary }"
+      :class="{ 'summary': isSummary, 'normal': !isSummary }"
     >
       <span class="log-container__occurrence-text">
         <jus-icon
@@ -291,6 +291,7 @@ export default {
       max-width: 80%;
       background-color: #fff;
       border: 3px solid #fff4cc;
+      align-self: flex-end;
 
       .log-container__occurrence-text {
         display: flex;
@@ -330,6 +331,10 @@ export default {
       .log-container__occurrence-about {
         margin: 6px 10px;
       }
+    }
+
+    &.normal {
+      padding: 6px;
     }
 
     .log-container__occurrence-text {
