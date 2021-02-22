@@ -1068,7 +1068,13 @@ export default {
 
     startReply(occurrence) {
       let senders, resume, type
-      if (occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.sender) {
+      console.log(occurrence)
+
+      if (occurrence.interaction?.properties?.PERSON_EMAIL) {
+        senders = [occurrence.interaction.properties.PERSON_EMAIL]
+      } else if (occurrence.interaction?.message?.parameters?.SENDER_EMAIL) {
+        senders = [occurrence.interaction.message.parameters.SENDER_EMAIL]
+      } else if (occurrence?.interaction?.message?.sender) {
         senders = [occurrence.interaction.message.sender]
       } else {
         senders = uniq(this.disputeLastInteractions.map(item => item.address))
