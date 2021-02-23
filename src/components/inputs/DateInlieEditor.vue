@@ -1,44 +1,47 @@
 <template>
-  <div class="currency-inline-editor">
+  <div class="date-inline-editor">
     <div
       v-if="!isEditing"
-      class="currency-inline-editor__value"
+      class="date-inline-editor__value"
     >
-      <span class="currency-inline-editor__inner">
-        {{ vModel | currency }}
+      <span class="date-inline-editor__inner">
+        {{ value | moment('DD/MM/YY') }}
       </span>
-      <span class="currency-inline-editor__icons">
+      <span class="date-inline-editor__icons">
         <i
-          class="currency-inline-editor__icon el-icon-copy-document"
+          class="date-inline-editor__icon el-icon-copy-document"
           @click="copyValue"
         />
         <i
           v-if="isEditable"
-          class="currency-inline-editor__icon el-icon-edit hidden-icon"
+          class="date-inline-editor__icon el-icon-edit"
           @click="enableEdit"
         />
       </span>
     </div>
 
-    <money
+    <el-date-picker
       v-else
-      id="currencyInput"
-      ref="currencyInput"
+      ref="dateInput"
       v-model="vModel"
-      class="currency-inline-editor__input"
-      maxlength="16"
-      @blur.native="disableEdit"
+      :clearable="false"
+      type="date"
+      prefix-icon=""
+      format="dd/MM/yy"
+      class="date-inline-editor__input"
+      @blur="disableEdit"
+      @change="disableEdit"
     />
   </div>
 </template>
 
 <script>
 export default {
-  name: 'CurrencyInlieEditor',
+  name: 'DateInlieEditor',
   props: {
     value: {
-      type: Number,
-      default: 0
+      type: [String, Number],
+      default: ''
     },
     isEditable: {
       type: Boolean,
@@ -47,7 +50,7 @@ export default {
   },
   data: () => ({
     isEditing: false,
-    model: 0
+    model: ''
   }),
   computed: {
     vModel: {
@@ -63,7 +66,10 @@ export default {
     enableEdit() {
       this.model = this.value
       this.isEditing = true
-      this.$nextTick(() => document.getElementById('currencyInput').focus())
+      this.$nextTick(() => {
+        this.$refs.dateInput.focus()
+        this.$forceUpdate()
+      })
     },
     disableEdit() {
       if (this.model !== this.value) {
@@ -72,8 +78,7 @@ export default {
       this.isEditing = false
     },
     copyValue() {
-      const formattedValue = new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2 }).format(this.vModel)
-      navigator.clipboard.writeText(formattedValue)
+      navigator.clipboard.writeText(this.vModel)
     }
   }
 }
@@ -82,23 +87,23 @@ export default {
 <style lang="scss" scoped>
 @import '@/styles/colors.scss';
 
-.currency-inline-editor {
-  .currency-inline-editor__value {
+.date-inline-editor {
+  .date-inline-editor__value {
     position: relative;
     border-bottom: 2px solid transparent;
 
     &:hover {
-      .currency-inline-editor__inner { opacity: .85; }
-      .currency-inline-editor__icons { opacity: 1; }
+      .date-inline-editor__inner { opacity: .85; }
+      .date-inline-editor__icons { opacity: 1; }
     }
 
     & > * { transition: .2s ease-out all; }
 
-    .currency-inline-editor__inner {
+    .date-inline-editor__inner {
       cursor: default;
     }
 
-    .currency-inline-editor__icons {
+    .date-inline-editor__icons {
       background-image: linear-gradient(to left, rgba(255, 255, 255, 145) 45%, rgba(255, 255, 255, 0) );
       position: absolute;
       opacity: 0;
@@ -106,22 +111,18 @@ export default {
       top: 0;
       padding-left: 30px;
 
-      .currency-inline-editor__icon {
+      .date-inline-editor__icon {
         cursor: pointer;
         margin-left: 3px;
         transition: .2s ease-out all;
-        &:hover { color: $--color-primary; }
+        &:hover {
+          color: $--color-primary;
+          &.el-icon-delete { color: $--color-danger; }
+        }
       }
     }
   }
 
-  .currency-inline-editor__input {
-    border: none;
-    padding: 0;
-    width: 100%;
-    font-size: inherit;
-    border-bottom: 2px solid #e4e7ed;
-  }
   // .request-succes {
   //   color: $--color-primary;
   // }
@@ -129,5 +130,25 @@ export default {
   // .request-fail {
   //   color: $--color-danger;
   // }
+}
+</style>
+
+<style lang="scss">
+.date-inline-editor {
+  .date-inline-editor__input {
+    .el-input__inner {
+      border: none;
+      border-bottom: 2px solid #e4e7ed;
+      line-height: normal;
+      height: auto;
+      padding: 0;
+      font-size: inherit;
+
+    }
+
+    .el-input__prefix {
+      display: none !important;
+    }
+  }
 }
 </style>

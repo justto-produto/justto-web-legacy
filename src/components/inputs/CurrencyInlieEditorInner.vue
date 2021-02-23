@@ -1,6 +1,6 @@
 <template>
   <div class="currency-inline-editor">
-    <div
+    <span
       v-if="!isEditing"
       class="currency-inline-editor__value"
     >
@@ -13,18 +13,18 @@
           @click="copyValue"
         />
         <i
-          v-if="isEditable"
           class="currency-inline-editor__icon el-icon-edit hidden-icon"
           @click="enableEdit"
         />
       </span>
-    </div>
+    </span>
 
     <money
       v-else
       id="currencyInput"
       ref="currencyInput"
       v-model="vModel"
+      :class="{ 'currency-inline-editor__input--align-right': iconSide === 'left' }"
       class="currency-inline-editor__input"
       maxlength="16"
       @blur.native="disableEdit"
@@ -40,9 +40,9 @@ export default {
       type: Number,
       default: 0
     },
-    isEditable: {
-      type: Boolean,
-      default: true
+    iconSide: {
+      type: String,
+      default: 'right'
     }
   },
   data: () => ({
@@ -83,12 +83,15 @@ export default {
 @import '@/styles/colors.scss';
 
 .currency-inline-editor {
+  display: inline-block;
+
   .currency-inline-editor__value {
     position: relative;
+    display: inline-block;
     border-bottom: 2px solid transparent;
 
     &:hover {
-      .currency-inline-editor__inner { opacity: .85; }
+      .currency-inline-editor__inner { opacity: .25; }
       .currency-inline-editor__icons { opacity: 1; }
     }
 
@@ -96,6 +99,7 @@ export default {
 
     .currency-inline-editor__inner {
       cursor: default;
+      user-select: none;
     }
 
     .currency-inline-editor__icons {
@@ -103,8 +107,7 @@ export default {
       position: absolute;
       opacity: 0;
       right: 0;
-      top: 0;
-      padding-left: 30px;
+      padding-left: 10px;
 
       .currency-inline-editor__icon {
         cursor: pointer;
@@ -121,7 +124,9 @@ export default {
     width: 100%;
     font-size: inherit;
     border-bottom: 2px solid #e4e7ed;
+    &--align-right { text-align: right; }
   }
+
   // .request-succes {
   //   color: $--color-primary;
   // }

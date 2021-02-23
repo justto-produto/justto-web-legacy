@@ -5,7 +5,7 @@
         Proposta da parte
       </div>
       <div>
-        <CurrencyInlieEditor
+        <CurrencyInlieEditorInner
           v-model="plaintiffOffer.value"
           class="overview-offers__proposal-value overview-offers__proposal-value--full-line"
           @change="updatePlaintiffOffer"
@@ -15,7 +15,7 @@
     <article class="overview-offers__proposal overview-offers__proposal--defendant">
       <div>
         <span>Proposta: </span>
-        <CurrencyInlieEditor
+        <CurrencyInlieEditorInner
           v-model="defendantOffer.value"
           icon-side="left"
           class="overview-offers__proposal-value"
@@ -24,7 +24,7 @@
       </div>
       <div>
         <span>Máx: </span>
-        <CurrencyInlieEditor
+        <CurrencyInlieEditorInner
           v-model="upperRange"
           icon-side="left"
           class="overview-offers__proposal-value"
@@ -41,7 +41,7 @@ import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'OverviewOffers',
   components: {
-    CurrencyInlieEditor: () => import('@/components/inputs/CurrencyInlieEditor')
+    CurrencyInlieEditorInner: () => import('@/components/inputs/CurrencyInlieEditorInner')
   },
   props: {
     plaintiffOffer: {
