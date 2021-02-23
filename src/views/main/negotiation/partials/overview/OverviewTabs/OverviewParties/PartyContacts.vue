@@ -6,10 +6,11 @@
       v-model="contact[model]"
       :mask="mask"
       :filter="filter"
-      can-delete
+      id-deletable
       class="party-contacts__infoline-data"
       @change="updateContact(contact.id, $event)"
       @delete="removeContact(contact.id)"
+      @click="selectContact(contact.id, contact[model])"
     />
     <a
       v-if="contactsLength > 3"
@@ -67,6 +68,9 @@ export default {
     },
     removeContact(contactId) {
       this.$emit('delete', contactId)
+    },
+    selectContact(contactId, contactValue) {
+      this.$emit('click', contactId, contactValue)
     }
   }
 }

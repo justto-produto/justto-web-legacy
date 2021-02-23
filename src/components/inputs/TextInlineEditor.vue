@@ -13,11 +13,12 @@
           @click="copyValue"
         />
         <i
+          v-if="isEditable"
           class="text-inline-editor__icon el-icon-edit"
           @click="enableEdit"
         />
         <i
-          v-if="canDelete"
+          v-if="isDeletable"
           class="text-inline-editor__icon el-icon-delete"
           @click="deletElement"
         />
@@ -51,9 +52,13 @@ export default {
       type: [Array, String],
       default: () => 'X'.repeat(255)
     },
-    canDelete: {
+    isDeletable: {
       type: Boolean,
       default: false
+    },
+    isEditable: {
+      type: Boolean,
+      default: true
     }
   },
   data: () => ({

@@ -22,7 +22,7 @@
         slot="label"
         class="el-icon-warning-outline"
       />
-      Informações
+      <OverviewInfo />
     </el-tab-pane>
     <el-tab-pane
       name="properties"
@@ -55,7 +55,8 @@ export default {
   components: {
     OverviewAttachments: () => import('./OverviewTabs/OverviewAttachments'),
     OverviewProperties: () => import('./OverviewTabs/OverviewProperties'),
-    OverviewParties: () => import('./OverviewTabs/OverviewParties')
+    OverviewParties: () => import('./OverviewTabs/OverviewParties'),
+    OverviewInfo: () => import('./OverviewTabs/OverviewInfo')
   },
   data: () => ({
     activeTab: 'parties',
