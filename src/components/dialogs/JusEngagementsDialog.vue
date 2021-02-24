@@ -149,7 +149,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      strategies: 'strategyListImport'
+      strategies: 'getMyStrategiesLite'
     }),
     strategy() {
       return this.strategies.find(el => {

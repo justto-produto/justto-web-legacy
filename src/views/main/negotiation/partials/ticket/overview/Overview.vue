@@ -1,10 +1,7 @@
 <template>
-  <section
-    id="overviewOmnichanelNegotiatorContainer"
-    class="overview-container"
-  >
+  <section class="overview-container">
     <i
-      :class="{ 'overview-container__button--active': showOverview }"
+      :class="{ 'overview-container__button--active': isOverviewActive }"
       class="overview-container__button el-icon-arrow-left el-icon-arrow-left"
       @click="$emit('toggle-show-overview')"
     />
@@ -19,6 +16,7 @@
       :defendant-offer="lastOffers.defendantOffer"
       :plaintiff-offer="lastOffers.plaintiffOffer"
       :upper-range="ticket.upperRange"
+      :status="ticket.status"
     />
 
     <OverviewObf
@@ -47,11 +45,26 @@ export default {
       required: true
     }
   },
+  data: () => ({
+    innerWidth: window.innerWidth
+  }),
   computed: {
     ...mapGetters({
       ticket: 'getTicketOverview',
       lastOffers: 'getLastTicketOffers'
+    }),
+
+    isOverviewActive() {
+      return this.innerWidth > 1200 ? !this.showOverview : this.showOverview
+    }
+  },
+  beforeMount() {
+    window.addEventListener('resize', event => {
+      this.innerWidth = event.target.innerWidth
     })
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize')
   }
 }
 </script>
@@ -64,6 +77,7 @@ export default {
   padding: 0 20px;
   display: flex;
   flex-direction: column;
+  height: 100%;
   gap: 20px;
 
   .overview-container__button {

@@ -2,24 +2,34 @@
   <section class="overview-info">
     <div
       v-for="data in dataList"
-      v-show="data.value"
       :key="data.key"
       class="overview-info__infoline"
     >
       <span class="overview-info__infoline-label">{{ $t(`ticket-labels.${data.key}`) | capitalize }}:</span>
       <component
         :is="data.component"
+        v-if="data.value || activeAddingData === data.key"
+        :ref="data.key"
         v-model="data.value"
         :is-editable="data.isEditable"
+        :options="data.options"
         class="overview-info__infoline-data"
         @change="editData(data.key, $event)"
+        @blur="stopEditing"
       />
+      <a
+        v-else
+        class="overview-info__infoline-link"
+        @click="startEditing(data.key)"
+      >
+        Adicionar
+      </a>
     </div>
   </section>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'OverviewInfo',
@@ -27,16 +37,27 @@ export default {
     TextInlineEditor: () => import('@/components/inputs/TextInlineEditor'),
     SelectInlineEditor: () => import('@/components/inputs/SelectInlineEditor'),
     CurrencyInlieEditor: () => import('@/components/inputs/CurrencyInlieEditor'),
+    TextareaInlineEditor: () => import('@/components/inputs/TextareaInlineEditor'),
     DateInlieEditor: () => import('@/components/inputs/DateInlieEditor')
   },
+  data: () => ({
+    activeAddingData: ''
+  }),
   computed: {
     ...mapGetters({
       ticketInfo: 'getTicketOverviewInfo',
-      ticket: 'getTicketOverview'
+      ticket: 'getTicketOverview',
+      strategies: 'getMyStrategiesLite'
     }),
 
     dataList() {
-      const { strategy, status, paused } = this.ticket
+      const {
+        strategy,
+        status,
+        paused,
+        code,
+        internalId
+      } = this.ticket
       const {
         materialDamageValue,
         moralDamageValue,
@@ -44,8 +65,7 @@ export default {
         requestedValue,
         expireDate,
         importedDate,
-        campaignName,
-        code
+        campaignName
       } = this.ticketInfo
 
       return [
@@ -67,9 +87,15 @@ export default {
           component: 'TextInlineEditor'
         },
         {
+          key: 'internalId',
+          value: internalId,
+          component: 'TextInlineEditor'
+        },
+        {
           key: 'strategy',
-          value: strategy?.name,
-          component: 'SelectInlineEditor'
+          value: strategy?.id,
+          component: 'SelectInlineEditor',
+          options: this.strategiesOptions
         },
         {
           key: 'status',
@@ -77,10 +103,6 @@ export default {
           component: 'TextInlineEditor',
           isEditable: false
         },
-        // {
-        //   key: 'Valor do acordo',
-        //   value: '' // Vai ter?
-        // },
         {
           key: 'expireDate',
           value: expireDate?.dateTime,
@@ -105,12 +127,13 @@ export default {
           key: 'requestedValue',
           value: requestedValue,
           component: 'CurrencyInlieEditor'
+        },
+        {
+          key: 'description',
+          value: this.ticket.description,
+          component: 'TextareaInlineEditor'
+          // visible: () => !strategy?.isObrigacaoFazer
         }
-        // {
-        //   key: 'description',
-        //   value: this.ticket.description,
-        //   visible: () => !strategy?.isObrigacaoFazer
-        // },
         // {
         //   key: 'configurations',
         //   value: this.ticketInfo.configurations
@@ -120,11 +143,33 @@ export default {
         //   value: this.ticketInfo.classification
         // }
       ]
+    },
+    strategiesOptions() {
+      return { list: this.strategies, label: 'name', value: 'id' }
+    },
+    disputeId() {
+      return Number(this.$route.params.id)
     }
   },
   methods: {
+    ...mapActions(['setTicketOverview']),
+
     editData(key, value) {
-      console.log(key, value)
+      const { disputeId } = this
+      const data = { [key]: value }
+      this.setTicketOverview({ data, disputeId })
+    },
+    startEditing(key) {
+      this.activeAddingData = key
+      console.log(key, this.$refs)
+      this.$nextTick(() => {
+        setTimeout(() => {
+          this.$refs[key][0].enableEdit()
+        }, 5)
+      })
+    },
+    stopEditing(value) {
+      if (!value) this.activeAddingData = ''
     }
   }
 }
@@ -134,6 +179,9 @@ export default {
 @import '@/styles/colors.scss';
 
 .overview-info {
+  overflow-y: auto;
+  overflow-x: hidden;
+
   .overview-info__infoline {
     margin-top: 6px;
 
@@ -143,9 +191,15 @@ export default {
       color: $--color-text-secondary;
     }
 
-    .overview-info__infoline-data {
+    .overview-info__infoline-data,
+    .overview-info__infoline-link {
       margin: 3px 0px 3px 18px;
       line-height: normal;
+      display: block;
+    }
+
+    .overview-info__infoline-link {
+      border-bottom: 2px solid transparent;
     }
   }
 }

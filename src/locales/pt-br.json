@@ -351,7 +351,8 @@
     "requestedValue": "valor do processo",
     "configurations": "configurações",
     "description": "descrição",
-    "classification": "configurações"    
+    "classification": "configurações",
+    "internalId": "código interno"
   },
   "ticket-status": {
     "ACCEPTED": "aceita",

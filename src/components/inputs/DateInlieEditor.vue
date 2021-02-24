@@ -49,7 +49,7 @@ export default {
     }
   },
   data: () => ({
-    isEditing: false,
+    isEditingActive: false,
     model: ''
   }),
   computed: {
@@ -60,11 +60,20 @@ export default {
       set(value) {
         this.model = value
       }
+    },
+    isEditing: {
+      get() {
+        return this.isEditingActive
+      },
+      set(value) {
+        this.isEditingActive = value
+        this.$emit('blur', value)
+      }
     }
   },
   methods: {
     enableEdit() {
-      this.model = this.value
+      this.model = this.value || new Date()
       this.isEditing = true
       this.$nextTick(() => {
         this.$refs.dateInput.focus()

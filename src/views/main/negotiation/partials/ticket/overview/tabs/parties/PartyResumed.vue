@@ -1,32 +1,32 @@
 <template>
   <el-collapse-item
     :name="party.disputeRoleId"
-    class="party-claiment"
+    class="party-resumed"
   >
     <template slot="title">
       <JusIcon
-        class="party-claiment__header-avatar"
+        class="party-resumed__header-avatar"
         :icon="partyType"
       />
       <article>
         {{ party.name | resumedName }}
         <div
-          v-if="party.polarity === 'CLAIMANT' && party.documentNumber"
-          :class="{ 'party-claiment__header-document--hidden': isActiveCollapseItem }"
-          class="party-claiment__header-document"
+          v-if="party.polarity === 'CLAIMANT' && party.documentNumber && !(['lawyer'].includes(partyType) && party.oabs && party.oabs.length)"
+          :class="{ 'party-resumed__header-document--hidden': isActiveCollapseItem }"
+          class="party-resumed__header-document"
         >
           <b>{{ documentType }}: </b>{{ party.documentNumber | cpfCnpj }}
         </div>
         <div
           v-if="party.polarity === 'CLAIMANT' && ['lawyer', 'own-cause'].includes(partyType) && party.oabs && party.oabs.length"
-          :class="{ 'party-claiment__header-document--hidden': isActiveCollapseItem }"
-          class="party-claiment__header-document"
+          :class="{ 'party-resumed__header-document--hidden': isActiveCollapseItem }"
+          class="party-resumed__header-document"
         >
-          <b>OAB: </b>{{ party.oabs[1].number + '/' + party.oabs[1].state }}
+          <b>OAB: </b>{{ party.oabs[0] }}
         </div>
         <div
-          :class="{ 'party-claiment__header-document--hidden': !isActiveCollapseItem }"
-          class="party-claiment__header-document"
+          :class="{ 'party-resumed__header-document--hidden': !isActiveCollapseItem }"
+          class="party-resumed__header-document"
         >
           {{ translatedPartyType | capitalize }}
         </div>
@@ -106,12 +106,12 @@ export default {
 <style lang="scss" scoped>
 @import '@/styles/colors.scss';
 
-.party-claiment {
-  .party-claiment__header-avatar {
+.party-resumed {
+  .party-resumed__header-avatar {
     margin-right: 10px;
   }
 
-  .party-claiment__header-document {
+  .party-resumed__header-document {
     font-size: 13px;
     color: $--color-text-secondary;
     max-height: 16px;
@@ -124,7 +124,7 @@ export default {
 </style>
 
 <style lang="scss">
-.party-claiment {
+.party-resumed {
   .el-collapse-item__header {
     padding: 12px 0;
     height: auto;

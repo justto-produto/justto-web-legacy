@@ -46,7 +46,7 @@ export default {
     }
   },
   data: () => ({
-    isEditing: false,
+    isEditingActive: false,
     model: 0
   }),
   computed: {
@@ -57,11 +57,20 @@ export default {
       set(value) {
         this.model = value
       }
+    },
+    isEditing: {
+      get() {
+        return this.isEditingActive
+      },
+      set(value) {
+        this.isEditingActive = value
+        this.$emit('blur', value)
+      }
     }
   },
   methods: {
     enableEdit() {
-      this.model = this.value
+      this.model = this.value || 0
       this.isEditing = true
       this.$nextTick(() => document.getElementById('currencyInput').focus())
     },

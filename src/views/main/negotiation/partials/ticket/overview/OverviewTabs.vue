@@ -53,10 +53,10 @@ import { mapActions } from 'vuex'
 export default {
   name: 'OverviewTabs',
   components: {
-    OverviewAttachments: () => import('./OverviewTabs/OverviewAttachments'),
-    OverviewProperties: () => import('./OverviewTabs/OverviewProperties'),
-    OverviewParties: () => import('./OverviewTabs/OverviewParties'),
-    OverviewInfo: () => import('./OverviewTabs/OverviewInfo')
+    OverviewAttachments: () => import('./tabs/OverviewAttachments'),
+    OverviewProperties: () => import('./tabs/OverviewProperties'),
+    OverviewParties: () => import('./tabs/OverviewParties'),
+    OverviewInfo: () => import('./tabs/OverviewInfo')
   },
   data: () => ({
     activeTab: 'parties',
@@ -76,6 +76,7 @@ export default {
   },
   beforeMount() {
     this.getTicketOverviewParties(this.disputeId)
+    this.getMyStrategiesLite()
   },
   methods: {
     ...mapActions([
@@ -83,7 +84,8 @@ export default {
       'getTicketOverviewParties',
       'getTicketOverviewProperties',
       'getTicketOverviewAttachments',
-      'updateTicketOverviewActiveTab'
+      'updateTicketOverviewActiveTab',
+      'getMyStrategiesLite'
     ]),
 
     updateTab({ name }) {

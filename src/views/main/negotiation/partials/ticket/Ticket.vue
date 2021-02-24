@@ -1,8 +1,5 @@
 <template>
-  <section
-    id="ticket-negotiation-container"
-    class="ticket-container"
-  >
+  <section class="ticket-container">
     <section class="ticket-container__omnichannel">
       <TicketHeader @toggle-show-overview="toggleShowOverview" />
       <Omnichannel />
@@ -66,6 +63,8 @@ export default {
 .ticket-container {
   display: flex;
   position: relative;
+  overflow: hidden;
+  height: 100%;
 
   .ticket-container__omnichannel {
     display: flex;
@@ -77,7 +76,7 @@ export default {
     width: 310px;
     border-left: 1px solid $--light-gray;
     transition: .6s cubic-bezier(0.19, 1, 0.22, 1);
-    // &--active { width: 0; }
+    &--active { width: 0; }
   }
 }
 

@@ -47,7 +47,7 @@ import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'OverviewParties',
   components: {
-    PartyResumed: () => import('./OverviewParties/PartyResumed'),
+    PartyResumed: () => import('./parties/PartyResumed'),
     DisputeAddRole: () => import('@/views/main/dispute/partials/DisputeAddRole')
   },
   data: () => ({
@@ -123,10 +123,12 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  height: 100%;
   gap: 10px;
 
   .overview-parties__list {
     overflow-y: auto;
+    overflow-x: hidden;
 
     .overview-parties__link {
       margin: 6px 0;
