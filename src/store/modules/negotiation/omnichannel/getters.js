@@ -8,15 +8,17 @@ const mapTabOccurrenceType = {
 
 const omnichannelGetters = {
   getActiveTab: state => (state.activeTab),
-  getEditorConfig: state => (state.editor.configs),
   getEditorReady: state => (state.editor.ready),
+  getEditorConfig: state => (state.editor.configs),
   getEditorText: state => (state.editor.messageText),
   getNoteEditorText: state => (state.editor.noteText),
-  getEditorRecipients: state => (state.editor.recipients),
-  getEditorTextScaped: state => stripHtml(state.editor.messageText),
-  getEditorMessageType: state => (state.editor.messageType),
   getOccurrencesList: state => (state.occurrences.list),
+  getEditorRecipients: state => (state.editor.recipients),
+  getEditorMessageType: state => (state.editor.messageType),
+  getFullMessages: state => (state.occurrences.fullMessages),
   getOccurrencesSummary: state => (state.occurrences.summary),
+  getRecentWhatsappMessages: state => (state.editor.recentMessages),
+  getEditorTextScaped: state => stripHtml(state.editor.messageText),
   getOccurrencesSummaryKeys: state => ({
     SMS: Object.keys(state.occurrences.summary.SMS).map(Number),
     EMAIL: Object.keys(state.occurrences.summary.EMAIL).map(Number),
@@ -25,8 +27,7 @@ const omnichannelGetters = {
   getOccurrencesFilter: state => ({
     ...state.occurrences.filter,
     type: mapTabOccurrenceType[state.activeTab]
-  }),
-  getFullMessages: state => (state.occurrences.fullMessages)
+  })
 }
 
 export default omnichannelGetters

@@ -40,6 +40,8 @@ const omnichannelMutations = {
     },
     ready: false,
     messageText: '',
+    sendinMessage: false,
+    recentMessages: [],
     noteText: '',
     messageType: 'email',
     recipients: []

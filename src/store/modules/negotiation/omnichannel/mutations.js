@@ -33,6 +33,11 @@ const omnichannelMutations = {
 
   addFullMessage: (state, { id, content }) => Vue.set(state.occurrences.fullMessages, id, content),
 
+  addRecentMessage: (state, message) => {
+    const index = state.editor.recentMessages.length
+    Vue.set(state.editor.recentMessages, index, message)
+  },
+
   removeFullMessage: (state, id) => Vue.delete(state.occurrences.fullMessages, id),
 
   setRecipients: (state, recipient) => {
@@ -45,6 +50,9 @@ const omnichannelMutations = {
       Vue.set(state.editor, 'recipients', [...recipients, recipient])
     }
   },
+
+  setSendingMessage: (state, sending) => Vue.set(state.editor, 'sendinMessage', !!sending),
+
   resetRecipients: (state) => Vue.set(state.editor, 'recipients', [])
 }
 
