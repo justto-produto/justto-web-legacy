@@ -126,7 +126,7 @@ const router = new Router({
             {
               name: 'ticket',
               path: ':id',
-              component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/negotiation/partials/Ticket'),
+              component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/negotiation/partials/ticket/Ticket'),
               meta: {
                 hideFullHeader: true,
                 requiresAuth: true,

@@ -54,7 +54,7 @@ import { mapActions } from 'vuex'
 export default {
   name: 'TicketActions',
   components: {
-    DialogAction: () => import('./DialogActions')
+    DialogAction: () => import('./TicketActionsDialogs')
   },
   props: {
     ticket: {

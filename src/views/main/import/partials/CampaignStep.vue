@@ -162,8 +162,7 @@ export default {
   computed: {
     ...mapGetters({
       loading: 'loading',
-      // strategyList: 'strategyListImport',
-      strategyList: 'strategyListImport',
+      strategyList: 'getMyStrategiesLite',
       importedFileName: 'importedFileName'
     })
   },

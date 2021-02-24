@@ -2,7 +2,7 @@
   <section class="overview-offers">
     <article class="overview-offers__proposal overview-offers__proposal--plaintiff">
       <div>
-        Proposta da parte
+        {{ ['ACCEPTED', 'CHECKOUT'].includes(status) ? 'Valor do acordo' : 'Proposta da parte' }}
       </div>
       <div>
         <CurrencyInlieEditorInner
@@ -55,6 +55,10 @@ export default {
     upperRange: {
       type: Number,
       default: 0
+    },
+    status: {
+      type: String,
+      required: true
     }
   },
   computed: {

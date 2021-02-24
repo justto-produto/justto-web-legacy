@@ -10,7 +10,7 @@ html {
   box-sizing: border-box;
   outline: none;
 }
-body, html, #app, section:not(.ps-container) {
+body, html, #app {
   height: 100%;
   margin: 0;
   background-color: $--background-color-white;
@@ -39,6 +39,9 @@ hr {
 }
 a {
   cursor: pointer;
+}
+.el-container {
+  height: 100%;
 }
 .pt0 {
   padding-top: 0 !important;

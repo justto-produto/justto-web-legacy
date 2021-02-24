@@ -31,7 +31,7 @@
       </div>
     </div>
     <span class="communication-ticket-item-container__time">
-      {{ getLastInteraction(ticket.lastInboundInteraction.dateTime.dateTime) }}
+      {{ getLastInteraction(lastInboundInteraction.dateTime) }}
     </span>
   </li>
 </template>
@@ -52,14 +52,25 @@ export default {
       return Number(this.$route.params.id) === this.ticket.disputeId
     },
     lastInboundInteraction() {
-      const { type, message } = this.ticket.lastInboundInteraction
+      const { lastInboundInteraction, disputeStatus, expirationDate } = this.ticket
+      const { type, message, dateTime } = lastInboundInteraction || {}
 
-      if (type === 'COMMUNICATION' && message) {
-        return { message }
-      } else {
+      if (lastInboundInteraction && type === 'COMMUNICATION' && message) {
+        return {
+          message,
+          dateTime: dateTime.dateTime
+        }
+      } else if (lastInboundInteraction) {
         return {
           icon: this.$t(`interaction-types.${type}.icon`),
-          message: this.$options.filters.capitalize(this.$t(`interaction-types.${type}.message`))
+          message: this.$options.filters.capitalize(this.$t(`interaction-types.${type}.message`)),
+          dateTime: dateTime.dateTime
+        }
+      } else {
+        return {
+          // icon: this.$t(`ticket-status.${disputeStatus}.icon`),
+          message: 'Dispute ' + this.$t(`ticket-status.${disputeStatus}`),
+          dateTime: expirationDate || '--/--/--'
         }
       }
     }

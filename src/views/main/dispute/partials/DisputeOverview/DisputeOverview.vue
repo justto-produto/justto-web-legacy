@@ -1862,7 +1862,7 @@ export default {
       disputeMetadata: 'disputeMetadata',
       dispute: 'dispute',
       onlineDocuments: 'onlineDocuments',
-      strategies: 'strategyListImport'
+      strategies: 'getMyStrategiesLite'
     }),
     campaign() {
       return this.dispute?.campaign

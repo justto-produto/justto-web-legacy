@@ -18,19 +18,30 @@
         stretch
         lazy
       >
-        <vue-perfect-scrollbar>
-          <ul
-            v-if="activeTab === tab.name"
-            class="tickets-container__list"
+        <ul
+          v-if="activeTab === tab.name"
+          class="tickets-container__list"
+        >
+          <component
+            :is="tab.component"
+            v-for="ticket in tickets.content"
+            :key="ticket.disputeId"
+            :ticket="ticket"
+          />
+          <infinite-loading
+            v-if="tickets.totalPages > 1"
+            :identifier="activeTab"
+            spinner="spiral"
+            @infinite="infiniteHandler"
           >
-            <component
-              :is="tab.component"
-              v-for="ticket in tickets.content"
-              :key="ticket.disputeId"
-              :ticket="ticket"
-            />
-          </ul>
-        </vue-perfect-scrollbar>
+            <div slot="no-more">
+              Fim das disputas
+            </div>
+            <div slot="no-results">
+              Nada por aqui
+            </div>
+          </infinite-loading>
+        </ul>
       </el-tab-pane>
     </el-tabs>
   </nav>
@@ -45,7 +56,7 @@ export default {
     EngagementTicketItem: () => import('./EngagementTicketItem'),
     CommunicationTicketItem: () => import('./CommunicationTicketItem'),
     TicketsHeader: () => import('./TicketsHeader'),
-    VuePerfectScrollbar: () => import('vue-perfect-scrollbar')
+    InfiniteLoading: () => import('vue-infinite-loading')
   },
   data: () => ({
     activeTab: 'running'
@@ -86,11 +97,12 @@ export default {
     }
   },
   beforeMount() {
-    this.getTickets()
+    this.handleChangeTab({ name: this.activeTab })
   },
   methods: {
     ...mapActions([
       'getTickets',
+      'getTicketsNextPage',
       'setTicketsQuery'
     ]),
 
@@ -117,7 +129,7 @@ export default {
           // this.setTicketsQuery({ key: 'sort', value: [] })
           break
         case 'finished':
-          this.setTicketsQuery({ key: 'prescription', value: ['NEWLY_FINISHED'] })
+          this.setTicketsQuery({ key: 'prescriptions', value: ['NEWLY_FINISHED'] })
           // this.setTicketsQuery({ key: 'sort', value: ['id,desc'] })
           break
       }
@@ -149,6 +161,18 @@ export default {
       }
 
       this.handleChangeTab({ name: this.activeTab })
+    },
+
+    infiniteHandler($state) {
+      console.log('infinite handles')
+      this.getTicketsNextPage()
+        .then(response => {
+          if (response.last) {
+            $state.complete()
+          } else {
+            $state.loaded()
+          }
+        })
     }
   }
 }
@@ -158,6 +182,16 @@ export default {
 @import '@/styles/colors.scss';
 
 .tickets-container {
+  display: flex;
+  flex-direction: column;
+
+  .tickets-container__tabs {
+    overflow: hidden;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
   .tickets-container__list {
     list-style: none;
     margin: 0 ;
@@ -170,15 +204,21 @@ export default {
 @import '@/styles/colors.scss';
 
 .tickets-container {
+  .tickets-container__tabs {
+    .el-tabs__content {
+      overflow: auto;
+    }
+  }
+
   .el-tabs__header {
     padding: 12px;
     margin: 0;
     border-bottom: 2px solid $--light-gray;
     border-top: 2px solid $--light-gray;
 
-    .el-tabs__nav-prev, .el-tabs__nav-next {
+    .el-tabs__nav-prev,
+    .el-tabs__nav-next {
       font-size: 18px !important;
-      &.is-disabled { color: $--color-primary !important; }
     }
   }
 

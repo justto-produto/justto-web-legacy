@@ -7,17 +7,20 @@
       OBF:
     </label>
 
-    <textarea
+    <el-input
       v-if="isEditing || value"
-      id="obf"
-      ref="oabTextarea"
+      ref="obfTextarea"
       v-model="description"
+      :autosize="{ minRows: 1, maxRows: 5}"
+      type="textarea"
       class="overview-obf__textarea"
+      @focus="showTextarea"
       @blur="hideTextarea"
       @input="updateDescription"
     />
     <span
       v-if="isEditing || value"
+      :class="{ 'overview-obf__textarea--shadow-hidden': isEditing }"
       class="overview-obf__textarea--shadow"
     />
 
@@ -66,7 +69,7 @@ export default {
     showTextarea() {
       this.model = this.value
       this.isEditing = true
-      this.$nextTick(() => this.$refs.oabTextarea.focus())
+      this.$nextTick(() => this.$refs.obfTextarea.focus())
     },
 
     hideTextarea() {
@@ -107,16 +110,11 @@ export default {
   .overview-obf__textarea {
     border: none;
     width: 100%;
-    height: 100px;
+    height: auto;
     line-height: 20px;
     color: $--color-text-regular;
     resize: none;
     padding: 3px;
-
-    &:focus ~ .overview-obf__textarea--shadow {
-      opacity: 0;
-      visibility: hidden;
-    }
   }
 
   .overview-obf__link {
@@ -128,16 +126,22 @@ export default {
     }
   }
 
-  .overview-obf__textarea--shadow {
-    bottom: 0;
-    top: 0;
-    left: 0;
-    right: 0;
-    position: absolute;
-    border-radius: 6px;
-    background-image: linear-gradient(to top, rgba(255, 255, 255, 85), rgba(255, 255, 255, 0) 60%);
-    transition: .2s ease-out;
-    opacity: 1;
+  .overview-obf__textarea {
+    &--shadow {
+      bottom: 0;
+      top: 0;
+      left: 0;
+      right: 0;
+      position: absolute;
+      border-radius: 6px;
+      background-image: linear-gradient(to top, rgba(255, 255, 255, 85), rgba(255, 255, 255, 0) 60%);
+      transition: .2s ease-out;
+      opacity: 1;
+    }
+    &--shadow-hidden {
+      opacity: 0 !important;
+      visibility: hidden !important;
+    }
   }
 
   &:hover {
@@ -152,6 +156,20 @@ export default {
   .overview-obf {
     .overview-obf__textarea--shadow {
       display: none;
+    }
+  }
+}
+</style>
+
+<style lang="scss">
+.overview-obf {
+  .overview-obf__textarea {
+    .el-textarea__inner {
+      border: none;
+      padding: 0;
+      font-size: inherit;
+      line-height: inherit;
+      resize: none;
     }
   }
 }

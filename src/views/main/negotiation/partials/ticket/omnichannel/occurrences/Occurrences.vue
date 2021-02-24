@@ -1,6 +1,5 @@
 <template>
   <section
-    id="occurrencesOmnichanelNegotiation"
     ref="occurrence-root"
     class="occurrences-container"
   >
@@ -113,19 +112,7 @@ export default {
 @import '@/styles/colors.scss';
 
 .occurrences-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
   overflow-y: auto;
-  max-height: calc(100vh - 120px);
-
-  @media(max-height: 680px) {
-    max-height: calc(100vh - 100px);
-  }
-
-  @media(max-width: 900px) {
-    max-height: calc(100vh - 140px);
-  }
 
   .infinite-loading-container > .infinite-status-prompt > div {
     color: #979797 !important;
