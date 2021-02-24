@@ -14,9 +14,9 @@ const overviewMutations = {
     const partyIndex = ticketOverviewParties.findIndex(party => party.disputeRoleId === payload)
     const partyToSet = ticketOverviewParties[partyIndex]
 
-    Vue.set(partyToSet, 'emails', data.emails)
-    Vue.set(partyToSet, 'phones', data.phones)
-    Vue.set(partyToSet, 'oabs', data.oabs)
+    Vue.set(partyToSet, 'emailsDto', data.emails)
+    Vue.set(partyToSet, 'phonesDto', data.phones)
+    Vue.set(partyToSet, 'oabsDto', data.oabs)
     Vue.set(partyToSet, 'legacyDto', data) // TODO: Remover essa merda aqui
   },
   setTicketOverviewProperties: (state, params) => (Vue.set(state, 'ticketOverviewProperties', params)),

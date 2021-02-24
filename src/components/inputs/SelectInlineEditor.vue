@@ -5,9 +5,13 @@
       class="select-inline-editor__value"
     >
       <span class="select-inline-editor__inner">
-        {{ $t(`roles.${options.role}.${vModel}`) | capitalize }}
+        {{ handledVModel }}
       </span>
       <span class="select-inline-editor__icons">
+        <i
+          class="select-inline-editor__icon el-icon-copy-document"
+          @click="copyValue"
+        />
         <i
           class="select-inline-editor__icon el-icon-edit hidden-icon"
           @click="enableEdit"
@@ -25,10 +29,10 @@
       <!-- @blur="isEditing = false" -->
       <el-option
         v-for="option in options.list"
-        :key="option.value"
-        :label="$options.filters.capitalize(option.label)"
-        :value="option.value"
-        :disabled="option.disabled"
+        :key="option[options.value]"
+        :label="option[options.label]"
+        :value="option[options.value]"
+        :disabled="option[options.disabled]"
       />
     </el-select>
   </div>
@@ -39,7 +43,7 @@ export default {
   name: 'SelectInlieEditor',
   props: {
     value: {
-      type: String,
+      type: [String, Number],
       default: ''
     },
     options: {
@@ -59,6 +63,11 @@ export default {
       set(value) {
         this.model = value
       }
+    },
+    handledVModel() {
+      const { list, value, label } = this.options
+      const selectedIndex = list.findIndex(item => item[value] === this.value)
+      return list[selectedIndex][label]
     }
   },
   methods: {
@@ -69,9 +78,12 @@ export default {
     },
     disableEdit() {
       if (this.model !== this.value) {
-        this.$emit('change', this.vModel)
+        this.$emit('change', { [this.options.value]: this.vModel })
       }
       this.isEditing = false
+    },
+    copyValue() {
+      navigator.clipboard.writeText(this.handledVModel)
     }
   }
 }
@@ -125,5 +137,29 @@ export default {
   // .request-fail {
   //   color: $--color-danger;
   // }
+}
+</style>
+
+<style lang="scss">
+.select-inline-editor {
+  .select-inline-editor__input {
+    .el-input__inner {
+      border: none;
+      border-bottom: 2px solid #e4e7ed;
+      line-height: normal;
+      height: auto;
+      padding: 0;
+      font-size: inherit;
+      &:focus { border-bottom-color: #e4e7ed; }
+    }
+
+    .el-input__suffix {
+      .el-input__suffix-inner {
+        .el-select__caret {
+          line-height: normal;
+        }
+      }
+    }
+  }
 }
 </style>

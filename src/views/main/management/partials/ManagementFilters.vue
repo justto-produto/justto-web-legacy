@@ -276,7 +276,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      strategies: 'strategyListImport',
+      strategies: 'getMyStrategiesLite',
       campaigns: 'campaignList',
       respondents: 'respondents',
       workspaceTags: 'workspaceTags',

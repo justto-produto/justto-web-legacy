@@ -163,6 +163,8 @@ export default {
 @import '@/styles/colors.scss';
 
 .overview-attachments {
+  height: 100%;
+
   .overview-attachments__drag-area {
     display: flex;
     flex-direction: column;

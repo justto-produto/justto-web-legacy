@@ -20,7 +20,7 @@ export default {
   name: 'Negotiation',
   components: {
     Tickets: () => import('./partials/tickets/Tickets'),
-    EmptyTicket: () => import('./partials/EmptyTicket')
+    EmptyTicket: () => import('./partials/ticket/TicketEmpty')
   }
 }
 </script>
@@ -30,7 +30,7 @@ export default {
 
 .negotiations-container {
   display: flex;
-  overflow-y: hidden;
+  overflow: hidden;
   flex: 1;
 
   .negotiations-container__tickets {

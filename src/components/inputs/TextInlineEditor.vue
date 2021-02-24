@@ -4,7 +4,9 @@
       v-if="!isEditing"
       class="text-inline-editor__value"
     >
-      <span class="text-inline-editor__inner">
+      <span
+        class="text-inline-editor__inner"
+        @click="$emit('click')">
         {{ filteredVModel }}
       </span>
       <span class="text-inline-editor__icons">
@@ -62,7 +64,7 @@ export default {
     }
   },
   data: () => ({
-    isEditing: false,
+    isEditingActive: false,
     model: ''
   }),
   computed: {
@@ -72,6 +74,15 @@ export default {
       },
       set(value) {
         this.model = value
+      }
+    },
+    isEditing: {
+      get() {
+        return this.isEditingActive
+      },
+      set(value) {
+        this.isEditingActive = value
+        this.$emit('blur', value)
       }
     },
     tokens() {
@@ -102,7 +113,7 @@ export default {
   },
   methods: {
     enableEdit() {
-      this.model = this.value
+      this.model = this.value || ''
       this.isEditing = true
       this.$nextTick(() => {
         this.$refs.textInput.focus()

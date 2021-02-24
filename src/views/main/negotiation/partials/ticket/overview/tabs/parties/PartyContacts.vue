@@ -10,7 +10,7 @@
       class="party-contacts__infoline-data"
       @change="updateContact(contact.id, $event)"
       @delete="removeContact(contact.id)"
-      @click="selectContact(contact.id, contact[model])"
+      @click="selectContact(contact[model])"
     />
     <a
       v-if="contactsLength > 3"
@@ -69,8 +69,8 @@ export default {
     removeContact(contactId) {
       this.$emit('delete', contactId)
     },
-    selectContact(contactId, contactValue) {
-      this.$emit('click', contactId, contactValue)
+    selectContact(contactValue) {
+      this.$emit('click', contactValue)
     }
   }
 }

@@ -32,12 +32,12 @@
       />
     </div>
     <div
-      v-if="party.phones && party.phones.length"
+      v-if="party.phonesDto && party.phonesDto.length"
       class="party-details__infoline"
     >
       <span class="party-details__infoline-label">Telefones:</span>
       <PartyContacts
-        :contacts="party.phones"
+        :contacts="party.phonesDto"
         filter="phoneNumber"
         model="number"
         :mask="[
@@ -50,24 +50,24 @@
         ]"
         @change="(...args)=>updateContacts(...args, 'phone')"
         @delete="removeContact($event, 'phone')"
-        @click="(...args)=>selectContact(...args, 'prone')"
+        @click="selectContact($event, 'phone')"
       />
     </div>
     <div
-      v-if="party.emails && party.emails.length"
+      v-if="party.emailsDto && party.emailsDto.length"
       class="party-details__infoline"
     >
       <span class="party-details__infoline-label">Emails:</span>
       <PartyContacts
-        :contacts="party.emails"
+        :contacts="party.emailsDto"
         model="address"
         @change="(...args)=>updateContacts(...args, 'email')"
         @delete="removeContact($event, 'email')"
-        @click="(...args)=>selectContact(...args, 'email')"
+        @click="selectContact($event, 'email')"
       />
     </div>
     <div
-      v-if="party.oabs && party.oabs.length"
+      v-if="party.oabsDto && party.oabsDto.length"
       class="party-details__infoline"
     >
       <span class="party-details__infoline-label">Oab:</span>
@@ -131,8 +131,8 @@ export default {
       }
     },
     mappedOabs() {
-      const { oabs } = this.party
-      return oabs?.map(oab => {
+      const { oabsDto } = this.party
+      return oabsDto?.map(oab => {
         const { number, state } = oab
         return { ...oab, fullOab: number + state }
       })
@@ -201,8 +201,8 @@ export default {
 
       this.deleteTicketOverviewPartyContact(params)
     },
-    selectContact(contactId, contactValue, contactType) {
-      console.log(contactId, contactValue, contactType)
+    selectContact(contactValue, contactType) {
+      console.log(contactValue, contactType)
     }
   }
 }
@@ -229,9 +229,4 @@ export default {
     }
   }
 }
-// Trocar polaridade
-// Polaridade
-// dados de contato
-
-// paginação ocorrencias
 </style>

@@ -1,51 +1,43 @@
 <template>
-  <div class="date-inline-editor">
+  <div class="textarea-inline-editor">
     <div
       v-if="!isEditing"
-      class="date-inline-editor__value"
+      class="textarea-inline-editor__value"
     >
-      <span class="date-inline-editor__inner">
-        {{ value | moment('DD/MM/YY') }}
+      <span class="textarea-inline-editor__inner">
+        {{ vModel }}
       </span>
-      <span class="date-inline-editor__icons">
+      <span class="textarea-inline-editor__icons">
         <i
-          class="date-inline-editor__icon el-icon-copy-document"
+          class="textarea-inline-editor__icon el-icon-copy-document"
           @click="copyValue"
         />
         <i
-          v-if="isEditable"
-          class="date-inline-editor__icon el-icon-edit"
+          class="textarea-inline-editor__icon el-icon-edit"
           @click="enableEdit"
         />
       </span>
     </div>
 
-    <el-date-picker
+    <el-input
       v-else
-      ref="dateInput"
+      ref="textareaInput"
       v-model="vModel"
-      :clearable="false"
-      type="date"
-      prefix-icon=""
-      format="dd/MM/yy"
-      class="date-inline-editor__input"
+      :autosize="{ minRows: 1, maxRows: 4}"
+      type="textarea"
+      class="textarea-inline-editor__input"
       @blur="disableEdit"
-      @change="disableEdit"
     />
   </div>
 </template>
 
 <script>
 export default {
-  name: 'DateInlieEditor',
+  name: 'TextareaInlieEditor',
   props: {
     value: {
-      type: [String, Number],
+      type: String,
       default: ''
-    },
-    isEditable: {
-      type: Boolean,
-      default: true
     }
   },
   data: () => ({
@@ -69,14 +61,14 @@ export default {
         this.isEditingActive = value
         this.$emit('blur', value)
       }
-    }
+    },
   },
   methods: {
     enableEdit() {
-      this.model = this.value || new Date()
+      this.model = this.value || ''
       this.isEditing = true
       this.$nextTick(() => {
-        this.$refs.dateInput.focus()
+        this.$refs.textareaInput.focus()
         this.$forceUpdate()
       })
     },
@@ -96,23 +88,23 @@ export default {
 <style lang="scss" scoped>
 @import '@/styles/colors.scss';
 
-.date-inline-editor {
-  .date-inline-editor__value {
+.textarea-inline-editor {
+  .textarea-inline-editor__value {
     position: relative;
     border-bottom: 2px solid transparent;
 
     &:hover {
-      .date-inline-editor__inner { opacity: .85; }
-      .date-inline-editor__icons { opacity: 1; }
+      .textarea-inline-editor__inner { opacity: .85; }
+      .textarea-inline-editor__icons { opacity: 1; }
     }
 
     & > * { transition: .2s ease-out all; }
 
-    .date-inline-editor__inner {
+    .textarea-inline-editor__inner {
       cursor: default;
     }
 
-    .date-inline-editor__icons {
+    .textarea-inline-editor__icons {
       background-image: linear-gradient(to left, rgba(255, 255, 255, 145) 45%, rgba(255, 255, 255, 0) );
       position: absolute;
       opacity: 0;
@@ -120,7 +112,7 @@ export default {
       top: 0;
       padding-left: 30px;
 
-      .date-inline-editor__icon {
+      .textarea-inline-editor__icon {
         cursor: pointer;
         margin-left: 3px;
         transition: .2s ease-out all;
@@ -143,20 +135,15 @@ export default {
 </style>
 
 <style lang="scss">
-.date-inline-editor {
-  .date-inline-editor__input {
-    .el-input__inner {
+.textarea-inline-editor {
+  .textarea-inline-editor__input {
+    .el-textarea__inner {
       border: none;
       border-bottom: 2px solid #e4e7ed;
       line-height: normal;
       height: auto;
       padding: 0;
       font-size: inherit;
-
-    }
-
-    .el-input__prefix {
-      display: none !important;
     }
   }
 }

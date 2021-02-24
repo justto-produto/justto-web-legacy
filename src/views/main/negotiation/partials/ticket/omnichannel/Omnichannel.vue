@@ -20,10 +20,10 @@ export default {
   display: flex;
   flex-direction: column;
   flex: 1;
+  overflow: hidden;
 
   .omnichannel-container__occurrences {
     flex: 1;
-    display: block;
   }
 }
 </style>

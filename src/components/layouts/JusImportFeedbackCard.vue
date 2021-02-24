@@ -319,11 +319,11 @@ export default {
     ...mapGetters([
       'isJusttoDev',
       'errorFields',
-      'strategyListImport'
+      'getMyStrategiesLite'
     ]),
 
     strategies() {
-      const activeSrategies = this.strategyListImport.filter(s => !s.archived)
+      const activeSrategies = this.getMyStrategiesLite.filter(s => !s.archived)
       if (this.isJusttoDev) {
         return activeSrategies
       } else {
