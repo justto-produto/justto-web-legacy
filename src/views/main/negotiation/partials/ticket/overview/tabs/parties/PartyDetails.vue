@@ -50,7 +50,7 @@
         ]"
         @change="(...args)=>updateContacts(...args, 'phone')"
         @delete="removeContact($event, 'phone')"
-        @click="(...args)=>selectContact(...args, 'prone')"
+        @click="selectContact($event, 'phone')"
       />
     </div>
     <div
@@ -63,7 +63,7 @@
         model="address"
         @change="(...args)=>updateContacts(...args, 'email')"
         @delete="removeContact($event, 'email')"
-        @click="(...args)=>selectContact(...args, 'email')"
+        @click="selectContact($event, 'email')"
       />
     </div>
     <div
@@ -201,8 +201,8 @@ export default {
 
       this.deleteTicketOverviewPartyContact(params)
     },
-    selectContact(contactId, contactValue, contactType) {
-      console.log(contactId, contactValue, contactType)
+    selectContact(contactValue, contactType) {
+      console.log(contactValue, contactType)
     }
   }
 }
