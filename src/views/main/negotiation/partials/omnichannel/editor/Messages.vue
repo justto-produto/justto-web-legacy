@@ -26,6 +26,7 @@
       <el-button
         type="primary"
         size="small"
+        @click="send"
       >
         Enviar mensagem
       </el-button>
@@ -72,9 +73,24 @@ export default {
   },
   methods: {
     ...mapActions([
+      'resetRecipients',
       'setEditorReady',
-      'setEditorText'
+      'setEditorText',
+      'sendMessage'
     ]),
+
+    send(_event) {
+      const { id } = this.$route.params
+      this.sendMessage(Number(id)).then(res => {
+        this.resetRecipients()
+        this.setEditorText('')
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Mensagem enviado com sucesso.',
+          type: 'success'
+        })
+      })
+    },
 
     destroyEditor() {
       this.editorReady = false

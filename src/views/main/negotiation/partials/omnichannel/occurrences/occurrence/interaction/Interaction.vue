@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 const negotiatorTypes = [
   'NEGOTIATOR_ACCESS',
   'NEGOTIATOR_PROPOSAL',
@@ -67,7 +67,7 @@ export default {
       const mapCommunicationTypes = {
         EMAIL: 'email',
         WHATSAPP: 'whatsapp',
-        NEGOTIATOR_MESSAGE: 'negotiator-message-2',
+        NEGOTIATOR_MESSAGE: 'negotiation',
         SMS: 'sms'
       }
       if (this.interaction?.message?.communicationType) {
@@ -120,8 +120,19 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['addRecipient']),
+
     reply(_event) {
-      window.alert('RESPONDER')
+      const reply = {
+        type: this.messageType,
+        address: null
+      }
+      if (this.value.interaction?.message?.sender) {
+        reply.address = this.value.interaction.message.sender
+      } else if (this.value.interaction?.message?.parameters?.SENDER) {
+        reply.address = this.value.interaction.message.parameters.SENDER
+      }
+      this.addRecipient(reply)
     }
   }
 }

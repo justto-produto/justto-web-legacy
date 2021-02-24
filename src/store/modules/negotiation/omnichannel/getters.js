@@ -12,6 +12,7 @@ const omnichannelGetters = {
   getEditorReady: state => (state.editor.ready),
   getEditorText: state => (state.editor.messageText),
   getNoteEditorText: state => (state.editor.noteText),
+  getEditorRecipients: state => (state.editor.recipients),
   getEditorTextScaped: state => stripHtml(state.editor.messageText),
   getEditorMessageType: state => (state.editor.messageType),
   getOccurrencesList: state => (state.occurrences.list),

@@ -41,7 +41,8 @@ const omnichannelMutations = {
     ready: false,
     messageText: '',
     noteText: '',
-    messageType: 'email'
+    messageType: 'email',
+    recipients: []
   }
 }
 

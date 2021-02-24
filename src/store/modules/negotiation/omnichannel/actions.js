@@ -13,18 +13,24 @@ const omnichannelActions = {
       dispatch('getOccurrences', id)
     }
   },
+
   setEditorReady({ commit }, isRedy) {
     commit('setEditorReady', isRedy)
   },
+
   setEditorText({ commit }, message) {
     commit('setEditorText', message)
   },
+
   setNoteEditorText({ commit }, note) {
     commit('setNoteEditorText', note)
   },
+
   setMessageType({ commit }, type) {
     commit('setMessageType', type)
+    commit('resetRecipients')
   },
+
   getOccurrences({ getters, commit }, disputeId) {
     commit('setOccurrences', { content: [] })
     const params = {
@@ -37,6 +43,7 @@ const omnichannelActions = {
       params
     })
   },
+
   getFullMessage({ _ }, messageId) {
     const messagesPath = 'api/messages'
     if (messageId) {
@@ -46,6 +53,7 @@ const omnichannelActions = {
       })
     }
   },
+
   deleteFullMessage({ commit }, messageId) {
     commit('removeFullMessage', messageId)
   },
@@ -89,6 +97,47 @@ const omnichannelActions = {
         commit('cleanSumary', payload)
         resolve()
       })
+    }
+  },
+
+  addRecipient({ commit, dispatch, getters }, recipient) {
+    if (getters.getEditorMessageType !== recipient.type) {
+      dispatch('setMessageType', recipient.type)
+    }
+    commit('setRecipients', recipient)
+  },
+
+  resetRecipients({ commit }) {
+    commit('resetRecipients')
+  },
+
+  sendMessage({ dispatch, getters }, disputeId) {
+    const {
+      getTicketOverviewNegotiators: negotiators,
+      getEditorTextScaped: messageText,
+      getEditorMessageType: type,
+      getEditorText: messageEmail,
+      getEditorRecipients
+    } = getters
+
+    const roleId = negotiators[0].disputeRoleId
+
+    const data = type === 'negotiation' ? {
+      roleId,
+      message: messageEmail,
+      email: getEditorRecipients[0].address
+    } : {
+      disputeId,
+      message: type === 'whatsapp' ? messageText.trim() : messageEmail,
+      to: getEditorRecipients.map(({ address }) => ({ address, roleId }))
+    }
+
+    if (type === 'email') {
+      return dispatch('sendemail', data)
+    } else if (type === 'whatsapp') {
+      return dispatch('sendwhatsapp', data)
+    } else if (type === 'negotiation') {
+      return dispatch('sendNegotiator', { disputeId, data })
     }
   }
 }
