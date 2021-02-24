@@ -50,6 +50,8 @@ const omnichannelActions = {
 
   deleteFullMessage: ({ commit }, messageId) => commit('removeFullMessage', messageId),
 
+  cleanRecentMessages: ({ commit }) => commit('cleanRecentMessages'),
+
   deleteTicketNote: ({ _ }, id) => axiosDispatch({
     url: `${disputeApi}/note/${id}`,
     method: 'DELETE'

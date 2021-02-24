@@ -38,6 +38,8 @@ const omnichannelMutations = {
     Vue.set(state.editor.recentMessages, index, message)
   },
 
+  cleanRecentMessages: state => Vue.set(state.editor, 'recentMessages', []),
+
   removeFullMessage: (state, id) => Vue.delete(state.occurrences.fullMessages, id),
 
   setRecipients: (state, recipient) => {
