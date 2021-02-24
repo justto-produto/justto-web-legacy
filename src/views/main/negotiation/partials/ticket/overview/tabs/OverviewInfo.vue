@@ -5,7 +5,9 @@
       :key="data.key"
       class="overview-info__infoline"
     >
-      <span class="overview-info__infoline-label">{{ $t(`ticket-labels.${data.key}`) | capitalize }}:</span>
+      <span class="overview-info__infoline-label">
+        {{ $t(`ticket-labels.${data.key}`) | capitalize }}:
+      </span>
       <component
         :is="data.component"
         v-if="data.value || activeAddingData === data.key"
@@ -17,13 +19,12 @@
         @change="editData(data.key, $event)"
         @blur="stopEditing"
       />
-      <a
+      <div
         v-else
         class="overview-info__infoline-link"
-        @click="startEditing(data.key)"
       >
-        Adicionar
-      </a>
+        <a @click="startEditing(data.key)">Adicionar</a>
+      </div>
     </div>
   </section>
 </template>
@@ -38,7 +39,9 @@ export default {
     SelectInlineEditor: () => import('@/components/inputs/SelectInlineEditor'),
     CurrencyInlieEditor: () => import('@/components/inputs/CurrencyInlieEditor'),
     TextareaInlineEditor: () => import('@/components/inputs/TextareaInlineEditor'),
-    DateInlieEditor: () => import('@/components/inputs/DateInlieEditor')
+    DateInlieEditor: () => import('@/components/inputs/DateInlieEditor'),
+    InfoConfigurations: () => import('./info/InfoConfigurations'),
+    InfoClassification: () => import('./info/InfoClassification')
   },
   data: () => ({
     activeAddingData: ''
@@ -52,7 +55,6 @@ export default {
 
     dataList() {
       const {
-        strategy,
         status,
         paused,
         code,
@@ -65,7 +67,8 @@ export default {
         requestedValue,
         expireDate,
         importedDate,
-        campaignName
+        campaignName,
+        strategyId
       } = this.ticketInfo
 
       return [
@@ -93,7 +96,7 @@ export default {
         },
         {
           key: 'strategy',
-          value: strategy?.id,
+          value: strategyId,
           component: 'SelectInlineEditor',
           options: this.strategiesOptions
         },
@@ -129,23 +132,44 @@ export default {
           component: 'CurrencyInlieEditor'
         },
         {
+          key: 'classification',
+          value: this.ticketInfo.classification,
+          component: 'InfoClassification'
+        },
+        {
+          key: 'configurations',
+          value: this.ticketConfigurations,
+          component: 'InfoConfigurations'
+        },
+        {
           key: 'description',
           value: this.ticket.description,
           component: 'TextareaInlineEditor'
           // visible: () => !strategy?.isObrigacaoFazer
         }
-        // {
-        //   key: 'configurations',
-        //   value: this.ticketInfo.configurations
-        // },
-        // {
-        //   key: 'classification',
-        //   value: this.ticketInfo.classification
-        // }
       ]
     },
     strategiesOptions() {
       return { list: this.strategies, label: 'name', value: 'id' }
+    },
+    ticketConfigurations() {
+      const {
+        skipEnrichment,
+        denySavingDeposit,
+        businessHoursEngagement,
+        awaysContactParty,
+        contactPartyWhenNoLawyer,
+        contactPartyWhenInvalidLawyer
+      } = this.ticketInfo
+
+      return {
+        skipEnrichment,
+        denySavingDeposit,
+        businessHoursEngagement,
+        awaysContactParty,
+        contactPartyWhenNoLawyer,
+        contactPartyWhenInvalidLawyer
+      }
     },
     disputeId() {
       return Number(this.$route.params.id)
@@ -181,6 +205,7 @@ export default {
 .overview-info {
   overflow-y: auto;
   overflow-x: hidden;
+  height: 100%;
 
   .overview-info__infoline {
     margin-top: 6px;
@@ -193,13 +218,8 @@ export default {
 
     .overview-info__infoline-data,
     .overview-info__infoline-link {
-      margin: 3px 0px 3px 18px;
+      margin: 3px 0 3px 18px;
       line-height: normal;
-      display: block;
-    }
-
-    .overview-info__infoline-link {
-      border-bottom: 2px solid transparent;
     }
   }
 }
