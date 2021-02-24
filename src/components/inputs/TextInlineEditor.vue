@@ -4,7 +4,9 @@
       v-if="!isEditing"
       class="text-inline-editor__value"
     >
-      <span class="text-inline-editor__inner">
+      <span
+        class="text-inline-editor__inner"
+        @click="$emit('click')">
         {{ filteredVModel }}
       </span>
       <span class="text-inline-editor__icons">
