@@ -132,7 +132,7 @@ const omnichannelActions = {
     }
   },
 
-  validateWhatsappMessage({ dispatch, getters }, { contact, data }) {
+  validateWhatsappMessage({ commit, dispatch, getters }, { contact, data }) {
     return new Promise((resolve, reject) => {
       dispatch('canSendWhatsapp', contact).then(({ canSend }) => {
         if (canSend) {
@@ -140,16 +140,18 @@ const omnichannelActions = {
           if (can) {
             dispatch('sendwhatsapp', data).then(res => resolve(res))
           } else {
-            reject(new Error({
+            commit('setEditorText', '')
+            reject(JSON.stringify({
               title: 'Ops!',
-              message: 'Parece que você enviou uma mensagem parecida recentemente. Devido às políticas de SPAM do WhatsApp, a mensagem não pôde ser enviada.',
+              message: 'Parece que você enviou uma mensagem parecida recentemente.\nDevido às políticas de SPAM do WhatsApp, a mensagem não pôde ser enviada.',
               type: 'error'
             }))
           }
         } else {
-          reject(new Error({
+          commit('resetRecipients')
+          reject(JSON.stringify({
             title: 'Ops!',
-            message: 'O envio de mensagem para este número WhatsApp não é permitido neste momento. O prazo para responder mensagens no WhatsApp é de 24 horas.<br><br>Não encontramos uma mensagem deste número nas últimas 24 horas para que você possa responder.',
+            message: 'O envio de mensagem para este número WhatsApp não é permitido neste momento.\nO prazo para responder mensagens no WhatsApp é de 24 horas.\n\nNão encontramos uma mensagem deste número nas últimas 24 horas para que você possa responder.',
             type: 'error'
           }))
         }

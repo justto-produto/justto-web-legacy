@@ -89,6 +89,9 @@ export default {
           message: 'Mensagem enviado com sucesso.',
           type: 'success'
         })
+      }).catch(error => {
+        const parsedError = JSON.parse(error)
+        this.$jusNotification(parsedError)
       })
     },
 
