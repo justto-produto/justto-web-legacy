@@ -1,22 +1,22 @@
 <template>
-  <div class="popover-link-inline-editor">
+  <div class="popover-inline-editor">
     <el-popover
       ref="popoverEditor"
       placement="bottom"
       :width="width"
       trigger="click"
-      class="popover-link-inline-editor__popover"
-      popper-class="popover-link-inline-editor__popper-class"
+      class="popover-inline-editor__popover"
+      popper-class="popover-inline-editor__popper-class"
     >
-      <ul class="popover-link-inline-editor__list">
+      <ul class="popover-inline-editor__list">
         <li
           v-for="option in options"
           :key="option.value"
           :class="{
-            'popover-link-inline-editor__option--selected': option.value === value,
-            'popover-link-inline-editor__option--disabled': option.disabled
+            'popover-inline-editor__option--selected': option.value === value,
+            'popover-inline-editor__option--disabled': option.disabled
           }"
-          class="popover-link-inline-editor__option"
+          class="popover-inline-editor__option"
           @click="handleSelect(option.value)"
         >
           <i
@@ -26,12 +26,18 @@
           {{ option.label | capitalize }}
         </li>
       </ul>
-      <a
+      <div
         slot="reference"
-        class="popover-link-inline-editor__link"
+        class="popover-inline-editor__reference show-right-icon"
       >
-        {{ label }}
-      </a>
+        <i
+          class="popover-inline-editor__reference-icon"
+          v-if="selectedOption.icon"
+          :class="selectedOption.icon"
+        />
+        {{ selectedOption.label | capitalize }}
+        <i class="el-icon-edit hidden-icon" />
+      </div>
     </el-popover>
   </div>
 </template>
@@ -41,20 +47,23 @@ export default {
   name: 'PopoverLinkInlineEditor',
   props: {
     value: {
-      type: String,
+      type: [String, Boolean],
       default: ''
     },
     options: {
       type: Array,
       default: () => ([])
     },
-    label: {
-      type: String,
-      default: 'Clique aqui'
-    },
     width: {
       type: Number,
       default: 300
+    }
+  },
+  computed: {
+    selectedOption() {
+      const optionIndex = this.options.findIndex(option => option.value === this.value)
+      const { label, icon } = this.options[optionIndex]
+      return { label, icon }
     }
   },
   methods: {
@@ -69,15 +78,25 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.popover-link-inline-editor {
-  .popover-link-inline-editor__popover {
+.popover-inline-editor {
+  .popover-inline-editor__popover {
     text-align: center;
     display: block;
   }
 
-  .popover-link-inline-editor__link {
-    font-size: 13px;
+  .popover-inline-editor__reference {
     line-height: normal;
+    cursor: default;
+    display: flex;
+    align-items: center;
+
+    .popover-inline-editor__reference-icon {
+      margin-right: 6px
+    }
+
+    .el-icon-edit {
+      padding-left: 3px    
+    }
   }
 }
 </style>
@@ -85,15 +104,15 @@ export default {
 <style lang="scss">
 @import '@/styles/colors.scss';
 
-.popover-link-inline-editor__popper-class {
+.popover-inline-editor__popper-class {
   padding: 6px 0;
 
-  .popover-link-inline-editor__list {
+  .popover-inline-editor__list {
     list-style: none;
     margin: 0;
     padding: 0;
 
-    .popover-link-inline-editor__option {
+    .popover-inline-editor__option {
       padding: 6px 24px;
       cursor: pointer;
 

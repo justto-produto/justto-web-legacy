@@ -4,6 +4,7 @@
       v-if="!party.roles.includes('NEGOTIATOR')"
       v-model="party.polarity"
       :options="roleOptions"
+      :width="200"
       label="Trocar polaridade"
       class="party-details__infoline-data"
       @change="updatePolarity"
@@ -121,13 +122,13 @@ export default {
       ]
 
       if (roles.includes('PARTY')) {
-        return { role: 'PARTY', list: partyOptions }
+        return partyOptions
       } else if (roles.includes('LAWYER')) {
-        return { role: 'LAWYER', list: lawyerOptions }
+        return lawyerOptions
       } else if (roles.includes('NEGOTIATOR')) {
-        return { role: 'NEGOTIATOR', list: [] }
+        return []
       } else {
-        return { role: '', list: [...partyOptions, ...lawyerOptions] }
+        return [...partyOptions, ...lawyerOptions]
       }
     },
     mappedOabs() {
@@ -214,17 +215,17 @@ export default {
 .party-details {
   .party-details__infoline {
     margin-top: 6px;
+    line-height: normal;
 
     .party-details__infoline-label {
       line-height: normal;
-      color: $--color-text-secondary;
       font-size: 13px;
+      color: $--color-text-secondary;
     }
 
     .party-details__infoline-data,
     .party-details__infoline-link {
-      margin-left: 18px;
-      margin-bottom: 3px;
+      margin: 3px 0 3px 18px;
       line-height: normal;
     }
   }
