@@ -51,6 +51,7 @@
         ]"
         @change="(...args)=>updateContacts(...args, 'phone')"
         @delete="removeContact($event, 'phone')"
+        @post="addContact($event, 'phone')"
         @click="selectContact($event, 'phone')"
       />
     </div>
@@ -64,6 +65,7 @@
         model="address"
         @change="(...args)=>updateContacts(...args, 'email')"
         @delete="removeContact($event, 'email')"
+        @post="addContact($event, 'email')"
         @click="selectContact($event, 'email')"
       />
     </div>
@@ -82,6 +84,7 @@
         ]"
         @change="(...args)=>updateContacts(...args, 'oab')"
         @delete="removeContact($event, 'oab')"
+        @post="addContact($event, 'oab')"
       />
     </div>
   </article>
@@ -106,7 +109,6 @@ export default {
     disputeId() {
       return Number(this.$route.params.id)
     },
-
     documentType() {
       return this.party.documentNumber?.length <= 14 ? 'CPF' : 'CNPJ'
     },

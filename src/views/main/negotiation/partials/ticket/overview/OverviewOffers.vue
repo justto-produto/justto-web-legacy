@@ -157,4 +157,20 @@ export default {
     }
   }
 }
+
+@media (max-height: 900px) {
+  .overview-offers {
+    .overview-offers__proposal {
+      font-size: 15px;
+
+      .overview-offers__proposal-value {
+        font-size: 19px;
+      }
+
+      &--defendant {
+        margin-top: 10px;
+      }
+    }
+  }
+}
 </style>

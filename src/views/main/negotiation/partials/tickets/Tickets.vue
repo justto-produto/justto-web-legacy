@@ -164,7 +164,6 @@ export default {
     },
 
     infiniteHandler($state) {
-      console.log('infinite handles')
       this.getTicketsNextPage()
         .then(response => {
           if (response.last) {

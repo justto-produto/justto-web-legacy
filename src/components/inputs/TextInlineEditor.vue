@@ -6,7 +6,8 @@
     >
       <span
         class="text-inline-editor__inner"
-        @click="$emit('click')">
+        @click="$emit('click')"
+      >
         {{ filteredVModel }}
       </span>
       <span class="text-inline-editor__icons">
@@ -82,7 +83,7 @@ export default {
       },
       set(value) {
         this.isEditingActive = value
-        this.$emit('blur', value)
+        if (!value) this.$emit('blur')
       }
     },
     tokens() {

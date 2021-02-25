@@ -139,11 +139,30 @@ a {
     cursor: pointer;
     transition: .2s ease-out all;
     opacity: 0;
+    &:hover { color: $--color-primary; }
   }
   &:hover .hidden-icon {
     opacity: 1;
     transform: translateX(0)
   }  
+}
+
+* {
+  -webkit-overflow-scrolling: touch;
+}
+*::-webkit-scrollbar {
+  background-color: transparent;
+  width: 18px;
+}
+*::-webkit-scrollbar-track { background-color: transparent }
+*::-webkit-scrollbar-button { display: none }
+*::-webkit-scrollbar-thumb {
+  background-color:#adadad97;
+  border: 3px solid #fff;
+  border-left-width: 9px;
+  border-radius: 11px 7px 7px 11px;
+  transition: .3s ease-out all;
+  &:hover { background-color:#adadadad; }
 }
 
 @keyframes dots {

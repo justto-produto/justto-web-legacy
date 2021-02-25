@@ -59,9 +59,9 @@ export default {
       },
       set(value) {
         this.isEditingActive = value
-        this.$emit('blur', value)
+        if (!value) this.$emit('blur')
       }
-    },
+    }
   },
   methods: {
     enableEdit() {
