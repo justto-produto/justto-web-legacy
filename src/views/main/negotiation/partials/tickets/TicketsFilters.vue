@@ -19,7 +19,7 @@
         @click="handlePrescriptionClick(prescription.prescription)"
       >
         <div>
-          <jus-icon
+          <JusIcon
             :class="{ 'management-prescriptions__filter-icon--selected' : hasPrescription(prescription.prescription) }"
             class="management-prescriptions__filter-icon"
             icon="filter"
@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 export default {
   name: 'ManagementPrescriptions',
   props: {
@@ -54,8 +54,7 @@ export default {
   computed: {
     ...mapGetters({
       hasPrescription: 'hasPrescription',
-      prescriptions: 'prescriptionsList',
-      recentPrescriptions: 'getRecentPrescriptions'
+      prescriptions: 'prescriptionsList'
     }),
 
     processedActiveTab() {
@@ -76,32 +75,27 @@ export default {
     }
   },
   methods: {
-    ...mapMutations([
-      'setRecentPrescription',
-      'addPrescription',
-      'removePrescription'
+    ...mapActions([
+      'getTickets',
+      'addTicketPrescription',
+      'removeTicketPrescription'
     ]),
 
     handlePrescriptionClick(prescription) {
       this.$store.commit('resetDisputeQueryPage')
-      if (this.hasPrescription(prescription)) {
-        this.removePrescription(prescription)
+      if (this.hasPrescription(prescription)) { // Talvez precise criar esse getter adaptado (ou nao)
+        this.removeTicketPrescription(prescription) // Ja mudei o nome e o map aqui
       } else {
-        this.addPrescription(prescription)
-        this.setRecentPrescription(prescription)
+        this.addTicketPrescription(prescription) // Ja mudei o nome e o map aqui
         // SEGMENT TRACK
         const translatedPrescription = this.$t(`prescription.${prescription}`).toUpperCase()
         this.$jusSegment(`Filtro botão ${translatedPrescription}`)
       }
-      this.getDisputes()
+      this.getTickets()
     },
 
     buttonType(name) {
       return this.hasPrescription(name) ? 'primary' : ''
-    },
-
-    getDisputes() {
-      this.$emit('management:getDisputes')
     }
   }
 }
