@@ -9,9 +9,11 @@ const overviewActions = {
       mutation: command === 'nextPage' ? 'setCommunicationTicketsNextPage' : 'setCommunicationTickets'
     })
   },
+
   setTicketsQuery({ commit }, params) {
     commit('setTicketsQuery', params)
   },
+
   getTicketsNextPage({ commit, dispatch }) {
     return new Promise((resolve, reject) => {
       commit('addTicketQueryPage')
@@ -19,6 +21,18 @@ const overviewActions = {
         .then(response => resolve(response))
         .catch(error => reject(error))
     })
+  },
+
+  addTicketPrescription({ commit }, prescription) {
+    commit('addTicketPrescription', prescription)
+  },
+
+  removeTicketPrescription({ commit }, prescription) {
+    commit('removeTicketPrescription', prescription)
+  },
+
+  resetTicketsPage({ commit }) {
+    commit('setTicketsQuery', { key: 'page', value: 0 })
   }
 }
 

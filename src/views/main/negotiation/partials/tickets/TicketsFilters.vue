@@ -54,6 +54,7 @@ export default {
   computed: {
     ...mapGetters({
       hasPrescription: 'hasPrescription',
+      ticketsPrescriptions: 'getTicketsPrescriptions',
       prescriptions: 'prescriptionsList'
     }),
 
@@ -74,28 +75,30 @@ export default {
       }
     }
   },
+
   methods: {
     ...mapActions([
       'getTickets',
+      'resetTicketPage',
       'addTicketPrescription',
       'removeTicketPrescription'
     ]),
 
     handlePrescriptionClick(prescription) {
-      this.$store.commit('resetDisputeQueryPage')
-      if (this.hasPrescription(prescription)) { // Talvez precise criar esse getter adaptado (ou nao)
-        this.removeTicketPrescription(prescription) // Ja mudei o nome e o map aqui
+      this.resetTicketsPage()
+      if (this.ticketsPrescriptions.includes(prescription)) { // Talvez precise criar esse getter adaptado (ou nao)
+        this.removeTicketPrescription(prescription)
       } else {
-        this.addTicketPrescription(prescription) // Ja mudei o nome e o map aqui
+        this.addTicketPrescription(prescription)
         // SEGMENT TRACK
         const translatedPrescription = this.$t(`prescription.${prescription}`).toUpperCase()
         this.$jusSegment(`Filtro botão ${translatedPrescription}`)
       }
-      this.getTickets()
+      this.getTickets('')
     },
 
     buttonType(name) {
-      return this.hasPrescription(name) ? 'primary' : ''
+      return this.ticketsPrescriptions.includes(name) ? 'primary' : ''
     }
   }
 }
