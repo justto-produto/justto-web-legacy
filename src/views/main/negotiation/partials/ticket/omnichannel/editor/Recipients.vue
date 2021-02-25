@@ -5,7 +5,8 @@
   >
     <span
       v-if="recipients.length > 0"
-      class="recipients-container_content">
+      class="recipients-container_content"
+    >
       <span class="recipients-container_label">
         Destinatários:
         {{ recipients[0].address }}
@@ -15,7 +16,8 @@
         :icon="type"
         :is-active="!!type && type !== 'negotiation'"
         class="recipients-container_icon"
-        :class="type" />
+        :class="type"
+      />
     </span>
   </section>
 </template>

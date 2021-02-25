@@ -2,6 +2,7 @@
   <nav class="tickets-container">
     <TicketsHeader
       target-path="negotiation"
+      :active-tab="activeTab"
       @set-tab="handleSetTab"
     />
     <el-tabs
