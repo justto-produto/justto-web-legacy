@@ -23,7 +23,10 @@
         </span>
       </template>
     </el-autocomplete>
-    <TicketFilters :active-tab="activeTab" />
+    <TicketFilters
+      v-if="showFilters"
+      :active-tab="activeTab"
+    />
   </header>
 </template>
 
@@ -50,6 +53,11 @@ export default {
     searchTerm: '',
     debounce: setTimeout()
   }),
+  computed: {
+    showFilters() {
+      return (this.$route?.fullPath || '').includes('/negotiation')
+    }
+  },
   beforeMount() {
     this.getPrescriptions()
   },
