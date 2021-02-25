@@ -2,6 +2,7 @@
   <nav class="tickets-container">
     <TicketsHeader
       target-path="negotiation"
+      :active-tab="activeTab"
       @set-tab="handleSetTab"
     />
     <el-tabs
@@ -164,7 +165,6 @@ export default {
     },
 
     infiniteHandler($state) {
-      console.log('infinite handles')
       this.getTicketsNextPage()
         .then(response => {
           if (response.last) {

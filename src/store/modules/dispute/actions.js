@@ -363,16 +363,11 @@ const disputeActions = {
       data: params
     })
   },
-  sendDisputeNote({ commit }, body) {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.post(`${disputesPath}/${body.disputeId}/note`, body)
-        .then(response => {
-          resolve(response.data)
-        })
-        .catch(error => {
-          reject(error)
-        })
+  sendDisputeNote({ _ }, data) {
+    return axiosDispatch({
+      url: `${disputesPath}/${data.disputeId}/note`,
+      method: 'post',
+      data
     })
   },
   deleteDisputeNote({ commit }, noteId) {

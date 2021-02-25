@@ -2,14 +2,18 @@
   <section class="overview-container">
     <i
       :class="{ 'overview-container__button--active': isOverviewActive }"
-      class="overview-container__button el-icon-arrow-left el-icon-arrow-left"
+      class="overview-container__button el-icon-arrow-left"
       @click="$emit('toggle-show-overview')"
     />
 
     <HeaderUserMenu class="overview-container__menu" />
 
-    <h1 style="margin: 0">
+    <h1 class="overview-container__title show-right-icon">
       #{{ ticket.disputeId }}
+      <i
+        class="el-icon-copy-document hidden-icon"
+        @click="copy(ticket.disputeId)"
+      />
     </h1>
 
     <OverviewOffers
@@ -65,6 +69,11 @@ export default {
   },
   beforeDestroy() {
     window.removeEventListener('resize')
+  },
+  methods: {
+    copy(value) {
+      navigator.clipboard.writeText(value)
+    }
   }
 }
 </script>
@@ -80,6 +89,48 @@ export default {
   height: 100%;
   gap: 20px;
 
+  .overview-container__title {
+    margin: 0;
+  }
+
+  .overview-container__button {
+    position: absolute;
+    top: 50%;
+    left: -20px;
+    font-size: 18px;
+    background-color: $--color-white;
+    padding: 12px 0px;
+    border-style: solid;
+    border-color: $--light-gray;
+    border-width: 1px 0 1px 1px;
+    border-radius: 6px 0 0 6px;
+    &:before {
+      display: block;
+      transform: translateY(-50%);
+      transition: .6s;
+      position: relative;
+      top: 8px;
+    }
+    &--active:before {
+      transform: rotate(180deg) translateY(50%) !important;
+    }
+  }
+}
+
+@media (max-height: 900px) {
+  .overview-container {
+    gap: 12px;
+
+  .overview-container__title {
+      font-size: 22px;
+    }
+  }
+}
+</style>
+
+<style lang="scss">
+@import '@/styles/colors.scss';
+
   .overview-container__button {
     transform: translateY(-50%);
     position: absolute;
@@ -87,25 +138,21 @@ export default {
     left: -18px;
     font-size: 18px;
     transition: .6s;
-    &--active { transform: rotate(180deg) translateY(50%); }
-  }
-}
-
-@media (max-height: 680px) {
-  .overview-container {
-    padding: 6px 24px !important;
-
-    .overview-container__menu {
-      height: 40px !important;
+    background-color: $--color-white;
+    padding: 12px 0px;
+    border-style: solid;
+    border-color: $--light-gray;
+    border-width: 1px 0 1px 1px;
+    border-radius: 6px 0 0 6px;
+    &:before {
+      transform: translateY(-50%);
     }
-  }
-}
-
-@media (max-width: 900px) {
-  .overview-container {
-    .overview-container__header {
-      display: none;
+    &--active {
+      &:before {
+        transform: rotate(180deg) translateY(50%) !important;
+      }
     }
+    // &:after {
+    // }
   }
-}
 </style>

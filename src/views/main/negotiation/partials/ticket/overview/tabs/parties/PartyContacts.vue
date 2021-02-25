@@ -6,19 +6,36 @@
       v-model="contact[model]"
       :mask="mask"
       :filter="filter"
-      id-deletable
+      is-deletable
       class="party-contacts__infoline-data"
       @change="updateContact(contact.id, $event)"
       @delete="removeContact(contact.id)"
       @click="selectContact(contact[model])"
     />
-    <a
+    <div
+      v-if="(isAllContactsVisible || contactsLength <= 3) && !isAddingNewContact"
+      class="party-contacts__infoline-link"
+    >
+      <a @click="startAddNewContact">Adicionar</a>
+    </div>
+    <TextInlineEditor
+      v-else
+      ref="newContactInput"
+      v-model="newContactModel"
+      :mask="mask"
+      :filter="filter"
+      class="party-contacts__infoline-data"
+      @change="addContact"
+      @blur="stopAddNewContact"
+    />
+    <div
       v-if="contactsLength > 3"
       class="party-contacts__infoline-link"
-      @click="toggleContactsVisible"
     >
-      {{ !isAllContactsVisible ? `Ver mais (+${contactsLength - 3})` : 'Ver menos' }}
-    </a>
+      <a @click="toggleContactsVisible">
+        {{ !isAllContactsVisible ? `Ver mais (+${contactsLength - 3})` : 'Ver menos' }}
+      </a>
+    </div>
   </article>
 </template>
 
@@ -47,7 +64,9 @@ export default {
     }
   },
   data: () => ({
-    isAllContactsVisible: false
+    isAllContactsVisible: false,
+    isAddingNewContact: false,
+    newContactModel: ''
   }),
   computed: {
     contactsLength() {
@@ -63,11 +82,22 @@ export default {
     toggleContactsVisible() {
       this.isAllContactsVisible = !this.isAllContactsVisible
     },
+    startAddNewContact() {
+      this.isAddingNewContact = true
+      this.$nextTick(() => this.$refs.newContactInput.enableEdit())
+    },
+    stopAddNewContact() {
+      this.isAddingNewContact = false
+      this.newContactModel = ''
+    },
     updateContact(contactId, contactValue) {
       this.$emit('change', contactId, contactValue)
     },
     removeContact(contactId) {
       this.$emit('delete', contactId)
+    },
+    addContact(contactValue) {
+      this.$emit('post', contactValue)
     },
     selectContact(contactValue) {
       this.$emit('click', contactValue)
@@ -83,6 +113,10 @@ export default {
     margin-left: 18px;
     margin-bottom: 3px;
     line-height: normal;
+  }
+
+  .party-contacts__infoline-link {
+    border-bottom: 2px solid transparent;
   }
 }
 </style>

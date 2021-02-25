@@ -3,7 +3,8 @@
     <div
       v-for="config in booleanConfigurations"
       :key="config.key"
-      class="info-configurations__infoline">
+      class="info-configurations__infoline"
+    >
       <span class="info-configurations__infoline-label">
         {{ $t(`ticket-labels.${config.key}`) | capitalize }}?
       </span>
@@ -52,7 +53,7 @@ import { mapActions } from 'vuex'
 export default {
   name: 'InfoConfigurations',
   components: {
-    PopoverInlineEditor: () => import('@/components/inputs/PopoverInlineEditor'),
+    PopoverInlineEditor: () => import('@/components/inputs/PopoverInlineEditor')
   },
   props: {
     value: {
@@ -134,7 +135,7 @@ export default {
           value: 'neverContactParty',
           label: this.$t('ticket-labels.neverContactParty'),
           icon: 'el-icon-close'
-        },
+        }
       ]
 
       return { model, options }
@@ -222,10 +223,6 @@ export default {
         color: $--color-text-secondary;
       }
     }
-
-    // ..info-configurations__infoline-data--popover {
-
-    // }
   }
 }
 </style>

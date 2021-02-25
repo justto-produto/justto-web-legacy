@@ -23,6 +23,7 @@
         </span>
       </template>
     </el-autocomplete>
+    <TicketFilters :active-tab="activeTab" />
   </header>
 </template>
 
@@ -32,21 +33,30 @@ import { mapActions } from 'vuex'
 export default {
   name: 'TicketsHeader',
   components: {
+    TicketFilters: () => import('./TicketsFilters'),
     JusDisputeResume: () => import('@/components/layouts/JusDisputeResume')
   },
   props: {
     targetPath: {
       type: String,
       default: 'management/dispute'
+    },
+    activeTab: {
+      type: String,
+      default: 'running'
     }
   },
   data: () => ({
     searchTerm: '',
     debounce: setTimeout()
   }),
+  beforeMount() {
+    this.getPrescriptions()
+  },
   methods: {
     ...mapActions([
-      'searchDisputes'
+      'searchDisputes',
+      'getPrescriptions'
     ]),
 
     handleInput(term, cb) {
@@ -75,6 +85,8 @@ export default {
 
 .tickets-header-container {
   padding: 0;
+  display: flex;
+  align-items: center;
 
   .tickets-header-container__input {
     padding: 12px;

@@ -1,15 +1,14 @@
 <template>
-  <article>
-    <span class="classification">
-      {{ value.name }}
-      <div
-        v-for="details in value.details"
-        :key="details.id"
-      >
-        <i class="el-icon-right" />
-        {{ details.name }}
-      </div>
-    </span>
+  <article class="info-classification">
+    {{ value.name }}
+    <div
+      v-for="details in value.details"
+      :key="details.id"
+      class="info-classification__sub-classification"
+    >
+      <i class="el-icon-right" />
+      {{ details.name }}
+    </div>
   </article>
 </template>
 
@@ -26,5 +25,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+.info-classification {
+  .info-classification__sub-classification {
+    margin-left: 6px;
+    font-weight: 500;
+  }
+}
 </style>

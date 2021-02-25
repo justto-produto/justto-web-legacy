@@ -8,39 +8,54 @@ const omnichannelMutations = {
       Vue.set(state, 'activeTab', tab)
     }
   },
-  setEditorReady: (state, isReady) => {
-    Vue.set(state.editor, 'ready', isReady)
-  },
-  setEditorText: (state, text) => {
-    Vue.set(state.editor, 'messageText', text)
-  },
-  setNoteEditorText: (state, text) => {
-    Vue.set(state.editor, 'noteText', text)
-  },
-  setMessageType: (state, type) => {
-    Vue.set(state.editor, 'messageType', type)
-  },
+  setEditorReady: (state, isReady) => Vue.set(state.editor, 'ready', isReady),
+
+  setEditorText: (state, text) => Vue.set(state.editor, 'messageText', text),
+
+  setNoteEditorText: (state, text) => Vue.set(state.editor, 'noteText', text),
+
+  setMessageType: (state, type) => Vue.set(state.editor, 'messageType', type),
+
   setOccurrences: (state, { content }) => {
     // TODO: Validar duplicidade/sobrescrita de ocorrências.
     const occurrences = content.map(el => ({ ...el, occurrences: el.occurrences.reverse() })).reverse()
     Vue.set(state.occurrences, 'list', occurrences)
   },
-  setUpOccurrencesSize: (state) => {
-    state.occurrences.filter.size += 10
-  },
+
+  setUpOccurrencesSize: (state) => (state.occurrences.filter.size += 10),
+
   addSumary: (state, { payload, data }) => {
     const { occurrenceId, type } = payload
     Vue.set(state.occurrences.summary[type], occurrenceId, data.content)
   },
-  cleanSumary: (state, { type, occurrenceId }) => {
-    Vue.delete(state.occurrences.summary[type], occurrenceId)
+
+  cleanSumary: (state, { type, occurrenceId }) => Vue.delete(state.occurrences.summary[type], occurrenceId),
+
+  addFullMessage: (state, { id, content }) => Vue.set(state.occurrences.fullMessages, id, content),
+
+  addRecentMessage: (state, message) => {
+    const index = state.editor.recentMessages.length
+    Vue.set(state.editor.recentMessages, index, message)
   },
-  addFullMessage: (state, { id, content }) => {
-    Vue.set(state.occurrences.fullMessages, id, content)
+
+  cleanRecentMessages: state => Vue.set(state.editor, 'recentMessages', []),
+
+  removeFullMessage: (state, id) => Vue.delete(state.occurrences.fullMessages, id),
+
+  setRecipients: (state, recipient) => {
+    const { recipients } = state.editor
+    const has = recipients.filter(({ address }) => address === recipient.address).length > 0
+
+    if (has) {
+      Vue.set(state.editor, 'recipients', recipients.filter(el => el.address !== recipient.address))
+    } else {
+      Vue.set(state.editor, 'recipients', [...recipients, recipient])
+    }
   },
-  removeFullMessage: (state, id) => {
-    Vue.delete(state.occurrences.fullMessages, id)
-  }
+
+  setSendingMessage: (state, sending) => Vue.set(state.editor, 'sendinMessage', !!sending),
+
+  resetRecipients: (state) => Vue.set(state.editor, 'recipients', [])
 }
 
 export default omnichannelMutations

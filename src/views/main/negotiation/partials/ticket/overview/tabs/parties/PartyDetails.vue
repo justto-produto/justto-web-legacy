@@ -51,7 +51,8 @@
         ]"
         @change="(...args)=>updateContacts(...args, 'phone')"
         @delete="removeContact($event, 'phone')"
-        @click="selectContact($event, 'phone')"
+        @post="addContact($event, 'phone')"
+        @click="selectContact($event, 'whatsapp')"
       />
     </div>
     <div
@@ -64,6 +65,7 @@
         model="address"
         @change="(...args)=>updateContacts(...args, 'email')"
         @delete="removeContact($event, 'email')"
+        @post="addContact($event, 'email')"
         @click="selectContact($event, 'email')"
       />
     </div>
@@ -82,6 +84,7 @@
         ]"
         @change="(...args)=>updateContacts(...args, 'oab')"
         @delete="removeContact($event, 'oab')"
+        @post="addContact($event, 'oab')"
       />
     </div>
   </article>
@@ -106,7 +109,6 @@ export default {
     disputeId() {
       return Number(this.$route.params.id)
     },
-
     documentType() {
       return this.party.documentNumber?.length <= 14 ? 'CPF' : 'CNPJ'
     },
@@ -141,10 +143,11 @@ export default {
   },
   methods: {
     ...mapActions([
-      'deleteTicketOverviewPartyContact',
-      'setTicketOverviewPartyContact',
+      'addRecipient',
       'setTicketOverviewParty',
-      'setTicketOverviewPartyPolarity'
+      'setTicketOverviewPartyContact',
+      'setTicketOverviewPartyPolarity',
+      'deleteTicketOverviewPartyContact'
     ]),
     updatePolarity(rolePolarity) {
       const params = {
@@ -202,8 +205,8 @@ export default {
 
       this.deleteTicketOverviewPartyContact(params)
     },
-    selectContact(contactValue, contactType) {
-      console.log(contactValue, contactType)
+    selectContact(address, type) {
+      this.addRecipient({ type, address })
     }
   }
 }

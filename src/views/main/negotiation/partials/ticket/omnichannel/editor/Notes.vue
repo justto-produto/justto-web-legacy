@@ -16,8 +16,14 @@
       <el-button
         type="primary"
         size="small"
+        :disabled="!enableButton"
+        @click="send"
       >
-        Salvar nota
+        <span v-if="!localLoading">Salvar nota</span>
+        <i
+          v-else
+          class="el-icon-loading"
+        />
       </el-button>
     </span>
   </section>
@@ -31,12 +37,19 @@ export default {
   components: {
     ckeditor: CKEditor.component
   },
+  data: () => ({
+    localLoading: false
+  }),
   computed: {
     ...mapGetters({
       getEditorReady: 'getEditorReady',
       editorConfig: 'getEditorConfig',
       editorText: 'getNoteEditorText'
     }),
+
+    enableButton() {
+      return this.editorReady && !this.localLoading && this.editorText.length
+    },
 
     editorReady: {
       get() {
@@ -53,8 +66,27 @@ export default {
   methods: {
     ...mapActions([
       'setEditorReady',
+      'sendDisputeNote',
       'setNoteEditorText'
     ]),
+
+    send(_event) {
+      const { id } = this.$route.params
+
+      this.localLoading = true
+      this.sendDisputeNote({
+        disputeId: id,
+        note: this.editorText
+      }).then(() => this.$jusNotification({
+        title: 'Yay!',
+        message: 'Nota gravada com sucesso.',
+        type: 'success'
+      })).catch(error => this.$jusNotification({
+        error
+      })).finally(() => {
+        this.localLoading = false
+      })
+    },
 
     destroyEditor() {
       this.editorReady = false

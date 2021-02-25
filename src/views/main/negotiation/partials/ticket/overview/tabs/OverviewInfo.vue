@@ -10,13 +10,13 @@
       </span>
       <component
         :is="data.component"
-        v-if="data.value || activeAddingData === data.key"
+        v-if="(data.value && data.visible !== false) || activeAddingData === data.key"
         :ref="data.key"
         v-model="data.value"
         :is-editable="data.isEditable"
         :options="data.options"
         class="overview-info__infoline-data"
-        @change="editData(data.key, $event)"
+        @change="setData(data.key, $event)"
         @blur="stopEditing"
       />
       <div
@@ -58,7 +58,8 @@ export default {
         status,
         paused,
         code,
-        internalId
+        internalId,
+        strategy
       } = this.ticket
       const {
         materialDamageValue,
@@ -68,7 +69,8 @@ export default {
         expireDate,
         importedDate,
         campaignName,
-        strategyId
+        strategyId,
+        classification
       } = this.ticketInfo
 
       return [
@@ -132,20 +134,21 @@ export default {
           component: 'CurrencyInlieEditor'
         },
         {
-          key: 'classification',
-          value: this.ticketInfo.classification,
-          component: 'InfoClassification'
-        },
-        {
           key: 'configurations',
           value: this.ticketConfigurations,
           component: 'InfoConfigurations'
         },
         {
+          key: 'classification',
+          value: classification,
+          component: 'InfoClassification',
+          visible: classification && classification.name
+        },
+        {
           key: 'description',
           value: this.ticket.description,
-          component: 'TextareaInlineEditor'
-          // visible: () => !strategy?.isObrigacaoFazer
+          component: 'TextareaInlineEditor',
+          visible: !strategy?.isObrigacaoFazer
         }
       ]
     },
@@ -178,7 +181,7 @@ export default {
   methods: {
     ...mapActions(['setTicketOverview']),
 
-    editData(key, value) {
+    setData(key, value) {
       const { disputeId } = this
       const data = { [key]: value }
       this.setTicketOverview({ data, disputeId })
@@ -192,8 +195,8 @@ export default {
         }, 5)
       })
     },
-    stopEditing(value) {
-      if (!value) this.activeAddingData = ''
+    stopEditing() {
+      this.activeAddingData = ''
     }
   }
 }
@@ -220,6 +223,10 @@ export default {
     .overview-info__infoline-link {
       margin: 3px 0 3px 18px;
       line-height: normal;
+    }
+
+    .overview-info__infoline-link {
+      border-bottom: 2px solid transparent;
     }
   }
 }

@@ -31,9 +31,9 @@
         class="popover-inline-editor__reference show-right-icon"
       >
         <i
-          class="popover-inline-editor__reference-icon"
           v-if="selectedOption.icon"
           :class="selectedOption.icon"
+          class="popover-inline-editor__reference-icon"
         />
         {{ selectedOption.label | capitalize }}
         <i class="el-icon-edit hidden-icon" />
@@ -89,14 +89,13 @@ export default {
     cursor: default;
     display: flex;
     align-items: center;
+    text-align: left;
 
     .popover-inline-editor__reference-icon {
       margin-right: 6px
     }
 
-    .el-icon-edit {
-      padding-left: 3px    
-    }
+    .el-icon-edit { padding-left: 3px }
   }
 }
 </style>
@@ -113,8 +112,10 @@ export default {
     padding: 0;
 
     .popover-inline-editor__option {
-      padding: 6px 24px;
       cursor: pointer;
+      padding: 6px 24px;
+      word-break: break-word;
+      text-align: left;
 
       &:hover {
         background-color: $--light-gray;
