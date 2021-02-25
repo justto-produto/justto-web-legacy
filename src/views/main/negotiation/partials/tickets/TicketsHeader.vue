@@ -33,7 +33,7 @@ import { mapActions } from 'vuex'
 export default {
   name: 'TicketsHeader',
   components: {
-    TicketFilters: () => import('./TicketFilters'),
+    TicketFilters: () => import('./TicketsFilters'),
     JusDisputeResume: () => import('@/components/layouts/JusDisputeResume')
   },
   props: {
