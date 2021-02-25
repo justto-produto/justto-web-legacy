@@ -79,7 +79,7 @@ export default {
   methods: {
     ...mapActions([
       'getTickets',
-      'resetTicketPage',
+      'resetTicketsPage',
       'addTicketPrescription',
       'removeTicketPrescription'
     ]),
