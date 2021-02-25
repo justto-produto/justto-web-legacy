@@ -51,7 +51,7 @@
         ]"
         @change="(...args)=>updateContacts(...args, 'phone')"
         @delete="removeContact($event, 'phone')"
-        @click="selectContact($event, 'phone')"
+        @click="selectContact($event, 'whatsapp')"
       />
     </div>
     <div
@@ -141,10 +141,11 @@ export default {
   },
   methods: {
     ...mapActions([
-      'deleteTicketOverviewPartyContact',
-      'setTicketOverviewPartyContact',
+      'addRecipient',
       'setTicketOverviewParty',
-      'setTicketOverviewPartyPolarity'
+      'setTicketOverviewPartyContact',
+      'setTicketOverviewPartyPolarity',
+      'deleteTicketOverviewPartyContact'
     ]),
     updatePolarity(rolePolarity) {
       const params = {
@@ -202,8 +203,8 @@ export default {
 
       this.deleteTicketOverviewPartyContact(params)
     },
-    selectContact(contactValue, contactType) {
-      console.log(contactValue, contactType)
+    selectContact(address, type) {
+      this.addRecipient({ type, address })
     }
   }
 }

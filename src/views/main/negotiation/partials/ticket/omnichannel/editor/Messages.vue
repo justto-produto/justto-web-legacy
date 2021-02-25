@@ -26,8 +26,16 @@
       <el-button
         type="primary"
         size="small"
+        :disabled="!editorReady || localLoading"
+        @click="send"
       >
-        Enviar mensagem
+        <span v-if="!localLoading">
+          Enviar mensagem
+        </span>
+        <i
+          v-else
+          class="el-icon-loading"
+        />
       </el-button>
     </span>
   </section>
@@ -41,9 +49,9 @@ export default {
   components: {
     ckeditor: CKEditor.component
   },
-  data() {
-    return { }
-  },
+  data: () => ({
+    localLoading: false
+  }),
   computed: {
     ...mapGetters({
       editorTextScaped: 'getEditorTextScaped',
@@ -72,9 +80,30 @@ export default {
   },
   methods: {
     ...mapActions([
+      'resetRecipients',
       'setEditorReady',
-      'setEditorText'
+      'setEditorText',
+      'sendMessage'
     ]),
+
+    send(_event) {
+      this.localLoading = true
+      const { id } = this.$route.params
+      this.sendMessage(Number(id)).then(res => {
+        this.resetRecipients()
+        this.setEditorText('')
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Mensagem enviado com sucesso.',
+          type: 'success'
+        })
+      }).catch(error => {
+        const parsedError = JSON.parse(error)
+        this.$jusNotification(parsedError)
+      }).finally(() => {
+        this.localLoading = false
+      })
+    },
 
     destroyEditor() {
       this.editorReady = false

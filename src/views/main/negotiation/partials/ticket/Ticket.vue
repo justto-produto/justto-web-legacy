@@ -41,11 +41,13 @@ export default {
   methods: {
     ...mapActions([
       'getTicketOverview',
-      'getLastTicketOffers'
+      'getLastTicketOffers',
+      'cleanRecentMessages'
     ]),
 
     fetchData() {
       const disputeId = this.$route.params.id
+      this.cleanRecentMessages()
       this.getTicketOverview(disputeId)
       this.getLastTicketOffers(disputeId)
     },

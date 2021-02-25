@@ -2,6 +2,7 @@
   <section
     id="editorOmnichannelNegotiation"
     class="editor-container"
+    :class="activeTab"
   >
     <el-tabs
       class="editor-container__tabs"
@@ -20,6 +21,7 @@
         />
       </el-tab-pane>
     </el-tabs>
+    <recipients class="editor-container__recipients" />
   </section>
 </template>
 
@@ -29,6 +31,7 @@ import EDITOR_CONSTANTS from '@/constants/editor'
 
 export default {
   components: {
+    recipients: () => import('./Recipients'),
     messages: () => import('./Messages'),
     notes: () => import('./Notes')
   },
@@ -80,6 +83,10 @@ export default {
 .editor-container {
   border-top: 2px solid $--light-gray;
   height: auto;
+
+  &.MESSAGES {
+    min-height: 40vh;
+  }
 }
 </style>
 
@@ -88,9 +95,19 @@ export default {
   margin-bottom: 0px !important;
 }
 .editor-container {
+  position: relative;
+
   .editor-container__tabs {
     flex: 1;
   }
+
+  .editor-container__recipients {
+    position: absolute;
+    top: 0;
+    right: 12px;
+    max-width: 340px;
+  }
+
   .el-tabs__item {
     padding: 0 18px !important;
   }

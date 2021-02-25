@@ -28,7 +28,8 @@ const overviewGetters = {
   },
   getTicketOverviewProperties: ({ ticketOverviewProperties }) => ticketOverviewProperties,
   getTicketOverviewAttachments: ({ ticketOverviewAttachments }) => ticketOverviewAttachments,
-  getLastTicketOffers: ({ lastTicketOffers }) => lastTicketOffers
+  getLastTicketOffers: ({ lastTicketOffers }) => lastTicketOffers,
+  getTicketOverviewNegotiators: ({ ticketOverviewParties }) => ticketOverviewParties.filter(({ roles }) => roles.includes('NEGOTIATOR'))
 }
 
 export default overviewGetters
