@@ -134,6 +134,8 @@ const omnichannelActions = {
     }
   },
 
+  sendNote({ commit }, params) {},
+
   validateWhatsappMessage({ commit, dispatch, getters }, { contact, data }) {
     return new Promise((resolve, reject) => {
       dispatch('canSendWhatsapp', contact).then(({ canSend }) => {
