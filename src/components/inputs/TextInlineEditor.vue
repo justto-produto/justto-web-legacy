@@ -34,8 +34,10 @@
       v-model="vModel"
       v-mask="{ mask, tokens }"
       class="text-inline-editor__input"
-      @blur="disableEdit"
+      @blur="confirmEdit"
     />
+      <!-- @keyup.native.enter="confirmEdit"
+      @keyup.native.esc="cancelEdit" -->
   </div>
 </template>
 
@@ -122,10 +124,17 @@ export default {
       })
     },
     disableEdit() {
+      this.isEditing = false
+    },
+    confirmEdit() {
       if (this.model !== this.value) {
         this.$emit('change', this.vModel)
       }
-      this.isEditing = false
+      this.disableEdit()
+    },
+    cancelEdit() {
+      this.model = this.value || ''
+      this.disableEdit()
     },
     copyValue() {
       navigator.clipboard.writeText(this.vModel)
