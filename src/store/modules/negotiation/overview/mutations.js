@@ -19,7 +19,7 @@ const overviewMutations = {
     for (const key of Object.keys(payload)) Vue.set(ticketOverview, key, payload[key])
   },
   setTicketOverviewInfo: (state, params) => (Vue.set(state, 'ticketOverviewInfo', params)),
-  updatedTicketOverviewInfo: ({ ticketOverviewInfo }, { payload }) => {
+  updateTicketOverviewInfo: ({ ticketOverviewInfo }, { payload }) => {
     for (const key of Object.keys(payload)) Vue.set(ticketOverviewInfo, key, payload[key])
   },
   setTicketOverviewParties: (state, params) => (Vue.set(state, 'ticketOverviewParties', params)),

@@ -27,8 +27,10 @@
       v-model="vModel"
       class="currency-inline-editor__input"
       maxlength="16"
-      @blur.native="disableEdit"
+      @blur.native="confirmEdit"
     />
+      <!-- @keyup.native.enter="confirmEdit"
+      @keyup.native.esc="cancelEdit" -->
   </div>
 </template>
 
@@ -75,10 +77,17 @@ export default {
       this.$nextTick(() => document.getElementById('currencyInput').focus())
     },
     disableEdit() {
+      this.isEditing = false
+    },
+    confirmEdit() {
       if (this.model !== this.value) {
         this.$emit('change', this.vModel)
       }
-      this.isEditing = false
+      this.disableEdit()
+    },
+    cancelEdit() {
+      this.model = this.value || 0
+      this.disableEdit()
     },
     copyValue() {
       const formattedValue = new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2 }).format(this.vModel)
