@@ -20,6 +20,7 @@
       >
         <el-menu-item
           v-for="menuItem in menuItems"
+          v-show="menuItem.isVisible"
           :key="menuItem.index"
           :index="menuItem.index"
           @click="menuItem.action"
@@ -94,6 +95,7 @@ export default {
   computed: {
     ...mapGetters({
       isAdminProfile: 'isAdminProfile',
+      isJusttoAdmin: 'isJusttoAdmin',
       workspaceMembersSorted: 'workspaceMembersSorted',
       workspace: 'workspaceSubdomain',
       personId: 'loggedPersonId',
@@ -106,24 +108,35 @@ export default {
           index: '/',
           title: 'Dashboard',
           icon: 'dashboard',
+          isVisible: true,
+          action: () => {}
+        },
+        {
+          index: '/negotiation',
+          title: 'Negociação',
+          icon: 'negotiation-window',
+          isVisible: this.isJusttoAdmin,
           action: () => {}
         },
         {
           index: '/management',
           title: 'Gerenciamento',
           icon: 'management',
+          isVisible: true,
           action: () => this.setTabQuery('management')
         },
         {
           index: '/management/all',
           title: 'Todas as disputas',
           icon: 'full-folder',
+          isVisible: true,
           action: () => this.setTabQuery('allDisputes')
         },
         {
           index: '/import',
           title: 'Importação',
           icon: 'import',
+          isVisible: true,
           action: () => {}
         }
       ]
