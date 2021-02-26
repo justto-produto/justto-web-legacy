@@ -6,7 +6,10 @@
       @click="$emit('toggle-show-overview')"
     />
 
-    <HeaderUserMenu class="overview-container__menu" />
+    <HeaderUserMenu
+      class="overview-container__menu"
+      :class="{'hidde-menu': showOverview}"
+    />
 
     <h1 class="overview-container__title show-right-icon">
       #{{ ticket.disputeId }}
@@ -117,11 +120,27 @@ export default {
   }
 }
 
+@media (min-width: 1200px) {
+  .overview-container {
+    .overview-container__menu.hidde-menu {
+      display: none;
+    }
+  }
+}
+
+@media (max-width: 900px) {
+  .overview-container {
+    .overview-container__menu {
+      display: none;
+    }
+  }
+}
+
 @media (max-height: 900px) {
   .overview-container {
     gap: 12px;
 
-  .overview-container__title {
+    .overview-container__title {
       font-size: 22px;
     }
   }
