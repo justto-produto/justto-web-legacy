@@ -451,6 +451,7 @@ export default {
 
   .ticket-actions__more-actions {
     margin-left: 10px;
+    &--hidden { display: none }
   }
 }
 
@@ -462,7 +463,7 @@ export default {
       display: none;
     }
     .ticket-actions__more-actions {
-      &--hidden { display: none }
+      &--hidden { display: block }
     }
   }
 }

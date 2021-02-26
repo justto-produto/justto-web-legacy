@@ -83,10 +83,6 @@ export default {
 .editor-container {
   border-top: 2px solid $--light-gray;
   height: auto;
-
-  &.MESSAGES {
-    min-height: 40vh;
-  }
 }
 </style>
 

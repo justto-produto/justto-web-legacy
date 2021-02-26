@@ -61,17 +61,32 @@ const overviewActions = {
     return axiosDispatch({
       url: `${disputeApi}/${disputeId}`,
       method: 'PATCH',
-      data
+      data,
+      mutation: 'updateTicketOverview',
+      payload: data
+    })
+  },
+
+  setTicketOverviewInfo({ _ }, params) {
+    const { data, disputeId } = params
+
+    return axiosDispatch({
+      url: `${disputeApi}/${disputeId}/info`,
+      method: 'PATCH',
+      data,
+      mutation: 'updateTicketOverviewInfo',
+      payload: data
+
     })
   },
 
   setTicketOverviewParty({ _ }, params) {
     const { disputeId, data } = params
-
     return axiosDispatch({
       url: `${disputeApiLegacy}/${disputeId}/dispute-roles`,
       method: 'PUT',
-      data
+      data,
+      mutation: 'updateTicketOverviewParty'
     })
   },
 
@@ -84,23 +99,32 @@ const overviewActions = {
     })
   },
 
-  deleteTicketOverviewPartyContact({ _ }, params) {
-    const { disputeId, roleId, contactId, contactType } = params
-
-    return axiosDispatch({
-      url: `${disputeApiLegacy}/${disputeId}/dispute-roles/${roleId}/${contactType}/${contactId}`,
-      method: 'DELETE'
-    })
-  },
-
   setTicketOverviewPartyContact({ _ }, params) {
     const { disputeId, roleId, contactType, contactData } = params
 
     return axiosDispatch({
       url: `${disputeApiLegacy}/${disputeId}/dispute-roles/${roleId}/${contactType}`,
       method: 'PUT',
-      data: contactData
+      data: contactData,
+      mutation: 'setTicketOverviewPartyContact',
+      payload: params
     })
+  },
+
+  deleteTicketOverviewPartyContact({ _ }, params) {
+    const { disputeId, roleId, contactId, contactType } = params
+
+    return axiosDispatch({
+      url: `${disputeApiLegacy}/${disputeId}/dispute-roles/${roleId}/${contactType}/${contactId}`,
+      method: 'DELETE',
+      mutation: 'deleteTicketOverviewPartyContact',
+      payload: params
+    })
+  },
+
+  updateTicketOverviewPartyContact({ dispatch }, params) {
+    dispatch('deleteTicketOverviewPartyContact', params)
+      .then(() => dispatch('setTicketOverviewPartyContact', params))
   }
 }
 

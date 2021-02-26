@@ -19,7 +19,7 @@
       <a @click="startAddNewContact">Adicionar</a>
     </div>
     <TextInlineEditor
-      v-else
+      v-if="isAddingNewContact"
       ref="newContactInput"
       v-model="newContactModel"
       :mask="mask"
@@ -94,6 +94,7 @@ export default {
       this.$emit('change', contactId, contactValue)
     },
     removeContact(contactId) {
+      console.log(contactId)
       this.$emit('delete', contactId)
     },
     addContact(contactValue) {

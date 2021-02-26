@@ -16,7 +16,7 @@
         :is-editable="data.isEditable"
         :options="data.options"
         class="overview-info__infoline-data"
-        @change="setData(data.key, $event)"
+        @change="setData(data.key, data.classToEdit, $event)"
         @blur="stopEditing"
       />
       <div
@@ -59,7 +59,8 @@ export default {
         paused,
         code,
         internalId,
-        strategy
+        strategy,
+        description
       } = this.ticket
       const {
         materialDamageValue,
@@ -69,7 +70,6 @@ export default {
         expireDate,
         importedDate,
         campaignName,
-        strategyId,
         classification
       } = this.ticketInfo
 
@@ -89,17 +89,20 @@ export default {
         {
           key: 'code',
           value: code,
-          component: 'TextInlineEditor'
+          component: 'TextInlineEditor',
+          classToEdit: 'ticket'
         },
         {
           key: 'internalId',
           value: internalId,
-          component: 'TextInlineEditor'
+          component: 'TextInlineEditor',
+          classToEdit: 'ticket'
         },
         {
           key: 'strategy',
-          value: strategyId,
+          value: strategy.id,
           component: 'SelectInlineEditor',
+          classToEdit: 'ticket',
           options: this.strategiesOptions
         },
         {
@@ -111,43 +114,51 @@ export default {
         {
           key: 'expireDate',
           value: expireDate?.dateTime,
-          component: 'DateInlieEditor'
+          component: 'DateInlieEditor',
+          classToEdit: 'info'
         },
         {
           key: 'materialDamageValue',
           value: materialDamageValue,
-          component: 'CurrencyInlieEditor'
+          component: 'CurrencyInlieEditor',
+          classToEdit: 'info'
         },
         {
           key: 'moralDamageValue',
           value: moralDamageValue,
-          component: 'CurrencyInlieEditor'
+          component: 'CurrencyInlieEditor',
+          classToEdit: 'info'
         },
         {
           key: 'provisionedValue',
           value: provisionedValue,
-          component: 'CurrencyInlieEditor'
+          component: 'CurrencyInlieEditor',
+          classToEdit: 'info'
         },
         {
           key: 'requestedValue',
           value: requestedValue,
-          component: 'CurrencyInlieEditor'
+          component: 'CurrencyInlieEditor',
+          classToEdit: 'info'
         },
         {
           key: 'configurations',
           value: this.ticketConfigurations,
-          component: 'InfoConfigurations'
+          component: 'InfoConfigurations',
+          classToEdit: 'info'
         },
         {
           key: 'classification',
           value: classification,
           component: 'InfoClassification',
-          visible: classification && classification.name
+          classToEdit: 'info',
+          visible: Boolean(classification && classification.name)
         },
         {
           key: 'description',
-          value: this.ticket.description,
+          value: description,
           component: 'TextareaInlineEditor',
+          classToEdit: 'ticket',
           visible: !strategy?.isObrigacaoFazer
         }
       ]
@@ -179,20 +190,27 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['setTicketOverview']),
+    ...mapActions([
+      'setTicketOverview',
+      'setTicketOverviewInfo'
+    ]),
 
-    setData(key, value) {
+    setData(key, classToEdit, value) {
       const { disputeId } = this
       const data = { [key]: value }
-      this.setTicketOverview({ data, disputeId })
+
+      if (classToEdit === 'info') {
+        this.setTicketOverviewInfo({ data, disputeId })
+      } else {
+        this.setTicketOverview({ data, disputeId })
+      }
     },
     startEditing(key) {
       this.activeAddingData = key
-      console.log(key, this.$refs)
       this.$nextTick(() => {
         setTimeout(() => {
           this.$refs[key][0].enableEdit()
-        }, 5)
+        }, 10)
       })
     },
     stopEditing() {

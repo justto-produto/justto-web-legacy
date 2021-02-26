@@ -129,6 +129,7 @@ export default {
     padding: 12px 0;
     height: auto;
     line-height: normal;
+    min-height: 62px;
   }
 }
 </style>

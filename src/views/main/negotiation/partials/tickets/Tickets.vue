@@ -109,7 +109,7 @@ export default {
 
     handleChangeTab(tab) {
       this.setTicketsQuery({ key: 'status', value: [] })
-      this.setTicketsQuery({ key: 'prescription', value: [] })
+      this.setTicketsQuery({ key: 'prescriptions', value: [] })
       this.setTicketsQuery({ key: 'sort', value: [] })
 
       switch (tab.name) {

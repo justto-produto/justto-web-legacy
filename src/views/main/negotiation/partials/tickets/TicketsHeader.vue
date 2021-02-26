@@ -23,7 +23,11 @@
         </span>
       </template>
     </el-autocomplete>
-    <TicketFilters :active-tab="activeTab" />
+
+    <TicketsFilters
+      v-if="$route.name === 'ticket'"
+      :active-tab="activeTab"
+    />
   </header>
 </template>
 
@@ -33,7 +37,7 @@ import { mapActions } from 'vuex'
 export default {
   name: 'TicketsHeader',
   components: {
-    TicketFilters: () => import('./TicketFilters'),
+    TicketsFilters: () => import('./TicketsFilters'),
     JusDisputeResume: () => import('@/components/layouts/JusDisputeResume')
   },
   props: {
