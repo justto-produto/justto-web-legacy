@@ -3,9 +3,8 @@
     ref="occurrence-root"
     class="occurrences-container"
   >
-    <InfiniteLoading
-      :identifier="infiniteId"
-      :distance="10"
+    <infinite-loading
+      :identifier="activeTab"
       spinner="spiral"
       direction="top"
       @infinite="loadOccurrences"
@@ -20,7 +19,7 @@
       >
         Início das ocorrências
       </div>
-    </InfiniteLoading>
+    </infinite-loading>
     <div
       v-for="(occurrenceContainer, occurrenceContainerIndex) in occurrences"
       :key="`occurrence-container-${occurrenceContainerIndex}`"
@@ -48,9 +47,6 @@ export default {
     Occurrence: () => import('./occurrence/Occurrence'),
     InfiniteLoading: () => import('vue-infinite-loading')
   },
-  data: () => ({
-    infiniteId: +new Date()
-  }),
   computed: {
     ...mapGetters({
       activeTab: 'getActiveTab',
@@ -65,27 +61,15 @@ export default {
     }
   },
   watch: {
-    activeTab() {
-      this.infiniteId += 1
-      this.goToChatBottom()
-    },
     '$route.params.id'() {
       this.getOccurrences(this.id)
     }
-  },
-  // TODO: Validar a troca de ticket.
-  mounted() {
-    this.init()
   },
   methods: {
     ...mapActions([
       'setMessageType',
       'getOccurrences'
     ]),
-
-    init() {
-      this.goToChatBottom()
-    },
 
     loadOccurrences($state) {
       this.getOccurrences(this.id).then(response => {
@@ -96,13 +80,6 @@ export default {
           this.$store.commit('setUpOccurrencesSize')
         }
       })
-    },
-
-    goToChatBottom() {
-      setTimeout(() => {
-        const height = this.$refs['occurrence-root'].scrollHeight
-        this.$refs['occurrence-root'].scroll(0, height)
-      }, 500)
     }
   }
 }

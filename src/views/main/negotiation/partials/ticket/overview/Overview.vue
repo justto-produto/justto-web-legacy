@@ -142,17 +142,13 @@ export default {
     padding: 12px 0px;
     border-style: solid;
     border-color: $--light-gray;
-    border-width: 1px 0 1px 1px;
+    border-width: 2px 0 2px 2px;
     border-radius: 6px 0 0 6px;
     &:before {
       transform: translateY(-50%);
     }
-    &--active {
-      &:before {
-        transform: rotate(180deg) translateY(50%) !important;
-      }
+    &--active:before {
+      transform: rotate(180deg) translateY(50%) !important;
     }
-    // &:after {
-    // }
   }
 </style>

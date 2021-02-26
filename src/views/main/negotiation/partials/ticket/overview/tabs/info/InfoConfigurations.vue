@@ -145,13 +145,13 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['setTicketOverview']),
+    ...mapActions(['setTicketOverviewInfo']),
 
     toggleOption(key, value) {
       const { disputeId } = this
       const data = { [key]: value }
 
-      this.setTicketOverview({ data, disputeId })
+      this.setTicketOverviewInfo({ data, disputeId })
     },
 
     selectContactPartyOption(value) {

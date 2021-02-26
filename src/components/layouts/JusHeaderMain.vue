@@ -95,7 +95,7 @@ export default {
     }
 
     .jus-header-main__search {
-      display: none;
+      display: none !important;
     }
 
     .jus-header-main__logo {

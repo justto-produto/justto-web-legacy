@@ -29,7 +29,6 @@
       prefix-icon=""
       format="dd/MM/yy"
       class="date-inline-editor__input"
-      @blur="disableEdit"
       @change="disableEdit"
     />
   </div>

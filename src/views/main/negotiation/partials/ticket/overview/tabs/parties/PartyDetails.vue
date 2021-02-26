@@ -16,7 +16,7 @@
         v-model="party.name"
         filter="ownName"
         class="party-details__infoline-data"
-        @change="updateName"
+        @change="updateParty($event, 'name')"
       />
     </div>
     <div
@@ -29,13 +29,10 @@
         :mask="['###.###.###-##', '##.###.###/####-##']"
         filter="cpfCnpj"
         class="party-details__infoline-data"
-        @change="updateDocument"
+        @change="updateParty($event, 'document')"
       />
     </div>
-    <div
-      v-if="party.phonesDto && party.phonesDto.length"
-      class="party-details__infoline"
-    >
+    <div class="party-details__infoline">
       <span class="party-details__infoline-label">Telefones:</span>
       <PartyContacts
         :contacts="party.phonesDto"
@@ -55,10 +52,7 @@
         @click="selectContact($event, 'whatsapp')"
       />
     </div>
-    <div
-      v-if="party.emailsDto && party.emailsDto.length"
-      class="party-details__infoline"
-    >
+    <div class="party-details__infoline">
       <span class="party-details__infoline-label">Emails:</span>
       <PartyContacts
         :contacts="party.emailsDto"
@@ -69,10 +63,7 @@
         @click="selectContact($event, 'email')"
       />
     </div>
-    <div
-      v-if="party.oabsDto && party.oabsDto.length"
-      class="party-details__infoline"
-    >
+    <div class="party-details__infoline">
       <span class="party-details__infoline-label">Oab:</span>
       <PartyContacts
         :contacts="mappedOabs"
@@ -145,9 +136,10 @@ export default {
     ...mapActions([
       'addRecipient',
       'setTicketOverviewParty',
-      'setTicketOverviewPartyContact',
       'setTicketOverviewPartyPolarity',
-      'deleteTicketOverviewPartyContact'
+      'setTicketOverviewPartyContact',
+      'deleteTicketOverviewPartyContact',
+      'updateTicketOverviewPartyContact'
     ]),
     updatePolarity(rolePolarity) {
       const params = {
@@ -158,17 +150,12 @@ export default {
 
       this.setTicketOverviewPartyPolarity(params)
     },
-    updateName(value) {
+    updateParty(value, key) {
       const { disputeId, party } = this
       const data = party.legacyDto
-      data.name = value
 
-      this.setTicketOverviewParty({ disputeId, data })
-    },
-    updateDocument(value) {
-      const { disputeId, party } = this
-      const data = party.legacyDto
-      data.documentNumber = value
+      if (key === 'document') key = 'documentNumber'
+      data[key] = value
 
       this.setTicketOverviewParty({ disputeId, data })
     },
@@ -191,19 +178,25 @@ export default {
       this.setTicketOverviewPartyContact(params)
     },
     updateContacts(contactId, contactValue, contactType) {
-      this.removeContact(contactId, contactType)
-      this.addContact(contactValue, contactType)
+      const { disputeId, party } = this
+
+      this.updateTicketOverviewPartyContact({
+        roleId: party.disputeRoleId,
+        disputeId,
+        contactId,
+        contactValue,
+        contactType
+      })
     },
     removeContact(contactId, contactType) {
       const { disputeId, party } = this
-      const params = {
+
+      this.deleteTicketOverviewPartyContact({
         roleId: party.disputeRoleId,
         disputeId,
         contactId,
         contactType
-      }
-
-      this.deleteTicketOverviewPartyContact(params)
+      })
     },
     selectContact(address, type) {
       this.addRecipient({ type, address })
