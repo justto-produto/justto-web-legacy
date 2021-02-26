@@ -28,6 +28,7 @@
       type="date"
       prefix-icon=""
       format="dd/MM/yy"
+      value-format="yyyy-MM-dd"
       class="date-inline-editor__input"
       @change="disableEdit"
     />
@@ -81,6 +82,7 @@ export default {
     },
     disableEdit() {
       if (this.model !== this.value) {
+        console.log('Valor:', this.vModel)
         this.$emit('change', this.vModel)
       }
       this.isEditing = false
