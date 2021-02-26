@@ -8,6 +8,7 @@ const messagesPath = 'api/messages'
 const omnichannelActions = {
   setActiveTab({ commit, dispatch }, tab) {
     commit('setActiveTab', tab)
+    commit('resetRecipients')
 
     if (route.currentRoute.params?.id) {
       const { id } = route.currentRoute.params
