@@ -36,7 +36,8 @@ const ticketsState = {
   ticketsQuery: {
     status: ['RUNNING'],
     size: 20,
-    page: 0
+    page: 0,
+    prescriptions: []
   }
 }
 

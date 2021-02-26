@@ -54,6 +54,11 @@ export default {
     searchTerm: '',
     debounce: setTimeout()
   }),
+  computed: {
+    showFilters() {
+      return (this.$route?.fullPath || '').includes('/negotiation')
+    }
+  },
   beforeMount() {
     this.getPrescriptions()
   },
