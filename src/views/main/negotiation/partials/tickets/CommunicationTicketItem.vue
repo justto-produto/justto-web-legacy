@@ -27,7 +27,9 @@
           :icon="lastInboundInteraction.icon"
           class="communication-ticket-item-container__message-icon"
         />
-        {{ lastInboundInteraction.message }}
+        <span :class="{ 'communication-ticket-item-container__message--bold': !ticket.visualized }">
+          {{ lastInboundInteraction.message }}
+        </span>
       </div>
     </div>
     <span class="communication-ticket-item-container__time">
@@ -156,6 +158,9 @@ export default {
       // white-space: nowrap;
       // text-overflow: ellipsis;
       // overflow: hidden;
+      &--bold {
+        font-weight: 600;
+      }
 
       .communication-ticket-item-container__message-icon {
         width: 16px;

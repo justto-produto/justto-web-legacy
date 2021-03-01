@@ -8,24 +8,9 @@
       <span class="info-configurations__infoline-label">
         {{ $t(`ticket-labels.${config.key}`) | capitalize }}?
       </span>
-      <!-- <div class="info-configurations__infoline-data">
-        <span
-          :class="{ 'info-configurations__infoline-data--disabled': !config.value }"
-          @click="toggleOption(config.key, true)"
-        >
-          <i class="el-icon-check" />
-          {{ $tc('boolean', true) | capitalize }}
-        </span>
-        <span
-          :class="{ 'info-configurations__infoline-data--disabled': config.value }"
-          @click="toggleOption(config.key, false)"
-        >
-          <i class="el-icon-close" />
-          {{ $tc('boolean', false) | capitalize }}
-        </span>
-      </div> -->
       <PopoverInlineEditor
         v-model="config.value"
+        :is-editable="config.isEditable"
         :options="booleanOptions"
         :width="120"
         class="info-configurations__infoline-data"
@@ -78,15 +63,18 @@ export default {
       return [
         {
           key: 'skipEnrichment',
-          value: skipEnrichment
+          value: skipEnrichment,
+          isEditable: false
         },
         {
           key: 'denySavingDeposit',
-          value: denySavingDeposit
+          value: denySavingDeposit,
+          isEditable: false
         },
         {
           key: 'businessHoursEngagement',
-          value: businessHoursEngagement
+          value: businessHoursEngagement,
+          isEditable: false
         }
       ]
     },
@@ -215,13 +203,6 @@ export default {
       gap: 12px;
       margin-left: 6px;
       font-weight: 500;
-
-      &--disabled {
-        cursor: pointer;
-        font-weight: 400;
-        font-size: 13px;
-        color: $--color-text-secondary;
-      }
     }
   }
 }
