@@ -246,9 +246,9 @@ export default {
                 this.mountError('E-mail não cadastrado ou senha incorreta.')
               } else {
                 this.loadingText = this.getErrorMessage()
-                setTimeout(this.doLogin, 6000)
-                // this.showLoading = false
-                // this.$jusNotification({ error })
+                // setTimeout(this.doLogin, 6000)
+                this.showLoading = false
+                this.$jusNotification({ error })
               }
             })
         } else {
