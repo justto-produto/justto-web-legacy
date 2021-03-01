@@ -21,7 +21,10 @@
         />
       </el-tab-pane>
     </el-tabs>
-    <recipients class="editor-container__recipients" />
+    <div class="editor-container__before-tabs">
+      <quick-reply />
+      <recipients class="editor-container__recipients" />
+    </div>
   </section>
 </template>
 
@@ -31,6 +34,7 @@ import EDITOR_CONSTANTS from '@/constants/editor'
 
 export default {
   components: {
+    QuickReply: () => import('./QuickReply'),
     recipients: () => import('./Recipients'),
     messages: () => import('./Messages'),
     notes: () => import('./Notes')
@@ -97,11 +101,16 @@ export default {
     flex: 1;
   }
 
-  .editor-container__recipients {
+  .editor-container__before-tabs {
     position: absolute;
     top: 0;
     right: 12px;
-    max-width: 340px;
+    width: 340px;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
   }
 
   .el-tabs__item {
