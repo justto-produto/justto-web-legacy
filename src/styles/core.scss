@@ -138,6 +138,7 @@ a {
   .hidden-icon {
     cursor: pointer;
     transition: .2s ease-out all;
+    margin-right: 6px;
     opacity: 0;
     &:hover { color: $--color-primary; }
   }

@@ -8,7 +8,6 @@
         'jus-avatar-user--purple': purple,
         'jus-avatar-user--status': status,
         'jus-avatar-user--online': status === 'ONLINE',
-        'jus-avatar-user--offline': status === 'OFFLINE',
       }
     ]"
     class="jus-avatar-user"
@@ -130,14 +129,15 @@ export default {
     bottom: 0px;
     right: 0px;
     border-radius: 50%;
-    border: solid 1px #fff;
   }
 
   &.jus-avatar-user--online:after {
+    border: solid 1px #fff;
     background: $--color-success;
   }
 
   &.jus-avatar-user--offline:after {
+    border: solid 1px #fff;
     background: $--color-danger;
   }
 

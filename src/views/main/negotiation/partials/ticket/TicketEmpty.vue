@@ -35,6 +35,7 @@ export default {
   font-weight: 500;
   font-size: 40px;
   gap: 24px;
+  height: 100%;
 
   &__text{
     text-align: center;

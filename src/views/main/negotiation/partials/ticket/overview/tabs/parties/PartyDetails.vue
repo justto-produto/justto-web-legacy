@@ -19,17 +19,27 @@
         @change="updateParty($event, 'name')"
       />
     </div>
-    <div
-      v-if="party.documentNumber"
-      class="party-details__infoline"
-    >
+
+    <div class="party-details__infoline">
+      <span class="party-details__infoline-label">Data de nascimento:</span>
+      <DateInlieEditor
+        v-if="party.birthday"
+        v-model="party.birthday"
+        :processed-date="$moment(party.birthday).fromNow(true)"
+        class="party-details__infoline-data"
+        @change="updateParty($event, 'birthday')"
+      />
+    </div>
+
+    <div class="party-details__infoline">
       <span class="party-details__infoline-label">{{ documentType }}:</span>
       <TextInlineEditor
+        v-if="party.documentNumber"
         v-model="party.documentNumber"
         :mask="['###.###.###-##', '##.###.###/####-##']"
         filter="cpfCnpj"
         class="party-details__infoline-data"
-        @change="updateParty($event, 'document')"
+        @change="updateParty($event, 'documentNumber')"
       />
     </div>
     <div class="party-details__infoline">
@@ -88,6 +98,7 @@ export default {
   components: {
     PopoverLinkInlineEditor: () => import('@/components/inputs/PopoverLinkInlineEditor'),
     TextInlineEditor: () => import('@/components/inputs/TextInlineEditor'),
+    DateInlieEditor: () => import('@/components/inputs/DateInlieEditor'),
     PartyContacts: () => import('./PartyContacts')
   },
   props: {
@@ -153,8 +164,6 @@ export default {
     updateParty(value, key) {
       const { disputeId, party } = this
       const data = party.legacyDto
-
-      if (key === 'document') key = 'documentNumber'
       data[key] = value
 
       this.setTicketOverviewParty({ disputeId, data })

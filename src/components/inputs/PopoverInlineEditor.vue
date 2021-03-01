@@ -4,6 +4,7 @@
       ref="popoverEditor"
       placement="bottom"
       :width="width"
+      :disabled="!isEditable"
       trigger="click"
       class="popover-inline-editor__popover"
       popper-class="popover-inline-editor__popper-class"
@@ -36,7 +37,10 @@
           class="popover-inline-editor__reference-icon"
         />
         {{ selectedOption.label | capitalize }}
-        <i class="el-icon-edit hidden-icon" />
+        <i
+          v-if="isEditable"
+          class="el-icon-edit hidden-icon"
+        />
       </div>
     </el-popover>
   </div>
@@ -53,6 +57,10 @@ export default {
     options: {
       type: Array,
       default: () => ([])
+    },
+    isEditable: {
+      type: Boolean,
+      default: true
     },
     width: {
       type: Number,

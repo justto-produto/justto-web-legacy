@@ -30,6 +30,7 @@ const overviewMutations = {
     Vue.set(partyToSet, 'emailsDto', data.emails)
     Vue.set(partyToSet, 'phonesDto', data.phones)
     Vue.set(partyToSet, 'oabsDto', data.oabs)
+    Vue.set(partyToSet, 'birthday', data.personProperties?.BIRTHDAY)
     Vue.set(partyToSet, 'legacyDto', data) // TODO: Remover essa merda aqui
   },
   updateTicketOverviewParty: ({ ticketOverviewParties }, params) => {
