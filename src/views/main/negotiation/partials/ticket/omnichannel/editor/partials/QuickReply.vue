@@ -37,17 +37,20 @@
           >
             <div
               class="dispute-view__templates-item-option"
-              @click="openEditTemplateDialog(template.template)">
+              @click="openEditTemplateDialog(template.template)"
+            >
               <i class="icon el-icon-edit" /> Editar
             </div>
             <div
               class="dispute-view__templates-item-option"
-              @click="resetQuickReplyTemplate({ templateId: template.template.referenceTemplateId, disputeId: id }); openTemplateMenu(null)">
+              @click="resetQuickReplyTemplate({ templateId: template.template.referenceTemplateId, disputeId: id }); openTemplateMenu(null)"
+            >
               <i class="icon el-icon-refresh-left" /> Restaurar
             </div>
             <div
               class="dispute-view__templates-item-option"
-              @click="archiveTemplate(template.template.referenceTemplateId); openTemplateMenu(null)">
+              @click="archiveTemplate(template.template.referenceTemplateId); openTemplateMenu(null)"
+            >
               <i class="icon el-icon-delete" /> Excluir
             </div>
             <el-button
@@ -100,7 +103,7 @@ import { mapActions, mapGetters } from 'vuex'
 
 export default {
   components: {
-    DisputeQuickReplyEditor: () => import('@/components/layouts/DisuteQuickReplyEditor'),
+    DisputeQuickReplyEditor: () => import('@/components/layouts/DisuteQuickReplyEditor')
   },
   data: () => ({
     activeTemplateMenu: null,
@@ -175,16 +178,6 @@ export default {
 
 .dispute-view__templates-item-option {
   cursor: pointer;
-
-  .icon {
-    display: none;
-  }
-
-  &:hover {
-    .icon {
-      display: inline;
-    }
-  }
 }
 
 .dispute-view__templates-list {
