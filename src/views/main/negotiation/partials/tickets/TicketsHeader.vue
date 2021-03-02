@@ -114,9 +114,7 @@ export default {
 
 <style lang="scss">
 .tickets-header-container__popover {
-  .el-autocomplete-suggestion.el-popper {
-    width: calc(100% - ((48px + 18px) * 2)) !important;
-  }
+  width: calc(100% - ((48px + 18px) * 2)) !important;
 }
 
 .tickets-header-container {
@@ -128,9 +126,7 @@ export default {
 }
 @media (max-width: 900px) {
   .tickets-header-container__popover {
-    .el-autocomplete-suggestion.el-popper {
-      width: calc(100% - (12px * 2)) !important;
-    }
+    width: calc(100% - (12px * 2)) !important;
   }
 }
 </style>

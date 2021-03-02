@@ -1,13 +1,19 @@
 <template>
   <article class="info-classification">
-    {{ value.name }}
+    <TextInlineEditor
+      v-model="value.name"
+      ref="classificationName"
+      class="info-classification__infoline-data"
+      @change="handleSetData($event, value.details)"
+      @blur="$emit('blur')"
+    />
     <div
-      v-for="details in value.details"
-      :key="details.id"
-      class="info-classification__sub-classification"
+      v-for="detail in value.details"
+      :key="detail"
+      class="info-classification__infoline-subdata"
     >
       <i class="el-icon-right" />
-      {{ details.name }}
+      {{ detail }}
     </div>
   </article>
 </template>
@@ -15,10 +21,21 @@
 <script>
 export default {
   name: 'InfoClassification',
+  components: {
+    TextInlineEditor: () => import('@/components/inputs/TextInlineEditor')
+  },
   props: {
     value: {
       type: Object,
       default: () => ({})
+    }
+  },
+  methods: {
+    enableEdit() {
+      this.$refs.classificationName.enableEdit()
+    },
+    handleSetData(name, details) {
+      this.$emit('change', { name, details })
     }
   }
 }
@@ -26,7 +43,7 @@ export default {
 
 <style lang="scss" scoped>
 .info-classification {
-  .info-classification__sub-classification {
+  .info-classification__infoline-subdata {
     margin-left: 6px;
     font-weight: 500;
   }
