@@ -42,7 +42,8 @@ export default {
     ...mapActions([
       'getTicketOverview',
       'getLastTicketOffers',
-      'cleanRecentMessages'
+      'cleanRecentMessages',
+      'getQuickReplyTemplates'
     ]),
 
     fetchData() {
@@ -50,6 +51,7 @@ export default {
       this.cleanRecentMessages()
       this.getTicketOverview(disputeId)
       this.getLastTicketOffers(disputeId)
+      this.getQuickReplyTemplates(disputeId)
     },
 
     toggleShowOverview() {

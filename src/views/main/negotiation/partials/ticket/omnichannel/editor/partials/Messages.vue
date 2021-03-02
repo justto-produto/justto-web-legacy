@@ -22,6 +22,7 @@
       :autosize="{ minRows: 5 }"
       @input="setEditorText"
     />
+    <Attachments class="messages-container__attachments" />
     <span class="messages-container__button">
       <el-button
         type="primary"
@@ -47,13 +48,15 @@ import { mapActions, mapGetters } from 'vuex'
 
 export default {
   components: {
-    ckeditor: CKEditor.component
+    ckeditor: CKEditor.component,
+    Attachments: () => import('./AttachemntsIndicator')
   },
   data: () => ({
     localLoading: false
   }),
   computed: {
     ...mapGetters({
+      attachment: 'getTicketOverviewAttachments',
       editorTextScaped: 'getEditorTextScaped',
       editorRecipients: 'getEditorRecipients',
       messageType: 'getEditorMessageType',
