@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700,900');
+// @import url('https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700,900');
 @import './variables';
 
 html {
@@ -138,6 +138,7 @@ a {
   .hidden-icon {
     cursor: pointer;
     transition: .2s ease-out all;
+    margin-right: 6px;
     opacity: 0;
     &:hover { color: $--color-primary; }
   }

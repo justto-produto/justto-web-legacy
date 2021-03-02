@@ -17,6 +17,10 @@
         class="el-icon-copy-document hidden-icon"
         @click="copy(ticket.disputeId)"
       />
+      <i
+        class="el-icon-delete hidden-icon"
+        @click="deleteDispute(ticket.disputeId)"
+      />
     </h1>
 
     <OverviewOffers
@@ -76,6 +80,13 @@ export default {
   methods: {
     copy(value) {
       navigator.clipboard.writeText(value)
+    },
+
+    deleteDispute(disputeId) {
+      this.$confirm('Tem certeza que deseja excluir essa disputa? Esta ação é irreverssível.', 'Atenção')
+        .then(() => {
+          this.$router.push('/negotiation')
+        })
     }
   }
 }
@@ -94,25 +105,30 @@ export default {
 
   .overview-container__title {
     margin: 0;
+
+    .el-icon-delete {
+      // font-size: 20px;
+      &:hover { color: $--color-danger; }
+    }
   }
 
   .overview-container__button {
     position: absolute;
     top: 50%;
-    left: -20px;
+    left: -22px;
     font-size: 18px;
     background-color: $--color-white;
     padding: 12px 0px;
     border-style: solid;
     border-color: $--light-gray;
-    border-width: 1px 0 1px 1px;
+    border-width: 2px 0 2px 2px;
     border-radius: 6px 0 0 6px;
     &:before {
       display: block;
       transform: translateY(-50%);
       transition: .6s;
       position: relative;
-      top: 8px;
+      top: 9px;
     }
     &--active:before {
       transform: rotate(180deg) translateY(50%) !important;
