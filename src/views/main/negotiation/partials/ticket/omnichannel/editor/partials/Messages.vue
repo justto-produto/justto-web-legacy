@@ -27,11 +27,11 @@
       <el-button
         type="primary"
         size="small"
-        :disabled="!editorReady || localLoading"
+        :disabled="!canSendMessage"
         @click="send"
       >
         <span v-if="!localLoading">
-          Enviar mensagem
+          {{ editorRecipients.length ? 'Enviar mensagem' : 'Selecione um destinatário' }}
         </span>
         <i
           v-else
@@ -58,6 +58,7 @@ export default {
     ...mapGetters({
       attachment: 'getTicketOverviewAttachments',
       editorTextScaped: 'getEditorTextScaped',
+      editorRecipients: 'getEditorRecipients',
       messageType: 'getEditorMessageType',
       getEditorReady: 'getEditorReady',
       editorConfig: 'getEditorConfig',
@@ -76,6 +77,10 @@ export default {
     },
     showCKEditor() {
       return !['sms', 'whatsapp'].includes(this.messageType)
+    },
+    canSendMessage() {
+      const { editorRecipients, localLoading, editorReady } = this
+      return editorRecipients.length && !localLoading && editorReady
     }
   },
   beforeDestroy() {

@@ -19,7 +19,7 @@
       />
       <i
         class="el-icon-delete hidden-icon"
-        @click="deleteDispute(ticket.disputeId)"
+        @click="deleteTicket(ticket.disputeId)"
       />
     </h1>
 
@@ -36,6 +36,12 @@
     />
 
     <OverviewTabs />
+
+    <DeleteTicketDialog
+      ref="deleteTicketDialog"
+      :status="ticket.status"
+      :dispute-id="ticket.disputeId"
+    />
   </section>
 </template>
 
@@ -48,7 +54,8 @@ export default {
     HeaderUserMenu: () => import('@/components/menus/HeaderUserMenu'),
     OverviewOffers: () => import('./OverviewOffers'),
     OverviewObf: () => import('./OverviewObf'),
-    OverviewTabs: () => import('./OverviewTabs')
+    OverviewTabs: () => import('./OverviewTabs'),
+    DeleteTicketDialog: () => import('./DeleteTicketDialog')
   },
   props: {
     showOverview: {
@@ -82,11 +89,8 @@ export default {
       navigator.clipboard.writeText(value)
     },
 
-    deleteDispute(disputeId) {
-      this.$confirm('Tem certeza que deseja excluir essa disputa? Esta ação é irreverssível.', 'Atenção')
-        .then(() => {
-          this.$router.push('/negotiation')
-        })
+    deleteTicket(disputeId) {
+      this.$refs.deleteTicketDialog.openDeleteTicketDialog()
     }
   }
 }

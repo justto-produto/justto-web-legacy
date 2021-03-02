@@ -6,6 +6,7 @@
   >
     <JusAvatarUser
       :name="ticket.plaintiff.name"
+      :status="ticket.plaintiff.status"
       class="communication-ticket-item-container__avatar"
       size="md"
       shadow

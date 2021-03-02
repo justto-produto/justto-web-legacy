@@ -1,77 +1,135 @@
 <template lang="html">
   <div
-    :class="{ 'jus-dispute-resume__disabled': disabled }"
+    :class="{ 'jus-dispute-resume--disabled': disabled }"
     class="jus-dispute-resume"
     @click="click"
   >
-    <h4 data-testid="dispute-title">
-      Disputa #{{ dispute.id }} |
-      Campanha: {{ dispute.campaign.name | capitalize }} |
-      Processo: {{ dispute.code }}
-      <span v-if="dispute.externalId">
-        | Código interno: {{ dispute.externalId }}
-      </span>
-      <div v-if="disabled">
-        <span v-if="archived">
-          Disputa excluída
-        </span>
-        <span v-else>
-          Você não tem permissão para acessar esta disputa
-        </span>
-      </div>
-    </h4>
-    <el-row
-      :gutter="20"
-      data-testid="dipute-info"
+    <h4
+      :class="{ 'jus-dispute-resume__header--archived': disabled }"
+      class="jus-dispute-resume__header"
     >
-      <el-col :span="10">
-        <div>Estratégia: {{ dispute.campaign.strategy }}</div>
-        <div>Status: <span>{{ $t('occurrence.type.' + dispute.status) | capitalize }}</span></div>
+      <span
+        v-if="dispute.id"
+        class="jus-dispute-resume__header-item"
+      >
+        Disputa: <b>#{{ dispute.id }}</b>
+      </span> |
+      <span
+        v-if="dispute.campaign && dispute.campaign.name"
+        class="jus-dispute-resume__header-item"
+      >
+        Campanha: <b>{{ dispute.campaign.name }}</b>
+      </span> |
+      <span
+        v-if="dispute.code"
+        class="jus-dispute-resume__header-item"
+      >
+        Processo: <b>{{ dispute.code }}</b>
+      </span> |
+      <span
+        v-if="dispute.externalId"
+        class="jus-dispute-resume__header-item"
+      >
+        Código interno: <b>{{ dispute.externalId }}</b>
+      </span>
+
+      <span v-if="disabled && archived">- <b>DISPUTA EXCLUÍDA</b></span>
+      <span v-else-if="disabled && !archived">- Você não tem permissão para acessar esta disputa</span>
+    </h4>
+
+    <article class="jus-dispute-resume__body">
+      <div class="jus-dispute-resume__main">
+        <div
+          v-if="dispute.campaign && dispute.campaign.strategy"
+          class="jus-dispute-resume__body-item"
+        >
+          Estratégia: <b>{{ dispute.campaign.strategy }}</b>
+        </div>
+        <div
+          v-if="dispute.status"
+          class="jus-dispute-resume__body-item"
+        >
+          Status: <b>{{ $t(`occurrence.type.${dispute.status}`) | capitalize }}</b>
+        </div>
         <div
           v-for="(claiment, index) in getClaimants(dispute.disputeRoles, 'CLAIMANT', 'PARTY')"
           :key="dispute.id + claiment.name + index + 'claimant'"
+          class="jus-dispute-resume__body-item jus-dispute-resume__body-item--list"
         >
-          Parte contrária: {{ claiment.name }}
+          Parte contrária: <b>{{ claiment.name | resumedName }}</b>
         </div>
         <div
           v-for="(lawyer, index) in getClaimants(dispute.disputeRoles, 'CLAIMANT', 'LAWYER')"
           :key="dispute.id + lawyer.name + index + 'lawyer'"
+          class="jus-dispute-resume__body-item jus-dispute-resume__body-item--list"
         >
-          Advogado: {{ lawyer.name }}
+          Advogado: <b>{{ lawyer.name }}</b>
         </div>
-      </el-col>
-      <el-col :span="7">
-        <div>Campanha: {{ dispute.campaign.name }}</div>
-        <div v-if="dispute.expirationDate">
+      </div>
+
+      <div class="jus-dispute-resume__dates">
+        <div
+          v-if="dispute.expirationDate"
+          class="jus-dispute-resume__body-item"
+        >
           Fim da negociação:
-          <span>{{ dispute.expirationDate.dateTime | moment('DD/MM/YY') }}</span>
+          <b>{{ dispute.expirationDate.dateTime | moment('DD/MM/YY') }}</b>
         </div>
-        <div v-if="dispute.disputeDealDate">
+        <div
+          v-if="dispute.disputeDealDate"
+          class="jus-dispute-resume__body-item"
+        >
           Data do acordo:
-          <span>{{ dispute.disputeDealDate.dateTime | moment('DD/MM/YY') }}</span>
+          <b>{{ dispute.disputeDealDate.dateTime | moment('DD/MM/YY') }}</b>
         </div>
-        <div v-if="dispute.lastInteraction">
+        <div
+          v-if="dispute.lastInteraction && dispute.lastInteraction.createAt"
+          class="jus-dispute-resume__body-item"
+        >
           Última interação:
-          <span>{{ getLastInteraction(dispute.lastInteraction.createAt.dateTime) }}</span>
+          <b>{{ getLastInteraction(dispute.lastInteraction.createAt.dateTime) }}</b>
         </div>
-      </el-col>
-      <el-col :span="7">
-        <div>Alçada máxima: {{ dispute.disputeUpperRange | currency }}</div>
-        <div>Valor proposto: {{ dispute.lastOfferValue | currency }}</div>
-        <div v-if="dispute.lastCounterOfferValue">
-          Contraproposta: {{ dispute.lastCounterOfferValue | currency }}
+      </div>
+
+      <div class="jus-dispute-resume__values">
+        <div
+          v-if="dispute.disputeUpperRange"
+          class="jus-dispute-resume__body-item"
+        >
+          Alçada máxima: <b>{{ dispute.disputeUpperRange | currency }}</b>
         </div>
-        <div v-if="dispute.disputeDealValue">
-          Valor do acordo: {{ dispute.disputeDealValue | currency }}
+        <div
+          v-if="dispute.lastOfferValue"
+          class="jus-dispute-resume__body-item"
+        >
+          Valor proposto: <b>{{ dispute.lastOfferValue | currency }}</b>
         </div>
-        <div v-if="dispute.materialDamage">
-          Dano material: {{ dispute.materialDamage | currency }}
+        <div
+          v-if="dispute.lastCounterOfferValue"
+          class="jus-dispute-resume__body-item"
+        >
+          Contraproposta: <b>{{ dispute.lastCounterOfferValue | currency }}</b>
         </div>
-        <div v-if="dispute.requestedValue">
-          Valor do processo: {{ dispute.requestedValue | currency }}
+        <div
+          v-if="dispute.disputeDealValue"
+          class="jus-dispute-resume__body-item"
+        >
+          Valor do acordo: <b>{{ dispute.disputeDealValue | currency }}</b>
         </div>
-      </el-col>
-    </el-row>
+        <div
+          v-if="dispute.materialDamage"
+          class="jus-dispute-resume__body-item"
+        >
+          Dano material: <b>{{ dispute.materialDamage | currency }}</b>
+        </div>
+        <div
+          v-if="dispute.requestedValue"
+          class="jus-dispute-resume__body-item"
+        >
+          Valor do processo: <b>{{ dispute.requestedValue | currency }}</b>
+        </div>
+      </div>
+    </article>
   </div>
 </template>
 
@@ -111,26 +169,61 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+@import '@/styles/colors.scss';
+
 .jus-dispute-resume {
-  line-height: 20px;
-  margin: 10px 20px;
-  white-space: initial;
   cursor: pointer;
-  h4 {
-    color: #9461f7;
-    margin: 0;
-    margin-bottom: 5px;
+  line-height: 20px;
+  white-space: initial;
+  margin: 12px;
+
+  &--disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
   }
-  color: #adadad;
-  > div span {
-    text-transform: capitalize;
+
+  .jus-dispute-resume__header {
+    color: $--color-primary;
+    margin: 0 0 6px;
+    &--archived { color: $--color-danger; }
+
+    .jus-dispute-resume__header-item {
+      display: inline-block;
+      & > b { font-weight: 500; }
+    }
   }
-  &__disabled {
-    cursor: default;
-    opacity: 0.3;
-    h4 > div {
-      color: red;
+
+  .jus-dispute-resume__body {
+    display: flex;
+    gap: 20px;
+    color: $--color-text-secondary;
+
+    .jus-dispute-resume__main { flex: 4 }
+    .jus-dispute-resume__values,
+    .jus-dispute-resume__dates {
+      flex: 3
+    }
+
+    .jus-dispute-resume__main,
+    .jus-dispute-resume__values,
+    .jus-dispute-resume__dates {
+      .jus-dispute-resume__body-item {
+        & > b { font-weight: 500; }
+      }
+    }
+  }
+
+  @media (max-width: 900px) {
+    .jus-dispute-resume__values,
+    .jus-dispute-resume__dates {
+      display: none;
+
+      .jus-dispute-resume__body-item {
+        &--list:nth-child(n+2) {
+          display: none;
+        }
+      }
     }
   }
 }
