@@ -44,7 +44,8 @@ const omnichannelMutations = {
     recentMessages: [],
     noteText: '',
     messageType: 'email',
-    recipients: []
+    recipients: [],
+    attachments: []
   }
 }
 
