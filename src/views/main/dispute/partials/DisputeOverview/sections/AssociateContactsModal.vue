@@ -375,7 +375,6 @@ export default {
               }
               .dialog-body__item-address {
                 font-size: 16px;
-                font-family: Montserrat;
               }
             }
 

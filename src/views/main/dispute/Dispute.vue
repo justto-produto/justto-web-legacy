@@ -427,7 +427,7 @@ export default {
     DisputeTips: () => import('./partials/DisputeTips'),
     DisputeNegotiation: () => import('./partials/DisputeNegotiation'),
     VueDraggableResizable: () => import('vue-draggable-resizable'),
-    DisputeQuickReplyEditor: () => import('./partials/DisuteQuickReplyEditor'),
+    DisputeQuickReplyEditor: () => import('@/components/layouts/DisuteQuickReplyEditor'),
     JusDragArea,
     quillEditor
   },

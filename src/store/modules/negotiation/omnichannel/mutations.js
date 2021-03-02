@@ -55,7 +55,9 @@ const omnichannelMutations = {
 
   setSendingMessage: (state, sending) => Vue.set(state.editor, 'sendinMessage', !!sending),
 
-  resetRecipients: (state) => Vue.set(state.editor, 'recipients', [])
+  resetRecipients: (state) => Vue.set(state.editor, 'recipients', []),
+
+  setMessageAttachments: (state, attachs) => Vue.set(state.editor, 'attachments', attachs)
 }
 
 export default omnichannelMutations

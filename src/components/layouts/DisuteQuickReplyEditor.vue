@@ -67,6 +67,7 @@ export default {
       html: '',
       editorRedy: false,
       editorConfig: {
+        parent: 'reply-editor',
         toolbarGroups: [
           { name: 'document', groups: ['mode', 'document', 'doctools'] },
           { name: 'clipboard', groups: ['clipboard', 'undo'] },
@@ -120,7 +121,9 @@ export default {
     destroyEditor() {
       this.editorRedy = false
       for (const instance of Object.values(window.CKEDITOR.instances)) {
-        instance.destroy()
+        if (instance.config.parent === this.editorConfig.parent) {
+          instance.destroy()
+        }
       }
     },
 
