@@ -154,21 +154,14 @@ export default {
     flex-direction: row-reverse;
   }
 
-  &.COMMUNICATION {
-    .interaction-container__balloon {
-      /* border: 3px solid #DFF4FE; */
-    }
-  }
-
   &.SCHEDULER {
     .interaction-container__balloon {
       border: 3px dotted #DFF4FE;
     }
   }
 
-  &.NEGOTIATOR, &.MANUAL {
+  &.MANUAL {
     .interaction-container__balloon {
-      /* border: 3px solid #FFC5A5; */
       background-color: white !important;
     }
   }
@@ -200,6 +193,10 @@ export default {
     &.INBOUND {
       flex-direction: row;
       background: #D1DBE27E;
+
+      &.NEGOTIATOR {
+        background: #D1DBE27E;
+      }
     }
 
     &.OUTBOUND {
