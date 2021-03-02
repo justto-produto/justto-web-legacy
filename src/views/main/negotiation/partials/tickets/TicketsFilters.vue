@@ -85,16 +85,16 @@ export default {
     ]),
 
     handlePrescriptionClick(prescription) {
-      this.resetTicketsPage()
-      if (this.ticketsPrescriptions.includes(prescription)) { // Talvez precise criar esse getter adaptado (ou nao)
+      this.setTicketsQuery({ key: 'page', value: 0 })
+
+      if (this.ticketsPrescriptions.includes(prescription)) {
         this.removeTicketPrescription(prescription)
       } else {
         this.addTicketPrescription(prescription)
-        // SEGMENT TRACK
         const translatedPrescription = this.$t(`prescription.${prescription}`).toUpperCase()
         this.$jusSegment(`Filtro botão ${translatedPrescription}`)
       }
-      this.getTickets('')
+      this.getTickets()
     },
 
     buttonType(name) {

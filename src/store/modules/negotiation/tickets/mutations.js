@@ -3,11 +3,14 @@
 import Vue from 'vue'
 
 const ticketsMutations = {
-  setCommunicationTickets: (state, params) => (Vue.set(state, 'tickets', params)),
-
-  setCommunicationTicketsNextPage: (state, params) => {
+  setCommunicationTickets: (state, params) => {
     params.content = state.tickets.content.concat(params.content)
     Vue.set(state, 'tickets', params)
+  },
+
+  deleteTicket: ({ tickets }, { payload }) => {
+    const ticketIndex = tickets.findIndex(ticket => ticket.disputeId === payload)
+    Vue.delete(tickets, ticketIndex)
   },
 
   setTicketsQuery: ({ ticketsQuery }, { key, value }) => (Vue.set(ticketsQuery, key, value)),

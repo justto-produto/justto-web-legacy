@@ -1,26 +1,38 @@
 import { axiosDispatch, buildQuery } from '@/utils/'
 
-const ticketsApi = '/api/disputes/v2'
+const disputeApi = '/api/disputes/v2'
+const disputeApiLegacy = '/api/disputes'
 
 const overviewActions = {
-  getTickets({ state }, command) {
+  getTickets({ state }) {
     return axiosDispatch({
-      url: `${ticketsApi}/filter${buildQuery(state.ticketsQuery)}`,
-      mutation: command === 'nextPage' ? 'setCommunicationTicketsNextPage' : 'setCommunicationTickets'
+      url: `${disputeApi}/filter${buildQuery(state.ticketsQuery)}`,
+      mutation: 'setCommunicationTickets'
     })
-  },
-
-  setTicketsQuery({ commit }, params) {
-    commit('setTicketsQuery', params)
   },
 
   getTicketsNextPage({ commit, dispatch }) {
     return new Promise((resolve, reject) => {
       commit('addTicketQueryPage')
-      dispatch('getTickets', 'nextPage')
+      dispatch('getTickets')
         .then(response => resolve(response))
         .catch(error => reject(error))
     })
+  },
+
+  deleteTicket({ _ }, params) {
+    const { disputeId, reason } = params
+
+    return axiosDispatch({
+      url: `${disputeApiLegacy}/${disputeId}/${reason}`,
+      method: 'DELETE',
+      mutation: 'deleteTicket',
+      payload: disputeId
+    })
+  },
+
+  setTicketsQuery({ commit }, params) {
+    commit('setTicketsQuery', params)
   },
 
   addTicketPrescription({ commit }, prescription) {
@@ -29,10 +41,6 @@ const overviewActions = {
 
   removeTicketPrescription({ commit }, prescription) {
     commit('removeTicketPrescription', prescription)
-  },
-
-  resetTicketsPage({ commit }) {
-    commit('setTicketsQuery', { key: 'page', value: 0 })
   }
 }
 

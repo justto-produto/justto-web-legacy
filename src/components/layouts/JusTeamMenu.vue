@@ -25,7 +25,7 @@
           >
             <JusAvatarUser
               :name="member.person.name"
-              :active="activePersonsIds.includes(member.person.id)"
+              :active="isActivePerson(member.person.id)"
               class="el-menu__avatar"
             />
           </el-tooltip>
@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'JusTeamMenu',
@@ -50,23 +50,40 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([
-      'disputeQuery',
-      'workspaceMembersSorted'
-    ]),
+    ...mapGetters({
+      disputeQuery: 'disputeQuery',
+      ticketsQuery: 'getTicketsQuery',
+      workspaceMembersSorted: 'workspaceMembersSorted'
+    }),
 
-    activePersonsIds() {
+    activePersonsDisputes() {
       return this.disputeQuery.persons || []
+    },
+    activePersonsTickets() {
+      return this.ticketsQuery.persons || []
     }
   },
   methods: {
-    setFilterPersonId(id, name) {
-      if (this.activePersonsIds.includes(id)) {
+    ...mapActions([
+      'setTicketsQuery',
+      'getTickets'
+    ]),
+
+    isActivePerson(personId) {
+      const { activePersonsTickets, activePersonsDisputes } = this
+      return activePersonsTickets.includes(personId) || activePersonsDisputes.includes(personId)
+    },
+
+    setFilterPersonId(personId) {
+      if (this.isActivePerson(personId)) {
         this.$store.commit('updateDisputeQuery', { key: 'persons', value: [] })
+        this.setTicketsQuery({ key: 'persons', value: [] })
+        this.getTickets()
       } else {
-        // SEGMENT TRACK
         this.$jusSegment('Filtro por negociador', { description: `Alterado filtro de negociador para ${name}` })
-        this.$store.commit('updateDisputeQuery', { key: 'persons', value: [id] })
+        this.$store.commit('updateDisputeQuery', { key: 'persons', value: [personId] })
+        this.setTicketsQuery({ key: 'persons', value: [personId] })
+        this.getTickets()
       }
     }
   }
