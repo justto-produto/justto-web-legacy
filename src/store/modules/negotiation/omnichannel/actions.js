@@ -23,6 +23,7 @@ const omnichannelActions = {
   setNoteEditorText: ({ commit }, note) => commit('setNoteEditorText', note),
 
   setMessageType({ commit }, type) {
+    commit('setMessageAttachments', [])
     commit('setMessageType', type)
     commit('resetRecipients')
   },
@@ -107,35 +108,43 @@ const omnichannelActions = {
   sendMessage({ dispatch, getters }, disputeId) {
     const {
       getTicketOverviewNegotiators: negotiators,
+      getSelectedAttachments: attachments,
       getEditorTextScaped: messageText,
-      getEditorMessageType: type,
+      getEditorRecipients: recipients,
       getEditorText: messageEmail,
-      getEditorRecipients
+      getEditorMessageType: type
     } = getters
 
     const roleId = negotiators[0].disputeRoleId
-
-    const data = type === 'negotiation' ? {
-      roleId,
-      message: messageEmail,
-      email: getEditorRecipients[0].address
-    } : {
-      disputeId,
-      externalIdentification: +new Date(),
-      message: type === 'whatsapp' ? messageText.trim() : messageEmail,
-      to: getEditorRecipients.map(({ address }) => ({ address }))
-    }
+    const to = recipients.map(({ address }) => ({ address }))
+    const externalIdentification = +new Date()
 
     if (type === 'email') {
+      const data = {
+        to,
+        disputeId,
+        attachments,
+        message: messageEmail,
+        externalIdentification
+      }
       return dispatch('sendemail', data)
     } else if (type === 'whatsapp') {
-      return dispatch('validateWhatsappMessage', { data, contact: getEditorRecipients[0].address })
-    } else if (type === 'negotiation') {
+      const data = {
+        to,
+        disputeId,
+        externalIdentification,
+        message: messageText.trim()
+      }
+      return dispatch('validateWhatsappMessage', { data, contact: recipients[0].address })
+    } else {
+      const data = {
+        roleId,
+        message: messageEmail,
+        email: recipients[0].address
+      }
       return dispatch('sendNegotiator', { disputeId, data })
     }
   },
-
-  sendNote({ commit }, params) {},
 
   validateWhatsappMessage({ commit, dispatch, getters }, { contact, data }) {
     return new Promise((resolve, reject) => {
@@ -162,6 +171,10 @@ const omnichannelActions = {
         }
       })
     })
+  },
+
+  setMessageAttachments({ commit }, attachs) {
+    commit('setMessageAttachments', attachs || [])
   }
 }
 
