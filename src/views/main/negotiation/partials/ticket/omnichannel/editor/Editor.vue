@@ -34,10 +34,10 @@ import EDITOR_CONSTANTS from '@/constants/editor'
 
 export default {
   components: {
-    QuickReply: () => import('./QuickReply'),
-    recipients: () => import('./Recipients'),
-    messages: () => import('./Messages'),
-    notes: () => import('./Notes')
+    QuickReply: () => import('./partials/QuickReply'),
+    recipients: () => import('./partials/Recipients'),
+    messages: () => import('./partials/Messages'),
+    notes: () => import('./partials/Notes')
   },
   computed: {
     ...mapGetters({
