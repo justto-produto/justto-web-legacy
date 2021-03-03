@@ -21,12 +21,23 @@
         />
       </div>
     </div>
-    <jus-icon
+    <span
       v-if="showReply"
-      class="interaction-container__reply-icon"
-      icon="reply"
-      @click="reply"
-    />
+      :class="{ 'active-icon': isInRecipients }"
+      class="interaction-container__reply"
+    >
+      <jus-icon
+        class="interaction-container__reply-icon"
+        icon="reply"
+        :is-active="isInRecipients"
+        @click="reply"
+      />
+      <jus-icon
+        class="interaction-container__reply-icon-remove"
+        icon="rejected-red"
+        @click="reply"
+      />
+    </span>
   </section>
 </template>
 
@@ -56,11 +67,16 @@ export default {
   },
   computed: {
     ...mapGetters({
+      recipients: 'getEditorRecipients',
       lastInteraction: 'disputeLastInteractions'
     }),
 
     type() {
       return this.value.interaction.type.split('_')[0]
+    },
+
+    isInRecipients() {
+      return this.recipients.map(({ address }) => address).includes(this.replyAdress)
     },
 
     messageType() {
@@ -119,6 +135,17 @@ export default {
           (negotiatorTypes.includes(type) || (this.disputeLastInteractions || []).length)
         )
       )
+    },
+
+    replyAdress() {
+      if (this.interaction?.properties?.PERSON_EMAIL) {
+        return this.interaction.properties.PERSON_EMAIL
+      } else if (this.interaction?.message?.sender) {
+        return this.interaction.message.sender
+      } else if (this.interaction?.message?.parameters?.SENDER) {
+        return this.interaction.message.parameters.SENDER
+      }
+      return null
     }
   },
   methods: {
@@ -127,7 +154,7 @@ export default {
     reply(_event) {
       const reply = {
         type: this.messageType,
-        address: null
+        address: this.replyAdress
       }
       if (this.value.interaction?.message?.sender) {
         reply.address = this.value.interaction.message.sender
@@ -144,6 +171,7 @@ export default {
 .interaction-container {
   display: flex;
   gap: 6px;
+  align-items: center;
 
   height: auto;
   margin: 10px 24px 0px 24px;
@@ -226,10 +254,29 @@ export default {
     }
   }
 
-  .interaction-container__reply-icon {
-    width: 20px;
-    cursor: pointer;
-  }
+  .interaction-container__reply {
+    display: flex;
+    height: 20px;
 
+    .interaction-container__reply-icon {
+      width: 20px;
+      cursor: pointer;
+    }
+
+    .interaction-container__reply-icon-remove {
+      width: 20px;
+      cursor: pointer;
+      display: none;
+    }
+  }
+  .active-icon:hover {
+    .interaction-container__reply-icon {
+      display: none;
+    }
+
+    .interaction-container__reply-icon-remove {
+      display: block;
+    }
+  }
 }
 </style>
