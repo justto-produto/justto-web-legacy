@@ -97,10 +97,13 @@ const omnichannelActions = {
   },
 
   addRecipient({ commit, dispatch, getters }, recipient) {
-    if (getters.getEditorMessageType !== recipient.type) {
+    console.log(recipient)
+    if (getters.getEditorMessageType !== recipient.type && recipient.address) {
       dispatch('setMessageType', recipient.type)
     }
-    commit('setRecipients', recipient)
+    if (recipient.address) {
+      commit('setRecipients', recipient)
+    }
   },
 
   resetRecipients: ({ commit }) => commit('resetRecipients'),
