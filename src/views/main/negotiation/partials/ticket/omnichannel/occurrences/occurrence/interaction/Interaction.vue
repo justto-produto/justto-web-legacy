@@ -157,7 +157,8 @@ export default {
     reply(_event) {
       const reply = {
         type: this.messageType,
-        address: this.replyAdress
+        value: this.replyAdress,
+        key: 'address'
       }
       this.addRecipient(reply)
     }
