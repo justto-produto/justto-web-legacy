@@ -75,6 +75,8 @@ export default {
         if (Object.keys(mapCommunicationTypes).includes(communicationType)) {
           return mapCommunicationTypes[communicationType]
         }
+      } else if ((this.interaction?.type || '').includes('NEGOTIATOR')) {
+        return 'negotiation'
       }
       return 'default'
     },
