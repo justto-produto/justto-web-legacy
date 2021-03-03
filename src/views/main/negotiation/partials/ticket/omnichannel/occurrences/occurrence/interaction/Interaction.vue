@@ -51,6 +51,7 @@ const negotiatorTypes = [
   'NEGOTIATOR_ACCEPTED',
   'NEGOTIATOR_REJECTED'
 ]
+
 export default {
   components: {
     COMMUNICATION: () => import('./partials/Communication'),
@@ -142,6 +143,8 @@ export default {
         return this.interaction.properties.PERSON_EMAIL
       } else if (this.interaction?.message?.sender) {
         return this.interaction.message.sender
+      } else if (this.interaction?.message?.parameters?.SENDER_EMAIL) {
+        return this.interaction.message.parameters.SENDER_EMAIL
       } else if (this.interaction?.message?.parameters?.SENDER) {
         return this.interaction.message.parameters.SENDER
       }
@@ -155,11 +158,6 @@ export default {
       const reply = {
         type: this.messageType,
         address: this.replyAdress
-      }
-      if (this.value.interaction?.message?.sender) {
-        reply.address = this.value.interaction.message.sender
-      } else if (this.value.interaction?.message?.parameters?.SENDER) {
-        reply.address = this.value.interaction.message.parameters.SENDER
       }
       this.addRecipient(reply)
     }
