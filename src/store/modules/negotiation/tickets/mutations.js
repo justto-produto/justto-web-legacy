@@ -3,9 +3,9 @@
 import Vue from 'vue'
 
 const ticketsMutations = {
-  setCommunicationTickets: (state, params) => {
-    params.content = state.tickets.content.concat(params.content)
-    Vue.set(state, 'tickets', params)
+  setCommunicationTickets: (state, { data, payload }) => {
+    if (payload === 'nextPage') data.content = state.tickets.content.concat(data.content)
+    Vue.set(state, 'tickets', data)
   },
 
   deleteTicket: ({ tickets }, { payload }) => {

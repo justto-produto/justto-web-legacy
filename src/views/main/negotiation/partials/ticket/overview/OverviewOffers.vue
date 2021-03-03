@@ -23,7 +23,7 @@
         />
       </div>
       <div>
-        <span>Máx: </span>
+        <span>Máx.: </span>
         <CurrencyInlieEditorInner
           v-model="upperRange"
           icon-side="left"

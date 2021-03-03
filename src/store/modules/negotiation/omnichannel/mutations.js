@@ -44,10 +44,10 @@ const omnichannelMutations = {
 
   setRecipients: (state, recipient) => {
     const { recipients } = state.editor
-    const has = recipients.filter(({ address }) => address === recipient.address).length > 0
+    const has = recipients.filter(({ value }) => value === recipient.value).length > 0
 
     if (has) {
-      Vue.set(state.editor, 'recipients', recipients.filter(el => el.address !== recipient.address))
+      Vue.set(state.editor, 'recipients', recipients.filter(el => el.value !== recipient.value))
     } else {
       Vue.set(state.editor, 'recipients', [...recipients, recipient])
     }

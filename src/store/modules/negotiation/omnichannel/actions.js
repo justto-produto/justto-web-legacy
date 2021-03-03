@@ -97,9 +97,15 @@ const omnichannelActions = {
   },
 
   addRecipient({ commit, dispatch, getters }, recipient) {
-    if (getters.getEditorMessageType !== recipient.type) {
-      dispatch('setMessageType', recipient.type)
+    const { type } = recipient
+
+    if (getters.getEditorMessageType !== type) {
+      dispatch('setMessageType', type)
     }
+    if (type === 'whatsapp') {
+      commit('resetRecipients')
+    }
+
     commit('setRecipients', recipient)
   },
 
@@ -116,7 +122,7 @@ const omnichannelActions = {
     } = getters
 
     const roleId = negotiators[0].disputeRoleId
-    const to = recipients.map(({ address }) => ({ address }))
+    const to = recipients.map(({ value, key }) => ({ [key]: value }))
     const externalIdentification = +new Date()
 
     if (type === 'email') {
@@ -135,12 +141,12 @@ const omnichannelActions = {
         externalIdentification,
         message: messageText.trim()
       }
-      return dispatch('validateWhatsappMessage', { data, contact: recipients[0].address })
+      return dispatch('validateWhatsappMessage', { data, contact: recipients[0].value })
     } else {
       const data = {
         roleId,
         message: messageEmail,
-        email: recipients[0].address
+        email: recipients[0].value
       }
       return dispatch('sendNegotiator', { disputeId, data })
     }
