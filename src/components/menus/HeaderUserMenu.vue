@@ -7,8 +7,13 @@
       v-if="isJusttoAdmin"
       content="Modo anônimo"
     >
-      <el-switch v-model="isGhostMode" />
+      <el-switch
+        v-model="isGhostMode"
+        class="usermenu-container__ghost-mode"
+      />
     </el-tooltip>
+
+    <JusAcademy class="usermenu-container__jus-academy" />
 
     <el-dropdown
       trigger="click"
@@ -91,6 +96,7 @@ import { mapActions, mapGetters } from 'vuex'
 
 export default {
   components: {
+    JusAcademy: () => import('@/components/dialogs/JusAcademy'),
     JusChangeWorkspace: () => import('@/components/dialogs/JusChangeWorkspace')
   },
   data: () => ({
@@ -201,8 +207,12 @@ export default {
   justify-content: center;
   align-items: center;
 
-  .el-switch {
+  .usermenu-container__ghost-mode {
     margin-right: 20px;
+  }
+
+  .usermenu-container__jus-academy {
+    margin-right: 10px;
   }
 
   .el-dropdown-link {
