@@ -4,17 +4,18 @@ const disputeApi = '/api/disputes/v2'
 const disputeApiLegacy = '/api/disputes'
 
 const overviewActions = {
-  getTickets({ state }) {
+  getTickets({ state }, command) {
     return axiosDispatch({
       url: `${disputeApi}/filter${buildQuery(state.ticketsQuery)}`,
-      mutation: 'setCommunicationTickets'
+      mutation: 'setCommunicationTickets',
+      payload: command || 'firstPage'
     })
   },
 
   getTicketsNextPage({ commit, dispatch }) {
     return new Promise((resolve, reject) => {
       commit('addTicketQueryPage')
-      dispatch('getTickets')
+      dispatch('getTickets', 'nextPage')
         .then(response => resolve(response))
         .catch(error => reject(error))
     })

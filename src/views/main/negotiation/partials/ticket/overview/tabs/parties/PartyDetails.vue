@@ -59,7 +59,7 @@
         @change="(...args)=>updateContacts(...args, 'phone')"
         @delete="removeContact($event, 'phone')"
         @post="addContact($event, 'phone')"
-        @click="selectContact($event, 'whatsapp')"
+        @click="(...args)=>selectContact(...args, 'whatsapp')"
       />
     </div>
     <div class="party-details__infoline">
@@ -70,7 +70,7 @@
         @change="(...args)=>updateContacts(...args, 'email')"
         @delete="removeContact($event, 'email')"
         @post="addContact($event, 'email')"
-        @click="selectContact($event, 'email')"
+        @click="(...args)=>selectContact(...args, 'email')"
       />
     </div>
     <div class="party-details__infoline">
@@ -207,8 +207,8 @@ export default {
         contactType
       })
     },
-    selectContact(address, type) {
-      this.addRecipient({ type, address })
+    selectContact(value, key, type) {
+      this.addRecipient({ value, key, type })
     }
   }
 }

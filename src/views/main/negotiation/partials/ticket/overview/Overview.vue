@@ -11,17 +11,30 @@
       :class="{'hidde-menu': showOverview}"
     />
 
-    <h1 class="overview-container__title show-right-icon">
-      #{{ ticket.disputeId }}
-      <i
-        class="el-icon-copy-document hidden-icon"
-        @click="copy(ticket.disputeId)"
-      />
-      <i
-        class="el-icon-delete hidden-icon"
-        @click="deleteTicket(ticket.disputeId)"
-      />
-    </h1>
+    <div>
+      <h1 class="overview-container__title show-right-icon">
+        #{{ ticket.disputeId }}
+        <i
+          class="el-icon-copy-document hidden-icon"
+          @click="copy(ticket.disputeId)"
+        />
+        <i
+          class="el-icon-delete hidden-icon"
+          @click="deleteTicket(ticket.disputeId)"
+        />
+      </h1>
+      <h3
+        v-if="ticket.internalId"
+        class="overview-container__subtitle show-right-icon"
+      >
+        Cod.:
+        <TextInlineEditor
+          v-model="ticket.internalId"
+          class="overview-container__subtitle-inline-editor"
+          @change="setData('internalId', $event)"
+        />
+      </h3>
+    </div>
 
     <OverviewOffers
       :defendant-offer="lastOffers.defendantOffer"
@@ -46,7 +59,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'Overview',
@@ -55,7 +68,8 @@ export default {
     OverviewOffers: () => import('./OverviewOffers'),
     OverviewObf: () => import('./OverviewObf'),
     OverviewTabs: () => import('./OverviewTabs'),
-    DeleteTicketDialog: () => import('./DeleteTicketDialog')
+    DeleteTicketDialog: () => import('./DeleteTicketDialog'),
+    TextInlineEditor: () => import('@/components/inputs/TextInlineEditor')
   },
   props: {
     showOverview: {
@@ -85,13 +99,22 @@ export default {
     window.removeEventListener('resize')
   },
   methods: {
+    ...mapActions(['setTicketOverview']),
+
     copy(value) {
       navigator.clipboard.writeText(value)
     },
 
-    deleteTicket(disputeId) {
+    deleteTicket() {
       this.$refs.deleteTicketDialog.openDeleteTicketDialog()
-    }
+    },
+
+    setData(key, value) {
+      const { disputeId } = this.ticket
+      const data = { [key]: value }
+
+      this.setTicketOverview({ data, disputeId })
+    },
   }
 }
 </script>
@@ -113,6 +136,17 @@ export default {
     .el-icon-delete {
       // font-size: 20px;
       &:hover { color: $--color-danger; }
+    }
+  }
+
+  .overview-container__subtitle {
+    margin: 3px 0 0;
+    color: $--color-text-secondary;
+    font-weight: 500;
+
+    .overview-container__subtitle-inline-editor {
+      display: inline-block;
+      width: calc(100% - 48px);
     }
   }
 
@@ -170,24 +204,42 @@ export default {
 <style lang="scss">
 @import '@/styles/colors.scss';
 
-  .overview-container__button {
+.overview-container__button {
+  transform: translateY(-50%);
+  position: absolute;
+  top: 50%;
+  left: -18px;
+  font-size: 18px;
+  transition: .6s;
+  background-color: $--color-white;
+  padding: 12px 0px;
+  border-style: solid;
+  border-color: $--light-gray;
+  border-width: 2px 0 2px 2px;
+  border-radius: 6px 0 0 6px;
+  &:before {
     transform: translateY(-50%);
-    position: absolute;
-    top: 50%;
-    left: -18px;
-    font-size: 18px;
-    transition: .6s;
-    background-color: $--color-white;
-    padding: 12px 0px;
-    border-style: solid;
-    border-color: $--light-gray;
-    border-width: 2px 0 2px 2px;
-    border-radius: 6px 0 0 6px;
-    &:before {
-      transform: translateY(-50%);
-    }
-    &--active:before {
-      transform: rotate(180deg) translateY(50%) !important;
+  }
+  &--active:before {
+    transform: rotate(180deg) translateY(50%) !important;
+  }
+}
+
+.overview-container {
+  .overview-container__subtitle {
+    .overview-container__subtitle-inline-editor {
+      .text-inline-editor__value {
+        display: inline-block;
+        &:hover .text-inline-editor__inner { opacity: .50; }
+      }
+      .text-inline-editor__input {
+        .el-input__inner {
+          color: $--color-text-secondary !important;
+          font-weight: 500 !important;
+          font-size: 16px !important;
+        }
+      }
     }
   }
+}
 </style>

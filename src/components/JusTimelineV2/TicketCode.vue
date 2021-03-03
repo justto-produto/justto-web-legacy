@@ -14,7 +14,7 @@
         >
           {{ code.trim() }}{{ timelineState }}
         </span>
-        <span>
+        <span class="jus-dispute-code__icons">
           <i
             :class="timelineStatus.icon"
             class="jus-dispute-code__icon"
@@ -142,25 +142,31 @@ export default {
 @import "@/styles/colors.scss";
 
 .jus-dispute-code {
-  display: inline-flex;
+  .jus-dispute-code__container {
+    .jus-dispute-code__link,
+    .jus-dispute-code__icon {
+      cursor: pointer;
+      transition: .2s ease-out;
+      &:hover { color: $--color-primary; }
+    }
 
-  .jus-dispute-code__link,
-  .jus-dispute-code__icon {
-    cursor: pointer;
-    transition: .2s ease-out;
-    &:hover { color: $--color-primary; }
-  }
+    .jus-dispute-code__link {
+      display: inline-block;
+      text-decoration: underline;
+      margin-right: 4px;
+    }
 
-  .jus-dispute-code__link {
-    display: inline-block;
-    text-decoration: underline;
-  }
-
-  .jus-dispute-code__icon {
-    margin-left: 4px;
-    &.el-icon-info { color: $--color-primary; }
-    &.el-icon-error { color: $--color-danger; }
-    &.el-icon-loading { color: $--color-text-secondary; }
+    .jus-dispute-code__icons {
+      display: inline-block;
+      // word-break: keep-all;
+      .jus-dispute-code__icon {
+        margin-left: 4px;
+        &:first-child { margin-left: 0; }
+        &.el-icon-info { color: $--color-primary; }
+        &.el-icon-error { color: $--color-danger; }
+        &.el-icon-loading { color: $--color-text-secondary; }
+      }
+    }
   }
 }
 </style>
