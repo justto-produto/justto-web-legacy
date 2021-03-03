@@ -18,7 +18,8 @@
       custom-class="jus-academy"
       append-to-body
       destroy-on-close
-      :before-close="handleClose">
+      :before-close="handleClose"
+    >
       <iframe
         width="729"
         height="410"
