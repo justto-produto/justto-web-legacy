@@ -22,7 +22,10 @@
       :autosize="{ minRows: 5 }"
       @input="setEditorText"
     />
-    <Attachments class="messages-container__attachments" />
+    <Attachments
+      v-if="messageType === 'email'"
+      class="messages-container__attachments"
+    />
     <span class="messages-container__button">
       <el-button
         type="primary"
