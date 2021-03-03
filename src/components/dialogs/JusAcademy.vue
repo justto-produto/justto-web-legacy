@@ -22,7 +22,7 @@
       <iframe
         width="729"
         height="410"
-        src="https://www.youtube.com/embed/videoseries?list=PLT-H88DcnUI4ckL-LVBUvwtLsHwc7v3pC"
+        :src="src"
         frameborder="0"
         allow="autoplay; encrypted-media"
         allowfullscreen
@@ -34,6 +34,7 @@
 <script>
 export default {
   data: () => ({
+    src: 'https://www.youtube.com/embed/videoseries?list=PLT-H88DcnUI4ckL-LVBUvwtLsHwc7v3pC',
     isVisible: false
   }),
   methods: {
@@ -46,11 +47,10 @@ export default {
     },
 
     handleClose(done) {
-      this.$confirm('Are you sure to close this dialog?')
-        .then(_ => {
-          done()
-        })
-        .catch(_ => {})
+      this.$confirm('Deseja sair do Justto Academy?', {
+        confirmButtonText: 'Não fechar',
+        cancelButtonText: 'Fechar'
+      }).then(_ => {}).catch(_ => done())
     }
   }
 }
@@ -73,7 +73,7 @@ export default {
   .jus-academy-container__academy-icon {
     width: 24px;
     margin-right: 10px;
-    cursor: help;
+    cursor: pointer;
   }
 }
 </style>
