@@ -437,7 +437,9 @@ export default {
 .ticket-actions {
   display: flex;
   justify-content: flex-end;
-  min-width: 260px;
+  width: auto;
+  // min-width: 260px;
+  max-width: 260px;
 
   .ticket-actions__buttons {
     padding: 10px;

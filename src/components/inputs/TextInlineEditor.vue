@@ -12,6 +12,7 @@
       </span>
       <span class="text-inline-editor__icons">
         <i
+          v-if="isCopyble"
           class="text-inline-editor__icon el-icon-copy-document"
           @click="copyValue"
         />
@@ -57,13 +58,17 @@ export default {
       type: [Array, String],
       default: () => 'X'.repeat(255)
     },
-    isDeletable: {
+    isCopyble: {
       type: Boolean,
-      default: false
+      default: true
     },
     isEditable: {
       type: Boolean,
       default: true
+    },
+    isDeletable: {
+      type: Boolean,
+      default: false
     }
   },
   data: () => ({

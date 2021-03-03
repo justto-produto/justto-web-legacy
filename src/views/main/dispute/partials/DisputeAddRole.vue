@@ -3,6 +3,7 @@
     :close-on-click-modal="false"
     :close-on-press-escape="false"
     :visible.sync="dialogVisible"
+    append-to-body
     title="Cadastrar parte"
     width="40%"
   >
@@ -16,8 +17,8 @@
       <el-form-item label="Parte">
         <el-select
           v-model="newRole.party"
-          clearable
           @change="clearDocuments"
+          style="width: 100%"
         >
           <el-option
             v-for="(party, index) in roleParty"

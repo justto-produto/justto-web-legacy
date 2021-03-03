@@ -205,14 +205,17 @@ export default {
         this.setTicketOverview({ data, disputeId })
       }
     },
+
     startEditing(key) {
       this.activeAddingData = key
       this.$nextTick(() => {
         setTimeout(() => {
+          console.log(this.$refs[key])
           this.$refs[key][0].enableEdit()
         }, 10)
       })
     },
+
     stopEditing() {
       this.activeAddingData = ''
     }
