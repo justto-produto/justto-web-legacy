@@ -2,12 +2,12 @@
   <section class="negotiator-container">
     <div class="negotiator-container__contact">
       <JusIcon
-        class="communication-container__email-icon"
-        :icon="messageType"
+        class="negotiator-container__email-icon"
+        icon="negotiation"
       />
       <span
         v-if="contact.length"
-        class="communication-container__email-prefix"
+        class="negotiator-container__email-prefix"
       >
         {{ prefix }}
       </span>
@@ -101,5 +101,17 @@ export default {
   background-color: transparent;
   overflow-y: hidden;
   margin: 12px;
+
+  .negotiator-container__contact {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 6px;
+
+    .negotiator-container__email-icon {
+      width: 16px;
+      margin-bottom: -3px;
+    }
+  }
 }
 </style>

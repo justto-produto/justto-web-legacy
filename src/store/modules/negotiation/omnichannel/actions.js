@@ -97,16 +97,11 @@ const omnichannelActions = {
   },
 
   addRecipient({ commit, dispatch, getters }, recipient) {
-    const { type } = recipient
+    const { type, value } = recipient
 
-    if (getters.getEditorMessageType !== type) {
-      dispatch('setMessageType', type)
-    }
-    if (type === 'whatsapp') {
-      commit('resetRecipients')
-    }
-
-    commit('setRecipients', recipient)
+    if (getters.getEditorMessageType !== type && value) dispatch('setMessageType', type)
+    if (type === 'whatsapp') commit('resetRecipients')
+    if (value) commit('setRecipients', recipient)
   },
 
   resetRecipients: ({ commit }) => commit('resetRecipients'),
