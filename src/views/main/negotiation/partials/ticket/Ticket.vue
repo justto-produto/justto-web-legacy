@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'Ticket',
@@ -30,13 +30,32 @@ export default {
   data: () => ({
     showOverview: false
   }),
+  computed: {
+    ...mapGetters({
+      workspace: 'workspaceSubdomain',
+      authorization: 'accountToken',
+      loggedPersonId: 'loggedPersonId'
+    }),
+
+    socketHeaders() {
+      return {
+        workspace: this.workspace,
+        authorization: this.authorization
+      }
+    }
+  },
   watch: {
-    '$route.params.id'() {
+    '$route.params.id'(current, old) {
+      this.socketAction('unsubscribe', old)
       this.fetchData()
     }
   },
   beforeMount() {
     this.fetchData()
+  },
+  beforeDestroy() {
+    const { id } = this.$route.params
+    this.socketAction('unsubscribe', id)
   },
   methods: {
     ...mapActions([
@@ -47,11 +66,21 @@ export default {
     ]),
 
     fetchData() {
-      const disputeId = this.$route.params.id
+      const { id } = this.$route.params
+      this.socketAction('subscribe', id)
       this.cleanRecentMessages()
-      this.getTicketOverview(disputeId)
-      this.getLastTicketOffers(disputeId)
-      this.getQuickReplyTemplates(disputeId)
+      this.getTicketOverview(id)
+      this.getLastTicketOffers(id)
+      this.getQuickReplyTemplates(id)
+    },
+
+    socketAction(action, id) {
+      if (this.workspace && this.loggedPersonId) {
+        this.$socket.emit(action, {
+          headers: this.socketHeaders,
+          channel: '/topic/' + this.workspace + '/' + this.loggedPersonId + '/dispute/' + id + '/occurrence'
+        })
+      }
     },
 
     toggleShowOverview() {

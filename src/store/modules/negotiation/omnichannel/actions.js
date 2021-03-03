@@ -176,6 +176,15 @@ const omnichannelActions = {
 
   setMessageAttachments({ commit }, attachs) {
     commit('setMessageAttachments', attachs || [])
+  },
+
+  SOCKET_ADD_OCCURRENCE({ commit }, occurrence) {
+    if (window.location.href.includes('negotiation')) {
+      commit('addNegotiationOccurrence', occurrence)
+    }
+    if (window.location.href.includes('dispute')) {
+      commit('addDisputeOccurrence', occurrence)
+    }
   }
 }
 
