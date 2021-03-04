@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'Ticket',
@@ -30,16 +30,38 @@ export default {
   data: () => ({
     showOverview: false
   }),
+  computed: {
+    ...mapGetters({
+      isGhost: 'ghostMode',
+      authorization: 'accountToken',
+      isJusttoAdmin: 'isJusttoAdmin',
+      workspace: 'workspaceSubdomain',
+      loggedPersonId: 'loggedPersonId'
+    }),
+
+    socketHeaders() {
+      return {
+        workspace: this.workspace,
+        authorization: this.authorization
+      }
+    }
+  },
   watch: {
-    '$route.params.id'() {
+    '$route.params.id'(current, old) {
+      this.socketAction('unsubscribe', old)
       this.fetchData()
     }
   },
   beforeMount() {
     this.fetchData()
   },
+  beforeDestroy() {
+    const { id } = this.$route.params
+    this.socketAction('unsubscribe', id)
+  },
   methods: {
     ...mapActions([
+      'disputeSetVisualized',
       'getTicketOverview',
       'getLastTicketOffers',
       'cleanRecentMessages',
@@ -47,11 +69,26 @@ export default {
     ]),
 
     fetchData() {
-      const disputeId = this.$route.params.id
+      const { id } = this.$route.params
+      this.socketAction('subscribe', id)
       this.cleanRecentMessages()
-      this.getTicketOverview(disputeId)
-      this.getLastTicketOffers(disputeId)
-      this.getQuickReplyTemplates(disputeId)
+      this.getTicketOverview(id)
+      this.getLastTicketOffers(id)
+      this.getQuickReplyTemplates(id)
+      this.disputeSetVisualized({
+        visualized: true,
+        disputeId: Number(id),
+        anonymous: this.isJusttoAdmin && this.isGhost
+      })
+    },
+
+    socketAction(action, id) {
+      if (this.workspace && this.loggedPersonId) {
+        this.$socket.emit(action, {
+          headers: this.socketHeaders,
+          channel: '/topic/' + this.workspace + '/' + this.loggedPersonId + '/dispute/' + id + '/occurrence'
+        })
+      }
     },
 
     toggleShowOverview() {

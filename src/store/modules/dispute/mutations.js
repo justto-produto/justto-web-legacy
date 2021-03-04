@@ -152,7 +152,7 @@ const disputeMutations = {
   addLoadingOccurrence(state, occurrence) {
     state.occurrences.push(occurrence)
   },
-  SOCKET_ADD_OCCURRENCE(state, newOccurrence) {
+  addDisputeOccurrence(state, newOccurrence) {
     Vue.nextTick(() => {
       if (!newOccurrence.id) {
         state.occurrences.push(newOccurrence)

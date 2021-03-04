@@ -17,9 +17,9 @@
     <el-input
       v-else
       :value="editorTextScaped"
+      :rows="5"
       type="textarea"
       resize="none"
-      :autosize="{ minRows: 5 }"
       @input="setEditorText"
     />
     <Attachments

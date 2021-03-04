@@ -98,10 +98,15 @@ const omnichannelActions = {
 
   addRecipient({ commit, dispatch, getters }, recipient) {
     const { type, value } = recipient
+    const { getEditorMessageType, getEditorRecipients } = getters
 
-    if (getters.getEditorMessageType !== type && value) dispatch('setMessageType', type)
-    if (type === 'whatsapp') commit('resetRecipients')
-    if (value) commit('setRecipients', recipient)
+    if (getEditorRecipients.find(el => el.value === value)) {
+      commit('removeRecipient', value)
+    } else {
+      if (getEditorMessageType !== type && value) dispatch('setMessageType', type)
+      if (type === 'whatsapp') commit('resetRecipients')
+      if (value) commit('setRecipients', recipient)
+    }
   },
 
   resetRecipients: ({ commit }) => commit('resetRecipients'),
@@ -176,6 +181,15 @@ const omnichannelActions = {
 
   setMessageAttachments({ commit }, attachs) {
     commit('setMessageAttachments', attachs || [])
+  },
+
+  SOCKET_ADD_OCCURRENCE({ commit }, occurrence) {
+    if (window.location.href.includes('negotiation')) {
+      commit('addNegotiationOccurrence', occurrence)
+    }
+    if (window.location.href.includes('dispute')) {
+      commit('addDisputeOccurrence', occurrence)
+    }
   }
 }
 

@@ -77,7 +77,7 @@ export default {
     },
 
     isInRecipients() {
-      return this.recipients.map(({ address }) => address).includes(this.replyAdress)
+      return this.recipients.map(({ value }) => value).includes(this.replyAdress)
     },
 
     messageType() {
@@ -157,7 +157,8 @@ export default {
     reply(_event) {
       const reply = {
         type: this.messageType,
-        address: this.replyAdress
+        value: this.replyAdress,
+        key: 'address'
       }
       this.addRecipient(reply)
     }

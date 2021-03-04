@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import moment from 'moment'
 
 import EDITOR_TABS from '@/constants/editor'
 
@@ -20,6 +21,27 @@ const omnichannelMutations = {
     // TODO: Validar duplicidade/sobrescrita de ocorrências.
     const occurrences = content.map(el => ({ ...el, occurrences: el.occurrences.reverse() })).reverse()
     Vue.set(state.occurrences, 'list', occurrences)
+  },
+
+  addNegotiationOccurrence: (state, occurrence) => {
+    const date = moment(occurrence.updateAt?.dateTime || occurrence.createAt?.dateTime).format('YYYY-MM-DD')
+    const dates = state.occurrences.list.map(({ date }) => date)
+
+    // TODO: Implementar validação dos tipos de occorrências por tipo de aba
+
+    if (dates.includes(date)) {
+      state.occurrences.list.map((item, dateIndex) => {
+        if (item.date === date) {
+          const index = item.occurrences.find(({ id }) => id === occurrence.id) || item.occurrences.length
+
+          Vue.set(state.occurrences.list[dateIndex].occurrences, index, occurrence)
+        }
+      })
+    } else {
+      const next = state.occurrences.list.length
+
+      Vue.set(state.occurrences.list, next, { date, occurrences: [occurrence] })
+    }
   },
 
   setUpOccurrencesSize: (state) => (state.occurrences.filter.size += 10),
@@ -51,6 +73,11 @@ const omnichannelMutations = {
     } else {
       Vue.set(state.editor, 'recipients', [...recipients, recipient])
     }
+  },
+
+  removeRecipient: (state, value) => {
+    const items = state.editor.recipients.filter(el => !(el.value === value))
+    Vue.set(state.editor, 'recipients', items)
   },
 
   setSendingMessage: (state, sending) => Vue.set(state.editor, 'sendinMessage', !!sending),
