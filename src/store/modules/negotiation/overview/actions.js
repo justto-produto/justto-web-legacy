@@ -63,7 +63,7 @@ const overviewActions = {
       method: 'PATCH',
       data,
       mutation: 'updateTicketOverview',
-      payload: data
+      payload: data || {}
     })
   },
 
@@ -75,7 +75,7 @@ const overviewActions = {
       method: 'PATCH',
       data,
       mutation: 'updateTicketOverviewInfo',
-      payload: data
+      payload: data || {}
 
     })
   },

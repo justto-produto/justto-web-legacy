@@ -1,7 +1,8 @@
 const ticketsGetters = {
-  getTickets: state => state.tickets,
-  getTicketsQuery: state => state.ticketsQuery,
-  getTicketsPrescriptions: state => state.ticketsQuery.prescriptions
+  getTickets: ({ tickets }) => tickets,
+  getTicketsQuery: ({ ticketsQuery }) => ticketsQuery,
+  getTicketsActiveTab: ({ ticketsActiveTab }) => ticketsActiveTab,
+  getTicketsPrescriptions: ({ ticketsQuery }) => ticketsQuery.prescriptions
 }
 
 export default ticketsGetters

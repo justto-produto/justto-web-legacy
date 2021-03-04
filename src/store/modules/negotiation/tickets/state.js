@@ -31,9 +31,8 @@ const ticketsState = {
   //   page: 0
   // },
 
-  tickets: {
-    content: []
-  },
+  tickets: { content: [] },
+  ticketsActiveTab: 'running',
   ticketsMap: {},
   ticketsQuery: {
     status: ['RUNNING'],
