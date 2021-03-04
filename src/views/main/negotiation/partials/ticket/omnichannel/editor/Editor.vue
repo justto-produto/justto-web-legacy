@@ -108,7 +108,6 @@ export default {
     width: 100%;
     padding-left: 320px;
     height: 45px;
-    /* width: 320px;*/
 
     display: flex;
     flex-direction: row;
