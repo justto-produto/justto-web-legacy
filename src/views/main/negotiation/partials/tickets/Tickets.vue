@@ -115,23 +115,23 @@ export default {
       switch (tab.name) {
         case 'pre-negotiation':
           this.setTicketsQuery({ key: 'status', value: ['PRE_NEGOTIATION'] })
-          // this.setTicketsQuery({ key: 'sort', value: [] })
+          this.setTicketsQuery({ key: 'sort', value: ['expirationDate,asc'] })
           break
         case 'engagement':
           this.setTicketsQuery({ key: 'status', value: ['IMPORTED', 'ENRICHED', 'ENGAGEMENT', 'PENDING'] })
-          // this.setTicketsQuery({ key: 'sort', value: [] })
+          this.setTicketsQuery({ key: 'sort', value: ['expirationDate,asc'] })
           break
         case 'running':
           this.setTicketsQuery({ key: 'status', value: ['RUNNING'] })
-          // this.setTicketsQuery({ key: 'sort', value: [] })
+          this.setTicketsQuery({ key: 'sort', value: ['visualized,asc', 'lastInboundInteraction.createdAt,desc', 'expirationDate,asc'] })
           break
         case 'accepted':
           this.setTicketsQuery({ key: 'status', value: ['ACCEPTED', 'CHECKOUT'] })
-          // this.setTicketsQuery({ key: 'sort', value: [] })
+          this.setTicketsQuery({ key: 'sort', value: ['visualized,asc', 'conclusionDate,asc'] })
           break
         case 'finished':
           this.setTicketsQuery({ key: 'prescriptions', value: ['NEWLY_FINISHED'] })
-          // this.setTicketsQuery({ key: 'sort', value: ['id,desc'] })
+          this.setTicketsQuery({ key: 'sort', value: ['visualized,asc', 'conclusionDate,asc', 'lastInboundInteraction,desc'] })
           break
       }
 

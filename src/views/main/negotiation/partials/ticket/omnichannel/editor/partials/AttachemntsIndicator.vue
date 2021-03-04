@@ -67,17 +67,12 @@ export default {
   max-width: 500px;
   width: auto;
   max-height: calc(100vh - 32px);
-  margin-bottom: 12px;
   overflow-y: auto;
   overflow-x: hidden;
 
   .el-popover__reference {
     display: flex;
     align-items: center;
-
-    position: absolute;
-    top: 20px;
-    left: 140px;
 
     .el-icon-paperclip {
       font-size: 18px;

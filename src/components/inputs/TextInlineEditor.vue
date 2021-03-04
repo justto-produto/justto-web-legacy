@@ -6,7 +6,7 @@
     >
       <span
         class="text-inline-editor__inner"
-        @click="emit('click')"
+        @click="$emit('click')"
       >
         {{ filteredVModel }}
       </span>
@@ -37,8 +37,8 @@
       class="text-inline-editor__input"
       @blur="confirmEdit"
     />
-      <!-- @keyup.native.enter="confirmEdit"
-      @keyup.native.esc="cancelEdit" -->
+    <!-- @keyup.native.enter="confirmEdit"
+    @keyup.native.esc="cancelEdit" -->
   </div>
 </template>
 
@@ -120,9 +120,6 @@ export default {
     }
   },
   methods: {
-    emit(event) {
-      this.$emit(event)
-    },
     enableEdit() {
       this.model = this.value || ''
       this.isEditing = true

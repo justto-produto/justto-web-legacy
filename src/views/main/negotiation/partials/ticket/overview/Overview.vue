@@ -114,7 +114,7 @@ export default {
       const data = { [key]: value }
 
       this.setTicketOverview({ data, disputeId })
-    },
+    }
   }
 }
 </script>
