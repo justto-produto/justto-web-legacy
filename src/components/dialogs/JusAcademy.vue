@@ -49,8 +49,8 @@ export default {
 
     handleClose(done) {
       this.$confirm('Deseja sair do Justto Academy?', {
-        confirmButtonText: 'Não fechar',
-        cancelButtonText: 'Fechar'
+        confirmButtonText: 'Não',
+        cancelButtonText: 'Sim'
       }).then(_ => {}).catch(_ => done())
     }
   }
