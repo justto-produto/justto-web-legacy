@@ -6,7 +6,7 @@
     >
       <span
         class="text-inline-editor__inner"
-        @click="$emit('click')"
+        @click="emit('click')"
       >
         {{ filteredVModel }}
       </span>
@@ -120,6 +120,9 @@ export default {
     }
   },
   methods: {
+    emit(event) {
+      this.$emit(event)
+    },
     enableEdit() {
       this.model = this.value || ''
       this.isEditing = true

@@ -77,7 +77,7 @@ export default {
     },
 
     isInRecipients() {
-      return this.recipients.map(({ address }) => address).includes(this.replyAdress)
+      return this.recipients.map(({ value }) => value).includes(this.replyAdress)
     },
 
     messageType() {

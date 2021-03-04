@@ -75,6 +75,11 @@ const omnichannelMutations = {
     }
   },
 
+  removeRecipient: (state, value) => {
+    const items = state.editor.recipients.filter(el => !(el.value === value))
+    Vue.set(state.editor, 'recipients', items)
+  },
+
   setSendingMessage: (state, sending) => Vue.set(state.editor, 'sendinMessage', !!sending),
 
   resetRecipients: (state) => Vue.set(state.editor, 'recipients', []),
