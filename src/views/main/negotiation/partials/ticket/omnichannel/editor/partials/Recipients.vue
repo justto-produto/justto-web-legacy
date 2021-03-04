@@ -32,7 +32,12 @@
             :hidden="recipients.length <= 1"
           >
             <span class="recipients-container__label-text">
-              {{ recipients[0].value }}
+              <span v-if="type === 'whatsapp'">
+                {{ recipients[0].value | phoneNumber }}
+              </span>
+              <span v-else>
+                {{ recipients[0].value }}
+              </span>
             </span>
           </el-badge>
         </el-popover>
