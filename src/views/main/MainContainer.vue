@@ -97,8 +97,8 @@ export default {
       isAdminProfile: 'isAdminProfile',
       isJusttoAdmin: 'isJusttoAdmin',
       workspaceMembersSorted: 'workspaceMembersSorted',
-      workspace: 'workspaceSubdomain',
       personId: 'loggedPersonId',
+      workspace: 'workspaceSubdomain',
       authorization: 'accountToken'
     }),
 
@@ -174,7 +174,7 @@ export default {
         this.subscriptions.forEach(subscription => this.$socket.emit('unsubscribe', subscription))
         this.subscriptions.length = 0
 
-        this.subscriptions.push({ headers, channel: `${baseUrl}/alert` })
+        // this.subscriptions.push({ headers, channel: `${baseUrl}/alert` })
         // this.subscriptions.push({ headers, channel: `${baseUrl}/whatsapp` })
         this.subscriptions.push({ headers, channel: `${baseUrl}/person-status` })
         this.subscriptions.push({ headers, channel: `${baseUrl}/${this.personId}/dispute` })
