@@ -37,8 +37,8 @@
       class="text-inline-editor__input"
       @blur="confirmEdit"
     />
-      <!-- @keyup.native.enter="confirmEdit"
-      @keyup.native.esc="cancelEdit" -->
+    <!-- @keyup.native.enter="confirmEdit"
+    @keyup.native.esc="cancelEdit" -->
   </div>
 </template>
 

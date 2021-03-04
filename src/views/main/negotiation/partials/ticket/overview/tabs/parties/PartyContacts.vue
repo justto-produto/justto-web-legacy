@@ -8,7 +8,7 @@
       <i
         v-if="mappedRecipients.includes(contact[model])"
         class="party-contacts__infoline-icon el-icon-s-promotion"
-        />
+      />
       <TextInlineEditor
         v-model="contact[model]"
         :mask="mask"
@@ -171,10 +171,10 @@ export default {
     .party-contacts__infoline-data {
       &--selected .text-inline-editor__inner {
         font-weight: 500;
-      }      
+      }
       &--disabled .text-inline-editor__inner {
         text-decoration: line-through;
-        cursor: not-allowed
+        cursor: not-allowed;
       }
     }
   }
