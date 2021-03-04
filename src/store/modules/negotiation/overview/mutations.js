@@ -4,6 +4,7 @@ import Vue from 'vue'
 // import TicketOverviewParties from '@/models/negotiations/overview/TicketOverviewPartiesVm'
 // import TicketOverviewProperties from '@/models/negotiations/overview/TicketOverviewPropertiesVm'
 // import TicketOverviewAttachments from '@/models/negotiations/overview/TicketOverviewAttachmentsVm'
+
 const findPartyById = (parties, roleId) => {
   const partyIndex = parties.findIndex(party => party.disputeRoleId === roleId)
   return parties[partyIndex]
@@ -47,7 +48,7 @@ const overviewMutations = {
     const contactTypeList = partyToSet.legacyDto[contactType + 's']
     let contactToSet
 
-    if (contactType === 'phone') contactToSet = { number: contactData.value } 
+    if (contactType === 'phone') contactToSet = { number: contactData.value }
     else if (contactType === 'email') contactToSet = { address: contactData.value }
     else contactToSet = contactData
 
@@ -65,7 +66,16 @@ const overviewMutations = {
   },
   setTicketOverviewProperties: (state, params) => (Vue.set(state, 'ticketOverviewProperties', params)),
   setTicketOverviewAttachments: (state, params) => (Vue.set(state, 'ticketOverviewAttachments', params)),
-  setLastTicketOffers: (state, params) => (Vue.set(state, 'lastTicketOffers', params))
+  setLastTicketOffers: (state, params) => (Vue.set(state, 'lastTicketOffers', params)),
+  updateTicket: (state, dispute) => {
+    // const { id } = dispute
+    // Vue.set(state, 'ticketOverview', new TicketOverview())
+    // Vue.set(state, 'ticketOverviewInfo', new TicketOverviewInfo())
+    // Vue.set(state, 'ticketOverviewParties', new TicketOverviewParties())
+    // Vue.set(state, 'ticketOverviewProperties', new TicketOverviewProperties())
+    // Vue.set(state, 'ticketOverviewAttachments', new TicketOverviewAttachments())
+    // Vue.set(state, 'lastTicketOffers', '')
+  }
 }
 
 export default overviewMutations

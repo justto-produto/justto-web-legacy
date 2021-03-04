@@ -42,6 +42,54 @@ const overviewActions = {
 
   removeTicketPrescription({ commit }, prescription) {
     commit('removeTicketPrescription', prescription)
+  },
+
+  setActivTab({ commit }, activeTab) {
+    commit('setActiveTab', activeTab)
+  },
+
+  SOCKET_ADD_DISPUTE({ rootState, state, commit }, dispute) {
+    let correspondingTab
+    switch (dispute.status) {
+      case 'PRE_NEGOTIATION':
+        correspondingTab = 'pre-negotiation'
+        break
+      case 'IMPORTED':
+      case 'ENRICHED':
+      case 'ENGAGEMENT':
+      case 'PENDING':
+        correspondingTab = 'engagement'
+        break
+      case 'RUNNING':
+        correspondingTab = 'running'
+        break
+      case 'ACCEPTED':
+      case 'CHECKOUT':
+        correspondingTab = 'accepted'
+        break
+      case '':
+        correspondingTab = 'finished'
+        break
+    }
+    
+    if (rootState.negotiationOverviewModule.ticketOverview.disputeId === dispute.id) {
+      if (correspondingTab !== state.ticketsActiveTab) {
+        commit('setActiveTab', correspondingTab)
+      } else {
+        commit('updateTicketItem', dispute)
+      }
+      commit('updateTicketOverview', dispute)
+    } else {
+      if (correspondingTab !== state.ticketsActiveTab) {
+        commit('deleteTicket', dispute.id)
+      } else {
+        commit('updateTicketItem', dispute)
+      }
+    }
+  },
+
+  SOCKET_REMOVE_DISPUTE({ commit }, dispute) {
+    commit('deleteTicket', dispute.id)
   }
 }
 

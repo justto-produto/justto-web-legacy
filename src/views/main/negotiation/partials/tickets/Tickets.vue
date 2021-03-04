@@ -97,11 +97,15 @@ export default {
       ]
     }
   },
+  beforeMount() {
+    this.getTickets({ name: this.activeTab })
+  },
   methods: {
     ...mapActions([
       'getTickets',
       'getTicketsNextPage',
-      'setTicketsQuery'
+      'setTicketsQuery',
+      'setActivTab'
     ]),
 
     handleChangeTab(tab) {
@@ -128,10 +132,11 @@ export default {
           break
         case 'finished':
           this.setTicketsQuery({ key: 'prescriptions', value: ['NEWLY_FINISHED'] })
-          this.setTicketsQuery({ key: 'sort', value: ['visualized,asc', 'conclusionDate,asc', 'lastInboundInteraction,desc'] })
+          this.setTicketsQuery({ key: 'sort', value: ['visualized,asc', 'conclusionDate,asc', 'lastInboundInteraction.createdAt,desc'] })
           break
       }
 
+      this.setActivTab(tab.name)
       this.getTickets()
     },
 

@@ -13,3 +13,10 @@ export class EntityDto {
     this.archived = archived
   }
 }
+
+export class DateTime {
+  constructor({ javaDate, dateTime }) {
+    this.javaDate = javaDate
+    this.dateTime = dateTime
+  }
+}
