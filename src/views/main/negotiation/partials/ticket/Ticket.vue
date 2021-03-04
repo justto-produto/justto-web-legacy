@@ -32,8 +32,10 @@ export default {
   }),
   computed: {
     ...mapGetters({
-      workspace: 'workspaceSubdomain',
+      isGhost: 'ghostMode',
       authorization: 'accountToken',
+      isJusttoAdmin: 'isJusttoAdmin',
+      workspace: 'workspaceSubdomain',
       loggedPersonId: 'loggedPersonId'
     }),
 
@@ -59,6 +61,7 @@ export default {
   },
   methods: {
     ...mapActions([
+      'disputeSetVisualized',
       'getTicketOverview',
       'getLastTicketOffers',
       'cleanRecentMessages',
@@ -72,6 +75,11 @@ export default {
       this.getTicketOverview(id)
       this.getLastTicketOffers(id)
       this.getQuickReplyTemplates(id)
+      this.disputeSetVisualized({
+        visualized: true,
+        disputeId: Number(id),
+        anonymous: this.isJusttoAdmin && this.isGhost
+      })
     },
 
     socketAction(action, id) {

@@ -8,7 +8,7 @@
       <i
         v-if="mappedRecipients.includes(contact[model])"
         class="party-contacts__infoline-icon el-icon-s-promotion"
-        />
+      />
       <TextInlineEditor
         v-model="contact[model]"
         :mask="mask"
@@ -122,8 +122,8 @@ export default {
       this.$emit('post', contactValue)
     },
     selectContact(contactValue, isValid) {
-      if (isValid && this.mappedRecipients.includes(contactValue[this.model])) {
-        this.$emit('click', contactValue, this.model)
+      if (isValid) {
+        this.$emit('click', contactValue, 'address')
       }
     }
   }
