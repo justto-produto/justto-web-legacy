@@ -2,20 +2,24 @@ import Vue from 'vue'
 
 Vue.filter('oab', function(value) {
   if (!value) return ''
-  const template = 'A.B/C'
-  value = value.replace(/[-/.] /, '')
+  let template = 'A.B/C'
+  const oabValue = value.replace(/[-/.] /, '')
 
-  if (value.length === 7) {
+  if (oabValue.length === 7) {
     return template
-      .replace('A', value.substr(0, 2))
-      .replace('B', value.substr(2, 3))
-      .replace('C', value.substr(5, 2))
+      .replace('A', oabValue.substr(0, 2))
+      .replace('B', oabValue.substr(2, 3))
+      .replace('C', oabValue.substr(5, 2))
   }
-  if (value.length === 8) {
+  if (oabValue.length === 8) {
     return template
-      .replace('A', value.substr(0, 3))
-      .replace('B', value.substr(3, 3))
-      .replace('C', value.substr(6, 2))
+      .replace('A', oabValue.substr(0, 3))
+      .replace('B', oabValue.substr(3, 3))
+      .replace('C', oabValue.substr(6, 2))
   }
+  if (![7, 8].includes(oabValue.length)) {
+    template = value.replace('null', '')
+  }
+
   return template.toUpperCase()
 })

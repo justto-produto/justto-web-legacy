@@ -171,10 +171,10 @@ export default {
     .party-contacts__infoline-data {
       &--selected .text-inline-editor__inner {
         font-weight: 500;
-      }      
+      }
       &--disabled .text-inline-editor__inner {
         text-decoration: line-through;
-        cursor: not-allowed
+        cursor: not-allowed;
       }
     }
   }

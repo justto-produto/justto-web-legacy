@@ -17,8 +17,8 @@
       <el-form-item label="Parte">
         <el-select
           v-model="newRole.party"
-          @change="clearDocuments"
           style="width: 100%"
+          @change="clearDocuments"
         >
           <el-option
             v-for="(party, index) in roleParty"

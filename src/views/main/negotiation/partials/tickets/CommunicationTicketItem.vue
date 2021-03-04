@@ -42,7 +42,7 @@
 import { getLastInteraction } from '@/utils'
 
 export default {
-  name: 'TicketItem',
+  name: 'CommunicationTicketItem',
   props: {
     ticket: {
       type: Object,

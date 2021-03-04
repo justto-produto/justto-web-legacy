@@ -136,6 +136,12 @@ export default {
     margin: 0px;
   }
 
+  .messages-container__attachments {
+    position: absolute;
+    top: 20px;
+    left: 140px;
+  }
+
   .messages-container__button {
     display: flex;
     justify-content: flex-end;
@@ -172,12 +178,11 @@ export default {
     border-radius: 6px;
   }
 }
-
 @media (max-width: 900px) {
   .messages-container {
     .el-textarea__inner {
-      width: calc(100% - 12px);
       margin: 6px;
+      width: calc(100% - 12px);
     }
   }
 }
