@@ -27,7 +27,48 @@ const omnichannelMutations = {
     const date = moment(occurrence.updateAt?.dateTime || occurrence.createAt?.dateTime).format('YYYY-MM-DD')
     const dates = state.occurrences.list.map(({ date }) => date)
 
-    // TODO: Implementar validação dos tipos de occorrências por tipo de aba
+    let canInclude = false
+    const { activeTab: tab } = state
+    const oType = occurrence.type
+    const iType = occurrence.interaction?.type
+
+    const validationInteractions = {
+      MESSAGES: [
+        'ATTACHMENT',
+        'COMMUNICATION',
+        'MANUAL_PROPOSAL',
+        'NEGOTIATOR_ACCESS',
+        'NEGOTIATOR_PROPOSAL',
+        'NEGOTIATOR_CHECKOUT',
+        'NEGOTIATOR_ACCEPTED',
+        'MANUAL_COUNTERPROPOSAL',
+        'NEGOTIATOR_COUNTERPROSAL'
+      ],
+      NOTES: null,
+      OCCURRENCES: [
+        'CLICK',
+        'ATTACHMENT',
+        'VISUALIZATION',
+        'COMMUNICATION',
+        'MANUAL_PROPOSAL',
+        'NEGOTIATOR_ACCESS',
+        'NEGOTIATOR_PROPOSAL',
+        'NEGOTIATOR_CHECKOUT',
+        'NEGOTIATOR_ACCEPTED',
+        'MANUAL_COUNTERPROPOSAL',
+        'NEGOTIATOR_COUNTERPROSAL'
+      ]
+    }
+
+    if (tab === 'MESSAGES' && oType === 'INTERACTION' && validationInteractions[tab].includes(iType)) {
+      canInclude = true
+    } else if (tab === 'NOTES' && oType === 'NOTE') {
+      canInclude = true
+    } else if (tab === 'OCCURRENCES' && oType !== 'NOTE' && validationInteractions[tab].includes(iType)) {
+      canInclude = true
+    }
+
+    if (!canInclude) return
 
     if (dates.includes(date)) {
       state.occurrences.list.map((item, dateIndex) => {
