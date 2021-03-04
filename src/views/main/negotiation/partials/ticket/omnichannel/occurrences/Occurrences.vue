@@ -3,24 +3,33 @@
     ref="occurrence-root"
     class="occurrences-container"
   >
-    <infinite-loading
-      :identifier="activeTab"
-      spinner="spiral"
-      direction="top"
-      @infinite="loadOccurrences"
-    >
-      <div
-        slot="no-more"
+    <div class="occurrences-container__occurrences">
+      <infinite-loading
+        :identifier="activeTab"
+        spinner="spiral"
+        direction="top"
+        @infinite="loadOccurrences"
       >
-        Início das ocorrências
-      </div>
-      <div
-        slot="no-results"
-      >
-        Início das ocorrências
-      </div>
-    </infinite-loading>
-    <div
+        <div
+          slot="no-more"
+        >
+          Início das ocorrências
+        </div>
+        <div
+          slot="no-results"
+        >
+          Início das ocorrências
+        </div>
+      </infinite-loading>
+      <component
+        :is="occurrence.type === 'date' ? 'Date': 'Occurrence'"
+        v-for="(occurrence, occurrenceIndex) in listOccurrences"
+        :key="`occurrence-container-${occurrenceIndex}`"
+        :value="occurrence"
+        class="occurrences-container__occurrences-item"
+      />
+    </div>
+    <!-- <div
       v-for="(occurrenceContainer, occurrenceContainerIndex) in occurrences"
       :key="`occurrence-container-${occurrenceContainerIndex}`"
       class="occurrences-container__occurrences"
@@ -36,7 +45,7 @@
         :value="occurrence"
         class="occurrences-container__occurrences-item"
       />
-    </div>
+    </div> -->
   </section>
 </template>
 
@@ -44,6 +53,7 @@
 import { mapActions, mapGetters } from 'vuex'
 export default {
   components: {
+    Date: () => import('./occurrence/Date'),
     Occurrence: () => import('./occurrence/Occurrence'),
     InfiniteLoading: () => import('vue-infinite-loading')
   },
@@ -58,6 +68,14 @@ export default {
       get() {
         return this.$route.params.id
       }
+    },
+    listOccurrences() {
+      let res = []
+      this.occurrences.map(item => {
+        res.push({ type: 'date', date: item.date })
+        res = [...res, ...item.occurrences]
+      })
+      return res
     }
   },
   watch: {
