@@ -12,6 +12,7 @@ const omnichannelActions = {
 
     if (route.currentRoute.params?.id) {
       const { id } = route.currentRoute.params
+      commit('resetOccurrences')
       dispatch('getOccurrences', id)
     }
   },
@@ -34,7 +35,7 @@ const omnichannelActions = {
       type: getters.getOccurrencesFilter.type === 'LOG' ? null : getters.getOccurrencesFilter.type
     }
     return axiosDispatch({
-      url: `${disputeApi}/${disputeId}/occurrences`,
+      url: `https://1ebed24e9267.ngrok.io/${disputeApi}/${disputeId}/occurrences`,
       mutation: 'setOccurrences',
       params
     })

@@ -21,6 +21,10 @@ const omnichannelMutations = {
     state.occurrences.list.unshift(...content)
   },
 
+  resetOccurrences: (state) => {
+    Vue.set(state.occurrences, 'list', [])
+  },
+
   addNegotiationOccurrence: (state, occurrence) => {
     const date = moment(occurrence.updateAt?.dateTime || occurrence.createAt?.dateTime).format('YYYY-MM-DD')
     const dates = state.occurrences.list.map(({ date }) => date)
