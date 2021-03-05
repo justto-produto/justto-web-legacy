@@ -299,6 +299,10 @@ export default {
         align-items: flex-start;
         padding: 0px 10px;
 
+        .log-container__occurrence-text__icon {
+          width: 16px;
+        }
+
         .log-container__occurrence-text__content {
           color: #f19737;
           font-weight: bold;
