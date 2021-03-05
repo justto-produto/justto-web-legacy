@@ -29,7 +29,6 @@ const omnichannelActions = {
   },
 
   getOccurrences({ getters, commit }, disputeId) {
-    commit('setOccurrences', { content: [] })
     const params = {
       ...getters.getOccurrencesFilter,
       type: getters.getOccurrencesFilter.type === 'LOG' ? null : getters.getOccurrencesFilter.type

@@ -18,9 +18,7 @@ const omnichannelMutations = {
   setMessageType: (state, type) => Vue.set(state.editor, 'messageType', type),
 
   setOccurrences: (state, { content }) => {
-    // TODO: Validar duplicidade/sobrescrita de ocorrências.
-    const occurrences = content.map(el => ({ ...el, occurrences: el.occurrences.reverse() })).reverse()
-    Vue.set(state.occurrences, 'list', occurrences)
+    state.occurrences.list.unshift(...content)
   },
 
   addNegotiationOccurrence: (state, occurrence) => {
@@ -85,7 +83,7 @@ const omnichannelMutations = {
     }
   },
 
-  setUpOccurrencesSize: (state) => (state.occurrences.filter.size += 10),
+  setUpOccurrencesSize: (state) => (state.occurrences.filter.page += 1),
 
   addSumary: (state, { payload, data }) => {
     const { occurrenceId, type } = payload
