@@ -299,6 +299,10 @@ export default {
         align-items: flex-start;
         padding: 0px 10px;
 
+        .log-container__occurrence-text__icon {
+          width: 16px !important;
+        }
+
         .log-container__occurrence-text__content {
           color: #f19737;
           font-weight: bold;
@@ -345,9 +349,9 @@ export default {
       gap: 6px;
       text-align: center;
 
-      .log-container__occurrence-text-icon {
+      .log-container__occurrence-text__icon {
         align-self: flex-start;
-        width: 14px;
+        width: 16px;
       }
     }
 

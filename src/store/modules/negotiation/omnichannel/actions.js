@@ -9,6 +9,7 @@ const omnichannelActions = {
   setActiveTab({ commit, dispatch }, tab) {
     commit('setActiveTab', tab)
     commit('resetRecipients')
+    commit('resetOccurrences')
 
     if (route.currentRoute.params?.id) {
       const { id } = route.currentRoute.params

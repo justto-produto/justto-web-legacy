@@ -6,9 +6,9 @@
     <div class="occurrences-container__occurrences">
       <infinite-loading
         :identifier="activeTab"
+        :distance="1000"
         spinner="spiral"
         direction="top"
-        distance="1000"
         @infinite="loadOccurrences"
       >
         <div
