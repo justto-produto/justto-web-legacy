@@ -22,7 +22,7 @@
       </el-tab-pane>
     </el-tabs>
     <div class="editor-container__before-tabs">
-      <quick-reply />
+      <quick-reply v-if="activeTab === 'MESSAGES'" />
       <recipients class="editor-container__recipients" />
     </div>
   </section>
