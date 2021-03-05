@@ -22,7 +22,6 @@ const omnichannelMutations = {
       const can = state.occurrences.list.filter(({ createAt, id }) => {
         return occ.id === id && occ.createAt.dateTime === createAt.dateTime
       }).length === 0
-      console.log(occ, can)
       if (can) {
         const pos = state.occurrences.list.length
         Vue.set(state.occurrences.list, pos, occ)
