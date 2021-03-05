@@ -18,11 +18,23 @@ const omnichannelMutations = {
   setMessageType: (state, type) => Vue.set(state.editor, 'messageType', type),
 
   setOccurrences: (state, { content }) => {
-    state.occurrences.list.unshift(...content)
+    const mappedItens = state.occurrences.list.map(({ createAt: { dateTime }, id }) => ({ dateTime, id }))
+
+    content.map(occ => {
+      const i = mappedItens.indexOf({ dateTime: occ.createAt.dateTime, id: occ.id })
+      if (i === -1) {
+        const pos = state.occurrences.list.length
+        Vue.set(state.occurrences.list, pos, occ)
+        // state.occurrences.list.unshift(occ)
+      }
+    })
+
+    // state.occurrences.list.unshift(...content)
   },
 
   resetOccurrences: (state) => {
     Vue.set(state.occurrences, 'list', [])
+    Vue.set(state.occurrences.filter, 'page', 0)
   },
 
   addNegotiationOccurrence: (state, occurrence) => {

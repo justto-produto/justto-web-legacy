@@ -9,10 +9,10 @@ const omnichannelActions = {
   setActiveTab({ commit, dispatch }, tab) {
     commit('setActiveTab', tab)
     commit('resetRecipients')
+    commit('resetOccurrences')
 
     if (route.currentRoute.params?.id) {
       const { id } = route.currentRoute.params
-      commit('resetOccurrences')
       dispatch('getOccurrences', id)
     }
   },
@@ -35,7 +35,7 @@ const omnichannelActions = {
       type: getters.getOccurrencesFilter.type === 'LOG' ? null : getters.getOccurrencesFilter.type
     }
     return axiosDispatch({
-      url: `https://1ebed24e9267.ngrok.io/${disputeApi}/${disputeId}/occurrences`,
+      url: `${disputeApi}/${disputeId}/occurrences`,
       mutation: 'setOccurrences',
       params
     })
