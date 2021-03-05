@@ -67,6 +67,10 @@ export default {
       tickets: 'getTickets'
     }),
 
+    ticketsList() {
+      return this.tickets.content.filter(t => t !== false)
+    },
+
     tabs() {
       return [
         {
