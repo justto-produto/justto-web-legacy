@@ -5,9 +5,7 @@ const disputeApiLegacy = '/api/disputes'
 
 const overviewActions = {
   getTickets({ state, dispatch }, command) {
-    if (command !== 'nextPage') {
-      dispatch('setTicketsQuery', { key: 'page', value: 1 })
-    }
+    if (command !== 'nextPage') dispatch('setTicketsQuery', { key: 'page', value: 1 })
     return axiosDispatch({
       url: `${disputeApi}/filter${buildQuery(state.ticketsQuery)}`,
       mutation: 'setCommunicationTickets',

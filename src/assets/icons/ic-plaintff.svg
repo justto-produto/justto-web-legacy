@@ -1,10 +1,12 @@
 <svg id="Grupo_3051" data-name="Grupo 3051" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
-  <g id="Elipse_635" data-name="Elipse 635" fill="#d1dbe2" stroke="#343c4b" stroke-linejoin="round" stroke-width="1">
-    <circle cx="16" cy="16" r="16" stroke="none"/>
-    <circle cx="16" cy="16" r="15.5" fill="none"/>
+  <g id="Elipse_635" data-name="Elipse 635" fill="#fff" stroke="#343c4b" stroke-linejoin="round" stroke-width="1">
+    <circle cx="16" cy="16" r="16" stroke="none" />
+    <circle cx="16" cy="16" r="15.5" fill="none" />
   </g>
   <g id="Grupo_2794" data-name="Grupo 2794" transform="translate(8 8)">
     <path id="Caminho_11614" data-name="Caminho 11614" d="M4733,1114.394h.015c.116,1.6,1.377,3.2,2.923,3.2s2.8-1.6,2.916-3.2h.016a.614.614,0,0,0,.231-1.16,3.773,3.773,0,0,0,.178-1.152,3.35,3.35,0,1,0-6.689,0,3.773,3.773,0,0,0,.178,1.152.614.614,0,0,0,.232,1.16Z" transform="translate(-4727.938 -1108.54)" fill="none" stroke="#343c4b" stroke-linejoin="round" stroke-width="1" fill-rule="evenodd"/>
     <path id="Caminho_11615" data-name="Caminho 11615" d="M4743.262,1124.644c-1.467-1.33-5.645-2.737-5.694-2.714a5.5,5.5,0,0,1-4.394,0c-.05-.023-4.194,1.353-5.7,2.714a.3.3,0,0,0-.108.224v1.114a.325.325,0,0,0,.342.309h15.317a.325.325,0,0,0,.341-.309v-1.114a.3.3,0,0,0-.108-.224Z" transform="translate(-4727.37 -1112.291)" fill="none" stroke="#343c4b" stroke-linejoin="round" stroke-width="1" fill-rule="evenodd"/>
   </g>
 </svg>
+
+<!-- fill="#d1dbe2" -->
