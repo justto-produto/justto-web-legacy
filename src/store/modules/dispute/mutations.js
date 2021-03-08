@@ -11,6 +11,9 @@ const disputeMutations = {
   cleanDisputeTimeline(state) {
     state.timeline = { }
   },
+  fillerDisputeRole(state, { data, payload }) {
+    Vue.set(payload, 'disputeRoles', data)
+  },
   setDisputes(state, pageable) {
     state.disputes = pageable.content
     state.query.size = pageable.size

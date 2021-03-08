@@ -58,7 +58,7 @@
     <jus-protocol-dialog
       :protocol-dialog-visible.sync="protocolDialogVisible"
       :dispute-id="dispute.id"
-      :dispute-roles="dispute.disputeRoles"
+      :dispute="dispute"
     />
   </el-card>
 </template>

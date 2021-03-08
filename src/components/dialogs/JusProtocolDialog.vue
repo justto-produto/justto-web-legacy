@@ -463,13 +463,12 @@ export default {
       type: Boolean,
       default: false
     },
-    disputeId: {
-      type: Number,
-      default: 0
-    },
-    disputeRoles: {
-      type: Array,
-      default: () => []
+    dispute: {
+      type: Object,
+      default: () => ({
+        id: 0,
+        disputeRoles: []
+      })
     }
   },
   data() {
@@ -520,6 +519,12 @@ export default {
     ...mapGetters({
       defaultSigners: 'availableSigners'
     }),
+    disputeRoles() {
+      return this.dispute.disputeRoles
+    },
+    disputeId() {
+      return this.dispute.id
+    },
     defaultsDocuments() {
       return this.defaultSigners.map(signer => this.stripDoc(signer.documentNumber))
     },
@@ -659,8 +664,15 @@ export default {
       'getDefaultAssigners',
       'setSelectedSigners',
       'setDocumentSigners',
-      'cleanSelectedSigners'
+      'cleanSelectedSigners',
+      'cleanSelectedSigners',
+      'fillerDisputeRole'
     ]),
+    disputeRolesFiller() {
+      if (!this.dispute.disputeRoles || !this.dispute.disputeRoles.length) {
+        this.fillerDisputeRole(this.dispute)
+      }
+    },
     getLabelSigner(role) {
       const { documentNumber, name } = role
       if (this.isDefaultSigner(documentNumber)) {
