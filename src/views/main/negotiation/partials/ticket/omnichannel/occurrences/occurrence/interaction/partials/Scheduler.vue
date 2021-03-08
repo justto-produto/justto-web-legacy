@@ -160,6 +160,10 @@ export default {
     font-size: 16px;
     color: #3C3B3B;
 
+    @media (max-height: 680px) {
+      font-size: 14px;
+    }
+
     .scheduler-container__message-link {
       cursor: pointer;
       font-size: 12px;
