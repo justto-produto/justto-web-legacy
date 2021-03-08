@@ -2744,12 +2744,17 @@ export default {
         })
         const roleDataDifference = this.verifyChangedRoleData(this.roleForm, this.originalRole)
         if (roleDataDifference.length) {
-          this.$confirm('Novos dados de contato foram adicionados. Deseja reiniciar o engajamento para esta parte?', 'Atenção!', {
-            confirmButtonText: 'Reengajar',
-            cancelButtonText: 'Cancelar',
+          this.$confirm('Novos dados de contato foram adicionados. Deseja reiniciar a disputa?', 'Atenção!', {
+            confirmButtonText: 'Não reiniciar',
+            cancelButtonText: 'Reiniciar disputa',
             type: 'warning',
             cancelButtonClass: 'is-plain'
-          }).then(() => {
+          }).then(() => this.$jusNotification({
+            title: 'Cuidado!',
+            message: 'A disputa não será reiniciada.',
+            type: 'warning',
+            dangerouslyUseHTMLString: true
+          })).catch(() => {
             const contacts = []
             for (const contact of roleDataDifference) {
               contacts.push(
@@ -2764,13 +2769,6 @@ export default {
                 title: 'Yay!',
                 message: 'Reengajamento realizado com sucesso.',
                 type: 'success'
-              })
-            }).catch(() => {
-              this.$jusNotification({
-                title: 'Ops!',
-                message: 'Parece que nem todos os contatos foram reengajados corretamente.',
-                type: 'warning',
-                dangerouslyUseHTMLString: true
               })
             })
           })
