@@ -12,7 +12,7 @@
     >
       <el-tab-pane
         v-for="tab in tabs"
-        :key="tab.name"
+        :key="`ticket-${tab.name}`"
         :name="tab.name"
         :label="tab.label"
         class="tickets-container__tab-pane"
@@ -26,13 +26,13 @@
           <component
             :is="tab.component"
             v-for="ticket in ticketsList"
-            :key="ticket.disputeId"
+            :key="`ticket-${ticket.disputeId}`"
             :ticket="ticket"
           />
           <infinite-loading
-            v-if="tickets.totalPages > 1"
             :identifier="activeTab"
             spinner="spiral"
+            :distance="1340"
             @infinite="infiniteHandler"
           >
             <div slot="no-more">
