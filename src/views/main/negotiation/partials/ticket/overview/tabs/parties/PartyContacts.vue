@@ -115,7 +115,6 @@ export default {
       this.$emit('change', contactId, contactValue)
     },
     removeContact(contactId) {
-      console.log(contactId)
       this.$emit('delete', contactId)
     },
     addContact(contactValue) {

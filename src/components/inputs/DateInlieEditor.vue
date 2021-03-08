@@ -87,8 +87,7 @@ export default {
     },
     disableEdit() {
       if (this.model !== this.value) {
-        console.log('Valor:', this.vModel)
-        this.$emit('change', this.vModel)
+        this.$emit('change', this.model)
       }
       this.isEditing = false
     },

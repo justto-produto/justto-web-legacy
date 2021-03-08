@@ -5,6 +5,7 @@ const disputeApiLegacy = '/api/disputes'
 
 const overviewActions = {
   getTickets({ state }, command) {
+    debugger
     return axiosDispatch({
       url: `${disputeApi}/filter${buildQuery(state.ticketsQuery)}`,
       mutation: 'setCommunicationTickets',
