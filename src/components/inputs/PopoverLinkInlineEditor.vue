@@ -71,8 +71,8 @@ export default {
 <style lang="scss" scoped>
 .popover-link-inline-editor {
   .popover-link-inline-editor__popover {
-    text-align: center;
-    display: block;
+    // text-align: center;
+    // display: block;
   }
 
   .popover-link-inline-editor__link {

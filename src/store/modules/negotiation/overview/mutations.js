@@ -42,6 +42,11 @@ const overviewMutations = {
     Vue.set(partyToSet, 'name', name)
     Vue.set(partyToSet, 'documentNumber', documentNumber)
   },
+  deleteTicketOverviewParty: ({ ticketOverviewParties }, { payload }) => {
+    console.log('to aqui', payload)
+    const partyToUnset = findPartyById(ticketOverviewParties, payload)
+    ticketOverviewParties.splice(partyToUnset, 1)
+  },
   setTicketOverviewPartyContact: ({ ticketOverviewParties }, { payload }) => {
     const { roleId, contactType, contactData } = payload
     const partyToSet = findPartyById(ticketOverviewParties, roleId)

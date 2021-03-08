@@ -63,13 +63,12 @@ const actionsActions = {
     })
   },
 
-  deleteTicket({ _ }, params) {
-    const { disputeId, reason } = params
-
+  deleteTicket({ _ }, { disputeId, reason }) {
     return axiosDispatch({
       url: `${disputesPath}/${disputeId}/${reason}`,
       method: 'DELETE',
-      params
+      mutation: 'deleteTicket',
+      payload: disputeId
     })
   },
 
@@ -80,9 +79,7 @@ const actionsActions = {
     })
   },
 
-  sendOffer({ _ }, params) {
-    const { data, disputeId } = params
-
+  sendOffer({ _ }, { data, disputeId }) {
     return axiosDispatch({
       url: `${disputesPath}/v2/${disputeId}/counterproposal`,
       method: 'POST',

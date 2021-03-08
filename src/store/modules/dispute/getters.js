@@ -46,7 +46,7 @@ const disputeGetters = {
   getRecentPrescriptions: ({ recentPrescriptions }) => {
     return Object.keys(recentPrescriptions).filter(p => moment(new Date()).diff(recentPrescriptions[p], 'days') < 1)
   },
-  prescriptionsList: state => state.prescriptionsList,
+  prescriptionsList: state => state.prescriptionsList.sort(),
   partyAnalysisByDocument: state => (documentNumber) => state.partyAnalysis[documentNumber],
   lastAccess: state => state.lastAccess,
   disputeLastInteractions: state => state.disputeLastInteractions

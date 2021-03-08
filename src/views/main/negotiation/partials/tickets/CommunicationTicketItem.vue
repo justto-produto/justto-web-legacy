@@ -21,16 +21,25 @@
           &gt; {{ ticket.negotiatorName | resumedName }}
         </span>
       </div>
-      <div class="communication-ticket-item-container__message">
-        <JusIcon
-          v-if="lastInboundInteraction.icon"
-          :icon="lastInboundInteraction.icon"
-          class="communication-ticket-item-container__message-icon"
-        />
-        <span :class="{ 'communication-ticket-item-container__message--bold': !ticket.visualized }">
-          {{ lastInboundInteraction.message }}
-        </span>
-      </div>
+      <el-tooltip
+        :open-delay="800"
+        :content="lastInboundInteraction.message"
+        popper-class="communication-ticket-item-container__message-tooltip"
+      >
+        <div
+          :class="{ 'communication-ticket-item-container__message--bold': !ticket.visualized }"
+          class="communication-ticket-item-container__message"
+        >
+          <JusIcon
+            v-if="lastInboundInteraction.icon"
+            :icon="lastInboundInteraction.icon"
+            class="communication-ticket-item-container__message-icon"
+          />
+          <span class="communication-ticket-item-container__message-content">
+            {{ lastInboundInteraction.message }}
+          </span>
+        </div>
+      </el-tooltip>
     </div>
     <span class="communication-ticket-item-container__time">
       {{ getLastInteraction(lastInboundInteraction.dateTime) }}
@@ -130,7 +139,6 @@ export default {
 
   .communication-ticket-item-container__avatar {
     align-self: center;
-    // width: 49px;
   }
 
   .communication-ticket-item-container__resume {
@@ -155,17 +163,21 @@ export default {
       display: flex;
       align-items: center;
       margin-bottom: 6px;
-      // white-space: nowrap;
-      // text-overflow: ellipsis;
-      // overflow: hidden;
-      &--bold {
-        font-weight: 600;
+      max-width: 226px;
+      &--bold { font-weight: 600; }
+
+      .communication-ticket-item-container__message-content {
+        display: inline-block;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow-x: hidden;
       }
 
       .communication-ticket-item-container__message-icon {
         width: 16px;
         height: 16px;
         margin-right: 6px;
+        vertical-align: middle;
       }
     }
   }
@@ -176,5 +188,11 @@ export default {
     right: 18px;
     font-size: 12px;
   }
+}
+</style>
+
+<style lang="scss">
+.communication-ticket-item-container__message-tooltip {
+  max-width: 400px;
 }
 </style>

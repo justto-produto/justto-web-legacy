@@ -1,14 +1,24 @@
 <template>
   <article class="party-details">
-    <PopoverLinkInlineEditor
+    <div
       v-if="!party.roles.includes('NEGOTIATOR')"
-      v-model="party.polarity"
-      :options="roleOptions"
-      :width="200"
-      label="Trocar polaridade"
-      class="party-details__infoline-data"
-      @change="updatePolarity"
-    />
+      class="party-details__infoline party-details__infoline--center"
+    >
+      <PopoverLinkInlineEditor
+        v-if="!party.roles.includes('NEGOTIATOR')"
+        v-model="party.polarity"
+        :options="roleOptions"
+        :width="200"
+        label="Trocar polaridade"
+        @change="updatePolarity"
+      />
+      <!-- <a
+        class="party-details__infoline-link party-details__infoline-link--danger"
+        @click="removeParty"
+      >
+        Excluir
+      </a> -->
+    </div>
 
     <div class="party-details__infoline">
       <span class="party-details__infoline-label">Nome completo:</span>
@@ -88,6 +98,17 @@
         @post="addContact($event, 'oab')"
       />
     </div>
+    <div
+      v-if="!party.roles.includes('NEGOTIATOR')"
+      class="party-details__infoline party-details__infoline--center"
+    >
+      <a
+        class="party-details__infoline-link party-details__infoline-link--danger"
+        @click="removeParty"
+      >
+        Excluir
+      </a>
+    </div>
   </article>
 </template>
 
@@ -147,6 +168,7 @@ export default {
     ...mapActions([
       'addRecipient',
       'setTicketOverviewParty',
+      'deleteTicketOverviewParty',
       'setTicketOverviewPartyPolarity',
       'setTicketOverviewPartyContact',
       'deleteTicketOverviewPartyContact',
@@ -167,6 +189,20 @@ export default {
       data[key] = value
 
       this.setTicketOverviewParty({ disputeId, data })
+    },
+    removeParty() {
+      const { disputeId, party } = this
+      this.$confirm('Tem certeza que deseja excluir est parte da dispute? Está ação é irreversível', 'Atenção', {
+        confirmButtonText: 'Continuar',
+        cancelButtonText: 'Cancelar',
+        cancelButtonClass: 'is-plain',
+        showClose: false
+      }).then(() => {
+        this.deleteTicketOverviewParty({ 
+          roleId: party.disputeRoleId,
+          disputeId,  
+        })
+      })
     },
     addContact(contactValue, contactType) {
       const { disputeId, party } = this
@@ -230,8 +266,21 @@ export default {
 
     .party-details__infoline-data,
     .party-details__infoline-link {
-      margin: 3px 0 3px 18px;
       line-height: normal;
+      &--danger {
+        color: $--color-danger;
+        &:hover { color: $--color-danger-light-3 }
+      }
+    }
+
+    .party-details__infoline-data {
+      margin: 3px 0 3px 18px;
+    }
+
+    &--center {
+      font-size: 13px;
+      display: flex;
+      justify-content: center;
     }
   }
 }
