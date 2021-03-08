@@ -38,7 +38,7 @@ const omnichannelMutations = {
 
   addNegotiationOccurrence: (state, occurrence) => {
     const date = moment(occurrence.updateAt?.dateTime || occurrence.createAt?.dateTime).format('YYYY-MM-DD')
-    const dates = state.occurrences.list.map(({ date }) => date)
+    const dates = state.occurrences.list.filter(item => !item.id)
 
     let canInclude = false
     const { activeTab: tab } = state
@@ -81,20 +81,13 @@ const omnichannelMutations = {
       canInclude = true
     }
 
-    if (!canInclude) return
-
-    if (dates.includes(date)) {
-      state.occurrences.list.map((item, dateIndex) => {
-        if (item.date === date) {
-          const index = item.occurrences.find(({ id }) => id === occurrence.id) || item.occurrences.length
-
-          Vue.set(state.occurrences.list[dateIndex].occurrences, index, occurrence)
-        }
-      })
-    } else {
-      const next = state.occurrences.list.length
-
-      Vue.set(state.occurrences.list, next, { date, occurrences: [occurrence] })
+    if (canInclude) {
+      // TODO: Verifica se a date esta na lista de dates:
+      // * True
+      //  ** Insere a ocorrência
+      // * False
+      //  ** Insere a Date
+      //  ** Insere a ocorrência
     }
   },
 
