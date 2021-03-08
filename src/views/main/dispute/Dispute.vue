@@ -653,10 +653,12 @@ export default {
     formatBody(body) {
       const start = body.indexOf('<body>') + 6
       const end = body.indexOf('</body>') - 7
+      let newBody = body
       if (start > 5 && end > 0) {
-        return body.substring(start, end).trim()
+        newBody = body.substring(start, end).trim()
       }
-      return body
+      newBody = newBody.split('\n').filter(l => l.trim().indexOf('<meta') !== 0).join('\n')
+      return newBody
     },
 
     inputTemplate(template) {
