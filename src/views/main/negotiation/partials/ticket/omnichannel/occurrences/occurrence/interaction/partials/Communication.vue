@@ -249,7 +249,9 @@ export default {
     font-size: 16px;
     color: #3C3B3B;
 
-    /* margin-left: 6px; */
+    @media (max-height: 680px) {
+      font-size: 14px;
+    }
 
     .communication-container__message-link {
       cursor: pointer;
