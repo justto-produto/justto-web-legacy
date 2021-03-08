@@ -1925,9 +1925,7 @@ export default {
         return []
       },
       set(bankAccountIds) {
-        if (bankAccountIds.length) {
-          this.updateDisputeBankAccounts(bankAccountIds)
-        }
+        this.updateDisputeBankAccounts(bankAccountIds)
       }
     },
     selectedRole: {
