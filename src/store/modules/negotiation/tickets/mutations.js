@@ -17,7 +17,7 @@ const ticketsMutations = {
 
   setTicketsQuery: ({ ticketsQuery }, { key, value }) => Vue.set(ticketsQuery, key, value),
 
-  addTicketQueryPage: ({ ticketsQuery }) => (ticketsQuery.page++),
+  addTicketQueryPage: ({ ticketsQuery }) => (ticketsQuery.page += 1),
 
   addTicketPrescription: ({ ticketsQuery }, prescription) => {
     const index = ticketsQuery.prescriptions.length

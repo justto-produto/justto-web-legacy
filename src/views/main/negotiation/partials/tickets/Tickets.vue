@@ -12,7 +12,7 @@
     >
       <el-tab-pane
         v-for="tab in tabs"
-        :key="tab.name"
+        :key="`ticket-${tab.name}`"
         :name="tab.name"
         :label="tab.label"
         class="tickets-container__tab-pane"
@@ -25,14 +25,14 @@
         >
           <component
             :is="tab.component"
-            v-for="ticket in tickets.content"
-            :key="ticket.disputeId"
+            v-for="ticket in ticketsList"
+            :key="`ticket-${ticket.disputeId}`"
             :ticket="ticket"
           />
           <infinite-loading
-            v-if="tickets.totalPages > 1"
             :identifier="activeTab"
             spinner="spiral"
+            :distance="1340"
             @infinite="infiniteHandler"
           >
             <div slot="no-more">
@@ -66,6 +66,10 @@ export default {
     ...mapGetters({
       tickets: 'getTickets'
     }),
+
+    ticketsList() {
+      return this.tickets.content.filter(t => (typeof t !== 'boolean'))
+    },
 
     tabs() {
       return [

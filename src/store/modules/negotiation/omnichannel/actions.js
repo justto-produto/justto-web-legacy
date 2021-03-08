@@ -9,6 +9,7 @@ const omnichannelActions = {
   setActiveTab({ commit, dispatch }, tab) {
     commit('setActiveTab', tab)
     commit('resetRecipients')
+    commit('resetOccurrences')
 
     if (route.currentRoute.params?.id) {
       const { id } = route.currentRoute.params
@@ -29,7 +30,6 @@ const omnichannelActions = {
   },
 
   getOccurrences({ getters, commit }, disputeId) {
-    commit('setOccurrences', { content: [] })
     const params = {
       ...getters.getOccurrencesFilter,
       type: getters.getOccurrencesFilter.type === 'LOG' ? null : getters.getOccurrencesFilter.type

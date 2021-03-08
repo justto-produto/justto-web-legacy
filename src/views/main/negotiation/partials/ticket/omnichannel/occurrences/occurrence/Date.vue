@@ -1,7 +1,7 @@
 <template>
   <article class="occurrences-container__occurrences-date">
     <span>
-      {{ value.date | moment('DD/MM/YYYY') }}
+      {{ date | moment('DD/MM/YYYY') }}
     </span>
   </article>
 </template>
@@ -13,6 +13,18 @@ export default {
       type: Object,
       required: true
     }
+  },
+  computed: {
+    date() {
+      const { dateTime } = this.value.createAt
+
+      return dateTime.split('T')[0]
+    }
+  },
+  mounted() {
+    this.$nextTick(() => {
+      this.$set(this.value, 'renderCompleted', true)
+    })
   }
 }
 </script>

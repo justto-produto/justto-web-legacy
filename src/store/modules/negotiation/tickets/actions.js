@@ -4,8 +4,8 @@ const disputeApi = '/api/disputes/v2'
 const disputeApiLegacy = '/api/disputes'
 
 const overviewActions = {
-  getTickets({ state }, command) {
-    debugger
+  getTickets({ state, dispatch }, command) {
+    if (command !== 'nextPage') dispatch('setTicketsQuery', { key: 'page', value: 1 })
     return axiosDispatch({
       url: `${disputeApi}/filter${buildQuery(state.ticketsQuery)}`,
       mutation: 'setCommunicationTickets',
@@ -72,7 +72,7 @@ const overviewActions = {
         correspondingTab = 'finished'
         break
     }
-    
+
     if (rootState.negotiationOverviewModule.ticketOverview.disputeId === dispute.id) {
       if (correspondingTab !== state.ticketsActiveTab) {
         commit('setActiveTab', correspondingTab)

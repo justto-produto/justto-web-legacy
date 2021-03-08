@@ -6,6 +6,7 @@
     <div class="occurrences-container__occurrences">
       <infinite-loading
         :identifier="activeTab"
+        :distance="1000"
         spinner="spiral"
         direction="top"
         @infinite="loadOccurrences"
@@ -22,30 +23,13 @@
         </div>
       </infinite-loading>
       <component
-        :is="occurrence.type === 'date' ? 'Date': 'Occurrence'"
-        v-for="(occurrence, occurrenceIndex) in listOccurrences"
+        :is="occurrence.id === null ? 'Date': 'Occurrence'"
+        v-for="(occurrence, occurrenceIndex) in occurrences"
         :key="`occurrence-container-${occurrenceIndex}`"
         :value="occurrence"
         class="occurrences-container__occurrences-item"
       />
     </div>
-    <!-- <div
-      v-for="(occurrenceContainer, occurrenceContainerIndex) in occurrences"
-      :key="`occurrence-container-${occurrenceContainerIndex}`"
-      class="occurrences-container__occurrences"
-    >
-      <span class="occurrences-container__occurrences-date">
-        <span>
-          {{ $moment(occurrenceContainer.date).format('DD/MM/YYYY') }}
-        </span>
-      </span>
-      <Occurrence
-        v-for="(occurrence, occurrenceIndex) in occurrenceContainer.occurrences"
-        :key="`occurrence-container-${occurrenceIndex}`"
-        :value="occurrence"
-        class="occurrences-container__occurrences-item"
-      />
-    </div> -->
   </section>
 </template>
 
@@ -62,25 +46,24 @@ export default {
       activeTab: 'getActiveTab',
       filter: 'getOccurrencesFilter',
       occurrences: 'getOccurrencesList',
-      messageType: 'getEditorMessageType'
+      messageType: 'getEditorMessageType',
+      getOccurrencesFilter: 'getOccurrencesFilter'
     }),
+    countRendereds() {
+      return this.occurrences.filter(o => o.renderCompleted).length
+    },
     id: {
       get() {
         return this.$route.params.id
       }
-    },
-    listOccurrences() {
-      let res = []
-      this.occurrences.map(item => {
-        res.push({ type: 'date', date: item.date })
-        res = [...res, ...item.occurrences]
-      })
-      return res
     }
   },
   watch: {
     '$route.params.id'() {
       this.getOccurrences(this.id)
+    },
+    'countRendereds'() {
+      this.adjustScroll()
     }
   },
   methods: {
@@ -89,12 +72,19 @@ export default {
       'getOccurrences'
     ]),
 
+    adjustScroll() {
+      if (this.getOccurrencesFilter.page === 0) {
+        const omni = document.getElementsByClassName('occurrences-container omnichannel-container__occurrences')[0]
+        omni.scrollTo({ top: omni.scrollHeight })
+      }
+    },
+
     loadOccurrences($state) {
       this.getOccurrences(this.id).then(response => {
         if (response.last) {
-          $state.complete()
+          if ($state) { $state.complete() }
         } else {
-          $state.loaded()
+          if ($state) { $state.loaded() }
           this.$store.commit('setUpOccurrencesSize')
         }
       })
