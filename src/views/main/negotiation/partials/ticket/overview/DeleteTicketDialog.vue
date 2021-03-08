@@ -31,7 +31,7 @@
       <el-button
         :disabled="!reason"
         type="primary"
-        @click.prevent="deleteTicket"
+        @click.stop="removeTicket"
       >
         Excluir
       </el-button>
@@ -84,7 +84,7 @@ export default {
         this.deleteTicketDialogVisible = true
       }
     },
-    deleteTicket() {
+    removeTicket() {
       const { disputeId, reason } = this
 
       this.deleteTicket({ disputeId, reason })

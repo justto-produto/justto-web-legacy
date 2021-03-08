@@ -38,6 +38,7 @@ $--color-info: #72cbff !default;
 $--color-success-light-5: mix($--color-white, $--color-success, 50%) !default;
 $--color-warning-light-5: mix($--color-white, $--color-warning, 50%) !default;
 $--color-danger-light-5: mix($--color-white, $--color-danger, 50%) !default;
+$--color-danger-light-3: mix($--color-white, $--color-danger, 30%) !default;
 $--color-info-light-5: mix($--color-white, $--color-info, 50%) !default;
 
 $--color-success-light: mix($--color-white, $--color-success, 80%) !default;

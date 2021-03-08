@@ -90,6 +90,15 @@ const overviewActions = {
     })
   },
 
+  deleteTicketOverviewParty({ _ }, { disputeId, roleId }) {
+    return axiosDispatch({
+      url: `${disputeApiLegacy}/${disputeId}/role/${roleId}`,
+      method: 'DELETE',
+      mutation: 'deleteTicketOverviewParty',
+      payload: roleId
+    })
+  },
+
   setTicketOverviewPartyPolarity({ _ }, params) {
     const { disputeId, roleId, rolePolarity } = params
 

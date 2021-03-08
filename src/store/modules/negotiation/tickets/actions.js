@@ -1,7 +1,6 @@
 import { axiosDispatch, buildQuery } from '@/utils/'
 
 const disputeApi = '/api/disputes/v2'
-const disputeApiLegacy = '/api/disputes'
 
 const overviewActions = {
   getTickets({ state, dispatch }, command) {
@@ -19,17 +18,6 @@ const overviewActions = {
       dispatch('getTickets', 'nextPage')
         .then(response => resolve(response))
         .catch(error => reject(error))
-    })
-  },
-
-  deleteTicket({ _ }, params) {
-    const { disputeId, reason } = params
-
-    return axiosDispatch({
-      url: `${disputeApiLegacy}/${disputeId}/${reason}`,
-      method: 'DELETE',
-      mutation: 'deleteTicket',
-      payload: disputeId
     })
   },
 

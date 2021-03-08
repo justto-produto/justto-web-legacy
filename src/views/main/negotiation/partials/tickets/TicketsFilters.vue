@@ -26,6 +26,9 @@
             {{ prescription.description | capitalize }}
           </div>
         </li>
+        <li>
+          <!-- FILTROS AVANÇADOS AQUI -->
+        </li>
       </ul>
       <el-button
         slot="reference"
@@ -53,7 +56,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      hasPrescription: 'hasPrescription',
+      ticketsQuery: 'getTicketsQuery',
       ticketsPrescriptions: 'getTicketsPrescriptions',
       prescriptions: 'prescriptionsList'
     }),
@@ -100,7 +103,11 @@ export default {
 
     buttonType(name) {
       return this.ticketsPrescriptions.includes(name) ? 'primary' : ''
-    }
+    },
+
+    hasPrescription(prescription) {
+      return this.ticketsQuery.prescriptions.includes(prescription)
+    },
   }
 }
 </script>
@@ -160,7 +167,7 @@ export default {
       display: none;
       width: 12px;
       height: 12px;
-      margin: -2px 0
+      margin: -1px 0;
 
       &--selected {
         display: inline-block;
