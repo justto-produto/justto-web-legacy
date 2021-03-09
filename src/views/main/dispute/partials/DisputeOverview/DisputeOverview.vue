@@ -2742,12 +2742,17 @@ export default {
         })
         const roleDataDifference = this.verifyChangedRoleData(this.roleForm, this.originalRole)
         if (roleDataDifference.length) {
-          this.$confirm('Novos dados de contato foram adicionados. Deseja reiniciar o engajamento para esta parte?', 'Atenção!', {
-            confirmButtonText: 'Reengajar',
-            cancelButtonText: 'Cancelar',
+          this.$confirm(this.$t('dispute.overview.confirm.restart.engagement.question'), 'Atenção!', {
+            confirmButtonText: this.$t('dispute.overview.confirm.restart.engagement.confirm'),
+            cancelButtonText: this.$t('dispute.overview.confirm.restart.engagement.cancel'),
             type: 'warning',
             cancelButtonClass: 'is-plain'
-          }).then(() => {
+          }).then(() => this.$jusNotification({
+            title: 'Cuidado!',
+            message: this.$t('dispute.notification.will-not-restart'),
+            type: 'warning',
+            dangerouslyUseHTMLString: true
+          })).catch(() => {
             const contacts = []
             for (const contact of roleDataDifference) {
               contacts.push(
@@ -2760,15 +2765,8 @@ export default {
             Promise.all(contacts).then(() => {
               this.$jusNotification({
                 title: 'Yay!',
-                message: 'Reengajamento realizado com sucesso.',
+                message: this.$t('dispute.notification.restarted'),
                 type: 'success'
-              })
-            }).catch(() => {
-              this.$jusNotification({
-                title: 'Ops!',
-                message: 'Parece que nem todos os contatos foram reengajados corretamente.',
-                type: 'warning',
-                dangerouslyUseHTMLString: true
               })
             })
           })
