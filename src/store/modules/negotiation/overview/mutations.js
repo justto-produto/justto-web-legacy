@@ -24,8 +24,7 @@ const overviewMutations = {
     for (const key of Object.keys(payload)) Vue.set(ticketOverviewInfo, key, payload[key])
   },
   setTicketOverviewParties: (state, params) => (Vue.set(state, 'ticketOverviewParties', params)),
-  setTicketOverviewParty: ({ ticketOverviewParties }, params) => {
-    const { data, payload } = params
+  setTicketOverviewParty: ({ ticketOverviewParties }, { data, payload }) => {
     const partyToSet = findPartyById(ticketOverviewParties, payload)
 
     Vue.set(partyToSet, 'emailsDto', data.emails)
@@ -35,31 +34,24 @@ const overviewMutations = {
     Vue.set(partyToSet, 'legacyDto', data) // TODO: Remover essa merda aqui
   },
   updateTicketOverviewParty: ({ ticketOverviewParties }, params) => {
-    const { id, name, documentNumber } = params
+    const { id, name, documentNumber, birthday } = params
     const partyToSet = findPartyById(ticketOverviewParties, id)
 
-    Vue.set(partyToSet, 'legacyDto', params)
     Vue.set(partyToSet, 'name', name)
+    Vue.set(partyToSet, 'birthday', birthday)
     Vue.set(partyToSet, 'documentNumber', documentNumber)
+    Vue.set(partyToSet, 'legacyDto', params)
+  },
+  updateTicketOverviewPartyPolarity: ({ ticketOverviewParties }, { payload }) => {
+    const { roleId, rolePolarity } = payload
+    const partyToSet = findPartyById(ticketOverviewParties, roleId)
+
+    Vue.set(partyToSet, 'polarity', rolePolarity)
   },
   deleteTicketOverviewParty: ({ ticketOverviewParties }, { payload }) => {
-    console.log('to aqui', payload)
     const partyToUnset = findPartyById(ticketOverviewParties, payload)
-    ticketOverviewParties.splice(partyToUnset, 1)
-  },
-  setTicketOverviewPartyContact: ({ ticketOverviewParties }, { payload }) => {
-    const { roleId, contactType, contactData } = payload
-    const partyToSet = findPartyById(ticketOverviewParties, roleId)
-    const contactTypeList = partyToSet.legacyDto[contactType + 's']
-    let contactToSet
 
-    if (contactType === 'phone') contactToSet = { number: contactData.value }
-    else if (contactType === 'email') contactToSet = { address: contactData.value }
-    else contactToSet = contactData
-
-    contactTypeList.push(contactToSet)
-    // const partyToSet = findPartyById(ticketOverviewParties, params.id)
-    // Vue.set(partyToSet, 'legacyDto', params)
+    Vue.delete(ticketOverviewParties, partyToUnset)
   },
   deleteTicketOverviewPartyContact: ({ ticketOverviewParties }, { payload }) => {
     const { roleId, contactId, contactType } = payload

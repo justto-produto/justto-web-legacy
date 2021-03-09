@@ -2,6 +2,7 @@
   <section class="overview-info">
     <div
       v-for="data in dataList"
+      v-show="data.visible !== false"
       :key="data.key"
       class="overview-info__infoline"
     >
@@ -10,7 +11,7 @@
       </span>
       <component
         :is="data.component"
-        v-if="(data.value && data.visible !== false) || activeAddingData === data.key"
+        v-if="data.value || activeAddingData === data.key"
         :ref="data.key"
         v-model="data.value"
         :is-editable="data.isEditable"
@@ -208,11 +209,12 @@ export default {
 
     startEditing(key) {
       this.activeAddingData = key
+      this.$forceUpdate()
       this.$nextTick(() => {
-        setTimeout(() => {
-          console.log(this.$refs[key])
+        this.$forceUpdate()
+        this.$nextTick(() => {
           this.$refs[key][0].enableEdit()
-        }, 10)
+        })
       })
     },
 
