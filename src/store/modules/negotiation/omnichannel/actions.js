@@ -34,6 +34,9 @@ const omnichannelActions = {
       ...getters.getOccurrencesFilter,
       type: getters.getOccurrencesFilter.type === 'LOG' ? null : getters.getOccurrencesFilter.type
     }
+
+    commit('incrementCountGetters')
+
     return axiosDispatch({
       url: `${disputeApi}/${disputeId}/occurrences`,
       mutation: 'setOccurrences',

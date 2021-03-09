@@ -29,11 +29,18 @@ const omnichannelMutations = {
     })
 
     state.occurrences.filter.page += 1
+
+    if (state.occurrences.countGetters > 0) {
+      state.occurrences.countGetters -= 1
+    }
   },
+
+  incrementCountGetters: (state) => (state.occurrences.countGetters += 1),
 
   resetOccurrences: (state) => {
     Vue.set(state.occurrences, 'list', [])
     Vue.set(state.occurrences.filter, 'page', 0)
+    Vue.set(state.occurrences, 'countGetters', 0)
   },
 
   addNegotiationOccurrence: (state, occurrence) => {
@@ -87,7 +94,6 @@ const omnichannelMutations = {
       state.occurrences.list.map((item, dateIndex) => {
         if (item.date === date) {
           const index = item.occurrences.find(({ id }) => id === occurrence.id) || item.occurrences.length
-
           Vue.set(state.occurrences.list[dateIndex].occurrences, index, occurrence)
         }
       })
