@@ -107,7 +107,7 @@ export default {
 
     hasPrescription(prescription) {
       return this.ticketsQuery.prescriptions.includes(prescription)
-    },
+    }
   }
 }
 </script>
@@ -146,7 +146,7 @@ export default {
     list-style: none;
     padding: 0;
     margin: 0;
-    
+
     .management-prescriptions__list-item {
       cursor: pointer;
       padding: 6px 24px;

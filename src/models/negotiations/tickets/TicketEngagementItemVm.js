@@ -1,4 +1,4 @@
-import { TicketItemVm } from './TicketItemVm'
+import TicketItemVm from './TicketItemVm'
 import CodedValueDomainDto from '../GenericClasses'
 
 class CommunicationsEngagementStatusVm {
@@ -8,7 +8,7 @@ class CommunicationsEngagementStatusVm {
   }
 }
 
-export class TicketEngagementItemVm extends TicketItemVm {
+export default class TicketEngagementItemVm extends TicketItemVm {
   constructor(dispute) {
     const { pendingReason, communications } = dispute
     super(dispute)
