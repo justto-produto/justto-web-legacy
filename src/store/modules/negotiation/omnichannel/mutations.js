@@ -30,12 +30,17 @@ const omnichannelMutations = {
 
     state.occurrences.filter.page += 1
 
-    if (state.occurrences.countGetters > 0) {
-      state.occurrences.countGetters -= 1
-    }
+    // if (state.countOmnichannelGetters > 0) {
+    //   state.countOmnichannelGetters -= 1
+    // }
   },
 
-  incrementCountGetters: (state) => (state.occurrences.countGetters += 1),
+  incrementOccurrencesCountGetters: (state) => (state.countOmnichannelGetters += 1),
+  decrementOccurrencesCountGetters: (state) => {
+    if (state.countOmnichannelGetters > 0) {
+      state.countOmnichannelGetters -= 1
+    }
+  },
 
   resetOccurrences: (state) => {
     Vue.set(state.occurrences, 'list', [])

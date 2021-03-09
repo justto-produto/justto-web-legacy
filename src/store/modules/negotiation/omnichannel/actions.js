@@ -29,13 +29,11 @@ const omnichannelActions = {
     commit('resetRecipients')
   },
 
-  getOccurrences({ getters, commit }, disputeId) {
+  getOccurrences({ getters }, disputeId) {
     const params = {
       ...getters.getOccurrencesFilter,
       type: getters.getOccurrencesFilter.type === 'LOG' ? null : getters.getOccurrencesFilter.type
     }
-
-    commit('incrementCountGetters')
 
     return axiosDispatch({
       url: `${disputeApi}/${disputeId}/occurrences`,

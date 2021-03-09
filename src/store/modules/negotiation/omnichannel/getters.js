@@ -19,7 +19,7 @@ const omnichannelGetters = {
   getOccurrencesSummary: state => (state.occurrences.summary),
   getRecentWhatsappMessages: state => (state.editor.recentMessages),
   getEditorTextScaped: state => stripHtml(state.editor.messageText),
-  isOccurrencesLoading: state => (state.occurrences.countGetters > 0),
+  isOccurrencesLoading: state => (state.countOmnichannelGetters > 0),
   getOccurrencesSummaryKeys: state => ({
     SMS: Object.keys(state.occurrences.summary.SMS).map(Number),
     EMAIL: Object.keys(state.occurrences.summary.EMAIL).map(Number),

@@ -9,6 +9,7 @@ const overviewState = {
   ticketOverviewInfo: {},
   ticketOverviewParties: [],
   ticketOverviewProperties: {},
+  ticketOverviewCountGetters: 0,
   ticketOverviewAttachments: [],
   lastTicketOffers: {}
 }
