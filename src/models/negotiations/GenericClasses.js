@@ -1,4 +1,4 @@
-export class CodedValueDomainDto {
+class CodedValueDomainDto {
   constructor({ id, code, description }) {
     this.id = id
     this.code = code
@@ -6,7 +6,7 @@ export class CodedValueDomainDto {
   }
 }
 
-export class EntityDto {
+class EntityDto {
   constructor({ createAt, updateAt, archived }) {
     this.createAt = createAt
     this.updateAt = updateAt
@@ -14,9 +14,15 @@ export class EntityDto {
   }
 }
 
-export class DateTime {
+class DateTime {
   constructor({ javaDate, dateTime }) {
     this.javaDate = javaDate
     this.dateTime = dateTime
   }
+}
+
+export default {
+  CodedValueDomainDto,
+  EntityDto,
+  DateTime
 }

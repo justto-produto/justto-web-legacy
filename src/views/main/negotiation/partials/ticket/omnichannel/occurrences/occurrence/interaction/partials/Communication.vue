@@ -2,7 +2,8 @@
   <section class="communication-container">
     <div
       class="communication-container__email"
-      :class="directionIn ? 'INBOUND' : 'OUTBOUND'">
+      :class="directionIn ? 'INBOUND' : 'OUTBOUND'"
+    >
       <JusIcon
         class="communication-container__email-icon"
         :icon="messageType"

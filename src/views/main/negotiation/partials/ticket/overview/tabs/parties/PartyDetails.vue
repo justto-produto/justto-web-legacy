@@ -198,9 +198,9 @@ export default {
         cancelButtonClass: 'is-plain',
         showClose: false
       }).then(() => {
-        this.deleteTicketOverviewParty({ 
+        this.deleteTicketOverviewParty({
           roleId: party.disputeRoleId,
-          disputeId,  
+          disputeId
         })
       })
     },
