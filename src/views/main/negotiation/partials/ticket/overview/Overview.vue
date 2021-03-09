@@ -1,5 +1,8 @@
 <template>
-  <section class="overview-container">
+  <section
+    v-loading="isLoading"
+    class="overview-container"
+  >
     <i
       :class="{ 'overview-container__button--active': isOverviewActive }"
       class="overview-container__button el-icon-arrow-left"
@@ -83,7 +86,8 @@ export default {
   computed: {
     ...mapGetters({
       ticket: 'getTicketOverview',
-      lastOffers: 'getLastTicketOffers'
+      lastOffers: 'getLastTicketOffers',
+      isLoading: 'isTicketOverviewloading'
     }),
 
     isOverviewActive() {

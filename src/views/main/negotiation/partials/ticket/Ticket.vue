@@ -72,7 +72,7 @@ export default {
       const { id } = this.$route.params
       this.socketAction('subscribe', id)
       this.cleanRecentMessages()
-      this.getTicketOverview(id)
+      this.getTicketOverview(id).then(() => (console.log('chegou o then aqui')))
       this.getLastTicketOffers(id)
       this.getQuickReplyTemplates(id)
       this.disputeSetVisualized({
