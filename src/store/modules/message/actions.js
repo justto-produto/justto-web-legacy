@@ -52,7 +52,7 @@ const messageActions = {
     return axiosDispatch({
       url: `${messagesPath}/quick-reply/template/${templateId}`,
       method: 'DELETE'
-    }).then(() => dispatch('getQuickReplyTemplates', disputeId))
+    }).then(() => dispatch('getQuickReplyTemplates', disputeId)).then(_ => {})
   },
   archiveQuickReplyTemplate({ commit }, templateId) {
     return axiosDispatch({
