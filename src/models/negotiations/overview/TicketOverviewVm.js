@@ -1,6 +1,6 @@
 class StrategyVm {
-  constructor({ id, strategyId, isObrigacaoFazer, isManual }) {
-    this.id = id || strategyId
+  constructor({ id, isObrigacaoFazer, isManual }) {
+    this.id = id
     this.isObrigacaoFazer = isObrigacaoFazer
     this.isManual = isManual
   }
@@ -17,7 +17,7 @@ export default class DisputeOverviewVm {
     favorite,
     upperRange, disputeUpperRange,
     hasDraft, hasDocument,
-    strategy, strategyId
+    strategy, strategyId, hasOBFInStrategy, manualStrategy
   }) {
     this.disputeId = disputeId || id
     this.internalId = internalId || externalId
@@ -28,6 +28,10 @@ export default class DisputeOverviewVm {
     this.favorite = favorite
     this.upperRange = upperRange || disputeUpperRange
     this.hasDraft = hasDraft || hasDocument
-    this.strategy = new StrategyVm(strategy || { strategyId })
+    this.strategy = new StrategyVm(strategy || {
+      id: strategyId,
+      isObrigacaoFazer: hasOBFInStrategy,
+      isManual: manualStrategy
+    })
   }
 }

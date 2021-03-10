@@ -61,6 +61,7 @@ export default {
   height: auto;
 
   .ticket-header-container__title {
+    flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;

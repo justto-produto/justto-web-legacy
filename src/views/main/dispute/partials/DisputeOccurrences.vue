@@ -1068,7 +1068,6 @@ export default {
 
     startReply(occurrence) {
       let senders, resume, type
-      console.log(occurrence)
 
       if (occurrence.interaction?.properties?.PERSON_EMAIL) {
         senders = [occurrence.interaction.properties.PERSON_EMAIL]

@@ -25,7 +25,7 @@
         >
           <component
             :is="tab.component"
-            v-for="ticket in ticketsList"
+            v-for="ticket in tickets.content"
             :key="ticket.disputeId"
             :ticket="ticket"
           />
@@ -67,10 +67,6 @@ export default {
       tickets: 'getTickets'
     }),
 
-    ticketsList() {
-      return this.tickets.content.filter(t => (typeof t !== 'boolean'))
-    },
-
     tabs() {
       return [
         {
@@ -98,6 +94,7 @@ export default {
   },
   beforeMount() {
     this.getTickets({ name: this.activeTab })
+    console.log(this.tickets.content)
   },
   methods: {
     ...mapActions([

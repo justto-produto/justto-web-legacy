@@ -143,6 +143,8 @@ export default {
 @import "@/styles/colors.scss";
 
 .jus-dispute-code {
+  display: inline-block;
+
   .jus-dispute-code__container {
     .jus-dispute-code__link,
     .jus-dispute-code__icon {

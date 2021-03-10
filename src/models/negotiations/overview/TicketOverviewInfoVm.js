@@ -42,8 +42,8 @@ export default class DisputeOverviewInfoVm {
     this.materialDamageValue = materialDamageValue || materialDamage
     this.moralDamageValue = moralDamageValue || moralDamage
     this.provisionedValue = provisionedValue
-    this.importedDate = new DateTime(importedDate || createAt)
-    this.expireDate = new DateTime(expireDate || expirationDate)
+    this.importedDate = new DateTime((importedDate || createAt) || {})
+    this.expireDate = new DateTime((expireDate || expirationDate) || {})
     this.classification = new ClassificationVm(classification)
   }
 }

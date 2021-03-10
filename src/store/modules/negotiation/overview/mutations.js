@@ -33,7 +33,7 @@ const overviewMutations = {
     Vue.set(partyToSet, 'emailsDto', data.emails)
     Vue.set(partyToSet, 'phonesDto', data.phones)
     Vue.set(partyToSet, 'oabsDto', data.oabs)
-    Vue.set(partyToSet, 'birthday', data.personProperties?.BIRTHDAY)
+    Vue.set(partyToSet, 'birthday', data.birthday)
     Vue.set(partyToSet, 'legacyDto', data) // TODO: Remover essa merda aqui
   },
 
@@ -77,6 +77,7 @@ const overviewMutations = {
     Vue.set(state, 'ticketOverview', new TicketOverview(dispute))
     Vue.set(state, 'ticketOverviewInfo', new TicketOverviewInfo(dispute))
     Vue.set(state, 'ticketOverviewParties', dispute.disputeRoles.map(party => new TicketOverviewParties(party)))
+    dispute.lastCounterOfferRoleId = state.lastTicketOffers?.plaintiffOffer?.roleId
     Vue.set(state, 'lastTicketOffers', new TicketOverviewLastOffers(dispute))
   },
 

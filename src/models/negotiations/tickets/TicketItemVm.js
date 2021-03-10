@@ -1,3 +1,5 @@
+import { DateTime } from '../GenericClasses'
+
 class Plaintiff {
   constructor({ documentNumber, name, oabNumber, oabState, role, status }) {
     this.documentNumber = documentNumber
@@ -13,6 +15,8 @@ export default class TicketItemVm {
     disputeId, id,
     disputeStatus, status,
     negotiatorName,
+    expirationDate,
+    conclusionDate, conclusion,
     visualized,
     favorite,
     plaintiff,
@@ -22,12 +26,15 @@ export default class TicketItemVm {
     firstClaimantLawyerDocumentNumber,
     firstClaimantLawyerOab,
     firstClaimantStatus,
-    firstClaimantLawyerStatus
+    firstClaimantLawyerStatus,
+    disputeRoles
   }) {
     const oab = firstClaimantLawyerOab ? firstClaimantLawyerOab.split('/') : []
     this.disputeId = disputeId || id
     this.disputeStatus = disputeStatus || status
-    this.negotiatorName = negotiatorName
+    this.negotiatorName = negotiatorName || disputeRoles.filter(role => role.roleNameNegotiator)[0].name
+    this.expirationDate = new DateTime(expirationDate || {})
+    this.conclusionDate = new DateTime((conclusionDate || conclusion) || {})
     this.visualized = visualized
     this.favorite = favorite
     this.plaintiff = new Plaintiff(plaintiff || {

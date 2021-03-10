@@ -25,8 +25,8 @@ const overviewActions = {
     commit('setTicketsQuery', params)
   },
 
-  addTicketPrescription({ commit }, prescription) {
-    commit('addTicketPrescription', prescription)
+  setTicketPrescription({ commit }, prescription) {
+    commit('setTicketPrescription', prescription)
   },
 
   unsetTicketPrescription({ commit }, prescription) {

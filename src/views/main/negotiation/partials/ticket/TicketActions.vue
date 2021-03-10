@@ -435,11 +435,12 @@ export default {
 @import '@/styles/colors.scss';
 
 .ticket-actions {
+  margin-left: 10px;
   display: flex;
   justify-content: flex-end;
   width: auto;
-  // min-width: 260px;
   max-width: 260px;
+  // min-width: 260px;
 
   .ticket-actions__buttons {
     padding: 10px;

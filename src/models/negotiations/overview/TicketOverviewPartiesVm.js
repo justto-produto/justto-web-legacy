@@ -7,8 +7,8 @@ class PersonDataDto {
     this.isMain = isMain
     this.source = source
     this.ranking = ranking
-    this.createAt = new DateTime(createAt)
-    this.updateAt = new DateTime(updateAt)
+    this.createAt = new DateTime(createAt || {})
+    this.updateAt = new DateTime(updateAt || {})
   }
 }
 

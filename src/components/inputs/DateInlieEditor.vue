@@ -29,7 +29,7 @@
       type="date"
       prefix-icon=""
       format="dd/MM/yy"
-      value-format="yyyy-MM-dd[T]hh:mm:ss[Z]"
+      :value-format="isDateTimeFormat ? 'yyyy-MM-dd[T]hh:mm:ss[Z]' : 'yyyy-MM-dd'"
       class="date-inline-editor__input"
       @change="disableEdit"
     />
@@ -41,12 +41,16 @@ export default {
   name: 'DateInlieEditor',
   props: {
     value: {
-      type: [String, Number],
+      type: [String, Number, Array],
       default: ''
     },
     processedDate: {
       type: String,
       default: ''
+    },
+    isDateTimeFormat: {
+      type: Boolean,
+      default: true
     },
     isEditable: {
       type: Boolean,
@@ -60,7 +64,7 @@ export default {
   computed: {
     vModel: {
       get() {
-        return this.isEditing ? this.model : this.value
+        return this.$moment(this.isEditing ? this.model : this.value).format('YYYY-MM-DD')
       },
       set(value) {
         this.model = value
@@ -90,7 +94,7 @@ export default {
     },
     disableEdit() {
       if (this.model !== this.value) {
-        this.$emit('change', { dateTime: this.model })
+        this.$emit('change', this.isDateTimeFormat ? { dateTime: this.model } : this.model)
       }
       this.isEditing = false
     },

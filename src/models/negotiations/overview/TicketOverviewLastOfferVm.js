@@ -13,6 +13,7 @@ export default class LastOfferVm {
     lastOfferValue,
     lastOfferName,
     plaintiffOffer,
+    lastCounterOfferRoleId,
     lastCounterOfferValue,
     lastCounterOfferName
   }) {
@@ -22,7 +23,7 @@ export default class LastOfferVm {
       name: lastOfferName
     })
     this.plaintiffOffer = new ProposalVm(plaintiffOffer || {
-      roleId: '',
+      roleId: lastCounterOfferRoleId,
       value: lastCounterOfferValue,
       name: lastCounterOfferName
     })
