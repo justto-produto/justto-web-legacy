@@ -89,7 +89,6 @@ export default {
           if ($state) { $state.complete() }
         } else {
           if ($state) { $state.loaded() }
-          this.$store.commit('setUpOccurrencesSize')
         }
       })
     }

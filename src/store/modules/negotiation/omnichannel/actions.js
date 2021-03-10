@@ -1,4 +1,4 @@
-import { axiosDispatch, isSimilarStrings } from '@/utils'
+import { axiosDispatch, isSimilarStrings, buildQuery } from '@/utils'
 
 import route from '@/router'
 
@@ -36,9 +36,8 @@ const omnichannelActions = {
     }
 
     return axiosDispatch({
-      url: `${disputeApi}/${disputeId}/occurrences`,
-      mutation: 'setOccurrences',
-      params
+      url: `${disputeApi}/${disputeId}/occurrences${buildQuery(params)}`,
+      mutation: 'setOccurrences'
     })
   },
 
