@@ -84,10 +84,12 @@ const overviewMutations = {
     // Vue.set(state, 'lastTicketOffers', '')
   },
 
-  incrementTicketOverviewCountGetters: ({ ticketOverviewCountGetters }) => (ticketOverviewCountGetters += 1),
+  incrementTicketOverviewCountGetters: (state) => (state.ticketOverviewCountGetters += 1),
 
-  decrementTicketOverviewCountGetters: ({ ticketOverviewCountGetters }) => {
-    if (ticketOverviewCountGetters > 0) ticketOverviewCountGetters -= 1
+  decrementTicketOverviewCountGetters: (state) => {
+    if (state.ticketOverviewCountGetters > 0) {
+      state.ticketOverviewCountGetters -= 1
+    }
   }
 }
 
