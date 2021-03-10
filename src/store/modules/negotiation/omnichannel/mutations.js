@@ -18,21 +18,20 @@ const omnichannelMutations = {
   setMessageType: (state, type) => Vue.set(state.editor, 'messageType', type),
 
   setOccurrences: (state, { content }) => {
-    content.map(occ => {
-      const can = state.occurrences.list.filter(({ createAt, id }) => {
-        return occ.id === id && occ.createAt.dateTime === createAt.dateTime
+    const canInsert = content.filter(occ => {
+      return state.occurrences.list.filter(({ createAt, id }, index) => {
+        if (id === null && occ.id === null && occ.createAt.dateTime === createAt.dateTime) {
+          Vue.delete(state.occurrences.list, index)
+          return false
+        } else {
+          return occ.id === id && occ.createAt.dateTime === createAt.dateTime
+        }
       }).length === 0
-      if (can) {
-        const pos = state.occurrences.list.length
-        Vue.set(state.occurrences.list, pos, occ)
-      }
     })
 
-    state.occurrences.filter.page += 1
+    state.occurrences.list.unshift(...canInsert)
 
-    // if (state.countOmnichannelGetters > 0) {
-    //   state.countOmnichannelGetters -= 1
-    // }
+    state.occurrences.filter.page += 1
   },
 
   incrementOccurrencesCountGetters: (state) => (state.countOmnichannelGetters += 1),
