@@ -123,9 +123,10 @@ export default {
 
     .communication-ticket-item-container__message {
       margin-bottom: 6px;
-      // white-space: nowrap;
-      // text-overflow: ellipsis;
-      // overflow: hidden;
+      max-width: 266px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow-x: hidden;
     }
   }
 

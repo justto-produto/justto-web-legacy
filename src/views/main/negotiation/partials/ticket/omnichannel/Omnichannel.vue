@@ -1,16 +1,25 @@
 <template>
-  <section class="omnichannel-container">
+  <section
+    v-loading="isLoading"
+    class="omnichannel-container"
+  >
     <Occurrences class="omnichannel-container__occurrences" />
     <Editor class="omnichannel-container__editor" />
   </section>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: 'Omnichannel',
   components: {
     Occurrences: () => import('./occurrences/Occurrences'),
     Editor: () => import('./editor/Editor')
+  },
+  computed: {
+    ...mapGetters({
+      isLoading: 'isOccurrencesLoading'
+    })
   }
 }
 </script>

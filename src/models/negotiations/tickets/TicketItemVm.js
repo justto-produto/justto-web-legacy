@@ -8,7 +8,7 @@ class Plaintiff {
     this.status = status
   }
 }
-export class TicketItemVm {
+export default class TicketItemVm {
   constructor({ disputeId, plaintiff, negotiatorId, disputeStatus, visualized, favorite }) {
     this.disputeId = disputeId
     this.disputeStatus = disputeStatus

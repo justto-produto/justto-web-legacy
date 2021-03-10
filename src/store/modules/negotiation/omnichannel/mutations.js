@@ -18,22 +18,33 @@ const omnichannelMutations = {
   setMessageType: (state, type) => Vue.set(state.editor, 'messageType', type),
 
   setOccurrences: (state, { content }) => {
-    content.map(occ => {
-      const can = state.occurrences.list.filter(({ createAt, id }) => {
-        return occ.id === id && occ.createAt.dateTime === createAt.dateTime
+    const canInsert = content.filter(occ => {
+      return state.occurrences.list.filter(({ createAt, id }, index) => {
+        if (id === null && occ.id === null && occ.createAt.dateTime === createAt.dateTime) {
+          Vue.delete(state.occurrences.list, index)
+          return false
+        } else {
+          return occ.id === id && occ.createAt.dateTime === createAt.dateTime
+        }
       }).length === 0
-      if (can) {
-        const pos = state.occurrences.list.length
-        Vue.set(state.occurrences.list, pos, occ)
-      }
     })
 
+    state.occurrences.list.unshift(...canInsert)
+
     state.occurrences.filter.page += 1
+  },
+
+  incrementOccurrencesCountGetters: (state) => (state.countOmnichannelGetters += 1),
+  decrementOccurrencesCountGetters: (state) => {
+    if (state.countOmnichannelGetters > 0) {
+      state.countOmnichannelGetters -= 1
+    }
   },
 
   resetOccurrences: (state) => {
     Vue.set(state.occurrences, 'list', [])
     Vue.set(state.occurrences.filter, 'page', 0)
+    Vue.set(state.occurrences, 'countGetters', 0)
   },
 
   addNegotiationOccurrence: (state, occurrence) => {
@@ -81,13 +92,19 @@ const omnichannelMutations = {
       canInclude = true
     }
 
-    if (canInclude) {
-      // TODO: Verifica se a date esta na lista de dates:
-      // * True
-      //  ** Insere a ocorrência
-      // * False
-      //  ** Insere a Date
-      //  ** Insere a ocorrência
+    if (!canInclude) return
+
+    if (dates.includes(date)) {
+      state.occurrences.list.map((item, dateIndex) => {
+        if (item.date === date) {
+          const index = item.occurrences.find(({ id }) => id === occurrence.id) || item.occurrences.length
+          Vue.set(state.occurrences.list[dateIndex].occurrences, index, occurrence)
+        }
+      })
+    } else {
+      const next = state.occurrences.list.length
+
+      Vue.set(state.occurrences.list, next, { date, occurrences: [occurrence] })
     }
   },
 

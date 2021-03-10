@@ -7,13 +7,15 @@
       para
       <span
         class="scheduler-container__contact-address"
-        @click="copyEmail">
+        @click="copyEmail"
+      >
         {{ to }}
       </span>
     </span>
     <div
       v-if="!hideContent"
-      class="scheduler-container__message">
+      class="scheduler-container__message"
+    >
       <span
         v-if="!canShowFullMessage && !isSmallText"
         class="scheduler-container__message-link"
@@ -159,6 +161,10 @@ export default {
   .scheduler-container__message {
     font-size: 16px;
     color: #3C3B3B;
+
+    @media (max-height: 680px) {
+      font-size: 14px;
+    }
 
     .scheduler-container__message-link {
       cursor: pointer;

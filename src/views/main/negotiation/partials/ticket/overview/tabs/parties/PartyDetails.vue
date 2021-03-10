@@ -1,14 +1,18 @@
 <template>
   <article class="party-details">
-    <PopoverLinkInlineEditor
+    <div
       v-if="!party.roles.includes('NEGOTIATOR')"
-      v-model="party.polarity"
-      :options="roleOptions"
-      :width="200"
-      label="Trocar polaridade"
-      class="party-details__infoline-data"
-      @change="updatePolarity"
-    />
+      class="party-details__infoline party-details__infoline--center"
+    >
+      <PopoverLinkInlineEditor
+        v-if="!party.roles.includes('NEGOTIATOR')"
+        v-model="party.polarity"
+        :options="roleOptions"
+        :width="200"
+        label="Trocar polaridade"
+        @change="updatePolarity"
+      />
+    </div>
 
     <div class="party-details__infoline">
       <span class="party-details__infoline-label">Nome completo:</span>
@@ -23,12 +27,20 @@
     <div class="party-details__infoline">
       <span class="party-details__infoline-label">Data de nascimento:</span>
       <DateInlieEditor
-        v-if="party.birthday"
+        v-if="party.birthday || activeAddingData === 'birthday'"
+        ref="birthday"
         v-model="party.birthday"
         :processed-date="$moment(party.birthday).fromNow(true)"
         class="party-details__infoline-data"
         @change="updateParty($event, 'birthday')"
+        @blur="stopEditing"
       />
+      <div
+        v-else
+        class="party-details__infoline-link"
+      >
+        <a @click="startEditing('birthday')">Adicionar</a>
+      </div>
     </div>
 
     <div class="party-details__infoline">
@@ -88,6 +100,17 @@
         @post="addContact($event, 'oab')"
       />
     </div>
+    <div
+      v-if="!party.roles.includes('NEGOTIATOR')"
+      class="party-details__infoline party-details__infoline--center"
+    >
+      <a
+        class="party-details__infoline-link party-details__infoline-link--danger"
+        @click="removeParty"
+      >
+        Excluir
+      </a>
+    </div>
   </article>
 </template>
 
@@ -107,6 +130,9 @@ export default {
       required: true
     }
   },
+  data: () => ({
+    activeAddingData: ''
+  }),
   computed: {
     disputeId() {
       return Number(this.$route.params.id)
@@ -147,11 +173,23 @@ export default {
     ...mapActions([
       'addRecipient',
       'setTicketOverviewParty',
+      'deleteTicketOverviewParty',
       'setTicketOverviewPartyPolarity',
       'setTicketOverviewPartyContact',
       'deleteTicketOverviewPartyContact',
       'updateTicketOverviewPartyContact'
     ]),
+    startEditing(key) {
+      this.activeAddingData = key
+      this.$forceUpdate()
+      this.$nextTick(() => {
+        this.$forceUpdate()
+        this.$refs[key].enableEdit()
+      })
+    },
+    stopEditing() {
+      this.activeAddingData = ''
+    },
     updatePolarity(rolePolarity) {
       const params = {
         disputeId: this.disputeId,
@@ -167,6 +205,20 @@ export default {
       data[key] = value
 
       this.setTicketOverviewParty({ disputeId, data })
+    },
+    removeParty() {
+      const { disputeId, party } = this
+      this.$confirm('Tem certeza que deseja excluir est parte da dispute? Está ação é irreversível', 'Atenção', {
+        confirmButtonText: 'Continuar',
+        cancelButtonText: 'Cancelar',
+        cancelButtonClass: 'is-plain',
+        showClose: false
+      }).then(() => {
+        this.deleteTicketOverviewParty({
+          roleId: party.disputeRoleId,
+          disputeId
+        })
+      })
     },
     addContact(contactValue, contactType) {
       const { disputeId, party } = this
@@ -188,14 +240,22 @@ export default {
     },
     updateContacts(contactId, contactValue, contactType) {
       const { disputeId, party } = this
-
-      this.updateTicketOverviewPartyContact({
+      const params = {
         roleId: party.disputeRoleId,
         disputeId,
         contactId,
-        contactValue,
-        contactType
-      })
+        contactType,
+        contactData: { value: contactValue }
+      }
+
+      if (contactType === 'oab') {
+        delete params.contactData.value
+        const oabSplited = contactValue.split('/')
+        params.contactData.number = oabSplited[0]
+        params.contactData.state = oabSplited[1]
+      }
+
+      this.updateTicketOverviewPartyContact(params)
     },
     removeContact(contactId, contactType) {
       const { disputeId, party } = this
@@ -230,8 +290,19 @@ export default {
 
     .party-details__infoline-data,
     .party-details__infoline-link {
-      margin: 3px 0 3px 18px;
       line-height: normal;
+      margin: 3px 0 3px 18px;
+      &--danger {
+        color: $--color-danger;
+        &:hover { color: $--color-danger-light-3 }
+      }
+    }
+
+    &--center {
+      font-size: 13px;
+      display: flex;
+      justify-content: center;
+      margin: 3px 0;
     }
   }
 }

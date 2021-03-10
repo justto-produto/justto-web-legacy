@@ -2,7 +2,8 @@
   <section class="communication-container">
     <div
       class="communication-container__email"
-      :class="directionIn ? 'INBOUND' : 'OUTBOUND'">
+      :class="directionIn ? 'INBOUND' : 'OUTBOUND'"
+    >
       <JusIcon
         class="communication-container__email-icon"
         :icon="messageType"
@@ -249,7 +250,9 @@ export default {
     font-size: 16px;
     color: #3C3B3B;
 
-    /* margin-left: 6px; */
+    @media (max-height: 680px) {
+      font-size: 14px;
+    }
 
     .communication-container__message-link {
       cursor: pointer;

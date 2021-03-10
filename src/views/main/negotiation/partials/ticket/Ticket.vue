@@ -74,7 +74,7 @@ export default {
       this.cleanRecentMessages()
       this.getTicketOverview(id)
       this.getLastTicketOffers(id)
-      this.getQuickReplyTemplates(id)
+      this.getQuickReplyTemplates(id).then(_ => {}).catch(_ => {})
       this.disputeSetVisualized({
         visualized: true,
         disputeId: Number(id),

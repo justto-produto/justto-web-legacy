@@ -306,6 +306,11 @@ export default {
         .log-container__occurrence-text__content {
           color: #f19737;
           font-weight: bold;
+          font-size: 16px;
+
+          @media (max-height: 680px) {
+            font-size: 14px;
+          }
         }
 
         .log-container__occurrence-text__summary {
@@ -352,6 +357,14 @@ export default {
       .log-container__occurrence-text__icon {
         align-self: flex-start;
         width: 16px;
+      }
+
+      .log-container__occurrence-text__content {
+        font-size: 16px;
+
+        @media (max-height: 680px) {
+          font-size: 14px;
+        }
       }
     }
 
