@@ -704,7 +704,7 @@ export default {
       if (['email'].includes(messageType)) {
         const { quill } = this.$refs.messageEditor
         const peviewText = quill.getText()
-        const peviewResume = `\n\n\n___________________\n${resume}`
+        const peviewResume = `\n___________________\n${resume}`
         quill.setContents([
           { insert: peviewText },
           { insert: peviewResume }
