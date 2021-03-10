@@ -397,6 +397,13 @@
     "PRE_NEGOTIATION": "pre-negociação",
     "PAUSED": "(pausada) | "
   },
+  "tickets-tabs": {
+    "pre-negotiation": "pré negociação",
+    "engagement": "sem resposta",
+    "running": "em negociação",
+    "accepted": "proposta aceita",
+    "finished": "finalizados"
+  },
   "fields": {
     "claimantParty": "Parte contrária",
     "claimantLawyer": "Advogado(a) da parte",

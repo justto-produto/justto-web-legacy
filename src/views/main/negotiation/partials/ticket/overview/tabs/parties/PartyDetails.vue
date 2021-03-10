@@ -24,13 +24,17 @@
       />
     </div>
 
-    <div class="party-details__infoline">
+    <div
+      v-if="party.polarity === 'CLAIMANT'"
+      class="party-details__infoline"
+    >
       <span class="party-details__infoline-label">Data de nascimento:</span>
       <DateInlieEditor
         v-if="party.birthday || activeAddingData === 'birthday'"
         ref="birthday"
         v-model="party.birthday"
         :processed-date="$moment(party.birthday).fromNow(true)"
+        :is-date-time-format="false"
         class="party-details__infoline-data"
         @change="updateParty($event, 'birthday')"
         @blur="stopEditing"
@@ -46,13 +50,20 @@
     <div class="party-details__infoline">
       <span class="party-details__infoline-label">{{ documentType }}:</span>
       <TextInlineEditor
-        v-if="party.documentNumber"
+        v-if="party.documentNumber || activeAddingData === 'documentNumber'"
+        ref="documentNumber"
         v-model="party.documentNumber"
         :mask="['###.###.###-##', '##.###.###/####-##']"
         filter="cpfCnpj"
         class="party-details__infoline-data"
         @change="updateParty($event, 'documentNumber')"
       />
+      <div
+        v-else
+        class="party-details__infoline-link"
+      >
+        <a @click="startEditing('documentNumber')">Adicionar</a>
+      </div>
     </div>
     <div class="party-details__infoline">
       <span class="party-details__infoline-label">Telefones:</span>
@@ -183,8 +194,10 @@ export default {
       this.activeAddingData = key
       this.$forceUpdate()
       this.$nextTick(() => {
-        this.$forceUpdate()
-        this.$refs[key].enableEdit()
+        setTimeout(() => {
+          this.$forceUpdate()
+          this.$refs[key].enableEdit()
+        }, 10)
       })
     },
     stopEditing() {

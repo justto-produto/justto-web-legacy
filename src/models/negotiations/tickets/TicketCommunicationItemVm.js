@@ -1,19 +1,22 @@
 import TicketItemVm from './TicketItemVm'
-import DateTime from '../GenericClasses'
+import { DateTime } from '../GenericClasses'
 
 class LastInboundInteractionVm {
   constructor({ dateTime, message, type }) {
-    this.dateTime = new DateTime(dateTime)
+    this.dateTime = new DateTime(dateTime || {})
     this.message = message
     this.type = type
   }
 }
 
-export default class TicketCommunication extends TicketItemVm {
+export default class TicketCommunicationItemVm extends TicketItemVm {
   constructor(dispute) {
+    const { lastInboundInteraction, lastReceivedMessage } = dispute
     super(dispute)
-    const { lastInboundInteraction, expirationDate } = dispute
-    this.expirationDate = expirationDate
-    this.lastInboundInteraction = new LastInboundInteractionVm(lastInboundInteraction)
+    this.lastInboundInteraction = new LastInboundInteractionVm(lastInboundInteraction || {
+      dateTime: lastReceivedMessage?.createAt,
+      message: lastReceivedMessage?.message?.resume,
+      type: lastReceivedMessage?.type
+    })
   }
 }

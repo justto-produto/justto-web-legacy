@@ -15,9 +15,9 @@ class EntityDto {
 }
 
 class DateTime {
-  constructor({ javaDate, dateTime }) {
-    this.javaDate = javaDate
+  constructor({ dateTime, javaDate }) {
     this.dateTime = dateTime
+    this.javaDate = javaDate
   }
 }
 

@@ -12,9 +12,9 @@
     >
       <el-tab-pane
         v-for="tab in tabs"
-        :key="`ticket-${tab.name}`"
+        :key="tab.name"
         :name="tab.name"
-        :label="tab.label"
+        :label="$options.filters.capitalize($t(`tickets-tabs.${tab.name}`))"
         class="tickets-container__tab-pane"
         stretch
         lazy
@@ -25,8 +25,8 @@
         >
           <component
             :is="tab.component"
-            v-for="ticket in ticketsList"
-            :key="`ticket-${ticket.disputeId}`"
+            v-for="ticket in tickets.content"
+            :key="ticket.disputeId"
             :ticket="ticket"
           />
           <infinite-loading
@@ -67,34 +67,25 @@ export default {
       tickets: 'getTickets'
     }),
 
-    ticketsList() {
-      return this.tickets.content.filter(t => (typeof t !== 'boolean'))
-    },
-
     tabs() {
       return [
         {
-          label: 'Pré negociação',
           name: 'pre-negotiation',
           component: 'EngagementTicketItem'
         },
         {
-          label: 'Sem resposta',
           name: 'engagement',
           component: 'EngagementTicketItem'
         },
         {
-          label: 'Em negociação',
           name: 'running',
           component: 'CommunicationTicketItem'
         },
         {
-          label: 'Proposta aceita',
           name: 'accepted',
           component: 'CommunicationTicketItem'
         },
         {
-          label: 'Finalizados',
           name: 'finished',
           component: 'CommunicationTicketItem'
         }
@@ -103,6 +94,7 @@ export default {
   },
   beforeMount() {
     this.getTickets({ name: this.activeTab })
+    console.log(this.tickets.content)
   },
   methods: {
     ...mapActions([

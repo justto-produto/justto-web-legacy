@@ -1,3 +1,5 @@
+import { DateTime } from '../GenericClasses'
+
 class Plaintiff {
   constructor({ documentNumber, name, oabNumber, oabState, role, status }) {
     this.documentNumber = documentNumber
@@ -9,12 +11,39 @@ class Plaintiff {
   }
 }
 export default class TicketItemVm {
-  constructor({ disputeId, plaintiff, negotiatorId, disputeStatus, visualized, favorite }) {
-    this.disputeId = disputeId
-    this.disputeStatus = disputeStatus
-    this.negotiatorName = negotiatorId
-    this.plaintiff = new Plaintiff(plaintiff)
+  constructor({
+    disputeId, id,
+    disputeStatus, status,
+    negotiatorName,
+    expirationDate,
+    conclusionDate, conclusion,
+    visualized,
+    favorite,
+    plaintiff,
+    firstClaimant,
+    firstClaimantLawyer,
+    firstClaimantDocumentNumber,
+    firstClaimantLawyerDocumentNumber,
+    firstClaimantLawyerOab,
+    firstClaimantStatus,
+    firstClaimantLawyerStatus,
+    disputeRoles
+  }) {
+    const oab = firstClaimantLawyerOab ? firstClaimantLawyerOab.split('/') : []
+    this.disputeId = disputeId || id
+    this.disputeStatus = disputeStatus || status
+    this.negotiatorName = negotiatorName || disputeRoles.filter(role => role.roleNameNegotiator)[0].name
+    this.expirationDate = new DateTime(expirationDate || {})
+    this.conclusionDate = new DateTime((conclusionDate || conclusion) || {})
     this.visualized = visualized
     this.favorite = favorite
+    this.plaintiff = new Plaintiff(plaintiff || {
+      name: firstClaimant || firstClaimantLawyer,
+      documentNumber: firstClaimantDocumentNumber || firstClaimantLawyerDocumentNumber,
+      oabNumber: oab[0] || '',
+      oabState: oab[1] || '',
+      role: firstClaimant ? 'PARTY' : 'LAWYER',
+      status: firstClaimant ? firstClaimantStatus : firstClaimantLawyerStatus
+    })
   }
 }

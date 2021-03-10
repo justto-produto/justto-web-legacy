@@ -160,7 +160,7 @@ export default {
           value: description,
           component: 'TextareaInlineEditor',
           classToEdit: 'ticket',
-          visible: !strategy?.isObrigacaoFazer
+          visible: !strategy.isObrigacaoFazer
         }
       ]
     },

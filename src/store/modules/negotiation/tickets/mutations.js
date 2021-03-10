@@ -1,6 +1,6 @@
 import Vue from 'vue'
-import TicketCommunication from '@/models/negotiations/tickets/TicketCommunicationItemVm'
-import TicketEngagement from '@/models/negotiations/tickets/TicketEngagementItemVm'
+import TicketCommunicationItem from '@/models/negotiations/tickets/TicketCommunicationItemVm'
+import TicketEngagementItem from '@/models/negotiations/tickets/TicketEngagementItemVm'
 
 const getTicketIndex = (tickets, disputeId) => tickets.findIndex(ticket => ticket.disputeId === disputeId)
 
@@ -19,14 +19,20 @@ const ticketsMutations = {
 
   addTicketQueryPage: ({ ticketsQuery }) => (ticketsQuery.page += 1),
 
-  addTicketPrescription: ({ ticketsQuery }, prescription) => {
+  setTicketPrescription: ({ ticketsQuery }, prescription) => {
     const index = ticketsQuery.prescriptions.length
     Vue.set(ticketsQuery.prescriptions, index, prescription)
   },
 
-  removeTicketPrescription: ({ ticketsQuery }, prescription) => {
+  unsetTicketPrescription: ({ ticketsQuery }, prescription) => {
     const index = ticketsQuery.prescriptions.indexOf(prescription)
     Vue.delete(ticketsQuery.prescriptions, index)
+  },
+
+  setTicketsFilters: (state, filters) => {
+    const { ticketsQuery } = state
+    Vue.set(state, 'ticketsQuery', filters)
+    Vue.set(ticketsQuery, 'page', 1)
   },
 
   setActiveTab: (state, activeTab) => Vue.set(state, 'ticketsActiveTab', activeTab),
@@ -40,8 +46,8 @@ const ticketsMutations = {
       'ENGAGEMENT',
       'PENDING'
     ].includes(dispute.status)
-      ? new TicketEngagement(dispute)
-      : new TicketCommunication(dispute)
+      ? new TicketEngagementItem(dispute)
+      : new TicketCommunicationItem(dispute)
 
     if (tickets.empty !== undefined) {
       if (ticketIndex > -1) Vue.set(tickets.content, ticketIndex, newTicket)

@@ -5,8 +5,8 @@
     @click="hangleSelectTicket"
   >
     <JusAvatarUser
-      :name="ticket.plaintiff.name"
-      :status="ticket.plaintiff.status"
+      :name="plaintiffName"
+      :status="ticket.plaintiff ? ticket.plaintiff.status : ''"
       class="communication-ticket-item-container__avatar"
       size="md"
       shadow
@@ -14,8 +14,10 @@
     />
     <div class="communication-ticket-item-container__resume">
       <div class="communication-ticket-item-container__parties">
-        <span class="communication-ticket-item-container__plaintiff">
-          {{ ticket.plaintiff.name | resumedName }}
+        <span
+          :class="{ 'communication-ticket-item-container__plaintiff--danger': !ticket.plaintiff }"
+          class="communication-ticket-item-container__plaintiff">
+          {{ plaintiffName | resumedName }}
         </span>
         <span class="communication-ticket-item-container__negotiator">
           &gt; {{ ticket.negotiatorName | resumedName }}
@@ -84,6 +86,10 @@ export default {
           dateTime: expirationDate || '--/--/--'
         }
       }
+    },
+    plaintiffName() {
+      const { plaintiff } = this.ticket
+      return plaintiff ? plaintiff.name : 'Sem parte'
     }
   },
   methods: {
@@ -152,6 +158,7 @@ export default {
         color: $--color-primary;
         font-weight: 700;
         font-size: 16px;
+        &--danger { color: $--color-danger; }
       }
       .communication-ticket-item-container__negotiator {
         color: $--color-text-secondary;

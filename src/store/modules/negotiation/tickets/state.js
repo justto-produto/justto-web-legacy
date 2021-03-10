@@ -36,6 +36,11 @@ const ticketsState = {
   ticketsMap: {},
   ticketsQuery: {
     status: ['RUNNING'],
+    sort: [
+      'visualized,asc',
+      'lastInboundInteraction.createdAt,desc',
+      'expirationDate,asc'
+    ],
     size: 20,
     page: 1,
     prescriptions: []
