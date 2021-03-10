@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div>
     <el-dialog
       :visible.sync="visible"
@@ -620,7 +620,6 @@ export default {
     buttonSize() {
       return IS_SMALL_WINDOW ? 'mini' : 'medium'
     }
-
   },
   watch: {
     step() {
@@ -636,18 +635,19 @@ export default {
     },
     visible(value) {
       if (value) {
-        this.loading = true
-        this.loadingChooseRecipients = false
-        this.loadingDownload = false
-        this.step = 0
-        this.recipients = {}
-        this.signers = ''
-        this.roles = JSON.parse(JSON.stringify(this.disputeRoles.filter(r => !r.documentNumber || r.documentNumber.length !== 14)))
-        this.emailForm.email = {}
-        this.getDocument()
-        this.roleForm.role = ''
-        this.showARoleButton = false
-        this.documentForm.document = {}
+        this.disputeRolesFiller(this.dispute).then(() => {
+          this.loading = true
+          this.loadingChooseRecipients = false
+          this.loadingDownload = false
+          this.step = 0
+          this.recipients = {}
+          this.signers = ''
+          this.roles = JSON.parse(JSON.stringify(this.disputeRoles.filter(r => !r.documentNumber || r.documentNumber.length !== 14)))
+          this.emailForm.email = {}
+          this.getDocument()
+          this.roleForm.role = ''
+          this.showARoleButton = false
+        })
       }
     }
   },
@@ -656,6 +656,7 @@ export default {
       this.isLowHeight = true
       this.fullscreen = true
     }
+    this.disputeRolesFiller()
   },
   methods: {
     ...mapActions([
@@ -669,9 +670,13 @@ export default {
       'fillerDisputeRole'
     ]),
     disputeRolesFiller() {
-      if (!this.dispute.disputeRoles || !this.dispute.disputeRoles.length) {
-        this.fillerDisputeRole(this.dispute)
-      }
+      return new Promise((resolve, reject) => {
+        if (!this.dispute.disputeRoles || !this.dispute.disputeRoles.length) {
+          this.fillerDisputeRole(this.dispute).then(resolve).catch(reject)
+        } else {
+          resolve()
+        }
+      })
     },
     getLabelSigner(role) {
       const { documentNumber, name } = role

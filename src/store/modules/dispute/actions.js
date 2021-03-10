@@ -48,7 +48,7 @@ const disputeActions = {
     dispatch('getDisputeProperties', id)
     dispatch('getDisputeAttachments', id)
   },
-  fillerDisputeRole({ commit }, dispute) {
+  fillerDisputeRole({ _ }, dispute) {
     return axiosDispatch({
       url: `${disputesPath}/${dispute.id}/dispute-roles`,
       mutation: 'fillerDisputeRole',
