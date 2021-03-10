@@ -67,7 +67,7 @@ const overviewActions = {
       } else {
         commit('updateTicketItem', dispute)
       }
-      commit('updateTicketOverview', dispute)
+      commit('updateTicket', dispute)
     } else {
       if (correspondingTab !== state.ticketsActiveTab) {
         commit('deleteTicket', dispute.id)

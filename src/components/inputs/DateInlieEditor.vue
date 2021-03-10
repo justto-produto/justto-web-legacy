@@ -6,7 +6,7 @@
     >
       <span class="date-inline-editor__inner">
         {{ value | moment('DD/MM/YY') }}
-        <span v-if="processedDate">({{ processedDate }})</span>
+        <span v-if="processedDate && value">({{ processedDate }})</span>
       </span>
       <span class="date-inline-editor__icons">
         <i
@@ -29,7 +29,7 @@
       type="date"
       prefix-icon=""
       format="dd/MM/yy"
-      value-format="yyyy-MM-dd"
+      value-format="yyyy-MM-dd[T]hh:mm:ss[Z]"
       class="date-inline-editor__input"
       @change="disableEdit"
     />
@@ -81,13 +81,16 @@ export default {
       this.model = this.value || new Date()
       this.isEditing = true
       this.$nextTick(() => {
-        this.$refs.dateInput.focus()
         this.$forceUpdate()
+        this.$nextTick(() => {
+          this.$refs.dateInput.focus()
+          this.$forceUpdate()
+        })
       })
     },
     disableEdit() {
       if (this.model !== this.value) {
-        this.$emit('change', this.model)
+        this.$emit('change', { dateTime: this.model })
       }
       this.isEditing = false
     },

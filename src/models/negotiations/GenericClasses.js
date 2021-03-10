@@ -21,7 +21,7 @@ class DateTime {
   }
 }
 
-export default {
+export {
   CodedValueDomainDto,
   EntityDto,
   DateTime

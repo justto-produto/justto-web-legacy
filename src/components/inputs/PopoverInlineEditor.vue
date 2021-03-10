@@ -48,7 +48,7 @@
 
 <script>
 export default {
-  name: 'PopoverLinkInlineEditor',
+  name: 'PopoverInlineEditor',
   props: {
     value: {
       type: [String, Boolean],

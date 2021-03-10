@@ -112,7 +112,9 @@ const overviewActions = {
 
     return axiosDispatch({
       url: `${disputeApiLegacy}/${disputeId}/dispute-roles/${roleId}/${rolePolarity}`,
-      method: 'PATCH'
+      method: 'PATCH',
+      mutation: 'updateTicketOverviewPartyPolarity',
+      payload: params
     })
   },
 
@@ -123,8 +125,8 @@ const overviewActions = {
       url: `${disputeApiLegacy}/${disputeId}/dispute-roles/${roleId}/${contactType}`,
       method: 'PUT',
       data: contactData,
-      mutation: 'setTicketOverviewPartyContact',
-      payload: params
+      mutation: 'setTicketOverviewParty',
+      payload: roleId
     })
   },
 
