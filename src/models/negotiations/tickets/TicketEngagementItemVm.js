@@ -1,5 +1,5 @@
 import TicketItemVm from './TicketItemVm'
-import CodedValueDomainDto from '../GenericClasses'
+import { CodedValueDomainDto } from '../GenericClasses'
 
 class CommunicationsEngagementStatusVm {
   constructor({ type, status }) {

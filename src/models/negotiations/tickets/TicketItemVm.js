@@ -9,12 +9,34 @@ class Plaintiff {
   }
 }
 export default class TicketItemVm {
-  constructor({ disputeId, plaintiff, negotiatorId, disputeStatus, visualized, favorite }) {
-    this.disputeId = disputeId
-    this.disputeStatus = disputeStatus
-    this.negotiatorName = negotiatorId
-    this.plaintiff = new Plaintiff(plaintiff)
+  constructor({
+    disputeId, id,
+    disputeStatus, status,
+    negotiatorName,
+    visualized,
+    favorite,
+    plaintiff,
+    firstClaimant,
+    firstClaimantLawyer,
+    firstClaimantDocumentNumber,
+    firstClaimantLawyerDocumentNumber,
+    firstClaimantLawyerOab,
+    firstClaimantStatus,
+    firstClaimantLawyerStatus
+  }) {
+    const oab = firstClaimantLawyerOab ? firstClaimantLawyerOab.split('/') : []
+    this.disputeId = disputeId || id
+    this.disputeStatus = disputeStatus || status
+    this.negotiatorName = negotiatorName
     this.visualized = visualized
     this.favorite = favorite
+    this.plaintiff = new Plaintiff(plaintiff || {
+      name: firstClaimant || firstClaimantLawyer,
+      documentNumber: firstClaimantDocumentNumber || firstClaimantLawyerDocumentNumber,
+      oabNumber: oab[0] || '',
+      oabState: oab[1] || '',
+      role: firstClaimant ? 'PARTY' : 'LAWYER',
+      status: firstClaimant ? firstClaimantStatus : firstClaimantLawyerStatus
+    })
   }
 }

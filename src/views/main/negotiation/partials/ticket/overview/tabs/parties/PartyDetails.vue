@@ -183,8 +183,10 @@ export default {
       this.activeAddingData = key
       this.$forceUpdate()
       this.$nextTick(() => {
-        this.$forceUpdate()
-        this.$refs[key].enableEdit()
+        setTimeout(() => {
+          this.$forceUpdate()
+          this.$refs[key].enableEdit()
+        }, 20)
       })
     },
     stopEditing() {

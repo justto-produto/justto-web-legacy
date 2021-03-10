@@ -1,9 +1,8 @@
 import Vue from 'vue'
-// import TicketOverview from '@/models/negotiations/overview/TicketOverviewVm'
-// import TicketOverviewInfo from '@/models/negotiations/overview/TicketOverviewInfoVm'
-// import TicketOverviewParties from '@/models/negotiations/overview/TicketOverviewPartiesVm'
-// import TicketOverviewProperties from '@/models/negotiations/overview/TicketOverviewPropertiesVm'
-// import TicketOverviewAttachments from '@/models/negotiations/overview/TicketOverviewAttachmentsVm'
+import TicketOverview from '@/models/negotiations/overview/TicketOverviewVm'
+import TicketOverviewInfo from '@/models/negotiations/overview/TicketOverviewInfoVm'
+import TicketOverviewParties from '@/models/negotiations/overview/TicketOverviewPartiesVm'
+import TicketOverviewLastOffers from '@/models/negotiations/overview/TicketOverviewLastOfferVm'
 
 const findPartyById = (parties, roleId) => {
   const partyIndex = parties.findIndex(party => party.disputeRoleId === roleId)
@@ -75,13 +74,10 @@ const overviewMutations = {
   setLastTicketOffers: (state, params) => (Vue.set(state, 'lastTicketOffers', params)),
 
   updateTicket: (state, dispute) => {
-    // const { id } = dispute
-    // Vue.set(state, 'ticketOverview', new TicketOverview())
-    // Vue.set(state, 'ticketOverviewInfo', new TicketOverviewInfo())
-    // Vue.set(state, 'ticketOverviewParties', new TicketOverviewParties())
-    // Vue.set(state, 'ticketOverviewProperties', new TicketOverviewProperties())
-    // Vue.set(state, 'ticketOverviewAttachments', new TicketOverviewAttachments())
-    // Vue.set(state, 'lastTicketOffers', '')
+    Vue.set(state, 'ticketOverview', new TicketOverview(dispute))
+    Vue.set(state, 'ticketOverviewInfo', new TicketOverviewInfo(dispute))
+    Vue.set(state, 'ticketOverviewParties', dispute.disputeRoles.map(party => new TicketOverviewParties(party)))
+    Vue.set(state, 'lastTicketOffers', new TicketOverviewLastOffers(dispute))
   },
 
   incrementTicketOverviewCountGetters: ({ ticketOverviewCountGetters }) => (ticketOverviewCountGetters += 1),

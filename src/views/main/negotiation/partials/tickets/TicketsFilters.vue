@@ -26,14 +26,26 @@
             {{ prescription.description | capitalize }}
           </div>
         </li>
-        <li>
-          <!-- FILTROS AVANÇADOS AQUI -->
+        <li
+          ref="advancedFilters"
+          :class="{ 'management-prescriptions__list-item--selected': hasPrescription('advancedFilters') }"
+          class="management-prescriptions__list-item"
+          @click="openAdvancedFiltersDialog"
+        >
+          <div>
+            <JusIcon
+              :class="{ 'management-prescriptions__filter-icon--selected' : hasPrescription('advancedFilters') }"
+              class="management-prescriptions__filter-icon"
+              icon="filter"
+            />
+            Filtros avançados
+          </div>
         </li>
       </ul>
       <el-button
         slot="reference"
         size="mini"
-        type="text"
+        class="management-prescriptions__popover-button"
       >
         <JusIcon
           class="management-prescriptions__popover-icon"
@@ -41,13 +53,21 @@
         />
       </el-button>
     </el-popover>
+    <TicketsAdvancedFilters
+      ref="advancedFilters"
+      :active-tab="activeTab"
+    />
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+
 export default {
-  name: 'ManagementPrescriptions',
+  name: 'TicketsFilters',
+  components: {
+    TicketsAdvancedFilters: () => import('./TicketsAdvancedFilters')
+  },
   props: {
     activeTab: {
       type: String,
@@ -72,29 +92,32 @@ export default {
         case 'accepted':
           return 3
         case 'finished':
-          return 3
+          return 4
         default:
           return 2
       }
     }
   },
-
   methods: {
     ...mapActions([
       'getTickets',
       'resetTicketsPage',
-      'addTicketPrescription',
-      'removeTicketPrescription',
+      'setTicketPrescription',
+      'unsetTicketPrescription',
       'setTicketsQuery'
     ]),
+
+    openAdvancedFiltersDialog() {
+      this.$refs.advancedFilters.openDialog()
+    },
 
     handlePrescriptionClick(prescription) {
       this.setTicketsQuery({ key: 'page', value: 0 })
 
       if (this.ticketsPrescriptions.includes(prescription)) {
-        this.removeTicketPrescription(prescription)
+        this.unsetTicketPrescription(prescription)
       } else {
-        this.addTicketPrescription(prescription)
+        this.setTicketPrescription(prescription)
         const translatedPrescription = this.$t(`prescription.${prescription}`).toUpperCase()
         this.$jusSegment(`Filtro botão ${translatedPrescription}`)
       }
@@ -116,12 +139,13 @@ export default {
 @import '@/styles/colors.scss';
 
 .management-prescriptions {
-  margin: 0 6px;
-  display: flex;
+  margin: 0 10px;
 
   .management-prescriptions__popover-trigger {
-    margin-left: 10px;
-
+    .management-prescriptions__popover-button {
+      border: 1px solid $--light-gray;
+      &:hover, &:focus { border-color: $--color-primary-light-8; }
+    }
     .management-prescriptions__popover-icon {
       width: 14px
     }

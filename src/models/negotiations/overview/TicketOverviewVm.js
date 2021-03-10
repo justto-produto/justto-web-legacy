@@ -1,29 +1,33 @@
-class ProposalVm {
-  constructor({ value, ownerName }) {
-    this.value = value
-    this.ownerName = ownerName
-  }
-}
-
 class StrategyVm {
-  constructor({ id, name, type, triggerType }) {
-    this.id = id
-    this.name = name
-    this.type = type
-    this.triggerType = triggerType
+  constructor({ id, strategyId, isObrigacaoFazer, isManual }) {
+    this.id = id || strategyId
+    this.isObrigacaoFazer = isObrigacaoFazer
+    this.isManual = isManual
   }
 }
 
-export class DisputeOverviewVm {
-  constructor({ disputeId = null, code = null, internalIdentification = null, upperRange = null, status = '', description = '', strategy = '', plaintiffProposal = null, defendantProposal = null }) {
-    this.disputeId = disputeId
+export default class DisputeOverviewVm {
+  constructor({
+    disputeId, id,
+    internalId, externalId,
+    code,
+    status,
+    description,
+    paused,
+    favorite,
+    upperRange, disputeUpperRange,
+    hasDraft, hasDocument,
+    strategy, strategyId
+  }) {
+    this.disputeId = disputeId || id
+    this.internalId = internalId || externalId
     this.code = code
-    this.internalId = internalIdentification
-    this.upperRange = upperRange
     this.status = status
     this.description = description
-    this.strategy = new StrategyVm(strategy)
-    this.plaintiffProposal = new ProposalVm(plaintiffProposal)
-    this.defendantProposal = new ProposalVm(defendantProposal)
+    this.paused = paused
+    this.favorite = favorite
+    this.upperRange = upperRange || disputeUpperRange
+    this.hasDraft = hasDraft || hasDocument
+    this.strategy = new StrategyVm(strategy || { strategyId })
   }
 }

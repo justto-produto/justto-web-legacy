@@ -126,7 +126,7 @@
             <el-button
               :plain="!hasFilters"
               :type="hasFilters ? 'primary' : ''"
-              @click="filtersVisible = true"
+              @click="showManagementFilters"
             >
               <jus-icon
                 :is-white="hasFilters"
@@ -158,8 +158,8 @@
           <jus-import-dialog :dialog-visible.sync="importDialogVisible" />
         </div>
       </div>
-      <management-filters
-        :visible.sync="filtersVisible"
+      <ManagementFilters
+        ref="managementFilters"
         :tab-index="activeTab"
       />
       <div style="min-height: 44px;position: relative;">
@@ -436,7 +436,6 @@ export default {
   data() {
     return {
       loadingExport: false,
-      filtersVisible: false,
       termDebounce: () => {},
       ufDebounce: () => {},
       disputeDebounce: '',
@@ -558,6 +557,9 @@ export default {
       })
 
       this.filteredBrazilianStates = this.brazilianStates
+    },
+    showManagementFilters() {
+      this.$refs.managementFilters.openDialog()
     },
     ufSearch(value) {
       this.filteredBrazilianStates = filterByTerm(value, this.brazilianStates, 'name', 'value')

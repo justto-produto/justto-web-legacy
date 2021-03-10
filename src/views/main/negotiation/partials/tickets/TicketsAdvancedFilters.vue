@@ -1,12 +1,12 @@
 <template>
   <el-dialog
     :close-on-click-modal="false"
-    :visible.sync="visibleFilters"
+    :visible.sync="advancedFiltersDialogVisible"
     width="650px"
     @open="restoreFilters()"
   >
     <template slot="title">
-      <h2>Filtrar {{ activeTabLabel }}</h2>
+      <h2>Filtrar {{ $t(`tickets-tabs.${activeTab}`) }}</h2>
     </template>
     <div class="management-filters">
       <el-form
@@ -67,7 +67,7 @@
             v-if="isNewAgreements"
             :span="12"
           >
-            <el-form-item :label="isNewAgreementsLabel">
+            <el-form-item :label="newAgreementsLabel">
               <el-date-picker
                 v-model="filters.dealDate"
                 data-testid="filters-disputeexpirationdate"
@@ -169,7 +169,7 @@
           </el-col>
           <!-- FAVORITOS -->
           <el-col
-            v-if="isInteration"
+            v-if="isRunning"
             :span="12"
           >
             <el-form-item
@@ -198,7 +198,7 @@
           </el-col>
           <!-- MEIO DE INTERAÇÃO -->
           <el-col
-            v-if="isInteration || isAll"
+            v-if="isRunning"
             :span="12"
           >
             <el-form-item label="Meio de interação">
@@ -219,7 +219,7 @@
             </el-form-item>
           </el-col>
           <el-col
-            v-if="isFinished || isEngagement || isAll"
+            v-if="isFinished || isEngagement"
             :span="24"
           >
             <el-form-item label="Status">
@@ -257,16 +257,16 @@
 import { mapActions, mapGetters } from 'vuex'
 
 export default {
-  name: 'ManagementFilters',
+  name: 'TicketsAdvancedFilters',
   props: {
-    tabIndex: {
+    activeTab: {
       type: String,
       required: true
     }
   },
   data() {
     return {
-      visibleFilters: false,
+      advancedFiltersDialogVisible: false,
       loading: false,
       filters: {}
     }
@@ -277,36 +277,34 @@ export default {
       campaigns: 'campaignList',
       respondents: 'respondents',
       workspaceTags: 'workspaceTags',
-      negotiatorsList: 'workspaceMembers'
+      negotiatorsList: 'workspaceMembers',
+      ticketsQuery: 'getTicketsQuery'
     }),
 
     isPreNegotiation() {
-      return this.tabIndex === '0'
+      return this.activeTab === 'pre-negotiation'
     },
     isEngagement() {
-      return this.tabIndex === '1'
+      return this.activeTab === 'engagement'
     },
-    isInteration() {
-      return this.tabIndex === '2'
-    },
-    isNewAgreements() {
-      return this.tabIndex === '3' || this.tabIndex === '4'
-    },
-    isNewAgreementsLabel() {
-      switch (this.tabIndex) {
-        case '3':
-          return 'Data do acordo'
-        case '4':
-          return 'Data de Finalização (ganho/perdido)'
-      }
-
-      return ''
+    isRunning() {
+      return this.activeTab === 'running'
     },
     isFinished() {
-      return this.tabIndex === '4'
+      return this.activeTab === 'finished'
     },
-    isAll() {
-      return this.tabIndex === '9'
+    isNewAgreements() {
+      return ['finished', 'accepted'].includes(this.activeTab)
+    },
+    newAgreementsLabel() {
+      switch (this.activeTab) {
+        case 'accepted':
+          return 'Data do acordo'
+        case 'finished':
+          return 'Data de Finalização (ganho/perdido)'
+        default:
+          return ''
+      }
     },
     interactions() {
       return [{
@@ -320,31 +318,15 @@ export default {
         value: 'Sistema Justto'
       }]
     },
-    activeTabLabel() {
-      switch (this.tabIndex) {
-        case '0':
-          return 'pré-Negociação'
-        case '1':
-          return 'sem resposta'
-        case '2':
-          return 'em negociação'
-        case '3':
-          return 'proposta aceita'
-        case '4':
-          return 'finalizados'
-        default:
-          return 'todos'
-      }
-    },
     statuses() {
-      switch (this.tabIndex) {
-        case '4':
+      switch (this.activeTab) {
+        case 'finished':
           return [
             'EXPIRED',
             'SETTLED',
             'UNSETTLED'
           ]
-        case '1':
+        case 'engagement':
           return [
             'IMPORTED',
             'PENDING',
@@ -369,7 +351,7 @@ export default {
     }
   },
   watch: {
-    visibleFilters(value) {
+    advancedFiltersDialogVisible(value) {
       if (value) {
         this.fetchData()
       }
@@ -381,7 +363,8 @@ export default {
       'getMyStrategiesLite',
       'getRespondents',
       'getWorkspaceTags',
-      'setTicketsFilters'
+      'setTicketsFilters',
+      'getTickets'
     ]),
     fetchData() {
       this.loading = true
@@ -395,13 +378,13 @@ export default {
       })
     },
     openDialog() {
-      this.visibleFilters = true
+      this.advancedFiltersDialogVisible = true
     },
     applyFilters() {
       if (!this.filters.onlyNotVisualized) delete this.filters.onlyNotVisualized
-      this.$store.commit('setDisputeHasFilters', true)
-      this.$store.commit('setDisputeQuery', this.filters)
-      this.visibleFilters = false
+      this.setTicketsFilters(this.filters)
+      this.advancedFiltersDialogVisible = false
+      this.getTickets()
       // SEGMENT TRACK
       if (this.filters.status) {
         if (this.filters.status.includes('EXPIRED')) {
@@ -428,7 +411,7 @@ export default {
       }
     },
     clearFilters() {
-      if (this.tabIndex === '4') {
+      if (this.activeTab === 'finished') {
         this.filters.status = []
       }
       this.clearCampaign()
@@ -442,13 +425,13 @@ export default {
       this.filters.onlyFavorite = false
       this.filters.onlyPaused = false
       this.filters.hasCounterproposal = false
-      this.$store.commit('setDisputeHasFilters', false)
-      this.$store.commit('setDisputeQuery', this.filters)
-      this.visibleFilters = false
+      this.setTicketsFilters(this.filters)
+      this.advancedFiltersDialogVisible = false
       delete this.filters.onlyNotVisualized
+      this.getTickets()
     },
     restoreFilters() {
-      this.filters = JSON.parse(JSON.stringify(this.$store.getters.disputeQuery))
+      this.filters = JSON.parse(JSON.stringify(this.ticketsQuery))
     },
     clearInteraction(value) {
       delete this.filters.lastInteractionType

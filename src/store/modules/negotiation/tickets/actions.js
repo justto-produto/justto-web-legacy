@@ -29,8 +29,12 @@ const overviewActions = {
     commit('addTicketPrescription', prescription)
   },
 
-  removeTicketPrescription({ commit }, prescription) {
-    commit('removeTicketPrescription', prescription)
+  unsetTicketPrescription({ commit }, prescription) {
+    commit('unsetTicketPrescription', prescription)
+  },
+
+  setTicketsFilters({ commit }, filters) {
+    commit('setTicketsFilters', filters)
   },
 
   setActivTab({ commit }, activeTab) {
