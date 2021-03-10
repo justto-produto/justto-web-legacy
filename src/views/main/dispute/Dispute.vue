@@ -620,21 +620,25 @@ export default {
       'sendNegotiator',
       'setHeight'
     ]),
+
     setNegotiatorActive(params) {
       this.setMessageType('negotiation')
       this.activeRoleId = params.roleId
       this.directContactAddress = [params.email]
     },
+
     archiveTemplate(templateId) {
       this.archiveQuickReplyTemplate(templateId)
       this.getQuickReplyTemplates(this.id).then(_ => {}).catch(_ => {})
     },
+
     closeEditTemplateDialog() {
       this.editTemplateQuickReply = {
         visible: false,
         template: {}
       }
     },
+
     openEditTemplateDialog(template) {
       this.editTemplateQuickReply = {
         visible: true,
@@ -653,20 +657,26 @@ export default {
     formatBody(body) {
       const start = body.indexOf('<body>') + 6
       const end = body.indexOf('</body>') - 7
+      let newBody = body
+
       if (start > 5 && end > 0) {
-        return body.substring(start, end).trim()
+        newBody = body.substring(start, end).trim()
       }
-      return body
+
+      newBody = newBody.split('\n').filter(l => l.trim().indexOf('<meta') !== 0).join('\n')
+      return newBody
     },
 
     inputTemplate(template) {
       this.closeTemplateMenu()
       this.$refs.messageEditor.quill.container.firstChild.innerHTML = this.formatBody(template.parsed.body)
     },
+
     updateWindowHeight() {
       this.width = this.$refs.sectionMessages.offsetWidth
       this.onDrag(0, this.$refs.sectionMessages.offsetHeight - this.sendMessageHeight)
     },
+
     onDrag(x, y) {
       const minTop = this.$refs.sectionMessages.offsetHeight - 208
       const maxTop = 65 + 120
@@ -675,6 +685,7 @@ export default {
       else this.y = y
       this.updateDragHeight(this.y)
     },
+
     updateDragHeight(height) {
       clearTimeout(this.dragDebounce)
       this.dragDebounce = setTimeout(() => {
@@ -682,6 +693,7 @@ export default {
         localStorage.setItem('jusoffsetheight', height)
       }, 100)
     },
+
     startReply(params) {
       if (this.$refs.messageEditor) {
         this.$refs.messageEditor.quill.container.firstChild.innerHTML = ''
@@ -692,7 +704,7 @@ export default {
       if (['email'].includes(messageType)) {
         const { quill } = this.$refs.messageEditor
         const peviewText = quill.getText()
-        const peviewResume = `\n\n\n___________________\n${resume}`
+        const peviewResume = `\n___________________\n${resume}`
         quill.setContents([
           { insert: peviewText },
           { insert: peviewResume }
@@ -701,6 +713,7 @@ export default {
       this.activeRoleId = 0
       this.directContactAddress = senders
     },
+
     setMessageType(type) {
       this.removeReply()
       this.messageType = ''
@@ -708,6 +721,7 @@ export default {
       this.handleTabClick({ name: '1' })
       this.$nextTick(() => this.$refs.messageEditor.quill.focus())
     },
+
     updateActiveRole(params) {
       if (typeof params === 'number') {
         const disputeId = params
@@ -728,6 +742,7 @@ export default {
       if (this.typingTab !== '1' && params.activeRole) this.typingTab = '1'
       if (params.messageType) this.setMessageType(params.messageType)
     },
+
     removeReply() {
       this.directContactAddress = []
       const message = this.$refs.messageEditor.quill.getText()
@@ -736,6 +751,7 @@ export default {
         this.$refs.messageEditor.quill.setText(message.substring(messageIndex, 0))
       }
     },
+
     socketAction(action, id) {
       if (this.workspaceSubdomain && this.loggedPersonId) {
         this.$socket.emit(action, {
@@ -744,10 +760,12 @@ export default {
         })
       }
     },
+
     unsubscribeOccurrences(id) {
       this.$store.commit('clearDisputeOccurrences')
       this.socketAction('unsubscribe', id)
     },
+
     fetchData() {
       this.loadingDispute = true
       this.socketAction('subscribe', this.id)
@@ -765,18 +783,22 @@ export default {
         }, 500)
       })
     },
+
     backToManagement() {
       if (this.$store.state.disputeModule.tab === '9') this.$router.push('/management/all')
       else this.$router.push('/management')
     },
+
     handleTabClick({ name }) {
       if (!['1', '3'].includes(name)) this.activeRoleId = 0
       this.typingTab = name
       localStorage.setItem('jusoccurrencestab', name)
     },
+
     handleBeforeLeaveTabs() {
       this.$store.commit('clearOccurrencesSize')
     },
+
     verifyWhatsappMessage(quillMessage) {
       return new Promise((resolve, reject) => {
         if (this.messageType === 'whatsapp') {
@@ -818,6 +840,7 @@ export default {
         }
       })
     },
+
     sendMessage() {
       if (!this.$refs.messageEditor.quill.getText().trim()) {
         return false
@@ -918,12 +941,14 @@ export default {
         })
       }
     },
+
     addLoadingOccurrence(params) {
       this.$store.commit('addLoadingOccurrence', Object.assign({
         sender: this.$store.getters.loggedPersonName,
         createAt: { dateTime: this.$moment() }
       }, params))
     },
+
     sendNote() {
       const note = this.$refs.noteEditor.quill.getText()
       if (note.trim()) {
@@ -947,6 +972,7 @@ export default {
         })
       }
     },
+
     removeRole() {
       this.isDeletingRole = true
       this.deletingRoleText = 'Por favor, aguarde enquanto apagamos a parte...'
