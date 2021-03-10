@@ -3,7 +3,24 @@
   "test": "teste",
   "isTyping": "está digitando",
   "dispute": {
+    "notification": {
+      "will-restart": "A disputa será reiniciada.",
+      "will-not-restart": "A disputa não será reiniciada.",
+      "restarted": "Disputa reiniciada com sucesso.",
+      "will-engage": "A disputa será reengajada.",
+      "will-not-engage": "A disputa não será reengajada.",
+      "engaged": "Disputa reengajada com sucesso."
+    },
     "overview": {
+      "confirm": {
+        "restart": {
+          "engagement": {
+            "question": "Novos dados de contato foram adicionados. Deseja reiniciar a disputa?",
+            "confirm": "Não reiniciar",
+            "cancel": "Reiniciar disputa"
+          }
+        }
+      },
       "label": {
         "contact-found": "{count} contato encontado | {count} contatos encontrados",
         "in-the-attachments": "nos anexos"

@@ -60,7 +60,9 @@ export default {
   },
   watch: {
     '$route.params.id'() {
-      this.getOccurrences(this.id)
+      this.resetRecipients()
+      this.resetOccurrences()
+      this.getOccurrences(this.$route.params.id)
     },
     'countRendereds'() {
       this.adjustScroll()
@@ -69,7 +71,9 @@ export default {
   methods: {
     ...mapActions([
       'setMessageType',
-      'getOccurrences'
+      'getOccurrences',
+      'resetRecipients',
+      'resetOccurrences'
     ]),
 
     adjustScroll() {

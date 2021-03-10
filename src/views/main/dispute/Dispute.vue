@@ -591,7 +591,7 @@ export default {
       disputeId: this.id,
       anonymous: this.isJusttoAdmin && this.ghostMode
     })
-    this.getQuickReplyTemplates(this.id)
+    this.getQuickReplyTemplates(this.id).then(_ => {}).catch(_ => {})
   },
   mounted() {
     this.getLastInteractions(this.id)
@@ -627,7 +627,7 @@ export default {
     },
     archiveTemplate(templateId) {
       this.archiveQuickReplyTemplate(templateId)
-      this.getQuickReplyTemplates(this.id)
+      this.getQuickReplyTemplates(this.id).then(_ => {}).catch(_ => {})
     },
     closeEditTemplateDialog() {
       this.editTemplateQuickReply = {

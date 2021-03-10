@@ -1,6 +1,6 @@
 import Vue from 'vue'
-import { TicketCommunication } from '@/models/negotiations/tickets/TicketCommunicationItemVm'
-import { TicketEngagement } from '@/models/negotiations/tickets/TicketEngagementItemVm'
+import TicketCommunication from '@/models/negotiations/tickets/TicketCommunicationItemVm'
+import TicketEngagement from '@/models/negotiations/tickets/TicketEngagementItemVm'
 
 const getTicketIndex = (tickets, disputeId) => tickets.findIndex(ticket => ticket.disputeId === disputeId)
 

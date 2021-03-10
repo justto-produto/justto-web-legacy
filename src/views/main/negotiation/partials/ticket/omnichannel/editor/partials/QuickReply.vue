@@ -146,7 +146,7 @@ export default {
 
     archiveTemplate(templateId) {
       this.archiveQuickReplyTemplate(templateId)
-      this.getQuickReplyTemplates(this.$route.params.id)
+      this.getQuickReplyTemplates(this.$route.params.id).then(_ => {}).catch(_ => {})
     },
 
     closeEditTemplateDialog() {

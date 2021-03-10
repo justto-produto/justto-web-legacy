@@ -26,9 +26,10 @@ const overviewGetters = {
       }
     })
   },
+  getLastTicketOffers: ({ lastTicketOffers }) => lastTicketOffers,
   getTicketOverviewProperties: ({ ticketOverviewProperties }) => ticketOverviewProperties,
   getTicketOverviewAttachments: ({ ticketOverviewAttachments }) => ticketOverviewAttachments,
-  getLastTicketOffers: ({ lastTicketOffers }) => lastTicketOffers,
+  isTicketOverviewloading: ({ ticketOverviewCountGetters }) => ticketOverviewCountGetters > 0,
   getTicketOverviewNegotiators: ({ ticketOverviewParties }) => ticketOverviewParties.filter(({ roles }) => roles.includes('NEGOTIATOR'))
 }
 

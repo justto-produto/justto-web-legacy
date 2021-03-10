@@ -31,7 +31,11 @@
           </div>
           <span
             class="usermenu-container__name__team-name"
-            :class="{ 'use-marquee-animation': isLargeTeamName, 'large-team-name-container': !isJusttoAdmin}"
+            :class="{
+              'use-marquee-animation': isLargeTeamName,
+              'large-team-name-container': !isJusttoAdmin,
+              'small-team-name-container': isJusttoAdmin
+            }"
           >
             {{ teamName }}
           </span>
@@ -256,6 +260,10 @@ export default {
 
     .large-team-name-container {
       max-width: 250px;
+    }
+
+    .small-team-name-container {
+      max-width: 130px;
     }
 
     .use-marquee-animation:hover {

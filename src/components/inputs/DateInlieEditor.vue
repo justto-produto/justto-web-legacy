@@ -5,7 +5,7 @@
       class="date-inline-editor__value"
     >
       <span class="date-inline-editor__inner">
-        {{ value | moment('DD/MM/YY') }} 
+        {{ value | moment('DD/MM/YY') }}
         <span v-if="processedDate">({{ processedDate }})</span>
       </span>
       <span class="date-inline-editor__icons">

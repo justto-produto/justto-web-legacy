@@ -1,4 +1,4 @@
-import { TicketItemVm } from './TicketItemVm'
+import TicketItemVm from './TicketItemVm'
 import DateTime from '../GenericClasses'
 
 class LastInboundInteractionVm {
@@ -9,7 +9,7 @@ class LastInboundInteractionVm {
   }
 }
 
-export class TicketCommunication extends TicketItemVm {
+export default class TicketCommunication extends TicketItemVm {
   constructor(dispute) {
     super(dispute)
     const { lastInboundInteraction, expirationDate } = dispute

@@ -91,19 +91,22 @@ export default {
       }
       this.$store.dispatch('getWorkspaceMembers')
         .then(() => {
-          this.$jusSegment('Troca de time/workspace', { description: `Alterado de ${workspace.workspace.name} para ${oldWorkspace}` })
+          this.$jusSegment('Troca de time/workspace', {
+            description: `Alterado de ${workspace.workspace.name} para ${oldWorkspace}`
+          })
         }).catch(error => {
           this.$jusNotification({ error })
         }).finally(() => {
-          if (this.$route.params && this.$route.params.id) {
-            this.$store.commit('setDisputesTab', '2')
-            this.$router.push('/management')
+          if (this.$route?.params?.id) {
+            const { href } = window.location
+            const newPath = href.split('#')[0] + '#/management'
+            window.location.replace(newPath)
           }
           this.isVisible = false
           setTimeout(() => {
             loading.close()
           }, 1000)
-          location.reload()
+          window.location.reload()
         })
     },
     getMembersAndRedirect() {

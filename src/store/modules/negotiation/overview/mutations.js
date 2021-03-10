@@ -14,19 +14,30 @@ const findContactIndex = (contactTypeList, contactId) => {
   return contactTypeList.findIndex(constact => constact.id === contactId)
 }
 
+const decrementCount = (state) => {
+  if (state.ticketOverviewCountGetters > 0) {
+    state.ticketOverviewCountGetters -= 1
+  }
+}
+
 const overviewMutations = {
-  setTicketOverview: (state, params) => (Vue.set(state, 'ticketOverview', params)),
+  setTicketOverview: (state, params) => Vue.set(state, 'ticketOverview', params),
+
   updateTicketOverview: ({ ticketOverview }, { payload }) => {
     for (const key of Object.keys(payload)) Vue.set(ticketOverview, key, payload[key])
   },
-  setTicketOverviewInfo: (state, params) => (Vue.set(state, 'ticketOverviewInfo', params)),
+
+  setTicketOverviewInfo: (state, params) => Vue.set(state, 'ticketOverviewInfo', params),
+
   updateTicketOverviewInfo: ({ ticketOverviewInfo }, { payload }) => {
     for (const key of Object.keys(payload)) Vue.set(ticketOverviewInfo, key, payload[key])
   },
-  setTicketOverviewParties: (state, params) => (Vue.set(state, 'ticketOverviewParties', params)),
-  setTicketOverviewParty: ({ ticketOverviewParties }, params) => {
+
+  setTicketOverviewParties: (state, params) => Vue.set(state, 'ticketOverviewParties', params),
+
+  setTicketOverviewParty: (state, params) => {
     const { data, payload } = params
-    const partyToSet = findPartyById(ticketOverviewParties, payload)
+    const partyToSet = findPartyById(state.ticketOverviewParties, payload)
 
     Vue.set(partyToSet, 'emailsDto', data.emails)
     Vue.set(partyToSet, 'phonesDto', data.phones)
@@ -34,6 +45,7 @@ const overviewMutations = {
     Vue.set(partyToSet, 'birthday', data.personProperties?.BIRTHDAY)
     Vue.set(partyToSet, 'legacyDto', data) // TODO: Remover essa merda aqui
   },
+
   updateTicketOverviewParty: ({ ticketOverviewParties }, params) => {
     const { id, name, documentNumber } = params
     const partyToSet = findPartyById(ticketOverviewParties, id)
@@ -42,6 +54,13 @@ const overviewMutations = {
     Vue.set(partyToSet, 'name', name)
     Vue.set(partyToSet, 'documentNumber', documentNumber)
   },
+
+  deleteTicketOverviewParty: ({ ticketOverviewParties }, { payload }) => {
+    console.log('to aqui', payload)
+    const partyToUnset = findPartyById(ticketOverviewParties, payload)
+    ticketOverviewParties.splice(partyToUnset, 1)
+  },
+
   setTicketOverviewPartyContact: ({ ticketOverviewParties }, { payload }) => {
     const { roleId, contactType, contactData } = payload
     const partyToSet = findPartyById(ticketOverviewParties, roleId)
@@ -56,6 +75,7 @@ const overviewMutations = {
     // const partyToSet = findPartyById(ticketOverviewParties, params.id)
     // Vue.set(partyToSet, 'legacyDto', params)
   },
+
   deleteTicketOverviewPartyContact: ({ ticketOverviewParties }, { payload }) => {
     const { roleId, contactId, contactType } = payload
     const partyToSet = findPartyById(ticketOverviewParties, roleId)
@@ -64,9 +84,13 @@ const overviewMutations = {
 
     Vue.delete(contactTypeList, contactToDelete)
   },
+
   setTicketOverviewProperties: (state, params) => (Vue.set(state, 'ticketOverviewProperties', params)),
+
   setTicketOverviewAttachments: (state, params) => (Vue.set(state, 'ticketOverviewAttachments', params)),
+
   setLastTicketOffers: (state, params) => (Vue.set(state, 'lastTicketOffers', params)),
+
   updateTicket: (state, dispute) => {
     // const { id } = dispute
     // Vue.set(state, 'ticketOverview', new TicketOverview())
@@ -75,7 +99,11 @@ const overviewMutations = {
     // Vue.set(state, 'ticketOverviewProperties', new TicketOverviewProperties())
     // Vue.set(state, 'ticketOverviewAttachments', new TicketOverviewAttachments())
     // Vue.set(state, 'lastTicketOffers', '')
-  }
+  },
+
+  incrementTicketOverviewCountGetters: (state) => (state.ticketOverviewCountGetters += 1),
+
+  decrementTicketOverviewCountGetters: (state) => decrementCount(state)
 }
 
 export default overviewMutations

@@ -102,6 +102,15 @@ export default {
   overflow-y: hidden;
   margin: 12px;
 
+  .negotiator-container__content {
+    font-size: 16px;
+    color: #3C3B3B;
+
+    @media (max-height: 680px) {
+      font-size: 14px;
+    }
+  }
+
   .negotiator-container__contact {
     display: flex;
     align-items: center;
