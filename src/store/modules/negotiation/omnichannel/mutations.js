@@ -3,6 +3,11 @@ import moment from 'moment'
 
 import EDITOR_TABS from '@/constants/editor'
 
+function getFormatedDate(occurrence) {
+  const onlyDate = (occurrence.updateAt?.dateTime || occurrence.createAt?.dateTime).split('T')[0]
+  return moment(onlyDate).format('YYYY-MM-DD')
+}
+
 const omnichannelMutations = {
   setActiveTab: (state, tab) => {
     if (Object.values(EDITOR_TABS).includes(tab)) {
@@ -18,21 +23,20 @@ const omnichannelMutations = {
   setMessageType: (state, type) => Vue.set(state.editor, 'messageType', type),
 
   setOccurrences: (state, { content }) => {
-    content.map(occ => {
-      const can = state.occurrences.list.filter(({ createAt, id }) => {
-        return occ.id === id && occ.createAt.dateTime === createAt.dateTime
+    const canInsert = content.filter(occ => {
+      return state.occurrences.list.filter(({ createAt, id }, index) => {
+        if (id === null && occ.id === null && occ.createAt.dateTime === createAt.dateTime) {
+          Vue.delete(state.occurrences.list, index)
+          return false
+        } else {
+          return occ.id === id && occ.createAt.dateTime === createAt.dateTime
+        }
       }).length === 0
-      if (can) {
-        const pos = state.occurrences.list.length
-        Vue.set(state.occurrences.list, pos, occ)
-      }
     })
 
-    state.occurrences.filter.page += 1
+    state.occurrences.list.unshift(...canInsert)
 
-    // if (state.countOmnichannelGetters > 0) {
-    //   state.countOmnichannelGetters -= 1
-    // }
+    state.occurrences.filter.page += 1
   },
 
   incrementOccurrencesCountGetters: (state) => (state.countOmnichannelGetters += 1),
@@ -49,10 +53,11 @@ const omnichannelMutations = {
   },
 
   addNegotiationOccurrence: (state, occurrence) => {
-    const date = moment(occurrence.updateAt?.dateTime || occurrence.createAt?.dateTime).format('YYYY-MM-DD')
-    const dates = state.occurrences.list.map(({ date }) => date)
+    const date = getFormatedDate(occurrence)
+    const dates = state.occurrences.list.filter(item => !item.id).map(getFormatedDate)
 
     let canInclude = false
+
     const { activeTab: tab } = state
     const oType = occurrence.type
     const iType = occurrence.interaction?.type
@@ -93,19 +98,14 @@ const omnichannelMutations = {
       canInclude = true
     }
 
-    if (!canInclude) return
+    if (canInclude) {
+      if (!dates.includes(date)) {
+        const nextIndex = state.occurrences.list.length
+        Vue.set(state.occurrences.list, nextIndex, { id: null, createAt: occurrence.createAt })
+      }
 
-    if (dates.includes(date)) {
-      state.occurrences.list.map((item, dateIndex) => {
-        if (item.date === date) {
-          const index = item.occurrences.find(({ id }) => id === occurrence.id) || item.occurrences.length
-          Vue.set(state.occurrences.list[dateIndex].occurrences, index, occurrence)
-        }
-      })
-    } else {
-      const next = state.occurrences.list.length
-
-      Vue.set(state.occurrences.list, next, { date, occurrences: [occurrence] })
+      const nextIndex = state.occurrences.list.length
+      Vue.set(state.occurrences.list, nextIndex, occurrence)
     }
   },
 

@@ -5,8 +5,9 @@ const omnichannelMutations = {
   countOmnichannelGetters: 0,
   occurrences: {
     filter: {
-      page: 0,
-      size: 20
+      page: 1,
+      size: 20,
+      sort: ['createdAt,desc']
     },
     list: [],
     summary: {
