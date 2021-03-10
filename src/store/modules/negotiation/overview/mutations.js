@@ -15,17 +15,20 @@ const findContactIndex = (contactTypeList, contactId) => {
 }
 
 const overviewMutations = {
-  setTicketOverview: (state, params) => (Vue.set(state, 'ticketOverview', params)),
+  setTicketOverview: (state, params) => Vue.set(state, 'ticketOverview', params),
+
   updateTicketOverview: ({ ticketOverview }, { payload }) => {
     for (const key of Object.keys(payload)) Vue.set(ticketOverview, key, payload[key])
   },
-  setTicketOverviewInfo: (state, params) => (Vue.set(state, 'ticketOverviewInfo', params)),
+
+  setTicketOverviewInfo: (state, params) => Vue.set(state, 'ticketOverviewInfo', params),
+
   updateTicketOverviewInfo: ({ ticketOverviewInfo }, { payload }) => {
     for (const key of Object.keys(payload)) Vue.set(ticketOverviewInfo, key, payload[key])
   },
   setTicketOverviewParties: (state, params) => (Vue.set(state, 'ticketOverviewParties', params)),
-  setTicketOverviewParty: ({ ticketOverviewParties }, params) => {
-    const { data, payload } = params
+
+  setTicketOverviewParty: ({ ticketOverviewParties }, { data, payload }) => {
     const partyToSet = findPartyById(ticketOverviewParties, payload)
 
     Vue.set(partyToSet, 'emailsDto', data.emails)
@@ -34,28 +37,28 @@ const overviewMutations = {
     Vue.set(partyToSet, 'birthday', data.personProperties?.BIRTHDAY)
     Vue.set(partyToSet, 'legacyDto', data) // TODO: Remover essa merda aqui
   },
+
   updateTicketOverviewParty: ({ ticketOverviewParties }, params) => {
-    const { id, name, documentNumber } = params
+    const { id, name, documentNumber, birthday } = params
     const partyToSet = findPartyById(ticketOverviewParties, id)
 
-    Vue.set(partyToSet, 'legacyDto', params)
     Vue.set(partyToSet, 'name', name)
+    Vue.set(partyToSet, 'birthday', birthday)
     Vue.set(partyToSet, 'documentNumber', documentNumber)
+    Vue.set(partyToSet, 'legacyDto', params)
   },
-  setTicketOverviewPartyContact: ({ ticketOverviewParties }, { payload }) => {
-    const { roleId, contactType, contactData } = payload
+  updateTicketOverviewPartyPolarity: ({ ticketOverviewParties }, { payload }) => {
+    const { roleId, rolePolarity } = payload
     const partyToSet = findPartyById(ticketOverviewParties, roleId)
-    const contactTypeList = partyToSet.legacyDto[contactType + 's']
-    let contactToSet
 
-    if (contactType === 'phone') contactToSet = { number: contactData.value }
-    else if (contactType === 'email') contactToSet = { address: contactData.value }
-    else contactToSet = contactData
-
-    contactTypeList.push(contactToSet)
-    // const partyToSet = findPartyById(ticketOverviewParties, params.id)
-    // Vue.set(partyToSet, 'legacyDto', params)
+    Vue.set(partyToSet, 'polarity', rolePolarity)
   },
+  deleteTicketOverviewParty: ({ ticketOverviewParties }, { payload }) => {
+    const partyToUnset = findPartyById(ticketOverviewParties, payload)
+
+    Vue.delete(ticketOverviewParties, partyToUnset)
+  },
+
   deleteTicketOverviewPartyContact: ({ ticketOverviewParties }, { payload }) => {
     const { roleId, contactId, contactType } = payload
     const partyToSet = findPartyById(ticketOverviewParties, roleId)
@@ -64,9 +67,13 @@ const overviewMutations = {
 
     Vue.delete(contactTypeList, contactToDelete)
   },
+
   setTicketOverviewProperties: (state, params) => (Vue.set(state, 'ticketOverviewProperties', params)),
+
   setTicketOverviewAttachments: (state, params) => (Vue.set(state, 'ticketOverviewAttachments', params)),
+
   setLastTicketOffers: (state, params) => (Vue.set(state, 'lastTicketOffers', params)),
+
   updateTicket: (state, dispute) => {
     // const { id } = dispute
     // Vue.set(state, 'ticketOverview', new TicketOverview())
@@ -75,6 +82,14 @@ const overviewMutations = {
     // Vue.set(state, 'ticketOverviewProperties', new TicketOverviewProperties())
     // Vue.set(state, 'ticketOverviewAttachments', new TicketOverviewAttachments())
     // Vue.set(state, 'lastTicketOffers', '')
+  },
+
+  incrementTicketOverviewCountGetters: (state) => (state.ticketOverviewCountGetters += 1),
+
+  decrementTicketOverviewCountGetters: (state) => {
+    if (state.ticketOverviewCountGetters > 0) {
+      state.ticketOverviewCountGetters -= 1
+    }
   }
 }
 

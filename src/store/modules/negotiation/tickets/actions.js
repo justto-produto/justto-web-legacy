@@ -1,13 +1,10 @@
 import { axiosDispatch, buildQuery } from '@/utils/'
 
 const disputeApi = '/api/disputes/v2'
-const disputeApiLegacy = '/api/disputes'
 
 const overviewActions = {
   getTickets({ state, dispatch }, command) {
-    if (command !== 'nextPage') {
-      dispatch('setTicketsQuery', { key: 'page', value: 1 })
-    }
+    if (command !== 'nextPage') dispatch('setTicketsQuery', { key: 'page', value: 1 })
     return axiosDispatch({
       url: `${disputeApi}/filter${buildQuery(state.ticketsQuery)}`,
       mutation: 'setCommunicationTickets',
@@ -21,17 +18,6 @@ const overviewActions = {
       dispatch('getTickets', 'nextPage')
         .then(response => resolve(response))
         .catch(error => reject(error))
-    })
-  },
-
-  deleteTicket({ _ }, params) {
-    const { disputeId, reason } = params
-
-    return axiosDispatch({
-      url: `${disputeApiLegacy}/${disputeId}/${reason}`,
-      method: 'DELETE',
-      mutation: 'deleteTicket',
-      payload: disputeId
     })
   },
 
@@ -81,7 +67,7 @@ const overviewActions = {
       } else {
         commit('updateTicketItem', dispute)
       }
-      commit('updateTicketOverview', dispute)
+      commit('updateTicket', dispute)
     } else {
       if (correspondingTab !== state.ticketsActiveTab) {
         commit('deleteTicket', dispute.id)

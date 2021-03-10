@@ -1,6 +1,6 @@
 import Vue from 'vue'
-// import TicketCommunicationItem from '@/models/negotiations/tickets/TicketCommunicationItemVm'
-// import TicketEngagementItem from '@/models/negotiations/tickets/TicketEngagementItemVm'
+import TicketCommunication from '@/models/negotiations/tickets/TicketCommunicationItemVm'
+import TicketEngagement from '@/models/negotiations/tickets/TicketEngagementItemVm'
 
 const getTicketIndex = (tickets, disputeId) => tickets.findIndex(ticket => ticket.disputeId === disputeId)
 
@@ -40,8 +40,8 @@ const ticketsMutations = {
       'ENGAGEMENT',
       'PENDING'
     ].includes(dispute.status)
-    // ? new TicketEngagementItem()
-    // : new TicketCommunicationItem()
+      ? new TicketEngagement(dispute)
+      : new TicketCommunication(dispute)
 
     if (tickets.empty !== undefined) {
       if (ticketIndex > -1) Vue.set(tickets.content, ticketIndex, newTicket)

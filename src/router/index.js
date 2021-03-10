@@ -88,7 +88,7 @@ const router = new Router({
         {
           name: 'allDisputes',
           path: '/management/all',
-          component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/management/Management'),
+          component: () => import(/* webpackChunkName: "managementAll" */ '@/views/main/management/Management'),
           meta: {
             requiresAuth: true,
             trackPage: true,
@@ -105,7 +105,7 @@ const router = new Router({
         {
           name: 'dispute',
           path: 'management/dispute/:id',
-          component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/dispute/Dispute'),
+          component: () => import(/* webpackChunkName: "managementDisputeIndex" */ '@/views/main/dispute/Dispute'),
           meta: {
             requiresAuth: true,
             trackPage: true,
@@ -126,7 +126,7 @@ const router = new Router({
             {
               name: 'ticket',
               path: ':id',
-              component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/negotiation/partials/ticket/Ticket'),
+              component: () => import(/* webpackChunkName: "TicketIndex" */ '@/views/main/negotiation/partials/ticket/Ticket'),
               meta: {
                 hideFullHeader: true,
                 requiresAuth: true,
@@ -139,7 +139,7 @@ const router = new Router({
         {
           name: 'configuration',
           path: 'configuration',
-          component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/configuration/Configuration'),
+          component: () => import(/* webpackChunkName: "configurationIndex" */ '@/views/main/configuration/Configuration'),
           meta: {
             requiresAuth: true,
             trackPage: true,

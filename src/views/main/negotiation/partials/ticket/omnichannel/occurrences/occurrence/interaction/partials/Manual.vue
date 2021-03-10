@@ -43,15 +43,11 @@ export default {
     display: flex;
     justify-content: flex-end;
 
-    font: normal normal normal 15px/18px Proxima Nova;
-    color: #9A9797;
-  }
-}
+    font-size: 16px;
+    color: #3C3B3B;
 
-@media (max-height: 680px) {
-  .manual-container {
-    .communication-container__contact {
-      font: normal normal normal 12px/12px Proxima Nova;
+    @media (max-height: 680px) {
+      font-size: 14px;
     }
   }
 }

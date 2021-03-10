@@ -8,9 +8,10 @@ class CommunicationsEngagementStatusVm {
   }
 }
 
-export class TicketEngagementItemVm extends TicketItemVm {
-  constructor({ pendingReason, communications }) {
-    super()
+export default class TicketEngagementItemVm extends TicketItemVm {
+  constructor(dispute) {
+    const { pendingReason, communications } = dispute
+    super(dispute)
     this.pendingReason = new CodedValueDomainDto(pendingReason)
     this.communications = new CommunicationsEngagementStatusVm(communications)
   }

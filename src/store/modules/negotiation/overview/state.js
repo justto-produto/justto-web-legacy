@@ -5,10 +5,13 @@
 // import TicketOverviewAttachments from '@/models/negotiations/overview/TicketOverviewAttachmentsVm'
 
 const overviewState = {
-  ticketOverview: {},
+  ticketOverview: {
+    status: ''
+  },
   ticketOverviewInfo: {},
   ticketOverviewParties: [],
   ticketOverviewProperties: {},
+  ticketOverviewCountGetters: 0,
   ticketOverviewAttachments: [],
   lastTicketOffers: {}
 }

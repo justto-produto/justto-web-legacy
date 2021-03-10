@@ -184,7 +184,7 @@ export default {
           break
       }
 
-      this.setTicketOverview({ data, disputeId })
+      this.setTicketOverviewInfo({ data, disputeId })
     }
   }
 }

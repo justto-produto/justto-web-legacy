@@ -9,9 +9,10 @@ class LastInboundInteractionVm {
   }
 }
 
-export class TicketCommunication extends TicketItemVm {
-  constructor({ lastInboundInteraction, expirationDate }) {
-    super()
+export default class TicketCommunication extends TicketItemVm {
+  constructor(dispute) {
+    super(dispute)
+    const { lastInboundInteraction, expirationDate } = dispute
     this.expirationDate = expirationDate
     this.lastInboundInteraction = new LastInboundInteractionVm(lastInboundInteraction)
   }

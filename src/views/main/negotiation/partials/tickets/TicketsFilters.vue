@@ -2,31 +2,34 @@
   <div class="management-prescriptions">
     <el-popover
       placement="bottom"
-      width="400"
+      width="300"
       popper-class="management-prescriptions__prescriptions-popover"
       class="management-prescriptions__popover-trigger"
       trigger="click"
     >
-      <el-button
-        v-for="prescription in prescriptions"
-        v-show="prescription.tabs.includes(processedActiveTab)"
-        :ref="prescription.prescription"
-        :key="prescription.prescription"
-        :type="buttonType(prescription.prescription)"
-        plain
-        size="small"
-        class="management-prescriptions__button"
-        @click="handlePrescriptionClick(prescription.prescription)"
-      >
-        <div>
-          <JusIcon
-            :class="{ 'management-prescriptions__filter-icon--selected' : hasPrescription(prescription.prescription) }"
-            class="management-prescriptions__filter-icon"
-            icon="filter"
-          />
-          {{ prescription.description | capitalize }}
-        </div>
-      </el-button>
+      <ul class="management-prescriptions__list">
+        <li
+          v-for="prescription in prescriptions"
+          v-show="prescription.tabs.includes(processedActiveTab)"
+          :ref="prescription.prescription"
+          :key="prescription.prescription"
+          :class="{ 'management-prescriptions__list-item--selected': hasPrescription(prescription.prescription) }"
+          class="management-prescriptions__list-item"
+          @click="handlePrescriptionClick(prescription.prescription)"
+        >
+          <div>
+            <JusIcon
+              :class="{ 'management-prescriptions__filter-icon--selected' : hasPrescription(prescription.prescription) }"
+              class="management-prescriptions__filter-icon"
+              icon="filter"
+            />
+            {{ prescription.description | capitalize }}
+          </div>
+        </li>
+        <li>
+          <!-- FILTROS AVANÇADOS AQUI -->
+        </li>
+      </ul>
       <el-button
         slot="reference"
         size="mini"
@@ -53,7 +56,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      hasPrescription: 'hasPrescription',
+      ticketsQuery: 'getTicketsQuery',
       ticketsPrescriptions: 'getTicketsPrescriptions',
       prescriptions: 'prescriptionsList'
     }),
@@ -81,7 +84,8 @@ export default {
       'getTickets',
       'resetTicketsPage',
       'addTicketPrescription',
-      'removeTicketPrescription'
+      'removeTicketPrescription',
+      'setTicketsQuery'
     ]),
 
     handlePrescriptionClick(prescription) {
@@ -99,6 +103,10 @@ export default {
 
     buttonType(name) {
       return this.ticketsPrescriptions.includes(name) ? 'primary' : ''
+    },
+
+    hasPrescription(prescription) {
+      return this.ticketsQuery.prescriptions.includes(prescription)
     }
   }
 }
@@ -126,56 +134,45 @@ export default {
     a { margin-left: 5px; }
   }
 }
-
-.management-prescriptions__button {
-  vertical-align: middle;
-
-  &.el-button.is-plain:focus {
-    color: #424242;
-    background-color: #fff;
-    border-color: #dcdfe6;
-  }
-
-  &.el-button.is-plain:hover {
-    color: #9461f7;
-    border-color: #9461f7;
-  }
-
-  &.el-button--primary.is-plain:focus {
-    color: #9461f7 !important;
-    background-color: #f4effe !important;
-    border-color: #d4c0fc !important;
-  }
-
-  &.el-button--primary.is-plain:hover {
-    color: #9461f7 !important;
-    background-color: #f4effe !important;
-    border-color: #d4c0fc !important;
-  }
-
-  .management-prescriptions__filter-icon {
-    display: none;
-    width: 12px;
-    height: 12px;
-    margin: -2px 0
-  }
-
-  &:hover .management-prescriptions__filter-icon {
-    display: inline-block;
-  }
-
-  .management-prescriptions__filter-icon--selected {
-    display: inline-block;
-  }
-}
 </style>
 
 <style lang="scss">
-.management-prescriptions__prescriptions-popover {
-  padding: 4px;
+@import '@/styles/colors.scss';
 
-  .management-prescriptions__button {
-    margin: 4px;
+.management-prescriptions__prescriptions-popover {
+  padding: 6px 0;
+
+  .management-prescriptions__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    .management-prescriptions__list-item {
+      cursor: pointer;
+      padding: 6px 24px;
+      word-break: break-word;
+      text-align: left;
+
+      &:hover {
+        background-color: $--light-gray;
+      }
+
+      &--selected {
+        color: $--color-primary;
+        font-weight: 600;
+      }
+    }
+
+    .management-prescriptions__filter-icon {
+      display: none;
+      width: 12px;
+      height: 12px;
+      margin: -1px 0;
+
+      &--selected {
+        display: inline-block;
+      }
+    }
   }
 }
 </style>

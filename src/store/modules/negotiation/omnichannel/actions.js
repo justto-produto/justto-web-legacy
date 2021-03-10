@@ -1,4 +1,4 @@
-import { axiosDispatch, isSimilarStrings } from '@/utils'
+import { axiosDispatch, isSimilarStrings, buildQuery } from '@/utils'
 
 import route from '@/router'
 
@@ -29,15 +29,15 @@ const omnichannelActions = {
     commit('resetRecipients')
   },
 
-  getOccurrences({ getters, commit }, disputeId) {
+  getOccurrences({ getters }, disputeId) {
     const params = {
       ...getters.getOccurrencesFilter,
       type: getters.getOccurrencesFilter.type === 'LOG' ? null : getters.getOccurrencesFilter.type
     }
+
     return axiosDispatch({
-      url: `${disputeApi}/${disputeId}/occurrences`,
-      mutation: 'setOccurrences',
-      params
+      url: `${disputeApi}/${disputeId}/occurrences${buildQuery(params)}`,
+      mutation: 'setOccurrences'
     })
   },
 
@@ -110,6 +110,8 @@ const omnichannelActions = {
   },
 
   resetRecipients: ({ commit }) => commit('resetRecipients'),
+
+  resetOccurrences: ({ commit }) => commit('resetOccurrences'),
 
   sendMessage({ dispatch, getters }, disputeId) {
     const {
