@@ -28,7 +28,7 @@
     </el-tooltip>
 
     <TicketTimeline
-      v-if="disputesTimeline[code]"
+      v-if="code && disputesTimeline[code]"
       v-model="showTimelineDialog"
       :code="code"
     />
@@ -48,7 +48,8 @@ export default {
   props: {
     code: {
       type: String,
-      required: true
+      required: true,
+      default: ''
     },
     getBeforMount: {
       type: Boolean,

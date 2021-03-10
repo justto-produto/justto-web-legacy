@@ -5,33 +5,41 @@ const disputeApiLegacy = '/api/disputes'
 const officeApi = '/api/office'
 
 const overviewActions = {
-  getTicketOverview({ _ }, disputeId) {
+  getTicketOverview({ commit }, disputeId) {
+    commit('incrementTicketOverviewCountGetters')
+
     return axiosDispatch({
       url: `${disputeApi}/${disputeId}`,
       mutation: 'setTicketOverview'
-    })
+    }).finally(() => commit('decrementTicketOverviewCountGetters'))
   },
 
-  getTicketOverviewInfo({ _ }, disputeId) {
+  getTicketOverviewInfo({ commit }, disputeId) {
+    commit('incrementTicketOverviewCountGetters')
+
     return axiosDispatch({
       url: `${disputeApi}/${disputeId}/info`,
       mutation: 'setTicketOverviewInfo'
-    })
+    }).finally(() => commit('decrementTicketOverviewCountGetters'))
   },
 
-  getTicketOverviewParties({ _ }, disputeId) {
+  getTicketOverviewParties({ commit }, disputeId) {
+    commit('incrementTicketOverviewCountGetters')
+
     return axiosDispatch({
       url: `${disputeApi}/${disputeId}/parties`,
       mutation: 'setTicketOverviewParties'
-    })
+    }).finally(() => commit('decrementTicketOverviewCountGetters'))
   },
 
-  getTicketOverviewParty({ _ }, { disputeId, disputeRoleId }) {
+  getTicketOverviewParty({ commit }, { disputeId, disputeRoleId }) {
+    commit('incrementTicketOverviewCountGetters')
+
     return axiosDispatch({
       url: `${disputeApi}/${disputeId}/parties/${disputeRoleId}`,
       mutation: 'setTicketOverviewParty',
       payload: disputeRoleId
-    })
+    }).finally(() => commit('decrementTicketOverviewCountGetters'))
   },
 
   getTicketOverviewProperties({ _ }, disputeId) {
