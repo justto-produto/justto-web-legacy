@@ -220,6 +220,8 @@ export default {
 @import '@/styles/colors.scss';
 
 .dispute-attachments {
+  display: initial;
+
   .dispute-overview-view__attachment-buttons {
     margin-bottom: 10px;
   }
