@@ -61,9 +61,6 @@
       :dispute="dispute"
     />
   </el-card>
-  <span v-else>
-    {{ dispute }}
-  </span>
 </template>
 
 <script>
