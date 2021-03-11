@@ -39,6 +39,8 @@
       </h3>
     </div>
 
+    <OverviewTags />
+
     <OverviewOffers
       :defendant-offer="lastOffers.defendantOffer"
       :plaintiff-offer="lastOffers.plaintiffOffer"
@@ -71,6 +73,7 @@ export default {
     OverviewOffers: () => import('./OverviewOffers'),
     OverviewObf: () => import('./OverviewObf'),
     OverviewTabs: () => import('./OverviewTabs'),
+    OverviewTags: () => import('./OverviewTags'),
     DeleteTicketDialog: () => import('./DeleteTicketDialog'),
     TextInlineEditor: () => import('@/components/inputs/TextInlineEditor')
   },
