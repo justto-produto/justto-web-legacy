@@ -1,13 +1,12 @@
 <template lang="html">
-  <article class="jus-tags">
+  <article class="overview-tags">
     <el-popover
       v-if="showPopover"
       ref="main-popover"
       v-model="visible"
       width="310"
       trigger="manual"
-      popper-class="jus-tags__popover"
-      :placement="placement"
+      popper-class="overview-tags__popover"
       @show="getTags"
       @hide="resetFields"
     >
@@ -19,8 +18,8 @@
             v-model="selectedTag"
             filterable
             placeholder="Buscar ou cadastrar nova etiqueta"
-            class="jus-tags__select"
-            popper-class="jus-tags__select-popper"
+            class="overview-tags__select"
+            popper-class="overview-tags__select-popper"
             @change="addTag"
           >
             <el-option
@@ -31,7 +30,7 @@
             >
               <el-tag
                 :color="tag.color"
-                class="jus-tags__option el-tag--etiqueta el-tag--etiqueta-select"
+                class="overview-tags__option el-tag--etiqueta el-tag--etiqueta-select"
               >
                 <div>
                   <i :class="`el-icon-${tag.icon}`" />
@@ -46,7 +45,7 @@
             <div slot="empty">
               <el-button
                 type="text"
-                class="jus-tags__add-button"
+                class="overview-tags__add-button"
                 size="small"
                 @click="showNewTagForm"
               >
@@ -58,9 +57,9 @@
         <!-- NOVA ETIQUETA -->
         <div
           v-if="showForm"
-          class="jus-tags__new-tag-form"
+          class="overview-tags__new-tag-form"
         >
-          <div class="jus-tags__title">
+          <div class="overview-tags__title">
             Nova etiqueta
           </div>
           <el-tag
@@ -77,7 +76,7 @@
             <el-popover
               trigger="hover"
               width="200"
-              popper-class="jus-tags__edit-tag"
+              popper-class="overview-tags__edit-tag"
             >
               <div class="title">
                 Personalizar etiqueta
@@ -106,7 +105,7 @@
               />
             </el-popover>
           </el-tag>
-          <div class="jus-tags__new-tag-actions">
+          <div class="overview-tags__new-tag-actions">
             <el-button
               plain
               size="mini"
@@ -131,65 +130,60 @@
       >
         <el-tag
           id="idTag"
-          class="jus-tags__open-button"
+          class="overview-tags__tag-button overview-tags__tag-button--is-first"
           @click="visible = !visible"
         >
-          <i
-            id="idTagIcon"
-            class="el-icon-plus"
-          />
+          <i class="el-icon-plus" />
         </el-tag>
       </el-tooltip>
     </el-popover>
 
     <el-tag
-      v-for="tag in disputeTags.slice(-4).reverse()"
+      v-for="tag in disputeTags.slice(-3).reverse()"
       :key="tag.id"
       :color="tag.color"
-      class="el-tag--etiqueta el-tag--click"
+      class="overview-tags__tag el-tag--etiqueta el-tag--click"
+      @click="filterByTag(tag.id)"
     >
-      <div @click="filterByTag(tag.id)">
-        <i :class="`el-icon-${tag.icon}`" />
-        {{ tag.name }}
-      </div>
+      <i :class="`el-icon-${tag.icon}`" />
+      <span class="overview-tags__label">{{ tag.name }}</span>
       <el-button
         type="text"
         icon="el-icon-close"
         size="small"
-        @click.prevent="removeTag(tag.id)"
+        class="overview-tags__button"
+        @click.stop.prevent="removeTag(tag.id)"
       />
     </el-tag>
 
     <el-popover
       v-if="disputeTags.length > 4"
-      ref="main-popover"
       width="310"
-      popper-class="jus-tags__popover"
-      :placement="placement"
+      popper-class="overview-tags__all-tags"
       @show="getTags"
       @hide="resetFields"
     >
       <el-tag
-        v-for="tag in disputeTags.slice(0, disputeTags.length - 4).reverse()"
+        v-for="tag in disputeTags.slice(0, disputeTags.length - 3).reverse()"
         :key="tag.id"
         :color="tag.color"
         class="el-tag--etiqueta el-tag--click"
+        @click="filterByTag(tag.id)"
       >
-        <div @click="filterByTag(tag.id)">
+        <span>
           <i :class="`el-icon-${tag.icon}`" />
           {{ tag.name }}
-        </div>
+        </span>
         <el-button
           type="text"
           icon="el-icon-close"
           size="small"
-          @click.prevent="removeTag(tag.id)"
+          @click.stop.prevent="removeTag(tag.id)"
         />
       </el-tag>
       <el-tag
-        id="idTag"
         slot="reference"
-        class="jus-tags__open-button"
+        class="overview-tags__tag-button overview-tags__tag-button--is-last"
       >
         <i class="el-icon-more" />
       </el-tag>
@@ -213,9 +207,6 @@ export default {
     showPopover: true
   }),
   computed: {
-    placement() {
-      return this.$store.getters.windowHeight >= 580 ? 'bottom' : this.$store.getters.windowHeight >= 520 ? 'left' : 'top'
-    },
     disputeId() {
       return this.$route.params.id
     },
@@ -250,15 +241,6 @@ export default {
     },
     icons() {
       return this.$store.state.tagModule.icons
-    }
-  },
-  watch: {
-    placement() {
-      this.showPopover = false
-      this.visible = false
-      this.$nextTick(() => {
-        this.showPopover = true
-      })
     }
   },
   mounted() {
@@ -368,11 +350,66 @@ export default {
 }
 </script>
 
+<style lang="scss" scoped>
+@import '@/styles/colors.scss';
+
+.overview-tags {
+  display: flex;
+
+  .overview-tags__tag {
+    display: flex;
+    align-items: center;
+    max-width: 36px;
+    transition: .2s ease-out;
+
+    .overview-tags__label {
+      overflow-x: hidden;
+      white-space: nowrap;
+      display: inline;
+      text-overflow: ellipsis;
+      width: 0px;
+      flex: 1;
+      margin-left: 2px;
+    }
+
+    .overview-tags__button {
+      width: 0px;
+      opacity: 0;
+      border-width: 0;
+      transition: .2s ease-out;
+    }
+    
+    &:hover {
+      flex: 1;
+      max-width: 260px;
+
+      .overview-tags__button {
+        width: 18px;
+        opacity: 1;
+        border-width: 1;
+      } 
+    }
+  }
+
+  .overview-tags__tag-button {
+    margin: 3px;
+    height: 28px;
+    line-height: 28px;
+    &:--is-first { margin-left: 0; }
+    &:--is-last { margin-right: 0; }
+  }
+}
+</style>
+
 <style lang="scss">
 @import '@/styles/colors.scss';
 
-.jus-tags {
-  width: 100%;
+.overview-tags__all-tags {
+  padding: 10px;
+}
+
+.overview-tags {
+  // width: 100%;
   &__popover {
     padding: 10px;
   }
@@ -450,7 +487,7 @@ export default {
   }
 }
 
-.jus-tags__option {
+.overview-tags__option {
   display:  flex;
   justify-content: space-between;
 

@@ -44,6 +44,6 @@ export default class DisputeOverviewInfoVm {
     this.provisionedValue = provisionedValue
     this.importedDate = new DateTime((importedDate || createAt) || {})
     this.expireDate = new DateTime((expireDate || expirationDate) || {})
-    this.classification = new ClassificationVm(classification)
+    this.classification = new ClassificationVm(classification || {})
   }
 }

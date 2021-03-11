@@ -116,8 +116,9 @@ export default {
   display: flex;
   width: 100%;
   padding: 18px 24px 18px 27px;
-  border-left: 3px solid transparent;
+  border-left: 6px solid transparent;
   border-bottom: 1px solid $--light-gray;
+  z-index: 0;
   cursor: pointer;
 
   &:hover:not(.communication-ticket-item-container--active) {
@@ -126,20 +127,19 @@ export default {
 
   &--active {
     background-color: $--color-primary-light-9;
-    border-left: 3px solid $--color-primary;
+    border-left: 6px solid $--color-primary;
     // &:after {
     //   content: '';
     //   position: absolute;
     //   display: flex;
     //   transform: translateY(-50%);
     //   top: 50%;
-    //   right: -5px;
+    //   right: 0px;
     //   width: 0;
     //   height: 0;
-    //   z-index: 99;
-    //   border-top: 18px solid transparent;
-    //   border-bottom: 18px solid transparent;
-    //   border-left: 12px solid green;
+    //   border-top: 49px solid transparent;
+    //   border-bottom: 49px solid transparent;
+    //   border-right: 8px solid $--color-white;
     // }
   }
 
