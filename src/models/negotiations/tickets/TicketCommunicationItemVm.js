@@ -11,12 +11,12 @@ class LastInboundInteractionVm {
 
 export default class TicketCommunicationItemVm extends TicketItemVm {
   constructor(dispute) {
-    const { lastInboundInteraction, lastReceivedMessage } = dispute
+    const { lastInboundInteraction, lastInteraction } = dispute
     super(dispute)
     this.lastInboundInteraction = new LastInboundInteractionVm(lastInboundInteraction || {
-      dateTime: lastReceivedMessage?.createAt,
-      message: lastReceivedMessage?.message?.resume,
-      type: lastReceivedMessage?.type
+      dateTime: lastInteraction?.createAt,
+      message: lastInteraction?.message?.resume,
+      type: lastInteraction?.type
     })
   }
 }

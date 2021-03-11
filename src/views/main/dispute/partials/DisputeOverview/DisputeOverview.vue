@@ -2728,6 +2728,7 @@ export default {
     },
     editRoleAction() {
       const hasNewBankAccount = this.roleForm.bankAccounts.filter(account => !account.id).length
+      delete this.roleForm.personProperties.BIRTHDAY
       const roleToEdit = JSON.parse(JSON.stringify(this.roleForm))
       delete roleToEdit.title
       this.editRoleDialogLoading = true
