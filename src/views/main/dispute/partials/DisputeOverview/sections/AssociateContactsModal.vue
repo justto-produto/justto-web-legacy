@@ -1,7 +1,6 @@
 <template>
   <section>
     <el-dialog
-      v-loading="loading"
       :visible.sync="toShow"
       :close-on-click-modal="false"
       destroy-on-close
@@ -9,7 +8,10 @@
       width="50%"
       :before-close="handleBeforeClose"
     >
-      <div class="dialog-body">
+      <div
+        v-loading="loading"
+        class="dialog-body"
+      >
         <div class="dialog-body__title">
           Associe os novos endereços de contato
         </div>
@@ -155,14 +157,13 @@
           </div>
         </div>
       </div>
-      <span
-        slot="footer"
-      >
+      <span slot="footer">
         <el-button @click="skip('MAIS TARDE')">
           Associar mais tarde
         </el-button>
         <el-button
           v-if="hasAssociations"
+          :disabled="loading"
           type="primary"
           @click="submit()"
         >
@@ -170,6 +171,7 @@
         </el-button>
         <el-button
           v-else
+          :disabled="loading"
           type="primary"
           @click="skip('SIM')"
         >
@@ -213,8 +215,11 @@ export default {
         return party === 'CLAIMANT' && (roles.includes('PARTY') || roles.includes('LAWYER'))
       }).map(({ id, name }) => ({ id, name }))
     },
-    toShow() {
-      return this.value && (this.emails.length > 0 || this.phones.length > 0)
+    toShow: {
+      get() {
+        return Boolean(this.value) && (this.emails?.length > 0 || this.phones?.length > 0)
+      },
+      set(_value) {}
     },
     hasAssociations() {
       const phones = this.phones.filter(phone => {
@@ -234,6 +239,9 @@ export default {
   mounted() {
     this.update()
   },
+  beforeDestroy() {
+    this.loading = false
+  },
   methods: {
     ...mapActions([
       'addPhoneToDisputeRole',
@@ -242,10 +250,19 @@ export default {
     ]),
 
     handleBeforeClose(done) {
-      if (!this.current) {
+      console.log('handleBeforeClose')
+      new Promise((resolve, reject) => {
+        console.log(this.current)
+        if (!this.current) {
+          resolve()
+        } else {
+          reject(new Error('Current is true'))
+        }
+      }).then(() => {
         this.skip('MAIS TARDE')
-      }
-      done()
+      }).catch(() => {
+        this.skip('MAIS TARDE')
+      }).finally(done)
     },
 
     update() {
@@ -257,10 +274,14 @@ export default {
       }
       this.emails = this.metadata.emails.map(setAssociated)
       this.phones = this.metadata.phones.map(setAssociated)
+      this.$nextTick(() => {
+        this.loading = false
+      })
     },
 
     skip(label) {
       this.$emit('input', label)
+      this.loading = true
     },
 
     submit() {
