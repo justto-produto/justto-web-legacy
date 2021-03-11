@@ -1,22 +1,5 @@
 <template lang="html">
   <article class="jus-tags">
-    <el-tag
-      v-for="tag in disputeTags"
-      :key="tag.id"
-      :color="tag.color"
-      class="el-tag--etiqueta el-tag--click"
-    >
-      <div @click="filterByTag(tag.id)">
-        <i :class="`el-icon-${tag.icon}`" />
-        {{ tag.name }}
-      </div>
-      <el-button
-        type="text"
-        icon="el-icon-close"
-        size="small"
-        @click.prevent="removeTag(tag.id)"
-      />
-    </el-tag>
     <el-popover
       v-if="showPopover"
       ref="main-popover"
@@ -158,6 +141,59 @@
         </el-tag>
       </el-tooltip>
     </el-popover>
+
+    <el-tag
+      v-for="tag in disputeTags.slice(-4).reverse()"
+      :key="tag.id"
+      :color="tag.color"
+      class="el-tag--etiqueta el-tag--click"
+    >
+      <div @click="filterByTag(tag.id)">
+        <i :class="`el-icon-${tag.icon}`" />
+        {{ tag.name }}
+      </div>
+      <el-button
+        type="text"
+        icon="el-icon-close"
+        size="small"
+        @click.prevent="removeTag(tag.id)"
+      />
+    </el-tag>
+
+    <el-popover
+      v-if="disputeTags.length > 4"
+      ref="main-popover"
+      width="310"
+      popper-class="jus-tags__popover"
+      :placement="placement"
+      @show="getTags"
+      @hide="resetFields"
+    >
+      <el-tag
+        v-for="tag in disputeTags.slice(0, disputeTags.length - 4).reverse()"
+        :key="tag.id"
+        :color="tag.color"
+        class="el-tag--etiqueta el-tag--click"
+      >
+        <div @click="filterByTag(tag.id)">
+          <i :class="`el-icon-${tag.icon}`" />
+          {{ tag.name }}
+        </div>
+        <el-button
+          type="text"
+          icon="el-icon-close"
+          size="small"
+          @click.prevent="removeTag(tag.id)"
+        />
+      </el-tag>
+      <el-tag
+        id="idTag"
+        slot="reference"
+        class="jus-tags__open-button"
+      >
+        <i class="el-icon-more" />
+      </el-tag>
+    </el-popover>
   </article>
 </template>
 
@@ -180,6 +216,9 @@ export default {
     placement() {
       return this.$store.getters.windowHeight >= 580 ? 'bottom' : this.$store.getters.windowHeight >= 520 ? 'left' : 'top'
     },
+    disputeId() {
+      return this.$route.params.id
+    },
     disputeTags: {
       get() {
         return this.$store.getters.disputeTags
@@ -187,7 +226,7 @@ export default {
       set(tags) {
         this.loading = true
         this.$store.dispatch('editDisputeTags', {
-          disputeId: this.$store.getters.disputeId,
+          disputeId: this.disputeId,
           data: tags
         }).then(() => {
           this.tagForm.name = ''

@@ -2689,7 +2689,7 @@ export default {
       this.originalRole = JSON.parse(JSON.stringify(role))
       this.roleForm.title = this.buildRoleTitle(role.party, role.roles[0])
       this.roleForm.documentNumber = this.$options.filters.cpfCnpj(this.roleForm.documentNumber)
-      this.roleForm.birthday = this.$moment(role.birthday).format('YYYY-MM-DD')
+      if (role.birthday) this.roleForm.birthday = this.$moment(role.birthday).format('YYYY-MM-DD')
       this.roleForm.emails = this.roleForm.emails.filter(f => !f.archived)
       this.roleForm.oabs = this.roleForm.oabs.filter(f => !f.archived)
       this.roleForm.phones = this.roleForm.phones.filter(f => !f.archived)
