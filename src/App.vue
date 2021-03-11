@@ -11,7 +11,7 @@ export default {
   name: 'App',
   watch: {
     '$route'(to, from) {
-      document.title = to.meta.title + (to.name === 'dispute' ? ` #${to.params.id}` : '') || 'Justto'
+      document.title = to.meta.title + (['dispute', 'ticket'].includes(to.name) ? ` #${to.params.id}` : '') || 'Justto'
     }
   }
 }
