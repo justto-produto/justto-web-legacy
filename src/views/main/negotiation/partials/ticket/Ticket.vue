@@ -63,6 +63,7 @@ export default {
     ...mapActions([
       'disputeSetVisualized',
       'getTicketOverview',
+      'getDisputeTags',
       'getLastTicketOffers',
       'cleanRecentMessages',
       'getQuickReplyTemplates'
@@ -73,8 +74,9 @@ export default {
       this.socketAction('subscribe', id)
       this.cleanRecentMessages()
       this.getTicketOverview(id)
+      this.getDisputeTags(id)
       this.getLastTicketOffers(id)
-      this.getQuickReplyTemplates(id).then(_ => {}).catch(_ => {})
+      this.getQuickReplyTemplates(id)
       this.disputeSetVisualized({
         visualized: true,
         disputeId: Number(id),
