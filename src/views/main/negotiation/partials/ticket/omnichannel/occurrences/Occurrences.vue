@@ -29,6 +29,10 @@
         :value="occurrence"
         class="occurrences-container__occurrences-item"
       />
+      <dispute-tips
+        v-if="activeTab === 'MESSAGES'"
+        :value="dispute"
+      />
     </div>
   </section>
 </template>
@@ -39,11 +43,13 @@ export default {
   components: {
     Date: () => import('./occurrence/Date'),
     Occurrence: () => import('./occurrence/Occurrence'),
-    InfiniteLoading: () => import('vue-infinite-loading')
+    InfiniteLoading: () => import('vue-infinite-loading'),
+    DisputeTips: () => import('@/views/main/dispute/partials/DisputeTips')
   },
   computed: {
     ...mapGetters({
       activeTab: 'getActiveTab',
+      ticket: 'getTicketOverview',
       filter: 'getOccurrencesFilter',
       occurrences: 'getOccurrencesList',
       messageType: 'getEditorMessageType',
@@ -52,9 +58,15 @@ export default {
     countRendereds() {
       return this.occurrences.filter(o => o.renderCompleted).length
     },
-    id: {
-      get() {
-        return this.$route.params.id
+    id() {
+      return this.$route.params.id
+    },
+    dispute() {
+      return {
+        ...this.ticket,
+        id: Number(this.id),
+        disputeRoles: [],
+        hasDocument: this.ticket.hasDraft
       }
     }
   },

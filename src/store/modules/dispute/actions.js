@@ -48,6 +48,13 @@ const disputeActions = {
     dispatch('getDisputeProperties', id)
     dispatch('getDisputeAttachments', id)
   },
+  fillerDisputeRole({ _ }, dispute) {
+    return axiosDispatch({
+      url: `${disputesPath}/${dispute.id}/dispute-roles`,
+      mutation: 'fillerDisputeRole',
+      payload: dispute
+    })
+  },
   getDispute({ commit, dispatch }, id) {
     return new Promise((resolve, reject) => {
       commit('clearDispute')

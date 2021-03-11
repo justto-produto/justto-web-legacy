@@ -34,15 +34,23 @@ const overviewMutations = {
     Vue.set(partyToSet, 'phonesDto', data.phones)
     Vue.set(partyToSet, 'oabsDto', data.oabs)
     Vue.set(partyToSet, 'birthday', data.birthday)
+    Vue.set(partyToSet, 'bankAccountsDto', data.bankAccounts)
     Vue.set(partyToSet, 'legacyDto', data) // TODO: Remover essa merda aqui
   },
 
   updateTicketOverviewParty: ({ ticketOverviewParties }, params) => {
-    const { id, name, documentNumber, birthday } = params
+    const {
+      id,
+      name,
+      birthday,
+      bankAccounts,
+      documentNumber
+    } = params
     const partyToSet = findPartyById(ticketOverviewParties, id)
 
     Vue.set(partyToSet, 'name', name)
     Vue.set(partyToSet, 'birthday', birthday)
+    Vue.set(partyToSet, 'bankAccountsDto', bankAccounts)
     Vue.set(partyToSet, 'documentNumber', documentNumber)
     Vue.set(partyToSet, 'legacyDto', params)
   },
