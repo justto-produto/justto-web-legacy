@@ -111,6 +111,13 @@
         @post="addContact($event, 'oab')"
       />
     </div>
+    <div class="party-details__infoline">
+      <span class="party-details__infoline-label">Dados bancários:</span>
+      <PartyBankAccounts
+        :value="bankAccounts"
+        class="party-details__infoline-data"
+      />
+    </div>
     <div
       v-if="!party.roles.includes('NEGOTIATOR')"
       class="party-details__infoline party-details__infoline--center"
@@ -133,6 +140,7 @@ export default {
     PopoverLinkInlineEditor: () => import('@/components/inputs/PopoverLinkInlineEditor'),
     TextInlineEditor: () => import('@/components/inputs/TextInlineEditor'),
     DateInlieEditor: () => import('@/components/inputs/DateInlieEditor'),
+    PartyBankAccounts: () => import('./PartyBankAccounts'),
     PartyContacts: () => import('./PartyContacts')
   },
   props: {
@@ -147,6 +155,9 @@ export default {
   computed: {
     disputeId() {
       return Number(this.$route.params.id)
+    },
+    bankAccounts() {
+      return this.party?.bankAccountsDto || []
     },
     documentType() {
       return this.party.documentNumber?.length <= 14 ? 'CPF' : 'CNPJ'
