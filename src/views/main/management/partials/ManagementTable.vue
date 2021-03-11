@@ -2,8 +2,8 @@
   <div class="management-table__container">
     <jus-protocol-dialog
       :protocol-dialog-visible.sync="protocolDialogVisible"
-      :dispute-id.sync="selectedDisputeId"
-      :dispute-roles.sync="selectedDisputeRoles"
+      :dispute-id.sync="selectedDispute.id"
+      :dispute.sync="selectedDispute"
     />
     <el-table
       ref="disputeTable"
@@ -397,8 +397,9 @@ export default {
       showEmptyDebounce: '',
       disputeActionsRow: 0,
       protocolDialogVisible: false,
-      selectedDisputeId: 0,
-      selectedDisputeRoles: [],
+      selectedDispute: {
+        id: 0
+      },
       disputeKey: 0,
       responseBoxLoading: false,
       actieTooltipDisputeId: 0,
@@ -567,9 +568,8 @@ export default {
       return this.$moment(date).isBetween(this.$moment(), this.$moment().add(4, 'day'))
     },
     showProtocolModal(dispute) {
-      this.selectedDisputeId = dispute.id
-      this.selectedDisputeRoles = dispute.disputeRoles
       this.protocolDialogVisible = true
+      this.selectedDispute = dispute
     },
 
     infiniteHandler($state) {

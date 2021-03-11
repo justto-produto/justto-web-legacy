@@ -57,19 +57,28 @@
     </div>
     <jus-protocol-dialog
       :protocol-dialog-visible.sync="protocolDialogVisible"
-      :dispute-id="dispute.id"
-      :dispute-roles="dispute.disputeRoles"
+      :dispute-id="dispute.id || dispute.disputeId"
+      :dispute="dispute"
     />
   </el-card>
+  <span v-else>
+    {{ dispute }}
+  </span>
 </template>
 
 <script>
 import { getDocumentStep } from '@/utils'
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions } from 'vuex'
 export default {
   name: 'DisputeTips',
   components: {
     JusProtocolDialog: () => import('@/components/dialogs/JusProtocolDialog')
+  },
+  props: {
+    value: {
+      type: Object,
+      default: () => ({})
+    }
   },
   data() {
     return {
@@ -79,9 +88,9 @@ export default {
     }
   },
   computed: {
-    ...mapGetters({
-      dispute: 'dispute'
-    }),
+    dispute() {
+      return Object.keys(this.value).length > 0 ? this.value : this.$store.getters.dispute
+    },
     documentStep() {
       return getDocumentStep(this.dispute.hasDocument, this.dispute.signStatus)
     },
