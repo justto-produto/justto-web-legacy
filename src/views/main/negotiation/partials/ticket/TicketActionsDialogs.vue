@@ -375,7 +375,7 @@ export default {
         {
           key: 'value',
           label: 'Valor do acordo',
-          value: this.$options.filters.currency(plaintiffProposal.value)
+          value: this.$options.filters.currency(plaintiffProposal?.value)
         }
       ]
     },
