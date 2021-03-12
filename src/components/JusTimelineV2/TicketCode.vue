@@ -69,10 +69,10 @@ export default {
     },
 
     timelineState() {
-      if (this.currentDiputeTimeline?.lawsuits?.length) {
-        const { source } = this.currentDiputeTimeline.lawsuits[0]
+      if (this.currentDiputeTimeline?.lawsuits?.length > 0) {
+        const source = this.currentDiputeTimeline.lawsuits[0].source || ''
         const state = brazilianStates.find(({ value }) => source.includes(value)).value
-        return `/${state}`
+        return state ? `/${state}` : ''
       }
 
       return ''
