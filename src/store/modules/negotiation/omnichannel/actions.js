@@ -6,8 +6,8 @@ const disputeApi = 'api/disputes/v2'
 const messagesPath = 'api/messages'
 
 const omnichannelActions = {
-  setActiveTab({ commit, dispatch }, tab) {
-    commit('setActiveTab', tab)
+  setOmnichannelActiveTab({ commit, dispatch }, tab) {
+    commit('setOmnichannelActiveTab', tab)
     commit('resetRecipients')
     commit('resetOccurrences')
 
