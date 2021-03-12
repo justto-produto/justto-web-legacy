@@ -59,14 +59,14 @@ const overviewActions = {
     commit('setTicketsFilters', filters)
   },
 
-  setActivTab({ commit }, activeTab) {
-    commit('setActiveTab', activeTab)
+  setTicketsActiveTab({ commit }, activeTab) {
+    commit('setTicketsActiveTab', activeTab)
   },
 
   updateActiveTab({ state, commit }, disputeStatus) {
     const correspondingTab = getCorrespondingTab(disputeStatus)
     if (correspondingTab !== state.ticketsActiveTab) {
-      commit('setActiveTab', getCorrespondingTab(disputeStatus))
+      commit('setTicketsActiveTab', getCorrespondingTab(disputeStatus))
     }
   },
 
@@ -75,7 +75,7 @@ const overviewActions = {
 
     if (rootState.negotiationOverviewModule.ticketOverview.disputeId === dispute.id) {
       if (correspondingTab !== state.ticketsActiveTab) {
-        commit('setActiveTab', correspondingTab)
+        commit('setTicketsActiveTab', correspondingTab)
       } else {
         commit('updateTicketItem', dispute)
       }

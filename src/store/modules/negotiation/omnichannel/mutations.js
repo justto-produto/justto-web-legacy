@@ -11,7 +11,7 @@ function getFormatedDate(occurrence) {
 }
 
 const omnichannelMutations = {
-  setActiveTab: (state, tab) => {
+  setOmnichannelActiveTab: (state, tab) => {
     if (Object.values(EDITOR_TABS).includes(tab)) {
       Vue.set(state, 'activeTab', tab)
     }
