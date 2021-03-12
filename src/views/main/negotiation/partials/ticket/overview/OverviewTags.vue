@@ -123,19 +123,14 @@
           </div>
         </div>
       </div>
-      <el-tooltip
-        id="idTagTooltip"
+      <el-tag
+        id="idTag"
         slot="reference"
-        content="Adicionar etiqueta"
+        class="overview-tags__tag-button overview-tags__tag-button--is-first"
+        @click="visible = !visible"
       >
-        <el-tag
-          id="idTag"
-          class="overview-tags__tag-button overview-tags__tag-button--is-first"
-          @click="visible = !visible"
-        >
-          <i class="el-icon-plus" />
-        </el-tag>
-      </el-tooltip>
+        <i class="el-icon-plus" />
+      </el-tag>
     </el-popover>
 
     <el-tag
@@ -252,7 +247,11 @@ export default {
     window.removeEventListener('click', this.closeOnCLick)
   },
   methods: {
-    ...mapActions(['deleteTag']),
+    ...mapActions([
+      'deleteTag',
+      'setTicketsQuery',
+      'getTickets'
+    ]),
 
     closeOnCLick(e) {
       if (!e.target.id.startsWith('idTag') && !e.target.textContent.includes('Adicionar nova etiqueta')) {
@@ -340,11 +339,8 @@ export default {
       this.$nextTick(() => { this.showForm = false })
     },
     filterByTag(tagId) {
-      this.$store.commit('clearDisputeQuery')
-      this.$store.commit('updateDisputeQuery', { key: 'status', value: [] })
-      this.$store.commit('updateDisputeQuery', { key: 'tags', value: [tagId] })
-      this.$store.commit('setDisputesTab', '9')
-      this.$router.push('/management/all')
+      this.setTicketsQuery({ key: 'tags', value: [tagId] })
+      this.getTickets()
     }
   }
 }
@@ -375,7 +371,7 @@ export default {
     .overview-tags__button {
       width: 0px;
       opacity: 0;
-      border-width: 0;
+      border: none;
       transition: .2s ease-out;
     }
     
@@ -384,9 +380,8 @@ export default {
       max-width: 260px;
 
       .overview-tags__button {
-        width: 18px;
+        width: 16px;
         opacity: 1;
-        border-width: 1;
       } 
     }
   }

@@ -5,8 +5,8 @@
     @click="hangleSelectTicket"
   >
     <JusAvatarUser
-      :name="ticket.plaintiff.name"
-      :status="ticket.plaintiff.status"
+      :name="plaintiffName"
+      :status="ticket.plaintiff ? ticket.plaintiff.status : ''"
       class="communication-ticket-item-container__avatar"
       size="md"
       shadow
@@ -14,8 +14,11 @@
     />
     <div class="communication-ticket-item-container__resume">
       <div class="communication-ticket-item-container__parties">
-        <span class="communication-ticket-item-container__plaintiff">
-          {{ ticket.plaintiff.name | resumedName }}
+        <span
+          :class="{ 'communication-ticket-item-container__plaintiff--danger': !ticket.plaintiff }"
+          class="communication-ticket-item-container__plaintiff"
+        >
+          {{ plaintiffName | resumedName }}
         </span>
         <span class="communication-ticket-item-container__negotiator">
           &lt; {{ ticket.negotiatorName | resumedName }}
@@ -45,6 +48,10 @@ export default {
   computed: {
     isActive() {
       return this.$route.params.id === this.ticket.disputeId
+    },
+    plaintiffName() {
+      const { plaintiff } = this.ticket
+      return plaintiff ? plaintiff.name : 'Sem parte'
     }
   },
   methods: {
@@ -71,7 +78,7 @@ export default {
   display: flex;
   width: 100%;
   padding: 18px 24px 18px 27px;
-  border-left: 3px solid transparent;
+  border-left: 6px solid transparent;
   border-bottom: 1px solid $--light-gray;
   cursor: pointer;
 
@@ -81,7 +88,7 @@ export default {
 
   &--active {
     background-color: $--color-primary-light-9;
-    border-left: 3px solid $--color-primary;
+    border-left: 6px solid $--color-primary;
     // &:after {
     //   content: '';
     //   position: absolute;
@@ -114,6 +121,7 @@ export default {
         color: $--color-primary;
         font-weight: 700;
         font-size: 16px;
+        &--danger { color: $--color-danger; }
       }
       .communication-ticket-item-container__negotiator {
         color: $--color-text-secondary;
@@ -123,7 +131,8 @@ export default {
 
     .communication-ticket-item-container__message {
       margin-bottom: 6px;
-      max-width: 266px;
+      max-width: 223px;
+      display: inline-block;
       white-space: nowrap;
       text-overflow: ellipsis;
       overflow-x: hidden;

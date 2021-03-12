@@ -83,7 +83,6 @@ export default {
 
     goToTicket({ disputeId, disputeStatus }) {
       this.$router.push(`/${this.targetPath}/${disputeId}`)
-      this.$emit('set-tab', disputeStatus)
     }
   }
 }

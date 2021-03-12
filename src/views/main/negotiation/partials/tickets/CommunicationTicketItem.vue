@@ -16,7 +16,8 @@
       <div class="communication-ticket-item-container__parties">
         <span
           :class="{ 'communication-ticket-item-container__plaintiff--danger': !ticket.plaintiff }"
-          class="communication-ticket-item-container__plaintiff">
+          class="communication-ticket-item-container__plaintiff"
+        >
           {{ plaintiffName | resumedName }}
         </span>
         <span class="communication-ticket-item-container__negotiator">
@@ -65,10 +66,10 @@ export default {
       return Number(this.$route.params.id) === this.ticket.disputeId
     },
     lastInboundInteraction() {
-      const { lastInboundInteraction, disputeStatus, expirationDate } = this.ticket
-      const { type, message, dateTime } = lastInboundInteraction || {}
+      const { lastInboundInteraction, lastReceivedMessage, disputeStatus, expirationDate } = this.ticket
+      const { type, message, dateTime } = (lastReceivedMessage || lastInboundInteraction) || {}
 
-      if (lastInboundInteraction && type === 'COMMUNICATION' && message) {
+      if (lastReceivedMessage) {
         return {
           message,
           dateTime: dateTime.dateTime
@@ -170,7 +171,7 @@ export default {
       display: flex;
       align-items: center;
       margin-bottom: 6px;
-      max-width: 226px;
+      max-width: 223px;
       &--bold { font-weight: 600; }
 
       .communication-ticket-item-container__message-content {
