@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import moment from 'moment'
 
+import { eventBus } from '@/utils'
+
 import EDITOR_TABS from '@/constants/editor'
 
 function getFormatedDate(occurrence) {
@@ -48,7 +50,7 @@ const omnichannelMutations = {
 
   resetOccurrences: (state) => {
     Vue.set(state.occurrences, 'list', [])
-    Vue.set(state.occurrences.filter, 'page', 0)
+    Vue.set(state.occurrences.filter, 'page', 1)
     Vue.set(state.occurrences, 'countGetters', 0)
   },
 
@@ -106,6 +108,9 @@ const omnichannelMutations = {
 
       const nextIndex = state.occurrences.list.length
       Vue.set(state.occurrences.list, nextIndex, occurrence)
+
+      // TODO: Procurar uma solução melhor.
+      eventBus.$emit('NEGOTIATION_WEBSOCKET_NEW_OCCURRENCE', {})
     }
   },
 
