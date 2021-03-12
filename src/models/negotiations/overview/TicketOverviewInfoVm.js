@@ -12,10 +12,10 @@ export default class DisputeOverviewInfoVm {
     disputeId, id,
     strategyId,
     internalIdentification, externalId,
-    contactPartyWhenInvalidLowyer,
-    contactPartyWhenNoLowyer,
+    contactPartyWhenInvalidLawyer, contactPartyWhenInvalidLowyer,
+    contactPartyWhenNoLawyer, contactPartyWhenNoLowyer,
     businessHoursEngagement,
-    alwaysContactParty,
+    awaysContactParty,
     skipEnrichment,
     denySavingDeposit,
     campaignName,
@@ -31,10 +31,10 @@ export default class DisputeOverviewInfoVm {
     this.disputeId = disputeId || id
     this.strategyId = strategyId
     this.internalIdentification = internalIdentification || externalId
-    this.contactPartyWhenInvalidLowyer = contactPartyWhenInvalidLowyer || campaign.contactPartyWhenInvalidLowyer
-    this.contactPartyWhenNoLowyer = contactPartyWhenNoLowyer || campaign.contactPartyWhenNoLowyer
+    this.contactPartyWhenInvalidLawyer = contactPartyWhenInvalidLawyer || (contactPartyWhenInvalidLowyer || campaign.contactPartyWhenInvalidLowyer)
+    this.contactPartyWhenNoLawyer = contactPartyWhenNoLawyer || (contactPartyWhenNoLowyer || campaign.contactPartyWhenNoLowyer)
     this.businessHoursEngagement = businessHoursEngagement || campaign.businessHoursEngagement
-    this.alwaysContactParty = alwaysContactParty || campaign.alwaysContactParty
+    this.awaysContactParty = awaysContactParty || campaign.awaysContactParty
     this.denySavingDeposit = denySavingDeposit || campaign.denySavingDeposit
     this.skipEnrichment = skipEnrichment || campaign.skipEnrichment
     this.campaignName = campaignName || campaign.name

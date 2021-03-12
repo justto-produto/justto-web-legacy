@@ -72,10 +72,10 @@ export default {
   },
   methods: {
     ...mapActions([
-      'setActiveTab'
+      'setOmnichannelActiveTab'
     ]),
     setTab(tab, _event) {
-      this.setActiveTab(tab.name)
+      this.setOmnichannelActiveTab(tab.name)
     }
   }
 }

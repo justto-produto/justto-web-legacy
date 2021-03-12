@@ -35,7 +35,7 @@ const ticketsMutations = {
     Vue.set(ticketsQuery, 'page', 1)
   },
 
-  setActiveTab: (state, activeTab) => Vue.set(state, 'ticketsActiveTab', activeTab),
+  setTicketsActiveTab: (state, activeTab) => Vue.set(state, 'ticketsActiveTab', activeTab),
 
   updateTicketItem: ({ tickets }, dispute) => {
     const ticketIndex = getTicketIndex(tickets.content, dispute.id)
