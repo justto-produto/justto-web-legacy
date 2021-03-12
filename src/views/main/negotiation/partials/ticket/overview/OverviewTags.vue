@@ -30,6 +30,7 @@
             >
               <el-tag
                 :color="tag.color"
+                :style="`color: hsl(0, 10%, calc(${getFontColor(tag.color)} * -10000000%))`"
                 class="overview-tags__option el-tag--etiqueta el-tag--etiqueta-select"
               >
                 <div>
@@ -124,12 +125,14 @@
         </div>
       </div>
       <el-tag
-        id="idTag"
+        id="popoverTagReference"
         slot="reference"
         class="overview-tags__tag-button overview-tags__tag-button--is-first"
         @click="visible = !visible"
       >
-        <i class="el-icon-plus" />
+        <i
+          id="popoverTagReferenceIcon"
+          class="el-icon-plus" />
       </el-tag>
     </el-popover>
 
@@ -137,8 +140,13 @@
       v-for="tag in disputeTags.slice(-3).reverse()"
       :key="tag.id"
       :color="tag.color"
+      :style="`color: hsl(0, 10%, calc(${getFontColor(tag.color)} * -10000000%))`"
+      :class="{
+        'overview-tags__tag--inclusive-is-active': tag.activeType === 'inclusive',
+        'overview-tags__tag--exclusive-is-active': tag.activeType === 'exclusive'
+      }"
       class="overview-tags__tag el-tag--etiqueta el-tag--click"
-      @click="filterByTag(tag.id)"
+      @click="nextTagState(tag.id)"
     >
       <i :class="`el-icon-${tag.icon}`" />
       <span class="overview-tags__label">{{ tag.name }}</span>
@@ -162,8 +170,13 @@
         v-for="tag in disputeTags.slice(0, disputeTags.length - 3).reverse()"
         :key="tag.id"
         :color="tag.color"
+        :style="`color: hsl(0, 10%, calc(${getFontColor(tag.color)} * -10000000%))`"
+        :class="{
+          'overview-tags__tag--inclusive-is-active': tag.activeType === 'inclusive',
+          'overview-tags__tag--exclusive-is-active': tag.activeType === 'exclusive'
+        }"
         class="el-tag--etiqueta el-tag--click"
-        @click="filterByTag(tag.id)"
+        @click="nextTagState(tag.id)"
       >
         <span>
           <i :class="`el-icon-${tag.icon}`" />
@@ -187,7 +200,8 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
+const _ = require('lodash')
 
 export default {
   name: 'OverviewTags',
@@ -197,17 +211,46 @@ export default {
     selectedTag: null,
     showForm: false,
     tagForm: {
-      name: '', color: '', icon: ''
+      name: '',
+      color: '',
+      icon: ''
     },
     showPopover: true
   }),
   computed: {
+    ...mapGetters({
+      ticketsQuery: 'getTicketsQuery',
+      colors: 'getTagsColors',
+      icons: 'getTagsIcons',
+      ticketTags: 'disputeTags'
+    }),
+
+    filteredTags() {
+      return this.ticketsQuery.tags
+    },
     disputeId() {
       return this.$route.params.id
     },
     disputeTags: {
       get() {
-        return this.$store.getters.disputeTags
+        return this.ticketTags.map(t => {
+          if (this.ticketsQuery.tags && this.ticketsQuery.tags.includes(t.id)) {
+            t.activeType = 'inclusive'
+          } else if (this.ticketsQuery.noTags && this.ticketsQuery.noTags.includes(t.id)) {
+            t.activeType = 'exclusive'
+          } else {
+            t.activeType = ''
+          }
+          return t
+        }).sort((a, b) => {
+          if (!!a.activeType === !!b.activeType) {
+            return 0
+          } else if (!!a.activeType > !!b.activeType) {
+            return 1
+          } else {
+            return -1
+          }
+        })
       },
       set(tags) {
         this.loading = true
@@ -230,12 +273,6 @@ export default {
       return this.$store.getters.workspaceTags.filter(t => {
         return !this.disputeTags.map(t => t.id).includes(t.id)
       })
-    },
-    colors() {
-      return this.$store.state.tagModule.colors
-    },
-    icons() {
-      return this.$store.state.tagModule.icons
     }
   },
   mounted() {
@@ -253,8 +290,57 @@ export default {
       'getTickets'
     ]),
 
-    closeOnCLick(e) {
-      if (!e.target.id.startsWith('idTag') && !e.target.textContent.includes('Adicionar nova etiqueta')) {
+    getFontColor(bgColor) {
+      const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(bgColor)
+      const red = parseInt(result[1], 16).toFixed(4)
+      const green = parseInt(result[2], 16).toFixed(4)
+      const blue = parseInt(result[3], 16).toFixed(4)
+
+      return ((red * 0.299 + green * 0.587 + blue * 0.114) / 255).toFixed(4) - 0.5
+    },
+
+    nextTagState(tagId) {
+      const currentTags = _.cloneDeep(this.ticketsQuery.tags || [])
+      const currentNoTags = _.cloneDeep(this.ticketsQuery.noTags || [])
+
+      if (!currentTags.includes(tagId) && !currentNoTags.includes(tagId)) {
+        this.setTagFilters(tagId, 'changeInclusive', currentTags, currentNoTags)
+      } else if (currentTags.includes(tagId)) {
+        this.setTagFilters(tagId, 'changeExclusive', currentTags, currentNoTags)
+      } else if (currentNoTags.includes(tagId)) {
+        this.unsetTagFilters(tagId, currentTags, currentNoTags)
+      }
+    },
+
+    setTagFilters(tagId, command, currentTags, currentNoTags) {
+      if (command === 'changeInclusive') {
+        currentNoTags = currentNoTags.filter(t => t !== tagId)
+        currentTags.push(tagId)
+      }
+      if (command === 'changeExclusive') {
+        currentTags = currentTags.filter(t => t !== tagId)
+        currentNoTags.push(tagId)
+      }
+      this.updateTagFilters(currentTags, currentNoTags)
+    },
+
+    unsetTagFilters(tagId, currentTags, currentNoTags) {
+      currentNoTags = currentNoTags.filter(t => t !== tagId)
+      currentTags = currentTags.filter(t => t !== tagId)
+      this.updateTagFilters(currentTags, currentNoTags)
+    },
+
+    updateTagFilters(currentTags, currentNoTags) {
+      this.setTicketsQuery({ key: 'tags', value: currentTags })
+      this.setTicketsQuery({ key: 'noTags', value: currentNoTags })
+      this.getTickets()
+    },
+
+    closeOnCLick(event) {
+      if (
+        !event.target.id.startsWith('popoverTagReference') &&
+        !event.target.textContent.includes('Adicionar nova etiqueta')
+      ) {
         this.visible = false
       }
     },
@@ -337,10 +423,6 @@ export default {
     },
     resetFields() {
       this.$nextTick(() => { this.showForm = false })
-    },
-    filterByTag(tagId) {
-      this.setTicketsQuery({ key: 'tags', value: [tagId] })
-      this.getTickets()
     }
   }
 }
@@ -348,6 +430,19 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/styles/colors.scss';
+@mixin selected-tag($--border-color, $--icon-url) {
+  border: 2px solid $--border-color;
+  position: relative;
+  padding: 0 9px;
+  &::after {
+    content: url($--icon-url);
+    position: absolute;
+    bottom: -3px;
+    right: -3px;
+    width: 12px;
+    height: 12px;
+  }
+}
 
 .overview-tags {
   display: flex;
@@ -357,6 +452,13 @@ export default {
     align-items: center;
     max-width: 36px;
     transition: .2s ease-out;
+
+    &--inclusive-is-active {
+      @include selected-tag($--color-success, '/src/assets/icons/ic-checked.svg');
+    }
+    &--exclusive-is-active {
+      @include selected-tag($--color-danger, '/src/assets/icons/ic-blocked.svg');
+    }
 
     .overview-tags__label {
       overflow-x: hidden;
@@ -375,7 +477,7 @@ export default {
       transition: .2s ease-out;
     }
     
-    &:hover {
+    &:hover, &:last-child {
       flex: 1;
       max-width: 260px;
 
@@ -398,9 +500,37 @@ export default {
 
 <style lang="scss">
 @import '@/styles/colors.scss';
+@mixin selected-tag($--border-color, $--icon-url) {
+  border: 2px solid $--border-color;
+  position: relative;
+  padding: 0 9px;
+  &::after {
+    content: url($--icon-url);
+    position: absolute;
+    z-index: 10;
+    bottom: -3px;
+    right: -3px;
+    width: 12px;
+    height: 12px;
+  }
+}
 
 .overview-tags__all-tags {
   padding: 10px;
+  
+  .overview-tags__tag {
+    display: flex;
+    align-items: center;
+    max-width: 36px;
+    transition: .2s ease-out;
+
+    &--inclusive-is-active {
+      @include selected-tag($--color-success, '/src/assets/icons/ic-checked.svg');
+    }
+    &--exclusive-is-active {
+      @include selected-tag($--color-danger, '/src/assets/icons/ic-blocked.svg');
+    }
+  }
 }
 
 .overview-tags {
