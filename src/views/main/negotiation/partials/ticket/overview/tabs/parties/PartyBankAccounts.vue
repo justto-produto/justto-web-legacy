@@ -101,10 +101,12 @@ export default {
         ...link.map(({ id, personId }) => this.linkAccount({ bankAccountId: id, personId, disputeId })),
         ...unlink.map(({ id, personId }) => this.unlinkAccount({ bankAccountId: id, personId, disputeId }))
       ]).then(() => {
+        const text = link.length > 0 ? 'Conta bancária <strong>vinculada</strong> com sucesso.' : 'Conta bancária <strong>desvinculada</strong> com sucesso.'
+
         this.$jusNotification({
           title: 'Yay!',
           dangerouslyUseHTMLString: true,
-          message: 'Conta bancária atualizada com sucesso.',
+          message: text,
           type: 'success'
         })
       })
