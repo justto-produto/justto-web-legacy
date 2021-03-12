@@ -25,7 +25,8 @@ const overviewMutations = {
   updateTicketOverviewInfo: ({ ticketOverviewInfo }, { payload }) => {
     for (const key of Object.keys(payload)) Vue.set(ticketOverviewInfo, key, payload[key])
   },
-  setTicketOverviewParties: (state, params) => (Vue.set(state, 'ticketOverviewParties', params)),
+
+  setTicketOverviewParties: (state, params) => Vue.set(state, 'ticketOverviewParties', params),
 
   setTicketOverviewParty: ({ ticketOverviewParties }, { data, payload }) => {
     const partyToSet = findPartyById(ticketOverviewParties, payload)
@@ -54,12 +55,14 @@ const overviewMutations = {
     Vue.set(partyToSet, 'documentNumber', documentNumber)
     Vue.set(partyToSet, 'legacyDto', params)
   },
+
   updateTicketOverviewPartyPolarity: ({ ticketOverviewParties }, { payload }) => {
     const { roleId, rolePolarity } = payload
     const partyToSet = findPartyById(ticketOverviewParties, roleId)
 
     Vue.set(partyToSet, 'polarity', rolePolarity)
   },
+
   deleteTicketOverviewParty: ({ ticketOverviewParties }, { payload }) => {
     const partyToUnset = findPartyById(ticketOverviewParties, payload)
 
@@ -73,6 +76,24 @@ const overviewMutations = {
     const contactToDelete = findContactIndex(contactTypeList, contactId)
 
     Vue.delete(contactTypeList, contactToDelete)
+  },
+
+  updateTicketRoleBankAccount: (state, { payload }) => {
+    const { bankAccountId, personId } = payload
+
+    const indexPartie = state.ticketOverviewParties.findIndex(partie => {
+      return partie.personId === personId
+    })
+
+    if (indexPartie >= 0) {
+      state.ticketOverviewParties[indexPartie].bankAccountsDto.forEach((item, index) => {
+        if (item.id === bankAccountId && !item.associatedInDispute) {
+          Vue.set(state.ticketOverviewParties[indexPartie].bankAccountsDto[index], 'associatedInDispute', true)
+        } else {
+          Vue.set(state.ticketOverviewParties[indexPartie].bankAccountsDto[index], 'associatedInDispute', false)
+        }
+      })
+    }
   },
 
   setTicketOverviewProperties: (state, params) => (Vue.set(state, 'ticketOverviewProperties', params)),

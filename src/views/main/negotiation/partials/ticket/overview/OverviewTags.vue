@@ -476,15 +476,15 @@ export default {
       border: none;
       transition: .2s ease-out;
     }
-    
-    &:hover, &:last-child {
+
+    &:hover {
       flex: 1;
       max-width: 260px;
 
       .overview-tags__button {
         width: 16px;
         opacity: 1;
-      } 
+      }
     }
   }
 

@@ -39,6 +39,8 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import { eventBus } from '@/utils'
+
 export default {
   components: {
     Date: () => import('./occurrence/Date'),
@@ -46,6 +48,9 @@ export default {
     InfiniteLoading: () => import('vue-infinite-loading'),
     DisputeTips: () => import('@/views/main/dispute/partials/DisputeTips')
   },
+  data: () => ({
+    needScroll: false
+  }),
   computed: {
     ...mapGetters({
       activeTab: 'getActiveTab',
@@ -74,11 +79,22 @@ export default {
     '$route.params.id'() {
       this.resetRecipients()
       this.resetOccurrences()
-      this.getOccurrences(this.$route.params.id)
+      this.getOccurrences(this.id)
     },
     'countRendereds'() {
       this.adjustScroll()
     }
+  },
+  mounted() {
+    eventBus.$on('NEGOTIATION_WEBSOCKET_NEW_OCCURRENCE', () => {
+      this.needScroll = true
+    })
+  },
+  updated() {
+    if (this.needScroll) this.adjustScroll(true)
+  },
+  beforeDestroy() {
+    eventBus.$off()
   },
   methods: {
     ...mapActions([
@@ -88,8 +104,8 @@ export default {
       'resetOccurrences'
     ]),
 
-    adjustScroll() {
-      if (this.getOccurrencesFilter.page === 0) {
+    adjustScroll(force = false) {
+      if (this.getOccurrencesFilter.page === 1 || force) {
         const omni = document.getElementsByClassName('occurrences-container omnichannel-container__occurrences')[0]
         omni.scrollTo({ top: omni.scrollHeight })
       }

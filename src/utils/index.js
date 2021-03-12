@@ -8,6 +8,7 @@ import normalizeString from './utils/normalizeString'
 import registerServiceWorker from './utils/registerServiceWorker'
 import showUnavailableLoading from './utils/showUnavailableLoading'
 import uuidv4 from './utils/uuidv4'
+import { eventBus } from './utils/eventBus'
 import {
   buildRoleTitle,
   getRoleIcon,
@@ -21,6 +22,7 @@ import {
 } from './utils/others'
 
 export {
+  eventBus,
   axiosDispatch,
   buildQuery,
   filterByTerm,

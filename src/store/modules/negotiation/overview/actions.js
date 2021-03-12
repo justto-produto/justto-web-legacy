@@ -1,6 +1,7 @@
 import { axiosDispatch } from '@/utils/'
 
 const disputeApi = '/api/disputes/v2'
+const oldDisputeApi = 'api/disputes'
 const disputeApiLegacy = '/api/disputes'
 const officeApi = '/api/office'
 
@@ -130,6 +131,28 @@ const overviewActions = {
       mutation: 'setTicketOverviewParty',
       payload: roleId
     })
+  },
+
+  setTicketRoleBankAccount({ commit }, { bankAccountId, disputeId, personId }) {
+    commit('incrementTicketOverviewCountGetters')
+
+    return axiosDispatch({
+      url: `${oldDisputeApi}/${disputeId}/bank-accounts/${bankAccountId}`,
+      method: 'POST',
+      payload: { bankAccountId, personId },
+      mutation: 'updateTicketRoleBankAccount'
+    }).finally(() => commit('decrementTicketOverviewCountGetters'))
+  },
+
+  deleteTicketRoleBankAccount({ commit }, { bankAccountId, disputeId, personId }) {
+    commit('incrementTicketOverviewCountGetters')
+
+    return axiosDispatch({
+      url: `${oldDisputeApi}/${disputeId}/bank-accounts/${bankAccountId}`,
+      method: 'DELETE',
+      payload: { bankAccountId, personId },
+      mutation: 'updateTicketRoleBankAccount'
+    }).finally(() => commit('decrementTicketOverviewCountGetters'))
   },
 
   deleteTicketOverviewPartyContact({ _ }, params) {

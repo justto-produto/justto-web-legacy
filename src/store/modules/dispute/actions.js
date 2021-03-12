@@ -109,28 +109,18 @@ const disputeActions = {
   cleanDisputeLastAccess({ commit }) {
     commit('cleanLastAccess')
   },
-  linkDisputeBankAccounts({ commit }, params) {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.post(`${disputesPath}/${params.disputeId}/bank-accounts/${params.bankAccountId}`)
-        .then(() => {
-          resolve()
-        })
-        .catch(error => {
-          reject(error)
-        })
+  // TODO: Duplicar pro Store do Negotiation
+  linkDisputeBankAccounts({ _ }, { bankAccountId, disputeId }) {
+    return axiosDispatch({
+      url: `${disputesPath}/${disputeId}/bank-accounts/${bankAccountId}`,
+      method: 'POST'
     })
   },
-  unlinkDisputeBankAccounts({ commit }, params) {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.delete(`${disputesPath}/${params.disputeId}/bank-accounts/${params.bankAccountId}`)
-        .then(() => {
-          resolve()
-        })
-        .catch(error => {
-          reject(error)
-        })
+  // TODO: Duplicar pro Store do Negotiation
+  unlinkDisputeBankAccounts({ _ }, { bankAccountId, disputeId }) {
+    return axiosDispatch({
+      url: `${disputesPath}/${disputeId}/bank-accounts/${bankAccountId}`,
+      method: 'DELETE'
     })
   },
   getDisputeDTO({ commit }, id) {
