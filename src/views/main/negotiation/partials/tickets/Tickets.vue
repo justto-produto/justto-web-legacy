@@ -107,7 +107,7 @@ export default {
     }
   },
   beforeMount() {
-    this.getTickets({ name: this.activeTab })
+    this.handleChangeTab({ name: this.activeTab })
   },
   methods: {
     ...mapActions([
