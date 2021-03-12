@@ -5,13 +5,15 @@ const disputeApiLegacy = '/api/disputes'
 const officeApi = '/api/office'
 
 const overviewActions = {
-  getTicketOverview({ commit }, disputeId) {
+  getTicketOverview({ commit, dispatch }, disputeId) {
     commit('incrementTicketOverviewCountGetters')
 
     return axiosDispatch({
       url: `${disputeApi}/${disputeId}`,
       mutation: 'setTicketOverview'
-    }).finally(() => commit('decrementTicketOverviewCountGetters'))
+    })
+      .then(({ status }) => dispatch('updateActiveTab', status))
+      .finally(() => commit('decrementTicketOverviewCountGetters'))
   },
 
   getTicketOverviewInfo({ commit }, disputeId) {

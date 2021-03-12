@@ -2,6 +2,28 @@ import { axiosDispatch, buildQuery } from '@/utils/'
 
 const disputeApi = '/api/disputes/v2'
 
+const getCorrespondingTab = disputeStatus => {
+  switch (disputeStatus) {
+    case 'PRE_NEGOTIATION':
+      return 'pre-negotiation'
+    case 'IMPORTED':
+    case 'ENRICHED':
+    case 'ENGAGEMENT':
+    case 'PENDING':
+      return 'engagement'
+    case 'RUNNING':
+      return 'running'
+    case 'ACCEPTED':
+    case 'CHECKOUT':
+      return 'accepted'
+    case 'UNSETTLED':
+    case '':
+      return 'finished'
+    default:
+      return 'engagement'
+  }
+}
+
 const overviewActions = {
   getTickets({ state, dispatch }, command) {
     if (command !== 'nextPage') dispatch('setTicketsQuery', { key: 'page', value: 1 })
@@ -41,29 +63,15 @@ const overviewActions = {
     commit('setActiveTab', activeTab)
   },
 
-  SOCKET_ADD_DISPUTE({ rootState, state, commit }, dispute) {
-    let correspondingTab
-    switch (dispute.status) {
-      case 'PRE_NEGOTIATION':
-        correspondingTab = 'pre-negotiation'
-        break
-      case 'IMPORTED':
-      case 'ENRICHED':
-      case 'ENGAGEMENT':
-      case 'PENDING':
-        correspondingTab = 'engagement'
-        break
-      case 'RUNNING':
-        correspondingTab = 'running'
-        break
-      case 'ACCEPTED':
-      case 'CHECKOUT':
-        correspondingTab = 'accepted'
-        break
-      case '':
-        correspondingTab = 'finished'
-        break
+  updateActiveTab({ state, commit }, disputeStatus) {
+    const correspondingTab = getCorrespondingTab(disputeStatus)
+    if (correspondingTab !== state.ticketsActiveTab) {
+      commit('setActiveTab', getCorrespondingTab(disputeStatus))
     }
+  },
+
+  SOCKET_ADD_DISPUTE({ rootState, state, commit }, dispute) {
+    const correspondingTab = getCorrespondingTab(dispute.status)
 
     if (rootState.negotiationOverviewModule.ticketOverview.disputeId === dispute.id) {
       if (correspondingTab !== state.ticketsActiveTab) {

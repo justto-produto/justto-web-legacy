@@ -3,7 +3,6 @@
     <TicketsHeader
       target-path="negotiation"
       :active-tab="activeTab"
-      @set-tab="handleSetTab"
     />
     <el-tabs
       v-model="activeTab"
@@ -62,12 +61,10 @@ export default {
     InfiniteLoading: () => import('vue-infinite-loading'),
     // VuePerfectScrollbar: () => import('vue-perfect-scrollbar'),
   },
-  data: () => ({
-    activeTab: 'running'
-  }),
   computed: {
     ...mapGetters({
-      tickets: 'getTickets'
+      tickets: 'getTickets',
+      ticketsActiveTab: 'getTicketsActiveTab'
     }),
 
     tabs() {
@@ -93,11 +90,24 @@ export default {
           component: 'CommunicationTicketItem'
         }
       ]
+    },
+
+    activeTab: {
+      get() {
+        return this.ticketsActiveTab
+      },
+      set(value) {
+        this.setActivTab(value)
+      }
+    }
+  },
+  watch: {
+    activeTab(currentActiveTab) {
+      this.handleChangeTab({ name: currentActiveTab })
     }
   },
   beforeMount() {
     this.getTickets({ name: this.activeTab })
-    console.log(this.tickets.content)
   },
   methods: {
     ...mapActions([
@@ -135,34 +145,7 @@ export default {
           break
       }
 
-      this.setActivTab(tab.name)
       this.getTickets()
-    },
-
-    handleSetTab(disputeStatus) {
-      switch (disputeStatus) {
-        case 'PRE_NEGOTIATION':
-          this.activeTab = 'pre-negotiation'
-          break
-        case 'IMPORTED':
-        case 'ENRICHED':
-        case 'ENGAGEMENT':
-        case 'PENDING':
-          this.activeTab = 'engagement'
-          break
-        case 'RUNNING':
-          this.activeTab = 'running'
-          break
-        case 'ACCEPTED':
-        case 'CHECKOUT':
-          this.activeTab = 'accepted'
-          break
-        case '':
-          this.activeTab = 'finished'
-          break
-      }
-
-      this.handleChangeTab({ name: this.activeTab })
     },
 
     infiniteHandler($state) {
