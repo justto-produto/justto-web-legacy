@@ -40,7 +40,9 @@ class OabDto extends PersonDataDto {
 }
 
 class BankAccountDto {
-  constructor({ personId, name, document, email, number, agency, bank, type }) {
+  constructor({ personId, name, document, email, number, agency, bank, type, id, associatedInDispute }) {
+    this.id = id
+    this.associatedInDispute = Boolean(associatedInDispute)
     this.personId = personId
     this.name = name
     this.document = document
