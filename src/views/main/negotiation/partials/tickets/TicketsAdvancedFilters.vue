@@ -381,36 +381,38 @@ export default {
       this.advancedFiltersDialogVisible = true
     },
     applyFilters() {
-      if (!this.filters.onlyNotVisualized) delete this.filters.onlyNotVisualized
-      this.setTicketsFilters(this.filters)
+      const { filters } = this
+      if (!filters.onlyNotVisualized) delete filters.onlyNotVisualized
+      this.setTicketsFilters({ filters, hasFilters: true })
       this.advancedFiltersDialogVisible = false
       this.getTickets()
       // SEGMENT TRACK
-      if (this.filters.status) {
-        if (this.filters.status.includes('EXPIRED')) {
+      if (filters.status) {
+        if (filters.status.includes('EXPIRED')) {
           this.$jusSegment('Filtro por status expirado')
         }
-        if (this.filters.status.includes('PENDING')) {
+        if (filters.status.includes('PENDING')) {
           this.$jusSegment('Filtro por status pendente')
         }
-        if (this.filters.status.includes('CHECKOUT')) {
+        if (filters.status.includes('CHECKOUT')) {
           this.$jusSegment('Filtro por status acordo')
         }
       }
-      if (this.filters.hasCounterproposal) {
+      if (filters.hasCounterproposal) {
         this.$jusSegment('Filtro por status com contraproposta')
       }
-      if (this.filters.hasCounterproposal) {
+      if (filters.hasCounterproposal) {
         this.$jusSegment('Filtro por status com contraproposta')
       }
-      if (this.filters.importingDate && this.filters.importingDate.length) {
+      if (filters.importingDate && filters.importingDate.length) {
         this.$jusSegment('Filtro por data importação')
       }
-      if (this.filters.expirationDate && this.filters.expirationDate.length) {
+      if (filters.expirationDate && filters.expirationDate.length) {
         this.$jusSegment('Filtro por data fim negociação')
       }
     },
     clearFilters() {
+      const { filters } = this
       if (this.activeTab === 'finished') {
         this.filters.status = []
       }
@@ -425,7 +427,7 @@ export default {
       this.filters.onlyFavorite = false
       this.filters.onlyPaused = false
       this.filters.hasCounterproposal = false
-      this.setTicketsFilters(this.filters)
+      this.setTicketsFilters({ filters, hasFilters: false })
       this.advancedFiltersDialogVisible = false
       delete this.filters.onlyNotVisualized
       this.getTickets()

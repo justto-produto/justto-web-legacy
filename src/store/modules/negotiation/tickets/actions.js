@@ -55,8 +55,9 @@ const overviewActions = {
     commit('unsetTicketPrescription', prescription)
   },
 
-  setTicketsFilters({ commit }, filters) {
+  setTicketsFilters({ commit }, { filters, hasFilters }) {
     commit('setTicketsFilters', filters)
+    commit('setTicketsHasFilters', hasFilters)
   },
 
   setTicketsActiveTab({ commit }, activeTab) {

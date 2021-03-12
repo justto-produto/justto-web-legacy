@@ -35,6 +35,8 @@ const ticketsMutations = {
     Vue.set(ticketsQuery, 'page', 1)
   },
 
+  setTicketsHasFilters: (state, hasFilters) => Vue.set(state, 'ticketsHasFilters', hasFilters),
+
   setTicketsActiveTab: (state, activeTab) => Vue.set(state, 'ticketsActiveTab', activeTab),
 
   updateTicketItem: ({ tickets }, dispute) => {
