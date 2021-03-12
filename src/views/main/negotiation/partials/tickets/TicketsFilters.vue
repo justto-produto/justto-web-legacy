@@ -26,7 +26,14 @@
             {{ prescription.description | capitalize }}
           </div>
         </li>
-        <li
+        <el-button
+          :type="ticketsHasFilters ? 'primary' : ''"
+          class="management-prescriptions__list-item-button"
+          @click="openAdvancedFiltersDialog"
+        >
+          Filtros avançados
+        </el-button>
+        <!-- <li
           ref="advancedFilters"
           :class="{ 'management-prescriptions__list-item--selected': hasPrescription('advancedFilters') }"
           class="management-prescriptions__list-item"
@@ -40,10 +47,11 @@
             />
             Filtros avançados
           </div>
-        </li>
+        </li> -->
       </ul>
       <el-button
         slot="reference"
+        :type="ticketsHasFilters || ticketsPrescriptions.length ? 'primary' : ''"
         size="mini"
         class="management-prescriptions__popover-button"
       >
@@ -77,6 +85,7 @@ export default {
   computed: {
     ...mapGetters({
       ticketsQuery: 'getTicketsQuery',
+      ticketsHasFilters: 'getTicketsHasFilters',
       ticketsPrescriptions: 'getTicketsPrescriptions',
       prescriptions: 'prescriptionsList'
     }),
@@ -142,7 +151,7 @@ export default {
   margin: 0 10px;
 
   .management-prescriptions__popover-trigger {
-    .management-prescriptions__popover-button {
+    .management-prescriptions__popover-button:not(.el-button--primary) {
       border: 1px solid $--light-gray;
       &:hover, &:focus { border-color: $--color-primary-light-8; }
     }
@@ -170,6 +179,10 @@ export default {
     list-style: none;
     padding: 0;
     margin: 0;
+    .management-prescriptions__list-item-button {
+      margin: 6px 24px 12px;
+      width: calc(100% - 48px);
+    }
 
     .management-prescriptions__list-item {
       cursor: pointer;

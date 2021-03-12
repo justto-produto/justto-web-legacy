@@ -380,8 +380,7 @@ export default {
       'getCampaigns',
       'getMyStrategiesLite',
       'getRespondents',
-      'getWorkspaceTags',
-      'setTicketsFilters'
+      'getWorkspaceTags'
     ]),
     fetchData() {
       this.loading = true

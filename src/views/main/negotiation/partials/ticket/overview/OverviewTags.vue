@@ -132,7 +132,8 @@
       >
         <i
           id="popoverTagReferenceIcon"
-          class="el-icon-plus" />
+          class="el-icon-plus"
+        />
       </el-tag>
     </el-popover>
 
@@ -160,7 +161,7 @@
     </el-tag>
 
     <el-popover
-      v-if="disputeTags.length > 4"
+      v-if="disputeTags.length > 3"
       width="310"
       popper-class="overview-tags__all-tags"
       @show="getTags"
@@ -517,7 +518,7 @@ export default {
 
 .overview-tags__all-tags {
   padding: 10px;
-  
+
   .overview-tags__tag {
     display: flex;
     align-items: center;

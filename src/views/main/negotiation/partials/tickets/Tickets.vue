@@ -19,30 +19,30 @@
         lazy
       >
         <!-- <vue-perfect-scrollbar> -->
-          <ul
-            v-if="activeTab === tab.name"
-            class="tickets-container__list"
+        <ul
+          v-if="activeTab === tab.name"
+          class="tickets-container__list"
+        >
+          <component
+            :is="tab.component"
+            v-for="ticket in tickets.content"
+            :key="ticket.disputeId"
+            :ticket="ticket"
+          />
+          <infinite-loading
+            :identifier="activeTab"
+            spinner="spiral"
+            :distance="1340"
+            @infinite="infiniteHandler"
           >
-            <component
-              :is="tab.component"
-              v-for="ticket in tickets.content"
-              :key="ticket.disputeId"
-              :ticket="ticket"
-            />
-            <infinite-loading
-              :identifier="activeTab"
-              spinner="spiral"
-              :distance="1340"
-              @infinite="infiniteHandler"
-            >
-              <div slot="no-more">
-                Fim das disputas
-              </div>
-              <div slot="no-results">
-                Nada por aqui
-              </div>
-            </infinite-loading>
-          </ul>
+            <div slot="no-more">
+              Fim das disputas
+            </div>
+            <div slot="no-results">
+              Nada por aqui
+            </div>
+          </infinite-loading>
+        </ul>
         <!-- </vue-perfect-scrollbar> -->
       </el-tab-pane>
     </el-tabs>
@@ -58,7 +58,7 @@ export default {
     EngagementTicketItem: () => import('./EngagementTicketItem'),
     CommunicationTicketItem: () => import('./CommunicationTicketItem'),
     TicketsHeader: () => import('./TicketsHeader'),
-    InfiniteLoading: () => import('vue-infinite-loading'),
+    InfiniteLoading: () => import('vue-infinite-loading')
     // VuePerfectScrollbar: () => import('vue-perfect-scrollbar'),
   },
   computed: {
@@ -97,7 +97,7 @@ export default {
         return this.ticketsActiveTab
       },
       set(value) {
-        this.setActivTab(value)
+        this.setTicketsActiveTab(value)
       }
     }
   },
@@ -114,7 +114,7 @@ export default {
       'getTickets',
       'getTicketsNextPage',
       'setTicketsQuery',
-      'setActivTab'
+      'setTicketsActiveTab'
     ]),
 
     handleChangeTab(tab) {

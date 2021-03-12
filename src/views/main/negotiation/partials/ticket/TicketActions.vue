@@ -232,7 +232,8 @@ export default {
       this.$jusNotification({
         message: `${message} com sucesso.`,
         title: 'Yay!',
-        type: 'success'
+        type: 'success',
+        dangerouslyUseHTMLString: true
       })
       this.$jusSegment(message, { disputeId })
     },
