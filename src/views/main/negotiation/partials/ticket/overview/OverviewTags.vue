@@ -374,7 +374,7 @@ export default {
       border: none;
       transition: .2s ease-out;
     }
-    
+
     &:hover {
       flex: 1;
       max-width: 260px;
@@ -382,7 +382,7 @@ export default {
       .overview-tags__button {
         width: 16px;
         opacity: 1;
-      } 
+      }
     }
   }
 
