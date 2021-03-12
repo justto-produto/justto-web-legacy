@@ -2,12 +2,12 @@
   <article class="bank-accounts">
     <el-checkbox-group
       v-if="isVisible"
-      v-model="model"
+      v-model="accountsSelected"
       class="bank-accounts__container"
     >
       <el-checkbox
-        v-for="account in value"
-        :key="`account-${account.id}-party-${account.personId}`"
+        v-for="(account, accountIndex) in value"
+        :key="`account-${accountIndex}-party-${account.personId}`"
         :label="account.id"
         class="bank-accounts__container__account"
       >
@@ -40,6 +40,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 export default {
   name: 'PartyBankAccounts',
   filters: {
@@ -54,23 +55,59 @@ export default {
     }
   },
   data: () => ({
-    isVisible: false,
-    model: []
+    isVisible: false
   }),
   computed: {
+    disputeId() {
+      return Number(this.$route.params.id)
+    },
     seeDataText() {
       return (!this.isVisible ? 'Ver dados bancários' : 'Esconder dados bancários')
     },
     canShowQuantity() {
       return this.value.length > 0
     },
+    availableIds() {
+      return this.value.map(({ id }) => id)
+    },
     quantity() {
       return (this.isVisible ? '-' : '+') + this.value.length
+    },
+    accountsSelected: {
+      get() {
+        return this.value.filter(({ associatedInDispute }) => associatedInDispute).map(({ id }) => id)
+      },
+
+      set(value) {
+        const link = this.value.filter(({ id, associatedInDispute: associated }) => (value.includes(id) && !associated)).map(({ id, personId }) => ({ id, personId }))
+        const unlink = this.value.filter(({ id, associatedInDispute: associated }) => (!value.includes(id) && associated)).map(({ id, personId }) => ({ id, personId }))
+
+        this.updateBankAccounts(link, unlink)
+      }
     }
   },
   methods: {
+    ...mapActions({
+      linkAccount: 'setTicketRoleBankAccount',
+      unlinkAccount: 'deleteTicketRoleBankAccount'
+    }),
     toggleVisibility() {
       this.isVisible = !this.isVisible
+    },
+    updateBankAccounts(link = [], unlink = []) {
+      const { disputeId } = this
+
+      Promise.all([
+        ...link.map(({ id, personId }) => this.linkAccount({ bankAccountId: id, personId, disputeId })),
+        ...unlink.map(({ id, personId }) => this.unlinkAccount({ bankAccountId: id, personId, disputeId }))
+      ]).then(() => {
+        this.$jusNotification({
+          title: 'Yay!',
+          dangerouslyUseHTMLString: true,
+          message: 'Conta bancária atualizada com sucesso.',
+          type: 'success'
+        })
+      })
     }
   }
 }
