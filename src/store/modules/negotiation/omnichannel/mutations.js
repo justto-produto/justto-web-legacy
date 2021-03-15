@@ -56,7 +56,6 @@ const omnichannelMutations = {
     }).filter(el => el !== false)
 
     toInsert.reverse().forEach(({ occurrence, index }) => {
-      console.log(occurrence, index + 1)
       state.occurrences.list.splice(index + 1, 0, occurrence)
     })
 
