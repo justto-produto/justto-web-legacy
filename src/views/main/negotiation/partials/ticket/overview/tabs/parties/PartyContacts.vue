@@ -13,7 +13,8 @@
         v-model="contact[model]"
         :mask="mask"
         :filter="filter"
-        is-deletable
+        :is-editable="!disabled"
+        :is-deletable="!disabled"
         :class="{
           'party-contacts__infoline-data--selected': mappedRecipients.includes(contact[model]),
           'party-contacts__infoline-data--disabled': contact.isValid === false,
@@ -26,7 +27,7 @@
       />
     </span>
     <div
-      v-if="(isAllContactsVisible || contactsLength <= 3) && !isAddingNewContact"
+      v-if="(isAllContactsVisible || contactsLength <= 3) && !isAddingNewContact && !disabled"
       class="party-contacts__infoline-link"
     >
       <a @click="startAddNewContact">Adicionar</a>
@@ -65,14 +66,22 @@ export default {
       type: Array,
       default: () => ([])
     },
+
+    disabled: {
+      type: Boolean,
+      default: false
+    },
+
     model: {
       type: String,
       required: true
     },
+
     filter: {
       type: String,
       default: ''
     },
+
     mask: {
       type: [Array, String],
       default: 'X'.repeat(255)

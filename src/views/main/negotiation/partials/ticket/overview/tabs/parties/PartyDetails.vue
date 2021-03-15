@@ -1,11 +1,10 @@
 <template>
   <article class="party-details">
     <div
-      v-if="!party.roles.includes('NEGOTIATOR')"
+      v-if="!isDisabled"
       class="party-details__infoline party-details__infoline--center"
     >
       <PopoverLinkInlineEditor
-        v-if="!party.roles.includes('NEGOTIATOR')"
         v-model="party.polarity"
         :options="roleOptions"
         :width="200"
@@ -18,6 +17,7 @@
       <span class="party-details__infoline-label">Nome completo:</span>
       <TextInlineEditor
         v-model="party.name"
+        :is-editable="!isDisabled"
         filter="ownName"
         class="party-details__infoline-data"
         @change="updateParty($event, 'name')"
@@ -33,6 +33,7 @@
         v-if="party.birthday || activeAddingData === 'birthday'"
         ref="birthday"
         v-model="party.birthday"
+        :is-editable="!isDisabled"
         :processed-date="$moment(party.birthday).fromNow(true)"
         :is-date-time-format="false"
         class="party-details__infoline-data"
@@ -53,6 +54,7 @@
         v-if="party.documentNumber || activeAddingData === 'documentNumber'"
         ref="documentNumber"
         v-model="party.documentNumber"
+        :is-editable="!isDisabled"
         :mask="['###.###.###-##', '##.###.###/####-##']"
         filter="cpfCnpj"
         class="party-details__infoline-data"
@@ -65,10 +67,15 @@
         <a @click="startEditing('documentNumber')">Adicionar</a>
       </div>
     </div>
-    <div class="party-details__infoline">
+
+    <div
+      v-if="!isDisabled || phonesList.length"
+      class="party-details__infoline"
+    >
       <span class="party-details__infoline-label">Telefones:</span>
       <PartyContacts
-        :contacts="party.phonesDto"
+        :contacts="phonesList"
+        :disabled="isDisabled"
         filter="phoneNumber"
         model="number"
         :mask="[
@@ -85,10 +92,15 @@
         @click="(...args)=>selectContact(...args, 'whatsapp')"
       />
     </div>
-    <div class="party-details__infoline">
+
+    <div
+      v-if="!isDisabled || emailsList.length"
+      class="party-details__infoline"
+    >
       <span class="party-details__infoline-label">Emails:</span>
       <PartyContacts
-        :contacts="party.emailsDto"
+        :contacts="emailsList"
+        :disabled="isDisabled"
         model="address"
         @change="(...args)=>updateContacts(...args, 'email')"
         @delete="removeContact($event, 'email')"
@@ -96,10 +108,15 @@
         @click="(...args)=>selectContact(...args, 'email')"
       />
     </div>
-    <div class="party-details__infoline">
+
+    <div
+      v-if="!isDisabled || mappedOabs.length"
+      class="party-details__infoline"
+    >
       <span class="party-details__infoline-label">Oab:</span>
       <PartyContacts
         :contacts="mappedOabs"
+        :disabled="isDisabled"
         filter="oab"
         model="fullOab"
         :mask="[
@@ -111,15 +128,20 @@
         @post="addContact($event, 'oab')"
       />
     </div>
-    <div class="party-details__infoline">
+
+    <div
+      v-if="!isDisabled"
+      class="party-details__infoline"
+    >
       <span class="party-details__infoline-label">Dados bancários:</span>
       <PartyBankAccounts
         :value="bankAccounts"
         class="party-details__infoline-data"
       />
     </div>
+
     <div
-      v-if="!party.roles.includes('NEGOTIATOR')"
+      v-if="!isDisabled"
       class="party-details__infoline party-details__infoline--center"
     >
       <a
@@ -156,12 +178,23 @@ export default {
     disputeId() {
       return Number(this.$route.params.id)
     },
+
+    phonesList() {
+      return this.party?.phonesDto || []
+    },
+
+    emailsList() {
+      return this.party?.emailsDto || []
+    },
+
     bankAccounts() {
       return this.party?.bankAccountsDto || []
     },
+
     documentType() {
       return this.party.documentNumber?.length <= 14 ? 'CPF' : 'CNPJ'
     },
+
     roleOptions() {
       const { roles } = this.party
       const partyOptions = [
@@ -183,12 +216,17 @@ export default {
         return [...partyOptions, ...lawyerOptions]
       }
     },
+
     mappedOabs() {
       const { oabsDto } = this.party
       return oabsDto?.map(oab => {
         const { number, state } = oab
         return { ...oab, fullOab: number + state }
       })
+    },
+
+    isDisabled() {
+      return this.party.roles?.includes('NEGOTIATOR')
     }
   },
   methods: {
