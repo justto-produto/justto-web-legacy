@@ -6,6 +6,7 @@
     <span
       v-if="recipients.length > 0"
       class="recipients-container__content"
+      :class="{ 'recipients-container__content-reverse': isReversed }"
     >
       <span class="recipients-container__label">
         <el-popover
@@ -56,6 +57,12 @@
 import { mapGetters } from 'vuex'
 export default {
   name: 'Recipients',
+  props: {
+    isReversed: {
+      type: Boolean,
+      default: false
+    }
+  },
   computed: {
     ...mapGetters({
       recipients: 'getEditorRecipients',
@@ -88,6 +95,10 @@ export default {
         margin-top: 2px;
       }
     }
+  }
+
+  .recipients-container__content-reverse {
+    flex-direction: row-reverse;
   }
 }
 </style>
