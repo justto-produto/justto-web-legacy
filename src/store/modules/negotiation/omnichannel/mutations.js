@@ -25,18 +25,40 @@ const omnichannelMutations = {
   setMessageType: (state, type) => Vue.set(state.editor, 'messageType', type),
 
   setOccurrences: (state, { content }) => {
-    const canInsert = content.filter(occ => {
-      return state.occurrences.list.filter(({ createAt, id }, index) => {
-        if (id === null && occ.id === null && occ.createAt.dateTime === createAt.dateTime) {
-          Vue.delete(state.occurrences.list, index)
-          return false
+    const datas = state.occurrences.list.map((occurrence, index) => {
+      if (occurrence.id === null) {
+        return {
+          index,
+          date: getFormatedDate(occurrence)
+        }
+      }
+      return false
+    }).filter(el => el !== false)
+
+    const toInsert = content.map(occurrence => {
+      const exists = state.occurrences.list.filter(({ createAt, id }, index) => {
+        if (id === null && occurrence.id === null && occurrence.createAt.dateTime === createAt.dateTime) {
+          return true
         } else {
-          return occ.id === id && occ.createAt.dateTime === createAt.dateTime
+          return occurrence.id === id && occurrence.createAt.dateTime === createAt.dateTime
         }
       }).length === 0
-    })
 
-    state.occurrences.list.unshift(...canInsert)
+      if (!exists) {
+        return false
+      } else {
+        const data = datas.find(data => data.date === getFormatedDate(occurrence))
+        return {
+          occurrence,
+          index: data !== undefined ? data.index : -1
+        }
+      }
+    }).filter(el => el !== false)
+
+    toInsert.reverse().forEach(({ occurrence, index }) => {
+      console.log(occurrence, index + 1)
+      state.occurrences.list.splice(index + 1, 0, occurrence)
+    })
 
     state.occurrences.filter.page += 1
   },
