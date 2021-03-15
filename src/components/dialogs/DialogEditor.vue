@@ -1,12 +1,23 @@
 <template>
   <el-dialog
     :visible.sync="dialogVisible"
-    :title="title"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
     append-to-body
     class="dialog-editor"
   >
+    <div
+      slot="title"
+      class="dialog-title"
+    >
+      <span v-if="title.length">
+        {{ title }}
+      </span>
+      <slot
+        v-else
+        name="title"
+      />
+    </div>
     <ckeditor
       ref="templateEditor"
       v-model="editorModel"
