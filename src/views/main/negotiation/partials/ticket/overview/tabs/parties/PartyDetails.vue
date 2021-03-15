@@ -222,7 +222,7 @@ export default {
       return oabsDto?.map(oab => {
         const { number, state } = oab
         return { ...oab, fullOab: number + state }
-      })
+      }) || []
     },
 
     isDisabled() {
