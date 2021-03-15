@@ -178,14 +178,20 @@ const getTracktitleByAction = function(action, batch) {
   return title
 }
 
+const getFormatedDate = (occurrence) => {
+  const onlyDate = (occurrence.updateAt?.dateTime || occurrence.createAt?.dateTime).split('T')[0]
+  return moment(onlyDate).format('YYYY-MM-DD')
+}
+
 export {
-  buildRoleTitle,
-  getRoleIcon,
   getRoles,
+  getRoleIcon,
   getFirstRole,
+  buildRoleTitle,
+  getFormatedDate,
+  getDocumentStep,
   getLastInteraction,
   getInteractionIcon,
-  getLastInteractionTooltip,
-  getDocumentStep,
-  getTracktitleByAction
+  getTracktitleByAction,
+  getLastInteractionTooltip
 }

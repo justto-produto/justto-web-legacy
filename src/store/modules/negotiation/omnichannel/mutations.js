@@ -1,14 +1,8 @@
 import Vue from 'vue'
-import moment from 'moment'
 
-import { eventBus } from '@/utils'
+import { eventBus, getFormatedDate } from '@/utils'
 
 import EDITOR_TABS from '@/constants/editor'
-
-function getFormatedDate(occurrence) {
-  const onlyDate = (occurrence.updateAt?.dateTime || occurrence.createAt?.dateTime).split('T')[0]
-  return moment(onlyDate).format('YYYY-MM-DD')
-}
 
 const omnichannelMutations = {
   setOmnichannelActiveTab: (state, tab) => {
@@ -56,7 +50,6 @@ const omnichannelMutations = {
     }).filter(el => el !== false)
 
     toInsert.reverse().forEach(({ occurrence, index }) => {
-      console.log(occurrence, index + 1)
       state.occurrences.list.splice(index + 1, 0, occurrence)
     })
 
