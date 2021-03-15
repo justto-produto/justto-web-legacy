@@ -18,10 +18,28 @@
       class="negotiator-container__content"
       v-html="message"
     />
+    <span class="negotiator-container__about">
+      <span class="negotiator-container__about__time">
+        {{ interaction.createAt.dateTime | moment('HH:mm') }}
+      </span>
+
+      <span v-if="status.icon">
+        •
+      </span>
+
+      <el-tooltip :content="status.tooltip">
+        <jus-icon
+          class="negotiator-container__about__icon"
+          :icon="status.icon"
+        />
+      </el-tooltip>
+    </span>
   </section>
 </template>
 
 <script>
+import { addInvisibleStatus } from '@/utils'
+
 export default {
   props: {
     value: {
@@ -63,7 +81,7 @@ export default {
           break
       }
 
-      return text
+      return addInvisibleStatus(text)
     },
 
     messageType() {
@@ -91,6 +109,15 @@ export default {
 
     contact() {
       return this.interaction?.properties?.PERSON_EMAIL || ''
+    },
+
+    status() {
+      const status = this.value?.properties?.DISPUTE_STATUS
+
+      return {
+        icon: status?.toLowerCase() || '',
+        tooltip: status ? `No momento desta ocorrência, esta disputa estava ${this.$t('dispute.status.' + status)}.` : ''
+      }
     }
   }
 }
@@ -103,6 +130,7 @@ export default {
   margin: 12px;
 
   .negotiator-container__content {
+    display: block;
     font-size: 16px;
     color: #3C3B3B;
 
@@ -120,6 +148,25 @@ export default {
     .negotiator-container__email-icon {
       width: 16px;
       margin-bottom: -3px;
+    }
+  }
+
+  .negotiator-container__about {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    gap: 6px;
+    margin-top: -12px;
+    font-size: 11px;
+
+    color: #3C3B3B;
+
+    .negotiator-container__about__time {
+      word-break: keep-all;
+    }
+
+    .negotiator-container__about__icon {
+      width: 14px;
     }
   }
 }

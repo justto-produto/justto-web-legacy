@@ -183,6 +183,10 @@ const getFormatedDate = (occurrence) => {
   return moment(onlyDate).format('YYYY-MM-DD')
 }
 
+const addInvisibleStatus = (text) => {
+  return text + '<div style="width: 56px; visibility: hidden; display: inline-block">.</div>'
+}
+
 export {
   getRoles,
   getRoleIcon,
@@ -190,6 +194,7 @@ export {
   buildRoleTitle,
   getFormatedDate,
   getDocumentStep,
+  addInvisibleStatus,
   getLastInteraction,
   getInteractionIcon,
   getTracktitleByAction,
