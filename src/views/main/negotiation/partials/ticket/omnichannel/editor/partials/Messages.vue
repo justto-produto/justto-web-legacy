@@ -26,6 +26,12 @@
       v-if="messageType === 'email'"
       class="messages-container__attachments"
     />
+    <span
+      class="messages-container__full-screen"
+      @click="openFullScreenEditor"
+    >
+      <i class="el-icon-full-screen" />
+    </span>
     <span class="messages-container__button">
       <el-button
         type="primary"
@@ -42,6 +48,9 @@
         />
       </el-button>
     </span>
+    <DialogEditor
+      ref="fullscreenEditor"
+    />
   </section>
 </template>
 
@@ -52,11 +61,14 @@ import { mapActions, mapGetters } from 'vuex'
 export default {
   components: {
     ckeditor: CKEditor.component,
-    Attachments: () => import('./AttachemntsIndicator')
+    Attachments: () => import('./AttachemntsIndicator'),
+    DialogEditor: () => import('@/components/dialogs/DialogEditor')
   },
+
   data: () => ({
     localLoading: false
   }),
+
   computed: {
     ...mapGetters({
       attachment: 'getTicketOverviewAttachments',
@@ -86,9 +98,11 @@ export default {
       return editorRecipients.length && !localLoading && editorReady
     }
   },
+
   beforeDestroy() {
     this.destroyEditor()
   },
+
   methods: {
     ...mapActions([
       'resetRecipients',
@@ -96,6 +110,10 @@ export default {
       'setEditorText',
       'sendMessage'
     ]),
+
+    openFullScreenEditor(_event) {
+      this.$refs.fullscreenEditor.openDialogEditor(this.editorText)
+    },
 
     send(_event) {
       this.localLoading = true
@@ -134,6 +152,14 @@ export default {
 
   .messages-container__editor {
     margin: 0px;
+  }
+
+  .messages-container__full-screen {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+
+    cursor: pointer;
   }
 
   .messages-container__attachments {
