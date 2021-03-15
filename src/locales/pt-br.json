@@ -38,6 +38,7 @@
         }
       }
     },
+    "courtHearingDate": "Data da audiência",
     "moralDamage": "valor dano moral",
     "negotiatorEmail": "email do negociador",
     "mappedStrategy": "nome da estratégia",
