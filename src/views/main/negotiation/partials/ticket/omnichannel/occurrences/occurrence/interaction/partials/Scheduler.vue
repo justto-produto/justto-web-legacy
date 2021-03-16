@@ -67,6 +67,10 @@ export default {
     hideContent: {
       type: Boolean,
       default: false
+    },
+    occurrence: {
+      type: Object,
+      required: true
     }
   },
   computed: {
@@ -129,6 +133,12 @@ export default {
     hasError() {
       return this.interaction?.message?.parameters?.FAILED_SEND
     }
+  },
+  updated() {
+    this.$set(this.occurrence, 'renderCompleted', true)
+  },
+  mounted() {
+    this.$set(this.value, 'renderCompleted', true)
   },
   methods: {
     ...mapActions([

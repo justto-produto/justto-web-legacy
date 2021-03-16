@@ -45,6 +45,10 @@ export default {
     value: {
       type: Object,
       required: true
+    },
+    occurrence: {
+      type: Object,
+      required: true
     }
   },
   computed: {
@@ -119,6 +123,12 @@ export default {
         tooltip: status ? `No momento desta ocorrência, esta disputa estava ${this.$t('dispute.status.' + status)}.` : ''
       }
     }
+  },
+  updated() {
+    this.$set(this.occurrence, 'renderCompleted', true)
+  },
+  mounted() {
+    this.$set(this.value, 'renderCompleted', true)
   }
 }
 </script>
