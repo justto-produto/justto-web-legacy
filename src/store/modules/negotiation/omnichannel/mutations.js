@@ -3,6 +3,7 @@ import Vue from 'vue'
 import { eventBus, getFormatedDate } from '@/utils'
 
 import EDITOR_TABS from '@/constants/editor'
+import { StateOccurrences } from '@/store/modules/negotiation/omnichannel/state'
 
 const omnichannelMutations = {
   setOmnichannelActiveTab: (state, tab) => {
@@ -18,12 +19,19 @@ const omnichannelMutations = {
 
   setMessageType: (state, type) => Vue.set(state.editor, 'messageType', type),
 
+  incrementRenderedOccurrence: (state) => {
+    Vue.set(state.occurrences, 'renderedCounts', state.occurrences.renderedCounts ? ++state.occurrences.renderedCounts : 1)
+  },
+
+  resetRenderedOccurrence: (state) => Vue.set(state.occurrences, 'renderedCounts', 0),
+
   setOccurrences: (state, { content }) => {
     const datas = state.occurrences.list.map((occurrence, index) => {
       if (occurrence.id === null) {
         return {
           index,
-          date: getFormatedDate(occurrence)
+          date: getFormatedDate(occurrence),
+          renderCompleted: occurrence.renderCompleted || false
         }
       }
       return false
@@ -31,11 +39,7 @@ const omnichannelMutations = {
 
     const toInsert = content.map(occurrence => {
       const exists = state.occurrences.list.filter(({ createAt, id }, index) => {
-        if (id === null && occurrence.id === null && occurrence.createAt.dateTime === createAt.dateTime) {
-          return true
-        } else {
-          return occurrence.id === id && occurrence.createAt.dateTime === createAt.dateTime
-        }
+        return occurrence.id === id && occurrence.createAt.dateTime === createAt.dateTime
       }).length === 0
 
       if (!exists) {
@@ -64,9 +68,7 @@ const omnichannelMutations = {
   },
 
   resetOccurrences: (state) => {
-    Vue.set(state.occurrences, 'list', [])
-    Vue.set(state.occurrences.filter, 'page', 1)
-    Vue.set(state.occurrences, 'countGetters', 0)
+    Vue.set(state, 'occurrences', new StateOccurrences())
   },
 
   addNegotiationOccurrence: (state, occurrence) => {

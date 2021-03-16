@@ -146,7 +146,6 @@ export default {
       this.localLoading = true
       const { id } = this.$route.params
       this.sendMessage(Number(id)).then(res => {
-        console.log('mensagem', res)
         this.resetRecipients()
         this.setEditorText('')
         this.$jusNotification({

@@ -29,7 +29,8 @@ const omnichannelGetters = {
     ...state.occurrences.filter,
     type: mapTabOccurrenceType[state.activeTab]
   }),
-  getSelectedAttachments: state => state.editor.attachments
+  getSelectedAttachments: state => state.editor.attachments,
+  getRenderedCounts: state => state.occurrences.renderedCounts
 }
 
 export default omnichannelGetters

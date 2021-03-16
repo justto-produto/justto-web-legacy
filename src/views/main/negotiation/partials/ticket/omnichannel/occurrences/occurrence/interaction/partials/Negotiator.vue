@@ -27,6 +27,10 @@ export default {
     value: {
       type: Object,
       required: true
+    },
+    occurrence: {
+      type: Object,
+      required: true
     }
   },
   computed: {
@@ -92,6 +96,12 @@ export default {
     contact() {
       return this.interaction?.properties?.PERSON_EMAIL || ''
     }
+  },
+  updated() {
+    this.$set(this.occurrence, 'renderCompleted', true)
+  },
+  mounted() {
+    this.$set(this.value, 'renderCompleted', true)
   }
 }
 </script>

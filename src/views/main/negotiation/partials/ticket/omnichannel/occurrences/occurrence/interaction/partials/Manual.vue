@@ -16,6 +16,10 @@ export default {
     value: {
       type: Object,
       required: true
+    },
+    occurrence: {
+      type: Object,
+      required: true
     }
   },
   computed: {
@@ -26,6 +30,12 @@ export default {
       const { USER, VALUE, PERSON_NAME } = this.interaction.properties
       return `Negociador(a) <strong>${USER}</strong> informou uma proposta realizada por <strong>${PERSON_NAME}</strong> no valor de <strong>${VALUE}</strong>`
     }
+  },
+  updated() {
+    this.$set(this.occurrence, 'renderCompleted', true)
+  },
+  mounted() {
+    this.$set(this.value, 'renderCompleted', true)
   }
 }
 </script>

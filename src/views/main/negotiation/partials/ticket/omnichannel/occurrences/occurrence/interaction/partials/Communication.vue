@@ -85,6 +85,10 @@ export default {
     value: {
       type: Object,
       required: true
+    },
+    occurrence: {
+      type: Object,
+      required: true
     }
   },
 
@@ -180,6 +184,12 @@ export default {
     hasError() {
       return this.interaction?.message?.parameters?.FAILED_SEND
     }
+  },
+  updated() {
+    this.$set(this.occurrence, 'renderCompleted', true)
+  },
+  mounted() {
+    this.$set(this.value, 'renderCompleted', true)
   },
   methods: {
     ...mapActions([

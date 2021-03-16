@@ -248,9 +248,16 @@ export default {
       return false
     }
   },
-
+  updated() {
+    this.$set(this.value, 'renderCompleted', true)
+  },
+  mounted() {
+    this.$set(this.value, 'renderCompleted', true)
+  },
   methods: {
-    ...mapActions(['getSummaryOccurrecies']),
+    ...mapActions([
+      'getSummaryOccurrecies'
+    ]),
 
     seeMore(communicationType, summaryRoleId) {
       const disputeId = this.$route.params.id
