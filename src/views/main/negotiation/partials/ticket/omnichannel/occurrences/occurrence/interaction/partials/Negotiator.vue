@@ -18,7 +18,7 @@
       class="negotiator-container__content"
       v-html="message"
     />
-    <span class="negotiator-container__about">
+    <span class="negotiator-container__about negotiation-occurrence-about">
       <span class="negotiator-container__about__time">
         {{ interaction.createAt.dateTime | moment('HH:mm') }}
       </span>
@@ -152,13 +152,6 @@ export default {
   }
 
   .negotiator-container__about {
-    display: flex;
-    justify-content: flex-end;
-    align-items: flex-end;
-    gap: 6px;
-    margin-top: -12px;
-    font-size: 11px;
-
     color: #3C3B3B;
 
     .negotiator-container__about__time {

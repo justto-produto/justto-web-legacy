@@ -4,7 +4,7 @@
       class="manual-container__text"
       v-html="text"
     />
-    <span class="communication-container__about">
+    <span class="communication-container__about negotiation-occurrence-about">
       {{ interaction.createAt.dateTime | moment('HH:mm') }}
     </span>
   </section>
@@ -45,11 +45,6 @@ export default {
   margin: 12px 6px;
 
   .communication-container__about {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: -12px;
-    font-size: 11px;
-
     color: #3C3B3B;
   }
 }

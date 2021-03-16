@@ -187,7 +187,7 @@ const getFormatedDate = (occurrence, customFormat = 'YYYY-MM-DD') => {
 }
 
 const addInvisibleStatus = (text) => {
-  return text + '<div style="width: 56px; visibility: hidden; display: inline-block">.</div>'
+  return text + '<div style="width: 60px; visibility: hidden; display: inline-block">.</div>'
 }
 
 export {
