@@ -442,9 +442,13 @@
       "ERROR" : "falha na importação"
     }
   },
-  "bankAccount": {
+  "bank-account": {
     "linkDisputeBankAccounts": "vinculada",
-    "unlinkDisputeBankAccounts": "desvinculada"
+    "unlinkDisputeBankAccounts": "desvinculada",
+    "type": {
+      "SAVING": "Poupança",
+      "CHECKING": "Corrente"
+    }
   },
   "tab": {
     "-1": "pré-Negociação",
