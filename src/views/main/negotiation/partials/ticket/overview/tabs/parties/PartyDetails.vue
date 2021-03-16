@@ -41,7 +41,7 @@
         @blur="stopEditing"
       />
       <div
-        v-else
+        v-else-if="!isDisabled"
         class="party-details__infoline-link"
       >
         <a @click="startEditing('birthday')">Adicionar</a>
@@ -61,7 +61,7 @@
         @change="updateParty($event, 'documentNumber')"
       />
       <div
-        v-else
+        v-else-if="!isDisabled"
         class="party-details__infoline-link"
       >
         <a @click="startEditing('documentNumber')">Adicionar</a>
@@ -330,7 +330,9 @@ export default {
       })
     },
     selectContact(value, key, type) {
-      this.addRecipient({ value, key, type })
+      if (!this.isDisabled) {
+        this.addRecipient({ value, key, type })
+      }
     }
   }
 }
