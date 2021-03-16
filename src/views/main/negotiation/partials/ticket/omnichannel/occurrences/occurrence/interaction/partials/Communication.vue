@@ -50,7 +50,7 @@
     </div>
 
     <div class="communication-container__about">
-      {{ sendDate[sendStatus] }}
+      {{ sendDate }}
       <span v-if="sendStatus !== 'default' && !directionIn">
         •
       </span>
@@ -77,7 +77,7 @@
 </template>
 
 <script>
-import { isSimilarStrings } from '@/utils'
+import { isSimilarStrings, getFormatedDate } from '@/utils'
 import { mapActions, mapGetters } from 'vuex'
 
 export default {
@@ -87,6 +87,7 @@ export default {
       required: true
     }
   },
+
   computed: {
     ...mapGetters({
       fullMessages: 'getFullMessages'
@@ -119,23 +120,18 @@ export default {
     },
 
     sendDate() {
-      const first = (first) => (first ? first.split(' ')[1] : '')
-      const defaultDate = this.interaction?.updateAt?.dateTime ? this.interaction.updateAt.dateTime : this.interaction.createAt.dateTime
-
-      return {
-        sent: first(this.interaction?.message?.parameters?.SEND_DATE),
-        readed: first(this.interaction?.message?.parameters?.READ_DATE),
-        recived: first(this.interaction?.message?.parameters?.RECEIVER_DATE),
-        default: this.$moment(defaultDate).format('HH:mm')
-      }
+      return getFormatedDate(this.interaction, 'HH:mm')
     },
 
     sendStatus() {
-      if (this.sendDate.readed) {
+      const parameters = this.interaction?.message?.parameters || {}
+      const keys = Object.keys(parameters)
+
+      if (keys.includes('READ_DATE')) {
         return 'readed'
-      } else if (this.sendDate.recived) {
+      } else if (keys.includes('RECEIVER_DATE')) {
         return 'recived'
-      } else if (this.sendDate.sent) {
+      } else if (keys.includes('SEND_DATE')) {
         return 'sent'
       } else {
         return 'default'
@@ -190,6 +186,7 @@ export default {
       'deleteFullMessage',
       'getFullMessage'
     ]),
+
     copyEmail(_event) {
       if (this.contact) {
         navigator.clipboard.writeText(this.contact)

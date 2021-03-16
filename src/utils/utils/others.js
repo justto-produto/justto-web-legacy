@@ -178,9 +178,10 @@ const getTracktitleByAction = function(action, batch) {
   return title
 }
 
-const getFormatedDate = (occurrence) => {
-  const onlyDate = (occurrence.updateAt?.dateTime || occurrence.createAt?.dateTime).split('T')[0]
-  return moment(onlyDate).format('YYYY-MM-DD')
+const getFormatedDate = (occurrence, customFormat = 'YYYY-MM-DD') => {
+  const date = (occurrence.updateAt?.dateTime || occurrence.createAt?.dateTime).replace('T', ' ').replace('Z', '')
+  console.log('getFormatedDate', date)
+  return moment(date).format(customFormat)
 }
 
 const addInvisibleStatus = (text) => {
