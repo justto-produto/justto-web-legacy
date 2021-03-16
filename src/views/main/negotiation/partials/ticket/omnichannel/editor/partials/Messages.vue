@@ -177,6 +177,15 @@ export default {
 
 <style lang="scss">
 .negotiator-fullscreen-editor {
+  .el-dialog__header {
+    margin: 10px 0px;
+    height: 30px;
+
+    .el-dialog__headerbtn {
+      top: 20px;
+    }
+  }
+
   .el-dialog__body {
     margin: 0px 0px 20px;
 
