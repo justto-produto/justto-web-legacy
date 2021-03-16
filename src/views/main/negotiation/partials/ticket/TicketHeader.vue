@@ -76,9 +76,13 @@ export default {
   }
 }
 
-@media (max-height: 680px) {
+@media (max-height: 900px) {
   .ticket-header-container {
-    height: 50px !important;
+    padding: 8px 12px;
+
+    .ticket-header-container__title {
+    font-size: 16px;
+    }
   }
 }
 

@@ -91,13 +91,17 @@ const overviewActions = {
     })
   },
 
-  setTicketOverviewParty({ _ }, params) {
+  setTicketOverviewParty({ commit }, params) {
     const { disputeId, data } = params
+
     return axiosDispatch({
       url: `${disputeApiLegacy}/${disputeId}/dispute-roles`,
       method: 'PUT',
-      data,
-      mutation: 'updateTicketOverviewParty'
+      data
+    }).then(response => {
+      commit('updateTicketOverviewParty', response.date)
+      commit('updateTicketItem', response.date)
+      return data
     })
   },
 

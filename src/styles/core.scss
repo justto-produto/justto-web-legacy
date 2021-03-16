@@ -229,3 +229,13 @@ a {
     display: none;
   }
 }
+
+.negotiation-occurrence-about {
+  display: flex;
+  align-self: flex-end;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: 6px;
+  font-size: 11px;
+  margin-top: -16px;
+}

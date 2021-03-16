@@ -82,6 +82,6 @@ export default class DisputeOverviewPartiesVm {
     this.emailsDto = emails.map(email => new EmailDto(email))
     this.oabsDto = oabs.map(oab => new OabDto(oab))
     this.bankAccountsDto = bankAccounts.map(bankAccount => new BankAccountDto(bankAccount))
-    this.legacyDto = party
+    this.legacyDto = role
   }
 }

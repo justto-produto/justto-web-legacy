@@ -74,7 +74,6 @@ export default {
 
 <style lang="scss" scoped>
 .recipients-container {
-  height: 48px;
   display: flex;
   align-items: center;
 

@@ -21,7 +21,7 @@
         />
       </el-tab-pane>
     </el-tabs>
-    <div class="editor-container__before-tabs">
+    <div class="editor-container__after-tabs">
       <quick-reply v-if="activeTab === 'MESSAGES'" />
       <recipients class="editor-container__recipients" />
     </div>
@@ -91,9 +91,21 @@ export default {
 </style>
 
 <style lang="scss">
-.el-tabs__header {
-  margin-bottom: 0px !important;
+.editor-container {
+  .el-tabs__header {
+    margin-bottom: 0px !important;
+
+    @media (max-height: 780px) {
+      .el-tabs__nav {
+        .el-tabs__item {
+          line-height: 30px;
+          height: auto;
+        }
+      }
+    }
+  }
 }
+
 .editor-container {
   position: relative;
 
@@ -101,18 +113,23 @@ export default {
     flex: 1;
   }
 
-  .editor-container__before-tabs {
+  .editor-container__after-tabs {
     position: absolute;
     top: 0;
-    right: 12px;
+    right: 0;
     width: 100%;
-    padding-left: 320px;
-    height: 45px;
+    padding-left: 312px;
+    padding-right: 12px;
+    height: 48px;
 
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+
+    @media (max-height: 780px) {
+      height: 36px;
+    }
   }
 
   .el-tabs__item {

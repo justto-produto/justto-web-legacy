@@ -62,7 +62,7 @@ export default {
     }
   }
 
-  @media (max-height: 680px) {
+  @media (max-height: 780px) {
     height: 40px !important;
     padding-left: 0px;
   }

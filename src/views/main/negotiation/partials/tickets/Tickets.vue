@@ -1,5 +1,8 @@
 <template>
-  <nav class="tickets-container">
+  <nav
+    v-loading="isLoading"
+    class="tickets-container"
+  >
     <TicketsHeader
       target-path="negotiation"
       :active-tab="activeTab"
@@ -64,7 +67,8 @@ export default {
   computed: {
     ...mapGetters({
       tickets: 'getTickets',
-      ticketsActiveTab: 'getTicketsActiveTab'
+      ticketsActiveTab: 'getTicketsActiveTab',
+      isLoading: 'getTicketsIsLoading'
     }),
 
     tabs() {
@@ -125,23 +129,23 @@ export default {
       switch (tab.name) {
         case 'pre-negotiation':
           this.setTicketsQuery({ key: 'status', value: ['PRE_NEGOTIATION'] })
-          this.setTicketsQuery({ key: 'sort', value: ['expirationDate,asc'] })
+          this.setTicketsQuery({ key: 'sort', value: ['expirationDate,asc', 'id,desc'] })
           break
         case 'engagement':
           this.setTicketsQuery({ key: 'status', value: ['IMPORTED', 'ENRICHED', 'ENGAGEMENT', 'PENDING'] })
-          this.setTicketsQuery({ key: 'sort', value: ['expirationDate,asc'] })
+          this.setTicketsQuery({ key: 'sort', value: ['expirationDate,asc', 'id,desc'] })
           break
         case 'running':
           this.setTicketsQuery({ key: 'status', value: ['RUNNING'] })
-          this.setTicketsQuery({ key: 'sort', value: ['visualized,asc', 'lastInboundInteraction.createdAt,desc', 'expirationDate,asc'] })
+          this.setTicketsQuery({ key: 'sort', value: ['visualized,asc', 'lastInboundInteraction.createdAt,desc', 'expirationDate,asc', 'id,desc'] })
           break
         case 'accepted':
           this.setTicketsQuery({ key: 'status', value: ['ACCEPTED', 'CHECKOUT'] })
-          this.setTicketsQuery({ key: 'sort', value: ['visualized,asc', 'conclusionDate,asc'] })
+          this.setTicketsQuery({ key: 'sort', value: ['visualized,asc', 'conclusionDate,asc', 'id,desc'] })
           break
         case 'finished':
           this.setTicketsQuery({ key: 'prescriptions', value: ['NEWLY_FINISHED'] })
-          this.setTicketsQuery({ key: 'sort', value: ['visualized,asc', 'conclusionDate,asc', 'lastInboundInteraction.createdAt,desc'] })
+          this.setTicketsQuery({ key: 'sort', value: ['visualized,asc', 'conclusionDate,asc', 'lastReceivedMessage,asc', 'id,desc'] })
           break
       }
 
@@ -206,6 +210,33 @@ export default {
     .el-tabs__nav-prev,
     .el-tabs__nav-next {
       font-size: 18px !important;
+    }
+
+    @media (max-height: 900px) {
+      padding: 6px 12px 10px;
+
+      .el-tabs__nav {
+        .el-tabs__item {
+          line-height: 38px;
+          height: auto;
+        }
+      }
+    }
+
+    @media (max-height: 780px) {
+      padding: 6px 12px 10px;
+
+      .el-tabs__nav {
+        .el-tabs__item {
+          line-height: 30px;
+          height: auto;
+        }
+      }
+
+      .el-tabs__nav-prev,
+      .el-tabs__nav-next {
+        line-height: 36px;
+      }
     }
   }
 

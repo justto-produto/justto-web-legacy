@@ -92,7 +92,7 @@
         </span>
       </span>
 
-      <span class="log-container__occurrence-about">
+      <span class="log-container__occurrence-about negotiation-occurrence-about">
         <span class="log-container__occurrence-about-time">
           {{ time | moment('HH:mm') }}
         </span>
@@ -120,16 +120,20 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import { addInvisibleStatus } from '@/utils'
+
 export default {
   components: {
     Scheduler: () => import('../interaction/partials/Scheduler')
   },
+
   props: {
     value: {
       type: Object,
       required: true
     }
   },
+
   data: () => ({
     loading: '',
     summaryTypes: ['EMAIL', 'WHATSAPP', 'SMS']
@@ -177,7 +181,7 @@ export default {
       if (this.occurrence?.type === 'INTERACTION' && this.occurrence?.interaction?.type === 'NEGOTIATOR_ACCESS') {
         text = 'Disputa visualizada'
       }
-      return text + '<div style="width: 56px; visibility: hidden;">.</div>'
+      return addInvisibleStatus(text)
     },
 
     isSummary() {
@@ -282,7 +286,7 @@ export default {
   justify-content: center;
   flex-direction: column;
   align-items: center;
-  margin: 10px;
+  margin: 10px 20px;
   gap: 0px;
 
   .log-container__occurrence {
@@ -315,7 +319,7 @@ export default {
           font-weight: bold;
           font-size: 16px;
 
-          @media (max-height: 680px) {
+          @media (max-height: 900px) {
             font-size: 14px;
           }
         }
@@ -350,7 +354,7 @@ export default {
     }
 
     &.normal {
-      padding: 6px;
+      padding: 12px;
     }
 
     .log-container__occurrence-text {
@@ -369,20 +373,13 @@ export default {
       .log-container__occurrence-text__content {
         font-size: 16px;
 
-        @media (max-height: 680px) {
+        @media (max-height: 900px) {
           font-size: 14px;
         }
       }
     }
 
     .log-container__occurrence-about {
-      margin-top: -12px;
-      font-size: 11px;
-      align-self: flex-end;
-      display: flex;
-      gap: 6px;
-      align-items: flex-end;
-
       .log-container__occurrence-about-time {
         word-break: keep-all;
       }
