@@ -18,6 +18,10 @@ export default {
     value: {
       type: Object,
       required: true
+    },
+    occurrence: {
+      type: Object,
+      required: true
     }
   },
   computed: {
@@ -31,6 +35,12 @@ export default {
 
       return addInvisibleStatus(text)
     }
+  },
+  updated() {
+    this.$set(this.occurrence, 'renderCompleted', true)
+  },
+  mounted() {
+    this.$set(this.value, 'renderCompleted', true)
   }
 }
 </script>

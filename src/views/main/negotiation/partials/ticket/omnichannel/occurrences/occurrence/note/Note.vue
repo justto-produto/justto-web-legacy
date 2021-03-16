@@ -67,6 +67,12 @@ export default {
       return this.value.description + '<span style="display: inline-block; width: 36px" />'
     }
   },
+  updated() {
+    this.$set(this.value, 'renderCompleted', true)
+  },
+  mounted() {
+    this.$set(this.value, 'renderCompleted', true)
+  },
   methods: {
     ...mapActions([
       'deleteTicketNote',

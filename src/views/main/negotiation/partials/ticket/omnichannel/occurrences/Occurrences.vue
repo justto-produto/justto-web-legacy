@@ -5,8 +5,8 @@
   >
     <div class="occurrences-container__occurrences">
       <infinite-loading
-        :identifier="activeTab"
-        :distance="1000"
+        :identifier="infiniteLoadingIdentifier"
+        :distance="680"
         spinner="spiral"
         direction="top"
         @infinite="loadOccurrences"
@@ -57,11 +57,13 @@ export default {
       ticket: 'getTicketOverview',
       filter: 'getOccurrencesFilter',
       occurrences: 'getOccurrencesList',
-      messageType: 'getEditorMessageType',
-      getOccurrencesFilter: 'getOccurrencesFilter'
+      messageType: 'getEditorMessageType'
     }),
+    infiniteLoadingIdentifier() {
+      return `${this.activeTab}-${this.id}`
+    },
     countRendereds() {
-      return this.occurrences.filter(o => o.renderCompleted).length
+      return this.occurrences.filter(o => (o.renderCompleted) || (o.interaction && o.interaction.countRendereds)).length
     },
     id() {
       return this.$route.params.id
@@ -79,7 +81,6 @@ export default {
     '$route.params.id'() {
       this.resetRecipients()
       this.resetOccurrences()
-      this.getOccurrences(this.id)
     },
     'countRendereds'() {
       this.adjustScroll()
@@ -105,7 +106,7 @@ export default {
     ]),
 
     adjustScroll(force = false) {
-      if (this.getOccurrencesFilter.page === 1 || force) {
+      if (this.filter.page <= 2 || force) {
         const omni = document.getElementsByClassName('occurrences-container omnichannel-container__occurrences')[0]
         omni.scrollTo({ top: omni.scrollHeight })
       }
