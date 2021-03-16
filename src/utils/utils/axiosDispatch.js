@@ -14,6 +14,10 @@ const axiosDispatch = (params) => {
         if (params.payload) store.commit(params.mutation, { data: response.data, payload: params.payload })
         else store.commit(params.mutation, response.data)
       }
+      if (params.action) {
+        if (params.payload) store.dispatch(params.action, { data: response.data, payload: params.payload })
+        else store.dispatch(params.action, response.data)
+      }
       resolve(response.data)
     }).catch(error => {
       reject(error)
