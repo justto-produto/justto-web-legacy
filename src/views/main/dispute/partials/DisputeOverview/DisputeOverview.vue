@@ -2493,7 +2493,7 @@ export default {
         this.$jusNotification({
           title: 'Yay!',
           dangerouslyUseHTMLString: true,
-          message: 'Conta bancária <strong>' + this.$t('bankAccount.' + action).toUpperCase() + '</strong> à disputa com sucesso.',
+          message: 'Conta bancária <strong>' + this.$t('bank-account.' + action).toUpperCase() + '</strong> à disputa com sucesso.',
           type: 'success'
         })
         setTimeout(function() {

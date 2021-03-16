@@ -47,7 +47,7 @@
       class="party-contacts__infoline-link"
     >
       <a @click="toggleContactsVisible">
-        {{ !isAllContactsVisible ? `Ver mais (+${contactsLength - 3})` : `Ver menos (-${contactsLength - 3})` }}
+        {{ expandLinkText }}
       </a>
     </div>
   </article>
@@ -101,6 +101,10 @@ export default {
     },
     contactsLength() {
       return this.contacts.length
+    },
+    expandLinkText() {
+      const { isAllContactsVisible, contactsLength } = this
+      return !isAllContactsVisible ? `Ver mais (+${contactsLength - 3})` : `Ver menos (-${contactsLength - 3})`
     },
     processedContacts() {
       const { contacts } = this
