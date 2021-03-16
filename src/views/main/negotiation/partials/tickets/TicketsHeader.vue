@@ -102,10 +102,10 @@ export default {
   }
 }
 
-@media (max-height: 680px) {
+@media (max-height: 900px) {
   .tickets-header-container {
     .tickets-header-container__input {
-      padding: 5px;
+      padding: 8px;
     }
   }
 }

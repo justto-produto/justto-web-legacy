@@ -61,7 +61,7 @@ export default {
   },
   methods: {
     ...mapActions([
-      'disputeSetVisualized',
+      'setTicketVisualized',
       'getTicketOverview',
       'getDisputeTags',
       'getLastTicketOffers',
@@ -77,7 +77,7 @@ export default {
       this.getDisputeTags(id)
       this.getLastTicketOffers(id)
       this.getQuickReplyTemplates(id)
-      this.disputeSetVisualized({
+      this.setTicketVisualized({
         visualized: true,
         disputeId: Number(id),
         anonymous: this.isJusttoAdmin && this.isGhost

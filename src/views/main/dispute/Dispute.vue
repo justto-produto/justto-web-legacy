@@ -1080,7 +1080,7 @@ export default {
       .ql-toolbar {
         display: inherit;
 
-        @media (max-height: 680px) {
+        @media (max-height: 780px) {
           padding-bottom: 0px;
         }
       }
@@ -1158,7 +1158,7 @@ export default {
   }
   &__send-message-actions {
     margin-top: 6px;
-    @media (max-height: 680px) {
+    @media (max-height: 780px) {
       margin-top: 0px;
     }
 

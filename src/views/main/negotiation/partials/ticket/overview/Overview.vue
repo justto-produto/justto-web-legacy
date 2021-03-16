@@ -199,10 +199,20 @@ export default {
 
 @media (max-height: 900px) {
   .overview-container {
-    gap: 12px;
+    gap: 10px;
 
     .overview-container__title {
-      font-size: 22px;
+      font-size: 20px;
+    }
+  }
+}
+
+@media (max-height: 780px) {
+  .overview-container {
+    gap: 6px;
+
+    .overview-container__title {
+      font-size: 20px;
     }
   }
 }

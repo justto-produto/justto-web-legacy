@@ -247,7 +247,7 @@ export default {
     font-size: 16px;
     color: #3C3B3B;
 
-    @media (max-height: 680px) {
+    @media (max-height: 900px) {
       font-size: 14px;
     }
 
@@ -274,7 +274,7 @@ export default {
   }
 }
 
-@media (max-height: 680px) {
+@media (max-height: 900px) {
   .communication-container {
     .communication-container__message {
       font-size: 14px;

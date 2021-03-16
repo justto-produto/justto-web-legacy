@@ -70,13 +70,8 @@ export default {
 
 <style lang="scss" scoped>
 .popover-link-inline-editor {
-  .popover-link-inline-editor__popover {
-    // text-align: center;
-    // display: block;
-  }
-
   .popover-link-inline-editor__link {
-    font-size: 13px;
+    font-size: 14px;
     line-height: normal;
   }
 }

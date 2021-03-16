@@ -59,12 +59,22 @@ const ticketsMutations = {
     }
   },
 
-  incrementTicketsGettersCounter: (state) => (state.ticketsGettersCounter += 1),
-  decrementTicketsGettersCounter: (state) => {
-    if (state.ticketsGettersCounter > 0) {
-      (state.ticketsGettersCounter -= 1)
+  setTicketVisualized: ({ tickets }, { payload }) => {
+    const { content } = tickets
+    const { disputeId, visualized, anonymous } = payload
+
+    if (!anonymous) {
+      const ticketIndex = getTicketIndex(content, disputeId)
+      Vue.set(content[ticketIndex], 'visualized', visualized)
     }
   },
+
+  incrementTicketsGettersCounter: (state) => (state.ticketsGettersCounter += 1),
+
+  decrementTicketsGettersCounter: (state) => {
+    if (state.ticketsGettersCounter > 0) state.ticketsGettersCounter -= 1
+  },
+
   resetTicketsGettersCounter: (state) => Vue.set(state, 'ticketsGettersCounter', 0)
 }
 

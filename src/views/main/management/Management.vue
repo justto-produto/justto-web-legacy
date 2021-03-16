@@ -930,7 +930,7 @@ export default {
 
   .view-management__tabs {
     .el-tabs__header  {
-      @media (max-height: 680px) {
+      @media (max-height: 780px) {
         margin: 0 0 8px;
       }
     }

@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'TicketActions',
@@ -63,6 +63,11 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      isGhost: 'ghostMode',
+      isJusttoAdmin: 'isJusttoAdmin'
+    }),
+
     actionsList() {
       return [
         {
@@ -198,7 +203,7 @@ export default {
   },
   methods: {
     ...mapActions([
-      'setVisualized',
+      'setTicketVisualized',
       'deleteTicket',
       'startNegotiation',
       'enrichTicket',
@@ -277,7 +282,11 @@ export default {
     handleSetUnread(action) {
       const { disputeId } = this.ticket
 
-      this.setVisualized({ disputeId, visualized: false, anonymous: false })
+      this.setTicketVisualized({
+        disputeId,
+        visualized: false,
+        anonymous: this.isJusttoAdmin && this.isGhost
+      })
         .then(() => {
           this.concludeAction(action, disputeId)
           this.$router.push('/negotiation')
@@ -448,13 +457,13 @@ export default {
     border-radius: 6px;
 
     .ticket-actions__icons {
-      width: 22px;
-      height: 22px;
+      width: 20px;
+      height: 20px;
     }
   }
 
   .ticket-actions__more-actions {
-    margin-left: 10px;
+    margin-left: 8px;
     &--hidden { display: none }
   }
 }
@@ -468,6 +477,22 @@ export default {
     }
     .ticket-actions__more-actions {
       &--hidden { display: block }
+    }
+  }
+}
+@media (max-height: 900px) {
+  .ticket-actions {
+    .ticket-actions__buttons {
+      margin-left: 8px;
+    }
+    .ticket-actions__buttons {
+      .ticket-actions__icons {
+        width: 18px;
+        height: 18px;
+      }
+    }
+    .ticket-actions__more-actions {
+      margin-left: 0px;
     }
   }
 }

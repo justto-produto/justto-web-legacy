@@ -596,18 +596,18 @@ export default {
 .management-table__container {
   height: calc(100% - 114px);
 
-  @media (max-height: 680px) {
+  @media (max-height: 780px) {
     height: calc(100% - 93px);
   }
 }
 
 .management-table {
-  @media (max-height: 680px) {
+  @media (max-height: 780px) {
     margin-bottom: 0;
   }
 
   th {
-    @media (max-height: 680px) {
+    @media (max-height: 780px) {
       padding: 2px 0 4px 0;
       height: 100%;
     }

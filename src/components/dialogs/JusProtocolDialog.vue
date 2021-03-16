@@ -1059,7 +1059,7 @@ export default {
     .el-dialog {
       .el-dialog__body {
         height: calc(100vh - 200px);
-        @media (max-height: 640px) {
+        @media (max-height: 780px) {
           margin: 10px;
           height: calc(100vh - 120px);
         }
