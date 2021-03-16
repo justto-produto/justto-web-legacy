@@ -138,7 +138,6 @@ export default {
     },
 
     ready() {
-      console.log('Editor está pronto.')
       this.editorReady = true
     },
 

@@ -50,7 +50,7 @@
     </div>
 
     <div class="communication-container__about">
-      {{ sendDate }}
+      {{ sendDate | moment('HH:mm') }}
       <span v-if="sendStatus !== 'default' && !directionIn">
         •
       </span>
