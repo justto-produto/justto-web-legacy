@@ -18,6 +18,10 @@ export default {
     value: {
       type: Object,
       required: true
+    },
+    occurrence: {
+      type: Object,
+      required: true
     }
   },
   computed: {
@@ -31,6 +35,12 @@ export default {
 
       return addInvisibleStatus(text)
     }
+  },
+  updated() {
+    this.$set(this.occurrence, 'renderCompleted', true)
+  },
+  mounted() {
+    this.$set(this.value, 'renderCompleted', true)
   }
 }
 </script>
@@ -46,10 +56,6 @@ export default {
 
   .communication-container__about {
     color: #3C3B3B;
-
-    @media (max-height: 900px) {
-      font-size: 14px;
-    }
   }
 }
 </style>

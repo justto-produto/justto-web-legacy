@@ -5,8 +5,14 @@
 </template>
 
 <script>
-export default {
 
+export default {
+  updated() {
+    this.$set(this.value, 'renderCompleted', true)
+  },
+  mounted() {
+    this.$set(this.value, 'renderCompleted', true)
+  }
 }
 </script>
 
