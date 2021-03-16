@@ -9,6 +9,7 @@
       :before-close="handleBeforeClose"
     >
       <div
+        v-if="toShow"
         v-loading="loading"
         class="dialog-body"
       >
