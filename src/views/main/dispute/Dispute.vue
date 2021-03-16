@@ -469,7 +469,8 @@ export default {
         }
       },
       isDeletingRole: false,
-      deletingRoleText: 'Por favor, aguarde enquanto carregamos a disputa...'
+      deletingRoleText: 'Por favor, aguarde enquanto carregamos a disputa...',
+      inReplyTo: null
     }
   },
   computed: {
@@ -712,6 +713,7 @@ export default {
       }
       this.activeRoleId = 0
       this.directContactAddress = senders
+      this.inReplyTo = params.inReplyTo
     },
 
     setMessageType(type) {
@@ -744,6 +746,7 @@ export default {
     },
 
     removeReply() {
+      this.inReplyTo = null
       this.directContactAddress = []
       const message = this.$refs.messageEditor.quill.getText()
       const messageIndex = message.indexOf('\n\n___________________')
@@ -893,6 +896,7 @@ export default {
             })
           }
           const externalIdentification = +new Date()
+          const inReplyTo = this.inReplyTo
           for (const contact of this.selectedContacts) {
             this.addLoadingOccurrence({
               message: this.$refs.messageEditor.quill.getText(),
@@ -905,7 +909,8 @@ export default {
             to,
             message: quillMessage,
             disputeId: this.dispute.id,
-            externalIdentification
+            externalIdentification,
+            inReplyTo
           }
           if (this.messageType === 'email') messageData.attachments = this.selectedAttachments
           this.$store.dispatch('send' + this.messageType, messageData).then(() => {
