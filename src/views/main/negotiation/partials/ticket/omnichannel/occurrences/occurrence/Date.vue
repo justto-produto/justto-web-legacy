@@ -7,8 +7,6 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
-
 export default {
   props: {
     value: {
@@ -28,11 +26,6 @@ export default {
   },
   mounted() {
     this.$set(this.value, 'renderCompleted', true)
-  },
-  methods: {
-    ...mapActions([
-      'incrementRenderedOccurrence'
-    ])
   }
 }
 </script>

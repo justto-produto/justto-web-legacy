@@ -19,12 +19,6 @@ const omnichannelMutations = {
 
   setMessageType: (state, type) => Vue.set(state.editor, 'messageType', type),
 
-  incrementRenderedOccurrence: (state) => {
-    Vue.set(state.occurrences, 'renderedCounts', state.occurrences.renderedCounts ? ++state.occurrences.renderedCounts : 1)
-  },
-
-  resetRenderedOccurrence: (state) => Vue.set(state.occurrences, 'renderedCounts', 0),
-
   setOccurrences: (state, { content }) => {
     const datas = state.occurrences.list.map((occurrence, index) => {
       if (occurrence.id === null) {

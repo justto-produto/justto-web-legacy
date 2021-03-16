@@ -57,9 +57,7 @@ export default {
       ticket: 'getTicketOverview',
       filter: 'getOccurrencesFilter',
       occurrences: 'getOccurrencesList',
-      messageType: 'getEditorMessageType',
-      getOccurrencesFilter: 'getOccurrencesFilter',
-      getRenderedCounts: 'getRenderedCounts'
+      messageType: 'getEditorMessageType'
     }),
     infiniteLoadingIdentifier() {
       return `${this.activeTab}-${this.id}`
@@ -108,7 +106,7 @@ export default {
     ]),
 
     adjustScroll(force = false) {
-      if (this.getOccurrencesFilter.page <= 2 || force) {
+      if (this.filter.page <= 2 || force) {
         const omni = document.getElementsByClassName('occurrences-container omnichannel-container__occurrences')[0]
         omni.scrollTo({ top: omni.scrollHeight })
       }

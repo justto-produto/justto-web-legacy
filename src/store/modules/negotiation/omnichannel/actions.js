@@ -104,11 +104,8 @@ const omnichannelActions = {
   resetRecipients: ({ commit }) => commit('resetRecipients'),
 
   resetOccurrences: ({ commit }) => {
-    commit('resetRenderedOccurrence')
     commit('resetOccurrences')
   },
-
-  incrementRenderedOccurrence: ({ commit }) => commit('incrementRenderedOccurrence'),
 
   sendMessage({ dispatch, getters }, disputeId) {
     const {
