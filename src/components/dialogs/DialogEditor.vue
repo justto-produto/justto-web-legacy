@@ -37,7 +37,7 @@
     <el-input
       v-else
       :value="editorModel"
-      :rows="12"
+      :rows="18"
       type="textarea"
       resize="none"
       @input="setModel"
@@ -104,6 +104,7 @@ export default {
   computed: {
     editorConfig() {
       return {
+        height: '50vh',
         parent: 'dialog-editor',
         toolbarGroups: [
           { name: 'document', groups: ['mode', 'document', 'doctools'] },

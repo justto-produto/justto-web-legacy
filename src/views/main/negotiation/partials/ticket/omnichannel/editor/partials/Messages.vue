@@ -122,7 +122,7 @@ export default {
     },
 
     dialogWidth() {
-      return window.innerWidth <= 900 ? '100%' : '75%'
+      return window.innerWidth <= 900 ? '100%' : '50%'
     }
   },
 
