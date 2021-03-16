@@ -229,7 +229,7 @@ export default {
       display: none;
     }
 
-    @media (max-height: 680px) {
+    @media (max-height: 6780) {
       margin: 2px 0;
     }
   }

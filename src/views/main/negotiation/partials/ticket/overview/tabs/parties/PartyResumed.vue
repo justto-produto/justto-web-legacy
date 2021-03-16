@@ -9,7 +9,9 @@
         :icon="partyType"
       />
       <article>
-        {{ party.name | resumedName }}
+        <span class="party-resumed__header-name">
+          {{ party.name | resumedName }}
+        </span>
         <div
           v-if="party.polarity === 'CLAIMANT' && party.documentNumber && !(['lawyer'].includes(partyType) && party.oabs && party.oabs.length)"
           :class="{ 'party-resumed__header-document--hidden': isActiveCollapseItem }"
@@ -121,15 +123,27 @@ export default {
     &--hidden { max-height: 0; opacity: 0; }
   }
 }
+
+@media (max-height: 900px) {
+  .party-resumed {
+    .party-resumed__header-name {
+      font-size: 16px;
+    }
+
+    .party-resumed__header-document {
+      font-size: 12px;
+    }
+  }
+}
 </style>
 
 <style lang="scss">
 .party-resumed {
   .el-collapse-item__header {
-    padding: 12px 0;
+    padding: 10px 0;
     height: auto;
     line-height: normal;
-    min-height: 62px;
+    min-height: 60px;
   }
 }
 </style>

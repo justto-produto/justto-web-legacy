@@ -8,9 +8,17 @@
         v-model="party.polarity"
         :options="roleOptions"
         :width="200"
+        class="party-details__infoline-link"
         label="Trocar polaridade"
         @change="updatePolarity"
       />
+      <a
+        v-if="!isDisabled"
+        class="party-details__infoline-link party-details__infoline-link--danger"
+        @click="removeParty"
+      >
+        <i class="el-icon-delete" />
+      </a>
     </div>
 
     <div class="party-details__infoline">
@@ -138,18 +146,6 @@
         :value="bankAccounts"
         class="party-details__infoline-data"
       />
-    </div>
-
-    <div
-      v-if="!isDisabled"
-      class="party-details__infoline party-details__infoline--center"
-    >
-      <a
-        class="party-details__infoline-link party-details__infoline-link--danger"
-        @click="removeParty"
-      >
-        Excluir
-      </a>
     </div>
   </article>
 </template>
@@ -354,10 +350,6 @@ export default {
     .party-details__infoline-link {
       line-height: normal;
       margin: 3px 0 3px 18px;
-      &--danger {
-        color: $--color-danger;
-        &:hover { color: $--color-danger-light-3 }
-      }
     }
 
     &--center {
@@ -365,6 +357,30 @@ export default {
       display: flex;
       justify-content: center;
       margin: 3px 0;
+      position: relative;
+
+      .party-details__infoline-link {
+        margin: 0;
+        margin-bottom: 3px;
+
+        &--danger {
+          color: $--color-danger;
+          position: absolute;
+          top: 0;
+          right: 0;
+          opacity: 0;
+          transition: .2s ease-out;
+          &:hover { color: $--color-danger-light-3; }
+        }
+      }
+    }
+  }
+
+  &:hover {
+    .party-details__infoline--center {
+      .party-details__infoline-link--danger {
+        opacity: 1;
+      }
     }
   }
 }

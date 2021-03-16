@@ -197,6 +197,27 @@ export default {
     font-size: 12px;
   }
 }
+
+@media (max-height: 900px) {
+  .communication-ticket-item-container {
+    padding: 18px 18px 18px 23px;
+
+    .communication-ticket-item-container__resume {
+      margin: 4px 0px 4px 12px;
+
+      .communication-ticket-item-container__parties {
+        margin-bottom: 4px;
+
+        .communication-ticket-item-container__plaintiff {
+          font-size: 14px;
+        }
+        .communication-ticket-item-container__negotiator {
+          font-size: 12px;
+        }
+      }
+    }
+  }
+}
 </style>
 
 <style lang="scss">

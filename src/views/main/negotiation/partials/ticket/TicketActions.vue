@@ -448,13 +448,13 @@ export default {
     border-radius: 6px;
 
     .ticket-actions__icons {
-      width: 22px;
-      height: 22px;
+      width: 20px;
+      height: 20px;
     }
   }
 
   .ticket-actions__more-actions {
-    margin-left: 10px;
+    margin-left: 8px;
     &--hidden { display: none }
   }
 }
@@ -468,6 +468,22 @@ export default {
     }
     .ticket-actions__more-actions {
       &--hidden { display: block }
+    }
+  }
+}
+@media (max-height: 900px) {
+  .ticket-actions {
+    .ticket-actions__buttons {
+      margin-left: 8px;
+    }
+    .ticket-actions__buttons {
+      .ticket-actions__icons {
+        width: 18px;
+        height: 18px;
+      }
+    }
+    .ticket-actions__more-actions {
+      margin-left: 0px;
     }
   }
 }

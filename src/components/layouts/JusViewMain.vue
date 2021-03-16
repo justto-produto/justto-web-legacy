@@ -105,8 +105,8 @@ export default {
       margin: 20px;
     }
 
-    @media (max-height: 680px) {
-      padding: 5px;
+    @media (max-height: 780px) {
+      padding: 6px;
     }
   }
   &__main-card {
@@ -154,7 +154,7 @@ export default {
     overflow-y: auto;
 
     .el-card__body {
-      @media (max-height: 680px) {
+      @media (max-height: 780px) {
         padding: 10px;
       }
     }

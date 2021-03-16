@@ -33,7 +33,7 @@
   margin-bottom: 10px;
   font-weight: bold;
 
-  @media (max-height: 640px) {
+  @media (max-height: 780px) {
     margin-top: 0;
   }
 }
@@ -47,7 +47,7 @@
 .el-dialog__footer {
   padding: 0 20px 20px;
 
-  @media (max-height: 640px) {
+  @media (max-height: 780px) {
     padding-bottom: 10px;
   }
 }

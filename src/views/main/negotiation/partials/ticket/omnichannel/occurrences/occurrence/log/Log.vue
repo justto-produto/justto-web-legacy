@@ -308,7 +308,7 @@ export default {
           font-weight: bold;
           font-size: 16px;
 
-          @media (max-height: 680px) {
+          @media (max-height: 900px) {
             font-size: 14px;
           }
         }
@@ -362,7 +362,7 @@ export default {
       .log-container__occurrence-text__content {
         font-size: 16px;
 
-        @media (max-height: 680px) {
+        @media (max-height: 900px) {
           font-size: 14px;
         }
       }

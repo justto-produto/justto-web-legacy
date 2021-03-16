@@ -161,14 +161,24 @@ export default {
 @media (max-height: 900px) {
   .overview-offers {
     .overview-offers__proposal {
-      font-size: 15px;
+      font-size: 14px;
 
       .overview-offers__proposal-value {
-        font-size: 19px;
+        font-size: 18px;
       }
 
       &--defendant {
-        margin-top: 10px;
+        margin-top: 8px;
+      }
+    }
+  }
+}
+
+@media (max-height: 780px) {
+  .overview-offers {
+    .overview-offers__proposal {
+      &--defendant {
+        margin-top: 4px;
       }
     }
   }
