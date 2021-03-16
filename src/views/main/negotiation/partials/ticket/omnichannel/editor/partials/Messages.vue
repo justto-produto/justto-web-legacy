@@ -57,10 +57,13 @@
       @confirm="send"
       @input="setEditorText"
     >
-      <Recipients
+      <div
         slot="title"
-        is-reversed
-      />
+        class="title-slot"
+      >
+        <Recipients is-reversed />
+        <QuickReply show-title />
+      </div>
     </DialogEditor>
   </section>
 </template>
@@ -72,6 +75,7 @@ import { mapActions, mapGetters } from 'vuex'
 export default {
   components: {
     ckeditor: CKEditor.component,
+    QuickReply: () => import('./QuickReply'),
     Recipients: () => import('./Recipients'),
     Attachments: () => import('./AttachemntsIndicator'),
     DialogEditor: () => import('@/components/dialogs/DialogEditor')
@@ -179,7 +183,14 @@ export default {
 .negotiator-fullscreen-editor {
   .el-dialog__header {
     margin: 10px 0px;
-    height: 30px;
+    height: 40px;
+
+    .dialog-title > .title-slot {
+      display: flex;
+      justify-content: flex-start;
+      gap: 12px;
+      align-items: center;
+    }
 
     .el-dialog__headerbtn {
       top: 20px;
