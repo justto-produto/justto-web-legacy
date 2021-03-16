@@ -1,5 +1,8 @@
 <template>
-  <nav class="tickets-container">
+  <nav
+    v-loading="isLoading"
+    class="tickets-container"
+  >
     <TicketsHeader
       target-path="negotiation"
       :active-tab="activeTab"
@@ -64,7 +67,8 @@ export default {
   computed: {
     ...mapGetters({
       tickets: 'getTickets',
-      ticketsActiveTab: 'getTicketsActiveTab'
+      ticketsActiveTab: 'getTicketsActiveTab',
+      isLoading: 'getTicketsIsLoading'
     }),
 
     tabs() {

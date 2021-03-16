@@ -25,13 +25,14 @@ const getCorrespondingTab = disputeStatus => {
 }
 
 const overviewActions = {
-  getTickets({ state, dispatch }, command) {
+  getTickets({ state, dispatch, commit }, command) {
+    commit('incrementTicketsGettersCounter')
     if (command !== 'nextPage') dispatch('setTicketsQuery', { key: 'page', value: 1 })
     return axiosDispatch({
       url: `${disputeApi}/filter${buildQuery(state.ticketsQuery)}`,
       mutation: 'setCommunicationTickets',
       payload: command || 'firstPage'
-    })
+    }).finally(() => commit('decrementTicketsGettersCounter'))
   },
 
   getTicketsNextPage({ commit, dispatch }) {

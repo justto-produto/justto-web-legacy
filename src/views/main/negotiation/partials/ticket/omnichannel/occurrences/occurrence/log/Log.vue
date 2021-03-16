@@ -279,7 +279,7 @@ export default {
   justify-content: center;
   flex-direction: column;
   align-items: center;
-  margin: 10px;
+  margin: 10px 20px;
   gap: 0px;
 
   .log-container__occurrence {
@@ -347,7 +347,7 @@ export default {
     }
 
     &.normal {
-      padding: 6px;
+      padding: 12px;
     }
 
     .log-container__occurrence-text {
