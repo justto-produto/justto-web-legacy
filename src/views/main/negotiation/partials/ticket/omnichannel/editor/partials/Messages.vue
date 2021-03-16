@@ -9,7 +9,7 @@
       v-show="editorReady"
       ref="messageEditor"
       :value="editorText"
-      :config="editorConfig"
+      :config="config"
       class="messages-container__editor"
       @ready="setEditorReady(true)"
       @input="setEditorText"
@@ -49,8 +49,17 @@
       </el-button>
     </span>
     <DialogEditor
-      ref="fullscreenEditor"
-    />
+      ref="fullScreenEditor"
+      :text-only="!showCKEditor"
+      :width="dialogWidth"
+      button-confirm="Enviar"
+      custom-class="negotiator-fullscreen-editor"
+    >
+      <Recipients
+        slot="title"
+        is-reversed
+      />
+    </DialogEditor>
   </section>
 </template>
 
@@ -61,6 +70,7 @@ import { mapActions, mapGetters } from 'vuex'
 export default {
   components: {
     ckeditor: CKEditor.component,
+    Recipients: () => import('./Recipients'),
     Attachments: () => import('./AttachemntsIndicator'),
     DialogEditor: () => import('@/components/dialogs/DialogEditor')
   },
@@ -79,6 +89,7 @@ export default {
       editorConfig: 'getEditorConfig',
       editorText: 'getEditorText'
     }),
+
     editorReady: {
       get() {
         return this.getEditorReady
@@ -87,15 +98,29 @@ export default {
         this.setEditorReady(value)
       }
     },
+
+    config() {
+      return {
+        parent: 'message-editor',
+        ...this.editorConfig
+      }
+    },
+
     body() {
       return this.editorText
     },
+
     showCKEditor() {
       return !['sms', 'whatsapp'].includes(this.messageType)
     },
+
     canSendMessage() {
       const { editorRecipients, localLoading, editorReady } = this
       return editorRecipients.length && !localLoading && editorReady
+    },
+
+    dialogWidth() {
+      return window.innerWidth <= 900 ? '100%' : '75%'
     }
   },
 
@@ -112,7 +137,7 @@ export default {
     ]),
 
     openFullScreenEditor(_event) {
-      this.$refs.fullscreenEditor.openDialogEditor(this.editorText)
+      this.$refs.fullScreenEditor.openDialogEditor(this.showCKEditor ? this.editorText : this.editorTextScaped)
     },
 
     send(_event) {
@@ -137,12 +162,26 @@ export default {
     destroyEditor() {
       this.editorReady = false
       for (const instance of Object.values(window.CKEDITOR.instances)) {
-        instance.destroy()
+        if (instance.config.parent === 'message-editor') {
+          instance.destroy()
+        }
       }
     }
   }
 }
 </script>
+
+<style lang="scss">
+.negotiator-fullscreen-editor {
+  .el-dialog__body {
+    margin: 0px 0px 20px;
+
+    .el-textarea > .el-textarea__inner {
+      border-radius: 6px;
+    }
+  }
+}
+</style>
 
 <style lang="scss" scoped>
 .messages-container {

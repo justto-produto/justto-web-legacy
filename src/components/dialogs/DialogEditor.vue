@@ -3,6 +3,10 @@
     :visible.sync="dialogVisible"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
+    :custom-class="customClass"
+    :before-close="handleClose"
+    :width="width"
+    destroy-on-close
     append-to-body
     class="dialog-editor"
   >
@@ -18,24 +22,37 @@
         name="title"
       />
     </div>
+
     <ckeditor
+      v-if="!textOnly"
       ref="templateEditor"
-      v-model="editorModel"
       class="reply-editor__editor"
+      :value="editorModel"
       :config="editorConfig"
+      @input="setModel"
     />
+
+    <el-input
+      v-else
+      :value="editorModel"
+      :rows="12"
+      type="textarea"
+      resize="none"
+      @input="setModel"
+    />
+
     <div slot="footer">
       <el-button
         plain
         @click="handleCancel"
       >
-        Cancelar
+        {{ buttonCancel }}
       </el-button>
       <el-button
         type="primary"
         @click="handleConfirm"
       >
-        Salvar
+        {{ buttonConfirm }}
       </el-button>
     </div>
   </el-dialog>
@@ -53,15 +70,38 @@ export default {
     title: {
       type: String,
       default: ''
+    },
+    textOnly: {
+      type: Boolean,
+      default: false
+    },
+    customClass: {
+      type: String,
+      default: ''
+    },
+    width: {
+      type: String,
+      default: '50%'
+    },
+    buttonConfirm: {
+      type: String,
+      default: 'Salvar'
+    },
+    buttonCancel: {
+      type: String,
+      default: 'Cancelar'
     }
   },
+
   data: () => ({
     dialogVisible: false,
     editorModel: ''
   }),
+
   computed: {
     editorConfig() {
       return {
+        parent: 'dialog-editor',
         toolbarGroups: [
           { name: 'document', groups: ['mode', 'document', 'doctools'] },
           { name: 'clipboard', groups: ['clipboard', 'undo'] },
@@ -82,10 +122,33 @@ export default {
       }
     }
   },
+
+  beforeDestroy() {
+    this.destroyEditor()
+  },
+
   methods: {
     openDialogEditor(model) {
       this.editorModel = model
       this.dialogVisible = true
+    },
+
+    handleClose(done) {
+      this.destroyEditor()
+      done()
+    },
+
+    destroyEditor() {
+      this.dialogVisible = false
+      for (const instance of Object.values(window.CKEDITOR.instances)) {
+        if (instance.config.parent === this.editorConfig.parent) {
+          instance.destroy()
+        }
+      }
+    },
+
+    setModel(text) {
+      this.editorModel = text
     },
 
     handleConfirm() {
