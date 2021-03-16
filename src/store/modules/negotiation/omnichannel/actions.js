@@ -1,7 +1,5 @@
 import { axiosDispatch, isSimilarStrings, buildQuery } from '@/utils'
 
-import route from '@/router'
-
 const disputeApi = 'api/disputes/v2'
 const messagesPath = 'api/messages'
 
@@ -10,11 +8,6 @@ const omnichannelActions = {
     commit('setOmnichannelActiveTab', tab)
     commit('resetRecipients')
     commit('resetOccurrences')
-
-    if (route.currentRoute.params?.id) {
-      const { id } = route.currentRoute.params
-      dispatch('getOccurrences', id)
-    }
   },
 
   setEditorReady: ({ commit }, isRedy) => commit('setEditorReady', isRedy),
@@ -28,7 +21,6 @@ const omnichannelActions = {
     commit('setMessageType', type)
     commit('resetRecipients')
   },
-
   getOccurrences({ getters }, disputeId) {
     const params = {
       ...getters.getOccurrencesFilter,
@@ -112,7 +104,9 @@ const omnichannelActions = {
 
   resetRecipients: ({ commit }) => commit('resetRecipients'),
 
-  resetOccurrences: ({ commit }) => commit('resetOccurrences'),
+  resetOccurrences: ({ commit }) => {
+    commit('resetOccurrences')
+  },
 
   sendMessage({ dispatch, getters }, disputeId) {
     const {

@@ -21,10 +21,11 @@ export default {
       return dateTime.split('T')[0]
     }
   },
+  updated() {
+    this.$set(this.value, 'renderCompleted', true)
+  },
   mounted() {
-    this.$nextTick(() => {
-      this.$set(this.value, 'renderCompleted', true)
-    })
+    this.$set(this.value, 'renderCompleted', true)
   }
 }
 </script>

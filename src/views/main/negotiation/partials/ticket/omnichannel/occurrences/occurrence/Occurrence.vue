@@ -51,11 +51,6 @@ export default {
       const interactionType = this.occurrency.interaction?.type || 'LOG'
       return Object.keys(mapType).find(key => (mapType[key].includes(occurrenceType) || mapType[key].includes(interactionType)))
     }
-  },
-  mounted() {
-    this.$nextTick(() => {
-      this.$set(this.value, 'renderCompleted', true)
-    })
   }
 }
 </script>

@@ -79,6 +79,12 @@
           class="dispute-view__templates-button-icon"
           icon="zap"
         />
+        <span
+          v-if="showTitle"
+          class="dispute-view__templates-button-text"
+        >
+          Respostas rápidas
+        </span>
       </el-button>
     </el-popover>
     <el-dialog
@@ -104,6 +110,12 @@ import { mapActions, mapGetters } from 'vuex'
 export default {
   components: {
     DisputeQuickReplyEditor: () => import('@/components/layouts/DisuteQuickReplyEditor')
+  },
+  props: {
+    showTitle: {
+      type: Boolean,
+      default: false
+    }
   },
   data: () => ({
     activeTemplateMenu: null,
@@ -166,10 +178,16 @@ export default {
 @import '@/styles/colors.scss';
 
 .dispute-view__templates {
-  .dispute-view__templates-button-icon {
-    width: 10px !important;
-    margin: 0px;
+  .dispute-view__templates-button > span {
+    display: flex;
+    gap: 12px;
+
+    .dispute-view__templates-button-icon {
+      width: 10px !important;
+      margin: 0px;
+    }
   }
+
 }
 
 .dispute-view__templates-item-option {
