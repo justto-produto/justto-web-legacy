@@ -57,12 +57,11 @@ export default {
     },
 
     message() {
-      const { currency } = this.$options.filters
       const { PERSON_NAME, VALUE, NOTE, BANK_INFO } = this.interaction.properties
       let text = `<b>${this.interaction.type}</b>`
       switch (this.interaction.type) {
         case 'NEGOTIATOR_COUNTERPROSAL':
-          text = `Contraproposta realizada por <b>${PERSON_NAME}</b>, no valor de <b>${currency(VALUE)}</b>`
+          text = `Contraproposta realizada por <b>${PERSON_NAME}</b>, no valor de <b>${VALUE}</b>`
           if (NOTE) {
             text += `, com a nota: ${NOTE}`
           } else {
@@ -70,7 +69,7 @@ export default {
           }
           break
         case 'NEGOTIATOR_PROPOSAL':
-          text = `Proposta realizada por <b>${PERSON_NAME}</b>, no valor de <b>${currency(VALUE)}</b>`
+          text = `Proposta realizada por <b>${PERSON_NAME}</b>, no valor de <b>${VALUE}</b>`
           if (NOTE) {
             text += `, com a nota: ${NOTE}`
           } else {
@@ -78,7 +77,7 @@ export default {
           }
           break
         case 'NEGOTIATOR_ACCEPTED':
-          text = `Proposta no valor de <b>${currency(VALUE)}</b> foi aceita através do portal de negociações da JUSTTO por <b>${PERSON_NAME}</b>`
+          text = `Proposta no valor de <b>${VALUE}</b> foi aceita através do portal de negociações da JUSTTO por <b>${PERSON_NAME}</b>`
           break
         case 'NEGOTIATOR_CHECKOUT':
           text = (`<b>Dados Bancários</b>:</br>${BANK_INFO}` || '').replaceAll(',', '</br>')
