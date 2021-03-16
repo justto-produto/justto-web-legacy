@@ -178,14 +178,28 @@ const getTracktitleByAction = function(action, batch) {
   return title
 }
 
+const getFormatedDate = (occurrence, customFormat = 'YYYY-MM-DD') => {
+  const date = (occurrence.updateAt?.dateTime || occurrence.createAt?.dateTime).replace('T', ' ').replace('Z', '')
+  if (typeof customFormat !== 'string') {
+    return moment(date).format(customFormat)
+  }
+  return date.split()[0]
+}
+
+const addInvisibleStatus = (text) => {
+  return text + '<div style="width: 60px; visibility: hidden; display: inline-block">.</div>'
+}
+
 export {
-  buildRoleTitle,
-  getRoleIcon,
   getRoles,
+  getRoleIcon,
   getFirstRole,
+  buildRoleTitle,
+  getFormatedDate,
+  getDocumentStep,
+  addInvisibleStatus,
   getLastInteraction,
   getInteractionIcon,
-  getLastInteractionTooltip,
-  getDocumentStep,
-  getTracktitleByAction
+  getTracktitleByAction,
+  getLastInteractionTooltip
 }

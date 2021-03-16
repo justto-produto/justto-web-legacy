@@ -4,13 +4,15 @@
       class="manual-container__text"
       v-html="text"
     />
-    <span class="communication-container__contact">
+    <span class="communication-container__about negotiation-occurrence-about">
       {{ interaction.createAt.dateTime | moment('HH:mm') }}
     </span>
   </section>
 </template>
 
 <script>
+import { addInvisibleStatus } from '@/utils'
+
 export default {
   props: {
     value: {
@@ -24,7 +26,10 @@ export default {
     },
     text() {
       const { USER, VALUE, PERSON_NAME } = this.interaction.properties
-      return `Negociador(a) <strong>${USER}</strong> informou uma proposta realizada por <strong>${PERSON_NAME}</strong> no valor de <strong>${VALUE}</strong>`
+
+      const text = `Negociador(a) <strong>${USER}</strong> informou uma proposta realizada por <strong>${PERSON_NAME}</strong> no valor de <strong>${VALUE}</strong>`
+
+      return addInvisibleStatus(text)
     }
   }
 }
@@ -39,11 +44,7 @@ export default {
   overflow: hidden;
   margin: 12px 6px;
 
-  .communication-container__contact {
-    display: flex;
-    justify-content: flex-end;
-
-    font-size: 16px;
+  .communication-container__about {
     color: #3C3B3B;
 
     @media (max-height: 900px) {

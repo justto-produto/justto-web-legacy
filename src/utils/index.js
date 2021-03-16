@@ -10,36 +10,40 @@ import showUnavailableLoading from './utils/showUnavailableLoading'
 import uuidv4 from './utils/uuidv4'
 import { eventBus } from './utils/eventBus'
 import {
-  buildRoleTitle,
-  getRoleIcon,
   getRoles,
+  getRoleIcon,
   getFirstRole,
+  buildRoleTitle,
+  getDocumentStep,
+  getFormatedDate,
+  addInvisibleStatus,
   getLastInteraction,
   getInteractionIcon,
-  getLastInteractionTooltip,
-  getDocumentStep,
-  getTracktitleByAction
+  getTracktitleByAction,
+  getLastInteractionTooltip
 } from './utils/others'
 
 export {
-  eventBus,
-  axiosDispatch,
-  buildQuery,
-  filterByTerm,
-  getStringInitials,
-  isSimilarStrings,
-  normalizeString,
-  registerServiceWorker,
-  showUnavailableLoading,
-  stripHtml,
   uuidv4,
-  buildRoleTitle,
-  getRoleIcon,
+  eventBus,
   getRoles,
+  stripHtml,
+  buildQuery,
+  getRoleIcon,
   getFirstRole,
+  filterByTerm,
+  axiosDispatch,
+  buildRoleTitle,
+  getDocumentStep,
+  getFormatedDate,
+  normalizeString,
+  isSimilarStrings,
+  getStringInitials,
+  addInvisibleStatus,
   getLastInteraction,
   getInteractionIcon,
-  getLastInteractionTooltip,
-  getDocumentStep,
-  getTracktitleByAction
+  getTracktitleByAction,
+  registerServiceWorker,
+  showUnavailableLoading,
+  getLastInteractionTooltip
 }

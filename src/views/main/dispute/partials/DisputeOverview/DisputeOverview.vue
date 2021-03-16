@@ -2014,7 +2014,6 @@ export default {
         return condition
       },
       set(value) {
-        console.log('SET do showAssociateContacts')
         const promisses = []
         if (value) {
           promisses.push(this.setDisputeProperty({ disputeId: this.dispute.id, key: 'CONTATOS ASSOCIADOS', value }))

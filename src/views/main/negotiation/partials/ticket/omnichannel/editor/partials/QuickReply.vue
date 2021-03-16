@@ -130,10 +130,6 @@ export default {
       'archiveQuickReplyTemplate'
     ]),
 
-    inputTemplate(evt) {
-      console.log(evt)
-    },
-
     setTemplate(template) {
       const { contentType, body } = template.parsed
       this.setMessageType(contentType)

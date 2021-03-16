@@ -106,11 +106,6 @@ export default {
         '!': { escape: true }
       }
     },
-    // unmaskedVModel() {
-    //   const gerRep = new RegExp(this.mask)
-    //   console.log(gerRep)
-    //   return this.vModel.replace(gerRep, '')
-    // },
     filteredVModel() {
       const { filter, vModel } = this
 

@@ -250,9 +250,7 @@ export default {
     ]),
 
     handleBeforeClose(done) {
-      console.log('handleBeforeClose')
       new Promise((resolve, reject) => {
-        console.log(this.current)
         if (!this.current) {
           resolve()
         } else {

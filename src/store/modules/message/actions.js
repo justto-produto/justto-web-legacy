@@ -26,7 +26,7 @@ const messageActions = {
       url: `api/negotiations/${disputeId}/messages`,
       method: 'POST',
       data,
-      mutation: 'SOCKET_ADD_OCCURRENCE'
+      action: 'SOCKET_ADD_OCCURRENCE'
     })
   },
   getOccurrenceMessage({ _ }, messageId) {
