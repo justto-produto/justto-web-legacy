@@ -11,13 +11,15 @@ const actionsActions = {
     })
   },
 
-  setVisualized({ _ }, params) {
+  setTicketVisualized({ _ }, params) {
     const { disputeId } = params
 
     return axiosDispatch({
       url: `${disputesPath}/${disputeId}/visualized`,
       method: 'PATCH',
-      params
+      params,
+      mutation: 'setTicketVisualized',
+      payload: params
     })
   },
 

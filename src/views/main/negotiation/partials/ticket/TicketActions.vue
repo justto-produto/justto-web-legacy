@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'TicketActions',
@@ -63,6 +63,11 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      isGhost: 'ghostMode',
+      isJusttoAdmin: 'isJusttoAdmin'
+    }),
+
     actionsList() {
       return [
         {
@@ -198,7 +203,7 @@ export default {
   },
   methods: {
     ...mapActions([
-      'setVisualized',
+      'setTicketVisualized',
       'deleteTicket',
       'startNegotiation',
       'enrichTicket',
@@ -277,7 +282,11 @@ export default {
     handleSetUnread(action) {
       const { disputeId } = this.ticket
 
-      this.setVisualized({ disputeId, visualized: false, anonymous: false })
+      this.setTicketVisualized({
+        disputeId,
+        visualized: false,
+        anonymous: this.isJusttoAdmin && this.isGhost
+      })
         .then(() => {
           this.concludeAction(action, disputeId)
           this.$router.push('/negotiation')

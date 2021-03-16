@@ -55,6 +55,16 @@ const ticketsMutations = {
       if (ticketIndex > -1) Vue.set(tickets.content, ticketIndex, newTicket)
       else tickets.content.unshift(newTicket)
     }
+  },
+
+  setTicketVisualized: ({ tickets }, { payload }) => {
+    const { content } = tickets
+    const { disputeId, visualized, anonymous } = payload
+
+    if (!anonymous) {
+      const ticketIndex = getTicketIndex(content, disputeId)
+      Vue.set(content[ticketIndex], 'visualized', visualized)
+    }
   }
 }
 
