@@ -24,12 +24,14 @@
     </div>
 
     <ckeditor
-      v-if="!textOnly"
+      v-if="!textOnly && dialogVisible"
+      v-show="editorReady"
       ref="templateEditor"
       class="reply-editor__editor"
       :value="editorModel"
       :config="editorConfig"
       @input="setModel"
+      @ready="ready()"
     />
 
     <el-input
@@ -95,6 +97,7 @@ export default {
 
   data: () => ({
     dialogVisible: false,
+    editorReady: false,
     editorModel: ''
   }),
 
@@ -133,6 +136,11 @@ export default {
       this.dialogVisible = true
     },
 
+    ready() {
+      console.log('Editor está pronto.')
+      this.editorReady = true
+    },
+
     handleClose(done) {
       this.destroyEditor()
       done()
@@ -140,6 +148,7 @@ export default {
 
     destroyEditor() {
       this.dialogVisible = false
+      this.editorReady = false
       for (const instance of Object.values(window.CKEDITOR.instances)) {
         if (instance.config.parent === this.editorConfig.parent) {
           instance.destroy()
@@ -149,16 +158,17 @@ export default {
 
     setModel(text) {
       this.editorModel = text
+      this.$emit('input', text)
     },
 
     handleConfirm() {
-      this.dialogVisible = false
       this.$emit('confirm', this.editorModel)
+      this.destroyEditor()
     },
 
     handleCancel() {
-      this.dialogVisible = false
       this.$emit('cancel', this.editorModel)
+      this.destroyEditor()
     }
   }
 }

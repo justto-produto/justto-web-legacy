@@ -54,6 +54,8 @@
       :width="dialogWidth"
       button-confirm="Enviar"
       custom-class="negotiator-fullscreen-editor"
+      @confirm="send"
+      @input="setEditorText"
     >
       <Recipients
         slot="title"
@@ -136,14 +138,15 @@ export default {
       'sendMessage'
     ]),
 
-    openFullScreenEditor(_event) {
+    openFullScreenEditor(_) {
       this.$refs.fullScreenEditor.openDialogEditor(this.showCKEditor ? this.editorText : this.editorTextScaped)
     },
 
-    send(_event) {
+    send(_) {
       this.localLoading = true
       const { id } = this.$route.params
       this.sendMessage(Number(id)).then(res => {
+        console.log('mensagem', res)
         this.resetRecipients()
         this.setEditorText('')
         this.$jusNotification({
@@ -152,8 +155,10 @@ export default {
           type: 'success'
         })
       }).catch(error => {
-        const parsedError = JSON.parse(error)
-        this.$jusNotification(parsedError)
+        try {
+          const parsedError = JSON.parse(error)
+          this.$jusNotification(parsedError)
+        } catch (e) {}
       }).finally(() => {
         this.localLoading = false
       })
