@@ -9,7 +9,7 @@
       v-show="editorReady"
       ref="messageEditor"
       :value="editorText"
-      :config="editorConfig"
+      :config="config"
       class="messages-container__editor"
       @ready="setEditorReady(true)"
       @input="setEditorText"
@@ -26,6 +26,12 @@
       v-if="messageType === 'email'"
       class="messages-container__attachments"
     />
+    <span
+      class="messages-container__full-screen"
+      @click="openFullScreenEditor"
+    >
+      <i class="el-icon-full-screen" />
+    </span>
     <span class="messages-container__button">
       <el-button
         type="primary"
@@ -42,6 +48,20 @@
         />
       </el-button>
     </span>
+    <DialogEditor
+      ref="fullScreenEditor"
+      :text-only="!showCKEditor"
+      :width="dialogWidth"
+      button-confirm="Enviar"
+      custom-class="negotiator-fullscreen-editor"
+      @confirm="send"
+      @input="setEditorText"
+    >
+      <Recipients
+        slot="title"
+        is-reversed
+      />
+    </DialogEditor>
   </section>
 </template>
 
@@ -52,11 +72,15 @@ import { mapActions, mapGetters } from 'vuex'
 export default {
   components: {
     ckeditor: CKEditor.component,
-    Attachments: () => import('./AttachemntsIndicator')
+    Recipients: () => import('./Recipients'),
+    Attachments: () => import('./AttachemntsIndicator'),
+    DialogEditor: () => import('@/components/dialogs/DialogEditor')
   },
+
   data: () => ({
     localLoading: false
   }),
+
   computed: {
     ...mapGetters({
       attachment: 'getTicketOverviewAttachments',
@@ -67,6 +91,7 @@ export default {
       editorConfig: 'getEditorConfig',
       editorText: 'getEditorText'
     }),
+
     editorReady: {
       get() {
         return this.getEditorReady
@@ -75,20 +100,36 @@ export default {
         this.setEditorReady(value)
       }
     },
+
+    config() {
+      return {
+        parent: 'message-editor',
+        ...this.editorConfig
+      }
+    },
+
     body() {
       return this.editorText
     },
+
     showCKEditor() {
       return !['sms', 'whatsapp'].includes(this.messageType)
     },
+
     canSendMessage() {
       const { editorRecipients, localLoading, editorReady } = this
       return editorRecipients.length && !localLoading && editorReady
+    },
+
+    dialogWidth() {
+      return window.innerWidth <= 900 ? '100%' : '50%'
     }
   },
+
   beforeDestroy() {
     this.destroyEditor()
   },
+
   methods: {
     ...mapActions([
       'resetRecipients',
@@ -97,10 +138,15 @@ export default {
       'sendMessage'
     ]),
 
-    send(_event) {
+    openFullScreenEditor(_) {
+      this.$refs.fullScreenEditor.openDialogEditor(this.showCKEditor ? this.editorText : this.editorTextScaped)
+    },
+
+    send(_) {
       this.localLoading = true
       const { id } = this.$route.params
       this.sendMessage(Number(id)).then(res => {
+        console.log('mensagem', res)
         this.resetRecipients()
         this.setEditorText('')
         this.$jusNotification({
@@ -109,8 +155,10 @@ export default {
           type: 'success'
         })
       }).catch(error => {
-        const parsedError = JSON.parse(error)
-        this.$jusNotification(parsedError)
+        try {
+          const parsedError = JSON.parse(error)
+          this.$jusNotification(parsedError)
+        } catch (e) {}
       }).finally(() => {
         this.localLoading = false
       })
@@ -119,12 +167,26 @@ export default {
     destroyEditor() {
       this.editorReady = false
       for (const instance of Object.values(window.CKEDITOR.instances)) {
-        instance.destroy()
+        if (instance.config.parent === 'message-editor') {
+          instance.destroy()
+        }
       }
     }
   }
 }
 </script>
+
+<style lang="scss">
+.negotiator-fullscreen-editor {
+  .el-dialog__body {
+    margin: 0px 0px 20px;
+
+    .el-textarea > .el-textarea__inner {
+      border-radius: 6px;
+    }
+  }
+}
+</style>
 
 <style lang="scss" scoped>
 .messages-container {
@@ -134,6 +196,14 @@ export default {
 
   .messages-container__editor {
     margin: 0px;
+  }
+
+  .messages-container__full-screen {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+
+    cursor: pointer;
   }
 
   .messages-container__attachments {
