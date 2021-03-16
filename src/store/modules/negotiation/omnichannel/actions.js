@@ -89,6 +89,7 @@ const omnichannelActions = {
   },
 
   addRecipient({ commit, dispatch, getters }, recipient) {
+    debugger
     const { type, value } = recipient
     const { getEditorMessageType, getEditorRecipients } = getters
 
@@ -120,6 +121,8 @@ const omnichannelActions = {
     const roleId = negotiators[0].disputeRoleId
     const to = recipients.map(({ value, key }) => ({ [key]: value }))
     const externalIdentification = +new Date()
+    const messagesToReply = recipients.map(r => r.inReplyTo).filter(r => r != null)
+    const inReplyTo = messagesToReply.length > 0 ? messagesToReply[0] : null
 
     if (type === 'email') {
       const data = {
@@ -127,7 +130,8 @@ const omnichannelActions = {
         disputeId,
         attachments,
         message: messageEmail,
-        externalIdentification
+        externalIdentification,
+        inReplyTo
       }
       return dispatch('sendemail', data)
     } else if (type === 'whatsapp') {

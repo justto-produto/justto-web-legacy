@@ -1067,7 +1067,7 @@ export default {
     },
 
     startReply(occurrence) {
-      let senders, resume, type
+      let senders, resume, type, inReplyTo
 
       if (occurrence.interaction?.properties?.PERSON_EMAIL) {
         senders = [occurrence.interaction.properties.PERSON_EMAIL]
@@ -1085,7 +1085,10 @@ export default {
         resume = occurrence.interaction.message.resume
         type = occurrence.interaction.message.communicationType
       }
-      this.$emit('dispute:reply', { senders, resume, type })
+      if (occurrence.interaction?.message?.messageId) {
+        inReplyTo = occurrence.interaction.message.messageId
+      }
+      this.$emit('dispute:reply', { senders, resume, type, inReplyTo })
     },
 
     /** @method buildWhatsappStatus
