@@ -6,8 +6,10 @@ const getTicketIndex = (tickets, disputeId) => tickets.findIndex(ticket => ticke
 
 const ticketsMutations = {
   setCommunicationTickets: (state, { data, payload }) => {
-    if (payload === 'nextPage') data.content = state.tickets.content.concat(data.content)
-    Vue.set(state, 'tickets', data)
+    setTimeout(() => {
+      if (payload === 'nextPage') data.content = state.tickets.content.concat(data.content)
+      Vue.set(state, 'tickets', data)
+    }, 1000)
   },
 
   deleteTicket: ({ tickets }, { payload }) => {
@@ -65,7 +67,15 @@ const ticketsMutations = {
       const ticketIndex = getTicketIndex(content, disputeId)
       Vue.set(content[ticketIndex], 'visualized', visualized)
     }
-  }
+  },
+
+  incrementTicketsGettersCounter: (state) => (state.ticketsGettersCounter += 1),
+
+  decrementTicketsGettersCounter: (state) => {
+    if (state.ticketsGettersCounter > 0) state.ticketsGettersCounter -= 1
+  },
+
+  resetTicketsGettersCounter: (state) => Vue.set(state, 'ticketsGettersCounter', 0)
 }
 
 export default ticketsMutations

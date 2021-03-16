@@ -45,7 +45,8 @@ const ticketsState = {
     size: 20,
     page: 1,
     prescriptions: []
-  }
+  },
+  ticketsGettersCounter: 0
 }
 
 export default ticketsState
