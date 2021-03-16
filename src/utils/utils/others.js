@@ -180,8 +180,10 @@ const getTracktitleByAction = function(action, batch) {
 
 const getFormatedDate = (occurrence, customFormat = 'YYYY-MM-DD') => {
   const date = (occurrence.updateAt?.dateTime || occurrence.createAt?.dateTime).replace('T', ' ').replace('Z', '')
-  console.log('getFormatedDate', date)
-  return moment(date).format(customFormat)
+  if (typeof customFormat !== 'string') {
+    return moment(date).format(customFormat)
+  }
+  return date.split()[0]
 }
 
 const addInvisibleStatus = (text) => {
