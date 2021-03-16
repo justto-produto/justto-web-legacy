@@ -56,10 +56,6 @@ export default {
 
   .communication-container__about {
     color: #3C3B3B;
-
-    @media (max-height: 900px) {
-      font-size: 14px;
-    }
   }
 }
 </style>
