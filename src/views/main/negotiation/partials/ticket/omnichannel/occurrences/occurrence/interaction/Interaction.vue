@@ -155,10 +155,15 @@ export default {
     ...mapActions(['addRecipient']),
 
     reply(_event) {
+      let inReplyTo = null
+      if (this.value.interaction?.message?.messageId) {
+        inReplyTo = this.value.interaction.message.messageId
+      }
       const reply = {
         type: this.messageType,
         value: this.replyAdress,
-        key: 'address'
+        key: 'address',
+        inReplyTo
       }
       this.addRecipient(reply)
     }

@@ -469,7 +469,8 @@ export default {
         }
       },
       isDeletingRole: false,
-      deletingRoleText: 'Por favor, aguarde enquanto carregamos a disputa...'
+      deletingRoleText: 'Por favor, aguarde enquanto carregamos a disputa...',
+      inReplyTo: null
     }
   },
   computed: {
@@ -698,13 +699,13 @@ export default {
       if (this.$refs.messageEditor) {
         this.$refs.messageEditor.quill.container.firstChild.innerHTML = ''
       }
-      const { type, resume, senders } = params
+      const { type, senders } = params
       const messageType = type.toLowerCase()
       this.setMessageType(messageType)
       if (['email'].includes(messageType)) {
         const { quill } = this.$refs.messageEditor
         const peviewText = quill.getText()
-        const peviewResume = `\n___________________\n${resume}`
+        const peviewResume = ''
         quill.setContents([
           { insert: peviewText },
           { insert: peviewResume }
@@ -712,6 +713,7 @@ export default {
       }
       this.activeRoleId = 0
       this.directContactAddress = senders
+      this.inReplyTo = params.inReplyTo
     },
 
     setMessageType(type) {
@@ -744,12 +746,8 @@ export default {
     },
 
     removeReply() {
+      this.inReplyTo = null
       this.directContactAddress = []
-      const message = this.$refs.messageEditor.quill.getText()
-      const messageIndex = message.indexOf('\n\n___________________')
-      if (messageIndex !== -1) {
-        this.$refs.messageEditor.quill.setText(message.substring(messageIndex, 0))
-      }
     },
 
     socketAction(action, id) {
@@ -893,6 +891,7 @@ export default {
             })
           }
           const externalIdentification = +new Date()
+          const inReplyTo = this.inReplyTo
           for (const contact of this.selectedContacts) {
             this.addLoadingOccurrence({
               message: this.$refs.messageEditor.quill.getText(),
@@ -905,7 +904,8 @@ export default {
             to,
             message: quillMessage,
             disputeId: this.dispute.id,
-            externalIdentification
+            externalIdentification,
+            inReplyTo
           }
           if (this.messageType === 'email') messageData.attachments = this.selectedAttachments
           this.$store.dispatch('send' + this.messageType, messageData).then(() => {
