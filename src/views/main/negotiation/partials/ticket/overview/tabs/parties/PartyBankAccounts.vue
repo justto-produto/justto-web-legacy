@@ -26,26 +26,26 @@
           </div>
         </span>
 
-        <!-- <span class="bank-accounts__account-icons">
+        <span class="bank-accounts__account-icons">
           <i
             class="bank-accounts__account-icon el-icon-edit"
-            @click="enableEdit"
+            @click.stop="openBankAccountDialog(account)"
           />
           <i
             class="bank-accounts__account-icon el-icon-delete"
-            @click="deletElement"
+            @click.stop="deleteAccount(account)"
           />
-        </span> -->
+        </span>
       </el-checkbox>
     </el-checkbox-group>
 
-    <!-- <a
+    <a
       v-if="isAllAccountsVisible || !accountsLength"
       class="bank-accounts__link"
-      @click="toggleAccountsVisible"
+      @click="openBankAccountDialog"
     >
       Adicionar
-    </a> -->
+    </a>
     <a
       v-if="accountsLength"
       class="bank-accounts__link"
@@ -53,13 +53,19 @@
     >
       {{ expandLinkText }}
     </a>
+
+    <PartyBankAccountDialog ref="partyBankAccountDialog" />
   </article>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
+
 export default {
   name: 'PartyBankAccounts',
+  components: {
+    PartyBankAccountDialog: () => import('./PartyBankAccountDialog')
+  },
   props: {
     accounts: {
       type: Array,
@@ -117,6 +123,10 @@ export default {
           type: 'success'
         })
       })
+    },
+    openBankAccountDialog(account) {
+      console.log(this.$refs.partyBankAccountDialog)
+      this.$refs.partyBankAccountDialog.openBankAccountDialog(account)
     }
   }
 }
