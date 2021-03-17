@@ -1,17 +1,19 @@
 <template>
   <article class="bank-accounts">
-    <el-checkbox-group
-      v-if="isAllAccountsVisible"
-      v-model="selectedAccounts"
-      class="bank-accounts__container"
-    >
-      <el-checkbox
+    <div class="bank-accounts__container">
+      <div
         v-for="account in accounts"
         :key="account.id"
-        :label="account.id"
+        :class="{
+          'is-checked': selectedAccounts.includes(account.id),
+          'is-not-checked': !selectedAccounts.includes(account.id)
+        }"
         class="bank-accounts__container-account"
       >
-        <span class="bank-accounts__container-inner">
+        <span
+          class="bank-accounts__container-inner"
+          @click="handleClick(account)"
+        >
           <div class="bank-accounts__account-info-title">
             Conta {{ $t(`bank-account.type.${account.type}`) }}
           </div>
@@ -24,20 +26,19 @@
           <div class="bank-accounts__account-info">
             Conta: {{ account.number }}
           </div>
+          <span class="bank-accounts__account-icons">
+            <i
+              class="bank-accounts__account-icon el-icon-edit"
+              @click.stop="openBankAccountDialog(account)"
+            />
+            <i
+              class="bank-accounts__account-icon el-icon-delete"
+              @click.stop="deleteAccount(account)"
+            />
+          </span>
         </span>
-
-        <span class="bank-accounts__account-icons">
-          <i
-            class="bank-accounts__account-icon el-icon-edit"
-            @click.stop="openBankAccountDialog(account)"
-          />
-          <i
-            class="bank-accounts__account-icon el-icon-delete"
-            @click.stop="deleteAccount(account)"
-          />
-        </span>
-      </el-checkbox>
-    </el-checkbox-group>
+      </div>
+    </div>
 
     <a
       v-if="isAllAccountsVisible || !accountsLength"
@@ -54,7 +55,9 @@
       {{ expandLinkText }}
     </a>
 
-    <PartyBankAccountDialog ref="partyBankAccountDialog" />
+    <PartyBankAccountDialog
+      ref="partyBankAccountDialog"
+    />
   </article>
 </template>
 
@@ -86,27 +89,36 @@ export default {
       const { isAllAccountsVisible, accountsLength } = this
       return !isAllAccountsVisible ? `Ver dados bancários (+${accountsLength})` : `Esconder dados bancários (-${accountsLength})`
     },
-    selectedAccounts: {
-      get() {
-        return this.accounts.filter(({ associatedInDispute }) => associatedInDispute).map(({ id }) => id)
-      },
-
-      set(accounts) {
-        const link = this.accounts.filter(({ id, associatedInDispute: associated }) => (accounts.includes(id) && !associated)).map(({ id, personId }) => ({ id, personId }))
-        const unlink = this.accounts.filter(({ id, associatedInDispute: associated }) => (!accounts.includes(id) && associated)).map(({ id, personId }) => ({ id, personId }))
-
-        this.updateBankAccounts(link, unlink)
-      }
+    selectedAccounts() {
+      return this.accounts.filter(({ associatedInDispute }) => associatedInDispute).map(({ id }) => id)
     }
   },
   methods: {
     ...mapActions({
       linkAccount: 'setTicketRoleBankAccount',
-      unlinkAccount: 'deleteTicketRoleBankAccount'
+      unlinkAccount: 'unlinkTicketRoleBankAccount',
+      deleteBankAccount: 'deleteTicketRoleBankAccount'
     }),
+
+    handleClick({ id, personId }) {
+      if (this.selectedAccounts.includes(id)) {
+        this.updateBankAccounts([], [{ id, personId }])
+      } else {
+        this.updateBankAccounts([{ id, personId }], [])
+      }
+    },
+
+    deleteAccount(account) {
+      const { disputeId } = this
+      const { id: bankAccountId, personId } = account
+
+      this.deleteBankAccount({ disputeId, personId, bankAccountId })
+    },
+
     toggleAccountsVisible() {
       this.isAllAccountsVisible = !this.isAllAccountsVisible
     },
+
     updateBankAccounts(link = [], unlink = []) {
       const { disputeId } = this
 
@@ -124,6 +136,7 @@ export default {
         })
       })
     },
+
     openBankAccountDialog(account) {
       console.log(this.$refs.partyBankAccountDialog)
       this.$refs.partyBankAccountDialog.openBankAccountDialog(account)
@@ -142,7 +155,7 @@ export default {
   .bank-accounts__container {
     display: flex;
     flex-direction: column;
-    position: relative;
+    gap: 6px;
 
     .bank-accounts__container-account {
       margin: 0;
@@ -150,6 +163,12 @@ export default {
       padding: 6px 3px 6px 18px;
       border-radius: 4px;
       transition: .2s ease-out all;
+      cursor: pointer;
+      position: relative;
+
+      .bank-accounts__container-inner {
+        padding-left: 6px;
+      }
 
       .bank-accounts__account-info {
         line-height: normal;
@@ -186,8 +205,22 @@ export default {
       &.is-checked {
         background-color: $--light-gray;
 
-        .el-checkbox__label .bank-accounts__account-info-title {
-          font-weight: 500;
+        .bank-accounts__container-inner {
+          border-left: solid $--color-primary 2px;
+          border-top-left-radius: 0px;
+          border-bottom-left-radius: 0px;
+
+          .el-checkbox__label .bank-accounts__account-info-title {
+            font-weight: 500;
+          }
+        }
+      }
+
+      &.is-not-checked {
+        .bank-accounts__container-inner {
+          border-left: solid $--color-text-secondary 1px;
+          border-top-left-radius: 0px;
+          border-bottom-left-radius: 0px;
         }
       }
     }
