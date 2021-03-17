@@ -13,6 +13,7 @@
           @click="copyValue"
         />
         <i
+          id="selectIcons"
           class="select-inline-editor__icon el-icon-edit hidden-icon"
           @click="enableEdit"
         />
@@ -21,14 +22,16 @@
 
     <el-select
       v-else
+      id="selectInput"
       ref="selectInput"
       v-model="vModel"
       class="select-inline-editor__input"
       @change="disableEdit"
+      @keyup.native.esc="disableEdit"
     >
-      <!-- @blur="isEditing = false" -->
       <el-option
         v-for="option in options.list"
+        :id="`selectInputOption-${option[options.value]}`"
         :key="option[options.value]"
         :label="option[options.label]"
         :value="option[options.value]"
@@ -75,12 +78,18 @@ export default {
       this.model = this.value
       this.isEditing = true
       this.$nextTick(() => this.$refs.selectInput.toggleMenu())
+      window.addEventListener('click', this.blurEvent)
     },
     disableEdit() {
       if (this.model !== this.value) {
         this.$emit('change', { [this.options.value]: this.vModel })
       }
       this.isEditing = false
+      window.removeEventListener('click', this.blurEvent)
+    },
+    blurEvent(event) {
+      const targetId = event.target.id
+      if (!targetId.startsWith('selectInput') && targetId !== 'selectIcons') this.disableEdit()
     },
     copyValue() {
       navigator.clipboard.writeText(this.handledVModel)

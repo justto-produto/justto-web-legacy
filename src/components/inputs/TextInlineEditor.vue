@@ -35,10 +35,10 @@
       v-model="vModel"
       v-mask="{ mask, tokens }"
       class="text-inline-editor__input"
-      @blur="confirmEdit"
+      @blur="handleBlur"
+      @keyup.native.enter="$refs.textInput.$emit('blur', 'confirm')"
+      @keyup.native.esc="$refs.textInput.$emit('blur', 'cancel')"
     />
-    <!-- @keyup.native.enter="confirmEdit"
-    @keyup.native.esc="cancelEdit" -->
   </div>
 </template>
 
@@ -115,6 +115,13 @@ export default {
     }
   },
   methods: {
+    handleBlur(event) {
+      if (event !== 'cancel') {
+        this.confirmEdit()
+      } else {
+        this.cancelEdit()
+      }
+    },
     enableEdit() {
       this.model = this.value || ''
       this.isEditing = true

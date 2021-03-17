@@ -89,7 +89,6 @@ const omnichannelActions = {
   },
 
   addRecipient({ commit, dispatch, getters }, recipient) {
-    debugger
     const { type, value } = recipient
     const { getEditorMessageType, getEditorRecipients } = getters
 

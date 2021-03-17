@@ -15,6 +15,7 @@
         />
         <i
           v-if="isEditable"
+          id="datepickerIcons"
           class="date-inline-editor__icon el-icon-edit"
           @click="enableEdit"
         />
@@ -23,6 +24,7 @@
 
     <el-date-picker
       v-else
+      id="datepickerInput"
       ref="dateInput"
       v-model="vModel"
       :clearable="false"
@@ -32,6 +34,7 @@
       :value-format="isDateTimeFormat ? 'yyyy-MM-dd[T]hh:mm:ss[Z]' : 'yyyy-MM-dd'"
       class="date-inline-editor__input"
       @change="disableEdit"
+      @keyup.esc="disableEdit"
     />
   </div>
 </template>
@@ -91,13 +94,19 @@ export default {
           this.$forceUpdate()
         })
       })
+      // window.addEventListener('click', this.blurEvent)
     },
     disableEdit() {
       if (this.model !== this.value) {
         this.$emit('change', this.isDateTimeFormat ? { dateTime: this.model } : this.model)
       }
       this.isEditing = false
+      // window.removeEventListener('click', this.blurEvent)
     },
+    // blurEvent() {
+    //   const targetId = event.target.id
+    //   if (!targetId.startsWith('datepickerIcons') && targetId !== 'datepickerInput') this.disableEdit()
+    // },
     copyValue() {
       navigator.clipboard.writeText(this.vModel)
     }
