@@ -112,7 +112,6 @@
         :key="`summary-occurrence-${summaryOccurrenceIndex}`"
         class="log-container__occurrence summary log-container__summary-scheduler"
         :value="interaction"
-        :hide-content="summaryOccurrenceIndex > 0"
       />
     </span>
   </section>
@@ -155,8 +154,8 @@ export default {
 
       this.summaryTypes.forEach(type => {
         if (this.summaryKeys[type].includes(id)) {
-          this.summaryOccurrences[type][id].forEach(({ occurrences }) => {
-            list = [...list, ...occurrences]
+          this.summaryOccurrences[type][id].forEach(occurrence => {
+            list = [...list, occurrence]
           })
         }
       })

@@ -30,10 +30,10 @@
             Conta: {{ account.number }}
           </div>
           <span class="bank-accounts__account-icons">
-            <i
+            <!--<i
               class="bank-accounts__account-icon el-icon-edit"
               @click.stop="openBankAccountDialog(account)"
-            />
+            />-->
             <i
               class="bank-accounts__account-icon el-icon-delete"
               @click.stop="deleteBankAccount(account)"
