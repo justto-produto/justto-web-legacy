@@ -138,7 +138,7 @@ export default {
     this.$set(this.occurrence, 'renderCompleted', true)
   },
   mounted() {
-    this.$set(this.value, 'renderCompleted', true)
+    this.$set(this.occurrence, 'renderCompleted', true)
   },
   methods: {
     ...mapActions([
