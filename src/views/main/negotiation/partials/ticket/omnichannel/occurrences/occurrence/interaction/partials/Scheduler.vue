@@ -66,6 +66,7 @@
         que ainda não foi entregue.
       </span>
       <span
+        v-else
         class="scheduler-container__status-about"
       >
         {{ sendDate | moment('HH:mm') }}
