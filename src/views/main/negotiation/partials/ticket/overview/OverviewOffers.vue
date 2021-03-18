@@ -85,7 +85,7 @@ export default {
       const ticketPlaintiffParty = ticketPlaintiffs.filter(party => party.roles.includes('PARTY'))[0]
 
       const data = {
-        roleid: roleId || (ticketPlaintiffLawyer?.disputeRoleId || ticketPlaintiffParty?.disputeRoleId),
+        roleId: roleId || (ticketPlaintiffLawyer?.disputeRoleId || ticketPlaintiffParty?.disputeRoleId),
         value,
         note: '',
         updateUpperRage: false
@@ -95,16 +95,15 @@ export default {
     },
 
     updateDefendantOffer(value) {
-      const { disputeId, defendantOffer } = this
-      const { roleId } = defendantOffer
+      const { disputeId, defendantOffer: { roleId } } = this
 
-      const disputeNegotiator = this.ticketParties.filter(party => {
-        party.polarity === 'RESPONDENT' &&
-        party.roles.includes('NEGOTIATOR')
-      })[0]
+      const disputeNegotiator = this.ticketParties.find(({ polarity, roles }) => {
+        return polarity === 'RESPONDENT' &&
+        roles.includes('NEGOTIATOR')
+      })
 
       const data = {
-        roleid: roleId || disputeNegotiator.disputeRoleId,
+        roleId: roleId || disputeNegotiator.disputeRoleId,
         value,
         note: '',
         updateUpperRage: false

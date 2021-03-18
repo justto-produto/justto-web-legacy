@@ -238,7 +238,7 @@
       "name": "retomar negociação",
       "feedback-message": "disputa <b>retomada</b>"
     },
-    "PAUSE": {
+    "PAUSED": {
       "name": "pausar negociação",
       "feedback-message": "disputa <b>pausada</b>"
     },

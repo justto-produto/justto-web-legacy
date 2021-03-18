@@ -1,7 +1,7 @@
 <template>
   <article class="party-details">
     <div
-      v-if="!isDisabled"
+      v-if="!isNegotiator"
       class="party-details__infoline party-details__infoline--center"
     >
       <PopoverLinkInlineEditor
@@ -13,7 +13,7 @@
         @change="updatePolarity"
       />
       <a
-        v-if="!isDisabled"
+        v-if="!isNegotiator"
         class="party-details__infoline-link party-details__infoline-link--danger"
         @click="removeParty"
       >
@@ -25,7 +25,7 @@
       <span class="party-details__infoline-label">Nome completo:</span>
       <TextInlineEditor
         v-model="party.name"
-        :is-editable="!isDisabled"
+        :is-editable="!isNegotiator"
         filter="ownName"
         class="party-details__infoline-data"
         @change="updateParty($event, 'name')"
@@ -41,7 +41,7 @@
         v-if="party.birthday || activeAddingData === 'birthday'"
         ref="birthday"
         v-model="party.birthday"
-        :is-editable="!isDisabled"
+        :is-editable="!isNegotiator"
         :processed-date="$moment(party.birthday).fromNow(true)"
         :is-date-time-format="false"
         class="party-details__infoline-data"
@@ -49,27 +49,30 @@
         @blur="stopEditing"
       />
       <div
-        v-else-if="!isDisabled"
+        v-else
         class="party-details__infoline-link"
       >
         <a @click="startEditing('birthday')">Adicionar</a>
       </div>
     </div>
 
-    <div class="party-details__infoline">
+    <div
+      v-if="!isNegotiator || party.documentNumber"
+      class="party-details__infoline"
+    >
       <span class="party-details__infoline-label">{{ documentType }}:</span>
       <TextInlineEditor
         v-if="party.documentNumber || activeAddingData === 'documentNumber'"
         ref="documentNumber"
         v-model="party.documentNumber"
-        :is-editable="!isDisabled"
+        :is-editable="!isNegotiator"
         :mask="['###.###.###-##', '##.###.###/####-##']"
         filter="cpfCnpj"
         class="party-details__infoline-data"
         @change="updateParty($event, 'documentNumber')"
       />
       <div
-        v-else-if="!isDisabled"
+        v-else
         class="party-details__infoline-link"
       >
         <a @click="startEditing('documentNumber')">Adicionar</a>
@@ -77,13 +80,13 @@
     </div>
 
     <div
-      v-if="!isDisabled || phonesList.length"
+      v-if="!isNegotiator || phonesList.length"
       class="party-details__infoline"
     >
       <span class="party-details__infoline-label">Telefones:</span>
       <PartyContacts
         :contacts="phonesList"
-        :disabled="isDisabled"
+        :disabled="isNegotiator"
         filter="phoneNumber"
         model="number"
         :mask="[
@@ -102,13 +105,13 @@
     </div>
 
     <div
-      v-if="!isDisabled || emailsList.length"
+      v-if="!isNegotiator || emailsList.length"
       class="party-details__infoline"
     >
       <span class="party-details__infoline-label">Emails:</span>
       <PartyContacts
         :contacts="emailsList"
-        :disabled="isDisabled"
+        :disabled="isNegotiator"
         model="address"
         @change="(...args)=>updateContacts(...args, 'email')"
         @delete="removeContact($event, 'email')"
@@ -118,13 +121,13 @@
     </div>
 
     <div
-      v-if="!isDisabled || mappedOabs.length"
+      v-if="!isNegotiator || mappedOabs.length"
       class="party-details__infoline"
     >
       <span class="party-details__infoline-label">Oab:</span>
       <PartyContacts
         :contacts="mappedOabs"
-        :disabled="isDisabled"
+        :disabled="isNegotiator"
         filter="oab"
         model="fullOab"
         :mask="[
@@ -138,7 +141,7 @@
     </div>
 
     <div
-      v-if="!isDisabled"
+      v-if="!isNegotiator"
       class="party-details__infoline"
     >
       <span class="party-details__infoline-label">Dados bancários:</span>
@@ -219,7 +222,7 @@ export default {
       }) || []
     },
 
-    isDisabled() {
+    isNegotiator() {
       return this.party.roles?.includes('NEGOTIATOR')
     }
   },
@@ -324,7 +327,7 @@ export default {
       })
     },
     selectContact(value, key, type) {
-      if (!this.isDisabled) {
+      if (!this.isNegotiator) {
         this.addRecipient({ value, key, type })
       }
     }
