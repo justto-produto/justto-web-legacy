@@ -26,10 +26,10 @@
       :autosize="{ minRows: 1, maxRows: 4}"
       type="textarea"
       class="textarea-inline-editor__input"
-      @blur="confirmEdit"
+      @blur="handleBlur"
+      @keyup.native.enter="$refs.textareaInput.$emit('blur', 'confirm')"
+      @keyup.native.esc="$refs.textareaInput.$emit('blur', 'cancel')"
     />
-      <!-- @keyup.native.enter="confirmEdit"
-      @keyup.native.esc="cancelEdit" -->
   </div>
 </template>
 
@@ -66,6 +66,13 @@ export default {
     }
   },
   methods: {
+    handleBlur(event) {
+      if (event !== 'cancel') {
+        this.confirmEdit()
+      } else {
+        this.cancelEdit()
+      }
+    },
     enableEdit() {
       this.model = this.value || ''
       this.isEditing = true

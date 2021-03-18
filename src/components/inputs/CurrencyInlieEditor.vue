@@ -28,9 +28,9 @@
       class="currency-inline-editor__input"
       maxlength="16"
       @blur.native="confirmEdit"
+      @keyup.native.enter="confirmEdit"
+      @keyup.native.esc="cancelEdit"
     />
-      <!-- @keyup.native.enter="confirmEdit"
-      @keyup.native.esc="cancelEdit" -->
   </div>
 </template>
 

@@ -65,7 +65,7 @@ const ticketsMutations = {
 
     if (!anonymous) {
       const ticketIndex = getTicketIndex(content, disputeId)
-      Vue.set(content[ticketIndex], 'visualized', visualized)
+      if (ticketIndex > -1) Vue.set(content[ticketIndex], 'visualized', visualized)
     }
   },
 
