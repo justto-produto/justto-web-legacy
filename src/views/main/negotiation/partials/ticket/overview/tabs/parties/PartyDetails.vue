@@ -142,7 +142,10 @@
       class="party-details__infoline"
     >
       <span class="party-details__infoline-label">Dados bancários:</span>
-      <PartyBankAccounts :accounts="bankAccounts" />
+      <PartyBankAccounts
+        :accounts="bankAccounts"
+        :person-id="party.personId"
+      />
       <!-- class="party-details__infoline-data" -->
     </div>
   </article>

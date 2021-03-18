@@ -1,6 +1,9 @@
 <template>
   <article class="bank-accounts">
-    <div class="bank-accounts__container">
+    <div
+      v-if="isAllAccountsVisible"
+      class="bank-accounts__container"
+    >
       <div
         v-for="account in accounts"
         :key="account.id"
@@ -33,7 +36,7 @@
             />
             <i
               class="bank-accounts__account-icon el-icon-delete"
-              @click.stop="deleteAccount(account)"
+              @click.stop="deleteBankAccount(account)"
             />
           </span>
         </span>
@@ -57,6 +60,8 @@
 
     <PartyBankAccountDialog
       ref="partyBankAccountDialog"
+      @create="addBankAccount"
+      @edit="editBankAccount"
     />
   </article>
 </template>
@@ -72,6 +77,10 @@ export default {
   props: {
     accounts: {
       type: Array,
+      required: true
+    },
+    personId: {
+      type: Number,
       required: true
     }
   },
@@ -97,7 +106,9 @@ export default {
     ...mapActions({
       linkAccount: 'setTicketRoleBankAccount',
       unlinkAccount: 'unlinkTicketRoleBankAccount',
-      deleteBankAccount: 'deleteTicketRoleBankAccount'
+      createBankAccount: 'createTicketRoleBankAccount',
+      deleteBankAccount: 'deleteTicketRoleBankAccount',
+      updateBankAccount: 'updateTicketRoleBankAccount'
     }),
 
     handleClick({ id, personId }) {
@@ -108,11 +119,47 @@ export default {
       }
     },
 
-    deleteAccount(account) {
+    deleteBankAccount(account) {
       const { disputeId } = this
       const { id: bankAccountId, personId } = account
 
       this.deleteBankAccount({ disputeId, personId, bankAccountId })
+    },
+
+    addBankAccount(account) {
+      const { disputeId, personId } = this
+
+      console.log(account)
+
+      this.createBankAccount({ disputeId, account, personId }).then(_ => {
+        this.$jusNotification({
+          title: 'Yay!',
+          dangerouslyUseHTMLString: true,
+          message: 'Conta bancária <strong>criada</strong> com sucesso.',
+          type: 'success'
+        })
+      }).catch(err => {
+        this.$jusNotification(err)
+      }).finally(_ => {
+        this.closeBankAccountDialog()
+      })
+    },
+
+    editBankAccount(account) {
+      const { disputeId, personId } = this
+
+      this.updateBankAccount({ disputeId, account, personId }).then(_ => {
+        this.$jusNotification({
+          title: 'Yay!',
+          dangerouslyUseHTMLString: true,
+          message: 'Conta bancária <strong>editada</strong> com sucesso.',
+          type: 'success'
+        })
+      }).catch(err => {
+        this.$jusNotification(err)
+      }).finally(_ => {
+        this.closeBankAccountDialog()
+      })
     },
 
     toggleAccountsVisible() {
@@ -138,8 +185,11 @@ export default {
     },
 
     openBankAccountDialog(account) {
-      console.log(this.$refs.partyBankAccountDialog)
       this.$refs.partyBankAccountDialog.openBankAccountDialog(account)
+    },
+
+    closeBankAccountDialog() {
+      this.$refs.partyBankAccountDialog.closeDialog()
     }
   }
 }
