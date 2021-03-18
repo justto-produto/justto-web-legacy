@@ -85,7 +85,8 @@ const actionsActions = {
     return axiosDispatch({
       url: `${disputesPath}/v2/${disputeId}/counterproposal`,
       method: 'POST',
-      data
+      data,
+      mutation: 'setLastTicketOffers'
     })
   }
 }

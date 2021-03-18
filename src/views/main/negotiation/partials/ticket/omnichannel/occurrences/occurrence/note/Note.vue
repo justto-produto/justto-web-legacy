@@ -9,11 +9,11 @@
         <span>
           <i
             class="note-container__header-icon el-icon-edit"
-            @click="openEditDialog(occurrence)"
+            @click="openEditDialog"
           />
           <i
             class="note-container__header-icon el-icon-delete"
-            @click="removeNote(occurrence, index)"
+            @click="removeNote"
           />
         </span>
       </div>

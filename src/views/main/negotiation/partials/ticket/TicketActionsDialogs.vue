@@ -431,7 +431,7 @@ export default {
     ]),
 
     confirmAction(action, message = 'Tem certeza que deseja realizar está ação?') {
-      const title = this.$options.filters.capitalize(this.$t(`actions.${action}`))
+      const title = this.$options.filters.capitalize(this.$t(`actions.${action}.name`))
       const options = {
         confirmButtonText: 'Continuar',
         cancelButtonText: 'Cancelar',
@@ -448,7 +448,7 @@ export default {
     },
 
     concludeAction(action, disputeId, param = false) {
-      const message = this.$tc(`actions.feedback.${action}`, param)
+      const message = this.$tc(`actions.${action}.feedback-message`, param)
 
       this.$jusNotification({
         message: `${message} com sucesso.`,
@@ -593,7 +593,7 @@ export default {
       const { ticket, offerForm, unsettledOutcomeReasons } = this
       const { note, unsettledType } = offerForm
       const { disputeId } = ticket
-      const payload = { note, reason: unsettledOutcomeReasons[unsettledType] }
+      const data = { note, reason: unsettledOutcomeReasons[unsettledType] }
       const action = 'UNSETTLED'
 
       if (this.isInsufficientUpperRange) {
@@ -602,7 +602,7 @@ export default {
             .then(() => {
               this.modalLoading = true
               this.sendManualOffer()
-                .then(() => this.sendTicketAction({ disputeId, action, payload })
+                .then(() => this.sendTicketAction({ disputeId, action, data })
                   .then(success => this.concludeAction(action, disputeId))
                   .catch(error => this.$jusNotification({ error }))
                   .finally(() => (this.modalLoading = false))
@@ -617,7 +617,7 @@ export default {
         this.confirmAction(action)
           .then(() => {
             this.modalLoading = true
-            this.sendTicketAction({ disputeId, action, payload })
+            this.sendTicketAction({ disputeId, action, data })
               .then(success => this.concludeAction(action, disputeId))
               .catch(error => this.$jusNotification({ error }))
               .finally(() => (this.modalLoading = false))
