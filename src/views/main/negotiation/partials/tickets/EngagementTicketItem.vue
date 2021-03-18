@@ -25,7 +25,7 @@
         </span>
       </div>
       <div class="communication-ticket-item-container__message">
-        {{ ticket.pendingReason || $t(`dispute.status.${ticket.disputeStatus}`) }}
+        {{ ticket.pendingReason || $options.filters.capitalize($t(`dispute.status.${ticket.disputeStatus}`)) }}
       </div>
     </div>
     <!-- <span class="communication-ticket-item-container__time">
