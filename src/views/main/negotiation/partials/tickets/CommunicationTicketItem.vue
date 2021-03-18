@@ -67,14 +67,15 @@ export default {
     },
     lastInboundInteraction() {
       const { lastInboundInteraction, lastReceivedMessage, disputeStatus, expirationDate } = this.ticket
-      const { type, message, dateTime } = (lastReceivedMessage || lastInboundInteraction) || {}
 
-      if (lastReceivedMessage) {
+      if (lastReceivedMessage && lastReceivedMessage.message) {
+        const { message, dateTime } = lastReceivedMessage
         return {
           message,
           dateTime: dateTime.dateTime
         }
-      } else if (lastInboundInteraction) {
+      } else if (lastInboundInteraction && lastInboundInteraction.type) {
+        const { type, dateTime } = lastInboundInteraction
         return {
           icon: this.$t(`interaction-types.${type}.icon`),
           message: this.$options.filters.capitalize(this.$t(`interaction-types.${type}.message`)),
@@ -83,7 +84,7 @@ export default {
       } else {
         return {
           // icon: this.$t(`ticket-status.${disputeStatus}.icon`),
-          message: 'Dispute ' + this.$t(`ticket-status.${disputeStatus}`),
+          message: 'Disputa ' + this.$t(`ticket-status.${disputeStatus}`),
           dateTime: expirationDate || '--/--/--'
         }
       }

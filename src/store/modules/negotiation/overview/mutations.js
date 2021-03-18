@@ -96,11 +96,16 @@ const overviewMutations = {
     }
   },
 
-  setTicketOverviewProperties: (state, params) => (Vue.set(state, 'ticketOverviewProperties', params)),
+  setTicketOverviewProperties: (state, params) => Vue.set(state, 'ticketOverviewProperties', params),
 
-  setTicketOverviewAttachments: (state, params) => (Vue.set(state, 'ticketOverviewAttachments', params)),
+  setTicketOverviewAttachments: (state, params) => Vue.set(state, 'ticketOverviewAttachments', params),
 
-  setLastTicketOffers: (state, params) => (Vue.set(state, 'lastTicketOffers', params)),
+  setLastTicketOffers: (state, params) => Vue.set(state, 'lastTicketOffers', params),
+
+  updateLastTicketOffers: (state, { payload }) => {
+    const { polarityObjectKey, value } = payload
+    Vue.set(state.lastTicketOffers[polarityObjectKey], 'value', value)
+  },
 
   updateTicket: (state, dispute) => {
     Vue.set(state, 'ticketOverview', new TicketOverview(dispute))
