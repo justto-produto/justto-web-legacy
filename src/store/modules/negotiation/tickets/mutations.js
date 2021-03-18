@@ -6,10 +6,8 @@ const getTicketIndex = (tickets, disputeId) => tickets.findIndex(ticket => ticke
 
 const ticketsMutations = {
   setCommunicationTickets: (state, { data, payload }) => {
-    setTimeout(() => {
-      if (payload === 'nextPage') data.content = state.tickets.content.concat(data.content)
-      Vue.set(state, 'tickets', data)
-    }, 1000)
+    if (payload === 'nextPage') data.content = state.tickets.content.concat(data.content)
+    Vue.set(state, 'tickets', data)
   },
 
   deleteTicket: ({ tickets }, { payload }) => {

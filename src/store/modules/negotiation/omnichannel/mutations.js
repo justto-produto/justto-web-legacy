@@ -66,8 +66,8 @@ const omnichannelMutations = {
   },
 
   addNegotiationOccurrence: (state, occurrence) => {
-    const date = getFormatedDate(occurrence, 'YYYY-MM-DD')
-    const dates = state.occurrences.list.filter(item => !item.id).map(item => getFormatedDate(item, 'YYYY-MM-DD'))
+    const date = getFormatedDate(occurrence, 'DD/MM/YYYY')
+    const dates = state.occurrences.list.filter(item => !item.id).map(item => getFormatedDate(item, 'DD/MM/YYYY'))
 
     let canInclude = false
 
