@@ -35,6 +35,7 @@
               <span
                 v-else
                 class="log-container__occurrence-text__summary-iterator-item__see-more"
+                :class="{ visible: !seeEmails }"
                 @click="seeMore('EMAIL', summary.disputeRoleId)"
               >
                 &#40;
@@ -51,6 +52,7 @@
               {{ summary.whatsApp }} {{ $tc('negotiation.ticket.omnichannel.occurrence.summary.count-whatsapp', summary.whatsApp) }} {{ summary.personName | resumedName }}
               <span
                 class="log-container__occurrence-text__summary-iterator-item__see-more"
+                :class="{ visible: !seeWhats }"
                 @click="seeMore('WHATSAPP', summary.disputeRoleId)"
               >
                 &#40;
@@ -71,6 +73,7 @@
               {{ summary.sms }} {{ $tc('negotiation.ticket.omnichannel.occurrence.summary.count-sms', summary.sms) }} {{ summary.personName | resumedName }}
               <span
                 class="log-container__occurrence-text__summary-iterator-item__see-more"
+                :class="{ visible: !seeSms }"
                 @click="seeMore('SMS', summary.disputeRoleId)"
               >
                 &#40;
@@ -112,6 +115,7 @@
         :key="`summary-occurrence-${summaryOccurrenceIndex}`"
         class="log-container__occurrence summary log-container__summary-scheduler"
         :value="interaction"
+        :occurrence="value"
       />
     </span>
   </section>
@@ -337,10 +341,17 @@ export default {
               .log-container__occurrence-text__summary-iterator-item__see-more {
                 color: $--color-primary;
                 font-size: 12px;
+                min-width: 66px;
                 cursor: pointer;
                 display: flex;
                 align-items: flex-end;
                 text-decoration: underline;
+                align-self: flex-start;
+                justify-content: flex-end;
+
+                &.visible {
+                  min-width: 114px;
+                }
               }
             }
           }
