@@ -148,7 +148,84 @@ const overviewActions = {
     }).finally(() => commit('decrementTicketOverviewCountGetters'))
   },
 
-  deleteTicketRoleBankAccount({ commit }, { bankAccountId, disputeId, personId }) {
+  updateTicketRoleBankAccount({ commit, dispatch, getters }, { disputeId, account, personId }) {
+    commit('incrementTicketOverviewCountGetters')
+
+    return new Promise((resolve, reject) => {
+      const { id: bankAccountId } = account
+      const disputeRole = getters.getTicketOverviewParties.find(el => Number(el.personId) === Number(personId)).legacyDto
+
+      axiosDispatch({
+        url: `${oldDisputeApi}/${disputeId}/dispute-roles`,
+        method: 'PUT',
+        data: {
+          ...disputeRole,
+          bankAccounts: disputeRole.bankAccounts.map(bankAccount => {
+            if (Number(bankAccount.id) !== Number(bankAccountId)) {
+              return bankAccount
+            } else {
+              return account
+            }
+          })
+        }
+      }).then(res => {
+        dispatch('getTicketOverviewParty', {
+          disputeId,
+          disputeRoleId: disputeRole.id
+        }).then(_ => resolve(res)).catch(err => reject(err))
+      }).catch(err => reject(err)).finally(_ => commit('decrementTicketOverviewCountGetters'))
+    })
+  },
+
+  createTicketRoleBankAccount({ commit, dispatch, getters }, { disputeId, account, personId }) {
+    commit('incrementTicketOverviewCountGetters')
+
+    return new Promise((resolve, reject) => {
+      const disputeRole = getters.getTicketOverviewParties.find(el => Number(el.personId) === Number(personId)).legacyDto
+
+      axiosDispatch({
+        url: `${oldDisputeApi}/${disputeId}/dispute-roles`,
+        method: 'PUT',
+        data: {
+          ...disputeRole,
+          bankAccounts: [...disputeRole.bankAccounts, account]
+        }
+      }).then(
+        res => {
+          dispatch('getTicketOverviewParty', {
+            disputeId,
+            disputeRoleId: disputeRole.id
+          }).then(_ => resolve(res)).catch(err => reject(err))
+        }
+      ).catch(err => reject(err)).finally(_ => commit('decrementTicketOverviewCountGetters'))
+    })
+  },
+
+  // TODO: Pedir uma API para deletar diretamente.
+  deleteTicketRoleBankAccount({ commit, dispatch, getters }, { bankAccountId, disputeId, personId }) {
+    commit('incrementTicketOverviewCountGetters')
+
+    return new Promise((resolve, reject) => {
+      const disputeRole = getters.getTicketOverviewPartie.find(item => Number(item.personId) === Number(personId)).legacyDto
+      axiosDispatch({
+        url: `${oldDisputeApi}/${disputeId}/dispute-roles`,
+        method: 'PUT',
+        data: {
+          ...disputeRole,
+          bankAccounts: disputeRole.bankAccounts.filter(({ id }) => Number(id) !== Number(bankAccountId))
+        }
+      }).then(
+        res => {
+          dispatch('getTicketOverviewParty', {
+            disputeId,
+            disputeRoleId: disputeRole.id
+          }).then(_ => resolve(res)).catch(err => reject(err))
+        }
+      ).catch(err => reject(err)).finally(_ => commit('decrementTicketOverviewCountGetters'))
+    })
+  },
+
+  unlinkTicketRoleBankAccount({ commit }, { bankAccountId, disputeId, personId }) {
     commit('incrementTicketOverviewCountGetters')
 
     return axiosDispatch({
