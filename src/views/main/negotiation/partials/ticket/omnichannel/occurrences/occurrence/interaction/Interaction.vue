@@ -182,12 +182,6 @@ export default {
     flex-direction: row-reverse;
   }
 
-  &.SCHEDULER {
-    .interaction-container__balloon {
-      border: 3px dotted #DFF4FE;
-    }
-  }
-
   &.MANUAL {
     .interaction-container__balloon {
       background-color: white !important;
