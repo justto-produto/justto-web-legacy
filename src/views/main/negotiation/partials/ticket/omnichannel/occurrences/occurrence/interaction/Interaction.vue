@@ -3,16 +3,10 @@
     class="interaction-container"
     :class="`${interaction.direction} ${type}`"
   >
-    <!-- <div class="interaction-container__out-avatar show-only-md">
-      <JusAvatarUser v-bind="avatarProps" />
-    </div> -->
     <div
       class="interaction-container__balloon"
       :class="`${interaction.direction}`"
     >
-      <!-- <div class="interaction-container__balloon-avatar show-only-sm">
-        <JusAvatarUser v-bind="avatarProps" />
-      </div> -->
       <div class="interaction-container__balloon-content">
         <component
           :is="type"
