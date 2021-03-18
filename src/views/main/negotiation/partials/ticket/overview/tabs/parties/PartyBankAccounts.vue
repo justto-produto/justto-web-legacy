@@ -129,8 +129,6 @@ export default {
     addBankAccount(account) {
       const { disputeId, personId } = this
 
-      console.log(account)
-
       this.createBankAccount({ disputeId, account, personId }).then(_ => {
         this.$jusNotification({
           title: 'Yay!',
