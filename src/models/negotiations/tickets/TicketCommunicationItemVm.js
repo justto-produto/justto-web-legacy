@@ -4,7 +4,7 @@ import { DateTime } from '../GenericClasses'
 class LastInboundCommunicationVm {
   constructor({ dateTime, createAt, message, type }) {
     this.dateTime = new DateTime(dateTime || createAt || {})
-    this.message = message?.resume || message
+    this.message = message.resume || message
     this.type = type
   }
 }
