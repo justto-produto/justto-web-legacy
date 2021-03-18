@@ -68,7 +68,7 @@ const overviewActions = {
   updateActiveTab({ state, commit }, disputeStatus) {
     const correspondingTab = getCorrespondingTab(disputeStatus)
     if (correspondingTab !== state.ticketsActiveTab) {
-      commit('setTicketsActiveTab', getCorrespondingTab(disputeStatus))
+      commit('setTicketsActiveTab', correspondingTab)
     }
   },
 

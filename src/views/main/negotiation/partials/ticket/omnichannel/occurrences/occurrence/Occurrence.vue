@@ -1,15 +1,15 @@
 <template>
-  <section class="occurrency-container">
+  <section class="occurrence-container">
     <component
       :is="component"
-      :value="occurrency"
+      :value="occurrence"
     />
   </section>
 </template>
 
 <script>
 export default {
-  name: 'Occurrency',
+  name: 'Occurrence',
   components: {
     LOG: () => import('./log/Log'),
     NOTE: () => import('./note/Note'),
@@ -29,7 +29,7 @@ export default {
     summaryTypes: ['EMAIL', 'WHATSAPP', 'SMS']
   }),
   computed: {
-    occurrency: {
+    occurrence: {
       get() {
         return this.value
       }
@@ -47,8 +47,8 @@ export default {
         SUMMARY: ['SUMMARY'],
         INTERACTION: ['INTERACTION']
       }
-      const occurrenceType = this.occurrency.type
-      const interactionType = this.occurrency.interaction?.type || 'LOG'
+      const occurrenceType = this.occurrence.type
+      const interactionType = this.occurrence.interaction?.type || 'LOG'
       return Object.keys(mapType).find(key => (mapType[key].includes(occurrenceType) || mapType[key].includes(interactionType)))
     }
   }

@@ -105,7 +105,7 @@ export default {
           isVisible: this.canResume
         },
         {
-          name: 'PAUSE',
+          name: 'PAUSED',
           method: (action) => this.handlePauseResume(action),
           isVisible: this.canPause
         },
@@ -331,7 +331,7 @@ export default {
 
       this.handleManualStrategy(action)
         .then(() => this.confirmAction(action)
-          .then(() => this.resendMessages({ disputeId, action })
+          .then(() => this.resendMessages(disputeId)
             .then(() => this.concludeAction(action, disputeId))
             .catch(error => this.$jusNotification({ error }))
           )
@@ -343,7 +343,7 @@ export default {
 
       this.handleManualStrategy(action)
         .then(() => this.confirmAction(action)
-          .then(() => this.cancelMessages({ disputeId, action })
+          .then(() => this.cancelMessages(disputeId)
             .then(() => this.concludeAction(action, disputeId))
             .catch(error => this.$jusNotification({ error }))
           )
