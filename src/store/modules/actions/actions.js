@@ -81,12 +81,16 @@ const actionsActions = {
     })
   },
 
-  sendOffer({ _ }, { data, disputeId }) {
+  sendOffer({ _ }, { data, disputeId, polarityObjectKey }) {
     return axiosDispatch({
       url: `${disputesPath}/v2/${disputeId}/counterproposal`,
       method: 'POST',
       data,
-      mutation: 'setLastTicketOffers'
+      mutation: 'updateLastTicketOffers',
+      payload: {
+        value: data.value,
+        polarityObjectKey
+      }
     })
   }
 }

@@ -91,7 +91,9 @@ export default {
         updateUpperRage: false
       }
 
-      this.sendOffer({ data, disputeId })
+      const polarityObjectKey = 'plaintiffOffer'
+
+      this.sendOffer({ data, disputeId, polarityObjectKey })
     },
 
     updateDefendantOffer(value) {
@@ -109,7 +111,9 @@ export default {
         updateUpperRage: false
       }
 
-      this.sendOffer({ data, disputeId })
+      const polarityObjectKey = 'defendantOffer'
+
+      this.sendOffer({ data, disputeId, polarityObjectKey })
     },
 
     updateUpperRange(upperRange) {
