@@ -133,7 +133,8 @@ const omnichannelMutations = {
 
   addSumary: (state, { payload, data }) => {
     const { occurrenceId, type } = payload
-    Vue.set(state.occurrences.summary[type], occurrenceId, data.content)
+    const content = data.content.filter(({ id }) => Boolean(id))
+    Vue.set(state.occurrences.summary[type], occurrenceId, content)
   },
 
   cleanSumary: (state, { type, occurrenceId }) => Vue.delete(state.occurrences.summary[type], occurrenceId),
