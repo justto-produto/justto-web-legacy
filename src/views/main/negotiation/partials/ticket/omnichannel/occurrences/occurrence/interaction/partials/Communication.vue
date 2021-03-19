@@ -59,6 +59,23 @@
         class="communication-container__about-icon"
         :icon="`status-${sendStatus}`"
       />
+      <span v-if="haveGroupedOccurrences">
+        •
+      </span>
+      <el-popover
+        placement="top-start"
+        trigger="hover"
+        :content="groupedOccurrencesHtml"
+        :disabled="!haveGroupedOccurrences"
+      >
+        <JusIcon
+          v-if="haveGroupedOccurrences"
+          slot="reference"
+          icon="running"
+          :style="{ width: '16px' }"
+        />
+      </el-popover>
+
       <el-tooltip>
         <div
           slot="content"
@@ -97,6 +114,10 @@ export default {
     ...mapGetters({
       fullMessages: 'getFullMessages'
     }),
+
+    interaction() {
+      return this.value
+    },
 
     prefix() {
       return this.directionIn ? 'de' : 'para'
