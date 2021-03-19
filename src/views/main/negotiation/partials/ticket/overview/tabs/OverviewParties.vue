@@ -91,6 +91,7 @@ export default {
   watch: {
     'disputeId'(disputeId) {
       this.loadedCollapseItems = []
+      this.activeCollapseItem = null
     }
   },
   methods: {
