@@ -61,6 +61,9 @@ export default {
       }
     }
   },
+  mounted() {
+    this.$emit('enableEdit')
+  },
   methods: {
     enableEdit() {
       this.model = this.value || 0

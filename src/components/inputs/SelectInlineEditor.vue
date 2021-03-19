@@ -25,6 +25,8 @@
       id="selectInput"
       ref="selectInput"
       v-model="vModel"
+      filterable
+      default-first-option
       class="select-inline-editor__input"
       @change="disableEdit"
       @keyup.native.esc="disableEdit"
@@ -72,6 +74,9 @@ export default {
       const selectedIndex = list.findIndex(item => item[value] === this.value)
       return list[selectedIndex][label]
     }
+  },
+  mounted() {
+    this.$emit('enableEdit')
   },
   methods: {
     enableEdit() {

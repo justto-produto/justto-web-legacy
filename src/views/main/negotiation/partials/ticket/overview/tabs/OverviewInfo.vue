@@ -19,6 +19,7 @@
         class="overview-info__infoline-data"
         @change="setData(data.key, data.classToEdit, $event)"
         @blur="stopEditing"
+        @enableEdit="enableEdit"
       />
       <div
         v-else
@@ -209,13 +210,11 @@ export default {
 
     startEditing(key) {
       this.activeAddingData = key
-      this.$forceUpdate()
-      this.$nextTick(() => {
-        this.$forceUpdate()
-        this.$nextTick(() => {
-          this.$refs[key][0].enableEdit()
-        })
-      })
+    },
+
+    enableEdit() {
+      const { activeAddingData } = this
+      if (activeAddingData) this.$refs[activeAddingData][0].enableEdit()
     },
 
     stopEditing() {

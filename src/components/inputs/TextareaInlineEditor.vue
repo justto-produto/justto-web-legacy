@@ -27,9 +27,9 @@
       type="textarea"
       class="textarea-inline-editor__input"
       @blur="handleBlur"
-      @keyup.native.enter="$refs.textareaInput.$emit('blur', 'confirm')"
       @keyup.native.esc="$refs.textareaInput.$emit('blur', 'cancel')"
     />
+    <!-- @keyup.native.enter="$refs.textareaInput.$emit('blur', 'confirm')" -->
   </div>
 </template>
 
@@ -64,6 +64,9 @@ export default {
         if (!value) this.$emit('blur')
       }
     }
+  },
+  mounted() {
+    this.$emit('enableEdit')
   },
   methods: {
     handleBlur(event) {
