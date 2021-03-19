@@ -81,7 +81,7 @@ export default {
       engagementLength: 'disputeNearExpirationsEngajement',
       interactionLength: 'disputeNotVisualizedInteration',
       newDealsLength: 'disputeNotVisualizedNewDeal',
-      finishedLenght: 'disputeNotVisualizedFinished',
+      finishedLenght: 'disputeNotVisualizedFinished'
     }),
 
     tabs() {
