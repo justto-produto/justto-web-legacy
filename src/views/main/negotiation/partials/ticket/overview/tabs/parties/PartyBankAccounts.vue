@@ -123,7 +123,16 @@ export default {
       const { disputeId } = this
       const { id: bankAccountId, personId } = account
 
-      this.deleteBankAccount({ disputeId, personId, bankAccountId })
+      this.deleteBankAccount({ disputeId, personId, bankAccountId }).then(_ => {
+        this.$jusNotification({
+          title: 'Yay!',
+          dangerouslyUseHTMLString: true,
+          message: 'Conta bancária <strong>excluída</strong> com sucesso.',
+          type: 'success'
+        })
+      }).catch(err => {
+        this.$jusNotification(err)
+      })
     },
 
     addBankAccount(account) {
