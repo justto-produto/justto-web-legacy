@@ -290,6 +290,9 @@ export default {
       this.setTicketOverviewPartyContact(params)
     },
     updateContacts(contactId, contactValue, contactType) {
+      if (!contactValue) {
+        return
+      }
       const { disputeId, party } = this
       const params = {
         roleId: party.disputeRoleId,
