@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <el-dialog
     :close-on-click-modal="false"
     :close-on-press-escape="false"
@@ -126,7 +126,7 @@
               slot="append"
               @click="addPhone()"
             >
-              <jus-icon icon="add-white" />
+              <jus-icon icon="add-purple" />
             </el-button>
           </el-input>
         </el-form-item>
@@ -172,7 +172,7 @@
               data-testid="add-email"
               @click="addEmail()"
             >
-              <jus-icon icon="add-white" />
+              <jus-icon icon="add-purple" />
             </el-button>
           </el-input>
         </el-form-item>
@@ -244,6 +244,7 @@
           <el-button
             class="button"
             type="primary"
+            size="mini"
             @click="addOab(newRole.personId, newRole.oabs)"
           >
             <jus-icon icon="add-white" />

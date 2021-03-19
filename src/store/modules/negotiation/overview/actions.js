@@ -194,7 +194,8 @@ const overviewActions = {
     commit('incrementTicketOverviewCountGetters')
 
     return new Promise((resolve, reject) => {
-      const disputeRole = getters.getTicketOverviewPartie.find(item => Number(item.personId) === Number(personId)).legacyDto
+      const disputeRole = getters.getTicketOverviewParties.find(item => Number(item.personId) === Number(personId)).legacyDto
+
       axiosDispatch({
         url: `${oldDisputeApi}/${disputeId}/dispute-roles`,
         method: 'PUT',

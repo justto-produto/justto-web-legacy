@@ -566,7 +566,7 @@ export default {
     handleEditNegotiators() {
       const { disputeId } = this.ticket
       const data = { negotiatorsId: this.editNegotiatorsForm }
-      const action = 'EDIT_NEGOTIATORS'
+      const action = 'NEGOTIATORS'
 
       this.modalLoading = true
       this.sendTicketAction({ disputeId, action, data })

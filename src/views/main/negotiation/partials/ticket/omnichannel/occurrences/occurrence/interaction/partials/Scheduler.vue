@@ -1,15 +1,33 @@
 <template>
   <section class="scheduler-container">
     <span
-      v-if="to"
       class="scheduler-container__contact"
     >
-      para
+      <JusIcon
+        class="scheduler-container__contact-icon"
+        :icon="messageType"
+      />
+      <span v-if="to">
+        para
+      </span>
       <span
+        v-if="!isSimilarName && person"
+        class="communication-container__email-person"
+      >
+        {{ person }}
+      </span>
+      <span
+        v-if="to"
         class="scheduler-container__contact-address"
         @click="copyEmail"
       >
+        <span>
+          &lt;
+        </span>
         {{ to }}
+        <span>
+          &gt;
+        </span>
       </span>
     </span>
     <div
@@ -34,11 +52,11 @@
     </div>
     <div class="scheduler-container__status">
       <br>
-      <span v-if="status === 'CANCELED'">
+      <span v-if="status === 'CANCELEDi'">
         <i class="el-icon-close" />
         Mensagem automática agendada foi <strong>CANCELADA</strong>.
       </span>
-      <span v-else-if="status === 'WAITING'">
+      <span v-else-if="status === 'WAITINGi'">
         <jus-icon
           icon="clock"
           style="width: 12px;"
@@ -47,10 +65,39 @@
         {{ interaction.message.scheduledTime.dateTime | moment('DD/MM[ às ]HH:mm') }}
         que ainda não foi entregue.
       </span>
-      <span v-else>
-        <i class="el-icon-check" />
-        Mensagem agendada foi entregue em
-        {{ interaction.message.scheduledTime.dateTime | moment('DD/MM[ às ]HH:mm') }}
+      <span
+        v-else
+        class="scheduler-container__status-about"
+      >
+        {{ sendDate | moment('HH:mm') }}
+        <span v-if="sendStatus !== 'default' && !directionIn">
+          •
+        </span>
+        <JusIcon
+          v-if="sendStatus !== 'default' && !directionIn"
+          class="scheduler-container__status-about-icon"
+          :icon="`status-${sendStatus}`"
+        />
+        <GroupedOccurrences
+          :have="haveGroupedOccurrences"
+          :occurrences="groupedOccurrences"
+        />
+        <!-- <span v-if="haveGroupedOccurrences">
+          •
+        </span>
+        <el-popover
+          placement="top-start"
+          trigger="hover"
+          :content="groupedOccurrencesHtml"
+          :disabled="!haveGroupedOccurrences"
+        >
+          <JusIcon
+            v-if="haveGroupedOccurrences"
+            slot="reference"
+            icon="running"
+            :style="{ width: '16px' }"
+          />
+        </el-popover> -->
       </span>
     </div>
   </section>
@@ -58,7 +105,13 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import communicationSendStatus from '@/utils/mixins/communicationSendStatus'
+
 export default {
+  components: {
+    GroupedOccurrences: () => import('./partials/groupedOccurrence')
+  },
+  mixins: [communicationSendStatus],
   props: {
     value: {
       type: Object,
@@ -73,6 +126,7 @@ export default {
       required: true
     }
   },
+
   computed: {
     ...mapGetters({
       fullMessages: 'getFullMessages'
@@ -82,24 +136,23 @@ export default {
       return this.value
     },
 
-    directionIn() {
-      return this.interaction.direction === 'INBOUND'
-    },
-
     to() {
       return this.interaction.message.receiver || false
     },
 
-    sendDate() {
-      const first = (first) => (first ? first.split(' ')[1] : '')
-      const defaultDate = this.interaction?.updateAt?.dateTime ? this.interaction.updateAt.dateTime : this.interaction.createAt.dateTime
-
-      return {
-        sent: first(this.interaction?.message?.parameters?.SEND_DATE),
-        readed: first(this.interaction?.message?.parameters?.READ_DATE),
-        recived: first(this.interaction?.message?.parameters?.RECEIVER_DATE),
-        default: this.$moment(defaultDate).format('HH:mm')
+    messageType() {
+      const mapCommunicationTypes = {
+        EMAIL: 'email',
+        WHATSAPP: 'whatsapp',
+        NEGOTIATOR_MESSAGE: 'negotiator-message-2'
       }
+      if (this.value?.message?.communicationType) {
+        const { communicationType } = this.value.message
+        if (Object.keys(mapCommunicationTypes).includes(communicationType)) {
+          return mapCommunicationTypes[communicationType]
+        }
+      }
+      return 'email'
     },
 
     text() {
@@ -134,12 +187,15 @@ export default {
       return this.interaction?.message?.parameters?.FAILED_SEND
     }
   },
+
   updated() {
     this.$set(this.occurrence, 'renderCompleted', true)
   },
+
   mounted() {
     this.$set(this.occurrence, 'renderCompleted', true)
   },
+
   methods: {
     ...mapActions([
       'deleteFullMessage',
@@ -165,7 +221,6 @@ export default {
 @import '@/styles/colors.scss';
 
 .scheduler-container {
-  background-color: transparent;
   margin: 12px;
 
   .scheduler-container__message {
@@ -188,13 +243,40 @@ export default {
 
   .scheduler-container__status {
     font-style: italic;
+
+    .scheduler-container__status-about {
+      font-style: normal;
+      margin-top: -24px;
+
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 6px;
+
+      font-size: 12px;
+      color: #9A9797;
+
+      .scheduler-container__status-about-icon {
+        width: 18px;
+      }
+    }
   }
 
   .scheduler-container__contact {
-    color: #9A9797;
+    color: #FF9300;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    margin-bottom: 6px;
+    gap: 6px;
+
+    .scheduler-container__contact-icon {
+      width: 16px;
+    }
 
     .scheduler-container__contact-address {
       cursor: copy;
+      display: flex;
     }
   }
 }

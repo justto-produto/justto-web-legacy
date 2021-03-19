@@ -59,6 +59,10 @@
         class="communication-container__about-icon"
         :icon="`status-${sendStatus}`"
       />
+      <GroupedOccurrences
+        :have="haveGroupedOccurrences"
+        :occurrences="groupedOccurrences"
+      />
       <el-tooltip>
         <div
           slot="content"
@@ -77,10 +81,14 @@
 </template>
 
 <script>
-import { isSimilarStrings, getFormatedDate } from '@/utils'
 import { mapActions, mapGetters } from 'vuex'
+import communicationSendStatus from '@/utils/mixins/communicationSendStatus'
 
 export default {
+  components: {
+    GroupedOccurrences: () => import('./partials/groupedOccurrence')
+  },
+  mixins: [communicationSendStatus],
   props: {
     value: {
       type: Object,
@@ -101,45 +109,12 @@ export default {
       return this.value
     },
 
-    directionIn() {
-      return this.interaction.direction === 'INBOUND'
-    },
-
     prefix() {
       return this.directionIn ? 'de' : 'para'
     },
 
     contact() {
       return this.interaction.message[this.directionIn ? 'sender' : 'receiver']
-    },
-
-    person() {
-      const name = this.interaction.message.parameters[this.directionIn ? 'SENDER_NAME' : 'RECEIVER_NAME']
-      return this.$options.filters.resumedName(name || '')
-      // return name
-    },
-
-    isSimilarName() {
-      return isSimilarStrings(this.person, this.contact, 75)
-    },
-
-    sendDate() {
-      return getFormatedDate(this.interaction, 'HH:mm')
-    },
-
-    sendStatus() {
-      const parameters = this.interaction?.message?.parameters || {}
-      const keys = Object.keys(parameters)
-
-      if (keys.includes('READ_DATE')) {
-        return 'readed'
-      } else if (keys.includes('RECEIVER_DATE')) {
-        return 'recived'
-      } else if (keys.includes('SEND_DATE')) {
-        return 'sent'
-      } else {
-        return 'default'
-      }
     },
 
     messageType() {
@@ -185,12 +160,15 @@ export default {
       return this.interaction?.message?.parameters?.FAILED_SEND
     }
   },
+
   updated() {
     this.$set(this.occurrence, 'renderCompleted', true)
   },
+
   mounted() {
     this.$set(this.value, 'renderCompleted', true)
   },
+
   methods: {
     ...mapActions([
       'deleteFullMessage',

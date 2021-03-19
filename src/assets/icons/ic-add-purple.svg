@@ -2,7 +2,7 @@
     <g fill="none" fill-rule="evenodd">
         <path d="M0 0h24v24H0z"/>
         <g stroke="#9461F7">
-            <circle cx="11.997" cy="12.002" r="11.382"/>
+            <!-- <circle cx="11.997" cy="12.002" r="11.382"/> -->
             <path d="M11.999 5.402v13.2M5.399 12.002h13.2"/>
         </g>
     </g>

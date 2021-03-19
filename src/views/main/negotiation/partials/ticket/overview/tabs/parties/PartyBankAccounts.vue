@@ -36,7 +36,7 @@
             />-->
             <i
               class="bank-accounts__account-icon el-icon-delete"
-              @click.stop="deleteBankAccount(account)"
+              @click.stop="removeBankAccount(account)"
             />
           </span>
         </span>
@@ -119,11 +119,20 @@ export default {
       }
     },
 
-    deleteBankAccount(account) {
+    removeBankAccount(account) {
       const { disputeId } = this
       const { id: bankAccountId, personId } = account
 
-      this.deleteBankAccount({ disputeId, personId, bankAccountId })
+      this.deleteBankAccount({ disputeId, personId, bankAccountId }).then(_ => {
+        this.$jusNotification({
+          title: 'Yay!',
+          dangerouslyUseHTMLString: true,
+          message: 'Conta bancária <strong>excluída</strong> com sucesso.',
+          type: 'success'
+        })
+      }).catch(err => {
+        this.$jusNotification(err)
+      })
     },
 
     addBankAccount(account) {
@@ -225,11 +234,11 @@ export default {
       }
 
       .bank-accounts__account-icons {
-        background-image: linear-gradient(to left, rgba(255, 255, 255, 145) 45%, rgba(255, 255, 255, 0) );
         position: absolute;
         opacity: 0;
-        right: 6px;
-        top: 6px;
+        right: 0;
+        top: 0;
+        margin: 6px 6px 0 0;
         padding-left: 30px;
         transition: .2s ease-out all;
 
@@ -237,9 +246,13 @@ export default {
           cursor: pointer;
           margin-left: 3px;
           transition: .2s ease-out all;
+
           &:hover {
             color: $--color-primary;
-            &.el-icon-delete { color: $--color-danger; }
+
+            &.el-icon-delete {
+              color: $--color-danger;
+            }
           }
         }
       }

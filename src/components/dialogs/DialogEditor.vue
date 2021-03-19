@@ -2,7 +2,6 @@
   <el-dialog
     :visible.sync="dialogVisible"
     :close-on-click-modal="false"
-    :close-on-press-escape="false"
     :custom-class="customClass"
     :before-close="handleClose"
     :width="width"
@@ -68,6 +67,7 @@ export default {
   components: {
     ckeditor: CKEditor.component
   },
+
   props: {
     title: {
       type: String,
