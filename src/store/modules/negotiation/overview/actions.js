@@ -99,8 +99,8 @@ const overviewActions = {
       method: 'PUT',
       data
     }).then(response => {
-      commit('updateTicketOverviewParty', response.date)
-      commit('updateTicketItem', response.date)
+      commit('updateTicketOverviewParty', response)
+      commit('updateTicketItem', response)
       return data
     })
   },
@@ -122,18 +122,6 @@ const overviewActions = {
       method: 'PATCH',
       mutation: 'updateTicketOverviewPartyPolarity',
       payload: params
-    })
-  },
-
-  setTicketOverviewPartyContact({ _ }, params) {
-    const { disputeId, roleId, contactType, contactData } = params
-
-    return axiosDispatch({
-      url: `${disputeApiLegacy}/${disputeId}/dispute-roles/${roleId}/${contactType}`,
-      method: 'PUT',
-      data: contactData,
-      mutation: 'setTicketOverviewParty',
-      payload: roleId
     })
   },
 
@@ -235,6 +223,18 @@ const overviewActions = {
       payload: { bankAccountId, personId },
       mutation: 'updateTicketRoleBankAccount'
     }).finally(() => commit('decrementTicketOverviewCountGetters'))
+  },
+
+  setTicketOverviewPartyContact({ _ }, params) {
+    const { disputeId, roleId, contactType, contactData } = params
+
+    return axiosDispatch({
+      url: `${disputeApiLegacy}/${disputeId}/dispute-roles/${roleId}/${contactType}`,
+      method: 'PUT',
+      data: contactData,
+      mutation: 'setTicketOverviewParty',
+      payload: roleId
+    })
   },
 
   deleteTicketOverviewPartyContact({ _ }, params) {

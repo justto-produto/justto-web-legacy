@@ -32,7 +32,7 @@ export default class TicketItemVm {
     const oab = firstClaimantLawyerOab ? firstClaimantLawyerOab.split('/') : []
     this.disputeId = disputeId || id
     this.disputeStatus = disputeStatus || status
-    this.negotiatorName = negotiatorName || disputeRoles.filter(role => role.roleNameNegotiator)[0].name
+    this.negotiatorName = negotiatorName || disputeRoles?.find(role => role.roleNameNegotiator).name
     this.expirationDate = new DateTime(expirationDate || {})
     this.conclusionDate = new DateTime((conclusionDate || conclusion) || {})
     this.visualized = visualized

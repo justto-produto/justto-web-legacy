@@ -42,11 +42,12 @@
         ref="birthday"
         v-model="party.birthday"
         :is-editable="!isNegotiator"
-        :processed-date="$moment(party.birthday).fromNow(true)"
+        :processed-date="$moment(new Date(party.birthday)).fromNow(true)"
         :is-date-time-format="false"
         class="party-details__infoline-data"
         @change="updateParty($event, 'birthday')"
         @blur="stopEditing"
+        @enableEdit="enableEdit"
       />
       <div
         v-else
@@ -70,6 +71,7 @@
         filter="cpfCnpj"
         class="party-details__infoline-data"
         @change="updateParty($event, 'documentNumber')"
+        @enableEdit="enableEdit"
       />
       <div
         v-else
@@ -241,13 +243,10 @@ export default {
     ]),
     startEditing(key) {
       this.activeAddingData = key
-      this.$forceUpdate()
-      this.$nextTick(() => {
-        setTimeout(() => {
-          this.$forceUpdate()
-          this.$refs[key].enableEdit()
-        }, 10)
-      })
+    },
+    enableEdit() {
+      const { activeAddingData } = this
+      if (activeAddingData) this.$refs[activeAddingData].enableEdit()
     },
     stopEditing() {
       this.activeAddingData = ''

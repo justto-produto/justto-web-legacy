@@ -1,7 +1,9 @@
 import { DateTime } from '../GenericClasses'
 
 class PersonDataDto {
-  constructor({ enriched, isValid, isMain, source, ranking, createAt, updateAt }) {
+  constructor({ id, archived, enriched, isValid, isMain, source, ranking, createAt, updateAt }) {
+    this.id = id
+    this.archived = archived
     this.enriched = enriched
     this.isValid = isValid
     this.isMain = isMain
@@ -60,6 +62,7 @@ export default class DisputeOverviewPartiesVm {
       personId,
       disputeRoleId, id,
       name,
+      birthday,
       documentNumber,
       polarity, party,
       status, online,
@@ -73,6 +76,7 @@ export default class DisputeOverviewPartiesVm {
     this.personId = personId
     this.disputeRoleId = disputeRoleId || id
     this.name = name
+    this.birthday = birthday
     this.documentNumber = documentNumber
     this.polarity = polarity || party
     this.status = status || (online ? 'ONLINE' : 'OFFLINE')

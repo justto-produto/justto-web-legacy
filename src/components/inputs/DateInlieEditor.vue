@@ -5,7 +5,7 @@
       class="date-inline-editor__value"
     >
       <span class="date-inline-editor__inner">
-        {{ value | moment('DD/MM/YY') }}
+        {{ newDateValue | moment('DD/MM/YY') }}
         <span v-if="processedDate && value">({{ processedDate }})</span>
       </span>
       <span class="date-inline-editor__icons">
@@ -65,9 +65,12 @@ export default {
     model: ''
   }),
   computed: {
+    newDateValue() {
+      return new Date(this.value)
+    },
     vModel: {
       get() {
-        return this.$moment(this.isEditing ? this.model : this.value).format('YYYY-MM-DD')
+        return this.$moment(this.isEditing ? this.model : this.newDateValue).format('YYYY-MM-DD')
       },
       set(value) {
         this.model = value
@@ -83,9 +86,12 @@ export default {
       }
     }
   },
+  mounted() {
+    this.$emit('enableEdit')
+  },
   methods: {
     enableEdit() {
-      this.model = this.value || new Date()
+      this.model = this.newDateValue || new Date()
       this.isEditing = true
       this.$nextTick(() => {
         this.$forceUpdate()
@@ -94,19 +100,19 @@ export default {
           this.$forceUpdate()
         })
       })
-      // window.addEventListener('click', this.blurEvent)
+      window.addEventListener('click', this.blurEvent)
     },
     disableEdit() {
       if (this.model !== this.value) {
         this.$emit('change', this.isDateTimeFormat ? { dateTime: this.model } : this.model)
       }
       this.isEditing = false
-      // window.removeEventListener('click', this.blurEvent)
+      window.removeEventListener('click', this.blurEvent)
     },
-    // blurEvent() {
-    //   const targetId = event.target.id
-    //   if (!targetId.startsWith('datepickerIcons') && targetId !== 'datepickerInput') this.disableEdit()
-    // },
+    blurEvent() {
+      const targetId = event.target.id
+      if (!targetId.startsWith('datepickerIcons') && !targetId.startsWith('datepickerInput')) this.disableEdit()
+    },
     copyValue() {
       navigator.clipboard.writeText(this.vModel)
     }

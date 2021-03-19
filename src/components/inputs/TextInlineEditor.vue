@@ -36,9 +36,9 @@
       v-mask="{ mask, tokens }"
       class="text-inline-editor__input"
       @blur="handleBlur"
-      @keyup.native.enter="$refs.textInput.$emit('blur', 'confirm')"
       @keyup.native.esc="$refs.textInput.$emit('blur', 'cancel')"
     />
+    <!-- @keyup.native.enter="$refs.textInput.$emit('blur', 'confirm')" -->
   </div>
 </template>
 
@@ -113,6 +113,9 @@ export default {
         ? this.$options.filters[filter](vModel)
         : vModel
     }
+  },
+  mounted() {
+    this.$emit('enableEdit')
   },
   methods: {
     handleBlur(event) {

@@ -41,6 +41,7 @@
       class="party-contacts__infoline-data"
       @change="addContact"
       @blur="stopAddNewContact"
+      @enableEdit="enableEdit"
     />
     <div
       v-if="contactsLength > 3"
@@ -96,20 +97,23 @@ export default {
     ...mapGetters({
       recipients: 'getEditorRecipients'
     }),
+    contactsFiltered() {
+      return this.contacts.filter(({ archived }) => !archived)
+    },
     mappedRecipients() {
       return this.recipients.map(({ value }) => (value))
     },
     contactsLength() {
-      return this.contacts.length
+      return this.contactsFiltered.length
     },
     expandLinkText() {
       const { isAllContactsVisible, contactsLength } = this
       return !isAllContactsVisible ? `Ver mais (+${contactsLength - 3})` : `Ver menos (-${contactsLength - 3})`
     },
     processedContacts() {
-      const { contacts } = this
-      const arrayCut = this.isAllContactsVisible ? this.contactsLength : 3
-      return contacts?.slice(0, arrayCut)
+      const { contactsFiltered, isAllContactsVisible, contactsLength } = this
+      const arrayCut = isAllContactsVisible ? contactsLength : 3
+      return contactsFiltered?.slice(0, arrayCut)
     }
   },
   methods: {
@@ -118,7 +122,9 @@ export default {
     },
     startAddNewContact() {
       this.isAddingNewContact = true
-      this.$nextTick(() => this.$refs.newContactInput.enableEdit())
+    },
+    enableEdit() {
+      if (this.isAddingNewContact) this.$refs.newContactInput.enableEdit()
     },
     stopAddNewContact() {
       this.isAddingNewContact = false
