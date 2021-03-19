@@ -78,6 +78,22 @@
           class="scheduler-container__status-about-icon"
           :icon="`status-${sendStatus}`"
         />
+        <span v-if="haveGroupedOccurrences">
+          •
+        </span>
+        <el-popover
+          placement="top-start"
+          trigger="hover"
+          :content="groupedOccurrencesHtml"
+          :disabled="!haveGroupedOccurrences"
+        >
+          <JusIcon
+            v-if="haveGroupedOccurrences"
+            slot="reference"
+            icon="running"
+            :style="{ width: '16px' }"
+          />
+        </el-popover>
       </span>
     </div>
   </section>
@@ -108,6 +124,10 @@ export default {
     ...mapGetters({
       fullMessages: 'getFullMessages'
     }),
+
+    interaction() {
+      return this.value
+    },
 
     to() {
       return this.interaction.message.receiver || false

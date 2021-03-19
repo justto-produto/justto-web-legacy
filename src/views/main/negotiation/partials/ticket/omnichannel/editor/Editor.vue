@@ -22,7 +22,10 @@
       </el-tab-pane>
     </el-tabs>
     <div class="editor-container__after-tabs">
-      <quick-reply v-if="activeTab === 'MESSAGES'" />
+      <quick-reply
+        v-if="activeTab === 'MESSAGES'"
+        :show-title="!haveRecipients"
+      />
       <recipients class="editor-container__recipients" />
     </div>
   </section>
@@ -41,7 +44,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      activeTab: 'getActiveTab'
+      activeTab: 'getActiveTab',
+      recipients: 'getEditorRecipients'
     }),
 
     tabs() {
@@ -68,6 +72,10 @@ export default {
           component: null
         }
       ]
+    },
+
+    haveRecipients() {
+      return this.recipients.length > 0
     }
   },
   methods: {

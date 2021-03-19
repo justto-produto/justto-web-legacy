@@ -2,10 +2,6 @@ import { getFormatedDate, isSimilarStrings } from '@/utils'
 
 export default {
   computed: {
-    interaction() {
-      return this.value
-    },
-
     person() {
       const name = this.interaction.message.parameters[this.directionIn ? 'SENDER_NAME' : 'RECEIVER_NAME']
       return this.$options.filters.resumedName(name || '')
@@ -36,6 +32,18 @@ export default {
       } else {
         return 'sent'
       }
+    },
+
+    groupedOccurrences() {
+      return [] // JSON.parse(this.occurrence?.properties?.GROUPED_OCCURRENCES || '[]')
+    },
+
+    haveGroupedOccurrences() {
+      return this.groupedOccurrences.length > 0
+    },
+
+    groupedOccurrencesHtml() {
+      return this.groupedOccurrences.join('<br/>')
     }
   }
 }
