@@ -67,7 +67,7 @@
         ref="documentNumber"
         v-model="party.documentNumber"
         :is-editable="!isNegotiator"
-        :mask="['###.###.###-##', '##.###.###/####-##']"
+        :mask="() => ['###.###.###-##', '##.###.###/####-##']"
         filter="cpfCnpj"
         class="party-details__infoline-data"
         @change="updateParty($event, 'documentNumber')"
@@ -91,14 +91,7 @@
         :disabled="isNegotiator"
         filter="phoneNumber"
         model="number"
-        :mask="[
-          '####-####',
-          '#####-####',
-          '(##) ####-####',
-          '(##) #####-####',
-          '+## (##) ####-####',
-          '+## (##) #####-####'
-        ]"
+        :mask="phoneMask"
         @change="(...args)=>updateContacts(...args, 'phone')"
         @delete="removeContact($event, 'phone')"
         @post="addContact($event, 'phone')"
@@ -132,10 +125,7 @@
         :disabled="isNegotiator"
         filter="oab"
         model="fullOab"
-        :mask="[
-          '##d.###/AA',
-          '##.###/AA',
-        ]"
+        :mask="oabMask"
         @change="(...args)=>updateContacts(...args, 'oab')"
         @delete="removeContact($event, 'oab')"
         @post="addContact($event, 'oab')"
@@ -331,6 +321,37 @@ export default {
     selectContact(value, key, type) {
       if (!this.isNegotiator) {
         this.addRecipient({ value, key, type })
+      }
+    },
+    oabMask(value = '') {
+      const oab = value?.replace(/[^\w*]/g, '').toUpperCase()
+
+      if (/[ABDENPabdenp]/.test(oab.charAt(2))) {
+        return '##D.###/AA'
+      } else if (/[A-Z]/.test(oab.charAt(5))) {
+        return '##.###/AA'
+      } else {
+        return '###.###/AA'
+      }
+    },
+    phoneMask(value = '') {
+      const number = value?.replace(/[^\w*]/g, '').toUpperCase()
+
+      switch (number.length) {
+        case 8:
+          return '####-####'
+        case 9:
+          return '#####-####'
+        case 10:  
+          return '(##) ####-####'
+        case 11:
+          return '(##) #####-####'
+        case 12:
+          return '+## (##) ####-####'
+        case 13:
+          return '+## (##) #####-####'
+        default:
+          return '####-####-####-####'
       }
     }
   }
