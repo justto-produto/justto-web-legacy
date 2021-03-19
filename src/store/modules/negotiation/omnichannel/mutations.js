@@ -74,6 +74,7 @@ const omnichannelMutations = {
     const { activeTab: tab } = state
     const oType = occurrence.type
     const iType = occurrence.interaction?.type
+    const isLog = occurrence.type === 'LOG'
 
     const validationInteractions = {
       MESSAGES: [
@@ -107,7 +108,7 @@ const omnichannelMutations = {
       canInclude = true
     } else if (tab === 'NOTES' && oType === 'NOTE') {
       canInclude = true
-    } else if (tab === 'OCCURRENCES' && oType !== 'NOTE' && validationInteractions[tab].includes(iType)) {
+    } else if (tab === 'OCCURRENCES' && oType !== 'NOTE' && (validationInteractions[tab].includes(iType) || isLog)) {
       canInclude = true
     }
 
