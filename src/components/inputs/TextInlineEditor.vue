@@ -33,7 +33,7 @@
       v-else
       ref="textInput"
       v-model="vModel"
-      v-mask="{ mask, tokens }"
+      v-mask="{ mask: mask(vModel), tokens }"
       class="text-inline-editor__input"
       @blur="handleBlur"
       @keyup.native.esc="$refs.textInput.$emit('blur', 'cancel')"
@@ -55,7 +55,7 @@ export default {
       default: ''
     },
     mask: {
-      type: [Array, String],
+      type: [Function, String],
       default: () => 'X'.repeat(255)
     },
     isCopyble: {

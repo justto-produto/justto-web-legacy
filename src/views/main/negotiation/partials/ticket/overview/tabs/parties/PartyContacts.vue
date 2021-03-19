@@ -84,8 +84,8 @@ export default {
     },
 
     mask: {
-      type: [Array, String],
-      default: 'X'.repeat(255)
+      type: [Function, String],
+      default: () => 'X'.repeat(255)
     }
   },
   data: () => ({
