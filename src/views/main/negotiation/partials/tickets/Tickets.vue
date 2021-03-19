@@ -16,11 +16,19 @@
         v-for="tab in tabs"
         :key="tab.name"
         :name="tab.name"
-        :label="$options.filters.capitalize($t(`tickets-tabs.${tab.name}`))"
-        class="tickets-container__tab-pane"
         stretch
         lazy
       >
+        <span slot="label">
+          {{ $t(`tickets-tabs.${tab.name}`) | capitalize }}
+          <el-badge
+            :hidden="!tab.counter"
+            :value="tab.counter"
+            :max="99"
+            type="primary"
+            class="el-badge--absolute"
+          />
+        </span>
         <!-- <vue-perfect-scrollbar> -->
         <ul
           v-if="activeTab === tab.name"
@@ -68,30 +76,40 @@ export default {
     ...mapGetters({
       tickets: 'getTickets',
       ticketsActiveTab: 'getTicketsActiveTab',
-      isLoading: 'getTicketsIsLoading'
+      isLoading: 'getTicketsIsLoading',
+      preNegotiationLenght: 'disputeNotVisualizedPreNegotiation',
+      engagementLength: 'disputeNearExpirationsEngajement',
+      interactionLength: 'disputeNotVisualizedInteration',
+      newDealsLength: 'disputeNotVisualizedNewDeal',
+      finishedLenght: 'disputeNotVisualizedFinished',
     }),
 
     tabs() {
       return [
         {
           name: 'pre-negotiation',
-          component: 'EngagementTicketItem'
+          component: 'EngagementTicketItem',
+          counter: this.preNegotiationLenght
         },
         {
           name: 'engagement',
-          component: 'EngagementTicketItem'
+          component: 'EngagementTicketItem',
+          counter: this.engagementLength
         },
         {
           name: 'running',
-          component: 'CommunicationTicketItem'
+          component: 'CommunicationTicketItem',
+          counter: this.interactionLength
         },
         {
           name: 'accepted',
-          component: 'CommunicationTicketItem'
+          component: 'CommunicationTicketItem',
+          counter: this.newDealsLength
         },
         {
           name: 'finished',
-          component: 'CommunicationTicketItem'
+          component: 'CommunicationTicketItem',
+          counter: this.finishedLenght
         }
       ]
     },
@@ -118,7 +136,9 @@ export default {
       'getTickets',
       'getTicketsNextPage',
       'setTicketsQuery',
-      'setTicketsActiveTab'
+      'setTicketsActiveTab',
+      'getNearExpirations',
+      'getNotVisualizeds'
     ]),
 
     handleChangeTab(tab) {
@@ -149,7 +169,10 @@ export default {
           break
       }
 
-      this.getTickets()
+      this.getTickets().then(() => {
+        this.getNearExpirations()
+        this.getNotVisualizeds()
+      })
     },
 
     infiniteHandler($state) {
@@ -248,6 +271,10 @@ export default {
 
   .el-tabs__nav-wrap:after {
     display: none;
+  }
+
+  .el-badge--absolute {
+    right: 0;
   }
 }
 </style>
