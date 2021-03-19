@@ -345,7 +345,7 @@ export default {
           return '####-####'
         case 9:
           return '#####-####'
-        case 10:  
+        case 10:
           return '(##) ####-####'
         case 11:
           return '(##) #####-####'
