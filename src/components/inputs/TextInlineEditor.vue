@@ -36,7 +36,8 @@
       v-mask="{ mask: mask(vModel), tokens }"
       class="text-inline-editor__input"
       @blur="handleBlur"
-      @keyup.native.esc="$refs.textInput.$emit('blur', 'cancel')"
+      @keyup.native.esc="handleEsc"
+      @keyup.native.enter="escaping = false;$event.target.blur()"
     />
     <!-- @keyup.native.enter="$refs.textInput.$emit('blur', 'confirm')" -->
   </div>
@@ -73,7 +74,8 @@ export default {
   },
   data: () => ({
     isEditingActive: false,
-    model: ''
+    model: '',
+    escaping: false
   }),
   computed: {
     vModel: {
@@ -118,11 +120,17 @@ export default {
     this.$emit('enableEdit')
   },
   methods: {
+    handleEsc(event) {
+      this.escaping = true
+      this.handleBlur(event)
+    },
     handleBlur(event) {
-      if (event !== 'cancel') {
-        this.confirmEdit()
-      } else {
-        this.cancelEdit()
+      if (event && !event.currentTarget.contains(event.relatedTarget)) {
+        if (this.escaping) {
+          this.cancelEdit()
+        } else {
+          this.confirmEdit()
+        }
       }
     },
     enableEdit() {

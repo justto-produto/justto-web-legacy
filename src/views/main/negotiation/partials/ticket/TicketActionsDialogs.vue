@@ -453,7 +453,8 @@ export default {
       this.$jusNotification({
         message: `${message} com sucesso.`,
         title: 'Yay!',
-        type: 'success'
+        type: 'success',
+        dangerouslyUseHTMLString: true
       })
       this.$jusSegment(message, { disputeId })
 
@@ -549,17 +550,15 @@ export default {
       return new Promise((resolve, reject) => {
         const { disputeId } = this.ticket
 
-        // TODO: Remover getDisputDTO, e parametro atribute
-        this.$store.dispatch('getDisputeDTO', disputeId)
-          .then(disputeToEdit => {
-            const { value, roleId, note } = this.offerForm
-            const data = { value, note, roleId, updateUpperRange }
+        const { value, roleId, note } = this.offerForm
+        const data = { value, note, roleId, updateUpperRange }
+        const polarityObjectKey = 'plaintiffOffer'
 
-            this.sendOffer({ disputeId, data })
-              .then(success => resolve(success))
-              .catch(error => reject(error))
+        this.sendOffer({ disputeId, data, polarityObjectKey })
+          .then(success => resolve(success))
+          .catch(error => {
+            return reject(error)
           })
-          .catch(error => reject(error))
       })
     },
 
