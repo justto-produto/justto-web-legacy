@@ -34,16 +34,23 @@ export default {
       }
     },
 
+    properties() {
+      return this.occurrence?.properties
+    },
+
     groupedOccurrences() {
-      return [] // JSON.parse(this.occurrence?.properties?.GROUPED_OCCURRENCES || '[]')
+      try {
+        if (this.occurrence?.properties?.GROUPED_OCCURRENCES?.length > 2) {
+          return JSON.parse(this.occurrence?.properties?.GROUPED_OCCURRENCES.replace(/'/g, '"'))
+        }
+        return []
+      } catch (_) {
+        return []
+      }
     },
 
     haveGroupedOccurrences() {
       return this.groupedOccurrences.length > 0
-    },
-
-    groupedOccurrencesHtml() {
-      return this.groupedOccurrences.join('<br/>')
     }
   }
 }

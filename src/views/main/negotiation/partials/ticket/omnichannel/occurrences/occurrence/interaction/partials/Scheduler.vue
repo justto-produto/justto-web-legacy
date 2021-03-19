@@ -52,11 +52,11 @@
     </div>
     <div class="scheduler-container__status">
       <br>
-      <span v-if="status === 'CANCELED'">
+      <span v-if="status === 'CANCELEDi'">
         <i class="el-icon-close" />
         Mensagem automática agendada foi <strong>CANCELADA</strong>.
       </span>
-      <span v-else-if="status === 'WAITING'">
+      <span v-else-if="status === 'WAITINGi'">
         <jus-icon
           icon="clock"
           style="width: 12px;"
@@ -78,7 +78,11 @@
           class="scheduler-container__status-about-icon"
           :icon="`status-${sendStatus}`"
         />
-        <span v-if="haveGroupedOccurrences">
+        <GroupedOccurrences
+          :have="haveGroupedOccurrences"
+          :occurrences="groupedOccurrences"
+        />
+        <!-- <span v-if="haveGroupedOccurrences">
           •
         </span>
         <el-popover
@@ -93,7 +97,7 @@
             icon="running"
             :style="{ width: '16px' }"
           />
-        </el-popover>
+        </el-popover> -->
       </span>
     </div>
   </section>
@@ -104,6 +108,9 @@ import { mapActions, mapGetters } from 'vuex'
 import communicationSendStatus from '@/utils/mixins/communicationSendStatus'
 
 export default {
+  components: {
+    GroupedOccurrences: () => import('./partials/groupedOccurrence')
+  },
   mixins: [communicationSendStatus],
   props: {
     value: {
