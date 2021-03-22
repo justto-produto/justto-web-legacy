@@ -30,6 +30,9 @@ const overviewGetters = {
   getTicketOverviewProperties: ({ ticketOverviewProperties }) => ticketOverviewProperties,
   getTicketOverviewAttachments: ({ ticketOverviewAttachments }) => ticketOverviewAttachments,
   isTicketOverviewloading: ({ ticketOverviewCountGetters }) => ticketOverviewCountGetters > 0,
+  getTicketMetadata: ({ ticketMetadata }) => ticketMetadata,
+  AssociatedContactsPropertie: ({ haveAssociatedContacts }) => haveAssociatedContacts,
+  showAssociatedContacts: ({ haveAssociatedContacts }) => (!!haveAssociatedContacts && ['NAO'].includes(haveAssociatedContacts)),
   getTicketOverviewNegotiators: ({ ticketOverviewParties }) => ticketOverviewParties.filter(({ roles }) => roles.includes('NEGOTIATOR'))
 }
 
