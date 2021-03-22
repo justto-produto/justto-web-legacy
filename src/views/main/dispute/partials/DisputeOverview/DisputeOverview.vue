@@ -276,13 +276,16 @@
               data-testid="dispute-infoline"
             >
               <span class="title">Configurações:</span>
-              <span class="configurations">
+              <span
+                v-if="dispute"
+                class="configurations"
+              >
                 Enriquecer automaticamente na importação?
                 <div><i :class="skipEnrichment ? 'el-icon-close' : 'el-icon-check'" /> {{ skipEnrichment ? 'Não' : 'Sim' }}</div>
                 Somente depósito em conta-corrente?
-                <div><i :class="dispute.campaign.denySavingDeposit ? 'el-icon-check' : 'el-icon-close'" /> {{ dispute.campaign.denySavingDeposit ? 'Sim' : 'Não ' }}</div>
+                <div><i :class="dispute.campaign && dispute.campaign.denySavingDeposit ? 'el-icon-check' : 'el-icon-close'" /> {{ dispute.campaign.denySavingDeposit ? 'Sim' : 'Não ' }}</div>
                 Mensagens somente em horário comercial?
-                <div><i :class="dispute.campaign.businessHoursEngagement ? 'el-icon-check' : 'el-icon-close'" /> {{ dispute.campaign.businessHoursEngagement ? 'Sim' : 'Não' }}</div>
+                <div><i :class="dispute.campaign && dispute.campaign.businessHoursEngagement ? 'el-icon-check' : 'el-icon-close'" /> {{ dispute.campaign.businessHoursEngagement ? 'Sim' : 'Não' }}</div>
                 Contatar autor?
                 <div>
                   <i :class="(dispute.contactPartyWhenNoLowyer || dispute.contactPartyWhenInvalidLowyer) ? 'el-icon-check' : 'el-icon-close'" />
@@ -620,7 +623,7 @@
                 class="dispute-overview-view__info-line"
               >
                 <span class="title">Data de nascimento:</span>
-                <span>{{ role.personProperties.BIRTHDAY | moment('DD/MM/YYYY') }}</span>
+                <span v-if="role.birthday">{{ new Date(role.birthday) | moment('DD/MM/YYYY') }}</span>
               </div>
               <div
                 v-show="role.party === 'CLAIMANT'"
@@ -1714,7 +1717,6 @@
 <script>
 import { getRoles, buildRoleTitle, getRoleIcon } from '@/utils'
 import { validateName, validateDocument, validatePhone, validateZero } from '@/utils/validations'
-
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
@@ -2690,7 +2692,7 @@ export default {
       this.originalRole = JSON.parse(JSON.stringify(role))
       this.roleForm.title = this.buildRoleTitle(role.party, role.roles[0])
       this.roleForm.documentNumber = this.$options.filters.cpfCnpj(this.roleForm.documentNumber)
-      if (role.birthday) this.roleForm.birthday = this.$moment(role.birthday).format('YYYY-MM-DD')
+      if (role.birthday) this.roleForm.birthday = this.$moment(new Date(role.birthday)).format('YYYY-MM-DD')
       this.roleForm.emails = this.roleForm.emails.filter(f => !f.archived)
       this.roleForm.oabs = this.roleForm.oabs.filter(f => !f.archived)
       this.roleForm.phones = this.roleForm.phones.filter(f => !f.archived)
