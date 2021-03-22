@@ -27,7 +27,6 @@
             index="menuItem.index"
           >
             <template slot="title">
-              <!--              <i class="icon el-icon-info" />-->
               <jus-icon
                 icon="management"
               />
@@ -244,6 +243,10 @@ export default {
   .el-main {
     display: flex;
   }
+}
+
+.el-submenu__icon-arrow.el-icon-arrow-right {
+  display: none;
 }
 
 .container-aside {
