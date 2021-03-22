@@ -620,7 +620,7 @@
                 class="dispute-overview-view__info-line"
               >
                 <span class="title">Data de nascimento:</span>
-                <span>{{ role.birthday | moment('DD/MM/YYYY') }}</span>
+                <span>{{ role.personProperties.BIRTHDAY | moment('DD/MM/YYYY') }}</span>
               </div>
               <div
                 v-show="role.party === 'CLAIMANT'"
