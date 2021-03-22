@@ -111,10 +111,7 @@ export default {
     }),
 
     canAccessNegotiationScreen() {
-      if (this.isJusttoAdmin) {
-        return true
-      }
-      return this.userPreferences.properties.NEGOTIATION_SCREEN && this.userPreferences.properties.NEGOTIATION_SCREEN === 'true'
+      return this.isJusttoAdmin || this.userPreferences?.properties?.NEGOTIATION_SCREEN === 'true'
     },
 
     menuItems() {
