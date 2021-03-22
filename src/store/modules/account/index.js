@@ -16,7 +16,12 @@ const account = {
       'guilherme@justto.com.br',
       'deivid@justto.com.br'
     ],
-    preferences: { tourSteps: {} }
+    preferences: {
+      tourSteps: {},
+      properties: {
+        NEGOTIATION_SCREEN: false
+      }
+    }
   },
   mutations,
   actions,
