@@ -15,7 +15,7 @@
         class="container-aside__menu el-menu--main-menu"
         :class="{ 'container-aside__menu--collapsed': isTeamSectionExpanded }"
         :default-active="$route.path"
-        :collapse="true"
+        collapse
         router
       >
         <div
