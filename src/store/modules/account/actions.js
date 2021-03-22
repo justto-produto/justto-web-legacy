@@ -100,6 +100,13 @@ const accountActions = {
       url: `${accountsPath}/my/property/${property}`,
       method: 'GET'
     })
+  },
+  loadAccountProperty({ _ }) {
+    return axiosDispatch({
+      url: `${accountsPath}/my/property`,
+      method: 'GET',
+      mutation: 'setAccountProperty'
+    })
   }
   // getUserPreferences({ state }) {
   //   return axiosDispatch({
