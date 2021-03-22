@@ -10,6 +10,12 @@
   height: 100%;
 }
 
+.el-submenu {
+  &.is-active {
+	border-left: 3px solid #7c4cf3;
+  }
+}
+
 .el-menu--main-menu, .el-menu--team-menu {
   .el-menu-item {
     height: 58px;

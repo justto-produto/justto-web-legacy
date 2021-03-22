@@ -15,24 +15,54 @@
         class="container-aside__menu el-menu--main-menu"
         :class="{ 'container-aside__menu--collapsed': isTeamSectionExpanded }"
         :default-active="$route.path"
-        collapse
+        :collapse="true"
         router
       >
-        <el-menu-item
+        <div
           v-for="menuItem in menuItems"
-          v-show="menuItem.isVisible"
           :key="menuItem.index"
-          :index="menuItem.index"
-          @click="menuItem.action"
         >
-          <JusIcon
-            :icon="menuItem.icon"
-            class=""
-          />
-          <span slot="title">
-            {{ menuItem.title }}
-          </span>
-        </el-menu-item>
+          <el-submenu
+            v-if="menuItem.isGroup"
+            index="menuItem.index"
+          >
+            <template slot="title">
+              <!--              <i class="icon el-icon-info" />-->
+              <jus-icon
+                icon="management"
+              />
+            </template>
+            <el-menu-item
+              v-for="subMenu in menuItem.childs"
+              v-show="subMenu.isVisible"
+              :key="subMenu.index"
+              :index="subMenu.index"
+              @click="subMenu.action"
+            >
+              <JusIcon
+                :icon="subMenu.icon"
+                class=""
+              />
+              <span slot="title">
+                {{ subMenu.title }}
+              </span>
+            </el-menu-item>
+          </el-submenu>
+          <el-menu-item
+            v-else
+            v-show="menuItem.isVisible"
+            :index="menuItem.index"
+            @click="menuItem.action"
+          >
+            <JusIcon
+              :icon="menuItem.icon"
+              class=""
+            />
+            <span slot="title">
+              {{ menuItem.title }}
+            </span>
+          </el-menu-item>
+        </div>
       </el-menu>
 
       <JusTeamMenu
@@ -52,28 +82,6 @@
         </transition>
       </el-main>
     </el-container>
-
-    <!-- <el-footer>
-      <el-menu
-        ref="sideMenu"
-        :default-active="$route.path"
-        mode="horizontal"
-        class="el-menu--main-menu"
-        router
-      >
-        <el-menu-item
-          v-for="menuItem in menuItems"
-          :key="menuItem.index"
-          :index="menuItem.index"
-          @click="menuItem.action"
-        >
-          <JusIcon
-            :icon="menuItem.icon"
-            class="el-menu__icon"
-          />
-        </el-menu-item>
-      </el-menu>
-    </el-footer> -->
   </el-container>
 </template>
 
@@ -99,47 +107,75 @@ export default {
       workspaceMembersSorted: 'workspaceMembersSorted',
       personId: 'loggedPersonId',
       workspace: 'workspaceSubdomain',
-      authorization: 'accountToken'
+      authorization: 'accountToken',
+      accountEmail: 'accountEmail'
     }),
 
+    canAccessNegotiationScreen() {
+      if (this.isJusttoAdmin) {
+        return true
+      }
+      const authorizedEmails = [
+        'mcluck.ti@gmail.com'
+      ]
+      return authorizedEmails.includes(this.accountEmail)
+    },
+
     menuItems() {
-      return [
-        {
-          index: '/',
-          title: 'Dashboard',
-          icon: 'dashboard',
-          isVisible: true,
-          action: () => {}
-        },
-        {
-          index: '/negotiation',
-          title: 'Negociação',
-          icon: 'negotiation-window',
-          isVisible: this.isJusttoAdmin,
-          action: () => {}
-        },
-        {
+      const itemsMenu = []
+      itemsMenu.push({
+        index: '/',
+        title: 'Dashboard',
+        icon: 'dashboard',
+        isVisible: true,
+        action: () => {}
+      })
+      if (this.canAccessNegotiationScreen) {
+        itemsMenu.push({
+          isGroup: true,
+          index: 'disputes',
+          name: 'Disputas',
+          childs: [
+            {
+              index: '/negotiation',
+              title: 'Negociação',
+              icon: 'negotiation-window',
+              isVisible: true,
+              action: () => {}
+            },
+            {
+              index: '/management',
+              title: 'Gerenciamento',
+              icon: 'list-app',
+              isVisible: true,
+              action: () => this.setTabQuery('management')
+            }
+          ]
+        })
+      } else {
+        itemsMenu.push({
           index: '/management',
           title: 'Gerenciamento',
           icon: 'management',
           isVisible: true,
           action: () => this.setTabQuery('management')
-        },
-        {
-          index: '/management/all',
-          title: 'Todas as disputas',
-          icon: 'full-folder',
-          isVisible: true,
-          action: () => this.setTabQuery('allDisputes')
-        },
-        {
-          index: '/import',
-          title: 'Importação',
-          icon: 'import',
-          isVisible: true,
-          action: () => {}
-        }
-      ]
+        })
+      }
+      itemsMenu.push({
+        index: '/management/all',
+        title: 'Todas as disputas',
+        icon: 'full-folder',
+        isVisible: true,
+        action: () => this.setTabQuery('allDisputes')
+      })
+      itemsMenu.push({
+        index: '/import',
+        title: 'Importação',
+        icon: 'import',
+        isVisible: true,
+        action: () => {}
+      })
+      return itemsMenu
     }
   },
   watch: {
@@ -236,6 +272,11 @@ export default {
     &.container-aside__menu--collapsed {
       .el-menu-item { overflow: hidden; height: 0; }
     }
+  }
+
+  .container-aside__menu:not(.el-menu--collapse) {
+    width: 200px;
+    min-height: 400px;
   }
 }
 
