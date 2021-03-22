@@ -39,6 +39,15 @@ const ticketsMutations = {
 
   setTicketsActiveTab: (state, activeTab) => Vue.set(state, 'ticketsActiveTab', activeTab),
 
+  updateTicketItemFromDisputeRole: ({ tickets }, disputeRole) => {
+    const ticketIndex = getTicketIndex(tickets.content, disputeRole.disputeId)
+    if (ticketIndex >= 0) {
+      const ticket = tickets.content[ticketIndex]
+      if (ticket && ticket.plaintiff && ticket.plaintiff.documentNumber === disputeRole.documentNumber) {
+        Vue.set(ticket.plaintiff, 'name', disputeRole.name)
+      }
+    }
+  },
   updateTicketItem: ({ tickets }, dispute) => {
     const ticketIndex = getTicketIndex(tickets.content, dispute.id)
     const newTicket = [

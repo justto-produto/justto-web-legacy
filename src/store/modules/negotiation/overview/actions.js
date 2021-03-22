@@ -115,8 +115,9 @@ const overviewActions = {
       method: 'PUT',
       data
     }).then(response => {
+      response.disputeId |= disputeId
       commit('updateTicketOverviewParty', response)
-      commit('updateTicketItem', response)
+      commit('updateTicketItemFromDisputeRole', response)
       return data
     })
   },
