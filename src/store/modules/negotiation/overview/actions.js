@@ -66,6 +66,22 @@ const overviewActions = {
     })
   },
 
+  getTicketMetadata({ _ }, disputeId) {
+    return axiosDispatch({
+      url: `${officeApi}/documents/dispute/${disputeId}/metadata`,
+      mutation: 'setTicketMetadata'
+    })
+  },
+
+  getAssociatedContacts({ dispatch }, disputeId) {
+    return axiosDispatch({
+      url: `${disputeApi}/${disputeId}/properties`,
+      mutation: 'setAssociatedContacts'
+    }).then(_ => {
+      dispatch('getTicketMetadata', disputeId)
+    })
+  },
+
   setTicketOverview({ _ }, params) {
     const { data, disputeId } = params
 
@@ -91,7 +107,7 @@ const overviewActions = {
     })
   },
 
-  setTicketOverviewParty({ commit }, params) {
+  async setTicketOverviewParty({ commit }, params) {
     const { disputeId, data } = params
 
     return axiosDispatch({

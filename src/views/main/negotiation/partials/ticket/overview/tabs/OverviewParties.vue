@@ -1,5 +1,12 @@
 <template>
   <section class="overview-parties">
+    <a
+      v-if="contactsMetadataCount"
+      class="overview-parties__associated-contacts"
+      @click="resetAssociatedContracts()"
+    >
+      {{ $tc('dispute.overview.label.contact-found', contactsMetadataCount, { count: contactsMetadataCount }) }} {{ $t('dispute.overview.label.in-the-attachments') }}
+    </a>
     <div class="overview-parties__list">
       <el-collapse
         v-model="activeCollapseItem"
@@ -50,15 +57,18 @@ export default {
     PartyResumed: () => import('./parties/PartyResumed'),
     DisputeAddRole: () => import('@/views/main/dispute/partials/DisputeAddRole')
   },
+
   data: () => ({
     activeCollapseItem: null,
     isAllPartiesVisible: false,
     loadedCollapseItems: [],
     newPartyDialogVisible: false
   }),
+
   computed: {
     ...mapGetters({
-      ticketParties: 'getTicketOverviewParties'
+      ticketParties: 'getTicketOverviewParties',
+      metadata: 'getTicketMetadata'
     }),
 
     filteredTicketParties() {
@@ -69,6 +79,11 @@ export default {
 
     disputeId() {
       return Number(this.$route.params.id)
+    },
+
+    contactsMetadataCount() {
+      const { phones, emails } = this.metadata
+      return phones.length + emails.length
     },
 
     concatedPartiesDocumentNumbers() {
@@ -88,16 +103,30 @@ export default {
       } else return []
     }
   },
+
   watch: {
     'disputeId'(disputeId) {
       this.loadedCollapseItems = []
       this.activeCollapseItem = null
     }
   },
+
   methods: {
     ...mapActions([
-      'getTicketOverviewParty'
+      'getTicketOverviewParty',
+      'setDisputeProperty',
+      'getAssociatedContacts'
     ]),
+
+    resetAssociatedContracts() {
+      this.setDisputeProperty({
+        key: 'CONTATOS ASSOCIADOS',
+        disputeId: this.disputeId,
+        value: 'NAO'
+      }).then(() => {
+        this.getAssociatedContacts(this.disputeId)
+      })
+    },
 
     getPartyDetails(collapseItem) {
       const { disputeId, loadedCollapseItems } = this
@@ -121,11 +150,17 @@ export default {
 
 <style lang="scss" scoped>
 .overview-parties {
+  margin-top: -24px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
   gap: 10px;
+
+  .overview-parties__associated-contacts {
+    margin-bottom: -12px;
+    margin-top: 12px;
+  }
 
   .overview-parties__list {
     overflow-y: auto;

@@ -1704,6 +1704,8 @@
       <associate-contacts-modal
         v-model="showAssociateContacts"
         :current="dispute.properties['CONTATOS ASSOCIADOS']"
+        :parties="dispute.disputeRoles"
+        :metadata="disputeMetadata"
       />
     </div>
   </div>
@@ -1726,7 +1728,7 @@ export default {
     JusTimeline: () => import('@/components/JusTimeline/JusTimeline'),
     JusVexatiousAlert: () => import('@/components/dialogs/JusVexatiousAlert'),
     LawyerDetail: () => import('./sections/LawyerDetail'),
-    AssociateContactsModal: () => import('./sections/AssociateContactsModal')
+    AssociateContactsModal: () => import('@/components/dialogs/AssociateContactsModal')
   },
   props: {
     loading: {

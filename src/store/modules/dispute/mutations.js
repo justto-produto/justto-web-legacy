@@ -229,7 +229,7 @@ const disputeMutations = {
   },
   cleanLastAccess: (state) => (state.lastAccess = {}),
   setDisputeRole: (state, disputeRole) => {
-    state.dispute.disputeRoles.map((dr, index) => {
+    (state.dispute?.disputeRoles || []).map((dr, index) => {
       if (dr.id === disputeRole.id) {
         Vue.set(state.dispute.disputeRoles, index, disputeRole)
       }
