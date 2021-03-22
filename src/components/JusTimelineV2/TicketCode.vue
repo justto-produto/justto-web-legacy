@@ -71,8 +71,8 @@ export default {
     timelineState() {
       if (this.currentDiputeTimeline?.lawsuits?.length > 0) {
         const source = this.currentDiputeTimeline.lawsuits[0].source || ''
-        const state = brazilianStates.find(({ value }) => source.includes(value)).value
-        return state ? `/${state}` : ''
+        const state = brazilianStates.find(({ value }) => source.includes(value))
+        return state ? `/${state.value}` : ''
       }
 
       return ''
