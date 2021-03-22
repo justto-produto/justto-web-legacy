@@ -66,7 +66,9 @@ export default {
       'getDisputeTags',
       'getLastTicketOffers',
       'cleanRecentMessages',
-      'getQuickReplyTemplates'
+      'getAssociatedContacts',
+      'getQuickReplyTemplates',
+      'getTicketOverviewParties'
     ]),
 
     fetchData() {
@@ -74,6 +76,9 @@ export default {
       this.socketAction('subscribe', id)
       this.cleanRecentMessages()
       this.getTicketOverview(id)
+      this.getTicketOverviewParties(id).then(() => {
+        this.getAssociatedContacts(id)
+      })
       this.getDisputeTags(id)
       this.getLastTicketOffers(id)
       this.getQuickReplyTemplates(id)

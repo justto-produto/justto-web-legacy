@@ -4,6 +4,7 @@
       :visible.sync="toShow"
       :close-on-click-modal="false"
       destroy-on-close
+      append-to-body
       title="Encontramos dados de contatos na inicial da disputa"
       width="50%"
       :before-close="handleBeforeClose"
@@ -184,7 +185,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapActions } from 'vuex'
 export default {
   name: 'AssociateContactsModal',
   props: {
@@ -197,6 +198,17 @@ export default {
       required: true,
       type: [String, Boolean],
       default: false
+    },
+    metadata: {
+      type: Object,
+      default: () => ({
+        emails: [],
+        phones: []
+      })
+    },
+    parties: {
+      type: Array,
+      default: () => []
     }
   },
   data() {
@@ -207,14 +219,10 @@ export default {
     }
   },
   computed: {
-    ...mapGetters({
-      metadata: 'disputeMetadata',
-      dispute: 'dispute'
-    }),
     disputeRoles() {
-      return (this.dispute.disputeRoles || []).filter(({ id, name, party, roles }) => {
-        return party === 'CLAIMANT' && (roles.includes('PARTY') || roles.includes('LAWYER'))
-      }).map(({ id, name }) => ({ id, name }))
+      return (this.parties).filter(({ party, polarity, roles }) => {
+        return (party === 'CLAIMANT' || polarity === 'CLAIMANT') && (roles.includes('PARTY') || roles.includes('LAWYER'))
+      }).map(({ id, name, disputeRoleId }) => (id ? { id, name } : { id: disputeRoleId, name }))
     },
     toShow: {
       get() {

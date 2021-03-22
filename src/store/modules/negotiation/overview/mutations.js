@@ -26,6 +26,18 @@ const overviewMutations = {
     for (const key of Object.keys(payload)) Vue.set(ticketOverviewInfo, key, payload[key])
   },
 
+  setAssociatedContacts: (state, properties) => {
+    const value = properties['CONTATOS ASSOCIADOS'] || 'NAO'
+    console.log('setAssociatedContacts', value)
+    if (value) {
+      Vue.set(state, 'haveAssociatedContacts', value)
+    }
+  },
+
+  setTicketMetadata: (state, metadata) => {
+    Vue.set(state, 'ticketMetadata', metadata)
+  },
+
   setTicketOverviewParties: (state, params) => Vue.set(state, 'ticketOverviewParties', params),
 
   setTicketOverviewParty: ({ ticketOverviewParties }, { data, payload }) => {

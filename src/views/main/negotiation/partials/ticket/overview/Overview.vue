@@ -60,6 +60,13 @@
       :status="ticket.status"
       :dispute-id="ticket.disputeId"
     />
+    <AssociateContactsModal
+      :value="showAssociatedContacts"
+      :current="associateContactsPropertie"
+      :parties="parties"
+      :metadata="metadata"
+      @input="handleChangeAssociatedContracts"
+    />
   </section>
 </template>
 
@@ -68,45 +75,61 @@ import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'Overview',
+
   components: {
-    HeaderUserMenu: () => import('@/components/menus/HeaderUserMenu'),
-    OverviewOffers: () => import('./OverviewOffers'),
     OverviewObf: () => import('./OverviewObf'),
     OverviewTabs: () => import('./OverviewTabs'),
     OverviewTags: () => import('./OverviewTags'),
+    OverviewOffers: () => import('./OverviewOffers'),
     DeleteTicketDialog: () => import('./DeleteTicketDialog'),
-    TextInlineEditor: () => import('@/components/inputs/TextInlineEditor')
+    HeaderUserMenu: () => import('@/components/menus/HeaderUserMenu'),
+    TextInlineEditor: () => import('@/components/inputs/TextInlineEditor'),
+    AssociateContactsModal: () => import('@/components/dialogs/AssociateContactsModal')
   },
+
   props: {
     showOverview: {
       type: Boolean,
       required: true
     }
   },
+
   data: () => ({
     innerWidth: window.innerWidth
   }),
+
   computed: {
     ...mapGetters({
       ticket: 'getTicketOverview',
       lastOffers: 'getLastTicketOffers',
-      isLoading: 'isTicketOverviewloading'
+      isLoading: 'isTicketOverviewloading',
+      showAssociatedContacts: 'showAssociatedContacts',
+      parties: 'getTicketOverviewParties',
+      metadata: 'getTicketMetadata',
+      associateContactsPropertie: 'AssociatedContactsPropertie'
     }),
 
     isOverviewActive() {
       return this.innerWidth > 1200 ? !this.showOverview : this.showOverview
     }
   },
+
   beforeMount() {
     window.addEventListener('resize', event => {
       this.innerWidth = event.target.innerWidth
     })
   },
+
   beforeDestroy() {
     window.removeEventListener('resize')
   },
+
   methods: {
-    ...mapActions(['setTicketOverview']),
+    ...mapActions([
+      'setTicketOverview',
+      'setDisputeProperty',
+      'getAssociatedContacts'
+    ]),
 
     copy(value) {
       navigator.clipboard.writeText(value)
@@ -121,6 +144,14 @@ export default {
       const data = { [key]: value }
 
       this.setTicketOverview({ data, disputeId })
+    },
+
+    handleChangeAssociatedContracts(value) {
+      const disputeId = this.$route.params.id
+
+      this.setDisputeProperty({ key: 'CONTATOS ASSOCIADOS', disputeId, value }).then(() => {
+        this.getAssociatedContacts(disputeId)
+      })
     }
   }
 }

@@ -13,7 +13,12 @@ const overviewState = {
   ticketOverviewProperties: {},
   ticketOverviewCountGetters: 0,
   ticketOverviewAttachments: [],
-  lastTicketOffers: {}
+  lastTicketOffers: {},
+  haveAssociatedContacts: false,
+  ticketMetadata: {
+    phones: [],
+    emails: []
+  }
 }
 
 export default overviewState

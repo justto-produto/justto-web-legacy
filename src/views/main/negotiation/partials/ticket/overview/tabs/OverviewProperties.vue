@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div
     v-loading="loading"
     element-loading-background="rgba(247, 247, 247, 0.7)"
@@ -107,7 +107,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'OverviewProperties',
@@ -153,6 +153,7 @@ export default {
           disputeId: id,
           data: properties
         }).finally(() => {
+          this.getAssociatedContacts(id)
           this.newKey = ''
           this.newValue = ''
           this.loading = false
@@ -161,12 +162,15 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['getAssociatedContacts']),
+
     focus(key, index) {
       this.editing[key + index] = true
       this.lineKey += 1
       this.editable = key
       this.$nextTick(() => this.$refs['input' + key + index][0].$el.children[0].focus())
     },
+
     blurKey(key, index) {
       this.editing[key + index] = false
       this.lineKey += 1
@@ -178,6 +182,7 @@ export default {
         this.disputeProperties = newDisputeProperties
       }
     },
+
     blurValue(key, value, index) {
       this.editing[value + index] = false
       this.lineKey += 1
@@ -188,12 +193,14 @@ export default {
         this.disputeProperties = newDisputeProperties
       }
     },
+
     removePropriety(key) {
       this.loading = true
       const newDisputeProperties = JSON.parse(JSON.stringify(this.disputeProperties))
       delete newDisputeProperties[key]
       this.disputeProperties = newDisputeProperties
     },
+
     newPropriety() {
       if (this.newKey && this.newValue) {
         this.loading = true
@@ -202,6 +209,7 @@ export default {
         this.disputeProperties = newDisputeProperties
       }
     },
+
     getSuggestionsKeys(queryString, cb) {
       const keys = [
         { value: 'COMARCA' },
