@@ -28,6 +28,10 @@ const accountMutations = {
       localStorage.setItem('loggedEmail', email)
       Vue.set(state, 'email', email)
     }
+  },
+
+  setAccountProperty(state, response) {
+    Object.keys(response).forEach(key => Vue.set(state.preferences.properties, key, response[key]))
   }
 }
 

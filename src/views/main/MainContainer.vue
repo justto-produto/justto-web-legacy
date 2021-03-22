@@ -85,7 +85,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'MainContainer',
@@ -107,17 +107,14 @@ export default {
       personId: 'loggedPersonId',
       workspace: 'workspaceSubdomain',
       authorization: 'accountToken',
-      accountEmail: 'accountEmail'
+      userPreferences: 'userPreferences'
     }),
 
     canAccessNegotiationScreen() {
       if (this.isJusttoAdmin) {
         return true
       }
-      const authorizedEmails = [
-        'mcluck.ti@gmail.com'
-      ]
-      return authorizedEmails.includes(this.accountEmail)
+      return this.userPreferences.properties.NEGOTIATION_SCREEN && this.userPreferences.properties.NEGOTIATION_SCREEN === 'true'
     },
 
     menuItems() {
@@ -127,7 +124,8 @@ export default {
         title: 'Dashboard',
         icon: 'dashboard',
         isVisible: true,
-        action: () => {}
+        action: () => {
+        }
       })
       if (this.canAccessNegotiationScreen) {
         itemsMenu.push({
@@ -140,7 +138,8 @@ export default {
               title: 'Negociação',
               icon: 'negotiation-window',
               isVisible: true,
-              action: () => {}
+              action: () => {
+              }
             },
             {
               index: '/management',
@@ -172,7 +171,8 @@ export default {
         title: 'Importação',
         icon: 'import',
         isVisible: true,
-        action: () => {}
+        action: () => {
+        }
       })
       return itemsMenu
     }
@@ -198,6 +198,9 @@ export default {
     }
   },
   methods: {
+    ...mapActions({
+      loadAccountProperty: 'loadAccountProperty'
+    }),
     subscribe() {
       if (this.workspace) {
         const headers = {
@@ -211,11 +214,21 @@ export default {
 
         // this.subscriptions.push({ headers, channel: `${baseUrl}/alert` })
         // this.subscriptions.push({ headers, channel: `${baseUrl}/whatsapp` })
-        this.subscriptions.push({ headers, channel: `${baseUrl}/person-status` })
-        this.subscriptions.push({ headers, channel: `${baseUrl}/${this.personId}/dispute` })
-        this.subscriptions.push({ headers, channel: `${baseUrl}/${this.personId}/dispute/summary` })
+        this.subscriptions.push({
+          headers,
+          channel: `${baseUrl}/person-status`
+        })
+        this.subscriptions.push({
+          headers,
+          channel: `${baseUrl}/${this.personId}/dispute`
+        })
+        this.subscriptions.push({
+          headers,
+          channel: `${baseUrl}/${this.personId}/dispute/summary`
+        })
 
         this.subscriptions.forEach(subscription => this.$socket.emit('subscribe', subscription))
+        this.loadAccountProperty()
       }
     },
 
@@ -224,8 +237,14 @@ export default {
       this.$store.commit('clearDisputeTab')
       if (target === 'allDisputes') {
         this.$store.commit('setDisputesTab', '9')
-        this.$store.commit('updateDisputeQuery', { key: 'status', value: [] })
-        this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['id,desc'] })
+        this.$store.commit('updateDisputeQuery', {
+          key: 'status',
+          value: []
+        })
+        this.$store.commit('updateDisputeQuery', {
+          key: 'sort',
+          value: ['id,desc']
+        })
       }
     },
 
@@ -239,6 +258,7 @@ export default {
 
 <style lang="scss">
 @import '@/styles/colors.scss';
+
 .el-container.is-vertical {
   .el-main {
     display: flex;
@@ -270,10 +290,15 @@ export default {
   }
 
   .container-aside__menu {
-    .el-menu-item { transition: all 0.3s; }
+    .el-menu-item {
+      transition: all 0.3s;
+    }
 
     &.container-aside__menu--collapsed {
-      .el-menu-item { overflow: hidden; height: 0; }
+      .el-menu-item {
+        overflow: hidden;
+        height: 0;
+      }
     }
   }
 
