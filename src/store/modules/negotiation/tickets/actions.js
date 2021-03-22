@@ -17,7 +17,8 @@ const getCorrespondingTab = disputeStatus => {
     case 'CHECKOUT':
       return 'accepted'
     case 'UNSETTLED':
-    case '':
+    case 'SETTLED':
+    case 'EXPIRED':
       return 'finished'
     default:
       return 'engagement'
