@@ -3,6 +3,7 @@
     <el-dialog
       :visible.sync="toShow"
       :close-on-click-modal="false"
+      custom-class="associate-contacts-dialog"
       destroy-on-close
       append-to-body
       title="Encontramos dados de contatos na inicial da disputa"
@@ -343,8 +344,10 @@ export default {
   max-height: 216px;
   overflow: auto;
 }
-.el-dialog__body {
-  margin: 0px !important;
+.associate-contacts-dialog {
+  .el-dialog__body {
+    margin: 0px !important;
+  }
 }
 </style>
 
