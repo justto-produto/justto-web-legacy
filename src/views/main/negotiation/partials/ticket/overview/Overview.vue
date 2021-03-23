@@ -289,5 +289,49 @@ export default {
       }
     }
   }
+
+}
+@media (max-height: 600px) {
+  .overview-container {
+    gap: 0px !important;
+
+    div {
+      .overview-container__title {
+        font-size: 16px !important;
+      }
+
+      .overview-container__subtitle {
+        font-size: 12px !important;
+      }
+    }
+
+    .overview-offers {
+      .overview-offers__proposal--defendant {
+        margin-top: -12px !important;
+      }
+    }
+
+    .overview-tabs {
+      .el-tabs__header {
+        margin-bottom: 0px !important;
+      }
+
+      .el-tabs__content {
+        .el-tab-pane {
+          margin-top: 0px !important;
+          padding-top: 0px !important;
+
+          .overview-parties {
+            margin-top: -6px !important;
+            height: calc(100% + 12px);
+
+            .overview-parties__list {
+              margin-top: 6px !important;
+            }
+          }
+        }
+      }
+    }
+  }
 }
 </style>

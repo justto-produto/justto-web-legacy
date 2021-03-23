@@ -32,7 +32,7 @@
 
     <el-button
       type="primary"
-      size="medium"
+      size="small"
       icon="el-icon-plus"
       @click="addParty"
     >
