@@ -8,7 +8,7 @@
       ref="noteEditor"
       :value="editorText"
       class="notes-container__editor"
-      :config="editorConfig"
+      :config="config"
       @ready="setEditorReady(true)"
       @input="setNoteEditorText"
     />
@@ -30,6 +30,8 @@
 </template>
 
 <script>
+import events from '@/constants/negotiationEvents'
+import { eventBus } from '@/utils'
 import CKEditor from 'ckeditor4-vue'
 import { mapActions, mapGetters } from 'vuex'
 
@@ -37,9 +39,11 @@ export default {
   components: {
     ckeditor: CKEditor.component
   },
+
   data: () => ({
     localLoading: false
   }),
+
   computed: {
     ...mapGetters({
       getEditorReady: 'getEditorReady',
@@ -58,11 +62,31 @@ export default {
       set(value) {
         this.setEditorReady(value)
       }
-    }
+    },
+
+    config() {
+      return {
+        parent: 'note-editor',
+        ...this.editorConfig
+      }
+    },
+
+    editor() {
+      return Object.values(window.CKEDITOR.instances).find(({ config }) => config.parent === this.config.parent)
+    },
   },
+
   beforeDestroy() {
     this.destroyEditor()
+    if (this.editor) {
+      this.editor.destroy()
+    }
   },
+
+  mounted() {
+    eventBus.$on(events.EDITOR_FOCUS.callback, this.focusOnEditor)
+  },
+
   methods: {
     ...mapActions([
       'setEditorReady',
@@ -90,9 +114,11 @@ export default {
 
     destroyEditor() {
       this.editorReady = false
-      for (const instance of Object.values(window.CKEDITOR.instances)) {
-        instance.destroy()
-      }
+      this.editor.destroy()
+    },
+
+    focusOnEditor() {
+      this.editor.focus()
     }
   }
 

@@ -16,6 +16,7 @@
     />
     <el-input
       v-else
+      ref="messageEditorTextOnly"
       :value="editorTextScaped"
       :rows="5"
       type="textarea"
@@ -69,6 +70,8 @@
 </template>
 
 <script>
+import events from '@/constants/negotiationEvents'
+import { eventBus } from '@/utils'
 import CKEditor from 'ckeditor4-vue'
 import { mapActions, mapGetters } from 'vuex'
 
@@ -79,6 +82,13 @@ export default {
     Recipients: () => import('./Recipients'),
     Attachments: () => import('./AttachemntsIndicator'),
     DialogEditor: () => import('@/components/dialogs/DialogEditor')
+  },
+
+  props: {
+    focusOnStartup: {
+      type: Boolean,
+      default: false
+    }
   },
 
   data: () => ({
@@ -103,6 +113,10 @@ export default {
       set(value) {
         this.setEditorReady(value)
       }
+    },
+
+    editor() {
+      return Object.values(window.CKEDITOR.instances).find(({ config }) => config.parent === this.config.parent)
     },
 
     config() {
@@ -130,8 +144,22 @@ export default {
     }
   },
 
+  watch: {
+    editorReady(ready) {
+      if (this.focusOnStartup && ready) {
+        this.$nextTick().then(() => this.focusOnEditor()).finally(() => {
+          this.$emit('update:focusOnStartup', false)
+        })
+      }
+    }
+  },
+
   beforeDestroy() {
     this.destroyEditor()
+  },
+
+  mounted() {
+    eventBus.$on(events.EDITOR_FOCUS.callback, this.focusOnEditor)
   },
 
   methods: {
@@ -169,9 +197,19 @@ export default {
 
     destroyEditor() {
       this.editorReady = false
-      for (const instance of Object.values(window.CKEDITOR.instances)) {
-        if (instance.config.parent === 'message-editor') {
-          instance.destroy()
+      if (this.editor) {
+        this.editor.destroy()
+      }
+    },
+
+    focusOnEditor() {
+      if (this.showCKEditor) {
+        if (this.editor) {
+          this.editor.focus()
+        }
+      } else {
+        if (this.$refs.messageEditorTextOnly) {
+          this.$refs.messageEditorTextOnly.focus()
         }
       }
     }

@@ -18,6 +18,7 @@
         <component
           :is="tab.component.name"
           v-if="tab.component && activeTab === tab.name"
+          :focus-on-startup.sync="needFocus"
         />
       </el-tab-pane>
     </el-tabs>
@@ -32,8 +33,10 @@
 </template>
 
 <script>
+import { eventBus } from '@/utils'
 import { mapActions, mapGetters } from 'vuex'
 import EDITOR_CONSTANTS from '@/constants/editor'
+import events from '@/constants/negotiationEvents'
 
 export default {
   components: {
@@ -42,6 +45,10 @@ export default {
     messages: () => import('./partials/Messages'),
     notes: () => import('./partials/Notes')
   },
+  data: () => ({
+    needFocus: false
+  }),
+
   computed: {
     ...mapGetters({
       activeTab: 'getActiveTab',
@@ -78,12 +85,26 @@ export default {
       return this.recipients.length > 0
     }
   },
+
+  mounted() {
+    eventBus.$on(events.EDITOR_FOCUS.callback, this.validateTabOnBeforeFocus)
+  },
+
   methods: {
     ...mapActions([
       'setOmnichannelActiveTab'
     ]),
+
     setTab(tab, _event) {
       this.setOmnichannelActiveTab(tab.name)
+    },
+
+    validateTabOnBeforeFocus() {
+      if (this.activeTab === 'OCCURRENCES') {
+        this.setOmnichannelActiveTab('MESSAGES').finally(_ => {
+          this.needFocus = true
+        })
+      }
     }
   }
 }
