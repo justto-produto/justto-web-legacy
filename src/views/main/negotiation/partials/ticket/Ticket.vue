@@ -75,7 +75,7 @@ export default {
       const { id } = this.$route.params
       this.socketAction('subscribe', id)
       this.cleanRecentMessages()
-      this.getTicketOverview(id)
+      this.getTicketOverview(id).catch(error => this.$jusNotification({ error }))
       this.getTicketOverviewParties(id).then(() => {
         this.getAssociatedContacts(id)
       })
