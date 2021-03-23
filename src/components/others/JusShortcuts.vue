@@ -21,7 +21,7 @@ export default {
   },
   methods: {
     doAction({ callback }) {
-      eventBus.$emit(callback)
+      eventBus.$emit(callback, {})
     }
   }
 }

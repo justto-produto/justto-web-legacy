@@ -62,9 +62,12 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import events from '@/constants/negotiationEvents'
+import { eventBus } from '@/utils'
 
 export default {
   name: 'Tickets',
+
   components: {
     EngagementTicketItem: () => import('./EngagementTicketItem'),
     CommunicationTicketItem: () => import('./CommunicationTicketItem'),
@@ -72,6 +75,7 @@ export default {
     InfiniteLoading: () => import('vue-infinite-loading')
     // VuePerfectScrollbar: () => import('vue-perfect-scrollbar'),
   },
+
   computed: {
     ...mapGetters({
       tickets: 'getTickets',
@@ -121,16 +125,28 @@ export default {
       set(value) {
         this.setTicketsActiveTab(value)
       }
+    },
+
+    activeTabIndex() {
+      return this.tabs.findIndex(({ name }) => this.activeTab === name)
     }
   },
+
   watch: {
     activeTab(currentActiveTab) {
       this.handleChangeTab({ name: currentActiveTab })
     }
   },
+
   beforeMount() {
     this.handleChangeTab({ name: this.activeTab })
   },
+
+  mounted() {
+    eventBus.$on(events.TICKET_NEXT_TAB.callback, this.handleNextTab)
+    eventBus.$on(events.TICKET_PREVIOUS_TAB.callback, this.handlePreviousTab)
+  },
+
   methods: {
     ...mapActions([
       'getTickets',
@@ -184,6 +200,20 @@ export default {
             $state.loaded()
           }
         })
+    },
+
+    handleNextTab() {
+      if (this.activeTabIndex >= 0 && this.activeTabIndex < (this.tabs.length - 1)) {
+        const { name } = this.tabs[this.activeTabIndex + 1]
+        this.setTicketsActiveTab(name)
+      }
+    },
+
+    handlePreviousTab() {
+      if (this.activeTabIndex > 0 && this.activeTabIndex <= (this.tabs.length - 1)) {
+        const { name } = this.tabs[this.activeTabIndex - 1]
+        this.setTicketsActiveTab(name)
+      }
     }
   }
 }
