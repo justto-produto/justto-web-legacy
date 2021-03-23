@@ -309,6 +309,10 @@ export default {
         flex-direction: column;
         &:last-child { margin-bottom: 0; }
 
+        a > .jus-timeline__document-download {
+          width: 12px;
+        }
+
         .jus-timeline__lawsuit-info-title {
           font-weight: 600;
         }
