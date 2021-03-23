@@ -81,6 +81,7 @@
         </transition>
       </el-main>
     </el-container>
+    <JusShortchts />
   </el-container>
 </template>
 
@@ -91,7 +92,8 @@ export default {
   name: 'MainContainer',
   components: {
     JusHeaderMain: () => import('@/components/layouts/JusHeaderMain'),
-    JusTeamMenu: () => import('@/components/layouts/JusTeamMenu')
+    JusTeamMenu: () => import('@/components/layouts/JusTeamMenu'),
+    JusShortchts: () => import('@/components/others/JusShortcuts')
   },
   data() {
     return {

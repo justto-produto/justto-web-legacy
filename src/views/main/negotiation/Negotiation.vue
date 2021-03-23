@@ -1,9 +1,5 @@
 <template>
   <main class="negotiations-container">
-    <span
-      v-shortkey="['ctrl', 'm']"
-      @shortkey="theAction"
-    />
     <Tickets
       :class="{ 'hide-section': $route.params.id }"
       class="negotiations-container__tickets"
@@ -20,18 +16,11 @@
 </template>
 
 <script>
-import { eventBus } from '@/utils'
-
 export default {
   name: 'Negotiation',
   components: {
     Tickets: () => import('./partials/tickets/Tickets'),
     EmptyTicket: () => import('./partials/ticket/TicketEmpty')
-  },
-  methods: {
-    theAction(_) {
-      eventBus.$emit('NEGOTIATION_SHORCUT_EDITOR_FOCUS')
-    }
   }
 }
 </script>
