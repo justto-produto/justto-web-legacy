@@ -1,6 +1,7 @@
 <template>
   <header class="tickets-header-container">
     <el-autocomplete
+      ref="searchInput"
       v-model="searchTerm"
       :min="3"
       :trigger-on-focus="false"
@@ -32,14 +33,19 @@
 </template>
 
 <script>
+import events from '@/constants/negotiationEvents'
+import { eventBus } from '@/utils'
+
 import { mapActions } from 'vuex'
 
 export default {
   name: 'TicketsHeader',
+
   components: {
     TicketsFilters: () => import('./TicketsFilters'),
     JusDisputeResume: () => import('@/components/layouts/JusDisputeResume')
   },
+
   props: {
     targetPath: {
       type: String,
@@ -50,18 +56,25 @@ export default {
       default: 'running'
     }
   },
+
   data: () => ({
     searchTerm: '',
     debounce: setTimeout()
   }),
+
   computed: {
     showFilters() {
       return (this.$route?.fullPath || '').includes('/negotiation')
     }
   },
+
   beforeMount() {
     this.getPrescriptions()
   },
+  mounted() {
+    eventBus.$on(events.SEARCH_FOCUS.callback, this.focusOnSearch)
+  },
+
   methods: {
     ...mapActions([
       'searchDisputes',
@@ -83,6 +96,12 @@ export default {
 
     goToTicket({ disputeId, disputeStatus }) {
       this.$router.push(`/${this.targetPath}/${disputeId}`)
+    },
+
+    focusOnSearch(_) {
+      if (this.$refs.searchInput) {
+        this.$refs.searchInput.focus()
+      }
     }
   }
 }
