@@ -18,6 +18,7 @@ import '@/plugins/vueChatScroll'
 import '@/plugins/vueMoment'
 import '@/plugins/vueMoney'
 import '@/plugins/vueTheMask'
+import '@/plugins/shortkey'
 
 // FILTERS
 import '@/filters/capitalize'
