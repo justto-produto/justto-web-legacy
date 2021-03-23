@@ -25,7 +25,7 @@
         </span>
       </div>
       <div class="communication-ticket-item-container__message">
-        {{ ticket.pendingReason || $options.filters.capitalize($t(`dispute.status.${ticket.disputeStatus}`)) }}
+        {{ getReason(ticket) || $options.filters.capitalize($t(`dispute.status.${ticket.disputeStatus}`)) }}
       </div>
     </div>
     <!-- <span class="communication-ticket-item-container__time">
@@ -65,6 +65,13 @@ export default {
     },
     getLastInteraction(time) {
       return getLastInteraction(time)
+    },
+    getReason(ticket) {
+      if (ticket.pendingReason && ticket.pendingReason.description) {
+        const reasons = ticket.pendingReason.description.replace('[', '').replace(']', '').split(',')
+        return `Encontrou termos ${reasons.join(',')}`
+      }
+      return null
     }
   }
 }
