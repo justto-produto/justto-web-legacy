@@ -234,6 +234,7 @@ export default {
   .communication-container__message {
     font-size: 16px;
     color: #3C3B3B;
+    max-width: 40vw;
 
     @media (max-height: 900px) {
       font-size: 14px;
