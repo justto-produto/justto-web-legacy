@@ -28,7 +28,6 @@ const overviewMutations = {
 
   setAssociatedContacts: (state, properties) => {
     const value = properties['CONTATOS ASSOCIADOS'] || 'NAO'
-    console.log('setAssociatedContacts', value)
     if (value) {
       Vue.set(state, 'haveAssociatedContacts', value)
     }
