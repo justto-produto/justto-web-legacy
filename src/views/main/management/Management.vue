@@ -416,13 +416,15 @@
 </template>
 
 <script>
-import { filterByTerm } from '@/utils'
+import { filterByTerm, eventBus } from '@/utils'
 import { mapActions, mapGetters } from 'vuex'
+import events from '@/constants/negotiationEvents'
 
 const defaultCheckedKeys = ['DISPUTE_CODE', 'EXTERNAL_ID', 'FIRST_CLAIMANT', 'LAWYER_PARTY_NAMES', 'RESPONDENT_NAMES', 'UPPER_RANGE', 'UPPER_RANGE_SAVING_VALUE', 'STATUS', 'CLASSIFICATION', 'DESCRIPTION']
 
 export default {
   name: 'Management',
+
   components: {
     InfiniteLoading: () => import('vue-infinite-loading'),
     ManagementFilters: () => import('./partials/ManagementFilters'),
@@ -433,6 +435,7 @@ export default {
     JusFilterButton: () => import('@/components/buttons/JusFilterButton'),
     JusLoader: () => import('@/components/others/JusLoader')
   },
+
   data() {
     return {
       loadingExport: false,
@@ -455,6 +458,7 @@ export default {
       exportedColumns: []
     }
   },
+
   computed: {
     ...mapGetters({
       brazilianStates: 'brazilianStates',
@@ -497,6 +501,7 @@ export default {
       return this.$route.name === 'allDisputes'
     }
   },
+
   watch: {
     persons() {
       this.getDisputes()
@@ -505,13 +510,18 @@ export default {
       this.$refs.tree.filter(val)
     }
   },
+
   beforeCreate() {
     this.$store.dispatch('getNotVisualizeds')
     this.$store.dispatch('getNearExpirations')
   },
+
   mounted() {
     this.init()
+    eventBus.$on(events.TICKET_NEXT_TAB.callback, this.handleNextTab)
+    eventBus.$on(events.TICKET_PREVIOUS_TAB.callback, this.handlePreviousTab)
   },
+
   methods: {
     ...mapActions([
       'exportDisputes',
@@ -521,6 +531,22 @@ export default {
       'getPrescriptions',
       'getAccountProperty'
     ]),
+
+    handleNextTab() {
+      const current = Number(this.activeTab)
+      if (current < 4) {
+        this.activeTab = String(current + 1)
+        this.handleChangeTab(this.activeTab)
+      }
+    },
+    handlePreviousTab() {
+      const current = Number(this.activeTab)
+      if (current > 0) {
+        this.activeTab = String(current - 1)
+        this.handleChangeTab(this.activeTab)
+      }
+    },
+
     init() {
       const query = this.$route.query
 
@@ -638,8 +664,10 @@ export default {
       this.$refs.managementTable.clearSelection()
     },
     handleChangeTab(tab) {
-      this.$refs.managementTable.clearHighlight()
-      this.$refs.managementTable.showEmpty = false
+      if (this.$refs.managementTable) {
+        this.$refs.managementTable.clearHighlight()
+        this.$refs.managementTable.showEmpty = false
+      }
       this.ufFilterValue = []
       this.$store.commit('clearDisputes')
       this.$store.commit('clearDisputeQueryByTab')
