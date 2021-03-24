@@ -129,6 +129,11 @@ export default {
 
     activeTabIndex() {
       return this.tabs.findIndex(({ name }) => this.activeTab === name)
+    },
+    ticketIndex() {
+      const { id } = this.$route.params
+
+      return this.tickets.content.findIndex((el) => Number(el.disputeId) === Number(id))
     }
   },
 
@@ -145,6 +150,8 @@ export default {
   mounted() {
     eventBus.$on(events.TICKET_NEXT_TAB.callback, this.handleNextTab)
     eventBus.$on(events.TICKET_PREVIOUS_TAB.callback, this.handlePreviousTab)
+    eventBus.$on(events.TICKET_DOWN.callback, this.handleNextTicket)
+    eventBus.$on(events.TICKET_UP.callback, this.handlePreviousTicket)
   },
 
   methods: {
@@ -213,6 +220,38 @@ export default {
       if (this.activeTabIndex > 0 && this.activeTabIndex <= (this.tabs.length - 1)) {
         const { name } = this.tabs[this.activeTabIndex - 1]
         this.setTicketsActiveTab(name)
+      }
+    },
+
+    handleNextTicket() {
+      const { id } = this.$route.params
+
+      if (id) {
+        const condition = this.ticketIndex >= 0 && this.ticketIndex < (this.tickets.content.length - 1)
+
+        const index = this.ticketIndex + Number(condition)
+
+        const { disputeId } = this.tickets.content[index]
+
+        if (condition) {
+          this.$router.push({ path: `/negotiation/${disputeId}` })
+        }
+      }
+    },
+
+    handlePreviousTicket() {
+      const { id } = this.$route.params
+
+      if (id) {
+        const condition = this.ticketIndex > 0 && this.ticketIndex <= (this.tickets.content.length - 1)
+
+        const index = this.ticketIndex - Number(condition)
+
+        const { disputeId } = this.tickets.content[index]
+
+        if (condition) {
+          this.$router.push({ path: `/negotiation/${disputeId}` })
+        }
       }
     }
   }
