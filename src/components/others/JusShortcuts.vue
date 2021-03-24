@@ -107,6 +107,10 @@ export default {
         .shortcut-dialog__list-item-text {
           font-weight: 600;
         }
+
+        &:last-child {
+          display: none;
+        }
       }
     }
   }
