@@ -402,10 +402,12 @@
 </template>
 
 <script>
-import { isSimilarStrings } from '@/utils'
+import { isSimilarStrings, eventBus } from '@/utils'
 import { mapGetters, mapActions } from 'vuex'
 import { JusDragArea } from '@/components/JusDragArea'
 import { quillEditor } from 'vue-quill-editor'
+
+import events from '@/constants/negotiationEvents'
 
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
@@ -431,6 +433,7 @@ export default {
     JusDragArea,
     quillEditor
   },
+
   data() {
     return {
       y: 0,
@@ -473,6 +476,7 @@ export default {
       inReplyTo: null
     }
   },
+
   computed: {
     ...mapGetters([
       'disputeAttachments',
@@ -559,6 +563,7 @@ export default {
       return ''
     }
   },
+
   watch: {
     '$route.params.id': function(id, oldId) {
       this.id = id.toString()
@@ -581,6 +586,7 @@ export default {
       this.sendMessageHeight = height >= 0 ? height : this.sendMessageHeight
     }
   },
+
   created() {
     this.id = this.$route.params.id.toString()
     this.fetchData()
@@ -594,6 +600,7 @@ export default {
     })
     this.getQuickReplyTemplates(this.id).then(_ => {}).catch(_ => {})
   },
+
   mounted() {
     this.getLastInteractions(this.id)
     setTimeout(() => {
@@ -604,11 +611,15 @@ export default {
     window.addEventListener('resize', this.updateWindowHeight)
     this.setHeight(window.document.getElementById('app').clientHeight)
     this.typingTab = localStorage.getItem('jusoccurrencestab') || '1'
+
+    eventBus.$on(events.EDITOR_FOCUS.callback, this.focusOnEditor)
   },
+
   beforeDestroy() {
     this.unsubscribeOccurrences(this.id)
     window.removeEventListener('resize', this.updateWindowHeight)
   },
+
   methods: {
     ...mapActions([
       'getDisputeStatuses',
@@ -621,6 +632,17 @@ export default {
       'sendNegotiator',
       'setHeight'
     ]),
+
+    focusOnEditor() {
+      if (this.typingTab === '1' && this.$refs.messageEditor) {
+        this.$refs.messageEditor.quill.focus()
+      } else if (this.typingTab === '2' && this.$refs.messageEditor) {
+        this.$refs.noteEditor.quill.focus()
+      } else if (this.typingTab === '3') {
+        this.typingTab = '1'
+        this.$nextTick(this.focusOnEditor)
+      }
+    },
 
     setNegotiatorActive(params) {
       this.setMessageType('negotiation')
