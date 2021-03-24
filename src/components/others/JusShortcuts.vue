@@ -16,6 +16,7 @@
       <ul class="shortcut-dialog__list">
         <li
           v-for="shortcut in shortcuts"
+          v-show="shortcut.show"
           :key="`shortcut-help-${shortcut.callback}`"
           class="shortcut-dialog__list-item"
         >
@@ -106,10 +107,6 @@ export default {
 
         .shortcut-dialog__list-item-text {
           font-weight: 600;
-        }
-
-        &:last-child {
-          display: none;
         }
       }
     }
