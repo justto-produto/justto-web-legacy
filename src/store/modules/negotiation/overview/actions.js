@@ -77,8 +77,6 @@ const overviewActions = {
     return axiosDispatch({
       url: `${disputeApi}/${disputeId}/properties`,
       mutation: 'setAssociatedContacts'
-    }).then(_ => {
-      dispatch('getTicketMetadata', disputeId)
     })
   },
 

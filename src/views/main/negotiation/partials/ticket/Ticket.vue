@@ -68,7 +68,8 @@ export default {
       'cleanRecentMessages',
       'getAssociatedContacts',
       'getQuickReplyTemplates',
-      'getTicketOverviewParties'
+      'getTicketOverviewParties',
+      'getTicketMetadata'
     ]),
 
     fetchData() {
@@ -77,7 +78,9 @@ export default {
       this.cleanRecentMessages()
       this.getTicketOverview(id).catch(error => this.$jusNotification({ error }))
       this.getTicketOverviewParties(id).then(() => {
-        this.getAssociatedContacts(id)
+        this.getTicketMetadata(id).then(() => {
+          this.getAssociatedContacts(id)
+        })
       })
       this.getDisputeTags(id)
       this.getLastTicketOffers(id)
