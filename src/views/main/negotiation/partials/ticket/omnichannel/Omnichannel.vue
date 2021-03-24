@@ -33,6 +33,7 @@ export default {
 
   .omnichannel-container__occurrences {
     flex: 1;
+    overflow: hidden;
   }
 }
 </style>
