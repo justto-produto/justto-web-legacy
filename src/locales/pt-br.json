@@ -565,5 +565,15 @@
         }
       }
     }
+  },
+  "events": {
+    "NEGOTIATION_EVENTS_EDITOR_FOCUS": "Foca no editor de mesnagens/notas.",
+    "GLOBAL_EVENTS_SEARCH_FOCUS": "Foca na barra de pesquisa de disputas.",
+    "NEGOTIATION_EVENTS_TICKET_DOWN": "Avança para o próximo ticket da tela de Negociação.",
+    "NEGOTIATION_EVENTS_TICKET_UP": "Volta para o próximo ticket da tela de Negociação.",
+    "NEGOTIATION_EVENTS_TICKET_NEXT_TAB": "Avança para a próxima aba da listagem de Tickets.",
+    "NEGOTIATION_EVENTS_TICKET_PREVIOUS_TAB": "Volta a aba anterior da listagem de Tickets.",
+    "SHOW_SHORTCUTS_HELP_1": "Abre a lista de atalhos.",
+    "SHOW_SHORTCUTS_HELP_2": "Abre a lista de atalhos."
   }
 }
