@@ -2,7 +2,7 @@
   <div class="management-prescriptions">
     <el-popover
       placement="bottom"
-      width="300"
+      width="328"
       popper-class="management-prescriptions__prescriptions-popover"
       class="management-prescriptions__popover-trigger"
       trigger="click"
@@ -26,13 +26,16 @@
             {{ prescription.description | capitalize }}
           </div>
         </li>
-        <el-button
-          :type="ticketsHasFilters ? 'primary' : ''"
-          class="management-prescriptions__list-item-button"
-          @click="openAdvancedFiltersDialog"
-        >
-          Filtros avançados
-        </el-button>
+        <div class="management-prescriptions__advanced-filters">
+          <el-button
+            :type="ticketsHasFilters ? 'primary' : ''"
+            class="management-prescriptions__list-item-button"
+            @click="openAdvancedFiltersDialog"
+          >
+            Filtros avançados
+          </el-button>
+          <TicketsTagsFilters />
+        </div>
         <!-- <li
           ref="advancedFilters"
           :class="{ 'management-prescriptions__list-item--selected': hasPrescription('advancedFilters') }"
@@ -74,7 +77,8 @@ import { mapGetters, mapActions } from 'vuex'
 export default {
   name: 'TicketsFilters',
   components: {
-    TicketsAdvancedFilters: () => import('./TicketsAdvancedFilters')
+    TicketsAdvancedFilters: () => import('./TicketsAdvancedFilters'),
+    TicketsTagsFilters: () => import('./TicketsTagsFilters')
   },
   props: {
     activeTab: {
@@ -179,9 +183,19 @@ export default {
     list-style: none;
     padding: 0;
     margin: 0;
+
+    .management-prescriptions__advanced-filters {
+      margin: 6px 24px;
+      display: flex;
+      align-items: center;
+      // flex-direction: column;
+      // justify-content: flex-start;
+      gap: 12px;
+    }
+
     .management-prescriptions__list-item-button {
-      margin: 6px 24px 12px;
-      width: calc(100% - 48px);
+      // margin: 6px 6px 6px 24px;
+      // width: 100%;
     }
 
     .management-prescriptions__list-item {

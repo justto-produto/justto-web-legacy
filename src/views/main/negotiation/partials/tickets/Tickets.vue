@@ -10,8 +10,8 @@
     <el-tabs
       v-model="activeTab"
       class="tickets-container__tabs"
-      @tab-click="handleChangeTab"
     >
+      <!-- @tab-click="handleChangeTab" -->
       <el-tab-pane
         v-for="tab in tabs"
         :key="tab.name"
@@ -161,7 +161,8 @@ export default {
       'setTicketsQuery',
       'setTicketsActiveTab',
       'getNearExpirations',
-      'getNotVisualizeds'
+      'getNotVisualizeds',
+      'getTicketsFilteredTags'
     ]),
 
     handleChangeTab(tab) {
@@ -192,10 +193,12 @@ export default {
           break
       }
 
-      this.getTickets().then(() => {
-        this.getNearExpirations()
-        this.getNotVisualizeds()
-      })
+      this.getTicketsFilteredTags()
+      this.getTickets()
+        .then(() => {
+          this.getNearExpirations()
+          this.getNotVisualizeds()
+        })
     },
 
     infiniteHandler($state) {
@@ -228,9 +231,7 @@ export default {
 
       if (id) {
         const condition = this.ticketIndex >= 0 && this.ticketIndex < (this.tickets.content.length - 1)
-
         const index = this.ticketIndex + Number(condition)
-
         const { disputeId } = this.tickets.content[index]
 
         if (condition) {
@@ -244,9 +245,7 @@ export default {
 
       if (id) {
         const condition = this.ticketIndex > 0 && this.ticketIndex <= (this.tickets.content.length - 1)
-
         const index = this.ticketIndex - Number(condition)
-
         const { disputeId } = this.tickets.content[index]
 
         if (condition) {
