@@ -34,23 +34,9 @@
           >
             Filtros avançados
           </el-button>
+
           <TicketsTagsFilters />
         </div>
-        <!-- <li
-          ref="advancedFilters"
-          :class="{ 'management-prescriptions__list-item--selected': hasPrescription('advancedFilters') }"
-          class="management-prescriptions__list-item"
-          @click="openAdvancedFiltersDialog"
-        >
-          <div>
-            <JusIcon
-              :class="{ 'management-prescriptions__filter-icon--selected' : hasPrescription('advancedFilters') }"
-              class="management-prescriptions__filter-icon"
-              icon="filter"
-            />
-            Filtros avançados
-          </div>
-        </li> -->
       </ul>
       <el-button
         slot="reference"
@@ -190,14 +176,7 @@ export default {
       margin: 6px 24px;
       display: flex;
       align-items: center;
-      // flex-direction: column;
-      // justify-content: flex-start;
       gap: 12px;
-    }
-
-    .management-prescriptions__list-item-button {
-      // margin: 6px 6px 6px 24px;
-      // width: 100%;
     }
 
     .management-prescriptions__list-item {
