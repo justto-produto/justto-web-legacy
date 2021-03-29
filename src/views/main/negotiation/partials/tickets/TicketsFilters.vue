@@ -114,6 +114,7 @@ export default {
   methods: {
     ...mapActions([
       'getTickets',
+      'getTicketsFilteredTags',
       'resetTicketsPage',
       'setTicketPrescription',
       'unsetTicketPrescription',
@@ -135,6 +136,7 @@ export default {
         this.$jusSegment(`Filtro botão ${translatedPrescription}`)
       }
       this.getTickets()
+      this.getTicketsFilteredTags()
     },
 
     buttonType(name) {

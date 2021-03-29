@@ -360,6 +360,7 @@ export default {
   methods: {
     ...mapActions([
       'getCampaigns',
+      'getTicketsFilteredTags',
       'getMyStrategiesLite',
       'getRespondents',
       'getWorkspaceTags',
@@ -386,6 +387,7 @@ export default {
       this.setTicketsFilters({ filters, hasFilters: true })
       this.advancedFiltersDialogVisible = false
       this.getTickets()
+      this.getTicketsFilteredTags()
       // SEGMENT TRACK
       if (filters.status) {
         if (filters.status.includes('EXPIRED')) {
