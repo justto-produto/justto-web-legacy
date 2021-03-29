@@ -408,6 +408,11 @@
     "accepted": "proposta aceita",
     "finished": "finalizados"
   },
+  "configurations-tabs": {
+    "workspace-data": "Dados da conta",
+    "team": "Equipe",
+    "features-and-modules": "Funcionalidades e módulos"
+  },
   "fields": {
     "claimantParty": "Parte contrária",
     "claimantLawyer": "Advogado(a) da parte",
