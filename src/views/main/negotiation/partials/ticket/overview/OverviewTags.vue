@@ -235,7 +235,7 @@ export default {
     disputeTags: {
       get() {
         return this.ticketTags.map(t => {
-          if (this.ticketsQuery.tags && this.ticketsQuery.tags.includes(t.id)) {
+          if (this.filteredTags && this.filteredTags.includes(t.id)) {
             t.activeType = 'inclusive'
           } else if (this.ticketsQuery.noTags && this.ticketsQuery.noTags.includes(t.id)) {
             t.activeType = 'exclusive'

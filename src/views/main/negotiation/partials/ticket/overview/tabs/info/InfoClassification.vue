@@ -1,8 +1,8 @@
 <template>
   <article class="info-classification">
     <TextInlineEditor
-      v-model="value.name"
       ref="classificationName"
+      v-model="value.name"
       class="info-classification__infoline-data"
       @change="handleSetData($event, value.details)"
       @blur="$emit('blur')"

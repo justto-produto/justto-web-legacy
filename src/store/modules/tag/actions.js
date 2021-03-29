@@ -31,7 +31,18 @@ const tagActions = {
     delete query.tags
     delete query.noTags
     return axiosDispatch({
-      method: 'get',
+      url: `/api/disputes/tags${buildQuery(query)}`,
+      mutation: 'setFilteredTags'
+    })
+  },
+  getTicketsFilteredTags({ rootState }) {
+    const query = JSON.parse(JSON.stringify(rootState.negotiationTicketsModule.ticketsQuery))
+    delete query.sort
+    delete query.page
+    delete query.size
+    delete query.tags
+    delete query.noTags
+    return axiosDispatch({
       url: `/api/disputes/tags${buildQuery(query)}`,
       mutation: 'setFilteredTags'
     })
