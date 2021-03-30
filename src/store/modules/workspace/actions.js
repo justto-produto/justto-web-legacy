@@ -35,6 +35,7 @@ const workspaceActions = {
   editWorkpace({ state }, workspace) {
     const { id, teamName, status, name } = state.workspace
     const data = { id, teamName, status, name, ...workspace }
+
     return axiosDispatch({
       url: `${workspacesPath}/`,
       method: 'PUT',
@@ -46,7 +47,9 @@ const workspaceActions = {
     return axiosDispatch({
       url: `${workspacesPath}/teamName`,
       method: 'patch',
-      data
+      data,
+      mutation: 'setTeamName',
+      payload: data.teamName
     })
   },
   inviteTeammates({ state }, teammates) {

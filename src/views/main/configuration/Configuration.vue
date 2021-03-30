@@ -915,10 +915,6 @@ export default {
           teamName: this.teamName,
           id: this.$store.getters.workspaceId
         }).then(() => {
-          const workspace = this.$store.getters.workspace
-          workspace.teamName = this.teamName
-          this.$store.commit('setWorkspace', workspace)
-          // SEGMENT TRACK
           this.$jusSegment('Nome da equipe alterado')
           this.$jusNotification({
             title: 'Yay!',
