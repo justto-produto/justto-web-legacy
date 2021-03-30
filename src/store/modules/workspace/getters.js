@@ -19,6 +19,7 @@ const workspaceGetters = {
       return state.workspace.members || []
     }
   },
+  workspaceTeam: state => state.workspace.team,
   workspaceMembersSorted: (_state, getters) =>
     getters.workspaceMembers
       .sort((a, b) => {

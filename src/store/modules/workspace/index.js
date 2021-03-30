@@ -16,6 +16,7 @@ const workspaceModule = {
       subDomain: workspace.subDomain,
       profile: profile,
       members: [],
+      team: [],
       blackList: workspace.blackList,
       properties: workspace.properties || {},
       defaultSigners: [],

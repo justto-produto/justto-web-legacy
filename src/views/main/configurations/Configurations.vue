@@ -58,6 +58,13 @@ export default {
 .configurations-container {
   margin: 30px;
   width: 100%;
+  overflow-y: hidden;
+
+  .configurations-container__tabs {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
 
   .configurations-container__user-menu {
     position: absolute;
@@ -69,6 +76,13 @@ export default {
 
 <style lang="scss">
 .configurations-container {
+  .el-tabs__content {
+    flex: 1;
+
+    .el-tab-pane {
+      height: 100%;
+    }
+  }
   .el-tabs__nav {
     .el-tabs__item {
       font-size: 16px;
