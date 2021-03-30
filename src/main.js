@@ -5,6 +5,8 @@ import store from './store'
 import { registerServiceWorker } from '@/utils'
 import { validateWorkspace } from '@/utils/validations'
 
+import CKEditor from '@ckeditor/ckeditor5-vue2'
+
 // PLUGINS
 import i18n from '@/plugins/vueI18n'
 import '@/plugins/axios'
@@ -73,6 +75,8 @@ import JusIcon from '@/components/images/JusIcon'
 import JusAvatarUser from '@/components/images/JusAvatarUser'
 import JusViewMain from '@/components/layouts/JusViewMain'
 import JusButtonBack from '@/components/buttons/JusButtonBack'
+
+Vue.use(CKEditor)
 
 Vue.component('JusIcon', JusIcon)
 Vue.component('JusAvatarUser', JusAvatarUser)

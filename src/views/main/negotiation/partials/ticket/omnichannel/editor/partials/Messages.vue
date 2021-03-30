@@ -4,18 +4,26 @@
     v-loading="showCKEditor && !editorReady"
     class="messages-container"
   >
-    <ckeditor
+    <!-- <ckeditor
       v-if="showCKEditor"
-      v-show="editorReady"
       ref="messageEditor"
+      :editor="ClassicEditor"
       :value="editorText"
       :config="config"
       class="messages-container__editor"
       @ready="setEditorReady(true)"
       @input="setEditorText"
+    /> -->
+    <ckeditor
+      v-if="showCKEditor"
+      v-model="model"
+      :editor="editor"
+      :config="config"
+      type="classic"
     />
     <el-input
       v-else
+      id="messageEditorTextOnly"
       ref="messageEditorTextOnly"
       :value="editorTextScaped"
       :rows="5"
@@ -23,10 +31,10 @@
       resize="none"
       @input="setEditorText"
     />
-    <Attachments
+    <!-- <Attachments
       v-if="messageType === 'email'"
       class="messages-container__attachments"
-    />
+    /> -->
     <span
       class="messages-container__full-screen"
       @click="openFullScreenEditor"
@@ -49,7 +57,7 @@
         />
       </el-button>
     </span>
-    <DialogEditor
+    <!-- <DialogEditor
       ref="fullScreenEditor"
       :text-only="!showCKEditor"
       :width="dialogWidth"
@@ -65,23 +73,24 @@
         <Recipients is-reversed />
         <QuickReply show-title />
       </div>
-    </DialogEditor>
+    </DialogEditor> -->
   </section>
 </template>
 
 <script>
 import events from '@/constants/negotiationEvents'
 import { eventBus } from '@/utils'
-import CKEditor from 'ckeditor4-vue'
+// import CKEditor from 'ckeditor4-vue'
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
+
 import { mapActions, mapGetters } from 'vuex'
 
 export default {
   components: {
-    ckeditor: CKEditor.component,
-    QuickReply: () => import('./QuickReply'),
-    Recipients: () => import('./Recipients'),
-    Attachments: () => import('./AttachemntsIndicator'),
-    DialogEditor: () => import('@/components/dialogs/DialogEditor')
+    // QuickReply: () => import('./QuickReply'),
+    // Recipients: () => import('./Recipients'),
+    // Attachments: () => import('./AttachemntsIndicator')
+    // DialogEditor: () => import('@/components/dialogs/DialogEditor')
   },
 
   props: {
@@ -91,9 +100,13 @@ export default {
     }
   },
 
-  data: () => ({
-    localLoading: false
-  }),
+  data() {
+    return {
+      localLoading: false,
+      editor: ClassicEditor,
+      model: ''
+    }
+  },
 
   computed: {
     ...mapGetters({
@@ -108,21 +121,25 @@ export default {
 
     editorReady: {
       get() {
-        return this.getEditorReady
+        return this.getEditorReady || true
       },
       set(value) {
         this.setEditorReady(value)
       }
     },
 
-    editor() {
-      return Object.values(window.CKEDITOR.instances).find(({ config }) => config.parent === this.config.parent)
-    },
-
     config() {
+      // return {
+      //   parent: 'message-editor',
+      //   ...this.editorConfig
+      // }
       return {
-        parent: 'message-editor',
-        ...this.editorConfig
+        toolbar: {
+          items: [
+            'bold',
+            'italic'
+          ]
+        }
       }
     },
 
@@ -212,12 +229,30 @@ export default {
           this.$refs.messageEditorTextOnly.focus()
         }
       }
+    },
+
+    pasteText() {
+      navigator.clipboard.readText().then(text => {
+        if (this.showCKEditor && this.editorReady && this.editor) {
+          this.editor.insertText(text)
+        } else if (!this.showCKEditor) {
+          const target = document.getElementById('messageEditorTextOnly')
+
+          if (target.setRangeText) {
+            target.setRangeText(text)
+          } else {
+            target.focus()
+            document.execCommand('insertText', false, text)
+          }
+        }
+      })
     }
   }
 }
 </script>
 
 <style lang="scss">
+
 .negotiator-fullscreen-editor {
   .el-dialog__header {
     margin: 10px 0px;
@@ -266,7 +301,14 @@ export default {
   .messages-container__attachments {
     position: absolute;
     top: 20px;
+    left: 160px;
+  }
+
+  .messages-container__paste {
+    position: absolute;
+    top: 20px;
     left: 140px;
+    cursor: pointer;
   }
 
   .messages-container__button {

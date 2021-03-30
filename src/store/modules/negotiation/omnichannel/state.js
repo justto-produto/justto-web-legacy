@@ -47,7 +47,8 @@ const omnichannelMutations = {
         { name: 'about', groups: ['about'] }
       ],
       removeButtons: 'Source,Save,NewPage,ExportPdf,Preview,Print,PasteFromWord,PasteText,Paste,Copy,Cut,Find,Replace,SelectAll,Scayt,Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,HiddenField,BGColor,Maximize,About,Styles,ShowBlocks,Format,Font,FontSize,Iframe,PageBreak,SpecialChar,Smiley,HorizontalRule,Table,Flash,Image,Anchor,Unlink,Link,BidiLtr,BidiRtl,Language,CreateDiv,Blockquote,Outdent,NumberedList,BulletedList,CopyFormatting,Strike,Subscript,Superscript,Undo,Redo,Templates,Indent,Undo,Redo',
-      removePlugins: 'elementspath,resize'
+      removePlugins: 'elementspath,resize',
+      contextMenu: []
     },
     ready: false,
     messageText: '',
