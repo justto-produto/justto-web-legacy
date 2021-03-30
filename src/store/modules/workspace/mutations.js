@@ -1,4 +1,4 @@
-// import Vue from 'vue'
+import Vue from 'vue'
 
 const workspaceMutations = {
   redirectNewWorkspaceTrue(state) {
@@ -22,6 +22,10 @@ const workspaceMutations = {
       }
       localStorage.setItem('jusworkspace', JSON.stringify(state.workspace))
     }
+  },
+  setTeamName(state, { payload }) {
+    Vue.set(state.workspace, 'teamName', payload)
+    localStorage.setItem('jusworkspace', JSON.stringify(state.workspace))
   },
   setProfile(state, profile) {
     if (profile) {
