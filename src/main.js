@@ -75,7 +75,6 @@ import JusIcon from '@/components/images/JusIcon'
 import JusAvatarUser from '@/components/images/JusAvatarUser'
 import JusViewMain from '@/components/layouts/JusViewMain'
 import JusButtonBack from '@/components/buttons/JusButtonBack'
-
 Vue.use(CKEditor)
 
 Vue.component('JusIcon', JusIcon)
