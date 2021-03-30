@@ -2,23 +2,13 @@
   <section
     id="messagesTabEditorOmnichannelNegotiation"
     v-loading="showCKEditor && !editorReady"
-    class="messages-container"
+    class="messages-container jus-ckeditor__parent"
   >
-    <!-- <ckeditor
-      v-if="showCKEditor"
-      ref="messageEditor"
-      :editor="ClassicEditor"
-      :value="editorText"
-      :config="config"
-      class="messages-container__editor"
-      @ready="setEditorReady(true)"
-      @input="setEditorText"
-    /> -->
     <ckeditor
       v-if="showCKEditor"
       v-model="model"
       :editor="editor"
-      :config="config"
+      :config="editorConfig"
       type="classic"
     />
     <el-input
@@ -31,10 +21,10 @@
       resize="none"
       @input="setEditorText"
     />
-    <!-- <Attachments
+    <Attachments
       v-if="messageType === 'email'"
       class="messages-container__attachments"
-    /> -->
+    />
     <span
       class="messages-container__full-screen"
       @click="openFullScreenEditor"
@@ -57,7 +47,7 @@
         />
       </el-button>
     </span>
-    <!-- <DialogEditor
+    <DialogEditor
       ref="fullScreenEditor"
       :text-only="!showCKEditor"
       :width="dialogWidth"
@@ -73,40 +63,26 @@
         <Recipients is-reversed />
         <QuickReply show-title />
       </div>
-    </DialogEditor> -->
+    </DialogEditor>
   </section>
 </template>
 
 <script>
 import events from '@/constants/negotiationEvents'
 import { eventBus } from '@/utils'
-
-import ClassicEditor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor'
-import Alignment from '@ckeditor/ckeditor5-alignment/src/alignment'
-import Autoformat from '@ckeditor/ckeditor5-autoformat/src/autoformat'
-import BlockQuote from '@ckeditor/ckeditor5-block-quote/src/blockquote'
-import Bold from '@ckeditor/ckeditor5-basic-styles/src/bold'
-import Essentials from '@ckeditor/ckeditor5-essentials/src/essentials'
-import Highlight from '@ckeditor/ckeditor5-highlight/src/highlight'
-import Indent from '@ckeditor/ckeditor5-indent/src/indent'
-import Italic from '@ckeditor/ckeditor5-basic-styles/src/italic'
-import List from '@ckeditor/ckeditor5-list/src/list'
-import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph'
-import PasteFromOffice from '@ckeditor/ckeditor5-paste-from-office/src/pastefromoffice'
-import RemoveFormat from '@ckeditor/ckeditor5-remove-format/src/removeformat'
-import Table from '@ckeditor/ckeditor5-table/src/table'
-import TextTransformation from '@ckeditor/ckeditor5-typing/src/texttransformation'
-import Underline from '@ckeditor/ckeditor5-basic-styles/src/underline'
+import ckeditor from '@/utils/mixins/ckeditor'
 
 import { mapActions, mapGetters } from 'vuex'
 
 export default {
   components: {
-    // QuickReply: () => import('./QuickReply'),
-    // Recipients: () => import('./Recipients'),
-    // Attachments: () => import('./AttachemntsIndicator')
-    // DialogEditor: () => import('@/components/dialogs/DialogEditor')
+    QuickReply: () => import('./QuickReply'),
+    Recipients: () => import('./Recipients'),
+    Attachments: () => import('./AttachemntsIndicator'),
+    DialogEditor: () => import('@/components/dialogs/DialogEditor')
   },
+
+  mixins: [ckeditor],
 
   props: {
     focusOnStartup: {
@@ -118,7 +94,6 @@ export default {
   data() {
     return {
       localLoading: false,
-      editor: ClassicEditor,
       model: ''
     }
   },
@@ -130,7 +105,6 @@ export default {
       editorRecipients: 'getEditorRecipients',
       messageType: 'getEditorMessageType',
       getEditorReady: 'getEditorReady',
-      editorConfig: 'getEditorConfig',
       editorText: 'getEditorText'
     }),
 
@@ -140,53 +114,6 @@ export default {
       },
       set(value) {
         this.setEditorReady(value)
-      }
-    },
-
-    config() {
-      // return {
-      //   parent: 'message-editor',
-      //   ...this.editorConfig
-      // }
-      return {
-        plugins: [
-          Alignment,
-          Autoformat,
-          BlockQuote,
-          Bold,
-          Essentials,
-          Highlight,
-          Indent,
-          Italic,
-          List,
-          Paragraph,
-          PasteFromOffice,
-          RemoveFormat,
-          Table,
-          TextTransformation,
-          Underline
-        ],
-        toolbar: {
-          items: [
-            'bold',
-            'italic',
-            'underline',
-            'removeFormat',
-            'link',
-            'bulletedList',
-            'numberedList',
-            '|',
-            'outdent',
-            'indent',
-            '|',
-            'blockQuote',
-            'insertTable',
-            'undo',
-            'redo'
-          ],
-          viewportTopOffset: 30,
-          shouldNotGroupWhenFull: true
-        }
       }
     },
 
@@ -339,16 +266,18 @@ export default {
 
   .messages-container__full-screen {
     position: absolute;
-    top: 16px;
-    right: 16px;
+    top: 0;
+    right: 0;
+    margin: 18px;
 
     cursor: pointer;
   }
 
   .messages-container__attachments {
     position: absolute;
-    top: 20px;
-    left: 160px;
+    top: 0;
+    right: 0;
+    margin: 18px 206px 0 0;
   }
 
   .messages-container__paste {
