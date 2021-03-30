@@ -71,6 +71,12 @@ const workspaceActions = {
       mutation: 'setWorkspaceMembers'
     })
   },
+  getWorkspaceTeam({ _ }) {
+    return axiosDispatch({
+      url: '/api/accounts?size=999&sort=a.name,asc',
+      mutation: 'setWorkspaceTeam'
+    })
+  },
   getWorkspaces({ _ }) {
     return axiosDispatch({ url: `${workspacesPath}?size=999&` })
   },

@@ -55,6 +55,7 @@ const workspaceMutations = {
     localStorage.removeItem('jusperson')
   },
   setWorkspaceMembers: (state, members) => (state.workspace.members = members.content),
+  setWorkspaceTeam: (state, team) => Vue.set(state.workspace, 'team', team.content),
   setBlackList(state, blackList) {
     if (blackList) state.workspace.blackList = blackList
   },

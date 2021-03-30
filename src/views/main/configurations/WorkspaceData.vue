@@ -242,6 +242,12 @@ export default {
     .workspace-data-container__form {
       flex-direction: column;
 
+      .workspace-data-container__form-item {
+        .workspace-data-container__input-label {
+          font-size: 14px;
+        }
+      }
+
       .workspace-data-container__input-file {
         height: 220px;
       }
