@@ -41,7 +41,10 @@
         label="Telefone de contato"
         prop="phone"
       >
-        <el-input v-model="form.phone">
+        <el-input
+          v-model="form.phone"
+          v-mask="['### (##) # ####-####',, '## (##) # ####-####', '(##) ####-####', '(##) #####-####']"
+        >
           <el-button
             slot="append"
             @click="editPhone()"
@@ -89,7 +92,7 @@ export default {
       name: this.hasName ? this.name : '',
       phone: this.phone?.number || ''
     })
-    // TODO: Adicionar mascara de telefone.
+    this.$nextTick().then(_ => this.$forceUpdate())
   },
 
   methods: {
