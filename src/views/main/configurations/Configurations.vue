@@ -72,6 +72,15 @@ export default {
     right: 30px;
   }
 }
+
+@media (max-width: 1600px) {
+  .configurations-container {
+    .configurations-container__tabs {
+      max-width: 1600px;
+      margin: auto;
+    }
+  }
+}
 </style>
 
 <style lang="scss">
