@@ -126,38 +126,59 @@ export default {
         action: () => {
         }
       })
-      if (this.canAccessNegotiationScreen) {
-        itemsMenu.push({
-          isGroup: true,
-          index: 'disputes',
-          name: 'Disputas',
-          childs: [
-            {
-              index: '/negotiation',
-              title: 'Negociação',
-              icon: 'negotiation-window',
-              isVisible: true,
-              action: () => {
-              }
-            },
-            {
-              index: '/management',
-              title: 'Gerenciamento',
-              icon: 'list-app',
-              isVisible: true,
-              action: () => this.setTabQuery('management')
-            }
-          ]
-        })
-      } else {
-        itemsMenu.push({
-          index: '/management',
-          title: 'Gerenciamento',
-          icon: 'management',
-          isVisible: true,
-          action: () => this.setTabQuery('management')
-        })
-      }
+      itemsMenu.push({
+        isGroup: true,
+        index: 'disputes',
+        name: 'Disputas',
+        childs: [
+          {
+            index: '/negotiation',
+            title: 'Negociação',
+            icon: 'negotiation-window',
+            isVisible: true,
+            action: () => {}
+          },
+          {
+            index: '/management',
+            title: 'Gerenciamento',
+            icon: 'list-app',
+            isVisible: true,
+            action: () => this.setTabQuery('management')
+          }
+        ]
+      })
+      // if (this.canAccessNegotiationScreen) {
+      //   itemsMenu.push({
+      //     isGroup: true,
+      //     index: 'disputes',
+      //     name: 'Disputas',
+      //     childs: [
+      //       {
+      //         index: '/negotiation',
+      //         title: 'Negociação',
+      //         icon: 'negotiation-window',
+      //         isVisible: true,
+      //         action: () => {
+      //         }
+      //       },
+      //       {
+      //         index: '/management',
+      //         title: 'Gerenciamento',
+      //         icon: 'list-app',
+      //         isVisible: true,
+      //         action: () => this.setTabQuery('management')
+      //       }
+      //     ]
+      //   })
+      // } else {
+      //   itemsMenu.push({
+      //     index: '/management',
+      //     title: 'Gerenciamento',
+      //     icon: 'management',
+      //     isVisible: true,
+      //     action: () => this.setTabQuery('management')
+      //   })
+      // }
       itemsMenu.push({
         index: '/management/all',
         title: 'Todas as disputas',
