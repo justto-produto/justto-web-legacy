@@ -585,5 +585,10 @@
     "NEGOTIATION_EVENTS_TICKET_NEXT_TAB": "Avança para a próxima aba, da listagem de tickets.",
     "SHOW_SHORTCUTS_HELP_1": "Abre esta janela de ajuda com os atalhos.",
     "SHOW_SHORTCUTS_HELP_2": "Abre esta janela de ajuda com os atalhos."
+  },
+  "dialog": {
+    "title": {
+      "my-data": "Meus dados"
+    }
   }
 }
