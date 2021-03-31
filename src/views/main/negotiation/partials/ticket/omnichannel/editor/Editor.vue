@@ -45,6 +45,7 @@ export default {
     messages: () => import('./partials/Messages'),
     notes: () => import('./partials/Notes')
   },
+
   data: () => ({
     needFocus: false
   }),
