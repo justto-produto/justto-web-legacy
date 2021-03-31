@@ -35,6 +35,23 @@ const personActions = {
       })
     })
   },
+  changeMemberName({ dispatch }, { name, personId }) {
+    return axiosDispatch({
+      url: `${personsPath}/${personId}/name`,
+      method: 'PUT',
+      data: { name }
+    }).then(() => {
+      dispatch('getWorkspaceTeam')
+    })
+  },
+  updatePersonProfile({ dispatch }, { profile, personId }) {
+    return axiosDispatch({
+      url: `/api/workspaces/members/person/${personId}/${profile}`,
+      method: 'PATCH'
+    }).then(() => {
+      dispatch('getWorkspaceTeam')
+    })
+  },
   searchPersonByDocument({ _ }, params) {
     return axiosDispatch({ url: `api/spider/person/${params.document}` })
   },

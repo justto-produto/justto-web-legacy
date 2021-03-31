@@ -52,11 +52,14 @@ const workspaceActions = {
       payload: data.teamName
     })
   },
-  inviteTeammates({ state }, teammates) {
+  inviteTeammates({ state, dispatch }, teammates) {
     return axiosDispatch({
       url: `api/accounts/workspaces/invite-teammates/${state.workspace.subDomain}`,
       method: 'POST',
       data: teammates
+    }).then(() => {
+      dispatch('getWorkspaceTeam')
+      dispatch('getWorkspaceMembers')
     })
   },
   readyWorkspace({ _ }, workspace) {
@@ -73,7 +76,7 @@ const workspaceActions = {
   },
   getWorkspaceTeam({ _ }) {
     return axiosDispatch({
-      url: '/api/accounts?size=999&sort=a.name,asc',
+      url: '/api/accounts?size=999&sort=personName,asc',
       mutation: 'setWorkspaceTeam'
     })
   },
@@ -86,11 +89,14 @@ const workspaceActions = {
       method: 'DELETE'
     })
   },
-  editWorkspaceMember({ _ }, member) {
+  editWorkspaceMember({ dispatch }, member) {
     return axiosDispatch({
       url: `${workspacesPath}/members/`,
       method: 'PUT',
       data: member
+    }).then(() => {
+      dispatch('getWorkspaceMembers')
+      dispatch('getWorkspaceTeam')
     })
   },
   syncInbox({ _ }, object) {
