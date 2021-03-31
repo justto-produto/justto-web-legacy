@@ -832,7 +832,7 @@ export default {
     editMember() {
       delete this.currentEditMember.person
       this.$store.dispatch('editWorkspaceMember', this.currentEditMember).then(() => {
-        this.getMembers()
+        // this.getMembers()
         this.dialogMember = false
         this.$jusNotification({
           title: 'Yay!',
@@ -863,7 +863,7 @@ export default {
             this.dialogInvite = false
             this.inviteForm.email = ''
             this.inviteForm.profile = 'NEGOTIATOR'
-            this.getMembers()
+            // this.getMembers()
           }).catch(error => {
             if (error.code === 'ALREADY_EXISTS') {
               this.$jusNotification({ error })

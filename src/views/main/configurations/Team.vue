@@ -13,9 +13,10 @@
       <el-button
         type="primary"
         icon="el-icon-plus"
+        @click="handleInviteMember"
       >
-      Cadastrar novo membro
-    </el-button>
+        Cadastrar novo membro
+      </el-button>
     </div>
     <el-table
       :data="filteredTeam"
@@ -27,10 +28,10 @@
       >
         <template slot-scope="scope">
           <TextInlineEditorInner
+            v-if="scope.row.personName || activeAddingData === 'name' + scope.row.id"
             :ref="'name' + scope.row.id"
-            v-if="scope.row.name || activeAddingData === 'name' + scope.row.id"
-            v-model="scope.row.name"
-            @change="handleEditMember($event, scope.row)"
+            v-model="scope.row.personName"
+            @change="handleEditMemberName($event, scope.row.personId)"
             @blur="stopEditing"
             @enableEdit="enableEdit"
           />
@@ -66,7 +67,7 @@
             v-model="scope.row.profile"
             :width="180"
             :options="profileOptions"
-            @change="handleEditMember($event, scope.row)"
+            @change="handleEditMemberProfile($event, scope.row.personId)"
           />
         </template>
       </el-table-column>
@@ -78,11 +79,11 @@
         <template slot-scope="scope">
           <span
             :class="{
-              'team-container__table-status--warning': scope.row.status === 'Inativo',
-              'team-container__table-status--danger': scope.row.status === 'Bloqueado'
+              'team-container__table-status--danger': ['blocked', 'inactive'].includes(scope.row.status),
+              'team-container__table-status--warning': ['activation.pending', 'password.reset'].includes(scope.row.status)
             }"
           >
-            {{ $t(`member-status.${scope.row.status}`) }}
+            {{ $t(`member-status.${scope.row.status.replace('.', '-')}`) }}
           </span>
         </template>
       </el-table-column>
@@ -98,6 +99,7 @@
     <el-button
       type="secondary"
       class="team-container__button"
+      @click="createNewTeam"
     >
       <JusIcon
         icon="logo-small"
@@ -105,6 +107,8 @@
       />
       Criar uma nova esquipe
     </el-button>
+
+    <TeamDialogs ref="teamDialogs" />
   </section>
 </template>
 
@@ -114,14 +118,15 @@ import { filterByTerm } from '@/utils'
 
 export default {
   name: 'Team',
+  components: {
+    TextInlineEditorInner: () => import('@/components/inputs/TextInlineEditorInner'),
+    PopoverInlineEditor: () => import('@/components/inputs/PopoverInlineEditor'),
+    TeamDialogs: () => import('./TeamDialogs')
+  },
   data: () => ({
     searchTerm: '',
     activeAddingData: ''
   }),
-  components: {
-    TextInlineEditorInner: () => import('@/components/inputs/TextInlineEditorInner'),
-    PopoverInlineEditor: () => import('@/components/inputs/PopoverInlineEditor')
-  },
   computed: {
     ...mapGetters({
       team: 'workspaceTeam'
@@ -148,11 +153,53 @@ export default {
   methods: {
     ...mapActions([
       'getWorkspaceTeam',
-      'removeWorkspaceMember'
+      'removeWorkspaceMember',
+      'changeMemberName',
+      'editWorkspaceMember',
+      'updatePersonProfile'
     ]),
 
-    handleEditMember(value, member) {
-      console.log(value, member)
+    handleInviteMember() {
+      this.$refs.teamDialogs.openNewMemberDialog()
+    },
+
+    handleEditMemberName(name, personId) {
+      this.changeMemberName({ name, personId })
+    },
+
+    handleEditMemberProfile(profile, personId) {
+      this.updatePersonProfile({ profile, personId })
+        .then(() => {
+          this.$jusNotification({
+            title: 'Yay!',
+            message: 'Usuário editado com sucesso.',
+            type: 'success'
+          })
+        })
+        .catch(error => {
+          this.$jusNotification({ error })
+        })
+      // const data = {
+      //   accountEmail: member.email,
+      //   accountId: member.id,
+      //   createdAt: null,
+      //   id: member.memberId,
+      //   personId: member.personId,
+      //   profile: role,
+      //   updatedAt: null
+      // }
+
+      // this.editWorkspaceMember(data)
+      //   .then(() => {
+      //     this.$jusNotification({
+      //       title: 'Yay!',
+      //       message: 'Usuário editado com sucesso.',
+      //       type: 'success'
+      //     })
+      //   })
+      //   .catch(error => {
+      //     this.$jusNotification({ error })
+      //   })
     },
 
     handleRremoveMember(memberId, memberName) {
@@ -167,9 +214,20 @@ export default {
 
       this.$confirm(message, 'Atenção', options)
         .then(() => {
-          console.log(memberId, memberName)
-          // this.removeWorkspaceMember(memberId)
+          this.removeWorkspaceMember(memberId)
         })
+    },
+
+    createNewTeam() {
+      this.$confirm('Você será redirecionado para a criação de nova Equipe, deseja continuar?', 'Redirecionamento', {
+        confirmButtonText: 'Criar nova Equipe',
+        cancelButtonText: 'Cancelar',
+        cancelButtonClass: 'is-plain',
+        type: 'warning'
+      }).then(() => {
+        this.$store.commit('redirectNewWorkspaceTrue')
+        this.$router.push('onboarding')
+      })
     },
 
     startEditing(key, id) {
