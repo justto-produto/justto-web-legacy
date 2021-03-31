@@ -46,6 +46,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   data: () => ({
     form: {
@@ -53,6 +54,20 @@ export default {
       password: '',
       phone: ''
     }
-  })
+  }),
+  computed: {
+    ...mapGetters({
+      name: 'loggedPersonName',
+      hasName: 'loggedPersonHasName',
+      phone: 'loggedPersonPhone'
+    })
+  },
+
+  mounted() {
+    Object.assign(this.form, {
+      name: this.hasName ? this.name : '',
+      phone: this.phone
+    })
+  }
 }
 </script>
