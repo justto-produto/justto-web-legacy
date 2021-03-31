@@ -36,7 +36,8 @@ const workspaceGetters = {
   workspaceBlackList: state => state.workspace.blackList,
   workspaceProperties: state => state.workspace.properties,
   getWorkspaceDefaultSigners: state => state.workspace.defaultSigners,
-  getPreNegotiation: state => state.workspace.preNegotiation
+  getPreNegotiation: state => state.workspace.preNegotiation,
+  getFeaturesAndModules: state => state.featuresAndModules
 }
 
 export default workspaceGetters

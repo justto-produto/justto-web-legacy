@@ -59,12 +59,9 @@ const workspaceMutations = {
   setBlackList(state, blackList) {
     if (blackList) state.workspace.blackList = blackList
   },
-  setPreNegotiationKeywords(state, keywords) {
-    state.workspace.preNegotiation.keyWords = keywords
-  },
-  setPreNegotiationLimitValue(state, value) {
-    state.workspace.preNegotiation.limitValue = Number(value)
-  }
+  setPreNegotiationKeywords: (state, keywords) => (state.workspace.preNegotiation.keyWords = keywords),
+  setPreNegotiationLimitValue: (state, value) => (state.workspace.preNegotiation.limitValue = Number(value)),
+  setFeaturesAndModules: (state, features) => Vue.set(state, 'featuresAndModules', features.content)
 }
 
 export default workspaceMutations

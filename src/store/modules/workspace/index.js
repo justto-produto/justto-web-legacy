@@ -7,6 +7,7 @@ const profile = localStorage.getItem('jusprofile') || ''
 
 const workspaceModule = {
   state: {
+    featuresAndModules: [],
     workspace: {
       id: workspace.id,
       name: workspace.name,
