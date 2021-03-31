@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <jus-view-main
     :class="{'configuration-view--user': !isAdminProfile}"
     class="configuration-view"
