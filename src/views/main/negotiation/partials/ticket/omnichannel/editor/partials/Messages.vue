@@ -6,6 +6,7 @@
   >
     <ckeditor
       v-if="showCKEditor"
+      ref="messageEditor"
       v-model="model"
       :editor="editor"
       :config="editorConfig"
@@ -132,6 +133,10 @@ export default {
 
     dialogWidth() {
       return window.innerWidth <= 900 ? '100%' : '50%'
+    },
+
+    editorInstance() {
+      return this.$refs.messageEditor
     }
   },
 
@@ -143,10 +148,6 @@ export default {
         })
       }
     }
-  },
-
-  beforeDestroy() {
-    this.destroyEditor()
   },
 
   mounted() {
@@ -186,18 +187,9 @@ export default {
       })
     },
 
-    destroyEditor() {
-      this.editorReady = false
-      if (this.editor) {
-        this.editor.destroy()
-      }
-    },
-
     focusOnEditor() {
       if (this.showCKEditor) {
-        if (this.editor) {
-          this.editor.focus()
-        }
+        this.ckeditorFocus()
       } else {
         if (this.$refs.messageEditorTextOnly) {
           this.$refs.messageEditorTextOnly.focus()

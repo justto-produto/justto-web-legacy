@@ -63,5 +63,12 @@ export default {
         }
       }
     }
+  },
+  methods: {
+    ckeditorFocus() {
+      if (this.editorInstance) {
+        this.editorInstance.$_instance.editing.view.focus()
+      }
+    }
   }
 }
