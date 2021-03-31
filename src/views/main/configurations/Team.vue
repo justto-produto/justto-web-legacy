@@ -4,6 +4,7 @@
       <el-input
         v-model="searchTerm"
         placeholder="Busque por um membro"
+        class="team-container__header-input"
       >
         <i
           slot="prefix"
@@ -13,6 +14,7 @@
       <el-button
         type="primary"
         icon="el-icon-plus"
+        class="team-container__header-button"
         @click="handleInviteMember"
       >
         Cadastrar novo membro
@@ -262,6 +264,7 @@ export default {
   .team-container__header {
     display: flex;
     gap: 12px;
+    margin-top: 3px;
   }
 }
 </style>
@@ -274,7 +277,20 @@ export default {
   flex-direction: column;
   height: 100%;
 
+  .team-container__header {
+    .team-container__header-input {
+      .el-input__inner {
+        height: 50px;
+        line-height: 50px;
+      }
+    }
+    .team-container__header-button {
+      height: 50px;
+    }
+  }
+
   .team-container__table {
+    margin-top: 3px;
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -333,6 +349,34 @@ export default {
       width: 16px;
       height: 16px;
       margin-right: 12px;
+    }
+  }
+}
+
+@media (max-height: 1400px) {
+  .team-container {
+    max-width: 1400px;
+    margin: auto;
+  }
+}
+
+@media (max-width: 900px) {
+  .team-container {
+    .team-container__header {
+      margin-top: 0;
+
+      .team-container__header-input {
+        .el-input__inner {
+          height: 50px;
+          line-height: 50px;
+        }
+      }
+      .team-container__header-button {
+        height: 50px;
+      }
+    }
+    .team-container__table {
+      margin-top: 3px;
     }
   }
 }

@@ -1,4 +1,5 @@
 import { axiosDispatch } from '@/utils'
+import axios from 'axios'
 
 const workspacesPath = 'api/workspaces'
 
@@ -89,6 +90,12 @@ const workspaceActions = {
       method: 'DELETE'
     })
   },
+  getFeaturesAndModules({ _ }) {
+    return axiosDispatch({
+      url: `${workspacesPath}/feature/`,
+      mutation: 'setFeaturesAndModules'
+    })
+  },
   editWorkspaceMember({ dispatch }, member) {
     return axiosDispatch({
       url: `${workspacesPath}/members/`,
@@ -97,6 +104,14 @@ const workspaceActions = {
     }).then(() => {
       dispatch('getWorkspaceMembers')
       dispatch('getWorkspaceTeam')
+    })
+  },
+  toggleConfiguration({ dispatch }, { value, featureId }) {
+    return axiosDispatch({
+      url: `${workspacesPath}/feature/${featureId}/${value}`,
+      method: 'PATCH'
+    }).then(() => {
+      dispatch('getFeaturesAndModules')
     })
   },
   syncInbox({ _ }, object) {

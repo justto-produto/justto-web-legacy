@@ -81,6 +81,12 @@ export default {
     }
   }
 }
+
+@media (max-width: 900px) {
+  .configurations-container {
+    margin: 18px;
+  }
+}
 </style>
 
 <style lang="scss">

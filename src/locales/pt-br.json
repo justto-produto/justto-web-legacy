@@ -413,6 +413,33 @@
     "team": "Equipe",
     "features-and-modules": "Funcionalidades e módulos"
   },
+  "configurations": {
+    "value": "gratis | R$ separadamente",
+    "PRE_NEGOTIATION": {
+      "label": "pré negociação",
+      "icon": "lighthouse"
+    },
+    "BAD_FAITH_LITIGANT": {
+      "label": "detecção de ofensores",
+      "icon": "people-documentation"
+    },
+    "AUTOMATIC_MESSAGES": {
+      "label": "automação de mensagens",
+      "icon": "gears"
+    },
+    "DRAFT_MANAGEMENT": {
+      "label": "gestão de minutas",
+      "icon": "protocol"
+    },
+    "COMMUNICATION_BLOCK_LIST": {
+      "label": "lista de bloqueio de endereços",
+      "icon": "locked-board"
+    },
+    "API_INTEGRATION": {
+      "label": "integração em API para importação",
+      "icon": "power-plug"
+    }
+  },
   "fields": {
     "claimantParty": "Parte contrária",
     "claimantLawyer": "Advogado(a) da parte",

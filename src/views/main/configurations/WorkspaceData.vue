@@ -67,7 +67,7 @@
         <img
           v-if="imageUrl"
           :src="imageUrl"
-          class="avatar"
+          class="workspace-data-container__input-file-image"
         >
         <span
           v-else
@@ -107,7 +107,8 @@ export default {
     }
   },
   beforeMount() {
-    const { teamName, name } = this.workspace
+    const { teamName, name, logoUrl } = this.workspace
+    this.imageUrl = logoUrl
     this.teamName = teamName
     this.workspaceName = name
   },
@@ -190,7 +191,7 @@ export default {
 
 .workspace-data-container {
   .workspace-data-container__title {
-    margin-bottom: 35px;
+    margin: 15px 0 30px;
   }
 
   .workspace-data-container__form {
@@ -220,6 +221,13 @@ export default {
     .workspace-data-container__input-file {
       flex: 1;
 
+      .workspace-data-container__input-file-image {
+        max-width: 100%;
+        max-height: 100%;
+        height: 100%;
+        padding: 12px;
+      }
+
       .workspace-data-container__input-file-icon {
         & > div {
           margin-top: 24px;
@@ -230,9 +238,9 @@ export default {
   }
 }
 
-@media (max-height: 1600px) {
+@media (max-height: 1400px) {
   .workspace-data-container {
-    max-width: 1600px;
+    max-width: 1400px;
     margin: auto
   }
 }
