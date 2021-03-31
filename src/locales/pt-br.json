@@ -456,9 +456,11 @@
     }
   },
   "member-status": {
-    "Ativo": "Ativo",
-    "Inativo": "Aguardando ativação",
-    "Bloqueado": "Conta bloqueada"
+    "blocked": "Conta bloqueada",
+    "activation-pending": "Aguardando ativação",
+    "password-reset": "Senha resetada",
+    "active": "Ativo",
+    "inactive": "Conta inativa"
   },
   "tab": {
     "-1": "pré-Negociação",
