@@ -20,22 +20,47 @@
         </el-input>
       </el-form-item>
 
-      <el-form-item
-        label="Alterar Senha"
-        prop="password"
-      >
-        <el-input
-          v-model="form.password"
-          type="password"
-          autocomplete="false"
-          readonly
-          onfocus="this.removeAttribute('readonly');"
-        >
-          <el-button slot="append">
-            Alterar
-          </el-button>
-        </el-input>
-      </el-form-item>
+      <el-row :gutter="12">
+        <el-col :span="12">
+          <el-form-item
+            label="Alterar Senha"
+            prop="password"
+          >
+            <el-input
+              v-model="form.password"
+              type="password"
+              autocomplete="false"
+              readonly
+              onfocus="this.removeAttribute('readonly');"
+            />
+          </el-form-item>
+        </el-col>
+
+        <el-col :span="12">
+          <el-form-item
+            label="Confirmar Senha"
+            prop="confirmPassword"
+          >
+            <el-input
+              v-model="form.confirmPassword"
+              :disabled="!passwordIsValid"
+              type="password"
+              autocomplete="false"
+              readonly
+              onfocus="this.removeAttribute('readonly');"
+            >
+              <input slot="preppend">
+              <el-button
+                slot="append"
+                :disabled="!passwordIsValid || !confirmPasswordIsValid"
+                @click="editPassword()"
+              >
+                Alterar
+              </el-button>
+            </el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
 
       <el-form-item
         label="Telefone de contato"
@@ -62,21 +87,30 @@ import { mapActions, mapGetters } from 'vuex'
 import { validatePhone } from '@/utils/validations'
 
 export default {
-  data: () => ({
-    form: {
-      name: '',
-      password: '',
-      phone: ''
-    },
-    rules: {
-      phone: [
-        { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-        { validator: validatePhone, message: 'Telefone inválido', trigger: 'submit' }
-      ],
-      password: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
-      // newPasswordConfirm: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
+  data() {
+    return {
+      form: {
+        name: '',
+        password: '',
+        confirmPassword: '',
+        phone: ''
+      },
+      rules: {
+        phone: [
+          { required: true, message: 'Este campo obrigatório', trigger: 'submit' },
+          { validator: validatePhone, message: 'Telefone inválido', trigger: 'change' }
+        ],
+        password: [
+          { required: true, message: 'Este campo obrigatório', trigger: 'submit' },
+          { min: 6, max: 12, message: 'Este campo deve ter de 6 a 12 caracteres', trigger: 'blur' }
+        ],
+        confirmPassword: [
+          { required: true, message: 'Este campo obrigatório', trigger: 'submit' },
+          { min: 6, max: 12, message: 'Este campo deve ter de 6 a 12 caracteres', trigger: 'blur' }
+        ]
+      }
     }
-  }),
+  },
 
   computed: {
     ...mapGetters({
@@ -84,7 +118,18 @@ export default {
       name: 'loggedPersonName',
       hasName: 'loggedPersonHasName',
       phone: 'loggedPersonPhone'
-    })
+    }),
+
+    passwordIsValid() {
+      const length = this.form.password.trim().length
+      return length >= 6 && length <= 12
+    },
+
+    confirmPasswordIsValid() {
+      const length = this.form.confirmPassword.trim().length
+      const equals = this.form.confirmPassword === this.form.password
+      return length >= 6 && length <= 12 && equals
+    }
   },
 
   mounted() {
@@ -96,7 +141,16 @@ export default {
   },
 
   methods: {
-    ...mapActions(['changeLoggedPersonName', 'changeLoggedPersonPhone']),
+    ...mapActions([
+      'setMainPhone',
+      'updatePassword',
+      'changeLoggedPersonName',
+      'changeLoggedPersonPhone'
+    ]),
+
+    emitClose() {
+      this.$emit('close')
+    },
 
     editName() {
       this.changeLoggedPersonName({
@@ -110,7 +164,7 @@ export default {
           message: 'Nome alterado com sucesso.',
           type: 'success'
         })
-      }).catch(error => this.$jusNotification({ error }))
+      }).catch(error => this.$jusNotification({ error })).finally(this.emitClose)
     },
 
     editPhone() {
@@ -128,6 +182,34 @@ export default {
             })
           }).catch(error => {
             this.$jusNotification({ error })
+          }).finally(this.emitClose)
+        }
+      })
+    },
+
+    editPassword() {
+      this.$refs.editUserForm.validateField(['password', 'confirmPassword'], hasError => {
+        if (!hasError) {
+          this.$prompt('Digite sua senha atual', 'Senha atual', {
+            confirmButtonText: 'Alterar',
+            cancelButtonText: 'Cancelar',
+            inputPattern: /\s*^([a-zA-Z0-9_-]){6,12}$/,
+            inputErrorMessage: 'Este campo deve ter de 6 a 12 caracteres'
+          }).then(({ value: oldPassword }) => {
+            this.updatePassword({
+              password: this.form.password,
+              oldPassword
+            }).then(() => {
+              // SEGMENT TRACK
+              this.$jusSegment('Senha do usuário alterada')
+              this.$jusNotification({
+                title: 'Yay!',
+                message: 'Senha alterada com sucesso.',
+                type: 'success'
+              })
+            }).catch(error => {
+              this.$jusNotification({ error })
+            }).finally(this.emitClose)
           })
         }
       })

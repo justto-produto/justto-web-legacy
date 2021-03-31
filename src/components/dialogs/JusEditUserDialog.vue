@@ -7,7 +7,7 @@
     append-to-body
     destroy-on-close
   >
-    <JusEdituser />
+    <JusEdituser @close="close" />
   </el-dialog>
 </template>
 
@@ -22,6 +22,9 @@ export default {
   methods: {
     open() {
       this.dialogVisible = true
+    },
+    close() {
+      this.dialogVisible = false
     }
   }
 }
