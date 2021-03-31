@@ -48,9 +48,11 @@ export default {
     InfiniteLoading: () => import('vue-infinite-loading'),
     DisputeTips: () => import('@/views/main/dispute/partials/DisputeTips')
   },
+
   data: () => ({
     needScroll: false
   }),
+
   computed: {
     ...mapGetters({
       activeTab: 'getActiveTab',
@@ -77,10 +79,13 @@ export default {
       }
     }
   },
+
   watch: {
     '$route.params.id'() {
       this.resetRecipients()
       this.resetOccurrences()
+      this.resetMessageText()
+      this.resetNoteText()
     },
     'countRendereds'() {
       this.adjustScroll()
@@ -99,10 +104,12 @@ export default {
   },
   methods: {
     ...mapActions([
+      'resetNoteText',
       'setMessageType',
       'getOccurrences',
       'resetRecipients',
-      'resetOccurrences'
+      'resetOccurrences',
+      'resetMessageText'
     ]),
 
     adjustScroll(force = false) {
