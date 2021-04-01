@@ -51,7 +51,7 @@
     <DialogEditor
       ref="fullScreenEditor"
       :text-only="!showCKEditor"
-      :width="dialogWidth"
+      :fullscreen="isFullscreenDialog"
       button-confirm="Enviar"
       custom-class="negotiator-fullscreen-editor"
       @confirm="send"
@@ -138,8 +138,8 @@ export default {
       return editorRecipients.length && !localLoading && editorReady
     },
 
-    dialogWidth() {
-      return window.innerWidth <= 900 ? '100%' : '50%'
+    isFullscreenDialog() {
+      return window.innerWidth <= 900
     },
 
     editorInstance() {

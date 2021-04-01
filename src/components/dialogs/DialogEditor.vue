@@ -4,6 +4,7 @@
     :close-on-click-modal="false"
     :custom-class="customClass"
     :before-close="handleClose"
+    :fullscreen="fullscreen"
     :width="width"
     destroy-on-close
     append-to-body
@@ -83,6 +84,10 @@ export default {
     width: {
       type: String,
       default: '50%'
+    },
+    fullscreen: {
+      type: Boolean,
+      default: false
     },
     buttonConfirm: {
       type: String,
