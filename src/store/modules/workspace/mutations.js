@@ -27,6 +27,10 @@ const workspaceMutations = {
     Vue.set(state.workspace, 'teamName', payload)
     localStorage.setItem('jusworkspace', JSON.stringify(state.workspace))
   },
+  updateWorkspaceLogoUrl: (state, logoUrl) => {
+    Vue.set(state.workspace, 'logoUrl', logoUrl)
+    localStorage.setItem('jusworkspace', JSON.stringify(state.workspace))
+  },
   setProfile(state, profile) {
     if (profile) {
       state.workspace.profile = profile
@@ -61,8 +65,7 @@ const workspaceMutations = {
   },
   setPreNegotiationKeywords: (state, keywords) => (state.workspace.preNegotiation.keyWords = keywords),
   setPreNegotiationLimitValue: (state, value) => (state.workspace.preNegotiation.limitValue = Number(value)),
-  setFeaturesAndModules: (state, features) => Vue.set(state, 'featuresAndModules', features.content),
-  updateWorkspaceLogoUrl: (state, logoUrl) => Vue.set(state.workspace, 'logoUrl', logoUrl)
+  setFeaturesAndModules: (state, features) => Vue.set(state, 'featuresAndModules', features.content)
 }
 
 export default workspaceMutations
