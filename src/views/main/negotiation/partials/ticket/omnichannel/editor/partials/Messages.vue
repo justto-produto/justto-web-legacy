@@ -7,7 +7,7 @@
     <ckeditor
       v-if="showCKEditor"
       ref="messageEditor"
-      v-model="model"
+      v-model="body"
       :editor="editor"
       :config="editorConfig"
       type="classic"
@@ -62,7 +62,10 @@
         class="title-slot"
       >
         <Recipients is-reversed />
-        <QuickReply show-title />
+        <QuickReply
+          show-title
+          @input="openFullScreenEditor"
+        />
       </div>
     </DialogEditor>
   </section>
@@ -94,8 +97,7 @@ export default {
 
   data() {
     return {
-      localLoading: false,
-      model: ''
+      localLoading: false
     }
   },
 
@@ -118,8 +120,13 @@ export default {
       }
     },
 
-    body() {
-      return this.editorText
+    body: {
+      get() {
+        return this.editorText
+      },
+      set(text) {
+        this.setEditorText(text)
+      }
     },
 
     showCKEditor() {
