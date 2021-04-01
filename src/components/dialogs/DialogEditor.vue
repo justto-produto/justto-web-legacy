@@ -51,6 +51,7 @@
         {{ buttonCancel }}
       </el-button>
       <el-button
+        :disabled="!canSendMessage"
         type="primary"
         @click="handleConfirm"
       >
@@ -88,6 +89,10 @@ export default {
     fullscreen: {
       type: Boolean,
       default: false
+    },
+    canSendMessage: {
+      type: Boolean,
+      default: true
     },
     buttonConfirm: {
       type: String,
