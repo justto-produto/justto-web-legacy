@@ -22,6 +22,25 @@ const personActions = {
       data: params.phoneDTO
     })
   },
+
+  changeLoggedPersonName({ _ }, { id, name }) {
+    return axiosDispatch({
+      url: `${personsPath}/${id}/name`,
+      method: 'PUT',
+      data: { name },
+      commit: 'setLoggedPerson'
+    })
+  },
+
+  changeLoggedPersonPhone({ commit }, phone) {
+    const person = JSON.parse(localStorage.getItem('jusperson'))
+
+    commit('setLoggedPerson', {
+      ...person,
+      phones: [phone]
+    })
+  },
+
   changePersonName({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
