@@ -4,10 +4,11 @@
     :close-on-click-modal="false"
     :custom-class="customClass"
     :before-close="handleClose"
+    :fullscreen="fullscreen"
     :width="width"
     destroy-on-close
     append-to-body
-    class="dialog-editor"
+    class="dialog-editor jus-ckeditor__parent"
   >
     <div
       slot="title"
@@ -24,13 +25,13 @@
 
     <ckeditor
       v-if="!textOnly && dialogVisible"
-      v-show="editorReady"
       ref="templateEditor"
       class="reply-editor__editor"
+      type="classic"
+      :editor="editor"
       :value="editorModel"
       :config="editorConfig"
       @input="setModel"
-      @ready="ready()"
     />
 
     <el-input
@@ -60,13 +61,12 @@
 </template>
 
 <script>
-import CKEditor from 'ckeditor4-vue'
+import ckeditor from '@/utils/mixins/ckeditor'
 
 export default {
   name: 'DialogEditor',
-  components: {
-    ckeditor: CKEditor.component
-  },
+
+  mixins: [ckeditor],
 
   props: {
     title: {
@@ -85,6 +85,10 @@ export default {
       type: String,
       default: '50%'
     },
+    fullscreen: {
+      type: Boolean,
+      default: false
+    },
     buttonConfirm: {
       type: String,
       default: 'Salvar'
@@ -97,38 +101,14 @@ export default {
 
   data: () => ({
     dialogVisible: false,
-    editorReady: false,
+    editorReady: true,
     editorModel: ''
   }),
 
   computed: {
-    editorConfig() {
-      return {
-        height: '50vh',
-        parent: 'dialog-editor',
-        toolbarGroups: [
-          { name: 'document', groups: ['mode', 'document', 'doctools'] },
-          { name: 'clipboard', groups: ['clipboard', 'undo'] },
-          { name: 'editing', groups: ['find', 'selection', 'spellchecker', 'editing'] },
-          { name: 'forms', groups: ['forms'] },
-          { name: 'basicstyles', groups: ['basicstyles', 'cleanup'] },
-          { name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align', 'bidi', 'paragraph'] },
-          { name: 'links', groups: ['links'] },
-          { name: 'insert', groups: ['insert'] },
-          { name: 'styles', groups: ['styles'] },
-          { name: 'colors', groups: ['colors'] },
-          { name: 'tools', groups: ['tools'] },
-          { name: 'others', groups: ['others'] },
-          { name: 'about', groups: ['about'] }
-        ],
-        removeButtons: 'Save,NewPage,ExportPdf,Preview,Print,PasteFromWord,PasteText,Paste,Redo,Copy,Templates,Cut,Undo,Find,Replace,SelectAll,Scayt,Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,HiddenField,Superscript,Subscript,CopyFormatting,Indent,Outdent,Styles,TextColor,BGColor,Maximize,ShowBlocks,About,Format,Font,FontSize,Iframe,PageBreak,SpecialChar,Smiley,HorizontalRule,Table,Flash,Image,Unlink,Link,Anchor,Language,BidiRtl,BidiLtr,JustifyBlock,JustifyRight,JustifyCenter,JustifyLeft,CreateDiv',
-        removePlugins: 'elementspath,resize'
-      }
+    editorInstance() {
+      return this.$refs.templateEditor
     }
-  },
-
-  beforeDestroy() {
-    this.destroyEditor()
   },
 
   methods: {
@@ -142,18 +122,8 @@ export default {
     },
 
     handleClose(done) {
-      this.destroyEditor()
-      done()
-    },
-
-    destroyEditor() {
       this.dialogVisible = false
-      this.editorReady = false
-      for (const instance of Object.values(window.CKEDITOR.instances)) {
-        if (instance.config.parent === this.editorConfig.parent) {
-          instance.destroy()
-        }
-      }
+      done()
     },
 
     setModel(text) {
@@ -163,12 +133,12 @@ export default {
 
     handleConfirm() {
       this.$emit('confirm', this.editorModel)
-      this.destroyEditor()
+      this.dialogVisible = false
     },
 
     handleCancel() {
       this.$emit('cancel', this.editorModel)
-      this.destroyEditor()
+      this.dialogVisible = false
     }
   }
 }
@@ -176,6 +146,20 @@ export default {
 
 <style lang="scss">
 @import '@/styles/colors.scss';
+
+.jus-ckeditor__parent {
+  .negotiator-fullscreen-editor {
+    .el-dialog__body {
+      .ck-editor {
+        .ck-editor__main {
+          .ck-editor__editable {
+            height: 50vh;
+          }
+        }
+      }
+    }
+  }
+}
 
 .dialog-editor {
   .cke_top { border: none; }
