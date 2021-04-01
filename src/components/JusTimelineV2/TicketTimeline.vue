@@ -88,7 +88,7 @@
                   slot="title"
                   class="jus-timeline__lawsuit-info-collapse-title"
                 >
-                  {{ party.name || '---' }}
+                  {{ (party.name || '---') }}
                 </div>
                 <div
                   v-if="party.type"
@@ -125,13 +125,13 @@
                   slot="title"
                   class="jus-timeline__lawsuit-info-collapse-title"
                 >
-                  {{ lawyer.name || '---' }}
+                  {{ (lawyer.name || '---') }}
                 </div>
                 <div
                   v-if="lawyer.oab"
                   class="jus-timeline__lawsuit-info-collapse-text"
                 >
-                  <b>OAB:</b> {{ lawyer.oab || '---' }}
+                  <b>OAB:</b> {{ (lawyer.oab || '---') }}
                 </div>
                 <div
                   v-if="lawyer.partyName"
@@ -326,8 +326,9 @@ export default {
 
         .jus-timeline__lawsuit-info-collapse-title {
           color: $--color-text-secondary;
-          line-height: 24px;
+          line-height: 18px;
           font-weight: normal;
+          font-size: 14px;
         }
         .jus-timeline__lawsuit-info-collapse-text {
           color: $--color-text-secondary;
