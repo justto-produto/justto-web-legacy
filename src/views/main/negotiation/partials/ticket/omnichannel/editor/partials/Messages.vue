@@ -40,7 +40,7 @@
         @click="send"
       >
         <span v-if="!localLoading">
-          {{ editorRecipients.length ? 'Enviar mensagem' : 'Selecione um destinatário' }}
+          {{ sendMessagetext }}
         </span>
         <i
           v-else
@@ -52,7 +52,8 @@
       ref="fullScreenEditor"
       :text-only="!showCKEditor"
       :fullscreen="isFullscreenDialog"
-      button-confirm="Enviar"
+      :can-send-message="canSendMessage"
+      :button-confirm="sendMessagetext"
       custom-class="negotiator-fullscreen-editor"
       @confirm="send"
       @input="setEditorText"
@@ -110,6 +111,10 @@ export default {
       getEditorReady: 'getEditorReady',
       editorText: 'getEditorText'
     }),
+
+    sendMessagetext() {
+      return this.editorRecipients.length ? 'Enviar mensagem' : 'Selecione um destinatário'
+    },
 
     editorReady: {
       get() {
