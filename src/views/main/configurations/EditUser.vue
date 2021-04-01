@@ -1,5 +1,8 @@
 <template>
-  <article class="edit-user-container">
+  <article
+    v-loading="localLoading"
+    class="edit-user-container"
+  >
     <el-form
       ref="editUserForm"
       :model="form"
@@ -28,13 +31,13 @@
           >
             <el-input
               v-model="form.password"
+              show-password
               type="password"
               autocomplete="false"
-              readonly
-              onfocus="this.removeAttribute('readonly');"
             />
           </el-form-item>
         </el-col>
+
         <el-col :span="12">
           <el-form-item
             label="Confirmar Senha"
@@ -43,10 +46,9 @@
             <el-input
               v-model="form.confirmPassword"
               :disabled="!passwordIsValid"
+              show-password
               type="password"
               autocomplete="false"
-              readonly
-              onfocus="this.removeAttribute('readonly');"
             >
               <input slot="preppend">
               <el-button
@@ -88,6 +90,7 @@ import { validatePhone } from '@/utils/validations'
 export default {
   data() {
     return {
+      localLoading: false,
       form: {
         name: '',
         password: '',
@@ -148,10 +151,12 @@ export default {
     ]),
 
     emitClose() {
+      this.localLoading = false
       this.$emit('close')
     },
 
     editName() {
+      this.localLoading = true
       this.changeLoggedPersonName({
         id: this.id,
         name: this.form.name
@@ -167,6 +172,7 @@ export default {
     },
 
     editPhone() {
+      this.localLoading = true
       this.$refs.editUserForm.validateField('phone', hasError => {
         if (!hasError) {
           this.setMainPhone({
@@ -182,34 +188,42 @@ export default {
           }).catch(error => {
             this.$jusNotification({ error })
           }).finally(this.emitClose)
+        } else {
+          this.localLoading = false
         }
       })
     },
 
     editPassword() {
+      this.localLoading = true
       this.$refs.editUserForm.validateField(['password', 'confirmPassword'], hasError => {
         if (!hasError) {
           this.$prompt('Digite sua senha atual', 'Senha atual', {
             confirmButtonText: 'Alterar',
             cancelButtonText: 'Cancelar',
+            inputType: 'password',
             inputPattern: /\s*^([a-zA-Z0-9_-]){6,12}$/,
             inputErrorMessage: 'Este campo deve ter de 6 a 12 caracteres'
           }).then(({ value: oldPassword }) => {
-            this.updatePassword({
-              password: this.form.password,
-              oldPassword
-            }).then(() => {
-              // SEGMENT TRACK
-              this.$jusSegment('Senha do usuário alterada')
-              this.$jusNotification({
-                title: 'Yay!',
-                message: 'Senha alterada com sucesso.',
-                type: 'success'
+            if (this.form.password !== oldPassword) {
+              this.updatePassword({
+                password: this.form.password,
+                oldPassword
+              }).then(() => {
+                // SEGMENT TRACK
+                this.$jusSegment('Senha do usuário alterada')
+                this.$jusNotification({
+                  title: 'Yay!',
+                  message: 'Senha alterada com sucesso.',
+                  type: 'success'
+                })
+              }).catch(error => {
+                this.$jusNotification({ error })
               })
-            }).catch(error => {
-              this.$jusNotification({ error })
-            }).finally(this.emitClose)
-          })
+            }
+          }).finally(this.emitClose)
+        } else {
+          this.localLoading = false
         }
       })
     }
