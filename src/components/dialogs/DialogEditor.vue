@@ -133,6 +133,7 @@ export default {
 
     handleConfirm() {
       this.$emit('confirm', this.editorModel)
+      this.dialogVisible = false
     },
 
     handleCancel() {
