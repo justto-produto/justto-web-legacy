@@ -18,6 +18,7 @@ const workspaceModule = {
       profile: profile,
       members: [],
       team: [],
+      logoUrl: '',
       blackList: workspace.blackList,
       properties: workspace.properties || {},
       defaultSigners: [],

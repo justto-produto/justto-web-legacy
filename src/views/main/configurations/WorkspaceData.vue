@@ -56,13 +56,15 @@
       </div>
 
       <el-upload
-        class="workspace-data-container__input-file"
-        action="https://justto.app/api/workspaces/logo"
-        :headers="requestHeaders"
-        drag
+        v-loading="isUploadingFile"
         :show-file-list="false"
         :on-success="handleChangeWorkspaceLogoSuccess"
         :on-error="handleChangeWorkspaceLogoError"
+        :before-upload="handleChangeWorkspace"
+        :headers="requestHeaders"
+        action="https://justto.app/api/workspaces/logo"
+        class="workspace-data-container__input-file"
+        drag
       >
         <img
           v-if="imageUrl"
@@ -91,7 +93,8 @@ export default {
   data: () => ({
     teamName: '',
     workspaceName: '',
-    imageUrl: ''
+    imageUrl: '',
+    isUploadingFile: false
   }),
   computed: {
     ...mapGetters([
@@ -115,7 +118,8 @@ export default {
   methods: {
     ...mapActions([
       'editWorkpace',
-      'changeTeamName'
+      'changeTeamName',
+      'updateWorkspaceLogoUrl'
     ]),
 
     handleChangeTeamName() {
@@ -169,6 +173,10 @@ export default {
       }
     },
 
+    handleChangeWorkspace() {
+      this.isUploadingFile = true
+    },
+
     handleChangeWorkspaceLogoSuccess(response) {
       this.$jusSegment('Logo da workspace alterado')
       this.$jusNotification({
@@ -176,11 +184,14 @@ export default {
         message: 'Logo alterado com sucesso.',
         type: 'success'
       })
+      this.updateWorkspaceLogoUrl(response)
       this.imageUrl = response
+      this.isUploadingFile = false
     },
 
     handleChangeWorkspaceLogoError(error) {
       this.$jusNotification({ error })
+      this.isUploadingFile = false
     }
   }
 }

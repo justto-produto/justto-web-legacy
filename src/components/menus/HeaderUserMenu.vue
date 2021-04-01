@@ -45,7 +45,10 @@
         </span>
       </span>
       <el-dropdown-menu slot="dropdown">
-        <div style="text-transform: capitalize; text-align: center;">
+        <div
+          style="text-transform: capitalize; text-align: center; cursor: pointer;"
+          @click="editUser()"
+        >
           {{ name | resumedName }}
         </div>
         <!-- <div class="usermenu-container__version">
@@ -87,10 +90,11 @@
       </el-dropdown-menu>
     </el-dropdown>
 
-    <jus-change-workspace
+    <JusChangeWorkspace
       ref="changeWorkspace"
       :visible.sync="changeWorkspaceDialogVisible"
     />
+    <JusEditUser ref="editUser" />
   </section>
 </template>
 
@@ -101,12 +105,14 @@ import { mapActions, mapGetters } from 'vuex'
 export default {
   components: {
     JusAcademy: () => import('@/components/dialogs/JusAcademy'),
-    JusChangeWorkspace: () => import('@/components/dialogs/JusChangeWorkspace')
+    JusChangeWorkspace: () => import('@/components/dialogs/JusChangeWorkspace'),
+    JusEditUser: () => import('@/components/dialogs/JusEditUserDialog')
   },
   data: () => ({
     selectedWorkspace: '',
     changeWorkspaceDialogVisible: false
   }),
+
   computed: {
     ...mapGetters({
       ghostMode: 'ghostMode',
@@ -136,6 +142,7 @@ export default {
       return IS_SMALL_WINDOW ? 'mini' : 'sm'
     }
   },
+
   watch: {
     loggedPersonHasName() {
       if (!this.loggedPersonHasName) {
@@ -143,10 +150,12 @@ export default {
       }
     }
   },
+
   mounted() {
     this.myWorkspace()
     this.setPersonName()
   },
+
   methods: {
     ...mapActions([
       'setGhostMode',
@@ -155,6 +164,10 @@ export default {
 
     changeWorkspace() {
       this.changeWorkspaceDialogVisible = true
+    },
+
+    editUser() {
+      this.$refs.editUser.open()
     },
 
     setPersonName() {
