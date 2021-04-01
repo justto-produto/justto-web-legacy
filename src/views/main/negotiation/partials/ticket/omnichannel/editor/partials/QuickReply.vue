@@ -1,6 +1,7 @@
 <template>
   <article>
     <el-popover
+      ref="quickReplyPopover"
       title="Respostas rápidas"
       trigger="click"
       placement="top"
@@ -142,10 +143,16 @@ export default {
       'archiveQuickReplyTemplate'
     ]),
 
+    hideMainPopover() {
+      this.$refs.quickReplyPopover.showPopper = false
+    },
+
     setTemplate(template) {
       const { contentType, body } = template.parsed
       this.setMessageType(contentType)
       this.setEditorText(body)
+      this.$emit('input', body)
+      this.hideMainPopover()
     },
 
     openTemplateMenu(templateId) {
