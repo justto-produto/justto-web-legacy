@@ -357,21 +357,35 @@ export default {
           label: 'Nº do processo',
           value: code
         },
-        {
-          key: 'defendant',
-          label: 'Réu(s)',
-          value: 'Teste'
-        },
-        {
-          key: 'plaintiff',
-          label: 'Autor(es)',
-          value: 'Teste'
-        },
-        {
-          key: 'lawyer',
-          label: 'Advogado(s) do autor(es)',
-          value: 'Teste'
-        },
+        // Autor
+        ...this.ticketParties.filter(({ polarity, roles }) => {
+          return (polarity === 'CLAIMANT' && roles.includes('PARTY'))
+        }).map(({ name }, i) => ({
+          key: `plaintiff-${i + 1}`,
+          label: 'Autor',
+          value: this.$options.filters.capitalize(name)
+        })),
+        // Advogado do autor
+        ...this.ticketParties.filter(({ polarity, roles }) => {
+          return (polarity === 'CLAIMANT' && roles.includes('LAWYER'))
+        }).map(({ name }, i) => ({
+          key: `lawyer-${i + 1}`,
+          label: 'Advogado do autor',
+          value: this.$options.filters.capitalize(name)
+        })),
+        // Reu
+        ...this.ticketParties.filter(({ polarity, roles }) => {
+          return (polarity === 'RESPONDENT' && roles.includes('PARTY'))
+        }).map(({ name }, i) => ({
+          key: `defendant-${i + 1}`,
+          label: 'Réu',
+          value: this.$options.filters.capitalize(name)
+        })),
+        // {
+        //   key: 'lawyer',
+        //   label: 'Advogado(s) do autor(es)',
+        //   value: 'Teste'
+        // },
         {
           key: 'value',
           label: 'Valor do acordo',
