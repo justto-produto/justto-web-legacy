@@ -22,6 +22,25 @@ const personActions = {
       data: params.phoneDTO
     })
   },
+
+  changeLoggedPersonName({ _ }, { id, name }) {
+    return axiosDispatch({
+      url: `${personsPath}/${id}/name`,
+      method: 'PUT',
+      data: { name },
+      commit: 'setLoggedPerson'
+    })
+  },
+
+  changeLoggedPersonPhone({ commit }, phone) {
+    const person = JSON.parse(localStorage.getItem('jusperson'))
+
+    commit('setLoggedPerson', {
+      ...person,
+      phones: [phone]
+    })
+  },
+
   changePersonName({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
@@ -33,6 +52,23 @@ const personActions = {
       }).catch(error => {
         reject(error)
       })
+    })
+  },
+  changeMemberName({ dispatch }, { name, personId }) {
+    return axiosDispatch({
+      url: `${personsPath}/${personId}/name`,
+      method: 'PUT',
+      data: { name }
+    }).then(() => {
+      dispatch('getWorkspaceTeam')
+    })
+  },
+  updatePersonProfile({ dispatch }, { profile, personId }) {
+    return axiosDispatch({
+      url: `/api/workspaces/members/person/${personId}/${profile}`,
+      method: 'PATCH'
+    }).then(() => {
+      dispatch('getWorkspaceTeam')
     })
   },
   searchPersonByDocument({ _ }, params) {

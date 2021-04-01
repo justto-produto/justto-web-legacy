@@ -7,6 +7,7 @@ const profile = localStorage.getItem('jusprofile') || ''
 
 const workspaceModule = {
   state: {
+    featuresAndModules: [],
     workspace: {
       id: workspace.id,
       name: workspace.name,
@@ -16,6 +17,8 @@ const workspaceModule = {
       subDomain: workspace.subDomain,
       profile: profile,
       members: [],
+      team: [],
+      logoUrl: '',
       blackList: workspace.blackList,
       properties: workspace.properties || {},
       defaultSigners: [],

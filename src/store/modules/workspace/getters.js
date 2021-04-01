@@ -19,6 +19,7 @@ const workspaceGetters = {
       return state.workspace.members || []
     }
   },
+  workspaceTeam: state => state.workspace.team,
   workspaceMembersSorted: (_state, getters) =>
     getters.workspaceMembers
       .sort((a, b) => {
@@ -35,7 +36,8 @@ const workspaceGetters = {
   workspaceBlackList: state => state.workspace.blackList,
   workspaceProperties: state => state.workspace.properties,
   getWorkspaceDefaultSigners: state => state.workspace.defaultSigners,
-  getPreNegotiation: state => state.workspace.preNegotiation
+  getPreNegotiation: state => state.workspace.preNegotiation,
+  getFeaturesAndModules: state => state.featuresAndModules
 }
 
 export default workspaceGetters

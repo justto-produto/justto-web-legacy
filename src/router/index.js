@@ -145,6 +145,17 @@ const router = new Router({
             trackPage: true,
             title: 'Configurações'
           }
+        },
+        {
+          name: 'configurations',
+          path: 'configurations',
+          component: () => import(/* webpackChunkName: "configurationIndex" */ '@/views/main/configurations/Configurations'),
+          meta: {
+            hideFullHeader: true,
+            requiresAuth: true,
+            trackPage: true,
+            title: 'Configurações'
+          }
         }
       ]
     },

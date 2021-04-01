@@ -408,6 +408,38 @@
     "accepted": "proposta aceita",
     "finished": "finalizados"
   },
+  "configurations-tabs": {
+    "workspace-data": "Dados da conta",
+    "team": "Equipe",
+    "features-and-modules": "Funcionalidades e módulos"
+  },
+  "configurations": {
+    "value": "gratis | R$ separadamente",
+    "PRE_NEGOTIATION": {
+      "label": "pré negociação",
+      "icon": "lighthouse"
+    },
+    "BAD_FAITH_LITIGANT": {
+      "label": "detecção de ofensores",
+      "icon": "people-documentation"
+    },
+    "AUTOMATIC_MESSAGES": {
+      "label": "automação de mensagens",
+      "icon": "gears"
+    },
+    "DRAFT_MANAGEMENT": {
+      "label": "gestão de minutas",
+      "icon": "protocol"
+    },
+    "COMMUNICATION_BLOCK_LIST": {
+      "label": "lista de bloqueio de endereços",
+      "icon": "locked-board"
+    },
+    "API_INTEGRATION": {
+      "label": "integração em API para importação",
+      "icon": "power-plug"
+    }
+  },
   "fields": {
     "claimantParty": "Parte contrária",
     "claimantLawyer": "Advogado(a) da parte",
@@ -449,6 +481,13 @@
       "SAVING": "Poupança",
       "CHECKING": "Corrente"
     }
+  },
+  "member-status": {
+    "blocked": "Conta bloqueada",
+    "activation-pending": "Aguardando ativação",
+    "password-reset": "Senha resetada",
+    "active": "Ativo",
+    "inactive": "Conta inativa"
   },
   "tab": {
     "-1": "pré-Negociação",
@@ -575,5 +614,10 @@
     "NEGOTIATION_EVENTS_TICKET_NEXT_TAB": "Avança para a próxima aba, da listagem de tickets.",
     "SHOW_SHORTCUTS_HELP_1": "Abre esta janela de ajuda com os atalhos.",
     "SHOW_SHORTCUTS_HELP_2": "Abre esta janela de ajuda com os atalhos."
+  },
+  "dialog": {
+    "title": {
+      "my-data": "Meus dados"
+    }
   }
 }

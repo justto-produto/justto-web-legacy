@@ -73,7 +73,7 @@ export default {
 
     editor() {
       return Object.values(window.CKEDITOR.instances).find(({ config }) => config.parent === this.config.parent)
-    },
+    }
   },
 
   beforeDestroy() {

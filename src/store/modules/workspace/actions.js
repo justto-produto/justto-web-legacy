@@ -1,4 +1,5 @@
 import { axiosDispatch } from '@/utils'
+import axios from 'axios'
 
 const workspacesPath = 'api/workspaces'
 
@@ -32,9 +33,13 @@ const workspaceActions = {
       data: properties
     })
   },
+  updateWorkspaceLogoUrl({ commit }, logoUrl) {
+    commit('updateWorkspaceLogoUrl', logoUrl)
+  },
   editWorkpace({ state }, workspace) {
     const { id, teamName, status, name } = state.workspace
     const data = { id, teamName, status, name, ...workspace }
+
     return axiosDispatch({
       url: `${workspacesPath}/`,
       method: 'PUT',
@@ -46,14 +51,19 @@ const workspaceActions = {
     return axiosDispatch({
       url: `${workspacesPath}/teamName`,
       method: 'patch',
-      data
+      data,
+      mutation: 'setTeamName',
+      payload: data.teamName
     })
   },
-  inviteTeammates({ state }, teammates) {
+  inviteTeammates({ state, dispatch }, teammates) {
     return axiosDispatch({
       url: `api/accounts/workspaces/invite-teammates/${state.workspace.subDomain}`,
       method: 'POST',
       data: teammates
+    }).then(() => {
+      dispatch('getWorkspaceTeam')
+      dispatch('getWorkspaceMembers')
     })
   },
   readyWorkspace({ _ }, workspace) {
@@ -68,6 +78,12 @@ const workspaceActions = {
       mutation: 'setWorkspaceMembers'
     })
   },
+  getWorkspaceTeam({ _ }) {
+    return axiosDispatch({
+      url: '/api/accounts?size=999&sort=personName,asc',
+      mutation: 'setWorkspaceTeam'
+    })
+  },
   getWorkspaces({ _ }) {
     return axiosDispatch({ url: `${workspacesPath}?size=999&` })
   },
@@ -77,11 +93,28 @@ const workspaceActions = {
       method: 'DELETE'
     })
   },
-  editWorkspaceMember({ _ }, member) {
+  getFeaturesAndModules({ _ }) {
+    return axiosDispatch({
+      url: `${workspacesPath}/feature/`,
+      mutation: 'setFeaturesAndModules'
+    })
+  },
+  editWorkspaceMember({ dispatch }, member) {
     return axiosDispatch({
       url: `${workspacesPath}/members/`,
       method: 'PUT',
       data: member
+    }).then(() => {
+      dispatch('getWorkspaceMembers')
+      dispatch('getWorkspaceTeam')
+    })
+  },
+  toggleConfiguration({ dispatch }, { value, featureId }) {
+    return axiosDispatch({
+      url: `${workspacesPath}/feature/${featureId}/${value}`,
+      method: 'PATCH'
+    }).then(() => {
+      dispatch('getFeaturesAndModules')
     })
   },
   syncInbox({ _ }, object) {

@@ -21,6 +21,7 @@ const omnichannelActions = {
     commit('setMessageType', type)
     commit('resetRecipients')
   },
+
   getOccurrences({ getters }, disputeId) {
     const params = {
       ...getters.getOccurrencesFilter,
@@ -105,6 +106,14 @@ const omnichannelActions = {
 
   resetOccurrences: ({ commit }) => {
     commit('resetOccurrences')
+  },
+
+  resetMessageText: ({ commit }) => {
+    commit('setEditorText', '')
+  },
+
+  resetNoteText: ({ commit }) => {
+    commit('setNoteEditorText', '')
   },
 
   sendMessage({ dispatch, getters }, disputeId) {

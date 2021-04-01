@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <jus-view-main
     :class="{'configuration-view--user': !isAdminProfile}"
     class="configuration-view"
@@ -832,7 +832,7 @@ export default {
     editMember() {
       delete this.currentEditMember.person
       this.$store.dispatch('editWorkspaceMember', this.currentEditMember).then(() => {
-        this.getMembers()
+        // this.getMembers()
         this.dialogMember = false
         this.$jusNotification({
           title: 'Yay!',
@@ -863,7 +863,7 @@ export default {
             this.dialogInvite = false
             this.inviteForm.email = ''
             this.inviteForm.profile = 'NEGOTIATOR'
-            this.getMembers()
+            // this.getMembers()
           }).catch(error => {
             if (error.code === 'ALREADY_EXISTS') {
               this.$jusNotification({ error })
@@ -915,10 +915,6 @@ export default {
           teamName: this.teamName,
           id: this.$store.getters.workspaceId
         }).then(() => {
-          const workspace = this.$store.getters.workspace
-          workspace.teamName = this.teamName
-          this.$store.commit('setWorkspace', workspace)
-          // SEGMENT TRACK
           this.$jusSegment('Nome da equipe alterado')
           this.$jusNotification({
             title: 'Yay!',
