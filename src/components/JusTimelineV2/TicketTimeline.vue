@@ -2,7 +2,7 @@
   <el-dialog
     :visible.sync="visible"
     append-to-body
-    width="65%"
+    width="68%"
     class="jus-timeline"
   >
     <div
@@ -31,33 +31,37 @@
       </a>
 
       <article class="jus-timeline__lawsuit-resume">
-        <el-row :gutter="8">
+        <el-row :gutter="12">
           <el-col
             :span="12"
+            :xl="6"
             class="jus-timeline__lawsuit-info"
           >
-            <span class="jus-timeline__lawsuit-info-title">Distribuído em</span>
+            <span class="jus-timeline__lawsuit-info-title">Distribuído em:</span>
             <span class="jus-timeline__lawsuit-info-text">{{ lawsuit.date || '---' }}</span>
           </el-col>
           <el-col
             :span="12"
+            :xl="6"
             class="jus-timeline__lawsuit-info"
           >
-            <span class="jus-timeline__lawsuit-info-title">Área</span>
+            <span class="jus-timeline__lawsuit-info-title">Área:</span>
             <span class="jus-timeline__lawsuit-info-text">{{ lawsuit.area || '---' }}</span>
           </el-col>
           <el-col
             :span="12"
+            :xl="6"
             class="jus-timeline__lawsuit-info"
           >
-            <span class="jus-timeline__lawsuit-info-title">Origem</span>
+            <span class="jus-timeline__lawsuit-info-title">Origem:</span>
             <span class="jus-timeline__lawsuit-info-text">{{ lawsuit.source || '---' }}</span>
           </el-col>
           <el-col
             :span="12"
+            :xl="6"
             class="jus-timeline__lawsuit-info"
           >
-            <span class="jus-timeline__lawsuit-info-title">Documentos</span>
+            <span class="jus-timeline__lawsuit-info-title">Documentos:</span>
             <a
               :class="{ 'jus-timeline__lawsuit-info-link': !(lawsuit.urlDocuments && lawsuit.urlDocuments.length)}"
               :href="lawsuit.urlDocuments && lawsuit.urlDocuments.length ? lawsuit.urlDocuments[0] : '#'"
@@ -73,12 +77,13 @@
           </el-col>
         </el-row>
 
-        <el-row :gutter="8">
+        <el-row :gutter="12">
           <el-col
-            :span="24"
+            :md="12"
+            :sm="24"
             class="jus-timeline__lawsuit-info"
           >
-            <span class="jus-timeline__lawsuit-info-title">Parte(s)</span>
+            <span class="jus-timeline__lawsuit-info-title">Parte(s):</span>
             <el-collapse>
               <el-collapse-item
                 v-for="(party, partyIndex) in lawsuit.parties"
@@ -112,10 +117,11 @@
             </el-collapse>
           </el-col>
           <el-col
-            :span="24"
+            :md="12"
+            :sm="24"
             class="jus-timeline__lawsuit-info"
           >
-            <span class="jus-timeline__lawsuit-info-title">Advogado(s)</span>
+            <span class="jus-timeline__lawsuit-info-title">Advogado(s):</span>
             <el-collapse>
               <el-collapse-item
                 v-for="(lawyer, lawyerIndex) in lawsuit.lawyers"
@@ -283,7 +289,9 @@ export default {
 
 .jus-timeline {
   .jus-timeline__title {
-    font-weight: 600;
+    margin-top: 24px;
+    font-weight: 500;
+    color: $--color-text-secondary;
   }
 
   .jus-timeline__lawsuit {
@@ -305,7 +313,7 @@ export default {
       padding: 16px;
 
       .jus-timeline__lawsuit-info {
-        margin-bottom: 8px;
+        margin-bottom: 12px;
         display: flex;
         flex-direction: column;
         &:last-child { margin-bottom: 0; }
@@ -322,6 +330,7 @@ export default {
         .jus-timeline__lawsuit-info-link {
           color: $--color-text-secondary;
           cursor: auto;
+          margin-top: 3px;
         }
 
         .jus-timeline__lawsuit-info-collapse-title {
@@ -333,6 +342,7 @@ export default {
         .jus-timeline__lawsuit-info-collapse-text {
           color: $--color-text-secondary;
           margin-left: 16px;
+          line-height: 22px;
         }
       }
     }
@@ -353,5 +363,44 @@ export default {
 
 .highlight {
   background-color: yellow !important;
+}
+</style>
+
+<style lang="scss">
+.jus-timeline {
+  padding: 24px;
+
+  .el-dialog {
+    max-width: 1200px;
+    @media (max-width: 1200px) { width: 86% !important; }
+    @media (max-width: 700px) { width: 100% !important; }
+
+    .el-dialog__headerbtn {
+      top: 24px;
+      right: 24px;
+    }
+    .el-dialog__body {
+      margin-top: 3px;
+
+      .jus-timeline__lawsuit {
+        .jus-timeline__lawsuit-resume {
+          .el-collapse-item {
+            .el-collapse-item__header {
+              height: auto;
+              margin-top: 6px;
+              line-height: 18px;
+            }
+            &:first-child {
+              .el-collapse-item__header { margin-top: 3px; }
+            }
+          }
+
+          .el-collapse-item__content {
+            padding: 3px 0;
+          }
+        }
+      }
+    }
+  }
 }
 </style>
