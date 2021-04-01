@@ -57,7 +57,10 @@
         <div class="usermenu-container__version">
           Versão {{ appVersion }}
         </div>
-        <router-link to="/configuration">
+        <router-link
+          v-if="showConfigs"
+          to="/configuration"
+        >
           <el-dropdown-item>
             Configurações
           </el-dropdown-item>
@@ -126,6 +129,9 @@ export default {
     }),
     appVersion() {
       return process.env.VUE_APP_VERSION
+    },
+    showConfigs() {
+      return this.isJusttoAdmin || this.isAdminProfile
     },
     isLargeTeamName() {
       return this.teamName.length > 20
