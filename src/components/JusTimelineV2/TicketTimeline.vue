@@ -339,6 +339,7 @@ export default {
           font-weight: normal;
           font-size: 14px;
         }
+
         .jus-timeline__lawsuit-info-collapse-text {
           color: $--color-text-secondary;
           margin-left: 16px;
