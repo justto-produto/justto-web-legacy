@@ -2,20 +2,19 @@
   <section
     id="messagesTabEditorOmnichannelNegotiation"
     v-loading="showCKEditor && !editorReady"
-    class="messages-container"
+    class="messages-container jus-ckeditor__parent"
   >
     <ckeditor
       v-if="showCKEditor"
-      v-show="editorReady"
       ref="messageEditor"
-      :value="editorText"
-      :config="config"
-      class="messages-container__editor"
-      @ready="setEditorReady(true)"
-      @input="setEditorText"
+      v-model="body"
+      :editor="editor"
+      :config="editorConfig"
+      type="classic"
     />
     <el-input
       v-else
+      id="messageEditorTextOnly"
       ref="messageEditorTextOnly"
       :value="editorTextScaped"
       :rows="5"
@@ -52,7 +51,7 @@
     <DialogEditor
       ref="fullScreenEditor"
       :text-only="!showCKEditor"
-      :width="dialogWidth"
+      :fullscreen="isFullscreenDialog"
       button-confirm="Enviar"
       custom-class="negotiator-fullscreen-editor"
       @confirm="send"
@@ -63,7 +62,10 @@
         class="title-slot"
       >
         <Recipients is-reversed />
-        <QuickReply show-title />
+        <QuickReply
+          show-title
+          @input="openFullScreenEditor"
+        />
       </div>
     </DialogEditor>
   </section>
@@ -72,17 +74,19 @@
 <script>
 import events from '@/constants/negotiationEvents'
 import { eventBus } from '@/utils'
-import CKEditor from 'ckeditor4-vue'
+import ckeditor from '@/utils/mixins/ckeditor'
+
 import { mapActions, mapGetters } from 'vuex'
 
 export default {
   components: {
-    ckeditor: CKEditor.component,
     QuickReply: () => import('./QuickReply'),
     Recipients: () => import('./Recipients'),
     Attachments: () => import('./AttachemntsIndicator'),
     DialogEditor: () => import('@/components/dialogs/DialogEditor')
   },
+
+  mixins: [ckeditor],
 
   props: {
     focusOnStartup: {
@@ -91,9 +95,11 @@ export default {
     }
   },
 
-  data: () => ({
-    localLoading: false
-  }),
+  data() {
+    return {
+      localLoading: false
+    }
+  },
 
   computed: {
     ...mapGetters({
@@ -102,32 +108,25 @@ export default {
       editorRecipients: 'getEditorRecipients',
       messageType: 'getEditorMessageType',
       getEditorReady: 'getEditorReady',
-      editorConfig: 'getEditorConfig',
       editorText: 'getEditorText'
     }),
 
     editorReady: {
       get() {
-        return this.getEditorReady
+        return this.getEditorReady || true
       },
       set(value) {
         this.setEditorReady(value)
       }
     },
 
-    editor() {
-      return Object.values(window.CKEDITOR.instances).find(({ config }) => config.parent === this.config.parent)
-    },
-
-    config() {
-      return {
-        parent: 'message-editor',
-        ...this.editorConfig
+    body: {
+      get() {
+        return this.editorText
+      },
+      set(text) {
+        this.setEditorText(text)
       }
-    },
-
-    body() {
-      return this.editorText
     },
 
     showCKEditor() {
@@ -139,8 +138,12 @@ export default {
       return editorRecipients.length && !localLoading && editorReady
     },
 
-    dialogWidth() {
-      return window.innerWidth <= 900 ? '100%' : '50%'
+    isFullscreenDialog() {
+      return window.innerWidth <= 900
+    },
+
+    editorInstance() {
+      return this.$refs.messageEditor
     }
   },
 
@@ -152,10 +155,6 @@ export default {
         })
       }
     }
-  },
-
-  beforeDestroy() {
-    this.destroyEditor()
   },
 
   mounted() {
@@ -195,29 +194,38 @@ export default {
       })
     },
 
-    destroyEditor() {
-      this.editorReady = false
-      if (this.editor) {
-        this.editor.destroy()
-      }
-    },
-
     focusOnEditor() {
       if (this.showCKEditor) {
-        if (this.editor) {
-          this.editor.focus()
-        }
+        this.ckeditorFocus()
       } else {
         if (this.$refs.messageEditorTextOnly) {
           this.$refs.messageEditorTextOnly.focus()
         }
       }
+    },
+
+    pasteText() {
+      navigator.clipboard.readText().then(text => {
+        if (this.showCKEditor && this.editorReady && this.editor) {
+          this.editor.insertText(text)
+        } else if (!this.showCKEditor) {
+          const target = document.getElementById('messageEditorTextOnly')
+
+          if (target.setRangeText) {
+            target.setRangeText(text)
+          } else {
+            target.focus()
+            document.execCommand('insertText', false, text)
+          }
+        }
+      })
     }
   }
 }
 </script>
 
 <style lang="scss">
+
 .negotiator-fullscreen-editor {
   .el-dialog__header {
     margin: 10px 0px;
@@ -257,16 +265,25 @@ export default {
 
   .messages-container__full-screen {
     position: absolute;
-    top: 16px;
-    right: 16px;
+    top: 0;
+    right: 0;
+    margin: 18px;
 
     cursor: pointer;
   }
 
   .messages-container__attachments {
     position: absolute;
+    top: 0;
+    right: 0;
+    margin: 18px 206px 0 0;
+  }
+
+  .messages-container__paste {
+    position: absolute;
     top: 20px;
     left: 140px;
+    cursor: pointer;
   }
 
   .messages-container__button {

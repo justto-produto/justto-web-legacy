@@ -1,0 +1,38 @@
+.jus-ckeditor__parent {
+  .ck-editor {
+    border: 2px solid #f4f4f4 !important;
+    border-radius: 6px !important;
+
+    .ck-editor__top {
+      .ck-sticky-panel {
+        .ck-sticky-panel__content {
+          .ck-toolbar {
+            border: none;
+            background-color: transparent;
+
+            .ck-toolbar__items {
+              .ck-button {
+                .ck-icon {
+                  width: 16px;
+                  height: 16px;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .ck-editor__main {
+      .ck-editor__editable {
+        height: 12vh;
+        border: none;
+
+        &.ck-focused {
+          border: none;
+          box-shadow: none;
+        }
+      }
+    }
+  }
+}
