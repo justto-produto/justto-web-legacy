@@ -2,6 +2,7 @@
   <el-dialog
     :visible.sync="visible"
     append-to-body
+    width="65%"
     class="jus-timeline"
   >
     <div

@@ -1,5 +1,8 @@
 <template>
-  <article class="edit-user-container">
+  <article
+    v-loading="localLoading"
+    class="edit-user-container"
+  >
     <el-form
       ref="editUserForm"
       :model="form"
@@ -20,33 +23,43 @@
         </el-input>
       </el-form-item>
 
+      <el-form-item
+        label="Antiga senha"
+        prop="oldPassword"
+      >
+        <el-input
+          v-model="form.oldPassword"
+          type="password"
+          show-password
+        />
+      </el-form-item>
+
       <el-row :gutter="12">
         <el-col :span="12">
           <el-form-item
-            label="Alterar Senha"
+            label="Nova senha"
             prop="password"
           >
             <el-input
               v-model="form.password"
+              show-password
               type="password"
               autocomplete="false"
-              readonly
-              onfocus="this.removeAttribute('readonly');"
             />
           </el-form-item>
         </el-col>
+
         <el-col :span="12">
           <el-form-item
-            label="Confirmar Senha"
+            label="Confirmar senha"
             prop="confirmPassword"
           >
             <el-input
               v-model="form.confirmPassword"
               :disabled="!passwordIsValid"
+              show-password
               type="password"
               autocomplete="false"
-              readonly
-              onfocus="this.removeAttribute('readonly');"
             >
               <input slot="preppend">
               <el-button
@@ -88,8 +101,10 @@ import { validatePhone } from '@/utils/validations'
 export default {
   data() {
     return {
+      localLoading: false,
       form: {
         name: '',
+        oldPassword: '',
         password: '',
         confirmPassword: '',
         phone: ''
@@ -100,6 +115,10 @@ export default {
           { validator: validatePhone, message: 'Telefone inválido', trigger: 'change' }
         ],
         password: [
+          { required: true, message: 'Este campo obrigatório', trigger: 'submit' },
+          { min: 6, max: 12, message: 'Este campo deve ter de 6 a 12 caracteres', trigger: 'blur' }
+        ],
+        oldPassword: [
           { required: true, message: 'Este campo obrigatório', trigger: 'submit' },
           { min: 6, max: 12, message: 'Este campo deve ter de 6 a 12 caracteres', trigger: 'blur' }
         ],
@@ -148,10 +167,12 @@ export default {
     ]),
 
     emitClose() {
+      this.localLoading = false
       this.$emit('close')
     },
 
     editName() {
+      this.localLoading = true
       this.changeLoggedPersonName({
         id: this.id,
         name: this.form.name
@@ -167,6 +188,7 @@ export default {
     },
 
     editPhone() {
+      this.localLoading = true
       this.$refs.editUserForm.validateField('phone', hasError => {
         if (!hasError) {
           this.setMainPhone({
@@ -182,34 +204,32 @@ export default {
           }).catch(error => {
             this.$jusNotification({ error })
           }).finally(this.emitClose)
+        } else {
+          this.localLoading = false
         }
       })
     },
 
     editPassword() {
-      this.$refs.editUserForm.validateField(['password', 'confirmPassword'], hasError => {
-        if (!hasError) {
-          this.$prompt('Digite sua senha atual', 'Senha atual', {
-            confirmButtonText: 'Alterar',
-            cancelButtonText: 'Cancelar',
-            inputPattern: /\s*^([a-zA-Z0-9_-]){6,12}$/,
-            inputErrorMessage: 'Este campo deve ter de 6 a 12 caracteres'
-          }).then(({ value: oldPassword }) => {
-            this.updatePassword({
-              password: this.form.password,
-              oldPassword
-            }).then(() => {
-              // SEGMENT TRACK
-              this.$jusSegment('Senha do usuário alterada')
-              this.$jusNotification({
-                title: 'Yay!',
-                message: 'Senha alterada com sucesso.',
-                type: 'success'
-              })
-            }).catch(error => {
-              this.$jusNotification({ error })
-            }).finally(this.emitClose)
-          })
+      this.localLoading = true
+      this.$refs.editUserForm.validateField(['password', 'confirmPassword', 'oldPassword'], hasError => {
+        const { password, oldPassword } = this.form
+        if (!hasError && password !== oldPassword) {
+          this.updatePassword({
+            password, oldPassword
+          }).then(() => {
+            // SEGMENT TRACK
+            this.$jusSegment('Senha do usuário alterada')
+            this.$jusNotification({
+              title: 'Yay!',
+              message: 'Senha alterada com sucesso.',
+              type: 'success'
+            })
+          }).catch(error => {
+            this.$jusNotification({ error })
+          }).finally(this.emitClose)
+        } else {
+          this.localLoading = false
         }
       })
     }
