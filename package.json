@@ -1,11 +1,11 @@
 {
   "name": "justto-web",
   "version": "1.10.612",
-  "homepage": "https://app.justto.com",
-  "author": "Henrique Liberato",
+  "homepage": "https://justto.app",
+  "author": "Justto",
   "engines": {
-    "node": "^8.11.4",
-    "npm": "^5.6.0"
+    "node": "^14.16.0",
+    "npm": "^7.7.6"
   },
   "private": true,
   "scripts": {
@@ -103,13 +103,16 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.0",
     "eslint-plugin-vue": "^6.2.2",
-    "node-sass": "^4.14.1",
+    "sass": "^1.32.8",
     "sass-loader": "^8.0.2",
     "vue-cli-plugin-axios": "0.0.4",
     "vue-cli-plugin-element": "^1.0.1",
     "vue-cli-plugin-i18n": "^1.0.1",
     "vue-cli-plugin-styleguidist": "^4.25.0",
     "vue-template-compiler": "^2.6.10"
+  },
+  "optionalDependencies": {
+    "fsevents": "*"
   },
   "postcss": {
     "plugins": {

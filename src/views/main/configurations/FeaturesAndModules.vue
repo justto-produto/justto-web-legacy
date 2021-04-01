@@ -30,6 +30,7 @@
             {{ feature.name }}
             <el-switch
               v-model="feature.active"
+              :disabled="feature.alwaysActive"
               @change="handleToggleConfiguration($event, feature.id, feature.free)"
             />
           </div>
