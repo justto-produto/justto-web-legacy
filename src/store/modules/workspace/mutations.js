@@ -61,7 +61,8 @@ const workspaceMutations = {
   },
   setPreNegotiationKeywords: (state, keywords) => (state.workspace.preNegotiation.keyWords = keywords),
   setPreNegotiationLimitValue: (state, value) => (state.workspace.preNegotiation.limitValue = Number(value)),
-  setFeaturesAndModules: (state, features) => Vue.set(state, 'featuresAndModules', features.content)
+  setFeaturesAndModules: (state, features) => Vue.set(state, 'featuresAndModules', features.content),
+  updateWorkspaceLogoUrl: (state, logoUrl) => Vue.set(state.workspace, 'logoUrl', logoUrl)
 }
 
 export default workspaceMutations

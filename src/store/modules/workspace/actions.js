@@ -33,6 +33,9 @@ const workspaceActions = {
       data: properties
     })
   },
+  updateWorkspaceLogoUrl({ commit }, logoUrl) {
+    commit('updateWorkspaceLogoUrl', logoUrl)
+  },
   editWorkpace({ state }, workspace) {
     const { id, teamName, status, name } = state.workspace
     const data = { id, teamName, status, name, ...workspace }
