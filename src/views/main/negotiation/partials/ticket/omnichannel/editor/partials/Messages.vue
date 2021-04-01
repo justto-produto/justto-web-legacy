@@ -280,8 +280,8 @@ export default {
   .messages-container__attachments {
     position: absolute;
     top: 0;
-    right: 0;
-    margin: 18px 206px 0 0;
+    left: 0;
+    margin: 18px 0px 0px 390px;
   }
 
   .messages-container__paste {
