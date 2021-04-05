@@ -75,6 +75,10 @@ export default {
     eventBus.$on(events.SEARCH_FOCUS.callback, this.focusOnSearch)
   },
 
+  beforeDestroy() {
+    eventBus.$off(events.SEARCH_FOCUS.callback, this.focusOnSearch)
+  },
+
   methods: {
     ...mapActions([
       'searchDisputes',

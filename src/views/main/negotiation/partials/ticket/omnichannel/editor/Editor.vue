@@ -91,6 +91,10 @@ export default {
     eventBus.$on(events.EDITOR_FOCUS.callback, this.validateTabOnBeforeFocus)
   },
 
+  beforeDestroy() {
+    eventBus.$off(events.EDITOR_FOCUS.callback, this.validateTabOnBeforeFocus)
+  },
+
   methods: {
     ...mapActions([
       'setOmnichannelActiveTab'

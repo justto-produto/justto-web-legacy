@@ -154,6 +154,13 @@ export default {
     eventBus.$on(events.TICKET_UP.callback, this.handlePreviousTicket)
   },
 
+  beforeDestroy() {
+    eventBus.$off(events.TICKET_NEXT_TAB.callback, this.handleNextTab)
+    eventBus.$off(events.TICKET_PREVIOUS_TAB.callback, this.handlePreviousTab)
+    eventBus.$off(events.TICKET_DOWN.callback, this.handleNextTicket)
+    eventBus.$off(events.TICKET_UP.callback, this.handlePreviousTicket)
+  },
+
   methods: {
     ...mapActions([
       'getTickets',

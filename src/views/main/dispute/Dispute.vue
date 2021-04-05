@@ -616,6 +616,7 @@ export default {
   },
 
   beforeDestroy() {
+    eventBus.$off(events.EDITOR_FOCUS.callback, this.focusOnEditor)
     this.unsubscribeOccurrences(this.id)
     window.removeEventListener('resize', this.updateWindowHeight)
   },
