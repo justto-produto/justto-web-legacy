@@ -40,12 +40,22 @@
           >
             {{ feature.description }}
           </highlight>
-          <a class="features-modules-container__body-button-link">
+          <a
+            class="features-modules-container__body-button-link"
+            @click="openConfigurationsDialog(feature.code)"
+          >
             Configurar
           </a>
         </div>
       </div>
     </article>
+
+    <ApiIntegrationDialog ref="apiIntegrationDialog" />
+    <AutomaticMessagesDialog ref="automaticMessagesDialog" />
+    <BadFaithLitigantDialog ref="badFaithLitigantDialog" />
+    <CommunicationBlockListDialog ref="communicationBlockListDialog" />
+    <DraftManagementDialog ref="draftManagementDialog" />
+    <PreNegotiationDialog ref="preNegotiationDialog" />
   </section>
 </template>
 
@@ -56,7 +66,13 @@ import { filterByTerm } from '@/utils'
 export default {
   name: 'FeaturesAndModules',
   components: {
-    highlight: () => import('vue-text-highlight')
+    highlight: () => import('vue-text-highlight'),
+    ApiIntegrationDialog: () => import('./FeaturesAndModulesDialogs/ApiIntegrationDialog'),
+    AutomaticMessagesDialog: () => import('./FeaturesAndModulesDialogs/AutomaticMessagesDialog'),
+    BadFaithLitigantDialog: () => import('./FeaturesAndModulesDialogs/BadFaithLitigantDialog'),
+    CommunicationBlockListDialog: () => import('./FeaturesAndModulesDialogs/CommunicationBlockListDialog'),
+    DraftManagementDialog: () => import('./FeaturesAndModulesDialogs/DraftManagementDialog'),
+    PreNegotiationDialog: () => import('./FeaturesAndModulesDialogs/PreNegotiationDialog')
   },
   data: () => ({
     searchTerm: ''
@@ -98,6 +114,13 @@ export default {
           type: 'warning'
         }).then(() => toggleConfiguration())
       } else toggleConfiguration()
+    },
+
+    openConfigurationsDialog(featureCode) {
+      const featureCodeCamelCase = (str) => str.toLowerCase()
+        .replace(/([_][a-z])/g, (group) => group.toUpperCase().replace('_', ''))
+
+      this.$refs[featureCodeCamelCase(featureCode) + 'Dialog'].openFeatureDialog()
     }
   }
 }
