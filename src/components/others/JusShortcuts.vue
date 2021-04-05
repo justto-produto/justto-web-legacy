@@ -66,6 +66,11 @@ export default {
     eventBus.$on(events.SHOW_SHORTCUTS_HELP_2.callback, this.showHelp)
   },
 
+  beforeDestroy() {
+    eventBus.$off(events.SHOW_SHORTCUTS_HELP_1.callback, this.showHelp)
+    eventBus.$off(events.SHOW_SHORTCUTS_HELP_2.callback, this.showHelp)
+  },
+
   methods: {
     doAction({ callback }) {
       eventBus.$emit(callback, {})

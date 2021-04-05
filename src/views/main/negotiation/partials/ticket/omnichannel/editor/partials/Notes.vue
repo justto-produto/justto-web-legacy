@@ -77,6 +77,7 @@ export default {
   },
 
   beforeDestroy() {
+    eventBus.$off(events.EDITOR_FOCUS.callback, this.focusOnEditor)
     this.destroyEditor()
     if (this.editor) {
       this.editor.destroy()

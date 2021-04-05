@@ -100,7 +100,7 @@ export default {
     if (this.needScroll) this.adjustScroll(true)
   },
   beforeDestroy() {
-    eventBus.$off()
+    eventBus.$off('NEGOTIATION_WEBSOCKET_NEW_OCCURRENCE')
   },
   methods: {
     ...mapActions([

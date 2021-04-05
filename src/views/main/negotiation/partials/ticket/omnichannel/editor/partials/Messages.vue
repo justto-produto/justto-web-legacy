@@ -166,6 +166,10 @@ export default {
     eventBus.$on(events.EDITOR_FOCUS.callback, this.focusOnEditor)
   },
 
+  beforeDestroy() {
+    eventBus.$off(events.EDITOR_FOCUS.callback, this.focusOnEditor)
+  },
+
   methods: {
     ...mapActions([
       'resetRecipients',

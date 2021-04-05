@@ -522,6 +522,11 @@ export default {
     eventBus.$on(events.TICKET_PREVIOUS_TAB.callback, this.handlePreviousTab)
   },
 
+  beforeDestroy() {
+    eventBus.$off(events.TICKET_NEXT_TAB.callback, this.handleNextTab)
+    eventBus.$off(events.TICKET_PREVIOUS_TAB.callback, this.handlePreviousTab)
+  },
+
   methods: {
     ...mapActions([
       'exportDisputes',
