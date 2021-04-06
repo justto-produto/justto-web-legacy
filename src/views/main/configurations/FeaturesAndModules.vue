@@ -41,6 +41,7 @@
             {{ feature.description }}
           </highlight>
           <a
+            v-if="hasConfiguration.includes(feature.code)"
             class="features-modules-container__body-button-link"
             @click="openConfigurationsDialog(feature.code)"
           >
@@ -50,9 +51,9 @@
       </div>
     </article>
 
-    <ApiIntegrationDialog ref="apiIntegrationDialog" />
-    <AutomaticMessagesDialog ref="automaticMessagesDialog" />
-    <BadFaithLitigantDialog ref="badFaithLitigantDialog" />
+    <!-- <ApiIntegrationDialog ref="apiIntegrationDialog" /> -->
+    <!-- <AutomaticMessagesDialog ref="automaticMessagesDialog" /> -->
+    <BadFaithLitigantDialog ref="badFaithLitigantDialog" />  
     <CommunicationBlockListDialog ref="communicationBlockListDialog" />
     <DraftManagementDialog ref="draftManagementDialog" />
     <PreNegotiationDialog ref="preNegotiationDialog" />
@@ -67,8 +68,8 @@ export default {
   name: 'FeaturesAndModules',
   components: {
     highlight: () => import('vue-text-highlight'),
-    ApiIntegrationDialog: () => import('./FeaturesAndModulesDialogs/ApiIntegrationDialog'),
-    AutomaticMessagesDialog: () => import('./FeaturesAndModulesDialogs/AutomaticMessagesDialog'),
+    // ApiIntegrationDialog: () => import('./FeaturesAndModulesDialogs/ApiIntegrationDialog'),
+    // AutomaticMessagesDialog: () => import('./FeaturesAndModulesDialogs/AutomaticMessagesDialog'),
     BadFaithLitigantDialog: () => import('./FeaturesAndModulesDialogs/BadFaithLitigantDialog'),
     CommunicationBlockListDialog: () => import('./FeaturesAndModulesDialogs/CommunicationBlockListDialog'),
     DraftManagementDialog: () => import('./FeaturesAndModulesDialogs/DraftManagementDialog'),
@@ -83,6 +84,16 @@ export default {
     }),
     filteredFeatures() {
       return filterByTerm(this.searchTerm, this.featuresAndModules, 'name', 'description')
+    },
+    hasConfiguration() {
+      return [
+        // 'API_INTEGRATION',
+        // 'AUTOMATIC_MESSAGES',
+        'BAD_FAITH_LITIGANT',
+        'COMMUNICATION_BLOCK_LIST',
+        'DRAFT_MANAGEMENT',
+        'PRE_NEGOTIATION'
+      ]
     }
   },
   beforeMount() {
