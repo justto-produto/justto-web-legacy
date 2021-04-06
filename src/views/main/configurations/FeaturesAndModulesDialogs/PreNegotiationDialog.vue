@@ -2,16 +2,19 @@
   <el-dialog
     :close-on-click-modal="false"
     :visible.sync="preNegotiationDialogVisible"
-    title="Pré negociação"
-    width="40%"
+    title="Configurações da Pré-Negociação"
+    fullscreen
   >
-    <span>Pré negociação</span>
+    <PreNegotiation />
   </el-dialog>
 </template>
 
 <script>
 export default {
   name: 'PreNegotiationDialog',
+  components: {
+    PreNegotiation: () => import('@/views/main/configurations/PreNegotiation')
+  },
   data: () => ({
     preNegotiationDialogVisible: false
   }),
