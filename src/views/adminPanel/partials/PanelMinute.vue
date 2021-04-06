@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="panel-minute-view">
     <el-table
       :key="tableKey"
@@ -80,9 +80,11 @@
       :visible.sync="editDialogVisible"
       :width="width"
       :close-on-click-modal="false"
+      append-to-body
       :class="{ 'panel-minute-view__dialog--full': fullscreen, 'panel-minute-view__dialog--large': !fullscreen }"
       title="Editar minuta"
       class="panel-minute-view__dialog"
+      custom-class="panel-minute-view__dialog"
     >
       <i
         :class="fullscreen ? 'el-icon-bottom-left' : 'el-icon-top-right'"
@@ -237,6 +239,16 @@ export default {
 <style lang="scss">
 @import '@/styles/colors.scss';
 
+.panel-minute-view__dialog {
+  .el-dialog__body {
+    display: flex !important;
+
+    iframe {
+      flex: 1 !important;
+    }
+  }
+}
+
 .panel-minute-view {
   display: flex;
   justify-content: center;
@@ -284,6 +296,7 @@ export default {
     height: calc(100vh - 194px);
   }
   iframe {
+    flex: 1;
     width: calc(100% - 280px);
   }
   &__name {

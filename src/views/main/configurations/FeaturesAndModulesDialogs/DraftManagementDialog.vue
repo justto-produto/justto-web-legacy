@@ -3,15 +3,20 @@
     :close-on-click-modal="false"
     :visible.sync="draftManagementDialogVisible"
     title="Gestão de minutas"
-    width="40%"
+    append-to-body
+    fullscreen
   >
-    <span>Gestão de minutas</span>
+    <!-- <span>Gestão de minutas</span> -->
+    <Draft />
   </el-dialog>
 </template>
 
 <script>
 export default {
   name: 'DraftManagementDialog',
+  components: {
+    Draft: () => import('@/views/adminPanel/partials/PanelMinute')
+  },
   data: () => ({
     draftManagementDialogVisible: false
   }),
