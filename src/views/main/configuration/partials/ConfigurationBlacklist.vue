@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="configuration-blackList-view">
     <el-table
       :data="filteredBlackList"
@@ -47,6 +47,7 @@
       :show-close="false"
       :close-on-press-escape="false"
       :visible.sync="blackListDialogVisible"
+      append-to-body
       title="Adicionar à blackList"
       label-position="top"
       width="40%"
