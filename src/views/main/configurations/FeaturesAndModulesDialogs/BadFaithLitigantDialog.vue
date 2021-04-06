@@ -3,15 +3,18 @@
     :close-on-click-modal="false"
     :visible.sync="badFaithLitigantDialogVisible"
     title="Detecção de ofensores"
-    width="40%"
+    fullscreen
   >
-    <span>Detecção de ofensores</span>
+    <BadFaithLitigant />
   </el-dialog>
 </template>
 
 <script>
 export default {
   name: 'BadFaithLitigantDialog',
+  components: {
+    BadFaithLitigant: () => import('@/views/main/configurations/BadFaithLitigant')
+  },
   data: () => ({
     badFaithLitigantDialogVisible: false
   }),
