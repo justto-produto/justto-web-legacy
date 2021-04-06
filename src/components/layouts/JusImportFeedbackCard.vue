@@ -606,29 +606,29 @@ export default {
 }
 
 .has-error {
-  border-color: $--color-light-danger;
+  border-color: $--color-warning;
 
   > .el-input__inner::placeholder {
-    color: $--color-light-danger;
+    color: $--color-warning;
   }
 
   > .el-input {
 
     > .el-input__inner::placeholder {
-      color: $--color-light-danger;
+      color: $--color-warning;
     }
 
     > .el-input__prefix {
-      color: $--color-light-danger;
+      color: $--color-warning;
     }
   }
 
   > .el-input__prefix {
-    color: $--color-light-danger;
+    color: $--color-warning;
   }
 }
 
 .has-error-icon {
-  color: $--color-light-danger;
+  color: $--color-warning;
 }
 </style>

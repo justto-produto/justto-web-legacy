@@ -22,6 +22,7 @@
         <template slot-scope="scope">
           <el-tooltip
             v-if="scope.row.withoutAlert > 0"
+            :open-delay="800"
             popper-class="jus-chart-table__tooltip"
           >
             <div
@@ -32,6 +33,7 @@
           </el-tooltip>
           <el-tooltip
             v-else
+            :open-delay="800"
             content="Tudo certo aqui, nenhuma disputa precisa de sua atenção"
           >
             <jus-icon
@@ -50,6 +52,7 @@
         <template slot-scope="scope">
           <el-tooltip
             v-if="scope.row.withAlert > 0"
+            :open-delay="800"
             popper-class="jus-chart-table__tooltip"
           >
             <div
@@ -60,6 +63,7 @@
           </el-tooltip>
           <el-tooltip
             v-else
+            :open-delay="800"
             content="Tudo certo aqui, nenhuma disputa precisa de sua atenção"
           >
             <jus-icon
@@ -79,6 +83,7 @@
         <div slot-scope="scope">
           <el-tooltip
             v-if="scope.row.total > 0"
+            :open-delay="800"
             popper-class="jus-chart-table__tooltip"
           >
             <div
@@ -89,6 +94,7 @@
           </el-tooltip>
           <el-tooltip
             v-else
+            :open-delay="800"
             content="Tudo certo aqui, nenhuma disputa precisa de sua atenção"
           >
             <jus-icon
