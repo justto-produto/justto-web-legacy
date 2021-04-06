@@ -29,6 +29,7 @@ module.exports = {
       enableInSFC: true
     }
   },
+
   chainWebpack: config => {
     config.plugin('html').tap(args => {
       args[0].hash = true
@@ -76,12 +77,15 @@ module.exports = {
         })
       })
   },
+
   // baseUrl: undefined,
   outputDir: undefined,
+
   assetsDir: undefined,
   runtimeCompiler: undefined,
   productionSourceMap: false,
   parallel: undefined,
+
   css: {
     sourceMap: true,
     loaderOptions: {
@@ -89,5 +93,10 @@ module.exports = {
         // localIdentName: '[hash:base64:5]',
       }
     }
+  },
+
+  pwa: {
+    name: 'Justto App',
+    themeColor: '#ff9300'
   }
 }

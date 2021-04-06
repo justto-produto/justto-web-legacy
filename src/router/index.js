@@ -229,6 +229,14 @@ const router = new Router({
       }
     },
     {
+      name: 'icons',
+      path: '/icons',
+      component: () => import(/* webpackChunkName: "adminPanel" */ '@/views/icons/Icons'),
+      meta: {
+        title: 'Justto - Icons'
+      }
+    },
+    {
       path: '*',
       redirect: '/'
     }
