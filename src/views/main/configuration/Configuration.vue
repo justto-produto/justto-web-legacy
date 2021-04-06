@@ -937,17 +937,6 @@ export default {
         this.editWorkpace({
           name: this.companyName
         })
-        // .then(() => {
-        //   // SEGMENT TRACK
-        //   this.$jusSegment('Nome do escritório/empresa alterado')
-        //   this.$jusNotification({
-        //     title: 'Yay!',
-        //     message: 'Nome do escritório/empresa alterado com sucesso.',
-        //     type: 'success'
-        //   })
-        // }).catch(error => {
-        //   this.$jusNotification({ error })
-        // })
       } else {
         this.$jusNotification({
           title: 'Ops!',
