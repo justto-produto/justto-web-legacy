@@ -1,4 +1,5 @@
 const listIcons = [
+
   'src/assets/icons/ic-academy.svg',
   'src/assets/icons/ic-accepted-negotiation-white.svg',
   'src/assets/icons/ic-accepted-negotiation.svg',
