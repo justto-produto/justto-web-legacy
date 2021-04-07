@@ -18,8 +18,10 @@ const omnichannelGetters = {
   getFullMessages: state => (state.occurrences.fullMessages),
   getOccurrencesSummary: state => (state.occurrences.summary),
   getRecentWhatsappMessages: state => (state.editor.recentMessages),
+  getTotalOccurrences: state => (state.occurrences.totalElements),
   getEditorTextScaped: state => stripHtml(state.editor.messageText),
   isOccurrencesLoading: state => (state.countOmnichannelGetters > 0),
+  getExportTicketModalVisible: state => state.exportTicketModalVisible,
   getOccurrencesSummaryKeys: state => ({
     SMS: Object.keys(state.occurrences.summary.SMS).map(Number),
     EMAIL: Object.keys(state.occurrences.summary.EMAIL).map(Number),

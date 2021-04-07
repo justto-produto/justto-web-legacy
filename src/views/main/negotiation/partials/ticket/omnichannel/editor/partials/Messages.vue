@@ -52,7 +52,7 @@
       ref="fullScreenEditor"
       :text-only="!showCKEditor"
       :fullscreen="isFullscreenDialog"
-      :can-send-message="canSendMessage"
+      :can-send-message="Boolean(canSendMessage)"
       :button-confirm="sendMessagetext"
       custom-class="negotiator-fullscreen-editor"
       @confirm="send"
