@@ -40,6 +40,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import '@/styles/colors.scss';
+
   .jus-notification-card {
     border: solid 1px #ffffff;
     padding: 20px;
@@ -47,7 +49,7 @@ export default {
     position: relative;
     &:hover {
       background-color: #f7f7f7;
-      border: solid 1px #9461f7;
+      border: solid 1px $--color-primary;
       border-radius: 6px;
       .el-icon-error{
         display: block;
@@ -59,7 +61,7 @@ export default {
       right: -10px;
       top: -10px;
       background-color: #f7f7f7;
-      color: #adadad;
+      color: $--color-text-secondary;
       font-size: 18px;
       border-radius: 50%;
       cursor: pointer;
@@ -78,12 +80,12 @@ export default {
   }
   .jus-notification-card__complement {
     font-size: 12px;
-    color: #adadad;
+    color: $--color-text-secondary;
   }
   .jus-notification-card__date {
     white-space: nowrap;
     text-align: right;
     font-size: 12px;
-    color: #adadad;
+    color: $--color-text-secondary;
   }
 </style>

@@ -1183,7 +1183,7 @@ export default {
 
         .fast-occurrence-actions__cancel-tooltip {
           margin-left: 0.5rem;
-          background-color: #9461f7;
+          background-color: $--color-primary;
           color: white;
           border: none;
         }
@@ -1263,7 +1263,7 @@ export default {
       }
     }
     &.WAITING, &.CANCELED {
-      border: 2px dashed #343c4b;
+      border: 2px dashed $--color-text-primary;
     }
     &.COMMUNICATION, &.SCHEDULER {
       .el-card__header {
@@ -1276,7 +1276,7 @@ export default {
         background-color: $--color-info-light;
       }
       &.UNKNOWN {
-        background-color: $--color-cloudy-blue;
+        background-color: $--color-light-gray;
       }
       &.EMAIL_CNA {
         background-color: #B6FFFB;
@@ -1298,7 +1298,7 @@ export default {
       .note {
         font-weight: lighter;
         font-style: italic;
-        color: #000;
+        color: $--color-black;
       }
     }
     &.NEGOTIATOR_CHECKOUT {
@@ -1492,7 +1492,7 @@ export default {
     font-style: italic;
   }
   .loading-spiral {
-    border: 2px solid #9461f7 !important;
+    border: 2px solid $--color-primary !important;
     border-right-color: transparent !important;
   }
   .el-alert__description {

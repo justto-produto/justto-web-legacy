@@ -126,7 +126,7 @@ export default {
       text-align: left;
 
       &:hover {
-        background-color: $--light-gray;
+        background-color: $--color-light-gray;
       }
 
       &--selected {

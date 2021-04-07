@@ -141,7 +141,7 @@ export default {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        border: 1px solid $--color-cloudy-blue;
+        border: 1px solid $--color-light-gray;
         margin-top: 3px;
         padding: 3px 6px;
         background-color: $--color-white;

@@ -140,7 +140,7 @@ export default {
 
   .strategy-communication__close-icon:hover {
     cursor: pointer;
-    color: $--color-text-regular;
+    color: $--color-text-primary;
   }
 
   .strategy-communication__title-popover {
@@ -149,7 +149,7 @@ export default {
 }
 
 .strategy-communication {
-  color: $--color-text-regular;
+  color: $--color-text-primary;
 
   .strategy-communication__icon {
     width: 20px;

@@ -35,7 +35,7 @@ export default {
 
   .negotiations-container__tickets {
     width: 360px;
-    border-right: 1px solid $--light-gray;
+    border-right: 1px solid $--color-light-gray;
   }
 
   .negotiations-container__ticket {

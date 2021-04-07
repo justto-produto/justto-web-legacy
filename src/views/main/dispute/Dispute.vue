@@ -1040,7 +1040,7 @@ export default {
       display: none;
     }
     .el-loading-text {
-      color: #adadad;
+      color: $--color-text-secondary;
       font-size: 15px;
       font-style: italic;
       margin-top: 21px;
@@ -1193,7 +1193,7 @@ export default {
     }
   }
   &__disabled-text {
-    color: #adadad;
+    color: $--color-text-secondary;
     cursor: default;
     align-self: center;
   }

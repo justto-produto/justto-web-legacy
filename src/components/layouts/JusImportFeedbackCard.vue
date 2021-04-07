@@ -535,7 +535,7 @@ export default {
     margin-left: 35px;
   }
   .el-icon-circle-check-outline {
-    color: $--color-cloudy-blue;
+    color: $--color-light-gray;
   }
   .select-strategy__messages {
     border-bottom: 1px solid #dcdfe6;
@@ -594,7 +594,7 @@ export default {
   }
   .el-select {
     .el-select__tags-text {
-      color: $--color-text-regular;
+      color: $--color-text-primary;
     }
     .el-tag__close.el-icon-close {
       background-color: $--color-text-secondary;

@@ -112,7 +112,7 @@ export default {
     width: 100%;
     height: auto;
     line-height: 20px;
-    color: $--color-text-regular;
+    color: $--color-text-primary;
     resize: none;
     padding: 3px;
   }
@@ -122,7 +122,7 @@ export default {
     display: block;
     transition: .2s ease-out color;
     &:hover {
-      color: $--color-text-regular;
+      color: $--color-text-primary;
     }
   }
 

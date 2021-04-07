@@ -119,12 +119,12 @@ export default {
   width: 100%;
   padding: 18px 24px 18px 27px;
   border-left: 6px solid transparent;
-  border-bottom: 1px solid $--light-gray;
+  border-bottom: 1px solid $--color-light-gray;
   z-index: 0;
   cursor: pointer;
 
   &:hover:not(.communication-ticket-item-container--active) {
-    background-color: $--light-gray;
+    background-color: $--color-light-gray;
   }
 
   &--active {

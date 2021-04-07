@@ -382,6 +382,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import '@/styles/colors.scss';
+
 .columns-step {
   margin: 0 40px;
   p {
@@ -402,10 +404,10 @@ export default {
   .file-column__title {
     font-size: 12px;
     font-weight: 500;
-    color: #adadad;
+    color: $--color-text-secondary;
   }
   .file-column__example {
-    color: #9461f7;
+    color: $--color-primary;
   }
   .el-collapse--drag + h3 {
     margin-top: 40px;

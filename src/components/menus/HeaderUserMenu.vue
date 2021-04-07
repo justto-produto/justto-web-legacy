@@ -223,6 +223,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '@/styles/colors.scss';
+
 .usermenu-container {
   background-color: transparent; // REMOVER
   height: auto;
@@ -255,7 +257,7 @@ export default {
 
   &__version {
     margin: 6px 20px 12px 20px;
-    color: #adadad;
+    color: $--color-text-secondary;
     font-size: 12px;
   }
   &__name {

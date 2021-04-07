@@ -263,7 +263,7 @@ export default {
   }
 
   .scheduler-container__contact {
-    color: #FF9300;
+    color: $--color-secondary;
     font-weight: 600;
     display: flex;
     align-items: center;

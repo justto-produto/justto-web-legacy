@@ -150,7 +150,7 @@ article {
       .note-container__header-icon {
         margin-left: 6px;
         cursor: pointer;
-        &:hover { color: $--color-text-regular; }
+        &:hover { color: $--color-text-primary; }
       }
     }
 

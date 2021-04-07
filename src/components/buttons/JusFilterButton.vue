@@ -92,7 +92,7 @@ export default {
     width: 180px;
     border-left: 0;
     &:hover {
-      border-left: 1px solid $--color-text-regular;
+      border-left: 1px solid $--color-text-primary;
     }
     &:focus {
       border-left: 1px solid $--color-primary;

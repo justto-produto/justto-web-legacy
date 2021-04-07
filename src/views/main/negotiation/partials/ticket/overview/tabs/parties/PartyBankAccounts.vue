@@ -258,13 +258,13 @@ export default {
       }
 
       &:hover {
-        background-color: $--light-gray;
+        background-color: $--color-light-gray;
         .bank-accounts__container-inner { opacity: .85; }
         .bank-accounts__account-icons { opacity: 1; }
       }
 
       &.is-checked {
-        background-color: $--light-gray;
+        background-color: $--color-light-gray;
 
         .bank-accounts__container-inner {
           border-left: solid $--color-primary 2px;

@@ -300,7 +300,7 @@ export default {
       font-size: 16px;
       // border-bottom: 1px solid $--color-text-secondary;
       tr th {
-        color: $--color-text-regular;
+        color: $--color-text-primary;
         font-weight: 500;
       }
     }

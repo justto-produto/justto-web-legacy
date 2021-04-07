@@ -63,6 +63,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '@/styles/colors.scss';
+
 .icons-view {
   padding: 12px 32px 32px;
 
@@ -98,7 +100,7 @@ export default {
       }
 
       &:hover {
-        border: 1px solid #9461f7;
+        border: 1px solid $--color-primary;
       }
 
       .icons-list__icon {

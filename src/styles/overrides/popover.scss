@@ -1,8 +1,10 @@
+@import '../colors';
+
 .el-popover {
   &--dark {
-    background-color: #343c4b;
+    background-color: $--color-text-primary;
     color: white;
-    border-color: #343c4b;
+    border-color: $--color-text-primary;
     font-size: 12px;
     padding: 10px;
     img {

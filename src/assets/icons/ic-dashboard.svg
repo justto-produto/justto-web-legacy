@@ -12,7 +12,7 @@
     <g fill="none" fill-rule="evenodd">
         <path d="M1 2h24v22H1z"/>
         <g transform="translate(1 1)">
-            <use stroke="#D1DBE2" xlink:href="#a"/>
+            <use stroke="#f3f4f5" xlink:href="#a"/>
             <use stroke="#424242" xlink:href="#a"/>
         </g>
         <g transform="translate(1 1)">

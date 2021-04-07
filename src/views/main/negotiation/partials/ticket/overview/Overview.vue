@@ -196,7 +196,7 @@ export default {
     background-color: $--color-white;
     padding: 12px 0px;
     border-style: solid;
-    border-color: $--light-gray;
+    border-color: $--color-light-gray;
     border-width: 2px 0 2px 2px;
     border-radius: 6px 0 0 6px;
     &:before {
@@ -262,7 +262,7 @@ export default {
   background-color: $--color-white;
   padding: 12px 0px;
   border-style: solid;
-  border-color: $--light-gray;
+  border-color: $--color-light-gray;
   border-width: 2px 0 2px 2px;
   border-radius: 6px 0 0 6px;
   &:before {

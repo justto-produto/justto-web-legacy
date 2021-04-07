@@ -674,26 +674,26 @@ export default {
       }
     }
     &:hover div span {
-      border: 1px solid #9461f7;
+      border: 1px solid $--color-primary;
     }
   }
   &__protocol_button--step {
     &-1 {
       span:first-child {
-        background-color: #9461f7;
-        border-color: #9461f7;
+        background-color: $--color-primary;
+        border-color: $--color-primary;
       }
     }
     &-2 {
       span:first-child, span:nth-child(2) {
-        background-color: #9461f7;
-        border-color: #9461f7;
+        background-color: $--color-primary;
+        border-color: $--color-primary;
       }
     }
     &-3 {
       span {
-        background-color: #9461f7;
-        border-color: #9461f7;
+        background-color: $--color-primary;
+        border-color: $--color-primary;
       }
     }
   }
@@ -722,7 +722,7 @@ export default {
   .infinite-loading-container {
     font-style: italic;
     margin: 20px 0 10px;
-    color: #adadad;
+    color: $--color-text-secondary;
     font-size: 1rem;
   }
 }

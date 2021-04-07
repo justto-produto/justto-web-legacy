@@ -53,7 +53,7 @@
 
     <!-- <ApiIntegrationDialog ref="apiIntegrationDialog" /> -->
     <!-- <AutomaticMessagesDialog ref="automaticMessagesDialog" /> -->
-    <BadFaithLitigantDialog ref="badFaithLitigantDialog" />  
+    <BadFaithLitigantDialog ref="badFaithLitigantDialog" />
     <CommunicationBlockListDialog ref="communicationBlockListDialog" />
     <DraftManagementDialog ref="draftManagementDialog" />
     <PreNegotiationDialog ref="preNegotiationDialog" />
@@ -160,7 +160,7 @@ export default {
         justify-content: center;
         position: relative;
         padding: 12px;
-        background-color: mix($--light-gray, white, 50%);
+        background-color: mix($--color-light-gray, $--color-white, 50%);
         border-radius: 2px 2px 0 0;
         border-bottom: 1px solid #dcdfe6;
 

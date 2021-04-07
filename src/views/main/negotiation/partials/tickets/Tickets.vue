@@ -302,8 +302,8 @@ export default {
   .el-tabs__header {
     padding: 12px;
     margin: 0;
-    border-bottom: 2px solid $--light-gray;
-    border-top: 2px solid $--light-gray;
+    border-bottom: 2px solid $--color-light-gray;
+    border-top: 2px solid $--color-light-gray;
 
     .el-tabs__nav-prev,
     .el-tabs__nav-next {

@@ -144,7 +144,7 @@ export default {
 
   .management-prescriptions__popover-trigger {
     .management-prescriptions__popover-button:not(.el-button--primary) {
-      border: 1px solid $--light-gray;
+      border: 1px solid $--color-light-gray;
       &:hover, &:focus { border-color: $--color-primary-light-8; }
     }
     .management-prescriptions__popover-icon {
@@ -186,7 +186,7 @@ export default {
       text-align: left;
 
       &:hover {
-        background-color: $--light-gray;
+        background-color: $--color-light-gray;
       }
 
       &--selected {

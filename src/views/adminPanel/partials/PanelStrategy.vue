@@ -84,6 +84,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import '@/styles/colors.scss';
+
 .panel-strategy-view {
   display: flex;
   justify-content: center;
@@ -100,7 +102,7 @@ export default {
     }
   }
   p {
-    color: #adadad;
+    color: $--color-text-secondary;
     margin-top: 0;
     font-size: 13px;
   }

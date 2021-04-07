@@ -127,6 +127,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import '@/styles/colors.scss';
+
 .dispute-tips {
   max-width: 800px;
   width: 80%;
@@ -141,11 +143,11 @@ export default {
       float: right;
     }
     .el-icon-info {
-      color: #72cbff;
+      color: $--color-info;
       font-size: 15px;
     }
     .el-icon-close {
-      color: #343c4b;
+      color: $--color-text-primary;
     }
   }
   .content {
@@ -157,13 +159,13 @@ export default {
   }
   .el-steps {
     .is-process, .is-wait {
-      color: #adadad;
+      color: $--color-text-secondary;
     }
     .el-step__line {
-      background-color: #adadad;
+      background-color: $--color-light-gray;
     }
     .el-step__description {
-      color: #343c4b;
+      color: $--color-text-primary;
     }
   }
 }

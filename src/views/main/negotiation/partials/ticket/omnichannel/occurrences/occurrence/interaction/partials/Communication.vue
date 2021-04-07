@@ -218,7 +218,7 @@ export default {
     }
 
     &.OUTBOUND {
-      color: #FF9300;
+      color: $--color-secondary;
     }
 
     .communication-container__email-contact {

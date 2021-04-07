@@ -256,7 +256,7 @@ export default {
 }
 
 .jus-tags-filter__tag {
-  color: $--color-text-regular;
+  color: $--color-text-primary;
   border-color: $--color-text-secondary;
 
   &.jus-tags-filter__tag--inclusive-is-active {
@@ -294,7 +294,7 @@ export default {
     margin-bottom: 2px;
     text-align: center;
     font-weight: bold;
-    color: $--color-text-regular;
+    color: $--color-text-primary;
   }
 
   // .popper__arrow {

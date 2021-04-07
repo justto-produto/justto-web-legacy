@@ -32,12 +32,12 @@
 
 .el-card--dashed {
   background-color: $--color-white;
-  border: dashed 1px $--color-cloudy-blue;
+  border: dashed 1px $--color-light-gray;
 }
 
 .el-card--dashed-hover {
   background-color: $--color-white;
-  border: dashed 1px $--color-cloudy-blue;
+  border: dashed 1px $--color-light-gray;
   &:hover {
     border-color: $--color-primary;
   }

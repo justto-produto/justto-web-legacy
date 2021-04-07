@@ -101,6 +101,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import '@/styles/colors.scss';
+
 .jus-sidenav-external {
   height: 100%;
   background-color: #f7f7f7;
@@ -121,7 +123,7 @@ export default {
     div {
       font-size: 20px;
       &:first-child {
-        color: #ff9300;
+        color: $--color-secondary;
         span {
           font-size: 30px;
           display: inline-block;
@@ -159,7 +161,7 @@ export default {
   }
   &__price {
     width: 100%;
-    color: #9461f7;
+    color: $--color-primary;
     span{
       font-size: 30px;
       font-weight: 500;

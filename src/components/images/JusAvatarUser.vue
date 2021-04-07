@@ -100,7 +100,7 @@ export default {
     height: 100%;
     font-weight: 500;
     border-radius: 50%;
-    background-color: #ff9300;
+    background-color: $--color-secondary;
   }
 
   &.jus-avatar-user--purple {

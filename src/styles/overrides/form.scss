@@ -1,3 +1,5 @@
+@import '../colors.scss';
+
 .el-form-item__error {
   right: 0 !important;
   top: -25px !important;
@@ -5,7 +7,7 @@
 }
 
 .el-form--label-top .el-form-item__label {
-  color: #adadad !important;
+  color: $--color-text-secondary !important;
   font-size: 12px !important;
   line-height: 30px !important;
   padding: 0 !important;

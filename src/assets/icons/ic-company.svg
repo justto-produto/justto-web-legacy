@@ -1,17 +1,15 @@
 <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" width="32" height="32">
-  <g id="Elipse_635" data-name="Elipse 635" fill="#fff" stroke="#343c4b" stroke-linejoin="round" stroke-width="1">
+  <g id="Elipse_635" data-name="Elipse 635" fill="#fff" stroke="#424242" stroke-linejoin="round" stroke-width="1">
     <circle cx="16" cy="16" r="16" stroke="none"/>
     <circle cx="16" cy="16" r="15.5" fill="none"/>
   </g>
   <g id="Grupo_1756" data-name="Grupo 1756" transform="matrix(1.003185, 0, 0, 0.903185, 6.9, 6)" style="">
-    <path id="Caminho_7325" data-name="Caminho 7325" d="M4658.56,351.19h1.636v10h-1.636Z" transform="translate(-4651.977 -343.707)" fill="none" stroke="#343c4b" stroke-linejoin="round" stroke-width="0.8" fill-rule="evenodd"/>
-    <path id="Caminho_7326" data-name="Caminho 7326" d="M4655.3,351.19h1.637v10H4655.3Z" transform="translate(-4652.884 -343.707)" fill="none" stroke="#343c4b" stroke-linejoin="round" stroke-width="0.8" fill-rule="evenodd"/>
-    <rect id="Retângulo405" data-name="Retângulo 1405" width="1.634" height="9.996" transform="translate(10.751 7.482)" fill="none" stroke="#343c4b" stroke-linejoin="round" stroke-width="0.8"/>
-    <path id="Caminho_7327" data-name="Caminho 7327" d="M4665.089,351.19h1.637v10h-1.637Z" transform="translate(-4650.158 -343.707)" fill="none" stroke="#343c4b" stroke-linejoin="round" stroke-width="0.8" fill-rule="evenodd"/>
-    <path id="Caminho_7328" data-name="Caminho 7328" d="M4653.41,351.206l9.5-5.869,9.474,5.869Z" transform="translate(-4653.41 -345.337)" fill="none" stroke="#343c4b" stroke-linejoin="round" stroke-width="0.8" fill-rule="evenodd"/>
-    <path id="Caminho_7329" data-name="Caminho 7329" d="M4672.382,360.333H4653.41" transform="translate(-4653.41 -341.162)" fill="none" stroke="#343c4b" stroke-width="0.8"/>
-    <path id="Caminho_7330" data-name="Caminho 7330" d="M4661.011,348.965a.832.832,0,1,0-.831-.832A.83.83,0,0,0,4661.011,348.965Z" transform="translate(-4651.525 -344.791)" fill="none" stroke="#343c4b" stroke-linejoin="round" stroke-width="0.8" fill-rule="evenodd"/>
+    <path id="Caminho_7325" data-name="Caminho 7325" d="M4658.56,351.19h1.636v10h-1.636Z" transform="translate(-4651.977 -343.707)" fill="none" stroke="#424242" stroke-linejoin="round" stroke-width="0.8" fill-rule="evenodd"/>
+    <path id="Caminho_7326" data-name="Caminho 7326" d="M4655.3,351.19h1.637v10H4655.3Z" transform="translate(-4652.884 -343.707)" fill="none" stroke="#424242" stroke-linejoin="round" stroke-width="0.8" fill-rule="evenodd"/>
+    <rect id="Retângulo405" data-name="Retângulo 1405" width="1.634" height="9.996" transform="translate(10.751 7.482)" fill="none" stroke="#424242" stroke-linejoin="round" stroke-width="0.8"/>
+    <path id="Caminho_7327" data-name="Caminho 7327" d="M4665.089,351.19h1.637v10h-1.637Z" transform="translate(-4650.158 -343.707)" fill="none" stroke="#424242" stroke-linejoin="round" stroke-width="0.8" fill-rule="evenodd"/>
+    <path id="Caminho_7328" data-name="Caminho 7328" d="M4653.41,351.206l9.5-5.869,9.474,5.869Z" transform="translate(-4653.41 -345.337)" fill="none" stroke="#424242" stroke-linejoin="round" stroke-width="0.8" fill-rule="evenodd"/>
+    <path id="Caminho_7329" data-name="Caminho 7329" d="M4672.382,360.333H4653.41" transform="translate(-4653.41 -341.162)" fill="none" stroke="#424242" stroke-width="0.8"/>
+    <path id="Caminho_7330" data-name="Caminho 7330" d="M4661.011,348.965a.832.832,0,1,0-.831-.832A.83.83,0,0,0,4661.011,348.965Z" transform="translate(-4651.525 -344.791)" fill="none" stroke="#424242" stroke-linejoin="round" stroke-width="0.8" fill-rule="evenodd"/>
   </g>
 </svg>
-
-<!-- fill="#d1dbe2" -->

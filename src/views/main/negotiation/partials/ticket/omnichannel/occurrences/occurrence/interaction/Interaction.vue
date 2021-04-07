@@ -166,6 +166,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '@/styles/colors.scss';
+
 .interaction-container {
   display: flex;
   gap: 6px;
@@ -214,10 +216,10 @@ export default {
 
     &.INBOUND {
       flex-direction: row;
-      background: #D1DBE27E;
+      background: mix($--color-light-gray, $--color-white, 50%);
 
       &.NEGOTIATOR {
-        background: #D1DBE27E;
+        background: mix($--color-light-gray, $--color-white, 50%);
       }
     }
 

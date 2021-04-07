@@ -67,7 +67,7 @@ export default {
     justify-content: center;
     align-items: flex-start;
     font-weight: 600;
-    color: $--color-text-regular;
+    color: $--color-text-primary;
     font-size: 18px;
 
     .ticket-header-container__overview-link {

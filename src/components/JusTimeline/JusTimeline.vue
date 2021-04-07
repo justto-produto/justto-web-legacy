@@ -265,7 +265,7 @@ export default {
               height: 1rem;
             }
             &.active {
-              background-color: #9461f7;
+              background-color: $--color-primary;
             }
           }
         }
@@ -296,7 +296,7 @@ export default {
           .jus-timeline__header-subtitle {
             font: normal normal medium 17px/22px Montserrat;
             letter-spacing: 0px;
-            color: #ADADAD;
+            color: $--color-text-secondary;
           }
           .jus-timeline__header-tags {
             margin: 8px 0px auto auto;
@@ -315,7 +315,7 @@ export default {
           .jus-timeline__body-collapse {
             font-size: 14px;
             margin-top: 0px;
-            color: #ADADAD;
+            color: $--color-text-secondary;
           }
 
           .jus-timeline__body-tags {

@@ -241,7 +241,7 @@ export default {
 
 .strategy-card {
   border-radius: 8px;
-  border: 1px solid $--color-cloudy-blue;
+  border: 1px solid $--color-light-gray;
   position: relative;
   box-shadow: inherit !important;
   margin-bottom: 24px;
@@ -312,7 +312,7 @@ export default {
       margin-left: 16px;
 
       .strategy-card__tags-area {
-        border: solid 1px $--color-cloudy-blue;
+        border: solid 1px $--color-light-gray;
         border-radius: 2px;
         padding: 4px;
 
@@ -322,7 +322,7 @@ export default {
         }
 
         .strategy-card__tags {
-          color: $--color-text-regular;
+          color: $--color-text-primary;
           margin: 2px;
         }
       }

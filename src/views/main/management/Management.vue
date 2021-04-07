@@ -920,7 +920,7 @@ export default {
       .el-checkbox {
         font-weight: 500;
         &__label {
-          color: #343c4b !important;
+          color: $--color-text-primary !important;
         }
       }
     }
@@ -990,7 +990,7 @@ export default {
     color: $--color-warning;
   }
   .queue-row {
-    color: $--color-text-regular;
+    color: $--color-text-primary;
   }
 }
 </style>

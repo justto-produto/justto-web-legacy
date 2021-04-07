@@ -136,7 +136,7 @@ export default {
     padding: 6px 12px;
     font-weight: 500;
     font-size: 16px;
-    color: $--color-text-regular;
+    color: $--color-text-primary;
 
     .overview-offers__proposal-value {
       font-size: 20px;

@@ -170,7 +170,7 @@ export default {
   .cke_top { border: none; }
 
   .cke.cke_chrome {
-    border: 2px solid $--light-gray;
+    border: 2px solid $--color-light-gray;
     border-radius: 6px;
   }
 }

@@ -1043,6 +1043,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import '@/styles/colors.scss';
+
 .jus-protocol-dialog {
   .jus-protocol-dialog__header {
     padding-top: 8px;
@@ -1115,7 +1117,7 @@ export default {
     }
 
     .jus-protocol-dialog__send-title {
-      color: #adadad;
+      color: $--color-text-secondary;
       font-weight: 700;
 
       border-bottom: solid 1px lightgray;
@@ -1178,7 +1180,7 @@ export default {
     }
   }
   .jus-protocol-dialog__status-icon {
-    color: #adadad;
+    color: $--color-text-secondary;
     margin-left: auto;
     img {
       width: 14px;
@@ -1194,7 +1196,7 @@ export default {
     > div:last-child {
       margin-left: 14px;
       > b:first-child {
-        color: #adadad;
+        color: $--color-text-secondary;
       }
     }
     &+ .jus-protocol-dialog__confirm-recipients {

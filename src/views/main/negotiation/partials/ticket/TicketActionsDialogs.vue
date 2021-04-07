@@ -110,7 +110,7 @@
           type="primary"
           @click.prevent="handleDialogAction"
         >
-          Atualizar contraproposta
+          {{ offerFormType !== 'UNSETTLED' || isInsufficientUpperRange ? 'Atualizar contraproposta' : 'Continuar' }}
         </el-button>
       </div>
     </el-dialog>

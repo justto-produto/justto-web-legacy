@@ -817,7 +817,7 @@ export default {
     }
   }
   &__length {
-    color: #9461f7;
+    color: $--color-primary;
     font-weight: 500;
     font-size: 14px;
     width: 42px;

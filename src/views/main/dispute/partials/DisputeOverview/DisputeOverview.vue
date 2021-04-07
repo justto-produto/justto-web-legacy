@@ -21,7 +21,7 @@
         <dispute-code-link
           v-if="dispute.code"
           :code="dispute.code"
-          :custom-style="{ fontSize: '14x', fontWeight: 'normal', color: '#adadad'}"
+          :custom-style="{ fontSize: '14x', fontWeight: 'normal', color: '#979797d'}"
           :custom-icon-style="{ paddingRight: '8px' }"
           @openTimeline="openTimelineModal"
         />
@@ -3205,7 +3205,7 @@ export default {
       div > span {
         font-size: 11px;
         display: block;
-        color: #adadad;
+        color: $--color-text-secondary;
       }
     }
     .el-collapse-item__content {
@@ -3290,7 +3290,7 @@ export default {
     font-size: 16px;
     margin-top: 20px;
     padding: 17px 16px 17px 15px;
-    color: #9461f7;
+    color: $--color-primary;
   }
   &__role-collapse {
     background-color: #fff;
@@ -3342,7 +3342,7 @@ export default {
   &__is-enriched {
     font-style: italic;
     span {
-      color: #9461f7;
+      color: $--color-primary;
       margin-left: 2px;
       font-weight: 500;
     }
@@ -3399,7 +3399,7 @@ export default {
       box-shadow: 0 4px 24px 0 rgba(37, 38, 94, 0.06);
       position: relative;
       &.is-active {
-        border: 2px solid #9461f7;
+        border: 2px solid $--color-primary;
       }
       &:last-child {
         margin-bottom: 20px;
@@ -3413,13 +3413,13 @@ export default {
     }
   }
   .el-table__body tr.current-row > td {
-    border-top: 1px solid #9461f7;
-    border-bottom: 1px solid #9461f7;
+    border-top: 1px solid $--color-primary;
+    border-bottom: 1px solid $--color-primary;
     &:first-child {
-      border-left: 1px solid #9461f7
+      border-left: 1px solid $--color-primary
     }
     &:last-child {
-      border-right: 1px solid #9461f7
+      border-right: 1px solid $--color-primary
     }
   }
   .slot-scope .cell {

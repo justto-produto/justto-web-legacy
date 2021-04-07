@@ -207,18 +207,18 @@ export default {
   }
 
   &.el-button.is-plain:hover {
-    color: #9461f7;
-    border-color: #9461f7;
+    color: $--color-primary;
+    border-color: $--color-primary;
   }
 
   &.el-button--primary.is-plain:focus {
-    color: #9461f7 !important;
+    color: $--color-primary !important;
     background-color: #f4effe !important;
     border-color: #d4c0fc !important;
   }
 
   &.el-button--primary.is-plain:hover {
-    color: #9461f7 !important;
+    color: $--color-primary !important;
     background-color: #f4effe !important;
     border-color: #d4c0fc !important;
   }

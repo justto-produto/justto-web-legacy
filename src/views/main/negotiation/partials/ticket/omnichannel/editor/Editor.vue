@@ -119,7 +119,7 @@ export default {
 @import '@/styles/colors.scss';
 
 .editor-container {
-  border-top: 2px solid $--light-gray;
+  border-top: 2px solid $--color-light-gray;
   height: auto;
 }
 </style>

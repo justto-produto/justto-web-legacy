@@ -145,10 +145,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '@/styles/colors.scss';
+
 .negotiator-interaction__container {
-  background-color: #343c4b;
+  background-color: $--color-text-primary;
   color: white;
-  border-color: #343c4b;
+  border-color: $--color-text-primary;
   font-size: 12px;
 
   .negotiator-interaction__reply-button {

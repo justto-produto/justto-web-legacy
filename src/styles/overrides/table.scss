@@ -35,7 +35,7 @@
   margin-bottom: 10px;
   th {
     font-weight: 500;
-    color: $--color-text-regular;
+    color: $--color-text-primary;
     height: 47px;
   }
   &::before {
@@ -97,7 +97,7 @@
     font-weight: 500;
   }
   thead {
-    color: $--color-text-regular;
+    color: $--color-text-primary;
   }
   th.is-leaf, td {
     border: 0;

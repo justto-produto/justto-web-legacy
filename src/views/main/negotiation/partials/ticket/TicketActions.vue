@@ -512,7 +512,7 @@ export default {
       cursor: pointer;
       padding: 3px 30px;
       &--hidden { display: none; }
-      &:hover { background-color: $--light-gray; }
+      &:hover { background-color: $--color-light-gray; }
     }
   }
 }

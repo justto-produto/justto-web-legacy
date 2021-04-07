@@ -93,7 +93,7 @@ export default {
       cursor: pointer;
 
       &:hover {
-        background-color: $--light-gray;
+        background-color: $--color-light-gray;
       }
 
       &--selected {

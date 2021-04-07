@@ -169,7 +169,7 @@ export default {
     }
 
     .party-contacts__infoline-data {
-      &--selected { color: $--color-text-regular !important; }
+      &--selected { color: $--color-text-primary !important; }
       &--secondary { color: $--color-text-secondary; }
       &--disabled { color: $--color-text-secondary; }
     }

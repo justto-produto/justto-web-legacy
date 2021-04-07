@@ -5,7 +5,7 @@
     <g fill="none" fill-rule="evenodd">
         <path d="M1 2h24v22H1z"/>
         <g transform="translate(1 1)">
-            <use fill="#9461F7" stroke="#D1DBE2" xlink:href="#a"/>
+            <use fill="#9461F7" stroke="#f3f4f5" xlink:href="#a"/>
             <use stroke="#424242" xlink:href="#a"/>
             <use stroke="#9461F7" xlink:href="#a"/>
             <circle cx="6" cy="13" r="1" stroke="#FFF"/>

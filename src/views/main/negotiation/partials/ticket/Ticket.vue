@@ -128,7 +128,7 @@ export default {
     height: 100%;
     z-index: 99;
     background-color: #fff;
-    border-left: 1px solid $--light-gray;
+    border-left: 1px solid $--color-light-gray;
     transition: .6s cubic-bezier(0.19, 1, 0.22, 1);
     &--active { width: 0; }
   }
