@@ -19,7 +19,7 @@ const omnichannelMutations = {
 
   setMessageType: (state, type) => Vue.set(state.editor, 'messageType', type),
 
-  setOccurrences: (state, { content }) => {
+  setOccurrences: (state, { content, totalElements }) => {
     const datas = state.occurrences.list.map((occurrence, index) => {
       if (occurrence.id === null) {
         return {
@@ -52,9 +52,11 @@ const omnichannelMutations = {
     })
 
     state.occurrences.filter.page += 1
+    Vue.set(state.occurrences, 'totalElements', totalElements)
   },
 
   incrementOccurrencesCountGetters: (state) => (state.countOmnichannelGetters += 1),
+
   decrementOccurrencesCountGetters: (state) => {
     if (state.countOmnichannelGetters > 0) {
       state.countOmnichannelGetters -= 1
@@ -171,7 +173,9 @@ const omnichannelMutations = {
 
   resetRecipients: (state) => Vue.set(state.editor, 'recipients', []),
 
-  setMessageAttachments: (state, attachs) => Vue.set(state.editor, 'attachments', attachs)
+  setMessageAttachments: (state, attachs) => Vue.set(state.editor, 'attachments', attachs),
+
+  toggleExportTicketModalVisible: (state, visible) => Vue.set(state, 'exportTicketModalVisible', visible)
 }
 
 export default omnichannelMutations

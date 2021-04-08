@@ -59,7 +59,8 @@ export default {
       ticket: 'getTicketOverview',
       filter: 'getOccurrencesFilter',
       occurrences: 'getOccurrencesList',
-      messageType: 'getEditorMessageType'
+      messageType: 'getEditorMessageType',
+      isPrinting: 'getExportTicketModalVisible'
     }),
     infiniteLoadingIdentifier() {
       return `${this.activeTab}-${this.id}`
@@ -116,17 +117,22 @@ export default {
       if (this.filter.page <= 2 || force) {
         const omni = document.getElementsByClassName('occurrences-container omnichannel-container__occurrences')[0]
         omni.scrollTo({ top: omni.scrollHeight })
+        eventBus.$emit('adjustScroll', { id: this.id })
       }
     },
 
     loadOccurrences($state) {
-      this.getOccurrences(this.id).then(response => {
-        if (response.last) {
-          if ($state) { $state.complete() }
-        } else {
-          if ($state) { $state.loaded() }
-        }
-      })
+      if (!this.isPrinting) {
+        this.getOccurrences(this.id).then(response => {
+          if (response.last) {
+            if ($state) { $state.complete() }
+          } else {
+            if ($state) { $state.loaded() }
+          }
+        })
+      } else {
+        $state.complete()
+      }
     }
   }
 }

@@ -14,6 +14,7 @@
         @toggle-show-overview="toggleShowOverview"
       />
     </section>
+    <TicketResume />
   </section>
 </template>
 
@@ -25,7 +26,8 @@ export default {
   components: {
     Omnichannel: () => import('./omnichannel/Omnichannel'),
     Overview: () => import('./overview/Overview'),
-    TicketHeader: () => import('./TicketHeader')
+    TicketHeader: () => import('./TicketHeader'),
+    TicketResume: () => import('./TicketResumeDialog')
   },
   data: () => ({
     showOverview: false
