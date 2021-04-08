@@ -36,10 +36,7 @@
             :open-delay="800"
             content="Tudo certo aqui, nenhuma disputa precisa de sua atenção"
           >
-            <jus-icon
-              icon="check"
-              class="jus-chart-table__check-icon"
-            />
+            <i class="el-icon-check jus-chart-table__check-icon" />
           </el-tooltip>
         </template>
       </el-table-column>
@@ -66,10 +63,7 @@
             :open-delay="800"
             content="Tudo certo aqui, nenhuma disputa precisa de sua atenção"
           >
-            <jus-icon
-              icon="check"
-              class="jus-chart-table__check-icon"
-            />
+            <i class="el-icon-check jus-chart-table__check-icon" />
           </el-tooltip>
         </template>
       </el-table-column>
@@ -97,10 +91,7 @@
             :open-delay="800"
             content="Tudo certo aqui, nenhuma disputa precisa de sua atenção"
           >
-            <jus-icon
-              icon="check"
-              class="jus-chart-table__check-icon"
-            />
+            <i class="el-icon-check jus-chart-table__check-icon" />
           </el-tooltip>
         </div>
       </el-table-column>
@@ -292,7 +283,7 @@ export default {
     }
   }
   &__check-icon {
-    height: 14px;
+    font-size: 24px;
   }
   &__tooltip {
     div {

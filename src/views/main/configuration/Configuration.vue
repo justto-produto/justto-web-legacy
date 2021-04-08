@@ -238,20 +238,14 @@
                         class="configuration-view__link"
                         @click.prevent="showEditMember(member)"
                       >
-                        <jus-icon
-                          icon="edit"
-                          class="configuration-view__icon"
-                        />
+                        <i class="el-icon-edit configuration-view__icon" />
                       </a>
                       <a
                         href="#"
                         class="configuration-view__link"
                         @click.prevent="removeMember(member.id, member.person.name)"
                       >
-                        <jus-icon
-                          icon="trash"
-                          class="configuration-view__icon"
-                        />
+                        <i class="el-icon-delete configuration-view__icon" />
                       </a>
                     </div>
                     <div v-else>
@@ -1024,8 +1018,7 @@ export default {
       display: none;
 
       .configuration-view__icon {
-        width: 18px;
-        height: 18px;
+        font-size: 18px;
       }
     }
 

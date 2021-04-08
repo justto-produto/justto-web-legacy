@@ -228,13 +228,11 @@ export default {
 
 <style lang="scss">
 .dispute-properties-view {
-  padding-top: 10px;
   overflow-y: auto;
   height: 100%;
-  padding-right: 4px;
+  padding-top: 4px;
   &__line {
     display: flex;
-    // flex-direction: column;
     align-items: flex-start;
     justify-content: space-between;
     .edit {
