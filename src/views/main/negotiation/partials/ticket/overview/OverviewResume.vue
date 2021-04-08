@@ -1,39 +1,42 @@
 <template>
   <article class="overview-resume__container">
-    <el-row
-      type="flex"
-      justify="center"
+    <el-table
+      :data="[ticket]"
+      style="width: 100vw"
     >
-      <el-col
-        :span="6"
-      >
-        <h3>
-          Disputa: {{ disputeId }}
-        </h3>
-      </el-col>
-      <el-col
-        :span="6"
-      >
-        <h3>
-          Nº do processo: {{ processNumber }}
-        </h3>
-      </el-col>
-    </el-row>
+      <el-table-column
+        prop="disputeId"
+        label="DIsputa"
+        align="center"
+      />
+      <el-table-column
+        prop="code"
+        label="Número do processo"
+        align="center"
+      />
+      <el-table-column
+        align="center"
+      />
+    </el-table>
+
     <el-collapse>
       <PartyResumed
         v-for="(item, itemIndex) in parties"
         :key="`partie-${itemIndex}`"
         :party="item"
+        hide-arrows
       />
       <PartyResumed
         v-for="(item, itemIndex) in lawyers"
         :key="`lawyer-${itemIndex}`"
         :party="item"
+        hide-arrows
       />
       <PartyResumed
         v-for="(item, itemIndex) in negotiators"
         :key="`negotiator-${itemIndex}`"
         :party="item"
+        hide-arrows
       />
     </el-collapse>
   </article>

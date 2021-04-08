@@ -11,12 +11,12 @@
       ref="html2Pdf"
       show-layout
       :paginate-elements-by-height="1400"
-      filename="hee hee"
+      :filename="filename"
       :pdf-quality="2"
       :manual-pagination="false"
       pdf-format="a4"
       pdf-orientation="landscape"
-      pdf-content-width="800px"
+      pdf-content-width="100%"
     >
       <section
         v-if="visible"
@@ -31,7 +31,6 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
-import { eventBus } from '@/utils'
 
 export default {
   components: {
@@ -41,7 +40,11 @@ export default {
   computed: {
     ...mapGetters({
       visible: 'getExportTicketModalVisible'
-    })
+    }),
+
+    filename() {
+      return `JUSTTO - Negociação #${this.$route.params.id}`
+    }
   },
   watch: {
     visible(isVisible) {
@@ -58,8 +61,7 @@ export default {
               )
             )
           }).finally(() => {
-            // TODO: Printar as ocorrências só depois que todas estiverem já com o texto completo e plotado na tela.
-            eventBus.$on('adjustScroll', this.print)
+            setTimeout(this.print, 250)
           })
         })
       }
@@ -76,7 +78,6 @@ export default {
     print() {
       if (this.visible) {
         this.$refs.html2Pdf.generatePdf()
-        eventBus.$off('adjustScroll', this.print)
       }
     }
   }
