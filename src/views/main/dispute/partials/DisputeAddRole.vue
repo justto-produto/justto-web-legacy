@@ -126,7 +126,7 @@
               slot="append"
               @click="addPhone()"
             >
-              <jus-icon icon="add-purple" />
+              <i class="el-icon-plus icon--active" />
             </el-button>
           </el-input>
         </el-form-item>
@@ -172,7 +172,7 @@
               data-testid="add-email"
               @click="addEmail()"
             >
-              <jus-icon icon="add-purple" />
+              <i class="el-icon-plus icon--active" />
             </el-button>
           </el-input>
         </el-form-item>
@@ -246,8 +246,8 @@
             type="primary"
             size="mini"
             @click="addOab(newRole.personId, newRole.oabs)"
+            icon="el-icon-plus"
           >
-            <jus-icon icon="add-white" />
           </el-button>
         </div>
         <el-table

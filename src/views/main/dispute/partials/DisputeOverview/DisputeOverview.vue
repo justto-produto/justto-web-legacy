@@ -14,7 +14,6 @@
           size="mini"
           @click="openRemoveDisputeDialog()"
         >
-          <i class="el-icon-delete" />
         </el-button>
       </el-tooltip>
       <span class="dispute-overview-view__subtitle">
@@ -1387,7 +1386,7 @@
               type="primary"
               @click="addOab(roleForm.personId, roleForm.oabs)"
             >
-              <jus-icon icon="add-white" />
+              <i class="el-icon-plus icon--white" />
             </el-button>
           </div>
           <el-table
@@ -1432,7 +1431,7 @@
                 slot="append"
                 @click="addPhone()"
               >
-                <jus-icon icon="add-white" />
+                <i class="el-icon-plus icon--white" />
               </el-button>
             </el-input>
           </el-form-item>
@@ -1494,7 +1493,7 @@
                 data-testid="add-email"
                 @click="addEmail()"
               >
-                <jus-icon icon="add-white" />
+                <i class="el-icon-plus icon--white" />
               </el-button>
             </el-input>
           </el-form-item>
@@ -1549,7 +1548,7 @@
               @click.prevent="openAddBankDialog()"
             >
               <el-tooltip content="Adicionar conta bancária">
-                <jus-icon icon="add-bold" />
+                <i class="el-icon-plus icon-white" />
               </el-tooltip>
             </a>
           </h4>
