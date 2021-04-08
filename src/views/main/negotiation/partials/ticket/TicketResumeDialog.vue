@@ -40,35 +40,47 @@ export default {
   },
   computed: {
     ...mapGetters({
-      visible: 'getExportTicketModalVisible'
+      visible: 'getExportTicketModalVisible',
+      activeTab: 'getActiveTab'
     }),
 
+    tab() {
+      switch (this.activeTab) {
+        case 'MESSAGES':
+          return this.$tc('negotiation.ticket.omnichannel.editor.tab.message', 1)
+        case 'NOTES':
+          return this.$tc('negotiation.ticket.omnichannel.editor.tab.note', 1)
+        case 'OCCURRENCES':
+          return this.$tc('negotiation.ticket.omnichannel.editor.tab.occurrence', 1)
+      }
+      return ''
+    },
+
     filename() {
-      return `JUSTTO - Negociação - #${this.$route.params.id}`
+      return `JUSTTO - Negociação - #${this.$route.params.id} - ${this.tab}`
     }
   },
   watch: {
     visible(isVisible) {
       if (isVisible) {
-        this.$message('Carregando dados.')
-        Promise.all([
-          this.resetOccurrences()
-        ]).then(() => {
-          this.getAllOccurrences(this.$route.params.id).then(({ content: occurrences }) => {
-            Promise.all(
-              occurrences.filter(
-                ({ id, interaction }) => id && interaction?.message?.messageId
-              ).map(
-                ({ interaction }) => this.getFullMessage(interaction?.message?.messageId)
+        if (['MESSAGES', 'OCCURRENCES'].includes(this.activeTab)) {
+          this.$message('Carregando dados.')
+          Promise.all([
+            this.resetOccurrences()
+          ]).then(() => {
+            this.getAllOccurrences(this.$route.params.id).then(({ content: occurrences }) => {
+              Promise.all(
+                occurrences.filter(
+                  ({ id, interaction }) => id && interaction?.message?.messageId
+                ).map(
+                  ({ interaction }) => this.getFullMessage(interaction?.message?.messageId)
+                )
               )
-            )
-          }).finally(() => {
-            this.$message('Gerando PDF.')
-            this.$nextTick().then(() => {
-              setTimeout(this.print, 250)
-            })
+            }).finally(() => this.startPrint())
           })
-        })
+        } else {
+          this.startPrint()
+        }
       }
     }
   },
@@ -79,6 +91,13 @@ export default {
       'resetOccurrences',
       'getFullMessage'
     ]),
+
+    startPrint() {
+      this.$message('Gerando PDF.')
+      this.$nextTick().then(() => {
+        setTimeout(this.print, 250)
+      })
+    },
 
     print() {
       if (this.visible) {

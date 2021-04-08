@@ -65,6 +65,7 @@ export default {
   computed: {
     ...mapGetters({
       isGhost: 'ghostMode',
+      activeTab: 'getActiveTab',
       isJusttoAdmin: 'isJusttoAdmin'
     }),
 
@@ -159,7 +160,7 @@ export default {
           isDynamic: true
         },
         {
-          name: 'PRINT_TICKET',
+          name: `PRINT_TICKET_${this.activeTab}`,
           method: (_action) => this.toggleExportTicketModalVisible(true),
           isVisible: true
         }
