@@ -4,7 +4,7 @@
     title="Exportar disputa"
     custom-class="export-ticket-modal"
     append-to-body
-    width="100%"
+    fullscreen
     @update:visible="toggleExportTicketModalVisible"
   >
     <vue-html2pdf
@@ -17,6 +17,7 @@
       pdf-format="a4"
       pdf-orientation="landscape"
       pdf-content-width="100%"
+      @hasDownloaded="toggleExportTicketModalVisible(false)"
     >
       <section
         v-if="visible"
