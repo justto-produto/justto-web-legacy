@@ -56,6 +56,7 @@ const omnichannelMutations = {
   },
 
   incrementOccurrencesCountGetters: (state) => (state.countOmnichannelGetters += 1),
+
   decrementOccurrencesCountGetters: (state) => {
     if (state.countOmnichannelGetters > 0) {
       state.countOmnichannelGetters -= 1

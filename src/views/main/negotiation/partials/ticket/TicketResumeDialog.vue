@@ -17,7 +17,7 @@
       pdf-format="a4"
       pdf-orientation="landscape"
       pdf-content-width="100%"
-      @hasDownloaded="toggleExportTicketModalVisible(false)"
+      @hasDownloaded="handleClose"
     >
       <section
         v-if="visible"
@@ -38,11 +38,16 @@ export default {
     Omnichannel: () => import('./omnichannel/Omnichannel'),
     OverviewResume: () => import('./overview/OverviewResume')
   },
+
   computed: {
     ...mapGetters({
       visible: 'getExportTicketModalVisible',
       activeTab: 'getActiveTab'
     }),
+
+    tabHaveMessages() {
+      return ['MESSAGES', 'OCCURRENCES'].includes(this.activeTab)
+    },
 
     tab() {
       switch (this.activeTab) {
@@ -60,10 +65,11 @@ export default {
       return `JUSTTO - Negociação - #${this.$route.params.id} - ${this.tab}`
     }
   },
+
   watch: {
     visible(isVisible) {
       if (isVisible) {
-        if (['MESSAGES', 'OCCURRENCES'].includes(this.activeTab)) {
+        if (this.tabHaveMessages) {
           this.$message('Carregando dados.')
           Promise.all([
             this.resetOccurrences()
@@ -84,12 +90,14 @@ export default {
       }
     }
   },
+
   methods: {
     ...mapActions([
       'toggleExportTicketModalVisible',
       'getAllOccurrences',
       'resetOccurrences',
-      'getFullMessage'
+      'getFullMessage',
+      'getOccurrences'
     ]),
 
     startPrint() {
@@ -102,6 +110,15 @@ export default {
     print() {
       if (this.visible) {
         this.$refs.html2Pdf.generatePdf()
+      }
+    },
+
+    handleClose() {
+      if (this.tabHaveMessages) {
+        this.resetOccurrences()
+        this.getOccurrences(this.$route.params.id).finally(() => this.toggleExportTicketModalVisible(false))
+      } else {
+        this.toggleExportTicketModalVisible(false)
       }
     }
   }
