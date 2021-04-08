@@ -38,13 +38,14 @@ const omnichannelActions = {
     // const { getTotalOccurrences } = getters
     const params = {
       ...getters.getOccurrencesFilter,
-      size: 1000,
+      size: getters.getTotalOccurrences,
       page: 1,
       type: getters.getOccurrencesFilter.type === 'LOG' ? null : getters.getOccurrencesFilter.type
     }
 
     return axiosDispatch({
       url: `${disputeApi}/${disputeId}/occurrences${buildQuery(params)}`,
+      params: { resumed: false },
       mutation: 'setOccurrences'
     })
   },

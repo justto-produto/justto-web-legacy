@@ -4,7 +4,7 @@
     title="Exportar disputa"
     custom-class="export-ticket-modal"
     append-to-body
-    fullscreen
+    width="100%"
     @update:visible="toggleExportTicketModalVisible"
   >
     <vue-html2pdf
@@ -43,12 +43,13 @@ export default {
     }),
 
     filename() {
-      return `JUSTTO - Negociação #${this.$route.params.id}`
+      return `JUSTTO - Negociação - #${this.$route.params.id}`
     }
   },
   watch: {
     visible(isVisible) {
       if (isVisible) {
+        this.$message('Carregando dados.')
         Promise.all([
           this.resetOccurrences()
         ]).then(() => {
@@ -61,7 +62,10 @@ export default {
               )
             )
           }).finally(() => {
-            setTimeout(this.print, 250)
+            this.$message('Gerando PDF.')
+            this.$nextTick().then(() => {
+              setTimeout(this.print, 250)
+            })
           })
         })
       }

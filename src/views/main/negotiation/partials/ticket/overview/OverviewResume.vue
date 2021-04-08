@@ -2,7 +2,7 @@
   <article class="overview-resume__container">
     <el-table
       :data="[ticket]"
-      style="width: 100vw"
+      style="width: 100%"
     >
       <el-table-column
         prop="disputeId"
