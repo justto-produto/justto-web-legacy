@@ -18,6 +18,8 @@ const buildQuery = (q, command, disputesLength, noSort) => {
       }
     } else if (noSort) {
       continue
+    } else if (key === 'resumed') {
+      query += key + '=' + value
     } else if (key === 'page') {
       query = query + key + '=' + ((command === 'update' ? 1 : value) - 1) + '&'
     } else if (key === 'size') {

@@ -35,11 +35,11 @@ const omnichannelActions = {
   },
 
   getAllOccurrences({ getters }, disputeId) {
-    const { getTotalOccurrences } = getters
+    // const { getTotalOccurrences } = getters
     const params = {
       ...getters.getOccurrencesFilter,
-      resumed: false,
-      size: getTotalOccurrences,
+      size: 1000,
+      page: 1,
       type: getters.getOccurrencesFilter.type === 'LOG' ? null : getters.getOccurrencesFilter.type
     }
 
