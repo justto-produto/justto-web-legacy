@@ -65,6 +65,7 @@ export default {
   computed: {
     ...mapGetters({
       isGhost: 'ghostMode',
+      activeTab: 'getActiveTab',
       isJusttoAdmin: 'isJusttoAdmin'
     }),
 
@@ -157,6 +158,11 @@ export default {
           method: (action) => this.handleStartNegotiation(action),
           isVisible: this.isPreNegotiation,
           isDynamic: true
+        },
+        {
+          name: `PRINT_TICKET_${this.activeTab}`,
+          method: (_action) => this.toggleExportTicketModalVisible(true),
+          isVisible: true
         }
       ].filter(action => action.isVisible)
     },
@@ -203,6 +209,7 @@ export default {
   },
   methods: {
     ...mapActions([
+      'toggleExportTicketModalVisible',
       'setTicketVisualized',
       'deleteTicket',
       'startNegotiation',

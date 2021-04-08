@@ -285,6 +285,15 @@
     "DELETE_DOCUMENT": {
       "name": "excluír documento",
       "feedback-message": "<b>minuta excluida</b>"
+    },
+    "PRINT_TICKET_MESSAGES": {
+      "name": "exportar mensagens"
+    },
+    "PRINT_TICKET_NOTES": {
+      "name": "exportar notas"
+    },
+    "PRINT_TICKET_OCCURRENCES": {
+      "name": "exportar ocorrências"
     }
   },
   "interaction-types": {

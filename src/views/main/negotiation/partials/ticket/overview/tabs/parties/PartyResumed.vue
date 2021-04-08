@@ -2,6 +2,7 @@
   <el-collapse-item
     :name="party.disputeRoleId"
     class="party-resumed"
+    :class="{'hide-arrows': hideArrows}"
   >
     <template slot="title">
       <JusIcon
@@ -53,6 +54,10 @@ export default {
     activeCollapseItem: {
       type: [Number, String],
       default: null
+    },
+    hideArrows: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -144,6 +149,13 @@ export default {
     height: auto;
     line-height: normal;
     min-height: 60px;
+  }
+}
+.hide-arrows {
+  .el-collapse-item__header {
+    i.el-collapse-item__arrow {
+      display: none;
+    }
   }
 }
 </style>

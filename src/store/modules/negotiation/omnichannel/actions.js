@@ -34,6 +34,22 @@ const omnichannelActions = {
     })
   },
 
+  getAllOccurrences({ getters }, disputeId) {
+    // const { getTotalOccurrences } = getters
+    const params = {
+      ...getters.getOccurrencesFilter,
+      size: getters.getTotalOccurrences,
+      page: 1,
+      type: getters.getOccurrencesFilter.type === 'LOG' ? null : getters.getOccurrencesFilter.type
+    }
+
+    return axiosDispatch({
+      url: `${disputeApi}/${disputeId}/occurrences${buildQuery(params)}`,
+      params: { resumed: false },
+      mutation: 'setOccurrences'
+    })
+  },
+
   getFullMessage({ _ }, messageId) {
     if (messageId) {
       return axiosDispatch({
@@ -198,6 +214,10 @@ const omnichannelActions = {
     if (window.location.href.includes('dispute')) {
       commit('addDisputeOccurrence', occurrence)
     }
+  },
+
+  toggleExportTicketModalVisible({ commit }, visible) {
+    commit('toggleExportTicketModalVisible', visible)
   }
 }
 

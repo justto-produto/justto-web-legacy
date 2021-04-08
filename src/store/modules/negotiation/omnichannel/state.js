@@ -14,14 +14,16 @@ class OccurrenceSummary {
   }
 }
 export class StateOccurrences {
-  constructor(filter, list, summary, fullMessages, renderedCounts) {
+  constructor(filter, list, summary, fullMessages, renderedCounts, totalElements) {
     this.filter = filter || new OccurrenceFilter()
     this.list = list || []
     this.summary = summary || new OccurrenceSummary()
     this.fullMessages = fullMessages || {}
     this.renderedCounts = renderedCounts || 0
+    this.totalElements = totalElements || 0
   }
 }
+
 const omnichannelMutations = {
   activeTab: EDITOR_CONSTANTS.MESSAGES,
   countOmnichannelGetters: 0,
@@ -58,7 +60,8 @@ const omnichannelMutations = {
     messageType: 'email',
     recipients: [],
     attachments: []
-  }
+  },
+  exportTicketModalVisible: false
 }
 
 export default omnichannelMutations
