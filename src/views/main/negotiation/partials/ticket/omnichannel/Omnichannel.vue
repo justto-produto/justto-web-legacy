@@ -4,7 +4,10 @@
     class="omnichannel-container"
   >
     <Occurrences class="omnichannel-container__occurrences" />
-    <Editor class="omnichannel-container__editor" />
+    <Editor
+      v-if="!hideEditor"
+      class="omnichannel-container__editor"
+    />
   </section>
 </template>
 
@@ -15,6 +18,12 @@ export default {
   components: {
     Occurrences: () => import('./occurrences/Occurrences'),
     Editor: () => import('./editor/Editor')
+  },
+  props: {
+    hideEditor: {
+      type: Boolean,
+      default: false
+    }
   },
   computed: {
     ...mapGetters({

@@ -21,6 +21,7 @@ import '@/plugins/vueMoment'
 import '@/plugins/vueMoney'
 import '@/plugins/vueTheMask'
 import '@/plugins/shortkey'
+import '@/plugins/vueHtml2pdf'
 
 // FILTERS
 import '@/filters/capitalize'
