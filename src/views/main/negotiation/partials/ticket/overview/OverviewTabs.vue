@@ -113,11 +113,13 @@ export default {
 
     .el-tab-pane {
       height: 100%;
-      padding: 12px 0;
+      padding: 0;
     }
   }
 
   .el-tabs__header {
+    margin: 0 0 8px;
+
     .el-tabs__nav {
       width: 100%;
 

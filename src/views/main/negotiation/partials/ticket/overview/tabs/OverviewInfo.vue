@@ -231,6 +231,7 @@ export default {
   overflow-y: auto;
   overflow-x: hidden;
   height: 100%;
+  padding-top: 2px;
 
   .overview-info__infoline {
     margin-top: 6px;

@@ -32,7 +32,7 @@
 
     <el-button
       type="primary"
-      size="small"
+      size="medium"
       icon="el-icon-plus"
       @click="addParty"
     >
@@ -150,7 +150,6 @@ export default {
 
 <style lang="scss" scoped>
 .overview-parties {
-  margin-top: -24px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

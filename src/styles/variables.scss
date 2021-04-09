@@ -23,6 +23,19 @@ a{
   }
 }
 
+
+/* Spaces
+-------------------------- */
+$--spaceing-xs: 4px !default;
+$--spaceing-sm: 8px !default;
+$--spaceing-mm: 12px !default;
+$--spaceing-cp: 16px !default;
+$--spaceing-md: 24px !default;
+$--spaceing-nm: 32px !default;
+$--spaceing-lg: 40px !default;
+$--spaceing-xl: 48px !default;
+$--spaceing-xxl: 64px !default;
+
 /* Background
 -------------------------- */
 $--background-color-base: #f6f6f6 !default;
@@ -47,6 +60,7 @@ $--border-radius-circle: 100% !default;
 $--box-shadow-base: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04) !default;
 $--box-shadow-dark: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .12) !default;
 $--box-shadow-light: 0 4px 24px 0 rgba(37, 38, 94, 0.06) !default;
+$--box-shadow: 0 0 8px 4px $--color-light-gray !default;
 
 /* Fill
 -------------------------- */

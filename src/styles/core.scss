@@ -101,6 +101,20 @@ a {
   border-top: solid 1px #eeeeee;
   border-bottom: solid 1px #eeeeee;
 }
+.icon {
+  &--active {
+    color: $--color-primary !important;
+  }
+  &--white {
+    color: $--color-white !important;
+  }
+}
+
+i.el-icon-delete {
+  color: $--color-danger;
+  &:hover { color: mix($--color-danger, $--color-white, 75%); }
+}
+
 .h100 {
   height: 100%
 }

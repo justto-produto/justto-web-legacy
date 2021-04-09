@@ -205,6 +205,7 @@ export default {
       transition: .6s;
       position: relative;
       top: 9px;
+      z-index: 99;
     }
     &--active:before {
       transform: rotate(180deg) translateY(50%) !important;

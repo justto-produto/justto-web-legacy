@@ -2,11 +2,14 @@
   <section class="icons-view">
     <div class="icons-header">
       <h1>Icones JUSTTO</h1>
-      <el-input
-        v-model="searchTerm"
-        placeholder="Busque um icone"
-        prefix-icon="el-icon-search"
-      />
+      <span class="icons-header__inputs">
+        <el-switch v-model="isSvg" />
+        <el-input
+          v-model="searchTerm"
+          placeholder="Busque um icone"
+          prefix-icon="el-icon-search"
+        />
+      </span>
     </div>
     <article class="icons-list">
       <div
@@ -14,35 +17,50 @@
         :key="icon"
         :class="{'icons-list__list-item--dark': icon.includes('white')}"
         class="icons-list__list-item"
-        @click="copyIconName(icon)"
+        @click="copyIconName('ic-' + icon)"
       >
         <JusIcon
+          v-if="isSvg"
           :icon="icon"
-          class="icons-list__icon"
+          class="icons-list__icon-svg"
         />
-        <span class="icons-list__name">{{ icon }}</span>
+        <i
+          v-else
+          :class="`ic-ic-${icon}`"
+          class="icons-list__icon-font"
+        />
+        <span class="icons-list__name">{{ `ic-${icon}` }}</span>
       </div>
     </article>
   </section>
 </template>
 
 <script>
-import iconsList from '@/constants/iconsList'
+import iconsSvg from '@/constants/iconsList'
+import iconsFont from '@/constants/icons'
 
 export default {
   name: 'Icons',
   data: () => ({
-    searchTerm: ''
+    searchTerm: '',
+    isSvg: true
   }),
   computed: {
     replacedIconsList() {
-      const replacedIconsList = iconsList.map(i =>
-        i
-          .replace('src/assets/icons/ic-', '')
-          .replace('.svg', '')
-      )
-
-      return replacedIconsList
+      if (this.isSvg) {
+        const replacedIconsList = iconsSvg.map(i =>
+          i
+            .replace('src/assets/icons/ic-', '')
+            .replace('.svg', '')
+        )
+        return replacedIconsList
+      } else {
+        return Object.keys(iconsFont).map(i =>
+          i
+            .replace('ic-', '')
+            .replace('.svg', '')
+        )
+      }
     },
     filteredIconsList() {
       return this.replacedIconsList.filter(i => i.includes(this.searchTerm))
@@ -74,7 +92,14 @@ export default {
     align-items: center;
     margin-bottom: 12px;
     h1 { display: inline-block; }
-    .el-input { width: calc(40% - 12px); }
+    .el-input { flex: 1 }
+
+    .icons-header__inputs {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+      width: calc(40% + 52px)
+    }
   }
 
   .icons-list {
@@ -103,8 +128,13 @@ export default {
         border: 1px solid $--color-primary;
       }
 
-      .icons-list__icon {
+      .icons-list__icon-svg {
         width: 40px;
+      }
+
+      .icons-list__icon-font {
+        font-size: 32px;
+        line-height: 1;
       }
 
       .icons-list__name {

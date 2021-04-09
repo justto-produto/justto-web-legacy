@@ -164,18 +164,19 @@ export default {
 
 .overview-attachments {
   height: 100%;
+  padding-top: 8px;
 
   .overview-attachments__drag-area {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    // gap: 10px;
   }
 
   .overview-attachments__list {
     list-style: none;
     overflow-y: auto;
     flex: 1;
-    margin: 0;
+    margin: 10px 0;
     padding: 0;
 
     .overview-attachments__list-item {
