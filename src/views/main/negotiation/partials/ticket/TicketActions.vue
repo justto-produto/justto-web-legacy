@@ -162,7 +162,7 @@ export default {
         {
           name: `PRINT_TICKET_${this.activeTab}`,
           method: (_action) => this.toggleExportTicketModalVisible(true),
-          isVisible: true
+          isVisible: this.isJusttoAdmin
         }
       ].filter(action => action.isVisible)
     },
