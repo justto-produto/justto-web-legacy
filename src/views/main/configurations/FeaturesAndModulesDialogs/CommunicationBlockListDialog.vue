@@ -4,7 +4,7 @@
     :visible.sync="communicationBlockListDialogVisible"
     title="Lista de bloqueio de endereços"
     append-to-body
-    fullscreen
+    width="50%"
   >
     <!-- <span>Lista de bloqueio de endereços</span> -->
     <ConfigurationBlacklist />

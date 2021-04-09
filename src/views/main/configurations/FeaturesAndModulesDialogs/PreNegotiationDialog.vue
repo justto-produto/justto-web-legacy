@@ -3,7 +3,7 @@
     :close-on-click-modal="false"
     :visible.sync="preNegotiationDialogVisible"
     title="Configurações da Pré-Negociação"
-    fullscreen
+    width="50%"
   >
     <PreNegotiation />
   </el-dialog>
