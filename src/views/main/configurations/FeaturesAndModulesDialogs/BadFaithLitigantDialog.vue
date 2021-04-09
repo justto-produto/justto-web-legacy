@@ -5,7 +5,7 @@
     title="Detecção de ofensores"
     width="50%"
   >
-    <BadFaithLitigant />
+    <BadFaithLitigant @close="closeFeatureDialog" />
   </el-dialog>
 </template>
 
@@ -21,6 +21,9 @@ export default {
   methods: {
     openFeatureDialog() {
       this.badFaithLitigantDialogVisible = true
+    },
+    closeFeatureDialog() {
+      this.badFaithLitigantDialogVisible = false
     }
   }
 }
