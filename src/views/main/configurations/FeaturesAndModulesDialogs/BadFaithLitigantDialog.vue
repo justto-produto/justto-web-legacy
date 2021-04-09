@@ -3,7 +3,7 @@
     :close-on-click-modal="false"
     :visible.sync="badFaithLitigantDialogVisible"
     title="Detecção de ofensores"
-    fullscreen
+    width="50%"
   >
     <BadFaithLitigant />
   </el-dialog>

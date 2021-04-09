@@ -4,7 +4,7 @@
     :visible.sync="draftManagementDialogVisible"
     title="Gestão de minutas"
     append-to-body
-    fullscreen
+    width="75%"
   >
     <!-- <span>Gestão de minutas</span> -->
     <Draft />
