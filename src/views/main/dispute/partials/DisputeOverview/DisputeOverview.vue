@@ -13,8 +13,7 @@
           class="right"
           size="mini"
           @click="openRemoveDisputeDialog()"
-        >
-        </el-button>
+        />
       </el-tooltip>
       <span class="dispute-overview-view__subtitle">
         <dispute-code-link

@@ -245,10 +245,9 @@
             class="button"
             type="primary"
             size="mini"
-            @click="addOab(newRole.personId, newRole.oabs)"
             icon="el-icon-plus"
-          >
-          </el-button>
+            @click="addOab(newRole.personId, newRole.oabs)"
+          />
         </div>
         <el-table
           :data="newRole.oabs"
