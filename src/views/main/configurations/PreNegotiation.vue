@@ -3,7 +3,7 @@
     label-position="top"
     class="pre-negotiation__form"
   >
-    <el-form-item
+    <!-- <el-form-item
       class="pre-negotiation-form-switch"
     >
       <el-switch v-model="workspacePreNegotiation.preNegotiation" />
@@ -24,10 +24,9 @@
           class="pre-negotiation-icon el-icon-warning"
         />
       </el-popover>
-    </el-form-item>
+    </el-form-item> -->
 
     <el-form-item
-      v-if="workspacePreNegotiation.preNegotiation"
       label="Palavras a serem detectadas para classificar como pré negociação"
       class="pre-negotiation__form-select"
     >
@@ -41,7 +40,6 @@
     </el-form-item>
 
     <el-form-item
-      v-if="workspacePreNegotiation.preNegotiation"
       label="Limite de valor do processo para classificar como pré negociação"
     >
       <money
@@ -149,6 +147,7 @@ export default {
           message: 'Configurações da pré negociação alteradas com sucesso.',
           type: 'success'
         })
+        this.$emit('close')
       }).catch(error => {
         this.$jusNotification({ error })
       })

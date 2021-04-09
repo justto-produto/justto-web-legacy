@@ -5,7 +5,7 @@
     title="Configurações da Pré-Negociação"
     width="50%"
   >
-    <PreNegotiation />
+    <PreNegotiation @close="closeFeatureDialog" />
   </el-dialog>
 </template>
 
@@ -21,6 +21,9 @@ export default {
   methods: {
     openFeatureDialog() {
       this.preNegotiationDialogVisible = true
+    },
+    closeFeatureDialog() {
+      this.preNegotiationDialogVisible = false
     }
   }
 }

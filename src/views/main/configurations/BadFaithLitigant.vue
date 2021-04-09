@@ -91,6 +91,7 @@ export default {
           message: 'Configurações da equipe alteradas com sucesso.',
           type: 'success'
         })
+        this.$emit('close')
       }).catch(error => {
         this.$jusNotification({ error })
       })
