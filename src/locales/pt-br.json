@@ -426,11 +426,13 @@
     "value": "gratis | cobrado",
     "PRE_NEGOTIATION": {
       "label": "pré negociação",
-      "icon": "lighthouse"
+      "icon": "lighthouse",
+      "help": "Posso ativar a pré negociação?\n\nQuanto será cobrado pelo uso desta funcionalidade?\n"
     },
     "BAD_FAITH_LITIGANT": {
       "label": "detecção de ofensores",
-      "icon": "people-documentation"
+      "icon": "people-documentation",
+      "help": ""
     },
     "AUTOMATIC_MESSAGES": {
       "label": "automação de mensagens",
@@ -438,15 +440,18 @@
     },
     "DRAFT_MANAGEMENT": {
       "label": "gestão de minutas",
-      "icon": "protocol"
+      "icon": "protocol",
+      "help": ""
     },
     "COMMUNICATION_BLOCK_LIST": {
       "label": "lista de bloqueio de endereços",
-      "icon": "locked-board"
+      "icon": "locked-board",
+      "help": ""
     },
     "API_INTEGRATION": {
       "label": "integração em API para importação",
-      "icon": "power-plug"
+      "icon": "power-plug",
+      "help": ""
     }
   },
   "fields": {
