@@ -108,6 +108,9 @@ a {
   &--white {
     color: $--color-white !important;
   }
+  &--pointer {
+    cursor: pointer;
+  }
 }
 
 i.el-icon-delete {
