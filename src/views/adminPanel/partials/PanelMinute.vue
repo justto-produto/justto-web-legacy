@@ -40,10 +40,11 @@
           slot="header"
           style="display: flex"
         >
-          <el-input
+          <input
             v-model="search"
             placeholder="Buscar"
-          />
+            class="el-input__inner"
+          >
           <el-button
             type="primary"
             icon="el-icon-plus"
