@@ -423,7 +423,7 @@
     "features-and-modules": "Funcionalidades e módulos"
   },
   "configurations": {
-    "value": "gratis | R$ separadamente",
+    "value": "gratis | cobrado",
     "PRE_NEGOTIATION": {
       "label": "pré negociação",
       "icon": "lighthouse"
