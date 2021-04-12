@@ -1978,7 +1978,7 @@ export default {
         const oabs = []
         this.disputeRolesSort.map(role => {
           if (role.oabs && role.oabs.length) {
-            role.oabs.map(oab => oabs.push(oab.number + oab.state))
+            role.oabs.filter(({ archived }) => !archived).map(oab => oabs.push(oab.number + oab.state))
           }
         })
         return oabs
