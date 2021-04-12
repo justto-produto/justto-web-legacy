@@ -449,7 +449,7 @@
 </template>
 
 <script>
-import { validateObjectEmail, validateDocument } from '@/utils/validations'
+import { validateObjectEmail, validateDocument, validateNameWithoutEmail } from '@/utils/validations'
 import { IS_SMALL_WINDOW } from '@/constants/variables'
 import * as cpf from '@fnando/cpf'
 // import * as cnpj from '@fnando/cnpj'
@@ -492,7 +492,10 @@ export default {
         role: ''
       },
       roleFormRules: {
-        role: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
+        role: [
+          { required: true, message: 'Campo obrigatório', trigger: 'submit' },
+          { validator: validateNameWithoutEmail, trigger: 'submit' }
+        ]
       },
       emailForm: {
         email: {}

@@ -5,6 +5,7 @@ import validateObjectEmail from './validateObjectEmail'
 import validatePhone from './validatePhone'
 import validateWorkspace from './validateWorkspace'
 import validateZero from './validateZero'
+import validateNameWithoutEmail from './validateNameWithoutEmail'
 
 export {
   isJusttoUser,
@@ -13,5 +14,6 @@ export {
   validateObjectEmail,
   validatePhone,
   validateWorkspace,
-  validateZero
+  validateZero,
+  validateNameWithoutEmail
 }
