@@ -290,17 +290,18 @@ export default {
       return this.tabIndex === '2'
     },
     isNewAgreements() {
-      return this.tabIndex === '3' || this.tabIndex === '4'
+      return ['3', '4', '9'].includes(this.tabIndex)
     },
     isNewAgreementsLabel() {
       switch (this.tabIndex) {
         case '3':
           return 'Data do acordo'
         case '4':
+        case '9':
           return 'Data de Finalização (ganho/perdido)'
+        default:
+          return ''
       }
-
-      return ''
     },
     isFinished() {
       return this.tabIndex === '4'
