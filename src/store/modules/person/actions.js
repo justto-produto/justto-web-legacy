@@ -75,7 +75,7 @@ const personActions = {
     return axiosDispatch({ url: `api/spider/person/${params.document}` })
   },
   searchPersonByOab({ _ }, params) {
-    return axiosDispatch({ url: `api/spider/lawyer/${params.oabNumber}/${params.oabStat}` })
+    return axiosDispatch({ url: `api/spider/lawyer/${params.oabNumber}/${params.oabState}` })
   },
   enrichPerson({ _ }, personId) {
     return axiosDispatch({
