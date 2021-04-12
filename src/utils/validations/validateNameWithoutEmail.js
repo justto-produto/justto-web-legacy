@@ -1,9 +1,11 @@
 const validateNameWithoutEmail = (rule, value, callback) => {
-  if (value && value.length > 2 && !value.includes('@') && !value.includes('.')) {
+  const haveDot = value.includes('.')
+  const haveAt = value.includes('@')
+  const haveComma = value.includes('-')
+
+  if (value && value.length > 2 && !haveAt && !haveDot && !haveComma) {
     callback()
-  } else if (value.includes('@')) {
-    callback(new Error('Insira um nome válido'))
-  } else if (value.includes('.')) {
+  } else if (haveDot) {
     callback(new Error('Insira um nome sem abreviações'))
   } else {
     callback(new Error('Insira um nome válido'))
