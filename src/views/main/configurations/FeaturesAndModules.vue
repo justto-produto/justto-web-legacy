@@ -22,7 +22,13 @@
             class="features-modules-container__header-icon"
           />
           <span class="features-modules-container__header-sub">
-            {{ $tc('configurations.value', feature.free) | capitalize }}
+            <span>
+              {{ $tc('configurations.value', feature.free) | capitalize }}
+            </span>
+            <i
+              v-if="!feature.free"
+              class="el-icon-question"
+            />
           </span>
         </header>
         <div class="features-modules-container__body">
