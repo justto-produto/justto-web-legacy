@@ -22,7 +22,14 @@
             class="features-modules-container__header-icon"
           />
           <span class="features-modules-container__header-sub">
-            {{ $tc('configurations.value', feature.free) | capitalize }}
+            <span>
+              {{ $tc('configurations.value', feature.free) | capitalize }}
+            </span>
+            <i
+              v-if="!feature.free"
+              class="el-icon-question icon--active icon--pointer"
+              @click="openCrispWithHelp(feature)"
+            />
           </span>
         </header>
         <div class="features-modules-container__body">
@@ -75,9 +82,11 @@ export default {
     DraftManagementDialog: () => import('./FeaturesAndModulesDialogs/DraftManagementDialog'),
     PreNegotiationDialog: () => import('./FeaturesAndModulesDialogs/PreNegotiationDialog')
   },
+
   data: () => ({
     searchTerm: ''
   }),
+
   computed: {
     ...mapGetters({
       featuresAndModules: 'getFeaturesAndModules'
@@ -96,9 +105,11 @@ export default {
       ]
     }
   },
+
   beforeMount() {
     this.getFeaturesAndModules()
   },
+
   methods: {
     ...mapActions([
       'getFeaturesAndModules',
@@ -132,6 +143,23 @@ export default {
         .replace(/([_][a-z])/g, (group) => group.toUpperCase().replace('_', ''))
 
       this.$refs[featureCodeCamelCase(featureCode) + 'Dialog'].openFeatureDialog()
+    },
+
+    openCrispWithHelp({ code }) {
+      const message = this.$tc(`configurations.${code}.help`)
+
+      if (window.$crisp.is('chat:closed')) {
+        window.$crisp.on('chat:opened', () => this.writeTextOnCrisp(message))
+        window.$crisp.do('chat:open')
+      } else {
+        this.writeTextOnCrisp(message)
+      }
+    },
+
+    writeTextOnCrisp(message) {
+      console.log('writeTextOnCrisp', message)
+      this.$nextTick().then(() => window.$crisp.set('message:text', [message]))
+      window.$crisp.off('chat:opened')
     }
   }
 }
