@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import moment from 'moment'
 
+let newUpdateTimeout = null
+
 const disputeMutations = {
   setDisputeTimeline(state, { timeline, code }) {
     Vue.set(state.timeline, code, {
@@ -194,7 +196,11 @@ const disputeMutations = {
     state.statuses[status.label] = status.value
   },
   disputeSetHasNew(state, bol) {
-    state.hasNew = bol
+    clearTimeout(newUpdateTimeout)
+
+    const time = (bol ? 5 : 0) * 1000
+
+    newUpdateTimeout = setTimeout(() => Vue.set(state, 'hasNew', bol), time)
   },
   setRespondents(state, respondents) {
     state.respondents = respondents
