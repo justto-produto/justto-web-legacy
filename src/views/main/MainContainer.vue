@@ -207,8 +207,10 @@ export default {
   },
   beforeMount() {
     this.subscribe()
+    window.addEventListener('resize', this.handleResize)
   },
   beforeDestroy() {
+    window.removeEventListener('resize', this.handleResize)
     this.subscriptions.forEach(s => this.$socket.emit('unsubscribe', s))
     this.subscriptions.length = 0
   },
@@ -219,8 +221,14 @@ export default {
   },
   methods: {
     ...mapActions({
-      loadAccountProperty: 'loadAccountProperty'
+      loadAccountProperty: 'loadAccountProperty',
+      setWindowGeometry: 'setWindowGeometry'
     }),
+
+    handleResize({ target }) {
+      this.setWindowGeometry(target)
+    },
+
     subscribe() {
       if (this.workspace) {
         const headers = {
