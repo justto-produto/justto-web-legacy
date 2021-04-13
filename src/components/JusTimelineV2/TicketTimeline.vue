@@ -3,6 +3,7 @@
     :visible.sync="visible"
     append-to-body
     width="68%"
+    :fullscreen="fullscreen"
     class="jus-timeline"
   >
     <div
@@ -33,32 +34,61 @@
       <article class="jus-timeline__lawsuit-resume">
         <el-row :gutter="12">
           <el-col
-            :span="12"
+            :md="10"
             :xl="6"
+            :sm="12"
+            :span="12"
             class="jus-timeline__lawsuit-info"
           >
             <span class="jus-timeline__lawsuit-info-title">Distribuído em:</span>
             <span class="jus-timeline__lawsuit-info-text">{{ lawsuit.date || '---' }}</span>
           </el-col>
+
           <el-col
-            :span="12"
+            v-if="!fullscreen"
+            :sm="0"
+            :xl="0"
+            :md="4"
+            :span="0"
+            class="jus-timeline__lawsuit-info"
+          />
+
+          <el-col
+            :md="10"
             :xl="6"
+            :sm="12"
+            :span="12"
             class="jus-timeline__lawsuit-info"
           >
             <span class="jus-timeline__lawsuit-info-title">Área:</span>
             <span class="jus-timeline__lawsuit-info-text">{{ lawsuit.area || '---' }}</span>
           </el-col>
+
           <el-col
-            :span="12"
+            :md="10"
             :xl="6"
+            :sm="12"
+            :span="12"
             class="jus-timeline__lawsuit-info"
           >
             <span class="jus-timeline__lawsuit-info-title">Origem:</span>
             <span class="jus-timeline__lawsuit-info-text">{{ lawsuit.source || '---' }}</span>
           </el-col>
+
           <el-col
-            :span="12"
+            v-if="!fullscreen"
+            :sm="0"
+            :xl="0"
+            :md="4"
+            :span="0"
+            class="jus-timeline__lawsuit-info"
+          />
+
+          <el-col
+            :md="10"
             :xl="6"
+            :sm="12"
+            :span="12"
             class="jus-timeline__lawsuit-info"
           >
             <span class="jus-timeline__lawsuit-info-title">Documentos:</span>
@@ -79,15 +109,20 @@
 
         <el-row :gutter="12">
           <el-col
-            :md="12"
+            :md="10"
             :sm="24"
             class="jus-timeline__lawsuit-info"
           >
             <span class="jus-timeline__lawsuit-info-title">Parte(s):</span>
-            <el-collapse>
+            <el-collapse
+              :value=" fullscreen ? lawsuit.parties.map((_el, partyIndex) => `party-${partyIndex}`) : []"
+              class="jus-timeline__lawsuit-info-collapse"
+            >
               <el-collapse-item
                 v-for="(party, partyIndex) in lawsuit.parties"
                 :key="`party-${partyIndex}`"
+                :name="`party-${partyIndex}`"
+                class="jus-timeline__lawsuit-info-collapse-item collapse-item__left-arrow"
               >
                 <div
                   slot="title"
@@ -116,16 +151,28 @@
               </el-collapse-item>
             </el-collapse>
           </el-col>
+
           <el-col
-            :md="12"
+            :md="4"
+            :sm="0"
+            class="jus-timeline__lawsuit-info"
+          />
+
+          <el-col
+            :md="10"
             :sm="24"
             class="jus-timeline__lawsuit-info"
           >
             <span class="jus-timeline__lawsuit-info-title">Advogado(s):</span>
-            <el-collapse>
+            <el-collapse
+              :value="fullscreen ? lawsuit.lawyers.map((_el, lawyerIndex) => `lawyer-${lawyerIndex}`) : []"
+              class="jus-timeline__lawsuit-info-collapse"
+            >
               <el-collapse-item
                 v-for="(lawyer, lawyerIndex) in lawsuit.lawyers"
                 :key="`lawyer-${lawyerIndex}`"
+                :name="`lawyer-${lawyerIndex}`"
+                class="jus-timeline__lawsuit-info-collapse-item collapse-item__left-arrow"
               >
                 <div
                   slot="title"
@@ -163,9 +210,12 @@
 
       <article class="jus-timeline__lawsuit-movements">
         <el-collapse v-model="fullTimelineCollapseOpen">
-          <el-collapse-item :name="lawsuit.description">
+          <el-collapse-item
+            :name="lawsuit.description"
+            class="collapse-item__left-arrow"
+          >
             <div slot="title">
-              {{ fullTimelineCollapseOpen ? 'Ocultar' : 'Mostrar' }} andamentos
+              {{ fullTimelineCollapseOpen.length ? 'Ocultar' : 'Mostrar' }} andamentos
             </div>
             <el-timeline class="jus-timeline__lawsuit-movements-timeline">
               <el-timeline-item
@@ -243,8 +293,13 @@ export default {
   }),
   computed: {
     ...mapGetters({
+      width: 'getWindowWidth',
       disputesTimeline: 'getDisputesTimeline'
     }),
+
+    fullscreen() {
+      return this.width <= 700
+    },
 
     dispute() {
       return this.disputesTimeline[this.code] || { lawsuits: [] }
@@ -396,9 +451,33 @@ export default {
             }
           }
 
+          .jus-timeline__lawsuit-info {
+            .jus-timeline__lawsuit-info-collapse {
+              .jus-timeline__lawsuit-info-collapse-item {
+                div[role='tabpanel'] {
+                  margin-left: 16px;
+                }
+              }
+            }
+          }
+
           .el-collapse-item__content {
             padding: 3px 0;
           }
+        }
+      }
+    }
+  }
+
+  .collapse-item__left-arrow {
+    div[role='tab'] {
+      .el-collapse-item__header {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: flex-end;
+
+        .el-collapse-item__arrow {
+          margin: 0px 8px 0px;
         }
       }
     }

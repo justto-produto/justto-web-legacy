@@ -39,20 +39,29 @@ export default new Vuex.Store({
     brazilianStates,
     ghostMode,
     loading: false,
-    windowHeight: 0
+    windowHeight: 0,
+    window: {
+      width: window.innerWidth,
+      height: window.innerHeight
+    }
   },
   getters: {
     banksList: state => state.banksList,
     brazilianStates: state => state.brazilianStates,
     ghostMode: state => state.ghostMode,
     loading: state => state.loading,
-    windowHeight: state => state.windowHeight
+    windowHeight: state => state.windowHeight,
+    getWindowHeight: state => state.window.height,
+    getWindowWidth: state => state.window.width
   },
   mutations: {
     setGhostMode: (state, value) => (state.ghostMode = value),
     showLoading: (state) => (state.loading = true),
     hideLoading: (state) => (state.loading = false),
-    setHeight: (state, value) => (state.windowHeight = value)
+    setHeight: (state, value) => (state.windowHeight = value),
+    setWindowHeight: (state, height) => Vue.set(state.window, 'height', height),
+    setWindowWidth: (state, width) => Vue.set(state.window, 'width', width)
+
   },
   actions: {
     setGhostMode({ commit }, value) {
@@ -67,6 +76,10 @@ export default new Vuex.Store({
     },
     setHeight({ commit }, value) {
       commit('setHeight', value)
+    },
+    setWindowGeometry({ commit }, { innerHeight, innerWidth }) {
+      commit('setWindowHeight', innerHeight)
+      commit('setWindowWidth', innerWidth)
     }
   },
   modules: {
