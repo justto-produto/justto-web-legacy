@@ -241,7 +241,8 @@
             <div class="dispute-view-occurrences__card-box">
               <attachment-occurrence
                 v-if="occurrence.interaction.type === 'ATTACHMENT'"
-                :value="occurrence"
+                :value="occurrence.interaction"
+                :occurrence="occurrence"
                 :class="(occurrence.interaction ? occurrence.interaction.type : '') + ' ' + buildCommunicationType(occurrence) + ' ' + (occurrence.interaction && occurrence.interaction.message ? occurrence.interaction.message.status : '')"
                 shadow="never"
                 class="dispute-view-occurrences__card"
