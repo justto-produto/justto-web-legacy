@@ -354,7 +354,7 @@
               :indeterminate="isIndeterminate"
               @change="invertSelectionColumns"
             >
-              Nome do campo
+              Nome do campo &lpar;{{ filteredCountCheckeds }} de {{ countTreeItems }}&rpar;
             </el-checkbox>
             <el-input
               v-model="filterQuery"
