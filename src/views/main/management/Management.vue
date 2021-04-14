@@ -354,7 +354,7 @@
               :indeterminate="isIndeterminate"
               @change="invertSelectionColumns"
             >
-              Nome do campo ({{ checkedNodes }} de {{ columns.length }})
+              Nome do campo &lpar;{{ filteredCountCheckeds }} de {{ countTreeItems }}&rpar;
             </el-checkbox>
             <el-input
               v-model="filterQuery"
@@ -418,6 +418,7 @@
 <script>
 import { filterByTerm, eventBus } from '@/utils'
 import { mapActions, mapGetters } from 'vuex'
+import lodash from 'lodash'
 import events from '@/constants/negotiationEvents'
 
 const defaultCheckedKeys = ['DISPUTE_CODE', 'EXTERNAL_ID', 'FIRST_CLAIMANT', 'LAWYER_PARTY_NAMES', 'RESPONDENT_NAMES', 'UPPER_RANGE', 'UPPER_RANGE_SAVING_VALUE', 'STATUS', 'CLASSIFICATION', 'DESCRIPTION']
@@ -445,8 +446,6 @@ export default {
       selectedIds: [],
       importDialogVisible: false,
       exportDisputesDialog: false,
-      isSelectedAllColumns: true,
-      isIndeterminate: false,
       checkedNodes: 0,
       filterQuery: '',
       filteredNodes: {},
@@ -475,30 +474,58 @@ export default {
       loadingDisputes: 'loadingDisputes',
       workspaceProperties: 'workspaceProperties'
     }),
+
     columns() {
+      let result = []
       if (this.exportedColumns.length && !this.showAllNodes) {
-        return this.exportedColumns
-      } else if (this.filterQuery || this.showAllNodes) {
-        return this.columnsList
+        result = this.exportedColumns
+      } else if (this.filterQuery?.length || this.showAllNodes) {
+        result = this.columnsList
       } else {
-        return this.columnsList.filter(n => defaultCheckedKeys.includes(n.key))
+        result = this.columnsList.filter(n => defaultCheckedKeys.includes(n.key))
       }
+
+      return result
     },
+
+    countTreeItems() {
+      return (this.filterQuery?.length ? this.filteredNodes : this.columns).length
+    },
+
+    filteredCountCheckeds() {
+      return this.checkedNodes <= this.countTreeItems ? this.checkedNodes : this.countTreeItems
+    },
+
     showAllNodesButton() {
       return this.showAllNodes ? 'Exibir apenas apenas campos sugeridos' : 'Exibir mais opções de campos'
     },
+
     activeTab: {
       get() { return this.$store.getters.disputeTab },
       set(tab) { this.$store.commit('setDisputesTab', tab) }
     },
+
     disputesTotalLength() {
       return this.$store.getters.disputeQuery.total
     },
+
     persons() {
       return this.$store.state.disputeModule.query.persons
     },
+
     isManagementAll() {
       return this.$route.name === 'allDisputes'
+    },
+
+    isIndeterminate() {
+      return this.filteredCountCheckeds > 0 && this.filteredCountCheckeds < this.countTreeItems
+    },
+
+    isSelectedAllColumns: {
+      get() {
+        return this.filteredCountCheckeds === this.countTreeItems
+      },
+      set(_value) {}
     }
   },
 
@@ -506,8 +533,13 @@ export default {
     persons() {
       this.getDisputes()
     },
-    filterQuery(val) {
-      this.$refs.tree.filter(val)
+
+    filterQuery(current, _last) {
+      this.$refs.tree.filter(current)
+
+      this.handlerChangeTree('', {
+        checkedKeys: this.$refs.tree.getCheckedKeys()
+      })
     }
   },
 
@@ -544,6 +576,7 @@ export default {
         this.handleChangeTab(this.activeTab)
       }
     },
+
     handlePreviousTab() {
       const current = Number(this.activeTab)
       if (current > 0) {
@@ -589,12 +622,15 @@ export default {
 
       this.filteredBrazilianStates = this.brazilianStates
     },
+
     showManagementFilters() {
       this.$refs.managementFilters.openDialog()
     },
+
     ufSearch(value) {
       this.filteredBrazilianStates = filterByTerm(value, this.brazilianStates, 'name', 'value')
     },
+
     setUfFilter(data) {
       clearTimeout(this.ufDebounce)
       this.ufDebounce = setTimeout(() => {
@@ -603,44 +639,72 @@ export default {
         this.getDisputes()
       }, 800)
     },
+
     changeExportType() {
       this.isExportingProtocol = !this.isExportingProtocol
     },
+
     showAllNodesHandler() {
       this.showAllNodes = !this.showAllNodes
     },
+
     filterColumns(value, data) {
       this.filteredNodes = filterByTerm(value, this.columns, 'label')
-      this.handlerChangeTree('', { checkedKeys: this.$refs.tree.getCheckedKeys() })
+      const filteredKeys = this.filteredNodes.map(({ key }) => key)
+      const checkedKeys = this.$refs.tree.getCheckedKeys().filter(key => filteredKeys.includes(key))
+
+      this.handlerChangeTree('', { checkedKeys })
+
       if (!value && this.showAllNodes) return true
       return data.label.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').indexOf(value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')) !== -1
     },
-    handlerChangeTree(value, obj) {
+
+    handlerChangeTree(_value, { checkedKeys }) {
       setTimeout(function() {
-        const checkedNodes = this.filteredNodes.filter(n => obj.checkedKeys.includes(n.key)).length
-        const nodesLength = this.filteredNodes.length
-        this.isSelectedAllColumns = checkedNodes === nodesLength
-        this.isIndeterminate = checkedNodes > 0 && checkedNodes < nodesLength
-        this.checkedNodes = obj.checkedKeys.length
+        if (this.filterQuery?.length) {
+          this.checkedNodes = this.filteredNodes.filter(({ key }) => checkedKeys.includes(key)).length
+        } else {
+          this.checkedNodes = checkedKeys.length
+        }
       }.bind(this), 200)
     },
+
     invertSelectionColumns(value) {
-      if (value) {
-        const allNodesSelected = [...this.$refs.tree.getCheckedKeys(), ...this.filteredNodes.map(c => c.key)]
-        this.$refs.tree.setCheckedKeys(allNodesSelected)
-      } else {
-        const filteredKeys = this.columns.filter(c => !this.filteredNodes.includes(c))
-        this.$refs.tree.setCheckedKeys(filteredKeys.map(c => c.key))
-      }
-      this.isIndeterminate = false
-      this.handlerChangeTree('', { checkedKeys: this.$refs.tree.getCheckedKeys() })
+      setTimeout(() => {
+        const { tree } = this.$refs // Componente de que lista os itens.
+
+        const dataKeys = tree.data.map(({ key }) => key) // Todos os itens que o componente tem acesso.
+        const filteredKeys = this.filteredNodes.map(({ key }) => key) // Itens filtrados que estão marcados.
+        const wereAlreadyMarked = tree.getCheckedKeys() // Todos os itens marcados.
+
+        let toCheck = [] // Lista de chaves que serão marcadas.
+
+        if (value) { // Clicou para marcar
+          if (this.filterQuery?.length) { // Tem filtro
+            toCheck = lodash.uniq([...filteredKeys, ...wereAlreadyMarked]) // Marca todos os itens que já estavam marcados, mais os itens filtrados.
+          } else { // Não tem filtro
+            toCheck = dataKeys // Marca todos os itens que o componente tem acesso.
+          }
+        } else { // Clicou para desmarcar
+          if (this.filterQuery?.length) { // Tem filtro
+            toCheck = wereAlreadyMarked.filter(key => !filteredKeys.includes(key)) // Marca todos os items que já estão marcados, menos os que estão no filtro.
+          } else { // Não tem filtro
+            toCheck = [] // Não marca nenhum item.
+          }
+        }
+
+        tree.setCheckedKeys(toCheck) // Marca os itens.
+
+        this.handlerChangeTree('', { checkedKeys: toCheck }) // Atualiza o contador de itens marcados.
+      }, 250)
     },
-    nodeDragEnd(draggingNode, dropNode, dropType, ev) {
+
+    nodeDragEnd(draggingNode, _dropNode, _dropType, _ev) {
       setTimeout(() => {
         this.$refs.tree.setChecked(draggingNode.data.key, draggingNode.checked)
       }, 100)
     },
-    allowDrop(draggingNode, dropNode, type) {
+    allowDrop(_draggingNode, _dropNode, type) {
       if (type === 'prev') {
         return true
       }
@@ -716,7 +780,6 @@ export default {
           this.$nextTick(() => {
             this.$refs.tree.setCheckedKeys(columns)
             this.checkedNodes = columns.length
-            this.isSelectedAllColumns = true
           })
         } else {
           this.$refs.tree.setCheckedKeys(this.columns.map(c => c.key))
