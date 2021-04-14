@@ -215,7 +215,7 @@
           v-loading="modalLoading"
           :disabled="modalLoading"
           plain
-          @click.prevent="handleIncreaseManualOffer(isSettledIncreaseAlertType)"
+          @click.prevent="handleIncreaseManualOffer(true)"
         >
           Majorar
         </el-button>
