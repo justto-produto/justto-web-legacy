@@ -672,6 +672,32 @@ const disputeActions = {
       url: `/api/disputes/count-finished/${buildQuery({ ...state.query, id, allSelected })}`,
       mutation: 'setDisputeMetadata'
     })
+  },
+  putWorkspacePreNegotiationKeywords({ _ }, keywords) {
+    return axiosDispatch({
+      url: `${disputesPath}/pre-negotiation/keywords`,
+      method: 'PUT',
+      data: keywords
+    })
+  },
+  getWorkspacePreNegotiationKeywords({ _ }) {
+    return axiosDispatch({
+      url: `${disputesPath}/pre-negotiation/keywords`,
+      mutation: 'setPreNegotiationKeywords'
+    })
+  },
+  putPreNegotiationLimitValue({ _ }, value) {
+    return axiosDispatch({
+      url: `${disputesPath}/pre-negotiation/limit-value`,
+      method: 'PUT',
+      data: { value }
+    })
+  },
+  getPreNegotiationLimitValue({ _ }) {
+    return axiosDispatch({
+      url: `${disputesPath}/pre-negotiation/limit-value`,
+      mutation: 'setPreNegotiationLimitValue'
+    })
   }
 }
 
