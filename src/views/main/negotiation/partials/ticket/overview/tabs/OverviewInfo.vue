@@ -117,7 +117,8 @@ export default {
           key: 'expireDate',
           value: expireDate?.dateTime,
           component: 'DateInlieEditor',
-          classToEdit: 'info'
+          classToEdit: 'info',
+          isDateTimeFormat: false
         },
         {
           key: 'materialDamageValue',

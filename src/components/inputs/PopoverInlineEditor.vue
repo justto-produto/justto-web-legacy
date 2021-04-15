@@ -70,8 +70,11 @@ export default {
   computed: {
     selectedOption() {
       const optionIndex = this.options.findIndex(option => option.value === this.value)
-      const { label, icon } = this.options[optionIndex]
-      return { label, icon }
+      if (optionIndex >= 0) {
+        const { label, icon } = this.options[optionIndex]
+        return { label, icon }
+      }
+      return {}
     }
   },
   methods: {
