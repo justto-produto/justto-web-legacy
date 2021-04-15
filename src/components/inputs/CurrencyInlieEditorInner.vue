@@ -28,6 +28,8 @@
       class="currency-inline-editor__input"
       maxlength="16"
       @blur.native="confirmEdit"
+      @keyup.native.esc="handleEsc"
+      @keyup.native.enter="escaping = false;$event.target.blur()"
     />
     <!-- @keyup.native.enter="confirmEdit"
     @keyup.native.esc="cancelEdit" -->
@@ -49,7 +51,8 @@ export default {
   },
   data: () => ({
     isEditing: false,
-    model: 0
+    model: 0,
+    escaping: false
   }),
   computed: {
     vModel: {
@@ -65,6 +68,10 @@ export default {
     this.$emit('enableEdit')
   },
   methods: {
+    handleEsc(event) {
+      this.escaping = true
+      this.confirmEdit(event)
+    },
     enableEdit() {
       this.model = this.value || 0
       this.isEditing = true
@@ -73,11 +80,17 @@ export default {
     disableEdit() {
       this.isEditing = false
     },
-    confirmEdit() {
-      if (this.model !== this.value) {
-        this.$emit('change', this.model)
+    confirmEdit(event) {
+      if (event && !event.currentTarget.contains(event.relatedTarget)) {
+        if (this.escaping) {
+          this.cancelEdit()
+        } else {
+          if (this.model !== this.value) {
+            this.$emit('change', this.model)
+          }
+          this.disableEdit()
+        }
       }
-      this.disableEdit()
     },
     cancelEdit() {
       this.model = this.value || 0

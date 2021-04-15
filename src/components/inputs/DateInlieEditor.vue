@@ -70,7 +70,7 @@ export default {
     },
     vModel: {
       get() {
-        return this.$moment(this.isEditing ? this.model : this.newDateValue).format('YYYY-MM-DD')
+        return this.isEditing ? this.model : this.newDateValue
       },
       set(value) {
         this.model = value
