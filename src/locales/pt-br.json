@@ -146,7 +146,8 @@
     "name": "nome",
     "alias": "nome fantasia",
     "naturalDocumentNumber": "cpf",
-    "legalDocumentNumber": "cnpj"
+    "legalDocumentNumber": "cnpj",
+    "documentNumber": "CPF"
   },
   "attributeBoundary": {
     "boundary": "alçada máxima"
