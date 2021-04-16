@@ -59,7 +59,7 @@
         </div>
         <router-link
           v-if="showConfigs"
-          to="/configuration"
+          to="/configurations"
         >
           <el-dropdown-item>
             Configurações
