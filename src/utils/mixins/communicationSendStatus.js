@@ -3,8 +3,12 @@ import { getFormatedDate, isSimilarStrings } from '@/utils'
 export default {
   computed: {
     person() {
-      const name = this.interaction.message.parameters[this.directionIn ? 'SENDER_NAME' : 'RECEIVER_NAME']
-      return this.$options.filters.resumedName(name || '')
+      if (this?.interaction?.properties?.PERSON_NAME) {
+        return this.$options.filters.resumedName(this?.interaction?.properties?.PERSON_NAME)
+      } else {
+        const name = this.interaction.message.parameters[this.directionIn ? 'SENDER_NAME' : 'RECEIVER_NAME']
+        return this.$options.filters.resumedName(name || '')
+      }
     },
 
     isSimilarName() {
