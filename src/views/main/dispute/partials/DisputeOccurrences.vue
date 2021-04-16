@@ -980,7 +980,7 @@ export default {
           return `
             Proposta realizada por <b>${occurrence.interaction.properties.PERSON_NAME}</b>
             no valor de <b>${occurrence.interaction.properties.VALUE}</b>${occurrence.interaction.properties.NOTE ? ' com a observação: ' + occurrence.interaction.properties.NOTE : ''}.`
-        } else if (['COMMUNICATION'].includes(occurrence.interaction.type) && occurrence.interaction.message && ['NEGOTIATOR_MESSAGE'].includes(occurrence.interaction.message.communicationType)) {
+        } else if (['COMMUNICATION'].includes(occurrence.interaction.type) && occurrence.interaction.message && ['NEGOTIATOR_MESSAGE', 'WHATSAPP'].includes(occurrence.interaction.message.communicationType)) {
           if (this.showResume(occurrence)) {
             return occurrence.interaction.message.resume + '...'
           } else {
