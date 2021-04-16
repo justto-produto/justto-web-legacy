@@ -25,7 +25,19 @@
         </span>
       </div>
       <div class="communication-ticket-item-container__message">
-        {{ getReason(ticket) || $options.filters.capitalize($t(`dispute.status.${ticket.disputeStatus}`)) }}
+        <el-tooltip
+          :disabled="!isPreNegotiation"
+          :open-delay="500"
+          :placement="'bottom-start'"
+        >
+          <div
+            slot="content"
+            v-html="reason"
+          />
+          <span>
+            {{ reason }}
+          </span>
+        </el-tooltip>
       </div>
     </div>
     <!-- <span class="communication-ticket-item-container__time">
@@ -36,6 +48,7 @@
 
 <script>
 import { getLastInteraction } from '@/utils'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'TicketItem',
@@ -46,12 +59,28 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      activeTab: 'getTicketsActiveTab'
+    }),
+
     isActive() {
       return this.$route.params.id === this.ticket.disputeId
     },
     plaintiffName() {
       const { plaintiff } = this.ticket
       return plaintiff ? plaintiff.name : 'Sem parte'
+    },
+    isPreNegotiation() {
+      return this.activeTab === 'pre-negotiation'
+    },
+    reason() {
+      const { pendingReason, disputeStatus } = this.ticket
+      if (pendingReason?.description) {
+        const reasons = pendingReason.description.replace('[', '').replace(']', '').split(',')
+        return `Encontrou termos ${reasons.join(',')}`
+      } else {
+        return this.$options.filters.capitalize(this.$t(`dispute.status.${disputeStatus}`))
+      }
     }
   },
   methods: {
@@ -65,13 +94,6 @@ export default {
     },
     getLastInteraction(time) {
       return getLastInteraction(time)
-    },
-    getReason(ticket) {
-      if (ticket.pendingReason && ticket.pendingReason.description) {
-        const reasons = ticket.pendingReason.description.replace('[', '').replace(']', '').split(',')
-        return `Encontrou termos ${reasons.join(',')}`
-      }
-      return null
     }
   }
 }
