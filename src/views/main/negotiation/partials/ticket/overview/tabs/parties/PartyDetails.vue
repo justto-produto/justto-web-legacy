@@ -143,29 +143,42 @@
       />
       <!-- class="party-details__infoline-data" -->
     </div>
+    <InfoMergeDialog
+      ref="mergeInfoDialog"
+      :party="party"
+      :infos="mergePartyInfos"
+      @update="handleMergePartyInfos"
+    />
   </article>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
+
 export default {
   name: 'PartyDetails',
+
   components: {
     PopoverLinkInlineEditor: () => import('@/components/inputs/PopoverLinkInlineEditor'),
     TextInlineEditor: () => import('@/components/inputs/TextInlineEditor'),
     DateInlieEditor: () => import('@/components/inputs/DateInlieEditor'),
+    InfoMergeDialog: () => import('./partial/InfoMergeDialog'),
     PartyBankAccounts: () => import('./PartyBankAccounts'),
     PartyContacts: () => import('./PartyContacts')
   },
+
   props: {
     party: {
       type: Object,
       required: true
     }
   },
+
   data: () => ({
-    activeAddingData: ''
+    activeAddingData: '',
+    mergePartyInfos: {}
   }),
+
   computed: {
     disputeId() {
       return Number(this.$route.params.id)
@@ -221,9 +234,11 @@ export default {
       return this.party.roles?.includes('NEGOTIATOR')
     }
   },
+
   methods: {
     ...mapActions([
       'addRecipient',
+      'searchPersonByOab',
       'setTicketOverviewParty',
       'deleteTicketOverviewParty',
       'setTicketOverviewPartyPolarity',
@@ -271,12 +286,29 @@ export default {
         })
       })
     },
+
+    handleMergePartyInfos(keys) {
+      Promise.all(keys.map(key => { // Percorre a lista de dados que serão salvos.
+        this.updateParty(this.mergePartyInfos[key], key) // Salva os dados na parte.
+      })).then(() => {
+        if (keys.length) { // Verifica se foi salvo algum dado.
+          this.$jusNotification({
+            title: 'Yay!',
+            message: 'Dados associados com sucesso',
+            type: 'success'
+          })
+        }
+      }).catch(error => this.$jusNotification({ error })).finally(() => {
+        this.mergePartyInfos = {} // Limpa o estado onde os dados à serem inseridos na parte.
+      })
+    },
+
     addContact(contactValue, contactType) {
       const { disputeId, party } = this
       const params = {
         roleId: party.disputeRoleId,
         disputeId,
-        contactType,
+        contactType: contactType,
         contactData: { value: contactValue }
       }
 
@@ -285,10 +317,65 @@ export default {
         const oabSplited = contactValue.split('/')
         params.contactData.number = oabSplited[0]
         params.contactData.state = oabSplited[1]
-      }
 
-      this.setTicketOverviewPartyContact(params)
+        let phones = []
+        let emails = []
+
+        this.searchPersonByOab({ // Busca os dados da pessoa pela OAB.
+          oabNumber: params.contactData.number.replace('.', ''),
+          oabState: params.contactData.state
+        }).then(res => {
+          if (res) { // Verifica se veio informação no GET.
+            phones = res.phones.filter(newPhone => {
+              return !newPhone.archived && newPhone.isValid && (this.phonesList.find(({ number }) => newPhone.number === number) === undefined)
+            }) // Filtra telefones para serem adicionados na parte.
+
+            emails = res.emails.filter(newEmail => {
+              return !newEmail.archived && newEmail.isValid && (this.emailsList.find(({ address }) => address === newEmail.address) === undefined)
+            }) // Filtra e-mails para serem adicionados na parte.
+
+            // Chaves que vão para a modal de associar contator.
+            const verifyKeys = ['documentNumber', 'name']
+
+            verifyKeys.forEach(key => {
+              if (this.party[key] !== res[key]) { // Verifica se os dados novos não são repetidos.
+                this.mergePartyInfos[key] = res[key] // Adiciona os dados para aparecerem na modal.
+              }
+            })
+
+            console.log(this.mergePartyInfos)
+
+            if (Object.values(this.mergePartyInfos).length) {
+              this.$refs.mergeInfoDialog.show() // Abre a modal
+            }
+          }
+        }).finally(() => {
+          this.setTicketOverviewPartyContact(params).then(() => { // Salva a OAB
+            console.log(phones, emails)
+            Promise.all([
+              // Salva todos os telefones novos encontrados pela OAB.
+              ...phones.map(({ number }) => this.addContact(number, 'phone')),
+              // Salva todos os emails novos encontrados pela OAB.
+              ...emails.map(({ address }) => this.addContact(address, 'email'))
+            ]).finally(() => {
+              // Verifica se precisa mostrar algúm dado na modal.
+              // if (Object.values(this.mergePartyInfos).length) {
+              //   this.$refs.mergeInfoDialog.show() // Abre a modal
+              // }
+            })
+          }).then(() => {
+            this.$jusNotification({
+              title: 'Yay!',
+              message: 'Dados associados com sucesso',
+              type: 'success'
+            })
+          }).catch(error => this.$jusNotification({ error }))
+        })
+      } else {
+        this.setTicketOverviewPartyContact(params)
+      }
     },
+
     updateContacts(contactId, contactValue, contactType) {
       if (!contactValue) {
         return
