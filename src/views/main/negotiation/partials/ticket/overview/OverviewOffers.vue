@@ -97,23 +97,13 @@ export default {
     },
 
     updateDefendantOffer(value) {
-      const { disputeId, defendantOffer: { roleId } } = this
-
-      const disputeNegotiator = this.ticketParties.find(({ polarity, roles }) => {
-        return polarity === 'RESPONDENT' &&
-        roles.includes('NEGOTIATOR')
-      })
+      const { disputeId } = this
 
       const data = {
-        roleId: roleId || disputeNegotiator.disputeRoleId,
-        value,
-        note: '',
-        updateUpperRage: false
+        defendantProposal: { value }
       }
 
-      const polarityObjectKey = 'defendantOffer'
-
-      this.sendOffer({ data, disputeId, polarityObjectKey })
+      this.setTicketOverview({ disputeId, data })
     },
 
     updateUpperRange(upperRange) {
