@@ -61,12 +61,14 @@ export default {
   overflow-y: hidden;
 
   .configurations-container__tabs {
+    z-index: 0;
     height: 100%;
     display: flex;
     flex-direction: column;
   }
 
   .configurations-container__user-menu {
+    z-index: 10;
     position: absolute;
     top: 6px;
     right: 30px;
