@@ -52,7 +52,8 @@ export default new Vuex.Store({
     loading: state => state.loading,
     windowHeight: state => state.windowHeight,
     getWindowHeight: state => state.window.height,
-    getWindowWidth: state => state.window.width
+    getWindowWidth: state => state.window.width,
+    getWindowMode: state => (state.window.width <= 900 ? 'mobile' : state.window.width <= 1200 ? 'tablet' : 'desktop')
   },
   mutations: {
     setGhostMode: (state, value) => (state.ghostMode = value),
