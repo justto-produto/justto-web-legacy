@@ -13,6 +13,7 @@
           @click="copyValue"
         />
         <i
+          v-if="isEditable"
           class="currency-inline-editor__icon el-icon-edit hidden-icon"
           @click="enableEdit"
         />
@@ -47,6 +48,10 @@ export default {
     iconSide: {
       type: String,
       default: 'right'
+    },
+    isEditable: {
+      type: Boolean,
+      default: true
     }
   },
   data: () => ({
@@ -73,9 +78,11 @@ export default {
       this.confirmEdit(event)
     },
     enableEdit() {
-      this.model = this.value || 0
-      this.isEditing = true
-      this.$nextTick(() => document.getElementById('currencyInput').focus())
+      if (this.isEditable) {
+        this.model = this.value || 0
+        this.isEditing = true
+        this.$nextTick(() => document.getElementById('currencyInput').focus())
+      }
     },
     disableEdit() {
       this.isEditing = false
