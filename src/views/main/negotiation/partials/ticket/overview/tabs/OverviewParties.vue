@@ -31,6 +31,7 @@
     </div>
 
     <el-button
+      v-if="!isPreNegotiation"
       type="primary"
       size="medium"
       icon="el-icon-plus"
@@ -50,13 +51,17 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import preNegotiation from '@/utils/mixins/ticketPreNegotiation'
 
 export default {
   name: 'OverviewParties',
+
   components: {
     PartyResumed: () => import('./parties/PartyResumed'),
     DisputeAddRole: () => import('@/views/main/dispute/partials/DisputeAddRole')
   },
+
+  mixins: [preNegotiation],
 
   data: () => ({
     activeCollapseItem: null,
