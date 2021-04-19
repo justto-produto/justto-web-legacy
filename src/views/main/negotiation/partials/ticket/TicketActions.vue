@@ -72,19 +72,27 @@ export default {
     actionsList() {
       return [
         {
+          name: 'FAVORITE',
+          icon: this.ticket?.favorite ? 'offices-tower-active' : 'offices-tower',
+          isVisible: () => !this.isPreNegotiation,
+          isDynamic: true,
+          method: () => {}
+          // tooltip: `${this.$t('action.FAVORITE')} (${this.$t('fields.respondentParty')})`
+        },
+        {
           name: 'SETTLED',
           icon: 'positive-hand',
           label: ['CHECKOUT', 'ACCEPTED'].includes(this.ticket.status),
           method: (action) => this.handleSettled(action),
           isVisible: this.canSettled,
-          isDynamic: true
+          isDynamic: !this.ticket?.favorite
         },
         {
           name: 'UNSETTLED',
           icon: 'negative-hand',
           method: (action) => this.handleUnsettled(action),
           isVisible: this.canUnsettled,
-          isDynamic: true
+          isDynamic: !this.ticket?.favorite
         },
         {
           name: 'MANUAL_COUNTERPROPOSAL',
