@@ -25,7 +25,7 @@
       <span class="party-details__infoline-label">Nome completo:</span>
       <TextInlineEditor
         v-model="party.name"
-        :is-editable="!isNegotiator"
+        :is-editable="!isNegotiator && !isPreNegotiation"
         filter="ownName"
         class="party-details__infoline-data"
         @change="updateParty($event, 'name')"
@@ -41,7 +41,7 @@
         v-if="party.birthday || activeAddingData === 'birthday'"
         ref="birthday"
         v-model="party.birthday"
-        :is-editable="!isNegotiator"
+        :is-editable="!isNegotiator && !isPreNegotiation"
         :processed-date="$moment(new Date(party.birthday)).fromNow(true)"
         :is-date-time-format="false"
         class="party-details__infoline-data"
@@ -50,7 +50,7 @@
         @enableEdit="enableEdit"
       />
       <div
-        v-else
+        v-else-if="!isPreNegotiation"
         class="party-details__infoline-link"
       >
         <a @click="startEditing('birthday')">Adicionar</a>
@@ -66,7 +66,7 @@
         v-if="party.documentNumber || activeAddingData === 'documentNumber'"
         ref="documentNumber"
         v-model="party.documentNumber"
-        :is-editable="!isNegotiator"
+        :is-editable="!isNegotiator && !isPreNegotiation"
         :mask="() => ['###.###.###-##', '##.###.###/####-##']"
         filter="cpfCnpj"
         class="party-details__infoline-data"
@@ -74,7 +74,7 @@
         @enableEdit="enableEdit"
       />
       <div
-        v-else
+        v-else-if="!isPreNegotiation"
         class="party-details__infoline-link"
       >
         <a @click="startEditing('documentNumber')">Adicionar</a>
@@ -140,6 +140,7 @@
       <PartyBankAccounts
         :accounts="bankAccounts"
         :person-id="party.personId"
+        :disabled="isPreNegotiation"
       />
       <!-- class="party-details__infoline-data" -->
     </div>
