@@ -86,16 +86,20 @@ export default {
     ]),
 
     handleInput(term, cb) {
-      clearTimeout(this.debounce)
+      if (term.trim().length) {
+        clearTimeout(this.debounce)
 
-      this.debounce = setTimeout(() => {
-        this.searchDisputes({ key: 'term', value: term.trim() })
-          .then(response => {
-            this.$jusSegment('Busca global de disputas', { description: `Termo utilizado: ${term}` })
-            if (response.length) cb(response)
-            else cb([{}])
-          })
-      }, 800)
+        this.debounce = setTimeout(() => {
+          this.searchDisputes({ key: 'term', value: term.trim() })
+            .then(response => {
+              this.$jusSegment('Busca global de disputas', { description: `Termo utilizado: ${term}` })
+              if (response.length) cb(response)
+              else cb([{}])
+            })
+        }, 800)
+      } else {
+        cb([{}])
+      }
     },
 
     goToTicket({ disputeId, disputeStatus }) {
