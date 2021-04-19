@@ -1,7 +1,7 @@
 <template>
   <article class="party-details">
     <div
-      v-if="!isNegotiator"
+      v-if="!isNegotiator && !isPreNegotiation"
       class="party-details__infoline party-details__infoline--center"
     >
       <PopoverLinkInlineEditor
@@ -88,7 +88,7 @@
       <span class="party-details__infoline-label">Telefones:</span>
       <PartyContacts
         :contacts="phonesList"
-        :disabled="isNegotiator"
+        :disabled="isNegotiator || isPreNegotiation"
         filter="phoneNumber"
         model="number"
         :mask="phoneMask"
@@ -106,7 +106,7 @@
       <span class="party-details__infoline-label">Emails:</span>
       <PartyContacts
         :contacts="emailsList"
-        :disabled="isNegotiator"
+        :disabled="isNegotiator || isPreNegotiation"
         model="address"
         @change="(...args)=>updateContacts(...args, 'email')"
         @delete="removeContact($event, 'email')"
@@ -122,7 +122,7 @@
       <span class="party-details__infoline-label">Oab:</span>
       <PartyContacts
         :contacts="mappedOabs"
-        :disabled="isNegotiator"
+        :disabled="isNegotiator || isPreNegotiation"
         filter="oab"
         model="fullOab"
         :mask="oabMask"
@@ -148,8 +148,11 @@
 
 <script>
 import { mapActions } from 'vuex'
+import preNegotiation from '@/utils/mixins/ticketPreNegotiation'
+
 export default {
   name: 'PartyDetails',
+
   components: {
     PopoverLinkInlineEditor: () => import('@/components/inputs/PopoverLinkInlineEditor'),
     TextInlineEditor: () => import('@/components/inputs/TextInlineEditor'),
@@ -157,6 +160,9 @@ export default {
     PartyBankAccounts: () => import('./PartyBankAccounts'),
     PartyContacts: () => import('./PartyContacts')
   },
+
+  mixins: [preNegotiation],
+
   props: {
     party: {
       type: Object,

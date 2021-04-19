@@ -37,12 +37,17 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import preNegotiation from '@/utils/mixins/ticketPreNegotiation'
 
 export default {
   name: 'OverviewOffers',
+
   components: {
     CurrencyInlieEditorInner: () => import('@/components/inputs/CurrencyInlieEditorInner')
   },
+
+  mixins: [preNegotiation],
+
   props: {
     plaintiffOffer: {
       type: Object,
@@ -61,6 +66,7 @@ export default {
       required: true
     }
   },
+
   computed: {
     ...mapGetters({
       ticketParties: 'getTicketOverviewParties'
