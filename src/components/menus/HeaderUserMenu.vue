@@ -13,6 +13,8 @@
       />
     </el-tooltip>
 
+    {{ width }}
+
     <JusAcademy class="usermenu-container__jus-academy" />
 
     <el-dropdown
@@ -46,14 +48,12 @@
       </span>
       <el-dropdown-menu slot="dropdown">
         <div
-          style="text-transform: capitalize; text-align: center; cursor: pointer;"
+          class="usermenu-container__perfil"
           @click="editUser()"
         >
-          {{ name | resumedName }}
+          Meu perfil
         </div>
-        <!-- <div class="usermenu-container__version">
-          {{ teamName }}
-        </div> -->
+
         <div class="usermenu-container__version">
           Versão {{ appVersion }}
         </div>
@@ -119,6 +119,7 @@ export default {
   computed: {
     ...mapGetters({
       ghostMode: 'ghostMode',
+      width: 'getWindowWidth',
       name: 'loggedPersonName',
       loggedPerson: 'loggedPerson',
       teamName: 'workspaceTeamName',
@@ -260,6 +261,13 @@ export default {
     color: $--color-text-secondary;
     font-size: 12px;
   }
+
+  &__perfil {
+    text-transform: capitalize;
+    text-align: center;
+    cursor: pointer;
+  }
+
   &__name {
     margin: 0 10px 0 10px;
     overflow-x: hidden;
