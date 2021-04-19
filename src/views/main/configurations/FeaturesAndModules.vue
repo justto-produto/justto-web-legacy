@@ -157,7 +157,6 @@ export default {
     },
 
     writeTextOnCrisp(message) {
-      console.log('writeTextOnCrisp', message)
       this.$nextTick().then(() => window.$crisp.set('message:text', [message]))
       window.$crisp.off('chat:opened')
     }
