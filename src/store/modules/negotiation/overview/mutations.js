@@ -132,6 +132,12 @@ const overviewMutations = {
     if (state.ticketOverviewCountGetters > 0) {
       state.ticketOverviewCountGetters -= 1
     }
+  },
+
+  toggleFavoriteTicket: (state, { payload: { disputeId, favorite } }) => {
+    if (Number(state.ticketOverview.disputeId) === Number(disputeId)) {
+      Vue.set(state.ticketOverview, 'favorite', favorite)
+    }
   }
 }
 

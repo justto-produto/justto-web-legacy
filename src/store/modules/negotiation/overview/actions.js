@@ -1,7 +1,6 @@
 import { axiosDispatch } from '@/utils/'
 
 const disputeApi = '/api/disputes/v2'
-const oldDisputeApi = 'api/disputes'
 const disputeApiLegacy = '/api/disputes'
 const officeApi = '/api/office'
 
@@ -144,7 +143,7 @@ const overviewActions = {
     commit('incrementTicketOverviewCountGetters')
 
     return axiosDispatch({
-      url: `${oldDisputeApi}/${disputeId}/bank-accounts/${bankAccountId}`,
+      url: `${disputeApiLegacy}/${disputeId}/bank-accounts/${bankAccountId}`,
       method: 'POST',
       payload: { bankAccountId, personId },
       mutation: 'updateTicketRoleBankAccount'
@@ -159,7 +158,7 @@ const overviewActions = {
       const disputeRole = getters.getTicketOverviewParties.find(el => Number(el.personId) === Number(personId)).legacyDto
 
       axiosDispatch({
-        url: `${oldDisputeApi}/${disputeId}/dispute-roles`,
+        url: `${disputeApiLegacy}/${disputeId}/dispute-roles`,
         method: 'PUT',
         data: {
           ...disputeRole,
@@ -187,7 +186,7 @@ const overviewActions = {
       const disputeRole = getters.getTicketOverviewParties.find(el => Number(el.personId) === Number(personId)).legacyDto
 
       axiosDispatch({
-        url: `${oldDisputeApi}/${disputeId}/dispute-roles`,
+        url: `${disputeApiLegacy}/${disputeId}/dispute-roles`,
         method: 'PUT',
         data: {
           ...disputeRole,
@@ -212,7 +211,7 @@ const overviewActions = {
       const disputeRole = getters.getTicketOverviewParties.find(item => Number(item.personId) === Number(personId)).legacyDto
 
       axiosDispatch({
-        url: `${oldDisputeApi}/${disputeId}/dispute-roles`,
+        url: `${disputeApiLegacy}/${disputeId}/dispute-roles`,
         method: 'PUT',
         data: {
           ...disputeRole,
@@ -233,7 +232,7 @@ const overviewActions = {
     commit('incrementTicketOverviewCountGetters')
 
     return axiosDispatch({
-      url: `${oldDisputeApi}/${disputeId}/bank-accounts/${bankAccountId}`,
+      url: `${disputeApiLegacy}/${disputeId}/bank-accounts/${bankAccountId}`,
       method: 'DELETE',
       payload: { bankAccountId, personId },
       mutation: 'updateTicketRoleBankAccount'
@@ -266,6 +265,24 @@ const overviewActions = {
   updateTicketOverviewPartyContact({ dispatch }, params) {
     dispatch('deleteTicketOverviewPartyContact', params)
       .then(() => dispatch('setTicketOverviewPartyContact', params))
+  },
+
+  favoriteTicket({ _ }, disputeId) {
+    return axiosDispatch({
+      url: `${disputeApiLegacy}/${disputeId}/favorite`,
+      method: 'PUT',
+      mutation: 'toggleFavoriteTicket',
+      payload: { disputeId, favorite: true }
+    })
+  },
+
+  disfavorTicket({ _ }, disputeId) {
+    return axiosDispatch({
+      url: `${disputeApiLegacy}/${disputeId}/disfavor`,
+      method: 'PUT',
+      mutation: 'toggleFavoriteTicket',
+      payload: { disputeId, favorite: false }
+    })
   }
 }
 
