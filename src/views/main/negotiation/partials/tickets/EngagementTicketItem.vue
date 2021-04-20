@@ -49,9 +49,13 @@
 <script>
 import { getLastInteraction } from '@/utils'
 import { mapGetters } from 'vuex'
+import preNegotiation from '@/utils/mixins/ticketPreNegotiation'
 
 export default {
   name: 'TicketItem',
+
+  mixins: [preNegotiation],
+
   props: {
     ticket: {
       type: Object,
@@ -69,9 +73,6 @@ export default {
     plaintiffName() {
       const { plaintiff } = this.ticket
       return plaintiff ? plaintiff.name : 'Sem parte'
-    },
-    isPreNegotiation() {
-      return this.activeTab === 'pre-negotiation'
     },
     reason() {
       const { pendingReason, disputeStatus } = this.ticket

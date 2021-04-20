@@ -51,6 +51,7 @@
       </div>
       <!-- ACTION -->
       <el-link
+        v-if="!isPreNegotiation"
         :underline="false"
         type="danger"
         icon="el-icon-delete"
@@ -74,7 +75,10 @@
         </div>
       </div>
     </el-tooltip>
-    <div class="dispute-properties-view__line mt20">
+    <div
+      v-if="!isPreNegotiation"
+      class="dispute-properties-view__line mt20"
+    >
       <div class="key">
         <el-autocomplete
           v-model="newKey"
@@ -108,9 +112,13 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import preNegotiation from '@/utils/mixins/ticketPreNegotiation'
 
 export default {
   name: 'OverviewProperties',
+
+  mixins: [preNegotiation],
+
   data() {
     return {
       loading: false,
@@ -165,6 +173,7 @@ export default {
     ...mapActions(['getAssociatedContacts']),
 
     focus(key, index) {
+      if (this.isPreNegotiation) return
       this.editing[key + index] = true
       this.lineKey += 1
       this.editable = key

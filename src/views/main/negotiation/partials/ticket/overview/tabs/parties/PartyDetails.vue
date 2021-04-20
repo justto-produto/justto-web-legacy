@@ -1,7 +1,7 @@
 <template>
   <article class="party-details">
     <div
-      v-if="!isNegotiator"
+      v-if="!isNegotiator && !isPreNegotiation"
       class="party-details__infoline party-details__infoline--center"
     >
       <PopoverLinkInlineEditor
@@ -25,7 +25,7 @@
       <span class="party-details__infoline-label">Nome completo:</span>
       <TextInlineEditor
         v-model="party.name"
-        :is-editable="!isNegotiator"
+        :is-editable="!isNegotiator && !isPreNegotiation"
         filter="ownName"
         class="party-details__infoline-data"
         @change="updateParty($event, 'name')"
@@ -41,7 +41,7 @@
         v-if="party.birthday || activeAddingData === 'birthday'"
         ref="birthday"
         v-model="party.birthday"
-        :is-editable="!isNegotiator"
+        :is-editable="!isNegotiator && !isPreNegotiation"
         :processed-date="$moment(new Date(party.birthday)).fromNow(true)"
         :is-date-time-format="false"
         class="party-details__infoline-data"
@@ -50,7 +50,7 @@
         @enableEdit="enableEdit"
       />
       <div
-        v-else
+        v-else-if="!isPreNegotiation"
         class="party-details__infoline-link"
       >
         <a @click="startEditing('birthday')">Adicionar</a>
@@ -66,7 +66,7 @@
         v-if="party.documentNumber || activeAddingData === 'documentNumber'"
         ref="documentNumber"
         v-model="party.documentNumber"
-        :is-editable="!isNegotiator"
+        :is-editable="!isNegotiator && !isPreNegotiation"
         :mask="() => ['###.###.###-##', '##.###.###/####-##']"
         filter="cpfCnpj"
         class="party-details__infoline-data"
@@ -74,7 +74,7 @@
         @enableEdit="enableEdit"
       />
       <div
-        v-else
+        v-else-if="!isPreNegotiation"
         class="party-details__infoline-link"
       >
         <a @click="startEditing('documentNumber')">Adicionar</a>
@@ -88,7 +88,7 @@
       <span class="party-details__infoline-label">Telefones:</span>
       <PartyContacts
         :contacts="phonesList"
-        :disabled="isNegotiator"
+        :disabled="isNegotiator || isPreNegotiation"
         filter="phoneNumber"
         model="number"
         :mask="phoneMask"
@@ -106,7 +106,7 @@
       <span class="party-details__infoline-label">Emails:</span>
       <PartyContacts
         :contacts="emailsList"
-        :disabled="isNegotiator"
+        :disabled="isNegotiator || isPreNegotiation"
         model="address"
         @change="(...args)=>updateContacts(...args, 'email')"
         @delete="removeContact($event, 'email')"
@@ -122,7 +122,7 @@
       <span class="party-details__infoline-label">Oab:</span>
       <PartyContacts
         :contacts="mappedOabs"
-        :disabled="isNegotiator"
+        :disabled="isNegotiator || isPreNegotiation"
         filter="oab"
         model="fullOab"
         :mask="oabMask"
@@ -140,6 +140,7 @@
       <PartyBankAccounts
         :accounts="bankAccounts"
         :person-id="party.personId"
+        :disabled="isPreNegotiation"
       />
       <!-- class="party-details__infoline-data" -->
     </div>
@@ -148,8 +149,11 @@
 
 <script>
 import { mapActions } from 'vuex'
+import preNegotiation from '@/utils/mixins/ticketPreNegotiation'
+
 export default {
   name: 'PartyDetails',
+
   components: {
     PopoverLinkInlineEditor: () => import('@/components/inputs/PopoverLinkInlineEditor'),
     TextInlineEditor: () => import('@/components/inputs/TextInlineEditor'),
@@ -157,6 +161,9 @@ export default {
     PartyBankAccounts: () => import('./PartyBankAccounts'),
     PartyContacts: () => import('./PartyContacts')
   },
+
+  mixins: [preNegotiation],
+
   props: {
     party: {
       type: Object,
