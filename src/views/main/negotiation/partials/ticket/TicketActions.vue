@@ -75,7 +75,6 @@ export default {
           name: 'FAVORITE',
           icon: 'offices-tower',
           isVisible: !this.isFavorite,
-          isDynamic: true,
           method: () => this.handleFavorite()
         },
         {
