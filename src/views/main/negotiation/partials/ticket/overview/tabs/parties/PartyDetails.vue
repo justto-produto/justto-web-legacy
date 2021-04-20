@@ -155,7 +155,9 @@
 
 <script>
 import { mapActions } from 'vuex'
+import { isSimilarStrings } from '@/utils'
 import preNegotiation from '@/utils/mixins/ticketPreNegotiation'
+import { isValid, strip } from '@fnando/cpf'
 
 export default {
   name: 'PartyDetails',
@@ -302,7 +304,9 @@ export default {
             type: 'success'
           })
         }
-      }).catch(error => this.$jusNotification({ error })).finally(() => {
+      }).catch(error => {
+        this.$jusNotification({ error })
+      }).finally(() => {
         this.mergePartyInfos = {} // Limpa o estado onde os dados à serem inseridos na parte.
       })
     },
@@ -338,19 +342,23 @@ export default {
               return !newEmail.archived && newEmail.isValid && (this.emailsList.find(({ address }) => address === newEmail.address) === undefined)
             }) // Filtra e-mails para serem adicionados na parte.
 
-            // Chaves que vão para a modal de associar contator.
-            const verifyKeys = ['documentNumber', 'name']
+            // TODO: Refatorar isso.
+            if (isValid(res.documentNumber)) {
+              const resDocument = strip(res.documentNumber)
+              const partyDocument = strip(this.party.documentNumber)
 
-            verifyKeys.forEach(key => {
-              if (this.party[key] !== res[key]) { // Verifica se os dados novos não são repetidos.
-                this.mergePartyInfos[key] = res[key] // Adiciona os dados para aparecerem na modal.
+              if (partyDocument !== resDocument) {
+                this.mergePartyInfos.documentNumber = res.documentNumber
               }
-            })
+            }
 
-            console.log(this.mergePartyInfos)
+            if (res.name?.length) {
+              const resName = String(res.name).toLowerCase()
+              const partyName = String(this.party.name).toLowerCase()
 
-            if (Object.values(this.mergePartyInfos).length) {
-              this.$refs.mergeInfoDialog.show() // Abre a modal
+              if (!isSimilarStrings(resName, partyName, 90)) {
+                this.mergePartyInfos.name = res.name
+              }
             }
           }
         }).finally(() => {
@@ -363,9 +371,9 @@ export default {
               ...emails.map(({ address }) => this.addContact(address, 'email'))
             ]).finally(() => {
               // Verifica se precisa mostrar algúm dado na modal.
-              // if (Object.values(this.mergePartyInfos).length) {
-              //   this.$refs.mergeInfoDialog.show() // Abre a modal
-              // }
+              if (Object.values(this.mergePartyInfos).length) {
+                this.$refs.mergeInfoDialog.show() // Abre a modal
+              }
             })
           }).then(() => {
             this.$jusNotification({
