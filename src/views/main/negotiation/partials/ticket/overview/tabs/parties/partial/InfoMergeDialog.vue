@@ -14,7 +14,7 @@
     </span>
 
     <el-row
-      v-for="key in keys"
+      v-for="(value, key) in infos"
       :key="key"
     >
       <el-col :span="12">
@@ -26,7 +26,7 @@
       <el-col :span="12">
         <h3>{{ $t('person.' + key) | capitalize }} novo:</h3>
         <span style="margin-left: 8px;">
-          {{ infos[key] | applyFilter(key) }}
+          {{ value | applyFilter(key) }}
         </span>
       </el-col>
     </el-row>
@@ -91,6 +91,7 @@ export default {
   },
 
   data: () => ({
+    keys: [],
     visible: false
   }),
 
@@ -98,12 +99,11 @@ export default {
     ...mapGetters({
       width: 'getWindowWidth'
     }),
-    keys() {
-      return Object.keys(this.infos)
-    },
+
     missingKeys() {
       return this.keys.filter(key => !this.party[key])
     },
+
     btnSize() {
       return this.width <= 1400 ? 'small' : 'normal'
     }
@@ -116,11 +116,18 @@ export default {
     },
 
     show() {
-      this.visible = true
+      this.keys = Object.keys(this.infos)
+
+      if (this.keys.length > 0) {
+        this.visible = true
+      } else {
+        this.doAction('update', [])
+      }
     },
 
     hide() {
       this.visible = false
+      this.keys = []
     }
   }
 }
