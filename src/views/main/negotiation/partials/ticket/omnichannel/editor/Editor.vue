@@ -19,10 +19,14 @@
           :is="tab.component.name"
           v-if="tab.component && activeTab === tab.name"
           :focus-on-startup.sync="needFocus"
+          :is-in-pre-negotiation="isPreNegotiation"
         />
       </el-tab-pane>
     </el-tabs>
-    <div class="editor-container__after-tabs">
+    <div
+      v-if="!isPreNegotiation"
+      class="editor-container__after-tabs"
+    >
       <quick-reply
         v-if="activeTab === 'MESSAGES'"
         :show-title="!haveRecipients"
@@ -37,6 +41,7 @@ import { eventBus } from '@/utils'
 import { mapActions, mapGetters } from 'vuex'
 import EDITOR_CONSTANTS from '@/constants/editor'
 import events from '@/constants/negotiationEvents'
+import ticketPreNegotiation from '@/utils/mixins/ticketPreNegotiation'
 
 export default {
   components: {
@@ -45,6 +50,8 @@ export default {
     messages: () => import('./partials/Messages'),
     notes: () => import('./partials/Notes')
   },
+
+  mixins: [ticketPreNegotiation],
 
   data: () => ({
     needFocus: false

@@ -1,5 +1,6 @@
 <template>
   <section
+    v-if="!isInPreNegotiation"
     id="messagesTabEditorOmnichannelNegotiation"
     v-loading="showCKEditor && !editorReady"
     class="messages-container jus-ckeditor__parent"
@@ -70,6 +71,14 @@
       </div>
     </DialogEditor>
   </section>
+  <section
+    v-else
+    class="messages-container"
+  >
+    <span class="messages-container__pre-negotiation-alert">
+      Disputa em pré negociação. Inicie a disputa para enviar mensagens.
+    </span>
+  </section>
 </template>
 
 <script>
@@ -91,6 +100,10 @@ export default {
 
   props: {
     focusOnStartup: {
+      type: Boolean,
+      default: false
+    },
+    isInPreNegotiation: {
       type: Boolean,
       default: false
     }
@@ -263,10 +276,21 @@ export default {
 </style>
 
 <style lang="scss" scoped>
+@import '@/styles/colors';
+
 .messages-container {
   padding: 6px;
   display: flex;
   flex-direction: column;
+
+  .messages-container__pre-negotiation-alert {
+    margin: 24px 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: $--color-text-secondary;
+    font-style: italic;
+  }
 
   .messages-container__editor {
     margin: 0px;

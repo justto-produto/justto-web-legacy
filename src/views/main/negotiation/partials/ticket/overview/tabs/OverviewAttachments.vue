@@ -56,6 +56,7 @@
       </div>
 
       <el-button
+        v-if="!isPreNegotiation"
         type="primary"
         size="medium"
         icon="el-icon-upload"
@@ -87,11 +88,17 @@ import { filterByTerm } from '@/utils'
 import { JusDragArea } from '@/components/JusDragArea'
 import { mapGetters, mapActions } from 'vuex'
 
+import preNegotiation from '@/utils/mixins/ticketPreNegotiation'
+
 export default {
   name: 'OverviewAttachments',
+
   components: {
     JusDragArea
   },
+
+  mixins: [preNegotiation],
+
   props: {
     isAccepted: {
       type: Boolean,

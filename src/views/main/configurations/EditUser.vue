@@ -177,7 +177,6 @@ export default {
         id: this.id,
         name: this.form.name
       }).then((res) => {
-        console.log(res)
         this.$jusSegment('Nome do usuário alterado')
         this.$jusNotification({
           title: 'Yay!',

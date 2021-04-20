@@ -7,6 +7,7 @@
       <div>
         <CurrencyInlieEditorInner
           v-model="plaintiffOffer.value"
+          :is-editable="!isPreNegotiation"
           class="overview-offers__proposal-value overview-offers__proposal-value--full-line"
           @change="updatePlaintiffOffer"
         />
@@ -17,6 +18,7 @@
         <span>Proposta: </span>
         <CurrencyInlieEditorInner
           v-model="defendantOffer.value"
+          :is-editable="!isPreNegotiation"
           icon-side="left"
           class="overview-offers__proposal-value"
           @change="updateDefendantOffer"
@@ -26,6 +28,7 @@
         <span>Máx.: </span>
         <CurrencyInlieEditorInner
           v-model="upperRange"
+          :is-editable="!isPreNegotiation"
           icon-side="left"
           class="overview-offers__proposal-value"
           @change="updateUpperRange"
@@ -37,12 +40,17 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import preNegotiation from '@/utils/mixins/ticketPreNegotiation'
 
 export default {
   name: 'OverviewOffers',
+
   components: {
     CurrencyInlieEditorInner: () => import('@/components/inputs/CurrencyInlieEditorInner')
   },
+
+  mixins: [preNegotiation],
+
   props: {
     plaintiffOffer: {
       type: Object,
@@ -61,6 +69,7 @@ export default {
       required: true
     }
   },
+
   computed: {
     ...mapGetters({
       ticketParties: 'getTicketOverviewParties'

@@ -565,7 +565,7 @@ export default {
           emails: filterValidEmails(concatEmails(role.emails, getObjectByDoc(role.documentNumber, this.defaultSigners).emails))
         }
       })
-      return [...roles, ...signers]
+      return [...roles, ...signers].filter(({ archived }) => archived !== true)
     },
     visible: {
       get() {
