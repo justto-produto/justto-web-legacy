@@ -22,7 +22,7 @@
         @enableEdit="enableEdit"
       />
       <div
-        v-else
+        v-else-if="data.isEditable !== false"
         class="overview-info__infoline-link"
       >
         <a @click="startEditing(data.key)">Adicionar</a>
@@ -33,9 +33,11 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import preNegotiation from '@/utils/mixins/ticketPreNegotiation'
 
 export default {
   name: 'OverviewInfo',
+
   components: {
     TextInlineEditor: () => import('@/components/inputs/TextInlineEditor'),
     SelectInlineEditor: () => import('@/components/inputs/SelectInlineEditor'),
@@ -45,9 +47,13 @@ export default {
     InfoConfigurations: () => import('./info/InfoConfigurations'),
     InfoClassification: () => import('./info/InfoClassification')
   },
+
+  mixins: [preNegotiation],
+
   data: () => ({
     activeAddingData: ''
   }),
+
   computed: {
     ...mapGetters({
       ticketInfo: 'getTicketOverviewInfo',
@@ -92,19 +98,22 @@ export default {
           key: 'code',
           value: code,
           component: 'TextInlineEditor',
-          classToEdit: 'ticket'
+          classToEdit: 'ticket',
+          isEditable: !this.isPreNegotiation
         },
         {
           key: 'internalId',
           value: internalId,
           component: 'TextInlineEditor',
-          classToEdit: 'ticket'
+          classToEdit: 'ticket',
+          isEditable: !this.isPreNegotiation
         },
         {
           key: 'strategy',
           value: strategy.id,
           component: 'SelectInlineEditor',
           classToEdit: 'ticket',
+          isEditable: !this.isPreNegotiation,
           options: this.strategiesOptions
         },
         {
@@ -118,42 +127,49 @@ export default {
           value: expireDate?.dateTime,
           component: 'DateInlieEditor',
           classToEdit: 'info',
+          isEditable: !this.isPreNegotiation,
           isDateTimeFormat: false
         },
         {
           key: 'materialDamageValue',
           value: materialDamageValue,
           component: 'CurrencyInlieEditor',
-          classToEdit: 'info'
+          classToEdit: 'info',
+          isEditable: !this.isPreNegotiation
         },
         {
           key: 'moralDamageValue',
           value: moralDamageValue,
           component: 'CurrencyInlieEditor',
-          classToEdit: 'info'
+          classToEdit: 'info',
+          isEditable: !this.isPreNegotiation
         },
         {
           key: 'provisionedValue',
           value: provisionedValue,
           component: 'CurrencyInlieEditor',
+          isEditable: !this.isPreNegotiation,
           classToEdit: 'info'
         },
         {
           key: 'requestedValue',
           value: requestedValue,
           component: 'CurrencyInlieEditor',
+          isEditable: !this.isPreNegotiation,
           classToEdit: 'info'
         },
         {
           key: 'configurations',
           value: this.ticketConfigurations,
           component: 'InfoConfigurations',
+          isEditable: !this.isPreNegotiation,
           classToEdit: 'info'
         },
         {
           key: 'classification',
           value: classification,
           component: 'InfoClassification',
+          isEditable: !this.isPreNegotiation,
           classToEdit: 'info',
           visible: Boolean(classification && classification.name)
         },
@@ -161,6 +177,7 @@ export default {
           key: 'description',
           value: description,
           component: 'TextareaInlineEditor',
+          isEditable: !this.isPreNegotiation,
           classToEdit: 'ticket',
           visible: !strategy.isObrigacaoFazer
         }

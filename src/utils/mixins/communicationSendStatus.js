@@ -1,4 +1,4 @@
-import { getFormatedDate, isSimilarStrings } from '@/utils'
+import { isSimilarStrings } from '@/utils'
 
 export default {
   computed: {
@@ -20,7 +20,8 @@ export default {
     },
 
     sendDate() {
-      return getFormatedDate(this.interaction, 'HH:mm')
+      return this.occurrence.updateAt?.dateTime || this.occurrence.createAt?.dateTime
+      // return getFormatedDate(this.interaction, 'HH:mm')
     },
 
     sendStatus() {

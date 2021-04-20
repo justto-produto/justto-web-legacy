@@ -72,19 +72,32 @@ export default {
     actionsList() {
       return [
         {
+          name: 'FAVORITE',
+          icon: 'offices-tower',
+          isVisible: !this.isFavorite,
+          method: () => this.handleFavorite()
+        },
+        {
+          name: 'DISFAVOR',
+          icon: 'offices-tower-active',
+          isVisible: this.isFavorite,
+          isDynamic: true,
+          method: () => this.handleDisfavor()
+        },
+        {
           name: 'SETTLED',
           icon: 'positive-hand',
           label: ['CHECKOUT', 'ACCEPTED'].includes(this.ticket.status),
           method: (action) => this.handleSettled(action),
           isVisible: this.canSettled,
-          isDynamic: true
+          isDynamic: !this.ticket?.favorite
         },
         {
           name: 'UNSETTLED',
           icon: 'negative-hand',
           method: (action) => this.handleUnsettled(action),
           isVisible: this.canUnsettled,
-          isDynamic: true
+          isDynamic: !this.ticket?.favorite
         },
         {
           name: 'MANUAL_COUNTERPROPOSAL',
@@ -166,6 +179,9 @@ export default {
         }
       ].filter(action => action.isVisible)
     },
+    isFavorite() {
+      return this.ticket?.favorite
+    },
     isPreNegotiation() {
       const { status } = this.ticket
       return status === 'PRE_NEGOTIATION'
@@ -218,7 +234,9 @@ export default {
       'resendMessages',
       'cancelMessages',
       'sendTicketAction',
-      'deleteDocument'
+      'deleteDocument',
+      'favoriteTicket',
+      'disfavorTicket'
     ]),
 
     confirmAction(action, message = 'Tem certeza que deseja realizar está ação?') {
@@ -231,11 +249,7 @@ export default {
         showClose: false
       }
 
-      return new Promise((resolve, reject) => {
-        this.$confirm(message, title, options)
-          .then(success => resolve(success))
-          .catch(error => reject(error))
-      })
+      return this.$confirm(message, title, options)
     },
 
     concludeAction(action, disputeId) {
@@ -248,6 +262,26 @@ export default {
         dangerouslyUseHTMLString: true
       })
       this.$jusSegment(message, { disputeId })
+    },
+
+    handleFavorite() {
+      const { id: disputeId } = this.$route.params
+
+      this.confirmAction('FAVORITE').then(() => {
+        this.favoriteTicket(disputeId).then(() => {
+          this.concludeAction('FAVORITE', disputeId)
+        }).catch(error => this.$jusNotification({ error }))
+      })
+    },
+
+    handleDisfavor() {
+      const { id: disputeId } = this.$route.params
+
+      this.confirmAction('DISFAVOR').then(() => {
+        this.disfavorTicket(disputeId).then(() => {
+          this.concludeAction('DISFAVOR', disputeId)
+        }).catch(error => this.$jusNotification({ error }))
+      })
     },
 
     handleSettled(action) {
