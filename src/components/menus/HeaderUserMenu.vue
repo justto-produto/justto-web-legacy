@@ -13,6 +13,8 @@
       />
     </el-tooltip>
 
+    {{ width }}
+
     <JusAcademy class="usermenu-container__jus-academy" />
 
     <el-dropdown
@@ -117,6 +119,7 @@ export default {
   computed: {
     ...mapGetters({
       ghostMode: 'ghostMode',
+      width: 'getWindowWidth',
       name: 'loggedPersonName',
       loggedPerson: 'loggedPerson',
       teamName: 'workspaceTeamName',
