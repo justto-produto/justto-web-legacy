@@ -294,6 +294,14 @@
     },
     "PRINT_TICKET_OCCURRENCES": {
       "name": "exportar ocorrências"
+    },
+    "FAVORITE": {
+      "name": "Aguardar análise da empresa",
+      "feedback-message": "<b>Aguardar análise da empresa</b>"
+    },
+    "DISFAVOR": {
+      "name": "Desmarcar aguardar análise da empresa",
+      "feedback-message": "<b>Desmarcar aguardar análise da empresa</b>"
     }
   },
   "interaction-types": {

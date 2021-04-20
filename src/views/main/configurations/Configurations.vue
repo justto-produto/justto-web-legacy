@@ -87,6 +87,10 @@ export default {
 @media (max-width: 900px) {
   .configurations-container {
     margin: 18px;
+
+    .configurations-container__user-menu {
+      display: none;
+    }
   }
 }
 </style>

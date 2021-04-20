@@ -22,6 +22,7 @@
           @click="copy(ticket.disputeId)"
         />
         <i
+          v-if="!isPreNegotiation"
           class="el-icon-delete hidden-icon"
           @click="deleteTicket(ticket.disputeId)"
         />
@@ -33,6 +34,7 @@
         Cod.:
         <TextInlineEditor
           v-model="ticket.internalId"
+          :is-editable="!isPreNegotiation"
           class="overview-container__subtitle-inline-editor"
           @change="setData('internalId', $event)"
         />
@@ -73,6 +75,8 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 
+import preNegotiation from '@/utils/mixins/ticketPreNegotiation'
+
 export default {
   name: 'Overview',
 
@@ -86,6 +90,8 @@ export default {
     TextInlineEditor: () => import('@/components/inputs/TextInlineEditor'),
     AssociateContactsModal: () => import('@/components/dialogs/AssociateContactsModal')
   },
+
+  mixins: [preNegotiation],
 
   props: {
     showOverview: {

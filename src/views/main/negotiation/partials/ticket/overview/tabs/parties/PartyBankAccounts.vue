@@ -35,6 +35,7 @@
               @click.stop="openBankAccountDialog(account)"
             />-->
             <i
+              v-if="!disabled"
               class="bank-accounts__account-icon el-icon-delete"
               @click.stop="removeBankAccount(account)"
             />
@@ -44,7 +45,7 @@
     </div>
 
     <a
-      v-if="isAllAccountsVisible || !accountsLength"
+      v-if="(isAllAccountsVisible || !accountsLength) && !disabled"
       class="bank-accounts__link"
       @click="openBankAccountDialog"
     >
@@ -82,6 +83,10 @@ export default {
     personId: {
       type: Number,
       required: true
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   data: () => ({
