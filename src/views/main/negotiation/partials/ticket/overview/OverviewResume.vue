@@ -1,41 +1,28 @@
 <template>
   <article class="overview-resume__container">
-    <el-table
-      :data="[ticket]"
-      style="width: 100%"
-    >
-      <el-table-column
-        prop="disputeId"
-        label="DIsputa"
-        align="center"
-      />
-      <el-table-column
-        prop="code"
-        label="Número do processo"
-        align="center"
-      />
-      <el-table-column
-        align="center"
-      />
-    </el-table>
-
-    <el-collapse>
+    <el-collapse class="overview-resume__container-row">
+      <el-collapse-item class="overview-resume__container-row-item info hide-arrows">
+        <template slot="title">
+          <img
+            class="overview-resume__container-row-item-image"
+            src="@/assets/logo-small.svg"
+          >
+          <div class="overview-resume__container-row-item-info">
+            <div class="overview-resume__container-row-item-info-primary">
+              Processo: {{ processNumber }}
+            </div>
+            <div class="overview-resume__container-row-item-info-secondary">
+              <b>ID da disputa:</b>
+              {{ disputeId }}
+            </div>
+          </div>
+        </template>
+      </el-collapse-item>
       <PartyResumed
-        v-for="(item, itemIndex) in parties"
+        v-for="(item, itemIndex) in partiesToShow"
         :key="`partie-${itemIndex}`"
         :party="item"
-        hide-arrows
-      />
-      <PartyResumed
-        v-for="(item, itemIndex) in lawyers"
-        :key="`lawyer-${itemIndex}`"
-        :party="item"
-        hide-arrows
-      />
-      <PartyResumed
-        v-for="(item, itemIndex) in negotiators"
-        :key="`negotiator-${itemIndex}`"
-        :party="item"
+        class="overview-resume__container-row-item"
         hide-arrows
       />
     </el-collapse>
@@ -44,6 +31,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+
 export default {
   components: {
     PartyResumed: () => import('./tabs/parties/PartyResumed')
@@ -63,23 +51,71 @@ export default {
       return this.ticket?.code || ''
     },
 
-    parties() {
-      return this.ticketParties.filter(({ polarity, roles }) => (polarity === 'CLAIMANT' && roles.includes('PARTY')))
-    },
-
-    lawyers() {
-      return this.ticketParties.filter(({ polarity, roles }) => (polarity === 'CLAIMANT' && roles.includes('LAWYER')))
-    },
-
-    negotiators() {
-      return this.ticketParties.filter(({ roles }) => roles.includes('NEGOTIATOR'))
+    partiesToShow() {
+      return this.ticketParties.filter(({ polarity, roles }) => {
+        return roles.includes('NEGOTIATOR') || (polarity === 'CLAIMANT' && (roles.includes('PARTY') || roles.includes('LAWYER')))
+      })
     }
+
   }
 }
 </script>
 
-<style lang="scss" scoped>
-  .overview-resume__container {
-    margin: 8px 16px;
+<style lang="scss">
+.hide-arrows {
+  .el-collapse-item__header {
+    i.el-collapse-item__arrow {
+      display: none;
+    }
   }
+}
+</style>
+
+<style lang="scss" scoped>
+@import '@/styles/colors';
+
+.overview-resume__container {
+  margin: 8px 16px;
+
+  .overview-resume__container-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+
+    .overview-resume__container-row-item {
+      &.info {
+        div[role="tab"] {
+          .el-collapse-item__header {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+
+            .overview-resume__container-row-item-image {
+              margin-right: 10px;
+            }
+
+            .overview-resume__container-row-item-info {
+              display: flex;
+              flex-direction: column;
+              align-items: flex-start;
+              justify-content: space-evenly;
+
+              .overview-resume__container-row-item-info-primary {
+                color: $--color-text-primary;
+                font-size: 16px;
+                line-height: normal;
+              }
+
+              .overview-resume__container-row-item-info-secondary {
+                color: $--color-text-secondary;
+                font-size: 12px;
+                line-height: normal;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
 </style>
