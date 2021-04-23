@@ -80,7 +80,7 @@ export default {
   .overview-resume__container-row {
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
+    justify-content: space-between;
 
     .overview-resume__container-row-item {
       &.info {

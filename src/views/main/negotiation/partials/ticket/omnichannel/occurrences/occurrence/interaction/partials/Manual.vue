@@ -1,19 +1,30 @@
 <template>
   <section class="manual-container">
+    <div
+      v-if="toPrint"
+      class="date-to-print no-indent"
+    >
+      {{ sendDate | moment('[Em] DD/MM [-] HH:mm') }}
+    </div>
     <span
       class="manual-container__text"
       v-html="text"
     />
-    <span class="communication-container__about negotiation-occurrence-about">
-      {{ interaction.createAt.dateTime | moment('HH:mm') }}
+    <span
+      v-if="!toPrint"
+      class="communication-container__about negotiation-occurrence-about"
+    >
+      {{ sendDate | moment('HH:mm') }}
     </span>
   </section>
 </template>
 
 <script>
 import { addInvisibleStatus } from '@/utils'
+import communicationSendStatus from '@/utils/mixins/communicationSendStatus'
 
 export default {
+  mixins: [communicationSendStatus],
   props: {
     value: {
       type: Object,
@@ -46,6 +57,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '@/styles/colors.scss';
+
 .manual-container {
   background-color: transparent;
   display: flex;
@@ -55,7 +68,7 @@ export default {
   margin: 12px 6px;
 
   .communication-container__about {
-    color: #3C3B3B;
+    color: $--color-text-primary;
   }
 }
 </style>

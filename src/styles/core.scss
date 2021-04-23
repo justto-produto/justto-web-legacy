@@ -257,4 +257,19 @@ i.el-icon-delete {
   gap: 6px;
   font-size: 11px;
   margin-top: -16px;
+
+  &.mt-0 {
+    margin-top: 0;
+  }
+}
+
+.date-to-print {
+  text-indent: 22px;
+  font-weight: 600;
+  font-size: 14px;
+  color: $--color-text-primary;
+
+  &.no-indent {
+    text-indent: 0px;
+  }
 }

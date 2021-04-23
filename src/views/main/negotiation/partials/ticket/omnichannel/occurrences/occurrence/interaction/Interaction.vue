@@ -3,9 +3,9 @@
     class="interaction-container"
     :class="`${interaction.direction} ${type}`"
   >
+    <!-- class="interaction-container__balloon" -->
     <div
-      class="interaction-container__balloon"
-      :class="`${interaction.direction}`"
+      :class="`${interaction.direction} ${!flat ? 'interaction-container__balloon' : ''}`"
     >
       <div class="interaction-container__balloon-content">
         <component
@@ -16,7 +16,7 @@
       </div>
     </div>
     <span
-      v-if="showReply"
+      v-if="showReply && !flat"
       :class="{ 'active-icon': isInRecipients }"
       class="interaction-container__reply"
     >
@@ -63,6 +63,7 @@ export default {
   computed: {
     ...mapGetters({
       recipients: 'getEditorRecipients',
+      flat: 'getExportTicketModalVisible',
       lastInteraction: 'disputeLastInteractions'
     }),
 
