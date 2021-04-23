@@ -293,22 +293,27 @@ export default {
       })
     },
 
-    handleMergePartyInfos(keys) {
-      Promise.all(keys.map(key => { // Percorre a lista de dados que serão salvos.
-        this.updateParty(this.mergePartyInfos[key], key) // Salva os dados na parte.
-      })).then(() => {
-        if (keys.length) { // Verifica se foi salvo algum dado.
+    handleMergePartyInfos(keys = []) {
+      if (keys.length) {
+        const data = Object.assign({}, this.party.legacyDto)
+        const { disputeId } = this
+
+        keys.forEach(key => {
+          data[key] = this.mergePartyInfos[key]
+        })
+
+        this.setTicketOverviewParty({ disputeId, data }).then(() => {
           this.$jusNotification({
             title: 'Yay!',
             message: 'Dados associados com sucesso',
             type: 'success'
           })
-        }
-      }).catch(error => {
-        this.$jusNotification({ error })
-      }).finally(() => {
-        this.mergePartyInfos = {} // Limpa o estado onde os dados à serem inseridos na parte.
-      })
+        }).catch(error => {
+          this.$jusNotification({ error })
+        }).finally(() => {
+          this.mergePartyInfos = {} // Limpa o estado onde os dados à serem inseridos na parte.
+        })
+      }
     },
 
     addContact(contactValue, contactType) {
