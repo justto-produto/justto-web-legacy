@@ -12,6 +12,7 @@
           data-testid="remove"
           class="right"
           size="mini"
+          icon="el-icon-delete"
           @click="openRemoveDisputeDialog()"
         />
       </el-tooltip>
