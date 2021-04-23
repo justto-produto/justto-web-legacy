@@ -1,5 +1,11 @@
 <template>
   <section class="scheduler-container">
+    <div
+      v-if="toPrint"
+      class="date-to-print"
+    >
+      {{ sendDate | moment('[Em] DD/MM [-] HH:mm') }}
+    </div>
     <span
       class="scheduler-container__contact"
     >
@@ -50,25 +56,12 @@
         Ver mais
       </span>
     </div>
-    <div class="scheduler-container__status">
+    <div
+      v-if="!toPrint"
+      class="scheduler-container__status"
+    >
       <br>
-      <span v-if="status === 'CANCELEDi'">
-        <i class="el-icon-close" />
-        Mensagem automática agendada foi <strong>CANCELADA</strong>.
-      </span>
-      <span v-else-if="status === 'WAITINGi'">
-        <jus-icon
-          icon="clock"
-          style="width: 12px;"
-        />
-        Mensagem agendada para
-        {{ interaction.message.scheduledTime.dateTime | moment('DD/MM[ às ]HH:mm') }}
-        que ainda não foi entregue.
-      </span>
-      <span
-        v-else
-        class="scheduler-container__status-about"
-      >
+      <span class="scheduler-container__status-about">
         {{ sendDate | moment('HH:mm') }}
         <span v-if="sendStatus !== 'default' && !directionIn">
           •
@@ -82,22 +75,6 @@
           :have="haveGroupedOccurrences"
           :occurrences="groupedOccurrences"
         />
-        <!-- <span v-if="haveGroupedOccurrences">
-          •
-        </span>
-        <el-popover
-          placement="top-start"
-          trigger="hover"
-          :content="groupedOccurrencesHtml"
-          :disabled="!haveGroupedOccurrences"
-        >
-          <JusIcon
-            v-if="haveGroupedOccurrences"
-            slot="reference"
-            icon="running"
-            :style="{ width: '16px' }"
-          />
-        </el-popover> -->
       </span>
     </div>
   </section>

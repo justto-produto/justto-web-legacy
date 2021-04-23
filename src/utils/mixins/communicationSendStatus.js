@@ -1,7 +1,12 @@
 import { isSimilarStrings } from '@/utils'
+import { mapGetters } from 'vuex'
 
 export default {
   computed: {
+    ...mapGetters({
+      toPrint: 'getExportTicketModalVisible'
+    }),
+
     person() {
       if (this?.interaction?.properties?.PERSON_NAME) {
         return this.$options.filters.resumedName(this?.interaction?.properties?.PERSON_NAME)
@@ -21,7 +26,6 @@ export default {
 
     sendDate() {
       return this.occurrence.updateAt?.dateTime || this.occurrence.createAt?.dateTime
-      // return getFormatedDate(this.interaction, 'HH:mm')
     },
 
     sendStatus() {

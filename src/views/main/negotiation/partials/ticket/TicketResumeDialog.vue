@@ -7,24 +7,34 @@
     fullscreen
     @update:visible="toggleExportTicketModalVisible"
   >
+    <el-progress
+      v-if="progress < 100"
+      :percentage="progress"
+      color="#9461f7"
+      type="dashboard"
+    />
     <vue-html2pdf
       ref="html2Pdf"
       show-layout
       :paginate-elements-by-height="1400"
       :filename="filename"
       :pdf-quality="2"
-      :manual-pagination="false"
-      pdf-format="a4"
-      pdf-orientation="landscape"
+      :manual-pagination="true"
+      :margin="0"
       pdf-content-width="100%"
+      pdf-format="a4"
+      pdf-orientation="portrait"
+      @progress="setProgress"
       @hasDownloaded="handleClose"
     >
       <section
         v-if="visible"
         slot="pdf-content"
       >
-        <OverviewResume />
-        <Omnichannel hide-editor />
+        <div style="display: flex; flex-direction: column; padding: 0px 16px;">
+          <OverviewResume />
+          <OmnichannelResume />
+        </div>
       </section>
     </vue-html2pdf>
   </el-dialog>
@@ -35,14 +45,19 @@ import { mapActions, mapGetters } from 'vuex'
 
 export default {
   components: {
-    Omnichannel: () => import('./omnichannel/Omnichannel'),
+    OmnichannelResume: () => import('./omnichannel/OmnichannelResume'),
     OverviewResume: () => import('./overview/OverviewResume')
   },
+
+  data: () => ({
+    progress: 0
+  }),
 
   computed: {
     ...mapGetters({
       visible: 'getExportTicketModalVisible',
-      activeTab: 'getActiveTab'
+      activeTab: 'getActiveTab',
+      width: 'getWindowWidth'
     }),
 
     tabHaveMessages() {
@@ -69,11 +84,12 @@ export default {
   watch: {
     visible(isVisible) {
       if (isVisible) {
+        this.progress = 0
         if (this.tabHaveMessages) {
-          this.$message('Carregando dados.')
           Promise.all([
             this.resetOccurrences()
           ]).then(() => {
+            this.setProgress(10)
             this.getAllOccurrences(this.$route.params.id).then(({ content: occurrences }) => {
               Promise.all(
                 occurrences.filter(
@@ -82,7 +98,7 @@ export default {
                   ({ interaction }) => this.getFullMessage(interaction?.message?.messageId)
                 )
               )
-            }).finally(() => this.startPrint())
+            }).then(() => this.setProgress(50)).finally(() => this.startPrint())
           })
         } else {
           this.startPrint()
@@ -101,7 +117,6 @@ export default {
     ]),
 
     startPrint() {
-      this.$message('Gerando PDF.')
       this.$nextTick().then(() => {
         setTimeout(this.print, 250)
       })
@@ -120,6 +135,10 @@ export default {
       } else {
         this.toggleExportTicketModalVisible(false)
       }
+    },
+
+    setProgress(progress) {
+      this.progress = progress
     }
   }
 }
@@ -129,13 +148,27 @@ export default {
 @import '@/styles/colors';
 
 .export-ticket-modal {
+  position: relative;
+
   .el-dialog__body {
+    .el-progress {
+      position: absolute;
+      z-index: 99999;
+      bottom: 0;
+      right: 0;
+    }
+
     .vue-html2pdf {
       .layout-container {
         background-color: $--color-white;
 
         .content-wrapper {
           width: 100% !important;
+
+          section {
+            max-width: 80vw;
+            margin: 0px auto;
+          }
         }
       }
     }

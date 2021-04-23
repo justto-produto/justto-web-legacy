@@ -1,8 +1,14 @@
 <template>
   <section class="communication-container">
     <div
+      v-if="toPrint"
+      class="date-to-print"
+    >
+      {{ sendDate | moment('[Em] DD/MM [-] HH:mm') }}
+    </div>
+    <div
       class="communication-container__email"
-      :class="directionIn ? 'INBOUND' : 'OUTBOUND'"
+      :class="directionIn || toPrint ? 'INBOUND' : 'OUTBOUND'"
     >
       <JusIcon
         class="communication-container__email-icon"
@@ -33,7 +39,7 @@
 
     <div class="communication-container__message">
       <span
-        v-if="!canShowFullMessage && !isSmallText"
+        v-if="!canShowFullMessage && !isSmallText && !toPrint"
         class="communication-container__message-link"
         @click="deleteFullMessage(interaction.message.messageId)"
       >
@@ -41,7 +47,7 @@
       </span>
       <span v-html="message" />
       <span
-        v-if="canShowFullMessage"
+        v-if="canShowFullMessage && !toPrint"
         class="communication-container__message-link"
         @click="getFullMessage(interaction.message.messageId)"
       >
@@ -49,7 +55,10 @@
       </span>
     </div>
 
-    <div class="communication-container__about">
+    <div
+      v-if="!toPrint"
+      class="communication-container__about"
+    >
       {{ sendDate | moment('HH:mm') }}
       <span v-if="sendStatus !== 'default' && !directionIn">
         •
@@ -214,7 +223,7 @@ export default {
     overflow: hidden;
 
     &.INBOUND {
-      color: #424242;
+      color: $--color-text-primary;
     }
 
     &.OUTBOUND {

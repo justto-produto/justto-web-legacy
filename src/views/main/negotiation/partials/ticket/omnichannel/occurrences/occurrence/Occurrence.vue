@@ -1,8 +1,12 @@
 <template>
-  <section class="occurrence-container">
+  <section
+    :id="`occurrence${value.id}`"
+    class="occurrence-container"
+  >
     <component
       :is="component"
       :value="occurrence"
+      v-bind="childProps"
     />
   </section>
 </template>

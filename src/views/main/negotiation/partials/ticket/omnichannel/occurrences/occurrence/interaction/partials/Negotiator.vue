@@ -1,9 +1,15 @@
 <template>
   <section class="negotiator-container">
+    <div
+      v-if="toPrint"
+      class="date-to-print"
+    >
+      {{ sendDate | moment('[Em] DD/MM [-] HH:mm') }}
+    </div>
     <div class="negotiator-container__contact">
       <JusIcon
         class="negotiator-container__email-icon"
-        icon="negotiation"
+        icon="negotiator-message-2"
       />
       <span
         v-if="contact.length"
@@ -18,9 +24,12 @@
       class="negotiator-container__content"
       v-html="message"
     />
-    <span class="negotiator-container__about negotiation-occurrence-about">
+    <span
+      v-if="!toPrint"
+      class="negotiator-container__about negotiation-occurrence-about"
+    >
       <span class="negotiator-container__about__time">
-        {{ interaction.createAt.dateTime | moment('HH:mm') }}
+        {{ sendDate | moment('HH:mm') }}
       </span>
 
       <span v-if="status.icon">
@@ -39,8 +48,11 @@
 
 <script>
 import { addInvisibleStatus } from '@/utils'
+import communicationSendStatus from '@/utils/mixins/communicationSendStatus'
 
 export default {
+  mixins: [communicationSendStatus],
+
   props: {
     value: {
       type: Object,
@@ -51,6 +63,7 @@ export default {
       required: true
     }
   },
+
   computed: {
     interaction() {
       return this.value
@@ -102,10 +115,6 @@ export default {
       return 'email'
     },
 
-    directionIn() {
-      return this.interaction.direction === 'INBOUND'
-    },
-
     prefix() {
       return this.directionIn ? 'de' : 'para'
     },
@@ -123,9 +132,11 @@ export default {
       }
     }
   },
+
   updated() {
     this.$set(this.occurrence, 'renderCompleted', true)
   },
+
   mounted() {
     this.$set(this.value, 'renderCompleted', true)
   }
@@ -133,6 +144,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '@/styles/colors.scss';
+
 .negotiator-container {
   overflow-y: hidden;
   margin: 12px;
@@ -140,7 +153,7 @@ export default {
   .negotiator-container__content {
     display: block;
     font-size: 16px;
-    color: #3C3B3B;
+    color: $--color-text-primary;
 
     @media (max-height: 900px) {
       font-size: 14px;
@@ -152,6 +165,8 @@ export default {
     align-items: center;
     justify-content: flex-start;
     gap: 6px;
+    font-weight: 600;
+    color: $--color-text-primary;
 
     .negotiator-container__email-icon {
       width: 16px;
