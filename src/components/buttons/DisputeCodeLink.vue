@@ -22,6 +22,11 @@
               @click="copyProccessCode"
             />
           </div>
+          <JusTjIdentifier
+            :code="code"
+            :disabled="!isJusttoAdmin"
+            class="dispute-code__icon"
+          />
           <i
             :class="status.icon"
             class="dispute-code__icon"
@@ -50,8 +55,14 @@ export default {
       default: () => ({})
     }
   },
+  components: {
+    // TicketTimeline: () => import('./TicketTimeline'),
+    JusTjIdentifier: () => import('@/components/others/JusTjIdentifier')
+  },
+
   computed: {
     ...mapGetters({
+      isJusttoAdmin: 'isJusttoAdmin',
       disputeTimeline: 'getDisputesTimeline'
     }),
 

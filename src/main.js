@@ -26,6 +26,7 @@ import '@/plugins/vueHtml2pdf'
 // FILTERS
 import '@/filters/capitalize'
 import '@/filters/cpfCnpj'
+import '@/filters/filterTj'
 import '@/filters/currency'
 import '@/filters/firstName'
 import '@/filters/phoneNumber'
