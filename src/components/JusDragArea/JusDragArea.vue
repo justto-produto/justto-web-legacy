@@ -62,13 +62,21 @@ export default {
     maskIsVisible: self => self.visible || self.isDragging
   },
   methods: {
-    ...mapActions(['uploadAttachment', 'getDisputeAttachments', 'hideLoadingAttachments']),
-    handleDragenter(evt) {
+    ...mapActions([
+      'uploadAttachment',
+      'getDisputeAttachments',
+      'hideLoadingAttachments',
+      'getTicketOverviewAttachments'
+    ]),
+
+    handleDragenter(_evt) {
       this.isDragging = true
     },
-    handleDragleave(evt) {
+
+    handleDragleave(_evt) {
       this.isDragging = false
     },
+
     handleDrop(evt) {
       const { files } = evt.dataTransfer || evt.target
 
@@ -76,6 +84,7 @@ export default {
 
       this.isDragging = false
     },
+
     uploadVerification(files) {
       let message
       const attatchmentIndexes = Object.keys(files)
@@ -95,6 +104,17 @@ export default {
         Object.keys(files).map(fileIndex => this.saveFile(files[fileIndex]))
       }).catch(() => false)
     },
+
+    updateAttachments(disputeId) {
+      if (window.location.href.includes('negotiation')) {
+        return this.getTicketOverviewAttachments(disputeId)
+      } else if (window.location.href.includes('dispute')) {
+        return this.getDisputeAttachments(disputeId)
+      } else {
+        return new Promise(resolve => resolve)
+      }
+    },
+
     saveFile(file) {
       this.isAttachmentLoading = true
       const segmentLog = `Solicitação de upload do arquivo ${file.name} com tamanho de ${file.size}`
@@ -107,9 +127,7 @@ export default {
         formData,
         file
       }).then(() => {
-        this.getDisputeAttachments(disputeId).then(() => {
-          this.$emit('closeDialog')
-          this.isAttachmentLoading = false
+        this.updateAttachments(disputeId).then(() => {
           this.$jusNotification({
             title: 'Yay!',
             message: 'Anexo(s) adicionado(s) com sucesso',
@@ -118,11 +136,13 @@ export default {
           this.$jusSegment(segmentLog, { fileName: file.name })
         })
       }).catch(error => {
-        this.$emit('closeDialog')
-        this.isAttachmentLoading = false
         this.$jusNotification({ error })
         this.$jusSegment(`${segmentLog} falhou`, { fileName: file.name })
-      }).finally(this.hideLoadingAttachments)
+      }).finally(() => {
+        this.$emit('closeDialog')
+        this.isAttachmentLoading = false
+        this.hideLoadingAttachments()
+      })
     }
   }
 }
