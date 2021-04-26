@@ -52,6 +52,7 @@ const billingActions = {
 
   addContract: ({ dispatch }, { customerId, contract }) => {
     const {
+      note,
       planId,
       status,
       tariffs,
@@ -68,6 +69,7 @@ const billingActions = {
       url: `${billingPath}/customer/${customerId}/contract`,
       method: 'POST',
       data: {
+        note,
         planId,
         status,
         tariffs,
