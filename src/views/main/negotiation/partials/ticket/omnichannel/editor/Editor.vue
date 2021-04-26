@@ -15,12 +15,14 @@
         :name="tab.name"
         :label="tab.label"
       >
-        <component
-          :is="tab.component.name"
-          v-if="tab.component && activeTab === tab.name"
-          :focus-on-startup.sync="needFocus"
-          :is-in-pre-negotiation="isPreNegotiation"
-        />
+        <JusDragArea>
+          <component
+            :is="tab.component.name"
+            v-if="tab.component && activeTab === tab.name"
+            :focus-on-startup.sync="needFocus"
+            :is-in-pre-negotiation="isPreNegotiation"
+          />
+        </JusDragArea>
       </el-tab-pane>
     </el-tabs>
     <div
@@ -45,6 +47,7 @@ import ticketPreNegotiation from '@/utils/mixins/ticketPreNegotiation'
 
 export default {
   components: {
+    JusDragArea: () => import('@/components/JusDragArea/JusDragArea'),
     QuickReply: () => import('./partials/QuickReply'),
     recipients: () => import('./partials/Recipients'),
     messages: () => import('./partials/Messages'),
