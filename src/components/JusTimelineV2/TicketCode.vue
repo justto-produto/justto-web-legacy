@@ -23,6 +23,11 @@
             class="jus-dispute-code__icon el-icon-copy-document hidden-icon"
             @click.stop="copyProccessCode"
           />
+          <JusTjIdentifier
+            :code="code"
+            :disabled="!isJusttoAdmin"
+            class="jus-dispute-code__icon hidden-icon"
+          />
         </span>
       </div>
     </el-tooltip>
@@ -39,10 +44,12 @@
 import { mapActions, mapGetters } from 'vuex'
 
 import brazilianStates from '@/constants/brazilianStates'
+import JusTjIdentifier from '../others/JusTjIdentifier.vue'
 
 export default {
   name: 'JusDisputeCode',
   components: {
+    JusTjIdentifier,
     TicketTimeline: () => import('./TicketTimeline')
   },
   props: {
@@ -61,6 +68,7 @@ export default {
   }),
   computed: {
     ...mapGetters({
+      isJusttoAdmin: 'isJusttoAdmin',
       disputesTimeline: 'getDisputesTimeline'
     }),
 
