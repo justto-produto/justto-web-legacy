@@ -68,17 +68,17 @@ export default {
     lastInboundInteraction() {
       const { lastInboundInteraction, lastReceivedMessage, disputeStatus, expirationDate } = this.ticket
 
-      if (lastReceivedMessage && lastReceivedMessage.message) {
-        const { message, dateTime } = lastReceivedMessage
-        return {
-          message,
-          dateTime: dateTime.dateTime
-        }
-      } else if (lastInboundInteraction && lastInboundInteraction.type) {
+      if (lastInboundInteraction && lastInboundInteraction.type) {
         const { type, dateTime } = lastInboundInteraction
         return {
           icon: this.$t(`interaction-types.${type}.icon`),
           message: this.$options.filters.capitalize(this.$t(`interaction-types.${type}.message`)),
+          dateTime: dateTime.dateTime
+        }
+      } else if (lastReceivedMessage && lastReceivedMessage.message) {
+        const { message, dateTime } = lastReceivedMessage
+        return {
+          message,
           dateTime: dateTime.dateTime
         }
       } else {

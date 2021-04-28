@@ -74,7 +74,7 @@ const getLastInteraction = function(lastinteractiondate) {
     return ''
   } else if (now.diff(date, 'seconds') < 59) {
     return 'há ' + now.diff(date, 'seconds') + ' segundos'
-  } else if (now.diff(date, 'minutes') < 59) {
+  } else if (now.diff(date, 'minutes') <= 59) {
     return 'há ' + now.diff(date, 'minutes') + ' minuto(s)'
   } else if (now.diff(date, 'hours') < 24) {
     return 'há ' + now.diff(date, 'hours') + ' hora(s)'

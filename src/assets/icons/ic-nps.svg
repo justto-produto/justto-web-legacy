@@ -1,0 +1,21 @@
+<svg id="ícone_NPS" data-name="ícone NPS" xmlns="http://www.w3.org/2000/svg" width="25.942" height="26.031"
+  viewBox="0 0 25.942 26.031">
+  <g id="Font_choices_as_flex" data-name="Font choices as flex" transform="translate(7.309 10.016)"
+    style="isolation: isolate">
+    <text id="NPS" transform="translate(5 5)" fill="#424242" font-size="6" font-family="Montserrat-Bold, Montserrat"
+      font-weight="700" style="isolation: isolate">
+      <tspan x="-6.534" y="0">NPS</tspan>
+    </text>
+  </g>
+  <g id="Grupo_39382" data-name="Grupo 39382" transform="translate(0)">
+    <path id="Caminho_10445" data-name="Caminho 10445"
+      d="M5.568,6.724l.873-1.855A7.466,7.466,0,0,1,1.961,0L0,.585A9.522,9.522,0,0,0,5.568,6.724Z"
+      transform="translate(4.232 8.581) rotate(39)" fill="#979797" />
+    <path id="Caminho_10446" data-name="Caminho 10446"
+      d="M2.046,3.88A7.389,7.389,0,0,1,2.671.9L.834,0A9.451,9.451,0,0,0,.28,6.165l1.98-.518A7.424,7.424,0,0,1,2.046,3.88Z"
+      transform="translate(7.681 3.715) rotate(39)" fill="#ff4b54" />
+    <path id="Caminho_10447" data-name="Caminho 10447"
+      d="M17.948,9.481A9.479,9.479,0,0,0,0,5.223l1.834.906A7.435,7.435,0,1,1,6.147,16.543l-.862,1.868a9.479,9.479,0,0,0,12.662-8.93Z"
+      transform="translate(11.994 0) rotate(39)" fill="#14cc30" />
+  </g>
+</svg>
