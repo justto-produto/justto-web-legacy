@@ -41,6 +41,10 @@
 <script>
 import { mapGetters } from 'vuex'
 export default {
+  components: {
+    JusTjIdentifier: () => import('@/components/others/JusTjIdentifier')
+  },
+
   props: {
     code: {
       type: String,
@@ -54,10 +58,6 @@ export default {
       type: Object,
       default: () => ({})
     }
-  },
-  components: {
-    // TicketTimeline: () => import('./TicketTimeline'),
-    JusTjIdentifier: () => import('@/components/others/JusTjIdentifier')
   },
 
   computed: {
