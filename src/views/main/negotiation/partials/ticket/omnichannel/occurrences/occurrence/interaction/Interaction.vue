@@ -52,7 +52,8 @@ export default {
     ATTACHMENT: () => import('@/views/main/dispute/partials/partials/AttachmentOccurrence'),
     NEGOTIATOR: () => import('./partials/Negotiator'),
     MANUAL: () => import('./partials/Manual'),
-    SCHEDULER: () => import('./partials/Scheduler')
+    SCHEDULER: () => import('./partials/Scheduler'),
+    NPS: () => import('./partials/Nps')
   },
   props: {
     value: {
@@ -80,7 +81,8 @@ export default {
         EMAIL: 'email',
         WHATSAPP: 'whatsapp',
         NEGOTIATOR_MESSAGE: 'negotiation',
-        SMS: 'sms'
+        SMS: 'sms',
+        NPS: 'nps'
       }
       if (this.interaction?.message?.communicationType) {
         const { communicationType } = this.interaction.message
