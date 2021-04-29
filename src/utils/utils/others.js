@@ -72,7 +72,7 @@ const getLastInteraction = function(lastinteractiondate) {
   const date = moment(lastinteractiondate)
   if (now.diff(date, 'seconds') < 0) {
     return ''
-  } else if (now.diff(date, 'seconds') < 59) {
+  } else if (now.diff(date, 'seconds') <= 59) {
     return 'há ' + now.diff(date, 'seconds') + ' segundos'
   } else if (now.diff(date, 'minutes') <= 59) {
     return 'há ' + now.diff(date, 'minutes') + ' minuto(s)'
