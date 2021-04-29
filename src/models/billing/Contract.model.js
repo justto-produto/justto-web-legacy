@@ -27,7 +27,8 @@ export class ContractModel {
       onlendingFee = 0,
       plan,
       monthlySubscriptionFee,
-      tariffs = []
+      tariffs = [],
+      note = ''
     }) {
     this._id = id
     this._status = status
@@ -39,6 +40,7 @@ export class ContractModel {
     this._tariffs = tariffs
     this._grossValueTax = grossValueTax
     this._onlendingFee = onlendingFee
+    this._note = note
   }
 
   get id() {

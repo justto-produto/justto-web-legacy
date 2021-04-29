@@ -206,7 +206,20 @@
               </el-col>
             </el-row>
 
-            <!-- 4 últimos campos de baixo do formulário -->
+            <!-- Campo nota -->
+            <el-row>
+              <el-col>
+                <el-form-item label="Nota">
+                  <textarea
+                    v-model="contract.note"
+                    class="el-textarea__inner"
+                    rows="4"
+                  />
+                </el-form-item>
+              </el-col>
+            </el-row>
+
+            <!-- Últimos campos de baixo do formulário -->
             <el-row :gutter="24">
               <el-col
                 v-for="(tariffValue, tariffKey, tariffCount) in tariffTypes"
@@ -395,6 +408,18 @@
                     :precision="3"
                     :step="0.1"
                     controls-position="right"
+                  />
+                </el-form-item>
+              </el-col>
+            </el-row>
+
+            <el-row>
+              <el-col>
+                <el-form-item label="Nota">
+                  <textarea
+                    v-model="newContract.note"
+                    class="el-textarea__inner"
+                    rows="4"
                   />
                 </el-form-item>
               </el-col>
