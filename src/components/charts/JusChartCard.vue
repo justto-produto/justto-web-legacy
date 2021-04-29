@@ -48,6 +48,7 @@
                 :width="npsWidth"
                 :color="colors"
                 :percentage="dataset.data[0]"
+                :format="(value) => `${value}`"
               />
               <span class="progress-label">
                 nps
@@ -141,7 +142,7 @@ export default {
       ]
     },
     npsWidth() {
-      return document.querySelector('#NPS')?.clientHeight || 50
+      return (document.querySelector('#NPS')?.clientHeight || 50) - 5
     }
   }
 }
@@ -163,8 +164,10 @@ export default {
         justify-content: flex-end;
         position: relative;
         border: none;
+        margin-bottom: -5px;
 
         &.center {
+          margin-bottom: 0;
           justify-content: center;
         }
 
