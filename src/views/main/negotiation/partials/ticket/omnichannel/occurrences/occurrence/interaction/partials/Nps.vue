@@ -3,11 +3,15 @@
     <div class="nps-container__contact">
       <jus-icon icon="nps" />
       <span>De</span>
-      <span>
+      <span v-if="person">
         {{ person | resumedName }}
       </span>
-      <span>
-        &lt;{{ interaction.message.sender }}&gt;
+      <span
+        v-if="senderEmail"
+        class="nps-container__contact-email"
+        @click="copyToClipboard"
+      >
+        &lt;{{ senderEmail }}&gt;
       </span>
     </div>
 
@@ -30,19 +34,88 @@
       </span>
     </div>
 
+    <div class="nps-container__reasons">
+      <el-tag
+        v-for="reason in npsReasons"
+        :key="`reason-${reason}`"
+        :class="reason"
+        class="nps-container__reasons-item"
+        effect="plain"
+        size="mini"
+      >
+        {{ reason.toLowerCase() }}
+      </el-tag>
+    </div>
+
+    <div
+      v-if="person"
+      class="nps-container__person-name"
+    >
+      {{ person | resumedName }} avaliou seu atendimento com {{ npsStars }} estrela(s)
+    </div>
+
     <div class="nps-container__comment">
       <span class="nps-container__comment-date">
-        Comentário em
-        {{ npsCommentDate | moment('DD/MM/YYYY [às] HH:MM') }}
+        {{ npsEvaluateDate | moment('[Comentário em] DD/MM/YYYY [às] HH:MM') }}
       </span>
+
       <span class="nps-container__comment-text">
-        "<span v-html="npsResume" />"
+        "{{ npsResume }}"
       </span>
     </div>
+
     <div class="nps-container__reply">
+      <div class="nps-container__reply-about">
+        <jus-icon
+          icon="reply"
+          class="nps-container__reply-about-icon"
+        />
+
+        <span
+          v-if="npsReplyDate"
+          class="nps-container__reply-about-date"
+        >
+          {{ npsReplyDate | moment('[Resposta em] DD/MM/YYYY [às] HH:MM') }}
+        </span>
+        <span
+          v-else
+          class="nps-container__reply-about-date"
+        >
+          Responda esta avaliação.
+        </span>
+      </div>
+
       <el-input
+        v-model="npsReply"
         type="textarea"
-        placeholder="Please input"
+        :rows="3"
+        :readonly="npsReplyHasText"
+        class="nps-container__reply-input"
+        placeholder="Sua resposta aqui."
+        resize="none"
+        @focus="toggleSendButton(true)"
+        @blur="toggleSendButton(false)"
+      />
+
+      <el-button
+        v-if="showSendBtn && !npsReplyHasText"
+        class="nps-container__reply-btn"
+        type="primary"
+        size="mini"
+        circle
+        plain
+        @click="sendReplyNps()"
+      >
+        <jus-icon icon="send" />
+      </el-button>
+      <el-button
+        v-else-if="loadingSendBtn"
+        class="nps-container__reply-btn"
+        icon="el-icon-loading"
+        type="primary"
+        size="mini"
+        circle
+        plain
       />
     </div>
   </article>
@@ -65,31 +138,111 @@ export default {
     }
   },
 
+  data: () => ({
+    npsReplyText: '',
+    loadingSendBtn: false,
+    showSendBtn: false
+  }),
+
   computed: {
     interaction() {
       return this.value
     },
 
     npsStars() {
-      return Number(this.interaction?.message?.parameters?.NPS_STARS)
+      return Number(this.interaction?.properties?.NPS_STARS || 0)
     },
 
     npsEvaluationText() {
       return this.npsStars <= 2 ? 'detrator' : this.npsStars < 4 ? 'neutro' : 'promotor'
     },
 
-    npsCommentDate() {
+    npsEvaluateDate() {
       return this.interaction?.updateAt?.dateTime || this.interaction?.createAt?.dateTime
     },
 
     npsResume() {
-      return this.interaction?.message?.resume || ''
+      return this.interaction?.properties?.NPS_COMMENT || ''
+    },
+
+    senderEmail() {
+      return this.interaction?.properties?.PERSON_EMAIL || ''
+    },
+
+    npsReasons() {
+      return this.interaction?.properties?.NPS_REASONS.split(',') || []
+    },
+
+    npsReply: {
+      get() {
+        return this.interaction?.properties?.NPS_REPLY || this.npsReplyText
+      },
+      set(text) {
+        this.npsReplyText = text
+      }
+    },
+
+    npsReplyHasText() {
+      return Boolean(this.interaction?.properties?.NPS_REPLY)
+    },
+
+    npsReplyDate() {
+      return this.interaction?.properties?.NPS_REPLY_DATE
+    }
+  },
+
+  methods: {
+    copyToClipboard(_event) {
+      navigator.clipboard.writeText(this.senderEmail).then(() => {
+        this.$message('Copiado com sucesso.')
+      })
+    },
+
+    toggleSendButton(visible) {
+      setTimeout(() => {
+        this.showSendBtn = visible
+      }, 250)
+    },
+
+    sendReplyNps() {
+      this.loadingSendBtn = true
+
+      // TODO: Salvar chamar a mutation que setta do dado no Store.
+      // TODO: Salvar a data em que foi enviado também.
+      const req = new Promise(resolve => {
+        setTimeout(() => {
+          this.loadingSendBtn = false
+          resolve()
+        }, 5000)
+      })
+
+      req.then(() => {
+        this.$jusNotification({
+          type: 'success',
+          title: 'Yay!',
+          message: 'Resposta enviada.'
+        })
+      })
     }
   }
 }
 </script>
 
+<style lang="scss">
+.nps-container__reply {
+  .nps-container__reply-input {
+    border: none;
+
+    .el-textarea__inner {
+      border: none;
+    }
+  }
+}
+</style>
+
 <style lang="scss" scoped>
+@import '@/styles/colors.scss';
+
 .nps-container {
   background-color: transparent;
   overflow: hidden;
@@ -107,6 +260,10 @@ export default {
     gap: 4px;
 
     font-weight: 600;
+
+    .nps-container__contact-email {
+      cursor: copy;
+    }
   }
 
   .nps-container__evaluation {
@@ -125,21 +282,38 @@ export default {
         border: none;
         text-transform: capitalize;
         font-weight: 500;
-        color: white;
+        color: $--color-white;
 
         &.promotor {
-          background-color: #14CC30;
+          background-color: $--color-nps-promoter;
         }
 
         &.neutro {
-          background-color: #979797;
+          background-color: $--color-nps-passive;
         }
 
         &.detrator {
-          background-color: #FF4B54;
+          background-color: $--color-nps-detractor;
         }
       }
     }
+  }
+
+  .nps-container__reasons {
+    display: flex;
+    gap: 8px;
+
+    .nps-container__reasons-item {
+      background-color: #00000050;
+      text-transform: capitalize;
+      font-weight: 500;
+      color: $--color-white;
+      border: none;
+    }
+  }
+
+  .nps-container__person-name {
+    font-size: 12px;
   }
 
   .nps-container__comment {
@@ -157,7 +331,50 @@ export default {
   }
 
   .nps-container__reply {
+    padding: 4px;
+    background: $--color-white;
+    border: solid 1px $--color-light-gray;
+    border-radius: 10px;
+    width: 100%;
+    position: relative;
 
+    .nps-container__reply-about {
+      display: flex;
+      gap: 8px;
+
+      .nps-container__reply-about-icon {
+        width: 16px;
+        height: 16px;
+        transform: rotate(180deg);
+      }
+
+      .nps-container__reply-about-date {
+        color: $--color-text-secondary;
+        font-size: 12px;
+      }
+    }
+
+    .nps-container__reply-btn {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      margin: 0 4px 4px 0;
+
+      color: #9461f7;
+      background: #f4effe;
+      border-color: #d4c0fc;
+
+      span > img {
+        width: 12px;
+        height: 12px;
+      }
+
+      &:hover {
+        color: #9461f7;
+        background: #f4effe;
+        border-color: #d4c0fc;
+      }
+    }
   }
 }
 </style>
