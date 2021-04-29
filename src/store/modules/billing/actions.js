@@ -88,6 +88,7 @@ const billingActions = {
   updateContract: ({ dispatch }, { customerId, contract }) => {
     const {
       id,
+      note,
       planId,
       status,
       tariffs,
@@ -103,6 +104,7 @@ const billingActions = {
       url: `${billingPath}/customer/${customerId}/contract/${id}`,
       method: 'patch',
       data: {
+        note,
         planId,
         status,
         tariffs,

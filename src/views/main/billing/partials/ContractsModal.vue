@@ -210,11 +210,11 @@
             <el-row>
               <el-col>
                 <el-form-item label="Nota">
-                <textarea
-                  v-model="contract.note"
-                  class="el-textarea__inner"
-                  rows="4"
-                />
+                  <textarea
+                    v-model="contract.note"
+                    class="el-textarea__inner"
+                    rows="4"
+                  />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -416,11 +416,11 @@
             <el-row>
               <el-col>
                 <el-form-item label="Nota">
-                <textarea
-                  v-model="newContract.note"
-                  class="el-textarea__inner"
-                  rows="4"
-                />
+                  <textarea
+                    v-model="newContract.note"
+                    class="el-textarea__inner"
+                    rows="4"
+                  />
                 </el-form-item>
               </el-col>
             </el-row>
