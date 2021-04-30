@@ -572,6 +572,9 @@
     "DISABLED": "inativo"
   },
   "dashboard": {
+    "NPS_DETRACTOR_PERCENTAGE": "detrator",
+    "NPS_PASSIVE_PERCENTAGE": "neutro",
+    "NPS_PROMOTER_PERCENTAGE": "promotor",
     "UPPER_RANGE_AVG": "alçada média",
     "SETTLED_DEALS_AVG": "média dos acordos",
     "SAVINGS_TOTAL": "economia",
