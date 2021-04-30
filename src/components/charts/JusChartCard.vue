@@ -4,7 +4,7 @@
       <el-col
         v-for="dataset in datasets"
         :key="dataset.label"
-        :style="`width: ${dataset.width}%; height: auto;`"
+        :style="`width: ${dataset.width}%;`"
       >
         <el-card
           :id="dataset.label"
@@ -17,7 +17,7 @@
             v-if="!dataset.isGraph"
             :class="'chart-card-view__icon ' + dataset.label"
           >
-            <i :class="dataset.icon" />
+            <jus-icon :icon="dataset.icon" />
           </div>
           <el-tooltip content="Valor referente a todo o período desse time">
             <div
@@ -78,7 +78,7 @@ export default {
         ? this.data.datasets.filter(ds => ds.label !== 'SAVINGS_PERCENTAGE').map(ds => {
           switch (ds.label) {
             case 'NPS_PROMOTER_PERCENTAGE':
-              ds.icon = 'el-icon-s-ticket'
+              ds.icon = 'nps-promoter-emoji'
               ds.width = 25
               ds.isPercentage = true
               ds.labelDark = false
@@ -90,35 +90,35 @@ export default {
               ds.width = 25
               break
             case 'NPS_DETRACTOR_PERCENTAGE':
-              ds.icon = 'el-icon-s-ticket'
+              ds.icon = 'nps-detractor-emoji'
               ds.width = 25
               ds.isPercentage = true
               ds.labelDark = false
               ds.color = '#FF4B54'
               break
             case 'NPS_PASSIVE_PERCENTAGE':
-              ds.icon = 'el-icon-s-ticket'
+              ds.icon = 'nps-passive-emoji'
               ds.width = 25
               ds.isPercentage = true
               ds.labelDark = true
               ds.color = '#F5F5F5'
               break
             case 'UPPER_RANGE_AVG':
-              ds.icon = 'el-icon-s-ticket'
+              ds.icon = 'upper-range-emoji'
               ds.width = 50
               ds.isPercentage = false
               ds.labelDark = false
               ds.color = '#FED300'
               break
             case 'SETTLED_DEALS_AVG':
-              ds.icon = 'el-icon-s-finance'
+              ds.icon = 'settled-deals-emoji'
               ds.width = 50
               ds.isPercentage = false
               ds.labelDark = false
               ds.color = '#30A4F2'
               break
             case 'SAVINGS_TOTAL':
-              ds.icon = 'el-icon-s-marketing'
+              ds.icon = 'savings-total-emoji'
               ds.width = 100
               ds.isPercentage = false
               ds.labelDark = false
@@ -156,6 +156,7 @@ export default {
     .el-col {
       min-height: 70px;
       padding: 5px;
+      height: 33%;
 
       .chart-card-view__card {
         flex: 1;
@@ -164,7 +165,6 @@ export default {
         justify-content: flex-end;
         position: relative;
         border: none;
-        margin-bottom: -5px;
 
         &.center {
           margin-bottom: 0;
@@ -184,10 +184,13 @@ export default {
             position: absolute;
             bottom: 0;
             left: 0;
-            opacity: .25;
-            font-size: 26px;
             z-index: 1;
-            margin: 0 0 0 8px;
+            margin: 0 0 4px 8px;
+
+            img {
+              width: 30px;
+              height: 30px;
+            }
           }
 
           .chart-card-view__info {
