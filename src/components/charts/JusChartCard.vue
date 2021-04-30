@@ -4,7 +4,7 @@
       <el-col
         v-for="dataset in datasets"
         :key="dataset.label"
-        :style="`width: ${dataset.width}%;`"
+        :style="`width: ${dataset.width}%; height: ${cardheight}%`"
       >
         <el-card
           :id="dataset.label"
@@ -130,10 +130,12 @@ export default {
         })
         : []
     },
+
     savingsPercentage() {
       return this.data && this.data.datasets
         ? this.data.datasets.find(ds => ds.label === 'SAVINGS_PERCENTAGE').data[0] : null
     },
+
     colors() {
       return [
         { color: '#FF4B54', percentage: 20 },
@@ -141,8 +143,14 @@ export default {
         { color: '#14CC30', percentage: 100 }
       ]
     },
+
     npsWidth() {
       return (document.querySelector('#NPS')?.clientHeight || 50) - 5
+    },
+
+    cardheight() {
+      const quantity = this.datasets.map(({ width }) => (width || 0)).reduce((acc, cur) => (acc + cur))
+      return parseInt(100 / (quantity / 100))
     }
   }
 }
@@ -156,7 +164,6 @@ export default {
     .el-col {
       min-height: 70px;
       padding: 5px;
-      height: 33%;
 
       .chart-card-view__card {
         flex: 1;

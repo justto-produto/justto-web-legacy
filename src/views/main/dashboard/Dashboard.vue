@@ -198,8 +198,8 @@ export default {
       return chart.data
     },
     disputeMonetarySummaries() {
-      // let chart = this.$store.getters.getChartsDatasets('DISPUTE_MONETARY_SUMMARIES')
-      const chart = this.format(this.$store.getters.getNpsSummary)
+      const chart = this.format(this.$store.getters.getChartsDatasets('DISPUTE_MONETARY_SUMMARIES'))
+      // const chart = this.format(this.$store.getters.getNpsSummary)
       return chart.data
     },
     disputeStatusSummaryWithWarn() {
