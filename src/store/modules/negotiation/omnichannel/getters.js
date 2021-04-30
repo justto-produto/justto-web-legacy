@@ -13,38 +13,38 @@ const omnichannelGetters = {
   getEditorText: state => (state.editor.messageText),
   getNoteEditorText: state => (state.editor.noteText),
   getOccurrencesList: state => ([
-    ...state.occurrences.list,
-    {
-      id: 1641311000,
-      createAt: { dateTime: '2021-04-16T20:57:23Z', javaDate: false },
-      updateAt: null,
-      archived: false,
-      disputeId: 185189,
-      description: 'Avaliação do NPS.',
-      type: 'INTERACTION',
-      executionDateTime: { dateTime: '2021-04-16T20:57:23Z', javaDate: false },
-      status: 'RUNNING',
-      interaction: {
-        id: 1037392800,
-        createAt: { dateTime: '2021-04-16T20:57:23Z', javaDate: false },
-        updateAt: null,
-        archived: false,
-        message: null,
-        type: 'NPS',
-        direction: 'INBOUND',
-        properties: {
-          PERSON_EMAIL: 'josewilliam@justto.com.br',
-          PERSON_NAME: 'LUCAS ISRAEL AMANCIO DA SILVA',
-          NPS_COMMENT: 'Mussum Ipsum, cacilds vidis litro abertis. Mais vale um bebadis conhecidiss, que um alcoolatra anonimis. Interessantiss quisso pudia ce receita de bolis, mais bolis eu num gostis. Atirei o pau no gatis, per gatis num morreus. Posuere libero varius. Nullam a nisl ut ante blandit hendrerit. Aenean sit amet nisi.S',
-          NPS_REASONS: 'ATENDIMENTO, ALÇADA INSUFICIENTE',
-          NPS_STARS: 4,
-          NPS_REPLY: 'É nois!',
-          NPS_REPLY_DATE: '2021-04-16T20:57:23Z'
-        }
-      },
-      properties: { GROUPED_OCCURRENCES: '[]' },
-      messageId: '16413110'
-    }
+    ...state.occurrences.list
+    // {
+    //   id: 1641311000,
+    //   createAt: { dateTime: '2021-04-16T20:57:23Z', javaDate: false },
+    //   updateAt: null,
+    //   archived: false,
+    //   disputeId: 185189,
+    //   description: 'Avaliação do NPS.',
+    //   type: 'INTERACTION',
+    //   executionDateTime: { dateTime: '2021-04-16T20:57:23Z', javaDate: false },
+    //   status: 'RUNNING',
+    //   interaction: {
+    //     id: 1037392800,
+    //     createAt: { dateTime: '2021-04-16T20:57:23Z', javaDate: false },
+    //     updateAt: null,
+    //     archived: false,
+    //     message: null,
+    //     type: 'NPS',
+    //     direction: 'INBOUND',
+    //     properties: {
+    //       PERSON_EMAIL: 'josewilliam@justto.com.br',
+    //       PERSON_NAME: 'LUCAS ISRAEL AMANCIO DA SILVA',
+    //       NPS_COMMENT: 'Mussum Ipsum, cacilds vidis litro abertis. Mais vale um bebadis conhecidiss, que um alcoolatra anonimis. Interessantiss quisso pudia ce receita de bolis, mais bolis eu num gostis. Atirei o pau no gatis, per gatis num morreus. Posuere libero varius. Nullam a nisl ut ante blandit hendrerit. Aenean sit amet nisi.S',
+    //       NPS_REASONS: 'ATENDIMENTO, ALÇADA INSUFICIENTE',
+    //       NPS_STARS: 4,
+    //       NPS_REPLY: '',
+    //       NPS_REPLY_DATE: null
+    //     }
+    //   },
+    //   properties: { GROUPED_OCCURRENCES: '[]' },
+    //   messageId: '16413110'
+    // }
   ]),
   getEditorRecipients: state => (state.editor.recipients),
   getEditorMessageType: state => (state.editor.messageType),
