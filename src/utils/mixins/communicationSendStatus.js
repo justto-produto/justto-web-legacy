@@ -11,7 +11,7 @@ export default {
       if (this?.interaction?.properties?.PERSON_NAME) {
         return this.$options.filters.resumedName(this?.interaction?.properties?.PERSON_NAME)
       } else {
-        const name = this.interaction.message.parameters[this.directionIn ? 'SENDER_NAME' : 'RECEIVER_NAME']
+        const name = this.interaction?.message?.parameters[this.directionIn ? 'SENDER_NAME' : 'RECEIVER_NAME']
         return this.$options.filters.resumedName(name || '')
       }
     },
