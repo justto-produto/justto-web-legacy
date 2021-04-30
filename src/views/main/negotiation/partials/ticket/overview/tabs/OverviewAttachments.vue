@@ -121,7 +121,11 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['deleteAttachment', 'getDisputeAttachments']),
+    ...mapActions([
+      'deleteAttachment',
+      'getDisputeAttachments',
+      'getTicketOverviewAttachments'
+    ]),
 
     copyUrl(value) {
       navigator.clipboard.writeText(value)
@@ -142,7 +146,9 @@ export default {
           disputeId: attachment.disputeId,
           documentId: attachment.id
         }).then(() => {
-          this.getDisputeAttachments(attachment.disputeId).then(() => {
+          const update = this.$route.fullPath.includes('negotiation') ? this.getTicketOverviewAttachments : this.getDisputeAttachments
+
+          update(attachment.disputeId).then(() => {
             this.$jusNotification({
               title: 'Yay!',
               message: 'Anexo removido com sucesso',
