@@ -13,7 +13,7 @@
 export default {
   name: 'PreNegotiationDialog',
   components: {
-    PreNegotiation: () => import('@/views/main/configurations/PreNegotiation')
+    PreNegotiation: () => import('@/views/main/configurations/partials/PreNegotiation')
   },
   data: () => ({
     preNegotiationDialogVisible: false

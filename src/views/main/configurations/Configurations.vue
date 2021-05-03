@@ -21,9 +21,9 @@
 export default {
   name: 'Configurations',
   components: {
-    WorkspaceData: () => import('./WorkspaceData'),
-    Team: () => import('./Team'),
-    FeaturesAndModules: () => import('./FeaturesAndModules'),
+    WorkspaceData: () => import('./partials/WorkspaceData'),
+    Team: () => import('./partials/Team'),
+    FeaturesAndModules: () => import('./partials/FeaturesAndModules'),
     HeaderUserMenu: () => import('@/components/menus/HeaderUserMenu')
   },
   data: () => ({
