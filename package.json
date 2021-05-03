@@ -11,7 +11,7 @@
   "scripts": {
     "serve": "vue-cli-service serve --open",
     "build": "vue-cli-service build && apv update build",
-    "build:icons": "icon-font-generator src/assets/icons/*.svg -o src/assets/fonts --csspath src/assets/styles/icons.css --jsonpath src/constants/icons.json --html false --types 'ttf' -p ic",
+    "build:icons": "icon-font-generator src/assets/icons/*.svg -o public/fonts --csspath public/styles/icons.css --jsonpath src/constants/icons.json --html false --types 'ttf, woff, woff2, eot' -p ic",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint",
