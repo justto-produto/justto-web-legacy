@@ -286,18 +286,24 @@ export default {
       if (response.profile) this.$store.commit('setProfile', response.profile)
       if (response.person) {
         this.$store.commit('setLoggedPerson', response.person)
+
+        const isJustto = response.person.emails?.filter(({ address, archived }) => (!archived && address.includes('@justto.com')))
+
+        this.$store.dispatch('getWorkspaceMembers')
+          .then(() => {
+            console.log(response.person)
+            if (response.profile === 'ADMINISTRATOR' && !isJustto) {
+              this.$router.push('/')
+            } else {
+              this.$router.push('/negotiation')
+            }
+          }).catch(error => {
+            console.error(error)
+            this.mountError()
+          })
+      } else {
+        this.$router.push('/')
       }
-      this.$store.dispatch('getWorkspaceMembers')
-        .then(() => {
-          if (window.innerWidth <= 900) {
-            this.$router.push('/negotiation')
-          } else {
-            this.$router.push('/')
-          }
-        }).catch(error => {
-          console.error(error)
-          this.mountError()
-        })
     },
     selectWorkspace() {
       this.$refs.workspaceForm.validate(valid => {
