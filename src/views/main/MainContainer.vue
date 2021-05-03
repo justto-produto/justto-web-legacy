@@ -119,6 +119,13 @@ export default {
     menuItems() {
       const itemsMenu = []
       itemsMenu.push({
+        index: '/negotiation',
+        title: 'Negociação',
+        icon: 'negotiation-window',
+        isVisible: true,
+        action: () => {}
+      })
+      itemsMenu.push({
         index: '/',
         title: 'Dashboard',
         icon: 'dashboard',
@@ -129,21 +136,21 @@ export default {
       itemsMenu.push({
         isGroup: true,
         index: 'disputes',
-        name: 'Disputas',
+        name: 'Todas as disputas',
         childs: [
-          {
-            index: '/negotiation',
-            title: 'Negociação',
-            icon: 'negotiation-window',
-            isVisible: true,
-            action: () => {}
-          },
           {
             index: '/management',
             title: 'Gerenciamento',
             icon: 'list-app',
             isVisible: true,
             action: () => this.setTabQuery('management')
+          },
+          {
+            index: '/management/all',
+            title: 'Todas as disputas',
+            icon: 'full-folder',
+            isVisible: true,
+            action: () => this.setTabQuery('allDisputes')
           }
         ]
       })
@@ -179,13 +186,6 @@ export default {
       //     action: () => this.setTabQuery('management')
       //   })
       // }
-      itemsMenu.push({
-        index: '/management/all',
-        title: 'Todas as disputas',
-        icon: 'full-folder',
-        isVisible: true,
-        action: () => this.setTabQuery('allDisputes')
-      })
       itemsMenu.push({
         index: '/import',
         title: 'Importação',
