@@ -19,8 +19,9 @@
       :paginate-elements-by-height="1400"
       :filename="filename"
       :pdf-quality="2"
-      :manual-pagination="true"
+      :html-to-pdf-options="htmlOptions"
       :margin="0"
+      manual-pagination
       pdf-content-width="100%"
       pdf-format="a4"
       pdf-orientation="portrait"
@@ -78,6 +79,13 @@ export default {
 
     filename() {
       return `JUSTTO - Negociação - #${this.$route.params.id} - ${this.tab}`
+    },
+
+    htmlOptions() {
+      return {
+        filename: this.filename,
+        jsPDF: { format: 'a4', orientation: 'portrait' }
+      }
     }
   },
 

@@ -12,9 +12,9 @@ const account = {
       'josewilliam@justto.com.br',
       'lucas@justto.com.br',
       'daniel@justto.com.br',
-      'gabriel@justto.com.br',
       'guilherme@justto.com.br',
-      'deivid@justto.com.br'
+      'deivid@justto.com.br',
+      'micaias@justto.com.br'
     ],
     preferences: {
       tourSteps: {},
