@@ -47,14 +47,15 @@
 </template>
 
 <script>
-import { getLastInteraction } from '@/utils'
 import { mapGetters } from 'vuex'
 import preNegotiation from '@/utils/mixins/ticketPreNegotiation'
+
+import sharedMethods from './patials/sharedTicketdMethods'
 
 export default {
   name: 'TicketItem',
 
-  mixins: [preNegotiation],
+  mixins: [preNegotiation, sharedMethods],
 
   props: {
     ticket: {
@@ -82,19 +83,6 @@ export default {
       } else {
         return this.$options.filters.capitalize(this.$t(`dispute.status.${disputeStatus}`))
       }
-    }
-  },
-  methods: {
-    hangleSelectTicket() {
-      if (!this.isActive) {
-        this.$router.push({
-          name: 'ticket',
-          params: { id: this.ticket.disputeId }
-        })
-      }
-    },
-    getLastInteraction(time) {
-      return getLastInteraction(time)
     }
   }
 }

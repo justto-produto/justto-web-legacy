@@ -46,5 +46,9 @@ export default {
     keys: ['ctrl', '/'],
     codes: ['ctrl', '&#47;'],
     callback: 'SHOW_SHORTCUTS_HELP_2'
+  },
+  TICKET_CHANGE: {
+    isShortcut: false,
+    callback: 'TICKET_CHANGE'
   }
 }

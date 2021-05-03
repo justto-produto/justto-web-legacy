@@ -19,19 +19,24 @@
 </template>
 
 <script>
+import events from '@/constants/negotiationEvents'
+import { eventBus } from '@/utils'
 import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'Ticket',
+
   components: {
     Omnichannel: () => import('./omnichannel/Omnichannel'),
     Overview: () => import('./overview/Overview'),
     TicketHeader: () => import('./TicketHeader'),
     TicketResume: () => import('./TicketResumeDialog')
   },
+
   data: () => ({
     showOverview: false
   }),
+
   computed: {
     ...mapGetters({
       isGhost: 'ghostMode',
@@ -48,19 +53,25 @@ export default {
       }
     }
   },
+
   watch: {
-    '$route.params.id'(current, old) {
+    '$route.params.id'(_current, old) {
       this.socketAction('unsubscribe', old)
       this.fetchData()
     }
   },
+
   beforeMount() {
     this.fetchData()
+    eventBus.$on(events.TICKET_CHANGE.callback, (_id) => this.fetchData())
   },
+
   beforeDestroy() {
     const { id } = this.$route.params
     this.socketAction('unsubscribe', id)
+    eventBus.$off(events.TICKET_CHANGE.callback, (_id) => this.fetchData())
   },
+
   methods: {
     ...mapActions([
       'setTicketVisualized',

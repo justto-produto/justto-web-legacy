@@ -57,7 +57,7 @@ export default {
 
   computed: {
     shortcuts() {
-      return Object.values(events)
+      return Object.values(events).filter(({ isShortcut }) => isShortcut !== false)
     }
   },
 

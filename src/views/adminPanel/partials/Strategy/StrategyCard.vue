@@ -117,21 +117,29 @@
             Sem tipo a estratégia <strong>não funciona!</strong> Escolha ao menos um!
           </span>
         </div>
-        <el-select
-          v-if="strategySelections[`strategy${strategyData.id}`]"
-          v-model="strategyData.types"
-          filterable
-          multiple
-          placeholder="Selecione tipos"
-          @change="changeStrategyTypes()"
-        >
-          <el-option
-            v-for="(type, index) in defaultStrategyTypes"
-            :key="index"
-            :label="$t(`strategyTypes.${type}`).toUpperCase()"
-            :value="type"
-          />
-        </el-select>
+        <div v-else>
+          <el-select
+            v-if="strategySelections[`strategy${strategyData.id}`]"
+            v-model="strategyData.types"
+            filterable
+            multiple
+            placeholder="Selecione tipos"
+            @change="changeStrategyTypes()"
+          >
+            <el-option
+              v-for="(type, index) in defaultStrategyTypes"
+              :key="index"
+              :label="$t(`strategyTypes.${type}`).toUpperCase()"
+              :value="type"
+            />
+          </el-select>
+          <span
+            v-if="strategyData.types.length === 0"
+            class="strategy-card__flex-area-select-alert"
+          >
+            Sem tipo a estratégia <strong>não funciona!</strong> Escolha ao menos um!
+          </span>
+        </div>
       </div>
     </div>
   </div>
@@ -221,8 +229,15 @@ export default {
     },
 
     changeStrategyActive() {
-      this.strategyData.active = !this.strategyData.active
-      this.changeStrategyData()
+      if (this.strategyData.types?.length) {
+        this.strategyData.active = !this.strategyData.active
+        this.changeStrategyData()
+      } else {
+        this.$jusNotification({
+          title: 'Ops!',
+          message: 'Escolha ao menos um tipo para a estratégia'
+        })
+      }
     },
 
     emitCopyStrategy() {
@@ -325,6 +340,11 @@ export default {
           color: $--color-text-primary;
           margin: 2px;
         }
+      }
+
+      .strategy-card__flex-area-select-alert {
+        color: red;
+        font-size: 12px;
       }
     }
   }
