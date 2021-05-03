@@ -40,6 +40,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 import { eventBus } from '@/utils'
+import events from '@/constants/negotiationEvents'
 
 export default {
   components: {
@@ -82,11 +83,8 @@ export default {
   },
 
   watch: {
-    '$route.params.id'() {
-      this.resetRecipients()
-      this.resetOccurrences()
-      this.resetMessageText()
-      this.resetNoteText()
+    '$route.params.id'(id) {
+      this.handleChangeTicket(id)
     },
     'countRendereds'() {
       this.adjustScroll()
@@ -96,12 +94,14 @@ export default {
     eventBus.$on('NEGOTIATION_WEBSOCKET_NEW_OCCURRENCE', () => {
       this.needScroll = true
     })
+    eventBus.$on(events.TICKET_CHANGE.callback, this.handleChangeTicket)
   },
   updated() {
     if (this.needScroll) this.adjustScroll(true)
   },
   beforeDestroy() {
     eventBus.$off('NEGOTIATION_WEBSOCKET_NEW_OCCURRENCE')
+    eventBus.$off(events.TICKET_CHANGE.callback, this.changeTicket)
   },
   methods: {
     ...mapActions([
@@ -133,6 +133,13 @@ export default {
       } else {
         $state.complete()
       }
+    },
+
+    handleChangeTicket(_id) {
+      this.resetRecipients()
+      this.resetOccurrences()
+      this.resetMessageText()
+      this.resetNoteText()
     }
   }
 }

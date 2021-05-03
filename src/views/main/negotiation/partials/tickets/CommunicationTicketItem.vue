@@ -51,10 +51,13 @@
 </template>
 
 <script>
-import { getLastInteraction } from '@/utils'
+import sharedMethods from './patials/sharedTicketdMethods'
 
 export default {
   name: 'CommunicationTicketItem',
+
+  mixins: [sharedMethods],
+
   props: {
     ticket: {
       type: Object,
@@ -92,19 +95,6 @@ export default {
     plaintiffName() {
       const { plaintiff } = this.ticket
       return plaintiff ? plaintiff.name : 'Sem parte'
-    }
-  },
-  methods: {
-    hangleSelectTicket() {
-      if (!this.isActive) {
-        this.$router.push({
-          name: 'ticket',
-          params: { id: this.ticket.disputeId }
-        })
-      }
-    },
-    getLastInteraction(time) {
-      return getLastInteraction(time)
     }
   }
 }
