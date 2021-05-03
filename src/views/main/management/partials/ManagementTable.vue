@@ -413,6 +413,7 @@ export default {
     ...mapGetters({
       disputeTimeline: 'getDisputesTimeline',
       loading: 'loading',
+      disputes: 'disputes',
       lastAccess: 'lastAccess',
       onlineDocuments: 'onlineDocuments'
     }),
@@ -424,9 +425,6 @@ export default {
       set(ids) {
         this.$emit('update:selectedIds', ids)
       }
-    },
-    disputes() {
-      return this.$store.getters.disputes
     },
     tab0() {
       return this.activeTab === '0'
@@ -572,13 +570,22 @@ export default {
       this.selectedDispute = dispute
     },
 
+    handleSelectionAllDisputes(recent) {
+      recent.forEach(dispute => this.$refs.disputeTable.toggleRowSelection(dispute))
+    },
+
     infiniteHandler($state) {
+      const isAllChecked = this.disputes.length === this.selectedIdsComp.length
       this.$store.commit('addDisputeQueryPage')
       this.$store.dispatch('getDisputes', 'nextPage').then(response => {
         if (response.last) {
           $state.complete()
         } else {
           $state.loaded()
+        }
+
+        if (isAllChecked) {
+          this.handleSelectionAllDisputes(response.content)
         }
       })
     }
