@@ -53,6 +53,32 @@
             </span>
           </el-alert>
         </div>
+
+        <div
+          v-if="keyAccount"
+          class="workspace-data-container__form-item"
+        >
+          <span class="workspace-data-container__input-label">
+            Key Account
+          </span>
+
+          <span class="el-input__inner">
+            <strong>{{ keyAccount.name }}</strong>
+            <span>
+              &lt;
+              {{ keyAccount.email }}
+              &gt;
+            </span>
+          </span>
+        </div>
+        <div class="workspace-data-container__form-item">
+          <a
+            class="workspace-data-container__form-item-link"
+            @click="handleOpenAssociateKeyAccountDialog"
+          >
+            Associar Key Account
+          </a>
+        </div>
       </div>
 
       <el-upload
@@ -82,6 +108,28 @@
         </span>
       </el-upload>
     </article>
+
+    <el-dialog
+      title="Associar key accounts"
+      :visible.sync="associateKeyAccountDialogVisible"
+      width="30%"
+    >
+      <span>This is a message</span>
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click="associateKeyAccountDialogVisible = false">
+          Cancel
+        </el-button>
+        <el-button
+          type="primary"
+          @click="associateKeyAccountDialogVisible = false"
+        >
+          Confirm
+        </el-button>
+      </span>
+    </el-dialog>
   </section>
 </template>
 
@@ -90,16 +138,20 @@ import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'WorkspaceData',
+
   data: () => ({
     teamName: '',
     workspaceName: '',
     imageUrl: '',
-    isUploadingFile: false
+    isUploadingFile: false,
+    associateKeyAccountDialogVisible: false
   }),
+
   computed: {
     ...mapGetters([
       'workspace',
-      'accountToken'
+      'accountToken',
+      'isJusttoAdmin'
     ]),
 
     requestHeaders() {
@@ -107,14 +159,24 @@ export default {
         Workspace: this.workspace?.subDomain,
         Authorization: this.accountToken
       }
+    },
+
+    keyAccount() {
+      return undefined
+      // return {
+      //   name: 'Lucas Israel',
+      //   email: 'lucas@Justto.com.br'
+      // }
     }
   },
+
   beforeMount() {
     const { teamName, name, logoUrl } = this.workspace
     this.imageUrl = logoUrl
     this.teamName = teamName
     this.workspaceName = name
   },
+
   methods: {
     ...mapActions([
       'editWorkpace',
@@ -192,6 +254,10 @@ export default {
     handleChangeWorkspaceLogoError(error) {
       this.$jusNotification({ error })
       this.isUploadingFile = false
+    },
+
+    handleOpenAssociateKeyAccountDialog(_event) {
+      this.associateKeyAccountDialogVisible = true
     }
   }
 }
