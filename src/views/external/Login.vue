@@ -295,7 +295,8 @@ export default {
             if (response.profile === 'ADMINISTRATOR' && !isJustto) {
               this.$router.push('/')
             } else {
-              this.$router.push('/negotiation')
+              this.$router.push('/')
+              // this.$router.push('/negotiation')
             }
           }).catch(error => {
             console.error(error)
