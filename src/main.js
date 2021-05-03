@@ -37,7 +37,6 @@ import '@/filters/oab'
 // STYLES
 import '@/styles/core.scss'
 import '@/styles/transitions.scss'
-import '@/assets/styles/icons.css'
 
 import '@/styles/overrides/alert.scss'
 import '@/styles/overrides/badge.scss'

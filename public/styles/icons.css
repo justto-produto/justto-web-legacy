@@ -1,6 +1,9 @@
 @font-face {
     font-family: "icons";
-    src: url("../fonts/icons.ttf?78db9d1447c976ccd13a92e238768359") format("truetype");
+    src: url("../fonts/icons.eot?4d65da70ce8bb8a1bb9622055fac5005?#iefix") format("embedded-opentype"),
+url("../fonts/icons.woff2?4d65da70ce8bb8a1bb9622055fac5005") format("woff2"),
+url("../fonts/icons.woff?4d65da70ce8bb8a1bb9622055fac5005") format("woff"),
+url("../fonts/icons.ttf?4d65da70ce8bb8a1bb9622055fac5005") format("truetype");
 }
 
 i[class^="ic-"]:before, i[class*=" ic-"]:before {
@@ -395,219 +398,246 @@ i[class^="ic-"]:before, i[class*=" ic-"]:before {
 .ic-ic-notification:before {
     content: "\f17f";
 }
-.ic-ic-offices-tower-active:before {
+.ic-ic-nps-detractor-emoji:before {
     content: "\f180";
 }
-.ic-ic-offices-tower:before {
+.ic-ic-nps-passive-emoji:before {
     content: "\f181";
 }
-.ic-ic-online:before {
+.ic-ic-nps-promoter-emoji:before {
     content: "\f182";
 }
-.ic-ic-open-case:before {
+.ic-ic-nps-star-active:before {
     content: "\f183";
 }
-.ic-ic-open-close-envelopes:before {
+.ic-ic-nps-star:before {
     content: "\f184";
 }
-.ic-ic-options-list:before {
+.ic-ic-nps:before {
     content: "\f185";
 }
-.ic-ic-own-cause:before {
+.ic-ic-offices-tower-active:before {
     content: "\f186";
 }
-.ic-ic-pause:before {
+.ic-ic-offices-tower:before {
     content: "\f187";
 }
-.ic-ic-pencil-active:before {
+.ic-ic-online:before {
     content: "\f188";
 }
-.ic-ic-pending:before {
+.ic-ic-open-case:before {
     content: "\f189";
 }
-.ic-ic-people-documentation:before {
+.ic-ic-open-close-envelopes:before {
     content: "\f18a";
 }
-.ic-ic-phone-active:before {
+.ic-ic-options-list:before {
     content: "\f18b";
 }
-.ic-ic-plaintff:before {
+.ic-ic-own-cause:before {
     content: "\f18c";
 }
-.ic-ic-polarity:before {
+.ic-ic-pause:before {
     content: "\f18d";
 }
-.ic-ic-positive-hand:before {
+.ic-ic-pencil-active:before {
     content: "\f18e";
 }
-.ic-ic-power-plug:before {
+.ic-ic-pending:before {
     content: "\f18f";
 }
-.ic-ic-pre_negotiation:before {
+.ic-ic-people-documentation:before {
     content: "\f190";
 }
-.ic-ic-profile-active:before {
+.ic-ic-phone-active:before {
     content: "\f191";
 }
-.ic-ic-profile:before {
+.ic-ic-plaintff:before {
     content: "\f192";
 }
-.ic-ic-proposal-white:before {
+.ic-ic-polarity:before {
     content: "\f193";
 }
-.ic-ic-proposal:before {
+.ic-ic-positive-hand:before {
     content: "\f194";
 }
-.ic-ic-protocol:before {
+.ic-ic-power-plug:before {
     content: "\f195";
 }
-.ic-ic-refresh:before {
+.ic-ic-pre_negotiation:before {
     content: "\f196";
 }
-.ic-ic-refused:before {
+.ic-ic-profile-active:before {
     content: "\f197";
 }
-.ic-ic-rejected-red:before {
+.ic-ic-profile:before {
     content: "\f198";
 }
-.ic-ic-rejected-white:before {
+.ic-ic-proposal-white:before {
     content: "\f199";
 }
-.ic-ic-rejected:before {
+.ic-ic-proposal:before {
     content: "\f19a";
 }
-.ic-ic-reply-active:before {
+.ic-ic-protocol:before {
     content: "\f19b";
 }
-.ic-ic-reply:before {
+.ic-ic-refresh:before {
     content: "\f19c";
 }
-.ic-ic-resend-messages:before {
+.ic-ic-refused:before {
     content: "\f19d";
 }
-.ic-ic-resend-messages2:before {
+.ic-ic-rejected-red:before {
     content: "\f19e";
 }
-.ic-ic-right-arrow:before {
+.ic-ic-rejected-white:before {
     content: "\f19f";
 }
-.ic-ic-right:before {
+.ic-ic-rejected:before {
     content: "\f1a0";
 }
-.ic-ic-running:before {
+.ic-ic-reply-active:before {
     content: "\f1a1";
 }
-.ic-ic-search:before {
+.ic-ic-reply:before {
     content: "\f1a2";
 }
-.ic-ic-search2:before {
+.ic-ic-resend-messages:before {
     content: "\f1a3";
 }
-.ic-ic-send:before {
+.ic-ic-resend-messages2:before {
     content: "\f1a4";
 }
-.ic-ic-settings-active:before {
+.ic-ic-right-arrow:before {
     content: "\f1a5";
 }
-.ic-ic-settings-grey:before {
+.ic-ic-right:before {
     content: "\f1a6";
 }
-.ic-ic-settings:before {
+.ic-ic-running:before {
     content: "\f1a7";
 }
-.ic-ic-settled:before {
+.ic-ic-savings-total-emoji:before {
     content: "\f1a8";
 }
-.ic-ic-sms-white:before {
+.ic-ic-search:before {
     content: "\f1a9";
 }
-.ic-ic-sms:before {
+.ic-ic-search2:before {
     content: "\f1aa";
 }
-.ic-ic-snooze:before {
+.ic-ic-send:before {
     content: "\f1ab";
 }
-.ic-ic-spreadsheet-xlsx:before {
+.ic-ic-settings-active:before {
     content: "\f1ac";
 }
-.ic-ic-star:before {
+.ic-ic-settings-grey:before {
     content: "\f1ad";
 }
-.ic-ic-start-again:before {
+.ic-ic-settings:before {
     content: "\f1ae";
 }
-.ic-ic-status-clock:before {
+.ic-ic-settled-deals-emoji:before {
     content: "\f1af";
 }
-.ic-ic-status-readed:before {
+.ic-ic-settled:before {
     content: "\f1b0";
 }
-.ic-ic-status-recived:before {
+.ic-ic-sms-white:before {
     content: "\f1b1";
 }
-.ic-ic-status-sent:before {
+.ic-ic-sms:before {
     content: "\f1b2";
 }
-.ic-ic-success:before {
+.ic-ic-snooze:before {
     content: "\f1b3";
 }
-.ic-ic-trash:before {
+.ic-ic-spreadsheet-xlsx:before {
     content: "\f1b4";
 }
-.ic-ic-tts-white:before {
+.ic-ic-star:before {
     content: "\f1b5";
 }
-.ic-ic-tts:before {
+.ic-ic-start-again:before {
     content: "\f1b6";
 }
-.ic-ic-unread:before {
+.ic-ic-status-clock:before {
     content: "\f1b7";
 }
-.ic-ic-unsettled:before {
+.ic-ic-status-readed:before {
     content: "\f1b8";
 }
-.ic-ic-upload-file-active:before {
+.ic-ic-status-recived:before {
     content: "\f1b9";
 }
-.ic-ic-upload-file-white:before {
+.ic-ic-status-sent:before {
     content: "\f1ba";
 }
-.ic-ic-upload-file:before {
+.ic-ic-success:before {
     content: "\f1bb";
 }
-.ic-ic-use-field:before {
+.ic-ic-trash:before {
     content: "\f1bc";
 }
-.ic-ic-user:before {
+.ic-ic-tts-white:before {
     content: "\f1bd";
 }
-.ic-ic-warn-dark:before {
+.ic-ic-tts:before {
     content: "\f1be";
 }
-.ic-ic-warn:before {
+.ic-ic-unread:before {
     content: "\f1bf";
 }
-.ic-ic-whatsapp-active:before {
+.ic-ic-unsettled:before {
     content: "\f1c0";
 }
-.ic-ic-whatsapp-connected:before {
+.ic-ic-upload-file-active:before {
     content: "\f1c1";
 }
-.ic-ic-whatsapp-disconnected:before {
+.ic-ic-upload-file-white:before {
     content: "\f1c2";
 }
-.ic-ic-whatsapp-inactive:before {
+.ic-ic-upload-file:before {
     content: "\f1c3";
 }
-.ic-ic-whatsapp-white:before {
+.ic-ic-upper-range-emoji:before {
     content: "\f1c4";
 }
-.ic-ic-whatsapp:before {
+.ic-ic-use-field:before {
     content: "\f1c5";
 }
-.ic-ic-win:before {
+.ic-ic-user:before {
     content: "\f1c6";
 }
-.ic-ic-zap:before {
+.ic-ic-warn-dark:before {
     content: "\f1c7";
+}
+.ic-ic-warn:before {
+    content: "\f1c8";
+}
+.ic-ic-whatsapp-active:before {
+    content: "\f1c9";
+}
+.ic-ic-whatsapp-connected:before {
+    content: "\f1ca";
+}
+.ic-ic-whatsapp-disconnected:before {
+    content: "\f1cb";
+}
+.ic-ic-whatsapp-inactive:before {
+    content: "\f1cc";
+}
+.ic-ic-whatsapp-white:before {
+    content: "\f1cd";
+}
+.ic-ic-whatsapp:before {
+    content: "\f1ce";
+}
+.ic-ic-win:before {
+    content: "\f1cf";
+}
+.ic-ic-zap:before {
+    content: "\f1d0";
 }
