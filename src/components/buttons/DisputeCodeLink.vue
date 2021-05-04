@@ -25,6 +25,7 @@
           <JusTjIdentifier
             :code="code"
             :disabled="!isJusttoAdmin"
+            :placement="tjPlacement"
             class="dispute-code__icon"
           />
           <i
@@ -57,6 +58,10 @@ export default {
     customIconStyle: {
       type: Object,
       default: () => ({})
+    },
+    tjPlacement: {
+      type: String,
+      default: () => 'right'
     }
   },
 
@@ -67,30 +72,33 @@ export default {
     }),
 
     status() {
-      let res = {}
       if (this.disputeTimeline && this.disputeTimeline[this.code]) {
         if (this.disputeTimeline[this.code].lawsuits.length) {
-          res = {
+          return {
             available: true,
             icon: 'el-icon-info',
             text: 'Abrir Timeline da disputa.'
           }
+        } else if (this.disputeTimeline[this.code].error) {
+          return {
+            available: false,
+            icon: 'el-icon-question',
+            text: this.disputeTimeline[this.code].error
+          }
         } else {
-          res = {
+          return {
             available: false,
             icon: 'el-icon-error',
-            text: 'Disputa não encontrada no TJ.'
+            text: 'Até este momento, não conseguimos capturar este processo.'
           }
         }
       } else {
-        res = {
+        return {
           available: false,
           icon: 'el-icon-loading',
           text: 'Carregando dados da disputa.'
         }
       }
-
-      return res
     }
   },
   methods: {
