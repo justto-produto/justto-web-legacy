@@ -1,7 +1,7 @@
 <template>
   <el-tooltip
     :disabled="disabled"
-    placement="right"
+    :placement="placement"
   >
     <div slot="content">
       {{ code | findTJbyCode }}
@@ -22,7 +22,12 @@ export default {
     },
     code: {
       type: String,
-      require: true
+      require: true,
+      default: () => '9999999-99.9999.9.99.9999'
+    },
+    placement: {
+      type: String,
+      default: () => 'right'
     }
   }
 }
