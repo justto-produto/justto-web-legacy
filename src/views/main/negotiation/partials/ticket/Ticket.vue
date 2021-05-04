@@ -2,7 +2,11 @@
   <section class="ticket-container">
     <section class="ticket-container__omnichannel">
       <TicketHeader @toggle-show-overview="toggleShowOverview" />
-      <Omnichannel />
+      <Omnichannel :show-overview="showOverview" />
+      <div
+        v-if="width <= 1200 && showOverview"
+        class="ticket-container__omnichannel-overlay"
+      />
     </section>
 
     <section
@@ -40,6 +44,7 @@ export default {
   computed: {
     ...mapGetters({
       isGhost: 'ghostMode',
+      width: 'getWindowWidth',
       authorization: 'accountToken',
       isJusttoAdmin: 'isJusttoAdmin',
       workspace: 'workspaceSubdomain',
@@ -132,8 +137,18 @@ export default {
 
   .ticket-container__omnichannel {
     display: flex;
+    position: relative;
     flex-direction: column;
     flex: 1;
+
+    .ticket-container__omnichannel-overlay {
+      position: absolute;
+      background-color: #000000;
+      opacity: .75;
+      width: 100%;
+      height: 100%;
+      z-index: 10;
+    }
   }
 
   .ticket-container__overview {
