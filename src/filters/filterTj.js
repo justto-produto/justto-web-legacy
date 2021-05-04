@@ -8,8 +8,8 @@ Vue.filter('findTJbyCode', (tjCode) => {
   if (replaced.length >= 16) {
     const subcode = replaced.substring(13, 16)
 
-    return listTj.find(({ code }) => String(code) === String(subcode))?.name || 'TJ Não encontrado.'
+    return listTj.find(({ code }) => String(code) === String(subcode))?.name || 'Número CNJ inválido.'
   } else {
-    return 'Número inválido'
+    return 'Número CNJ inválido'
   }
 })
