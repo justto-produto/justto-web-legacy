@@ -280,7 +280,7 @@ export default {
     },
     removeParty() {
       const { disputeId, party } = this
-      this.$confirm('Tem certeza que deseja excluir est parte da dispute? Está ação é irreversível', 'Atenção', {
+      this.$confirm('Tem certeza que deseja excluir esta parte da disputa? Está ação é irreversível', 'Atenção', {
         confirmButtonText: 'Continuar',
         cancelButtonText: 'Cancelar',
         cancelButtonClass: 'is-plain',
