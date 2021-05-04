@@ -36,6 +36,14 @@
             />
           </el-select>
         </el-form-item>
+        <el-form-item>
+          <div>
+            <el-checkbox v-model="acceptTerms" />
+            <span>
+              Eu, {{ personName }}, estou ciente que ao cadastrar uma nova pessoa no time, esta pessoa irá ter acesso as disputas da minha conta e estou de acordo com os <a href="https://justto.com.br/termos-de-uso">termos de uso</a> da plataforma e com a <a href="https://justto.com.br/poilitica-privacidade">política de privacidade</a>.
+            </span>
+          </div>
+        </el-form-item>
       </el-form>
       <span slot="footer">
         <el-button
@@ -45,22 +53,32 @@
         >
           Cancelar
         </el-button>
-        <el-button
-          type="primary"
-          @click="inviteTeammate"
+        <el-tooltip
+          :disabled="acceptTerms"
+          content="É necessário aceitar os termos de privacidade antes de convidar!"
+          placement="top"
         >
-          Convidar
-        </el-button>
+          <span>
+            <el-button
+              :disabled="!acceptTerms"
+              type="primary"
+              @click="inviteTeammate"
+            >
+              Convidar
+            </el-button>
+          </span>
+        </el-tooltip>
       </span>
     </el-dialog>
   </article>
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'TeamDialogs',
   data: () => ({
+    acceptTerms: false,
     newMemberDialogVisible: false,
     newMemberForm: {
       email: '',
@@ -75,6 +93,7 @@ export default {
     newMemberDialogLoading: false
   }),
   computed: {
+    ...mapGetters({ personName: 'loggedPersonName' }),
     profileOptions() {
       return [
         {
