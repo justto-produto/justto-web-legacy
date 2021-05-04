@@ -5,7 +5,7 @@
       class="date-inline-editor__value"
     >
       <span class="date-inline-editor__inner">
-        {{ newDateValue | moment('DD/MM/YY') }}
+        {{ newDateValue | moment('DD/MM/YYYY') }}
         <span v-if="processedDate && value">({{ processedDate }})</span>
       </span>
       <span class="date-inline-editor__icons">
@@ -30,7 +30,7 @@
       :clearable="false"
       type="date"
       prefix-icon=""
-      format="dd/MM/yy"
+      format="dd/MM/yyyy"
       :value-format="isDateTimeFormat ? 'yyyy-MM-dd[T]hh:mm:ss[Z]' : 'yyyy-MM-dd'"
       class="date-inline-editor__input"
       @change="disableEdit"
