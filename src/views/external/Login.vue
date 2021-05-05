@@ -346,16 +346,4 @@ export default {
 
 <style lang="scss">
   @import 'external.scss';
-  .end-of-the-world-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
-    .end-of-the-world-container__text {
-      font-weight: 600;
-      font-size: xx-large;
-      text-align: center;
-    }
-  }
 </style>
