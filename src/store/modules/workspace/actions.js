@@ -177,6 +177,38 @@ const workspaceActions = {
         reject(error)
       })
     })
+  },
+  getWorkspaceKeyAccounts({ commit }) {
+    return Promise((resolve) => {
+      commit('setWorkspaceKeyAccounts', [{ name: 'Micaias', email: 'micaias@justto.com' }, { name: 'Ladgelson', email: 'ladgelson@justto.com' }])
+      resolve()
+    })
+    // return axiosDispatch({
+    //   url: 'api/accounts/workspaces/keyAccount',
+    //   mutation: 'setWorkspaceKeyAccounts'
+    // })
+  },
+  getAssociatedKeyAccount({ commit, getters }) {
+    return Promise((resolve) => {
+      commit('setAssociatedKeyAccount', {
+        workspace: { id: 10, name: 'Workspace 1', teamName: 'Chelsea' },
+        keyAccount: { id: 25, name: 'Micaias Ladgelson', email: 'ladgelson@justto.com.br' },
+        portifolios: ['Micaias', 'Mussum', 'Ipsum']
+      })
+      resolve()
+    })
+    // return axiosDispatch({
+    //   url: `/api/accounts/workspaces/${getters.workspaceId}/keyAccount`,
+    //   mutation: 'setKeyAccounts'
+    // })
+  },
+  updateWorkspaceKeyAccount({ commit, getters }, data) {
+    return axiosDispatch({
+      url: `/api/accounts/workspaces/${getters.workspaceId}/keyAccount`,
+      method: 'patch',
+      data,
+      mutation: 'updateAssociatedKeyAccount'
+    })
   }
 }
 

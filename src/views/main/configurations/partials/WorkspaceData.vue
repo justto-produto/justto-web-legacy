@@ -55,7 +55,6 @@
         </div>
 
         <div
-          v-if="keyAccount"
           class="workspace-data-container__form-item"
         >
           <span class="workspace-data-container__input-label">
@@ -63,12 +62,18 @@
           </span>
 
           <span class="el-input__inner">
-            <strong>{{ keyAccount.name }}</strong>
-            <span>
-              &lt;
-              {{ keyAccount.email }}
-              &gt;
+            <div v-if="associetedKeyAccount">
+              <strong>{{ associetedKeyAccount.name }}</strong>
+              <span>
+                &lt;
+                {{ associetedKeyAccount.email }}
+                &gt;
+              </span>
+            </div>
+            <span v-else>
+              Nenhum Key Account selecionado.
             </span>
+
           </span>
         </div>
         <div class="workspace-data-container__form-item">
@@ -114,19 +119,35 @@
       :visible.sync="associateKeyAccountDialogVisible"
       width="30%"
     >
-      <span>This is a message</span>
+      <span>
+        <el-dropdown>
+          <span class="el-dropdown-link">
+            {{ selectedKeyAccount ? `${selectedKeyAccount.name} - ${selectedKeyAccount.email}` : 'Selecione o Key Account' }}
+            <i class="el-icon-arrow-down el-icon--right" />
+          </span>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item
+              v-for="keyAccounter in getKeyAccounts"
+              :key="keyAccounter.name"
+              @click.native="selectKeyAccount(keyAccounter)"
+            >
+              {{ keyAccounter.name }} - {{ keyAccounter.email }}
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </span>
       <span
         slot="footer"
         class="dialog-footer"
       >
         <el-button @click="associateKeyAccountDialogVisible = false">
-          Cancel
+          Cancelar
         </el-button>
         <el-button
           type="primary"
-          @click="associateKeyAccountDialogVisible = false"
+          @click="connectKeyAccount"
         >
-          Confirm
+          Associar
         </el-button>
       </span>
     </el-dialog>
@@ -144,14 +165,17 @@ export default {
     workspaceName: '',
     imageUrl: '',
     isUploadingFile: false,
-    associateKeyAccountDialogVisible: false
+    associateKeyAccountDialogVisible: false,
+    associetedKeyAccount: undefined,
+    selectedKeyAccount: undefined
   }),
 
   computed: {
     ...mapGetters([
       'workspace',
       'accountToken',
-      'isJusttoAdmin'
+      'isJusttoAdmin',
+      'getWorkspaceKeyAccounts'
     ]),
 
     requestHeaders() {
@@ -159,14 +183,6 @@ export default {
         Workspace: this.workspace?.subDomain,
         Authorization: this.accountToken
       }
-    },
-
-    keyAccount() {
-      return undefined
-      // return {
-      //   name: 'Lucas Israel',
-      //   email: 'lucas@Justto.com.br'
-      // }
     }
   },
 
@@ -177,12 +193,27 @@ export default {
     this.workspaceName = name
   },
 
+  mounted() {
+    this.getWorkspaceKeyAccounts()
+  },
+
   methods: {
     ...mapActions([
       'editWorkpace',
       'changeTeamName',
-      'updateWorkspaceLogoUrl'
+      'updateWorkspaceLogoUrl',
+      'getWorkspaceKeyAccounts'
     ]),
+
+    connectKeyAccount(_event) {
+      // TODO: ASSOCIAR KEY ACCOUNT
+      this.associetedKeyAccount = this.selectedKeyAccount
+      this.associateKeyAccountDialogVisible = false
+    },
+
+    selectKeyAccount(keyAccount) {
+      this.selectedKeyAccount = keyAccount
+    },
 
     handleChangeTeamName() {
       const { teamName, workspace } = this
