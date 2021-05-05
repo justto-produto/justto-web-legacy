@@ -7,10 +7,7 @@
       >
         <jus-sidenav-external />
       </el-aside>
-      <el-main
-        v-if="false"
-        class="display-flex"
-      >
+      <el-main class="display-flex">
         <el-form
           v-if="!workspaces.length"
           ref="loginForm"
@@ -156,14 +153,14 @@
           </el-button>
         </el-form>
       </el-main>
-      <el-main
+      <!-- <el-main
         v-else
         class="end-of-the-world-container"
       >
         <span class="end-of-the-world-container__text">
           Nosso portal está passando por dificuldades, logo resolveremos o problema!
         </span>
-      </el-main>
+      </el-main> -->
     </el-container>
   </div>
 </template>
