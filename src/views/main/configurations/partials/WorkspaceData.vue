@@ -76,12 +76,15 @@
 
           </span>
         </div>
-        <div class="workspace-data-container__form-item">
+        <div
+          v-if="isJusttoAdmin"
+          class="workspace-data-container__form-item"
+        >
           <a
             class="workspace-data-container__form-item-link"
             @click="handleOpenAssociateKeyAccountDialog"
           >
-            Associar Key Account
+            {{ associetedKeyAccount ? 'Alterar Key Account' : 'Associar Key Account' }}
           </a>
         </div>
       </div>
