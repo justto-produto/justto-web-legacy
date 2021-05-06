@@ -149,7 +149,7 @@
         </el-button>
         <el-button
           type="primary"
-          @click="connectKeyAccount(keyAcc)"
+          @click="connectKeyAccount(selectedKeyAccount)"
         >
           Associar
         </el-button>
