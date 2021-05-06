@@ -5,11 +5,11 @@
       style="width: 100%"
     >
       <el-table-column
-        prop="name"
+        prop="workspace.name"
         label="Workspace"
       />
       <el-table-column
-        prop="teamName"
+        prop="workspace.teamName"
         label="Equipe"
       />
       <el-table-column
@@ -27,11 +27,11 @@
         </template>
       </el-table-column>
       <el-table-column
-        prop="KA.name"
+        prop="keyAccount.name"
         label="Key Account"
       />
       <el-table-column
-        prop="KA.email"
+        prop="keyAccount.email"
         label="Email"
       />
     </el-table>
@@ -39,33 +39,25 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
 export default {
   computed: {
-    workspaces() {
-      return [
-        {
-          id: 1,
-          name: 'Equipe Justto 1',
-          teamName: 'Equipe Justto 1',
-          portifolios: ['indenizatorio', 'cobranca'],
-          KA: {
-            accountId: '',
-            name: 'Lucas',
-            email: 'lucas@justto.com.br'
-          }
-        },
-        {
-          id: 2,
-          name: 'Equipe Justto 2',
-          teamName: 'Equipe Justto 2',
-          portifolios: ['indenizatorio', 'cobranca', 'indenizatorio', 'cobranca', 'indenizatorio', 'cobranca'],
-          KA: {
-            accountId: '',
-            name: 'Lucas',
-            email: 'lucas@justto.com.br'
-          }
-        }
-      ]
+    ...mapGetters({
+      workspaces: 'getKeyAccountByWorkspace'
+    })
+  },
+
+  mounted() {
+    this.init()
+  },
+
+  methods: {
+    ...mapActions({
+      getAssociatedKeyAccountByWorkspace: 'getAssociatedKeyAccountByWorkspace'
+    }),
+
+    init() {
+      this.getAssociatedKeyAccountByWorkspace()
     }
   }
 }

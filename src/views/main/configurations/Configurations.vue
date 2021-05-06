@@ -22,10 +22,10 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'Configurations',
   components: {
-    Team: () => import('./Team'),
-    WorkspaceList: () => import('./WorkspaceList'),
-    WorkspaceData: () => import('./WorkspaceData'),
-    FeaturesAndModules: () => import('./FeaturesAndModules'),
+    WorkspaceList: () => import('./partials/WorkspaceList'),
+    WorkspaceData: () => import('./partials/WorkspaceData'),
+    Team: () => import('./partials/Team'),
+    FeaturesAndModules: () => import('./partials/FeaturesAndModules'),
     HeaderUserMenu: () => import('@/components/menus/HeaderUserMenu')
   },
   data: () => ({
