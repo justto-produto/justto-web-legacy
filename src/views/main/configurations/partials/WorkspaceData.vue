@@ -121,6 +121,7 @@
       title="Associar key accounts"
       :visible.sync="associateKeyAccountDialogVisible"
       width="30%"
+      :show-close="false"
     >
       <span>
         <el-dropdown>
@@ -130,11 +131,11 @@
           </span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item
-              v-for="keyAccounter in workspaceKeyAccounts"
-              :key="keyAccounter.name"
-              @click.native="selectKeyAccount(keyAccounter)"
+              v-for="keyAcc in workspaceKeyAccounts"
+              :key="keyAcc.name"
+              @click.native="selectKeyAccount(keyAcc)"
             >
-              {{ keyAccounter.name }} - {{ keyAccounter.email }}
+              {{ keyAcc.name }} - {{ keyAcc.email }}
             </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -148,7 +149,7 @@
         </el-button>
         <el-button
           type="primary"
-          @click="connectKeyAccount"
+          @click="connectKeyAccount(keyAcc)"
         >
           Associar
         </el-button>
@@ -169,7 +170,6 @@ export default {
     imageUrl: '',
     isUploadingFile: false,
     associateKeyAccountDialogVisible: false,
-    associetedKeyAccount: undefined,
     selectedKeyAccount: undefined
   }),
 
@@ -179,7 +179,8 @@ export default {
         workspace: 'workspace',
         accountToken: 'accountToken',
         isJusttoAdmin: 'isJusttoAdmin',
-        workspaceKeyAccounts: 'getWorkspaceKeyAccounts'
+        workspaceKeyAccounts: 'getWorkspaceKeyAccounts',
+        associatedKeyAccount: 'getAssociatedKeyAccount'
       }
     ),
 
@@ -207,13 +208,28 @@ export default {
       'editWorkpace',
       'changeTeamName',
       'updateWorkspaceLogoUrl',
-      'getWorkspaceKeyAccounts'
+      'getWorkspaceKeyAccounts',
+      'updateWorkspaceKeyAccount'
     ]),
 
-    connectKeyAccount(_event) {
-      // TODO: ASSOCIAR KEY ACCOUNT
-      this.associetedKeyAccount = this.selectedKeyAccount
-      this.associateKeyAccountDialogVisible = false
+    connectKeyAccount({ id }) {
+      const keyAccount = {
+        keyAccount: { id },
+        portifolios: []
+      }
+      this.updateWorkspaceKeyAccount(keyAccount)
+        .then(() => {
+          this.$jusNotification({
+            title: 'Yay!',
+            message: 'Key Account associado com sucesso.',
+            type: 'success'
+          })
+          this.associetedKeyAccount = this.selectedKeyAccount
+          this.associateKeyAccountDialogVisible = false
+        })
+        .catch(error => {
+          this.$jusNotification({ error })
+        })
     },
 
     selectKeyAccount(keyAccount) {
