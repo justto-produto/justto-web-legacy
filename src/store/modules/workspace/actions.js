@@ -179,7 +179,7 @@ const workspaceActions = {
     })
   },
   getWorkspaceKeyAccounts({ commit }) {
-    return Promise((resolve) => {
+    return new Promise((resolve) => {
       commit('setWorkspaceKeyAccounts', [{ name: 'Micaias', email: 'micaias@justto.com' }, { name: 'Ladgelson', email: 'ladgelson@justto.com' }])
       resolve()
     })
@@ -188,8 +188,24 @@ const workspaceActions = {
     //   mutation: 'setWorkspaceKeyAccounts'
     // })
   },
+  getAssociatedKeyAccountByWorkspace({ commit, getters }) {
+    return new Promise((resolve) => {
+      commit('setAssociatedKeyAccountByWorkspace', [
+        {
+          workspace: { id: 10, name: 'Workspace 1', teamName: 'Chelsea' },
+          keyAccount: { id: 25, name: 'Micaias Ladgelson', email: 'ladgelson@justto.com.br' },
+          portifolios: ['Micaias', 'Mussum', 'Ipsum']
+        }
+      ])
+      resolve()
+    })
+    // return axiosDispatch({
+    //   url: `/api/accounts/workspaces/${getters.workspaceId}/keyAccount`,
+    //   mutation: 'setKeyAccounts'
+    // })
+  },
   getAssociatedKeyAccount({ commit, getters }) {
-    return Promise((resolve) => {
+    return new Promise((resolve) => {
       commit('setAssociatedKeyAccount', {
         workspace: { id: 10, name: 'Workspace 1', teamName: 'Chelsea' },
         keyAccount: { id: 25, name: 'Micaias Ladgelson', email: 'ladgelson@justto.com.br' },

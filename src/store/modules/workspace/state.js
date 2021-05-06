@@ -26,6 +26,7 @@ export default {
       keyAccount: { name: '', email: '' },
       portifolios: []
     },
+    associatedKeyAccountByWorkspace: [],
     keyAccounts: []
   },
   redirectNewWorkspace: false

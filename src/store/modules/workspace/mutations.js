@@ -68,6 +68,7 @@ const workspaceMutations = {
   setFeaturesAndModules: (state, features) => Vue.set(state, 'featuresAndModules', features.content),
   setWorkspaceKeyAccounts: (state, keyAccounts) => Vue.set(state.workspace, 'keyAccounts', keyAccounts),
   setAssociatedKeyAccount: (state, keyAccount) => Vue.set(state.workspace, 'associatedKeyAccount', keyAccount),
+  setAssociatedKeyAccountByWorkspace: (state, list) => Vue.set(state.workspace, 'associatedKeyAccountByWorkspace', list),
   updateAssociatedKeyAccount: (state, { keyAccount: { id: keyAccountId }, portifolios }) => {
     const keyAccount = state.workspace.keyAccounts.find(({ id }) => id === keyAccountId)
     Vue.set(state.workspace.associatedKeyAccount, 'portifolios', portifolios)
