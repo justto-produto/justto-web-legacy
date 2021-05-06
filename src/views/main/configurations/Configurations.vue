@@ -18,11 +18,13 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: 'Configurations',
   components: {
-    WorkspaceData: () => import('./WorkspaceData'),
     Team: () => import('./Team'),
+    WorkspaceList: () => import('./WorkspaceList'),
+    WorkspaceData: () => import('./WorkspaceData'),
     FeaturesAndModules: () => import('./FeaturesAndModules'),
     HeaderUserMenu: () => import('@/components/menus/HeaderUserMenu')
   },
@@ -31,24 +33,37 @@ export default {
   }),
 
   computed: {
+    ...mapGetters({
+      isJustto: 'isJusttoAdmin'
+    }),
+
     tabs() {
       return [
         {
           name: 'workspace-data',
           label: this.$t('configurations-tabs.workspace-data'),
-          component: 'WorkspaceData'
+          component: 'WorkspaceData',
+          show: true
         },
         {
           name: 'team',
           label: this.$t('configurations-tabs.team'),
-          component: 'Team'
+          component: 'Team',
+          show: true
+        },
+        {
+          name: 'workspaces-list',
+          label: this.$t('configurations-tabs.workspaces-list'),
+          component: 'WorkspaceList',
+          show: this.isJustto
         },
         {
           name: 'features-and-modules',
           label: this.$t('configurations-tabs.features-and-modules'),
-          component: 'FeaturesAndModules'
+          component: 'FeaturesAndModules',
+          show: true
         }
-      ]
+      ].filter(({ show }) => show)
     }
   }
 }
