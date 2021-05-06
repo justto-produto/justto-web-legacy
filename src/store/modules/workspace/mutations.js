@@ -65,7 +65,14 @@ const workspaceMutations = {
   },
   setPreNegotiationKeywords: (state, keywords) => (state.workspace.preNegotiation.keyWords = keywords),
   setPreNegotiationLimitValue: (state, value) => (state.workspace.preNegotiation.limitValue = Number(value)),
-  setFeaturesAndModules: (state, features) => Vue.set(state, 'featuresAndModules', features.content)
+  setFeaturesAndModules: (state, features) => Vue.set(state, 'featuresAndModules', features.content),
+  setWorkspaceKeyAccounts: (state, keyAccounts) => Vue.set(state.workspace, 'keyAccounts', keyAccounts),
+  setAssociatedKeyAccount: (state, keyAccount) => Vue.set(state.workspace, 'associatedKeyAccount', keyAccount),
+  updateAssociatedKeyAccount: (state, { keyAccount: { id: keyAccountId }, portifolios }) => {
+    const keyAccount = state.workspace.keyAccounts.find(({ id }) => id === keyAccountId)
+    Vue.set(state.workspace.associatedKeyAccount, 'portifolios', portifolios)
+    Vue.set(state.workspace.associatedKeyAccount, 'keyAccount', keyAccount)
+  }
 }
 
 export default workspaceMutations

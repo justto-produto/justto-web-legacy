@@ -14,7 +14,7 @@
 <script>
 export default {
   components: {
-    JusEdituser: () => import('@/views/main/configurations/EditUser')
+    JusEdituser: () => import('@/views/main/configurations/partials/EditUser')
   },
   data: () => ({
     dialogVisible: false

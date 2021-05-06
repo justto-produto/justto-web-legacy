@@ -53,6 +53,37 @@
             </span>
           </el-alert>
         </div>
+
+        <div
+          class="workspace-data-container__form-item"
+        >
+          <span class="workspace-data-container__input-label">
+            Key Account
+          </span>
+
+          <span class="el-input__inner">
+            <div v-if="associetedKeyAccount">
+              <strong>{{ associetedKeyAccount.name }}</strong>
+              <span>
+                &lt;
+                {{ associetedKeyAccount.email }}
+                &gt;
+              </span>
+            </div>
+            <span v-else>
+              Nenhum Key Account selecionado.
+            </span>
+
+          </span>
+        </div>
+        <div class="workspace-data-container__form-item">
+          <a
+            class="workspace-data-container__form-item-link"
+            @click="handleOpenAssociateKeyAccountDialog"
+          >
+            Associar Key Account
+          </a>
+        </div>
       </div>
 
       <el-upload
@@ -82,6 +113,44 @@
         </span>
       </el-upload>
     </article>
+
+    <el-dialog
+      title="Associar key accounts"
+      :visible.sync="associateKeyAccountDialogVisible"
+      width="30%"
+    >
+      <span>
+        <el-dropdown>
+          <span class="el-dropdown-link">
+            {{ selectedKeyAccount ? `${selectedKeyAccount.name} - ${selectedKeyAccount.email}` : 'Selecione o Key Account' }}
+            <i class="el-icon-arrow-down el-icon--right" />
+          </span>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item
+              v-for="keyAccounter in getKeyAccounts"
+              :key="keyAccounter.name"
+              @click.native="selectKeyAccount(keyAccounter)"
+            >
+              {{ keyAccounter.name }} - {{ keyAccounter.email }}
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </span>
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click="associateKeyAccountDialogVisible = false">
+          Cancelar
+        </el-button>
+        <el-button
+          type="primary"
+          @click="connectKeyAccount"
+        >
+          Associar
+        </el-button>
+      </span>
+    </el-dialog>
   </section>
 </template>
 
@@ -90,16 +159,23 @@ import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'WorkspaceData',
+
   data: () => ({
     teamName: '',
     workspaceName: '',
     imageUrl: '',
-    isUploadingFile: false
+    isUploadingFile: false,
+    associateKeyAccountDialogVisible: false,
+    associetedKeyAccount: undefined,
+    selectedKeyAccount: undefined
   }),
+
   computed: {
     ...mapGetters([
       'workspace',
-      'accountToken'
+      'accountToken',
+      'isJusttoAdmin',
+      'getWorkspaceKeyAccounts'
     ]),
 
     requestHeaders() {
@@ -109,18 +185,35 @@ export default {
       }
     }
   },
+
   beforeMount() {
     const { teamName, name, logoUrl } = this.workspace
     this.imageUrl = logoUrl
     this.teamName = teamName
     this.workspaceName = name
   },
+
+  mounted() {
+    this.getWorkspaceKeyAccounts()
+  },
+
   methods: {
     ...mapActions([
       'editWorkpace',
       'changeTeamName',
-      'updateWorkspaceLogoUrl'
+      'updateWorkspaceLogoUrl',
+      'getWorkspaceKeyAccounts'
     ]),
+
+    connectKeyAccount(_event) {
+      // TODO: ASSOCIAR KEY ACCOUNT
+      this.associetedKeyAccount = this.selectedKeyAccount
+      this.associateKeyAccountDialogVisible = false
+    },
+
+    selectKeyAccount(keyAccount) {
+      this.selectedKeyAccount = keyAccount
+    },
 
     handleChangeTeamName() {
       const { teamName, workspace } = this
@@ -192,6 +285,10 @@ export default {
     handleChangeWorkspaceLogoError(error) {
       this.$jusNotification({ error })
       this.isUploadingFile = false
+    },
+
+    handleOpenAssociateKeyAccountDialog(_event) {
+      this.associateKeyAccountDialogVisible = true
     }
   }
 }

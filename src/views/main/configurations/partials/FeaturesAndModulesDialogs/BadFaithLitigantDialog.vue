@@ -13,7 +13,7 @@
 export default {
   name: 'BadFaithLitigantDialog',
   components: {
-    BadFaithLitigant: () => import('@/views/main/configurations/BadFaithLitigant')
+    BadFaithLitigant: () => import('@/views/main/configurations/partials/BadFaithLitigant')
   },
   data: () => ({
     badFaithLitigantDialogVisible: false
