@@ -127,7 +127,7 @@
           </span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item
-              v-for="keyAccounter in getKeyAccounts"
+              v-for="keyAccounter in workspaceKeyAccounts"
               :key="keyAccounter.name"
               @click.native="selectKeyAccount(keyAccounter)"
             >
@@ -171,12 +171,14 @@ export default {
   }),
 
   computed: {
-    ...mapGetters([
-      'workspace',
-      'accountToken',
-      'isJusttoAdmin',
-      'getWorkspaceKeyAccounts'
-    ]),
+    ...mapGetters(
+      {
+        workspace: 'workspace',
+        accountToken: 'accountToken',
+        isJusttoAdmin: 'isJusttoAdmin',
+        workspaceKeyAccounts: 'getWorkspaceKeyAccounts'
+      }
+    ),
 
     requestHeaders() {
       return {
