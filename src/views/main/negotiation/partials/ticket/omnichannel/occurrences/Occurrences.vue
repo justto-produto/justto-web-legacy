@@ -1,6 +1,6 @@
 <template>
   <section
-    v-if="lastMessage.disputeId === id"
+    v-if="lastMessage.disputeId === id || localLoading"
     ref="occurrence-root"
     class="occurrences-container"
   >
@@ -42,10 +42,12 @@
   >
     <div class="occurrences-container__omnichannel-error">
       <el-button
+        type="primary"
         size="small"
-        @click="handleChangeTicket"
+        plain
+        @click="resetTicket"
       >
-        Ver mensagens
+        Click aqui para ver mensagens
       </el-button>
     </div>
   </section>
@@ -65,7 +67,8 @@ export default {
   },
 
   data: () => ({
-    needScroll: false
+    needScroll: false,
+    localLoading: false
   }),
 
   computed: {
@@ -101,9 +104,6 @@ export default {
   },
 
   watch: {
-    '$route.params.id'(id) {
-      this.handleChangeTicket(id)
-    },
     'countRendereds'() {
       this.adjustScroll()
     }
@@ -113,7 +113,7 @@ export default {
     eventBus.$on('NEGOTIATION_WEBSOCKET_NEW_OCCURRENCE', () => {
       this.needScroll = true
     })
-    eventBus.$on(events.TICKET_CHANGE.callback, this.handleChangeTicket)
+    eventBus.$on(events.TICKET_CHANGE.callback, this.resetTicket)
   },
 
   updated() {
@@ -122,7 +122,7 @@ export default {
 
   beforeDestroy() {
     eventBus.$off('NEGOTIATION_WEBSOCKET_NEW_OCCURRENCE')
-    eventBus.$off(events.TICKET_CHANGE.callback, this.changeTicket)
+    eventBus.$off(events.TICKET_CHANGE.callback, this.resetTicket)
   },
   methods: {
     ...mapActions([
@@ -156,12 +156,12 @@ export default {
       }
     },
 
-    handleChangeTicket(_id) {
+    resetTicket(_current, _old) {
       this.resetRecipients()
       this.resetOccurrences()
       this.resetMessageText()
       this.resetNoteText()
-      this.getOccurrences(this.id)
+      this.localLoading = false
     }
   }
 }

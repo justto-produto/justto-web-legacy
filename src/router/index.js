@@ -2,6 +2,9 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Store from '@/store'
 
+import { eventBus } from '@/utils'
+import events from '@/constants/negotiationEvents'
+
 Vue.use(Router)
 
 const router = new Router({
@@ -244,6 +247,9 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
+  if (to.name === 'ticket' && from.name === 'ticket') {
+    eventBus.$emit(events.TICKET_CHANGE.callback, to.params.id, from.params.id)
+  }
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (Store.getters.isLoggedIn) {
       if (Store.getters.hasWorkspace) {

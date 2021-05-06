@@ -59,22 +59,15 @@ export default {
     }
   },
 
-  watch: {
-    '$route.params.id'(_current, old) {
-      this.socketAction('unsubscribe', old)
-      this.fetchData()
-    }
-  },
-
-  beforeMount() {
-    this.fetchData()
-    eventBus.$on(events.TICKET_CHANGE.callback, (_id) => this.fetchData())
+  mounted() {
+    this.fetchData(Number(this.$route.params.id))
+    eventBus.$on(events.TICKET_CHANGE.callback, this.fetchData)
   },
 
   beforeDestroy() {
     const { id } = this.$route.params
     this.socketAction('unsubscribe', id)
-    eventBus.$off(events.TICKET_CHANGE.callback, (_id) => this.fetchData())
+    eventBus.$off(events.TICKET_CHANGE.callback, this.fetchData)
   },
 
   methods: {
@@ -90,8 +83,8 @@ export default {
       'getTicketMetadata'
     ]),
 
-    fetchData() {
-      const { id } = this.$route.params
+    fetchData(id, _oldId = null) {
+      console.log('fetchData', id)
       this.socketAction('subscribe', id)
       this.cleanRecentMessages()
       this.getTicketOverview(id).catch(error => this.$jusNotification({ error }))
