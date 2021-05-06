@@ -28,12 +28,6 @@
           ref="sectionMessages"
           class="dispute-view__section-messages"
         >
-          <el-button
-            icon="el-icon-edit"
-            class="dispute-view__section-messages__temporary-button"
-            round
-            @click="handleToManagement"
-          />
           <!-- DRAGGING -->
           <vue-draggable-resizable
             v-if="typingTab !== '3'"
@@ -639,10 +633,6 @@ export default {
       'sendNegotiator',
       'setHeight'
     ]),
-    handleToManagement() {
-      const negotiationRoute = `/negotiation/${this.$route.params.id}`
-      this.$router.push({ path: negotiationRoute })
-    },
 
     focusOnEditor() {
       if (this.typingTab === '1' && this.$refs.messageEditor) {
@@ -1030,12 +1020,6 @@ export default {
     flex-direction: column;
     height: 100%;
     position: relative;
-    &__temporary-button {
-      position: absolute;
-      right: 0px;
-      margin: 24px 40px;
-      z-index: 3;
-    }
   }
   &__send-message {
     position: relative;

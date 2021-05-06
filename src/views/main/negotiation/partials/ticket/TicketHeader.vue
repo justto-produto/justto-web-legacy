@@ -25,11 +25,6 @@
       :ticket="ticket"
       class="ticket-header-container__actions"
     />
-    <el-button
-      icon="el-icon-edit"
-      round
-      @click="handleToManagement"
-    />
   </section>
 </template>
 
@@ -50,10 +45,6 @@ export default {
   methods: {
     handleShowOverview() {
       this.$emit('toggle-show-overview')
-    },
-    handleToManagement() {
-      const managementRoute = `/management/dispute/${this.$route.params.id}`
-      this.$router.push({ path: managementRoute })
     }
   }
 }
