@@ -72,6 +72,7 @@ export default {
     }),
 
     status() {
+      const defaultMessage = 'Até este momento, não conseguimos capturar este processo.'
       if (this.disputeTimeline && this.disputeTimeline[this.code]) {
         if (this.disputeTimeline[this.code].lawsuits.length) {
           return {
@@ -83,13 +84,13 @@ export default {
           return {
             available: false,
             icon: 'el-icon-question',
-            text: this.disputeTimeline[this.code].error
+            text: this.disputeTimeline[this.code].error || defaultMessage
           }
         } else {
           return {
             available: false,
             icon: 'el-icon-error',
-            text: 'Até este momento, não conseguimos capturar este processo.'
+            text: defaultMessage
           }
         }
       } else {
