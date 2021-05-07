@@ -1385,4 +1385,5 @@ export default {
 .dialog_edit_template__container {
   padding-top: 16px;
 }
+
 </style>

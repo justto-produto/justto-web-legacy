@@ -560,6 +560,13 @@ export default {
           condition: () => !this.isPreNegotiation,
           action: () => this.disputeAction(this.dispute.favorite ? 'disfavor' : 'favorite'),
           tooltip: `${this.$t('action.FAVORITE')} (${this.$t('fields.respondentParty')})`
+        },
+        {
+          name: 'redirect',
+          icon: 'switch',
+          condition: () => true,
+          action: () => this.redirectNegotiation(),
+          tooltip: 'Ir para negociação'
         }
       ]
     },
@@ -654,6 +661,11 @@ export default {
       'sendDisputeNote',
       'startNegotiation'
     ]),
+
+    redirectNegotiation() {
+      const negotiationRoute = `/negotiation/${this.$route.params.id}`
+      this.$router.push({ path: negotiationRoute })
+    },
 
     // TODO: Transformar isso em um util
     scapeHtml(text) {
