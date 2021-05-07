@@ -2,7 +2,6 @@
   <section class="workspace-container">
     <el-table
       :data="workspaces"
-      height="80vh"
       class="workspace-container__table"
     >
       <el-table-column
@@ -18,7 +17,7 @@
         label="Key Account"
       >
         <template slot-scope="scope">
-          {{ scope.row.keyAccountId || '-' }}
+          {{ keyAccountTemplate(scope.row.keyAccountId) }}
         </template>
       </el-table-column>
     </el-table>
@@ -31,7 +30,8 @@ import { mapActions, mapGetters } from 'vuex'
 export default {
   computed: {
     ...mapGetters({
-      workspaces: 'getMyWorkspaces'
+      workspaces: 'getMyWorkspaces',
+      keyAccounts: 'getWorkspaceKeyAccounts'
     })
   },
 
@@ -46,6 +46,16 @@ export default {
 
     init() {
       this.getAssociatedKeyAccountByWorkspace()
+    },
+
+    keyAccountTemplate(keyAccountId) {
+      const ka = this.keyAccounts.find(({ id }) => Number(id) === Number(keyAccountId))
+
+      if (ka) {
+        return (ka.name ? `${ka.name} - ` : '') + `${ka.email}`
+      } else {
+        return '-'
+      }
     }
   }
 }
@@ -55,6 +65,8 @@ export default {
   .workspace-container {
     .workspace-container__table {
       width: 100%;
+      max-height: 85vh;
+      overflow-y: scroll;
 
       .el-table__body-wrapper {
         height: auto !important;
