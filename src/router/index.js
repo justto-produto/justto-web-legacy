@@ -2,6 +2,9 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Store from '@/store'
 
+import { eventBus } from '@/utils'
+import events from '@/constants/negotiationEvents'
+
 Vue.use(Router)
 
 const router = new Router({
@@ -258,6 +261,10 @@ router.beforeEach((to, from, next) => {
     } else next('login')
   } else if (from.query.token) next(false)
   else next()
+
+  if (to.name === 'ticket' && from.name === 'ticket') {
+    eventBus.$emit(events.TICKET_CHANGE.callback, to.params.id, from.params.id)
+  }
 })
 
 router.afterEach((to) => {
