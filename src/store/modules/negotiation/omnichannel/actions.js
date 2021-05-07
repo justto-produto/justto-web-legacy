@@ -3,6 +3,14 @@ import { axiosDispatch, isSimilarStrings, buildQuery } from '@/utils'
 const disputeApi = 'api/disputes/v2'
 const messagesPath = 'api/messages'
 
+const validateCurrentId = (disputeId) => {
+  const idIndex = location.href.split('/').length - 1
+
+  const currentId = location.href.split('/')[idIndex]
+
+  return Number(disputeId) === Number(currentId)
+}
+
 const omnichannelActions = {
   setOmnichannelActiveTab({ commit, dispatch }, tab) {
     commit('setOmnichannelActiveTab', tab)
@@ -28,10 +36,10 @@ const omnichannelActions = {
       type: getters.getOccurrencesFilter.type === 'LOG' ? null : getters.getOccurrencesFilter.type
     }
 
-    return axiosDispatch({
+    return validateCurrentId(disputeId) ? axiosDispatch({
       url: `${disputeApi}/${disputeId}/occurrences${buildQuery(params)}`,
       mutation: 'setOccurrences'
-    })
+    }) : new Promise(resolve => resolve)
   },
 
   getAllOccurrences({ getters }, disputeId) {

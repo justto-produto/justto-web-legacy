@@ -1,5 +1,6 @@
 <template>
   <section
+    v-if="lastMessage.disputeId === id || localLoading"
     ref="occurrence-root"
     class="occurrences-container"
   >
@@ -35,6 +36,21 @@
       />
     </div>
   </section>
+  <section
+    v-else
+    class="occurrences-container"
+  >
+    <div class="occurrences-container__omnichannel-error">
+      <el-button
+        type="primary"
+        size="small"
+        plain
+        @click="resetTicket"
+      >
+        Click aqui para ver mensagens
+      </el-button>
+    </div>
+  </section>
 </template>
 
 <script>
@@ -51,7 +67,8 @@ export default {
   },
 
   data: () => ({
-    needScroll: false
+    needScroll: false,
+    localLoading: false
   }),
 
   computed: {
@@ -59,6 +76,7 @@ export default {
       activeTab: 'getActiveTab',
       ticket: 'getTicketOverview',
       filter: 'getOccurrencesFilter',
+      isLoading: 'isOccurrencesLoading',
       occurrences: 'getOccurrencesList',
       messageType: 'getEditorMessageType',
       isPrinting: 'getExportTicketModalVisible'
@@ -70,38 +88,41 @@ export default {
       return this.occurrences.filter(o => (o.renderCompleted) || (o.interaction && o.interaction.countRendereds)).length
     },
     id() {
-      return this.$route.params.id
+      return Number(this.$route.params.id)
     },
     dispute() {
       return {
         ...this.ticket,
-        id: Number(this.id),
+        id: this.id,
         disputeRoles: [],
         hasDocument: this.ticket.hasDraft
       }
+    },
+    lastMessage() {
+      return this.occurrences[this.occurrences.length - 1] || { disputeId: this.id }
     }
   },
 
   watch: {
-    '$route.params.id'(id) {
-      this.handleChangeTicket(id)
-    },
     'countRendereds'() {
       this.adjustScroll()
     }
   },
+
   mounted() {
     eventBus.$on('NEGOTIATION_WEBSOCKET_NEW_OCCURRENCE', () => {
       this.needScroll = true
     })
-    eventBus.$on(events.TICKET_CHANGE.callback, this.handleChangeTicket)
+    eventBus.$on(events.TICKET_CHANGE.callback, this.resetTicket)
   },
+
   updated() {
     if (this.needScroll) this.adjustScroll(true)
   },
+
   beforeDestroy() {
     eventBus.$off('NEGOTIATION_WEBSOCKET_NEW_OCCURRENCE')
-    eventBus.$off(events.TICKET_CHANGE.callback, this.changeTicket)
+    eventBus.$off(events.TICKET_CHANGE.callback, this.resetTicket)
   },
   methods: {
     ...mapActions([
@@ -135,11 +156,12 @@ export default {
       }
     },
 
-    handleChangeTicket(_id) {
+    resetTicket(_current) {
       this.resetRecipients()
       this.resetOccurrences()
       this.resetMessageText()
       this.resetNoteText()
+      this.localLoading = false
     }
   }
 }
@@ -174,6 +196,14 @@ export default {
         padding: 10px;
       }
     }
+  }
+
+  .occurrences-container__omnichannel-error {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
   }
 }
 </style>

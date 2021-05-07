@@ -198,7 +198,7 @@
         <p class="dialog-actions__increase-alert-infoline">
           <span>*</span>
           <small>
-            Ao clicar em <strong>mão majorar</strong>, somente será feita a <strong>contraproposta</strong>, sem alterações no status da disputa.
+            Ao clicar em <strong>não majorar</strong>, somente será feita a <strong>contraproposta</strong>, sem alterações no status da disputa.
           </small>
         </p>
       </div>
