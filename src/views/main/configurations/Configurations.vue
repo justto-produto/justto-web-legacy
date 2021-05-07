@@ -22,7 +22,6 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'Configurations',
   components: {
-    WorkspaceList: () => import('./partials/WorkspaceList'),
     WorkspaceData: () => import('./partials/WorkspaceData'),
     Team: () => import('./partials/Team'),
     FeaturesAndModules: () => import('./partials/FeaturesAndModules'),
@@ -50,12 +49,6 @@ export default {
           label: this.$t('configurations-tabs.team'),
           component: 'Team',
           show: true
-        },
-        {
-          name: 'workspaces-list',
-          label: this.$t('configurations-tabs.workspaces-list'),
-          component: 'WorkspaceList',
-          show: this.isJustto
         },
         {
           name: 'features-and-modules',

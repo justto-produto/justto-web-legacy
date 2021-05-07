@@ -173,6 +173,16 @@ const router = new Router({
       }
     },
     {
+      name: 'workspaces',
+      path: '/workspaces',
+      component: () => import(/* webpackChunkName: "workspaces" */ '@/views/main/configurations/partials/WorkspaceList'),
+      meta: {
+        requiresAuth: false,
+        trackPage: true,
+        title: 'Justto'
+      }
+    },
+    {
       name: 'register',
       path: '/register',
       component: () => import(/* webpackChunkName: "register" */ '@/views/external/Register'),

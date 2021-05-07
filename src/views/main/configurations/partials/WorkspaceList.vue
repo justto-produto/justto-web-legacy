@@ -1,7 +1,9 @@
 <template>
   <section class="workspace-container">
     <el-table
-      :data="workspaces"
+      :data="filteredWorkspaces"
+      style="width: 100%"
+      height="95vh"
       class="workspace-container__table"
     >
       <el-table-column
@@ -20,19 +22,47 @@
           {{ keyAccountTemplate(scope.row.keyAccountId) }}
         </template>
       </el-table-column>
+      <el-table-column align="right">
+        <template
+          slot="header"
+        >
+          <div class="el-input el-input--mini">
+            <input
+              v-model="search"
+              placeholder="Pesquise aqui"
+              class="el-input__inner"
+              @input="$forceUpdate()"
+            >
+          </div>
+        </template>
+      </el-table-column>
     </el-table>
   </section>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
+  data: () => ({
+    search: ''
+  }),
+
   computed: {
     ...mapGetters({
       workspaces: 'getMyWorkspaces',
       keyAccounts: 'getWorkspaceKeyAccounts'
-    })
+    }),
+
+    filteredWorkspaces() {
+      if (!this.search) {
+        return this.workspaces
+      } else {
+        return this.workspaces.filter(({ teamName, keyAccountId }) => {
+          return teamName.includes(this.search) || this.keyAccountTemplate(keyAccountId).includes(this.search)
+        })
+      }
+    }
   },
 
   mounted() {
@@ -40,6 +70,16 @@ export default {
   },
 
   methods: {
+    ...mapActions([
+      'myWorkspace',
+      'getWorkspaceKeyAccounts'
+    ]),
+
+    init() {
+      this.myWorkspace()
+      this.getWorkspaceKeyAccounts()
+    },
+
     keyAccountTemplate(keyAccountId) {
       const ka = this.keyAccounts.find(({ id }) => Number(id) === Number(keyAccountId))
 
@@ -52,17 +92,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-  .workspace-container {
-    .workspace-container__table {
-      width: 100%;
-      max-height: 85vh;
-      overflow-y: scroll;
-
-      .el-table__body-wrapper {
-        height: auto !important;
-      }
-    }
-  }
-</style>
