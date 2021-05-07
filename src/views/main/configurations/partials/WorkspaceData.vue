@@ -315,7 +315,7 @@ export default {
     },
 
     handleToggleAssociateKeyAccountDialog(_event) {
-      this.selectedKeyAccountId = this.associatedKeyAccount.id
+      this.selectedKeyAccountId = this.associatedKeyAccount.id || undefined
 
       this.associateKeyAccountDialogVisible = !this.associateKeyAccountDialogVisible
     }
