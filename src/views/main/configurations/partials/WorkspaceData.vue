@@ -54,38 +54,35 @@
           </el-alert>
         </div>
 
-        <div
-          class="workspace-data-container__form-item"
-        >
+        <div class="workspace-data-container__form-item">
           <span class="workspace-data-container__input-label">
             Key Account
           </span>
 
-          <span class="el-input__inner">
-            <div v-if="associetedKeyAccount">
-              <strong>{{ associetedKeyAccount.name }}</strong>
-              <span>
-                &lt;
-                {{ associetedKeyAccount.email }}
-                &gt;
+          <span class="workspace-data-container__form-item-input el-input el-input-group el-input-group--append">
+            <div class="el-input__inner">
+              <span v-if="hasAssociatedKeyAccount">
+                <strong>{{ associatedKeyAccount.name }}</strong>
+                <span>
+                  &lt;{{ associatedKeyAccount.email }}&gt;
+                </span>
+              </span>
+              <span v-else>
+                Nenhum Key Account selecionado.
               </span>
             </div>
-            <span v-else>
-              Nenhum Key Account selecionado.
-            </span>
-
+            <div
+              v-if="isJusttoAdmin"
+              class="workspace-data-container__form-item-input-append el-input-group__append"
+            >
+              <span
+                class="el-input-group__form-item-input-append-link"
+                @click="handleToggleAssociateKeyAccountDialog"
+              >
+                {{ hasAssociatedKeyAccount ? 'Alterar Key Account' : 'Associar Key Account' }}
+              </span>
+            </div>
           </span>
-        </div>
-        <div
-          v-if="isJusttoAdmin"
-          class="workspace-data-container__form-item"
-        >
-          <a
-            class="workspace-data-container__form-item-link"
-            @click="handleOpenAssociateKeyAccountDialog"
-          >
-            {{ associetedKeyAccount ? 'Alterar Key Account' : 'Associar Key Account' }}
-          </a>
         </div>
       </div>
 
@@ -120,36 +117,35 @@
     <el-dialog
       title="Associar key accounts"
       :visible.sync="associateKeyAccountDialogVisible"
-      width="30%"
+      width="40%"
       :show-close="false"
     >
       <span>
-        <el-dropdown>
-          <span class="el-dropdown-link">
-            {{ selectedKeyAccount ? `${selectedKeyAccount.name} - ${selectedKeyAccount.email}` : 'Selecione o Key Account' }}
-            <i class="el-icon-arrow-down el-icon--right" />
-          </span>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item
-              v-for="keyAcc in workspaceKeyAccounts"
-              :key="keyAcc.name"
-              @click.native="selectKeyAccount(keyAcc)"
-            >
-              {{ keyAcc.name }} - {{ keyAcc.email }}
-            </el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
+        <el-select
+          v-model="selectedKeyAccountId"
+          filterable
+          style="width: 100%;"
+        >
+          <el-option
+            v-for="ka in workspaceKeyAccounts"
+            :key="ka.id"
+            :disabled="ka.id === selectedKeyAccountId"
+            :value="ka.id"
+            :label="ka | buildKAName"
+          />
+        </el-select>
       </span>
       <span
         slot="footer"
         class="dialog-footer"
       >
-        <el-button @click="associateKeyAccountDialogVisible = false">
+        <el-button @click="handleToggleAssociateKeyAccountDialog">
           Cancelar
         </el-button>
         <el-button
           type="primary"
-          @click="connectKeyAccount(selectedKeyAccount)"
+          :disabled="selectedKeyAccountId === associatedKeyAccount.id"
+          @click="connectKeyAccount"
         >
           Associar
         </el-button>
@@ -164,13 +160,19 @@ import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'WorkspaceData',
 
+  filters: {
+    buildKAName(ka) {
+      return (ka.name ? `${ka.name} - ` : '') + `${ka.email}`
+    }
+  },
+
   data: () => ({
     teamName: '',
     workspaceName: '',
     imageUrl: '',
     isUploadingFile: false,
     associateKeyAccountDialogVisible: false,
-    selectedKeyAccount: undefined
+    selectedKeyAccountId: undefined
   }),
 
   computed: {
@@ -189,6 +191,10 @@ export default {
         Workspace: this.workspace?.subDomain,
         Authorization: this.accountToken
       }
+    },
+
+    hasAssociatedKeyAccount() {
+      return Boolean(this.associatedKeyAccount?.id)
     }
   },
 
@@ -200,7 +206,7 @@ export default {
   },
 
   mounted() {
-    this.getWorkspaceKeyAccounts()
+    this.init()
   },
 
   methods: {
@@ -209,31 +215,30 @@ export default {
       'changeTeamName',
       'updateWorkspaceLogoUrl',
       'getWorkspaceKeyAccounts',
-      'updateWorkspaceKeyAccount'
+      'updateWorkspaceKeyAccount',
+      'getAssociatedKeyAccount'
     ]),
 
-    connectKeyAccount({ id }) {
-      const keyAccount = {
-        keyAccount: { id },
-        portifolios: []
-      }
-      this.updateWorkspaceKeyAccount(keyAccount)
-        .then(() => {
+    init() {
+      this.getWorkspaceKeyAccounts()
+      this.getAssociatedKeyAccount().then(({ keyAccount }) => {
+        this.selectedKeyAccountId = keyAccount?.id
+      })
+    },
+
+    connectKeyAccount(_event) {
+      if (this.selectedKeyAccountId) {
+        this.updateWorkspaceKeyAccount(this.selectedKeyAccountId).then(() => {
           this.$jusNotification({
             title: 'Yay!',
             message: 'Key Account associado com sucesso.',
             type: 'success'
           })
-          this.associetedKeyAccount = this.selectedKeyAccount
-          this.associateKeyAccountDialogVisible = false
-        })
-        .catch(error => {
+          this.handleToggleAssociateKeyAccountDialog()
+        }).catch(error => {
           this.$jusNotification({ error })
         })
-    },
-
-    selectKeyAccount(keyAccount) {
-      this.selectedKeyAccount = keyAccount
+      }
     },
 
     handleChangeTeamName() {
@@ -308,8 +313,10 @@ export default {
       this.isUploadingFile = false
     },
 
-    handleOpenAssociateKeyAccountDialog(_event) {
-      this.associateKeyAccountDialogVisible = true
+    handleToggleAssociateKeyAccountDialog(_event) {
+      this.selectedKeyAccountId = this.associatedKeyAccount.id
+
+      this.associateKeyAccountDialogVisible = !this.associateKeyAccountDialogVisible
     }
   }
 }
@@ -333,7 +340,13 @@ export default {
 
     .workspace-data-container__form-item {
       margin-top: 24px;
-     &:first-child { margin-top: 0; }
+      &:first-child { margin-top: 0; }
+
+      .workspace-data-container__form-item-input {
+        .workspace-data-container__form-item-input-append {
+          cursor: pointer;
+        }
+      }
 
       .workspace-data-container__input-alert {
         padding: 12px 16px;
