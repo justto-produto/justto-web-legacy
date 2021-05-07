@@ -2,48 +2,36 @@
   <section class="workspace-container">
     <el-table
       :data="workspaces"
-      style="width: 100%"
+      class="workspace-container__table"
     >
       <el-table-column
-        prop="workspace.name"
+        prop="name"
         label="Workspace"
       />
       <el-table-column
-        prop="workspace.teamName"
+        prop="teamName"
         label="Equipe"
       />
       <el-table-column
-        prop="portifolios"
-        label="Carteiras"
+        prop="keyAccountId"
+        label="Key Account"
       >
         <template slot-scope="scope">
-          <el-tag
-            v-for="(portifolio, portifolioIndex) in scope.row.portifolios"
-            :key="`portifolioIndex-${portifolioIndex}`"
-            style="margin: 4px;"
-          >
-            {{ portifolio }}
-          </el-tag>
+          {{ keyAccountTemplate(scope.row.keyAccountId) }}
         </template>
       </el-table-column>
-      <el-table-column
-        prop="keyAccount.name"
-        label="Key Account"
-      />
-      <el-table-column
-        prop="keyAccount.email"
-        label="Email"
-      />
     </el-table>
   </section>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
+
 export default {
   computed: {
     ...mapGetters({
-      workspaces: 'getKeyAccountByWorkspace'
+      workspaces: 'getMyWorkspaces',
+      keyAccounts: 'getWorkspaceKeyAccounts'
     })
   },
 
@@ -52,13 +40,29 @@ export default {
   },
 
   methods: {
-    ...mapActions({
-      getAssociatedKeyAccountByWorkspace: 'getAssociatedKeyAccountByWorkspace'
-    }),
+    keyAccountTemplate(keyAccountId) {
+      const ka = this.keyAccounts.find(({ id }) => Number(id) === Number(keyAccountId))
 
-    init() {
-      this.getAssociatedKeyAccountByWorkspace()
+      if (ka) {
+        return (ka.name ? `${ka.name} - ` : '') + `${ka.email}`
+      } else {
+        return '-'
+      }
     }
   }
 }
 </script>
+
+<style lang="scss">
+  .workspace-container {
+    .workspace-container__table {
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: scroll;
+
+      .el-table__body-wrapper {
+        height: auto !important;
+      }
+    }
+  }
+</style>
