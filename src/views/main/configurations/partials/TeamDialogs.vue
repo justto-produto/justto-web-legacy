@@ -42,7 +42,19 @@
               v-model="acceptTerms"
             />
             <span>
-              Eu, {{ personName }}, estou ciente que ao cadastrar uma nova pessoa no time, esta pessoa irá ter acesso as disputas da minha conta e estou de acordo com os <a href="https://justto.com.br/termos-de-uso">termos de uso</a> da plataforma e com a <a href="https://justto.com.br/poilitica-privacidade">política de privacidade</a>.
+              Eu, {{ personName }}, estou ciente que ao cadastrar uma nova pessoa no time, esta pessoa irá ter acesso as disputas da minha conta e estou de acordo com os 
+              <a
+                target="_blank"
+                href="https://justto.com.br/termos-de-uso">
+                termos de uso
+              </a>
+              da plataforma e com a
+              <a
+                target="_blank"
+                href="https://justto.com.br/poilitica-privacidade"
+              >
+                política de privacidade
+              </a>.
             </span>
           </div>
         </el-form-item>
