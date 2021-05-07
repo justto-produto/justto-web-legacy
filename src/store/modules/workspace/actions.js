@@ -212,7 +212,8 @@ const workspaceActions = {
     return axiosDispatch({
       url: `${accountsWorkspaceApi}/${getters.workspaceId}/keyAccount/${keyAccountId}`,
       method: 'patch',
-      mutation: 'updateAssociatedKeyAccount'
+      mutation: 'updateAssociatedKeyAccount',
+      payload: { keyAccountId }
     })
   }
 }

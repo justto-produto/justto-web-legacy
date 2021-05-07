@@ -59,29 +59,30 @@
             Key Account
           </span>
 
-          <span class="workspace-data-container__form-item-input el-input__inner">
-            <div v-if="hasAssociatedKeyAccount">
-              <strong>{{ associatedKeyAccount.name }}</strong>
-              <span>
-                &lt;{{ associatedKeyAccount.email }}&gt;
+          <span class="workspace-data-container__form-item-input el-input el-input-group el-input-group--append">
+            <div class="el-input__inner">
+              <span v-if="hasAssociatedKeyAccount">
+                <strong>{{ associatedKeyAccount.name }}</strong>
+                <span>
+                  &lt;{{ associatedKeyAccount.email }}&gt;
+                </span>
+              </span>
+              <span v-else>
+                Nenhum Key Account selecionado.
               </span>
             </div>
-            <span v-else>
-              Nenhum Key Account selecionado.
-            </span>
-
+            <div
+              v-if="isJusttoAdmin"
+              class="workspace-data-container__form-item-input-append el-input-group__append"
+            >
+              <span
+                class="el-input-group__form-item-input-append-link"
+                @click="handleToggleAssociateKeyAccountDialog"
+              >
+                {{ hasAssociatedKeyAccount ? 'Alterar Key Account' : 'Associar Key Account' }}
+              </span>
+            </div>
           </span>
-        </div>
-        <div
-          v-if="isJusttoAdmin"
-          class="workspace-data-container__form-item"
-        >
-          <a
-            class="workspace-data-container__form-item-link"
-            @click="handleOpenAssociateKeyAccountDialog"
-          >
-            {{ hasAssociatedKeyAccount ? 'Alterar Key Account' : 'Associar Key Account' }}
-          </a>
         </div>
       </div>
 
@@ -122,13 +123,13 @@
       <span>
         <el-select
           v-model="selectedKeyAccountId"
-          clearable
           filterable
           style="width: 100%;"
         >
           <el-option
             v-for="ka in workspaceKeyAccounts"
             :key="ka.id"
+            :disabled="ka.id === selectedKeyAccountId"
             :value="ka.id"
             :label="ka | buildKAName"
           />
@@ -138,11 +139,12 @@
         slot="footer"
         class="dialog-footer"
       >
-        <el-button @click="associateKeyAccountDialogVisible = false">
+        <el-button @click="handleToggleAssociateKeyAccountDialog">
           Cancelar
         </el-button>
         <el-button
           type="primary"
+          :disabled="selectedKeyAccountId === associatedKeyAccount.id"
           @click="connectKeyAccount"
         >
           Associar
@@ -232,7 +234,7 @@ export default {
             message: 'Key Account associado com sucesso.',
             type: 'success'
           })
-          this.associateKeyAccountDialogVisible = false
+          this.handleToggleAssociateKeyAccountDialog()
         }).catch(error => {
           this.$jusNotification({ error })
         })
@@ -311,8 +313,10 @@ export default {
       this.isUploadingFile = false
     },
 
-    handleOpenAssociateKeyAccountDialog(_event) {
-      this.associateKeyAccountDialogVisible = true
+    handleToggleAssociateKeyAccountDialog(_event) {
+      this.selectedKeyAccountId = this.associatedKeyAccount.id
+
+      this.associateKeyAccountDialogVisible = !this.associateKeyAccountDialogVisible
     }
   }
 }
@@ -336,7 +340,13 @@ export default {
 
     .workspace-data-container__form-item {
       margin-top: 24px;
-     &:first-child { margin-top: 0; }
+      &:first-child { margin-top: 0; }
+
+      .workspace-data-container__form-item-input {
+        .workspace-data-container__form-item-input-append {
+          cursor: pointer;
+        }
+      }
 
       .workspace-data-container__input-alert {
         padding: 12px 16px;
