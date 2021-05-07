@@ -145,7 +145,7 @@
         </el-button>
         <el-button
           type="primary"
-          :disabled="selectedKeyAccountId === associatedKeyAccount.id"
+          :disabled="hasAssociatedKeyAccount && selectedKeyAccountId === associatedKeyAccount.id"
           @click="connectKeyAccount"
         >
           Associar
@@ -223,7 +223,9 @@ export default {
     init() {
       this.getWorkspaceKeyAccounts()
       this.getAssociatedKeyAccount().then(({ keyAccount }) => {
-        this.selectedKeyAccountId = keyAccount?.id
+        if (keyAccount) {
+          this.selectedKeyAccountId = keyAccount.id
+        }
       })
     },
 
@@ -315,7 +317,9 @@ export default {
     },
 
     handleToggleAssociateKeyAccountDialog(_event) {
-      this.selectedKeyAccountId = this.associatedKeyAccount.id || undefined
+      if (this.hasAssociatedKeyAccount) {
+        this.selectedKeyAccountId = this.associatedKeyAccount.id
+      }
 
       this.associateKeyAccountDialogVisible = !this.associateKeyAccountDialogVisible
     }
