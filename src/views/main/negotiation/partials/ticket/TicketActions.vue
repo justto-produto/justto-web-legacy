@@ -1,18 +1,21 @@
 <template>
   <article class="ticket-actions">
-    <el-button
+    <span
       v-for="action in actionsList.filter(a => a.isDynamic && a.isVisible)"
       :key="action.name"
-      class="ticket-actions__dynamic-buttons ticket-actions__buttons"
-      @click="action.method(action.name)"
     >
       <el-tooltip :content="$options.filters.capitalize($tc(`actions.${action.name}.name`, action.label))">
-        <JusIcon
-          :icon="action.icon"
-          class="ticket-actions__icons"
-        />
+        <el-button
+          class="ticket-actions__dynamic-buttons ticket-actions__buttons"
+          @click="action.method(action.name)"
+        >
+          <JusIcon
+            :icon="action.icon"
+            class="ticket-actions__icons"
+          />
+        </el-button>
       </el-tooltip>
-    </el-button>
+    </span>
 
     <el-popover
       :class="{ 'ticket-actions__more-actions--hidden': isPreNegotiation }"
@@ -71,6 +74,13 @@ export default {
 
     actionsList() {
       return [
+        {
+          name: 'REDIRECTMANAGEMENT',
+          icon: 'switch',
+          isVisible: true,
+          isDynamic: true,
+          method: () => this.redirectToManagement()
+        },
         {
           name: 'FAVORITE',
           icon: 'offices-tower',
@@ -477,6 +487,11 @@ export default {
           reject(error)
         } resolve()
       })
+    },
+
+    redirectToManagement() {
+      const managementRoute = `/management/dispute/${this.$route.params.id}`
+      this.$router.push({ path: managementRoute })
     }
   }
 }
