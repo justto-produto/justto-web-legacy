@@ -125,6 +125,7 @@
           v-model="selectedKeyAccountId"
           filterable
           style="width: 100%;"
+          @input="$forceUpdate()"
         >
           <el-option
             v-for="ka in workspaceKeyAccounts"
