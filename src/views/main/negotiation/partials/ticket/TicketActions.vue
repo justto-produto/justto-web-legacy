@@ -75,13 +75,6 @@ export default {
     actionsList() {
       return [
         {
-          name: 'REDIRECTMANAGEMENT',
-          icon: 'switch',
-          isVisible: true,
-          isDynamic: true,
-          method: () => this.redirectToManagement()
-        },
-        {
           name: 'FAVORITE',
           icon: 'offices-tower',
           isVisible: !this.isFavorite,
@@ -186,6 +179,13 @@ export default {
           name: `PRINT_TICKET_${this.activeTab}`,
           method: (_action) => this.toggleExportTicketModalVisible(true),
           isVisible: this.isJusttoAdmin
+        },
+        {
+          name: 'REDIRECTMANAGEMENT',
+          icon: 'switch',
+          isVisible: true,
+          isDynamic: true,
+          method: () => this.redirectToManagement()
         }
       ].filter(action => action.isVisible)
     },
