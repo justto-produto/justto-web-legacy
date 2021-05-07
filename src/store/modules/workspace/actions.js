@@ -2,6 +2,7 @@ import { axiosDispatch } from '@/utils'
 import axios from 'axios'
 
 const workspacesPath = 'api/workspaces'
+const accountsWorkspaceApi = 'api/accounts/workspaces'
 
 const workspaceActions = {
   myWorkspace() {
@@ -179,14 +180,10 @@ const workspaceActions = {
     })
   },
   getWorkspaceKeyAccounts({ commit }) {
-    return new Promise((resolve) => {
-      commit('setWorkspaceKeyAccounts', [{ name: 'Micaias', email: 'micaias@justto.com' }, { name: 'Ladgelson', email: 'ladgelson@justto.com' }])
-      resolve()
+    return axiosDispatch({
+      url: 'api/accounts/workspaces/keyAccount',
+      mutation: 'setWorkspaceKeyAccounts'
     })
-    // return axiosDispatch({
-    //   url: 'api/accounts/workspaces/keyAccount',
-    //   mutation: 'setWorkspaceKeyAccounts'
-    // })
   },
   getAssociatedKeyAccountByWorkspace({ commit, getters }) {
     return new Promise((resolve) => {
@@ -204,25 +201,17 @@ const workspaceActions = {
     //   mutation: 'setKeyAccounts'
     // })
   },
-  getAssociatedKeyAccount({ commit, getters }) {
-    return new Promise((resolve) => {
-      commit('setAssociatedKeyAccount', {
-        workspace: { id: 10, name: 'Workspace 1', teamName: 'Chelsea' },
-        keyAccount: { id: 25, name: 'Micaias Ladgelson', email: 'ladgelson@justto.com.br' },
-        portifolios: ['Micaias', 'Mussum', 'Ipsum']
-      })
-      resolve()
-    })
-    // return axiosDispatch({
-    //   url: `/api/accounts/workspaces/${getters.workspaceId}/keyAccount`,
-    //   mutation: 'setKeyAccounts'
-    // })
-  },
-  updateWorkspaceKeyAccount({ commit, getters }, data) {
+  getAssociatedKeyAccount({ getters }) {
     return axiosDispatch({
-      url: `/api/accounts/workspaces/${getters.workspaceId}/keyAccount`,
+      url: `${accountsWorkspaceApi}/${getters.workspaceId}/keyAccount`,
+      mutation: 'setAssociatedKeyAccount'
+    })
+  },
+
+  updateWorkspaceKeyAccount({ getters }, keyAccountId) {
+    return axiosDispatch({
+      url: `${accountsWorkspaceApi}/${getters.workspaceId}/keyAccount/${keyAccountId}`,
       method: 'patch',
-      data,
       mutation: 'updateAssociatedKeyAccount'
     })
   }
