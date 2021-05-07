@@ -84,7 +84,7 @@ export default {
           return {
             available: false,
             icon: 'el-icon-question',
-            text: this.disputeTimeline[this.code].error || defaultMessage
+            text: this.disputeTimeline[this.code].error?.description || defaultMessage
           }
         } else {
           return {
