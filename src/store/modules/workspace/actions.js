@@ -179,7 +179,7 @@ const workspaceActions = {
       })
     })
   },
-  getWorkspaceKeyAccounts({ commit }) {
+  getWorkspaceKeyAccounts({ _ }) {
     return axiosDispatch({
       url: 'api/accounts/workspaces/keyAccount',
       mutation: 'setWorkspaceKeyAccounts'
