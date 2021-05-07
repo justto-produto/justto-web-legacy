@@ -58,8 +58,14 @@ export default {
       if (!this.search) {
         return this.workspaces
       } else {
-        return this.workspaces.filter(({ teamName, keyAccountId }) => {
-          return teamName.includes(this.search) || this.keyAccountTemplate(keyAccountId).includes(this.search)
+        return this.workspaces.filter(({ name, teamName, keyAccountId }) => {
+          const lowerCaseSearch = this.search.toLocaleLowerCase()
+
+          const lowerCaseTeamName = (teamName || '').toLocaleLowerCase()
+          const lowerCaseKeyAccount = this.keyAccountTemplate(keyAccountId).toLocaleLowerCase()
+          const lowerCaseName = (name || '').toLocaleLowerCase()
+
+          return lowerCaseTeamName.includes(lowerCaseSearch) || lowerCaseName.includes(lowerCaseSearch) || lowerCaseKeyAccount.includes(this.search)
         })
       }
     }
