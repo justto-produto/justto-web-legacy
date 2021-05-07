@@ -491,6 +491,7 @@ export default {
 
     redirectToManagement() {
       const managementRoute = `/management/dispute/${this.$route.params.id}`
+      this.$jusSegment('Chaveia de negociação para gerenciamento', {})
       this.$router.push({ path: managementRoute })
     }
   }

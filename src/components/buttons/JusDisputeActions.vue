@@ -664,6 +664,7 @@ export default {
 
     redirectNegotiation() {
       const negotiationRoute = `/negotiation/${this.$route.params.id}`
+      this.$jusSegment('Chaveia de gerenciamento para negociação', {})
       this.$router.push({ path: negotiationRoute })
     },
 
