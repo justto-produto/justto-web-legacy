@@ -2,6 +2,7 @@ import { axiosDispatch } from '@/utils'
 import axios from 'axios'
 
 const workspacesPath = 'api/workspaces'
+const accountsWorkspaceApi = 'api/accounts/workspaces'
 
 const workspaceActions = {
   myWorkspace() {
@@ -176,6 +177,43 @@ const workspaceActions = {
       }).catch(error => {
         reject(error)
       })
+    })
+  },
+  getWorkspaceKeyAccounts({ commit }) {
+    return axiosDispatch({
+      url: 'api/accounts/workspaces/keyAccount',
+      mutation: 'setWorkspaceKeyAccounts'
+    })
+  },
+  getAssociatedKeyAccountByWorkspace({ commit, getters }) {
+    return new Promise((resolve) => {
+      commit('setAssociatedKeyAccountByWorkspace', [
+        {
+          workspace: { id: 10, name: 'Workspace 1', teamName: 'Chelsea' },
+          keyAccount: { id: 25, name: 'Micaias Ladgelson', email: 'ladgelson@justto.com.br' },
+          portifolios: ['Micaias', 'Mussum', 'Ipsum']
+        }
+      ])
+      resolve()
+    })
+    // return axiosDispatch({
+    //   url: `/api/accounts/workspaces/${getters.workspaceId}/keyAccount`,
+    //   mutation: 'setKeyAccounts'
+    // })
+  },
+  getAssociatedKeyAccount({ getters }) {
+    return axiosDispatch({
+      url: `${accountsWorkspaceApi}/${getters.workspaceId}/keyAccount`,
+      mutation: 'setAssociatedKeyAccount'
+    })
+  },
+
+  updateWorkspaceKeyAccount({ getters }, keyAccountId) {
+    return axiosDispatch({
+      url: `${accountsWorkspaceApi}/${getters.workspaceId}/keyAccount/${keyAccountId}`,
+      method: 'patch',
+      mutation: 'updateAssociatedKeyAccount',
+      payload: { keyAccountId }
     })
   }
 }

@@ -1,4 +1,5 @@
 import { getStringInitials } from '@/utils'
+import state from './state'
 
 const workspaceGetters = {
   workspace: state => state.workspace,
@@ -37,7 +38,10 @@ const workspaceGetters = {
   workspaceProperties: state => state.workspace.properties,
   getWorkspaceDefaultSigners: state => state.workspace.defaultSigners,
   getPreNegotiation: state => state.workspace.preNegotiation,
-  getFeaturesAndModules: state => state.featuresAndModules
+  getFeaturesAndModules: state => state.featuresAndModules,
+  getWorkspaceKeyAccounts: (state) => state.workspace.keyAccounts,
+  getAssociatedKeyAccount: (state) => state.workspace.associatedKeyAccount,
+  getKeyAccountByWorkspace: () => state.workspace.associatedKeyAccountByWorkspace
 }
 
 export default workspaceGetters
