@@ -60,7 +60,7 @@
     <DeleteTicketDialog
       ref="deleteTicketDialog"
       :status="ticket.status"
-      :dispute-id="ticket.disputeId"
+      :dispute-id="ticket.disputeId || routeId"
     />
     <AssociateContactsModal
       :value="showAssociatedContacts"
@@ -117,6 +117,10 @@ export default {
 
     isOverviewActive() {
       return this.innerWidth > 1200 ? !this.showOverview : this.showOverview
+    },
+
+    routeId() {
+      return Number(this.$route.params.id)
     }
   },
 
