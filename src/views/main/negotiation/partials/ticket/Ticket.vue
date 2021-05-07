@@ -83,7 +83,7 @@ export default {
       'getTicketMetadata'
     ]),
 
-    fetchData(id, _oldId = null) {
+    fetchData(id) {
       console.log('fetchData', id)
       this.socketAction('subscribe', id)
       this.cleanRecentMessages()

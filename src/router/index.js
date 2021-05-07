@@ -247,9 +247,6 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  if (to.name === 'ticket' && from.name === 'ticket') {
-    eventBus.$emit(events.TICKET_CHANGE.callback, to.params.id, from.params.id)
-  }
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (Store.getters.isLoggedIn) {
       if (Store.getters.hasWorkspace) {
@@ -264,6 +261,10 @@ router.beforeEach((to, from, next) => {
     } else next('login')
   } else if (from.query.token) next(false)
   else next()
+
+  if (to.name === 'ticket' && from.name === 'ticket') {
+    eventBus.$emit(events.TICKET_CHANGE.callback, to.params.id, from.params.id)
+  }
 })
 
 router.afterEach((to) => {

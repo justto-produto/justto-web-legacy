@@ -156,7 +156,7 @@ export default {
       }
     },
 
-    resetTicket(_current, _old) {
+    resetTicket(_current) {
       this.resetRecipients()
       this.resetOccurrences()
       this.resetMessageText()
