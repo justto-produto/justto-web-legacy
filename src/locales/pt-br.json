@@ -223,6 +223,9 @@
     }
   },
   "actions": {
+    "REDIRECTMANAGEMENT": {
+      "name": "ir para gerenciamento"
+    },
     "SETTLED": {
       "name": "ganhar | aceitar acordo",
       "feedback-message": "disputa <b>ganha</b> | proposta aceita"
