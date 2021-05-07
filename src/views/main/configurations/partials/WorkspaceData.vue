@@ -53,6 +53,37 @@
             </span>
           </el-alert>
         </div>
+
+        <div class="workspace-data-container__form-item">
+          <span class="workspace-data-container__input-label">
+            Key Account
+          </span>
+
+          <span class="workspace-data-container__form-item-input el-input el-input-group el-input-group--append">
+            <div class="el-input__inner">
+              <span v-if="hasAssociatedKeyAccount">
+                <strong>{{ associatedKeyAccount.name }}</strong>
+                <span>
+                  &lt;{{ associatedKeyAccount.email }}&gt;
+                </span>
+              </span>
+              <span v-else>
+                Nenhum Key Account selecionado.
+              </span>
+            </div>
+            <div
+              v-if="isJusttoAdmin"
+              class="workspace-data-container__form-item-input-append el-input-group__append"
+            >
+              <span
+                class="el-input-group__form-item-input-append-link"
+                @click="handleToggleAssociateKeyAccountDialog"
+              >
+                {{ hasAssociatedKeyAccount ? 'Alterar Key Account' : 'Associar Key Account' }}
+              </span>
+            </div>
+          </span>
+        </div>
       </div>
 
       <el-upload
@@ -82,6 +113,44 @@
         </span>
       </el-upload>
     </article>
+
+    <el-dialog
+      title="Associar key accounts"
+      :visible.sync="associateKeyAccountDialogVisible"
+      width="40%"
+      :show-close="false"
+    >
+      <span>
+        <el-select
+          v-model="selectedKeyAccountId"
+          filterable
+          style="width: 100%;"
+        >
+          <el-option
+            v-for="ka in workspaceKeyAccounts"
+            :key="ka.id"
+            :disabled="ka.id === selectedKeyAccountId"
+            :value="ka.id"
+            :label="ka | buildKAName"
+          />
+        </el-select>
+      </span>
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click="handleToggleAssociateKeyAccountDialog">
+          Cancelar
+        </el-button>
+        <el-button
+          type="primary"
+          :disabled="selectedKeyAccountId === associatedKeyAccount.id"
+          @click="connectKeyAccount"
+        >
+          Associar
+        </el-button>
+      </span>
+    </el-dialog>
   </section>
 </template>
 
@@ -90,37 +159,87 @@ import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'WorkspaceData',
+
+  filters: {
+    buildKAName(ka) {
+      return (ka.name ? `${ka.name} - ` : '') + `${ka.email}`
+    }
+  },
+
   data: () => ({
     teamName: '',
     workspaceName: '',
     imageUrl: '',
-    isUploadingFile: false
+    isUploadingFile: false,
+    associateKeyAccountDialogVisible: false,
+    selectedKeyAccountId: undefined
   }),
+
   computed: {
-    ...mapGetters([
-      'workspace',
-      'accountToken'
-    ]),
+    ...mapGetters(
+      {
+        workspace: 'workspace',
+        accountToken: 'accountToken',
+        isJusttoAdmin: 'isJusttoAdmin',
+        workspaceKeyAccounts: 'getWorkspaceKeyAccounts',
+        associatedKeyAccount: 'getAssociatedKeyAccount'
+      }
+    ),
 
     requestHeaders() {
       return {
         Workspace: this.workspace?.subDomain,
         Authorization: this.accountToken
       }
+    },
+
+    hasAssociatedKeyAccount() {
+      return Boolean(this.associatedKeyAccount?.id)
     }
   },
+
   beforeMount() {
     const { teamName, name, logoUrl } = this.workspace
     this.imageUrl = logoUrl
     this.teamName = teamName
     this.workspaceName = name
   },
+
+  mounted() {
+    this.init()
+  },
+
   methods: {
     ...mapActions([
       'editWorkpace',
       'changeTeamName',
-      'updateWorkspaceLogoUrl'
+      'updateWorkspaceLogoUrl',
+      'getWorkspaceKeyAccounts',
+      'updateWorkspaceKeyAccount',
+      'getAssociatedKeyAccount'
     ]),
+
+    init() {
+      this.getWorkspaceKeyAccounts()
+      this.getAssociatedKeyAccount().then(({ keyAccount }) => {
+        this.selectedKeyAccountId = keyAccount?.id
+      })
+    },
+
+    connectKeyAccount(_event) {
+      if (this.selectedKeyAccountId) {
+        this.updateWorkspaceKeyAccount(this.selectedKeyAccountId).then(() => {
+          this.$jusNotification({
+            title: 'Yay!',
+            message: 'Key Account associado com sucesso.',
+            type: 'success'
+          })
+          this.handleToggleAssociateKeyAccountDialog()
+        }).catch(error => {
+          this.$jusNotification({ error })
+        })
+      }
+    },
 
     handleChangeTeamName() {
       const { teamName, workspace } = this
@@ -192,6 +311,12 @@ export default {
     handleChangeWorkspaceLogoError(error) {
       this.$jusNotification({ error })
       this.isUploadingFile = false
+    },
+
+    handleToggleAssociateKeyAccountDialog(_event) {
+      this.selectedKeyAccountId = this.associatedKeyAccount.id
+
+      this.associateKeyAccountDialogVisible = !this.associateKeyAccountDialogVisible
     }
   }
 }
@@ -215,7 +340,13 @@ export default {
 
     .workspace-data-container__form-item {
       margin-top: 24px;
-     &:first-child { margin-top: 0; }
+      &:first-child { margin-top: 0; }
+
+      .workspace-data-container__form-item-input {
+        .workspace-data-container__form-item-input-append {
+          cursor: pointer;
+        }
+      }
 
       .workspace-data-container__input-alert {
         padding: 12px 16px;
