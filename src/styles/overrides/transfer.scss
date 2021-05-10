@@ -1,0 +1,17 @@
+.el-transfer {
+  display: flex;
+  align-items: center;
+
+  .el-transfer__buttons {
+    padding: 0 8px;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 16px;
+
+    .el-button {
+      margin: 0;
+    }
+  }
+}
