@@ -266,6 +266,10 @@
       "name": "trocar negociadores",
       "feedback-message": "negociadores alterados"
     },
+    "NEGOTIATORS": {
+      "name": "trocar negociadores",
+      "feedback-message": "negociadores alterados"
+    },
     "ENRICH": {
       "name": "enriquecer disputa",
       "feedback-message": "dispute <b>enriquecida</b>"
