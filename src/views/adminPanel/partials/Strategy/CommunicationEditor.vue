@@ -68,21 +68,13 @@
           ref="editor-fieldset"
           class="communication-editor__editor-fieldset show-toolbar"
         >
-          <!-- <froala
-            id="edit"
-            v-model="template.body"
-            :tag="'textarea'"
-            :config="config"
-          /> -->
           <ckeditor
-            v-show="editorRedy"
+            v-if="isVisible"
             ref="edit"
             v-model="template.body"
-            class="communication-editor__editor"
-            tag-name="textarea"
+            :editor="editor"
             :config="editorConfig"
-            @ready="editorRedy = true"
-            @namespaceloaded="onNamespaceLoaded"
+            type="classic"
           />
         </div>
       </div>
@@ -115,15 +107,17 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-
-import CKEditor from 'ckeditor4-vue'
+import ckeditor from '@/utils/mixins/ckeditor'
 
 export default {
   name: 'CommunicationEditor',
+
   components: {
-    ckeditor: CKEditor.component,
     JusVariablesCard: () => import('@/components/layouts/JusVariablesCard')
   },
+
+  mixins: [ckeditor],
+
   props: {
     templateToEdit: {
       type: Object,
@@ -143,52 +137,31 @@ export default {
     }
 
   },
+
   data() {
     return {
-      height: 400,
-      template: {},
-      editorDataFroala: '',
-      config: {
-        heightMax: 500
-      },
-      editorRedy: false
+      template: {
+        body: ''
+      }
     }
   },
+
   computed: {
     ...mapGetters({
       variables: 'getAvaliableVariablesToTemplate'
     }),
+
     savedAt() {
       const lastUpdate = this.template.updatedAt
       return `Template salvo ${lastUpdate && lastUpdate.dateTime ? this.$moment(lastUpdate.dateTime).from(new Date()) : ''}`
     },
+
     isVisible: {
       get() {
         return this.visible
       },
       set(value) {
         this.$emit('update:visible', value)
-      }
-    },
-    editorConfig() {
-      return {
-        toolbarGroups: [
-          { name: 'document', groups: ['mode', 'document', 'doctools'] },
-          { name: 'clipboard', groups: ['clipboard', 'undo'] },
-          { name: 'editing', groups: ['find', 'selection', 'spellchecker', 'editing'] },
-          { name: 'forms', groups: ['forms'] },
-          { name: 'basicstyles', groups: ['basicstyles', 'cleanup'] },
-          { name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align', 'bidi', 'paragraph'] },
-          { name: 'links', groups: ['links'] },
-          { name: 'insert', groups: ['insert'] },
-          { name: 'styles', groups: ['styles'] },
-          { name: 'colors', groups: ['colors'] },
-          { name: 'tools', groups: ['tools'] },
-          { name: 'others', groups: ['others'] },
-          { name: 'about', groups: ['about'] }
-        ],
-        // removeButtons: 'Save,NewPage,ExportPdf,Preview,Print,PasteFromWord,PasteText,Paste,Redo,Copy,Templates,Cut,Undo,Find,Replace,SelectAll,Scayt,Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,HiddenField,Superscript,Subscript,CopyFormatting,Indent,Outdent,Styles,TextColor,BGColor,Maximize,ShowBlocks,About,Format,Font,FontSize,Iframe,PageBreak,SpecialChar,Smiley,HorizontalRule,Table,Flash,Image,Unlink,Link,Anchor,Language,BidiRtl,BidiLtr,JustifyBlock,JustifyRight,JustifyCenter,JustifyLeft,CreateDiv',
-        removePlugins: 'elementspath,resize'
       }
     }
   },
@@ -198,21 +171,10 @@ export default {
         this.template = current
         if (!this.template.title) this.template.title = 'Mensagem da Justto'
       }
-    },
-    editorRedy() {
-      this.$refs.edit.config.height = this.$refs['editor-fieldset'].clientHeight
-      this.$forceUpdate()
     }
   },
   methods: {
     ...mapActions(['changeCommunicationTemplate']),
-
-    onNamespaceLoaded(CKEDITOR) {
-      // Add external `placeholder` plugin which will be available for each
-      // editor instance on the page.
-      CKEDITOR.plugins.addExternal('autogrow', '../../../plugins/autogrow', 'plugin.js')
-      // CKEDITOR.config.autoGrow_onStartup = true
-    },
 
     saveTemplate() {
       if (!this.template.title) {
@@ -255,24 +217,16 @@ export default {
   }
 }
 </script>
+
 <style lang="scss">
-.communication-editor__editor {
-  height: 100%;
-
-  .cke {
-    height: 100%;
-
-    .cke_inner {
-      height: 100%;
-
-      .cke_contents {
-        height: 92% !important;
+.communication-editor__editor-fieldset {
+  .ck-editor {
+    .ck-editor__main {
+      .ck-editor__editable {
+        height: 75vh !important;
       }
     }
   }
-}
-.cke_contents {
-  height: 92% !important;
 }
 </style>
 

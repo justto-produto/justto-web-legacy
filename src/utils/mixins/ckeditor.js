@@ -8,6 +8,7 @@ import Highlight from '@ckeditor/ckeditor5-highlight/src/highlight'
 import Indent from '@ckeditor/ckeditor5-indent/src/indent'
 import Italic from '@ckeditor/ckeditor5-basic-styles/src/italic'
 import List from '@ckeditor/ckeditor5-list/src/list'
+import Link from '@ckeditor/ckeditor5-link/src/link'
 import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph'
 import PasteFromOffice from '@ckeditor/ckeditor5-paste-from-office/src/pastefromoffice'
 import RemoveFormat from '@ckeditor/ckeditor5-remove-format/src/removeformat'
@@ -34,6 +35,7 @@ export default {
           Indent,
           Italic,
           List,
+          Link,
           Paragraph,
           PasteFromOffice,
           RemoveFormat,
@@ -43,6 +45,7 @@ export default {
         ],
         toolbar: {
           items: [
+            'mode',
             'bold',
             'italic',
             'underline',
