@@ -254,10 +254,10 @@ export default {
       font-weight: bold;
     }
     td.without-alert {
-      background: #1abc9c80 !important;
+      background: #5EDCAE !important;
     }
     td.with-alert {
-      background: #f1c40f80 !important;
+      background: #FED437 !important;
     }
     td.column-total {
       font-weight: bold;
