@@ -15,6 +15,16 @@
         label-position="top"
         style="margin-bottom: -22px;"
       >
+        <el-row>
+          <el-col v-if="warningSixtyLastDaysRange">
+            <span class="error">
+              Na aba finalizadas contém apenas disputas finalizadas nos últimos 60 dias. Para filtrar qualquer período, utilize a tela que mostra
+              <a @click="redirectToAllDisputes()">
+                todas as disputas do sistema.
+              </a>
+            </span>
+          </el-col>
+        </el-row>
         <el-row :gutter="20">
           <!--  CAMPANHA -->
           <el-col
@@ -267,6 +277,7 @@ export default {
   data() {
     return {
       advancedFiltersDialogVisible: false,
+      warningSixtyLastDaysRange: false,
       loading: false,
       filters: {}
     }
@@ -454,18 +465,30 @@ export default {
     },
     changeDealDate(value) {
       if (value) {
-        this.filters.dealDate = value
+        if (this.activeTab === 'finished') {
+          const initialDateRange = this.$moment(value[0], 'YYYY-MM-DD')
+          const diffDaysRange = Math.abs(initialDateRange.diff(this.$moment(), 'days'))
+          const isMoreThan60DaysRange = diffDaysRange > 60
+          debugger
+          if (isMoreThan60DaysRange) {
+            this.$jusNotification({
+              title: 'Opa!',
+              message: 'Filtro inválido, tente novamente com outra data!',
+              type: 'error'
+            })
+            this.warningSixtyLastDaysRange = true
+            this.filters.dealDate = []
+          } else {
+            this.warningSixtyLastDaysRange = false
+            this.filters.dealDate = value
+          }
+        } else {
+          this.filters.dealDate = value
+        }
       } else {
         this.filters.dealDate = []
       }
     },
-    // clearLastInteractionDate (value) {
-    //   if (value) {
-    //     this.filters.lastInteractionDate = value
-    //   } else {
-    //     delete this.filters.lastInteractionDate
-    //   }
-    // },
     changeExpirationDate(value) {
       if (value) {
         this.filters.expirationDate = value
@@ -479,6 +502,10 @@ export default {
       } else {
         this.filters.importingDate = []
       }
+    },
+    redirectToAllDisputes() {
+      this.advancedFiltersDialogVisible = false
+      this.$router.push({ path: '/management/all' })
     }
   }
 }
@@ -522,6 +549,10 @@ export default {
   }
   .el-tag {
     overflow: hidden;
+  }
+
+  .error {
+    color: red
   }
 }
 </style>
