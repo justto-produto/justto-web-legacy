@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <el-row class="admin-panel-view">
     <el-col
       :span="left"
@@ -124,7 +124,9 @@ export default {
         'guilherme@justto.com.br',
         'josewilliam@justto.com.br',
         'daniel@justto.com.br',
-        'deivid@justto.com.br'
+        'deivid@justto.com.br',
+        'micaias@justto.com.br',
+        'danilo.rosa@justto.com.br'
       ]
     }
   },

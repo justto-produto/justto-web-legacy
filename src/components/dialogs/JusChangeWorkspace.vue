@@ -99,7 +99,7 @@ export default {
         }).finally(() => {
           if (this.$route?.params?.id) {
             const { href } = window.location
-            const newPath = href.split('#')[0] + '#/management'
+            const newPath = href.split('#')[0] + '#/negotiation'
             window.location.replace(newPath)
           }
           this.isVisible = false

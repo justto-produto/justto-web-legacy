@@ -71,10 +71,10 @@ export default {
     lastInboundInteraction() {
       const { lastInboundInteraction, lastReceivedMessage, disputeStatus, expirationDate } = this.ticket
 
-      if (lastInboundInteraction?.type !== 'COMMUNICATION') {
+      if (!!lastInboundInteraction && lastInboundInteraction?.type !== 'COMMUNICATION') {
         const { type, dateTime } = lastInboundInteraction
         return {
-          icon: this.$t(`interaction-types.${type}.icon`),
+          icon: type ? this.$t(`interaction-types.${type}.icon`) : null,
           message: this.$options.filters.capitalize(this.$t(`interaction-types.${type}.message`)),
           dateTime: dateTime.dateTime
         }

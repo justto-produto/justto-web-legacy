@@ -125,6 +125,7 @@
           v-model="selectedKeyAccountId"
           filterable
           style="width: 100%;"
+          @input="$forceUpdate()"
         >
           <el-option
             v-for="ka in workspaceKeyAccounts"
@@ -144,7 +145,7 @@
         </el-button>
         <el-button
           type="primary"
-          :disabled="selectedKeyAccountId === associatedKeyAccount.id"
+          :disabled="hasAssociatedKeyAccount && selectedKeyAccountId === associatedKeyAccount.id"
           @click="connectKeyAccount"
         >
           Associar
@@ -222,7 +223,9 @@ export default {
     init() {
       this.getWorkspaceKeyAccounts()
       this.getAssociatedKeyAccount().then(({ keyAccount }) => {
-        this.selectedKeyAccountId = keyAccount?.id
+        if (keyAccount) {
+          this.selectedKeyAccountId = keyAccount.id
+        }
       })
     },
 
@@ -314,7 +317,9 @@ export default {
     },
 
     handleToggleAssociateKeyAccountDialog(_event) {
-      this.selectedKeyAccountId = this.associatedKeyAccount.id
+      if (this.hasAssociatedKeyAccount) {
+        this.selectedKeyAccountId = this.associatedKeyAccount.id
+      }
 
       this.associateKeyAccountDialogVisible = !this.associateKeyAccountDialogVisible
     }
