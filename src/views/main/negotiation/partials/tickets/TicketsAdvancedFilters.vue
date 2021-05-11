@@ -3,6 +3,8 @@
     :close-on-click-modal="false"
     :visible.sync="advancedFiltersDialogVisible"
     width="650px"
+    destroy-on-close
+    append-to-body
     @open="restoreFilters()"
   >
     <template slot="title">
@@ -16,7 +18,7 @@
         style="margin-bottom: -22px;"
       >
         <el-row>
-          <el-col v-if="warningSixtyLastDaysRange">
+          <el-col v-if="warningSixtyLastDaysRange && isFinished">
             <span class="error">
               Na aba finalizadas contém apenas disputas finalizadas nos últimos 60 dias. Para filtrar qualquer período, utilize a tela que mostra
               <a @click="redirectToAllDisputes()">
@@ -385,7 +387,7 @@ export default {
         this.getMyStrategiesLite(),
         this.getRespondents(),
         this.getWorkspaceTags()
-      ]).finally(responses => {
+      ]).finally(_responses => {
         this.loading = false
       })
     },
@@ -437,6 +439,7 @@ export default {
       this.changeExpirationDate()
       this.changeimportingDate()
       this.clearInteraction()
+      this.warningSixtyLastDaysRange = false
       this.filters.onlyFavorite = false
       this.filters.onlyPaused = false
       this.filters.hasCounterproposal = false
@@ -448,7 +451,7 @@ export default {
     restoreFilters() {
       this.filters = JSON.parse(JSON.stringify(this.ticketsQuery))
     },
-    clearInteraction(value) {
+    clearInteraction(_value) {
       delete this.filters.lastInteractionType
     },
     clearStrategy() {
@@ -465,7 +468,7 @@ export default {
     },
     changeDealDate(value) {
       if (value) {
-        if (this.activeTab === 'finished') {
+        if (this.isFinished) {
           const initialDateRange = this.$moment(value[0], 'YYYY-MM-DD')
           const diffDaysRange = Math.abs(initialDateRange.diff(this.$moment(), 'days'))
           const isMoreThan60DaysRange = diffDaysRange > 60
@@ -504,7 +507,7 @@ export default {
       }
     },
     redirectToAllDisputes() {
-      this.advancedFiltersDialogVisible = false
+      this.advancedFiltersDialogVisible = this.warningSixtyLastDaysRange = false
       this.$router.push({ path: '/management/all' })
     }
   }
