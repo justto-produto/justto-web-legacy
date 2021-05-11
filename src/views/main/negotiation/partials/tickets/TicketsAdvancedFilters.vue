@@ -472,7 +472,6 @@ export default {
           const initialDateRange = this.$moment(value[0], 'YYYY-MM-DD')
           const diffDaysRange = Math.abs(initialDateRange.diff(this.$moment(), 'days'))
           const isMoreThan60DaysRange = diffDaysRange > 60
-          debugger
           if (isMoreThan60DaysRange) {
             this.$jusNotification({
               title: 'Opa!',
