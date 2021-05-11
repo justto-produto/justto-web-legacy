@@ -24,6 +24,7 @@ import '@/plugins/shortkey'
 import '@/plugins/vueHtml2pdf'
 
 // FILTERS
+import '@/filters/numberFormat'
 import '@/filters/capitalize'
 import '@/filters/cpfCnpj'
 import '@/filters/filterTj'
