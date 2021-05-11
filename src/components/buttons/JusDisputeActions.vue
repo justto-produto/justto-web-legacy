@@ -610,7 +610,7 @@ export default {
       return this.counterOfferForm.lastCounterOfferValue > this.dispute.disputeUpperRange
     },
     isInsufficientUpperRange() {
-      return this.unsettledType && this.unsettledType === 'INSUFFICIENT_UPPER_RANGE' && ((this.dispute && !this.dispute.lastCounterOfferValue) || (this.dispute && this.dispute.lastCounterOfferValue <= this.dispute.disputeUpperRange))
+      return this.unsettledType === 'INSUFFICIENT_UPPER_RANGE'
     },
     workspaceNegotiators() {
       return this.$store.getters.workspaceMembers.map(member => {
