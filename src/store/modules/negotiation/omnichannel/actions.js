@@ -1,18 +1,10 @@
-import { axiosDispatch, isSimilarStrings, buildQuery } from '@/utils'
+import { axiosDispatch, isSimilarStrings, buildQuery, validateCurrentId } from '@/utils'
 
 const disputeApi = 'api/disputes/v2'
 const messagesPath = 'api/messages'
 
-const validateCurrentId = (disputeId) => {
-  const idIndex = location.href.split('/').length - 1
-
-  const currentId = location.href.split('/')[idIndex]
-
-  return Number(disputeId) === Number(currentId)
-}
-
 const omnichannelActions = {
-  setOmnichannelActiveTab({ commit, dispatch }, tab) {
+  setOmnichannelActiveTab({ commit }, tab) {
     commit('setOmnichannelActiveTab', tab)
     commit('resetRecipients')
     commit('resetOccurrences')
@@ -36,14 +28,12 @@ const omnichannelActions = {
       type: getters.getOccurrencesFilter.type === 'LOG' ? null : getters.getOccurrencesFilter.type
     }
 
-    return validateCurrentId(disputeId) ? axiosDispatch({
-      url: `${disputeApi}/${disputeId}/occurrences${buildQuery(params)}`,
-      mutation: 'setOccurrences'
-    }) : new Promise(resolve => resolve)
+    const url = `${disputeApi}/${disputeId}/occurrences${buildQuery(params)}`
+
+    return validateCurrentId(disputeId, () => axiosDispatch({ url, mutation: 'setOccurrences' }))
   },
 
   getAllOccurrences({ getters }, disputeId) {
-    // const { getTotalOccurrences } = getters
     const params = {
       ...getters.getOccurrencesFilter,
       size: getters.getTotalOccurrences,
@@ -51,11 +41,11 @@ const omnichannelActions = {
       type: getters.getOccurrencesFilter.type === 'LOG' ? null : getters.getOccurrencesFilter.type
     }
 
-    return axiosDispatch({
-      url: `${disputeApi}/${disputeId}/occurrences${buildQuery(params)}`,
-      params: { resumed: false },
-      mutation: 'setOccurrences'
-    })
+    const url = `${disputeApi}/${disputeId}/occurrences${buildQuery(params)}`
+
+    return validateCurrentId(disputeId, () => axiosDispatch({
+      url, params: { resumed: false }, mutation: 'setOccurrences'
+    }))
   },
 
   getFullMessage({ _ }, messageId) {
@@ -79,11 +69,11 @@ const omnichannelActions = {
   saveTicketNote({ _ }, params) {
     const { disputeId, id, note } = params
 
-    return axiosDispatch({
+    return validateCurrentId(disputeId, () => axiosDispatch({
       url: `api/disputes/note/${id}`,
       method: 'PUT',
       data: { disputeId, note }
-    })
+    }))
   },
 
   getSummaryOccurrecies({ getters, commit }, { disputeId, communicationType, summaryRoleId, summaryOccurrenceId }) {
@@ -95,7 +85,7 @@ const omnichannelActions = {
     }
 
     if (!keys[communicationType].includes(summaryOccurrenceId)) {
-      return axiosDispatch({
+      return validateCurrentId(disputeId, () => axiosDispatch({
         url: `${disputeApi}/${disputeId}/occurrences`,
         params: {
           summaryRoleId,
@@ -104,9 +94,9 @@ const omnichannelActions = {
         },
         mutation: 'addSumary',
         payload
-      })
+      }))
     } else {
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         commit('cleanSumary', payload)
         resolve()
       })
@@ -165,7 +155,7 @@ const omnichannelActions = {
         externalIdentification,
         inReplyTo
       }
-      return dispatch('sendemail', data)
+      return validateCurrentId(disputeId, () => dispatch('sendemail', data))
     } else if (type === 'whatsapp') {
       const data = {
         to,
@@ -173,14 +163,14 @@ const omnichannelActions = {
         externalIdentification,
         message: messageText.trim()
       }
-      return dispatch('validateWhatsappMessage', { data, contact: recipients[0].value })
+      return validateCurrentId(disputeId, () => dispatch('validateWhatsappMessage', { data, contact: recipients[0].value }))
     } else {
       const data = {
         roleId,
         message: messageEmail,
         email: recipients[0].value
       }
-      return dispatch('sendNegotiator', { disputeId, data })
+      return validateCurrentId(disputeId, () => dispatch('sendNegotiator', { disputeId, data }))
     }
   },
 
