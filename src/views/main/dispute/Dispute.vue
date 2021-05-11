@@ -629,7 +629,6 @@ export default {
       'getQuickReplyTemplates',
       'resetQuickReplyTemplate',
       'archiveQuickReplyTemplate',
-      'getDisputeMetadata',
       'sendNegotiator',
       'setHeight'
     ]),

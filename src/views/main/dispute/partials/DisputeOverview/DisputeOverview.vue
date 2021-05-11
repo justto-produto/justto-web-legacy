@@ -2037,15 +2037,13 @@ export default {
         this.selectedNamesake = ''
       }
     },
-    'dispute.code'() {
-      this.getDisputeTimeline(this.dispute.code)
-    },
     showAssociateContacts() {
       this.checkTabByAssociatedContractValue(this.showAssociateContacts)
     },
     dispute(newew, old) {
       if ((!old || !old.id) && newew.properties) {
         const { id } = this.$route.params
+
         this.getDisputeMetadata(id).then(() => {
           switch (this.dispute.properties['CONTATOS ASSOCIADOS']) {
             case 'MAIS TARDE':

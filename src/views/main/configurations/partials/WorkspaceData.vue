@@ -60,24 +60,32 @@
           </span>
 
           <span class="workspace-data-container__form-item-input el-input el-input-group el-input-group--append">
-            <div class="el-input__inner">
-              <span v-if="hasAssociatedKeyAccount">
-                <strong>{{ associatedKeyAccount.name }}</strong>
-                <span>
-                  &lt;{{ associatedKeyAccount.email }}&gt;
-                </span>
-              </span>
-              <span v-else>
-                Nenhum Key Account selecionado.
-              </span>
-            </div>
+            <el-select
+              v-model="selectedKeyAccountId"
+              filterable
+              style="width: 100%;"
+              @input="$forceUpdate()"
+            >
+              <el-option
+                :value="undefined"
+                :label="'Nenhum Key Account selecionado.'"
+                disabled
+              />
+              <el-option
+                v-for="ka in workspaceKeyAccounts"
+                :key="ka.id"
+                :disabled="ka.id === selectedKeyAccountId"
+                :value="ka.id"
+                :label="ka | buildKAName"
+              />
+            </el-select>
             <div
               v-if="isJusttoAdmin"
               class="workspace-data-container__form-item-input-append el-input-group__append"
             >
               <span
                 class="el-input-group__form-item-input-append-link"
-                @click="handleToggleAssociateKeyAccountDialog"
+                @click="connectKeyAccount"
               >
                 {{ hasAssociatedKeyAccount ? 'Alterar Key Account' : 'Associar Key Account' }}
               </span>
@@ -113,45 +121,6 @@
         </span>
       </el-upload>
     </article>
-
-    <el-dialog
-      title="Associar key accounts"
-      :visible.sync="associateKeyAccountDialogVisible"
-      width="40%"
-      :show-close="false"
-    >
-      <span>
-        <el-select
-          v-model="selectedKeyAccountId"
-          filterable
-          style="width: 100%;"
-          @input="$forceUpdate()"
-        >
-          <el-option
-            v-for="ka in workspaceKeyAccounts"
-            :key="ka.id"
-            :disabled="ka.id === selectedKeyAccountId"
-            :value="ka.id"
-            :label="ka | buildKAName"
-          />
-        </el-select>
-      </span>
-      <span
-        slot="footer"
-        class="dialog-footer"
-      >
-        <el-button @click="handleToggleAssociateKeyAccountDialog">
-          Cancelar
-        </el-button>
-        <el-button
-          type="primary"
-          :disabled="hasAssociatedKeyAccount && selectedKeyAccountId === associatedKeyAccount.id"
-          @click="connectKeyAccount"
-        >
-          Associar
-        </el-button>
-      </span>
-    </el-dialog>
   </section>
 </template>
 
