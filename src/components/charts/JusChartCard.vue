@@ -33,7 +33,7 @@
                   {{ dataset.data[0] | currency }}
                 </span>
                 <span v-else>
-                  {{ dataset.data[0] }}%
+                  {{ dataset.data[0] | number }}%
                 </span>
                 <span v-if="dataset.savingsPercentage">({{ dataset.savingsPercentage }}%)</span>
               </span>
@@ -47,7 +47,7 @@
                 type="dashboard"
                 :width="npsWidth"
                 :color="colors"
-                :percentage="dataset.data[0]"
+                :percentage="dataset.data[0] | min"
                 :format="(value) => `${value}`"
               />
               <span class="progress-label">
@@ -64,6 +64,10 @@
 <script>
 export default {
   name: 'JusChartCard',
+
+  filters: {
+    min: (progress) => Math.max(progress, 0)
+  },
 
   props: {
     data: {
@@ -96,8 +100,8 @@ export default {
               ds.labelDark = false
               ds.color = '#FF4B54'
               break
-            case 'NPS_PASSIVE_PERCENTAGE':
-              ds.icon = 'nps-passive-emoji'
+            case 'NPS_NEUTRAL_PERCENTAGE':
+              ds.icon = 'nps-neutral-emoji'
               ds.width = 25
               ds.isPercentage = true
               ds.labelDark = true
