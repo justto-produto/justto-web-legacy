@@ -602,13 +602,14 @@ export default {
   },
 
   mounted() {
-    this.getLastInteractions(this.id)
     setTimeout(() => {
       this.disputeOccurrencesKey += 1
       this.width = this.$refs.sectionMessages.offsetWidth
       this.y = parseInt(localStorage.getItem('jusoffsetheight')) || this.$refs.sectionMessages.offsetHeight - 208
     }, 800)
+
     window.addEventListener('resize', this.updateWindowHeight)
+
     this.setHeight(window.document.getElementById('app').clientHeight)
     this.typingTab = localStorage.getItem('jusoccurrencestab') || '1'
 
@@ -617,8 +618,9 @@ export default {
 
   beforeDestroy() {
     eventBus.$off(events.EDITOR_FOCUS.callback, this.focusOnEditor)
-    this.unsubscribeOccurrences(this.id)
     window.removeEventListener('resize', this.updateWindowHeight)
+
+    this.unsubscribeOccurrences(this.id)
   },
 
   methods: {
