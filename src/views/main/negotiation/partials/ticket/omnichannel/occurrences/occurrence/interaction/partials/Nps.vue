@@ -43,7 +43,7 @@
         effect="plain"
         size="mini"
       >
-        {{ reason.toLowerCase() }}
+        {{ reason.trim() | capitalize }}
       </el-tag>
     </div>
 
@@ -64,7 +64,10 @@
       </span>
     </div>
 
-    <div class="nps-container__reply">
+    <div
+      v-if="false"
+      class="nps-container__reply"
+    >
       <div class="nps-container__reply-about">
         <jus-icon
           icon="reply"
@@ -289,7 +292,7 @@ export default {
         }
 
         &.neutro {
-          background-color: $--color-nps-passive;
+          background-color: $--color-nps-neutral;
         }
 
         &.detrator {
@@ -300,15 +303,13 @@ export default {
   }
 
   .nps-container__reasons {
-    display: flex;
-    gap: 8px;
+    display: inline;
 
     .nps-container__reasons-item {
-      background-color: #00000050;
-      text-transform: capitalize;
+      margin: 0px 2px 4px;
       font-weight: 500;
-      color: $--color-white;
-      border: none;
+      color: $--color-nps-neutral;
+      border-color: $--color-nps-neutral;
     }
   }
 
