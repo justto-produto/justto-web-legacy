@@ -87,17 +87,25 @@ export default {
     },
 
     timelineStatus() {
+      const textDefault = 'Até este momento, não conseguimos capturar este processo'
+
       if (this.currentDiputeTimeline?.lawsuits?.length) {
         return {
           available: true,
           icon: 'el-icon-info',
           text: 'Abrir Timeline da disputa.'
         }
+      } else if (this.currentDiputeTimeline?.error) {
+        return {
+          available: false,
+          icon: 'el-icon-question',
+          text: this.currentDiputeTimeline?.error?.description || textDefault
+        }
       } else if (!this.currentDiputeTimeline.lawsuits.length) {
         return {
           available: false,
           icon: 'el-icon-error',
-          text: 'Disputa não encontrada no TJ.'
+          text: textDefault
         }
       } else {
         return {
