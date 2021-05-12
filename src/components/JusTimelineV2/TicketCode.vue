@@ -95,11 +95,11 @@ export default {
           icon: 'el-icon-info',
           text: 'Abrir Timeline da disputa.'
         }
-      } else if (this.currentDiputeTimeline.lawsuits?.error) {
+      } else if (this.currentDiputeTimeline?.error) {
         return {
           available: false,
           icon: 'el-icon-question',
-          text: this.currentDiputeTimeline.lawsuits?.error?.description || textDefault
+          text: this.currentDiputeTimeline?.error?.description || textDefault
         }
       } else if (!this.currentDiputeTimeline.lawsuits.length) {
         return {
