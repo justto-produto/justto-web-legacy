@@ -226,6 +226,16 @@ const omnichannelActions = {
 
   toggleExportTicketModalVisible({ commit }, visible) {
     commit('toggleExportTicketModalVisible', visible)
+  },
+
+  replyNps({ _ }, { disputeId, disputeRoleId, data, occurrenceId }) {
+    return axiosDispatch({
+      url: `${disputeApi}/${disputeId}/nps/${disputeRoleId}/response`,
+      method: 'PATCH',
+      data,
+      mutation: 'updateNpsReply',
+      payload: { occurrenceId, data }
+    })
   }
 }
 
