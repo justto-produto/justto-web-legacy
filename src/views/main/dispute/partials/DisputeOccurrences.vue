@@ -1029,7 +1029,7 @@ export default {
     },
 
     buildStatusTooltip(occurrence) {
-      return 'No momento desta ocorrência, esta disputa estava ' + this.$t('dispute.status.' + occurrence.status)
+      return 'No momento desta ocorrência, esta disputa estava ' + this.$tc('dispute.status.' + occurrence.status)
     },
 
     buildHour(occurrence) {
