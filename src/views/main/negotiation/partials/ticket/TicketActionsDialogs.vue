@@ -30,6 +30,7 @@
                 v-model="offerForm.unsettledType"
                 placeholder="Escolha o motivo da perda"
                 style="width: 100%;"
+                @change="handleUnsettledTypeChange"
               >
                 <el-option
                   v-for="(label, key) in unsettledOutcomeReasons"
@@ -330,17 +331,7 @@ export default {
     }),
 
     isInsufficientUpperRange() {
-      const { offerForm, ticket } = this
-      const { unsettledType } = offerForm
-
-      return ticket &&
-        unsettledType &&
-        unsettledType === 'INSUFFICIENT_UPPER_RANGE' &&
-        (
-          (!ticket.plaintiffProposal) ||
-          (!ticket.plaintiffProposal.value) ||
-          (ticket.plaintiffProposal.value <= ticket.upperRange)
-        )
+      return this.offerForm.unsettledType === 'INSUFFICIENT_UPPER_RANGE'
     },
 
     ticketResume() {
@@ -485,8 +476,9 @@ export default {
       let roleId
       if (ticketPlaintiffs.length === 1) roleId = ticketPlaintiffs[0].disputeRoleId
       else if (action === 'MANUAL_COUNTERPROPOSAL') roleId = null
-      else if (plaintiffProposal) roleId = plaintiffProposal.id
-      else roleId = null
+      else if (plaintiffProposal) {
+        roleId = ticketPlaintiffs.find(({ name }) => name === plaintiffProposal.ownerName)?.disputeRoleId
+      } else roleId = null
 
       this.offerForm.unsettledType = ''
       this.offerForm.roleId = roleId
@@ -495,6 +487,18 @@ export default {
       this.offerFormType = action
       this.offerDialogVisible = true
       if (this.$refs.offerForm) this.$refs.offerForm.clearValidate()
+    },
+
+    handleUnsettledTypeChange(value) {
+      if (value === 'INSUFFICIENT_UPPER_RANGE') {
+        const { ticketPlaintiffs } = this
+        const { plaintiffProposal } = this.ticket
+
+        if (plaintiffProposal) {
+          this.offerForm.roleId = ticketPlaintiffs.find(({ name }) => name === plaintiffProposal.ownerName)?.disputeRoleId
+          this.offerForm.value = plaintiffProposal.value
+        }
+      }
     },
 
     openEditNegotiatorsDialog(action) {

@@ -266,6 +266,10 @@
       "name": "trocar negociadores",
       "feedback-message": "negociadores alterados"
     },
+    "NEGOTIATORS": {
+      "name": "trocar negociadores",
+      "feedback-message": "negociadores alterados"
+    },
     "ENRICH": {
       "name": "enriquecer disputa",
       "feedback-message": "dispute <b>enriquecida</b>"
@@ -577,7 +581,7 @@
   },
   "dashboard": {
     "NPS_DETRACTOR_PERCENTAGE": "detrator",
-    "NPS_PASSIVE_PERCENTAGE": "neutro",
+    "NPS_NEUTRAL_PERCENTAGE": "neutro",
     "NPS_PROMOTER_PERCENTAGE": "promotor",
     "UPPER_RANGE_AVG": "alçada média",
     "SETTLED_DEALS_AVG": "média dos acordos",

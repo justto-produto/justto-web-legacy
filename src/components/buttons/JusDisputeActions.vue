@@ -610,7 +610,7 @@ export default {
       return this.counterOfferForm.lastCounterOfferValue > this.dispute.disputeUpperRange
     },
     isInsufficientUpperRange() {
-      return this.unsettledType && this.unsettledType === 'INSUFFICIENT_UPPER_RANGE' && ((this.dispute && !this.dispute.lastCounterOfferValue) || (this.dispute && this.dispute.lastCounterOfferValue <= this.dispute.disputeUpperRange))
+      return this.unsettledType === 'INSUFFICIENT_UPPER_RANGE'
     },
     workspaceNegotiators() {
       return this.$store.getters.workspaceMembers.map(member => {
@@ -663,7 +663,7 @@ export default {
     ]),
 
     redirectNegotiation() {
-      const negotiationRoute = `/negotiation/${this.$route.params.id}`
+      const negotiationRoute = `/negotiation/${this.dispute.id || this.$route.params.id}`
       this.$jusSegment('Chaveia de gerenciamento para negociação', {})
       this.$router.push({ path: negotiationRoute })
     },
