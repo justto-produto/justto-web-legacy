@@ -56,7 +56,7 @@
 
     <div class="nps-container__comment">
       <span class="nps-container__comment-date">
-        {{ npsEvaluateDate | moment('[Comentário em] DD/MM/YYYY [às] HH:MM') }}
+        {{ npsEvaluateDate | moment('[Comentado:] DD/MM/YYYY HH:MM') }}
       </span>
 
       <span class="nps-container__comment-text">
@@ -65,7 +65,6 @@
     </div>
 
     <div
-      v-if="false"
       class="nps-container__reply"
     >
       <div class="nps-container__reply-about">
@@ -78,7 +77,7 @@
           v-if="npsReplyDate"
           class="nps-container__reply-about-date"
         >
-          {{ npsReplyDate | moment('[Resposta em] DD/MM/YYYY [às] HH:MM') }}
+          {{ npsReplyDate | moment('[Respondido:] DD/MM/YYYY HH:MM') }}
         </span>
         <span
           v-else
@@ -126,6 +125,7 @@
 
 <script>
 import communicationSendStatus from '@/utils/mixins/communicationSendStatus'
+import { mapActions } from 'vuex'
 
 export default {
   mixins: [communicationSendStatus],
@@ -195,6 +195,9 @@ export default {
   },
 
   methods: {
+    ...mapActions({
+      replyNps: 'replyNps'
+    }),
     copyToClipboard(_event) {
       navigator.clipboard.writeText(this.senderEmail).then(() => {
         this.$message('Copiado com sucesso.')
@@ -209,22 +212,19 @@ export default {
 
     sendReplyNps() {
       this.loadingSendBtn = true
-
-      // TODO: Salvar chamar a mutation que setta do dado no Store.
-      // TODO: Salvar a data em que foi enviado também.
-      const req = new Promise(resolve => {
-        setTimeout(() => {
-          this.loadingSendBtn = false
-          resolve()
-        }, 5000)
-      })
-
-      req.then(() => {
+      this.replyNps({
+        disputeId: this.$route.params.id,
+        occurrenceId: this.occurrence?.id,
+        disputeRoleId: this.interaction?.properties?.ROLE_ID,
+        data: { response: this.npsReply }
+      }).then(() => {
         this.$jusNotification({
           type: 'success',
           title: 'Yay!',
           message: 'Resposta enviada.'
         })
+      }).catch(error => this.$jusNotification({ error })).finally(() => {
+        this.loadingSendBtn = false
       })
     }
   }
