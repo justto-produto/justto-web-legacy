@@ -72,7 +72,7 @@ const overviewActions = {
     })
   },
 
-  getAssociatedContacts({ dispatch }, disputeId) {
+  getAssociatedContacts({ _ }, disputeId) {
     return axiosDispatch({
       url: `${disputeApi}/${disputeId}/properties`,
       mutation: 'setAssociatedContacts'
@@ -120,6 +120,7 @@ const overviewActions = {
   },
 
   deleteTicketOverviewParty({ _ }, { disputeId, roleId }) {
+    // TODO: alterar aqui para usar na nova feature
     return axiosDispatch({
       url: `${disputeApiLegacy}/${disputeId}/role/${roleId}`,
       method: 'DELETE',

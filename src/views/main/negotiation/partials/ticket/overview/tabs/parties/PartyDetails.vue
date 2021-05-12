@@ -1,5 +1,52 @@
 <template>
   <article class="party-details">
+    <!-- Dialog para exclusão de parte cascateda ou não -->
+    <el-dialog
+      :close-on-click-modal="false"
+      :show-close="false"
+      :close-on-press-escape="false"
+      :visible.sync="chooseRemoveLawyerDialogVisible"
+      title="Excluir parte"
+      width="520px"
+    >
+      <div class="el-message-box__content">
+        <div class="el-message-box__container">
+          <div class="el-message-box__status el-icon-warning" />
+          <div class="el-message-box__message">
+            <p>Tem certeza que deseja excluir esta parte?</p>
+            <p>Esta ação é irreversível.</p>
+          </div>
+        </div>
+      </div>
+      <span slot="footer">
+        <el-tooltip
+          :content="`Remover ${partName} de todas as disputas com mesmo réu.`"
+          placement="top"
+        >
+          <el-button
+            @click="removeLawyer(false)"
+          >
+            De todas as disputas
+          </el-button>
+        </el-tooltip>
+        <el-tooltip
+          :content="`Remover ${partName} somente desta disputa.`"
+          placement="top"
+        >
+          <el-button
+            @click="removeLawyer(true)"
+          >
+            Desta disputa
+          </el-button>
+        </el-tooltip>
+        <el-button
+          type="primary"
+          @click="chooseRemoveLawyerDialogVisible = false"
+        >
+          Cancelar
+        </el-button>
+      </span>
+    </el-dialog>
     <div
       v-if="!isNegotiator && !isPreNegotiation"
       class="party-details__infoline party-details__infoline--center"
@@ -181,6 +228,7 @@ export default {
   },
 
   data: () => ({
+    chooseRemoveLawyerDialogVisible: false,
     activeAddingData: '',
     mergePartyInfos: {}
   }),
@@ -238,6 +286,14 @@ export default {
 
     isNegotiator() {
       return this.party.roles?.includes('NEGOTIATOR')
+    },
+
+    isLawyer() {
+      return this.party.roles?.includes('LAWYER')
+    },
+
+    partName() {
+      return this.party.name
     }
   },
 
@@ -279,18 +335,34 @@ export default {
       this.setTicketOverviewParty({ disputeId, data })
     },
     removeParty() {
+      if (this.isLawyer) {
+        this.chooseRemoveLawyerDialogVisible = true
+      } else {
+        const { disputeId, party } = this
+        this.$confirm('Tem certeza que deseja excluir esta parte da disputa? Está ação é irreversível', 'Atenção', {
+          confirmButtonText: 'Continuar',
+          cancelButtonText: 'Cancelar',
+          cancelButtonClass: 'is-plain',
+          showClose: false
+        }).then(() => {
+          this.deleteTicketOverviewParty({
+            roleId: party.disputeRoleId,
+            disputeId
+          })
+        })
+      }
+    },
+
+    removeLawyer(forAllDisputes) {
       const { disputeId, party } = this
-      this.$confirm('Tem certeza que deseja excluir esta parte da disputa? Está ação é irreversível', 'Atenção', {
-        confirmButtonText: 'Continuar',
-        cancelButtonText: 'Cancelar',
-        cancelButtonClass: 'is-plain',
-        showClose: false
-      }).then(() => {
+      if (forAllDisputes) {
         this.deleteTicketOverviewParty({
           roleId: party.disputeRoleId,
           disputeId
         })
-      })
+      } else {
+        // TODO: deletar para essa disputa
+      }
     },
 
     handleMergePartyInfos(keys = []) {
