@@ -3038,14 +3038,14 @@ export default {
     },
 
     removeLawyer(forAllDisputes) {
-      if (forAllDisputes) {
-        this.deleteTicketOverviewParty({
-          roleId: this.deletingLawyer.id,
-          disputeId: this.dispute.id
-        })
-      } else {
-        // TODO: deletar para essa disputa
+      const payload = {
+        roleId: this.deletingLawyer.id,
+        disputeId: this.dispute.id
       }
+      if (!forAllDisputes) {
+        payload.cancelPropagation = true
+      }
+      this.deleteTicketOverviewParty(payload)
     }
   }
 }

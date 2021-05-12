@@ -119,10 +119,11 @@ const overviewActions = {
     })
   },
 
-  deleteTicketOverviewParty({ _ }, { disputeId, roleId }) {
-    // TODO: alterar aqui para usar na nova feature
+  deleteTicketOverviewParty({ _ }, { disputeId, roleId, cancelPropagation = false }) {
+    let url = `${disputeApiLegacy}/${disputeId}/role/${roleId}`
+    if (cancelPropagation) url = `?cancelPropagation=${cancelPropagation}`
     return axiosDispatch({
-      url: `${disputeApiLegacy}/${disputeId}/role/${roleId}`,
+      url,
       method: 'DELETE',
       mutation: 'deleteTicketOverviewParty',
       payload: roleId

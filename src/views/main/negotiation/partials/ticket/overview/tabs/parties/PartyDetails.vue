@@ -355,14 +355,14 @@ export default {
 
     removeLawyer(forAllDisputes) {
       const { disputeId, party } = this
-      if (forAllDisputes) {
-        this.deleteTicketOverviewParty({
-          roleId: party.disputeRoleId,
-          disputeId
-        })
-      } else {
-        // TODO: deletar para essa disputa
+      const payload = {
+        roleId: party.disputeRoleId,
+        disputeId
       }
+      if (!forAllDisputes) {
+        payload.cancelPropagation = true
+      }
+      this.deleteTicketOverviewParty(payload)
     },
 
     handleMergePartyInfos(keys = []) {
