@@ -121,7 +121,7 @@ const overviewActions = {
 
   deleteTicketOverviewParty({ _ }, { disputeId, roleId, cancelPropagation = false }) {
     let url = `${disputeApiLegacy}/${disputeId}/role/${roleId}`
-    if (cancelPropagation) url = `?cancelPropagation=${cancelPropagation}`
+    if (cancelPropagation) url += `?cancelPropagation=${cancelPropagation}`
     return axiosDispatch({
       url,
       method: 'DELETE',

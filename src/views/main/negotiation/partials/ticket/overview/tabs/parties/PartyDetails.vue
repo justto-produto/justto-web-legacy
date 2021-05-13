@@ -24,7 +24,7 @@
           placement="top"
         >
           <el-button
-            @click="removeLawyer(false)"
+            @click="removeLawyer(true)"
           >
             De todas as disputas
           </el-button>
@@ -34,7 +34,7 @@
           placement="top"
         >
           <el-button
-            @click="removeLawyer(true)"
+            @click="removeLawyer(false)"
           >
             Desta disputa
           </el-button>
@@ -362,7 +362,16 @@ export default {
       if (!forAllDisputes) {
         payload.cancelPropagation = true
       }
-      this.deleteTicketOverviewParty(payload)
+      this.deleteTicketOverviewParty(payload).then(() => {
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Parte removida com sucesso!',
+          type: 'success'
+        })
+      }).catch(error => {
+        this.$jusNotification({ error })
+      })
+      this.chooseRemoveLawyerDialogVisible = false
     },
 
     handleMergePartyInfos(keys = []) {
