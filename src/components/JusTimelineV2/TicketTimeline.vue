@@ -347,7 +347,7 @@ export default {
       const disputeId = this.$route.params.id
       let part = {}
       this.dispute.lawsuits.map(lawsuit => {
-        part = lawsuit.parties.find(p => isSimilarStrings(partyName?.toLowerCase(), p.name?.toLowerCase(), 75))
+        part = lawsuit.parties.find(p => isSimilarStrings(partyName, p.name, 75))
       })
       const { type } = part
       const polarity = this.isClaimant(type) ? 'CLAIMANT' : 'RESPONDENT'
@@ -393,16 +393,17 @@ export default {
     },
 
     isDisputePart({ name = '', document = '' }) {
-      const cleanedDocumentNumber = document.replaceAll(/\D+/g, '')
+      const cleanedDocumentNumber = document?.replaceAll(/\D+/g, '')
       const isPart = this.disputeParts.filter(disputePart => {
-        return isSimilarStrings(disputePart.name?.toLowerCase(), name.toLowerCase(), 75) || isSimilarStrings(disputePart.documentNumber?.toLowerCase(), cleanedDocumentNumber.toLowerCase(), 75)
+        return isSimilarStrings(disputePart.name?.toLowerCase(), name?.toLowerCase(), 75) ||
+          isSimilarStrings(disputePart.documentNumber?.toLowerCase(), cleanedDocumentNumber?.toLowerCase(), 75)
       }).length > 0
       return isPart
     },
 
     isDisputeLawer({ name = '' }) {
       const isDisputePart = this.disputeParts.filter(disputePart => {
-        return name.includes(disputePart.name)
+        return isSimilarStrings(name, disputePart.name, 75)
       }).length > 0
       return isDisputePart
     },

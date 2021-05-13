@@ -114,6 +114,8 @@ const overviewActions = {
         response.disputeId |= disputeId
         commit('updateTicketOverviewParty', response)
         commit('updateTicketItemFromDisputeRole', response)
+      } else {
+        commit('setNewTicketOverviewParty', response)
       }
       return data
     })

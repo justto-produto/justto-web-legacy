@@ -41,13 +41,27 @@ const overviewMutations = {
 
   setTicketOverviewParty: ({ ticketOverviewParties }, { data, payload }) => {
     const partyToSet = findPartyById(ticketOverviewParties, payload)
-
     Vue.set(partyToSet, 'emailsDto', data.emails)
     Vue.set(partyToSet, 'phonesDto', data.phones)
     Vue.set(partyToSet, 'oabsDto', data.oabs)
     Vue.set(partyToSet, 'birthday', data.birthday)
     Vue.set(partyToSet, 'bankAccountsDto', data.bankAccounts)
     Vue.set(partyToSet, 'legacyDto', data) // TODO: Remover essa merda aqui
+  },
+
+  setNewTicketOverviewParty: (state, response) => {
+    const { id, documentNumber, name, oabs, personId, party, roles } = response
+    const newTicketOverviewParty = {
+      disputeRoleId: id,
+      documentNumber,
+      name,
+      oabs,
+      personId,
+      polarity: party,
+      roles,
+      status: 'OFFLINE'
+    }
+    Vue.set(state.ticketOverviewParties, state.ticketOverviewParties.length, newTicketOverviewParty)
   },
 
   updateTicketOverviewParty: ({ ticketOverviewParties }, params) => {
