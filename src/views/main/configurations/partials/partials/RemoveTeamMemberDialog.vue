@@ -2,7 +2,7 @@
   <el-dialog
     title="Remover Participante"
     :visible.sync="isDialogVisible"
-    width="75%"
+    width="50%"
     custom-class="remove-team-member"
     destroy-on-close
     append-to-body
