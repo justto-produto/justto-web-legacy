@@ -8,8 +8,6 @@ export default {
       url: `${negotiatorApi}/${personId}/associated`,
       mutation: 'setDisputeSumaryByNegotiator',
       payload: { personId }
-    }).then(res => {
-      console.log(res)
     })
   }
 }
