@@ -1,4 +1,4 @@
-import { axiosDispatch } from '@/utils/'
+import { axiosDispatch, validateCurrentId } from '@/utils/'
 
 const disputeApi = '/api/disputes/v2'
 const disputeApiLegacy = '/api/disputes'
@@ -8,106 +8,103 @@ const overviewActions = {
   getTicketOverview({ commit, dispatch }, disputeId) {
     commit('incrementTicketOverviewCountGetters')
 
-    return axiosDispatch({
+    return validateCurrentId(disputeId, () => axiosDispatch({
       url: `${disputeApi}/${disputeId}`,
       mutation: 'setTicketOverview'
-    })
-      .then(({ status }) => dispatch('updateActiveTab', status))
-      .finally(() => commit('decrementTicketOverviewCountGetters'))
+    }).then(({ status }) => dispatch('updateActiveTab', status)).finally(() => commit('decrementTicketOverviewCountGetters')))
   },
 
   getTicketOverviewInfo({ commit }, disputeId) {
     commit('incrementTicketOverviewCountGetters')
 
-    return axiosDispatch({
+    return validateCurrentId(disputeId, () => axiosDispatch({
       url: `${disputeApi}/${disputeId}/info`,
       mutation: 'setTicketOverviewInfo'
-    }).finally(() => commit('decrementTicketOverviewCountGetters'))
+    }).finally(() => commit('decrementTicketOverviewCountGetters')))
   },
 
   getTicketOverviewParties({ commit }, disputeId) {
     commit('incrementTicketOverviewCountGetters')
 
-    return axiosDispatch({
+    return validateCurrentId(disputeId, () => axiosDispatch({
       url: `${disputeApi}/${disputeId}/parties`,
       mutation: 'setTicketOverviewParties'
-    }).finally(() => commit('decrementTicketOverviewCountGetters'))
+    }).finally(() => commit('decrementTicketOverviewCountGetters')))
   },
 
   getTicketOverviewParty({ commit }, { disputeId, disputeRoleId }) {
     commit('incrementTicketOverviewCountGetters')
 
-    return axiosDispatch({
+    return validateCurrentId(disputeId, () => axiosDispatch({
       url: `${disputeApi}/${disputeId}/parties/${disputeRoleId}`,
       mutation: 'setTicketOverviewParty',
       payload: disputeRoleId
-    }).finally(() => commit('decrementTicketOverviewCountGetters'))
+    }).finally(() => commit('decrementTicketOverviewCountGetters')))
   },
 
   getTicketOverviewProperties({ _ }, disputeId) {
-    return axiosDispatch({
+    return validateCurrentId(disputeId, () => axiosDispatch({
       url: `${disputeApi}/${disputeId}/properties`,
       mutation: 'setTicketOverviewProperties'
-    })
+    }))
   },
 
   getTicketOverviewAttachments({ _ }, disputeId) {
-    return axiosDispatch({
+    return validateCurrentId(disputeId, () => axiosDispatch({
       url: `${officeApi}/disputes/${disputeId}/attachments`,
       mutation: 'setTicketOverviewAttachments'
-    })
+    }))
   },
 
   getLastTicketOffers({ _ }, disputeId) {
-    return axiosDispatch({
+    return validateCurrentId(disputeId, () => axiosDispatch({
       url: `${disputeApi}/${disputeId}/last-dispute-offer`,
       mutation: 'setLastTicketOffers'
-    })
+    }))
   },
 
   getTicketMetadata({ _ }, disputeId) {
-    return axiosDispatch({
+    return validateCurrentId(disputeId, () => axiosDispatch({
       url: `${officeApi}/documents/dispute/${disputeId}/metadata`,
       mutation: 'setTicketMetadata'
-    })
+    }))
   },
 
   getAssociatedContacts({ dispatch }, disputeId) {
-    return axiosDispatch({
+    return validateCurrentId(disputeId, () => axiosDispatch({
       url: `${disputeApi}/${disputeId}/properties`,
       mutation: 'setAssociatedContacts'
-    })
+    }))
   },
 
   setTicketOverview({ _ }, params) {
     const { data, disputeId } = params
 
-    return axiosDispatch({
+    return validateCurrentId(disputeId, () => axiosDispatch({
       url: `${disputeApi}/${disputeId}`,
       method: 'PATCH',
       data,
       mutation: 'updateTicketOverview',
       payload: data || {}
-    })
+    }))
   },
 
   setTicketOverviewInfo({ _ }, params) {
     const { data, disputeId } = params
 
-    return axiosDispatch({
+    return validateCurrentId(disputeId, () => axiosDispatch({
       url: `${disputeApi}/${disputeId}/info`,
       method: 'PATCH',
       data,
       mutation: 'updateTicketOverviewInfo',
       payload: data || {}
-
-    })
+    }))
   },
 
   async setTicketOverviewParty({ commit }, params) {
     const { disputeId, data } = params
 
-    return axiosDispatch({
+    return validateCurrentId(disputeId, () => axiosDispatch({
       url: `${disputeApiLegacy}/${disputeId}/dispute-roles`,
       method: 'PUT',
       data
@@ -116,38 +113,38 @@ const overviewActions = {
       commit('updateTicketOverviewParty', response)
       commit('updateTicketItemFromDisputeRole', response)
       return data
-    })
+    }))
   },
 
   deleteTicketOverviewParty({ _ }, { disputeId, roleId }) {
-    return axiosDispatch({
+    return validateCurrentId(disputeId, () => axiosDispatch({
       url: `${disputeApiLegacy}/${disputeId}/role/${roleId}`,
       method: 'DELETE',
       mutation: 'deleteTicketOverviewParty',
       payload: roleId
-    })
+    }))
   },
 
   setTicketOverviewPartyPolarity({ _ }, params) {
     const { disputeId, roleId, rolePolarity } = params
 
-    return axiosDispatch({
+    return validateCurrentId(disputeId, () => axiosDispatch({
       url: `${disputeApiLegacy}/${disputeId}/dispute-roles/${roleId}/${rolePolarity}`,
       method: 'PATCH',
       mutation: 'updateTicketOverviewPartyPolarity',
       payload: params
-    })
+    }))
   },
 
   setTicketRoleBankAccount({ commit }, { bankAccountId, disputeId, personId }) {
     commit('incrementTicketOverviewCountGetters')
 
-    return axiosDispatch({
+    return validateCurrentId(disputeId, () => axiosDispatch({
       url: `${disputeApiLegacy}/${disputeId}/bank-accounts/${bankAccountId}`,
       method: 'POST',
       payload: { bankAccountId, personId },
       mutation: 'updateTicketRoleBankAccount'
-    }).finally(() => commit('decrementTicketOverviewCountGetters'))
+    }).finally(() => commit('decrementTicketOverviewCountGetters')))
   },
 
   updateTicketRoleBankAccount({ commit, dispatch, getters }, { disputeId, account, personId }) {
@@ -242,24 +239,24 @@ const overviewActions = {
   setTicketOverviewPartyContact({ _ }, params) {
     const { disputeId, roleId, contactType, contactData } = params
 
-    return axiosDispatch({
+    return validateCurrentId(disputeId, () => axiosDispatch({
       url: `${disputeApiLegacy}/${disputeId}/dispute-roles/${roleId}/${contactType}`,
       method: 'PUT',
       data: contactData,
       mutation: 'setTicketOverviewParty',
       payload: roleId
-    })
+    }))
   },
 
   deleteTicketOverviewPartyContact({ _ }, params) {
     const { disputeId, roleId, contactId, contactType } = params
 
-    return axiosDispatch({
+    return validateCurrentId(disputeId, () => axiosDispatch({
       url: `${disputeApiLegacy}/${disputeId}/dispute-roles/${roleId}/${contactType}/${contactId}`,
       method: 'DELETE',
       mutation: 'deleteTicketOverviewPartyContact',
       payload: params
-    })
+    }))
   },
 
   updateTicketOverviewPartyContact({ dispatch }, params) {
@@ -268,21 +265,21 @@ const overviewActions = {
   },
 
   favoriteTicket({ _ }, disputeId) {
-    return axiosDispatch({
+    return validateCurrentId(disputeId, () => axiosDispatch({
       url: `${disputeApiLegacy}/${disputeId}/favorite`,
       method: 'PUT',
       mutation: 'toggleFavoriteTicket',
       payload: { disputeId, favorite: true }
-    })
+    }))
   },
 
   disfavorTicket({ _ }, disputeId) {
-    return axiosDispatch({
+    return validateCurrentId(disputeId, () => axiosDispatch({
       url: `${disputeApiLegacy}/${disputeId}/disfavor`,
       method: 'PUT',
       mutation: 'toggleFavoriteTicket',
       payload: { disputeId, favorite: false }
-    })
+    }))
   }
 }
 
