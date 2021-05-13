@@ -8,6 +8,7 @@ import normalizeString from './utils/normalizeString'
 import registerServiceWorker from './utils/registerServiceWorker'
 import showUnavailableLoading from './utils/showUnavailableLoading'
 import uuidv4 from './utils/uuidv4'
+import validateCurrentId from './utils/validateCurrentId'
 import { eventBus } from './utils/eventBus'
 import {
   getRoles,
@@ -38,6 +39,7 @@ export {
   getFormatedDate,
   normalizeString,
   isSimilarStrings,
+  validateCurrentId,
   getStringInitials,
   addInvisibleStatus,
   getLastInteraction,
