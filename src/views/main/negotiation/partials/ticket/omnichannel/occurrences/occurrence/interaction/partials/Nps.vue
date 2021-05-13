@@ -223,6 +223,8 @@ export default {
           title: 'Yay!',
           message: 'Resposta enviada.'
         })
+        this.$set(this.occurrence.interaction.properties, 'NPS_REPLY', this.npsReply)
+        this.$set(this.occurrence.interaction.properties, 'NPS_REPLY_DATE', this.$moment().format('YYYY-MM-DD[T]HH:mm:ss.SSS[Z]'))
       }).catch(error => this.$jusNotification({ error })).finally(() => {
         this.loadingSendBtn = false
       })
