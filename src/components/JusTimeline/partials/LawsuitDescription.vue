@@ -78,6 +78,13 @@
               >
                 Documento: {{ party.document }}
               </li>
+              <a
+                v-if="!isDisputePart(party) && !alreadyAdded(party)"
+                class="jus-timeline__lawsuit-new-part"
+                @click="addPart(party)"
+              >
+                Cadastrar parte
+              </a>
             </ul>
           </el-collapse-item>
         </el-collapse>
@@ -111,6 +118,13 @@
               >
                 Parte: {{ lawyer.partyName.toLowerCase() }}
               </li>
+              <a
+                v-if="!isDisputeLawer(lawyer) && !alreadyAdded(lawyer)"
+                class="jus-timeline__lawsuit-new-part"
+                @click="addLawyer(lawyer)"
+              >
+                Cadastrar parte
+              </a>
             </ul>
           </el-collapse-item>
         </el-collapse>
@@ -120,19 +134,109 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex'
+import { isSimilarStrings } from '@/utils'
 export default {
   components: {
     jusIcon: () => import('@/components/images/JusIcon')
   },
+
   props: {
     lawsuitDispute: {
       type: Object,
       required: true
     }
   },
+
+  data: () => ({
+    addedParts: []
+  }),
+
   computed: {
+    ...mapGetters({
+      dispute: 'dispute'
+    }),
+
     state() {
       return this.lawsuitDispute
+    },
+
+    disputeParts() {
+      return this.dispute.disputeRoles
+    }
+  },
+
+  methods: {
+    ...mapActions([
+      'setTicketOverviewParty'
+    ]),
+
+    addPart({ document = '', type = '', name }) {
+      const disputeId = this.$route.params.id
+      const polarity = this.isClaimant(type) ? 'CLAIMANT' : 'RESPONDENT'
+      const data = {
+        party: polarity,
+        documentNumber: document,
+        name,
+        main: true,
+        roles: ['PARTY']
+      }
+      this.setTicketOverviewParty({ disputeId, data, isNew: true }).then(() => {
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Parte cadastrada com sucesso!',
+          type: 'success'
+        })
+        this.addedParts.push(data.name)
+      }).catch(error => {
+        this.$jusNotification({ error })
+      })
+    },
+
+    addLawyer({ name = '', oab = '', partyName = '' }) {
+      const disputeId = this.$route.params.id
+      const { type } = this.state.parties.find(p => isSimilarStrings(partyName?.toLowerCase(), p.name?.toLowerCase(), 75))
+      const polarity = this.isClaimant(type) ? 'CLAIMANT' : 'RESPONDENT'
+      const data = {
+        party: polarity,
+        documentNumber: oab,
+        name,
+        main: true,
+        roles: ['LAWYER']
+      }
+      this.setTicketOverviewParty({ disputeId, data, isNew: true }).then(() => {
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Parte cadastrada com sucesso!',
+          type: 'success'
+        })
+        this.addedParts.push(data.name)
+      }).catch(error => {
+        this.$jusNotification({ error })
+      })
+    },
+
+    isClaimant(type) {
+      return type.toUpperCase().includes('ATIVO')
+    },
+
+    isDisputePart({ name = '', document = '' }) {
+      const cleanedDocumentNumber = document.replaceAll(/\D+/g, '')
+      const isPart = this.disputeParts.filter(disputePart => {
+        return isSimilarStrings(disputePart.name?.toLowerCase(), name.toLowerCase(), 75) || isSimilarStrings(disputePart.documentNumber?.toLowerCase(), cleanedDocumentNumber.toLowerCase(), 75)
+      }).length > 0
+      return isPart
+    },
+
+    isDisputeLawer({ name = '' }) {
+      const isDisputePart = this.disputeParts.filter(disputePart => {
+        return name.includes(disputePart.name)
+      }).length > 0
+      return isDisputePart
+    },
+
+    alreadyAdded({ name }) {
+      return this.addedParts.includes(name)
     }
   }
 }

@@ -104,17 +104,17 @@ const overviewActions = {
     })
   },
 
-  async setTicketOverviewParty({ commit }, params) {
-    const { disputeId, data } = params
-
+  async setTicketOverviewParty({ commit }, { disputeId, data, isNew = false }) {
     return axiosDispatch({
       url: `${disputeApiLegacy}/${disputeId}/dispute-roles`,
       method: 'PUT',
       data
     }).then(response => {
-      response.disputeId |= disputeId
-      commit('updateTicketOverviewParty', response)
-      commit('updateTicketItemFromDisputeRole', response)
+      if (!isNew) {
+        response.disputeId |= disputeId
+        commit('updateTicketOverviewParty', response)
+        commit('updateTicketItemFromDisputeRole', response)
+      }
       return data
     })
   },

@@ -119,7 +119,7 @@
               class="jus-timeline__lawsuit-info-collapse"
             >
               <el-collapse-item
-                v-for="(party, partyIndex) in lawsuit.parties"
+                v-for="(part, partyIndex) in lawsuit.parties"
                 :key="`party-${partyIndex}`"
                 :name="`party-${partyIndex}`"
                 class="jus-timeline__lawsuit-info-collapse-item collapse-item__left-arrow"
@@ -128,26 +128,33 @@
                   slot="title"
                   class="jus-timeline__lawsuit-info-collapse-title"
                 >
-                  {{ (party.name || '---') }}
+                  {{ (part.name || '---') }}
                 </div>
                 <div
-                  v-if="party.type"
+                  v-if="part.type"
                   class="jus-timeline__lawsuit-info-collapse-text"
                 >
-                  <b>Tipo:</b> {{ party.type || '---' }}
+                  <b>Tipo:</b> {{ part.type || '---' }}
                 </div>
                 <div
-                  v-if="party.profile"
+                  v-if="part.profile"
                   class="jus-timeline__lawsuit-info-collapse-text"
                 >
-                  <b>Polo:</b> {{ party.profile || '---' }}
+                  <b>Polo:</b> {{ part.profile || '---' }}
                 </div>
                 <div
-                  v-if="party.document"
+                  v-if="part.document"
                   class="jus-timeline__lawsuit-info-collapse-text"
                 >
-                  <b>Documento:</b> {{ party.document || '---' }}
+                  <b>Documento:</b> {{ part.document || '---' }}
                 </div>
+                <a
+                  v-if="!isDisputePart(part) && !alreadyAdded(part)"
+                  class="jus-timeline__lawsuit-new-part"
+                  @click="addPart(part)"
+                >
+                  Cadastrar parte
+                </a>
               </el-collapse-item>
             </el-collapse>
           </el-col>
@@ -192,6 +199,13 @@
                 >
                   <b>Parte:</b> {{ lawyer.partyName | capitalize }}
                 </div>
+                <a
+                  v-if="!isDisputeLawer(lawyer) && !alreadyAdded(lawyer)"
+                  class="jus-timeline__lawsuit-new-part"
+                  @click="addLawyer(lawyer)"
+                >
+                  Cadastrar parte
+                </a>
               </el-collapse-item>
             </el-collapse>
           </el-col>
@@ -242,34 +256,12 @@
         </el-collapse>
       </article>
     </section>
-
-    <!-- <li class="jus-timeline__list-search">
-      <div class="jus-timeline__filter">
-        <el-input
-          v-model="queryTerm"
-          class="jus-timeline__filter-input"
-          placeholder="Filtrar"
-          size="medium"
-          prefix-icon="el-icon-search" />
-        <el-checkbox-group
-          v-if="queryTerm.length > 0"
-          v-model="showOnlyFiltered"
-          class="jus-timeline__filter-checkbox"
-          size="small">
-          <el-checkbox-button class="jus-timeline__filter-checkbox-item">
-            <jus-icon
-              class="jus-timeline__filter-icon"
-              :icon="showOnlyFiltered ? 'filter-white' : 'filter'" />
-          </el-checkbox-button>
-        </el-checkbox-group>
-      </div>
-    </li> -->
   </el-dialog>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import { normalizeString } from '@/utils'
+import { mapGetters, mapActions } from 'vuex'
+import { normalizeString, isSimilarStrings } from '@/utils'
 
 export default {
   name: 'JusTimeline',
@@ -289,12 +281,15 @@ export default {
   data: () => ({
     queryTerm: '',
     showOnlyFiltered: false,
-    fullTimelineCollapseOpen: ['1']
+    fullTimelineCollapseOpen: ['1'],
+    addedParts: []
   }),
+
   computed: {
     ...mapGetters({
       width: 'getWindowWidth',
-      disputesTimeline: 'getDisputesTimeline'
+      disputesTimeline: 'getDisputesTimeline',
+      disputeParts: 'getTicketOverviewParties'
     }),
 
     fullscreen() {
@@ -314,10 +309,71 @@ export default {
       }
     }
   },
+
   beforeDestroy() {
     this.queryTerm = ''
   },
+
   methods: {
+    ...mapActions([
+      'setTicketOverviewParty'
+    ]),
+
+    // TODO: refatorar parar algum modelo de dados
+    // TODO: ADD: get para enriquecimento
+    addPart({ document = '', type = '', name }) {
+      const disputeId = this.$route.params.id
+      const polarity = this.isClaimant(type) ? 'CLAIMANT' : 'RESPONDENT'
+      const data = {
+        party: polarity,
+        documentNumber: document,
+        name,
+        main: true,
+        roles: ['PARTY']
+      }
+      this.setTicketOverviewParty({ disputeId, data, isNew: true }).then(() => {
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Parte cadastrada com sucesso!',
+          type: 'success'
+        })
+        this.addedParts.push(data.name)
+      }).catch(error => {
+        this.$jusNotification({ error })
+      })
+    },
+
+    addLawyer({ name = '', oab = '', partyName = '' }) {
+      const disputeId = this.$route.params.id
+      let part = {}
+      this.dispute.lawsuits.map(lawsuit => {
+        part = lawsuit.parties.find(p => isSimilarStrings(partyName?.toLowerCase(), p.name?.toLowerCase(), 75))
+      })
+      const { type } = part
+      const polarity = this.isClaimant(type) ? 'CLAIMANT' : 'RESPONDENT'
+      const data = {
+        party: polarity,
+        documentNumber: oab,
+        name,
+        main: true,
+        roles: ['LAWYER']
+      }
+      this.setTicketOverviewParty({ disputeId, data, isNew: true }).then(() => {
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Parte cadastrada com sucesso!',
+          type: 'success'
+        })
+        this.addedParts.push(data.name)
+      }).catch(error => {
+        this.$jusNotification({ error })
+      })
+    },
+
+    isClaimant(type) {
+      return type.toUpperCase().includes('ATIVO')
+    },
+
     resetFiltre() {
       this.queryTerm = ''
     },
@@ -334,6 +390,25 @@ export default {
         type: 'success'
       })
       setTimeout(() => window.open(url), 1500)
+    },
+
+    isDisputePart({ name = '', document = '' }) {
+      const cleanedDocumentNumber = document.replaceAll(/\D+/g, '')
+      const isPart = this.disputeParts.filter(disputePart => {
+        return isSimilarStrings(disputePart.name?.toLowerCase(), name.toLowerCase(), 75) || isSimilarStrings(disputePart.documentNumber?.toLowerCase(), cleanedDocumentNumber.toLowerCase(), 75)
+      }).length > 0
+      return isPart
+    },
+
+    isDisputeLawer({ name = '' }) {
+      const isDisputePart = this.disputeParts.filter(disputePart => {
+        return name.includes(disputePart.name)
+      }).length > 0
+      return isDisputePart
+    },
+
+    alreadyAdded({ name }) {
+      return this.addedParts.includes(name)
     }
   }
 }
@@ -379,6 +454,10 @@ export default {
 
         .jus-timeline__lawsuit-info-title {
           font-weight: 600;
+        }
+
+        .jus-timeline__lawsuit-new-part {
+          margin-top: 8px;
         }
 
         .jus-timeline__lawsuit-info-text,
