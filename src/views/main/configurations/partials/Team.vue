@@ -111,7 +111,10 @@
     </el-button>
 
     <TeamDialogs ref="teamDialogs" />
-    <RemoveTeamMemberDialog ref="removeTeamMemberDialog" />
+    <RemoveTeamMemberDialog
+      ref="removeTeamMemberDialog"
+      @createMember="handleInviteMember"
+    />
   </section>
 </template>
 
@@ -286,18 +289,6 @@ export default {
   display: flex;
   flex-direction: column;
   height: 100%;
-
-  .team-container__header {
-    .team-container__header-input {
-      .el-input__inner {
-        height: 50px;
-        line-height: 50px;
-      }
-    }
-    .team-container__header-button {
-      height: 50px;
-    }
-  }
 
   .team-container__table {
     margin-top: 3px;
