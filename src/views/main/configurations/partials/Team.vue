@@ -33,7 +33,7 @@
             v-if="scope.row.personName || activeAddingData === 'name' + scope.row.id"
             :ref="'name' + scope.row.id"
             v-model="scope.row.personName"
-            @change="handleEditMemberName($event, scope.row.personId)"
+            @change="handleEditMemberName($event, scope.row.id)"
             @blur="stopEditing"
             @enableEdit="enableEdit"
           />
@@ -177,8 +177,8 @@ export default {
       this.$refs.teamDialogs.openNewMemberDialog()
     },
 
-    handleEditMemberName(name, personId) {
-      this.changeMemberName({ name, personId })
+    handleEditMemberName(name, accountId) {
+      this.changeMemberName({ name, accountId })
     },
 
     handleEditMemberProfile(profile, personId) {
@@ -193,44 +193,10 @@ export default {
         .catch(error => {
           this.$jusNotification({ error })
         })
-      // const data = {
-      //   accountEmail: member.email,
-      //   accountId: member.id,
-      //   createdAt: null,
-      //   id: member.memberId,
-      //   personId: member.personId,
-      //   profile: role,
-      //   updatedAt: null
-      // }
-
-      // this.editWorkspaceMember(data)
-      //   .then(() => {
-      //     this.$jusNotification({
-      //       title: 'Yay!',
-      //       message: 'Usuário editado com sucesso.',
-      //       type: 'success'
-      //     })
-      //   })
-      //   .catch(error => {
-      //     this.$jusNotification({ error })
-      //   })
     },
 
     handleRemoveMember(id, name) {
       this.$refs.removeTeamMemberDialog.show({ id, name })
-      // const message = `Tem certeza que dexeja excluir <b>${memberName}</b> da sua workspace? Esta ação é irreversível.`
-      // const options = {
-      //   confirmButtonText: 'Continuar',
-      //   cancelButtonText: 'Cancelar',
-      //   cancelButtonClass: 'is-plain',
-      //   dangerouslyUseHTMLString: true,
-      //   showClose: false
-      // }
-
-      // this.$confirm(message, 'Atenção', options)
-      //   .then(() => {
-      //     this.removeWorkspaceMember(memberId)
-      //   })
     },
 
     createNewTeam() {
@@ -299,7 +265,6 @@ export default {
 
     .el-table__header-wrapper {
       font-size: 16px;
-      // border-bottom: 1px solid $--color-text-secondary;
       tr th {
         color: $--color-text-primary;
         font-weight: 500;
