@@ -2130,7 +2130,7 @@ export default {
       'getDisputeProperties',
       'getDisputeStatuses',
       'getDisputeTimeline',
-      'hideSearchLawerLoading',
+      'hideSearchLawyerLoading',
       'removeDispute',
       'searchLawyers',
       'setDisputeparty',
@@ -2271,7 +2271,7 @@ export default {
     searchThisLawyer(lawyer, ref) {
       if (!this.$refs[ref][0].showPopper) {
         this.$refs[ref][0].$el.classList.add('active-popover')
-        this.searchLawyers(lawyer).finally(this.hideSearchLawerLoading)
+        this.searchLawyers(lawyer).finally(this.hideSearchLawyerLoading)
       }
     },
 

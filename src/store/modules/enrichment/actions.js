@@ -16,7 +16,7 @@ export default {
       mutation: 'setSearchedLawyers'
     })
   },
-  hideSearchLawerLoading({ state }) {
+  hideSearchLawyerLoading({ state }) {
     state.searchLawyersLoading = false
   }
 }

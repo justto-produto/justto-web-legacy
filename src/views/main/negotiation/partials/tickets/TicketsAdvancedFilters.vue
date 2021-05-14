@@ -3,6 +3,8 @@
     :close-on-click-modal="false"
     :visible.sync="advancedFiltersDialogVisible"
     width="650px"
+    destroy-on-close
+    append-to-body
     @open="restoreFilters()"
   >
     <template slot="title">
@@ -15,6 +17,16 @@
         label-position="top"
         style="margin-bottom: -22px;"
       >
+        <el-row>
+          <el-col v-if="warningSixtyLastDaysRange && isFinished">
+            <span class="error">
+              Na aba finalizadas contém apenas disputas finalizadas nos últimos 60 dias. Para filtrar qualquer período, utilize a tela que mostra
+              <a @click="redirectToAllDisputes()">
+                todas as disputas do sistema.
+              </a>
+            </span>
+          </el-col>
+        </el-row>
         <el-row :gutter="20">
           <!--  CAMPANHA -->
           <el-col
@@ -267,6 +279,7 @@ export default {
   data() {
     return {
       advancedFiltersDialogVisible: false,
+      warningSixtyLastDaysRange: false,
       loading: false,
       filters: {}
     }
@@ -374,7 +387,7 @@ export default {
         this.getMyStrategiesLite(),
         this.getRespondents(),
         this.getWorkspaceTags()
-      ]).finally(responses => {
+      ]).finally(_responses => {
         this.loading = false
       })
     },
@@ -426,6 +439,7 @@ export default {
       this.changeExpirationDate()
       this.changeimportingDate()
       this.clearInteraction()
+      this.warningSixtyLastDaysRange = false
       this.filters.onlyFavorite = false
       this.filters.onlyPaused = false
       this.filters.hasCounterproposal = false
@@ -437,7 +451,7 @@ export default {
     restoreFilters() {
       this.filters = JSON.parse(JSON.stringify(this.ticketsQuery))
     },
-    clearInteraction(value) {
+    clearInteraction(_value) {
       delete this.filters.lastInteractionType
     },
     clearStrategy() {
@@ -454,18 +468,29 @@ export default {
     },
     changeDealDate(value) {
       if (value) {
-        this.filters.dealDate = value
+        if (this.isFinished) {
+          const initialDateRange = this.$moment(value[0], 'YYYY-MM-DD')
+          const diffDaysRange = Math.abs(initialDateRange.diff(this.$moment(), 'days'))
+          const isMoreThan60DaysRange = diffDaysRange > 60
+          if (isMoreThan60DaysRange) {
+            this.$jusNotification({
+              title: 'Opa!',
+              message: 'Filtro inválido, tente novamente com outra data!',
+              type: 'error'
+            })
+            this.warningSixtyLastDaysRange = true
+            this.filters.dealDate = []
+          } else {
+            this.warningSixtyLastDaysRange = false
+            this.filters.dealDate = value
+          }
+        } else {
+          this.filters.dealDate = value
+        }
       } else {
         this.filters.dealDate = []
       }
     },
-    // clearLastInteractionDate (value) {
-    //   if (value) {
-    //     this.filters.lastInteractionDate = value
-    //   } else {
-    //     delete this.filters.lastInteractionDate
-    //   }
-    // },
     changeExpirationDate(value) {
       if (value) {
         this.filters.expirationDate = value
@@ -479,12 +504,18 @@ export default {
       } else {
         this.filters.importingDate = []
       }
+    },
+    redirectToAllDisputes() {
+      this.advancedFiltersDialogVisible = this.warningSixtyLastDaysRange = false
+      this.$router.push({ path: '/management/all' })
     }
   }
 }
 </script>
 
 <style lang="scss">
+@import "@/styles/colors.scss";
+
 .management-filters {
   .el-select, .el-date-editor, .el-radio-group {
     width: 100%;
@@ -522,6 +553,10 @@ export default {
   }
   .el-tag {
     overflow: hidden;
+  }
+
+  .error {
+    color: $--color-danger;
   }
 }
 </style>
