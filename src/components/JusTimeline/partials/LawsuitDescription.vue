@@ -224,7 +224,7 @@ export default {
       const cleanedDocumentNumber = document?.replaceAll(/\D+/g, '')
       const isPart = this.disputeParts.filter(disputePart => {
         return isSimilarStrings(disputePart.name?.toLowerCase(), name?.toLowerCase(), 75) ||
-          isSimilarStrings(disputePart.documentNumber?.toLowerCase(), cleanedDocumentNumber?.toLowerCase(), 75)
+          isSimilarStrings(disputePart.documentNumber?.toLowerCase(), cleanedDocumentNumber?.toLowerCase(), 90)
       }).length > 0
       return isPart
     },
