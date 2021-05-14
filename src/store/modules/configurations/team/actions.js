@@ -4,10 +4,18 @@ const negotiatorApi = 'api/disputes/negotiator'
 
 export default {
   getDisputesByMemberId({ _ }, personId) {
-    axiosDispatch({
+    return axiosDispatch({
       url: `${negotiatorApi}/${personId}/associated`,
       mutation: 'setDisputeSumaryByNegotiator',
       payload: { personId }
+    })
+  },
+
+  distributeMemberDisputes({ _ }, data) {
+    return axiosDispatch({
+      url: `${negotiatorApi}/replace`,
+      method: 'PATH',
+      data
     })
   }
 }
