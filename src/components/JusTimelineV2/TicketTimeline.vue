@@ -200,7 +200,7 @@
                   <b>Parte:</b> {{ lawyer.partyName | capitalize }}
                 </div>
                 <a
-                  v-if="!isDisputeLawer(lawyer) && !alreadyAdded(lawyer)"
+                  v-if="!isDisputeLawyer(lawyer) && !alreadyAdded(lawyer)"
                   class="jus-timeline__lawsuit-new-part"
                   @click="addLawyer(lawyer)"
                 >
@@ -401,7 +401,7 @@ export default {
       return isPart
     },
 
-    isDisputeLawer({ name = '' }) {
+    isDisputeLawyer({ name = '' }) {
       const isDisputePart = this.disputeParts.filter(disputePart => {
         return isSimilarStrings(name, disputePart.name, 75)
       }).length > 0
