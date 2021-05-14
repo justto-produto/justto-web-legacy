@@ -514,6 +514,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import "@/styles/colors.scss";
+
 .management-filters {
   .el-select, .el-date-editor, .el-radio-group {
     width: 100%;
@@ -554,7 +556,7 @@ export default {
   }
 
   .error {
-    color: red
+    color: $--color-danger;
   }
 }
 </style>
