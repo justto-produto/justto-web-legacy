@@ -225,7 +225,7 @@ export default {
     status() {
       return {
         icon: this.occurrence?.status?.toLowerCase() || '',
-        tooltip: 'No momento desta ocorrência, esta disputa estava ' + this.$t('dispute.status.' + this.occurrence?.status)
+        tooltip: 'No momento desta ocorrência, esta disputa estava ' + this.$tc('dispute.status.' + this.occurrence?.status)
       }
     },
 

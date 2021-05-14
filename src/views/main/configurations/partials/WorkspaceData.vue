@@ -54,7 +54,10 @@
           </el-alert>
         </div>
 
-        <div class="workspace-data-container__form-item">
+        <div
+          v-if="isJusttoAdmin"
+          class="workspace-data-container__form-item"
+        >
           <span class="workspace-data-container__input-label">
             Key Account
           </span>
@@ -79,10 +82,7 @@
                 :label="ka | buildKAName"
               />
             </el-select>
-            <div
-              v-if="isJusttoAdmin"
-              class="workspace-data-container__form-item-input-append el-input-group__append"
-            >
+            <div class="workspace-data-container__form-item-input-append el-input-group__append">
               <span
                 class="el-input-group__form-item-input-append-link"
                 @click="connectKeyAccount"
@@ -176,7 +176,9 @@ export default {
   },
 
   mounted() {
-    this.init()
+    if (this.isJusttoAdmin) {
+      this.init()
+    }
   },
 
   methods: {

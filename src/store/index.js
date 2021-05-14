@@ -23,6 +23,7 @@ import strategyModule from './modules/strategy'
 import tagModule from './modules/tag'
 import userModule from './modules/user'
 import workspaceModule from './modules/workspace'
+import configurationsModule from './modules/configurations'
 
 // CONSTANTS
 import banksList from '@/constants/banksList'
@@ -104,6 +105,7 @@ export default new Vuex.Store({
     strategyModule,
     tagModule,
     userModule,
-    workspaceModule
+    workspaceModule,
+    configurationsModule
   }
 })
