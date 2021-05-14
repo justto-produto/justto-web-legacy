@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import moment from 'moment'
 
 import { eventBus, getFormatedDate } from '@/utils'
 
@@ -80,6 +81,7 @@ const omnichannelMutations = {
 
     const validationInteractions = {
       MESSAGES: [
+        'NPS',
         'ATTACHMENT',
         'COMMUNICATION',
         'MANUAL_PROPOSAL',
@@ -175,7 +177,15 @@ const omnichannelMutations = {
 
   setMessageAttachments: (state, attachs) => Vue.set(state.editor, 'attachments', attachs),
 
-  toggleExportTicketModalVisible: (state, visible) => Vue.set(state, 'exportTicketModalVisible', visible)
+  toggleExportTicketModalVisible: (state, visible) => Vue.set(state, 'exportTicketModalVisible', visible),
+
+  updateNpsReply: (state, { payload: { occurrenceId, data: { response } } }) => {
+    const occurrence = state.occurrences.list.find(({ id }) => Number(id) === Number(occurrenceId))
+    if (occurrence) {
+      Vue.set(occurrence.interaction.properties, 'NPS_REPLY_DATE', moment().format('YYYY-MM-DD[T]HH:mm:ss.SSS[Z]'))
+      Vue.set(occurrence.interaction.properties, 'NPS_REPLY', response)
+    }
+  }
 }
 
 export default omnichannelMutations

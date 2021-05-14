@@ -14,7 +14,8 @@ const account = {
       'daniel@justto.com.br',
       'guilherme@justto.com.br',
       'deivid@justto.com.br',
-      'micaias@justto.com.br'
+      'micaias@justto.com.br',
+      'danilo.rosa@justto.com.br'
     ],
     preferences: {
       tourSteps: {},
