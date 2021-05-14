@@ -14,7 +14,7 @@ export default {
   distributeMemberDisputes({ _ }, data) {
     return axiosDispatch({
       url: `${negotiatorApi}/replace`,
-      method: 'PATH',
+      method: 'PATCH',
       data
     })
   }
