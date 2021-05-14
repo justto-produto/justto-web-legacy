@@ -166,6 +166,8 @@
 </template>
 
 <script>
+import { isJusttoUser } from '@/utils/validations'
+
 export default {
   name: 'Login',
   components: {
@@ -295,11 +297,10 @@ export default {
       if (response.person) {
         this.$store.commit('setLoggedPerson', response.person)
 
-        const isJustto = response.person.emails?.filter(({ address, archived }) => (!archived && address.includes('@justto.com')))
+        const isJustto = response.person.emails?.find(({ address, archived }) => (!archived && isJusttoUser(address))) !== undefined
 
         this.$store.dispatch('getWorkspaceMembers')
           .then(() => {
-            console.log(response.person)
             if (response.profile === 'ADMINISTRATOR' && !isJustto) {
               this.$router.push('/')
             } else {
