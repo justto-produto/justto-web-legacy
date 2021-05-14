@@ -91,7 +91,8 @@ const workspaceActions = {
   removeWorkspaceMember({ _ }, id) {
     return axiosDispatch({
       url: `${workspacesPath}/members/${id}`,
-      method: 'DELETE'
+      method: 'DELETE',
+      action: 'getWorkspaceTeam'
     })
   },
   getFeaturesAndModules({ _ }) {

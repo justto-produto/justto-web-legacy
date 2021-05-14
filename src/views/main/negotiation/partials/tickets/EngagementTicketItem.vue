@@ -81,7 +81,7 @@ export default {
         const reasons = pendingReason.description.replace('[', '').replace(']', '').split(',')
         return `Encontrou termos ${reasons.join(',')}`
       } else {
-        return this.$options.filters.capitalize(this.$t(`dispute.status.${disputeStatus}`))
+        return this.$options.filters.capitalize(this.$tc(`dispute.status.${disputeStatus}`))
       }
     }
   }

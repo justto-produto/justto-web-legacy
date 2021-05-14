@@ -93,7 +93,7 @@
         <template slot-scope="scope">
           <i
             class="el-icon-delete team-container__table-action"
-            @click="handleRremoveMember(scope.row.memberId, scope.row.name)"
+            @click="handleRemoveMember(scope.row.personId, scope.row.personName)"
           />
         </template>
       </el-table-column>
@@ -111,6 +111,10 @@
     </el-button>
 
     <TeamDialogs ref="teamDialogs" />
+    <RemoveTeamMemberDialog
+      ref="removeTeamMemberDialog"
+      @createMember="handleInviteMember"
+    />
   </section>
 </template>
 
@@ -120,22 +124,28 @@ import { filterByTerm } from '@/utils'
 
 export default {
   name: 'Team',
+
   components: {
     TextInlineEditorInner: () => import('@/components/inputs/TextInlineEditorInner'),
     PopoverInlineEditor: () => import('@/components/inputs/PopoverInlineEditor'),
-    TeamDialogs: () => import('./TeamDialogs')
+    TeamDialogs: () => import('./TeamDialogs'),
+    RemoveTeamMemberDialog: () => import('./partials/RemoveTeamMemberDialog')
   },
+
   data: () => ({
     searchTerm: '',
     activeAddingData: ''
   }),
+
   computed: {
     ...mapGetters({
       team: 'workspaceTeam'
     }),
+
     filteredTeam() {
       return filterByTerm(this.searchTerm, this.team, 'name', 'email')
     },
+
     profileOptions() {
       return [
         {
@@ -149,9 +159,11 @@ export default {
       ]
     }
   },
+
   beforeMount() {
     this.getWorkspaceTeam()
   },
+
   methods: {
     ...mapActions([
       'getWorkspaceTeam',
@@ -204,20 +216,21 @@ export default {
       //   })
     },
 
-    handleRremoveMember(memberId, memberName) {
-      const message = `Tem certeza que dexeja excluir <b>${memberName}</b> da sua workspace? Esta ação é irreversível.`
-      const options = {
-        confirmButtonText: 'Continuar',
-        cancelButtonText: 'Cancelar',
-        cancelButtonClass: 'is-plain',
-        dangerouslyUseHTMLString: true,
-        showClose: false
-      }
+    handleRemoveMember(id, name) {
+      this.$refs.removeTeamMemberDialog.show({ id, name })
+      // const message = `Tem certeza que dexeja excluir <b>${memberName}</b> da sua workspace? Esta ação é irreversível.`
+      // const options = {
+      //   confirmButtonText: 'Continuar',
+      //   cancelButtonText: 'Cancelar',
+      //   cancelButtonClass: 'is-plain',
+      //   dangerouslyUseHTMLString: true,
+      //   showClose: false
+      // }
 
-      this.$confirm(message, 'Atenção', options)
-        .then(() => {
-          this.removeWorkspaceMember(memberId)
-        })
+      // this.$confirm(message, 'Atenção', options)
+      //   .then(() => {
+      //     this.removeWorkspaceMember(memberId)
+      //   })
     },
 
     createNewTeam() {
@@ -276,18 +289,6 @@ export default {
   display: flex;
   flex-direction: column;
   height: 100%;
-
-  .team-container__header {
-    .team-container__header-input {
-      .el-input__inner {
-        height: 50px;
-        line-height: 50px;
-      }
-    }
-    .team-container__header-button {
-      height: 50px;
-    }
-  }
 
   .team-container__table {
     margin-top: 3px;
