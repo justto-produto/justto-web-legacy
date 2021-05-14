@@ -128,7 +128,7 @@ export default {
 
       return {
         icon: status?.toLowerCase() || '',
-        tooltip: status ? `No momento desta ocorrência, esta disputa estava ${this.$t('dispute.status.' + status)}.` : ''
+        tooltip: status ? `No momento desta ocorrência, esta disputa estava ${this.$tc('dispute.status.' + status)}.` : ''
       }
     }
   },

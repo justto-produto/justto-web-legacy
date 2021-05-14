@@ -247,6 +247,12 @@
                 shadow="never"
                 class="dispute-view-occurrences__card"
               />
+              <NpsInteraction
+                v-else-if="occurrence.interaction.type === 'NPS'"
+                :occurrence="occurrence"
+                :value="occurrence.interaction"
+                class="dispute-view-occurrences__card-box-nps"
+              />
               <el-card
                 v-else
                 :class="(occurrence.interaction ? occurrence.interaction.type : '') + ' ' + buildCommunicationType(occurrence) + ' ' + (occurrence.interaction && occurrence.interaction.message ? occurrence.interaction.message.status : '')"
@@ -444,6 +450,12 @@
                 shadow="never"
                 class="dispute-view-occurrences__card"
               />
+              <NpsInteraction
+                v-else-if="mergedOccurency.interaction.type === 'NPS'"
+                :occurrence="mergedOccurency"
+                :value="mergedOccurency.interaction"
+                class="dispute-view-occurrences__card-box-nps"
+              />
               <el-card
                 v-else
                 :class="(mergedOccurency.interaction ? mergedOccurency.interaction.type : '') + ' ' + buildCommunicationType(mergedOccurency) + ' ' + (mergedOccurency.interaction && mergedOccurency.interaction.message ? mergedOccurency.interaction.message.status : '')"
@@ -622,6 +634,7 @@ export default {
   name: 'DisputeOccurrences',
   components: {
     InfiniteLoading,
+    NpsInteraction: () => import('@/views/main/negotiation/partials/ticket/omnichannel/occurrences/occurrence/interaction/partials/Nps'),
     AttachmentOccurrence: () => import('./partials/AttachmentOccurrence')
   },
   props: {
@@ -1029,7 +1042,7 @@ export default {
     },
 
     buildStatusTooltip(occurrence) {
-      return 'No momento desta ocorrência, esta disputa estava ' + this.$t('dispute.status.' + occurrence.status)
+      return 'No momento desta ocorrência, esta disputa estava ' + this.$tc('dispute.status.' + occurrence.status)
     },
 
     buildHour(occurrence) {
@@ -1050,12 +1063,9 @@ export default {
     },
     showReply(occurrence) {
       if (occurrence.interaction &&
-        ((occurrence.interaction.message &&
-        occurrence.interaction.message.communicationType &&
-        !['ATTACHMENT'].includes(occurrence.interaction.type) &&
-        ['EMAIL', 'WHATSAPP', 'NEGOTIATOR_MESSAGE'].includes(occurrence.interaction.message.communicationType)) ||
-        (this.negotiatorTypes.includes(occurrence.interaction.type) ||
-        this.disputeLastInteractions.length)) &&
+        (['EMAIL', 'WHATSAPP', 'NEGOTIATOR_MESSAGE'].includes(occurrence.interaction?.message?.communicationType) ||
+        (this.negotiatorTypes.includes(occurrence.interaction.type) || this.disputeLastInteractions.length)) &&
+        !['ATTACHMENT', 'NPS'].includes(occurrence.interaction.type) &&
         occurrence.interaction.direction === 'INBOUND') {
         return true
       }
@@ -1218,6 +1228,7 @@ export default {
     margin-top: 20px;
     display: flex;
     width: 100%;
+
     &.OUTBOUND {
       flex-direction: row-reverse;
       .dispute-view-occurrences__card {
@@ -1227,6 +1238,7 @@ export default {
         margin: 0 20px 0 12px;
       }
     }
+
     &.INBOUND {
       .dispute-view-occurrences__card {
         margin-right: 8px;
@@ -1327,16 +1339,20 @@ export default {
     .el-card__body {
       padding: 10px 10px;
       word-break: break-word;
+
       strong {
         margin-bottom: 8px;
         display: inline-block;
       }
+
       table:not([style]) {
         width: 100%;
       }
+
       table, table tbody, table tbody *  {
         background: none !important;
       }
+
       img {
         max-width: 100%;
       }
@@ -1344,6 +1360,12 @@ export default {
   }
   &__card-box {
     max-width: 70%;
+
+    &-nps {
+      border: solid 1px lightgray;
+      padding: 8px !important;
+      border-radius: 10px;
+    }
   }
   &__card-info {
     display: flex;
