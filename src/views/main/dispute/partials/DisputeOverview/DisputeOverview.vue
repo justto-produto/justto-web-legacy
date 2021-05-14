@@ -831,6 +831,54 @@
                   </el-button>
                 </div>
               </el-tooltip>
+              <!-- Dialog para exclusão de parte cascateda ou não -->
+              <el-dialog
+                append-to-body
+                :close-on-click-modal="false"
+                :show-close="false"
+                :close-on-press-escape="false"
+                :visible.sync="chooseRemoveLawyerDialogVisible"
+                title="Excluir parte"
+                width="520px"
+              >
+                <div class="el-message-box__content">
+                  <div class="el-message-box__container">
+                    <div class="el-message-box__status el-icon-warning" />
+                    <div class="el-message-box__message">
+                      <p>Tem certeza que deseja excluir esta parte?</p>
+                      <p>Esta ação é irreversível.</p>
+                    </div>
+                  </div>
+                </div>
+                <span slot="footer">
+                  <el-tooltip
+                    :content="`Remover ${deletingLawyer.name} de todas as disputas com mesmo réu.`"
+                    placement="top"
+                  >
+                    <el-button
+                      @click="removeLawyer(true)"
+                    >
+                      De todas as disputas
+                    </el-button>
+                  </el-tooltip>
+                  <el-tooltip
+                    :content="`Remover ${deletingLawyer.name} somente desta disputa.`"
+                    placement="top"
+                  >
+                    <el-button
+                      @click="removeLawyer(false)"
+                    >
+                      Desta disputa
+                    </el-button>
+                  </el-tooltip>
+                  <el-button
+                    type="primary"
+                    @click="chooseRemoveLawyerDialogVisible = false"
+                  >
+                    Cancelar
+                  </el-button>
+                </span>
+              </el-dialog>
             </el-collapse-item>
             <el-tooltip
               :disabled="dispute.status !== 'PRE_NEGOTIATION'"
@@ -1751,6 +1799,7 @@ export default {
       namesakeDialogLoading: false,
       namesakeButtonLoading: false,
       namesakeProcessing: false,
+      deletingLawyer: '',
       deleteType: '',
       deleteTypes: [],
       modalLoading: false,
@@ -1810,6 +1859,7 @@ export default {
       editRoleDialogLoading: false,
       editRoleDialogError: false,
       editRoleDialogErrorList: [],
+      chooseRemoveLawyerDialogVisible: false,
       chooseDeleteDialogVisible: false,
       descriptionCollapse: true,
       addBankDialogVisible: false,
@@ -2087,7 +2137,8 @@ export default {
       'addPhoneToDisputeRole',
       'addOabToDisputeRole',
       'getDisputeMetadata',
-      'setDisputeProperty'
+      'setDisputeProperty',
+      'deleteTicketOverviewParty'
     ]),
 
     init() {
@@ -2889,28 +2940,33 @@ export default {
       this.roleForm.oabs.splice(index, 1)
     },
     removeRole(role) {
-      this.$confirm('Tem certeza que deseja excluir esta parte?', 'Atenção!', {
-        confirmButtonText: 'Excluir',
-        cancelButtonText: 'Cancelar',
-        type: 'warning',
-        cancelButtonClass: 'is-plain'
-      }).then(() => {
-        this.$emit('removeRole')
-        setTimeout(() => {
-          this.$store.dispatch('removeRole', {
-            disputeId: this.dispute.id,
-            roleId: role.id
-          }).then(response => {
-            this.$jusNotification({
-              title: 'Yay!',
-              message: 'Pessoa removida com sucesso.',
-              type: 'success'
+      if (this.isLawyer(role)) {
+        this.deletingLawyer = role
+        this.chooseRemoveLawyerDialogVisible = true
+      } else {
+        this.$confirm('Tem certeza que deseja excluir esta parte?', 'Atenção!', {
+          confirmButtonText: 'Excluir',
+          cancelButtonText: 'Cancelar',
+          type: 'warning',
+          cancelButtonClass: 'is-plain'
+        }).then(() => {
+          this.$emit('removeRole')
+          setTimeout(() => {
+            this.$store.dispatch('removeRole', {
+              disputeId: this.dispute.id,
+              roleId: role.id
+            }).then(response => {
+              this.$jusNotification({
+                title: 'Yay!',
+                message: 'Pessoa removida com sucesso.',
+                type: 'success'
+              })
+            }).catch(error => {
+              this.$jusNotification({ error })
             })
-          }).catch(error => {
-            this.$jusNotification({ error })
-          })
-        }, 4600)
-      })
+          }, 4600)
+        })
+      }
     },
     addBankData() {
       this.$refs.addBankForm.validate(valid => {
@@ -2976,6 +3032,30 @@ export default {
           this.isEditingRule = false
           this.getDisputeProperties(this.dispute.id)
         })
+    },
+
+    isLawyer(role) {
+      return role.roles?.includes('LAWYER')
+    },
+
+    removeLawyer(forAllDisputes) {
+      const payload = {
+        roleId: this.deletingLawyer.id,
+        disputeId: this.dispute.id
+      }
+      if (!forAllDisputes) {
+        payload.cancelPropagation = true
+      }
+      this.deleteTicketOverviewParty(payload).then(() => {
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Parte removida com sucesso!',
+          type: 'success'
+        })
+      }).catch(error => {
+        this.$jusNotification({ error })
+      })
+      this.chooseRemoveLawyerDialogVisible = false
     }
   }
 }

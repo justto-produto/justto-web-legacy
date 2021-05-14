@@ -70,7 +70,7 @@ const overviewActions = {
     }))
   },
 
-  getAssociatedContacts({ dispatch }, disputeId) {
+  getAssociatedContacts({ _ }, disputeId) {
     return validateCurrentId(disputeId, () => axiosDispatch({
       url: `${disputeApi}/${disputeId}/properties`,
       mutation: 'setAssociatedContacts'
@@ -116,11 +116,11 @@ const overviewActions = {
     }))
   },
 
-  deleteTicketOverviewParty({ _ }, { disputeId, roleId }) {
+  deleteTicketOverviewParty({ _ }, { disputeId, roleId, cancelPropagation = false }) {
     return validateCurrentId(disputeId, () => axiosDispatch({
-      url: `${disputeApiLegacy}/${disputeId}/role/${roleId}`,
       method: 'DELETE',
       mutation: 'deleteTicketOverviewParty',
+      params: { cancelPropagation },
       payload: roleId
     }))
   },
