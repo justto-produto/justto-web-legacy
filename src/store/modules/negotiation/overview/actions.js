@@ -120,6 +120,7 @@ const overviewActions = {
 
   deleteTicketOverviewParty({ _ }, { disputeId, roleId, cancelPropagation = false }) {
     return validateCurrentId(disputeId, () => axiosDispatch({
+      url: `${disputeApiLegacy}/${disputeId}/role/${roleId}`,
       method: 'DELETE',
       mutation: 'deleteTicketOverviewParty',
       params: { cancelPropagation },
