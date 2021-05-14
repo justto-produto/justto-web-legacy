@@ -313,6 +313,10 @@
     }
   },
   "interaction-types": {
+    "NPS": {
+      "icon": "nps-star-active",
+      "message": "avaliação NPS recebida"
+    },
     "COMMUNICATION": {
       "message": ""
     },
