@@ -1,5 +1,6 @@
 import { axiosDispatch } from '@/utils/'
 
+const accountsPath = 'api/accounts'
 const personsPath = 'api/persons'
 
 const personActions = {
@@ -54,13 +55,12 @@ const personActions = {
       })
     })
   },
-  changeMemberName({ dispatch }, { name, personId }) {
+  changeMemberName({ _ }, { name, accountId }) {
     return axiosDispatch({
-      url: `${personsPath}/${personId}/name`,
-      method: 'PUT',
-      data: { name }
-    }).then(() => {
-      dispatch('getWorkspaceTeam')
+      url: `${accountsPath}/workspaces/${accountId}/change-name`,
+      method: 'PATCH',
+      data: { value: name },
+      action: 'getWorkspaceTeam'
     })
   },
   updatePersonProfile({ dispatch }, { profile, personId }) {
