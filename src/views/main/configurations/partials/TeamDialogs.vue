@@ -4,7 +4,8 @@
       :close-on-click-modal="false"
       :visible.sync="newMemberDialogVisible"
       title="Convide pessoas à sua equipe"
-      width="40%"
+      custom-class="invite-member-dialog"
+      width="60%"
     >
       <el-form
         ref="inviteForm"
@@ -60,9 +61,13 @@
           </div>
         </el-form-item>
       </el-form>
-      <span slot="footer">
+      <span
+        slot="footer"
+        class="el-dialog__footer-buttons"
+      >
         <el-button
           v-loading="newMemberDialogLoading"
+          size="small"
           plain
           @click="newMemberDialogVisible = false"
         >
@@ -76,6 +81,7 @@
           <span>
             <el-button
               :disabled="!acceptTerms"
+              size="small"
               type="primary"
               @click="inviteTeammate"
             >
@@ -171,6 +177,32 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.invite-member-dialog {
+  .el-dialog__body {
+    .el-form {
+      .el-form-item {
+        .el-form-item__content {
+          .acceptTerms {
+            width: 80% !important;
+            margin: 0 auto !important;
+            font-size: 12px !important;
+          }
+        }
+      }
+    }
+  }
+
+  .el-dialog__footer {
+    .el-dialog__footer-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+    }
+  }
+}
+</style>
 
 <style scoped>
 .acceptTerms {
