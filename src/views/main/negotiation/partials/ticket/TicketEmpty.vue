@@ -3,6 +3,7 @@
     id="negotiation-empty-ticket"
     class="empty-ticket-container"
   >
+    <HeaderUserMenu class="empty-ticket-container__menu" />
     <jus-icon
       icon="empty-ticket-state"
       class="empty-ticket-container__icon"
@@ -14,12 +15,11 @@
 </template>
 
 <script>
-import EmptyTicket from '@/assets/icons/ic-empty-ticket-state.svg'
 
 export default {
-  data: () => ({
-    src: EmptyTicket
-  })
+  components: {
+    HeaderUserMenu: () => import('@/components/menus/HeaderUserMenu')
+  }
 }
 </script>
 
@@ -39,6 +39,12 @@ export default {
 
   &__text{
     text-align: center;
+  }
+
+  .empty-ticket-container__menu {
+    position: absolute;
+    top: 0;
+    right: 0;
   }
 }
 </style>
