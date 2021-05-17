@@ -70,6 +70,11 @@
 
     <div class="party-details__infoline">
       <span class="party-details__infoline-label">Nome completo:</span>
+      <JusVexatiousAlert
+        v-if="party.polarity === 'CLAIMANT'"
+        :document-number="party.documentNumber"
+        :name="party.name"
+      />
       <TextInlineEditor
         v-model="party.name"
         :is-editable="!isNegotiator && !isPreNegotiation"
@@ -211,6 +216,7 @@ export default {
 
   components: {
     PopoverLinkInlineEditor: () => import('@/components/inputs/PopoverLinkInlineEditor'),
+    JusVexatiousAlert: () => import('@/components/dialogs/JusVexatiousAlert'),
     TextInlineEditor: () => import('@/components/inputs/TextInlineEditor'),
     DateInlieEditor: () => import('@/components/inputs/DateInlieEditor'),
     InfoMergeDialog: () => import('./partial/InfoMergeDialog'),
@@ -553,6 +559,13 @@ export default {
   .party-details__infoline {
     margin-top: 6px;
     line-height: normal;
+    position: relative;
+
+    .jus-vexatious-alert {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+    }
 
     .party-details__infoline-label {
       line-height: normal;
@@ -563,7 +576,7 @@ export default {
     .party-details__infoline-data,
     .party-details__infoline-link {
       line-height: normal;
-      margin: 3px 0 3px 18px;
+      margin: 3px 0 3px 24px;
     }
 
     &--center {

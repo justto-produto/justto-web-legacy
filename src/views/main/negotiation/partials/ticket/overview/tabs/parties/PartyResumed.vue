@@ -5,6 +5,11 @@
     :class="{'hide-arrows': hideArrows}"
   >
     <template slot="title">
+      <i
+        v-if="party.polarity === 'CLAIMANT' && !isActiveCollapseItem"
+        class="el-icon-warning-outline el-icon-pulse vexatious-alert"
+        :style="{ color: alertColor }"
+      />
       <JusIcon
         class="party-resumed__header-avatar"
         :icon="partyType"
@@ -66,6 +71,9 @@ export default {
     },
     documentType() {
       return this.party.documentNumber?.length <= 14 ? 'CPF' : 'CNPJ'
+    },
+    alertColor() {
+      return 'red'
     },
     partyType() {
       const { roles, polarity } = this.party
@@ -149,6 +157,16 @@ export default {
     height: auto;
     line-height: normal;
     min-height: 60px;
+    position: relative;
+
+    .vexatious-alert {
+      color: rgb(255, 201, 0);
+      font-size: 30px;
+
+      position: absolute;
+      right: 0;
+      margin-right: 16px;
+    }
   }
 }
 .hide-arrows {
