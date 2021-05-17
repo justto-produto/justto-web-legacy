@@ -373,6 +373,7 @@
         @closeDialog="handleAttachmentDialogVisable()"
       />
     </el-dialog>
+    <!-- Dialog para baixa definitiva -->
   </div>
 </template>
 
@@ -894,6 +895,7 @@ export default {
       })
     },
     dropLawsuit() {
+      // TODO: chamar dialog aqui
       this.$jusSegment('Baixa definitiva na disputa', { disputeId: this.dispute.id })
       this.$confirm('Esta ação é irreversível, tem certeza que deseja continuar?', 'Baixa definitiva', {
         confirmButtonText: 'Continuar',

@@ -331,6 +331,7 @@ export default {
         value: 'Sistema Justto'
       }]
     },
+    // Adicionar status CANCELED
     statuses() {
       switch (this.activeTab) {
         case 'finished':

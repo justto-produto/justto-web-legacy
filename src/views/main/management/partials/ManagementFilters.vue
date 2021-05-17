@@ -337,6 +337,7 @@ export default {
           return 'todos'
       }
     },
+    // Adicionar o filtro aqui, uma nova opção
     statuses() {
       switch (this.tabIndex) {
         case '4':
