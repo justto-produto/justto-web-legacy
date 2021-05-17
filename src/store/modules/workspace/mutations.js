@@ -71,7 +71,8 @@ const workspaceMutations = {
   updateAssociatedKeyAccount: (state, { payload: { keyAccountId } }) => {
     const keyAccount = state.workspace.keyAccounts.find(({ id }) => id === keyAccountId)
     Vue.set(state.workspace, 'associatedKeyAccount', keyAccount)
-  }
+  },
+  setPortifolio: (state, portifolio) => Vue.set(state, 'portifolio', portifolio)
 }
 
 export default workspaceMutations

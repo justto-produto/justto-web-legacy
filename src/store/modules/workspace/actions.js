@@ -88,6 +88,14 @@ const workspaceActions = {
   getWorkspaces({ _ }) {
     return axiosDispatch({ url: `${workspacesPath}?size=999&` })
   },
+
+  getPortifolio({ _ }) {
+    return axiosDispatch({
+      url: `${workspacesPath}/portifolio`,
+      mutation: 'setPortifolio'
+    })
+  },
+
   removeWorkspaceMember({ _ }, id) {
     return axiosDispatch({
       url: `${workspacesPath}/members/${id}`,

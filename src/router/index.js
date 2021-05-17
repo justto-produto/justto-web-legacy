@@ -177,9 +177,8 @@ const router = new Router({
       path: '/workspaces',
       component: () => import(/* webpackChunkName: "workspaces" */ '@/views/main/configurations/partials/WorkspaceList'),
       meta: {
-        requiresAuth: false,
         trackPage: true,
-        title: 'Justto'
+        title: 'Justto - Workspaces'
       }
     },
     {

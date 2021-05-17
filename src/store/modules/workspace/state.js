@@ -3,6 +3,7 @@ const profile = localStorage.getItem('jusprofile') || ''
 
 export default {
   featuresAndModules: [],
+  portifolio: [],
   workspace: {
     id: workspace.id,
     name: workspace.name,

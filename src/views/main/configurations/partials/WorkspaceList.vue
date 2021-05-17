@@ -22,6 +22,24 @@
           {{ keyAccountTemplate(scope.row.keyAccountId) }}
         </template>
       </el-table-column>
+      <el-table-column
+        label="Portifolio"
+      >
+        <template>
+          <el-select
+            v-model="portifolios"
+            size="small"
+            multiple
+          >
+            <el-option
+              v-for="(portifolio, pIndex) in portifolioList"
+              :key="`portifolio${pIndex}`"
+              :label="portifolio.name"
+              :value="portifolio.name"
+            />
+          </el-select>
+        </template>
+      </el-table-column>
       <el-table-column align="right">
         <template
           slot="header"
@@ -36,6 +54,18 @@
           </div>
         </template>
       </el-table-column>
+      <el-table-column
+        align="right"
+        width="60"
+      >
+        <template>
+          <el-button
+            icon="el-icon-edit"
+            size="small"
+            circle
+          />
+        </template>
+      </el-table-column>
     </el-table>
   </section>
 </template>
@@ -45,13 +75,15 @@ import { mapActions, mapGetters } from 'vuex'
 
 export default {
   data: () => ({
-    search: ''
+    search: '',
+    portifolios: []
   }),
 
   computed: {
     ...mapGetters({
       workspaces: 'getMyWorkspaces',
-      keyAccounts: 'getWorkspaceKeyAccounts'
+      keyAccounts: 'getWorkspaceKeyAccounts',
+      portifolioList: 'getPortifolio'
     }),
 
     filteredWorkspaces() {
@@ -78,11 +110,13 @@ export default {
   methods: {
     ...mapActions([
       'myWorkspace',
-      'getWorkspaceKeyAccounts'
+      'getWorkspaceKeyAccounts',
+      'getPortifolio'
     ]),
 
     init() {
       this.myWorkspace()
+      this.getPortifolio()
       this.getWorkspaceKeyAccounts()
     },
 
