@@ -162,7 +162,7 @@ export default {
     },
 
     disputeParts() {
-      return this.dispute.disputeRoles
+      return this.lawsuitDispute.parties
     }
   },
 
