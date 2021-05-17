@@ -26,8 +26,8 @@
       </div>
       <div class="communication-ticket-item-container__message">
         <el-tooltip
-          :disabled="!isPreNegotiation"
-          :open-delay="500"
+          :disabled="!isInPreNegotiaionTab"
+          :open-delay="250"
           :placement="'bottom-start'"
         >
           <div
@@ -35,14 +35,11 @@
             v-html="reason"
           />
           <span>
-            {{ reason }}
+            {{ isInPreNegotiaionTab ? resonKeyWords : reason }}
           </span>
         </el-tooltip>
       </div>
     </div>
-    <!-- <span class="communication-ticket-item-container__time">
-      {{ getLastInteraction(ticket.lastReceivedMessage.dateTime.dateTime) }}
-    </span> -->
   </li>
 </template>
 
@@ -63,6 +60,7 @@ export default {
       required: true
     }
   },
+
   computed: {
     ...mapGetters({
       activeTab: 'getTicketsActiveTab'
@@ -71,10 +69,16 @@ export default {
     isActive() {
       return this.$route.params.id === this.ticket.disputeId
     },
+
     plaintiffName() {
       const { plaintiff } = this.ticket
       return plaintiff ? plaintiff.name : 'Sem parte'
     },
+
+    isInPreNegotiaionTab() {
+      return this.activeTab === 'pre-negotiation'
+    },
+
     reason() {
       const { pendingReason, disputeStatus } = this.ticket
       if (pendingReason?.description) {
@@ -83,6 +87,10 @@ export default {
       } else {
         return this.$options.filters.capitalize(this.$tc(`dispute.status.${disputeStatus}`))
       }
+    },
+
+    resonKeyWords() {
+      return (this.ticket.properties['PALAVRAS PRE NEGOCIACAO'] || '-').replace(/ *\[/g, '').replace(/ *\]/g, '')
     }
   }
 }
