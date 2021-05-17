@@ -69,7 +69,7 @@ export default {
     }),
 
     isActive() {
-      return this.$route.params.id === this.ticket.disputeId
+      return Number(this.$route.params?.id || '') === Number(this.ticket?.disputeId)
     },
     plaintiffName() {
       const { plaintiff } = this.ticket
