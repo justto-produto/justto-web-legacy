@@ -427,6 +427,7 @@ export default {
         this.$jusSegment('Filtro por data fim negociação')
       }
     },
+    // TODO VALIDAR ESSA FUNCAO AQUI DE FILTRO
     clearFilters() {
       if (this.tabIndex === '4') {
         this.filters.status = []
