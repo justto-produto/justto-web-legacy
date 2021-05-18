@@ -161,6 +161,9 @@ export default {
       this.resetOccurrences()
       this.resetMessageText()
       this.resetNoteText()
+      if (this.lastMessage.disputeId !== this.id) {
+        this.getOccurrences(this.id)
+      }
       this.localLoading = false
     }
   }

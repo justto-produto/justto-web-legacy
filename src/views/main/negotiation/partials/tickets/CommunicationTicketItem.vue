@@ -66,7 +66,7 @@ export default {
   },
   computed: {
     isActive() {
-      return Number(this.$route.params.id) === this.ticket.disputeId
+      return Number(this.$route.params.id) === Number(this.ticket?.disputeId)
     },
     lastInboundInteraction() {
       const { lastInboundInteraction, lastReceivedMessage, disputeStatus, expirationDate } = this.ticket
