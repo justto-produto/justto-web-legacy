@@ -427,7 +427,6 @@ export default {
         this.$jusSegment('Filtro por data fim negociação')
       }
     },
-    // TODO VALIDAR ESSA FUNCAO AQUI DE FILTRO
     clearFilters() {
       if (this.tabIndex === '4') {
         this.filters.status = []
@@ -440,6 +439,7 @@ export default {
       this.changeExpirationDate()
       this.changeimportingDate()
       this.clearInteraction()
+      this.clearStatuses()
       this.filters.onlyFavorite = false
       this.filters.onlyPaused = false
       this.filters.hasCounterproposal = false
@@ -473,13 +473,9 @@ export default {
         this.filters.dealDate = []
       }
     },
-    // clearLastInteractionDate (value) {
-    //   if (value) {
-    //     this.filters.lastInteractionDate = value
-    //   } else {
-    //     delete this.filters.lastInteractionDate
-    //   }
-    // },
+    clearStatuses() {
+      this.filters.status = []
+    },
     changeExpirationDate(value) {
       if (value) {
         this.filters.expirationDate = value

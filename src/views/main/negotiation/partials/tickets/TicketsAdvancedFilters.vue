@@ -426,7 +426,6 @@ export default {
         this.$jusSegment('Filtro por data fim negociação')
       }
     },
-    // TODO VERIFICAR ESSA FUNÇÃO PARA VALIDAR PORQUE O STATUS NÃO ESTÁ ZERANDO
     clearFilters() {
       const { filters } = this
       if (this.activeTab === 'finished') {
