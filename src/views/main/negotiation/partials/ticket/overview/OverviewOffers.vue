@@ -15,7 +15,7 @@
     </article>
     <article class="overview-offers__proposal overview-offers__proposal--defendant">
       <div>
-        <span>Proposta: </span>
+        <span>Sua proposta: </span>
         <CurrencyInlieEditorInner
           v-model="defendantOffer.value"
           :is-editable="!isPreNegotiation"
@@ -25,7 +25,7 @@
         />
       </div>
       <div>
-        <span>Máx.: </span>
+        <span>Alçada Máx.: </span>
         <CurrencyInlieEditorInner
           v-model="upperRange"
           :is-editable="!isPreNegotiation"
