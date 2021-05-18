@@ -11,6 +11,13 @@ const actionsActions = {
     })
   },
 
+  getDropLawsuitReasons({ _ }, payload) {
+    // return axiosDispatch({
+    //   url: 'rota',
+    //   mutation: 'setDropLawsuitReasons'
+    // })
+  },
+
   setTicketVisualized({ _ }, params) {
     const { disputeId } = params
 

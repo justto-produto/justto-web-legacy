@@ -443,20 +443,7 @@ export default {
     },
 
     handleDropLawsuit(action) {
-      const { disputeId } = this.ticket
-      const confirmMessage = 'Esta ação é irreversível, tem certeza que deseja continuar?'
-
-      this.confirmAction(action, confirmMessage)
-        .then(() => {
-          this.deleteTicket({ disputeId, reason: 'DISPUTE_DROPPED' })
-            .then(() => {
-              this.concludeAction(action, disputeId)
-              this.$router.push('/negotiation')
-            })
-            .catch(error => {
-              this.$jusNotification({ error })
-            })
-        })
+      this.$refs.dialogActions.openDropLawsuitDialog(action)
     },
 
     handleStartNegotiation(action) {

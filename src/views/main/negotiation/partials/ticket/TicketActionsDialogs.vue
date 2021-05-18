@@ -287,6 +287,64 @@
       <span />
     </el-dialog>
     <!-- CRIAR DIALOG AQUI BASEADO NO PERDER -->
+    <el-dialog
+      :visible.sync="dropLawsuitDialogVisible"
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      append-to-body
+      width="604px"
+      title="Baixa definitiva na negociação"
+      class="dialog-actions__increase-alert"
+    >
+      <el-form
+        ref="dropLawsuitForm"
+        :model="dropLawsuitForm"
+        :rules="dropLawsuitRules"
+        :disabled="modalLoading"
+        label-position="top"
+      >
+        <el-row
+          :gutter="20"
+        >
+          <el-col :span="24">
+            <el-form-item
+              label="Motivo da baixa:"
+              prop="reason"
+            >
+              <el-select
+                v-model="dropLawsuitForm.reason"
+                placeholder="Escolha o motivo da baixa"
+                style="width: 100%;"
+              >
+                <el-option
+                  v-for="item in motivos"
+                  :key="item.value"
+                  :value="item.value"
+                  :label="item.label"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <div slot="footer">
+        <el-button
+          plain
+          @click="dropLawsuitDialogVisible = false"
+        >
+          Cancelar
+        </el-button>
+        <el-button
+          v-loading="modalLoading"
+          :disabled="modalLoading"
+          type="primary"
+          @click.prevent="handleDropLawsuit"
+        >
+          Confirmar
+        </el-button>
+      </div>
+    </el-dialog>
   </section>
 </template>
 
@@ -302,6 +360,7 @@ export default {
     }
   },
   data: () => ({
+    motivos: [{ value: 1, label: 'motivo 1' }, { value: 2, label: 'motivo 2' }],
     modalLoading: false,
     offerDialogVisible: false,
     offerFormType: 'MANUAL_COUNTERPROPOSAL',
@@ -310,6 +369,14 @@ export default {
       value: '',
       note: '',
       unsettledType: ''
+    },
+    dropLawsuitForm: {
+      roleId: null,
+      reason: []
+    },
+    dropLawsuitRules: {
+      roleId: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+      reason: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
     },
     offerFormRules: {
       unsettledType: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
@@ -322,13 +389,15 @@ export default {
     editNegotiatorsDialogVisible: false,
     editNegotiatorsForm: [],
     confirmIncreaseUpperrangeDialogVisible: false,
-    attachmentDialogVisible: false
+    attachmentDialogVisible: false,
+    dropLawsuitDialogVisible: false
   }),
   computed: {
     ...mapGetters({
       ticketParties: 'getTicketOverviewParties',
       workspaceMembers: 'workspaceMembers',
       outcomeReasons: 'getOutcomeReasons'
+      // getDropLawsuitReasons
     }),
 
     isInsufficientUpperRange() {
@@ -373,11 +442,6 @@ export default {
           label: 'Réu',
           value: this.$options.filters.capitalize(name)
         })),
-        // {
-        //   key: 'lawyer',
-        //   label: 'Advogado(s) do autor(es)',
-        //   value: 'Teste'
-        // },
         {
           key: 'value',
           label: 'Valor do acordo',
@@ -517,6 +581,10 @@ export default {
       this.attachmentDialogVisible = true
     },
 
+    openDropLawsuitDialog(action) {
+      this.dropLawsuitDialogVisible = true
+    },
+
     handleDialogAction() {
       const { offerFormType } = this
 
@@ -650,6 +718,33 @@ export default {
           else reject(new Error('Campos obrigatórios não preenchidos'))
         })
       })
+    },
+
+    handleDropLawsuit() {
+      this.modalLoading = true
+      // const disputeId = this.$route.params.id
+      // this.cancelTicket({ disputeId, reason: this.dropLawsuitForm.reason })
+      //   .then(() => {
+      //     this.$jusNotification({
+      //       message: 'Disputa cancelada com sucesso.',
+      //       title: 'Yay!',
+      //       type: 'success'
+      //     })
+      //     // this.$jusSegment(message, { disputeId })
+      //   })
+      //   .catch(error => this.$jusNotification({ error }))
+      // ANTIGOOOOOOOOOOOOOOOOOOO
+      // this.confirmAction(action, confirmMessage)
+      //   .then(() => {
+      //     this.deleteTicket({ disputeId, reason: 'DISPUTE_DROPPED' })
+      //       .then(() => {
+      //         this.concludeAction(action, disputeId)
+      //         this.$router.push('/negotiation')
+      //       })
+      //       .catch(error => {
+      //         this.$jusNotification({ error })
+      //       })
+      //   })
     }
   }
 }
