@@ -42,6 +42,7 @@
         </el-link>
       </div>
     </div>
+
     <div class="lawsuit-description__container-parties">
       <div class="lawsuit-description__container-party">
         <div class="lawsuit-description__party-title">
@@ -51,7 +52,7 @@
           <el-collapse-item
             v-for="(party, partyIndex) in state.parties"
             :key="`party-${partyIndex}`"
-            class="lawsuit-description__party-items"
+            class="lawsuit-description__party-items collapse-item__left-arrow"
           >
             <div
               slot="title"
@@ -97,7 +98,7 @@
           <el-collapse-item
             v-for="(lawyer, lawyerIndex) in state.lawyers"
             :key="`lawyer-${lawyerIndex}`"
-            class="lawsuit-description__party-items"
+            class="lawsuit-description__party-items collapse-item__left-arrow"
           >
             <div
               slot="title"
@@ -134,7 +135,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import { isSimilarStrings } from '@/utils'
 export default {
   components: {
@@ -154,7 +155,8 @@ export default {
 
   computed: {
     ...mapGetters({
-      dispute: 'dispute'
+      dispute: 'dispute',
+      negotiationParts: 'getTicketOverviewParties'
     }),
 
     state() {
@@ -162,7 +164,7 @@ export default {
     },
 
     disputeParts() {
-      return this.lawsuitDispute.parties
+      return window.location.href.includes('/negotiation') ? this.negotiationParts : this.dispute.disputeRoles
     }
   },
 
@@ -221,10 +223,11 @@ export default {
     },
 
     isDisputePart({ name = '', document = '' }) {
-      const cleanedDocumentNumber = document?.replaceAll(/\D+/g, '')
+      const cleanDoc = (doc = '') => (doc || '').replace(/\D+/g, '')
+
       const isPart = this.disputeParts.filter(disputePart => {
         return isSimilarStrings(disputePart.name?.toLowerCase(), name?.toLowerCase(), 75) ||
-          isSimilarStrings(disputePart.documentNumber?.toLowerCase(), cleanedDocumentNumber?.toLowerCase(), 90)
+          (!!document && cleanDoc(disputePart.documentNumber) === cleanDoc(document))
       }).length > 0
       return isPart
     },
@@ -243,20 +246,48 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 .el-collapse-item__header {
   height: auto;
   margin: 8px;
 }
+
 .el-collapse-item__content {
   padding-bottom: 0px;
 }
+
 .lawsuit-description__document-download {
   height: 16px;
 }
+
+.lawsuit-description__party-collapse {
+  margin: 0 !important;
+
+  .collapse-item__left-arrow {
+    div[role='tab'] {
+      .el-collapse-item__header {
+        margin: 8px 0 !important;
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: flex-end;
+
+        .el-collapse-item__arrow {
+          margin: 0px;
+          margin-right: 4px;
+        }
+      }
+    }
+
+    div[role='tabpanel'] {
+      margin-left: 16px !important;
+    }
+  }
+}
+
 </style>
 
 <style lang="scss" scoped>
+@import "@/styles/colors.scss";
 
 .lawsuit-description {
   width: 100%;
@@ -271,24 +302,24 @@ export default {
   .lawsuit-description__container-info {
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
 
     .lawsuit-description__info {
       display: flex;
       flex-direction: column;
+      align-items: center;
       margin-bottom: 8px;
       width: 25%;
 
       .lawsuit-description__info-title {
         text-align: left;
-        font: normal normal 800 14px/18px Montserrat;
-        letter-spacing: 0.14px;
+        font-size: 14px;
         color: #424242;
       }
 
       .lawsuit-description__info-text {
         text-transform: capitalize;
-        font: normal normal medium 14px/26px Montserrat;
-        letter-spacing: 0px;
+        font-size: 14px;
         color: #a3a3a3;
       }
 
@@ -310,27 +341,36 @@ export default {
     flex-direction: row;
     justify-content: space-between;
 
+    @media (max-width: 900px) {
+      flex-direction: column;
+      gap: 18px;
+    }
+
     .lawsuit-description__container-party {
-      min-width: 45%;
+
       .lawsuit-description__party-title {
-        font: normal normal 800 14px/18px Montserrat;
-        letter-spacing: 0.14px;
-        color: #424242;
+        font-size: 14px;
+        font-weight: 700;
+        color: $--color-text-primary;
       }
+
       .lawsuit-description__party-collapse {
         margin-left: 8px;
         .lawsuit-description__party-items {
           .lawsuit-description__party-name {
-            font: normal normal 600 12px/17px Montserrat;
+            font-size: 12px;
+            line-height: 14px;
+            font-weight: 600;
+            color: $--color-text-primary;
           }
+
           .lawsuit-description__party-list {
             padding-left: 20px;
-            .lawsuit-description__party-info {
-              font: normal normal 600 12px/17px Montserrat;
-              color: #A3A3A3;
-              letter-spacing: 0px;
-              text-transform: capitalize;
 
+            .lawsuit-description__party-info {
+              font-size: 12px;
+              line-height: 14px;
+              color: $--color-text-secondary;
             }
           }
         }
