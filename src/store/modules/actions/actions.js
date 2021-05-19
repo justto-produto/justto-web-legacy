@@ -11,11 +11,12 @@ const actionsActions = {
     })
   },
 
-  getDropLawsuitReasons({ _ }, payload) {
-    // return axiosDispatch({
-    //   url: 'rota',
-    //   mutation: 'setDropLawsuitReasons'
-    // })
+  getDropLawsuitReasons({ _ }, _payload) {
+    const url = `${disputesPath}/outcome-reasons/CANCELED`
+    return axiosDispatch({
+      url,
+      mutation: 'setDropLawsuitReasons'
+    })
   },
 
   setTicketVisualized({ _ }, params) {
@@ -78,6 +79,17 @@ const actionsActions = {
       method: 'DELETE',
       mutation: 'deleteTicket',
       payload: disputeId
+    })
+  },
+
+  cancelTicket({ _ }, payload) {
+    const { disputeId } = payload
+    return axiosDispatch({
+      url: `${disputesPath}/v2/${disputeId}/cancel`,
+      method: 'PATCH',
+      mutation: 'cancelTicket',
+      payload: payload,
+      data: payload
     })
   },
 

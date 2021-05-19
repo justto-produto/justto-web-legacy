@@ -374,6 +374,78 @@
       />
     </el-dialog>
     <!-- Dialog para baixa definitiva -->
+    <el-dialog
+      :visible.sync="dropLawsuitDialogVisible"
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      append-to-body
+      width="604px"
+      title="Cancelar disputa"
+      class="dialog-actions__increase-alert"
+    >
+      <el-form
+        ref="dropLawsuitForm"
+        :model="dropLawsuitForm"
+        :rules="dropLawsuitRules"
+        :disabled="modalLoading"
+        label-position="top"
+      >
+        <el-row
+          :gutter="20"
+        >
+          <el-col :span="24">
+            <el-form-item
+              label="Motivo do cancelamento:"
+              prop="reason"
+            >
+              <el-select
+                v-model="dropLawsuitForm.reason"
+                placeholder="Escolha o motivo"
+                style="width: 100%;"
+              >
+                <el-option
+                  v-for="(key, value) in dropLawsuitReasons"
+                  :key="key"
+                  :value="value"
+                  :label="key"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
+            <el-form-item
+              label="Nota:"
+              prop="note"
+            >
+              <el-input
+                v-model="dropLawsuitForm.conclusionNote"
+                type="textarea"
+                rows="4"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <div slot="footer">
+        <el-button
+          plain
+          @click="dropLawsuitDialogVisible = false"
+        >
+          Cancelar
+        </el-button>
+        <el-button
+          v-loading="modalLoading"
+          :disabled="modalLoading"
+          type="primary"
+          @click.prevent="handleDropLawsuit"
+        >
+          Confirmar
+        </el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -413,11 +485,19 @@ export default {
       counterproposalDialogVisible: false,
       uploadAttacmentDialogVisable: false,
       settledDialogVisible: false,
+      dropLawsuitDialogVisible: false,
       modalLoading: false,
       counterOfferForm: {
         lastCounterOfferValue: '',
         selectedRoleId: '',
         note: ''
+      },
+      dropLawsuitForm: {
+        reason: null,
+        conclusionNote: null
+      },
+      dropLawsuitRules: {
+        reason: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
       },
       counterOfferFormRules: {
         lastCounterOfferValue: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
@@ -426,11 +506,12 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([
-      'disputeStatuses',
-      'isJusttoAdmin',
-      'ghostMode'
-    ]),
+    ...mapGetters({
+      disputeStatuses: 'disputeStatuses',
+      isJusttoAdmin: 'isJusttoAdmin',
+      ghostMode: 'ghostMode',
+      dropLawsuitReasons: 'getDropLawsuitReasons'
+    }),
 
     collapsed: {
       get() {
@@ -531,8 +612,8 @@ export default {
           name: 'permanently-leave',
           icon: 'hammer',
           condition: () => this.isPreNegotiation,
-          action: () => this.dropLawsuit(),
-          tooltip: 'Confirmar baixa definitiva'
+          action: () => { this.dropLawsuitDialogVisible = true },
+          tooltip: 'Cancelar disputa'
         },
         {
           name: 'start-negotiation',
@@ -653,6 +734,9 @@ export default {
       return []
     }
   },
+  beforeMount() {
+    this.getDropLawsuitReasons()
+  },
   methods: {
     ...mapActions([
       'deleteDocument',
@@ -660,7 +744,9 @@ export default {
       'removeDispute',
       'sendDisputeAction',
       'sendDisputeNote',
-      'startNegotiation'
+      'startNegotiation',
+      'getDropLawsuitReasons',
+      'cancelTicket'
     ]),
 
     redirectNegotiation() {
@@ -894,22 +980,48 @@ export default {
         this.$jusNotification({ error })
       })
     },
-    dropLawsuit() {
-      // TODO: chamar dialog aqui
-      this.$jusSegment('Baixa definitiva na disputa', { disputeId: this.dispute.id })
-      this.$confirm('Esta ação é irreversível, tem certeza que deseja continuar?', 'Baixa definitiva', {
-        confirmButtonText: 'Continuar',
-        cancelButtonText: 'Cancelar',
-        cancelButtonClass: 'is-plain',
-        showClose: false
-      }).then(() => {
-        this.removeDispute({
-          disputeId: this.dispute.id, reason: 'DISPUTE_DROPPED'
-        }).then(() => {
-          this.setDisputesTab('0')
-          if (!this.tableActions) this.$router.push('/management')
+    validateForm(ref) {
+      return new Promise((resolve, reject) => {
+        this.$refs[ref].validate(valid => {
+          if (valid) resolve()
+          else reject(new Error('Campos obrigatórios não preenchidos'))
         })
       })
+    },
+    dropLawsuit() {
+      this.modalLoading = true
+      const disputeId = this.$route.params.id
+      const { reason, conclusionNote } = this.dropLawsuitForm
+      this.validateForm('dropLawsuitForm')
+        .then(() => {
+          this.cancelTicket({ disputeId, reason, conclusionNote })
+            .then(() => {
+              this.$jusNotification({
+                message: 'Disputa cancelada com sucesso.',
+                title: 'Yay!',
+                type: 'success'
+              })
+              this.dropLawsuitDialogVisible = false
+              this.$jusSegment('Cancelamento de disputa', { disputeId })
+            })
+            .catch(error => this.$jusNotification({ error }))
+        })
+        .finally(() => { this.modalLoading = false })
+      // // TODO: chamar dialog aqui
+      // this.$jusSegment('Baixa definitiva na disputa', { disputeId: this.dispute.id })
+      // this.$confirm('Esta ação é irreversível, tem certeza que deseja continuar?', 'Baixa definitiva', {
+      //   confirmButtonText: 'Continuar',
+      //   cancelButtonText: 'Cancelar',
+      //   cancelButtonClass: 'is-plain',
+      //   showClose: false
+      // }).then(() => {
+      //   this.removeDispute({
+      //     disputeId: this.dispute.id, reason: 'DISPUTE_DROPPED'
+      //   }).then(() => {
+      //     this.setDisputesTab('0')
+      //     if (!this.tableActions) this.$router.push('/management')
+      //   })
+      // })
     },
     goToNegotiation() {
       this.startNegotiation(this.dispute.id)

@@ -1,13 +1,12 @@
 import Vue from 'vue'
 
 const actionsMutations = {
-  setOutcomeReasons: ({ outcomeReasons }, { data, payload }) => {
-    Vue.set(outcomeReasons, payload, data)
+  setOutcomeReasons: (state, { data, payload }) => {
+    Vue.set(state, payload, data)
   },
 
-  // MUTATION PARA PEGAR AS REASONS
-  setDropLawsuitReasons: ({ dropLawsuitReasons }, { data, payload }) => {
-    Vue.set(dropLawsuitReasons, payload, data)
+  setDropLawsuitReasons: (state, data) => {
+    Vue.set(state, 'dropLawsuitReasons', data)
   }
 }
 

@@ -15,6 +15,11 @@ const ticketsMutations = {
     if (ticketIndex > -1) Vue.delete(tickets.content, ticketIndex)
   },
 
+  cancelTicket: ({ tickets }, payload) => {
+    const ticketIndex = getTicketIndex(tickets.content, payload)
+    if (ticketIndex > -1) Vue.delete(tickets.content, ticketIndex)
+  },
+
   setTicketsQuery: ({ ticketsQuery }, { key, value }) => Vue.set(ticketsQuery, key, value),
 
   addTicketQueryPage: ({ ticketsQuery }) => (ticketsQuery.page += 1),

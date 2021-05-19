@@ -215,7 +215,7 @@
     "CHANGE_EXPIRATION_DATE": "data limite",
     "RENEGOTIATE": "retornar para negociação",
     "EDIT-NEGOTIATORS": "editar negociadores",
-    "DROP_LAWSUIT": "confirmar baixa definitiva",
+    "DROP_LAWSUIT": "cancelar disputa",
     "START_NEGOTIATON": "inicar negociação",
     "SEND_BILK_MESSAGE": "Enviar mensagens em massa",
     "tooltip": {

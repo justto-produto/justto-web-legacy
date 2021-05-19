@@ -294,7 +294,7 @@
       :close-on-press-escape="false"
       append-to-body
       width="604px"
-      title="Baixa definitiva na negociação"
+      title="Cancelar disputa"
       class="dialog-actions__increase-alert"
     >
       <el-form
@@ -309,21 +309,35 @@
         >
           <el-col :span="24">
             <el-form-item
-              label="Motivo da baixa:"
+              label="Motivo do cancelamento:"
               prop="reason"
             >
               <el-select
                 v-model="dropLawsuitForm.reason"
-                placeholder="Escolha o motivo da baixa"
+                placeholder="Escolha o motivo"
                 style="width: 100%;"
               >
                 <el-option
-                  v-for="item in motivos"
-                  :key="item.value"
-                  :value="item.value"
-                  :label="item.label"
+                  v-for="(key, value) in dropLawsuitReasons"
+                  :key="key"
+                  :value="value"
+                  :label="key"
                 />
               </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
+            <el-form-item
+              label="Nota:"
+              prop="note"
+            >
+              <el-input
+                v-model="dropLawsuitForm.conclusionNote"
+                type="textarea"
+                rows="4"
+              />
             </el-form-item>
           </el-col>
         </el-row>
@@ -371,11 +385,10 @@ export default {
       unsettledType: ''
     },
     dropLawsuitForm: {
-      roleId: null,
-      reason: []
+      reason: null,
+      conclusionNote: null
     },
     dropLawsuitRules: {
-      roleId: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
       reason: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
     },
     offerFormRules: {
@@ -396,8 +409,8 @@ export default {
     ...mapGetters({
       ticketParties: 'getTicketOverviewParties',
       workspaceMembers: 'workspaceMembers',
-      outcomeReasons: 'getOutcomeReasons'
-      // getDropLawsuitReasons
+      outcomeReasons: 'getOutcomeReasons',
+      dropLawsuitReasons: 'getDropLawsuitReasons'
     }),
 
     isInsufficientUpperRange() {
@@ -488,16 +501,18 @@ export default {
   },
   beforeMount() {
     const { unsettledOutcomeReasons } = this
-
     if (!unsettledOutcomeReasons || !Object.keys(unsettledOutcomeReasons).length) {
       this.getOutcomeReasons('UNSETTLED')
     }
+    this.getDropLawsuitReasons()
   },
   methods: {
     ...mapActions([
       'getOutcomeReasons',
       'sendTicketAction',
-      'sendOffer'
+      'sendOffer',
+      'getDropLawsuitReasons',
+      'cancelTicket'
     ]),
 
     confirmAction(action, message = 'Tem certeza que deseja realizar está ação?') {
@@ -614,7 +629,7 @@ export default {
               .then(() => {
                 this.modalLoading = true
                 this.sendManualOffer()
-                  .then(success => this.concludeAction(action, disputeId, true))
+                  .then(_success => this.concludeAction(action, disputeId, true))
                   .catch(error => this.$jusNotification({ error }))
                   .finally(() => (this.modalLoading = false))
               })
@@ -656,7 +671,7 @@ export default {
 
       this.modalLoading = true
       this.sendTicketAction({ disputeId, action, data })
-        .then(success => this.concludeAction(action, disputeId))
+        .then(_success => this.concludeAction(action, disputeId))
         .catch(error => this.$jusNotification({ error }))
         .finally(() => (this.modalLoading = false))
     },
@@ -669,7 +684,7 @@ export default {
         .then(() => {
           this.modalLoading = true
           this.sendTicketAction({ disputeId, action })
-            .then(success => this.concludeAction(action, disputeId))
+            .then(_success => this.concludeAction(action, disputeId))
             .catch(error => this.$jusNotification({ error }))
             .finally(() => (this.modalLoading = false))
         })
@@ -711,7 +726,7 @@ export default {
       }
     },
 
-    validateOfferForm(actionType) {
+    validateOfferForm(_actionType) {
       return new Promise((resolve, reject) => {
         this.$refs.offerForm.validate(valid => {
           if (valid) resolve()
@@ -720,31 +735,34 @@ export default {
       })
     },
 
+    validateForm(ref) {
+      return new Promise((resolve, reject) => {
+        this.$refs[ref].validate(valid => {
+          if (valid) resolve()
+          else reject(new Error('Campos obrigatórios não preenchidos'))
+        })
+      })
+    },
+
     handleDropLawsuit() {
       this.modalLoading = true
-      // const disputeId = this.$route.params.id
-      // this.cancelTicket({ disputeId, reason: this.dropLawsuitForm.reason })
-      //   .then(() => {
-      //     this.$jusNotification({
-      //       message: 'Disputa cancelada com sucesso.',
-      //       title: 'Yay!',
-      //       type: 'success'
-      //     })
-      //     // this.$jusSegment(message, { disputeId })
-      //   })
-      //   .catch(error => this.$jusNotification({ error }))
-      // ANTIGOOOOOOOOOOOOOOOOOOO
-      // this.confirmAction(action, confirmMessage)
-      //   .then(() => {
-      //     this.deleteTicket({ disputeId, reason: 'DISPUTE_DROPPED' })
-      //       .then(() => {
-      //         this.concludeAction(action, disputeId)
-      //         this.$router.push('/negotiation')
-      //       })
-      //       .catch(error => {
-      //         this.$jusNotification({ error })
-      //       })
-      //   })
+      const disputeId = this.$route.params.id
+      const { reason, conclusionNote } = this.dropLawsuitForm
+      this.validateForm('dropLawsuitForm')
+        .then(() => {
+          this.cancelTicket({ disputeId, reason, conclusionNote })
+            .then(() => {
+              this.$jusNotification({
+                message: 'Disputa cancelada com sucesso.',
+                title: 'Yay!',
+                type: 'success'
+              })
+              this.dropLawsuitDialogVisible = false
+              this.$jusSegment('Cancelamento de disputa', { disputeId })
+            })
+            .catch(error => this.$jusNotification({ error }))
+        })
+        .finally(() => { this.modalLoading = false })
     }
   }
 }
