@@ -284,8 +284,8 @@
       "feedback-message": ""
     },
     "DROP_LAWSUIT": {
-      "name": "confirmar baixa definitiva",
-      "feedback-message": "<b>baixa definitiva</b>"
+      "name": "cancelar disputa",
+      "feedback-message": "<b>cancelar disputa</b>"
     },
     "START_NEGOTIATION": {
       "name": "iniciar negociação",
