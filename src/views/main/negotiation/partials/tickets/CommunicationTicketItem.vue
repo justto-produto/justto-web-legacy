@@ -8,8 +8,7 @@
       :name="plaintiffName"
       :status="ticket.plaintiff ? ticket.plaintiff.status : ''"
       class="communication-ticket-item-container__avatar"
-      size="md"
-      shadow
+      size="sm"
       purple
     />
     <div class="communication-ticket-item-container__resume">
@@ -44,13 +43,36 @@
         </div>
       </el-tooltip>
     </div>
+    <div class="communication-ticket-item-container__gray" />
+    <span
+      v-if="isAccepted"
+      class="communication-ticket-item-container__minuta"
+    >
+      Minuta
+    </span>
+    <el-steps
+      v-if="isAccepted"
+      :active="documentStep"
+      finish-status="success"
+      class="communication-ticket-item-container__minuta-steps"
+      style="width: 100px"
+    >
+      <el-step />
+      <el-step />
+      <el-step />
+    </el-steps>
     <span class="communication-ticket-item-container__time">
       {{ getLastInteraction(lastInboundInteraction.dateTime) }}
     </span>
+    <div
+      :class="`communication-ticket-item-plaintiff-status-${ticket.plaintiff.status}`"
+    />
   </li>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import { getDocumentStep } from '@/utils'
 import sharedMethods from './patials/sharedTicketdMethods'
 
 export default {
@@ -65,6 +87,18 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      activeTab: 'getTicketsActiveTab'
+    }),
+    documentStep() {
+      return this.getDocumentStep(this.ticket.hasDraft, this.ticket.draftStatus)
+    },
+    isOnline() {
+      return this.ticket.plaintiff.status === 'ONLINE'
+    },
+    isAccepted() {
+      return this.activeTab === 'accepted'
+    },
     isActive() {
       return Number(this.$route.params.id) === Number(this.ticket?.disputeId)
     },
@@ -86,7 +120,6 @@ export default {
         }
       } else {
         return {
-          // icon: this.$t(`ticket-status.${disputeStatus}.icon`),
           message: 'Disputa ' + this.$t(`ticket-status.${disputeStatus}`),
           dateTime: expirationDate || '--/--/--'
         }
@@ -96,6 +129,9 @@ export default {
       const { plaintiff } = this.ticket
       return plaintiff ? plaintiff.name : 'Sem parte'
     }
+  },
+  methods: {
+    getDocumentStep: (hasDocument, signStatus) => getDocumentStep(hasDocument, signStatus)
   }
 }
 </script>
@@ -120,19 +156,6 @@ export default {
   &--active {
     background-color: $--color-primary-light-9;
     border-left: 6px solid $--color-primary;
-    // &:after {
-    //   content: '';
-    //   position: absolute;
-    //   display: flex;
-    //   transform: translateY(-50%);
-    //   top: 50%;
-    //   right: 0px;
-    //   width: 0;
-    //   height: 0;
-    //   border-top: 49px solid transparent;
-    //   border-bottom: 49px solid transparent;
-    //   border-right: 8px solid $--color-white;
-    // }
   }
 
   .communication-ticket-item-container__avatar {
@@ -164,6 +187,7 @@ export default {
       margin-bottom: 6px;
       max-width: 223px;
       &--bold { font-weight: 600; }
+      font-size: 13px;
 
       .communication-ticket-item-container__message-content {
         display: inline-block;
@@ -173,8 +197,8 @@ export default {
       }
 
       .communication-ticket-item-container__message-icon {
-        width: 16px;
-        height: 16px;
+        width: 14px;
+        height: 14px;
         margin-right: 6px;
         vertical-align: middle;
       }
@@ -183,9 +207,50 @@ export default {
 
   .communication-ticket-item-container__time {
     position: absolute;
-    bottom: 9px;
+    bottom: 3px;
     right: 18px;
-    font-size: 12px;
+    font-size: 10px;
+  }
+
+  .communication-ticket-item-container__minuta {
+    position: absolute;
+    bottom: 3px;
+    left: 78px;
+    font-size: 10px;
+  }
+
+  .communication-ticket-item-container__gray {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background-color: #EBEBF2;
+    width: 100%;
+    height: 20px;
+    z-index: -1;
+  }
+
+  .communication-ticket-item-plaintiff-status-ONLINE {
+    position: absolute;
+    bottom: 0;
+    margin-bottom: 24px;
+    margin-left: 28px;
+    background-color: red;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    z-index: 1;
+  }
+
+  .communication-ticket-item-plaintiff-status-OFFLINE {
+    position: absolute;
+    bottom: 0;
+    margin-bottom: 24px;
+    margin-left: 28px;
+    background-color: red;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    z-index: 1;
   }
 }
 
@@ -212,7 +277,39 @@ export default {
 </style>
 
 <style lang="scss">
+@import '@/styles/colors.scss';
+
 .communication-ticket-item-container__message-tooltip {
   max-width: 400px;
+}
+
+.communication-ticket-item-container__minuta-steps {
+  position: absolute;
+  bottom: 7px;
+  left: 122px;
+  .el-step {
+    .is-success {
+      border-color: $--color-primary !important;
+      .is-text {
+        background-color: $--color-primary !important;;
+      }
+    }
+
+    .is-wait {
+      border-color: #C0C4CC !important;
+      color: white !important;
+    }
+
+    .is-process {
+      border-color: #C0C4CC !important;
+      color: white !important;
+    }
+    .el-step__icon{
+      width: 14px;
+      height: 14px;
+      font-size: 6px;
+      color: $--color-primary;
+    }
+  }
 }
 </style>
