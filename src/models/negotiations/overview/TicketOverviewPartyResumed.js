@@ -2,7 +2,7 @@ class Person {
   constructor({ dead, id, namesake, vexatiousAuthor, vexatiousLawyer, vexatiousParty }) {
     // TODO: Validar se { name, document, oabs } continuam sendo dados redundantes que estão no Super().
 
-    this.id = Number(id)
+    this.id = id
     this.dead = Boolean(dead)
     this.namesake = Boolean(namesake)
     this.vexatiousAuthor = Boolean(vexatiousAuthor)
@@ -32,7 +32,11 @@ export default class TicketTicketOverviewPartyResumed {
     this.polarity = polarity || ''
     this.roles = roles || []
     this.status = status || ''
-    this.person = new Person(person)
+    this.person = new Person(person || { id: 0 })
+  }
+
+  get personId() {
+    return this.person.id
   }
 
   get isClaimant() {
