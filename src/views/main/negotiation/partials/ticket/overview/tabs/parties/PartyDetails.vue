@@ -71,7 +71,7 @@
 
     <div class="party-details__infoline">
       <el-alert
-        v-if="!resumedState.isDead"
+        v-if="resumedState.isDead"
         :closable="false"
         class="party-details__infoline-dead-alert mb10"
         title="Possível óbito"
@@ -83,7 +83,7 @@
       <span class="party-details__infoline-label">Nome completo:</span>
 
       <JusVexatiousAlert
-        v-if="party.polarity === 'CLAIMANT'"
+        v-if="resumedState.isVexatious && resumedState.isClaimant"
         :document-number="party.documentNumber"
         :name="party.name"
       />
@@ -98,7 +98,7 @@
     </div>
 
     <div
-      v-if="party.polarity === 'CLAIMANT'"
+      v-if="resumedState.isClaimant"
       class="party-details__infoline"
     >
       <span class="party-details__infoline-label">Data de nascimento:</span>
@@ -123,7 +123,20 @@
     </div>
 
     <div
-      v-if="!isNegotiator || party.documentNumber"
+      v-if="resumedState.isNamesake"
+      class="party-details__infoline"
+    >
+      <el-button
+        type="warning"
+        style="width: 100%; margin: 8px 0;"
+        @click="showNamesakeDialog"
+      >
+        <span>Tratar homônimos</span>
+      </el-button>
+    </div>
+
+    <div
+      v-else-if="!isNegotiator || party.documentNumber"
       class="party-details__infoline"
     >
       <span class="party-details__infoline-label">{{ documentType }}:</span>
@@ -204,7 +217,7 @@
       <span class="party-details__infoline-label">Dados bancários:</span>
       <PartyBankAccounts
         :accounts="bankAccounts"
-        :person-id="party.personId"
+        :person-id="resumedState.personId"
         :disabled="isPreNegotiation"
       />
       <!-- class="party-details__infoline-data" -->
@@ -215,11 +228,13 @@
       :infos="mergePartyInfos"
       @update="handleMergePartyInfos"
     />
+
+    <NamesakeDialog ref="namesakeDialog" />
   </article>
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import { isSimilarStrings } from '@/utils'
 import { isValid, strip } from '@fnando/cpf'
 
@@ -234,6 +249,7 @@ export default {
     JusVexatiousAlert: () => import('@/components/dialogs/JusVexatiousAlert'),
     TextInlineEditor: () => import('@/components/inputs/TextInlineEditor'),
     DateInlieEditor: () => import('@/components/inputs/DateInlieEditor'),
+    NamesakeDialog: () => import('@/components/dialogs/NamesakeDialog'),
     InfoMergeDialog: () => import('./partial/InfoMergeDialog'),
     PartyBankAccounts: () => import('./PartyBankAccounts'),
     PartyContacts: () => import('./PartyContacts')
@@ -255,6 +271,10 @@ export default {
   }),
 
   computed: {
+    ...mapGetters({
+      ticketStatus: 'getticketOverviewStatus'
+    }),
+
     disputeId() {
       return Number(this.$route.params.id)
     },
@@ -333,16 +353,20 @@ export default {
       'deleteTicketOverviewPartyContact',
       'updateTicketOverviewPartyContact'
     ]),
+
     startEditing(key) {
       this.activeAddingData = key
     },
+
     enableEdit() {
       const { activeAddingData } = this
       if (activeAddingData) this.$refs[activeAddingData].enableEdit()
     },
+
     stopEditing() {
       this.activeAddingData = ''
     },
+
     updatePolarity(rolePolarity) {
       const params = {
         disputeId: this.disputeId,
@@ -352,6 +376,7 @@ export default {
 
       this.setTicketOverviewPartyPolarity(params)
     },
+
     updateParty(value, key) {
       const { disputeId, party } = this
       const data = party.legacyDto
@@ -359,6 +384,7 @@ export default {
 
       this.setTicketOverviewParty({ disputeId, data })
     },
+
     removeParty() {
       if (this.isLawyer) {
         this.chooseRemoveLawyerDialogVisible = true
@@ -521,6 +547,7 @@ export default {
 
       this.updateTicketOverviewPartyContact(params)
     },
+
     removeContact(contactId, contactType) {
       const { disputeId, party } = this
 
@@ -531,11 +558,13 @@ export default {
         contactType
       })
     },
+
     selectContact(value, key, type) {
       if (!this.isNegotiator) {
         this.addRecipient({ value, key, type })
       }
     },
+
     oabMask(value = '') {
       const oab = value?.replace(/[^\w*]/g, '').toUpperCase()
 
@@ -547,6 +576,7 @@ export default {
         return '###.###/AA'
       }
     },
+
     phoneMask(value = '') {
       const number = value?.replace(/[^\w*]/g, '').toUpperCase()
 
@@ -566,6 +596,27 @@ export default {
         default:
           return '####-####-####-####'
       }
+    },
+
+    showNamesakeDialog() {
+      if (['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(this.ticketStatus)) {
+        this.$confirm(`Você está solicitando o tratamento de homônimo de uma disputa que já
+        foi finalizada. Este processo irá agendar novamente as mensagens
+        para a parte quando finalizado.<br /><br />Você deseja continuar mesmo assim?`,
+        'Atenção!', {
+          confirmButtonClass: 'confirm-action-btn',
+          confirmButtonText: 'Continuar',
+          cancelButtonText: 'Cancelar',
+          dangerouslyUseHTMLString: true,
+          cancelButtonClass: 'is-plain'
+        }).then(() => this.opeNnamesakeDialog())
+      } else {
+        this.opeNnamesakeDialog()
+      }
+    },
+
+    opeNnamesakeDialog() {
+      this.$refs.namesakeDialog.show(this.resumedState.name, this.resumedState.personId)
     }
   }
 }
