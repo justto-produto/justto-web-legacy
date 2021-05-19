@@ -331,14 +331,14 @@ export default {
         value: 'Sistema Justto'
       }]
     },
-    // Adicionar status CANCELED
     statuses() {
       switch (this.activeTab) {
         case 'finished':
           return [
             'EXPIRED',
             'SETTLED',
-            'UNSETTLED'
+            'UNSETTLED',
+            'CANCELED'
           ]
         case 'engagement':
           return [
@@ -359,7 +359,8 @@ export default {
             'EXPIRED',
             'SETTLED',
             'UNSETTLED',
-            'REFUSED'
+            'REFUSED',
+            'CANCELED'
           ]
       }
     }

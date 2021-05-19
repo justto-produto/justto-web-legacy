@@ -183,7 +183,8 @@
       "EXPIRED": "expirado",
       "FAVORITE": "Aguardar análise da empresa",
       "DISFAVOR": "Desmarcar aguardar análise da empresa",
-      "PRE_NEGOTIATION": "pre-negociação"
+      "PRE_NEGOTIATION": "pre-negociação",
+      "CANCELED": "cancelado"
     }
   },
   "profile": {
