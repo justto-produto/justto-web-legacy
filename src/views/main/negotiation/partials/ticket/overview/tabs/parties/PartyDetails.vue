@@ -47,6 +47,7 @@
         </el-button>
       </span>
     </el-dialog>
+
     <div
       v-if="!isNegotiator && !isPreNegotiation"
       class="party-details__infoline party-details__infoline--center"
@@ -69,12 +70,24 @@
     </div>
 
     <div class="party-details__infoline">
+      <el-alert
+        v-if="!resumedState.isDead"
+        :closable="false"
+        class="party-details__infoline-dead-alert mb10"
+        title="Possível óbito"
+        type="error"
+      >
+        Algumas de nossas bases de informações constam que a parte possivelmente encontra-se em óbito.
+      </el-alert>
+
       <span class="party-details__infoline-label">Nome completo:</span>
+
       <JusVexatiousAlert
         v-if="party.polarity === 'CLAIMANT'"
         :document-number="party.documentNumber"
         :name="party.name"
       />
+
       <TextInlineEditor
         v-model="party.name"
         :is-editable="!isNegotiator && !isPreNegotiation"
@@ -208,8 +221,10 @@
 <script>
 import { mapActions } from 'vuex'
 import { isSimilarStrings } from '@/utils'
-import preNegotiation from '@/utils/mixins/ticketPreNegotiation'
 import { isValid, strip } from '@fnando/cpf'
+
+import preNegotiation from '@/utils/mixins/ticketPreNegotiation'
+import TicketTicketOverviewPartyResumed from '@/models/negotiations/overview/TicketOverviewPartyResumed'
 
 export default {
   name: 'PartyDetails',
@@ -257,7 +272,7 @@ export default {
     },
 
     documentType() {
-      return this.party.documentNumber?.length <= 14 ? 'CPF' : 'CNPJ'
+      return this.resumedState.documentType
     },
 
     roleOptions() {
@@ -300,6 +315,10 @@ export default {
 
     partName() {
       return this.party.name
+    },
+
+    resumedState() {
+      return new TicketTicketOverviewPartyResumed(this.party)
     }
   },
 
