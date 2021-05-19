@@ -758,7 +758,7 @@ export default {
                 type: 'success'
               })
               this.dropLawsuitDialogVisible = false
-              this.$jusSegment('Cancelamento de disputa', { disputeId })
+              this.$jusSegment('Cancelamento de disputa pelo /negotiation', { disputeId })
             })
             .catch(error => this.$jusNotification({ error }))
         })

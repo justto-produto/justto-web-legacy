@@ -1002,26 +1002,11 @@ export default {
                 type: 'success'
               })
               this.dropLawsuitDialogVisible = false
-              this.$jusSegment('Cancelamento de disputa', { disputeId })
+              this.$jusSegment('Cancelamento de disputa pelo /management', { disputeId })
             })
             .catch(error => this.$jusNotification({ error }))
         })
         .finally(() => { this.modalLoading = false })
-      // // TODO: chamar dialog aqui
-      // this.$jusSegment('Baixa definitiva na disputa', { disputeId: this.dispute.id })
-      // this.$confirm('Esta ação é irreversível, tem certeza que deseja continuar?', 'Baixa definitiva', {
-      //   confirmButtonText: 'Continuar',
-      //   cancelButtonText: 'Cancelar',
-      //   cancelButtonClass: 'is-plain',
-      //   showClose: false
-      // }).then(() => {
-      //   this.removeDispute({
-      //     disputeId: this.dispute.id, reason: 'DISPUTE_DROPPED'
-      //   }).then(() => {
-      //     this.setDisputesTab('0')
-      //     if (!this.tableActions) this.$router.push('/management')
-      //   })
-      // })
     },
     goToNegotiation() {
       this.startNegotiation(this.dispute.id)
