@@ -6,9 +6,9 @@
   >
     <template slot="title">
       <i
-        v-if="party.polarity === 'CLAIMANT' && !isActiveCollapseItem"
+        v-if="state.hasAlert && !isActiveCollapseItem"
         class="el-icon-warning-outline el-icon-pulse vexatious-alert"
-        :style="{ color: alertColor }"
+        :style="{ color: state.alertColor }"
       />
       <JusIcon
         class="party-resumed__header-avatar"
@@ -46,11 +46,15 @@
 </template>
 
 <script>
+import TicketTicketOverviewPartyResumed from '@/models/negotiations/overview/TicketOverviewPartyResumed'
+
 export default {
   name: 'PartyResumed',
+
   components: {
     PartyDetails: () => import('./PartyDetails')
   },
+
   props: {
     party: {
       type: Object,
@@ -65,16 +69,16 @@ export default {
       default: false
     }
   },
+
   computed: {
     isActiveCollapseItem() {
       return this.party.disputeRoleId === this.activeCollapseItem
     },
+
     documentType() {
       return this.party.documentNumber?.length <= 14 ? 'CPF' : 'CNPJ'
     },
-    alertColor() {
-      return 'red'
-    },
+
     partyType() {
       const { roles, polarity } = this.party
 
@@ -90,6 +94,7 @@ export default {
         return ''
       }
     },
+
     translatedPartyType() {
       let role
 
@@ -113,6 +118,10 @@ export default {
       }
 
       return this.$t(`roles.${role}.${this.party.polarity}`)
+    },
+
+    state() {
+      return new TicketTicketOverviewPartyResumed(this.party)
     }
   }
 }
