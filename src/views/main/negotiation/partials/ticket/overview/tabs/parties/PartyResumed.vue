@@ -6,7 +6,7 @@
   >
     <template slot="title">
       <i
-        v-if="state.hasAlert && !isActiveCollapseItem"
+        v-if="state.hasAlert"
         class="el-icon-warning-outline el-icon-pulse vexatious-alert"
         :style="{ color: state.alertColor }"
       />
@@ -121,7 +121,7 @@ export default {
     },
 
     state() {
-      return new TicketTicketOverviewPartyResumed(this.party)
+      return this.party ? new TicketTicketOverviewPartyResumed(this.party) : {}
     }
   }
 }
