@@ -10,15 +10,21 @@
         class="party-contacts__infoline-icon el-icon-s-promotion"
       />
       <div
-        v-else-if="contact.isMain === false"
+        v-else-if="!contact.isMain"
       >
         <el-tooltip
           effect="dark"
-          placement="left"
+          placement="bottom"
           :content="LGPDMessage"
         >
           <jusIcon
-            icon="alert"
+            v-if="isPhoneNumber"
+            icon="not-main-phone-active"
+            class="party-contacts__infoline-icon"
+          />
+          <jusIcon
+            v-else
+            icon="not-main-email-active"
             class="party-contacts__infoline-icon"
           />
         </el-tooltip>
@@ -31,13 +37,13 @@
         :is-deletable="!disabled"
         :class="{
           'party-contacts__infoline-data--selected': mappedRecipients.includes(contact[model]),
-          'party-contacts__infoline-data--disabled': contact.isValid === false,
-          'party-contacts__infoline-data--secondary': contact.isMain === false
+          'party-contacts__infoline-data--disabled': !contact.isValid,
+          'party-contacts__infoline-data--secondary': !contact.isMain
         }"
         class="party-contacts__infoline-data"
         @change="updateContact(contact.id, $event)"
         @delete="removeContact(contact.id)"
-        @click="selectContact(contact[model], contact.isValid)"
+        @click="selectContact(contact[model], contact.isValid, contact.isMain)"
       />
     </span>
     <div
@@ -65,6 +71,44 @@
         {{ expandLinkText }}
       </a>
     </div>
+    <el-dialog
+      :close-on-click-modal="false"
+      :show-close="false"
+      :close-on-press-escape="false"
+      :visible.sync="LGPDDialogVisible"
+      append-to-body
+      width="604px"
+    >
+      <div class="party-contacts__lgpd-header">
+        <jusIcon
+          class="party-contacts__lgpd-header__icon"
+          icon="alert-active"
+        />
+        <div class="party-contacts__lgpd-header__label">ATENÇÃO</div>
+      </div>
+      <div class="party-contacts__lgpd-body">
+        <span class="party-contacts__lgpd-body-item-alert">Alerta sobre Lei Geral de Proteção de Dados</span>
+        <span class="party-contacts__lgpd-body-item">{{ partyName }} optou por não ser contatado nesse e-mail</span>
+        <span class="party-contacts__lgpd-body-item">Ao realizar essa ação voce está violando sua desição e as regras da LGPD</span>
+        <strong class="party-contacts__lgpd-body-item">Quer mesmo continuar?</strong>
+      </div>
+      <span class="party-contacts__lgpd-footer">
+        <el-button
+          :disabled="modalLoading"
+          plain
+          @click="LGPDDialogVisible = false"
+        >
+          Cancelar
+        </el-button>
+        <el-button
+          :loading="modalLoading"
+          type="primary"
+          @click="emitClick(currentContactValue, currentValid)"
+        >
+          Continuar
+        </el-button>
+      </span>
+    </el-dialog>
   </article>
 </template>
 
@@ -100,18 +144,34 @@ export default {
     mask: {
       type: [Function, String],
       default: () => 'X'.repeat(255)
+    },
+
+    partyName: {
+      type: String,
+      required: false,
+      default: () => ''
     }
   },
   data: () => ({
     isAllContactsVisible: false,
     isAddingNewContact: false,
     newContactModel: '',
-    LGPDMessage: 'Este email/telefone está desabilitado para receber mensagens automáticas'
+    modalLoading: false,
+    LGPDDialogVisible: false,
+    currentContactValue: '',
+    currentValid: false
   }),
   computed: {
     ...mapGetters({
       recipients: 'getEditorRecipients'
     }),
+    isPhoneNumber() {
+      return this.model === 'number'
+    },
+    LGPDMessage() {
+      const type = this.isPhoneNumber ? 'telefone' : 'e-mail'
+      return `Este ${type} está desabilitado para receber mensagens automáticas`
+    },
     contactsFiltered() {
       return this.contacts.filter(({ archived }) => !archived)
     },
@@ -154,10 +214,20 @@ export default {
     addContact(contactValue) {
       this.$emit('post', contactValue)
     },
-    selectContact(contactValue, isValid) {
+    selectContact(contactValue, isValid, isMain) {
+      if (!isMain && !this.mappedRecipients.includes(contactValue)) {
+        this.LGPDDialogVisible = true
+        this.currentContactValue = contactValue
+        this.currentValid = isValid
+      } else {
+        this.emitClick(contactValue, isValid)
+      }
+    },
+    emitClick(contactValue, isValid) {
       if (isValid) {
         this.$emit('click', contactValue, 'address')
       }
+      this.LGPDDialogVisible = false
     }
   }
 }
@@ -188,11 +258,48 @@ export default {
       &--secondary { color: $--color-text-secondary; }
       &--disabled { color: $--color-text-secondary; }
     }
+
   }
 
   .party-contacts__infoline-link {
     border-bottom: 2px solid transparent;
   }
+}
+.party-contacts__lgpd-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-bottom: 10px;
+  .party-contacts__lgpd-header__icon {
+    width: 28px;
+    height: 28px;
+    margin-right: 8px;
+  }
+  .party-contacts__lgpd-header__label {
+    color: $--color-secondary;
+    font-weight: bold;
+    font-size: 22px;
+  }
+}
+
+.party-contacts__lgpd-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .party-contacts__lgpd-body-item {
+    margin-bottom: 5px;
+  }
+  .party-contacts__lgpd-body-item-alert {
+    font-size: 18px;
+    margin-bottom: 8px;
+    font-weight: bold;
+  }
+}
+.party-contacts__lgpd-footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: 12px;
 }
 </style>
 

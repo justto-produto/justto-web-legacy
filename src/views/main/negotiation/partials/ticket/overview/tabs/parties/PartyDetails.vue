@@ -136,6 +136,7 @@
       <PartyContacts
         :contacts="phonesList"
         :disabled="isNegotiator || isPreNegotiation"
+        :party-name="party.name"
         filter="phoneNumber"
         model="number"
         :mask="phoneMask"
@@ -152,6 +153,7 @@
     >
       <span class="party-details__infoline-label">Emails:</span>
       <PartyContacts
+        :party-name="party.name"
         :contacts="emailsList"
         :disabled="isNegotiator || isPreNegotiation"
         model="address"
