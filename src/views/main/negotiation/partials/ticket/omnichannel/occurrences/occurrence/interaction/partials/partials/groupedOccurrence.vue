@@ -17,11 +17,11 @@
           +{{ occurrences.length }} ocorrência(s) similare(s) à essa:
         </strong>
         <div
-          v-for="(data, index) in occurrences"
+          v-for="({ date }, index) in occurrences"
           :key="index"
           class="grouped-occurrences__container-date"
         >
-          {{ data | moment('DD [de] MMMM [de] YYYY [às] HH:MM') }}
+          {{ date | moment('DD [de] MMMM [de] YYYY [às] HH:MM') }}
         </div>
       </div>
       <JusIcon
