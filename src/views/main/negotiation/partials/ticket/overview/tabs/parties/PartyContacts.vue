@@ -22,25 +22,8 @@
             class="party-contacts__infoline-icon"
           />
         </el-tooltip>
-        <TextInlineEditor
-          v-model="contact[model]"
-          :mask="mask"
-          :filter="filter"
-          :is-editable="!disabled"
-          :is-deletable="!disabled"
-          :class="{
-            'party-contacts__infoline-data--selected': mappedRecipients.includes(contact[model]),
-            'party-contacts__infoline-data--disabled': contact.isValid === false,
-            'party-contacts__infoline-data--secondary': contact.isMain === false
-          }"
-          class="party-contacts__infoline-data"
-          @change="updateContact(contact.id, $event)"
-          @delete="removeContact(contact.id)"
-          @click="selectContact(contact[model], contact.isValid)"
-        />
       </div>
       <TextInlineEditor
-        v-else
         v-model="contact[model]"
         :mask="mask"
         :filter="filter"
@@ -123,7 +106,7 @@ export default {
     isAllContactsVisible: false,
     isAddingNewContact: false,
     newContactModel: '',
-    LGPDMessage: 'Este email/telefone está desabilitado para receber mensagens automáticas, ao editar e habilitar o endereço, você está em desrespeito com a LGPD.'
+    LGPDMessage: 'Este email/telefone está desabilitado para receber mensagens automáticas'
   }),
   computed: {
     ...mapGetters({
