@@ -8,8 +8,7 @@
       :name="plaintiffName"
       :status="ticket.plaintiff ? ticket.plaintiff.status : ''"
       class="communication-ticket-item-container__avatar"
-      size="md"
-      shadow
+      size="sm"
       purple
     />
     <div class="communication-ticket-item-container__resume">
@@ -40,6 +39,7 @@
         </el-tooltip>
       </div>
     </div>
+    <div class="communication-ticket-item-container__gray" />
     <!-- <span class="communication-ticket-item-container__time">
       {{ getLastInteraction(ticket.lastReceivedMessage.dateTime.dateTime) }}
     </span> -->
@@ -125,7 +125,7 @@ export default {
 
   .communication-ticket-item-container__avatar {
     align-self: center;
-    width: 49px;
+    // width: 49px;
   }
 
   .communication-ticket-item-container__resume {
@@ -148,6 +148,7 @@ export default {
     }
 
     .communication-ticket-item-container__message {
+      font-size: 13px;
       margin-bottom: 6px;
       max-width: 223px;
       display: inline-block;
@@ -155,6 +156,16 @@ export default {
       text-overflow: ellipsis;
       overflow-x: hidden;
     }
+
+  }
+  .communication-ticket-item-container__gray {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background-color: #EBEBF2;
+    width: 100%;
+    height: 20px;
+    z-index: 1;
   }
 
   .communication-ticket-item-container__time {

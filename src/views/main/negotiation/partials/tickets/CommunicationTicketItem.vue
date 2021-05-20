@@ -64,9 +64,6 @@
     <span class="communication-ticket-item-container__time">
       {{ getLastInteraction(lastInboundInteraction.dateTime) }}
     </span>
-    <div
-      :class="`communication-ticket-item-plaintiff-status-${ticket.plaintiff.status}`"
-    />
   </li>
 </template>
 
@@ -217,6 +214,8 @@ export default {
     bottom: 3px;
     left: 78px;
     font-size: 10px;
+    color: $--color-primary !important;
+    font-weight: 500;
   }
 
   .communication-ticket-item-container__gray {
