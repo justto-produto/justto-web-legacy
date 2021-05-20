@@ -50,7 +50,7 @@ export default {
   name: 'JusDisputeCode',
   components: {
     JusTjIdentifier,
-    TicketTimeline: () => import('./TicketTimeline')
+    TicketTimeline: () => import('@/components/JusTimeline/JusTimeline')
   },
   props: {
     code: {
@@ -121,6 +121,7 @@ export default {
       this.getDisputeTimeline(current)
     }
   },
+
   beforeMount() {
     if (this.getBeforMount) {
       this.getDisputeTimeline(this.code)
