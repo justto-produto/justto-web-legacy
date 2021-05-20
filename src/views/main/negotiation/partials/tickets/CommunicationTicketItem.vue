@@ -90,9 +90,6 @@ export default {
     documentStep() {
       return this.getDocumentStep(this.ticket.hasDraft, this.ticket.draftStatus)
     },
-    isOnline() {
-      return this.ticket.plaintiff.status === 'ONLINE'
-    },
     isAccepted() {
       return this.activeTab === 'accepted'
     },
@@ -226,30 +223,6 @@ export default {
     width: 100%;
     height: 20px;
     z-index: -1;
-  }
-
-  .communication-ticket-item-plaintiff-status-ONLINE {
-    position: absolute;
-    bottom: 0;
-    margin-bottom: 24px;
-    margin-left: 28px;
-    background-color: red;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    z-index: 1;
-  }
-
-  .communication-ticket-item-plaintiff-status-OFFLINE {
-    position: absolute;
-    bottom: 0;
-    margin-bottom: 24px;
-    margin-left: 28px;
-    background-color: red;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    z-index: 1;
   }
 }
 

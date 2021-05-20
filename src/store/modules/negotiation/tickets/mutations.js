@@ -49,7 +49,6 @@ const ticketsMutations = {
     }
   },
   updateTicketItem: ({ tickets }, dispute) => {
-    debugger
     const ticketIndex = getTicketIndex(tickets.content, dispute.id)
     const newTicket = [
       'PRE_NEGOTIATION',

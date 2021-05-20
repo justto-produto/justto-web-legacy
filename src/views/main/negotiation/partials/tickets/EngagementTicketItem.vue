@@ -40,9 +40,6 @@
       </div>
     </div>
     <div class="communication-ticket-item-container__gray" />
-    <!-- <span class="communication-ticket-item-container__time">
-      {{ getLastInteraction(ticket.lastReceivedMessage.dateTime.dateTime) }}
-    </span> -->
   </li>
 </template>
 
@@ -107,25 +104,10 @@ export default {
   &--active {
     background-color: $--color-primary-light-9;
     border-left: 6px solid $--color-primary;
-    // &:after {
-    //   content: '';
-    //   position: absolute;
-    //   display: block;
-    //   transform: translateY(-50%);
-    //   top: 50%;
-    //   right: -10px;
-    //   width: 0;
-    //   height: 0;
-    //   z-index: 99;
-    //   border-top: 18px solid transparent;
-    //   border-bottom: 18px solid transparent;
-    //   border-left: 12px solid green;
-    // }
   }
 
   .communication-ticket-item-container__avatar {
     align-self: center;
-    // width: 49px;
   }
 
   .communication-ticket-item-container__resume {
