@@ -9,22 +9,41 @@
         v-if="mappedRecipients.includes(contact[model])"
         class="party-contacts__infoline-icon el-icon-s-promotion"
       />
-      <TextInlineEditor
-        v-model="contact[model]"
-        :mask="mask"
-        :filter="filter"
-        :is-editable="!disabled"
-        :is-deletable="!disabled"
-        :class="{
-          'party-contacts__infoline-data--selected': mappedRecipients.includes(contact[model]),
-          'party-contacts__infoline-data--disabled': contact.isValid === false,
-          'party-contacts__infoline-data--secondary': contact.isMain === false
-        }"
-        class="party-contacts__infoline-data"
-        @change="updateContact(contact.id, $event)"
-        @delete="removeContact(contact.id)"
-        @click="selectContact(contact[model], contact.isValid)"
-      />
+      <div class="party-contacts__popover">
+        <el-popover
+          v-if="isOabContacts"
+          :ref="`popover-${contact.number}-${contact.state}`"
+          popper-class="party-contacts__info-popover-lawyer"
+          :placement="'top-end'"
+          trigger="click"
+          @hide="deactivePopover(`popover-${contact.number}-${contact.state}`)"
+        >
+          <lawyer-detail
+            @update="emitUpdate"
+          />
+          <i
+            slot="reference"
+            class="el-icon-info icon-info-popover"
+            @click="searchThisLawyer({ name: party.name, oabs: [contact] }, `popover-${contact.number}-${contact.state}`)"
+          />
+        </el-popover>
+        <TextInlineEditor
+          v-model="contact[model]"
+          :mask="mask"
+          :filter="filter"
+          :is-editable="!disabled"
+          :is-deletable="!disabled"
+          :class="{
+            'party-contacts__infoline-data--selected': mappedRecipients.includes(contact[model]),
+            'party-contacts__infoline-data--disabled': contact.isValid === false,
+            'party-contacts__infoline-data--secondary': contact.isMain === false
+          }"
+          class="party-contacts__infoline-data"
+          @change="updateContact(contact.id, $event)"
+          @delete="removeContact(contact.id)"
+          @click="selectContact(contact[model], contact.isValid)"
+        />
+      </div>
     </span>
     <div
       v-if="(isAllContactsVisible || contactsLength <= 3) && !isAddingNewContact && !disabled"
@@ -55,14 +74,21 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'PartyContacts',
   components: {
-    TextInlineEditor: () => import('@/components/inputs/TextInlineEditor')
+    TextInlineEditor: () => import('@/components/inputs/TextInlineEditor'),
+    LawyerDetail: () => import('@/components/others/LawyerDetail')
   },
   props: {
+    party: {
+      type: Object,
+      required: false,
+      default: () => ({})
+    },
+
     contacts: {
       type: Array,
       default: () => ([])
@@ -114,9 +140,16 @@ export default {
       const { contactsFiltered, isAllContactsVisible, contactsLength } = this
       const arrayCut = isAllContactsVisible ? contactsLength : 3
       return contactsFiltered?.slice(0, arrayCut)
+    },
+    isOabContacts() {
+      return Object.values(this.party).length > 0
     }
   },
   methods: {
+    ...mapActions([
+      'searchLawyers',
+      'hideSearchLawyerLoading'
+    ]),
     toggleContactsVisible() {
       this.isAllContactsVisible = !this.isAllContactsVisible
     },
@@ -143,6 +176,21 @@ export default {
       if (isValid) {
         this.$emit('click', contactValue, 'address')
       }
+    },
+
+    searchThisLawyer(lawyer, ref) {
+      if (!this.$refs[ref][0].showPopper) {
+        this.$refs[ref][0].$el.classList.add('active-popover')
+        this.searchLawyers(lawyer).finally(this.hideSearchLawyerLoading)
+      }
+    },
+
+    deactivePopover(ref) {
+      this.$refs[ref][0].$el.classList.remove('active-popover')
+    },
+
+    emitUpdate(payload) {
+      this.$emit('update', payload)
     }
   }
 }
@@ -160,6 +208,14 @@ export default {
   }
   .party-contacts__infoline-container {
     position: relative;
+    .party-contacts__popover {
+      i:hover {
+        color: $--color-primary;
+      }
+    }
+    .icon-info-popover {
+      position: absolute;
+    }
 
     .party-contacts__infoline-icon {
       position: absolute;
@@ -196,5 +252,10 @@ export default {
       }
     }
   }
+}
+.party-contacts__info-popover-lawyer {
+  width: 500px;
+  min-height: 20vh;
+  max-height: 50vh;
 }
 </style>
