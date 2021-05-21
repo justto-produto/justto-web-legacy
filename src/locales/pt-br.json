@@ -183,7 +183,8 @@
       "EXPIRED": "expirado",
       "FAVORITE": "Aguardar análise da empresa",
       "DISFAVOR": "Desmarcar aguardar análise da empresa",
-      "PRE_NEGOTIATION": "pre-negociação"
+      "PRE_NEGOTIATION": "pre-negociação",
+      "CANCELED": "cancelada"
     },
     "interaction": {
       "message": {
@@ -393,6 +394,10 @@
     "NEGOTIATOR_ACCEPTED": {
       "icon": "justto",
       "message": "Informou dados bancários"
+    },
+    "CANCELED": {
+      "icon": "rejected-red",
+      "message": "Negociação cancelada."
     }
   },
   "roles": {
@@ -462,7 +467,8 @@
     "SETTLED": "ganha",
     "UNSETTLED": "perdida",
     "PRE_NEGOTIATION": "pre-negociação",
-    "PAUSED": "(pausada) | "
+    "PAUSED": "(pausada) | ",
+    "CANCELED": "cancelada"
   },
   "tickets-tabs": {
     "pre-negotiation": "pré negociação",
