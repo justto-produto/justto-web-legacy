@@ -88,8 +88,12 @@
       </div>
       <div class="party-contacts__lgpd-body">
         <span class="party-contacts__lgpd-body-item-alert">Alerta sobre Lei Geral de Proteção de Dados</span>
-        <span class="party-contacts__lgpd-body-item">{{ partyName }} optou por não ser contatado nesse e-mail</span>
-        <span class="party-contacts__lgpd-body-item">Ao realizar essa ação voce está violando sua desição e as regras da LGPD</span>
+        <span class="party-contacts__lgpd-body-item">
+          <span class="party-contacts__lgpd-body-item-person-name">
+            {{ partyName.toLowerCase() }}
+          </span>
+          optou por não ser contatado nesse e-mail!</span>
+        <span class="party-contacts__lgpd-body-item">Ao realizar essa ação voce está violando as regras da LGPD.</span>
         <strong class="party-contacts__lgpd-body-item">Quer mesmo continuar?</strong>
       </div>
       <span class="party-contacts__lgpd-footer">
@@ -288,6 +292,10 @@ export default {
   align-items: center;
   .party-contacts__lgpd-body-item {
     margin-bottom: 5px;
+
+    .party-contacts__lgpd-body-item-person-name {
+      text-transform: capitalize;
+    }
   }
   .party-contacts__lgpd-body-item-alert {
     font-size: 18px;

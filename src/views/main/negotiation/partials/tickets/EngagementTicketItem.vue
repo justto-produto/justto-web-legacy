@@ -2,7 +2,7 @@
   <li
     :class="{ 'communication-ticket-item-container--active': isActive }"
     class="communication-ticket-item-container"
-    @click="hangleSelectTicket"
+    @click="handleSelectTicket"
   >
     <JusAvatarUser
       :name="plaintiffName"
