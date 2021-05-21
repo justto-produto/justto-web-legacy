@@ -83,7 +83,7 @@
       <span class="party-details__infoline-label">Nome completo:</span>
       <div class="party-details__icon-info-lawyer">
         <el-popover
-          v-if="isLawyer"
+          v-if="isLawyer && !resumedState.isVexatious"
           :ref="`popover-${party.name}`"
           popper-class="party-details__info-popover-lawyer"
           :placement="'top-end'"
