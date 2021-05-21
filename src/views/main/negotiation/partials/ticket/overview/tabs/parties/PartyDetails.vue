@@ -673,7 +673,7 @@ export default {
         if (!alreadyExists) {
           this.addOabToDisputeRole({
             disputeId: id,
-            disputeRoleId: disputeRole.id,
+            disputeRoleId: disputeRole.id || disputeRole.disputeRoleId,
             number,
             state
           }).then(() => {
@@ -696,11 +696,13 @@ export default {
         }
       } else if (field === 'phone') {
         const lawyerNumber = `55 ${value}`.split(' ').join('')
+
         const alreadyExistsNumber = disputeRole.phonesDto.filter(({ number }) => number.includes(lawyerNumber)).length > 0
+
         if (!alreadyExistsNumber) {
           this.addPhoneToDisputeRole({
             disputeId: id,
-            disputeRoleId: disputeRole.id,
+            disputeRoleId: disputeRole.id || disputeRole.disputeRoleId,
             value
           }).then(() => {
             this.$jusNotification({
