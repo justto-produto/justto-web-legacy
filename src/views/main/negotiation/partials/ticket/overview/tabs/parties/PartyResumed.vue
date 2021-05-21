@@ -5,6 +5,11 @@
     :class="{'hide-arrows': hideArrows}"
   >
     <template slot="title">
+      <i
+        v-if="state.hasAlert"
+        class="el-icon-warning el-icon-pulse vexatious-alert"
+        :style="{ color: state.alertColor }"
+      />
       <JusIcon
         class="party-resumed__header-avatar"
         :icon="partyType"
@@ -41,11 +46,15 @@
 </template>
 
 <script>
+import TicketTicketOverviewPartyResumed from '@/models/negotiations/overview/TicketOverviewPartyResumed'
+
 export default {
   name: 'PartyResumed',
+
   components: {
     PartyDetails: () => import('./PartyDetails')
   },
+
   props: {
     party: {
       type: Object,
@@ -60,13 +69,16 @@ export default {
       default: false
     }
   },
+
   computed: {
     isActiveCollapseItem() {
       return this.party.disputeRoleId === this.activeCollapseItem
     },
+
     documentType() {
       return this.party.documentNumber?.length <= 14 ? 'CPF' : 'CNPJ'
     },
+
     partyType() {
       const { roles, polarity } = this.party
 
@@ -82,6 +94,7 @@ export default {
         return ''
       }
     },
+
     translatedPartyType() {
       let role
 
@@ -105,6 +118,10 @@ export default {
       }
 
       return this.$t(`roles.${role}.${this.party.polarity}`)
+    },
+
+    state() {
+      return this.party ? new TicketTicketOverviewPartyResumed(this.party) : {}
     }
   }
 }
@@ -149,6 +166,16 @@ export default {
     height: auto;
     line-height: normal;
     min-height: 60px;
+    position: relative;
+
+    .vexatious-alert {
+      color: rgb(255, 201, 0);
+      font-size: 30px;
+
+      position: absolute;
+      right: 0;
+      margin-right: 16px;
+    }
   }
 }
 .hide-arrows {

@@ -3,6 +3,8 @@ import { axiosDispatch, validateCurrentId } from '@/utils/'
 const disputeApi = '/api/disputes/v2'
 const disputeApiLegacy = '/api/disputes'
 const officeApi = '/api/office'
+const spiderApi = '/api/spider'
+const fusionRunnerApi = '/api/fusion-runner'
 
 const overviewActions = {
   getTicketOverview({ commit, dispatch }, disputeId) {
@@ -283,6 +285,18 @@ const overviewActions = {
       mutation: 'toggleFavoriteTicket',
       payload: { disputeId, favorite: false }
     }))
+  },
+
+  searchNamesakeTicketOptions({ _ }, name) {
+    return axiosDispatch({
+      url: `${spiderApi}/search/name/${name}`
+    })
+  },
+  setNamesakeTicketOptions({ _ }, { personId, document, disputeId }) {
+    return axiosDispatch({
+      url: `${fusionRunnerApi}/set-document/person/${personId}/${document}/${disputeId}`,
+      method: 'PATCH'
+    })
   }
 }
 
