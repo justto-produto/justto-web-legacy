@@ -28,19 +28,46 @@
         />
 
         <div class="summary-container__item-occurrence-item-status">
-          <span>
+          <span class="summary-container__item-occurrence-item-status-message">
             <i class="el-icon-edit" />
-            <span>
-              Mensagem criada em {{ occurrenceItem.summaryOccurrence.createAt | moment('DD/MM/YY [às] hh:mm') }}
+            <span class="summary-container__item-occurrence-item-status-message-body">
+              <span class="summary-container__item-occurrence-item-status-message-body-normal">
+                Mensagem criada em
+              </span>
+              <span class="summary-container__item-occurrence-item-status-message-body-date">
+                {{ occurrenceItem.summaryOccurrence.createAt.dateTime | moment('DD/MM [às] HH:mm') }}
+              </span>
             </span>
           </span>
+
           <span
             v-for="(messageStatus, statusIndex) in (occurrenceItem.summaryOccurrence.messagesStatus || [])"
             :key="`message-status-${statusIndex}`"
+            class="summary-container__item-occurrence-item-status-message"
           >
             <i :class="messageStatus.status | getIconByStatus" />
-            <span>
-              Mensagem STATUS AQUI em {{ occurrenceItem.summaryOccurrence.createAt | moment('DD/MM/YY [às] hh:mm') }}
+            <span class="summary-container__item-occurrence-item-status-message-body">
+              <!-- <span class="summary-container__item-occurrence-item-status-message-body-normal">
+                Mensagem
+              </span> -->
+              <span class="summary-container__item-occurrence-item-status-message-body-status">
+                {{ $t(`occurrence.interaction.message.status.${messageStatus.status}.label`) | capitalize }}
+              </span>
+              <span class="summary-container__item-occurrence-item-status-message-body-normal">
+                em
+              </span>
+              <span class="summary-container__item-occurrence-item-status-message-body-date">
+                {{ messageStatus.date | moment('DD/MM') }}
+              </span>
+              <span class="summary-container__item-occurrence-item-status-message-body-normal">
+                {{ $t(`occurrence.interaction.message.status.${messageStatus.status}.preposition`) }}
+              </span>
+              <span class="summary-container__item-occurrence-item-status-message-body-adress">
+                {{ messageStatus.receiver }}
+              </span>
+              <span class="summary-container__item-occurrence-item-status-message-body-date">
+                {{ messageStatus.date | moment('[às] HH:mm') }}
+              </span>
             </span>
           </span>
 
@@ -224,16 +251,30 @@ export default {
 
         font-size: 12px;
 
-        .el-icon-edit {
-          color: #BBBBBB;
-        }
+        .summary-container__item-occurrence-item-status-message {
+          .el-icon-edit {
+            color: #BBBBBB;
+          }
 
-        .el-icon-check {
-          color: #14CC30;
-        }
+          .el-icon-check {
+            color: #14CC30;
+          }
 
-        .el-icon-timer {
-          color: #FF9300;
+          .el-icon-timer {
+            color: #FF9300;
+          }
+
+          .summary-container__item-occurrence-item-status-message-body {
+            .summary-container__item-occurrence-item-status-message-body-normal,
+            .summary-container__item-occurrence-item-status-message-body-status,
+            .summary-container__item-occurrence-item-status-message-body-date {
+              color: $--color-text-secondary;
+            }
+
+            .summary-container__item-occurrence-item-status-message-body-adress {
+              color: $--color-text-primary;
+            }
+          }
         }
       }
 
