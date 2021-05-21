@@ -128,6 +128,7 @@ export default {
 
     messageType() {
       const mapCommunicationTypes = {
+        SMS: 'sms',
         EMAIL: 'email',
         WHATSAPP: 'whatsapp',
         NEGOTIATOR_MESSAGE: 'negotiator-message-2'

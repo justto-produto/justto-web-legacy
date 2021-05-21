@@ -2,7 +2,7 @@ import { getLastInteraction } from '@/utils'
 
 export default {
   methods: {
-    hangleSelectTicket() {
+    handleSelectTicket() {
       if (!this.isActive) {
         const id = this.ticket.disputeId
 

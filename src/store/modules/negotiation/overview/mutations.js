@@ -14,7 +14,7 @@ const findContactIndex = (contactTypeList, contactId) => {
 }
 
 const overviewMutations = {
-  setTicketOverview: (state, params) => Vue.set(state, 'ticketOverview', params),
+  setTicketOverview: (state, params) => Vue.set(state, 'ticketOverview', new TicketOverview(params)),
 
   updateTicketOverview: ({ ticketOverview }, { payload }) => {
     for (const key of Object.keys(payload)) Vue.set(ticketOverview, key, payload[key])

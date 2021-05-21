@@ -2,14 +2,13 @@
   <li
     :class="{ 'communication-ticket-item-container--active': isActive }"
     class="communication-ticket-item-container"
-    @click="hangleSelectTicket"
+    @click="handleSelectTicket"
   >
     <JusAvatarUser
       :name="plaintiffName"
       :status="ticket.plaintiff ? ticket.plaintiff.status : ''"
       class="communication-ticket-item-container__avatar"
-      size="md"
-      shadow
+      size="sm"
       purple
     />
     <div class="communication-ticket-item-container__resume">
@@ -40,9 +39,7 @@
         </el-tooltip>
       </div>
     </div>
-    <!-- <span class="communication-ticket-item-container__time">
-      {{ getLastInteraction(ticket.lastReceivedMessage.dateTime.dateTime) }}
-    </span> -->
+    <div class="communication-ticket-item-container__gray" />
   </li>
 </template>
 
@@ -69,7 +66,7 @@ export default {
     }),
 
     isActive() {
-      return this.$route.params.id === this.ticket.disputeId
+      return Number(this.$route.params?.id || '') === Number(this.ticket?.disputeId)
     },
     plaintiffName() {
       const { plaintiff } = this.ticket
@@ -107,25 +104,10 @@ export default {
   &--active {
     background-color: $--color-primary-light-9;
     border-left: 6px solid $--color-primary;
-    // &:after {
-    //   content: '';
-    //   position: absolute;
-    //   display: block;
-    //   transform: translateY(-50%);
-    //   top: 50%;
-    //   right: -10px;
-    //   width: 0;
-    //   height: 0;
-    //   z-index: 99;
-    //   border-top: 18px solid transparent;
-    //   border-bottom: 18px solid transparent;
-    //   border-left: 12px solid green;
-    // }
   }
 
   .communication-ticket-item-container__avatar {
     align-self: center;
-    width: 49px;
   }
 
   .communication-ticket-item-container__resume {
@@ -148,6 +130,7 @@ export default {
     }
 
     .communication-ticket-item-container__message {
+      font-size: 13px;
       margin-bottom: 6px;
       max-width: 223px;
       display: inline-block;
@@ -155,6 +138,16 @@ export default {
       text-overflow: ellipsis;
       overflow-x: hidden;
     }
+
+  }
+  .communication-ticket-item-container__gray {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background-color: #EBEBF2;
+    width: 100%;
+    height: 20px;
+    z-index: 1;
   }
 
   .communication-ticket-item-container__time {

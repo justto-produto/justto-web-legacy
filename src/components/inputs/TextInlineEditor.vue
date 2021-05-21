@@ -39,7 +39,6 @@
       @keyup.native.esc="handleEsc"
       @keyup.native.enter="escaping = false;$event.target.blur()"
     />
-    <!-- @keyup.native.enter="$refs.textInput.$emit('blur', 'confirm')" -->
   </div>
 </template>
 

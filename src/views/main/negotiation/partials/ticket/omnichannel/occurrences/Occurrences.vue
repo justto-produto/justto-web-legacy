@@ -95,7 +95,8 @@ export default {
         ...this.ticket,
         id: this.id,
         disputeRoles: [],
-        hasDocument: this.ticket.hasDraft
+        hasDocument: this.ticket.hasDraft,
+        signStatus: this.ticket.draftStatus
       }
     },
     lastMessage() {
@@ -161,6 +162,9 @@ export default {
       this.resetOccurrences()
       this.resetMessageText()
       this.resetNoteText()
+      if (this.lastMessage.disputeId !== this.id) {
+        this.getOccurrences(this.id)
+      }
       this.localLoading = false
     }
   }
