@@ -47,6 +47,7 @@
         </el-button>
       </span>
     </el-dialog>
+
     <div
       v-if="!isNegotiator && !isPreNegotiation"
       class="party-details__infoline party-details__infoline--center"
@@ -69,18 +70,55 @@
     </div>
 
     <div class="party-details__infoline">
+      <el-alert
+        v-if="resumedState.isDead"
+        :closable="false"
+        class="party-details__infoline-dead-alert mb10"
+        title="Possível óbito"
+        type="error"
+      >
+        Algumas de nossas bases de informações constam que a parte possivelmente encontra-se em óbito.
+      </el-alert>
+
       <span class="party-details__infoline-label">Nome completo:</span>
-      <TextInlineEditor
-        v-model="party.name"
-        :is-editable="!isNegotiator && !isPreNegotiation"
-        filter="ownName"
-        class="party-details__infoline-data"
-        @change="updateParty($event, 'name')"
-      />
+      <div class="party-details__icon-info-lawyer">
+        <el-popover
+          v-if="isLawyer && !resumedState.isVexatious"
+          :ref="`popover-${party.name}`"
+          popper-class="party-details__info-popover-lawyer"
+          :placement="'top-end'"
+          trigger="click"
+          @hide="deactivePopover(`popover-${party.name}`)"
+        >
+          <lawyer-detail
+            @update="updateDisputeRoleField(party, $event)"
+          />
+          <i
+            slot="reference"
+            class="el-icon-info"
+            @click="searchThisLawyer({ name: party.name, oabs: [] }, `popover-${party.name}`)"
+          />
+        </el-popover>
+
+        <JusVexatiousAlert
+          v-if="resumedState.isVexatious && resumedState.isClaimant"
+          :document-number="party.documentNumber"
+          :name="party.name"
+          icon="flat-alert"
+        />
+
+        <TextInlineEditor
+          v-model="party.name"
+          :is-editable="!isNegotiator && !isPreNegotiation"
+          filter="ownName"
+          class="party-details__infoline-data"
+          @change="updateParty($event, 'name')"
+        />
+      </div>
     </div>
 
     <div
-      v-if="party.polarity === 'CLAIMANT'"
+      v-if="resumedState.isClaimant"
       class="party-details__infoline"
     >
       <span class="party-details__infoline-label">Data de nascimento:</span>
@@ -105,7 +143,20 @@
     </div>
 
     <div
-      v-if="!isNegotiator || party.documentNumber"
+      v-if="resumedState.isNamesake"
+      class="party-details__infoline"
+    >
+      <el-button
+        class="party-details__infoline-namesake-button"
+        type="warning"
+        @click="showNamesakeDialog"
+      >
+        <span>Tratar homônimos</span>
+      </el-button>
+    </div>
+
+    <div
+      v-else-if="!isNegotiator || party.documentNumber"
       class="party-details__infoline"
     >
       <span class="party-details__infoline-label">{{ documentType }}:</span>
@@ -172,9 +223,11 @@
       <PartyContacts
         :contacts="mappedOabs"
         :disabled="isNegotiator || isPreNegotiation"
+        :party="party"
         filter="oab"
         model="fullOab"
         :mask="oabMask"
+        @update="updateDisputeRoleField(party, $event)"
         @change="(...args)=>updateContacts(...args, 'oab')"
         @delete="removeContact($event, 'oab')"
         @post="addContact($event, 'oab')"
@@ -188,7 +241,7 @@
       <span class="party-details__infoline-label">Dados bancários:</span>
       <PartyBankAccounts
         :accounts="bankAccounts"
-        :person-id="party.personId"
+        :person-id="resumedState.personId"
         :disabled="isPreNegotiation"
       />
       <!-- class="party-details__infoline-data" -->
@@ -199,25 +252,32 @@
       :infos="mergePartyInfos"
       @update="handleMergePartyInfos"
     />
+
+    <NamesakeDialog ref="namesakeDialog" />
   </article>
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import { isSimilarStrings } from '@/utils'
-import preNegotiation from '@/utils/mixins/ticketPreNegotiation'
 import { isValid, strip } from '@fnando/cpf'
+
+import preNegotiation from '@/utils/mixins/ticketPreNegotiation'
+import TicketTicketOverviewPartyResumed from '@/models/negotiations/overview/TicketOverviewPartyResumed'
 
 export default {
   name: 'PartyDetails',
 
   components: {
     PopoverLinkInlineEditor: () => import('@/components/inputs/PopoverLinkInlineEditor'),
+    JusVexatiousAlert: () => import('@/components/dialogs/JusVexatiousAlert'),
     TextInlineEditor: () => import('@/components/inputs/TextInlineEditor'),
     DateInlieEditor: () => import('@/components/inputs/DateInlieEditor'),
+    NamesakeDialog: () => import('@/components/dialogs/NamesakeDialog'),
     InfoMergeDialog: () => import('./partial/InfoMergeDialog'),
     PartyBankAccounts: () => import('./PartyBankAccounts'),
-    PartyContacts: () => import('./PartyContacts')
+    PartyContacts: () => import('./PartyContacts'),
+    LawyerDetail: () => import('@/components/others/LawyerDetail')
   },
 
   mixins: [preNegotiation],
@@ -236,6 +296,10 @@ export default {
   }),
 
   computed: {
+    ...mapGetters({
+      ticketStatus: 'getticketOverviewStatus'
+    }),
+
     disputeId() {
       return Number(this.$route.params.id)
     },
@@ -253,7 +317,7 @@ export default {
     },
 
     documentType() {
-      return this.party.documentNumber?.length <= 14 ? 'CPF' : 'CNPJ'
+      return this.resumedState.documentType
     },
 
     roleOptions() {
@@ -296,11 +360,17 @@ export default {
 
     partName() {
       return this.party.name
+    },
+
+    resumedState() {
+      return new TicketTicketOverviewPartyResumed(this.party)
     }
   },
 
   methods: {
     ...mapActions([
+      'getDispute',
+      'searchLawyers',
       'addRecipient',
       'searchPersonByOab',
       'setTicketOverviewParty',
@@ -308,18 +378,25 @@ export default {
       'setTicketOverviewPartyPolarity',
       'setTicketOverviewPartyContact',
       'deleteTicketOverviewPartyContact',
-      'updateTicketOverviewPartyContact'
+      'updateTicketOverviewPartyContact',
+      'addPhoneToDisputeRole',
+      'addOabToDisputeRole',
+      'hideSearchLawyerLoading'
     ]),
+
     startEditing(key) {
       this.activeAddingData = key
     },
+
     enableEdit() {
       const { activeAddingData } = this
       if (activeAddingData) this.$refs[activeAddingData].enableEdit()
     },
+
     stopEditing() {
       this.activeAddingData = ''
     },
+
     updatePolarity(rolePolarity) {
       const params = {
         disputeId: this.disputeId,
@@ -329,6 +406,7 @@ export default {
 
       this.setTicketOverviewPartyPolarity(params)
     },
+
     updateParty(value, key) {
       const { disputeId, party } = this
       const data = party.legacyDto
@@ -336,6 +414,7 @@ export default {
 
       this.setTicketOverviewParty({ disputeId, data })
     },
+
     removeParty() {
       if (this.isLawyer) {
         this.chooseRemoveLawyerDialogVisible = true
@@ -498,6 +577,7 @@ export default {
 
       this.updateTicketOverviewPartyContact(params)
     },
+
     removeContact(contactId, contactType) {
       const { disputeId, party } = this
 
@@ -508,11 +588,13 @@ export default {
         contactType
       })
     },
+
     selectContact(value, key, type) {
       if (!this.isNegotiator) {
         this.addRecipient({ value, key, type })
       }
     },
+
     oabMask(value = '') {
       const oab = value?.replace(/[^\w*]/g, '').toUpperCase()
 
@@ -524,6 +606,7 @@ export default {
         return '###.###/AA'
       }
     },
+
     phoneMask(value = '') {
       const number = value?.replace(/[^\w*]/g, '').toUpperCase()
 
@@ -543,10 +626,136 @@ export default {
         default:
           return '####-####-####-####'
       }
+    },
+
+    showNamesakeDialog() {
+      if (['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(this.ticketStatus)) {
+        this.$confirm(`Você está solicitando o tratamento de homônimo de uma disputa que já
+        foi finalizada. Este processo irá agendar novamente as mensagens
+        para a parte quando finalizado.<br /><br />Você deseja continuar mesmo assim?`,
+        'Atenção!', {
+          confirmButtonClass: 'confirm-action-btn',
+          confirmButtonText: 'Continuar',
+          cancelButtonText: 'Cancelar',
+          dangerouslyUseHTMLString: true,
+          cancelButtonClass: 'is-plain'
+        }).then(() => this.opeNnamesakeDialog())
+      } else {
+        this.opeNnamesakeDialog()
+      }
+    },
+
+    opeNnamesakeDialog() {
+      this.$refs.namesakeDialog.show(this.resumedState.name, this.resumedState.personId)
+    },
+
+    searchThisLawyer(lawyer, ref) {
+      if (!this.$refs[ref].showPopper) {
+        this.$refs[ref].$el.classList.add('active-popover')
+        this.searchLawyers(lawyer).finally(this.hideSearchLawyerLoading)
+      }
+    },
+
+    deactivePopover(ref) {
+      this.$refs[ref].$el.classList.remove('active-popover')
+    },
+
+    updateDisputeRoleField(disputeRole, { field, value }) {
+      let message = ''
+      const id = this.$route.params.id
+      if (field === 'oab') {
+        const { number, state } = value
+
+        const alreadyExists = disputeRole.oabsDto.filter(oab => {
+          return number === oab.number && state === oab.state && !oab.archived
+        }).length > 0
+
+        if (!alreadyExists) {
+          this.addOabToDisputeRole({
+            disputeId: id,
+            disputeRoleId: disputeRole.id,
+            number,
+            state
+          }).then(() => {
+            this.$jusNotification({
+              title: 'Yay!',
+              message: 'Nº de OAB adicionada.',
+              type: 'success'
+            })
+          }).catch(error => {
+            this.$jusNotification({ error })
+          }).finally(this.$forceUpdate)
+        } else {
+          message = 'Este nº de OAB já esta em uso.'
+        }
+      } else if (field === 'documentNumber') {
+        if (disputeRole.documentNumber !== value) {
+          this.addNewDocumentNumber(disputeRole, value)
+        } else {
+          message = 'Este documento já esta em uso.'
+        }
+      } else if (field === 'phone') {
+        const lawyerNumber = `55 ${value}`.split(' ').join('')
+        const alreadyExistsNumber = disputeRole.phonesDto.filter(({ number }) => number.includes(lawyerNumber)).length > 0
+        if (!alreadyExistsNumber) {
+          this.addPhoneToDisputeRole({
+            disputeId: id,
+            disputeRoleId: disputeRole.id,
+            value
+          }).then(() => {
+            this.$jusNotification({
+              title: 'Yay!',
+              message: 'Nº de Telefone adicionada.',
+              type: 'success'
+            })
+          }).catch(error => {
+            this.$jusNotification({ error })
+          }).finally(this.$forceUpdate)
+        } else {
+          message = 'Este telefone já esta em uso.'
+        }
+      }
+      if (message) {
+        this.$jusNotification({
+          title: 'Yay!',
+          message: message,
+          type: 'success'
+        })
+      }
+    },
+
+    addNewDocumentNumber(disputeRole, documentNumber) {
+      const newRole = {
+        ...disputeRole,
+        documentNumber
+      }
+      this.$store.dispatch('editRole', {
+        disputeId: this.$route.params.id,
+        disputeRole: newRole
+      }).then(() => {
+        this.getDispute(this.$route.params.id)
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Documento Adicionado.',
+          type: 'success'
+        })
+      }).catch(error => {
+        this.$jusNotification({ error })
+      })
     }
   }
 }
 </script>
+
+<style lang="scss">
+.jus-vexatious-alert {
+  .el-popover__reference-wrapper {
+    img {
+      width: 20px;
+    }
+  }
+}
+</style>
 
 <style lang="scss" scoped>
 @import '@/styles/colors.scss';
@@ -555,6 +764,19 @@ export default {
   .party-details__infoline {
     margin-top: 6px;
     line-height: normal;
+    position: relative;
+
+    .party-details__infoline-namesake-button {
+      width: 100%;
+      margin: 8px 0;
+      background: #FF9300;
+    }
+
+    .jus-vexatious-alert {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+    }
 
     .party-details__infoline-label {
       line-height: normal;
@@ -562,10 +784,21 @@ export default {
       color: $--color-text-secondary;
     }
 
+    .party-details__icon-info-lawyer {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      span {
+        &:hover {
+          color: $--color-primary;
+        }
+      }
+    }
+
     .party-details__infoline-data,
     .party-details__infoline-link {
       line-height: normal;
-      margin: 3px 0 3px 18px;
+      margin: 3px 0 3px 24px;
     }
 
     &--center {
@@ -591,7 +824,6 @@ export default {
       }
     }
   }
-
   &:hover {
     .party-details__infoline--center {
       .party-details__infoline-link--danger {
@@ -599,5 +831,13 @@ export default {
       }
     }
   }
+}
+</style>
+
+<style lang="scss">
+.party-details__info-popover-lawyer {
+  width: 500px;
+  min-height: 20vh;
+  max-height: 50vh;
 }
 </style>

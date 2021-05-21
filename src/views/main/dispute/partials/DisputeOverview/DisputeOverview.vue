@@ -1776,7 +1776,7 @@ export default {
     JusTags: () => import('@/components/others/JusTags'),
     JusTimeline: () => import('@/components/JusTimeline/JusTimeline'),
     JusVexatiousAlert: () => import('@/components/dialogs/JusVexatiousAlert'),
-    LawyerDetail: () => import('./sections/LawyerDetail'),
+    LawyerDetail: () => import('@/components/others/LawyerDetail'),
     AssociateContactsModal: () => import('@/components/dialogs/AssociateContactsModal')
   },
   props: {
