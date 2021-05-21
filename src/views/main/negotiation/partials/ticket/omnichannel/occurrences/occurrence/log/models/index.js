@@ -68,13 +68,10 @@ class SummaryOccurrence {
     return [
       {
         receiver: this.messageReceiver,
-        status: 'PROCESSED', // this.interaction.messageStatus,
+        status: this.interaction.messageStatus,
         date: this.createAt.dateTime
       },
-      ...this.groupedOccurrences.map(item => ({
-        receiver: this.messageReceiver,
-        ...item
-      }))
+      ...this.groupedOccurrences
     ]
   }
 }
