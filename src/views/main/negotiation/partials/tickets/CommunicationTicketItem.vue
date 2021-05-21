@@ -45,13 +45,13 @@
     </div>
     <div class="communication-ticket-item-container__gray" />
     <span
-      v-if="isAccepted"
+      v-if="isAcceptedTab || (isFinishedTab && isSettled)"
       class="communication-ticket-item-container__minuta"
     >
       Minuta
     </span>
     <el-steps
-      v-if="isAccepted"
+      v-if="isAcceptedTab || (isFinishedTab && isSettled)"
       :active="documentStep"
       finish-status="success"
       class="communication-ticket-item-container__minuta-steps"
@@ -88,10 +88,17 @@ export default {
       activeTab: 'getTicketsActiveTab'
     }),
     documentStep() {
-      return this.getDocumentStep(this.ticket.hasDraft, this.ticket.draftStatus)
+      const signStatus = this.ticket?.draftStatus ? this.ticket.draftStatus : this.ticket.signStatus
+      return this.getDocumentStep(this.ticket.hasDraft, signStatus)
     },
-    isAccepted() {
+    isAcceptedTab() {
       return this.activeTab === 'accepted'
+    },
+    isFinishedTab() {
+      return this.activeTab === 'finished'
+    },
+    isSettled() {
+      return this.ticket.disputeStatus === 'SETTLED'
     },
     isActive() {
       return Number(this.$route.params.id) === Number(this.ticket?.disputeId)
