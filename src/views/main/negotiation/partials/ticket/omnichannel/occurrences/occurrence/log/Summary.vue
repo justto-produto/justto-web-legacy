@@ -253,15 +253,23 @@ export default {
 
         .summary-container__item-occurrence-item-status-message {
           .el-icon-edit {
+            font-weight: 800;
             color: #BBBBBB;
           }
 
           .el-icon-check {
-            color: #14CC30;
+            font-weight: 800;
+            color: $--color-success;
           }
 
           .el-icon-timer {
-            color: #FF9300;
+            font-weight: 800;
+            color: $--color-warning;
+          }
+
+          .el-icon-close {
+            color: $--color-danger;
+            font-weight: 800;
           }
 
           .summary-container__item-occurrence-item-status-message-body {
