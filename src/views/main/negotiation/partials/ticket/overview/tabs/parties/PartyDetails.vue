@@ -81,21 +81,40 @@
       </el-alert>
 
       <span class="party-details__infoline-label">Nome completo:</span>
+      <div class="party-details__icon-info-lawyer">
+        <el-popover
+          v-if="isLawyer"
+          :ref="`popover-${party.name}`"
+          popper-class="party-details__info-popover-lawyer"
+          :placement="'top-end'"
+          trigger="click"
+          @hide="deactivePopover(`popover-${party.name}`)"
+        >
+          <lawyer-detail
+            @update="updateDisputeRoleField(party, $event)"
+          />
+          <i
+            slot="reference"
+            class="el-icon-info"
+            @click="searchThisLawyer({ name: party.name, oabs: [] }, `popover-${party.name}`)"
+          />
+        </el-popover>
 
-      <JusVexatiousAlert
-        v-if="resumedState.isVexatious && resumedState.isClaimant"
-        :document-number="party.documentNumber"
-        :name="party.name"
-        icon="flat-alert"
-      />
+        <JusVexatiousAlert
+          v-if="resumedState.isVexatious && resumedState.isClaimant"
+          :document-number="party.documentNumber"
+          :name="party.name"
+          icon="flat-alert"
+        />
 
-      <TextInlineEditor
-        v-model="party.name"
-        :is-editable="!isNegotiator && !isPreNegotiation"
-        filter="ownName"
-        class="party-details__infoline-data"
-        @change="updateParty($event, 'name')"
-      />
+        <TextInlineEditor
+          v-model="party.name"
+          :is-editable="!isNegotiator && !isPreNegotiation"
+          filter="ownName"
+          class="party-details__infoline-data"
+          @change="updateParty($event, 'name')"
+        />
+      </div>
     </div>
 
     <div
@@ -202,9 +221,11 @@
       <PartyContacts
         :contacts="mappedOabs"
         :disabled="isNegotiator || isPreNegotiation"
+        :party="party"
         filter="oab"
         model="fullOab"
         :mask="oabMask"
+        @update="updateDisputeRoleField(party, $event)"
         @change="(...args)=>updateContacts(...args, 'oab')"
         @delete="removeContact($event, 'oab')"
         @post="addContact($event, 'oab')"
@@ -253,7 +274,8 @@ export default {
     NamesakeDialog: () => import('@/components/dialogs/NamesakeDialog'),
     InfoMergeDialog: () => import('./partial/InfoMergeDialog'),
     PartyBankAccounts: () => import('./PartyBankAccounts'),
-    PartyContacts: () => import('./PartyContacts')
+    PartyContacts: () => import('./PartyContacts'),
+    LawyerDetail: () => import('@/components/others/LawyerDetail')
   },
 
   mixins: [preNegotiation],
@@ -345,6 +367,8 @@ export default {
 
   methods: {
     ...mapActions([
+      'getDispute',
+      'searchLawyers',
       'addRecipient',
       'searchPersonByOab',
       'setTicketOverviewParty',
@@ -352,7 +376,10 @@ export default {
       'setTicketOverviewPartyPolarity',
       'setTicketOverviewPartyContact',
       'deleteTicketOverviewPartyContact',
-      'updateTicketOverviewPartyContact'
+      'updateTicketOverviewPartyContact',
+      'addPhoneToDisputeRole',
+      'addOabToDisputeRole',
+      'hideSearchLawyerLoading'
     ]),
 
     startEditing(key) {
@@ -618,6 +645,101 @@ export default {
 
     opeNnamesakeDialog() {
       this.$refs.namesakeDialog.show(this.resumedState.name, this.resumedState.personId)
+    },
+
+    searchThisLawyer(lawyer, ref) {
+      if (!this.$refs[ref].showPopper) {
+        this.$refs[ref].$el.classList.add('active-popover')
+        this.searchLawyers(lawyer).finally(this.hideSearchLawyerLoading)
+      }
+    },
+
+    deactivePopover(ref) {
+      this.$refs[ref].$el.classList.remove('active-popover')
+    },
+
+    updateDisputeRoleField(disputeRole, { field, value }) {
+      let message = ''
+      const id = this.$route.params.id
+      if (field === 'oab') {
+        const { number, state } = value
+
+        const alreadyExists = disputeRole.oabsDto.filter(oab => {
+          return number === oab.number && state === oab.state && !oab.archived
+        }).length > 0
+
+        if (!alreadyExists) {
+          this.addOabToDisputeRole({
+            disputeId: id,
+            disputeRoleId: disputeRole.id,
+            number,
+            state
+          }).then(() => {
+            this.$jusNotification({
+              title: 'Yay!',
+              message: 'Nº de OAB adicionada.',
+              type: 'success'
+            })
+          }).catch(error => {
+            this.$jusNotification({ error })
+          }).finally(this.$forceUpdate)
+        } else {
+          message = 'Este nº de OAB já esta em uso.'
+        }
+      } else if (field === 'documentNumber') {
+        if (disputeRole.documentNumber !== value) {
+          this.addNewDocumentNumber(disputeRole, value)
+        } else {
+          message = 'Este documento já esta em uso.'
+        }
+      } else if (field === 'phone') {
+        const lawyerNumber = `55 ${value}`.split(' ').join('')
+        const alreadyExistsNumber = disputeRole.phonesDto.filter(({ number }) => number.includes(lawyerNumber)).length > 0
+        if (!alreadyExistsNumber) {
+          this.addPhoneToDisputeRole({
+            disputeId: id,
+            disputeRoleId: disputeRole.id,
+            value
+          }).then(() => {
+            this.$jusNotification({
+              title: 'Yay!',
+              message: 'Nº de Telefone adicionada.',
+              type: 'success'
+            })
+          }).catch(error => {
+            this.$jusNotification({ error })
+          }).finally(this.$forceUpdate)
+        } else {
+          message = 'Este telefone já esta em uso.'
+        }
+      }
+      if (message) {
+        this.$jusNotification({
+          title: 'Yay!',
+          message: message,
+          type: 'success'
+        })
+      }
+    },
+
+    addNewDocumentNumber(disputeRole, documentNumber) {
+      const newRole = {
+        ...disputeRole,
+        documentNumber
+      }
+      this.$store.dispatch('editRole', {
+        disputeId: this.$route.params.id,
+        disputeRole: newRole
+      }).then(() => {
+        this.getDispute(this.$route.params.id)
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Documento Adicionado.',
+          type: 'success'
+        })
+      }).catch(error => {
+        this.$jusNotification({ error })
+      })
     }
   }
 }
@@ -660,6 +782,17 @@ export default {
       color: $--color-text-secondary;
     }
 
+    .party-details__icon-info-lawyer {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      span {
+        &:hover {
+          color: $--color-primary;
+        }
+      }
+    }
+
     .party-details__infoline-data,
     .party-details__infoline-link {
       line-height: normal;
@@ -689,7 +822,6 @@ export default {
       }
     }
   }
-
   &:hover {
     .party-details__infoline--center {
       .party-details__infoline-link--danger {
@@ -697,5 +829,13 @@ export default {
       }
     }
   }
+}
+</style>
+
+<style lang="scss">
+.party-details__info-popover-lawyer {
+  width: 500px;
+  min-height: 20vh;
+  max-height: 50vh;
 }
 </style>
