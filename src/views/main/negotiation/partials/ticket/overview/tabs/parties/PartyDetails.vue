@@ -86,6 +86,7 @@
         v-if="resumedState.isVexatious && resumedState.isClaimant"
         :document-number="party.documentNumber"
         :name="party.name"
+        icon="flat-alert"
       />
 
       <TextInlineEditor
@@ -127,8 +128,8 @@
       class="party-details__infoline"
     >
       <el-button
+        class="party-details__infoline-namesake-button"
         type="warning"
-        style="width: 100%; margin: 8px 0;"
         @click="showNamesakeDialog"
       >
         <span>Tratar homônimos</span>
@@ -622,6 +623,16 @@ export default {
 }
 </script>
 
+<style lang="scss">
+.jus-vexatious-alert {
+  .el-popover__reference-wrapper {
+    img {
+      width: 20px;
+    }
+  }
+}
+</style>
+
 <style lang="scss" scoped>
 @import '@/styles/colors.scss';
 
@@ -630,6 +641,12 @@ export default {
     margin-top: 6px;
     line-height: normal;
     position: relative;
+
+    .party-details__infoline-namesake-button {
+      width: 100%;
+      margin: 8px 0;
+      background: #FF9300;
+    }
 
     .jus-vexatious-alert {
       position: absolute;

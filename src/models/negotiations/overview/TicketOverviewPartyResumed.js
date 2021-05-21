@@ -64,6 +64,6 @@ export default class TicketTicketOverviewPartyResumed {
   }
 
   get alertColor() {
-    return this.isDead ? '#af0000' : '#ffa315'
+    return this.isDead ? '#FF4B54' : '#FF9300'
   }
 }

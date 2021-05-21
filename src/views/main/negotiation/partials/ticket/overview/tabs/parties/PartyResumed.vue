@@ -7,7 +7,7 @@
     <template slot="title">
       <i
         v-if="state.hasAlert"
-        class="el-icon-warning-outline el-icon-pulse vexatious-alert"
+        class="el-icon-warning el-icon-pulse vexatious-alert"
         :style="{ color: state.alertColor }"
       />
       <JusIcon
