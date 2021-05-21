@@ -39,7 +39,7 @@
         </el-tooltip>
       </div>
     </div>
-    <div class="communication-ticket-item-container__gray" />
+    <!-- <div class="communication-ticket-item-container__gray" /> -->
   </li>
 </template>
 
