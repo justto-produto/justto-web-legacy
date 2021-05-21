@@ -19,6 +19,9 @@
     <span v-else>
       {{ nameInitials }}
     </span>
+    <div
+      :class="{'communication-ticket-item-plaintiff-status-online': isOnline}"
+    />
   </div>
 </template>
 
@@ -69,6 +72,9 @@ export default {
     },
     nameInitials() {
       return getStringInitials(this.name).toUpperCase()
+    },
+    isOnline() {
+      return this.status === 'ONLINE'
     }
   }
 }
@@ -160,6 +166,17 @@ export default {
     font-size: 9px;
     width: 1.4rem;
     height: 1.4rem;
+  }
+  .communication-ticket-item-plaintiff-status-online {
+    position: absolute;
+    bottom: 0;
+    margin-bottom: 0px;
+    margin-left: 28px;
+    background-color: $--color-success;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    z-index: 5;
   }
 }
 </style>
