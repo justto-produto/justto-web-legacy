@@ -670,7 +670,7 @@
                     </el-tooltip>
                   </el-radio>
                   <!-- <div class="alerts"> -->
-                  <el-tooltip content="Este número não receberá mensagens automáticas">
+                  <el-tooltip content="Este telefone está desabilitado para receber mensagens automáticas, ao editar e habilitar o endereço, você está em desrespeito com a LGPD. ">
                     <jus-icon
                       v-show="!phone.isMain"
                       icon="not-main-phone-active"
@@ -709,7 +709,7 @@
                     </span>
                   </el-tooltip>
                   <div class="alerts">
-                    <el-tooltip content="Este e-mail não receberá mensagens automáticas">
+                    <el-tooltip content="Este email está desabilitado para receber mensagens automáticas, ao editar e habilitar o endereço, você está em desrespeito com a LGPD. ">
                       <jus-icon
                         v-show="!email.isMain"
                         icon="not-main-email-active"
