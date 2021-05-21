@@ -1,5 +1,5 @@
 const ticketsGetters = {
-  getTickets: ({ tickets }) => tickets,
+  getTickets: (state) => state.tickets,
   getTicketsQuery: ({ ticketsQuery }) => ticketsQuery,
   getTicketsHasFilters: ({ ticketsHasFilters }) => ticketsHasFilters,
   getTicketsActiveTab: ({ ticketsActiveTab }) => ticketsActiveTab,

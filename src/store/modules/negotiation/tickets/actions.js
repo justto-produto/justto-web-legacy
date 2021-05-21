@@ -18,6 +18,7 @@ const getCorrespondingTab = disputeStatus => {
       return 'accepted'
     case 'UNSETTLED':
     case 'SETTLED':
+    case 'CANCELED':
     case 'EXPIRED':
       return 'finished'
     default:
@@ -75,7 +76,7 @@ const overviewActions = {
 
   SOCKET_ADD_DISPUTE({ rootState, state, commit }, dispute) {
     const correspondingTab = getCorrespondingTab(dispute.status)
-
+    debugger
     if (rootState.negotiationOverviewModule.ticketOverview.disputeId === dispute.id) {
       if (correspondingTab !== state.ticketsActiveTab) {
         commit('setTicketsActiveTab', correspondingTab)
@@ -93,6 +94,7 @@ const overviewActions = {
   },
 
   SOCKET_REMOVE_DISPUTE({ commit }, dispute) {
+    debugger
     commit('deleteTicket', dispute.id)
   }
 }
