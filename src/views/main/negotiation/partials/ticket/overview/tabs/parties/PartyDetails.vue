@@ -187,6 +187,7 @@
       <PartyContacts
         :contacts="phonesList"
         :disabled="isNegotiator || isPreNegotiation"
+        :party-name="party.name"
         filter="phoneNumber"
         model="number"
         :mask="phoneMask"
@@ -203,6 +204,7 @@
     >
       <span class="party-details__infoline-label">Emails:</span>
       <PartyContacts
+        :party-name="party.name"
         :contacts="emailsList"
         :disabled="isNegotiator || isPreNegotiation"
         model="address"
@@ -671,7 +673,7 @@ export default {
         if (!alreadyExists) {
           this.addOabToDisputeRole({
             disputeId: id,
-            disputeRoleId: disputeRole.id,
+            disputeRoleId: disputeRole.id || disputeRole.disputeRoleId,
             number,
             state
           }).then(() => {
@@ -694,11 +696,13 @@ export default {
         }
       } else if (field === 'phone') {
         const lawyerNumber = `55 ${value}`.split(' ').join('')
+
         const alreadyExistsNumber = disputeRole.phonesDto.filter(({ number }) => number.includes(lawyerNumber)).length > 0
+
         if (!alreadyExistsNumber) {
           this.addPhoneToDisputeRole({
             disputeId: id,
-            disputeRoleId: disputeRole.id,
+            disputeRoleId: disputeRole.id || disputeRole.disputeRoleId,
             value
           }).then(() => {
             this.$jusNotification({
