@@ -43,7 +43,7 @@
         </div>
       </el-tooltip>
     </div>
-    <div class="communication-ticket-item-container__gray" />
+    <!-- <div class="communication-ticket-item-container__gray" /> -->
     <span
       v-if="isAcceptedTab || (isFinishedTab && isSettled)"
       class="communication-ticket-item-container__minuta"
