@@ -2,7 +2,7 @@
   <article class="nps-container">
     <div class="nps-container__contact">
       <jus-icon icon="nps" />
-      <span>De</span>
+      <span>de</span>
       <span v-if="person">
         {{ person | resumedName }}
       </span>
