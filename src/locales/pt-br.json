@@ -184,6 +184,40 @@
       "FAVORITE": "Aguardar análise da empresa",
       "DISFAVOR": "Desmarcar aguardar análise da empresa",
       "PRE_NEGOTIATION": "pre-negociação"
+    },
+    "interaction": {
+      "message": {
+        "status": {
+          "WAITING": {
+            "preposition": "para",
+            "label": "agendada"
+          },
+          "PROCESSED": {
+            "preposition": "por",
+            "label": "recebida"
+          },
+          "PROCESSED_BY_USER": {
+            "preposition": "em",
+            "label": "recebida pelo usuário"
+          },
+          "FAILED": {
+            "preposition": "para",
+            "label": "falha no envio"
+          },
+          "CANCELED": {
+            "preposition": "para",
+            "label": "envio cancelado"
+          },
+          "RETRYING": {
+            "preposition": "para",
+            "label": "reenviando"
+          },
+          "WAITING_TO_RESPONSE": {
+            "preposition": "de",
+            "label": "aguardando resposta"
+          }
+        }
+      }
     }
   },
   "profile": {
