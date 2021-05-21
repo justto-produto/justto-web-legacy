@@ -33,7 +33,11 @@ class SummaryInteraction {
   }
 
   get messageStatus() {
-    return this.message?.status || 'VOID'
+    return this.message?.status || 'WAITING'
+  }
+
+  get messageReceiver() {
+    return this.message.receiver || 'nao@definido.com'
   }
 }
 
@@ -56,15 +60,20 @@ class SummaryOccurrence {
     return JSON.parse((this.properties.GROUPED_OCCURRENCES || '[]').replace(/'/g, '"'))
   }
 
+  get messageReceiver() {
+    return this.interaction.messageReceiver
+  }
+
   get messagesStatus() {
     return [
       {
-        status: this.interaction.messageStatus,
+        receiver: this.messageReceiver,
+        status: 'PROCESSED', // this.interaction.messageStatus,
         date: this.createAt.dateTime
       },
-      ...this.groupedOccurrences.map(_date => ({
-        status: this.interaction.messageStatus,
-        date: this.createAt.dateTime
+      ...this.groupedOccurrences.map(item => ({
+        receiver: this.messageReceiver,
+        ...item
       }))
     ]
   }
