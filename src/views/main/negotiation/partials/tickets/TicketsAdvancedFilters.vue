@@ -177,6 +177,16 @@
                   data-testid="filters-only-paused"
                 />
               </div>
+              <div v-if="!isPreNegotiation">
+                <div>
+                  <!-- <jus-icon icon="pause" /> Somente não pausadas -->
+                  <i class="el-icon-video-play" /> Somenta não pausadas
+                </div>
+                <el-switch
+                  v-model="filters.onlyNotPaused"
+                  data-testid="filters-not-only-paused"
+                />
+              </div>
             </el-form-item>
           </el-col>
           <!-- FAVORITOS -->
@@ -394,9 +404,16 @@ export default {
     openDialog() {
       this.advancedFiltersDialogVisible = true
     },
+    // APLICAR VALIDAÇÂO AQUI
     applyFilters() {
       const { filters } = this
       if (!filters.onlyNotVisualized) delete filters.onlyNotVisualized
+      if (!filters.onlyNotPaused && !filters.onlyPaused) {
+        filters.onlyPaused = null
+      }
+      if (filters.onlyNotPaused) {
+        filters.onlyPaused = false
+      }
       this.setTicketsFilters({ filters, hasFilters: true })
       this.advancedFiltersDialogVisible = false
       this.getTickets()

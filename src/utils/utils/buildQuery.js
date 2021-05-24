@@ -1,10 +1,16 @@
 import moment from 'moment'
 
 const buildQuery = (q, command, disputesLength, noSort) => {
+  debugger
   let query = '?'
   for (const [key, value] of Object.entries(q)) {
     if (['total'].includes(key)) continue
-    if (!value && key !== 'onlyNotVisualized') continue
+    if (key === 'onlyPaused') {
+      query = query + key + '=' + value + '&'
+      continue
+    }
+    if ((!value && key !== 'onlyNotVisualized') || key === 'onlyNotPaused') continue
+    if (!value) continue
     if (Array.isArray(value)) {
       if (!value.length) continue
       if (['expirationDate', 'dealDate', 'importingDate'].includes(key)) {
