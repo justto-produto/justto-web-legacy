@@ -27,7 +27,11 @@ export default class TicketItemVm {
     firstClaimantLawyerOab,
     firstClaimantStatus,
     firstClaimantLawyerStatus,
-    disputeRoles
+    disputeRoles,
+    hasDocument,
+    signStatus,
+    hasDraft,
+    draftStatus
   }) {
     const oab = firstClaimantLawyerOab ? firstClaimantLawyerOab.split('/') : []
     this.disputeId = disputeId || id
@@ -37,6 +41,8 @@ export default class TicketItemVm {
     this.conclusionDate = new DateTime((conclusionDate || conclusion) || {})
     this.visualized = visualized
     this.favorite = favorite
+    this.hasDraft = hasDraft || hasDocument
+    this.signStatus = signStatus || draftStatus
     this.plaintiff = new Plaintiff(plaintiff || {
       name: firstClaimant || firstClaimantLawyer,
       documentNumber: firstClaimantDocumentNumber || firstClaimantLawyerDocumentNumber,

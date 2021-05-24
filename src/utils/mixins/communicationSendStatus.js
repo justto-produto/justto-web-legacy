@@ -50,7 +50,7 @@ export default {
     groupedOccurrences() {
       try {
         if (this.occurrence?.properties?.GROUPED_OCCURRENCES?.length > 2) {
-          return JSON.parse(this.occurrence?.properties?.GROUPED_OCCURRENCES.replace(/'/g, '"'))
+          return JSON.parse(this.occurrence?.properties?.GROUPED_OCCURRENCES.replace(/'/g, '"').map(({ date }) => date))
         }
         return []
       } catch (_) {

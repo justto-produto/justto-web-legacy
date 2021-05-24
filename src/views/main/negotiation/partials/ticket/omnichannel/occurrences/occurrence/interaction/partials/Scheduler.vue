@@ -7,6 +7,7 @@
       {{ sendDate | moment('[Em] DD/MM [-] HH:mm') }}
     </div>
     <span
+      v-if="!hiddenContactInfo"
       class="scheduler-container__contact"
     >
       <JusIcon
@@ -36,6 +37,7 @@
         </span>
       </span>
     </span>
+
     <div
       v-if="!hideContent"
       class="scheduler-container__message"
@@ -56,8 +58,9 @@
         Ver mais
       </span>
     </div>
+
     <div
-      v-if="!toPrint"
+      v-if="!toPrint && !hiddenSendStatus"
       class="scheduler-container__status"
     >
       <br>
@@ -101,6 +104,14 @@ export default {
     occurrence: {
       type: Object,
       required: true
+    },
+    hiddenContactInfo: {
+      type: Boolean,
+      default: false
+    },
+    hiddenSendStatus: {
+      type: Boolean,
+      default: false
     }
   },
 

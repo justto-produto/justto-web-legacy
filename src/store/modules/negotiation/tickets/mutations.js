@@ -66,7 +66,6 @@ const ticketsMutations = {
     ].includes(dispute.status)
       ? new TicketEngagementItem(dispute)
       : new TicketCommunicationItem(dispute)
-
     if (tickets.empty !== undefined) {
       if (ticketIndex > -1) Vue.set(tickets.content, ticketIndex, newTicket)
       else tickets.content.unshift(newTicket)
