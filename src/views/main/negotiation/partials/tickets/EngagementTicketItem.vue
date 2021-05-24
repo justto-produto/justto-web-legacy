@@ -94,8 +94,6 @@ export default {
       const { pendingReason, disputeStatus } = this.ticket
       if (pendingReason?.description) {
         return pendingReason.description
-        // const reasons = pendingReason.description.replace('[', '').replace(']', '').split(',')
-        // return `Encontrou termo(s): <b>${reasons.join(',')}</b>`
       } else {
         return this.$options.filters.capitalize(this.$tc(`dispute.status.${disputeStatus}`))
       }
