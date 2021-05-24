@@ -47,7 +47,6 @@
 </template>
 
 <script>
-import { addInvisibleStatus } from '@/utils'
 import communicationSendStatus from '@/utils/mixins/communicationSendStatus'
 
 export default {
@@ -97,7 +96,7 @@ export default {
           break
       }
 
-      return addInvisibleStatus(text)
+      return text
     },
 
     messageType() {

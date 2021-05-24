@@ -1,9 +1,10 @@
 <template>
   <el-dialog
     v-loading="loading"
-    width="65%"
     class="dialog-timeline"
+    width="65%"
     :visible.sync="visible"
+    :fullscreen="isMobile"
   >
     <div
       slot="title"
@@ -170,8 +171,13 @@ export default {
   computed: {
     ...mapGetters({
       loading: 'loading',
-      disputesTimeline: 'getDisputesTimeline'
+      disputesTimeline: 'getDisputesTimeline',
+      mode: 'getWindowMode'
     }),
+
+    isMobile() {
+      return this.mode === 'mobile'
+    },
 
     dispute() {
       return this.disputesTimeline[this.code] || { lawsuits: [] }
