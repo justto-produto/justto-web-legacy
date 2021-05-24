@@ -32,10 +32,10 @@
         >
           <div
             slot="content"
-            v-html="reason"
+            v-html="resumeReason"
           />
           <span>
-            {{ isInPreNegotiaionTab ? resonKeyWords : reason }}
+            {{ isInPreNegotiaionTab ? reason : resumeReason }}
           </span>
         </el-tooltip>
       </div>
@@ -81,16 +81,24 @@ export default {
 
     reason() {
       const { pendingReason, disputeStatus } = this.ticket
-      if (pendingReason?.description) {
-        const reasons = pendingReason.description.replace('[', '').replace(']', '').split(',')
-        return `Encontrou termos ${reasons.join(',')}`
+      if (pendingReason?.keywords) {
+        return pendingReason.keywords.join(', ')
+      } else if (pendingReason?.description) {
+        return pendingReason?.description
       } else {
         return this.$options.filters.capitalize(this.$tc(`dispute.status.${disputeStatus}`))
       }
     },
 
-    resonKeyWords() {
-      return (this.ticket.properties['PALAVRAS PRE NEGOCIACAO'] || '-').replace(/ *\[/g, '').replace(/ *\]/g, '')
+    resumeReason() {
+      const { pendingReason, disputeStatus } = this.ticket
+      if (pendingReason?.description) {
+        return pendingReason.description
+        // const reasons = pendingReason.description.replace('[', '').replace(']', '').split(',')
+        // return `Encontrou termo(s): <b>${reasons.join(',')}</b>`
+      } else {
+        return this.$options.filters.capitalize(this.$tc(`dispute.status.${disputeStatus}`))
+      }
     }
   }
 }
