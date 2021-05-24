@@ -1,4 +1,5 @@
 <template>
+  <!-- ?  INSERIR AQUI O BLOQUEIO DAS MENSAGENS-->
   <section
     v-if="!isInPreNegotiation"
     id="messagesTabEditorOmnichannelNegotiation"
@@ -122,7 +123,8 @@ export default {
       editorRecipients: 'getEditorRecipients',
       messageType: 'getEditorMessageType',
       getEditorReady: 'getEditorReady',
-      editorText: 'getEditorText'
+      editorText: 'getEditorText',
+      dispute: 'dispute'
     }),
 
     sendMessagetext() {
@@ -145,6 +147,12 @@ export default {
       set(text) {
         this.setEditorText(text)
       }
+    },
+
+    loadingText() {
+      return this.dispute.paused
+        ? 'Disputa pausada. Retome a disputa para enviar mensagens'
+        : 'Disputa em pré negociação. Inicie a disputa para enviar mensagens'
     },
 
     showCKEditor() {

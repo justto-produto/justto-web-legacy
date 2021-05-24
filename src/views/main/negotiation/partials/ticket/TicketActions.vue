@@ -187,7 +187,14 @@ export default {
           isDynamic: true,
           method: () => this.redirectToManagement()
         }
-      ].filter(action => action.isVisible)
+      ].filter(action => {
+        if (this.ticket.paused) {
+          return this.pausedDisputeActionList.includes(action.name)
+        } else return action.isVisible
+      })
+    },
+    pausedDisputeActionList() {
+      return ['RESUME', 'REDIRECTMANAGEMENT', 'UPLOAD_ATTACHMENT', 'EDIT_NEGOTIATORS', `PRINT_TICKET_${this.activeTab}`]
     },
     isFavorite() {
       return this.ticket?.favorite
