@@ -14,6 +14,7 @@ const tagModule = {
       '#3498db', // 3 azul
       '#1abc9c', // 4 verde
       '#9b59b6' //  5 roxo
+      // ALTERAR PALETA DE CORES AQUI
     ],
     icons: [
       'user',
