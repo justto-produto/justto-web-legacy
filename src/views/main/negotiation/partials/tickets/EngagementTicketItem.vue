@@ -39,7 +39,7 @@
         </el-tooltip>
       </div>
     </div>
-    <div class="communication-ticket-item-container__gray" />
+    <!-- <div class="communication-ticket-item-container__gray" /> -->
   </li>
 </template>
 
@@ -144,7 +144,7 @@ export default {
     position: absolute;
     bottom: 0;
     left: 0;
-    background-color: #EBEBF2;
+    background-color: #F3F3F3;
     width: 100%;
     height: 20px;
     z-index: 1;
