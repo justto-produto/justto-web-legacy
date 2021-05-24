@@ -1,4 +1,6 @@
 export default {
+  // TODO: Mandar esse mixin para os mixins globais.
+
   methods: {
     handleKeys(event) {
       const { code, key, keyCode, isTrusted } = event
