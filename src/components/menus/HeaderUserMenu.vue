@@ -190,6 +190,7 @@ export default {
           closeOnPressEscape: false,
           showClose: false
         }).then(({ value }) => {
+          // Alterar action here
           const loggetPersonId = this.$store.getters.loggedPersonId
           this.$store.dispatch('changePersonName', {
             person: { id: loggetPersonId, name: value },

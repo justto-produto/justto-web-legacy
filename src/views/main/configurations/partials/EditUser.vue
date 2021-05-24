@@ -170,7 +170,7 @@ export default {
       this.localLoading = false
       this.$emit('close')
     },
-
+    // TROCAR ACTION AQUI
     editName() {
       this.localLoading = true
       this.changeLoggedPersonName({
