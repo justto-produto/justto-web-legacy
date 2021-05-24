@@ -84,24 +84,30 @@
 
       <span class="party-details__infoline-label">Nome completo:</span>
       <div class="party-details__icon-info-lawyer">
-        <el-popover
-          v-if="isLawyer && !resumedState.isVexatious"
-          :ref="`popover-${party.name}`"
-          popper-class="party-details__info-popover-lawyer"
-          :placement="'top-end'"
-          trigger="click"
-          @hide="deactivePopover(`popover-${party.name}`)"
+        <el-tooltip
+          :open-delay="600"
+          effect="dark"
+          placement="left"
+          content="Ver mais informações"
         >
-          <lawyer-detail
-            @update="updateDisputeRoleField(party, $event)"
-          />
-          <i
-            slot="reference"
-            class="el-icon-info"
-            @click="searchThisLawyer({ name: party.name, oabs: [] }, `popover-${party.name}`)"
-          />
-        </el-popover>
-
+          <el-popover
+            v-if="isLawyer && !resumedState.isVexatious"
+            :ref="`popover-${party.name}`"
+            popper-class="party-details__info-popover-lawyer"
+            :placement="'top-end'"
+            trigger="click"
+            @hide="deactivePopover(`popover-${party.name}`)"
+          >
+            <lawyer-detail
+              @update="updateDisputeRoleField(party, $event)"
+            />
+            <i
+              slot="reference"
+              class="el-icon-info"
+              @click="searchThisLawyer({ name: party.name, oabs: [] }, `popover-${party.name}`)"
+            />
+          </el-popover>
+        </el-tooltip>
         <JusVexatiousAlert
           v-if="resumedState.isVexatious && resumedState.isClaimant"
           :document-number="party.documentNumber"
