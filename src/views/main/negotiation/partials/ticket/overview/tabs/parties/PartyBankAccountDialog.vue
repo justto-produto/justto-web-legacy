@@ -149,6 +149,7 @@ export default {
 
   methods: {
     openBankAccountDialog(account) {
+      console.log(account)
       Object.keys(account).forEach(key => this.$set(this.account, key, account[key]))
       this.bankAccountDialogVisible = true
       if (account.document) {

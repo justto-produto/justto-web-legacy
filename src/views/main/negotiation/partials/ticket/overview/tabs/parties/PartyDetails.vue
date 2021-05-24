@@ -243,6 +243,9 @@
         :accounts="bankAccounts"
         :person-id="resumedState.personId"
         :disabled="isPreNegotiation"
+        :can-open="resumedState.hasDocumentNumber"
+        :account-mockup="bankAccountMockup"
+        @validateOpen="validateDocumentNumber"
       />
       <!-- class="party-details__infoline-data" -->
     </div>
@@ -364,6 +367,17 @@ export default {
 
     resumedState() {
       return new TicketTicketOverviewPartyResumed(this.party)
+    },
+
+    firstEmail() {
+      return this.emailsList.find(({ archived, isMain, isValid }) => (!archived && isMain && isValid))?.address || ''
+    },
+
+    bankAccountMockup() {
+      return {
+        ...this.resumedState.bankAccountMockup,
+        email: this.firstEmail
+      }
     }
   },
 
@@ -744,6 +758,17 @@ export default {
       }).catch(error => {
         this.$jusNotification({ error })
       })
+    },
+
+    validateDocumentNumber(_dialogVisibility) {
+      if (!this.resumedState.hasDocumentNumber) {
+        this.$jusNotification({
+          title: 'Ops!',
+          message: 'Informe CPF/CNPJ.',
+          type: 'warning',
+          onClose: () => this.$refs.documentNumber.enableEdit()
+        })
+      }
     }
   }
 }

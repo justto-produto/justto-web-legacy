@@ -76,6 +76,7 @@ export default {
     model: '',
     escaping: false
   }),
+
   computed: {
     vModel: {
       get() {
@@ -115,9 +116,11 @@ export default {
         : vModel
     }
   },
+
   mounted() {
     this.$emit('enableEdit')
   },
+
   methods: {
     handleEsc(event) {
       this.escaping = true
