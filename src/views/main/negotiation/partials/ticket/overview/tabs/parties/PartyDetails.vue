@@ -20,6 +20,7 @@
       </div>
       <span slot="footer">
         <el-tooltip
+          :open-delay="600"
           :content="`Remover ${partName} de todas as disputas com mesmo réu.`"
           placement="top"
         >
@@ -30,6 +31,7 @@
           </el-button>
         </el-tooltip>
         <el-tooltip
+          :open-delay="600"
           :content="`Remover ${partName} somente desta disputa.`"
           placement="top"
         >

@@ -13,6 +13,7 @@
         v-else-if="!contact.isMain"
       >
         <el-tooltip
+          :open-delay="600"
           effect="dark"
           placement="bottom"
           :content="LGPDMessage"
