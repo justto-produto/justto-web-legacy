@@ -178,7 +178,7 @@ export default {
     },
 
     handleEditMemberName(name, accountId) {
-      this.changeMemberName({ name, accountId })
+      this.changeMemberName({ name, accountId, updateWorkspace: true })
     },
 
     handleEditMemberProfile(profile, personId) {

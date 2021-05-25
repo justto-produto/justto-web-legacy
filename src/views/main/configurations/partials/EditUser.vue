@@ -174,6 +174,8 @@ export default {
     editName() {
       this.localLoading = true
       this.changeMemberName({
+        updateWorkspace: false,
+        updatePerson: true,
         accountId: this.accountId,
         name: this.form.name
       }).then((_res) => {

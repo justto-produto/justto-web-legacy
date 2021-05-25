@@ -194,6 +194,8 @@ export default {
         }).then(({ value }) => {
           this.$jusSegment('Nome do usuário alterado no primeiro acesso')
           this.changeMemberName({
+            updatePerson: true,
+            updateWorkspace: false,
             accountId: this.accountId,
             name: value
           }).then(() => {
