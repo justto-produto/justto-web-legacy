@@ -164,6 +164,8 @@ export default {
       'setMainPhone',
       'updatePassword',
       'changeMemberName',
+      'changeLoggedPersonName',
+      'changeAccountName',
       'changeLoggedPersonPhone'
     ]),
 
@@ -178,7 +180,9 @@ export default {
         updatePerson: true,
         accountId: this.accountId,
         name: this.form.name
-      }).then((_res) => {
+      }).then(({ _ }) => {
+        this.changeLoggedPersonName(this.form.name)
+        this.changeAccountName(this.form.name)
         this.$jusSegment('Nome do usuário alterado na edição')
         this.$jusNotification({
           title: 'Yay!',
