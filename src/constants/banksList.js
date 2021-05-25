@@ -254,5 +254,6 @@ export default
   { code: '102', name: 'XP INVESTIMENTOS' },
   { code: '336', name: 'BANCO C6 S.A' },
   { code: '085', name: 'COOP CENTRAL AILOS' },
+  { code: '290', name: 'PAGSEGURO INTERNET S. A (PAGBANK)' },
   { code: '136', name: 'UNICRED COOPERATIVA LTDA' }
 ]
