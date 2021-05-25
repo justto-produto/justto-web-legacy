@@ -9,7 +9,12 @@
           class="ticket-actions__dynamic-buttons ticket-actions__buttons"
           @click="action.method(action.name)"
         >
+          <i
+            v-if="action.isElementIcon"
+            class="el-icon-video-play ticket-actions__icons_element"
+          />
           <JusIcon
+            v-else
             :icon="action.icon"
             class="ticket-actions__icons"
           />
@@ -118,8 +123,11 @@ export default {
         },
         {
           name: 'RESUME',
+          icon: 'el-icon-video-play',
           method: (action) => this.handlePauseResume(action),
-          isVisible: this.canResume
+          isVisible: this.canResume,
+          isDynamic: this.isPaused,
+          isElementIcon: true
         },
         {
           name: 'PAUSED',
@@ -184,11 +192,11 @@ export default {
           name: 'REDIRECTMANAGEMENT',
           icon: 'switch',
           isVisible: true,
-          isDynamic: true,
+          isDynamic: !this.isPaused,
           method: () => this.redirectToManagement()
         }
       ].filter(action => {
-        if (this.ticket.paused) {
+        if (this.isPaused) {
           return this.pausedDisputeActionList.includes(action.name)
         } else return action.isVisible
       })
@@ -198,6 +206,9 @@ export default {
     },
     isFavorite() {
       return this.ticket?.favorite
+    },
+    isPaused() {
+      return this.ticket.paused
     },
     isPreNegotiation() {
       const { status } = this.ticket
@@ -523,6 +534,9 @@ export default {
     .ticket-actions__icons {
       width: 20px;
       height: 20px;
+    }
+    .ticket-actions__icons_element {
+      font-size: 19px;
     }
   }
 

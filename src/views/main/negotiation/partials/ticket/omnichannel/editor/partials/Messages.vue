@@ -1,7 +1,6 @@
 <template>
-  <!-- ?  INSERIR AQUI O BLOQUEIO DAS MENSAGENS-->
   <section
-    v-if="!isInPreNegotiation"
+    v-if="!isInPreNegotiation && !isPaused"
     id="messagesTabEditorOmnichannelNegotiation"
     v-loading="showCKEditor && !editorReady"
     class="messages-container jus-ckeditor__parent"
@@ -77,7 +76,7 @@
     class="messages-container"
   >
     <span class="messages-container__pre-negotiation-alert">
-      Disputa em pré negociação. Inicie a disputa para enviar mensagens.
+      {{ loadingText }}
     </span>
   </section>
 </template>
@@ -124,7 +123,7 @@ export default {
       messageType: 'getEditorMessageType',
       getEditorReady: 'getEditorReady',
       editorText: 'getEditorText',
-      dispute: 'dispute'
+      ticket: 'getTicketOverview'
     }),
 
     sendMessagetext() {
@@ -149,8 +148,12 @@ export default {
       }
     },
 
+    isPaused() {
+      return this.ticket.paused
+    },
+
     loadingText() {
-      return this.dispute.paused
+      return this.isPaused
         ? 'Disputa pausada. Retome a disputa para enviar mensagens'
         : 'Disputa em pré negociação. Inicie a disputa para enviar mensagens'
     },
