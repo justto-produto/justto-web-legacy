@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div>
     <div
       :class="{'active': active}"
@@ -321,19 +321,40 @@
         </el-button>
       </span>
     </el-dialog>
+
+    <!-- DROP_LAWSUIT -->
+    <el-dialog
+      :visible.sync="showDropLawsuitDialog"
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      append-to-body
+      destroy-on-close
+      width="604px"
+      title="Cancelar disputa"
+      class="dialog-actions__increase-alert"
+    >
+      <DropLawsuitForm
+        @cancel="showDropLawsuitDialog = false"
+        @submit="handleDropLawsuit($event)"
+      />
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { getTracktitleByAction } from '@/utils'
+import { getTracktitleByAction, scapeHtml } from '@/utils'
 import { mapGetters, mapActions } from 'vuex'
 import CKEditor from 'ckeditor4-vue'
 
 export default {
   name: 'ManagementActions',
+
   components: {
-    ckeditor: CKEditor.component
+    ckeditor: CKEditor.component,
+    DropLawsuitForm: () => import('@/components/layouts/DropLawsuitForm')
   },
+
   props: {
     activeTab: {
       type: String,
@@ -344,8 +365,10 @@ export default {
       default: () => []
     }
   },
+
   data() {
     return {
+      showDropLawsuitDialog: false,
       showBulkMessageDialog: false,
       chooseSettledDialogVisible: false,
       chooseUnsettledDialogVisible: false,
@@ -358,6 +381,7 @@ export default {
       disputeNegotiatorMap: [],
       currentDisputeNegotiator: 0,
       allSelectedDisputes: 0,
+      dropLawsuitReason: '',
       message: '',
       note: '',
       unsettledType: '',
@@ -386,6 +410,7 @@ export default {
       }
     }
   },
+
   computed: {
     ...mapGetters({
       disputeStatuses: 'disputeStatuses',
@@ -449,6 +474,7 @@ export default {
       })
     }
   },
+
   created() {
     this.editorRedy = false
     if (!this.disputeStatuses.UNSETTLED || !Object.keys(this.disputeStatuses.UNSETTLED).length) {
@@ -459,9 +485,11 @@ export default {
     }
     this.$store.dispatch('getMyStrategiesLite')
   },
+
   beforeDestroy() {
     this.editorRedy = false
   },
+
   methods: {
     ...mapActions([
       'getDisputeStatuses',
@@ -474,11 +502,6 @@ export default {
       }, 250)
     },
 
-    // TODO: Transformar isso em um util
-    scapeHtml(text) {
-      return text.replace(/(<([^>]+)>)/gi, '')
-    },
-
     doAction(action) {
       const params = {
         type: action.toUpperCase(),
@@ -486,8 +509,8 @@ export default {
       }
       switch (action) {
         case 'DROP_LAWSUIT':
-          params.reasonKey = 'DISPUTE_DROPPED'
-          params.type = 'DELETE'
+          params.type = 'CANCEL_NEGOTIATION'
+          params.reasonKey = 'dropLawsuitReason'
           break
         case 'CHANGE_STRATEGY':
           params.strategyId = this.newStrategyId
@@ -502,12 +525,12 @@ export default {
           if (this.unsettledType) {
             Object.assign(params, {
               unsettledReasons: { [this.unsettledType]: this.disputeStatuses.UNSETTLED[this.unsettledType] },
-              note: this.scapeHtml(this.note)
+              note: scapeHtml(this.note)
             })
           }
           break
         case 'SETTLED':
-          Object.assign(params, { note: this.scapeHtml(this.note) })
+          Object.assign(params, { note: scapeHtml(this.note) })
       }
       if (this.isSelectedAll) {
         params.allSelected = true
@@ -517,7 +540,7 @@ export default {
     },
 
     dispatchAction(action, params) {
-      this.$store.dispatch('sendBatchAction', params).then(response => {
+      this.$store.dispatch('sendBatchAction', params).then(_response => {
         this.chooseDeleteDialogVisible = false
         this.chooseSettledDialogVisible = false
         this.chooseUnsettledDialogVisible = false
@@ -572,6 +595,20 @@ export default {
       this.closeBulkMessageDialog()
     },
 
+    openDropLawsuitDialog() {
+      this.showDropLawsuitDialog = true
+    },
+
+    // TODO: Tem que testar.
+    handleDropLawsuit(form) {
+      this.dispatchAction('DROP_LAWSUIT', {
+        type: 'DROP_LAWSUIT',
+        disputeIds: this.selectedIds,
+        allSelected: this.isSelectedAll,
+        ...form
+      })
+    },
+
     sendBatchAction(action) {
       const message = {
         title: this.$options.filters.capitalize(this.$t('action.' + action.toUpperCase())),
@@ -607,16 +644,20 @@ export default {
         this.checkDisputeNegotiators()
       } else if (action === 'SEND_BILK_MESSAGE') {
         this.openBulkMessageCompose()
+      } else if (action === 'DROP_LAWSUIT') {
+        this.openDropLawsuitDialog()
       } else {
         this.$confirm(message.content, message.title, configs).then(() => {
           this.doAction(action)
         })
       }
     },
+
     clearSelection() {
       this.$emit('disputes:clear')
       this.selectedIdsComp = []
     },
+
     checkFinishedDisputes(action, message, configs) {
       const req = {
         allSelected: this.isSelectedAll,
@@ -631,6 +672,7 @@ export default {
         })
       })
     },
+
     checkDisputeNegotiators() {
       const _ = require('lodash')
       let disputeNegotiatorMap = []
@@ -714,6 +756,7 @@ export default {
       })
       this.$store.commit('updateDisputeQuery', { key: 'id', value: [] })
     },
+
     changeNegotiator() {
       const isByGroup = !!this.disputeNegotiatorMap.length
       const params = {

@@ -286,6 +286,7 @@
     >
       <span />
     </el-dialog>
+
     <!-- CRIAR DIALOG AQUI BASEADO NO PERDER -->
     <el-dialog
       :visible.sync="dropLawsuitDialogVisible"
@@ -293,71 +294,16 @@
       :close-on-click-modal="false"
       :close-on-press-escape="false"
       append-to-body
+      destroy-on-close
       width="604px"
       title="Cancelar disputa"
       class="dialog-actions__increase-alert"
     >
-      <el-form
-        ref="dropLawsuitForm"
-        :model="dropLawsuitForm"
-        :rules="dropLawsuitRules"
-        :disabled="modalLoading"
-        label-position="top"
-      >
-        <el-row
-          :gutter="20"
-        >
-          <el-col :span="24">
-            <el-form-item
-              label="Motivo do cancelamento:"
-              prop="reason"
-            >
-              <el-select
-                v-model="dropLawsuitForm.reason"
-                placeholder="Escolha o motivo"
-                style="width: 100%;"
-              >
-                <el-option
-                  v-for="(key, value) in dropLawsuitReasons"
-                  :key="key"
-                  :value="value"
-                  :label="key"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item
-              label="Nota:"
-              prop="note"
-            >
-              <el-input
-                v-model="dropLawsuitForm.conclusionNote"
-                type="textarea"
-                rows="4"
-              />
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-form>
-      <div slot="footer">
-        <el-button
-          plain
-          @click="dropLawsuitDialogVisible = false"
-        >
-          Cancelar
-        </el-button>
-        <el-button
-          v-loading="modalLoading"
-          :disabled="modalLoading"
-          type="primary"
-          @click.prevent="handleDropLawsuit"
-        >
-          Confirmar
-        </el-button>
-      </div>
+      <DropLawsuitForm
+        :loading="modalLoading"
+        @cancel="dropLawsuitDialogVisible = false"
+        @submit="handleDropLawsuit($event)"
+      />
     </el-dialog>
   </section>
 </template>
@@ -367,14 +313,19 @@ import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'DialogActions',
+
+  components: {
+    DropLawsuitForm: () => import('@/components/layouts/DropLawsuitForm')
+  },
+
   props: {
     ticket: {
       type: Object,
       required: true
     }
   },
+
   data: () => ({
-    motivos: [{ value: 1, label: 'motivo 1' }, { value: 2, label: 'motivo 2' }],
     modalLoading: false,
     offerDialogVisible: false,
     offerFormType: 'MANUAL_COUNTERPROPOSAL',
@@ -383,13 +334,6 @@ export default {
       value: '',
       note: '',
       unsettledType: ''
-    },
-    dropLawsuitForm: {
-      reason: null,
-      conclusionNote: null
-    },
-    dropLawsuitRules: {
-      reason: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
     },
     offerFormRules: {
       unsettledType: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
@@ -405,12 +349,12 @@ export default {
     attachmentDialogVisible: false,
     dropLawsuitDialogVisible: false
   }),
+
   computed: {
     ...mapGetters({
       ticketParties: 'getTicketOverviewParties',
       workspaceMembers: 'workspaceMembers',
-      outcomeReasons: 'getOutcomeReasons',
-      dropLawsuitReasons: 'getDropLawsuitReasons'
+      outcomeReasons: 'getOutcomeReasons'
     }),
 
     isInsufficientUpperRange() {
@@ -499,19 +443,19 @@ export default {
       })
     }
   },
+
   beforeMount() {
     const { unsettledOutcomeReasons } = this
     if (!unsettledOutcomeReasons || !Object.keys(unsettledOutcomeReasons).length) {
       this.getOutcomeReasons('UNSETTLED')
     }
-    this.getDropLawsuitReasons()
   },
+
   methods: {
     ...mapActions([
       'getOutcomeReasons',
       'sendTicketAction',
       'sendOffer',
-      'getDropLawsuitReasons',
       'cancelTicket'
     ]),
 
@@ -744,25 +688,28 @@ export default {
       })
     },
 
-    handleDropLawsuit() {
+    handleDropLawsuit(dropLawsuitForm) {
       this.modalLoading = true
+
       const disputeId = this.$route.params.id
-      const { reason, conclusionNote } = this.dropLawsuitForm
-      this.validateForm('dropLawsuitForm')
-        .then(() => {
-          this.cancelTicket({ disputeId, reason, conclusionNote })
-            .then(() => {
-              this.$jusNotification({
-                message: 'Disputa cancelada com sucesso.',
-                title: 'Yay!',
-                type: 'success'
-              })
-              this.dropLawsuitDialogVisible = false
-              this.$jusSegment('Cancelamento de disputa pelo /negotiation', { disputeId })
-            })
-            .catch(error => this.$jusNotification({ error }))
+      const { reason, conclusionNote } = dropLawsuitForm
+
+      this.cancelTicket({
+        disputeId,
+        reason,
+        conclusionNote
+      }).then(() => {
+        this.$jusNotification({
+          message: 'Disputa cancelada com sucesso.',
+          title: 'Yay!',
+          type: 'success'
         })
-        .finally(() => { this.modalLoading = false })
+
+        this.dropLawsuitDialogVisible = false
+        this.$jusSegment('Cancelamento de disputa na tela /negotiation', { disputeId })
+      }).catch(error => this.$jusNotification({ error })).finally(() => {
+        this.modalLoading = false
+      })
     }
   }
 }
