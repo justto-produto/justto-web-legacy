@@ -72,7 +72,9 @@
         :have="haveGroupedOccurrences"
         :occurrences="groupedOccurrences"
       />
-      <el-tooltip>
+      <el-tooltip
+        :open-delay="600"
+      >
         <div
           slot="content"
           style="max-width: 400px; text-align: justify;"
