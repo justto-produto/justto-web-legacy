@@ -64,7 +64,6 @@ export default {
     dataList() {
       const {
         status,
-        paused,
         code,
         internalId,
         strategy,
@@ -118,7 +117,7 @@ export default {
         },
         {
           key: 'status',
-          value: this.$options.filters.capitalize(`${this.$t('ticket-status.' + status)} ${this.$tc('ticket-status.PAUSED', paused)}`),
+          value: this.$options.filters.capitalize(`${this.$t('occurrence.type.' + status)}`),
           component: 'TextInlineEditor',
           isEditable: false
         },
