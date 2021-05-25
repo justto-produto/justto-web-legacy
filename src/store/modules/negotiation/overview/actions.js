@@ -157,7 +157,7 @@ const overviewActions = {
 
     return new Promise((resolve, reject) => {
       const { id: bankAccountId } = account
-      const disputeRole = getters.getTicketOverviewParties.find(el => Number(el.personId) === Number(personId)).legacyDto
+      const disputeRole = getters.getTicketOverviewParties.find(el => Number(el.person.id) === Number(personId)).legacyDto
 
       axiosDispatch({
         url: `${disputeApiLegacy}/${disputeId}/dispute-roles`,
@@ -185,7 +185,7 @@ const overviewActions = {
     commit('incrementTicketOverviewCountGetters')
 
     return new Promise((resolve, reject) => {
-      const disputeRole = getters.getTicketOverviewParties.find(el => Number(el.personId) === Number(personId)).legacyDto
+      const disputeRole = getters.getTicketOverviewParties.find(el => Number(el.person.id) === Number(personId)).legacyDto
 
       axiosDispatch({
         url: `${disputeApiLegacy}/${disputeId}/dispute-roles`,
@@ -210,7 +210,7 @@ const overviewActions = {
     commit('incrementTicketOverviewCountGetters')
 
     return new Promise((resolve, reject) => {
-      const disputeRole = getters.getTicketOverviewParties.find(item => Number(item.personId) === Number(personId)).legacyDto
+      const disputeRole = getters.getTicketOverviewParties.find(item => Number(item.person.id) === Number(personId)).legacyDto
 
       axiosDispatch({
         url: `${disputeApiLegacy}/${disputeId}/dispute-roles`,

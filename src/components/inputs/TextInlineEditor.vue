@@ -127,6 +127,7 @@ export default {
       this.handleBlur(event)
     },
     handleBlur(event) {
+      this.$emit('blur')
       if (event && !event.currentTarget.contains(event.relatedTarget)) {
         if (this.escaping) {
           this.cancelEdit()
