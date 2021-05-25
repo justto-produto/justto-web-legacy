@@ -116,6 +116,7 @@ export default {
 
   computed: {
     ...mapGetters({
+      accountId: 'accountId',
       ghostMode: 'ghostMode',
       name: 'loggedPersonName',
       loggedPerson: 'loggedPerson',
@@ -163,7 +164,8 @@ export default {
   methods: {
     ...mapActions([
       'setGhostMode',
-      'myWorkspace'
+      'myWorkspace',
+      'changeMemberName'
     ]),
 
     changeWorkspace() {
@@ -190,11 +192,10 @@ export default {
           closeOnPressEscape: false,
           showClose: false
         }).then(({ value }) => {
-          // Alterar action here
-          const loggetPersonId = this.$store.getters.loggedPersonId
-          this.$store.dispatch('changePersonName', {
-            person: { id: loggetPersonId, name: value },
-            isEditingLoggedPerson: true
+          this.$jusSegment('Nome do usuário alterado no primeiro acesso')
+          this.changeMemberName({
+            accountId: this.accountId,
+            name: value
           }).then(() => {
             this.$jusNotification({
               title: 'Yay!',
