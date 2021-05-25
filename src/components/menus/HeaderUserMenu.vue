@@ -192,7 +192,7 @@ export default {
           closeOnPressEscape: false,
           showClose: false
         }).then(({ value }) => {
-          this.$jusSegment('Nome do usuário alterado no primeiro acesso')
+          this.$jusSegment('Nome do usuário alterado no primeiro')
           this.changeMemberName({
             accountId: this.accountId,
             name: value

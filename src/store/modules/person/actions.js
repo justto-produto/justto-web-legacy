@@ -24,13 +24,8 @@ const personActions = {
     })
   },
 
-  changeLoggedPersonName({ _ }, { id, name }) {
-    return axiosDispatch({
-      url: `${personsPath}/${id}/name`,
-      method: 'PUT',
-      data: { name },
-      commit: 'setLoggedPerson'
-    })
+  changeLoggedPersonName({ commit }, name) {
+    commit('setLoggedPersonName', name)
   },
 
   changeLoggedPersonPhone({ commit }, phone) {
