@@ -225,18 +225,18 @@ export default {
     isDisputePart({ name = '', document = '' }) {
       const cleanDoc = (doc = '') => (doc || '').replace(/\D+/g, '')
 
-      const isPart = this.disputeParts.filter(disputePart => {
+      const isPart = (this.disputeParts || []).filter(disputePart => {
         return isSimilarStrings(disputePart.name?.toLowerCase(), name?.toLowerCase(), 75) ||
           (!!document && cleanDoc(disputePart.documentNumber) === cleanDoc(document))
       }).length > 0
-      return isPart
+      return isPart || false
     },
 
     isDisputeLawyer({ name = '' }) {
-      const isDisputePart = this.disputeParts.filter(disputePart => {
+      const isDisputePart = (this.disputeParts || []).filter(disputePart => {
         return isSimilarStrings(name, disputePart.name, 75)
       }).length > 0
-      return isDisputePart
+      return isDisputePart || false
     },
 
     alreadyAdded({ name }) {

@@ -23,7 +23,10 @@
         <span v-if="status.icon">
           •
         </span>
-        <el-tooltip :content="status.tooltip">
+        <el-tooltip
+          :open-delay="600"
+          :content="status.tooltip"
+        >
           <jus-icon
             class="log-container__occurrence-about-icon"
             :icon="status.icon"

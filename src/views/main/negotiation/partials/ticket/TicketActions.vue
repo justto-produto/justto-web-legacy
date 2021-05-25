@@ -4,7 +4,10 @@
       v-for="action in actionsList.filter(a => a.isDynamic && a.isVisible)"
       :key="action.name"
     >
-      <el-tooltip :content="$options.filters.capitalize($tc(`actions.${action.name}.name`, action.label))">
+      <el-tooltip
+        :content="$options.filters.capitalize($tc(`actions.${action.name}.name`, action.label))"
+        :open-delay="600"
+      >
         <el-button
           class="ticket-actions__dynamic-buttons ticket-actions__buttons"
           @click="action.method(action.name)"
