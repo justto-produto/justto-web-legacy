@@ -1,7 +1,6 @@
 import moment from 'moment'
 
 const buildQuery = (q, command, disputesLength, noSort) => {
-  debugger
   let query = '?'
   for (const [key, value] of Object.entries(q)) {
     if (['total'].includes(key)) continue
