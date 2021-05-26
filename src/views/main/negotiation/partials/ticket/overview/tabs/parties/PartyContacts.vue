@@ -13,6 +13,7 @@
         v-else-if="!contact.isMain"
       >
         <el-tooltip
+          :open-delay="600"
           effect="dark"
           placement="bottom"
           :content="LGPDMessage"
@@ -29,42 +30,31 @@
           />
         </el-tooltip>
       </div>
-
-      <!-- <TextInlineEditor
-        v-model="contact[model]"
-        :mask="mask"
-        :filter="filter"
-        :is-editable="!disabled"
-        :is-deletable="!disabled"
-        :class="{
-          'party-contacts__infoline-data--selected': mappedRecipients.includes(contact[model]),
-          'party-contacts__infoline-data--disabled': !contact.isValid,
-          'party-contacts__infoline-data--secondary': !contact.isMain
-        }"
-        class="party-contacts__infoline-data"
-        @change="updateContact(contact.id, $event)"
-        @delete="removeContact(contact.id)"
-        @click="selectContact(contact[model], contact.isValid, contact.isMain)"
-      /> -->
-
       <div class="party-contacts__popover">
-        <el-popover
-          v-if="isOabContacts"
-          :ref="`popover-${contact.number}-${contact.state}`"
-          popper-class="party-contacts__info-popover-lawyer"
-          :placement="'top-end'"
-          trigger="click"
-          @hide="deactivePopover(`popover-${contact.number}-${contact.state}`)"
+        <el-tooltip
+          :open-delay="600"
+          effect="dark"
+          placement="left"
+          content="Ver mais informações"
         >
-          <lawyer-detail
-            @update="emitUpdate"
-          />
-          <i
-            slot="reference"
-            class="el-icon-info icon-info-popover"
-            @click="searchThisLawyer({ name: party.name, oabs: [contact] }, `popover-${contact.number}-${contact.state}`)"
-          />
-        </el-popover>
+          <el-popover
+            v-if="isOabContacts"
+            :ref="`popover-${contact.number}-${contact.state}`"
+            popper-class="party-contacts__info-popover-lawyer"
+            :placement="'top-end'"
+            trigger="click"
+            @hide="deactivePopover(`popover-${contact.number}-${contact.state}`)"
+          >
+            <lawyer-detail
+              @update="emitUpdate"
+            />
+            <i
+              slot="reference"
+              class="el-icon-info icon-info-popover"
+              @click="searchThisLawyer({ name: party.name, oabs: [contact] }, `popover-${contact.number}-${contact.state}`)"
+            />
+          </el-popover>
+        </el-tooltip>
         <TextInlineEditor
           v-model="contact[model]"
           :mask="mask"
