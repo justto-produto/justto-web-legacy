@@ -164,7 +164,6 @@ export default {
     },
 
     resetTicket(id) {
-      console.log('resetTicket')
       this.resetRecipients()
       this.resetOccurrences()
       this.resetMessageText()
