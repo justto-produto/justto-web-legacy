@@ -16,51 +16,20 @@ import TextTransformation from '@ckeditor/ckeditor5-typing/src/texttransformatio
 import Underline from '@ckeditor/ckeditor5-basic-styles/src/underline'
 import Mention from '@ckeditor/ckeditor5-mention/src/mention'
 import { normalizeString } from '@/utils'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   data() {
     return {
-      editor: ClassicEditor,
-      items: [
-        {
-          id: '{{dispute_provisioned_value}}',
-          name: 'Valor provisionado (Formatado como 0,00)',
-          type: 'text'
-        },
-        {
-          id: '{{last_note}}',
-          name: 'Última nota adicionada na disputa',
-          type: 'text'
-        },
-        {
-          id: '{{logo_url}}',
-          name: 'Logo do escritório/empresa configurada na workspace',
-          type: 'image'
-        },
-        {
-          id: '{{negotiator_name}}',
-          name: 'Nome do negociador da disputa',
-          type: 'text'
-        },
-        {
-          id: '{{import_date}}',
-          name: 'Data em que a disputa foi importada no formato dd/MM/yyyy',
-          type: 'text'
-        },
-        {
-          id: '{{negotiation_duedate}}',
-          name: 'Data limite da negociação',
-          type: 'text'
-        },
-        {
-          id: '{{dispute_value_of_claim}}',
-          name: 'Valor do processo (Formatado como 0,00)',
-          type: 'text'
-        }
-      ]
+      editor: ClassicEditor
     }
   },
+
   computed: {
+    ...mapGetters({
+      variables: 'getAvaliableVariablesToTemplate'
+    }),
+
     editorConfig() {
       return {
         plugins: [
@@ -113,9 +82,29 @@ export default {
           shouldNotGroupWhenFull: true
         }
       }
+    },
+
+    variablesList() {
+      const imgKeys = []
+      const linkKeys = []
+
+      return Object.keys(this.variables).map(key => {
+        return {
+          id: `{{${key}}}`,
+          name: `${this.variables[key]}`,
+          type: imgKeys.includes(key) ? 'img' : linkKeys.includes(key) ? 'link' : 'text'
+        }
+      })
     }
   },
+
+  beforeMount() {
+    this.getAvaliableVariablesToTemplate()
+  },
+
   methods: {
+    ...mapActions(['getAvaliableVariablesToTemplate']),
+
     MentionCustomization(editor) {
       // The upcast converter will convert view <a class='mention' href='' data-user-id=''>
       // elements to the model 'mention' text attribute.
@@ -177,37 +166,24 @@ export default {
         converterPriority: 'high'
       })
     },
+
     customItemRenderer(item) {
       return item.name
     },
+
     getFeedItems(queryText) {
-      // As an example of an asynchronous action, return a promise
-      // that resolves after a 100ms timeout.
-      // This can be a server request or any sort of delayed action.
-      return new Promise(resolve => {
-        setTimeout(() => {
-          const itemsToDisplay = this.items
-            // Filter out the full list of all items to only those matching the query text.
-            .filter(isItemMatching)
-            // Return 10 items max - needed for generic queries when the list may contain hundreds of elements.
-            .slice(0, 10)
-
-          resolve(itemsToDisplay)
-        }, 100)
-      })
-
-      // Filtering function - it uses the `name` and `username` properties of an item to find a match.
-      function isItemMatching(item) {
-        // Make the search case-insensitive.
+      function isItemMatching({ name, id }) {
         const searchString = normalizeString(queryText)
 
-        // Include an item in the search results if the name or username includes the current user input.
         return (
-          normalizeString(item.name).includes(searchString) ||
-          normalizeString(item.id).includes(searchString)
+          normalizeString(name).includes(searchString) ||
+          normalizeString(id).includes(searchString)
         )
       }
+
+      return this.variablesList.filter(isItemMatching).slice(0, 10)
     },
+
     ckeditorFocus() {
       if (this.editorInstance) {
         this.editorInstance.$_instance.editing.view.focus()
