@@ -538,7 +538,6 @@ export default {
           }
         }).finally(() => {
           this.setTicketOverviewPartyContact(params).then(() => { // Salva a OAB
-            console.log(phones, emails)
             Promise.all([
               // Salva todos os telefones novos encontrados pela OAB.
               ...phones.map(({ number }) => this.addContact(number, 'phone')),
