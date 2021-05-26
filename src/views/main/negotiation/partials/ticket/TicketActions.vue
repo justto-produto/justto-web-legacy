@@ -164,8 +164,11 @@ export default {
         },
         {
           name: 'RENEGOTIATE',
+          icon: 'el-icon-refresh-left',
           method: (action) => this.handleRenegotiate(action),
-          isVisible: this.canRenegotiate
+          isVisible: this.canRenegotiate || this.isCanceled,
+          isDynamic: this.isCanceled,
+          isElementIcon: true
         },
         {
           name: 'UPLOAD_ATTACHMENT',
@@ -201,11 +204,16 @@ export default {
       ].filter(action => {
         if (this.isPaused) {
           return this.pausedDisputeActionList.includes(action.name)
+        } else if (this.isCanceled) {
+          return this.canceledDisputeActionList.includes(action.name)
         } else return action.isVisible
       })
     },
     pausedDisputeActionList() {
       return ['RESUME', 'REDIRECTMANAGEMENT', 'UPLOAD_ATTACHMENT', 'EDIT_NEGOTIATORS', `PRINT_TICKET_${this.activeTab}`]
+    },
+    canceledDisputeActionList() {
+      return ['RENEGOTIATE', 'UPLOAD_ATTACHMENT', `PRINT_TICKET_${this.activeTab}`]
     },
     isFavorite() {
       return this.ticket?.favorite
@@ -216,6 +224,10 @@ export default {
     isPreNegotiation() {
       const { status } = this.ticket
       return status === 'PRE_NEGOTIATION'
+    },
+    isCanceled() {
+      const { status } = this.ticket
+      return status === 'CANCELED'
     },
     canSettled() {
       const { isPreNegotiation, ticket } = this
@@ -440,7 +452,7 @@ export default {
       const { disputeId, hasDraft } = this.ticket
 
       this.confirmAction(action)
-        .then(() => this.revertStatus({ disputeId, action })
+        .then(() => this.revertStatus({ disputeId, action, remove: true })
           .then(() => {
             if (hasDraft) {
               const confirmMessage = 'Esta disputa possui documento gerado, deseja exclui-lo?'
@@ -464,20 +476,7 @@ export default {
     },
 
     handleDropLawsuit(action) {
-      const { disputeId } = this.ticket
-      const confirmMessage = 'Esta ação é irreversível, tem certeza que deseja continuar?'
-
-      this.confirmAction(action, confirmMessage)
-        .then(() => {
-          this.deleteTicket({ disputeId, reason: 'DISPUTE_DROPPED' })
-            .then(() => {
-              this.concludeAction(action, disputeId)
-              this.$router.push('/negotiation')
-            })
-            .catch(error => {
-              this.$jusNotification({ error })
-            })
-        })
+      this.$refs.dialogActions.openDropLawsuitDialog(action)
     },
 
     handleStartNegotiation(action) {
