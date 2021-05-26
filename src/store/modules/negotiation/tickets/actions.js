@@ -65,6 +65,7 @@ const overviewActions = {
 
   setTicketsActiveTab({ commit }, activeTab) {
     commit('setTicketsActiveTab', activeTab)
+    localStorage.setItem('TICKET_ACTIVE_TAB', activeTab)
   },
 
   updateActiveTab({ state, commit }, disputeStatus) {
