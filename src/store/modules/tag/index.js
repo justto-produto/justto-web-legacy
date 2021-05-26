@@ -8,6 +8,12 @@ const tagModule = {
     disputeTags: [],
     filteredTags: [],
     colors: [
+      '#f1c40f', // 0 amarelo
+      '#e74c3c', // 1 vermelho
+      '#f39c12', // 2 laranja
+      '#3498db', // 3 azul
+      '#1abc9c', // 4 verde
+      '#9b59b6', //  5 roxo
       '#FFCA36',
       '#64CD32',
       '#966DF7',
@@ -22,12 +28,6 @@ const tagModule = {
       '#D4FBF7',
       '#1AABE5',
       '#707070',
-      '#f1c40f', // 0 amarelo
-      '#e74c3c', // 1 vermelho
-      '#f39c12', // 2 laranja
-      '#3498db', // 3 azul
-      '#1abc9c', // 4 verde
-      '#9b59b6', //  5 roxo
       '#F1F1F3'
     ],
     icons: [
