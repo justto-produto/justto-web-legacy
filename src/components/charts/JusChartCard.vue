@@ -48,7 +48,7 @@
                 :width="npsWidth"
                 :color="colors"
                 :percentage="dataset.data[0] | calcNps"
-                :format="(value) => `${value}`"
+                :format="(value) => `${dataset.data[0]}`"
               />
               <span class="progress-label">
                 nps
