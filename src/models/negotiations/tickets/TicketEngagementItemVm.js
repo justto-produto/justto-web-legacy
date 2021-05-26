@@ -14,7 +14,8 @@ export default class TicketEngagementItemVm extends TicketItemVm {
     super(dispute)
     // this.pendingReason = new CodedValueDomainDto(pendingReason)
     // this.communications = new CommunicationsEngagementStatusVm(communications)
-    this.pendingReason = null
+    this.pendingReason = dispute.pendingReason || {}
+    this.properties = dispute.properties || {}
     this.communications = null
   }
 }

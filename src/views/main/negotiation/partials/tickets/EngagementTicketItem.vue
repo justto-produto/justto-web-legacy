@@ -25,21 +25,20 @@
       </div>
       <div class="communication-ticket-item-container__message">
         <el-tooltip
-          :disabled="!isPreNegotiation"
-          :open-delay="500"
+          :disabled="!isInPreNegotiaionTab"
+          :open-delay="250"
           :placement="'bottom-start'"
         >
           <div
             slot="content"
-            v-html="reason"
+            v-html="resumeReason"
           />
           <span>
-            {{ reason }}
+            {{ isInPreNegotiaionTab ? reason : resumeReason }}
           </span>
         </el-tooltip>
       </div>
     </div>
-    <!-- <div class="communication-ticket-item-container__gray" /> -->
   </li>
 </template>
 
@@ -60,6 +59,7 @@ export default {
       required: true
     }
   },
+
   computed: {
     ...mapGetters({
       activeTab: 'getTicketsActiveTab'
@@ -68,15 +68,31 @@ export default {
     isActive() {
       return Number(this.$route.params?.id || '') === Number(this.ticket?.disputeId)
     },
+
     plaintiffName() {
       const { plaintiff } = this.ticket
       return plaintiff ? plaintiff.name : 'Sem parte'
     },
+
+    isInPreNegotiaionTab() {
+      return this.activeTab === 'pre-negotiation'
+    },
+
     reason() {
       const { pendingReason, disputeStatus } = this.ticket
+      if (pendingReason?.keywords) {
+        return pendingReason.keywords.join(', ')
+      } else if (pendingReason?.description) {
+        return pendingReason?.description
+      } else {
+        return this.$options.filters.capitalize(this.$tc(`dispute.status.${disputeStatus}`))
+      }
+    },
+
+    resumeReason() {
+      const { pendingReason, disputeStatus } = this.ticket
       if (pendingReason?.description) {
-        const reasons = pendingReason.description.replace('[', '').replace(']', '').split(',')
-        return `Encontrou termos ${reasons.join(',')}`
+        return pendingReason.description
       } else {
         return this.$options.filters.capitalize(this.$tc(`dispute.status.${disputeStatus}`))
       }
