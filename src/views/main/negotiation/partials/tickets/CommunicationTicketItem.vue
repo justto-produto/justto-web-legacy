@@ -103,6 +103,7 @@ export default {
     isActive() {
       return Number(this.$route.params.id) === Number(this.ticket?.disputeId)
     },
+
     lastInboundInteraction() {
       const { lastInboundInteraction, lastReceivedMessage, disputeStatus, expirationDate } = this.ticket
       if (lastInboundInteraction?.type && lastInboundInteraction?.type !== 'COMMUNICATION') {
@@ -121,10 +122,11 @@ export default {
       } else {
         return {
           message: 'Disputa ' + this.$t(`ticket-status.${disputeStatus}`),
-          dateTime: expirationDate || '--/--/--'
+          dateTime: expirationDate.dateTime || '--/--/--'
         }
       }
     },
+
     plaintiffName() {
       const { plaintiff } = this.ticket
       return plaintiff ? plaintiff.name : 'Sem parte'
