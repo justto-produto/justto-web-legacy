@@ -1,5 +1,6 @@
 const actionsGetters = {
-  getOutcomeReasons: ({ outcomeReasons }) => outcomeReasons
+  getOutcomeReasons: ({ outcomeReasons }) => outcomeReasons,
+  getDropLawsuitReasons: ({ dropLawsuitReasons }) => dropLawsuitReasons
 }
 
 export default actionsGetters

@@ -343,7 +343,8 @@ export default {
           return [
             'EXPIRED',
             'SETTLED',
-            'UNSETTLED'
+            'UNSETTLED',
+            'CANCELED'
           ]
         case '1':
           return [
@@ -364,7 +365,8 @@ export default {
             'EXPIRED',
             'SETTLED',
             'UNSETTLED',
-            'REFUSED'
+            'REFUSED',
+            'CANCELED'
           ]
       }
     }

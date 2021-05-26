@@ -115,6 +115,12 @@ export default {
       this.needScroll = true
     })
     eventBus.$on(events.TICKET_CHANGE.callback, this.resetTicket)
+
+    if (Number(this.lastMessage.disputeId) !== Number(this.id)) {
+      const id = Number(location.href.split('/').slice(-1).pop())
+
+      this.resetTicket(id)
+    }
   },
 
   updated() {
@@ -157,13 +163,13 @@ export default {
       }
     },
 
-    resetTicket(_current) {
+    resetTicket(id) {
       this.resetRecipients()
       this.resetOccurrences()
       this.resetMessageText()
       this.resetNoteText()
-      if (this.lastMessage.disputeId !== this.id) {
-        this.getOccurrences(this.id)
+      if (this.lastMessage.disputeId !== id || !this.occurrences.length) {
+        this.getOccurrences(id)
       }
       this.localLoading = false
     }

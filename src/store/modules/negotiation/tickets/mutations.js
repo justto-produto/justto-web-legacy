@@ -22,6 +22,19 @@ const ticketsMutations = {
     if (ticketIndex > -1) Vue.delete(tickets.content, ticketIndex)
   },
 
+  removeCanceledTicket: ({ tickets }, { payload: { disputeId, remove } }) => {
+    if (remove) {
+      const ticketIndex = getTicketIndex(tickets.content, disputeId)
+      if (ticketIndex > -1) Vue.delete(tickets.content, ticketIndex)
+    }
+  },
+
+  cancelTicket: (state, { payload }) => {
+    const { disputeId } = payload
+    const content = [...state.tickets.content.filter((ticket) => Number(ticket.disputeId) !== Number(disputeId))]
+    Vue.set(state.tickets, 'content', content)
+  },
+
   setTicketsQuery: ({ ticketsQuery }, { key, value }) => Vue.set(ticketsQuery, key, value),
 
   addTicketQueryPage: ({ ticketsQuery }) => (ticketsQuery.page += 1),
@@ -75,7 +88,6 @@ const ticketsMutations = {
   setTicketVisualized: ({ tickets }, { payload }) => {
     const { content } = tickets
     const { disputeId, visualized, anonymous } = payload
-
     if (!anonymous) {
       const ticketIndex = getTicketIndex(content, disputeId)
       if (ticketIndex > -1) Vue.set(content[ticketIndex], 'visualized', visualized)

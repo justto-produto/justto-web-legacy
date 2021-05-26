@@ -36,7 +36,10 @@
         •
       </span>
 
-      <el-tooltip :content="status.tooltip">
+      <el-tooltip
+        :open-delay="600"
+        :content="status.tooltip"
+      >
         <jus-icon
           class="negotiator-container__about__icon"
           :icon="status.icon"
