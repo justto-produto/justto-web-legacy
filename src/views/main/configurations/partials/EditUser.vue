@@ -132,6 +132,7 @@ export default {
 
   computed: {
     ...mapGetters({
+      accountId: 'accountId',
       id: 'loggedPersonId',
       name: 'loggedPersonName',
       hasName: 'loggedPersonHasName',
@@ -162,7 +163,9 @@ export default {
     ...mapActions([
       'setMainPhone',
       'updatePassword',
+      'changeMemberName',
       'changeLoggedPersonName',
+      'changeAccountName',
       'changeLoggedPersonPhone'
     ]),
 
@@ -170,14 +173,17 @@ export default {
       this.localLoading = false
       this.$emit('close')
     },
-
     editName() {
       this.localLoading = true
-      this.changeLoggedPersonName({
-        id: this.id,
+      this.changeMemberName({
+        updateWorkspace: false,
+        updatePerson: true,
+        accountId: this.accountId,
         name: this.form.name
-      }).then((res) => {
-        this.$jusSegment('Nome do usuário alterado')
+      }).then(({ _ }) => {
+        this.changeLoggedPersonName(this.form.name)
+        this.changeAccountName(this.form.name)
+        this.$jusSegment('Nome do usuário alterado na edição')
         this.$jusNotification({
           title: 'Yay!',
           message: 'Nome alterado com sucesso.',
