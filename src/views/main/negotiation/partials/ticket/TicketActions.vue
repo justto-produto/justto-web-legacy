@@ -183,7 +183,7 @@ export default {
           name: 'START_NEGOTIATION',
           icon: 'right-arrow',
           method: (action) => this.handleStartNegotiation(action),
-          isVisible: this.isPreNegotiation,
+          isVisible: this.isPreNegotiation || this.isCanceled,
           isDynamic: true
         },
         {
@@ -201,11 +201,16 @@ export default {
       ].filter(action => {
         if (this.isPaused) {
           return this.pausedDisputeActionList.includes(action.name)
+        } else if (this.isCanceled) {
+          return this.canceledDisputeActionList.includes(action.name)
         } else return action.isVisible
       })
     },
     pausedDisputeActionList() {
       return ['RESUME', 'REDIRECTMANAGEMENT', 'UPLOAD_ATTACHMENT', 'EDIT_NEGOTIATORS', `PRINT_TICKET_${this.activeTab}`]
+    },
+    canceledDisputeActionList() {
+      return ['START_NEGOTIATION', 'UPLOAD_ATTACHMENT', `PRINT_TICKET_${this.activeTab}`]
     },
     isFavorite() {
       return this.ticket?.favorite
@@ -216,6 +221,10 @@ export default {
     isPreNegotiation() {
       const { status } = this.ticket
       return status === 'PRE_NEGOTIATION'
+    },
+    isCanceled() {
+      const { status } = this.ticket
+      return status === 'CANCELED'
     },
     canSettled() {
       const { isPreNegotiation, ticket } = this

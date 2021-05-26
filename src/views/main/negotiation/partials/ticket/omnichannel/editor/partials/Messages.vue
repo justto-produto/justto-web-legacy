@@ -1,6 +1,6 @@
 <template>
   <section
-    v-if="!isInPreNegotiation && !isPaused"
+    v-if="!isInPreNegotiation && !isPaused && !isCanceled"
     id="messagesTabEditorOmnichannelNegotiation"
     v-loading="showCKEditor && !editorReady"
     class="messages-container jus-ckeditor__parent"
@@ -152,10 +152,15 @@ export default {
       return this.ticket.paused
     },
 
+    isCanceled() {
+      const { status } = this.ticket
+      return status === 'CANCELED'
+    },
+
     loadingText() {
-      return this.isPaused
-        ? 'Disputa pausada. Retome a disputa para enviar mensagens'
-        : 'Disputa em pré negociação. Inicie a disputa para enviar mensagens'
+      if (this.isPaused || this.isCanceled) {
+        return `Disputa ${this.isPaused ? 'pausada' : 'cancelada'}. Retome a disputa para enviar mensagens`
+      } else return 'Disputa em pré negociação. Inicie a disputa para enviar mensagens'
     },
 
     showCKEditor() {
