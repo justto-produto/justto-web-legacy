@@ -15,6 +15,13 @@ const ticketsMutations = {
     if (ticketIndex > -1) Vue.delete(tickets.content, ticketIndex)
   },
 
+  removeCanceledTicket: ({ tickets }, { payload: { disputeId, remove } }) => {
+    if (remove) {
+      const ticketIndex = getTicketIndex(tickets.content, disputeId)
+      if (ticketIndex > -1) Vue.delete(tickets.content, ticketIndex)
+    }
+  },
+
   cancelTicket: (state, { payload }) => {
     const { disputeId } = payload
     const content = [...state.tickets.content.filter((ticket) => Number(ticket.disputeId) !== Number(disputeId))]

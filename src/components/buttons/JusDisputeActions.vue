@@ -653,10 +653,10 @@ export default {
       ]
     },
     canSettled() {
-      return this.dispute && this.dispute.status && this.dispute.status !== 'SETTLED' && !this.isPreNegotiation
+      return this.dispute?.status !== 'SETTLED' && !this.isPreNegotiation
     },
     canUnsettled() {
-      return this.dispute && this.dispute.status && this.dispute.status !== 'UNSETTLED' && !this.isPreNegotiation
+      return this.dispute?.status !== 'UNSETTLED' && !this.isPreNegotiation
     },
     canResume() {
       return this.dispute && this.dispute.paused && !this.isPreNegotiation
@@ -665,16 +665,16 @@ export default {
       return this.dispute && !this.dispute.paused && !this.isPreNegotiation
     },
     canMarkAsNotRead() {
-      return this.dispute && this.dispute.status && !['IMPORTED', 'ENRICHED', 'ENGAGEMENT'].includes(this.dispute.status) && !this.isPreNegotiation
+      return this.dispute?.status && !['IMPORTED', 'ENRICHED', 'ENGAGEMENT'].includes(this.dispute.status) && !this.isPreNegotiation
     },
     canSendCounterproposal() {
-      return this.dispute && this.dispute.status && !['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(this.dispute.status) && !this.isPreNegotiation
+      return this.dispute?.status && !['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(this.dispute.status) && !this.isPreNegotiation
     },
     canMoveToRunning() {
-      return this.dispute && this.dispute.status && ['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(this.dispute.status) && !this.isPreNegotiation
+      return this.dispute?.status && ['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED', 'CANCELED'].includes(this.dispute.status) && !this.isPreNegotiation
     },
     canRestartEngagement() {
-      return this.dispute && this.dispute.status && !['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(this.dispute.status) && !this.isPreNegotiation
+      return this.dispute?.status && !['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(this.dispute.status) && !this.isPreNegotiation
     },
     isPreNegotiation() {
       return this.dispute.status === 'PRE_NEGOTIATION'
@@ -988,7 +988,7 @@ export default {
         })
       })
     },
-    dropLawsuit() {
+    handleDropLawsuit() {
       this.modalLoading = true
       const disputeId = this.$route.params.id
       const { reason, conclusionNote } = this.dropLawsuitForm

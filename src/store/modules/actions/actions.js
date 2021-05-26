@@ -39,12 +39,13 @@ const actionsActions = {
   },
 
   revertStatus({ _ }, params) {
-    let { disputeId, action } = params
+    let { disputeId, action, remove = false } = params
     action = action.toLowerCase().replace('_', '-')
-
     return axiosDispatch({
       url: `${disputesPath}/${disputeId}/${action}`,
-      method: 'PATCH'
+      method: 'PATCH',
+      payload: { disputeId, remove },
+      mutation: 'removeCanceledTicket'
     })
   },
 

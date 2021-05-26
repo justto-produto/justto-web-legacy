@@ -164,8 +164,11 @@ export default {
         },
         {
           name: 'RENEGOTIATE',
+          icon: 'el-icon-refresh-left',
           method: (action) => this.handleRenegotiate(action),
-          isVisible: this.canRenegotiate
+          isVisible: this.canRenegotiate || this.isCanceled,
+          isDynamic: this.isCanceled,
+          isElementIcon: true
         },
         {
           name: 'UPLOAD_ATTACHMENT',
@@ -183,7 +186,7 @@ export default {
           name: 'START_NEGOTIATION',
           icon: 'right-arrow',
           method: (action) => this.handleStartNegotiation(action),
-          isVisible: this.isPreNegotiation || this.isCanceled,
+          isVisible: this.isPreNegotiation,
           isDynamic: true
         },
         {
@@ -210,7 +213,7 @@ export default {
       return ['RESUME', 'REDIRECTMANAGEMENT', 'UPLOAD_ATTACHMENT', 'EDIT_NEGOTIATORS', `PRINT_TICKET_${this.activeTab}`]
     },
     canceledDisputeActionList() {
-      return ['START_NEGOTIATION', 'UPLOAD_ATTACHMENT', `PRINT_TICKET_${this.activeTab}`]
+      return ['RENEGOTIATE', 'UPLOAD_ATTACHMENT', `PRINT_TICKET_${this.activeTab}`]
     },
     isFavorite() {
       return this.ticket?.favorite
@@ -449,7 +452,7 @@ export default {
       const { disputeId, hasDraft } = this.ticket
 
       this.confirmAction(action)
-        .then(() => this.revertStatus({ disputeId, action })
+        .then(() => this.revertStatus({ disputeId, action, remove: true })
           .then(() => {
             if (hasDraft) {
               const confirmMessage = 'Esta disputa possui documento gerado, deseja exclui-lo?'

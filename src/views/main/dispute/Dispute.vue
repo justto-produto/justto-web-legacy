@@ -230,7 +230,7 @@
                 name="1"
               >
                 <el-card
-                  v-loading="isPaused || isPreNegotiation"
+                  v-loading="isPaused || isPreNegotiation || isCanceled"
                   :element-loading-text="loadingText"
                   element-loading-spinner="el-icon-video-pause"
                   element-loading-background="#fff"
@@ -522,10 +522,13 @@ export default {
     isPreNegotiation() {
       return this.dispute.status === 'PRE_NEGOTIATION'
     },
+    isCanceled() {
+      return this.dispute?.status === 'CANCELED'
+    },
     loadingText() {
-      return this.isPaused
-        ? 'Disputa pausada. Retome a disputa para enviar mensagens'
-        : 'Disputa em pré negociação. Inicie a disputa para enviar mensagens'
+      if (this.isPaused || this.isCanceled) {
+        return `Disputa ${this.isPaused ? 'pausada' : 'cancelada'}. Retome a disputa para enviar mensagens`
+      } else return 'Disputa em pré negociação. Inicie a disputa para enviar mensagens'
     },
     isFavorite() {
       return this.dispute ? this.dispute.favorite : false
