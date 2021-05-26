@@ -226,6 +226,7 @@
     "ADMINISTRATOR": "administrador"
   },
   "action": {
+    "CANCEL": "cancelar disputa",
     "RESTART_ENGAGEMENT": "reiniciar",
     "RESTART-ENGAGEMENT": "reiniciar disputa",
     "RESEND-MESSAGES": "reenviar mensagens automáticas",

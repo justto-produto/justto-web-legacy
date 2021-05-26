@@ -599,14 +599,14 @@ export default {
       this.showDropLawsuitDialog = true
     },
 
-    // TODO: Tem que testar.
     handleDropLawsuit(form) {
-      this.dispatchAction('DROP_LAWSUIT', {
-        type: 'DROP_LAWSUIT',
+      this.dispatchAction('CANCEL', {
+        type: 'CANCEL',
         disputeIds: this.selectedIds,
         allSelected: this.isSelectedAll,
         ...form
       })
+      this.showDropLawsuitDialog = false
     },
 
     sendBatchAction(action) {
