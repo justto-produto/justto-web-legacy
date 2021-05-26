@@ -58,7 +58,10 @@
         @click="removePropriety(propriety.key)"
       />
     </div>
-    <el-tooltip content="Propriedade não editável">
+    <el-tooltip
+      content="Propriedade não editável"
+      :open-delay="600"
+    >
       <div
         v-if="disputeProperties['ENRIQUECIDO']"
         class="dispute-properties-view__line"
@@ -98,7 +101,10 @@
           @keyup.enter.exact.native="newPropriety"
         />
       </div>
-      <el-tooltip content="Adicionar propriedade">
+      <el-tooltip
+        content="Adicionar propriedade"
+        :open-delay="500"
+      >
         <el-link
           :underline="false"
           type="primary"

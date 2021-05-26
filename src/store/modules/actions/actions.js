@@ -11,6 +11,14 @@ const actionsActions = {
     })
   },
 
+  getDropLawsuitReasons({ _ }, _payload) {
+    const url = `${disputesPath}/outcome-reasons/CANCELED`
+    return axiosDispatch({
+      url,
+      mutation: 'setDropLawsuitReasons'
+    })
+  },
+
   setTicketVisualized({ _ }, params) {
     const { disputeId } = params
 
@@ -31,12 +39,13 @@ const actionsActions = {
   },
 
   revertStatus({ _ }, params) {
-    let { disputeId, action } = params
+    let { disputeId, action, remove = false } = params
     action = action.toLowerCase().replace('_', '-')
-
     return axiosDispatch({
       url: `${disputesPath}/${disputeId}/${action}`,
-      method: 'PATCH'
+      method: 'PATCH',
+      payload: { disputeId, remove },
+      mutation: 'removeCanceledTicket'
     })
   },
 
@@ -71,6 +80,17 @@ const actionsActions = {
       method: 'DELETE',
       mutation: 'deleteTicket',
       payload: disputeId
+    })
+  },
+
+  cancelTicket({ _ }, payload) {
+    const { disputeId } = payload
+    return axiosDispatch({
+      url: `${disputesPath}/v2/${disputeId}/cancel`,
+      method: 'PATCH',
+      mutation: 'cancelTicket',
+      payload: payload,
+      data: payload
     })
   },
 

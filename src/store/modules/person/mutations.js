@@ -26,6 +26,11 @@ const personMutations = {
   },
   clearOnlineDocs(state) {
     Vue.set(state, 'onlineDocuments', {})
+  },
+
+  setLoggedPersonName(state, name) {
+    Vue.set(state.loggedPerson, 'name', name)
+    localStorage.setItem('jusperson', JSON.stringify({ ...state.loggedPerson, name }))
   }
 }
 

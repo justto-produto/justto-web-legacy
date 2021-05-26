@@ -274,6 +274,10 @@ router.beforeEach((to, from, next) => {
 
   if (to.name === 'ticket') {
     eventBus.$emit(events.TICKET_CHANGE.callback, to.params.id, from?.params?.id)
+
+    if (from.name !== 'ticket' && to.params?.id) {
+      eventBus.$emit(events.TICKET_CHANGE.callback, to.params.id, from?.params?.id)
+    }
   }
 })
 

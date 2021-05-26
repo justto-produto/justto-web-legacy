@@ -183,7 +183,42 @@
       "EXPIRED": "expirado",
       "FAVORITE": "Aguardar análise da empresa",
       "DISFAVOR": "Desmarcar aguardar análise da empresa",
-      "PRE_NEGOTIATION": "pre-negociação"
+      "PRE_NEGOTIATION": "pre-negociação",
+      "CANCELED": "cancelada"
+    },
+    "interaction": {
+      "message": {
+        "status": {
+          "WAITING": {
+            "preposition": "para",
+            "label": "agendada"
+          },
+          "PROCESSED": {
+            "preposition": "por",
+            "label": "recebida"
+          },
+          "PROCESSED_BY_USER": {
+            "preposition": "em",
+            "label": "recebida pelo usuário"
+          },
+          "FAILED": {
+            "preposition": "para",
+            "label": "falha no envio"
+          },
+          "CANCELED": {
+            "preposition": "para",
+            "label": "envio cancelado"
+          },
+          "RETRYING": {
+            "preposition": "para",
+            "label": "reenviando"
+          },
+          "WAITING_TO_RESPONSE": {
+            "preposition": "de",
+            "label": "aguardando resposta"
+          }
+        }
+      }
     }
   },
   "profile": {
@@ -191,6 +226,7 @@
     "ADMINISTRATOR": "administrador"
   },
   "action": {
+    "CANCEL": "cancelar disputa",
     "RESTART_ENGAGEMENT": "reiniciar",
     "RESTART-ENGAGEMENT": "reiniciar disputa",
     "RESEND-MESSAGES": "reenviar mensagens automáticas",
@@ -215,7 +251,7 @@
     "CHANGE_EXPIRATION_DATE": "data limite",
     "RENEGOTIATE": "retornar para negociação",
     "EDIT-NEGOTIATORS": "editar negociadores",
-    "DROP_LAWSUIT": "confirmar baixa definitiva",
+    "DROP_LAWSUIT": "cancelar disputa",
     "START_NEGOTIATON": "inicar negociação",
     "SEND_BILK_MESSAGE": "Enviar mensagens em massa",
     "tooltip": {
@@ -283,8 +319,8 @@
       "feedback-message": ""
     },
     "DROP_LAWSUIT": {
-      "name": "confirmar baixa definitiva",
-      "feedback-message": "<b>baixa definitiva</b>"
+      "name": "cancelar disputa",
+      "feedback-message": "<b>cancelar disputa</b>"
     },
     "START_NEGOTIATION": {
       "name": "iniciar negociação",
@@ -359,6 +395,10 @@
     "NEGOTIATOR_ACCEPTED": {
       "icon": "justto",
       "message": "Informou dados bancários"
+    },
+    "CANCELED": {
+      "icon": "rejected-red",
+      "message": "Negociação cancelada."
     }
   },
   "roles": {
@@ -428,7 +468,8 @@
     "SETTLED": "ganha",
     "UNSETTLED": "perdida",
     "PRE_NEGOTIATION": "pre-negociação",
-    "PAUSED": "(pausada) | "
+    "PAUSED": "(pausada) | ",
+    "CANCELED": "cancelada"
   },
   "tickets-tabs": {
     "pre-negotiation": "pré negociação",

@@ -107,6 +107,9 @@ const accountActions = {
       method: 'GET',
       mutation: 'setAccountProperty'
     })
+  },
+  changeAccountName({ commit }, { name }) {
+    commit('setAccountName', { name })
   }
   // getUserPreferences({ state }) {
   //   return axiosDispatch({

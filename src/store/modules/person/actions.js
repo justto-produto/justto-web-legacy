@@ -11,6 +11,8 @@ const personActions = {
     return axiosDispatch({ url: `${personsPath}/${id}` })
   },
   refreshPerson({ _ }, id) {
+    console.log('refreshPerson', id)
+
     return axiosDispatch({
       url: `${personsPath}/${id}`,
       mutation: 'setLoggedPerson'
@@ -24,13 +26,8 @@ const personActions = {
     })
   },
 
-  changeLoggedPersonName({ _ }, { id, name }) {
-    return axiosDispatch({
-      url: `${personsPath}/${id}/name`,
-      method: 'PUT',
-      data: { name },
-      commit: 'setLoggedPerson'
-    })
+  changeLoggedPersonName({ commit }, name) {
+    commit('setLoggedPersonName', name)
   },
 
   changeLoggedPersonPhone({ commit }, phone) {
@@ -55,12 +52,20 @@ const personActions = {
       })
     })
   },
-  changeMemberName({ _ }, { name, accountId }) {
-    return axiosDispatch({
-      url: `${accountsPath}/workspaces/${accountId}/change-name`,
-      method: 'PATCH',
-      data: { value: name },
-      action: 'getWorkspaceTeam'
+  changeMemberName({ dispatch, getters }, { name, accountId, updateWorkspace = false, updatePerson = false }) {
+    return new Promise((resolve, reject) => {
+      axiosDispatch({
+        url: `${accountsPath}/workspaces/${accountId}/change-name`,
+        method: 'PATCH',
+        data: { value: name }
+      }).then(() => {
+        console.log('getters.loggedPersonId', getters.loggedPersonId, updatePerson)
+
+        Promise.all([
+          updateWorkspace ? dispatch('getWorkspaceTeam') : () => {},
+          updatePerson ? dispatch('refreshPerson', getters.loggedPersonId) : () => {}
+        ]).then(resolve).catch(reject)
+      }).catch(reject)
     })
   },
   updatePersonProfile({ dispatch }, { profile, personId }) {

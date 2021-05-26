@@ -7,7 +7,8 @@ const actions = {
     outcomeReasons: {
       UNSETTLED: {},
       ARCHIVED: {}
-    }
+    },
+    dropLawsuitReasons: []
   },
   actions: acts,
   getters,

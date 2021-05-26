@@ -107,7 +107,7 @@
         icon="logo-small"
         class="team-container__button-icon"
       />
-      Criar uma nova esquipe
+      Criar uma nova equipe
     </el-button>
 
     <TeamDialogs ref="teamDialogs" />
@@ -178,7 +178,7 @@ export default {
     },
 
     handleEditMemberName(name, accountId) {
-      this.changeMemberName({ name, accountId })
+      this.changeMemberName({ name, accountId, updateWorkspace: true })
     },
 
     handleEditMemberProfile(profile, personId) {
