@@ -4,10 +4,17 @@ import TicketEngagementItem from '@/models/negotiations/tickets/TicketEngagement
 
 const getTicketIndex = (tickets, disputeId) => tickets.findIndex(ticket => ticket.disputeId === disputeId)
 
+const EngagementTicketStatus = [
+  'PRE_NEGOTIATION'
+]
+
 const ticketsMutations = {
   setCommunicationTickets: (state, { data, payload }) => {
     if (payload === 'nextPage') data.content = state.tickets.content.concat(data.content)
-    Vue.set(state, 'tickets', data)
+    Vue.set(state, 'tickets', {
+      ...data,
+      content: data.content.map(ticket => EngagementTicketStatus.includes(ticket.disputeStatus) ? new TicketEngagementItem(ticket) : ticket)
+    })
   },
 
   deleteTicket: ({ tickets }, { payload }) => {
