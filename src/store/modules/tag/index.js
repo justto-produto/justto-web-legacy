@@ -17,7 +17,6 @@ const tagModule = {
       '#FFCA36',
       '#64CD32',
       '#966DF7',
-      '#FFF1C8',
       '#DFF9E4',
       '#F4EFFE',
       '#F9932C',
