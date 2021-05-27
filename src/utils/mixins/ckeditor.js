@@ -10,7 +10,7 @@ import Italic from '@ckeditor/ckeditor5-basic-styles/src/italic'
 import List from '@ckeditor/ckeditor5-list/src/list'
 import Link from '@ckeditor/ckeditor5-link/src/link'
 import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph'
-import PasteFromOffice from '@ckeditor/ckeditor5-paste-from-office/src/pastefromoffice'
+// import PasteFromOffice from '@ckeditor/ckeditor5-paste-from-office/src/pastefromoffice'
 import RemoveFormat from '@ckeditor/ckeditor5-remove-format/src/removeformat'
 import Table from '@ckeditor/ckeditor5-table/src/table'
 import TextTransformation from '@ckeditor/ckeditor5-typing/src/texttransformation'
@@ -46,7 +46,6 @@ export default {
           List,
           Link,
           Paragraph,
-          PasteFromOffice,
           RemoveFormat,
           Table,
           TextTransformation,
@@ -67,22 +66,23 @@ export default {
         } : {},
         toolbar: {
           items: [
-            'mode',
-            'bold',
-            'italic',
-            'underline',
-            'removeFormat',
-            'link',
-            'bulletedList',
-            'numberedList',
-            '|',
-            'outdent',
-            'indent',
-            '|',
-            'blockQuote',
-            'undo',
-            'redo',
-            'preview'
+            ...[
+              'bold',
+              'italic',
+              'underline',
+              'removeFormat',
+              'link',
+              'bulletedList',
+              'numberedList',
+              '|',
+              'outdent',
+              'indent',
+              '|',
+              'blockQuote',
+              'undo',
+              'redo'
+            ],
+            ...(this.usePreviewPlugin ? ['preview'] : [])
           ],
           viewportTopOffset: 30,
           shouldNotGroupWhenFull: true
