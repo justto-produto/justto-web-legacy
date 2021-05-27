@@ -92,9 +92,11 @@
       :visible.sync="editTemplateQuickReply.visible"
       append-to-body
       width="40%"
+      destroy-on-close
       @close="closeEditTemplateDialog()"
     >
       <dispute-quick-reply-editor
+        v-if="editTemplateQuickReply.visible"
         :dispute-id="disputeId"
         :template="editTemplateQuickReply.template"
         @cancel="closeEditTemplateDialog()"

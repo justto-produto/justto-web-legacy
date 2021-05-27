@@ -2,7 +2,7 @@ import Vue from 'vue'
 
 const actionsMutations = {
   setOutcomeReasons: (state, { data, payload }) => {
-    Vue.set(state, payload, data)
+    Vue.set(state.outcomeReasons, payload, data)
   },
 
   setDropLawsuitReasons: (state, data) => {

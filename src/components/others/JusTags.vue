@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="jus-tags">
     <el-tag
       v-for="tag in disputeTags"
@@ -216,7 +216,7 @@ export default {
         .map((a) => ({ sort: Math.random(), value: a }))
         .sort((a, b) => a.sort - b.sort)
         .map((a) => a.value)
-    },
+    }
   },
   watch: {
     placement() {

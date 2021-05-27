@@ -31,20 +31,25 @@
 
     <el-input
       v-else
+      id="textInlineEditorInput"
       ref="textInput"
       v-model="vModel"
       v-mask="{ mask: mask(vModel), tokens }"
       class="text-inline-editor__input"
       @blur="handleBlur"
-      @keyup.native.esc="handleEsc"
-      @keyup.native.enter="escaping = false;$event.target.blur()"
     />
+    <!-- @keyup.native.enter="escaping = false;$event.target.blur()" -->
   </div>
 </template>
 
 <script>
+import HandleKeys from './handleKeys'
+
 export default {
   name: 'TextInlieEditor',
+
+  mixins: [HandleKeys],
+
   props: {
     value: {
       type: [String, Number],
@@ -71,11 +76,13 @@ export default {
       default: false
     }
   },
+
   data: () => ({
     isEditingActive: false,
     model: '',
     escaping: false
   }),
+
   computed: {
     vModel: {
       get() {
@@ -115,15 +122,32 @@ export default {
         : vModel
     }
   },
+  watch: {
+    isEditing(value) {
+      if (value) {
+        document.addEventListener('keyup', this.handleKeys)
+      } else {
+        document.removeEventListener('keyup', this.handleKeys)
+      }
+    }
+  },
   mounted() {
     this.$emit('enableEdit')
   },
+
   methods: {
+    handleEnter(event) {
+      this.escaping = false
+      event.target.blur()
+    },
+
     handleEsc(event) {
       this.escaping = true
       this.handleBlur(event)
     },
+
     handleBlur(event) {
+      this.$emit('blur')
       if (event && !event.currentTarget.contains(event.relatedTarget)) {
         if (this.escaping) {
           this.cancelEdit()

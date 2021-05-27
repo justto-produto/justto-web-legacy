@@ -613,7 +613,7 @@ export default {
           icon: 'hammer',
           condition: () => this.isPreNegotiation,
           action: () => { this.dropLawsuitDialogVisible = true },
-          tooltip: 'Cancelar disputa'
+          tooltip: 'Cancelar negociação'
         },
         {
           name: 'start-negotiation',
