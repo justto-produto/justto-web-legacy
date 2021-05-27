@@ -4,14 +4,13 @@
     class="notes-container"
   >
     <ckeditor
-      v-show="editorReady"
       ref="noteEditor"
-      :value="editorText"
-      class="notes-container__editor"
-      :config="config"
-      @ready="setEditorReady(true)"
-      @input="setNoteEditorText"
+      v-model="body"
+      :editor="editor"
+      :config="editorConfig"
+      type="classic"
     />
+
     <span class="notes-container__button">
       <el-button
         type="primary"
@@ -32,65 +31,48 @@
 <script>
 import events from '@/constants/negotiationEvents'
 import { eventBus } from '@/utils'
-import CKEditor from 'ckeditor4-vue'
+import ckeditor from '@/utils/mixins/ckeditor'
+
 import { mapActions, mapGetters } from 'vuex'
 
 export default {
-  components: {
-    ckeditor: CKEditor.component
-  },
+  mixins: [ckeditor],
 
   data: () => ({
-    localLoading: false
+    localLoading: false,
+    useMenstionPlugin: true,
+    usePreviewPlugin: true
   }),
 
   computed: {
     ...mapGetters({
-      getEditorReady: 'getEditorReady',
-      editorConfig: 'getEditorConfig',
       editorText: 'getNoteEditorText'
     }),
 
-    enableButton() {
-      return this.editorReady && !this.localLoading && this.editorText.length
-    },
-
-    editorReady: {
+    body: {
       get() {
-        return this.getEditorReady
+        return this.editorText
       },
-      set(value) {
-        this.setEditorReady(value)
+      set(text) {
+        this.setNoteEditorText(text)
       }
     },
 
-    config() {
-      return {
-        parent: 'note-editor',
-        ...this.editorConfig
-      }
-    },
-
-    editor() {
-      return Object.values(window.CKEDITOR.instances).find(({ config }) => config.parent === this.config.parent)
+    enableButton() {
+      return !this.localLoading && this.editorText.length
     }
   },
 
   beforeDestroy() {
-    eventBus.$off(events.EDITOR_FOCUS.callback, this.focusOnEditor)
-    this.destroyEditor()
-    if (this.editor) {
-      this.editor.destroy()
-    }
+    eventBus.$off(events.EDITOR_FOCUS.callback, this.ckeditorFocus)
   },
 
   mounted() {
-    eventBus.$on(events.EDITOR_FOCUS.callback, this.focusOnEditor)
+    eventBus.$on(events.EDITOR_FOCUS.callback, this.ckeditorFocus)
   },
 
   methods: {
     ...mapActions([
-      'setEditorReady',
       'sendDisputeNote',
       'setNoteEditorText'
     ]),
@@ -102,24 +84,18 @@ export default {
       this.sendDisputeNote({
         disputeId: id,
         note: this.editorText
-      }).then(() => this.$jusNotification({
-        title: 'Yay!',
-        message: 'Nota gravada com sucesso.',
-        type: 'success'
-      })).catch(error => this.$jusNotification({
+      }).then(() => {
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Nota gravada com sucesso.',
+          type: 'success'
+        })
+        this.body = ''
+      }).catch(error => this.$jusNotification({
         error
       })).finally(() => {
         this.localLoading = false
       })
-    },
-
-    destroyEditor() {
-      this.editorReady = false
-      this.editor.destroy()
-    },
-
-    focusOnEditor() {
-      this.editor.focus()
     }
   }
 
