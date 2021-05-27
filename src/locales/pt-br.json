@@ -520,9 +520,14 @@
       "icon": "customized-configurations",
       "help": ""
     },
-    "NET_PROMOTER_SCORE_deprec": {
+    "NET_PROMOTER_SCORE": {
       "label": "net promoter score",
       "icon": "net-promoter-score-config",
+      "help": ""
+    },
+    "CUSTOMIZE_ODR_ADDRESS": {
+      "label": "ODR",
+      "icon": "customized-configurations",
       "help": ""
     }
   },
