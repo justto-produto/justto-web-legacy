@@ -1,7 +1,7 @@
 <template>
   <section
     id="notesTabEditorOmnichannelNegotiation"
-    class="notes-container"
+    class="notes-container jus-ckeditor__parent"
   >
     <ckeditor
       ref="noteEditor"
