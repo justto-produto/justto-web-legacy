@@ -514,6 +514,16 @@
       "label": "integração em API para importação",
       "icon": "power-plug",
       "help": ""
+    },
+    "CUSTOMIZED_CONFIGURATIONS": {
+      "label": "sua empresa/escritório como ODR",
+      "icon": "customized-configurations",
+      "help": ""
+    },
+    "NET_PROMOTER_SCORE_deprec": {
+      "label": "net promoter score",
+      "icon": "net-promoter-score-config",
+      "help": ""
     }
   },
   "fields": {

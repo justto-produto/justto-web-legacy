@@ -60,6 +60,7 @@
 
     <!-- <ApiIntegrationDialog ref="apiIntegrationDialog" /> -->
     <!-- <AutomaticMessagesDialog ref="automaticMessagesDialog" /> -->
+    <ConfigureCustomizationsDialog ref="configureCustomizationsDialog" />
     <BadFaithLitigantDialog ref="badFaithLitigantDialog" />
     <CommunicationBlockListDialog ref="communicationBlockListDialog" />
     <DraftManagementDialog ref="draftManagementDialog" />
@@ -77,6 +78,7 @@ export default {
     highlight: () => import('vue-text-highlight'),
     // ApiIntegrationDialog: () => import('./FeaturesAndModulesDialogs/ApiIntegrationDialog'),
     // AutomaticMessagesDialog: () => import('./FeaturesAndModulesDialogs/AutomaticMessagesDialog'),
+    ConfigureCustomizationsDialog: () => import('./FeaturesAndModulesDialogs/ConfigureCustomizationsDialog'),
     BadFaithLitigantDialog: () => import('./FeaturesAndModulesDialogs/BadFaithLitigantDialog'),
     CommunicationBlockListDialog: () => import('./FeaturesAndModulesDialogs/CommunicationBlockListDialog'),
     DraftManagementDialog: () => import('./FeaturesAndModulesDialogs/DraftManagementDialog'),
@@ -98,6 +100,7 @@ export default {
       return [
         // 'API_INTEGRATION',
         // 'AUTOMATIC_MESSAGES',
+        'CONFIGURE_CUSTOMIZATIONS',
         'BAD_FAITH_LITIGANT',
         'COMMUNICATION_BLOCK_LIST',
         'DRAFT_MANAGEMENT',

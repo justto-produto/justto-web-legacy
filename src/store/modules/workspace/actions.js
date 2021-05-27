@@ -201,6 +201,13 @@ const workspaceActions = {
       mutation: 'updateAssociatedKeyAccount',
       payload: { keyAccountId }
     })
+  },
+
+  updateCustomizedConfigurations({ state }, payload) {
+    // return axiosDispatch({
+    //   url: '/rotaaqui',
+    //   payload
+    // })
   }
 }
 
