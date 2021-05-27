@@ -20,6 +20,7 @@
       <el-tooltip
         v-if="action.condition()"
         :content="action.tooltip"
+        :open-delay="300"
       >
         <span>
           <el-button
@@ -526,6 +527,7 @@ export default {
         {
           name: 'settled',
           icon: 'win',
+          disabled: this.isPaused || this.isCanceled,
           condition: () => this.canSettled,
           action: () => this.disputeAction('settled'),
           tooltip: this.dispute.status === 'CHECKOUT' || this.dispute.status === 'ACCEPTED' ? 'Ganhar' : 'Aceitar acordo'
@@ -533,6 +535,7 @@ export default {
         {
           name: 'unsettled',
           icon: 'lose',
+          disabled: this.isPaused || this.isCanceled,
           condition: () => this.canUnsettled,
           action: () => this.disputeAction('unsettled'),
           tooltip: 'Perder'
@@ -540,13 +543,15 @@ export default {
         {
           name: 'resume',
           icon: 'start-again',
-          condition: () => this.canResume,
+          disabled: this.isCanceled,
+          condition: () => this.canResume || this.isCanceled,
           action: () => this.disputeAction('resume'),
           tooltip: 'Retomar'
         },
         {
           name: 'paused',
           icon: 'pause',
+          disabled: this.isPaused || this.isCanceled,
           condition: () => this.canPause,
           action: () => this.disputeAction('paused'),
           tooltip: 'Pausar'
@@ -554,6 +559,7 @@ export default {
         {
           name: 'restart-engagement',
           icon: 'refresh',
+          disabled: this.isPaused || this.isCanceled,
           condition: () => this.canRestartEngagement,
           action: () => this.disputeAction('restart-engagement'),
           tooltip: 'Reiniciar disputa'
@@ -562,13 +568,14 @@ export default {
           name: 'resend-messages',
           icon: 'resend-messages',
           condition: () => this.canResendMessages,
-          disabled: !this.isInNegotiation,
+          disabled: !this.isInNegotiation || this.isPaused || this.isCanceled,
           action: () => this.disputeAction('resend-messages'),
           tooltip: (this.isInNegotiation ? 'Reenviar mensagens automáticas' : 'A disputa precisa estar em negociação para reagendar mensagens automáticas')
         },
         {
           name: 'cancel-messages',
           icon: 'cancel-messages',
+          disabled: this.isPaused || this.isCanceled,
           condition: () => !this.tableActions && !this.isPreNegotiation,
           action: () => this.disputeAction('cancel-messages'),
           tooltip: 'Cancelar mensagens automáticas'
@@ -576,6 +583,7 @@ export default {
         {
           name: 'change-negotiators',
           icon: 'delegate',
+          disabled: this.isCanceled,
           condition: () => !this.tableActions && !this.isPreNegotiation,
           action: () => this.openEditNegotiatorsDialog(),
           tooltip: 'Alterar negociador'
@@ -583,6 +591,7 @@ export default {
         {
           name: 'enrich',
           icon: 'enrich',
+          disabled: this.isPaused || this.isCanceled,
           condition: () => !this.tableActions && !this.isPreNegotiation,
           action: () => this.disputeAction('enrich'),
           tooltip: 'Enriquecer disputa'
@@ -590,6 +599,7 @@ export default {
         {
           name: 'counterproposal',
           icon: 'proposal',
+          disabled: this.isPaused || this.isCanceled,
           condition: () => this.canSendCounterproposal,
           action: () => this.disputeAction('counterproposal'),
           tooltip: 'Contraproposta manual'
@@ -597,6 +607,7 @@ export default {
         {
           name: 'renegotiate',
           icon: 'move-to-running',
+          disabled: this.isPaused,
           condition: () => this.canMoveToRunning,
           action: () => this.disputeAction('renegotiate'),
           tooltip: 'Retornar para negociação'
@@ -604,20 +615,22 @@ export default {
         {
           name: 'set-unread',
           icon: 'unread',
-          condition: () => this.canMarkAsNotRead,
+          condition: () => this.canMarkAsNotRead || this.isCanceled,
           action: () => this.setAsUnread(),
           tooltip: 'Marcar como não lida'
         },
         {
           name: 'permanently-leave',
           icon: 'hammer',
-          condition: () => this.isPreNegotiation,
+          disabled: this.isCanceled,
+          condition: () => this.isPreNegotiation || this.isCanceled,
           action: () => { this.dropLawsuitDialogVisible = true },
           tooltip: 'Cancelar negociação'
         },
         {
           name: 'start-negotiation',
           icon: 'right-arrow',
+          disabled: this.isPaused,
           condition: () => this.isPreNegotiation,
           action: () => this.goToNegotiation(),
           tooltip: 'Iniciar negociação'
@@ -651,6 +664,12 @@ export default {
           tooltip: 'Ir para negociação'
         }
       ]
+    },
+    isPaused() {
+      return this.dispute?.paused
+    },
+    isCanceled() {
+      return this.dispute?.status === 'CANCELED'
     },
     canSettled() {
       return this.dispute?.status !== 'SETTLED' && !this.isPreNegotiation
