@@ -167,7 +167,12 @@
       v-else-if="!isNegotiator || party.documentNumber"
       class="party-details__infoline"
     >
-      <span class="party-details__infoline-label">{{ documentType }}:</span>
+      <span
+        ref="spanDocumentNumber"
+        class="party-details__infoline-label"
+      >
+        {{ documentType }}:
+      </span>
       <TextInlineEditor
         v-if="party.documentNumber || activeAddingData === 'documentNumber'"
         ref="documentNumber"
@@ -176,6 +181,7 @@
         :mask="() => ['###.###.###-##', '##.###.###/####-##']"
         filter="cpfCnpj"
         class="party-details__infoline-data"
+        @blur="startEditing('')"
         @change="updateParty($event, 'documentNumber')"
         @enableEdit="enableEdit"
       />
@@ -251,9 +257,13 @@
         :accounts="bankAccounts"
         :person-id="resumedState.personId"
         :disabled="isPreNegotiation"
+        :can-open="resumedState.hasDocumentNumber"
+        :account-mockup="bankAccountMockup"
+        @validateOpen="validateDocumentNumber"
       />
       <!-- class="party-details__infoline-data" -->
     </div>
+
     <InfoMergeDialog
       ref="mergeInfoDialog"
       :party="party"
@@ -372,6 +382,17 @@ export default {
 
     resumedState() {
       return new TicketTicketOverviewPartyResumed(this.party)
+    },
+
+    firstEmail() {
+      return this.emailsList.find(({ archived, isMain, isValid }) => (!archived && isMain && isValid))?.address || ''
+    },
+
+    bankAccountMockup() {
+      return {
+        ...this.resumedState.bankAccountMockup,
+        email: this.firstEmail
+      }
     }
   },
 
@@ -646,13 +667,13 @@ export default {
           cancelButtonText: 'Cancelar',
           dangerouslyUseHTMLString: true,
           cancelButtonClass: 'is-plain'
-        }).then(() => this.opeNnamesakeDialog())
+        }).then(() => this.openNamesakeDialog())
       } else {
-        this.opeNnamesakeDialog()
+        this.openNamesakeDialog()
       }
     },
 
-    opeNnamesakeDialog() {
+    openNamesakeDialog() {
       this.$refs.namesakeDialog.show(this.resumedState.name, this.resumedState.personId)
     },
 
@@ -751,6 +772,23 @@ export default {
       }).catch(error => {
         this.$jusNotification({ error })
       })
+    },
+
+    validateDocumentNumber(_dialogVisibility) {
+      if (!this.resumedState.hasDocumentNumber) {
+        this.$jusNotification({
+          title: 'Ops!',
+          message: 'Informe CPF/CNPJ.',
+          type: 'warning',
+          onClose: () => {
+            if (this.$refs.documentNumber) {
+              this.$refs.documentNumber.enableEdit()
+            } else {
+              this.startEditing('documentNumber')
+            }
+          }
+        })
+      }
     }
   }
 }
