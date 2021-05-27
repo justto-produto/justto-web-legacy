@@ -221,11 +221,16 @@ export default {
   computed: {
     ...mapGetters({
       ticketsQuery: 'getTicketsQuery',
-      colors: 'getTagsColors',
+      allColors: 'getTagsColors',
       icons: 'getTagsIcons',
       ticketTags: 'disputeTags'
     }),
-
+    colors() {
+      return this.allColors
+        .map((a) => ({ sort: Math.random(), value: a }))
+        .sort((a, b) => a.sort - b.sort)
+        .map((a) => a.value)
+    },
     filteredTags() {
       return this.ticketsQuery.tags
     },
@@ -607,7 +612,7 @@ export default {
       padding: 5px;
     }
     .color .el-tag {
-      flex: 1 0 31%;
+      flex: 1 0 17%;
       margin: 2px;
     }
   }

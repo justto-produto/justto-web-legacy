@@ -103,17 +103,17 @@ export default {
     isActive() {
       return Number(this.$route.params.id) === Number(this.ticket?.disputeId)
     },
+
     lastInboundInteraction() {
       const { lastInboundInteraction, lastReceivedMessage, disputeStatus, expirationDate } = this.ticket
-
-      if (!!lastInboundInteraction && lastInboundInteraction?.type !== 'COMMUNICATION') {
+      if (lastInboundInteraction?.type && lastInboundInteraction?.type !== 'COMMUNICATION') {
         const { type, dateTime } = lastInboundInteraction
         return {
           icon: type ? this.$t(`interaction-types.${type}.icon`) : null,
           message: this.$options.filters.capitalize(this.$t(`interaction-types.${type}.message`)),
           dateTime: dateTime.dateTime
         }
-      } else if (lastReceivedMessage && lastReceivedMessage.message) {
+      } else if (lastReceivedMessage?.message) {
         const { message, dateTime } = lastReceivedMessage
         return {
           message,
@@ -122,10 +122,11 @@ export default {
       } else {
         return {
           message: 'Disputa ' + this.$t(`ticket-status.${disputeStatus}`),
-          dateTime: expirationDate || '--/--/--'
+          dateTime: expirationDate.dateTime || '--/--/--'
         }
       }
     },
+
     plaintiffName() {
       const { plaintiff } = this.ticket
       return plaintiff ? plaintiff.name : 'Sem parte'

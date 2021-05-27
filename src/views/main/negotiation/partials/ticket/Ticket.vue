@@ -84,7 +84,6 @@ export default {
     ]),
 
     fetchData(id) {
-      console.log('fetchData', id)
       this.socketAction('subscribe', id)
       this.cleanRecentMessages()
       this.getTicketOverview(id).catch(error => this.$jusNotification({ error }))

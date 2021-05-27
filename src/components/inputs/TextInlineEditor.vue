@@ -122,7 +122,6 @@ export default {
         : vModel
     }
   },
-
   watch: {
     isEditing(value) {
       if (value) {
@@ -132,7 +131,6 @@ export default {
       }
     }
   },
-
   mounted() {
     this.$emit('enableEdit')
   },
@@ -149,6 +147,7 @@ export default {
     },
 
     handleBlur(event) {
+      this.$emit('blur')
       if (event && !event.currentTarget.contains(event.relatedTarget)) {
         if (this.escaping) {
           this.cancelEdit()

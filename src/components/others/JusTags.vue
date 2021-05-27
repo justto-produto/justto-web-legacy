@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="jus-tags">
     <el-tag
       v-for="tag in disputeTags"
@@ -208,11 +208,14 @@ export default {
         return !this.disputeTags.map(t => t.id).includes(t.id)
       })
     },
-    colors() {
-      return this.$store.state.tagModule.colors
-    },
     icons() {
       return this.$store.state.tagModule.icons
+    },
+    colors() {
+      return this.$store.state.tagModule.colors
+        .map((a) => ({ sort: Math.random(), value: a }))
+        .sort((a, b) => a.sort - b.sort)
+        .map((a) => a.value)
     }
   },
   watch: {
@@ -408,7 +411,7 @@ export default {
       padding: 5px;
     }
     .color .el-tag {
-      flex: 1 0 31%;
+      flex: 1 0 17%;
       margin: 2px;
     }
   }
