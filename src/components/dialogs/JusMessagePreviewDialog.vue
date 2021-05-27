@@ -3,6 +3,7 @@
     :visible.sync="isVisible"
     title="Preview"
     width="50%"
+    custom-class="dialog-preview"
     destroy-on-close
   >
     <div
@@ -35,3 +36,11 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.dialog-preview {
+  .el-dialog__header {
+    padding-top: 24px !important;
+  }
+}
+</style>

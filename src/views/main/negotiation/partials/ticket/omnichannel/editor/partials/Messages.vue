@@ -195,26 +195,19 @@ export default {
 
   mounted() {
     eventBus.$on(events.EDITOR_FOCUS.callback, this.focusOnEditor)
-    eventBus.$on('SEE-PREVIEW', this.seePreview)
   },
 
   beforeDestroy() {
     eventBus.$off(events.EDITOR_FOCUS.callback, this.focusOnEditor)
-    eventBus.$off('SEE-PREVIEW', this.seePreview)
   },
 
   methods: {
     ...mapActions([
-      'getMessageToPreview',
       'resetRecipients',
       'setEditorReady',
       'setEditorText',
       'sendMessage'
     ]),
-
-    seePreview() {
-      this.getMessageToPreview(this.body, Number(this.$route.params.id))
-    },
 
     openFullScreenEditor(_) {
       this.$refs.fullScreenEditor.openDialogEditor(this.showCKEditor ? this.editorText : this.editorTextScaped)

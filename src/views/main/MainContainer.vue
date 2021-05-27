@@ -88,6 +88,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import { eventBus } from '@/utils'
 
 export default {
   name: 'MainContainer',
@@ -97,12 +98,14 @@ export default {
     JusTeamMenu: () => import('@/components/layouts/JusTeamMenu'),
     JusShortchts: () => import('@/components/others/JusShortcuts'),
   },
+
   data() {
     return {
       subscriptions: [],
       isTeamSectionExpanded: false
     }
   },
+
   computed: {
     ...mapGetters({
       isAdminProfile: 'isAdminProfile',
@@ -181,32 +184,41 @@ export default {
       return itemsMenu
     }
   },
+
   watch: {
-    workspace(workspace) {
+    workspace(_workspace) {
       this.subscribe()
     }
   },
+
   beforeCreate() {
     this.$store.commit('clearDisputeQuery')
   },
+
   beforeMount() {
     this.subscribe()
     window.addEventListener('resize', this.handleResize)
+    eventBus.$on('SEE-PREVIEW', this.getPreview)
   },
+
   beforeDestroy() {
+    eventBus.$off('SEE-PREVIEW', this.getPreview)
     window.removeEventListener('resize', this.handleResize)
     this.subscriptions.forEach(s => this.$socket.emit('unsubscribe', s))
     this.subscriptions.length = 0
   },
+
   sockets: {
     reconnect() {
       this.subscribe()
     }
   },
+
   methods: {
     ...mapActions({
       loadAccountProperty: 'loadAccountProperty',
-      setWindowGeometry: 'setWindowGeometry'
+      setWindowGeometry: 'setWindowGeometry',
+      getPreview: 'getMessageToPreview'
     }),
 
     handleResize({ target }) {

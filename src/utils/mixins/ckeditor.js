@@ -109,7 +109,9 @@ export default {
   },
 
   methods: {
-    ...mapActions(['getAvaliableVariablesToTemplate']),
+    ...mapActions([
+      'getAvaliableVariablesToTemplate'
+    ]),
 
     MentionCustomization(editor) {
       // The upcast converter will convert view <a class='mention' href='' data-user-id=''>
@@ -184,8 +186,14 @@ export default {
         })
 
         view.on('execute', () => {
-          // TODO: Registrar evento globalmente.
-          eventBus.$emit('SEE-PREVIEW')
+          const editor = Array(...document.querySelectorAll('.ck-content')).pop()
+
+          if (editor) {
+            const disputeId = this.disputeId || Number(location.href.split('/').pop())
+            const template = editor.innerHTML
+
+            eventBus.$emit('SEE-PREVIEW', { template, disputeId })
+          }
         })
 
         return view

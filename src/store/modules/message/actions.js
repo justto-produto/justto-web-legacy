@@ -67,9 +67,10 @@ const messageActions = {
       data: template
     })
   },
-  getMessageToPreview({ commit }, { template, disputeId }) {
+  getMessageToPreview({ _ }, { template, disputeId }) {
     return axiosDispatch({
       url: `${messagesPath}/quick-reply/preview/${disputeId}`,
+      method: 'POST',
       data: {
         value: template
       },
