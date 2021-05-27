@@ -196,7 +196,7 @@ export default {
       } = this.ticketInfo
 
       return {
-        skipEnrichment,
+        skipEnrichment: !skipEnrichment,
         denySavingDeposit,
         businessHoursEngagement,
         awaysContactParty,
