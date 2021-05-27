@@ -46,7 +46,7 @@ const overviewMutations = {
     Vue.set(partyToSet, 'oabsDto', data.oabs)
     Vue.set(partyToSet, 'birthday', data.birthday)
     Vue.set(partyToSet, 'bankAccountsDto', data.bankAccounts)
-    Vue.set(partyToSet, 'legacyDto', data) // TODO: Remover essa merda aqui
+    Vue.set(partyToSet, 'legacyDto', data) // TODO: Remover
   },
 
   setNewTicketOverviewParty: (state, response) => {

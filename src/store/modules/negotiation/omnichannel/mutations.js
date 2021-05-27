@@ -20,7 +20,10 @@ const omnichannelMutations = {
 
   setMessageType: (state, type) => Vue.set(state.editor, 'messageType', type),
 
-  setOccurrences: (state, { content, totalElements }) => {
+  setOccurrences: (state, { content, totalElements, first }) => {
+    if (first) {
+      Vue.set(state.occurrences, 'list', [])
+    }
     const datas = state.occurrences.list.map((occurrence, index) => {
       if (occurrence.id === null) {
         return {

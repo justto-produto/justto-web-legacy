@@ -47,7 +47,7 @@
     <a
       v-if="(isAllAccountsVisible || !accountsLength) && !disabled"
       class="bank-accounts__link"
-      @click="openBankAccountDialog"
+      @click="openBankAccountDialog()"
     >
       Adicionar
     </a>
@@ -87,6 +87,14 @@ export default {
     disabled: {
       type: Boolean,
       default: false
+    },
+    canOpen: {
+      type: Boolean,
+      default: true
+    },
+    accountMockup: {
+      type: Object,
+      default: () => ({})
     }
   },
   data: () => ({
@@ -196,8 +204,12 @@ export default {
       })
     },
 
-    openBankAccountDialog(account) {
-      this.$refs.partyBankAccountDialog.openBankAccountDialog(account)
+    openBankAccountDialog() {
+      if (this.canOpen) {
+        this.$refs.partyBankAccountDialog.openBankAccountDialog(this.accountMockup)
+      } else {
+        this.$emit('validateOpen', this.isAllAccountsVisible)
+      }
     },
 
     closeBankAccountDialog() {
