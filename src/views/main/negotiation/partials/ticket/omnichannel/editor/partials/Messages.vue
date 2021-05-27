@@ -193,10 +193,12 @@ export default {
 
   mounted() {
     eventBus.$on(events.EDITOR_FOCUS.callback, this.focusOnEditor)
+    eventBus.$on('SEE-PREVIEW', this.seePreview)
   },
 
   beforeDestroy() {
     eventBus.$off(events.EDITOR_FOCUS.callback, this.focusOnEditor)
+    eventBus.$off('SEE-PREVIEW', this.seePreview)
   },
 
   methods: {
@@ -206,6 +208,10 @@ export default {
       'setEditorText',
       'sendMessage'
     ]),
+
+    seePreview() {
+      console.log('see preview')
+    },
 
     openFullScreenEditor(_) {
       this.$refs.fullScreenEditor.openDialogEditor(this.showCKEditor ? this.editorText : this.editorTextScaped)
@@ -325,7 +331,7 @@ export default {
     position: absolute;
     top: 0;
     left: 0;
-    margin: 18px 0px 0px 390px;
+    margin: 18px 0px 0px 430px;
   }
 
   .messages-container__paste {
