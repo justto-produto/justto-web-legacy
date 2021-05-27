@@ -325,7 +325,7 @@ export default {
     position: absolute;
     top: 0;
     right: 0;
-    margin: 18px;
+    margin: 16px;
 
     cursor: pointer;
   }
@@ -333,8 +333,8 @@ export default {
   .messages-container__attachments {
     position: absolute;
     top: 0;
-    left: 0;
-    margin: 18px 0px 0px 430px;
+    right: 0;
+    margin: 16px 40px 0px 0px;
   }
 
   .messages-container__paste {
