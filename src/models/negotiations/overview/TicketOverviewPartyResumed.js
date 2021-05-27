@@ -1,7 +1,5 @@
 class Person {
   constructor({ dead, id, namesake, vexatiousAuthor, vexatiousLawyer, vexatiousParty }) {
-    // TODO: Validar se { name, document, oabs } continuam sendo dados redundantes que estão no Super().
-
     this.id = id
     this.dead = Boolean(dead)
     this.namesake = Boolean(namesake)
@@ -33,6 +31,17 @@ export default class TicketTicketOverviewPartyResumed {
     this.roles = roles || []
     this.status = status || ''
     this.person = new Person(person || { id: 0 })
+  }
+
+  get bankAccountMockup() {
+    return {
+      name: this.name || '',
+      document: this.documentNumber || ''
+    }
+  }
+
+  get hasDocumentNumber() {
+    return !!this.documentNumber
   }
 
   get personId() {
