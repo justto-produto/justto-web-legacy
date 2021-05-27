@@ -5,22 +5,18 @@
     title="Customizar sua empresa ou escritório como ODR"
     append-to-body
     width="80%"
-    class="configure-customizations"
+    custom-class="configure-customizations"
   >
     <el-form
-      ref="formCustomizations"
-      :model="formCustomizations"
+      ref="form"
+      :model="form"
       :rules="rulesCustomizations"
       :disabled="modalLoading"
       label-position="top"
       class="configure-customizations__form"
     >
-      <div
-        class="configure-customizations__form-header"
-      >
-        <div
-          class="configure-customizations__form-header-item"
-        >
+      <div class="configure-customizations__form-header">
+        <div class="configure-customizations__form-header-item">
           <el-form-item
             class="configure-customizations__form-header-item-input"
             prop="email"
@@ -41,13 +37,12 @@
               <i class="el-icon-info" />
             </el-tooltip>
             <el-input
-              v-model="formCustomizations.email"
+              v-model="form.email"
             />
           </el-form-item>
         </div>
-        <div
-          class="configure-customizations__form-header-item"
-        >
+
+        <div class="configure-customizations__form-header-item">
           <el-form-item
             class="configure-customizations__form-header-item-input"
             prop="link"
@@ -68,17 +63,23 @@
               <i class="el-icon-info" />
             </el-tooltip>
             <el-input
-              v-model="formCustomizations.link"
+              v-model="form.link"
             />
           </el-form-item>
         </div>
       </div>
-      <el-form-item
-        class="configure-customizations__form-ckeditor"
-      >
-        HERE WILL BE CKEDITOR
+
+      <el-form-item class="configure-customizations__form-ckeditor jus-ckeditor__parent">
+        <ckeditor
+          ref="footerEditor"
+          v-model="form.emailFooter"
+          :editor="editor"
+          :config="editorConfig"
+          type="classic"
+        />
       </el-form-item>
     </el-form>
+
     <div class="configure-customizations__footer">
       <div class="configure-customizations__footer-info">
         <span class="configure-customizations__footer-info-span">
@@ -93,10 +94,11 @@
           Caso não queira mais receber mensagens da nossa plataforma descadastre seu email aqui.
         </span>
       </div>
+
       <el-button
         class="configure-customizations__footer-cancel"
         plain
-        @click="dropLawsuitDialogVisible = false"
+        @click="closeFeatureDialog()"
       >
         Cancelar
       </el-button>
@@ -112,17 +114,25 @@
     </div>
   </el-dialog>
 </template>
+
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
+import OdrCustomizationModel from '@/models/configurations/OdrCustomizationModel'
+import ckeditor from '@/utils/mixins/ckeditor'
+
 export default {
   name: 'ConfigureCustomizationsDialog',
+
+  mixins: [ckeditor],
+
   data: () => ({
-    configureCustomizationsDialogVisible: true,
+    configureCustomizationsDialogVisible: false,
     modalLoading: false,
-    formCustomizations: {
+    form: {
       email: '',
       link: '',
-      emailFooter: ''
+      emailFooter: '',
+      emailFooterId: null
     },
     rulesCustomizations: {
       email: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
@@ -130,20 +140,30 @@ export default {
       emailFooter: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
     }
   }),
+
   computed: {
-    ...mapActions({
-      updateCustomizedConfigurations: 'updateCustomizedConfigurations'
+    ...mapGetters({
+      properties: 'workspaceProperties'
     })
   },
+
   methods: {
+    ...mapActions({
+      getTemplate: 'getStrategyTemplate',
+      editTemplate: 'editStrategyTemplate',
+      createTemplate: 'createStrategyTemplate'
+    }),
+
     saveCustomizedConfigurations() {
       this.modalLoading = true
-      this.validateForm('formCustomizations')
-        .then(() => {
-          console.log('then')
-        })
-        .finally(() => { this.modalLoading = true })
+
+      this.validateForm('form').then(() => {
+        this.saveChanges()
+      }).finally(() => {
+        this.modalLoading = false
+      })
     },
+
     validateForm(ref) {
       return new Promise((resolve, reject) => {
         this.$refs[ref].validate(valid => {
@@ -151,47 +171,112 @@ export default {
           else reject(new Error('Campos obrigatórios não preenchidos'))
         })
       })
+    },
+
+    openFeatureDialog() {
+      this.configureCustomizationsDialogVisible = true
+
+      this.form = new OdrCustomizationModel(this.properties)
+
+      this.searchTemplete()
+    },
+
+    closeFeatureDialog() {
+      this.configureCustomizationsDialogVisible = false
+      this.form.emailFooter = ''
+    },
+
+    searchTemplete() {
+      this.getTemplate(this.form.emailFooterId).then(res => (this.form.emailFooterTemplate = res))
+    },
+
+    saveChanges() {
+      // TODO: Implementar aqui o save dos dados
+
+      // TODO: Salvar o email na propertie CUSTOM_EMAIL_SENDER
+      // TODO: Salvar o link na properte DEAL_URL
+
+      // TODO: Salvar/editar o template
+      // this.form.saveNew ? this.createTemplate() : this.editTemplate()
+      // TODO: Se for salvar o template:
+      // TODO: Salvar o ID do novo template no campo FOOTER_EMAIL_TEMPLATE_ID
     }
   }
 }
 </script>
+
+<style lang="scss">
+/* Configura tamanho do CKEditor */
+.configure-customizations {
+  .configure-customizations__form {
+    .configure-customizations__form-ckeditor {
+      .el-form-item__content {
+        .ck-editor {
+          height: 50vh;
+
+          .ck-editor__main {
+            height: 95%;
+
+            .ck-content {
+              height: 90%;
+
+              p {
+                margin: 0;
+                padding: 0;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+</style>
+
 <style lang="scss" scoped>
 @import '@/styles/colors.scss';
+
 .configure-customizations {
-  &__form {
+  .configure-customizations__form {
     display: flex;
     flex-direction: column;
-    &-header {
+
+    .configure-customizations__form-header {
       display: flex;
       flex-direction: row;
-      &-item {
+
+      .configure-customizations__form-header-item {
         width: 50%;
-        &-input {
+
+        .configure-customizations__form-header-item-input {
           width: 70%;
-          &-label {
+
+          .configure-customizations__form-header-item-input-label {
             font-size: 12px;
           }
+
           i {
             color: $--color-primary;
+
             &:hover {
+              cursor: pointer;
               color: $--color-primary-light-3;
             }
           }
         }
       }
     }
-    // &-ckeditor {
-    //   width: 50%;
-    // }
   }
-  &__footer {
+  .configure-customizations__footer {
     display: flex;
-    &-info {
-      &-span {
+
+    .configure-customizations__footer-info {
+      .configure-customizations__footer-info-span {
         font-size: 10px;
       }
     }
-    &-confirm {
+
+    .configure-customizations__footer-confirm {
       .el-loading-mask {
         .el-loading-spinner .path {
           stroke: $--color-success;
