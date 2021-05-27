@@ -111,7 +111,9 @@ export default {
 
   data() {
     return {
-      localLoading: false
+      localLoading: false,
+      useMenstionPlugin: true,
+      usePreviewPlugin: true
     }
   },
 
@@ -203,6 +205,7 @@ export default {
 
   methods: {
     ...mapActions([
+      'getMessageToPreview',
       'resetRecipients',
       'setEditorReady',
       'setEditorText',
@@ -210,7 +213,7 @@ export default {
     ]),
 
     seePreview() {
-      console.log('see preview')
+      this.getMessageToPreview(this.body, Number(this.$route.params.id))
     },
 
     openFullScreenEditor(_) {
@@ -377,6 +380,7 @@ export default {
     border-radius: 6px;
   }
 }
+
 @media (max-width: 900px) {
   .messages-container {
     .el-textarea__inner {
