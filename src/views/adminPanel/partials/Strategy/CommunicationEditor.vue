@@ -66,7 +66,7 @@
         <div
           v-else
           ref="editor-fieldset"
-          class="communication-editor__editor-fieldset show-toolbar"
+          class="communication-editor__editor-fieldset show-toolbar jus-ckeditor__parent"
         >
           <ckeditor
             v-if="isVisible"
@@ -81,7 +81,7 @@
 
       <div class="communication-editor__right-area">
         <JusVariablesCard
-          :variables="variables"
+          :variables="templateVariables"
           class="communication-editor__variables-card"
         />
         <div class="communication-editor__footer">
@@ -140,6 +140,7 @@ export default {
 
   data() {
     return {
+      useMenstionPlugin: true,
       template: {
         body: ''
       }
@@ -148,7 +149,7 @@ export default {
 
   computed: {
     ...mapGetters({
-      variables: 'getAvaliableVariablesToTemplate'
+      templateVariables: 'getAvaliableVariablesToTemplate'
     }),
 
     savedAt() {
