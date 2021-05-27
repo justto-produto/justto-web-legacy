@@ -97,7 +97,7 @@ const workspaceActions = {
   },
   getFeaturesAndModules({ _ }) {
     return axiosDispatch({
-      url: `${workspacesPath}/feature/`,
+      url: `${workspacesPath}/feature?sort=description,asc`,
       mutation: 'setFeaturesAndModules'
     })
   },
