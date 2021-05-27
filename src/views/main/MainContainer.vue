@@ -82,6 +82,7 @@
       </el-main>
     </el-container>
     <JusShortchts />
+    <jusMessagePreview />
   </el-container>
 </template>
 
@@ -91,9 +92,10 @@ import { mapGetters, mapActions } from 'vuex'
 export default {
   name: 'MainContainer',
   components: {
+    jusMessagePreview: () => import('@/components/dialogs/JusMessagePreviewDialog'),
     JusHeaderMain: () => import('@/components/layouts/JusHeaderMain'),
     JusTeamMenu: () => import('@/components/layouts/JusTeamMenu'),
-    JusShortchts: () => import('@/components/others/JusShortcuts')
+    JusShortchts: () => import('@/components/others/JusShortcuts'),
   },
   data() {
     return {

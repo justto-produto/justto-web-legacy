@@ -1,6 +1,6 @@
 <template>
   <section
-    v-if="!isInPreNegotiation"
+    v-if="!isInPreNegotiation && !isPaused && !isCanceled"
     id="messagesTabEditorOmnichannelNegotiation"
     v-loading="showCKEditor && !editorReady"
     class="messages-container jus-ckeditor__parent"
@@ -76,7 +76,7 @@
     class="messages-container"
   >
     <span class="messages-container__pre-negotiation-alert">
-      Disputa em pré negociação. Inicie a disputa para enviar mensagens.
+      {{ loadingText }}
     </span>
   </section>
 </template>
@@ -111,7 +111,9 @@ export default {
 
   data() {
     return {
-      localLoading: false
+      localLoading: false,
+      useMenstionPlugin: true,
+      usePreviewPlugin: true
     }
   },
 
@@ -122,7 +124,8 @@ export default {
       editorRecipients: 'getEditorRecipients',
       messageType: 'getEditorMessageType',
       getEditorReady: 'getEditorReady',
-      editorText: 'getEditorText'
+      editorText: 'getEditorText',
+      ticket: 'getTicketOverview'
     }),
 
     sendMessagetext() {
@@ -145,6 +148,21 @@ export default {
       set(text) {
         this.setEditorText(text)
       }
+    },
+
+    isPaused() {
+      return this.ticket.paused
+    },
+
+    isCanceled() {
+      const { status } = this.ticket
+      return status === 'CANCELED'
+    },
+
+    loadingText() {
+      if (this.isPaused || this.isCanceled) {
+        return `Disputa ${this.isPaused ? 'pausada' : 'cancelada'}. Retome a disputa para enviar mensagens`
+      } else return 'Disputa em pré negociação. Inicie a disputa para enviar mensagens'
     },
 
     showCKEditor() {
@@ -177,19 +195,26 @@ export default {
 
   mounted() {
     eventBus.$on(events.EDITOR_FOCUS.callback, this.focusOnEditor)
+    eventBus.$on('SEE-PREVIEW', this.seePreview)
   },
 
   beforeDestroy() {
     eventBus.$off(events.EDITOR_FOCUS.callback, this.focusOnEditor)
+    eventBus.$off('SEE-PREVIEW', this.seePreview)
   },
 
   methods: {
     ...mapActions([
+      'getMessageToPreview',
       'resetRecipients',
       'setEditorReady',
       'setEditorText',
       'sendMessage'
     ]),
+
+    seePreview() {
+      this.getMessageToPreview(this.body, Number(this.$route.params.id))
+    },
 
     openFullScreenEditor(_) {
       this.$refs.fullScreenEditor.openDialogEditor(this.showCKEditor ? this.editorText : this.editorTextScaped)
@@ -309,7 +334,7 @@ export default {
     position: absolute;
     top: 0;
     left: 0;
-    margin: 18px 0px 0px 390px;
+    margin: 18px 0px 0px 430px;
   }
 
   .messages-container__paste {
@@ -355,6 +380,7 @@ export default {
     border-radius: 6px;
   }
 }
+
 @media (max-width: 900px) {
   .messages-container {
     .el-textarea__inner {

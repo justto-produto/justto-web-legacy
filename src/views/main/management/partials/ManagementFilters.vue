@@ -343,7 +343,8 @@ export default {
           return [
             'EXPIRED',
             'SETTLED',
-            'UNSETTLED'
+            'UNSETTLED',
+            'CANCELED'
           ]
         case '1':
           return [
@@ -364,7 +365,8 @@ export default {
             'EXPIRED',
             'SETTLED',
             'UNSETTLED',
-            'REFUSED'
+            'REFUSED',
+            'CANCELED'
           ]
       }
     }
@@ -439,6 +441,7 @@ export default {
       this.changeExpirationDate()
       this.changeimportingDate()
       this.clearInteraction()
+      this.clearStatuses()
       this.filters.onlyFavorite = false
       this.filters.onlyPaused = false
       this.filters.hasCounterproposal = false
@@ -472,13 +475,9 @@ export default {
         this.filters.dealDate = []
       }
     },
-    // clearLastInteractionDate (value) {
-    //   if (value) {
-    //     this.filters.lastInteractionDate = value
-    //   } else {
-    //     delete this.filters.lastInteractionDate
-    //   }
-    // },
+    clearStatuses() {
+      this.filters.status = []
+    },
     changeExpirationDate(value) {
       if (value) {
         this.filters.expirationDate = value

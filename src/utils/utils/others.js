@@ -71,7 +71,11 @@ const getLastInteraction = function(lastinteractiondate) {
   const now = moment()
   const date = moment(lastinteractiondate)
   if (now.diff(date, 'seconds') < 0) {
-    return ''
+    if (date.diff(now, 'days') > 0) {
+      return date.format('DD/MM/YYYY')
+    } else {
+      return ''
+    }
   } else if (now.diff(date, 'seconds') <= 59) {
     return 'há ' + now.diff(date, 'seconds') + ' segundos'
   } else if (now.diff(date, 'minutes') <= 59) {
@@ -81,7 +85,7 @@ const getLastInteraction = function(lastinteractiondate) {
   } else if (now.diff(date, 'hours') < 48) {
     return 'há 1 dia'
   } else {
-    return date.format('DD/MM/YY')
+    return date.format('DD/MM/YYYY')
   }
 }
 

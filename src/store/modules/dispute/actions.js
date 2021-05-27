@@ -43,7 +43,6 @@ const disputeActions = {
     })
   },
   updateDisputeData({ dispatch }, id) {
-    dispatch('getDisputeMetadata', id)
     dispatch('getLastInteractions', id)
     dispatch('getDisputeProperties', id)
     dispatch('getDisputeAttachments', id)

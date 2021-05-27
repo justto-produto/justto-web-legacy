@@ -2,7 +2,7 @@
   <article class="nps-container">
     <div class="nps-container__contact">
       <jus-icon icon="nps" />
-      <span>De</span>
+      <span>de</span>
       <span v-if="person">
         {{ person | resumedName }}
       </span>
@@ -43,7 +43,7 @@
         effect="plain"
         size="mini"
       >
-        {{ reason.toLowerCase() }}
+        {{ reason.trim() | capitalize }}
       </el-tag>
     </div>
 
@@ -56,15 +56,21 @@
 
     <div class="nps-container__comment">
       <span class="nps-container__comment-date">
-        {{ npsEvaluateDate | moment('[Comentário em] DD/MM/YYYY [às] HH:MM') }}
+        {{ npsResume.length ? 'Comentado:' : 'Avaliado:' }}
+        {{ npsEvaluateDate | moment('DD/MM/YYYY HH:MM') }}
       </span>
 
-      <span class="nps-container__comment-text">
+      <span
+        v-if="npsResume.length"
+        class="nps-container__comment-text"
+      >
         "{{ npsResume }}"
       </span>
     </div>
 
-    <div class="nps-container__reply">
+    <div
+      class="nps-container__reply"
+    >
       <div class="nps-container__reply-about">
         <jus-icon
           icon="reply"
@@ -75,7 +81,7 @@
           v-if="npsReplyDate"
           class="nps-container__reply-about-date"
         >
-          {{ npsReplyDate | moment('[Resposta em] DD/MM/YYYY [às] HH:MM') }}
+          {{ npsReplyDate | moment('[Respondido:] DD/MM/YYYY HH:MM') }}
         </span>
         <span
           v-else
@@ -123,6 +129,7 @@
 
 <script>
 import communicationSendStatus from '@/utils/mixins/communicationSendStatus'
+import { mapActions } from 'vuex'
 
 export default {
   mixins: [communicationSendStatus],
@@ -192,6 +199,9 @@ export default {
   },
 
   methods: {
+    ...mapActions({
+      replyNps: 'replyNps'
+    }),
     copyToClipboard(_event) {
       navigator.clipboard.writeText(this.senderEmail).then(() => {
         this.$message('Copiado com sucesso.')
@@ -206,22 +216,21 @@ export default {
 
     sendReplyNps() {
       this.loadingSendBtn = true
-
-      // TODO: Salvar chamar a mutation que setta do dado no Store.
-      // TODO: Salvar a data em que foi enviado também.
-      const req = new Promise(resolve => {
-        setTimeout(() => {
-          this.loadingSendBtn = false
-          resolve()
-        }, 5000)
-      })
-
-      req.then(() => {
+      this.replyNps({
+        disputeId: this.$route.params.id,
+        occurrenceId: this.occurrence?.id,
+        disputeRoleId: this.interaction?.properties?.ROLE_ID,
+        data: { response: this.npsReply }
+      }).then(() => {
         this.$jusNotification({
           type: 'success',
           title: 'Yay!',
           message: 'Resposta enviada.'
         })
+        this.$set(this.occurrence.interaction.properties, 'NPS_REPLY', this.npsReply)
+        this.$set(this.occurrence.interaction.properties, 'NPS_REPLY_DATE', this.$moment().format('YYYY-MM-DD[T]HH:mm:ss.SSS[Z]'))
+      }).catch(error => this.$jusNotification({ error })).finally(() => {
+        this.loadingSendBtn = false
       })
     }
   }
@@ -289,7 +298,7 @@ export default {
         }
 
         &.neutro {
-          background-color: $--color-nps-passive;
+          background-color: $--color-nps-neutral;
         }
 
         &.detrator {
@@ -300,15 +309,13 @@ export default {
   }
 
   .nps-container__reasons {
-    display: flex;
-    gap: 8px;
+    display: inline;
 
     .nps-container__reasons-item {
-      background-color: #00000050;
-      text-transform: capitalize;
+      margin: 0px 2px 4px;
       font-weight: 500;
-      color: $--color-white;
-      border: none;
+      color: $--color-nps-neutral;
+      border-color: $--color-nps-neutral;
     }
   }
 

@@ -72,7 +72,9 @@
         :have="haveGroupedOccurrences"
         :occurrences="groupedOccurrences"
       />
-      <el-tooltip>
+      <el-tooltip
+        :open-delay="600"
+      >
         <div
           slot="content"
           style="max-width: 400px; text-align: justify;"
@@ -128,6 +130,7 @@ export default {
 
     messageType() {
       const mapCommunicationTypes = {
+        SMS: 'sms',
         EMAIL: 'email',
         WHATSAPP: 'whatsapp',
         NEGOTIATOR_MESSAGE: 'negotiator-message-2'

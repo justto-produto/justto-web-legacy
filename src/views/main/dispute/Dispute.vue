@@ -230,7 +230,7 @@
                 name="1"
               >
                 <el-card
-                  v-loading="isPaused || isPreNegotiation"
+                  v-loading="isPaused || isPreNegotiation || isCanceled"
                   :element-loading-text="loadingText"
                   element-loading-spinner="el-icon-video-pause"
                   element-loading-background="#fff"
@@ -522,10 +522,13 @@ export default {
     isPreNegotiation() {
       return this.dispute.status === 'PRE_NEGOTIATION'
     },
+    isCanceled() {
+      return this.dispute?.status === 'CANCELED'
+    },
     loadingText() {
-      return this.isPaused
-        ? 'Disputa pausada. Retome a disputa para enviar mensagens'
-        : 'Disputa em pré negociação. Inicie a disputa para enviar mensagens'
+      if (this.isPaused || this.isCanceled) {
+        return `Disputa ${this.isPaused ? 'pausada' : 'cancelada'}. Retome a disputa para enviar mensagens`
+      } else return 'Disputa em pré negociação. Inicie a disputa para enviar mensagens'
     },
     isFavorite() {
       return this.dispute ? this.dispute.favorite : false
@@ -602,13 +605,14 @@ export default {
   },
 
   mounted() {
-    this.getLastInteractions(this.id)
     setTimeout(() => {
       this.disputeOccurrencesKey += 1
       this.width = this.$refs.sectionMessages.offsetWidth
       this.y = parseInt(localStorage.getItem('jusoffsetheight')) || this.$refs.sectionMessages.offsetHeight - 208
     }, 800)
+
     window.addEventListener('resize', this.updateWindowHeight)
+
     this.setHeight(window.document.getElementById('app').clientHeight)
     this.typingTab = localStorage.getItem('jusoccurrencestab') || '1'
 
@@ -617,8 +621,9 @@ export default {
 
   beforeDestroy() {
     eventBus.$off(events.EDITOR_FOCUS.callback, this.focusOnEditor)
-    this.unsubscribeOccurrences(this.id)
     window.removeEventListener('resize', this.updateWindowHeight)
+
+    this.unsubscribeOccurrences(this.id)
   },
 
   methods: {
@@ -629,7 +634,6 @@ export default {
       'getQuickReplyTemplates',
       'resetQuickReplyTemplate',
       'archiveQuickReplyTemplate',
-      'getDisputeMetadata',
       'sendNegotiator',
       'setHeight'
     ]),

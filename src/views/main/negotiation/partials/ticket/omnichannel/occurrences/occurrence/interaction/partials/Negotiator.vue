@@ -36,7 +36,10 @@
         •
       </span>
 
-      <el-tooltip :content="status.tooltip">
+      <el-tooltip
+        :open-delay="600"
+        :content="status.tooltip"
+      >
         <jus-icon
           class="negotiator-container__about__icon"
           :icon="status.icon"
@@ -47,7 +50,6 @@
 </template>
 
 <script>
-import { addInvisibleStatus } from '@/utils'
 import communicationSendStatus from '@/utils/mixins/communicationSendStatus'
 
 export default {
@@ -97,7 +99,7 @@ export default {
           break
       }
 
-      return addInvisibleStatus(text)
+      return text
     },
 
     messageType() {
@@ -128,7 +130,7 @@ export default {
 
       return {
         icon: status?.toLowerCase() || '',
-        tooltip: status ? `No momento desta ocorrência, esta disputa estava ${this.$t('dispute.status.' + status)}.` : ''
+        tooltip: status ? `No momento desta ocorrência, esta disputa estava ${this.$tc('dispute.status.' + status)}.` : ''
       }
     }
   },

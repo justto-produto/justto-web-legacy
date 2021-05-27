@@ -135,16 +135,9 @@ export default {
       return filterByTerm(this.attachmentFilterTerm, this.disputeAttachments, 'name')
     }
   },
-  mounted() {
-    this.initState()
-  },
+
   methods: {
     ...mapActions(['deleteAttachment', 'getDisputeAttachments', 'hideLoadingAttachments']),
-
-    initState() {
-      const { id } = this.$route.params
-      this.getDisputeAttachments(id)
-    },
 
     enrichDispute() {
       const message = {

@@ -16,8 +16,14 @@ export default class DisputeOverviewVm {
     paused,
     favorite,
     upperRange, disputeUpperRange,
-    hasDraft, hasDocument,
-    strategy, strategyId, hasOBFInStrategy, manualStrategy
+    hasDraft,
+    hasDocument,
+    signStatus,
+    draftStatus,
+    strategy,
+    strategyId,
+    hasOBFInStrategy,
+    manualStrategy
   }) {
     this.disputeId = disputeId || id
     this.internalId = internalId || externalId
@@ -28,6 +34,7 @@ export default class DisputeOverviewVm {
     this.favorite = favorite
     this.upperRange = upperRange || disputeUpperRange
     this.hasDraft = hasDraft || hasDocument
+    this.draftStatus = signStatus || draftStatus
     this.strategy = new StrategyVm(strategy || {
       id: strategyId,
       isObrigacaoFazer: hasOBFInStrategy,

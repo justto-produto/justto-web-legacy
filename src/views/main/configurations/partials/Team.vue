@@ -33,7 +33,7 @@
             v-if="scope.row.personName || activeAddingData === 'name' + scope.row.id"
             :ref="'name' + scope.row.id"
             v-model="scope.row.personName"
-            @change="handleEditMemberName($event, scope.row.personId)"
+            @change="handleEditMemberName($event, scope.row.id)"
             @blur="stopEditing"
             @enableEdit="enableEdit"
           />
@@ -93,7 +93,7 @@
         <template slot-scope="scope">
           <i
             class="el-icon-delete team-container__table-action"
-            @click="handleRremoveMember(scope.row.memberId, scope.row.name)"
+            @click="handleRemoveMember(scope.row.personId, scope.row.personName)"
           />
         </template>
       </el-table-column>
@@ -107,10 +107,14 @@
         icon="logo-small"
         class="team-container__button-icon"
       />
-      Criar uma nova esquipe
+      Criar uma nova equipe
     </el-button>
 
     <TeamDialogs ref="teamDialogs" />
+    <RemoveTeamMemberDialog
+      ref="removeTeamMemberDialog"
+      @createMember="handleInviteMember"
+    />
   </section>
 </template>
 
@@ -120,22 +124,28 @@ import { filterByTerm } from '@/utils'
 
 export default {
   name: 'Team',
+
   components: {
     TextInlineEditorInner: () => import('@/components/inputs/TextInlineEditorInner'),
     PopoverInlineEditor: () => import('@/components/inputs/PopoverInlineEditor'),
-    TeamDialogs: () => import('./TeamDialogs')
+    TeamDialogs: () => import('./TeamDialogs'),
+    RemoveTeamMemberDialog: () => import('./partials/RemoveTeamMemberDialog')
   },
+
   data: () => ({
     searchTerm: '',
     activeAddingData: ''
   }),
+
   computed: {
     ...mapGetters({
       team: 'workspaceTeam'
     }),
+
     filteredTeam() {
       return filterByTerm(this.searchTerm, this.team, 'name', 'email')
     },
+
     profileOptions() {
       return [
         {
@@ -149,9 +159,11 @@ export default {
       ]
     }
   },
+
   beforeMount() {
     this.getWorkspaceTeam()
   },
+
   methods: {
     ...mapActions([
       'getWorkspaceTeam',
@@ -165,8 +177,8 @@ export default {
       this.$refs.teamDialogs.openNewMemberDialog()
     },
 
-    handleEditMemberName(name, personId) {
-      this.changeMemberName({ name, personId })
+    handleEditMemberName(name, accountId) {
+      this.changeMemberName({ name, accountId, updateWorkspace: true })
     },
 
     handleEditMemberProfile(profile, personId) {
@@ -181,43 +193,10 @@ export default {
         .catch(error => {
           this.$jusNotification({ error })
         })
-      // const data = {
-      //   accountEmail: member.email,
-      //   accountId: member.id,
-      //   createdAt: null,
-      //   id: member.memberId,
-      //   personId: member.personId,
-      //   profile: role,
-      //   updatedAt: null
-      // }
-
-      // this.editWorkspaceMember(data)
-      //   .then(() => {
-      //     this.$jusNotification({
-      //       title: 'Yay!',
-      //       message: 'Usuário editado com sucesso.',
-      //       type: 'success'
-      //     })
-      //   })
-      //   .catch(error => {
-      //     this.$jusNotification({ error })
-      //   })
     },
 
-    handleRremoveMember(memberId, memberName) {
-      const message = `Tem certeza que dexeja excluir <b>${memberName}</b> da sua workspace? Esta ação é irreversível.`
-      const options = {
-        confirmButtonText: 'Continuar',
-        cancelButtonText: 'Cancelar',
-        cancelButtonClass: 'is-plain',
-        dangerouslyUseHTMLString: true,
-        showClose: false
-      }
-
-      this.$confirm(message, 'Atenção', options)
-        .then(() => {
-          this.removeWorkspaceMember(memberId)
-        })
+    handleRemoveMember(id, name) {
+      this.$refs.removeTeamMemberDialog.show({ id, name })
     },
 
     createNewTeam() {
@@ -277,18 +256,6 @@ export default {
   flex-direction: column;
   height: 100%;
 
-  .team-container__header {
-    .team-container__header-input {
-      .el-input__inner {
-        height: 50px;
-        line-height: 50px;
-      }
-    }
-    .team-container__header-button {
-      height: 50px;
-    }
-  }
-
   .team-container__table {
     margin-top: 3px;
     flex: 1;
@@ -298,7 +265,6 @@ export default {
 
     .el-table__header-wrapper {
       font-size: 16px;
-      // border-bottom: 1px solid $--color-text-secondary;
       tr th {
         color: $--color-text-primary;
         font-weight: 500;

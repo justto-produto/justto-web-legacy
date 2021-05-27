@@ -7,7 +7,7 @@
       <div>
         <CurrencyInlieEditorInner
           v-model="plaintiffOffer.value"
-          :is-editable="!isPreNegotiation"
+          :is-editable="!isPreNegotiation && !isPaused && !isCanceled"
           class="overview-offers__proposal-value overview-offers__proposal-value--full-line"
           @change="updatePlaintiffOffer"
         />
@@ -15,7 +15,7 @@
     </article>
     <article class="overview-offers__proposal overview-offers__proposal--defendant">
       <div>
-        <span>Proposta: </span>
+        <span>Sua proposta: </span>
         <CurrencyInlieEditorInner
           v-model="defendantOffer.value"
           :is-editable="!isPreNegotiation"
@@ -25,7 +25,7 @@
         />
       </div>
       <div>
-        <span>Máx.: </span>
+        <span>Alçada Máx.: </span>
         <CurrencyInlieEditorInner
           v-model="upperRange"
           :is-editable="!isPreNegotiation"
@@ -72,8 +72,18 @@ export default {
 
   computed: {
     ...mapGetters({
-      ticketParties: 'getTicketOverviewParties'
+      ticketParties: 'getTicketOverviewParties',
+      ticket: 'getTicketOverview'
     }),
+
+    isPaused() {
+      return this.ticket.paused
+    },
+
+    isCanceled() {
+      const { status } = this.ticket
+      return status === 'CANCELED'
+    },
 
     disputeId() {
       return Number(this.$route.params.id)

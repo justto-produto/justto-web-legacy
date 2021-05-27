@@ -18,6 +18,13 @@ const messageMutations = {
     if (index !== -1) {
       Vue.delete(state.quickReplyTemplates, index)
     }
+  },
+  setMessageToPreview(state, { body }) {
+    Vue.set(state, 'previewMessage', body)
+    Vue.set(state, 'showPreview', Boolean(body?.length))
+  },
+  setShowPreview(state, visibility) {
+    Vue.set(state, 'showPreview', visibility)
   }
 }
 

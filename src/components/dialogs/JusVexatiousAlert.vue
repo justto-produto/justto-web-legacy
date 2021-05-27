@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <el-popover
     width="314"
     trigger="click"
@@ -21,7 +21,8 @@
     </div>
     <jus-icon
       slot="reference"
-      icon="alert-active"
+      :icon="icon"
+      is-active
     />
   </el-popover>
 </template>
@@ -37,6 +38,10 @@ export default {
     name: {
       type: String,
       default: ''
+    },
+    icon: {
+      type: String,
+      default: () => 'alert'
     }
   },
   data() {

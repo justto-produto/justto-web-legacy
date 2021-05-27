@@ -54,17 +54,17 @@
     "description": "descrição",
     "provisionedValue": "valor provisionado",
     "status": {
-      "ACCEPTED": "aceita",
+      "ACCEPTED": "aceita | aceitas",
       "CHECKOUT": "sem dados bancarios",
       "ENGAGEMENT": "sem resposta da parte",
-      "ENRICHED": "enriquecida",
-      "EXPIRED": "expirada",
-      "IMPORTED": "importada",
-      "PENDING": "pendente",
+      "ENRICHED": "enriquecida | enriquecidas",
+      "EXPIRED": "expirada | expiradas",
+      "IMPORTED": "importada | importadas",
+      "PENDING": "pendente | pendentes",
       "REFUSED": "com proposta recusada",
       "RUNNING": "em negociação",
-      "SETTLED": "ganha",
-      "UNSETTLED": "perdida",
+      "SETTLED": "ganha | ganahs",
+      "UNSETTLED": "perdida | perdidas",
       "PRE_NEGOTIATION": "pre-negociação"
     },
     "export": {
@@ -183,7 +183,42 @@
       "EXPIRED": "expirado",
       "FAVORITE": "Aguardar análise da empresa",
       "DISFAVOR": "Desmarcar aguardar análise da empresa",
-      "PRE_NEGOTIATION": "pre-negociação"
+      "PRE_NEGOTIATION": "pre-negociação",
+      "CANCELED": "cancelada"
+    },
+    "interaction": {
+      "message": {
+        "status": {
+          "WAITING": {
+            "preposition": "para",
+            "label": "agendada"
+          },
+          "PROCESSED": {
+            "preposition": "por",
+            "label": "recebida"
+          },
+          "PROCESSED_BY_USER": {
+            "preposition": "em",
+            "label": "recebida pelo usuário"
+          },
+          "FAILED": {
+            "preposition": "para",
+            "label": "falha no envio"
+          },
+          "CANCELED": {
+            "preposition": "para",
+            "label": "envio cancelado"
+          },
+          "RETRYING": {
+            "preposition": "para",
+            "label": "reenviando"
+          },
+          "WAITING_TO_RESPONSE": {
+            "preposition": "de",
+            "label": "aguardando resposta"
+          }
+        }
+      }
     }
   },
   "profile": {
@@ -191,6 +226,7 @@
     "ADMINISTRATOR": "administrador"
   },
   "action": {
+    "CANCEL": "cancelar negociação",
     "RESTART_ENGAGEMENT": "reiniciar",
     "RESTART-ENGAGEMENT": "reiniciar disputa",
     "RESEND-MESSAGES": "reenviar mensagens automáticas",
@@ -215,7 +251,7 @@
     "CHANGE_EXPIRATION_DATE": "data limite",
     "RENEGOTIATE": "retornar para negociação",
     "EDIT-NEGOTIATORS": "editar negociadores",
-    "DROP_LAWSUIT": "confirmar baixa definitiva",
+    "DROP_LAWSUIT": "cancelar negociação",
     "START_NEGOTIATON": "inicar negociação",
     "SEND_BILK_MESSAGE": "Enviar mensagens em massa",
     "tooltip": {
@@ -266,6 +302,10 @@
       "name": "trocar negociadores",
       "feedback-message": "negociadores alterados"
     },
+    "NEGOTIATORS": {
+      "name": "trocar negociadores",
+      "feedback-message": "negociadores alterados"
+    },
     "ENRICH": {
       "name": "enriquecer disputa",
       "feedback-message": "dispute <b>enriquecida</b>"
@@ -279,8 +319,8 @@
       "feedback-message": ""
     },
     "DROP_LAWSUIT": {
-      "name": "confirmar baixa definitiva",
-      "feedback-message": "<b>baixa definitiva</b>"
+      "name": "cancelar negociação",
+      "feedback-message": "<b>cancelar negociação</b>"
     },
     "START_NEGOTIATION": {
       "name": "iniciar negociação",
@@ -309,6 +349,10 @@
     }
   },
   "interaction-types": {
+    "NPS": {
+      "icon": "nps-star-active",
+      "message": "avaliação NPS recebida"
+    },
     "COMMUNICATION": {
       "message": ""
     },
@@ -351,6 +395,10 @@
     "NEGOTIATOR_ACCEPTED": {
       "icon": "justto",
       "message": "Informou dados bancários"
+    },
+    "CANCELED": {
+      "icon": "rejected-red",
+      "message": "Negociação cancelada."
     }
   },
   "roles": {
@@ -420,7 +468,8 @@
     "SETTLED": "ganha",
     "UNSETTLED": "perdida",
     "PRE_NEGOTIATION": "pre-negociação",
-    "PAUSED": "(pausada) | "
+    "PAUSED": "(pausada) | ",
+    "CANCELED": "cancelada"
   },
   "tickets-tabs": {
     "pre-negotiation": "pré negociação",
@@ -577,7 +626,7 @@
   },
   "dashboard": {
     "NPS_DETRACTOR_PERCENTAGE": "detrator",
-    "NPS_PASSIVE_PERCENTAGE": "neutro",
+    "NPS_NEUTRAL_PERCENTAGE": "neutro",
     "NPS_PROMOTER_PERCENTAGE": "promotor",
     "UPPER_RANGE_AVG": "alçada média",
     "SETTLED_DEALS_AVG": "média dos acordos",

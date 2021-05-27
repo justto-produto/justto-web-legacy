@@ -4,15 +4,35 @@ import TicketEngagementItem from '@/models/negotiations/tickets/TicketEngagement
 
 const getTicketIndex = (tickets, disputeId) => tickets.findIndex(ticket => ticket.disputeId === disputeId)
 
+const EngagementTicketStatus = [
+  'PRE_NEGOTIATION'
+]
+
 const ticketsMutations = {
   setCommunicationTickets: (state, { data, payload }) => {
     if (payload === 'nextPage') data.content = state.tickets.content.concat(data.content)
-    Vue.set(state, 'tickets', data)
+    Vue.set(state, 'tickets', {
+      ...data,
+      content: data.content.map(ticket => EngagementTicketStatus.includes(ticket.disputeStatus) ? new TicketEngagementItem(ticket) : ticket)
+    })
   },
 
   deleteTicket: ({ tickets }, { payload }) => {
     const ticketIndex = getTicketIndex(tickets.content, payload)
     if (ticketIndex > -1) Vue.delete(tickets.content, ticketIndex)
+  },
+
+  removeCanceledTicket: ({ tickets }, { payload: { disputeId, remove } }) => {
+    if (remove) {
+      const ticketIndex = getTicketIndex(tickets.content, disputeId)
+      if (ticketIndex > -1) Vue.delete(tickets.content, ticketIndex)
+    }
+  },
+
+  cancelTicket: (state, { payload }) => {
+    const { disputeId } = payload
+    const content = [...state.tickets.content.filter((ticket) => Number(ticket.disputeId) !== Number(disputeId))]
+    Vue.set(state.tickets, 'content', content)
   },
 
   setTicketsQuery: ({ ticketsQuery }, { key, value }) => Vue.set(ticketsQuery, key, value),
@@ -59,7 +79,6 @@ const ticketsMutations = {
     ].includes(dispute.status)
       ? new TicketEngagementItem(dispute)
       : new TicketCommunicationItem(dispute)
-
     if (tickets.empty !== undefined) {
       if (ticketIndex > -1) Vue.set(tickets.content, ticketIndex, newTicket)
       else tickets.content.unshift(newTicket)
@@ -69,7 +88,6 @@ const ticketsMutations = {
   setTicketVisualized: ({ tickets }, { payload }) => {
     const { content } = tickets
     const { disputeId, visualized, anonymous } = payload
-
     if (!anonymous) {
       const ticketIndex = getTicketIndex(content, disputeId)
       if (ticketIndex > -1) Vue.set(content[ticketIndex], 'visualized', visualized)

@@ -130,6 +130,7 @@ export default {
     activeTabIndex() {
       return this.tabs.findIndex(({ name }) => this.activeTab === name)
     },
+
     ticketIndex() {
       const { id } = this.$route.params
 
