@@ -32,7 +32,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['setShowPreview']),
+    ...mapActions(['setShowPreview'])
   }
 }
 </script>

@@ -2,7 +2,7 @@
   <section
     v-if="!isInPreNegotiation && !isPaused && !isCanceled"
     id="messagesTabEditorOmnichannelNegotiation"
-    v-loading="showCKEditor && !editorReady"
+    v-loading="showCKEditor"
     class="messages-container jus-ckeditor__parent"
   >
     <ckeditor
@@ -123,22 +123,12 @@ export default {
       editorTextScaped: 'getEditorTextScaped',
       editorRecipients: 'getEditorRecipients',
       messageType: 'getEditorMessageType',
-      getEditorReady: 'getEditorReady',
       editorText: 'getEditorText',
       ticket: 'getTicketOverview'
     }),
 
     sendMessagetext() {
       return this.editorRecipients.length ? 'Enviar mensagem' : 'Selecione um destinatário'
-    },
-
-    editorReady: {
-      get() {
-        return this.getEditorReady || true
-      },
-      set(value) {
-        this.setEditorReady(value)
-      }
     },
 
     body: {
@@ -170,8 +160,8 @@ export default {
     },
 
     canSendMessage() {
-      const { editorRecipients, localLoading, editorReady } = this
-      return editorRecipients.length && !localLoading && editorReady
+      const { editorRecipients, localLoading } = this
+      return editorRecipients.length && !localLoading
     },
 
     isFullscreenDialog() {
@@ -180,16 +170,6 @@ export default {
 
     editorInstance() {
       return this.$refs.messageEditor
-    }
-  },
-
-  watch: {
-    editorReady(ready) {
-      if (this.focusOnStartup && ready) {
-        this.$nextTick().then(() => this.focusOnEditor()).finally(() => {
-          this.$emit('update:focusOnStartup', false)
-        })
-      }
     }
   },
 
@@ -204,7 +184,6 @@ export default {
   methods: {
     ...mapActions([
       'resetRecipients',
-      'setEditorReady',
       'setEditorText',
       'sendMessage'
     ]),
@@ -246,7 +225,7 @@ export default {
 
     pasteText() {
       navigator.clipboard.readText().then(text => {
-        if (this.showCKEditor && this.editorReady && this.editor) {
+        if (this.showCKEditor && this.editor) {
           this.editor.insertText(text)
         } else if (!this.showCKEditor) {
           const target = document.getElementById('messageEditorTextOnly')
