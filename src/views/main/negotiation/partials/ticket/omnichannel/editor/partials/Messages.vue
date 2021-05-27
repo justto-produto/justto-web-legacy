@@ -2,7 +2,6 @@
   <section
     v-if="!isInPreNegotiation && !isPaused && !isCanceled"
     id="messagesTabEditorOmnichannelNegotiation"
-    v-loading="showCKEditor"
     class="messages-container jus-ckeditor__parent"
   >
     <ckeditor
