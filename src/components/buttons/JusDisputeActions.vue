@@ -20,6 +20,7 @@
       <el-tooltip
         v-if="action.condition()"
         :content="action.tooltip"
+        :open-delay="300"
       >
         <span>
           <el-button
@@ -526,6 +527,7 @@ export default {
         {
           name: 'settled',
           icon: 'win',
+          disabled: this.isPaused,
           condition: () => this.canSettled,
           action: () => this.disputeAction('settled'),
           tooltip: this.dispute.status === 'CHECKOUT' || this.dispute.status === 'ACCEPTED' ? 'Ganhar' : 'Aceitar acordo'
@@ -533,6 +535,7 @@ export default {
         {
           name: 'unsettled',
           icon: 'lose',
+          disabled: this.isPaused,
           condition: () => this.canUnsettled,
           action: () => this.disputeAction('unsettled'),
           tooltip: 'Perder'
@@ -547,6 +550,7 @@ export default {
         {
           name: 'paused',
           icon: 'pause',
+          disabled: this.isPaused,
           condition: () => this.canPause,
           action: () => this.disputeAction('paused'),
           tooltip: 'Pausar'
@@ -554,6 +558,7 @@ export default {
         {
           name: 'restart-engagement',
           icon: 'refresh',
+          disabled: this.isPaused,
           condition: () => this.canRestartEngagement,
           action: () => this.disputeAction('restart-engagement'),
           tooltip: 'Reiniciar disputa'
@@ -562,13 +567,14 @@ export default {
           name: 'resend-messages',
           icon: 'resend-messages',
           condition: () => this.canResendMessages,
-          disabled: !this.isInNegotiation,
+          disabled: !this.isInNegotiation || this.isPaused,
           action: () => this.disputeAction('resend-messages'),
           tooltip: (this.isInNegotiation ? 'Reenviar mensagens automáticas' : 'A disputa precisa estar em negociação para reagendar mensagens automáticas')
         },
         {
           name: 'cancel-messages',
           icon: 'cancel-messages',
+          disabled: this.isPaused,
           condition: () => !this.tableActions && !this.isPreNegotiation,
           action: () => this.disputeAction('cancel-messages'),
           tooltip: 'Cancelar mensagens automáticas'
@@ -583,6 +589,7 @@ export default {
         {
           name: 'enrich',
           icon: 'enrich',
+          disabled: this.isPaused,
           condition: () => !this.tableActions && !this.isPreNegotiation,
           action: () => this.disputeAction('enrich'),
           tooltip: 'Enriquecer disputa'
@@ -590,6 +597,7 @@ export default {
         {
           name: 'counterproposal',
           icon: 'proposal',
+          disabled: this.isPaused,
           condition: () => this.canSendCounterproposal,
           action: () => this.disputeAction('counterproposal'),
           tooltip: 'Contraproposta manual'
@@ -597,6 +605,7 @@ export default {
         {
           name: 'renegotiate',
           icon: 'move-to-running',
+          disabled: this.isPaused,
           condition: () => this.canMoveToRunning,
           action: () => this.disputeAction('renegotiate'),
           tooltip: 'Retornar para negociação'
@@ -618,6 +627,7 @@ export default {
         {
           name: 'start-negotiation',
           icon: 'right-arrow',
+          disabled: this.isPaused,
           condition: () => this.isPreNegotiation,
           action: () => this.goToNegotiation(),
           tooltip: 'Iniciar negociação'
@@ -639,6 +649,7 @@ export default {
         {
           name: 'favorite',
           icon: this.dispute.favorite ? 'offices-tower-active' : 'offices-tower',
+          disabled: this.isPaused,
           condition: () => !this.isPreNegotiation,
           action: () => this.disputeAction(this.dispute.favorite ? 'disfavor' : 'favorite'),
           tooltip: `${this.$t('action.FAVORITE')} (${this.$t('fields.respondentParty')})`
@@ -651,6 +662,9 @@ export default {
           tooltip: 'Ir para negociação'
         }
       ]
+    },
+    isPaused() {
+      return this.dispute?.paused
     },
     canSettled() {
       return this.dispute?.status !== 'SETTLED' && !this.isPreNegotiation
