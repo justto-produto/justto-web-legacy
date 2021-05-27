@@ -76,6 +76,7 @@ export default {
     model: '',
     escaping: false
   }),
+
   computed: {
     vModel: {
       get() {
@@ -115,15 +116,18 @@ export default {
         : vModel
     }
   },
+
   mounted() {
     this.$emit('enableEdit')
   },
+
   methods: {
     handleEsc(event) {
       this.escaping = true
       this.handleBlur(event)
     },
     handleBlur(event) {
+      this.$emit('blur')
       if (event && !event.currentTarget.contains(event.relatedTarget)) {
         if (this.escaping) {
           this.cancelEdit()
