@@ -46,15 +46,24 @@
             class="features-modules-container__body-description"
             v-html="feature.description"
           />
-          <!-- {{ feature.description }} -->
-          <!-- v-html="feature.description" -->
-          <!-- </highlight> -->
           <a
-            v-if="hasConfiguration.includes(feature.code)"
+            v-if="feature.active && hasConfiguration.includes(feature.code)"
             class="features-modules-container__body-button-link"
             @click="openConfigurationsDialog(feature.code)"
           >
             Configurar
+          </a>
+          <a
+            v-else-if="hasConfiguration.includes(feature.code)"
+            class="features-modules-container__body-button-link"
+          >
+            <el-tooltip
+              content="Recurso não está habilitado!"
+              placement="top"
+              :open-delay="500"
+            >
+              <span>Configurar</span>
+            </el-tooltip>
           </a>
         </div>
       </div>
