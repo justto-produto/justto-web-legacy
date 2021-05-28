@@ -38,6 +38,7 @@
             </el-tooltip>
             <el-input
               v-model="form.email"
+              :disabled="!isJusttoAdmin"
               size="small"
             />
           </el-form-item>
@@ -65,6 +66,7 @@
             </el-tooltip>
             <el-input
               v-model="form.link"
+              :disabled="!isJusttoAdmin"
               size="small"
             />
           </el-form-item>
@@ -76,6 +78,7 @@
           ref="footerEditor"
           v-model="form.emailFooter"
           :editor="editor"
+          :disabled="!isJusttoAdmin"
           :config="editorConfig"
           type="classic"
         />
@@ -150,6 +153,7 @@ export default {
   computed: {
     ...mapGetters({
       properties: 'workspaceProperties',
+      isJusttoAdmin: 'isJusttoAdmin',
       workspaceId: 'workspaceId'
     })
   },
