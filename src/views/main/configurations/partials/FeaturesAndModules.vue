@@ -58,7 +58,7 @@
       </div>
     </article>
 
-    <!-- <ApiIntegrationDialog ref="apiIntegrationDialog" /> -->
+    <ApiIntegrationDialog ref="apiIntegrationDialog" />
     <!-- <AutomaticMessagesDialog ref="automaticMessagesDialog" /> -->
     <BadFaithLitigantDialog ref="badFaithLitigantDialog" />
     <CommunicationBlockListDialog ref="communicationBlockListDialog" />
@@ -75,7 +75,7 @@ export default {
   name: 'FeaturesAndModules',
   components: {
     highlight: () => import('vue-text-highlight'),
-    // ApiIntegrationDialog: () => import('./FeaturesAndModulesDialogs/ApiIntegrationDialog'),
+    ApiIntegrationDialog: () => import('./FeaturesAndModulesDialogs/ApiIntegrationDialog'),
     // AutomaticMessagesDialog: () => import('./FeaturesAndModulesDialogs/AutomaticMessagesDialog'),
     BadFaithLitigantDialog: () => import('./FeaturesAndModulesDialogs/BadFaithLitigantDialog'),
     CommunicationBlockListDialog: () => import('./FeaturesAndModulesDialogs/CommunicationBlockListDialog'),
