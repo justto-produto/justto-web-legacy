@@ -38,6 +38,7 @@
             </el-tooltip>
             <el-input
               v-model="form.email"
+              size="small"
             />
           </el-form-item>
         </div>
@@ -64,6 +65,7 @@
             </el-tooltip>
             <el-input
               v-model="form.link"
+              size="small"
             />
           </el-form-item>
         </div>
@@ -81,6 +83,27 @@
     </el-form>
 
     <div class="configure-customizations__footer">
+      <div class="configure-customizations__footer-actions">
+        <el-button
+          class="configure-customizations__footer-cancel"
+          size="small"
+          plain
+          @click="closeFeatureDialog()"
+        >
+          Cancelar
+        </el-button>
+        <el-button
+          v-loading="modalLoading"
+          :disabled="modalLoading"
+          class="configure-customizations__footer-confirm"
+          type="success"
+          size="small"
+          @click.prevent="saveCustomizedConfigurations"
+        >
+          Salvar configuração
+        </el-button>
+      </div>
+
       <div class="configure-customizations__footer-info">
         <span class="configure-customizations__footer-info-span">
           Ao utilizar nossa plataforma você está ciente e concorda com nossa
@@ -94,23 +117,6 @@
           Caso não queira mais receber mensagens da nossa plataforma descadastre seu email aqui.
         </span>
       </div>
-
-      <el-button
-        class="configure-customizations__footer-cancel"
-        plain
-        @click="closeFeatureDialog()"
-      >
-        Cancelar
-      </el-button>
-      <el-button
-        v-loading="modalLoading"
-        :disabled="modalLoading"
-        class="configure-customizations__footer-confirm"
-        type="success"
-        @click.prevent="saveCustomizedConfigurations"
-      >
-        Salvar configuração
-      </el-button>
     </div>
   </el-dialog>
 </template>
@@ -143,7 +149,8 @@ export default {
 
   computed: {
     ...mapGetters({
-      properties: 'workspaceProperties'
+      properties: 'workspaceProperties',
+      workspaceId: 'workspaceId'
     })
   },
 
@@ -191,12 +198,21 @@ export default {
     },
 
     saveChanges() {
+      const template = {
+        // id: this.form.saveNew ? null : this.form.emailFooterId,
+        title: `footer-workspace-${this.workspaceId}`,
+        body: this.form.emailFooter,
+        contentType: 'HTML'
+      }
       // TODO: Implementar aqui o save dos dados
 
       // TODO: Salvar o email na propertie CUSTOM_EMAIL_SENDER
       // TODO: Salvar o link na properte DEAL_URL
 
       // TODO: Salvar/editar o template
+      this.createTemplate(template).then(res => {
+        console.log(res)
+      })
       // this.form.saveNew ? this.createTemplate() : this.editTemplate()
       // TODO: Se for salvar o template:
       // TODO: Salvar o ID do novo template no campo FOOTER_EMAIL_TEMPLATE_ID
@@ -223,6 +239,9 @@ export default {
               p {
                 margin: 0;
                 padding: 0;
+
+                line-height: 24px;
+                font-size: 13px !important;
               }
             }
           }
@@ -269,20 +288,32 @@ export default {
   }
   .configure-customizations__footer {
     display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
 
     .configure-customizations__footer-info {
+      width: 75%;
+
       .configure-customizations__footer-info-span {
         font-size: 10px;
+        line-height: 10px;
       }
     }
 
-    .configure-customizations__footer-confirm {
-      .el-loading-mask {
-        .el-loading-spinner .path {
-          stroke: $--color-success;
+    .configure-customizations__footer-actions {
+      display: flex;
+      gap: 16px;
+
+      .configure-customizations__footer-confirm {
+        .el-loading-mask {
+          .el-loading-spinner .path {
+            stroke: $--color-success;
+          }
         }
       }
     }
+
   }
 }
 </style>
