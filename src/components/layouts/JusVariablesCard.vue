@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <el-card
     shadow="never"
     class="jus-variables-card"

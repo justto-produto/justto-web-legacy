@@ -66,6 +66,22 @@ const messageActions = {
       method: 'put',
       data: template
     })
+  },
+  getMessageToPreview({ _ }, { template, disputeId }) {
+    return axiosDispatch({
+      url: `${messagesPath}/quick-reply/preview/${disputeId}`,
+      method: 'POST',
+      data: {
+        value: template
+      },
+      mutation: 'setMessageToPreview'
+    })
+  },
+  setShowPreview({ commit }, visibility) {
+    return new Promise(resolve => {
+      commit('setShowPreview', visibility)
+      resolve()
+    })
   }
 }
 
