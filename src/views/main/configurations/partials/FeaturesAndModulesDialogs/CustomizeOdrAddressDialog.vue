@@ -97,7 +97,7 @@
         </el-button>
         <el-button
           v-loading="modalLoading"
-          :disabled="modalLoading"
+          :disabled="modalLoading || !isJusttoAdmin"
           class="configure-customizations__footer-confirm"
           type="success"
           size="small"
