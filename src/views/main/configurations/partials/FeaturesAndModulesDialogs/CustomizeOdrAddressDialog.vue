@@ -158,6 +158,7 @@ export default {
     ...mapActions({
       getTemplate: 'getStrategyTemplate',
       editTemplate: 'editStrategyTemplate',
+      editProperties: 'editWorkpaceProperties',
       createTemplate: 'createStrategyTemplate'
     }),
 
@@ -199,23 +200,46 @@ export default {
 
     saveChanges() {
       const template = {
-        // id: this.form.saveNew ? null : this.form.emailFooterId,
+        id: this.form.saveNew ? null : this.form.emailFooterId,
         title: `footer-workspace-${this.workspaceId}`,
         body: this.form.emailFooter,
         contentType: 'HTML'
       }
-      // TODO: Implementar aqui o save dos dados
 
-      // TODO: Salvar o email na propertie CUSTOM_EMAIL_SENDER
-      // TODO: Salvar o link na properte DEAL_URL
+      this.form.saveNew ? this.saveNewTemplate(template) : this.saveExistingTemplate(template)
+    },
 
-      // TODO: Salvar/editar o template
-      this.createTemplate(template).then(res => {
-        console.log(res)
-      })
-      // this.form.saveNew ? this.createTemplate() : this.editTemplate()
-      // TODO: Se for salvar o template:
-      // TODO: Salvar o ID do novo template no campo FOOTER_EMAIL_TEMPLATE_ID
+    saveNewTemplate(template) {
+      this.createTemplate(template).then(({ id }) => {
+        this.editProperties({
+          DEAL_URL: this.form.link,
+          CUSTOM_EMAIL_SENDER: this.form.email,
+          FOOTER_EMAIL_TEMPLATE_ID: id
+        }).then(() => {
+          this.$jusNotification({
+            type: 'success',
+            title: 'Yay!',
+            message: 'Configuração de ODR salva com sucesso'
+          })
+          this.closeFeatureDialog()
+        }).catch(error => this.$jusNotification({ error }))
+      }).catch(error => this.$jusNotification({ error }))
+    },
+
+    saveExistingTemplate(template) {
+      this.editTemplate(template).then(() => {
+        this.editProperties({
+          DEAL_URL: this.form.link,
+          CUSTOM_EMAIL_SENDER: this.form.email
+        }).then(() => {
+          this.$jusNotification({
+            type: 'success',
+            title: 'Yay!',
+            message: 'Configuração de ODR salva com sucesso'
+          })
+          this.closeFeatureDialog()
+        }).catch(error => this.$jusNotification({ error }))
+      }).catch(error => this.$jusNotification({ error }))
     }
   }
 }
