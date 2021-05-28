@@ -35,26 +35,27 @@ export default {
     editorConfig() {
       return {
         plugins: [
-          Alignment,
-          Autoformat,
-          BlockQuote,
-          Bold,
-          Essentials,
-          Highlight,
-          Indent,
-          Italic,
-          List,
-          Link,
-          Paragraph,
-          RemoveFormat,
-          Table,
-          TextTransformation,
-          Underline,
-          Mention,
-          this.useMenstionPlugin ? this.MentionCustomization : () => {},
-          this.usePreviewPlugin ? this.PreviewPlugin : () => {}
+          ...[
+            Alignment,
+            Autoformat,
+            BlockQuote,
+            Bold,
+            Essentials,
+            Highlight,
+            Indent,
+            Italic,
+            List,
+            Link,
+            Paragraph,
+            RemoveFormat,
+            Table,
+            TextTransformation,
+            Underline
+          ],
+          ...(this.useMentionPlugin ? [Mention, this.MentionCustomization] : []),
+          ...(this.usePreviewPlugin ? [this.PreviewPlugin] : [])
         ],
-        mention: this.useMenstionPlugin ? {
+        mention: this.useMentionPlugin ? {
           feeds: [
             {
               marker: '{',

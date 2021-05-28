@@ -140,7 +140,7 @@ export default {
 
   data() {
     return {
-      useMenstionPlugin: true,
+      useMentionPlugin: true,
       template: {
         body: ''
       }

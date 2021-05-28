@@ -110,9 +110,7 @@ export default {
 
   data() {
     return {
-      localLoading: false,
-      useMenstionPlugin: true,
-      usePreviewPlugin: true
+      localLoading: false
     }
   },
 
