@@ -37,7 +37,7 @@ build:
     - script:
         name: Run npm i
         code: |
-          npm i --legacy-peer-deps
+          rm -rf node_modules && npm i --legacy-peer-deps
     - script:
         name: Run npm run release
         code: |
