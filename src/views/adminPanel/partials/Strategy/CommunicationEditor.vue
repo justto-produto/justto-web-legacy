@@ -68,13 +68,32 @@
           ref="editor-fieldset"
           class="communication-editor__editor-fieldset show-toolbar jus-ckeditor__parent"
         >
+          <!-- <jus-icon
+            icon="html-preview"
+            class="button-src-plugin"
+            @click="toggleEditorSourcePreview()"
+          /> -->
+          <el-button
+            icon="el-icon-document"
+            class="button-src-plugin"
+            size="small"
+            @click="toggleEditorSourcePreview()"
+          />
+
           <ckeditor
-            v-if="isVisible"
+            v-if="isVisible && !seeSource"
             ref="edit"
             v-model="template.body"
             :editor="editor"
             :config="editorConfig"
             type="classic"
+          />
+
+          <el-input
+            v-else-if="seeSource"
+            v-model="template.body"
+            :rows="22"
+            type="textarea"
           />
         </div>
       </div>
@@ -141,6 +160,7 @@ export default {
   data() {
     return {
       useMentionPlugin: true,
+      useSeeSourcePlugin: false,
       template: {
         body: ''
       }
@@ -149,6 +169,7 @@ export default {
 
   computed: {
     ...mapGetters({
+      seeSource: 'getEditorSourcePreview',
       templateVariables: 'getAvaliableVariablesToTemplate'
     }),
 
@@ -166,6 +187,7 @@ export default {
       }
     }
   },
+
   watch: {
     templateToEdit(current) {
       if (current) {
@@ -174,8 +196,12 @@ export default {
       }
     }
   },
+
   methods: {
-    ...mapActions(['changeCommunicationTemplate']),
+    ...mapActions([
+      'toggleEditorSourcePreview',
+      'changeCommunicationTemplate'
+    ]),
 
     saveTemplate() {
       if (!this.template.title) {
@@ -221,6 +247,24 @@ export default {
 
 <style lang="scss">
 .communication-editor__editor-fieldset {
+  position: relative;
+
+  .button-src-plugin {
+    position: absolute;
+    z-index: 3000;
+    top: 0;
+    right: 0;
+
+    border: none;
+    background: transparent;
+    border: none;
+    padding: 10px;
+
+    &:before {
+      font-size: 16px;
+    }
+  }
+
   .ck-editor {
     .ck-editor__main {
       .ck-editor__editable {

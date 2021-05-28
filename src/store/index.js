@@ -44,9 +44,11 @@ export default new Vuex.Store({
     window: {
       width: window.innerWidth,
       height: window.innerHeight
-    }
+    },
+    editorSourcePreview: false
   },
   getters: {
+    getEditorSourcePreview: state => state.editorSourcePreview,
     banksList: state => state.banksList,
     brazilianStates: state => state.brazilianStates,
     ghostMode: state => state.ghostMode,
@@ -57,6 +59,7 @@ export default new Vuex.Store({
     getWindowMode: state => (state.window.width <= 900 ? 'mobile' : state.window.width <= 1200 ? 'tablet' : 'desktop')
   },
   mutations: {
+    toggleEditorSourcePreview: (state) => Vue.set(state, 'editorSourcePreview', !state.editorSourcePreview),
     setGhostMode: (state, value) => (state.ghostMode = value),
     showLoading: (state) => (state.loading = true),
     hideLoading: (state) => (state.loading = false),
@@ -66,6 +69,10 @@ export default new Vuex.Store({
 
   },
   actions: {
+    toggleEditorSourcePreview({ commit }) {
+      console.log('toggleEditorSourcePreview')
+      commit('toggleEditorSourcePreview')
+    },
     setGhostMode({ commit }, value) {
       commit('setGhostMode', value)
       localStorage.setItem('jusghostmode', value)
