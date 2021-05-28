@@ -544,7 +544,7 @@ export default {
           name: 'resume',
           icon: 'start-again',
           disabled: this.isCanceled,
-          condition: () => this.canResume || this.isCanceled,
+          condition: () => this.canResume,
           action: () => this.disputeAction('resume'),
           tooltip: 'Retomar'
         },
