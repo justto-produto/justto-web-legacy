@@ -164,11 +164,10 @@ export default {
         },
         {
           name: 'RENEGOTIATE',
-          icon: 'el-icon-refresh-left',
+          icon: 'move-to-running',
           method: (action) => this.handleRenegotiate(action),
           isVisible: this.canRenegotiate || this.isCanceled,
-          isDynamic: this.isCanceled,
-          isElementIcon: true
+          isDynamic: this.isCanceled
         },
         {
           name: 'UPLOAD_ATTACHMENT',
