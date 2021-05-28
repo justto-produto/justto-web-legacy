@@ -164,11 +164,10 @@ export default {
         },
         {
           name: 'RENEGOTIATE',
-          icon: 'el-icon-refresh-left',
+          icon: 'move-to-running',
           method: (action) => this.handleRenegotiate(action),
           isVisible: this.canRenegotiate || this.isCanceled,
-          isDynamic: this.isCanceled,
-          isElementIcon: true
+          isDynamic: this.isCanceled
         },
         {
           name: 'UPLOAD_ATTACHMENT',
@@ -198,7 +197,7 @@ export default {
           name: 'REDIRECTMANAGEMENT',
           icon: 'switch',
           isVisible: true,
-          isDynamic: !this.isPaused,
+          isDynamic: !this.isPaused && !this.isCanceled,
           method: () => this.redirectToManagement()
         }
       ].filter(action => {
@@ -213,7 +212,7 @@ export default {
       return ['RESUME', 'REDIRECTMANAGEMENT', 'UPLOAD_ATTACHMENT', 'EDIT_NEGOTIATORS', `PRINT_TICKET_${this.activeTab}`]
     },
     canceledDisputeActionList() {
-      return ['RENEGOTIATE', 'UPLOAD_ATTACHMENT', `PRINT_TICKET_${this.activeTab}`]
+      return ['RENEGOTIATE', 'REDIRECTMANAGEMENT', 'UPLOAD_ATTACHMENT', `PRINT_TICKET_${this.activeTab}`]
     },
     isFavorite() {
       return this.ticket?.favorite
