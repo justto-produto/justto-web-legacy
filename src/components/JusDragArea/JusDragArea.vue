@@ -40,6 +40,55 @@
       class="jus-drag-area__input-file"
       @change="handleDrop"
     >
+
+    <el-dialog
+      :visible.sync="attachmentDialog.isVisible"
+      title="Enviar Anexos"
+      custom-class="attachment-dialog"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      :show-close="false"
+      :before-close="closeAttachmentDialog"
+    >
+      <div class="attachment-dialog__container">
+        <span class="attachment-dialog__container-message">
+          {{ attachmentDialog.message }}
+        </span>
+
+        <div class="attachment-dialog__container-check">
+          <el-switch
+            v-model="attachmentDialog.confidential"
+            inactive-color="#13ce66"
+            active-color="#ff4949"
+          />
+
+          <span>
+            <strong>
+              {{ attachmentDialog.confidential ? 'Não exibir' : 'Exibir' }}
+            </strong>
+            anexo no portal de negociações
+          </span>
+        </div>
+      </div>
+
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          @click="attachmentDialog.isVisible = false"
+        >
+          Cancelar
+        </el-button>
+
+        <el-button
+          type="primary"
+          @click="uploadFiles(attachmentDialog)"
+        >
+          Continuar
+        </el-button>
+      </span>
+    </el-dialog>
   </article>
 </template>
 
@@ -48,19 +97,29 @@ import { mapActions } from 'vuex'
 
 export default {
   name: 'JusDragArea',
+
   props: {
     visible: {
       type: Boolean,
       default: false
     }
   },
+
   data: () => ({
     isDragging: false,
-    isAttachmentLoading: false
+    isAttachmentLoading: false,
+    attachmentDialog: {
+      isVisible: false,
+      message: '',
+      confidential: false,
+      files: []
+    }
   }),
+
   computed: {
     maskIsVisible: self => self.visible || self.isDragging
   },
+
   methods: {
     ...mapActions([
       'uploadAttachment',
@@ -85,24 +144,28 @@ export default {
       this.isDragging = false
     },
 
+    closeAttachmentDialog(done) {
+      done()
+      this.attachmentDialog.message = ''
+      this.attachmentDialog.confidential = false
+      this.attachmentDialog.files = []
+    },
+
+    uploadFiles({ files, confidential }) {
+      Object.keys(files).map(fileIndex => this.saveFile(files[fileIndex], confidential))
+    },
+
     uploadVerification(files) {
-      let message
       const attatchmentIndexes = Object.keys(files)
 
       if (attatchmentIndexes.length === 1) {
-        message = `Tem certeza que deseja fazer o upload do arquivo "${files[0].name}"?`
+        this.attachmentDialog.message = `Tem certeza que deseja fazer o upload do arquivo "${files[0].name}"?`
       } else {
-        message = `Tem certeza que deseja fazer o upload de ${attatchmentIndexes.length} arquivos?`
+        this.attachmentDialog.message = `Tem certeza que deseja fazer o upload de ${attatchmentIndexes.length} arquivos?`
       }
 
-      return this.$confirm(message, 'Enviando anexos', {
-        confirmButtonText: 'Continuar',
-        cancelButtonText: 'Cancelar',
-        cancelButtonClass: 'is-plain',
-        showClose: false
-      }).then(() => {
-        Object.keys(files).map(fileIndex => this.saveFile(files[fileIndex]))
-      }).catch(() => false)
+      this.attachmentDialog.files = files
+      this.attachmentDialog.isVisible = true
     },
 
     updateAttachments(disputeId) {
@@ -115,7 +178,7 @@ export default {
       }
     },
 
-    saveFile(file) {
+    saveFile(file, confidential = false) {
       this.isAttachmentLoading = true
       const segmentLog = `Solicitação de upload do arquivo ${file.name} com tamanho de ${file.size}`
       const disputeId = this.$route.params.id
@@ -125,7 +188,8 @@ export default {
       return this.uploadAttachment({
         disputeId,
         formData,
-        file
+        file,
+        confidential
       }).then(() => {
         this.updateAttachments(disputeId).then(() => {
           this.$jusNotification({
@@ -183,6 +247,21 @@ export default {
         position: absolute;
         top: 0;
         width: 100%;
+      }
+    }
+  }
+}
+
+.attachment-dialog {
+  .el-dialog__body {
+    .attachment-dialog__container {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+
+      .attachment-dialog__container-check {
+        display: flex;
+        gap: 16px;
       }
     }
   }
