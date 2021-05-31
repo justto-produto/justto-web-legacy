@@ -217,6 +217,7 @@ export default {
   methods: {
     ...mapActions({
       loadAccountProperty: 'loadAccountProperty',
+      setAccountProperty: 'setAccountProperty',
       setWindowGeometry: 'setWindowGeometry',
       getPreview: 'getMessageToPreview'
     }),
@@ -252,7 +253,30 @@ export default {
         })
 
         this.subscriptions.forEach(subscription => this.$socket.emit('subscribe', subscription))
-        this.loadAccountProperty()
+        this.loadAccountProperty().then(this.checkAcceptterms)
+      }
+    },
+
+    checkAcceptterms(response) {
+      const key = 'LAST_ACCEPTED_DATE'
+      const lastTermDate = this.$moment('20/04/2021', 'DD/MM/YYYY')
+      const lastAcceptedDate = response[key] ? this.$moment(response[key], 'DD/MM/YYYY') : this.$moment(new Date())
+
+      // TODO[4003]: Ajustar html do confirm.
+      if (lastAcceptedDate.isAfter(lastTermDate)) {
+        const confirmText = '<strong>AQUI</strong>'
+        this.$confirm(confirmText, 'Warning', {
+          dangerouslyUseHTMLString: true,
+          closeOnPressEscape: false,
+          closeOnClickModal: false,
+          showCancelButton: false,
+          showClose: false,
+          confirmButtonText: 'Aceitar'
+        }).then(() => {
+          this.setAccountProperty({
+            LAST_ACCEPTED_DATE: lastTermDate.format('DD/MM/YYYY')
+          })
+        })
       }
     },
 
