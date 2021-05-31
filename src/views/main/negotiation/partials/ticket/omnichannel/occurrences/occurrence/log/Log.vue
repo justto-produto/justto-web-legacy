@@ -67,7 +67,7 @@ export default {
     },
 
     text() {
-      let text = this.isCanceled ? this.handleCanceledText(this.occurrence.description) : this.occurrence.description
+      let text = this.isCanceledText(this.occurrence.description) ? this.handleCanceledText(this.occurrence.description) : this.occurrence.description
       if (this.occurrence?.type === 'INTERACTION' && this.occurrence?.interaction?.type === 'NEGOTIATOR_ACCESS') {
         text = 'Disputa visualizada'
       }
@@ -136,7 +136,11 @@ export default {
   methods: {
     handleCanceledText(description) {
       const [handledDescription, reason] = description.split(':')
-      return `${handledDescription} ${this.$tc(`canceled.reason.${reason.trim()}`)}`
+      return `${handledDescription}: ${this.$tc(`canceled.reason.${reason.trim()}`)}.`
+    },
+
+    isCanceledText(description) {
+      return description.includes('Disputa cancelada por')
     }
   }
 }

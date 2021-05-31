@@ -4,11 +4,11 @@
   "isTyping": "está digitando",
   "canceled": {
     "reason": {
+      "UNQUALIFIED_TO_NEGOTIATION": "Inapto para negociação",
       "CLOSED_BY_THIRD": "Acordo fechado por terceiros",
-      "DROPPED": "Arquivado/Baixa definitiva",
-      "IMPROPER_JUDGMENT/EXTINCTION": "Sentenca Improcedente/Extinção",
-      "JUDICIALIZED": "Judicializado",
-      "UNQUALIFIED_TO_NEGOTIATION": "Inapto para negociação"
+      "DROPPED": "Arquivado/Baixa definitiva",
+      "IMPROPER_JUDGMENT/EXTINCTION": "Sentenca Improcedente/Extinção",
+      "JUDICIALIZED": "Judicializado"
     }
   },
   "dispute": {
