@@ -1,25 +1,4 @@
-class Person {
-  constructor({ dead, id, namesake, vexatiousAuthor, vexatiousLawyer, vexatiousParty }) {
-    this.id = id
-    this.dead = Boolean(dead)
-    this.namesake = Boolean(namesake)
-    this.vexatiousAuthor = Boolean(vexatiousAuthor)
-    this.vexatiousLawyer = Boolean(vexatiousLawyer)
-    this.vexatiousParty = Boolean(vexatiousParty)
-  }
-
-  get isDead() {
-    return this.dead
-  }
-
-  get isNamesake() {
-    return this.namesake
-  }
-
-  get isVexatious() {
-    return this.vexatiousAuthor || this.vexatiousLawyer || this.vexatiousParty
-  }
-}
+import PersonDto from './TicketOverviewPartyResumedPerson'
 
 export default class TicketTicketOverviewPartyResumed {
   constructor({ disputeRoleId, documentNumber, name, oabs, polarity, roles, status, person }) {
@@ -30,7 +9,7 @@ export default class TicketTicketOverviewPartyResumed {
     this.polarity = polarity || ''
     this.roles = roles || []
     this.status = status || ''
-    this.person = new Person(person || { id: 0 })
+    this.person = new PersonDto(person || { id: 0 })
   }
 
   get bankAccountMockup() {
