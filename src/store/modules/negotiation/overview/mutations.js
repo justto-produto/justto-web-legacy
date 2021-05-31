@@ -152,6 +152,14 @@ const overviewMutations = {
     if (Number(state.ticketOverview.disputeId) === Number(disputeId)) {
       Vue.set(state.ticketOverview, 'favorite', favorite)
     }
+  },
+
+  pauseTicket(state, { _ }) {
+    Vue.set(state.ticketOverview, 'paused', true)
+  },
+
+  resumeTicket(state, { _ }) {
+    Vue.set(state.ticketOverview, 'paused', false)
   }
 }
 
