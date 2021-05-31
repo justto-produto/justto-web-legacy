@@ -263,7 +263,7 @@ export default {
       const lastAcceptedDate = response[key] ? this.$moment(response[key], 'DD/MM/YYYY') : this.$moment(new Date())
 
       // TODO[4003]: Ajustar html do confirm.
-      if (lastAcceptedDate.isAfter(lastTermDate)) {
+      if (lastAcceptedDate.isAfter(lastTermDate, 'day')) {
         const confirmText = '<strong>AQUI</strong>'
         this.$confirm(confirmText, 'Warning', {
           dangerouslyUseHTMLString: true,
