@@ -90,7 +90,7 @@
                 style="height: 8px; width: 8px;"
               />
             </el-tooltip>
-            {{ scope.row.firstClaimant || '-' }}
+            {{ scope.row | getColumn('firstClaimant') }}
           </div>
         </template>
       </el-table-column>
@@ -124,7 +124,7 @@
                 style="height: 8px; width: 8px;"
               />
             </el-tooltip>
-            {{ scope.row.firstClaimantLawyer || '-' }}
+            {{ scope.row | getColumn('firstClaimantLawyer') }}
           </nav>
           <!-- {{ firstClaimantLawyerStatus ? 'ONLINE' : 'OFFLINE' }} -->
         </template>
@@ -356,6 +356,10 @@ import { mapGetters, mapActions } from 'vuex'
 export default {
   name: 'ManagementTable',
   filters: {
+    getColumn: (row, key) => {
+      return row[key] || '-'
+    },
+
     counterProposal: function({ lastCounterOfferValue, disputeUpperRange, lastOfferValue }) {
       if (lastCounterOfferValue) {
         return lastCounterOfferValue
