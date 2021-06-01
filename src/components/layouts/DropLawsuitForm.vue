@@ -85,7 +85,9 @@ export default {
   },
 
   beforeMount() {
-    this.getDropLawsuitReasons()
+    if (!Object.keys(this.dropLawsuitReasons).length) {
+      this.getDropLawsuitReasons()
+    }
   },
 
   methods: {
