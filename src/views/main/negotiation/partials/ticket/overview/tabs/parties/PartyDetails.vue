@@ -108,6 +108,7 @@
             />
           </el-popover>
         </el-tooltip>
+
         <JusVexatiousAlert
           v-if="resumedState.isVexatious && resumedState.isClaimant"
           :document-number="party.documentNumber"
