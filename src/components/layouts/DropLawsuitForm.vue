@@ -43,7 +43,7 @@
       <el-button
         @click="onCancel()"
       >
-        Cancel
+        Cancelar
       </el-button>
       <el-button
         type="primary"
