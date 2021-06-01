@@ -437,6 +437,23 @@
                 class="dispute-overview-view__person-title"
               >
                 <i
+                  v-if="showNamesake(role) && !role.roles.includes('NEGOTIATOR')"
+                  class="el-icon-warning el-icon-pulse"
+                  style="{ color: '#FF9300'; position: absolute; top: 0px; left: 0px;}"
+                />
+                <JusIcon
+                  v-else-if="showVexatious(role.personProperties) && !role.roles.includes('NEGOTIATOR') "
+                  style="{ color: '#FF9300'; position: absolute; top: 0px; left: 0px;}"
+                  class="el-icon-pulse"
+                  icon="flat-alert-yellow"
+                />
+                <JusIcon
+                  v-else-if="showIsDead(role)"
+                  style="{ color: '#FF9300'; position: absolute; top: 0px; left: 0px;}"
+                  class="el-icon-pulse"
+                  icon="flat-alert"
+                />
+                <!-- <i
                   v-if="(showNamesake(role) || showVexatious(role.personProperties)) && !role.roles.includes('NEGOTIATOR') "
                   class="el-icon-warning-outline el-icon-pulse"
                   style="color: rgb(255, 201, 0);position: absolute;top: 0px;left: 0px;font-size: 30px;background-color: #fff0;"
@@ -445,7 +462,7 @@
                   v-if="showIsDead(role)"
                   class="el-icon-warning-outline el-icon-pulse"
                   style="color: rgb(255, 75, 84);position: absolute;top: 0px;left: 0px;font-size: 30px;background-color: #fff0;"
-                />
+                /> -->
                 <div class="dispute-overview-view__name">
                   <span
                     v-for="r in role.roles"

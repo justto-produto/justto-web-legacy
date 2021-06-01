@@ -8,9 +8,19 @@
       <!-- TODO 3983 usar o icone de info do elemment aqui para homonimo -->
       <!-- TODO usar um else com um jusIcon para obito e ofensor -->
       <i
-        v-if="state.hasAlert"
+        v-if="state.hasAlert && state.isNamesake"
         class="el-icon-warning el-icon-pulse vexatious-alert"
         :style="{ color: state.alertColor }"
+      />
+      <JusIcon
+        v-else-if="state.hasAlert && state.isVexatious"
+        class="el-icon-pulse vexatious-alert"
+        icon="flat-alert-yellow"
+      />
+      <JusIcon
+        v-else-if="state.hasAlert && state.isDead"
+        class="el-icon-pulse vexatious-alert"
+        icon="flat-alert"
       />
       <JusIcon
         class="party-resumed__header-avatar"
