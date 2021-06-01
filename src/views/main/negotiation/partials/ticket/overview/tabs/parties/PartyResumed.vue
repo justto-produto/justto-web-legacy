@@ -5,8 +5,6 @@
     :class="{'hide-arrows': hideArrows}"
   >
     <template slot="title">
-      <!-- TODO 3983 usar o icone de info do elemment aqui para homonimo -->
-      <!-- TODO usar um else com um jusIcon para obito e ofensor -->
       <i
         v-if="state.hasAlert && state.isNamesake"
         class="el-icon-warning el-icon-pulse vexatious-alert"
