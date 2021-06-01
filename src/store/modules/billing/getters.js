@@ -6,7 +6,7 @@ const billingGetters = {
   getCurrentCustomer: state => new ClientModel(state.currentCustomer),
   getPlans: state => state.plans,
   transactions: state => state.currentCustomer.transactions,
-  billingDashboard: state => [...state.billingDashboard, { archived: null, revenue: null, title: 'Indicativo de baixa', total: 0, type: 'LAWSUIT_DROPPED' }],
+  billingDashboard: state => state.billingDashboard,
   tableLoading: state => state.tableLoading,
   currentWorkspace: state => state.query.workspaceId
 }
