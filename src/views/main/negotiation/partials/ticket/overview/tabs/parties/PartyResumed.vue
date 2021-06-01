@@ -5,25 +5,29 @@
     :class="{'hide-arrows': hideArrows}"
   >
     <template slot="title">
+      <JusIcon
+        v-if="state.hasAlert && state.isDead"
+        class="el-icon-pulse vexatious-alert"
+        icon="flat-alert"
+      />
+
       <i
-        v-if="state.hasAlert && state.isNamesake"
+        v-else-if="state.hasAlert && state.isNamesake"
         class="el-icon-warning el-icon-pulse vexatious-alert"
         :style="{ color: state.alertColor }"
       />
+
       <JusIcon
         v-else-if="state.hasAlert && state.isVexatious"
         class="el-icon-pulse vexatious-alert"
         icon="flat-alert-yellow"
       />
-      <JusIcon
-        v-else-if="state.hasAlert && state.isDead"
-        class="el-icon-pulse vexatious-alert"
-        icon="flat-alert"
-      />
+
       <JusIcon
         class="party-resumed__header-avatar"
         :icon="partyType"
       />
+
       <article>
         <span class="party-resumed__header-name">
           {{ party.name | resumedName }}
