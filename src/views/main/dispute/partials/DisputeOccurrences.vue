@@ -765,6 +765,19 @@ export default {
   methods: {
     ...mapActions(['setActiveactiveOccurrency']),
 
+    isCanceled(occurrence) {
+      return occurrence?.status === 'CANCELED'
+    },
+
+    handleCanceledText(description) {
+      const [handledDescription, reason] = description.split(':')
+      return `${handledDescription}: ${this.$tc(`canceled.reason.${reason.trim()}`)}.`
+    },
+
+    isCanceledText(description) {
+      return description.includes('Disputa cancelada por')
+    },
+
     buildColor(occurrence) {
       return occurrence && occurrence.interaction &&
         occurrence.interaction.direction === 'INBOUND' &&
@@ -978,6 +991,9 @@ export default {
       if (occurrence.type === 'LOG' || (occurrence.interaction && ['VISUALIZATION', 'CLICK', 'NEGOTIATOR_ACCESS'].includes(occurrence.interaction.type))) {
         if (occurrence.interaction && occurrence.interaction.type === 'NEGOTIATOR_ACCESS') {
           return 'Disputa visualizada'
+        }
+        if (this.isCanceled(occurrence) && this.isCanceledText(occurrence.description)) {
+          return this.handleCanceledText(occurrence.description)
         }
         return occurrence.description
       }
