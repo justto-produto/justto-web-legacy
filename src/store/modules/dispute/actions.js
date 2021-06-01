@@ -158,11 +158,12 @@ const disputeActions = {
   hideLoadingAttachments({ commit }) {
     commit('hideLoadingAttachments')
   },
-  uploadAttachment({ commit }, { disputeId, formData }) {
+  uploadAttachment({ commit }, { disputeId, formData, confidential }) {
     return axiosDispatch({
       url: `api/office/disputes/${disputeId}/attachment`,
       method: 'post',
-      data: formData
+      data: formData,
+      params: { confidential }
     })
   },
   deleteAttachment({ commit, dispatch }, { disputeId, documentId }) {
