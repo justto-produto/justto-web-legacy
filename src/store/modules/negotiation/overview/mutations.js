@@ -152,6 +152,14 @@ const overviewMutations = {
     if (Number(state.ticketOverview.disputeId) === Number(disputeId)) {
       Vue.set(state.ticketOverview, 'favorite', favorite)
     }
+  },
+
+  setAttachmentConfidentiality: (state, { payload: { id } }) => {
+    state.ticketOverviewAttachments.forEach((attach, attachIndex) => {
+      if (attach.id === id) {
+        Vue.set(state.ticketOverviewAttachments[attachIndex], 'confidential', !attach.confidential)
+      }
+    })
   }
 }
 
