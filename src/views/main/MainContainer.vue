@@ -262,13 +262,39 @@ export default {
       const lastTermDate = this.$moment('20/04/2021', 'DD/MM/YYYY')
       let lastAcceptedDate = response[key] ? this.$moment(response[key], 'DD/MM/YYYY') : Boolean(response[key])
       if (!lastAcceptedDate || lastTermDate.isAfter(lastAcceptedDate, 'day')) {
-        const confirmText = 'Atualizamos nossos <a href="https://justto.com.br/termos-de-uso" target="_blank" >Termos Gerais e Condições de Uso</a>, nossos <a href="https://justto.com.br/termos-de-contratacao/" target="_blank">Termos Gerais de Contratação de Licenciamen de Uso de Tecnologia</a> e nossa <a href="https://justto.com.br/poilitica-privacidade" target="_blank" >Política de privacidade</a>.'
-        this.$confirm(confirmText, 'Termos de Uso e Política de Privacidade', {
+        const docs = [
+          {
+            label: 'Termos Gerais e Condições de Uso',
+            href: 'https://justto.com.br/termos-de-uso',
+            isVisible: true
+          },
+          {
+            label: 'Termos Gerais de Contratação de Licenciamento de Uso de Tecnologia',
+            href: 'https://justto.com.br/termos-de-contratacao/',
+            isVisible: this.isAdminProfile
+          },
+          {
+            label: 'Política de privacidade',
+            href: 'https://justto.com.br/poilitica-privacidade',
+            isVisible: true
+          }
+        ]
+
+        const confirmText = `
+        <p>Olá, tudo bem?</p><br>
+        <p>Atualizamos nossos documentos de uso da plataforma. Os documentos alterados são:</p>
+        <ul>${docs.filter(({ isVisible }) => isVisible).map(item => {
+          return `<li><a href="${item.href}" target="_blank">${item.label}</a></li>`
+        }).join('')}</ul>
+        <p>Por favor, leia os documentos nos links acima e clique em <b>Ciente</b> para prosseguir com o uso dos serviços!</p>`
+
+        this.$confirm(confirmText, 'Atualização nos documentos de uso da plataforma', {
           dangerouslyUseHTMLString: true,
           closeOnPressEscape: false,
           closeOnClickModal: false,
           showCancelButton: false,
           showClose: false,
+          customClass: 'terms-confirm',
           confirmButtonText: 'Ciente'
         }).then(() => {
           if (!lastAcceptedDate) {
@@ -307,6 +333,10 @@ export default {
 
 <style lang="scss">
 @import '@/styles/colors.scss';
+
+.terms-confirm {
+  width: 50vw;
+}
 
 .el-container.is-vertical {
   .el-main {
