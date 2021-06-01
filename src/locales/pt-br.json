@@ -91,6 +91,7 @@
     "UNSETTLED": "perdido"
   },
   "transactions": {
+    "LAWSUIT_DROPPED": "disputa cancelada",
     "DISPUTE_ACCEPTED": "disputa aceita",
     "IMPORTED_DISPUTE": "disputa importada",
     "INTERACTION": "interação na disputa",
