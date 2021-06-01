@@ -130,13 +130,13 @@ export default {
         }
       }
 
-      this.setTicketOverview({ disputeId, data })
+      const polarityObjectKey = 'defendantOffer'
+      this.sendOffer({ disputeId, data, polarityObjectKey })
     },
 
     updateUpperRange(upperRange) {
       const { disputeId } = this
       const data = { upperRange }
-
       this.setTicketOverview({ data, disputeId })
     }
   }
