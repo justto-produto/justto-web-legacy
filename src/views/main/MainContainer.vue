@@ -261,17 +261,15 @@ export default {
       const key = 'LAST_ACCEPTED_DATE'
       const lastTermDate = this.$moment('20/04/2021', 'DD/MM/YYYY')
       const lastAcceptedDate = response[key] ? this.$moment(response[key], 'DD/MM/YYYY') : this.$moment(new Date())
-
-      // TODO[4003]: Ajustar html do confirm.
       if (lastAcceptedDate.isAfter(lastTermDate, 'day')) {
-        const confirmText = '<strong>AQUI</strong>'
-        this.$confirm(confirmText, 'Warning', {
+        const confirmText = 'Atualizamos nossos <a href="https://justto.com.br/termos-de-uso" target="_blank" >Termos Gerais e Condições de Uso</a> e nossa <a href="https://justto.com.br/poilitica-privacidade" target="_blank" >Política de privacidade</a>.'
+        this.$confirm(confirmText, 'Termos de Uso e Política de Privacidade', {
           dangerouslyUseHTMLString: true,
           closeOnPressEscape: false,
           closeOnClickModal: false,
           showCancelButton: false,
           showClose: false,
-          confirmButtonText: 'Aceitar'
+          confirmButtonText: 'Ciente'
         }).then(() => {
           this.setAccountProperty({
             LAST_ACCEPTED_DATE: lastTermDate.format('DD/MM/YYYY')
