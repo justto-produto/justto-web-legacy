@@ -47,9 +47,10 @@
 
           <div class="overview-attachments__item-confidentiality">
             <el-switch
+              :class="{ 'active': !attachment.confidential }"
               :value="attachment.confidential"
-              inactive-color="#13ce66"
-              active-color="#ff4949"
+              inactive-color="#14CC30"
+              active-color="#ADADAD"
               @input="setAttachmentConfidentiality(attachment)"
             />
 
@@ -293,9 +294,15 @@ export default {
       height: 12px;
       width: 20px !important;
 
-      &::after{
+      &::after {
         width: 8px;
         height: 8px;
+      }
+    }
+
+    &.active {
+      .el-switch__core::after {
+        left: 9px;
       }
     }
   }
