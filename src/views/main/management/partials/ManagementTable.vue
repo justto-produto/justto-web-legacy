@@ -357,6 +357,7 @@ export default {
   name: 'ManagementTable',
   filters: {
     getColumn: (row, key) => {
+      console.log('getColumn', row, row[key], key)
       return row[key] || '-'
     },
 
