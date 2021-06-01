@@ -453,16 +453,6 @@
                   class="el-icon-pulse"
                   icon="flat-alert"
                 />
-                <!-- <i
-                  v-if="(showNamesake(role) || showVexatious(role.personProperties)) && !role.roles.includes('NEGOTIATOR') "
-                  class="el-icon-warning-outline el-icon-pulse"
-                  style="color: rgb(255, 201, 0);position: absolute;top: 0px;left: 0px;font-size: 30px;background-color: #fff0;"
-                />
-                <i
-                  v-if="showIsDead(role)"
-                  class="el-icon-warning-outline el-icon-pulse"
-                  style="color: rgb(255, 75, 84);position: absolute;top: 0px;left: 0px;font-size: 30px;background-color: #fff0;"
-                /> -->
                 <div class="dispute-overview-view__name">
                   <span
                     v-for="r in role.roles"
