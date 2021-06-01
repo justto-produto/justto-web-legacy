@@ -160,6 +160,14 @@ const overviewMutations = {
 
   resumeTicket(state, { _ }) {
     Vue.set(state.ticketOverview, 'paused', false)
+  },
+
+  setAttachmentConfidentiality: (state, { payload: { id } }) => {
+    state.ticketOverviewAttachments.forEach((attach, attachIndex) => {
+      if (attach.id === id) {
+        Vue.set(state.ticketOverviewAttachments[attachIndex], 'confidential', !attach.confidential)
+      }
+    })
   }
 }
 

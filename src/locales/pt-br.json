@@ -2,6 +2,15 @@
   "message": "mensagem",
   "test": "teste",
   "isTyping": "está digitando",
+  "canceled": {
+    "reason": {
+      "UNQUALIFIED_TO_NEGOTIATION": "Inapto para negociação",
+      "CLOSED_BY_THIRD": "Acordo fechado por terceiros",
+      "DROPPED": "Arquivado/Baixa definitiva",
+      "IMPROPER_JUDGMENT/EXTINCTION": "Sentenca Improcedente/Extinção",
+      "JUDICIALIZED": "Judicializado"
+    }
+  },
   "dispute": {
     "notification": {
       "will-restart": "A disputa será reiniciada.",
@@ -513,6 +522,21 @@
     "API_INTEGRATION": {
       "label": "integração em API para importação",
       "icon": "power-plug",
+      "help": ""
+    },
+    "CUSTOMIZED_CONFIGURATIONS": {
+      "label": "sua empresa/escritório como ODR",
+      "icon": "customized-configurations",
+      "help": ""
+    },
+    "NET_PROMOTER_SCORE": {
+      "label": "net promoter score",
+      "icon": "net-promoter-score-config",
+      "help": ""
+    },
+    "CUSTOMIZE_ODR_ADDRESS": {
+      "label": "ODR",
+      "icon": "customized-configurations",
       "help": ""
     }
   },

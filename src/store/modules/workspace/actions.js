@@ -97,7 +97,7 @@ const workspaceActions = {
   },
   getFeaturesAndModules({ _ }) {
     return axiosDispatch({
-      url: `${workspacesPath}/feature/`,
+      url: `${workspacesPath}/feature?sort=description,asc`,
       mutation: 'setFeaturesAndModules'
     })
   },
@@ -201,6 +201,13 @@ const workspaceActions = {
       mutation: 'updateAssociatedKeyAccount',
       payload: { keyAccountId }
     })
+  },
+
+  updateCustomizedConfigurations({ state }, payload) {
+    // return axiosDispatch({
+    //   url: '/rotaaqui',
+    //   payload
+    // })
   }
 }
 

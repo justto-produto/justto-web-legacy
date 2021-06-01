@@ -108,6 +108,7 @@
             />
           </el-popover>
         </el-tooltip>
+
         <JusVexatiousAlert
           v-if="resumedState.isVexatious && resumedState.isClaimant"
           :document-number="party.documentNumber"
@@ -164,7 +165,7 @@
     </div>
 
     <div
-      v-else-if="!isNegotiator || party.documentNumber"
+      v-if="!isNegotiator || party.documentNumber"
       class="party-details__infoline"
     >
       <span

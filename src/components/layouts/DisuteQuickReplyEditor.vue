@@ -1,22 +1,18 @@
 <template>
   <div class="reply-editor__container">
-    <div class="reply-editor__body">
+    <div class="reply-editor__body jus-ckeditor__parent">
       <el-input v-model="state.title" />
+
       <ckeditor
-        v-if="state.body"
-        v-show="editorRedy"
         ref="templateEditor"
-        v-model="state.body"
-        class="reply-editor__editor"
+        v-model="text"
+        :editor="editor"
         :config="editorConfig"
-        @ready="editorIsRedy()"
-      />
-      <el-container
-        v-if="!editorRedy"
-        v-loading="true"
-        style="width: 100%; height: 40vh;"
+        type="classic"
+        @ready="editorReady()"
       />
     </div>
+
     <div class="reply-editor__footer">
       <el-row
         class="reply-editor__footer-row"
@@ -46,65 +42,66 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
-import CKEditor from 'ckeditor4-vue'
+import ckeditor from '@/utils/mixins/ckeditor'
 
 export default {
-  components: {
-    ckeditor: CKEditor.component
-  },
+  mixins: [ckeditor],
+
   props: {
     template: {
       type: Object,
       required: true
     },
+
     disputeId: {
       type: Number,
       required: true
     }
   },
+
   data() {
     return {
-      html: '',
-      editorRedy: false,
-      editorConfig: {
-        parent: 'reply-editor',
-        toolbarGroups: [
-          { name: 'document', groups: ['mode', 'document', 'doctools'] },
-          { name: 'clipboard', groups: ['clipboard', 'undo'] },
-          { name: 'editing', groups: ['find', 'selection', 'spellchecker', 'editing'] },
-          { name: 'forms', groups: ['forms'] },
-          { name: 'basicstyles', groups: ['basicstyles', 'cleanup'] },
-          { name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align', 'bidi', 'paragraph'] },
-          { name: 'links', groups: ['links'] },
-          { name: 'insert', groups: ['insert'] },
-          { name: 'styles', groups: ['styles'] },
-          { name: 'colors', groups: ['colors'] },
-          { name: 'tools', groups: ['tools'] },
-          { name: 'others', groups: ['others'] },
-          { name: 'about', groups: ['about'] }
-        ],
-        removeButtons: 'Save,NewPage,ExportPdf,Preview,Print,PasteFromWord,PasteText,Paste,Redo,Copy,Templates,Cut,Undo,Find,Replace,SelectAll,Scayt,Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,HiddenField,Superscript,Subscript,CopyFormatting,Indent,Outdent,Styles,TextColor,BGColor,Maximize,ShowBlocks,About,Format,Font,FontSize,Iframe,PageBreak,SpecialChar,Smiley,HorizontalRule,Table,Flash,Image,Unlink,Link,Anchor,Language,BidiRtl,BidiLtr,JustifyBlock,JustifyRight,JustifyCenter,JustifyLeft,CreateDiv',
-        removePlugins: 'elementspath,resize'
+      state: {
+        title: '',
+        body: ''
       },
-      state: { title: '', body: '' }
+      editorLoaded: false,
+      useMenstionPlugin: true,
+      usePreviewPlugin: true
     }
   },
+
   computed: {
-    ...mapGetters(['loading'])
+    ...mapGetters(['loading']),
+
+    text: {
+      get() {
+        return this.state.body
+      },
+      set(text) {
+        this.state.body = text
+      }
+    }
   },
+
   watch: {
     template() {
-      this.state = { ...this.template, body: this.formatBody() }
+      if (this.isEditorReady) {
+        this.loadTemplate()
+      }
     }
   },
+
   mounted() {
-    this.editorRedy = false
-    this.state = { ...this.template, body: this.formatBody() }
+    if (this.isEditorReady) {
+      this.loadTemplate()
+    }
   },
+
   beforeDestroy() {
-    this.destroyEditor()
     this.state = { title: '', body: '' }
   },
+
   methods: {
     ...mapActions([
       'editTemplate',
@@ -112,23 +109,18 @@ export default {
       'hideLoading'
     ]),
 
-    editorIsRedy() {
-      setTimeout(() => {
-        this.editorRedy = true
-      }, 250)
+    loadTemplate() {
+      const body = this.formatBody()
+
+      this.state = { ...this.template, body }
     },
 
-    destroyEditor() {
-      this.editorRedy = false
-      for (const instance of Object.values(window.CKEDITOR.instances)) {
-        if (instance.config.parent === this.editorConfig.parent) {
-          instance.destroy()
-        }
-      }
+    editorReady() {
+      this.isEditorReady = true
+      this.loadTemplate()
     },
 
     cancel() {
-      this.destroyEditor()
       this.$emit('cancel')
       this.hideLoading()
     },
@@ -139,7 +131,6 @@ export default {
         template: this.state,
         disputeId: this.disputeId
       }).then(res => {
-        this.destroyEditor()
         this.$emit('input', res)
         this.$emit('update')
       }).catch(error => {
@@ -162,12 +153,32 @@ export default {
 }
 </script>
 
+<style lang="scss">
+.reply-editor__container {
+  .reply-editor__body {
+    .ck-editor {
+      height: 90% !important;
+
+      .ck-editor__main {
+        height: 100% !important;
+
+        .ck-content {
+          height: 90% !important;
+        }
+      }
+    }
+  }
+}
+</style>
+
 <style lang="scss" scoped>
 .reply-editor__container {
   margin: 16px 0px;
   padding: 16px 0px;
+  height: 80vh;
 
   .reply-editor__body {
+    height: 90%;
     margin-top: 8px;
     display: flex;
     flex-direction: column;
