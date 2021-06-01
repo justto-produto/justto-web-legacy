@@ -165,7 +165,7 @@
     </div>
 
     <div
-      v-else-if="!isNegotiator || party.documentNumber"
+      v-if="!isNegotiator || party.documentNumber"
       class="party-details__infoline"
     >
       <span

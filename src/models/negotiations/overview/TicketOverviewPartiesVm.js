@@ -1,6 +1,7 @@
 import { DateTime } from '../GenericClasses'
+import PersonDto from './TicketOverviewPartyResumedPerson'
 
-class PersonDataDto {
+class PersonContactDataDto {
   constructor({ id, archived, enriched, isValid, isMain, source, ranking, createAt, updateAt }) {
     this.id = id
     this.archived = archived
@@ -14,7 +15,7 @@ class PersonDataDto {
   }
 }
 
-class PhoneDto extends PersonDataDto {
+class PhoneDto extends PersonContactDataDto {
   constructor(phone) {
     const { number, mobile, service } = phone
     super(phone)
@@ -24,7 +25,7 @@ class PhoneDto extends PersonDataDto {
   }
 }
 
-class EmailDto extends PersonDataDto {
+class EmailDto extends PersonContactDataDto {
   constructor(email) {
     const { address } = email
     super(email)
@@ -32,7 +33,7 @@ class EmailDto extends PersonDataDto {
   }
 }
 
-class OabDto extends PersonDataDto {
+class OabDto extends PersonContactDataDto {
   constructor(oab) {
     const { number, state } = oab
     super(oab)
@@ -60,8 +61,11 @@ export default class DisputeOverviewPartiesVm {
   constructor(role) {
     const {
       personId,
-      disputeRoleId, id,
+      disputeRoleId,
+      id,
       name,
+      dead,
+      namesake,
       birthday,
       documentNumber,
       polarity, party,
@@ -70,7 +74,8 @@ export default class DisputeOverviewPartiesVm {
       phones,
       emails,
       oabs,
-      bankAccounts
+      bankAccounts,
+      personProperties
     } = role
 
     this.personId = personId
@@ -86,6 +91,16 @@ export default class DisputeOverviewPartiesVm {
     this.emailsDto = emails.map(email => new EmailDto(email))
     this.oabsDto = oabs.map(oab => new OabDto(oab))
     this.bankAccountsDto = bankAccounts.map(bankAccount => new BankAccountDto(bankAccount))
+    this.person = new PersonDto({
+      dead,
+      id: personId,
+      namesake,
+      name,
+      documentNumber,
+      vexatiousParty: personProperties.IS_VEXATIOUS_PARTY === 'true',
+      vexatiousAuthor: personProperties.IS_VEXATIOUS_AUTHOR === 'true',
+      vexatiousLawyer: personProperties.IS_VEXATIOUS_LAWYER === 'true'
+    })
     this.legacyDto = role
   }
 }
