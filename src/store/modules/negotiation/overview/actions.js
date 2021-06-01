@@ -292,10 +292,20 @@ const overviewActions = {
       url: `${spiderApi}/search/name/${name}`
     })
   },
+
   setNamesakeTicketOptions({ _ }, { personId, document, disputeId }) {
     return axiosDispatch({
       url: `${fusionRunnerApi}/set-document/person/${personId}/${document}/${disputeId}`,
       method: 'PATCH'
+    })
+  },
+
+  setTicketOverviewAttachmentConfidentiality({ _ }, { disputeId, attach: { id, confidential } }) {
+    return axiosDispatch({
+      url: `${officeApi}/disputes/${disputeId}/attachment/${id}/confidential/${!confidential}`,
+      method: 'PATCH',
+      mutation: 'setAttachmentConfidentiality',
+      payload: { id }
     })
   }
 }

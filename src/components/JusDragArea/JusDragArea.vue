@@ -58,8 +58,9 @@
         <div class="attachment-dialog__container-check">
           <el-switch
             v-model="attachmentDialog.confidential"
-            inactive-color="#13ce66"
-            active-color="#ff4949"
+            :class="attachmentDialog.confidential ? 'inactive' : 'active'"
+            inactive-color="#14CC30"
+            active-color="#ADADAD"
           />
 
           <span>
@@ -152,7 +153,11 @@ export default {
     },
 
     uploadFiles({ files, confidential }) {
-      Object.keys(files).map(fileIndex => this.saveFile(files[fileIndex], confidential))
+      Promise.all([
+        ...Object.keys(files).map(fileIndex => this.saveFile(files[fileIndex], confidential))
+      ]).then(() => {
+        this.attachmentDialog.isVisible = false
+      })
     },
 
     uploadVerification(files) {
@@ -262,6 +267,25 @@ export default {
       .attachment-dialog__container-check {
         display: flex;
         gap: 16px;
+      }
+    }
+  }
+}
+</style>
+
+<style lang="scss">
+.attachment-dialog__container-check {
+  .el-switch {
+    &.inactive {
+      .el-switch__core::after {
+        margin: 0;
+        left: 1px;
+      }
+    }
+
+    &.active {
+      .el-switch__core::after {
+        left: 20px;
       }
     }
   }
