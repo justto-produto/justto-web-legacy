@@ -68,18 +68,17 @@
         :sortable="false"
         prop="firstClaimant"
         min-width="140px"
-        class-name="text-ellipsis"
+        class-name="text-ellipsis first-claimant-container"
         label="Parte(s) contrária(s)"
       >
         <template v-slot="scope">
-          <jus-vexatious-alert
-            v-if="(scope.row.firstClaimantAlerts && scope.row.firstClaimantAlerts.length)"
-            :document-number="scope.row.firstClaimantDocumentNumber"
-            :name="scope.row.firstClaimant"
-            style="display: flex; align-items: center;"
-          />
-
-          <div>
+          <div class="first-claimant-container__cell">
+            <jus-vexatious-alert
+              v-if="(scope.row.firstClaimantAlerts && scope.row.firstClaimantAlerts.length)"
+              :document-number="scope.row.firstClaimantDocumentNumber"
+              :name="scope.row.firstClaimant"
+              style="display: flex; align-items: center;"
+            />
             <el-tooltip
               v-if="scope.row.firstClaimant"
               class="online-icon"
@@ -98,19 +97,18 @@
       <el-table-column
         :sortable="false"
         prop="firstClaimantLawyer"
-        class-name="text-ellipsis"
+        class-name="text-ellipsis first-claimant-container"
         label="Advogado(s) da parte"
         min-width="154px"
       >
         <template v-slot="scope">
-          <jus-vexatious-alert
-            v-if="scope.row.firstClaimantLawyerAlerts && scope.row.firstClaimantLawyerAlerts.length"
-            :document-number="scope.row.firstClaimantLawyerDocumentNumber"
-            :alerts="scope.row.firstClaimantLawyerAlerts"
-            style="display: flex;"
-          />
-
-          <div>
+          <div class="first-claimant-container__cell">
+            <jus-vexatious-alert
+              v-if="scope.row.firstClaimantLawyerAlerts && scope.row.firstClaimantLawyerAlerts.length"
+              :document-number="scope.row.firstClaimantLawyerDocumentNumber"
+              :alerts="scope.row.firstClaimantLawyerAlerts"
+              style="display: flex;"
+            />
             <el-tooltip
               v-if="scope.row.firstClaimantLawyer"
               :content="`${$options.filters.capitalize(scope.row.firstClaimantLawyer.toLowerCase().split(' ')[0])} está online`"
@@ -598,6 +596,17 @@ export default {
 
 <style lang="scss">
 @import '@/styles/colors.scss';
+
+.first-claimant-container {
+  .cell {
+    .first-claimant-container__cell {
+      width: 100%;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+    }
+  }
+}
 
 .el-table__row--highlighted {
   background-color: $--color-info-lighter !important;
