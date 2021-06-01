@@ -51,7 +51,7 @@
           @cardAction="handlerAction"
         />
         <jus-financial-card
-          v-grid-item.col-1.row-2
+          v-grid-item.col-1.row-1
           :data="totalCard.data"
           :actions="totalCard.actions"
           highlighted
