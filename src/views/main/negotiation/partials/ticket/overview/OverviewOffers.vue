@@ -18,7 +18,7 @@
         <span>Sua proposta: </span>
         <CurrencyInlieEditorInner
           v-model="defendantOffer.value"
-          :is-editable="!isPreNegotiation"
+          :is-editable="!isPreNegotiation && upperRange > 0"
           icon-side="left"
           class="overview-offers__proposal-value"
           @change="updateDefendantOffer"
