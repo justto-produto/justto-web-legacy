@@ -33,7 +33,7 @@
         class-name="management-table__row-code"
         prop="code"
       >
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <DisputeCodeLink
             :code="scope.row.code"
             :custom-style="{ fontWeight: (!scope.row.visualized && !['1'].includes(activeTab))? 'bold' : 'normal'}"
@@ -71,14 +71,15 @@
         class-name="text-ellipsis"
         label="Parte(s) contrária(s)"
       >
-        <template slot-scope="scope">
+        <template v-slot="scope">
+          <jus-vexatious-alert
+            v-if="(scope.row.firstClaimantAlerts && scope.row.firstClaimantAlerts.length)"
+            :document-number="scope.row.firstClaimantDocumentNumber"
+            :name="scope.row.firstClaimant"
+            style="display: flex; align-items: center;"
+          />
+
           <div>
-            <jus-vexatious-alert
-              v-if="(scope.row.firstClaimantAlerts && scope.row.firstClaimantAlerts.length)"
-              :document-number="scope.row.firstClaimantDocumentNumber"
-              :name="scope.row.firstClaimant"
-              style="display: flex; align-items: center;"
-            />
             <el-tooltip
               v-if="scope.row.firstClaimant"
               class="online-icon"
@@ -90,7 +91,7 @@
                 style="height: 8px; width: 8px;"
               />
             </el-tooltip>
-            {{ scope.row | getColumn('firstClaimant') }}
+            {{ scope.row.firstClaimant || '-' }}
           </div>
         </template>
       </el-table-column>
@@ -101,14 +102,15 @@
         label="Advogado(s) da parte"
         min-width="154px"
       >
-        <template slot-scope="scope">
+        <template v-slot="scope">
+          <jus-vexatious-alert
+            v-if="scope.row.firstClaimantLawyerAlerts && scope.row.firstClaimantLawyerAlerts.length"
+            :document-number="scope.row.firstClaimantLawyerDocumentNumber"
+            :alerts="scope.row.firstClaimantLawyerAlerts"
+            style="display: flex;"
+          />
+
           <div>
-            <jus-vexatious-alert
-              v-if="scope.row.firstClaimantLawyerAlerts && scope.row.firstClaimantLawyerAlerts.length"
-              :document-number="scope.row.firstClaimantLawyerDocumentNumber"
-              :alerts="scope.row.firstClaimantLawyerAlerts"
-              style="display: flex;"
-            />
             <el-tooltip
               v-if="scope.row.firstClaimantLawyer"
               :content="`${$options.filters.capitalize(scope.row.firstClaimantLawyer.toLowerCase().split(' ')[0])} está online`"
@@ -124,7 +126,7 @@
                 style="height: 8px; width: 8px;"
               />
             </el-tooltip>
-            {{ scope.row | getColumn('firstClaimantLawyer') }}
+            {{ scope.row.firstClaimantLawyer || '-' }}
           </div>
           <!-- {{ firstClaimantLawyerStatus ? 'ONLINE' : 'OFFLINE' }} -->
         </template>
@@ -137,7 +139,7 @@
         prop="disputeUpperRange"
         min-width="118px"
       >
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <span v-if="scope.row.disputeUpperRange">
             {{ scope.row.disputeUpperRange | currency }}
           </span>
@@ -152,7 +154,7 @@
         align="center"
         min-width="114px"
       >
-        <template slot-scope="scope">
+        <template v-slot="scope">
           {{ scope.row.lastOfferValue | currency }}
         </template>
       </el-table-column>
@@ -162,7 +164,7 @@
         min-width="140px"
         align="center"
       >
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <ManagementLastInteraction
             :data="scope.row"
             @update:responseBoxLoading="responseBoxLoading = $event"
@@ -176,7 +178,7 @@
         class-name="management-table__row-actions"
         align="center"
       >
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <el-button
             v-if="isWonDispute(scope.row.status) || scope.row.hasDocument"
             plain
@@ -200,7 +202,7 @@
         prop="lastCounterOfferValue"
         min-width="120px"
       >
-        <template slot-scope="scope">
+        <template v-slot="scope">
           {{ scope.row | counterProposal | currency }}
         </template>
       </el-table-column>
@@ -211,7 +213,7 @@
         prop=""
         min-width="140px"
       >
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <el-tooltip
             v-if="scope.row.properties && scope.row.properties['PALAVRAS PRE NEGOCIACAO'] && scope.row.properties['MOTIVO PRE NEGOCIACAO']"
             :open-delay="600"
@@ -236,7 +238,7 @@
         align="center"
         width="136px"
       >
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <el-tooltip content="Negociação encerra nos próximos 3 dias">
             <span
               v-if="(disputeNextToExpire(scope.row.expirationDate.dateTime) || scope.row.disputeNextToExpire) && scope.row.status !== 'EXPIRED'"
@@ -258,7 +260,7 @@
         align="center"
         min-width="90px"
       >
-        <template slot-scope="scope">
+        <template v-slot="scope">
           {{ $t('occurrence.type.' + scope.row.status) | capitalize }}
           <span v-if="scope.row.paused">(pausada)</span>
         </template>
@@ -271,7 +273,7 @@
         align="center"
         width="120px"
       >
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <span v-if="scope.row.disputeDealValue && isWonDispute(scope.row.status)">
             {{ scope.row.disputeDealValue | currency }}
           </span>
@@ -286,7 +288,7 @@
         min-width="118px"
         align="center"
       >
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <span v-if="scope.row.disputeDealDate && isWonDispute(scope.row.status)">
             {{ scope.row.disputeDealDate.dateTime | moment('DD/MM/YY') }}
           </span>
@@ -297,7 +299,7 @@
         class-name="hidden-actions"
         width="1px"
       >
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <jus-dispute-actions
             v-if="disputeActionsRow === scope.row.id"
             :dispute="scope.row"
@@ -356,11 +358,6 @@ import { mapGetters, mapActions } from 'vuex'
 export default {
   name: 'ManagementTable',
   filters: {
-    getColumn: (row, key) => {
-      console.log('getColumn', row, row[key], key)
-      return row[key] || '-'
-    },
-
     counterProposal: function({ lastCounterOfferValue, disputeUpperRange, lastOfferValue }) {
       if (lastCounterOfferValue) {
         return lastCounterOfferValue
