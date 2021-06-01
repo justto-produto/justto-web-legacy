@@ -72,13 +72,13 @@
         label="Parte(s) contrária(s)"
       >
         <template slot-scope="scope">
-          <jus-vexatious-alert
-            v-if="(scope.row.firstClaimantAlerts && scope.row.firstClaimantAlerts.length)"
-            :document-number="scope.row.firstClaimantDocumentNumber"
-            :name="scope.row.firstClaimant"
-            style="display: flex; align-items: center;"
-          />
           <div>
+            <jus-vexatious-alert
+              v-if="(scope.row.firstClaimantAlerts && scope.row.firstClaimantAlerts.length)"
+              :document-number="scope.row.firstClaimantDocumentNumber"
+              :name="scope.row.firstClaimant"
+              style="display: flex; align-items: center;"
+            />
             <el-tooltip
               v-if="scope.row.firstClaimant"
               class="online-icon"
@@ -102,13 +102,13 @@
         min-width="154px"
       >
         <template slot-scope="scope">
-          <jus-vexatious-alert
-            v-if="scope.row.firstClaimantLawyerAlerts && scope.row.firstClaimantLawyerAlerts.length"
-            :document-number="scope.row.firstClaimantLawyerDocumentNumber"
-            :alerts="scope.row.firstClaimantLawyerAlerts"
-            style="display: flex;"
-          />
-          <nav>
+          <div>
+            <jus-vexatious-alert
+              v-if="scope.row.firstClaimantLawyerAlerts && scope.row.firstClaimantLawyerAlerts.length"
+              :document-number="scope.row.firstClaimantLawyerDocumentNumber"
+              :alerts="scope.row.firstClaimantLawyerAlerts"
+              style="display: flex;"
+            />
             <el-tooltip
               v-if="scope.row.firstClaimantLawyer"
               :content="`${$options.filters.capitalize(scope.row.firstClaimantLawyer.toLowerCase().split(' ')[0])} está online`"
@@ -125,7 +125,7 @@
               />
             </el-tooltip>
             {{ scope.row | getColumn('firstClaimantLawyer') }}
-          </nav>
+          </div>
           <!-- {{ firstClaimantLawyerStatus ? 'ONLINE' : 'OFFLINE' }} -->
         </template>
       </el-table-column>
