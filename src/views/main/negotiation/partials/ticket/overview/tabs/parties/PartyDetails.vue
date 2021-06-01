@@ -108,7 +108,7 @@
             />
           </el-popover>
         </el-tooltip>
-        <!-- TODO: 3983 alterar nome do icone para o vermelho -->
+
         <JusVexatiousAlert
           v-if="resumedState.isVexatious && resumedState.isClaimant"
           :document-number="party.documentNumber"
