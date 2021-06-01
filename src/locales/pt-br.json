@@ -2,6 +2,15 @@
   "message": "mensagem",
   "test": "teste",
   "isTyping": "está digitando",
+  "canceled": {
+    "reason": {
+      "UNQUALIFIED_TO_NEGOTIATION": "Inapto para negociação",
+      "CLOSED_BY_THIRD": "Acordo fechado por terceiros",
+      "DROPPED": "Arquivado/Baixa definitiva",
+      "IMPROPER_JUDGMENT/EXTINCTION": "Sentenca Improcedente/Extinção",
+      "JUDICIALIZED": "Judicializado"
+    }
+  },
   "dispute": {
     "notification": {
       "will-restart": "A disputa será reiniciada.",
