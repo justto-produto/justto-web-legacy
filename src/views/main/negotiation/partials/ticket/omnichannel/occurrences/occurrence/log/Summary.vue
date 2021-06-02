@@ -63,7 +63,7 @@
                 {{ $t(`occurrence.interaction.message.status.${messageStatus.status}.preposition`) }}
               </span>
               <span class="summary-container__item-occurrence-item-status-message-body-adress">
-                {{ messageStatus.receiver }}
+                {{ messageStatus.receiver | phoneOrEmail }}
               </span>
               <span class="summary-container__item-occurrence-item-status-message-body-date">
                 {{ messageStatus.date | moment('[às] HH:mm') }}
