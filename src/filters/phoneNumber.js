@@ -1,6 +1,6 @@
 import Vue from 'vue'
 
-Vue.filter('phoneNumber', function(value) {
+function formatNumber(value) {
   if (!value) return ''
   if (!/^\d+$/.test(value)) return value
   const template1 = 'C-D'
@@ -43,4 +43,10 @@ Vue.filter('phoneNumber', function(value) {
       .replace('D', value.substr(9, 4))
   }
   return value
+}
+
+Vue.filter('phoneOrEmail', (address) => {
+  return address.includes('@') ? address : formatNumber(address)
 })
+
+Vue.filter('phoneNumber', formatNumber)
