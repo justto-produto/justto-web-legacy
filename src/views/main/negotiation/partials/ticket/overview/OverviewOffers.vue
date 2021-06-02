@@ -167,7 +167,7 @@ export default {
         return polarity === 'RESPONDENT' &&
         roles.includes('NEGOTIATOR')
       })
-      const object = {
+      const obj = {
         value: value,
         defendantProposal: {
           value: value,
@@ -175,8 +175,8 @@ export default {
           lastOfferRoleId: roleId || disputeRoleId
         }
       }
-      if (isUpperRange) object.upperRange = this.upperRange
-      return object
+      if (isUpperRange) obj.upperRange = value
+      return obj
     }
   }
 }
