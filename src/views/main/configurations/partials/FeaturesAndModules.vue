@@ -161,8 +161,6 @@ export default {
 
       if (this.$refs[ref]) {
         this.$refs[ref].openFeatureDialog()
-      } else {
-        console.log(`Inserir feature ${ref}`)
       }
     },
 
