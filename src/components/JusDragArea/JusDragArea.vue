@@ -43,6 +43,7 @@
 
     <el-dialog
       :visible.sync="attachmentDialog.isVisible"
+      append-to-body
       title="Enviar Anexos"
       custom-class="attachment-dialog"
       :close-on-click-modal="false"
