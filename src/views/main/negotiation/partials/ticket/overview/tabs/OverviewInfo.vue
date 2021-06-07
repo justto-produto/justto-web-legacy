@@ -129,6 +129,15 @@ export default {
           isEditable: !this.isPreNegotiation,
           isDateTimeFormat: false
         },
+        // TODO 3622
+        {
+          key: 'hearingDate',
+          value: expireDate?.dateTime, // Alterar aqui
+          component: 'DateInlieEditor',
+          classToEdit: 'info',
+          isEditable: !this.isPreNegotiation,
+          isDateTimeFormat: false
+        },
         {
           key: 'materialDamageValue',
           value: materialDamageValue,
