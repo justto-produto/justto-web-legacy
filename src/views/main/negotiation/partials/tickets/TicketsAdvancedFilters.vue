@@ -217,6 +217,7 @@
                   data-testid="filters-has-counterproposal"
                 />
               </div>
+              <!-- TODO 4028 EL-SWITCH AQUI -->
             </el-form-item>
           </el-col>
           <!-- MEIO DE INTERAÇÃO -->
