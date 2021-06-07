@@ -11,7 +11,7 @@
         prop="name"
         label="Nome"
       >
-        <template slot-scope="props">
+        <template v-slot="props">
           <el-input
             v-show="props.row.editing"
             :ref="'input' + props.row.id"

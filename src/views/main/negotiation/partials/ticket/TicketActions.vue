@@ -191,7 +191,7 @@ export default {
         {
           name: `PRINT_TICKET_${this.activeTab}`,
           method: (_action) => this.toggleExportTicketModalVisible(true),
-          isVisible: this.isJusttoAdmin
+          isVisible: true
         },
         {
           name: 'REDIRECTMANAGEMENT',

@@ -272,3 +272,7 @@ i.el-icon-delete {
     text-indent: 0px;
   }
 }
+
+.ck-balloon-panel {
+  z-index: 3000 !important;
+}

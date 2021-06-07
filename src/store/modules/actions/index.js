@@ -8,7 +8,7 @@ const actions = {
       UNSETTLED: {},
       ARCHIVED: {}
     },
-    dropLawsuitReasons: []
+    dropLawsuitReasons: {}
   },
   actions: acts,
   getters,

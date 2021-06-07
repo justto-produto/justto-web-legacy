@@ -6,7 +6,9 @@ const message = {
   state: {
     recentMessages: [],
     messageResumes: [],
-    quickReplyTemplates: []
+    quickReplyTemplates: [],
+    previewMessage: '',
+    showPreview: false
   },
   mutations,
   actions,

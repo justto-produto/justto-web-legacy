@@ -66,13 +66,15 @@
         <div
           v-else
           ref="editor-fieldset"
-          class="communication-editor__editor-fieldset show-toolbar"
+          class="communication-editor__editor-fieldset show-toolbar jus-ckeditor__parent"
         >
-          <!-- <froala
-            id="edit"
+          <!-- <ckeditor
+            v-if="isVisible"
+            ref="edit"
             v-model="template.body"
-            :tag="'textarea'"
-            :config="config"
+            :editor="editor"
+            :config="editorConfig"
+            type="classic"
           /> -->
           <ckeditor
             v-show="editorRedy"
@@ -89,7 +91,7 @@
 
       <div class="communication-editor__right-area">
         <JusVariablesCard
-          :variables="variables"
+          :variables="templateVariables"
           class="communication-editor__variables-card"
         />
         <div class="communication-editor__footer">
@@ -115,15 +117,19 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-
+// import ckeditor from '@/utils/mixins/ckeditor'
 import CKEditor from 'ckeditor4-vue'
 
 export default {
   name: 'CommunicationEditor',
+
   components: {
     ckeditor: CKEditor.component,
     JusVariablesCard: () => import('@/components/layouts/JusVariablesCard')
   },
+
+  // mixins: [ckeditor],
+
   props: {
     templateToEdit: {
       type: Object,
@@ -143,25 +149,32 @@ export default {
     }
 
   },
+
   data() {
     return {
       height: 400,
-      template: {},
       editorDataFroala: '',
       config: {
         heightMax: 500
       },
-      editorRedy: false
+      editorRedy: false,
+      useMenstionPlugin: true,
+      template: {
+        body: ''
+      }
     }
   },
+
   computed: {
     ...mapGetters({
-      variables: 'getAvaliableVariablesToTemplate'
+      templateVariables: 'getAvaliableVariablesToTemplate'
     }),
+
     savedAt() {
       const lastUpdate = this.template.updatedAt
       return `Template salvo ${lastUpdate && lastUpdate.dateTime ? this.$moment(lastUpdate.dateTime).from(new Date()) : ''}`
     },
+
     isVisible: {
       get() {
         return this.visible
@@ -170,6 +183,7 @@ export default {
         this.$emit('update:visible', value)
       }
     },
+
     editorConfig() {
       return {
         toolbarGroups: [
@@ -192,6 +206,7 @@ export default {
       }
     }
   },
+
   watch: {
     templateToEdit(current) {
       if (current) {
@@ -199,6 +214,7 @@ export default {
         if (!this.template.title) this.template.title = 'Mensagem da Justto'
       }
     },
+
     editorRedy() {
       this.$refs.edit.config.height = this.$refs['editor-fieldset'].clientHeight
       this.$forceUpdate()
@@ -255,25 +271,17 @@ export default {
   }
 }
 </script>
+
 <style lang="scss">
-.communication-editor__editor {
-  height: 100%;
-
-  .cke {
-    height: 100%;
-
-    .cke_inner {
-      height: 100%;
-
-      .cke_contents {
-        height: 92% !important;
+/* .communication-editor__editor-fieldset {
+  .ck-editor {
+    .ck-editor__main {
+      .ck-editor__editable {
+        height: 75vh !important;
       }
     }
   }
-}
-.cke_contents {
-  height: 92% !important;
-}
+} */
 </style>
 
 <style lang="scss" scoped>
@@ -409,5 +417,20 @@ export default {
   .ql-toolbar {
     display: inherit;
   }
+}
+
+.communication-editor__editor {
+  height: 100%;
+
+  .cke_reset {
+    height: 100%;
+
+    .cke_contents {
+      height: 92% !important;
+    }
+  }
+}
+.cke_contents {
+  height: 92% !important;
 }
 </style>

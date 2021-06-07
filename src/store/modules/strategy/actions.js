@@ -32,6 +32,20 @@ const strategyActions = {
       method: 'PUT',
       data: params
     })
+  },
+
+  createStrategyTemplate({ _ }, params) {
+    return axiosDispatch({
+      url: 'api/templates/',
+      method: 'POST',
+      data: params
+    })
+  },
+
+  getStrategyTemplate({ _ }, templateId) {
+    return axiosDispatch({
+      url: `api/templates/${templateId}`
+    })
   }
 }
 

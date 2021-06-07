@@ -81,13 +81,26 @@ const overviewActions = {
 
   setTicketOverview({ _ }, params) {
     const { data, disputeId } = params
-
     return validateCurrentId(disputeId, () => axiosDispatch({
       url: `${disputeApi}/${disputeId}`,
       method: 'PATCH',
       data,
       mutation: 'updateTicketOverview',
       payload: data || {}
+    }))
+  },
+
+  setTicketOverviewDefendantProposal({ _ }, params) {
+    const { data, disputeId, polarityObjectKey } = params
+    return validateCurrentId(disputeId, () => axiosDispatch({
+      url: `${disputeApi}/${disputeId}`,
+      method: 'PATCH',
+      data,
+      mutation: 'updateLastTicketOffers',
+      payload: {
+        value: data.value,
+        polarityObjectKey
+      }
     }))
   },
 
@@ -292,10 +305,20 @@ const overviewActions = {
       url: `${spiderApi}/search/name/${name}`
     })
   },
+
   setNamesakeTicketOptions({ _ }, { personId, document, disputeId }) {
     return axiosDispatch({
       url: `${fusionRunnerApi}/set-document/person/${personId}/${document}/${disputeId}`,
       method: 'PATCH'
+    })
+  },
+
+  setTicketOverviewAttachmentConfidentiality({ _ }, { disputeId, attach: { id, confidential } }) {
+    return axiosDispatch({
+      url: `${officeApi}/disputes/${disputeId}/attachment/${id}/confidential/${!confidential}`,
+      method: 'PATCH',
+      mutation: 'setAttachmentConfidentiality',
+      payload: { id }
     })
   }
 }
