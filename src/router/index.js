@@ -159,6 +159,16 @@ const router = new Router({
             trackPage: true,
             title: 'Configurações'
           }
+        },
+        {
+          name: 'workspaces',
+          path: 'workspaces',
+          component: () => import(/* webpackChunkName: "workspaces" */ '@/views/main/configurations/partials/WorkspaceList'),
+          meta: {
+            requiresAuth: true,
+            trackPage: true,
+            title: 'Workspaces'
+          }
         }
       ]
     },
@@ -170,16 +180,6 @@ const router = new Router({
         requiresAuth: false,
         trackPage: true,
         title: 'Justto - Login'
-      }
-    },
-    {
-      name: 'workspaces',
-      path: '/workspaces',
-      component: () => import(/* webpackChunkName: "workspaces" */ '@/views/main/configurations/partials/WorkspaceList'),
-      meta: {
-        requiresAuth: false,
-        trackPage: true,
-        title: 'Justto'
       }
     },
     {

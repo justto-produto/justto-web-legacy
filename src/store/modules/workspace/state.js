@@ -26,7 +26,8 @@ export default {
       keyAccount: { name: '', email: '' },
       portifolios: []
     },
-    keyAccounts: []
+    keyAccounts: [],
   },
+  portifolios: [],
   redirectNewWorkspace: false
 }

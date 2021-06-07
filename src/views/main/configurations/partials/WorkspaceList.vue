@@ -1,5 +1,8 @@
 <template>
-  <section class="workspace-container">
+  <section
+    v-loading="isLoading"
+    class="workspace-container"
+  >
     <el-table
       :data="filteredWorkspaces"
       style="width: 100%"
@@ -14,14 +17,52 @@
         prop="teamName"
         label="Equipe"
       />
+
       <el-table-column
         prop="keyAccountId"
         label="Key Account"
       >
         <template v-slot="scope">
-          {{ keyAccountTemplate(scope.row.keyAccountId) }}
+          <el-select
+            :value="scope.row.keyAccountId"
+            size="small"
+            filterable
+          >
+            <el-option
+              v-for="keyAccount in keyAccounts"
+              :key="`key-account-${keyAccount.id}`"
+              :value="keyAccount.id"
+              :label="keyAccountTemplate(keyAccount)"
+            />
+          </el-select>
         </template>
       </el-table-column>
+
+      <el-table-column
+        prop="portifolios"
+        label="Portifolios"
+      >
+        <template v-slot="scope">
+          <span
+            :style="{ cursor: 'pointer' }"
+            @click="openPortifolioDialog(scope.row.id)"
+          >Ver portifolios</span>
+          <!-- <el-select
+            :value="scope.row.portifolios"
+            size="small"
+            multiple
+            @change="setPortifolioToWorkspace($event, scope.row)"
+          >
+            <el-option
+              v-for="(portifolio) in portifolios"
+              :key="`portifolio-${portifolio.id}-workspace-${scope.row.id}`"
+              :value="portifolio.id"
+              :label="portifolio.name"
+            />
+          </el-select> -->
+        </template>
+      </el-table-column>
+
       <el-table-column align="right">
         <template
           slot="header"
@@ -37,21 +78,36 @@
         </template>
       </el-table-column>
     </el-table>
+
+    <el-dialog
+      title="Portifolios"
+      :visible.sync="dialog.visible"
+      append-to-body
+    >
+      <span>This is a message</span>
+    </el-dialog>
   </section>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import _ from 'lodash'
 
 export default {
   data: () => ({
-    search: ''
+    isLoading: false,
+    search: '',
+    dialog: {
+      visible: false,
+      workspace: null
+    }
   }),
 
   computed: {
     ...mapGetters({
       workspaces: 'getMyWorkspaces',
-      keyAccounts: 'getWorkspaceKeyAccounts'
+      keyAccounts: 'getWorkspaceKeyAccounts',
+      portifolios: 'getPortifolios'
     }),
 
     filteredWorkspaces() {
@@ -71,30 +127,65 @@ export default {
     }
   },
 
-  mounted() {
+  beforeMount() {
     this.init()
   },
 
   methods: {
     ...mapActions([
       'myWorkspace',
-      'getWorkspaceKeyAccounts'
+      'getPortifolios',
+      'getPortifolioAssociated',
+      'getWorkspaceKeyAccounts',
+      'setPortifolioToWorkspace'
     ]),
 
     init() {
-      this.myWorkspace()
-      this.getWorkspaceKeyAccounts()
+      this.isLoading = true
+
+      Promise.all([
+        this.myWorkspace(),
+        this.getPortifolios(),
+        this.getWorkspaceKeyAccounts()
+      ]).then(() => {}).finally(() => {
+        this.isLoading = false
+      })
     },
 
-    keyAccountTemplate(keyAccountId) {
-      const ka = this.keyAccounts.find(({ id }) => Number(id) === Number(keyAccountId))
-
+    keyAccountTemplate(ka) {
       if (ka) {
         return (ka.name ? `${ka.name} - ` : '') + `${ka.email}`
       } else {
         return '-'
       }
+    },
+
+    openPortifolioDialog(workspaceId) {
+      this.isLoading = true
+
+      this.getPortifolioAssociated(workspaceId).then(res => {
+        console.log(res)
+        this.dialog.workspace = workspaceId
+        this.dialog.visible = true
+      }).finally(() => {
+        this.isLoading = false
+      })
+    },
+
+    setPortifolioToWorkspace(portifolio, workspace) {
+      if (_.difference(portifolio, workspace.portifolios).length) {
+        console.log('inserir')
+      } else if (_.difference(workspace.portifolios, portifolio).length) {
+        console.log('remover')
+      }
+      // this.setPortifolioToWorkspace()
     }
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.workspace-container {
+  width: 100%;
+}
+</style>

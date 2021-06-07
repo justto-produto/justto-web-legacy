@@ -187,10 +187,32 @@ const workspaceActions = {
     })
   },
 
-  getAssociatedKeyAccount({ getters }) {
+  getAssociatedKeyAccount({ getters: { workspaceId } }) {
     return axiosDispatch({
-      url: `${accountsWorkspaceApi}/${getters.workspaceId}/keyAccount`,
+      url: `${accountsWorkspaceApi}/${workspaceId}/keyAccount`,
       mutation: 'setAssociatedKeyAccount'
+    })
+  },
+
+  getPortifolios({ _ }) {
+    return axiosDispatch({
+      url: `${workspacesPath}/portifolio`,
+      mutation: 'setPortifolio'
+    })
+  },
+
+  getPortifolioAssociated({ _ }, workspaceId) {
+    return axiosDispatch({
+      url: `api/associateds/${workspaceId}`
+    })
+  },
+
+  setPortifolioToWorkspace({ _ }, { workspaceId, portifolioId }) {
+    return axiosDispatch({
+      url: `api/${portifolioId}/workspace/${workspaceId}`,
+      method: 'PUT',
+      mutation: 'setPortifolioToWorkspace',
+      payload: { workspaceId, portifolioId }
     })
   },
 
