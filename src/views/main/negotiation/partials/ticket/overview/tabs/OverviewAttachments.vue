@@ -27,6 +27,7 @@
             <i class="el-icon-document" />
             {{ attachment.name }}
           </el-link>
+
           <span class="overview-attachments__item-actions">
             <el-tooltip
               :open-delay="600"
@@ -43,6 +44,25 @@
               @click="removeAttachment(attachment)"
             />
           </span>
+
+          <div class="overview-attachments__item-confidentiality">
+            <el-switch
+              :class="{ 'active': !attachment.confidential }"
+              :value="attachment.confidential"
+              inactive-color="#14CC30"
+              active-color="#ADADAD"
+              @input="setAttachmentConfidentiality(attachment)"
+            />
+
+            <span>
+              <strong>
+                {{ attachment.confidential ? 'Não exibir' : 'Exibir' }}
+              </strong>
+
+              anexo no portal de negociações
+            </span>
+          </div>
+
           <div class="overview-attachments__item-details">
             {{ attachmentOrigin(attachment) }} - {{ attachment.createAt.dateTime | moment('DD/MM/YY') }}
           </div>
@@ -105,12 +125,14 @@ export default {
       default: false
     }
   },
+
   data() {
     return {
       uploadAttacmentDialogVisable: false,
       filterTerm: ''
     }
   },
+
   computed: {
     ...mapGetters({
       ticketAttachments: 'getTicketOverviewAttachments'
@@ -120,12 +142,21 @@ export default {
       return filterByTerm(this.filterTerm, this.ticketAttachments, 'name')
     }
   },
+
   methods: {
     ...mapActions([
       'deleteAttachment',
       'getDisputeAttachments',
-      'getTicketOverviewAttachments'
+      'getTicketOverviewAttachments',
+      'setTicketOverviewAttachmentConfidentiality'
     ]),
+
+    setAttachmentConfidentiality(attach) {
+      this.setTicketOverviewAttachmentConfidentiality({
+        disputeId: this.$route.params.id,
+        attach
+      })
+    },
 
     copyUrl(value) {
       navigator.clipboard.writeText(value)
@@ -230,6 +261,15 @@ export default {
         opacity: 1;
       }
 
+      .overview-attachments__item-confidentiality {
+        margin-top: 8px;
+        font-size: 10px;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 8px;
+      }
+
       .overview-attachments__item-details {
         margin-top: 6px;
         font-weight: 500;
@@ -248,6 +288,26 @@ export default {
 </style>
 
 <style lang="scss">
+.overview-attachments__item-confidentiality {
+  .el-switch {
+    .el-switch__core {
+      height: 12px;
+      width: 20px !important;
+
+      &::after {
+        width: 8px;
+        height: 8px;
+      }
+    }
+
+    &.active {
+      .el-switch__core::after {
+        left: 9px;
+      }
+    }
+  }
+}
+
 .dispute-attachments__upload-dialog {
   .el-dialog__body {
     height: 300px;

@@ -28,7 +28,7 @@
         prop="name"
         label="Nome"
       >
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <TextInlineEditorInner
             v-if="scope.row.personName || activeAddingData === 'name' + scope.row.id"
             :ref="'name' + scope.row.id"
@@ -49,7 +49,7 @@
         prop="email"
         label="Email"
       >
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <span class="show-right-icon">
             {{ scope.row.email }}
             <i
@@ -64,7 +64,7 @@
         label="Perfil"
         width="300px"
       >
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <PopoverInlineEditor
             v-model="scope.row.profile"
             :width="180"
@@ -78,7 +78,7 @@
         label="Status"
         width="180px"
       >
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <span
             :class="{
               'team-container__table-status--danger': ['blocked', 'inactive'].includes(scope.row.status),
@@ -90,7 +90,7 @@
         </template>
       </el-table-column>
       <el-table-column width="60px">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <i
             class="el-icon-delete team-container__table-action"
             @click="handleRemoveMember(scope.row.personId, scope.row.personName)"
@@ -107,7 +107,7 @@
         icon="logo-small"
         class="team-container__button-icon"
       />
-      Criar uma nova esquipe
+      Criar uma nova equipe
     </el-button>
 
     <TeamDialogs ref="teamDialogs" />
@@ -178,7 +178,7 @@ export default {
     },
 
     handleEditMemberName(name, accountId) {
-      this.changeMemberName({ name, accountId })
+      this.changeMemberName({ name, accountId, updateWorkspace: true })
     },
 
     handleEditMemberProfile(profile, personId) {

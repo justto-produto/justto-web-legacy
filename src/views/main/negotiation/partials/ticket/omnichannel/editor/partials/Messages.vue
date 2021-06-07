@@ -1,8 +1,7 @@
 <template>
   <section
-    v-if="!isInPreNegotiation"
+    v-if="!isInPreNegotiation && !isPaused && !isCanceled"
     id="messagesTabEditorOmnichannelNegotiation"
-    v-loading="showCKEditor && !editorReady"
     class="messages-container jus-ckeditor__parent"
   >
     <ckeditor
@@ -76,7 +75,7 @@
     class="messages-container"
   >
     <span class="messages-container__pre-negotiation-alert">
-      Disputa em pré negociação. Inicie a disputa para enviar mensagens.
+      {{ loadingText }}
     </span>
   </section>
 </template>
@@ -111,7 +110,9 @@ export default {
 
   data() {
     return {
-      localLoading: false
+      localLoading: false,
+      useMenstionPlugin: false,
+      usePreviewPlugin: false
     }
   },
 
@@ -121,21 +122,12 @@ export default {
       editorTextScaped: 'getEditorTextScaped',
       editorRecipients: 'getEditorRecipients',
       messageType: 'getEditorMessageType',
-      getEditorReady: 'getEditorReady',
-      editorText: 'getEditorText'
+      editorText: 'getEditorText',
+      ticket: 'getTicketOverview'
     }),
 
     sendMessagetext() {
       return this.editorRecipients.length ? 'Enviar mensagem' : 'Selecione um destinatário'
-    },
-
-    editorReady: {
-      get() {
-        return this.getEditorReady || true
-      },
-      set(value) {
-        this.setEditorReady(value)
-      }
     },
 
     body: {
@@ -147,13 +139,28 @@ export default {
       }
     },
 
+    isPaused() {
+      return this.ticket.paused
+    },
+
+    isCanceled() {
+      const { status } = this.ticket
+      return status === 'CANCELED'
+    },
+
+    loadingText() {
+      if (this.isPaused || this.isCanceled) {
+        return `Disputa ${this.isPaused ? 'pausada' : 'cancelada'}. Retome a disputa para enviar mensagens`
+      } else return 'Disputa em pré negociação. Inicie a disputa para enviar mensagens'
+    },
+
     showCKEditor() {
       return !['sms', 'whatsapp'].includes(this.messageType)
     },
 
     canSendMessage() {
-      const { editorRecipients, localLoading, editorReady } = this
-      return editorRecipients.length && !localLoading && editorReady
+      const { editorRecipients, localLoading } = this
+      return editorRecipients.length && !localLoading
     },
 
     isFullscreenDialog() {
@@ -162,16 +169,6 @@ export default {
 
     editorInstance() {
       return this.$refs.messageEditor
-    }
-  },
-
-  watch: {
-    editorReady(ready) {
-      if (this.focusOnStartup && ready) {
-        this.$nextTick().then(() => this.focusOnEditor()).finally(() => {
-          this.$emit('update:focusOnStartup', false)
-        })
-      }
     }
   },
 
@@ -186,7 +183,6 @@ export default {
   methods: {
     ...mapActions([
       'resetRecipients',
-      'setEditorReady',
       'setEditorText',
       'sendMessage'
     ]),
@@ -228,7 +224,7 @@ export default {
 
     pasteText() {
       navigator.clipboard.readText().then(text => {
-        if (this.showCKEditor && this.editorReady && this.editor) {
+        if (this.showCKEditor && this.editor) {
           this.editor.insertText(text)
         } else if (!this.showCKEditor) {
           const target = document.getElementById('messageEditorTextOnly')
@@ -300,7 +296,7 @@ export default {
     position: absolute;
     top: 0;
     right: 0;
-    margin: 18px;
+    margin: 16px;
 
     cursor: pointer;
   }
@@ -308,8 +304,8 @@ export default {
   .messages-container__attachments {
     position: absolute;
     top: 0;
-    left: 0;
-    margin: 18px 0px 0px 390px;
+    right: 0;
+    margin: 16px 40px 0px 0px;
   }
 
   .messages-container__paste {
@@ -355,6 +351,7 @@ export default {
     border-radius: 6px;
   }
 }
+
 @media (max-width: 900px) {
   .messages-container {
     .el-textarea__inner {

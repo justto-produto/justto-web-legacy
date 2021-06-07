@@ -44,15 +44,26 @@
           <highlight
             :queries="[searchTerm]"
             class="features-modules-container__body-description"
-          >
-            {{ feature.description }}
-          </highlight>
+            v-html="feature.description"
+          />
           <a
-            v-if="hasConfiguration.includes(feature.code)"
+            v-if="feature.active && hasConfiguration.includes(feature.code)"
             class="features-modules-container__body-button-link"
             @click="openConfigurationsDialog(feature.code)"
           >
             Configurar
+          </a>
+          <a
+            v-else-if="hasConfiguration.includes(feature.code)"
+            class="features-modules-container__body-button-link"
+          >
+            <el-tooltip
+              content="Recurso não está habilitado!"
+              placement="top"
+              :open-delay="500"
+            >
+              <span>Configurar</span>
+            </el-tooltip>
           </a>
         </div>
       </div>
@@ -60,6 +71,7 @@
 
     <!-- <ApiIntegrationDialog ref="apiIntegrationDialog" /> -->
     <!-- <AutomaticMessagesDialog ref="automaticMessagesDialog" /> -->
+    <CustomizeOdrAddressDialog ref="customizeOdrAddressDialog" />
     <BadFaithLitigantDialog ref="badFaithLitigantDialog" />
     <CommunicationBlockListDialog ref="communicationBlockListDialog" />
     <DraftManagementDialog ref="draftManagementDialog" />
@@ -77,6 +89,7 @@ export default {
     highlight: () => import('vue-text-highlight'),
     // ApiIntegrationDialog: () => import('./FeaturesAndModulesDialogs/ApiIntegrationDialog'),
     // AutomaticMessagesDialog: () => import('./FeaturesAndModulesDialogs/AutomaticMessagesDialog'),
+    CustomizeOdrAddressDialog: () => import('./FeaturesAndModulesDialogs/CustomizeOdrAddressDialog'),
     BadFaithLitigantDialog: () => import('./FeaturesAndModulesDialogs/BadFaithLitigantDialog'),
     CommunicationBlockListDialog: () => import('./FeaturesAndModulesDialogs/CommunicationBlockListDialog'),
     DraftManagementDialog: () => import('./FeaturesAndModulesDialogs/DraftManagementDialog'),
@@ -98,6 +111,8 @@ export default {
       return [
         // 'API_INTEGRATION',
         // 'AUTOMATIC_MESSAGES',
+        'CUSTOMIZE_ODR_ADDRESS',
+        'CONFIGURE_CUSTOMIZATIONS',
         'BAD_FAITH_LITIGANT',
         'COMMUNICATION_BLOCK_LIST',
         'DRAFT_MANAGEMENT',
@@ -142,7 +157,11 @@ export default {
       const featureCodeCamelCase = (str) => str.toLowerCase()
         .replace(/([_][a-z])/g, (group) => group.toUpperCase().replace('_', ''))
 
-      this.$refs[featureCodeCamelCase(featureCode) + 'Dialog'].openFeatureDialog()
+      const ref = featureCodeCamelCase(featureCode) + 'Dialog'
+
+      if (this.$refs[ref]) {
+        this.$refs[ref].openFeatureDialog()
+      }
     },
 
     openCrispWithHelp({ code }) {
@@ -193,6 +212,9 @@ export default {
 
         .features-modules-container__header-icon {
           margin: 12px 0;
+
+          width: 40px;
+          height: 40px;
         }
 
         .features-modules-container__header-sub {
@@ -273,11 +295,6 @@ export default {
 .features-modules-container {
   .features-modules-container__header-input {
     margin-top: 3px;
-
-    .el-input__inner {
-      line-height: 50px;
-      height: 50px;
-    }
   }
 }
 
@@ -285,11 +302,6 @@ export default {
   .features-modules-container {
     .features-modules-container__header-input {
       margin-top: 0;
-
-      .el-input__inner {
-        line-height: 40px;
-        height: 40px;
-      }
     }
   }
 }

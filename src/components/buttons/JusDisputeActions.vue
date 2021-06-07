@@ -20,6 +20,7 @@
       <el-tooltip
         v-if="action.condition()"
         :content="action.tooltip"
+        :open-delay="300"
       >
         <span>
           <el-button
@@ -373,6 +374,79 @@
         @closeDialog="handleAttachmentDialogVisable()"
       />
     </el-dialog>
+    <!-- Dialog para baixa definitiva -->
+    <el-dialog
+      :visible.sync="dropLawsuitDialogVisible"
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      append-to-body
+      width="604px"
+      title="Cancelar disputa"
+      class="dialog-actions__increase-alert"
+    >
+      <el-form
+        ref="dropLawsuitForm"
+        :model="dropLawsuitForm"
+        :rules="dropLawsuitRules"
+        :disabled="modalLoading"
+        label-position="top"
+      >
+        <el-row
+          :gutter="20"
+        >
+          <el-col :span="24">
+            <el-form-item
+              label="Motivo do cancelamento:"
+              prop="reason"
+            >
+              <el-select
+                v-model="dropLawsuitForm.reason"
+                placeholder="Escolha o motivo"
+                style="width: 100%;"
+              >
+                <el-option
+                  v-for="(key, value) in dropLawsuitReasons"
+                  :key="key"
+                  :value="value"
+                  :label="key"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
+            <el-form-item
+              label="Nota:"
+              prop="note"
+            >
+              <el-input
+                v-model="dropLawsuitForm.conclusionNote"
+                type="textarea"
+                rows="4"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <div slot="footer">
+        <el-button
+          plain
+          @click="dropLawsuitDialogVisible = false"
+        >
+          Cancelar
+        </el-button>
+        <el-button
+          v-loading="modalLoading"
+          :disabled="modalLoading"
+          type="primary"
+          @click.prevent="handleDropLawsuit"
+        >
+          Confirmar
+        </el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -412,11 +486,19 @@ export default {
       counterproposalDialogVisible: false,
       uploadAttacmentDialogVisable: false,
       settledDialogVisible: false,
+      dropLawsuitDialogVisible: false,
       modalLoading: false,
       counterOfferForm: {
         lastCounterOfferValue: '',
         selectedRoleId: '',
         note: ''
+      },
+      dropLawsuitForm: {
+        reason: null,
+        conclusionNote: null
+      },
+      dropLawsuitRules: {
+        reason: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
       },
       counterOfferFormRules: {
         lastCounterOfferValue: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
@@ -425,11 +507,12 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([
-      'disputeStatuses',
-      'isJusttoAdmin',
-      'ghostMode'
-    ]),
+    ...mapGetters({
+      disputeStatuses: 'disputeStatuses',
+      isJusttoAdmin: 'isJusttoAdmin',
+      ghostMode: 'ghostMode',
+      dropLawsuitReasons: 'getDropLawsuitReasons'
+    }),
 
     collapsed: {
       get() {
@@ -444,6 +527,7 @@ export default {
         {
           name: 'settled',
           icon: 'win',
+          disabled: this.isPaused || this.isCanceled,
           condition: () => this.canSettled,
           action: () => this.disputeAction('settled'),
           tooltip: this.dispute.status === 'CHECKOUT' || this.dispute.status === 'ACCEPTED' ? 'Ganhar' : 'Aceitar acordo'
@@ -451,6 +535,7 @@ export default {
         {
           name: 'unsettled',
           icon: 'lose',
+          disabled: this.isPaused || this.isCanceled,
           condition: () => this.canUnsettled,
           action: () => this.disputeAction('unsettled'),
           tooltip: 'Perder'
@@ -458,6 +543,7 @@ export default {
         {
           name: 'resume',
           icon: 'start-again',
+          disabled: this.isCanceled,
           condition: () => this.canResume,
           action: () => this.disputeAction('resume'),
           tooltip: 'Retomar'
@@ -465,6 +551,7 @@ export default {
         {
           name: 'paused',
           icon: 'pause',
+          disabled: this.isPaused || this.isCanceled,
           condition: () => this.canPause,
           action: () => this.disputeAction('paused'),
           tooltip: 'Pausar'
@@ -472,6 +559,7 @@ export default {
         {
           name: 'restart-engagement',
           icon: 'refresh',
+          disabled: this.isPaused || this.isCanceled,
           condition: () => this.canRestartEngagement,
           action: () => this.disputeAction('restart-engagement'),
           tooltip: 'Reiniciar disputa'
@@ -480,13 +568,14 @@ export default {
           name: 'resend-messages',
           icon: 'resend-messages',
           condition: () => this.canResendMessages,
-          disabled: !this.isInNegotiation,
+          disabled: !this.isInNegotiation || this.isPaused || this.isCanceled,
           action: () => this.disputeAction('resend-messages'),
           tooltip: (this.isInNegotiation ? 'Reenviar mensagens automáticas' : 'A disputa precisa estar em negociação para reagendar mensagens automáticas')
         },
         {
           name: 'cancel-messages',
           icon: 'cancel-messages',
+          disabled: this.isPaused || this.isCanceled,
           condition: () => !this.tableActions && !this.isPreNegotiation,
           action: () => this.disputeAction('cancel-messages'),
           tooltip: 'Cancelar mensagens automáticas'
@@ -494,6 +583,7 @@ export default {
         {
           name: 'change-negotiators',
           icon: 'delegate',
+          disabled: this.isCanceled,
           condition: () => !this.tableActions && !this.isPreNegotiation,
           action: () => this.openEditNegotiatorsDialog(),
           tooltip: 'Alterar negociador'
@@ -501,6 +591,7 @@ export default {
         {
           name: 'enrich',
           icon: 'enrich',
+          disabled: this.isPaused || this.isCanceled,
           condition: () => !this.tableActions && !this.isPreNegotiation,
           action: () => this.disputeAction('enrich'),
           tooltip: 'Enriquecer disputa'
@@ -508,6 +599,7 @@ export default {
         {
           name: 'counterproposal',
           icon: 'proposal',
+          disabled: this.isPaused || this.isCanceled,
           condition: () => this.canSendCounterproposal,
           action: () => this.disputeAction('counterproposal'),
           tooltip: 'Contraproposta manual'
@@ -515,6 +607,7 @@ export default {
         {
           name: 'renegotiate',
           icon: 'move-to-running',
+          disabled: this.isPaused,
           condition: () => this.canMoveToRunning,
           action: () => this.disputeAction('renegotiate'),
           tooltip: 'Retornar para negociação'
@@ -522,20 +615,22 @@ export default {
         {
           name: 'set-unread',
           icon: 'unread',
-          condition: () => this.canMarkAsNotRead,
+          condition: () => this.canMarkAsNotRead || this.isCanceled,
           action: () => this.setAsUnread(),
           tooltip: 'Marcar como não lida'
         },
         {
           name: 'permanently-leave',
           icon: 'hammer',
-          condition: () => this.isPreNegotiation,
-          action: () => this.dropLawsuit(),
-          tooltip: 'Confirmar baixa definitiva'
+          disabled: this.isCanceled,
+          condition: () => this.isPreNegotiation || this.isCanceled,
+          action: () => { this.dropLawsuitDialogVisible = true },
+          tooltip: 'Cancelar negociação'
         },
         {
           name: 'start-negotiation',
           icon: 'right-arrow',
+          disabled: this.isPaused,
           condition: () => this.isPreNegotiation,
           action: () => this.goToNegotiation(),
           tooltip: 'Iniciar negociação'
@@ -570,11 +665,17 @@ export default {
         }
       ]
     },
+    isPaused() {
+      return this.dispute?.paused
+    },
+    isCanceled() {
+      return this.dispute?.status === 'CANCELED'
+    },
     canSettled() {
-      return this.dispute && this.dispute.status && this.dispute.status !== 'SETTLED' && !this.isPreNegotiation
+      return this.dispute?.status !== 'SETTLED' && !this.isPreNegotiation
     },
     canUnsettled() {
-      return this.dispute && this.dispute.status && this.dispute.status !== 'UNSETTLED' && !this.isPreNegotiation
+      return this.dispute?.status !== 'UNSETTLED' && !this.isPreNegotiation
     },
     canResume() {
       return this.dispute && this.dispute.paused && !this.isPreNegotiation
@@ -583,16 +684,16 @@ export default {
       return this.dispute && !this.dispute.paused && !this.isPreNegotiation
     },
     canMarkAsNotRead() {
-      return this.dispute && this.dispute.status && !['IMPORTED', 'ENRICHED', 'ENGAGEMENT'].includes(this.dispute.status) && !this.isPreNegotiation
+      return this.dispute?.status && !['IMPORTED', 'ENRICHED', 'ENGAGEMENT'].includes(this.dispute.status) && !this.isPreNegotiation
     },
     canSendCounterproposal() {
-      return this.dispute && this.dispute.status && !['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(this.dispute.status) && !this.isPreNegotiation
+      return this.dispute?.status && !['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(this.dispute.status) && !this.isPreNegotiation
     },
     canMoveToRunning() {
-      return this.dispute && this.dispute.status && ['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(this.dispute.status) && !this.isPreNegotiation
+      return this.dispute?.status && ['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED', 'CANCELED'].includes(this.dispute.status) && !this.isPreNegotiation
     },
     canRestartEngagement() {
-      return this.dispute && this.dispute.status && !['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(this.dispute.status) && !this.isPreNegotiation
+      return this.dispute?.status && !['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(this.dispute.status) && !this.isPreNegotiation
     },
     isPreNegotiation() {
       return this.dispute.status === 'PRE_NEGOTIATION'
@@ -652,6 +753,11 @@ export default {
       return []
     }
   },
+  beforeMount() {
+    if (!Object.keys(this.dropLawsuitReasons).length) {
+      this.getDropLawsuitReasons()
+    }
+  },
   methods: {
     ...mapActions([
       'deleteDocument',
@@ -659,7 +765,9 @@ export default {
       'removeDispute',
       'sendDisputeAction',
       'sendDisputeNote',
-      'startNegotiation'
+      'startNegotiation',
+      'getDropLawsuitReasons',
+      'cancelTicket'
     ]),
 
     redirectNegotiation() {
@@ -893,21 +1001,33 @@ export default {
         this.$jusNotification({ error })
       })
     },
-    dropLawsuit() {
-      this.$jusSegment('Baixa definitiva na disputa', { disputeId: this.dispute.id })
-      this.$confirm('Esta ação é irreversível, tem certeza que deseja continuar?', 'Baixa definitiva', {
-        confirmButtonText: 'Continuar',
-        cancelButtonText: 'Cancelar',
-        cancelButtonClass: 'is-plain',
-        showClose: false
-      }).then(() => {
-        this.removeDispute({
-          disputeId: this.dispute.id, reason: 'DISPUTE_DROPPED'
-        }).then(() => {
-          this.setDisputesTab('0')
-          if (!this.tableActions) this.$router.push('/management')
+    validateForm(ref) {
+      return new Promise((resolve, reject) => {
+        this.$refs[ref].validate(valid => {
+          if (valid) resolve()
+          else reject(new Error('Campos obrigatórios não preenchidos'))
         })
       })
+    },
+    handleDropLawsuit() {
+      this.modalLoading = true
+      const disputeId = this.$route.params.id
+      const { reason, conclusionNote } = this.dropLawsuitForm
+      this.validateForm('dropLawsuitForm')
+        .then(() => {
+          this.cancelTicket({ disputeId, reason, conclusionNote })
+            .then(() => {
+              this.$jusNotification({
+                message: 'Disputa cancelada com sucesso.',
+                title: 'Yay!',
+                type: 'success'
+              })
+              this.dropLawsuitDialogVisible = false
+              this.$jusSegment('Cancelamento de disputa pelo /management', { disputeId })
+            })
+            .catch(error => this.$jusNotification({ error }))
+        })
+        .finally(() => { this.modalLoading = false })
     },
     goToNegotiation() {
       this.startNegotiation(this.dispute.id)

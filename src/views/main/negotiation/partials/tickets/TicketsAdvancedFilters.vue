@@ -175,6 +175,17 @@
                 <el-switch
                   v-model="filters.onlyPaused"
                   data-testid="filters-only-paused"
+                  @change="canSelectPaused"
+                />
+              </div>
+              <div v-if="!isPreNegotiation">
+                <div>
+                  <i class="el-icon-video-play" /> Somente não pausadas
+                </div>
+                <el-switch
+                  v-model="filters.onlyNotPaused"
+                  data-testid="filters-not-only-paused"
+                  @change="canSelectNotPaused"
                 />
               </div>
             </el-form-item>
@@ -337,7 +348,8 @@ export default {
           return [
             'EXPIRED',
             'SETTLED',
-            'UNSETTLED'
+            'UNSETTLED',
+            'CANCELED'
           ]
         case 'engagement':
           return [
@@ -358,7 +370,8 @@ export default {
             'EXPIRED',
             'SETTLED',
             'UNSETTLED',
-            'REFUSED'
+            'REFUSED',
+            'CANCELED'
           ]
       }
     }
@@ -380,6 +393,18 @@ export default {
       'setTicketsFilters',
       'getTickets'
     ]),
+    canSelectPaused(_value) {
+      const { onlyPaused, onlyNotPaused } = this.filters
+      if (onlyPaused && onlyNotPaused) {
+        this.filters.onlyNotPaused = false
+      }
+    },
+    canSelectNotPaused(_value) {
+      const { onlyPaused, onlyNotPaused } = this.filters
+      if (onlyPaused && onlyNotPaused) {
+        this.filters.onlyPaused = false
+      }
+    },
     fetchData() {
       this.loading = true
       Promise.all([
@@ -397,6 +422,12 @@ export default {
     applyFilters() {
       const { filters } = this
       if (!filters.onlyNotVisualized) delete filters.onlyNotVisualized
+      if (!filters.onlyNotPaused && !filters.onlyPaused) {
+        delete filters.onlyPaused
+      }
+      if (filters.onlyNotPaused) {
+        filters.onlyPaused = false
+      }
       this.setTicketsFilters({ filters, hasFilters: true })
       this.advancedFiltersDialogVisible = false
       this.getTickets()
@@ -442,6 +473,7 @@ export default {
       this.warningSixtyLastDaysRange = false
       this.filters.onlyFavorite = false
       this.filters.onlyPaused = false
+      this.filters.onlyNotPaused = false
       this.filters.hasCounterproposal = false
       this.setTicketsFilters({ filters, hasFilters: false })
       this.advancedFiltersDialogVisible = false

@@ -66,7 +66,6 @@ export default {
 .configurations-container {
   margin: 30px;
   width: 100%;
-  overflow-y: hidden;
 
   .configurations-container__tabs {
     z-index: 0;
@@ -107,6 +106,7 @@ export default {
 .configurations-container {
   .el-tabs__content {
     flex: 1;
+    overflow: auto;
 
     .el-tab-pane {
       height: 100%;

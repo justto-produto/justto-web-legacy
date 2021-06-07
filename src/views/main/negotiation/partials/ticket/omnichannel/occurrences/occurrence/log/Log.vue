@@ -1,8 +1,8 @@
 <template>
   <section class="log-container">
     <span
-      class="log-container__occurrence"
-      :class="{ 'summary': isSummary, 'normal': !isSummary }"
+      v-if="!isSummary"
+      class="log-container__occurrence normal"
     >
       <span class="log-container__occurrence-text">
         <jus-icon
@@ -14,85 +14,6 @@
           class="log-container__occurrence-text__content"
           v-html="text"
         />
-        <span
-          v-if="isSummary"
-          class="log-container__occurrence-text__summary"
-        >
-          <span
-            v-for="(summary, sIndex) in summaryDetail"
-            :key="sIndex"
-            class="log-container__occurrence-text__summary-iterator"
-          >
-            <span
-              v-if="summary.email"
-              class="log-container__occurrence-text__summary-iterator-item"
-            >
-              {{ summary.email }} {{ $tc('negotiation.ticket.omnichannel.occurrence.summary.count-email', summary.email) }} {{ summary.personName | resumedName }}
-              <i
-                v-if="loading === 'EMAIL'"
-                class="el-icon-loading"
-              />
-              <span
-                v-else
-                class="log-container__occurrence-text__summary-iterator-item__see-more"
-                :class="{ visible: !seeEmails }"
-                @click="seeMore('EMAIL', summary.disputeRoleId)"
-              >
-                &#40;
-                <span>
-                  {{ seeEmails ? 'ver' : 'esconder' }} e-mails
-                </span>
-                &#41;
-              </span>
-            </span>
-            <span
-              v-if="summary.whatsApp"
-              class="log-container__occurrence-text__summary-iterator-item"
-            >
-              {{ summary.whatsApp }} {{ $tc('negotiation.ticket.omnichannel.occurrence.summary.count-whatsapp', summary.whatsApp) }} {{ summary.personName | resumedName }}
-              <span
-                class="log-container__occurrence-text__summary-iterator-item__see-more"
-                :class="{ visible: !seeWhats }"
-                @click="seeMore('WHATSAPP', summary.disputeRoleId)"
-              >
-                &#40;
-                <i
-                  v-if="loading === 'WHATSAPP'"
-                  class="el-icon-loading"
-                />
-                <span v-else>
-                  {{ seeWhats ? 'ver' : 'esconder' }} whats
-                </span>
-                &#41;
-              </span>
-            </span>
-            <span
-              v-if="summary.sms"
-              class="log-container__occurrence-text__summary-iterator-item"
-            >
-              {{ summary.sms }} {{ $tc('negotiation.ticket.omnichannel.occurrence.summary.count-sms', summary.sms) }} {{ summary.personName | resumedName }}
-              <span
-                class="log-container__occurrence-text__summary-iterator-item__see-more"
-                :class="{ visible: !seeSms }"
-                @click="seeMore('SMS', summary.disputeRoleId)"
-              >
-                &#40;
-                <i
-                  v-if="loading === 'SMS'"
-                  class="el-icon-loading"
-                />
-                <span v-else>
-                  {{ seeSms ? 'ver' : 'esconder' }} sms
-                </span>
-                &#41;
-              </span>
-            </span>
-          </span>
-          <span
-            v-if="!summaryDetail.length && oldSummary.length"
-            v-html="oldSummary"
-          />
-        </span>
       </span>
 
       <span class="log-container__occurrence-about negotiation-occurrence-about">
@@ -102,32 +23,31 @@
         <span v-if="status.icon">
           •
         </span>
-        <el-tooltip :content="status.tooltip">
+        <el-tooltip
+          :open-delay="600"
+          :content="status.tooltip"
+        >
           <jus-icon
             class="log-container__occurrence-about-icon"
             :icon="status.icon"
           />
         </el-tooltip>
       </span>
-
-      <Scheduler
-        v-for="({ interaction }, summaryOccurrenceIndex) in groupedOccurrences"
-        :key="`summary-occurrence-${summaryOccurrenceIndex}`"
-        class="log-container__occurrence summary log-container__summary-scheduler"
-        :value="interaction"
-        :occurrence="value"
-      />
     </span>
+
+    <Summary
+      v-for="summary in (isSummary ? summaryDetail : [])"
+      :key="`summary-${summary.summary}`"
+      :occurrence="occurrence"
+      :summary="summary"
+    />
   </section>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
-import { addInvisibleStatus } from '@/utils'
-
 export default {
   components: {
-    Scheduler: () => import('../interaction/partials/Scheduler')
+    Summary: () => import('./Summary')
   },
 
   props: {
@@ -137,76 +57,25 @@ export default {
     }
   },
 
-  data: () => ({
-    loading: '',
-    summaryTypes: ['EMAIL', 'WHATSAPP', 'SMS']
-  }),
-
   computed: {
-    ...mapGetters({
-      summaryKeys: 'getOccurrencesSummaryKeys',
-      summaryOccurrences: 'getOccurrencesSummary'
-    }),
-
     occurrence() {
       return this.value
     },
 
-    groupedOccurrences() {
-      let list = []
-      const { id } = this.occurrence
-
-      this.summaryTypes.forEach(type => {
-        if (this.summaryKeys[type].includes(id)) {
-          this.summaryOccurrences[type][id].forEach(occurrence => {
-            list = [...list, occurrence]
-          })
-        }
-      })
-
-      return list
-    },
-
-    seeEmails() {
-      return !this.summaryKeys.EMAIL.includes(this.occurrence.id)
-    },
-
-    seeWhats() {
-      return !this.summaryKeys.WHATSAPP.includes(this.occurrence.id)
-    },
-
-    seeSms() {
-      return !this.summaryKeys.SMS.includes(this.occurrence.id)
+    isCanceled() {
+      return this.occurrence?.status === 'CANCELED'
     },
 
     text() {
-      let text = this.occurrence.description
+      let text = this.isCanceledText(this.occurrence.description) ? this.handleCanceledText(this.occurrence.description) : this.occurrence.description
       if (this.occurrence?.type === 'INTERACTION' && this.occurrence?.interaction?.type === 'NEGOTIATOR_ACCESS') {
         text = 'Disputa visualizada'
       }
-      return addInvisibleStatus(text)
+      return text
     },
 
     isSummary() {
       return this.occurrence?.properties?.ENGAGEMENT === 'SUMMARY'
-    },
-
-    oldSummary() {
-      let res = ''
-      if (this.occurrence?.properties?.SUMMARY_EMAIL_QUANTITY) {
-        const { SUMMARY_EMAIL_QUANTITY } = this.occurrence?.properties
-        const messagePlural = Number(SUMMARY_EMAIL_QUANTITY) > 1 ? 'Mensagens' : 'Mensagem'
-        res += `<span>${SUMMARY_EMAIL_QUANTITY} ${messagePlural} de Email foram agendada(s).</span>`
-      } if (this.occurrence?.properties?.SUMMARY_WHATSAPP_QUANTITY) {
-        const { SUMMARY_WHATSAPP_QUANTITY } = this.occurrence?.properties
-        const messagePlural = Number(SUMMARY_WHATSAPP_QUANTITY) > 1 ? 'Mensagens' : 'Mensagem'
-        res += `<span>${this.occurrence?.properties?.SUMMARY_WHATSAPP_QUANTITY} ${messagePlural} de WhatsApp foram agendada(s).</span>`
-      } if (this.occurrence?.properties?.SUMMARY_SMS_QUANTITY) {
-        const { SUMMARY_SMS_QUANTITY } = this.occurrence?.properties
-        const messagePlural = Number(SUMMARY_SMS_QUANTITY) > 1 ? 'Mensagens' : 'Mensagem'
-        res += `<span>${this.occurrence?.properties?.SUMMARY_SMS_QUANTITY} ${messagePlural} de SMS foram agendada(s).</span>`
-      }
-      return res
     },
 
     summaryDetail() {
@@ -255,27 +124,23 @@ export default {
       return false
     }
   },
+
   updated() {
     this.$set(this.value, 'renderCompleted', true)
   },
+
   mounted() {
     this.$set(this.value, 'renderCompleted', true)
   },
-  methods: {
-    ...mapActions([
-      'getSummaryOccurrecies'
-    ]),
 
-    seeMore(communicationType, summaryRoleId) {
-      const disputeId = this.$route.params.id
-      const summaryOccurrenceId = this.occurrence.id
-      this.loading = communicationType
-      this.getSummaryOccurrecies({
-        disputeId,
-        summaryRoleId,
-        communicationType,
-        summaryOccurrenceId
-      }).then(() => (this.loading = '')).finally(() => (this.loading = ''))
+  methods: {
+    handleCanceledText(description) {
+      const [handledDescription, reason] = description.split(':')
+      return `${handledDescription}: ${this.$tc(`canceled.reason.${reason.trim()}`)}.`
+    },
+
+    isCanceledText(description) {
+      return description.includes('Disputa cancelada por')
     }
   }
 }

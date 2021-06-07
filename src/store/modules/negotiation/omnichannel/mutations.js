@@ -12,7 +12,6 @@ const omnichannelMutations = {
       Vue.set(state, 'activeTab', tab)
     }
   },
-  setEditorReady: (state, isReady) => Vue.set(state.editor, 'ready', isReady),
 
   setEditorText: (state, text) => Vue.set(state.editor, 'messageText', text),
 
@@ -20,7 +19,10 @@ const omnichannelMutations = {
 
   setMessageType: (state, type) => Vue.set(state.editor, 'messageType', type),
 
-  setOccurrences: (state, { content, totalElements }) => {
+  setOccurrences: (state, { content, totalElements, first }) => {
+    if (first) {
+      Vue.set(state.occurrences, 'list', [])
+    }
     const datas = state.occurrences.list.map((occurrence, index) => {
       if (occurrence.id === null) {
         return {
@@ -170,8 +172,6 @@ const omnichannelMutations = {
     const items = state.editor.recipients.filter(el => !(el.value === value))
     Vue.set(state.editor, 'recipients', items)
   },
-
-  setSendingMessage: (state, sending) => Vue.set(state.editor, 'sendinMessage', !!sending),
 
   resetRecipients: (state) => Vue.set(state.editor, 'recipients', []),
 

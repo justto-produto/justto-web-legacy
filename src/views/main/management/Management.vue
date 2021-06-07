@@ -233,7 +233,7 @@
               align="center"
               header-align="center"
             >
-              <template slot-scope="scope">
+              <template v-slot="scope">
                 <el-tooltip
                   :disabled="!exportSituation(scope.row) === 'QUEUE'"
                   :content="buildSituationTooltip(scope.row)"
@@ -253,7 +253,7 @@
               align="center"
               header-align="center"
             >
-              <template slot-scope="scope">
+              <template v-slot="scope">
                 <span>{{ exportDateTime(scope.row.requestedAt) }}</span>
               </template>
             </el-table-column>
@@ -262,7 +262,7 @@
               align="center"
               header-align="center"
             >
-              <template slot-scope="scope">
+              <template v-slot="scope">
                 <jus-icon
                   v-if="exportSituation(scope.row) === 'QUEUE'"
                   icon="clock"
@@ -280,7 +280,7 @@
               width="40"
               align="center"
             >
-              <template slot-scope="scope">
+              <template v-slot="scope">
                 <el-tooltip
                   v-if="exportSituation(scope.row) === 'FINISHED'"
                   content="Baixar relatório"

@@ -31,7 +31,7 @@
         style="width: 100%"
       >
         <el-table-column label="Arquivo">
-          <template slot-scope="scope">
+          <template v-slot="scope">
             {{ scope.row.file_name }}
           </template>
         </el-table-column>
@@ -45,12 +45,12 @@
           </template>
         </el-table-column>
         <el-table-column label="Data">
-          <template slot-scope="scope">
+          <template v-slot="scope">
             {{ scope.row.date | moment('DD/MM/YYYY [às] HH:mm') }}
           </template>
         </el-table-column>
         <el-table-column label="Status">
-          <template slot-scope="scope">
+          <template v-slot="scope">
             <i :class="setStatusIcon(scope.row.status)" />
             {{ $t('import.status.' + scope.row.status ) | capitalize }}
           </template>
@@ -60,7 +60,7 @@
           label="Linhas"
           align="center"
         >
-          <template slot-scope="scope">
+          <template v-slot="scope">
             {{ scope.row.rows }}
           </template>
         </el-table-column>
@@ -69,7 +69,7 @@
           align="center"
           label="Baixar"
         >
-          <template slot-scope="scope">
+          <template v-slot="scope">
             <a
               :href="scope.row.file_url"
               target="_blank"

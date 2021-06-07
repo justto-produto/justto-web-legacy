@@ -5,7 +5,7 @@
       width="100%"
     >
       <el-table-column label="Termo bloqueado">
-        <template slot-scope="props">
+        <template v-slot="props">
           {{ props.row }}
         </template>
       </el-table-column>

@@ -3,6 +3,8 @@ import { axiosDispatch, validateCurrentId } from '@/utils/'
 const disputeApi = '/api/disputes/v2'
 const disputeApiLegacy = '/api/disputes'
 const officeApi = '/api/office'
+const spiderApi = '/api/spider'
+const fusionRunnerApi = '/api/fusion-runner'
 
 const overviewActions = {
   getTicketOverview({ commit, dispatch }, disputeId) {
@@ -79,13 +81,26 @@ const overviewActions = {
 
   setTicketOverview({ _ }, params) {
     const { data, disputeId } = params
-
     return validateCurrentId(disputeId, () => axiosDispatch({
       url: `${disputeApi}/${disputeId}`,
       method: 'PATCH',
       data,
       mutation: 'updateTicketOverview',
       payload: data || {}
+    }))
+  },
+
+  setTicketOverviewDefendantProposal({ _ }, params) {
+    const { data, disputeId, polarityObjectKey } = params
+    return validateCurrentId(disputeId, () => axiosDispatch({
+      url: `${disputeApi}/${disputeId}`,
+      method: 'PATCH',
+      data,
+      mutation: 'updateLastTicketOffers',
+      payload: {
+        value: data.value,
+        polarityObjectKey
+      }
     }))
   },
 
@@ -155,7 +170,7 @@ const overviewActions = {
 
     return new Promise((resolve, reject) => {
       const { id: bankAccountId } = account
-      const disputeRole = getters.getTicketOverviewParties.find(el => Number(el.personId) === Number(personId)).legacyDto
+      const disputeRole = getters.getTicketOverviewParties.find(el => Number(el.person.id) === Number(personId)).legacyDto
 
       axiosDispatch({
         url: `${disputeApiLegacy}/${disputeId}/dispute-roles`,
@@ -183,7 +198,7 @@ const overviewActions = {
     commit('incrementTicketOverviewCountGetters')
 
     return new Promise((resolve, reject) => {
-      const disputeRole = getters.getTicketOverviewParties.find(el => Number(el.personId) === Number(personId)).legacyDto
+      const disputeRole = getters.getTicketOverviewParties.find(el => Number(el.person.id) === Number(personId)).legacyDto
 
       axiosDispatch({
         url: `${disputeApiLegacy}/${disputeId}/dispute-roles`,
@@ -208,7 +223,7 @@ const overviewActions = {
     commit('incrementTicketOverviewCountGetters')
 
     return new Promise((resolve, reject) => {
-      const disputeRole = getters.getTicketOverviewParties.find(item => Number(item.personId) === Number(personId)).legacyDto
+      const disputeRole = getters.getTicketOverviewParties.find(item => Number(item.person.id) === Number(personId)).legacyDto
 
       axiosDispatch({
         url: `${disputeApiLegacy}/${disputeId}/dispute-roles`,
@@ -283,6 +298,28 @@ const overviewActions = {
       mutation: 'toggleFavoriteTicket',
       payload: { disputeId, favorite: false }
     }))
+  },
+
+  searchNamesakeTicketOptions({ _ }, name) {
+    return axiosDispatch({
+      url: `${spiderApi}/search/name/${name}`
+    })
+  },
+
+  setNamesakeTicketOptions({ _ }, { personId, document, disputeId }) {
+    return axiosDispatch({
+      url: `${fusionRunnerApi}/set-document/person/${personId}/${document}/${disputeId}`,
+      method: 'PATCH'
+    })
+  },
+
+  setTicketOverviewAttachmentConfidentiality({ _ }, { disputeId, attach: { id, confidential } }) {
+    return axiosDispatch({
+      url: `${officeApi}/disputes/${disputeId}/attachment/${id}/confidential/${!confidential}`,
+      method: 'PATCH',
+      mutation: 'setAttachmentConfidentiality',
+      payload: { id }
+    })
   }
 }
 

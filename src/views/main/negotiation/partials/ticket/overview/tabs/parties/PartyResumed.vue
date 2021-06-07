@@ -6,9 +6,28 @@
   >
     <template slot="title">
       <JusIcon
+        v-if="state.hasAlert && state.isDead"
+        class="el-icon-pulse vexatious-alert"
+        icon="flat-alert"
+      />
+
+      <i
+        v-else-if="state.hasAlert && state.isNamesake"
+        class="el-icon-warning el-icon-pulse vexatious-alert"
+        :style="{ color: state.alertColor }"
+      />
+
+      <JusIcon
+        v-else-if="state.hasAlert && state.isVexatious"
+        class="el-icon-pulse vexatious-alert"
+        icon="flat-alert-yellow"
+      />
+
+      <JusIcon
         class="party-resumed__header-avatar"
         :icon="partyType"
       />
+
       <article>
         <span class="party-resumed__header-name">
           {{ party.name | resumedName }}
@@ -41,11 +60,15 @@
 </template>
 
 <script>
+import TicketTicketOverviewPartyResumed from '@/models/negotiations/overview/TicketOverviewPartyResumed'
+
 export default {
   name: 'PartyResumed',
+
   components: {
     PartyDetails: () => import('./PartyDetails')
   },
+
   props: {
     party: {
       type: Object,
@@ -60,13 +83,16 @@ export default {
       default: false
     }
   },
+
   computed: {
     isActiveCollapseItem() {
       return this.party.disputeRoleId === this.activeCollapseItem
     },
+
     documentType() {
       return this.party.documentNumber?.length <= 14 ? 'CPF' : 'CNPJ'
     },
+
     partyType() {
       const { roles, polarity } = this.party
 
@@ -82,6 +108,7 @@ export default {
         return ''
       }
     },
+
     translatedPartyType() {
       let role
 
@@ -105,6 +132,10 @@ export default {
       }
 
       return this.$t(`roles.${role}.${this.party.polarity}`)
+    },
+
+    state() {
+      return this.party ? new TicketTicketOverviewPartyResumed(this.party) : {}
     }
   }
 }
@@ -149,6 +180,16 @@ export default {
     height: auto;
     line-height: normal;
     min-height: 60px;
+    position: relative;
+
+    .vexatious-alert {
+      color: rgb(255, 201, 0);
+      font-size: 30px;
+
+      position: absolute;
+      right: 0;
+      margin-right: 16px;
+    }
   }
 }
 .hide-arrows {

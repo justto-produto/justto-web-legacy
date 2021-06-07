@@ -32,6 +32,10 @@ const accountMutations = {
 
   setAccountProperty(state, response) {
     Object.keys(response).forEach(key => Vue.set(state.preferences.properties, key, response[key]))
+  },
+
+  setAccountName(state, name) {
+    Vue.set(state, 'name', name)
   }
 }
 

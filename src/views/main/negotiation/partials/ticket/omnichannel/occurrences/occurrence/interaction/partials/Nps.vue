@@ -2,7 +2,7 @@
   <article class="nps-container">
     <div class="nps-container__contact">
       <jus-icon icon="nps" />
-      <span>De</span>
+      <span>de</span>
       <span v-if="person">
         {{ person | resumedName }}
       </span>
@@ -56,10 +56,14 @@
 
     <div class="nps-container__comment">
       <span class="nps-container__comment-date">
-        {{ npsEvaluateDate | moment('[Comentado:] DD/MM/YYYY HH:MM') }}
+        {{ npsResume.length ? 'Comentado:' : 'Avaliado:' }}
+        {{ npsEvaluateDate | moment('DD/MM/YYYY HH:MM') }}
       </span>
 
-      <span class="nps-container__comment-text">
+      <span
+        v-if="npsResume.length"
+        class="nps-container__comment-text"
+      >
         "{{ npsResume }}"
       </span>
     </div>

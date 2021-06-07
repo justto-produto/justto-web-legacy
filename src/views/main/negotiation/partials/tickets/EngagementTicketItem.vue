@@ -2,14 +2,13 @@
   <li
     :class="{ 'communication-ticket-item-container--active': isActive }"
     class="communication-ticket-item-container"
-    @click="hangleSelectTicket"
+    @click="handleSelectTicket"
   >
     <JusAvatarUser
       :name="plaintiffName"
       :status="ticket.plaintiff ? ticket.plaintiff.status : ''"
       class="communication-ticket-item-container__avatar"
-      size="md"
-      shadow
+      size="sm"
       purple
     />
     <div class="communication-ticket-item-container__resume">
@@ -26,23 +25,20 @@
       </div>
       <div class="communication-ticket-item-container__message">
         <el-tooltip
-          :disabled="!isPreNegotiation"
-          :open-delay="500"
+          :disabled="!isInPreNegotiaionTab"
+          :open-delay="250"
           :placement="'bottom-start'"
         >
           <div
             slot="content"
-            v-html="reason"
+            v-html="resumeReason"
           />
           <span>
-            {{ reason }}
+            {{ isInPreNegotiaionTab ? reason : resumeReason }}
           </span>
         </el-tooltip>
       </div>
     </div>
-    <!-- <span class="communication-ticket-item-container__time">
-      {{ getLastInteraction(ticket.lastReceivedMessage.dateTime.dateTime) }}
-    </span> -->
   </li>
 </template>
 
@@ -63,6 +59,7 @@ export default {
       required: true
     }
   },
+
   computed: {
     ...mapGetters({
       activeTab: 'getTicketsActiveTab'
@@ -71,15 +68,31 @@ export default {
     isActive() {
       return Number(this.$route.params?.id || '') === Number(this.ticket?.disputeId)
     },
+
     plaintiffName() {
       const { plaintiff } = this.ticket
       return plaintiff ? plaintiff.name : 'Sem parte'
     },
+
+    isInPreNegotiaionTab() {
+      return this.activeTab === 'pre-negotiation'
+    },
+
     reason() {
       const { pendingReason, disputeStatus } = this.ticket
+      if (pendingReason?.keywords) {
+        return pendingReason.keywords.join(', ')
+      } else if (pendingReason?.description) {
+        return pendingReason?.description
+      } else {
+        return this.$options.filters.capitalize(this.$tc(`dispute.status.${disputeStatus}`))
+      }
+    },
+
+    resumeReason() {
+      const { pendingReason, disputeStatus } = this.ticket
       if (pendingReason?.description) {
-        const reasons = pendingReason.description.replace('[', '').replace(']', '').split(',')
-        return `Encontrou termos ${reasons.join(',')}`
+        return pendingReason.description
       } else {
         return this.$options.filters.capitalize(this.$tc(`dispute.status.${disputeStatus}`))
       }
@@ -107,25 +120,10 @@ export default {
   &--active {
     background-color: $--color-primary-light-9;
     border-left: 6px solid $--color-primary;
-    // &:after {
-    //   content: '';
-    //   position: absolute;
-    //   display: block;
-    //   transform: translateY(-50%);
-    //   top: 50%;
-    //   right: -10px;
-    //   width: 0;
-    //   height: 0;
-    //   z-index: 99;
-    //   border-top: 18px solid transparent;
-    //   border-bottom: 18px solid transparent;
-    //   border-left: 12px solid green;
-    // }
   }
 
   .communication-ticket-item-container__avatar {
     align-self: center;
-    width: 49px;
   }
 
   .communication-ticket-item-container__resume {
@@ -148,6 +146,7 @@ export default {
     }
 
     .communication-ticket-item-container__message {
+      font-size: 13px;
       margin-bottom: 6px;
       max-width: 223px;
       display: inline-block;
@@ -155,6 +154,16 @@ export default {
       text-overflow: ellipsis;
       overflow-x: hidden;
     }
+
+  }
+  .communication-ticket-item-container__gray {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background-color: #F3F3F3;
+    width: 100%;
+    height: 20px;
+    z-index: 1;
   }
 
   .communication-ticket-item-container__time {

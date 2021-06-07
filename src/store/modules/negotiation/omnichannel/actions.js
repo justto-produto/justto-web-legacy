@@ -10,8 +10,6 @@ const omnichannelActions = {
     commit('resetOccurrences')
   },
 
-  setEditorReady: ({ commit }, isRedy) => commit('setEditorReady', isRedy),
-
   setEditorText: ({ commit }, message) => commit('setEditorText', message),
 
   setNoteEditorText: ({ commit }, note) => commit('setNoteEditorText', note),
@@ -97,7 +95,7 @@ const omnichannelActions = {
       }))
     } else {
       return new Promise((resolve) => {
-        commit('cleanSumary', payload)
+        // commit('cleanSumary', payload)
         resolve()
       })
     }

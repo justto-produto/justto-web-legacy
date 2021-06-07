@@ -47,8 +47,8 @@
                 type="dashboard"
                 :width="npsWidth"
                 :color="colors"
-                :percentage="dataset.data[0] | min"
-                :format="(value) => `${value}`"
+                :percentage="dataset.data[0] | calcNps"
+                :format="(value) => `${dataset.data[0]}`"
               />
               <span class="progress-label">
                 nps
@@ -66,7 +66,7 @@ export default {
   name: 'JusChartCard',
 
   filters: {
-    min: (progress) => Math.max(progress, 0)
+    calcNps: (nps) => parseInt((nps + 100) / 2)
   },
 
   props: {
@@ -142,7 +142,7 @@ export default {
 
     colors() {
       return [
-        { color: '#FF4B54', percentage: 20 },
+        { color: '#FF4B54', percentage: 40 },
         { color: '#707070', percentage: 60 },
         { color: '#14CC30', percentage: 100 }
       ]

@@ -28,17 +28,18 @@
       class="currency-inline-editor__input"
       maxlength="16"
       @blur.native="confirmEdit"
-      @keyup.native.esc="handleEsc"
-      @keyup.native.enter="escaping = false;$event.target.blur()"
     />
-    <!-- @keyup.native.enter="confirmEdit"
-    @keyup.native.esc="cancelEdit" -->
   </div>
 </template>
 
 <script>
+import HandleKeys from './handleKeys'
+
 export default {
   name: 'CurrencyInlieEditor',
+
+  mixins: [HandleKeys],
+
   props: {
     value: {
       type: Number,
@@ -49,11 +50,13 @@ export default {
       default: true
     }
   },
+
   data: () => ({
     isEditingActive: false,
     model: 0,
     escaping: false
   }),
+
   computed: {
     vModel: {
       get() {
@@ -73,22 +76,42 @@ export default {
       }
     }
   },
+
+  watch: {
+    isEditing(value) {
+      if (value) {
+        document.addEventListener('keyup', this.handleKeys)
+      } else {
+        document.removeEventListener('keyup', this.handleKeys)
+      }
+    }
+  },
+
   mounted() {
     this.$emit('enableEdit')
   },
+
   methods: {
+    handleEnter(event) {
+      this.escaping = false
+      event.target.blur()
+    },
+
     handleEsc(event) {
       this.escaping = true
       this.confirmEdit(event)
     },
+
     enableEdit() {
       this.model = this.value || 0
       this.isEditing = true
       this.$nextTick(() => document.getElementById('currencyInput').focus())
     },
+
     disableEdit() {
       this.isEditing = false
     },
+
     confirmEdit(event) {
       if (event && !event.currentTarget.contains(event.relatedTarget)) {
         if (this.escaping) {

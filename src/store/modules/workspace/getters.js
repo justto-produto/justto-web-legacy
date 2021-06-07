@@ -39,8 +39,8 @@ const workspaceGetters = {
   getPreNegotiation: state => state.workspace.preNegotiation,
   getFeaturesAndModules: state => state.featuresAndModules,
   getWorkspaceKeyAccounts: (state) => state.workspace.keyAccounts,
-  getAssociatedKeyAccount: (state) => state.workspace.associatedKeyAccount,
-  getPortifolio: (state) => state.portifolio
+  getPortifolios: (state) => state.portifolios,
+  getAssociatedKeyAccount: (state) => state.workspace.associatedKeyAccount
 }
 
 export default workspaceGetters

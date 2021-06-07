@@ -16,13 +16,19 @@
           label="Nome"
           prop="name"
         >
-          <el-input v-model="account.name" />
+          <el-input
+            v-model="account.name"
+            disabled
+          />
         </el-form-item>
         <el-form-item
           label="Email"
           prop="email"
         >
-          <el-input v-model="account.email" />
+          <el-input
+            v-model="account.email"
+            disabled
+          />
         </el-form-item>
         <el-form-item
           label="CPF ou CNPJ"
@@ -32,6 +38,7 @@
             ref="accountDocumentInput"
             v-model="account.document"
             v-mask="['###.###.###-##', '##.###.###/####-##']"
+            disabled
           />
         </el-form-item>
         <el-form-item
@@ -147,18 +154,29 @@ export default {
     }
   },
 
+  watch: {
+    bankAccountDialogVisible(visible) {
+      if (visible) {
+        this.$delete(this.account, 'bank')
+        this.$delete(this.account, 'agency')
+        this.$delete(this.account, 'number')
+        this.$delete(this.account, 'type')
+      }
+    }
+  },
+
   methods: {
     openBankAccountDialog(account) {
-      Object.keys(account).forEach(key => this.$set(this.account, key, account[key]))
       this.bankAccountDialogVisible = true
+      Object.keys(account).forEach(key => this.$set(this.account, key, account[key]))
       if (account.document) {
         const { cpfCnpj } = this.$options.filters
         this.$set(this.account, 'document', cpfCnpj(account.document))
+        this.$forceUpdate()
       }
     },
 
     closeDialog() {
-      Object.keys(this.account).forEach(key => this.$set(this.account, key, ''))
       this.bankAccountDialogVisible = false
     },
 

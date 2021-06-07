@@ -4,6 +4,7 @@ import filterByTerm from './utils/filterByTerm'
 import getStringInitials from './utils/getStringInitials'
 import isSimilarStrings from './utils/isSimilarStrings'
 import stripHtml from './utils/stripHtml'
+import scapeHtml from './utils/scapeHtml'
 import normalizeString from './utils/normalizeString'
 import registerServiceWorker from './utils/registerServiceWorker'
 import showUnavailableLoading from './utils/showUnavailableLoading'
@@ -28,6 +29,7 @@ export {
   uuidv4,
   eventBus,
   getRoles,
+  scapeHtml,
   stripHtml,
   buildQuery,
   getRoleIcon,

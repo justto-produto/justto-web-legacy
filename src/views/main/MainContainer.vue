@@ -82,25 +82,30 @@
       </el-main>
     </el-container>
     <JusShortchts />
+    <jusMessagePreview />
   </el-container>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import { eventBus } from '@/utils'
 
 export default {
   name: 'MainContainer',
   components: {
+    jusMessagePreview: () => import('@/components/dialogs/JusMessagePreviewDialog'),
     JusHeaderMain: () => import('@/components/layouts/JusHeaderMain'),
     JusTeamMenu: () => import('@/components/layouts/JusTeamMenu'),
     JusShortchts: () => import('@/components/others/JusShortcuts')
   },
+
   data() {
     return {
       subscriptions: [],
       isTeamSectionExpanded: false
     }
   },
+
   computed: {
     ...mapGetters({
       isAdminProfile: 'isAdminProfile',
@@ -179,32 +184,42 @@ export default {
       return itemsMenu
     }
   },
+
   watch: {
-    workspace(workspace) {
+    workspace(_workspace) {
       this.subscribe()
     }
   },
+
   beforeCreate() {
     this.$store.commit('clearDisputeQuery')
   },
+
   beforeMount() {
     this.subscribe()
     window.addEventListener('resize', this.handleResize)
+    eventBus.$on('SEE-PREVIEW', this.getPreview)
   },
+
   beforeDestroy() {
+    eventBus.$off('SEE-PREVIEW', this.getPreview)
     window.removeEventListener('resize', this.handleResize)
     this.subscriptions.forEach(s => this.$socket.emit('unsubscribe', s))
     this.subscriptions.length = 0
   },
+
   sockets: {
     reconnect() {
       this.subscribe()
     }
   },
+
   methods: {
     ...mapActions({
       loadAccountProperty: 'loadAccountProperty',
-      setWindowGeometry: 'setWindowGeometry'
+      setAccountProperty: 'setAccountProperty',
+      setWindowGeometry: 'setWindowGeometry',
+      getPreview: 'getMessageToPreview'
     }),
 
     handleResize({ target }) {
@@ -238,7 +253,57 @@ export default {
         })
 
         this.subscriptions.forEach(subscription => this.$socket.emit('subscribe', subscription))
-        this.loadAccountProperty()
+        this.loadAccountProperty().then(this.checkAcceptterms)
+      }
+    },
+
+    checkAcceptterms(response) {
+      const key = 'LAST_ACCEPTED_DATE'
+      const lastTermDate = this.$moment('20/04/2021', 'DD/MM/YYYY')
+      let lastAcceptedDate = response[key] ? this.$moment(response[key], 'DD/MM/YYYY') : Boolean(response[key])
+      if (!lastAcceptedDate || lastTermDate.isAfter(lastAcceptedDate, 'day')) {
+        const docs = [
+          {
+            label: 'Termos Gerais e Condições de Uso',
+            href: 'https://justto.com.br/termos-de-uso',
+            isVisible: true
+          },
+          {
+            label: 'Termos Gerais de Contratação de Licenciamento de Uso de Tecnologia',
+            href: 'https://justto.com.br/termos-de-contratacao/',
+            isVisible: this.isAdminProfile
+          },
+          {
+            label: 'Política de privacidade',
+            href: 'https://justto.com.br/poilitica-privacidade',
+            isVisible: true
+          }
+        ]
+
+        const confirmText = `
+        <p>Olá, tudo bem?</p><br>
+        <p>Atualizamos nossos documentos de uso da plataforma. Os documentos alterados são:</p>
+        <ul>${docs.filter(({ isVisible }) => isVisible).map(item => {
+          return `<li><a href="${item.href}" target="_blank">${item.label}</a></li>`
+        }).join('')}</ul>
+        <p>Por favor, leia os documentos nos links acima e clique em <b>Ciente</b> para prosseguir com o uso dos serviços!</p>`
+
+        this.$confirm(confirmText, 'Atualização nos documentos de uso da plataforma', {
+          dangerouslyUseHTMLString: true,
+          closeOnPressEscape: false,
+          closeOnClickModal: false,
+          showCancelButton: false,
+          showClose: false,
+          customClass: 'terms-confirm',
+          confirmButtonText: 'Ciente'
+        }).then(() => {
+          if (!lastAcceptedDate) {
+            lastAcceptedDate = this.$moment().format('DD/MM/YYYY')
+          }
+          this.setAccountProperty({
+            LAST_ACCEPTED_DATE: lastAcceptedDate
+          })
+        })
       }
     },
 
@@ -268,6 +333,10 @@ export default {
 
 <style lang="scss">
 @import '@/styles/colors.scss';
+
+.terms-confirm {
+  width: 50vw;
+}
 
 .el-container.is-vertical {
   .el-main {

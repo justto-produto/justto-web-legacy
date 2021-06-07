@@ -276,8 +276,8 @@ export default {
                 dataset.pointBackgroundColor = this.colors[3]
                 break
               case 'Concluídos':
-                dataset.borderColor = '#5EDCAE'
-                dataset.pointBackgroundColor = '#5EDCAE'
+                dataset.borderColor = this.colors[4]
+                dataset.pointBackgroundColor = this.colors[4]
                 break
               case 'Acordos':
                 dataset.borderColor = this.colors[5]
