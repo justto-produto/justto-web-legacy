@@ -7,7 +7,7 @@
       <div>
         <CurrencyInlieEditorInner
           v-model="plaintiffOffer.value"
-          :is-editable="!isPreNegotiation && !isPaused && !isCanceled"
+          :is-editable="canEditPlaintiffOffer"
           class="overview-offers__proposal-value overview-offers__proposal-value--full-line"
           @change="updatePlaintiffOffer"
         />
@@ -76,17 +76,13 @@ export default {
       ticket: 'getTicketOverview'
     }),
 
-    isPaused() {
-      return this.ticket.paused
-    },
-
-    isCanceled() {
-      const { status } = this.ticket
-      return status === 'CANCELED'
-    },
-
     disputeId() {
       return Number(this.$route.params.id)
+    },
+
+    canEditPlaintiffOffer() {
+      const { status } = this
+      return ['ENGAGEMENT', 'PENDING', 'RUNNING', 'IMPORTED', 'ENRICHED'].includes(status)
     }
   },
   methods: {
