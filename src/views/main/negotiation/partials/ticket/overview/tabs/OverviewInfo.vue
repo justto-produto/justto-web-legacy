@@ -77,7 +77,8 @@ export default {
         expireDate,
         importedDate,
         campaignName,
-        classification
+        classification,
+        courtHearingDate
       } = this.ticketInfo
 
       return [
@@ -131,8 +132,8 @@ export default {
         },
         // TODO 3622
         {
-          key: 'hearingDate',
-          value: expireDate?.dateTime, // Alterar aqui
+          key: 'courtHearingDate',
+          value: courtHearingDate?.dateTime || '',
           component: 'DateInlieEditor',
           classToEdit: 'info',
           isEditable: !this.isPreNegotiation,
@@ -224,6 +225,7 @@ export default {
     ]),
 
     setData(key, classToEdit, value) {
+      debugger
       const { disputeId } = this
       const data = { [key]: value }
 
@@ -235,6 +237,9 @@ export default {
     },
 
     startEditing(key) {
+      if (key === 'courtHearingDate') {
+        this.ticketInfo.courtHearingDate = { dateTime: new Date() }
+      }
       this.activeAddingData = key
     },
 
