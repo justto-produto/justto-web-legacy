@@ -439,6 +439,7 @@
     }
   },
   "ticket-labels": {
+    "courtHearingDate": "data de audiência",
     "importedDate": "data de importação",
     "campaignName": "campanha",
     "code": "número do processo",
