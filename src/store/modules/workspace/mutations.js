@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import ApiConfiguration from '@/models/configurations/ApiConfiguration'
 
 const workspaceMutations = {
   redirectNewWorkspaceTrue(state) {
@@ -71,6 +72,13 @@ const workspaceMutations = {
   updateAssociatedKeyAccount: (state, { payload: { keyAccountId } }) => {
     const keyAccount = state.workspace.keyAccounts.find(({ id }) => id === keyAccountId)
     Vue.set(state.workspace, 'associatedKeyAccount', keyAccount)
+  },
+  setApiIntegrationConfiguration: (state, payload) => {
+    if (payload.payload) payload = payload.payload
+    payload.properties.forEach(({ key, value }) => {
+      payload[key] = value
+    })
+    Vue.set(state.workspace, 'apiIntegrationConfiguration', new ApiConfiguration(payload))
   }
 }
 
