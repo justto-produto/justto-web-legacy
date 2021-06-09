@@ -56,6 +56,12 @@ const importActions = {
   },
   clearErrorField({ commit }, filed) {
     commit('clearErrorField', filed)
+  },
+  startDuplicateValidations({ commit }) {
+    commit('validationInProgress', true)
+  },
+  finishDuplicateValidations({ commit }) {
+    commit('validationInProgress', false)
   }
 }
 

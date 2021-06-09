@@ -30,6 +30,7 @@
             key="2"
             :mapped-campaigns="mappedCampaigns"
             :campaign-is-mapped="isMapped"
+            :duplicated-action.sync="duplicatedAction"
           />
         </transition>
       </div>
@@ -42,6 +43,7 @@
         </el-button>
         <el-button
           v-if="activeStep === 2"
+          :disabled="validationInProgress"
           type="primary"
           data-testid="start-negotiation"
           @click="finalStep"
@@ -77,11 +79,12 @@ export default {
       uploadId: undefined,
       activeStep: 0,
       mappedCampaigns: [],
-      campaignIsMapped: false
+      campaignIsMapped: false,
+      duplicatedAction: 'IGNORE'
     }
   },
   computed: {
-    ...mapGetters(['errorFields']),
+    ...mapGetters(['errorFields', 'validationInProgress']),
 
     isMapped() {
       return this.campaignIsMapped
@@ -146,6 +149,19 @@ export default {
           delete campaign.id
           delete campaign.updatedAt
           delete campaign.updatedBy
+          if (this.duplicatedAction === 'IGNORE') {
+            campaign.allowDuplicateDispute = false
+            campaign.allowUpdateDispute = false
+          }
+          if (this.duplicatedAction === 'UPDATE') {
+            campaign.allowDuplicateDispute = false
+            campaign.allowUpdateDispute = true
+          }
+          if (this.duplicatedAction === 'DUPLICATE') {
+            campaign.allowDuplicateDispute = true
+            campaign.allowUpdateDispute = false
+          }
+
           promises.push(this.$store.dispatch('createCampaign', campaign))
         }
         Promise.all(promises).then(() => {
