@@ -495,6 +495,7 @@ export default {
       this.changeExpirationDate()
       this.changeimportingDate()
       this.clearInteraction()
+      this.clearPreNegotitationKeyWorks()
       this.warningSixtyLastDaysRange = false
       this.filters.onlyFavorite = false
       this.filters.onlyPaused = false

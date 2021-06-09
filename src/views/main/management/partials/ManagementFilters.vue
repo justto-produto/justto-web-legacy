@@ -467,6 +467,7 @@ export default {
       this.changeimportingDate()
       this.clearInteraction()
       this.clearStatuses()
+      this.clearPreNegotitationKeyWorks()
       this.filters.onlyFavorite = false
       this.filters.onlyPaused = false
       this.filters.hasCounterproposal = false
