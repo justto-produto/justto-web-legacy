@@ -74,11 +74,13 @@
             @click="toggleEditorSourcePreview()"
           /> -->
           <el-button
-            icon="el-icon-document"
             class="button-src-plugin"
             size="small"
             @click="toggleEditorSourcePreview()"
-          />
+          >
+            <i class="el-icon-document" />
+            Código fonte
+          </el-button>
 
           <ckeditor
             v-if="isVisible && !seeSource"
@@ -89,12 +91,21 @@
             type="classic"
           />
 
-          <el-input
+          <MonacoEditor
+            v-else-if="seeSource"
+            ref="monaco"
+            v-model="template.body"
+            class="editor"
+            language="html"
+            @editorDidMount="formatDoc"
+          />
+
+          <!-- <el-input
             v-else-if="seeSource"
             v-model="template.body"
             :rows="22"
             type="textarea"
-          />
+          /> -->
         </div>
       </div>
 
@@ -127,11 +138,13 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import ckeditor from '@/utils/mixins/ckeditor'
+import MonacoEditor from 'vue-monaco'
 
 export default {
   name: 'CommunicationEditor',
 
   components: {
+    MonacoEditor,
     JusVariablesCard: () => import('@/components/layouts/JusVariablesCard')
   },
 
@@ -163,6 +176,15 @@ export default {
       useSeeSourcePlugin: false,
       template: {
         body: ''
+      },
+      monacoOptions: {
+        selectOnLineNumbers: true,
+        roundedSelection: false,
+        readOnly: false,
+        cursorStyle: 'line',
+        automaticLayout: true,
+        glyphMargin: true,
+        autoIndent: true
       }
     }
   },
@@ -203,6 +225,30 @@ export default {
       'changeCommunicationTemplate'
     ]),
 
+    format(html) {
+      const tab = '\t'
+      let result = ''
+      let indent = ''
+
+      html.split(/>\s*</).forEach(function(element) {
+        if (element.match(/^\/\w/)) {
+          indent = indent.substring(tab.length)
+        }
+
+        result += indent + '<' + element + '>\r\n'
+
+        if (element.match(/^<?\w[^>]*[^\\/]$/) && !element.startsWith('input')) {
+          indent += tab
+        }
+      })
+
+      return result.substring(1, result.length - 3)
+    },
+
+    formatDoc(_editor) {
+      this.template.body = this.format(this.template.body)
+    },
+
     saveTemplate() {
       if (!this.template.title) {
         this.$jusNotification({
@@ -234,7 +280,9 @@ export default {
             ${body}
           </body>
         </html>`
-      this.template.body = fullTemplate
+      if (!body.endsWith('</html>')) {
+        this.template.body = fullTemplate
+      }
       this.saveTemplate()
     },
 
@@ -246,6 +294,16 @@ export default {
 </script>
 
 <style lang="scss">
+.editor {
+  width: 100%;
+  max-width: 75vw;
+  height: 100%;
+
+  .monaco-editor {
+    padding-top: 34px;
+  }
+}
+
 .communication-editor__editor-fieldset {
   position: relative;
 
@@ -255,10 +313,14 @@ export default {
     top: 0;
     right: 0;
 
-    border: none;
     background: transparent;
     border: none;
     padding: 10px;
+    margin-left: 4px;
+
+    &:focus {
+      background-color: #fff !important;
+    }
 
     &:before {
       font-size: 16px;
