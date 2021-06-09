@@ -170,7 +170,7 @@
                   <i class="el-icon-warning-outline" /> Com advogados ofensores
                 </div>
                 <el-switch
-                  v-model="filters.isAdvogadoOfensor"
+                  v-model="filters.vexatiousLawyer"
                   data-testid="filters-advogados-ofensores"
                 />
               </div>
@@ -454,8 +454,7 @@ export default {
       this.filters.onlyFavorite = false
       this.filters.onlyPaused = false
       this.filters.hasCounterproposal = false
-      // TODO 4028 - alterar aqui
-      this.advogadoOfensor = false
+      this.filters.vexatiousLawyer = false
       this.$store.commit('setDisputeHasFilters', false)
       this.$store.commit('setDisputeQuery', this.filters)
       this.visibleFilters = false

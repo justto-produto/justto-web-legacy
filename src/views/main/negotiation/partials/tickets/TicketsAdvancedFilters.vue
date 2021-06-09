@@ -193,7 +193,7 @@
                   <i class="el-icon-warning-outline" /> Com advogados ofensores
                 </div>
                 <el-switch
-                  v-model="filters.isAdvogadoOfensor"
+                  v-model="filters.vexatiousLawyer"
                   data-testid="filters-advogados-ofensores"
                 />
               </div>
@@ -485,10 +485,9 @@ export default {
       this.filters.onlyPaused = false
       this.filters.onlyNotPaused = false
       this.filters.hasCounterproposal = false
+      this.filters.vexatiousLawyer = false
       this.setTicketsFilters({ filters, hasFilters: false })
       this.advancedFiltersDialogVisible = false
-      // TODO 4028 - alterar aqui
-      this.advogadoOfensor = false
       delete this.filters.onlyNotVisualized
       this.getTickets()
     },
