@@ -210,6 +210,15 @@
                   @change="canSelectNotPaused"
                 />
               </div>
+              <div v-if="isEngagement || isRunning">
+                <div>
+                  <i class="el-icon-warning-outline" /> Com advogados ofensores
+                </div>
+                <el-switch
+                  v-model="filters.vexatiousLawyer"
+                  data-testid="filters-advogados-ofensores"
+                />
+              </div>
             </el-form-item>
           </el-col>
           <!-- FAVORITOS -->
@@ -481,6 +490,7 @@ export default {
       if (filters.expirationDate && filters.expirationDate.length) {
         this.$jusSegment('Filtro por data fim negociação')
       }
+      // add last filters]
     },
     clearFilters() {
       const { filters } = this
@@ -501,6 +511,7 @@ export default {
       this.filters.onlyPaused = false
       this.filters.onlyNotPaused = false
       this.filters.hasCounterproposal = false
+      this.filters.vexatiousLawyer = false
       this.setTicketsFilters({ filters, hasFilters: false })
       this.advancedFiltersDialogVisible = false
       delete this.filters.onlyNotVisualized

@@ -187,6 +187,15 @@
                   data-testid="filters-only-paused"
                 />
               </div>
+              <div v-if="isEngagement || isInteration || isAll">
+                <div>
+                  <i class="el-icon-warning-outline" /> Com advogados ofensores
+                </div>
+                <el-switch
+                  v-model="filters.vexatiousLawyer"
+                  data-testid="filters-advogados-ofensores"
+                />
+              </div>
             </el-form-item>
           </el-col>
           <!-- FAVORITOS -->
@@ -471,6 +480,7 @@ export default {
       this.filters.onlyFavorite = false
       this.filters.onlyPaused = false
       this.filters.hasCounterproposal = false
+      this.filters.vexatiousLawyer = false
       this.$store.commit('setDisputeHasFilters', false)
       this.$store.commit('setDisputeQuery', this.filters)
       this.visibleFilters = false
