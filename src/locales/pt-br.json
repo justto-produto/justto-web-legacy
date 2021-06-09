@@ -170,7 +170,8 @@
     "PAYMENT": "indenizatorio de valor",
     "RECOVERY": "cobrança",
     "OBLIGATION": "obrigação de fazer",
-    "DISCOUNT": "desconto"
+    "DISCOUNT": "desconto",
+		"MULTI_PARTY_NEGOTIATION": "Negociação com multiplas partes"
   },
   "occurrence": {
     "type": {
