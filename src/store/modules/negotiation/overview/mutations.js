@@ -118,7 +118,7 @@ const overviewMutations = {
     const { bankAccountId, personId } = payload
 
     const indexPartie = state.ticketOverviewParties.findIndex(partie => {
-      return partie.personId === personId
+      return partie.person.id === personId
     })
 
     if (indexPartie >= 0) {
