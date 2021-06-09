@@ -39,6 +39,28 @@
               </el-select>
             </el-form-item>
           </el-col>
+          <!-- MOTIVOS DE PRENEGOCIACAO -->
+          <el-col
+            v-if="!loading"
+            :span="12"
+          >
+            <el-form-item label="Palavras de pré-negociação">
+              <el-select
+                v-model="filters.preNegotiationKeywords"
+                multiple
+                filterable
+                placeholder="Selecione uma opção"
+                @clear="clearPreNegotitationKeyWorks"
+              >
+                <el-option
+                  v-for="keyword in preNegotiationKeywords.keyWords"
+                  :key="keyword"
+                  :value="keyword"
+                  :label="keyword"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
           <!-- ESTRATÉGIA -->
           <el-col
             v-if="!loading"
@@ -277,7 +299,8 @@ export default {
       campaigns: 'campaignList',
       respondents: 'respondents',
       workspaceTags: 'workspaceTags',
-      negotiatorsList: 'workspaceMembers'
+      negotiatorsList: 'workspaceMembers',
+      preNegotiationKeywords: 'getPreNegotiation'
     }),
 
     isPreNegotiation() {
@@ -383,7 +406,8 @@ export default {
       'getCampaigns',
       'getMyStrategiesLite',
       'getRespondents',
-      'getWorkspaceTags'
+      'getWorkspaceTags',
+      'getWorkspacePreNegotiationKeywords'
     ]),
     fetchData() {
       this.loading = true
@@ -391,7 +415,8 @@ export default {
         this.getCampaigns(),
         this.getMyStrategiesLite(),
         this.getRespondents(),
-        this.getWorkspaceTags()
+        this.getWorkspaceTags(),
+        this.getWorkspacePreNegotiationKeywords()
       ]).finally(responses => {
         this.loading = false
       })
@@ -477,6 +502,9 @@ export default {
     },
     clearStatuses() {
       this.filters.status = []
+    },
+    clearPreNegotitationKeyWorks() {
+      this.filters.preNegotiationKeywords = []
     },
     changeExpirationDate(value) {
       if (value) {
