@@ -188,6 +188,15 @@
                   @change="canSelectNotPaused"
                 />
               </div>
+              <div v-if="isEngagement || isRunning">
+                <div>
+                  <i class="el-icon-warning-outline" /> Com advogados ofensores
+                </div>
+                <el-switch
+                  v-model="filters.isAdvogadoOfensor"
+                  data-testid="filters-advogados-ofensores"
+                />
+              </div>
             </el-form-item>
           </el-col>
           <!-- FAVORITOS -->
@@ -217,7 +226,6 @@
                   data-testid="filters-has-counterproposal"
                 />
               </div>
-              <!-- TODO 4028 EL-SWITCH AQUI -->
             </el-form-item>
           </el-col>
           <!-- MEIO DE INTERAÇÃO -->
@@ -457,6 +465,7 @@ export default {
       if (filters.expirationDate && filters.expirationDate.length) {
         this.$jusSegment('Filtro por data fim negociação')
       }
+      // add last filters]
     },
     clearFilters() {
       const { filters } = this
@@ -478,6 +487,8 @@ export default {
       this.filters.hasCounterproposal = false
       this.setTicketsFilters({ filters, hasFilters: false })
       this.advancedFiltersDialogVisible = false
+      // TODO 4028 - alterar aqui
+      this.advogadoOfensor = false
       delete this.filters.onlyNotVisualized
       this.getTickets()
     },
