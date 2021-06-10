@@ -26,7 +26,8 @@ export default class DisputeOverviewInfoVm {
     provisionedValue,
     importedDate, createAt,
     expireDate, expirationDate,
-    classification
+    classification,
+    courtHearingDate
   }) {
     this.disputeId = disputeId || id
     this.strategyId = strategyId
@@ -45,5 +46,6 @@ export default class DisputeOverviewInfoVm {
     this.importedDate = new DateTime((importedDate || createAt) || {})
     this.expireDate = new DateTime((expireDate || expirationDate) || {})
     this.classification = new ClassificationVm(classification || {})
+    this.courtHearingDate = courtHearingDate
   }
 }
