@@ -373,6 +373,8 @@
         @submit="handleDropLawsuit($event)"
       />
     </el-dialog>
+
+    <ImageUploadDialog @input="setImgTag" />
   </div>
 </template>
 
@@ -387,7 +389,8 @@ export default {
   name: 'ManagementActions',
 
   components: {
-    DropLawsuitForm: () => import('@/components/layouts/DropLawsuitForm')
+    DropLawsuitForm: () => import('@/components/layouts/DropLawsuitForm'),
+    ImageUploadDialog: () => import('@/components/dialogs/ImageUploadDialog.vue')
   },
 
   mixins: [ckeditor],
@@ -405,6 +408,9 @@ export default {
 
   data() {
     return {
+      useMentionPlugin: true,
+      usePreviewPlugin: true,
+      useImageAttachmentPlugin: true,
       showDropLawsuitDialog: false,
       showBulkMessageDialog: false,
       chooseSettledDialogVisible: false,
@@ -443,6 +449,10 @@ export default {
       set(ids) {
         this.$emit('update:selectedIds', ids)
       }
+    },
+
+    disputeId() {
+      return this.selectedIds[0]
     },
 
     active() {
