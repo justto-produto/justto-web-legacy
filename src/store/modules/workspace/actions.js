@@ -203,11 +203,33 @@ const workspaceActions = {
     })
   },
 
-  updateCustomizedConfigurations({ state }, payload) {
-    // return axiosDispatch({
-    //   url: '/rotaaqui',
-    //   payload
-    // })
+  getApiIntegrationConfiguration({ _ }, featureId) {
+    return axiosDispatch({
+      url: `${workspacesPath}/feature/${featureId}/properties`,
+      mutation: 'setApiIntegrationConfiguration'
+    })
+  },
+
+  setApiIntegrationConfiguration({ _ }, params) {
+    const { featureId, payload } = params
+    return axiosDispatch({
+      url: `${workspacesPath}/feature/${featureId}/properties`,
+      method: 'patch',
+      mutation: 'setApiIntegrationConfiguration',
+      data: payload,
+      payload
+    })
+  },
+
+  /**
+    * Função que testa a integração configurada na workspace
+    * @param  {[Number]} disputeId Id da disputa que será enviada para teste
+  */
+  testApiIntegration({ _ }, disputeId) {
+    return axiosDispatch({
+      url: `api/dispute-websocket/test/publish-dispute/${disputeId}`,
+      method: 'put'
+    })
   }
 }
 
