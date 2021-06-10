@@ -80,7 +80,6 @@ export default {
         classification,
         courtHearingDate
       } = this.ticketInfo
-
       return [
         {
           key: 'importedDate',
@@ -130,13 +129,12 @@ export default {
           isEditable: !this.isPreNegotiation,
           isDateTimeFormat: false
         },
-        // TODO 3622
         {
           key: 'courtHearingDate',
           value: courtHearingDate?.dateTime || '',
           component: 'DateInlieEditor',
           classToEdit: 'info',
-          isEditable: !this.isPreNegotiation,
+          isEditable: true,
           isDateTimeFormat: false
         },
         {
@@ -225,7 +223,6 @@ export default {
     ]),
 
     setData(key, classToEdit, value) {
-      debugger
       const { disputeId } = this
       const data = { [key]: value }
 
@@ -237,9 +234,6 @@ export default {
     },
 
     startEditing(key) {
-      if (key === 'courtHearingDate') {
-        this.ticketInfo.courtHearingDate = { dateTime: new Date() }
-      }
       this.activeAddingData = key
     },
 
