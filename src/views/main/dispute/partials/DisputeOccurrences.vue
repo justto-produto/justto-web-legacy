@@ -933,6 +933,7 @@ export default {
     isJusttineMessage(occurrence) {
       return occurrence.interaction &&
       occurrence.interaction.message &&
+      ['EMAIL', 'WHATSAPP'].includes(occurrence.interaction.message.communicationType) &&
       occurrence.interaction.message.status !== 'PROCESSED_BY_USER' &&
       occurrence.interaction.message.createdBy === 'system' &&
       occurrence.interaction.direction === 'OUTBOUND'
