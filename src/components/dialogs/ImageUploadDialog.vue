@@ -16,7 +16,7 @@
         </template>
       </el-input>
 
-      <span>ou</span>
+      <!-- <span>ou</span>
 
       <article
         ref="dragAreaElm"
@@ -61,7 +61,7 @@
           class="jus-drag-area__input-file"
           @change="handleDrop"
         >
-      </article>
+      </article> -->
     </div>
 
     <span
