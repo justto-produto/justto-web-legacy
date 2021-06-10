@@ -154,12 +154,11 @@ export default {
           confirmButtonText: 'Não majorar',
           cancelButtonText: 'Majorar'
         }).catch(() => {
-          debugger
           const { disputeId } = this
           const updateUpperRangeObj = { upperRange: value }
           data.updateUpperRange = true
           this.sendOffer({ data, disputeId, polarityObjectKey })
-            .then(() => this.updateTicketOverview(updateUpperRangeObj))
+            .then(() => this.updateTicketOverview({ payload: { ...updateUpperRangeObj } }))
         })
       } else {
         this.sendOffer({ data, disputeId, polarityObjectKey })
