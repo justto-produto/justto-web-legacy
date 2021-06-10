@@ -57,10 +57,10 @@ export default {
             RemoveFormat,
             Table,
             TextTransformation,
-            Underline,
-            this.ImageAttachmentPlugin,
-            this.SourceCodeViewPlugin,
+            Underline
           ],
+          ...(this.useImageAttachmentPlugin ? [this.ImageAttachmentPlugin] : []),
+          ...(this.useSourceCodePlugin ? [this.SourceCodeViewPlugin] : []),
           ...(this.useMentionPlugin ? [Mention, this.MentionCustomization] : []),
           ...(this.usePreviewPlugin ? [this.PreviewPlugin] : [])
         ],
@@ -76,8 +76,8 @@ export default {
         } : {},
         toolbar: {
           items: [
+            ...(this.useSourceCodePlugin ? ['sourceCode', '|'] : []),
             ...[
-              'sourceCode',
               'bold',
               'italic',
               'underline',
@@ -92,9 +92,9 @@ export default {
               'blockQuote',
               'undo',
               'redo',
-              'imageStyle',
-              'imageAttachment'
+              'imageStyle'
             ],
+            ...(this.useImageAttachmentPlugin ? ['imageAttachment'] : []),
             ...(this.usePreviewPlugin ? ['preview'] : [])
           ],
           viewportTopOffset: 30,
@@ -216,9 +216,11 @@ export default {
     SourceCodeViewPlugin(editor) {
       editor.ui.componentFactory.add('sourceCode', locale => {
         const view = new ButtonView(locale)
+        const imageIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="18" style="margin-left: 10px !important;" height="18"><path data-name="Caminho 13974" d="M8.948 4.948a.611.611 0 10-1.222 0c0 .009.005.017.005.026V13.5a3.254 3.254 0 11-6.508 0V3.273a2.034 2.034 0 114.067 0v8.591a.813.813 0 11-1.626 0V4.942a.106.106 0 000-.017.611.611 0 10-1.222 0 .106.106 0 000 .017v6.922a2.034 2.034 0 104.068 0V3.273a3.254 3.254 0 10-6.508 0V13.5a4.474 4.474 0 108.948 0V4.974h-.005c-.002-.009.003-.017.003-.026z"/></svg>'
 
         view.set({
           label: 'Código Fonte',
+          icon: imageIcon,
           tooltip: true,
           withText: true
         })
@@ -238,12 +240,23 @@ export default {
           label: 'Inserir Imagem',
           icon: imageIcon,
           tooltip: true,
-          withText: true
+          withText: false
         })
 
         view.on('execute', () => store.dispatch('toggleImageUploadDialog', true))
 
         return view
+      })
+    },
+
+    setImgTag(src) {
+      this.$nextTick(() => {
+        const editor = document.querySelector('.ck-editor__editable').ckeditorInstance
+
+        editor.model.change(writer => {
+          const imageElement = writer.createElement('image', { src })
+          editor.model.insertContent(imageElement, editor.model.document.selection)
+        })
       })
     },
 

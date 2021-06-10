@@ -169,7 +169,8 @@ export default {
   data() {
     return {
       useMentionPlugin: true,
-      useSeeSourcePlugin: false,
+      useSourceCodePlugin: true,
+      useImageAttachmentPlugin: true,
       template: {
         body: ''
       },
@@ -220,17 +221,6 @@ export default {
       'toggleEditorSourcePreview',
       'changeCommunicationTemplate'
     ]),
-
-    setImgTag(src) {
-      this.$nextTick(() => {
-        const editor = document.querySelector('.ck-editor__editable').ckeditorInstance
-
-        editor.model.change(writer => {
-          const imageElement = writer.createElement('image', { src })
-          editor.model.insertContent(imageElement, editor.model.document.selection)
-        })
-      })
-    },
 
     format(html) {
       const tab = '\t'
