@@ -77,9 +77,9 @@ export default {
         expireDate,
         importedDate,
         campaignName,
-        classification
+        classification,
+        courtHearingDate
       } = this.ticketInfo
-
       return [
         {
           key: 'importedDate',
@@ -127,6 +127,14 @@ export default {
           component: 'DateInlieEditor',
           classToEdit: 'info',
           isEditable: !this.isPreNegotiation,
+          isDateTimeFormat: false
+        },
+        {
+          key: 'courtHearingDate',
+          value: courtHearingDate?.dateTime || '',
+          component: 'DateInlieEditor',
+          classToEdit: 'info',
+          isEditable: true,
           isDateTimeFormat: false
         },
         {

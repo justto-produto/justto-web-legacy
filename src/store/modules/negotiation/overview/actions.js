@@ -106,7 +106,6 @@ const overviewActions = {
 
   setTicketOverviewInfo({ _ }, params) {
     const { data, disputeId } = params
-
     return validateCurrentId(disputeId, () => axiosDispatch({
       url: `${disputeApi}/${disputeId}/info`,
       method: 'PATCH',
