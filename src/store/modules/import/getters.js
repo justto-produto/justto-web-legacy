@@ -1,5 +1,6 @@
 const importGetters = {
   importedFileName: state => state.file ? state.file.file_name : null,
+  validationInProgress: state => state.validationInProgress,
   hasImportsFile: state => {
     return state.file !== undefined
   },
