@@ -31,10 +31,14 @@ const overviewMutations = {
     }
   },
 
-  setTicketOverviewInfo: (state, params) => Vue.set(state, 'ticketOverviewInfo', params),
+  setTicketOverviewInfo: (state, params) => {
+    Vue.set(state, 'ticketOverviewInfo', params)
+  },
 
   updateTicketOverviewInfo: ({ ticketOverviewInfo }, { payload }) => {
-    for (const key of Object.keys(payload)) Vue.set(ticketOverviewInfo, key, payload[key])
+    for (const key of Object.keys(payload)) {
+      Vue.set(ticketOverviewInfo, key, payload[key])
+    }
   },
 
   setAssociatedContacts: (state, properties) => {
