@@ -14,10 +14,11 @@ import ImageToolbar from '@ckeditor/ckeditor5-image/src/imagetoolbar'
 import ImageStyle from '@ckeditor/ckeditor5-image/src/imagestyle'
 import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph'
 import RemoveFormat from '@ckeditor/ckeditor5-remove-format/src/removeformat'
-import Table from '@ckeditor/ckeditor5-table/src/table'
 import TextTransformation from '@ckeditor/ckeditor5-typing/src/texttransformation'
 import Underline from '@ckeditor/ckeditor5-basic-styles/src/underline'
 import Mention from '@ckeditor/ckeditor5-mention/src/mention'
+import Table from '@ckeditor/ckeditor5-table/src/table'
+import TableToolbar from '@ckeditor/ckeditor5-table/src/tabletoolbar'
 import { normalizeString, eventBus } from '@/utils'
 import { mapActions, mapGetters } from 'vuex'
 import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview'
@@ -56,6 +57,7 @@ export default {
             Paragraph,
             RemoveFormat,
             Table,
+            TableToolbar,
             TextTransformation,
             Underline
           ],
@@ -86,6 +88,8 @@ export default {
               'bulletedList',
               'numberedList',
               '|',
+              'insertTable',
+              '|',
               'outdent',
               'indent',
               '|',
@@ -99,6 +103,9 @@ export default {
           ],
           viewportTopOffset: 30,
           shouldNotGroupWhenFull: true
+        },
+        table: {
+          contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells']
         }
       }
     },

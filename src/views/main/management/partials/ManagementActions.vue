@@ -290,6 +290,8 @@
     <el-dialog
       width="60%"
       :visible.sync="showBulkMessageDialog"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
       class="dialog__bulk-message"
       append-to-body
       @before-close="closeBulkMessageDialog()"
