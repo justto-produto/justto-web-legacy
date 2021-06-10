@@ -108,6 +108,8 @@ export default {
 
       set(visibility) {
         this.toggleImageUploadDialog(visibility)
+        this.imageUrl = ''
+        this.file = null
       }
     }
   },
