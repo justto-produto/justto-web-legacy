@@ -2,6 +2,7 @@
   <div class="communication-editor">
     <el-dialog
       v-if="visible"
+      ref="communication-editor-dialog"
       :visible.sync="isVisible"
       class="communication-editor__dialog"
     >
@@ -68,12 +69,8 @@
           ref="editor-fieldset"
           class="communication-editor__editor-fieldset show-toolbar jus-ckeditor__parent"
         >
-          <!-- <jus-icon
-            icon="html-preview"
-            class="button-src-plugin"
-            @click="toggleEditorSourcePreview()"
-          /> -->
           <el-button
+            v-if="seeSource"
             class="button-src-plugin"
             size="small"
             @click="toggleEditorSourcePreview()"
@@ -86,6 +83,7 @@
             v-if="isVisible && !seeSource"
             ref="edit"
             v-model="template.body"
+            :class="`ckeditor-${_uid}`"
             :editor="editor"
             :config="editorConfig"
             type="classic"
@@ -99,13 +97,6 @@
             language="html"
             @editorDidMount="formatDoc"
           />
-
-          <!-- <el-input
-            v-else-if="seeSource"
-            v-model="template.body"
-            :rows="22"
-            type="textarea"
-          /> -->
         </div>
       </div>
 
@@ -132,11 +123,15 @@
         </div>
       </div>
     </el-dialog>
+
+    <ImageUploadDialog @input="setImgTag" />
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+
+// Editores
 import ckeditor from '@/utils/mixins/ckeditor'
 import MonacoEditor from 'vue-monaco'
 
@@ -145,7 +140,8 @@ export default {
 
   components: {
     MonacoEditor,
-    JusVariablesCard: () => import('@/components/layouts/JusVariablesCard')
+    JusVariablesCard: () => import('@/components/layouts/JusVariablesCard'),
+    ImageUploadDialog: () => import('@/components/dialogs/ImageUploadDialog.vue')
   },
 
   mixins: [ckeditor],
@@ -224,6 +220,17 @@ export default {
       'toggleEditorSourcePreview',
       'changeCommunicationTemplate'
     ]),
+
+    setImgTag(src) {
+      this.$nextTick(() => {
+        const editor = document.querySelector('.ck-editor__editable').ckeditorInstance
+
+        editor.model.change(writer => {
+          const imageElement = writer.createElement('image', { src })
+          editor.model.insertContent(imageElement, editor.model.document.selection)
+        })
+      })
+    },
 
     format(html) {
       const tab = '\t'
@@ -311,7 +318,7 @@ export default {
     position: absolute;
     z-index: 3000;
     top: 0;
-    right: 0;
+    left: 0;
 
     background: transparent;
     border: none;

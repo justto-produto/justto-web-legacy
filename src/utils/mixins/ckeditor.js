@@ -9,8 +9,10 @@ import Indent from '@ckeditor/ckeditor5-indent/src/indent'
 import Italic from '@ckeditor/ckeditor5-basic-styles/src/italic'
 import List from '@ckeditor/ckeditor5-list/src/list'
 import Link from '@ckeditor/ckeditor5-link/src/link'
+import Image from '@ckeditor/ckeditor5-image/src/image'
+import ImageToolbar from '@ckeditor/ckeditor5-image/src/imagetoolbar'
+import ImageStyle from '@ckeditor/ckeditor5-image/src/imagestyle'
 import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph'
-// import PasteFromOffice from '@ckeditor/ckeditor5-paste-from-office/src/pastefromoffice'
 import RemoveFormat from '@ckeditor/ckeditor5-remove-format/src/removeformat'
 import Table from '@ckeditor/ckeditor5-table/src/table'
 import TextTransformation from '@ckeditor/ckeditor5-typing/src/texttransformation'
@@ -19,6 +21,8 @@ import Mention from '@ckeditor/ckeditor5-mention/src/mention'
 import { normalizeString, eventBus } from '@/utils'
 import { mapActions, mapGetters } from 'vuex'
 import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview'
+
+import store from '@/store'
 
 export default {
   data() {
@@ -40,6 +44,9 @@ export default {
             Autoformat,
             BlockQuote,
             Bold,
+            Image,
+            ImageToolbar,
+            ImageStyle,
             Essentials,
             Highlight,
             Indent,
@@ -50,7 +57,9 @@ export default {
             RemoveFormat,
             Table,
             TextTransformation,
-            Underline
+            Underline,
+            this.ImageAttachmentPlugin,
+            this.SourceCodeViewPlugin,
           ],
           ...(this.useMentionPlugin ? [Mention, this.MentionCustomization] : []),
           ...(this.usePreviewPlugin ? [this.PreviewPlugin] : [])
@@ -68,6 +77,7 @@ export default {
         toolbar: {
           items: [
             ...[
+              'sourceCode',
               'bold',
               'italic',
               'underline',
@@ -81,7 +91,9 @@ export default {
               '|',
               'blockQuote',
               'undo',
-              'redo'
+              'redo',
+              'imageStyle',
+              'imageAttachment'
             ],
             ...(this.usePreviewPlugin ? ['preview'] : [])
           ],
@@ -201,24 +213,39 @@ export default {
       })
     },
 
-    // ViewSource(editor) {
-    //   editor.ui.componentFactory.add('viewSource', locale => {
-    //     const view = new ButtonView(locale)
+    SourceCodeViewPlugin(editor) {
+      editor.ui.componentFactory.add('sourceCode', locale => {
+        const view = new ButtonView(locale)
 
-    //     view.set({
-    //       label: 'Ver/Esconder código fonter',
-    //       icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 13.2 9.5"><path d="M12 7h-.5V.8c0-.1-.1-.1-.2-.1H1.8c-.1 0-.1.1-.1.1V7h-.6V.8c0-.3.3-.6.6-.6h9.5c.3 0 .7.3.7.6V7zM12.4 9.5H.7c-.3 0-.7-.4-.7-.7v-1h6.1v.4H7v-.4h6v1c0 .3-.3.7-.6.7zM.5 8.3v.5c0 .1.1.2.2.2h11.7c.1 0 .1-.1.1-.2v-.5H7.4c0 .2-.2.4-.4.4h-.9c-.2 0-.4-.2-.4-.4H.5z"/><path d="M5.4 4.1c0 .2-.2.4-.4.4s-.4-.2-.4-.4.2-.4.4-.4.4.2.4.4" fill-rule="evenodd" clip-rule="evenodd"/><g><path d="M5.8 6c-.1-.1-.3-.2-.4-.4l.5-.3c0 .1.1.2.2.2.1.1.2.1.4.1s.4-.1.5-.2c.1-.2.2-.4.2-.6V1.9h.6v2.9c0 .3-.1.5-.2.7-.1.2-.2.4-.4.5-.2.1-.5.2-.7.2-.3 0-.5-.1-.7-.2z"/></g></svg>',
-    //       tooltip: true
-    //     })
+        view.set({
+          label: 'Código Fonte',
+          tooltip: true,
+          withText: true
+        })
 
-    //     view.on('execute', () => {
-    //       console.log('Ver Código fonte')
-    //       eventBus.$emit('TOGGLE-SOURCE-PREVIEW', {})
-    //     })
+        view.on('execute', () => store.dispatch('toggleEditorSourcePreview'))
 
-    //     return view
-    //   })
-    // },
+        return view
+      })
+    },
+
+    ImageAttachmentPlugin(editor) {
+      editor.ui.componentFactory.add('imageAttachment', locale => {
+        const view = new ButtonView(locale)
+        const imageIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="18" style="margin-left: 10px !important;" height="18"><path data-name="Caminho 13974" d="M8.948 4.948a.611.611 0 10-1.222 0c0 .009.005.017.005.026V13.5a3.254 3.254 0 11-6.508 0V3.273a2.034 2.034 0 114.067 0v8.591a.813.813 0 11-1.626 0V4.942a.106.106 0 000-.017.611.611 0 10-1.222 0 .106.106 0 000 .017v6.922a2.034 2.034 0 104.068 0V3.273a3.254 3.254 0 10-6.508 0V13.5a4.474 4.474 0 108.948 0V4.974h-.005c-.002-.009.003-.017.003-.026z"/></svg>'
+
+        view.set({
+          label: 'Inserir Imagem',
+          icon: imageIcon,
+          tooltip: true,
+          withText: true
+        })
+
+        view.on('execute', () => store.dispatch('toggleImageUploadDialog', true))
+
+        return view
+      })
+    },
 
     customItemRenderer(item) {
       return item.name

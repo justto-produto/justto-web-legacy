@@ -24,6 +24,7 @@ import tagModule from './modules/tag'
 import userModule from './modules/user'
 import workspaceModule from './modules/workspace'
 import configurationsModule from './modules/configurations'
+import pluginsModule from './modules/plugins'
 
 // CONSTANTS
 import banksList from '@/constants/banksList'
@@ -107,6 +108,7 @@ export default new Vuex.Store({
     negotiationOverviewModule,
     negotiationTicketsModule,
     personModule,
+    pluginsModule,
     socketModule,
     strategyAdminPanelModule,
     strategyModule,
