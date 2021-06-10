@@ -225,7 +225,9 @@ export default {
           withText: true
         })
 
-        view.on('execute', () => store.dispatch('toggleEditorSourcePreview'))
+        view.on('execute', () => {
+          store.dispatch('toggleEditorSourcePreview')
+        })
 
         return view
       })

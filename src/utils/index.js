@@ -13,6 +13,7 @@ import validateCurrentId from './utils/validateCurrentId'
 import { eventBus } from './utils/eventBus'
 import {
   getRoles,
+  formatHtml,
   getRoleIcon,
   getFirstRole,
   buildRoleTitle,
@@ -31,6 +32,7 @@ export {
   getRoles,
   scapeHtml,
   stripHtml,
+  formatHtml,
   buildQuery,
   getRoleIcon,
   getFirstRole,

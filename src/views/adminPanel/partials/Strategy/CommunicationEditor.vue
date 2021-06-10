@@ -130,6 +130,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import { formatHtml } from '@/utils'
 
 // Editores
 import ckeditor from '@/utils/mixins/ckeditor'
@@ -173,15 +174,6 @@ export default {
       useImageAttachmentPlugin: true,
       template: {
         body: ''
-      },
-      monacoOptions: {
-        selectOnLineNumbers: true,
-        roundedSelection: false,
-        readOnly: false,
-        cursorStyle: 'line',
-        automaticLayout: true,
-        glyphMargin: true,
-        autoIndent: true
       }
     }
   },
@@ -222,28 +214,8 @@ export default {
       'changeCommunicationTemplate'
     ]),
 
-    format(html) {
-      const tab = '\t'
-      let result = ''
-      let indent = ''
-
-      html.split(/>\s*</).forEach(function(element) {
-        if (element.match(/^\/\w/)) {
-          indent = indent.substring(tab.length)
-        }
-
-        result += indent + '<' + element + '>\r\n'
-
-        if (element.match(/^<?\w[^>]*[^\\/]$/) && !element.startsWith('input')) {
-          indent += tab
-        }
-      })
-
-      return result.substring(1, result.length - 3)
-    },
-
     formatDoc(_editor) {
-      this.template.body = this.format(this.template.body)
+      this.template.body = formatHtml(this.template.body)
     },
 
     saveTemplate() {
