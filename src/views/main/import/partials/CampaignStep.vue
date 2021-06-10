@@ -85,7 +85,7 @@
       </div>
       <div>
         <h2>Carregando estratégias</h2>
-        Aguarde um momento enquanto o sistema carrega as estratégias disponíveis para esta campanha.
+        <span>Aguarde um momento enquanto o sistema carrega as estratégias disponíveis para esta campanha.</span>
       </div>
     </el-alert>
     <el-alert
@@ -93,30 +93,40 @@
       type="error"
     >
       <h2>Atenção!</h2>
+
       <div v-if="summaryWarnings.duplicated || summaryWarnings.expired">
         <span v-if="summaryWarnings.duplicated">
           - Encontramos {{ summaryWarnings.duplicated }} registro<span v-if="summaryWarnings.duplicated > 1">s</span> duplicado<span v-if="summaryWarnings.duplicated > 1">s</span><br>
         </span>
+
         <span v-if="summaryWarnings.expired">
           - Encontramos {{ summaryWarnings.expired }} disputa<span v-if="summaryWarnings.expired > 1">s</span> expirada<span v-if="summaryWarnings.expired > 1">s</span><br>
         </span>
-        &nbsp;
-        <div v-show="summaryWarnings.duplicated">
-          O que deseja fazer com as duplicidades?
-          <el-radio-group v-model="duplicatedAction" @input="emitChangeDuplicatedAction">
+
+        <div
+          v-show="summaryWarnings.duplicated && isJusttoAdmin"
+          class="summary-duplucated-container"
+        >
+          <span>O que deseja fazer com as duplicidades?</span>
+
+          <el-radio-group v-model="duplicatedActionToDo">
             <el-radio-button label="IGNORE">
               Ignorar duplicadas
             </el-radio-button>
+
             <el-radio-button label="UPDATE">
               Atualizar dados
             </el-radio-button>
+
             <el-radio-button label="DUPLICATE">
               Duplicar disputas
             </el-radio-button>
           </el-radio-group>
-          <br/>
         </div>
-        <a @click="showDetails=!showDetails"><span v-if="showDetails">ocultar detalhes</span><span v-else>ver detalhes</span></a>
+
+        <a @click="showDetails = !showDetails">
+          {{ showDetails ? 'ocultar detalhes' : 'ver detalhes' }}
+        </a>
       </div>
 
       <ul
@@ -126,31 +136,38 @@
       >
         <li>
           {{ d.code }} - Disputa
+
           <span v-if="d.status === 'DUPLICATED_DISPUTE' || d.status === 'DUPLICATE_AND_EXPIRED' || d.status === 'DUPLICATED'">
-            <span v-if="duplicatedAction==='IGNORE'">
+            <span v-if="duplicatedActionToDo === 'IGNORE'">
               <strong>não será importada</strong> porque já está cadastrada
               (campanha {{ d.duplicatedBy.campaignName }}).
             </span>
-            <span v-if="duplicatedAction==='UPDATE'">
+
+            <span v-if="duplicatedActionToDo === 'UPDATE'">
               já está cadastrada e <strong>será atuailzada</strong> com os novos dados
               (campanha {{ d.duplicatedBy.campaignName }}).
             </span>
-            <span v-if="duplicatedAction==='DUPLICATE'">
+
+            <span v-if="duplicatedActionToDo === 'DUPLICATE'">
               já está cadastrada e <strong>será duplicada</strong> quando prosseguir a importação
               (campanha {{ d.duplicatedBy.campaignName }}).
             </span>
           </span>
+
           <span v-if="d.status === 'DUPLICATED_ROW'">
-            <span v-if="duplicatedAction==='IGNORE'">
+            <span v-if="duplicatedActionToDo === 'IGNORE'">
               <strong>será importada apenas 1 vez</strong> pois está duplicada na planilha
             </span>
-            <span v-if="duplicatedAction==='UPDATE'">
+
+            <span v-if="duplicatedActionToDo === 'UPDATE'">
               está duplicada na planilha. Irá importar <strong>apenas 1 vez</strong> e terá os dados atualizados pelas linhas duplicadas
             </span>
-            <span v-if="duplicatedAction==='DUPLICATE'">
+
+            <span v-if="duplicatedActionToDo === 'DUPLICATE'">
               está duplicada na planilha. Irá <strong>criar uma disputa para cada registro duplicado</strong> da planilha
             </span>
           </span>
+
           <span v-if="d.status === 'EXPIRED'">
             <strong>será importada</strong> com data já expirada
             ({{ d.expirationDate.dateTime | moment('DD/MM/YY') }}).
@@ -158,6 +175,7 @@
         </li>
       </ul>
     </el-alert>
+
     <div class="import-view__container">
       <div
         v-if="!validationInProgress"
@@ -182,6 +200,7 @@ export default {
   components: {
     JusImportFeedbackCard: () => import('@/components/layouts/JusImportFeedbackCard')
   },
+
   props: {
     campaignIsMapped: {
       type: Boolean,
@@ -196,6 +215,7 @@ export default {
       default: 'IGNORE'
     }
   },
+
   data() {
     return {
       duplicatedDisputes: [],
@@ -203,20 +223,34 @@ export default {
       showDetails: false
     }
   },
+
   computed: {
     ...mapGetters({
       loading: 'loading',
+      isJusttoAdmin: 'isJusttoAdmin',
       strategyList: 'getMyStrategiesLite',
       importedFileName: 'importedFileName',
-      validationInProgress: 'validationInProgress',
+      validationInProgress: 'validationInProgress'
     }),
+
     summaryWarnings() {
       return {
         duplicated: this.duplicatedDisputes.filter(w => w.status === 'DUPLICATED_DISPUTE' || w.status === 'DUPLICATED' || w.status === 'DUPLICATED_ROW').length,
         expired: this.duplicatedDisputes.filter(w => w.status === 'EXPIRED' || w.status === 'DUPLICATE_AND_EXPIRED').length
       }
+    },
+
+    duplicatedActionToDo: {
+      get() {
+        return this.duplicatedAction
+      },
+
+      set(value) {
+        this.$emit('update:duplicatedAction', value)
+      }
     }
   },
+
   watch: {
     campaignIsMapped(current) {
       if (current) {
@@ -226,6 +260,7 @@ export default {
       }
     }
   },
+
   async beforeMount() {
     this.startDuplicateValidations()
     if (!this.strategyList.length) {
@@ -236,6 +271,7 @@ export default {
       this.duplicatedDisputes = response.disputes
     }).finally(() => (this.finishDuplicateValidations()))
   },
+
   methods: {
     ...mapActions([
       'showLoading',
@@ -244,6 +280,7 @@ export default {
       'startDuplicateValidations',
       'finishDuplicateValidations'
     ]),
+
     async getStrategies() {
       this.loadingStrategies = true
       this.showLoading()
@@ -259,9 +296,6 @@ export default {
         }
       }
       this.loadingStrategies = false
-    },
-    emitChangeDuplicatedAction() {
-      this.$emit('update:duplicatedAction', this.duplicatedAction)
     }
   }
 }
@@ -320,5 +354,11 @@ export default {
       }
     }
   }
+}
+.summary-duplucated-container {
+  display: flex;
+  gap: 8px;
+  flex-direction: column;
+  margin: 16px 0;
 }
 </style>
