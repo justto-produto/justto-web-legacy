@@ -253,8 +253,6 @@ export default {
     },
 
     setImgTag(src) {
-      console.log('setImgTag', src)
-
       this.$nextTick(() => {
         const editor = document.querySelector('.ck-editor__editable').ckeditorInstance
 
@@ -271,15 +269,12 @@ export default {
 
     getFeedItems(queryText) {
       function isItemMatching({ name, id }) {
-        const searchString = normalizeString(queryText)
+        const searchString = normalizeString(queryText).replace(/{/g, '')
 
-        return (
-          normalizeString(name).includes(searchString) ||
-          normalizeString(id).includes(searchString)
-        )
+        return normalizeString(name).includes(searchString) || normalizeString(id).includes(searchString)
       }
 
-      return this.variablesList.filter(isItemMatching).slice(0, 10)
+      return this.variablesList.filter(isItemMatching)
     },
 
     ckeditorFocus() {
