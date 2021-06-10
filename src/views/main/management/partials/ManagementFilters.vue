@@ -464,9 +464,6 @@ export default {
       }
     },
     clearFilters() {
-      if (this.tabIndex === '4') {
-        this.filters.status = []
-      }
       this.clearCampaign()
       this.clearStrategy()
       this.clearTags()
@@ -485,6 +482,7 @@ export default {
       this.$store.commit('setDisputeQuery', this.filters)
       this.visibleFilters = false
       delete this.filters.onlyNotVisualized
+      delete this.filters.onlyPaused
     },
     restoreFilters() {
       this.filters = JSON.parse(JSON.stringify(this.$store.getters.disputeQuery))
@@ -512,7 +510,18 @@ export default {
       }
     },
     clearStatuses() {
-      this.filters.status = []
+      if (this.isFinished || this.isEngagement || this.isAll) {
+        switch (this.tabIndex) {
+          case '1':
+            this.filters.status = ['IMPORTED', 'ENRICHED', 'ENGAGEMENT', 'PENDING']
+            break
+          case '4':
+          case '9':
+          default:
+            this.filters.status = []
+            break
+        }
+      }
     },
     clearPreNegotitationKeyWorks() {
       this.filters.preNegotiationKeywords = []
