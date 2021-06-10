@@ -112,7 +112,7 @@
         size="small"
         class="api-integration__search-input"
         prefix-icon="el-icon-search"
-        popper-class="tickets-header-container__popover"
+        popper-class="api-integration__search-popover"
         placeholder="Busque sua disputa..."
         :disabled="!(activeStandartWebhook || activeWebServiceFinch)"
       >
@@ -387,9 +387,6 @@ export default {
     }
     .api-integration__search-input {
       margin-bottom: 16px;
-    }
-    .tickets-header-container__popover {
-      width: 100% !important;
     }
   }
   .api-integration__footer {
