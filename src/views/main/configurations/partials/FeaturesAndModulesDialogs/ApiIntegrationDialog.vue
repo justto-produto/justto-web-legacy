@@ -33,7 +33,9 @@
               :disabled="!activeStandartWebhook"
               placeholder="https://seudominioaqui.com/here"
             >
-              <template slot="prepend">URL</template>
+              <template slot="prepend">
+                URL
+              </template>
             </el-input>
           </el-form-item>
         </el-form>
@@ -65,7 +67,9 @@
               :disabled="!activeWebServiceFinch"
               placeholder="http://api.processos.finch/followUp"
             >
-              <template slot="prepend">URL</template>
+              <template slot="prepend">
+                URL
+              </template>
             </el-input>
           </el-form-item>
         </div>
