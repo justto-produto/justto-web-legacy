@@ -212,7 +212,7 @@
               </div>
               <div v-if="isEngagement || isRunning">
                 <div>
-                  <i class="el-icon-warning-outline" /> Com advogados ofensores
+                  <i class="el-icon-warning-outline" /> Advogados ofensores
                 </div>
                 <el-switch
                   v-model="filters.vexatiousLawyer"
