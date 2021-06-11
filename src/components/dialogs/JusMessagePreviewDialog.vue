@@ -2,7 +2,7 @@
   <el-dialog
     :visible.sync="isVisible"
     title="Preview"
-    width="50%"
+    width="65%"
     custom-class="dialog-preview"
     destroy-on-close
   >
@@ -41,6 +41,16 @@ export default {
 .dialog-preview {
   .el-dialog__header {
     padding-top: 24px !important;
+  }
+
+  .el-dialog__body {
+    .preview {
+      .image {
+        .ck {
+          display: none !important;
+        }
+      }
+    }
   }
 }
 </style>

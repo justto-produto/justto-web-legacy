@@ -9,16 +9,21 @@ import Indent from '@ckeditor/ckeditor5-indent/src/indent'
 import Italic from '@ckeditor/ckeditor5-basic-styles/src/italic'
 import List from '@ckeditor/ckeditor5-list/src/list'
 import Link from '@ckeditor/ckeditor5-link/src/link'
+import Image from '@ckeditor/ckeditor5-image/src/image'
+import ImageToolbar from '@ckeditor/ckeditor5-image/src/imagetoolbar'
+import ImageStyle from '@ckeditor/ckeditor5-image/src/imagestyle'
 import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph'
-// import PasteFromOffice from '@ckeditor/ckeditor5-paste-from-office/src/pastefromoffice'
 import RemoveFormat from '@ckeditor/ckeditor5-remove-format/src/removeformat'
-import Table from '@ckeditor/ckeditor5-table/src/table'
 import TextTransformation from '@ckeditor/ckeditor5-typing/src/texttransformation'
 import Underline from '@ckeditor/ckeditor5-basic-styles/src/underline'
 import Mention from '@ckeditor/ckeditor5-mention/src/mention'
+import Table from '@ckeditor/ckeditor5-table/src/table'
+import TableToolbar from '@ckeditor/ckeditor5-table/src/tabletoolbar'
 import { normalizeString, eventBus } from '@/utils'
 import { mapActions, mapGetters } from 'vuex'
 import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview'
+
+import store from '@/store'
 
 export default {
   data() {
@@ -35,26 +40,33 @@ export default {
     editorConfig() {
       return {
         plugins: [
-          Alignment,
-          Autoformat,
-          BlockQuote,
-          Bold,
-          Essentials,
-          Highlight,
-          Indent,
-          Italic,
-          List,
-          Link,
-          Paragraph,
-          RemoveFormat,
-          Table,
-          TextTransformation,
-          Underline,
-          Mention,
-          this.useMenstionPlugin ? this.MentionCustomization : () => {},
-          this.usePreviewPlugin ? this.PreviewPlugin : () => {}
+          ...[
+            Alignment,
+            Autoformat,
+            BlockQuote,
+            Bold,
+            Image,
+            ImageToolbar,
+            ImageStyle,
+            Essentials,
+            Highlight,
+            Indent,
+            Italic,
+            List,
+            Link,
+            Paragraph,
+            RemoveFormat,
+            Table,
+            TableToolbar,
+            TextTransformation,
+            Underline
+          ],
+          ...(this.useImageAttachmentPlugin ? [this.ImageAttachmentPlugin] : []),
+          ...(this.useSourceCodePlugin ? [this.SourceCodeViewPlugin] : []),
+          ...(this.useMentionPlugin ? [Mention, this.MentionCustomization] : []),
+          ...(this.usePreviewPlugin ? [this.PreviewPlugin] : [])
         ],
-        mention: this.useMenstionPlugin ? {
+        mention: this.useMentionPlugin ? {
           feeds: [
             {
               marker: '{',
@@ -66,6 +78,7 @@ export default {
         } : {},
         toolbar: {
           items: [
+            ...(this.useSourceCodePlugin ? ['sourceCode', '|'] : []),
             ...[
               'bold',
               'italic',
@@ -75,17 +88,24 @@ export default {
               'bulletedList',
               'numberedList',
               '|',
+              'insertTable',
+              '|',
               'outdent',
               'indent',
               '|',
               'blockQuote',
               'undo',
-              'redo'
+              'redo',
+              'imageStyle'
             ],
+            ...(this.useImageAttachmentPlugin ? ['imageAttachment'] : []),
             ...(this.usePreviewPlugin ? ['preview'] : [])
           ],
           viewportTopOffset: 30,
           shouldNotGroupWhenFull: true
+        },
+        table: {
+          contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells']
         }
       }
     },
@@ -189,7 +209,8 @@ export default {
           const editor = Array(...document.querySelectorAll('.ck-content')).pop()
 
           if (editor) {
-            const disputeId = this.disputeId || Number(location.href.split('/').pop())
+            const { getSelectedIds: ids } = store.getters
+            const disputeId = ids.length ? ids[0] : Number(location.href.split('/').pop())
             const template = editor.innerHTML
 
             eventBus.$emit('SEE-PREVIEW', { template, disputeId })
@@ -200,21 +221,67 @@ export default {
       })
     },
 
+    SourceCodeViewPlugin(editor) {
+      editor.ui.componentFactory.add('sourceCode', locale => {
+        const view = new ButtonView(locale)
+        const imageIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="13.305" height="18"><g data-name="Grupo 39805"><g data-name="Grupo 39803"><path data-name="Caminho 13983" d="M10.163 0h-9.06a1.106 1.106 0 00-1.1 1.1v15.8a1.105 1.105 0 001.1 1.1h11.1a1.1 1.1 0 001.1-1.1V3.413zm2.214 16.9a.178.178 0 01-.177.177H1.1a.177.177 0 01-.177-.177V1.1A.177.177 0 011.1.924h8.392l2.881 3.147V16.9z"/></g><g data-name="Grupo 39804" stroke="#000" stroke-miterlimit="10" stroke-width=".5"><path data-name="Caminho 13984" d="M4.879 14.565l-3.141-3.142L4.88 8.281l.444.444-2.7 2.7 2.7 2.7z"/><path data-name="Caminho 13985" d="M8.425 8.281l3.141 3.142-3.142 3.142-.444-.444 2.7-2.7-2.7-2.7z"/></g></g></svg>'
+
+        view.set({
+          label: 'Código Fonte',
+          icon: imageIcon,
+          tooltip: true,
+          withText: true
+        })
+
+        view.on('execute', () => {
+          store.dispatch('toggleEditorSourcePreview')
+        })
+
+        return view
+      })
+    },
+
+    ImageAttachmentPlugin(editor) {
+      editor.ui.componentFactory.add('imageAttachment', locale => {
+        const view = new ButtonView(locale)
+        const imageIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="18" style="margin-left: 10px !important;" height="18"><path data-name="Caminho 13974" d="M8.948 4.948a.611.611 0 10-1.222 0c0 .009.005.017.005.026V13.5a3.254 3.254 0 11-6.508 0V3.273a2.034 2.034 0 114.067 0v8.591a.813.813 0 11-1.626 0V4.942a.106.106 0 000-.017.611.611 0 10-1.222 0 .106.106 0 000 .017v6.922a2.034 2.034 0 104.068 0V3.273a3.254 3.254 0 10-6.508 0V13.5a4.474 4.474 0 108.948 0V4.974h-.005c-.002-.009.003-.017.003-.026z"/></svg>'
+
+        view.set({
+          label: 'Inserir Imagem',
+          icon: imageIcon,
+          tooltip: true,
+          withText: false
+        })
+
+        view.on('execute', () => store.dispatch('toggleImageUploadDialog', true))
+
+        return view
+      })
+    },
+
+    setImgTag(src) {
+      this.$nextTick(() => {
+        const editor = document.querySelector('.ck-editor__editable').ckeditorInstance
+
+        editor.model.change(writer => {
+          const imageElement = writer.createElement('image', { src })
+          editor.model.insertContent(imageElement, editor.model.document.selection)
+        })
+      })
+    },
+
     customItemRenderer(item) {
       return item.name
     },
 
     getFeedItems(queryText) {
       function isItemMatching({ name, id }) {
-        const searchString = normalizeString(queryText)
+        const searchString = normalizeString(queryText).replace(/{/g, '')
 
-        return (
-          normalizeString(name).includes(searchString) ||
-          normalizeString(id).includes(searchString)
-        )
+        return normalizeString(name).includes(searchString) || normalizeString(id).includes(searchString)
       }
 
-      return this.variablesList.filter(isItemMatching).slice(0, 10)
+      return this.variablesList.filter(isItemMatching)
     },
 
     ckeditorFocus() {

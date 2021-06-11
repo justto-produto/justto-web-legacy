@@ -288,29 +288,65 @@
       </span>
     </el-dialog>
     <el-dialog
-      width="50%"
+      width="60%"
       :visible.sync="showBulkMessageDialog"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
       class="dialog__bulk-message"
+      append-to-body
       @before-close="closeBulkMessageDialog()"
     >
-      <span class="dialog-body__text-info">
-        <i class="el-icon-warning" />
-        Essa mensagem será enviada para a(s) {{ selectedLenghtToShow }} disputa(s) selecionada(s)
+      <span class="dialog-body__header">
+        <span class="dialog-body__header-text-info">
+          <i class="el-icon-warning" />
+          Essa mensagem será enviada para a(s) {{ selectedLenghtToShow }} disputa(s) selecionada(s)
+        </span>
+
+        <span class="dialog-body__header-recipients">
+          <span class="dialog-body__recipients-label">
+            Destinatarios:
+          </span>
+
+          <el-checkbox-group
+            v-model="partyRoles"
+            class="dialog-body__recipients-checkbox"
+            size="mini"
+            fill="#ffffff"
+            @input="$set(hasError, 'partyRoles', false)"
+          >
+            <el-checkbox-button label="PARTY">
+              <i class="el-icon-user-solid" />
+              <span>Parte</span>
+            </el-checkbox-button>
+
+            <el-checkbox-button label="LAWYER">
+              <i class="el-icon-s-custom" />
+              <span>Advogado</span>
+            </el-checkbox-button>
+          </el-checkbox-group>
+
+          <span
+            v-if="hasError.partyRoles"
+            class="dialog-body__recipients-error"
+          >
+            * Escolha um destinatário.
+          </span>
+        </span>
       </span>
-      <ckeditor
-        v-if="showBulkMessageDialog"
-        v-show="editorRedy"
-        ref="messageEditor"
-        v-model="message"
-        class="dialog-body__editor"
-        :config="editorConfig"
-        @ready="editorIsRedy()"
-      />
-      <el-container
-        v-if="!editorRedy"
-        v-loading="true"
-        style="width: 100%; height: 40vh;"
-      />
+
+      <div class="jus-ckeditor__parent">
+        <ckeditor
+          v-if="showBulkMessageDialog"
+          ref="messageEditor"
+          v-model="message"
+          class="dialog-body__editor"
+          :class="`ckeditor-${_uid}`"
+          :editor="editor"
+          :config="editorConfig"
+          type="classic"
+        />
+      </div>
+
       <span slot="footer">
         <el-button @click="closeBulkMessageDialog()">Cancelar</el-button>
         <el-button
@@ -339,21 +375,27 @@
         @submit="handleDropLawsuit($event)"
       />
     </el-dialog>
+
+    <ImageUploadDialog @input="setImgTag" />
   </div>
 </template>
 
 <script>
 import { getTracktitleByAction, scapeHtml } from '@/utils'
 import { mapGetters, mapActions } from 'vuex'
-import CKEditor from 'ckeditor4-vue'
+
+// Editores
+import ckeditor from '@/utils/mixins/ckeditor'
 
 export default {
   name: 'ManagementActions',
 
   components: {
-    ckeditor: CKEditor.component,
-    DropLawsuitForm: () => import('@/components/layouts/DropLawsuitForm')
+    DropLawsuitForm: () => import('@/components/layouts/DropLawsuitForm'),
+    ImageUploadDialog: () => import('@/components/dialogs/ImageUploadDialog.vue')
   },
+
+  mixins: [ckeditor],
 
   props: {
     activeTab: {
@@ -368,6 +410,9 @@ export default {
 
   data() {
     return {
+      useMentionPlugin: true,
+      usePreviewPlugin: true,
+      useImageAttachmentPlugin: true,
       showDropLawsuitDialog: false,
       showBulkMessageDialog: false,
       chooseSettledDialogVisible: false,
@@ -388,26 +433,8 @@ export default {
       deleteType: '',
       newStrategyId: '',
       newExpirationDate: '',
-      editorRedy: false,
-      editorConfig: {
-        toolbarGroups: [
-          { name: 'document', groups: ['mode', 'document', 'doctools'] },
-          { name: 'clipboard', groups: ['clipboard', 'undo'] },
-          { name: 'editing', groups: ['find', 'selection', 'spellchecker', 'editing'] },
-          { name: 'forms', groups: ['forms'] },
-          { name: 'basicstyles', groups: ['basicstyles', 'cleanup'] },
-          { name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align', 'bidi', 'paragraph'] },
-          { name: 'links', groups: ['links'] },
-          { name: 'insert', groups: ['insert'] },
-          { name: 'styles', groups: ['styles'] },
-          { name: 'colors', groups: ['colors'] },
-          { name: 'tools', groups: ['tools'] },
-          { name: 'others', groups: ['others'] },
-          { name: 'about', groups: ['about'] }
-        ],
-        removeButtons: 'Save,NewPage,ExportPdf,Preview,Print,PasteFromWord,PasteText,Paste,Redo,Copy,Templates,Cut,Undo,Find,Replace,SelectAll,Scayt,Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,HiddenField,Superscript,Subscript,CopyFormatting,Indent,Outdent,Styles,TextColor,BGColor,Maximize,ShowBlocks,About,Format,Font,FontSize,Iframe,PageBreak,SpecialChar,Smiley,HorizontalRule,Table,Flash,Image,Unlink,Link,Anchor,Language,BidiRtl,BidiLtr,JustifyBlock,JustifyRight,JustifyCenter,JustifyLeft,CreateDiv',
-        removePlugins: 'elementspath,resize'
-      }
+      partyRoles: [],
+      hasError: {}
     }
   },
 
@@ -425,9 +452,15 @@ export default {
         this.$emit('update:selectedIds', ids)
       }
     },
+
+    disputeId() {
+      return this.selectedIds[0]
+    },
+
     active() {
       return this.selectedIdsComp.length >= 1
     },
+
     actionsList() {
       return [
         { name: 'SETTLED', tabs: ['1', '2', '3', '4', '9'] },
@@ -452,18 +485,23 @@ export default {
         }
       ]
     },
+
     selectedIdsLength() {
       return this.selectedIdsComp.length
     },
+
     disputesTotalLength() {
       return this.$store.getters.disputeQuery.total
     },
+
     selectedLenghtToShow() {
       return this.isSelectedAll ? this.disputesTotalLength : this.selectedIdsLength
     },
+
     isSelectedAll() {
       return this.$store.getters.disputes.length === this.selectedIdsLength
     },
+
     workspaceNegotiators() {
       return this.$store.getters.workspaceMembers.map(member => {
         return {
@@ -486,21 +524,11 @@ export default {
     this.$store.dispatch('getMyStrategiesLite')
   },
 
-  beforeDestroy() {
-    this.editorRedy = false
-  },
-
   methods: {
     ...mapActions([
       'getDisputeStatuses',
       'getFinishedDisputesCount'
     ]),
-
-    editorIsRedy() {
-      setTimeout(() => {
-        this.editorRedy = true
-      }, 250)
-    },
 
     doAction(action) {
       const params = {
@@ -576,23 +604,27 @@ export default {
     },
 
     closeBulkMessageDialog() {
-      this.editorRedy = false
       this.showBulkMessageDialog = false
       this.message = ''
-      for (const instance of Object.values(window.CKEDITOR.instances)) {
-        instance.destroy()
-      }
     },
 
     sendBulkMessage() {
-      const { message } = this
-      this.dispatchAction('SEND_MESSAGE', {
-        type: 'SEND_MESSAGE',
-        disputeIds: this.selectedIds,
-        allSelected: this.isSelectedAll,
-        message
-      })
-      this.closeBulkMessageDialog()
+      const { message, partyRoles } = this
+
+      if (partyRoles.length && message.length) {
+        this.dispatchAction('SEND_MESSAGE', {
+          type: 'SEND_MESSAGE',
+          disputeIds: this.selectedIds,
+          allSelected: this.isSelectedAll,
+          partyRoles,
+          message
+        })
+        this.closeBulkMessageDialog()
+      } else {
+        if (partyRoles.length === 0) {
+          this.$set(this.hasError, 'partyRoles', true)
+        }
+      }
     },
 
     openDropLawsuitDialog() {
@@ -810,16 +842,100 @@ export default {
 
 .dialog__bulk-message {
   .el-dialog__body {
-    .dialog-body__text-info {
-      color: $--color-primary;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    .dialog-body__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-right: 16px;
+
+      .dialog-body__header-text-info {
+        color: $--color-primary;
+      }
+
+      .dialog-body__header-recipients {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        align-items: flex-start;
+
+        .dialog-body__recipients-label {
+          margin-left: 16px;
+        }
+
+        .el-checkbox-group {
+          .el-checkbox-button {
+            .el-checkbox-button__inner {
+              border: none;
+              padding-bottom: 0px;
+
+              span {
+                color: $--color-text-secondary;
+              }
+
+              &:hover {
+                color: $--color-text-primary;
+              }
+
+              i:before {
+                font-size: 16px;
+                color: $--color-text-secondary;
+              }
+            }
+
+            &.is-checked {
+              .el-checkbox-button__inner {
+                span {
+                  font-weight: 700;
+                  color: $--color-primary;
+                }
+
+                i:before {
+                  font-weight: 700;
+                  color: $--color-primary;
+                }
+              }
+            }
+          }
+        }
+
+        .dialog-body__recipients-error {
+          margin-top: 8px;
+          margin-left: 16px;
+          font-size: 12px;
+
+          padding: 8px 16px;
+
+          border-radius: 0px 10px 10px 10px;
+
+          background-color: $--color-danger-light-3;
+          font-weight: 600;
+          color: $--color-white
+        }
+      }
     }
 
-    .dialog-body__editor {
-      margin-top: 16px;
-      min-height: 224px;
+    .jus-ckeditor__parent {
+      .ck-editor {
+        height: 50vh;
+        overflow: hidden;
+
+        .ck-editor__main {
+          height: 90%;
+
+          .ck-editor__editable {
+            height: 100%;
+          }
+        }
+      }
     }
+
   }
 }
+
 .management-actions {
   overflow-x: auto;
   position: absolute;

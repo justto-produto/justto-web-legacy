@@ -2,6 +2,7 @@
   <div class="communication-editor">
     <el-dialog
       v-if="visible"
+      ref="communication-editor-dialog"
       :visible.sync="isVisible"
       class="communication-editor__dialog"
     >
@@ -68,23 +69,33 @@
           ref="editor-fieldset"
           class="communication-editor__editor-fieldset show-toolbar jus-ckeditor__parent"
         >
-          <!-- <ckeditor
-            v-if="isVisible"
+          <el-button
+            v-if="seeSource"
+            class="button-src-plugin"
+            size="small"
+            @click="toggleEditorSourcePreview()"
+          >
+            <i class="el-icon-document" />
+            Código fonte
+          </el-button>
+
+          <ckeditor
+            v-if="isVisible && !seeSource"
             ref="edit"
             v-model="template.body"
+            :class="`ckeditor-${_uid}`"
             :editor="editor"
             :config="editorConfig"
             type="classic"
-          /> -->
-          <ckeditor
-            v-show="editorRedy"
-            ref="edit"
+          />
+
+          <MonacoEditor
+            v-else-if="seeSource"
+            ref="monaco"
             v-model="template.body"
-            class="communication-editor__editor"
-            tag-name="textarea"
-            :config="editorConfig"
-            @ready="editorRedy = true"
-            @namespaceloaded="onNamespaceLoaded"
+            class="editor"
+            language="html"
+            @editorDidMount="formatDoc"
           />
         </div>
       </div>
@@ -112,23 +123,29 @@
         </div>
       </div>
     </el-dialog>
+
+    <ImageUploadDialog @input="setImgTag" />
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-// import ckeditor from '@/utils/mixins/ckeditor'
-import CKEditor from 'ckeditor4-vue'
+import { formatHtml } from '@/utils'
+
+// Editores
+import ckeditor from '@/utils/mixins/ckeditor'
+import MonacoEditor from 'vue-monaco'
 
 export default {
   name: 'CommunicationEditor',
 
   components: {
-    ckeditor: CKEditor.component,
-    JusVariablesCard: () => import('@/components/layouts/JusVariablesCard')
+    MonacoEditor,
+    JusVariablesCard: () => import('@/components/layouts/JusVariablesCard'),
+    ImageUploadDialog: () => import('@/components/dialogs/ImageUploadDialog.vue')
   },
 
-  // mixins: [ckeditor],
+  mixins: [ckeditor],
 
   props: {
     templateToEdit: {
@@ -152,13 +169,9 @@ export default {
 
   data() {
     return {
-      height: 400,
-      editorDataFroala: '',
-      config: {
-        heightMax: 500
-      },
-      editorRedy: false,
-      useMenstionPlugin: true,
+      useMentionPlugin: true,
+      useSourceCodePlugin: true,
+      useImageAttachmentPlugin: true,
       template: {
         body: ''
       }
@@ -167,6 +180,7 @@ export default {
 
   computed: {
     ...mapGetters({
+      seeSource: 'getEditorSourcePreview',
       templateVariables: 'getAvaliableVariablesToTemplate'
     }),
 
@@ -181,28 +195,6 @@ export default {
       },
       set(value) {
         this.$emit('update:visible', value)
-      }
-    },
-
-    editorConfig() {
-      return {
-        toolbarGroups: [
-          { name: 'document', groups: ['mode', 'document', 'doctools'] },
-          { name: 'clipboard', groups: ['clipboard', 'undo'] },
-          { name: 'editing', groups: ['find', 'selection', 'spellchecker', 'editing'] },
-          { name: 'forms', groups: ['forms'] },
-          { name: 'basicstyles', groups: ['basicstyles', 'cleanup'] },
-          { name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align', 'bidi', 'paragraph'] },
-          { name: 'links', groups: ['links'] },
-          { name: 'insert', groups: ['insert'] },
-          { name: 'styles', groups: ['styles'] },
-          { name: 'colors', groups: ['colors'] },
-          { name: 'tools', groups: ['tools'] },
-          { name: 'others', groups: ['others'] },
-          { name: 'about', groups: ['about'] }
-        ],
-        // removeButtons: 'Save,NewPage,ExportPdf,Preview,Print,PasteFromWord,PasteText,Paste,Redo,Copy,Templates,Cut,Undo,Find,Replace,SelectAll,Scayt,Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,HiddenField,Superscript,Subscript,CopyFormatting,Indent,Outdent,Styles,TextColor,BGColor,Maximize,ShowBlocks,About,Format,Font,FontSize,Iframe,PageBreak,SpecialChar,Smiley,HorizontalRule,Table,Flash,Image,Unlink,Link,Anchor,Language,BidiRtl,BidiLtr,JustifyBlock,JustifyRight,JustifyCenter,JustifyLeft,CreateDiv',
-        removePlugins: 'elementspath,resize'
       }
     }
   },
@@ -220,14 +212,15 @@ export default {
       this.$forceUpdate()
     }
   },
-  methods: {
-    ...mapActions(['changeCommunicationTemplate']),
 
-    onNamespaceLoaded(CKEDITOR) {
-      // Add external `placeholder` plugin which will be available for each
-      // editor instance on the page.
-      CKEDITOR.plugins.addExternal('autogrow', '../../../plugins/autogrow', 'plugin.js')
-      // CKEDITOR.config.autoGrow_onStartup = true
+  methods: {
+    ...mapActions([
+      'toggleEditorSourcePreview',
+      'changeCommunicationTemplate'
+    ]),
+
+    formatDoc(_editor) {
+      this.template.body = formatHtml(this.template.body)
     },
 
     saveTemplate() {
@@ -261,7 +254,9 @@ export default {
             ${body}
           </body>
         </html>`
-      this.template.body = fullTemplate
+      if (!body.endsWith('</html>')) {
+        this.template.body = fullTemplate
+      }
       this.saveTemplate()
     },
 
@@ -273,7 +268,39 @@ export default {
 </script>
 
 <style lang="scss">
-/* .communication-editor__editor-fieldset {
+.editor {
+  width: 100%;
+  max-width: 75vw;
+  height: 100%;
+
+  .monaco-editor {
+    padding-top: 34px;
+  }
+}
+
+.communication-editor__editor-fieldset {
+  position: relative;
+
+  .button-src-plugin {
+    position: absolute;
+    z-index: 3000;
+    top: 0;
+    left: 0;
+
+    background: transparent;
+    border: none;
+    padding: 10px;
+    margin-left: 4px;
+
+    &:focus {
+      background-color: #fff !important;
+    }
+
+    &:before {
+      font-size: 16px;
+    }
+  }
+
   .ck-editor {
     .ck-editor__main {
       .ck-editor__editable {
@@ -281,7 +308,7 @@ export default {
       }
     }
   }
-} */
+}
 </style>
 
 <style lang="scss" scoped>
