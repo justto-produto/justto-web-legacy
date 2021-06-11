@@ -7,6 +7,7 @@
     width="40%"
     class="api-integration"
     destroy-on-close
+    :before-close="handleClose"
   >
     <div class="api-integration__standart">
       <strong class="api-integration__standart-label">Enviar para meu sistema usando Webhook padrão</strong>
@@ -33,7 +34,9 @@
               :disabled="!activeStandartWebhook"
               placeholder="https://seudominioaqui.com/here"
             >
-              <template slot="prepend">URL</template>
+              <template slot="prepend">
+                URL
+              </template>
             </el-input>
           </el-form-item>
         </el-form>
@@ -65,7 +68,9 @@
               :disabled="!activeWebServiceFinch"
               placeholder="http://api.processos.finch/followUp"
             >
-              <template slot="prepend">URL</template>
+              <template slot="prepend">
+                URL
+              </template>
             </el-input>
           </el-form-item>
         </div>
@@ -198,29 +203,6 @@ export default {
     this.getPrescriptions()
   },
 
-  mounted() {
-    this.getApiIntegrationConfiguration(this.feature)
-      .then((data) => {
-        if (data) {
-          this.workspaceId = data.workspaceId
-          const obj = {
-            workspaceId: this.workspaceId
-          }
-          data.properties.forEach(({ key, value }) => {
-            obj[key] = value
-          })
-          this.activeStandartWebhook = obj.JUSTTO_ACTIVE ? obj.JUSTTO_ACTIVE : false
-          this.activeWebServiceFinch = obj.FINCH_ACTIVE ? obj.FINCH_ACTIVE : false
-          this.activeStandartWebhook = this.activeStandartWebhook === 'true'
-          this.activeWebServiceFinch = this.activeWebServiceFinch === 'true'
-          this.formStandartWebhook.urlStandartWebhook = obj.JUSTTO_ENDPOINT || ''
-          this.formWebServiceFinch.urlWebServiceFinch = obj.FINCH_ENDPOINT || ''
-          this.formWebServiceFinch.userWebServiceFinch = obj.FINCH_USERNAME || ''
-          this.formWebServiceFinch.passwordWebServiceFinch = obj.FINCH_PASSWORD || ''
-        }
-      })
-  },
-
   methods: {
     ...mapActions({
       getApiIntegrationConfiguration: 'getApiIntegrationConfiguration',
@@ -240,7 +222,7 @@ export default {
         this.debounce = setTimeout(() => {
           this.searchDisputes({ key: 'term', value: term.trim() })
             .then(response => {
-              this.$jusSegment('Busca global de disputas', { description: `Termo utilizado: ${term}` })
+              this.$jusSegment('Busca de disputa na configuração de integração', { description: `Termo utilizado: ${term}` })
               if (response.length) cb(response)
               else cb([{}])
             })
@@ -251,23 +233,28 @@ export default {
     },
 
     testIntegration({ disputeId }) {
-      this.testApiIntegration(disputeId)
+      Promise.all([
+        this.saveConfiguration()
+      ])
         .then(() => {
-          this.$jusNotification({
-            type: 'success',
-            title: 'Yay!',
-            message: 'Integração testada com sucesso'
-          })
-        }).catch(() => {
-          this.$jusNotification({
-            type: 'error',
-            title: 'Ops!',
-            message: 'Ocorreu algum erro durante a integração!'
-          })
+          this.testApiIntegration(disputeId)
+            .then(() => {
+              this.$jusNotification({
+                type: 'success',
+                title: 'Yay!',
+                message: 'Integração salva e testada com sucesso!'
+              })
+            }).catch(() => {
+              this.$jusNotification({
+                type: 'error',
+                title: 'Ops!',
+                message: 'Ocorreu algum erro durante a integração!'
+              })
+            })
         })
     },
 
-    handleSaveApiIntegration() {
+    async saveConfiguration() {
       Promise.all([
         this.activeStandartWebhook ? this.validateForm('formStandartWebhook') : () => {},
         this.activeWebServiceFinch ? this.validateForm('formWebServiceFinch') : () => {}
@@ -281,28 +268,66 @@ export default {
           JUSTTO_ACTIVE: this.activeStandartWebhook.toString(),
           workspaceId: this.workspaceId
         })
-        this.setApiIntegrationConfiguration({ payload, featureId: this.feature })
-          .then(() => {
-            this.$jusNotification({
-              type: 'success',
-              title: 'Yay!',
-              message: 'API de Integração salva com sucesso!'
-            })
-          })
-          .catch(() => {
-            this.$jusNotification({
-              type: 'error',
-              title: 'Ops!',
-              message: 'Algo deu errado ao tentar salvar configurações!'
-            })
-          })
-          .finally(() => {
-            this.apiIntegrationDialogVisible = false
-          })
-      })
+        return this.setApiIntegrationConfiguration({ payload, featureId: this.feature })
+      }).catch((error) => { return new Promise((resolve, reject) => reject(error)) })
     },
 
-    openFeatureDialog() {
+    handleSaveApiIntegration() {
+      this.saveConfiguration()
+        .then(() => {
+          this.$jusNotification({
+            type: 'success',
+            title: 'Yay!',
+            message: 'API de Integração salva com sucesso!'
+          })
+        })
+        .catch(() => {
+          this.$jusNotification({
+            type: 'error',
+            title: 'Ops!',
+            message: 'Algo deu errado ao tentar salvar configurações!'
+          })
+        })
+        .finally(() => {
+          this.handleClose()
+        })
+    },
+
+    fetchData() {
+      this.getApiIntegrationConfiguration(this.feature)
+        .then((data) => {
+          if (data) {
+            this.workspaceId = data.workspaceId
+            const obj = {
+              workspaceId: this.workspaceId
+            }
+            data.properties.forEach(({ key, value }) => {
+              obj[key] = value
+            })
+            this.activeStandartWebhook = obj.JUSTTO_ACTIVE ? obj.JUSTTO_ACTIVE : false
+            this.activeWebServiceFinch = obj.FINCH_ACTIVE ? obj.FINCH_ACTIVE : false
+            this.activeStandartWebhook = this.activeStandartWebhook === 'true'
+            this.activeWebServiceFinch = this.activeWebServiceFinch === 'true'
+            this.formStandartWebhook.urlStandartWebhook = obj.JUSTTO_ENDPOINT || ''
+            this.formWebServiceFinch.urlWebServiceFinch = obj.FINCH_ENDPOINT || ''
+            this.formWebServiceFinch.userWebServiceFinch = obj.FINCH_USERNAME || ''
+            this.formWebServiceFinch.passwordWebServiceFinch = obj.FINCH_PASSWORD || ''
+          }
+        })
+    },
+
+    handleClose(done) {
+      this.activeStandartWebhook = false
+      this.formStandartWebhook.urlStandartWebhook = ''
+      this.activeWebServiceFinch = false
+      this.formWebServiceFinch.urlWebServiceFinch = ''
+      this.formWebServiceFinch.userWebServiceFinch = ''
+      this.formWebServiceFinch.passwordWebServiceFinch = ''
+      done()
+    },
+
+    async openFeatureDialog() {
+      await this.fetchData()
       this.apiIntegrationDialogVisible = true
     },
 
