@@ -50,5 +50,9 @@ export default {
   TICKET_CHANGE: {
     isShortcut: false,
     callback: 'TICKET_CHANGE'
+  },
+  CKEDITOR_UPLOAD_DIALOG: {
+    isShortcut: false,
+    callback: 'CKEDITOR_UPLOAD_DIALOG'
   }
 }
