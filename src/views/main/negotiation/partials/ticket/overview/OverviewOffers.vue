@@ -76,13 +76,22 @@ export default {
       ticket: 'getTicketOverview'
     }),
 
+    isPaused() {
+      return this.ticket.paused
+    },
+
+    isCanceled() {
+      const { status } = this.ticket
+      return status === 'CANCELED'
+    },
+
     disputeId() {
       return Number(this.$route.params.id)
     },
 
     canEditPlaintiffOffer() {
       const { status } = this
-      return ['ENGAGEMENT', 'PENDING', 'RUNNING', 'IMPORTED', 'ENRICHED'].includes(status)
+      return ['ENGAGEMENT', 'PENDING', 'RUNNING', 'IMPORTED', 'ENRICHED'].includes(status) && !this.isCanceled && !this.isPaused
     }
   },
   methods: {
