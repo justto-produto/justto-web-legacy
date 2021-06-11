@@ -66,11 +66,15 @@ const actionsActions = {
   sendTicketAction({ _ }, params) {
     let { data, action, disputeId } = params
     action = action.toLowerCase()
-
+    const mutations = {
+      paused: 'pauseTicket',
+      resume: 'resumeTicket'
+    }
     return axiosDispatch({
       url: `${disputesPath}/${disputeId}/${action}`,
       method: 'PUT',
-      data
+      data,
+      mutation: mutations[action]
     })
   },
 

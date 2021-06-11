@@ -11,7 +11,7 @@
             size="mini"
             placeholder="Buscar"/>
         </template>
-        <template slot-scope="props">
+        <template v-slot="props">
           <el-tooltip content="Adicionar">
             <el-button size="mini" type="" icon="el-icon-plus" />
           </el-tooltip>

@@ -69,7 +69,10 @@
       </div>
     </article>
 
-    <!-- <ApiIntegrationDialog ref="apiIntegrationDialog" /> -->
+    <ApiIntegrationDialog
+      ref="apiIntegrationDialog"
+      :feature="getFeatureIdByCode('API_INTEGRATION')"
+    />
     <!-- <AutomaticMessagesDialog ref="automaticMessagesDialog" /> -->
     <CustomizeOdrAddressDialog ref="customizeOdrAddressDialog" />
     <BadFaithLitigantDialog ref="badFaithLitigantDialog" />
@@ -87,7 +90,7 @@ export default {
   name: 'FeaturesAndModules',
   components: {
     highlight: () => import('vue-text-highlight'),
-    // ApiIntegrationDialog: () => import('./FeaturesAndModulesDialogs/ApiIntegrationDialog'),
+    ApiIntegrationDialog: () => import('./FeaturesAndModulesDialogs/ApiIntegrationDialog'),
     // AutomaticMessagesDialog: () => import('./FeaturesAndModulesDialogs/AutomaticMessagesDialog'),
     CustomizeOdrAddressDialog: () => import('./FeaturesAndModulesDialogs/CustomizeOdrAddressDialog'),
     BadFaithLitigantDialog: () => import('./FeaturesAndModulesDialogs/BadFaithLitigantDialog'),
@@ -104,12 +107,14 @@ export default {
     ...mapGetters({
       featuresAndModules: 'getFeaturesAndModules'
     }),
+
     filteredFeatures() {
       return filterByTerm(this.searchTerm, this.featuresAndModules, 'name', 'description')
     },
+
     hasConfiguration() {
       return [
-        // 'API_INTEGRATION',
+        'API_INTEGRATION',
         // 'AUTOMATIC_MESSAGES',
         'CUSTOMIZE_ODR_ADDRESS',
         'CONFIGURE_CUSTOMIZATIONS',
@@ -130,6 +135,10 @@ export default {
       'getFeaturesAndModules',
       'toggleConfiguration'
     ]),
+
+    getFeatureIdByCode(code) {
+      return this.filteredFeatures.find(item => item.code === code)?.id
+    },
 
     handleToggleConfiguration(value, featureId, isFree, isActive) {
       const toggleConfiguration = () => {
@@ -161,8 +170,6 @@ export default {
 
       if (this.$refs[ref]) {
         this.$refs[ref].openFeatureDialog()
-      } else {
-        console.log(`Inserir feature ${ref}`)
       }
     },
 

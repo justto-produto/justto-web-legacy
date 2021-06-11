@@ -95,7 +95,7 @@ const omnichannelActions = {
       }))
     } else {
       return new Promise((resolve) => {
-        commit('cleanSumary', payload)
+        // commit('cleanSumary', payload)
         resolve()
       })
     }

@@ -16,14 +16,29 @@ const findContactIndex = (contactTypeList, contactId) => {
 const overviewMutations = {
   setTicketOverview: (state, params) => Vue.set(state, 'ticketOverview', new TicketOverview(params)),
 
-  updateTicketOverview: ({ ticketOverview }, { payload }) => {
-    for (const key of Object.keys(payload)) Vue.set(ticketOverview, key, payload[key])
+  updateTicketOverview: (state, { payload }) => {
+    for (const key of Object.keys(payload)) {
+      Vue.set(state.ticketOverview, key, payload[key])
+    }
+    if (payload.defendantProposal) {
+      const offerObj = {
+        name: payload.defendantProposal.name,
+        roleId: payload.defendantProposal.lastOfferRoleId,
+        value: payload.defendantProposal.value
+      }
+      Vue.set(state.ticketOverview, 'upperRange', payload.defendantProposal.value)
+      Vue.set(state.lastTicketOffers, 'defendantOffer', offerObj)
+    }
   },
 
-  setTicketOverviewInfo: (state, params) => Vue.set(state, 'ticketOverviewInfo', params),
+  setTicketOverviewInfo: (state, params) => {
+    Vue.set(state, 'ticketOverviewInfo', params)
+  },
 
   updateTicketOverviewInfo: ({ ticketOverviewInfo }, { payload }) => {
-    for (const key of Object.keys(payload)) Vue.set(ticketOverviewInfo, key, payload[key])
+    for (const key of Object.keys(payload)) {
+      Vue.set(ticketOverviewInfo, key, payload[key])
+    }
   },
 
   setAssociatedContacts: (state, properties) => {
@@ -107,7 +122,7 @@ const overviewMutations = {
     const { bankAccountId, personId } = payload
 
     const indexPartie = state.ticketOverviewParties.findIndex(partie => {
-      return partie.personId === personId
+      return partie.person.id === personId
     })
 
     if (indexPartie >= 0) {
@@ -152,6 +167,22 @@ const overviewMutations = {
     if (Number(state.ticketOverview.disputeId) === Number(disputeId)) {
       Vue.set(state.ticketOverview, 'favorite', favorite)
     }
+  },
+
+  pauseTicket(state, { _ }) {
+    Vue.set(state.ticketOverview, 'paused', true)
+  },
+
+  resumeTicket(state, { _ }) {
+    Vue.set(state.ticketOverview, 'paused', false)
+  },
+
+  setAttachmentConfidentiality: (state, { payload: { id } }) => {
+    state.ticketOverviewAttachments.forEach((attach, attachIndex) => {
+      if (attach.id === id) {
+        Vue.set(state.ticketOverviewAttachments[attachIndex], 'confidential', !attach.confidential)
+      }
+    })
   }
 }
 

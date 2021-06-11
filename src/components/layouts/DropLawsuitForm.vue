@@ -43,7 +43,7 @@
       <el-button
         @click="onCancel()"
       >
-        Cancel
+        Cancelar
       </el-button>
       <el-button
         type="primary"
@@ -85,7 +85,9 @@ export default {
   },
 
   beforeMount() {
-    this.getDropLawsuitReasons()
+    if (!Object.keys(this.dropLawsuitReasons).length) {
+      this.getDropLawsuitReasons()
+    }
   },
 
   methods: {

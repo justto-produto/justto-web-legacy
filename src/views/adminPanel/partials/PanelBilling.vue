@@ -3,13 +3,13 @@
     <img src="./icon.png">
     <!-- <el-table :data="filteredAccounts" width="100%">
       <el-table-column type="expand" fixed="left" width="50px">
-        <template slot-scope="props">
+        <template v-slot="props">
           <el-table :data="props.row.workspaces" size="small" width="100%">
             <el-table-column prop="name" label="Workspace"/>
             <el-table-column prop="teamName" label="Nome de Exibição"/>
             <el-table-column prop="status" label="Status"/>
             <el-table-column align="right" fixed="right">
-              <template slot-scope="props">
+              <template v-slot="props">
                 <el-button type="text" icon="el-icon-delete" style="color: #FF4B54"/>
               </template>
             </el-table-column>
@@ -27,7 +27,7 @@
             size="mini"
             placeholder="Buscar"/>
         </template>
-        <template slot-scope="props">
+        <template v-slot="props">
           <el-tooltip content="Adicionar usuário">
             <el-button size="mini" type="" plain icon="el-icon-plus" />
           </el-tooltip>

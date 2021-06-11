@@ -62,8 +62,12 @@ export default {
       return this.value
     },
 
+    isCanceled() {
+      return this.occurrence?.status === 'CANCELED'
+    },
+
     text() {
-      let text = this.occurrence.description
+      let text = this.isCanceledText(this.occurrence.description) ? this.handleCanceledText(this.occurrence.description) : this.occurrence.description
       if (this.occurrence?.type === 'INTERACTION' && this.occurrence?.interaction?.type === 'NEGOTIATOR_ACCESS') {
         text = 'Disputa visualizada'
       }
@@ -127,6 +131,17 @@ export default {
 
   mounted() {
     this.$set(this.value, 'renderCompleted', true)
+  },
+
+  methods: {
+    handleCanceledText(description) {
+      const [handledDescription, reason] = description.split(':')
+      return `${handledDescription}: ${this.$tc(`canceled.reason.${reason.trim()}`)}.`
+    },
+
+    isCanceledText(description) {
+      return description.includes('Disputa cancelada por')
+    }
   }
 }
 </script>

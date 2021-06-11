@@ -145,7 +145,7 @@ export default {
     ImageUploadDialog: () => import('@/components/dialogs/ImageUploadDialog.vue')
   },
 
-  mixins: [ckeditor],
+  // mixins: [ckeditor],
 
   props: {
     templateToEdit: {
@@ -205,6 +205,11 @@ export default {
         this.template = current
         if (!this.template.title) this.template.title = 'Mensagem da Justto'
       }
+    },
+
+    editorRedy() {
+      this.$refs.edit.config.height = this.$refs['editor-fieldset'].clientHeight
+      this.$forceUpdate()
     }
   },
 
@@ -439,5 +444,20 @@ export default {
   .ql-toolbar {
     display: inherit;
   }
+}
+
+.communication-editor__editor {
+  height: 100%;
+
+  .cke_reset {
+    height: 100%;
+
+    .cke_contents {
+      height: 92% !important;
+    }
+  }
+}
+.cke_contents {
+  height: 92% !important;
 }
 </style>

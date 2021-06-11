@@ -39,7 +39,9 @@ export default {
   mixins: [ckeditor],
 
   data: () => ({
-    localLoading: false
+    localLoading: false,
+    useMenstionPlugin: false,
+    usePreviewPlugin: false
   }),
 
   computed: {

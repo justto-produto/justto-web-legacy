@@ -12,7 +12,7 @@
         fixed="left"
         width="50px"
       >
-        <template slot-scope="props">
+        <template v-slot="props">
           <el-table
             :key="usersTableKey"
             :data="users[props.row.id]"
@@ -27,7 +27,7 @@
               prop="profile"
               label="Perfil"
             >
-              <template slot-scope="props2">
+              <template v-slot="props2">
                 {{ $t('profile.' + props2.row.profile) | capitalize }}
               </template>
             </el-table-column>
@@ -35,7 +35,7 @@
               align="right"
               fixed="right"
             >
-              <template slot-scope="props2">
+              <template v-slot="props2">
                 <el-tooltip
                   :open-delay="800"
                   content="Remover usuário"
@@ -56,7 +56,7 @@
         prop="name"
         label="Nome"
       >
-        <template slot-scope="props">
+        <template v-slot="props">
           <el-input
             v-show="props.row.editing"
             :ref="'input' + props.row.id"
@@ -86,7 +86,7 @@
         label="Status"
         width="80px"
       >
-        <template slot-scope="props">
+        <template v-slot="props">
           {{ $t('workspace.' + props.row.status) | capitalize }}
         </template>
       </el-table-column>
@@ -94,7 +94,7 @@
         fixed="right"
         align="right"
       >
-        <template slot-scope="props">
+        <template v-slot="props">
           <el-tooltip
             :open-delay="800"
             :content="props.row.status === 'DISABLED' ? 'Equipe desabilitada' : 'Convidar usuário'"

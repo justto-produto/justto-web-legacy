@@ -437,14 +437,21 @@
                 class="dispute-overview-view__person-title"
               >
                 <i
-                  v-if="(showNamesake(role) || showVexatious(role.personProperties)) && !role.roles.includes('NEGOTIATOR') "
-                  class="el-icon-warning-outline el-icon-pulse"
-                  style="color: rgb(255, 201, 0);position: absolute;top: 0px;left: 0px;font-size: 30px;background-color: #fff0;"
+                  v-if="showNamesake(role) && !role.roles.includes('NEGOTIATOR')"
+                  class="el-icon-warning el-icon-pulse"
+                  style="{ color: '#FF9300'; position: absolute; top: 0px; left: 0px;}"
                 />
-                <i
-                  v-if="showIsDead(role)"
-                  class="el-icon-warning-outline el-icon-pulse"
-                  style="color: rgb(255, 75, 84);position: absolute;top: 0px;left: 0px;font-size: 30px;background-color: #fff0;"
+                <JusIcon
+                  v-else-if="showVexatious(role.personProperties) && !role.roles.includes('NEGOTIATOR') "
+                  style="{ color: '#FF9300'; position: absolute; top: 0px; left: 0px;}"
+                  class="el-icon-pulse"
+                  icon="flat-alert-yellow"
+                />
+                <JusIcon
+                  v-else-if="showIsDead(role)"
+                  style="{ color: '#FF9300'; position: absolute; top: 0px; left: 0px;}"
+                  class="el-icon-pulse"
+                  icon="flat-alert"
                 />
                 <div class="dispute-overview-view__name">
                   <span
@@ -1455,7 +1462,7 @@
               width="48px"
               class-name="visible"
             >
-              <template slot-scope="scope">
+              <template v-slot="scope">
                 <a
                   href="#"
                   @click.prevent="removeOab(scope.$index)"
@@ -1500,7 +1507,7 @@
               width="114px"
               class-name="visible slot-scope"
             >
-              <template slot-scope="scope">
+              <template v-slot="scope">
                 <el-tooltip
                   :open-delay="500"
                   :content="scope.row.isMain ? 'Este número receberá mensagens automáticas' : 'Este número não recberá mensagens automáticas'"
@@ -1562,7 +1569,7 @@
               width="114px"
               class-name="visible slot-scope"
             >
-              <template slot-scope="scope">
+              <template v-slot="scope">
                 <el-tooltip
                   :open-delay="500"
                   :content="scope.row.isMain ? 'Este e-mail receberá mensagens automáticas' : 'Este e-mail não recberá mensagens automáticas'"
@@ -1622,7 +1629,7 @@
               width="48px"
               class-name="visible"
             >
-              <template slot-scope="scope">
+              <template v-slot="scope">
                 <a
                   href="#"
                   @click.prevent="removeBankData(scope.$index, scope.row.id)"

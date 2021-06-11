@@ -18,7 +18,7 @@
         prop="keyAccountId"
         label="Key Account"
       >
-        <template slot-scope="scope">
+        <template v-slot="scope">
           {{ keyAccountTemplate(scope.row.keyAccountId) }}
         </template>
       </el-table-column>

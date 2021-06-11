@@ -2,6 +2,15 @@
   "message": "mensagem",
   "test": "teste",
   "isTyping": "está digitando",
+  "canceled": {
+    "reason": {
+      "UNQUALIFIED_TO_NEGOTIATION": "Inapto para negociação",
+      "CLOSED_BY_THIRD": "Acordo fechado por terceiros",
+      "DROPPED": "Arquivado/Baixa definitiva",
+      "IMPROPER_JUDGMENT/EXTINCTION": "Sentenca Improcedente/Extinção",
+      "JUDICIALIZED": "Judicializado"
+    }
+  },
   "dispute": {
     "notification": {
       "will-restart": "A disputa será reiniciada.",
@@ -82,6 +91,7 @@
     "UNSETTLED": "perdido"
   },
   "transactions": {
+    "LAWSUIT_DROPPED": "disputa cancelada",
     "DISPUTE_ACCEPTED": "disputa aceita",
     "IMPORTED_DISPUTE": "disputa importada",
     "INTERACTION": "interação na disputa",
@@ -160,7 +170,8 @@
     "PAYMENT": "indenizatorio de valor",
     "RECOVERY": "cobrança",
     "OBLIGATION": "obrigação de fazer",
-    "DISCOUNT": "desconto"
+    "DISCOUNT": "desconto",
+		"MULTI_PARTY_NEGOTIATION": "Negociação com multiplas partes"
   },
   "occurrence": {
     "type": {
@@ -429,6 +440,7 @@
     }
   },
   "ticket-labels": {
+    "courtHearingDate": "data de audiência",
     "importedDate": "data de importação",
     "campaignName": "campanha",
     "code": "número do processo",

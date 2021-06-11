@@ -19,7 +19,7 @@
         prop="withoutAlert"
         label="Sem alerta"
       >
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <el-tooltip
             v-if="scope.row.withoutAlert > 0"
             :open-delay="800"
@@ -46,7 +46,7 @@
         prop="withAlert"
         label="Com alerta"
       >
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <el-tooltip
             v-if="scope.row.withAlert > 0"
             :open-delay="800"

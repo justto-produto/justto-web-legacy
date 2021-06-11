@@ -2,6 +2,7 @@
   <section class="summary-container">
     <div
       v-for="(summaryItem, summaryItemIndex) in renderItems"
+      :id="`summary-item-${summaryItemIndex}`"
       :key="`summary-item-${summaryItemIndex}`"
       class="summary-container__item"
     >
@@ -47,27 +48,7 @@
           >
             <i :class="messageStatus.status | getIconByStatus" />
             <span class="summary-container__item-occurrence-item-status-message-body">
-              <!-- <span class="summary-container__item-occurrence-item-status-message-body-normal">
-                Mensagem
-              </span> -->
-              <span class="summary-container__item-occurrence-item-status-message-body-status">
-                {{ $t(`occurrence.interaction.message.status.${messageStatus.status}.label`) | capitalize }}
-              </span>
-              <span class="summary-container__item-occurrence-item-status-message-body-normal">
-                em
-              </span>
-              <span class="summary-container__item-occurrence-item-status-message-body-date">
-                {{ messageStatus.date | moment('DD/MM') }}
-              </span>
-              <span class="summary-container__item-occurrence-item-status-message-body-normal">
-                {{ $t(`occurrence.interaction.message.status.${messageStatus.status}.preposition`) }}
-              </span>
-              <span class="summary-container__item-occurrence-item-status-message-body-adress">
-                {{ messageStatus.receiver }}
-              </span>
-              <span class="summary-container__item-occurrence-item-status-message-body-date">
-                {{ messageStatus.date | moment('[às] HH:mm') }}
-              </span>
+              <span v-html="buildMessage(messageStatus, summaryItem.type, summaryItemIndex)" />
             </span>
           </span>
 
@@ -97,7 +78,10 @@ export default {
         case 'WAITING':
           return 'el-icon-timer'
         case 'PROCESSED':
+        case 'PROCESSED_BY_USER':
           return 'el-icon-check'
+        case 'RETRYING':
+          return 'el-icon-refresh'
         default:
           return 'el-icon-close'
       }
@@ -164,6 +148,39 @@ export default {
     ...mapActions([
       'getSummaryOccurrecies'
     ]),
+
+    buildMessage({ status, date, receiver }, messageType, index) {
+      const { phoneOrEmail, capitalize } = this.$options.filters
+      const formatDate = (date) => this.$moment(date).format('DD/MM [às] HH:mm')
+      const element = document.getElementById(`summary-item-${index}`) || { offsetWidth: 0 }
+      const breakTag = element.offsetWidth < 500 ? '<br/>' : ''
+
+      let message = ''
+
+      switch (status) {
+        case 'WAITING':
+          message = `${messageType} agendado para ${formatDate(date)} para <b>${phoneOrEmail(receiver)}</b>.`
+          break
+        case 'PROCESSED':
+        case 'PROCESSED_BY_USER':
+          message = `${messageType} enviado em ${formatDate(date)} para <b>${phoneOrEmail(receiver)}</b>.`
+          break
+        case 'FAILED':
+          message = `Falhou o envio para o ${messageType} <b>${phoneOrEmail(receiver)}</b>${breakTag} em ${formatDate(date)}.`
+          break
+        case 'CANCELED':
+          message = `Envio de ${messageType} para <b>${phoneOrEmail(receiver)}</b>${breakTag} cancelado em ${formatDate(date)}.`
+          break
+        case 'RETRYING':
+          message = `Estamos retentando enviar ${messageType} para <b>${phoneOrEmail(receiver)}</b>.${breakTag} O primeiro envio falhou em ${formatDate(date)}.`
+          break
+        default:
+          message = `${messageType} com status ${status}.`
+          break
+      }
+
+      return capitalize(message)
+    },
 
     getOccurrences(communicationType) {
       this.disputeId = this.$route.params.id
@@ -248,10 +265,19 @@ export default {
         flex-direction: column;
         width: 100%;
         align-items: flex-start;
-
+        gap: 4px;
         font-size: 12px;
 
         .summary-container__item-occurrence-item-status-message {
+          display: flex;
+          gap: 4px;
+          justify-content: flex-start;
+          align-items: flex-start;
+
+          [class*="el-icon-"] {
+            margin-top: 3px;
+          }
+
           .el-icon-edit {
             font-weight: 800;
             color: #BBBBBB;
@@ -262,7 +288,8 @@ export default {
             color: $--color-success;
           }
 
-          .el-icon-timer {
+          .el-icon-timer,
+          .el-icon-refresh {
             font-weight: 800;
             color: $--color-warning;
           }
@@ -273,7 +300,13 @@ export default {
           }
 
           .summary-container__item-occurrence-item-status-message-body {
-            .summary-container__item-occurrence-item-status-message-body-normal,
+            color: $--color-text-secondary;
+
+            b {
+              font-weight: normal;
+              color: $--color-text-primary;
+            }
+            /* .summary-container__item-occurrence-item-status-message-body-normal,
             .summary-container__item-occurrence-item-status-message-body-status,
             .summary-container__item-occurrence-item-status-message-body-date {
               color: $--color-text-secondary;
@@ -281,7 +314,7 @@ export default {
 
             .summary-container__item-occurrence-item-status-message-body-adress {
               color: $--color-text-primary;
-            }
+            }*/
           }
         }
       }

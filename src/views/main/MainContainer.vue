@@ -217,6 +217,7 @@ export default {
   methods: {
     ...mapActions({
       loadAccountProperty: 'loadAccountProperty',
+      setAccountProperty: 'setAccountProperty',
       setWindowGeometry: 'setWindowGeometry',
       getPreview: 'getMessageToPreview'
     }),
@@ -252,7 +253,57 @@ export default {
         })
 
         this.subscriptions.forEach(subscription => this.$socket.emit('subscribe', subscription))
-        this.loadAccountProperty()
+        this.loadAccountProperty().then(this.checkAcceptterms)
+      }
+    },
+
+    checkAcceptterms(response) {
+      const key = 'LAST_ACCEPTED_DATE'
+      const lastTermDate = this.$moment('20/04/2021', 'DD/MM/YYYY')
+      let lastAcceptedDate = response[key] ? this.$moment(response[key], 'DD/MM/YYYY') : Boolean(response[key])
+      if (!lastAcceptedDate || lastTermDate.isAfter(lastAcceptedDate, 'day')) {
+        const docs = [
+          {
+            label: 'Termos Gerais e Condições de Uso',
+            href: 'https://justto.com.br/termos-de-uso',
+            isVisible: true
+          },
+          {
+            label: 'Termos Gerais de Contratação de Licenciamento de Uso de Tecnologia',
+            href: 'https://justto.com.br/termos-de-contratacao/',
+            isVisible: this.isAdminProfile
+          },
+          {
+            label: 'Política de privacidade',
+            href: 'https://justto.com.br/poilitica-privacidade',
+            isVisible: true
+          }
+        ]
+
+        const confirmText = `
+        <p>Olá, tudo bem?</p><br>
+        <p>Atualizamos nossos documentos de uso da plataforma. Os documentos alterados são:</p>
+        <ul>${docs.filter(({ isVisible }) => isVisible).map(item => {
+          return `<li><a href="${item.href}" target="_blank">${item.label}</a></li>`
+        }).join('')}</ul>
+        <p>Por favor, leia os documentos nos links acima e clique em <b>Ciente</b> para prosseguir com o uso dos serviços!</p>`
+
+        this.$confirm(confirmText, 'Atualização nos documentos de uso da plataforma', {
+          dangerouslyUseHTMLString: true,
+          closeOnPressEscape: false,
+          closeOnClickModal: false,
+          showCancelButton: false,
+          showClose: false,
+          customClass: 'terms-confirm',
+          confirmButtonText: 'Ciente'
+        }).then(() => {
+          if (!lastAcceptedDate) {
+            lastAcceptedDate = this.$moment().format('DD/MM/YYYY')
+          }
+          this.setAccountProperty({
+            LAST_ACCEPTED_DATE: lastAcceptedDate
+          })
+        })
       }
     },
 
@@ -282,6 +333,10 @@ export default {
 
 <style lang="scss">
 @import '@/styles/colors.scss';
+
+.terms-confirm {
+  width: 50vw;
+}
 
 .el-container.is-vertical {
   .el-main {

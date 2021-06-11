@@ -725,7 +725,7 @@ export default {
           if (fo.interaction && fo.interaction.message && fo.interaction.message.communicationType === 'WHATSAPP') return
           let similarity
           if (fo.interaction && fo.interaction.type) {
-            similarity = ['MANUAL_COUNTERPROPOSAL', 'NEGOTIATOR_PROPOSAL', 'NEGOTIATOR_COUNTERPROSAL', 'MANUAL_PROPOSAL'].includes(fo.interaction.type) ? 100 : 75
+            similarity = ['ATTACHMENT', 'MANUAL_COUNTERPROPOSAL', 'NEGOTIATOR_PROPOSAL', 'NEGOTIATOR_COUNTERPROSAL', 'MANUAL_PROPOSAL'].includes(fo.interaction.type) ? 100 : 75
           } else {
             similarity = 75
           }
@@ -764,6 +764,19 @@ export default {
   },
   methods: {
     ...mapActions(['setActiveactiveOccurrency']),
+
+    isCanceled(occurrence) {
+      return occurrence?.status === 'CANCELED'
+    },
+
+    handleCanceledText(description) {
+      const [handledDescription, reason] = description.split(':')
+      return `${handledDescription}: ${this.$tc(`canceled.reason.${reason.trim()}`)}.`
+    },
+
+    isCanceledText(description) {
+      return description.includes('Disputa cancelada por')
+    },
 
     buildColor(occurrence) {
       return occurrence && occurrence.interaction &&
@@ -979,6 +992,9 @@ export default {
       if (occurrence.type === 'LOG' || (occurrence.interaction && ['VISUALIZATION', 'CLICK', 'NEGOTIATOR_ACCESS'].includes(occurrence.interaction.type))) {
         if (occurrence.interaction && occurrence.interaction.type === 'NEGOTIATOR_ACCESS') {
           return 'Disputa visualizada'
+        }
+        if (this.isCanceled(occurrence) && this.isCanceledText(occurrence.description)) {
+          return this.handleCanceledText(occurrence.description)
         }
         return occurrence.description
       }
