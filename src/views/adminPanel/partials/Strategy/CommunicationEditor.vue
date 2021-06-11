@@ -145,7 +145,7 @@ export default {
     ImageUploadDialog: () => import('@/components/dialogs/ImageUploadDialog.vue')
   },
 
-  // mixins: [ckeditor],
+  mixins: [ckeditor],
 
   props: {
     templateToEdit: {

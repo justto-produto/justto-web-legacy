@@ -91,7 +91,7 @@
     <el-dialog
       :visible.sync="editTemplateQuickReply.visible"
       append-to-body
-      width="40%"
+      width="50%"
       destroy-on-close
       @close="closeEditTemplateDialog()"
     >
