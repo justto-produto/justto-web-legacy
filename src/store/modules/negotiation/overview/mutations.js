@@ -183,6 +183,16 @@ const overviewMutations = {
         Vue.set(state.ticketOverviewAttachments[attachIndex], 'confidential', !attach.confidential)
       }
     })
+  },
+
+  setNamesake: (state, { payload: { personId, document } }) => {
+    state.ticketOverviewParties.forEach(party => {
+      if (Number(party.person?.id || 0) === Number(personId)) {
+        Vue.set(party, 'documentNumber', document)
+        Vue.set(party.person, 'document', document)
+        Vue.set(party.person, 'namesake', false)
+      }
+    })
   }
 }
 

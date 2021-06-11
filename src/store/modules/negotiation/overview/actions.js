@@ -308,7 +308,9 @@ const overviewActions = {
   setNamesakeTicketOptions({ _ }, { personId, document, disputeId }) {
     return axiosDispatch({
       url: `${fusionRunnerApi}/set-document/person/${personId}/${document}/${disputeId}`,
-      method: 'PATCH'
+      method: 'PATCH',
+      mutation: 'setNamesake',
+      payload: { personId, document, disputeId }
     })
   },
 
