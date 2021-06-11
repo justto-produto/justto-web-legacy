@@ -73,7 +73,7 @@
       ref="apiIntegrationDialog"
       :feature="getFeatureIdByCode('API_INTEGRATION')"
     />
-    <!-- <AutomaticMessagesDialog ref="automaticMessagesDialog" /> -->
+    <!-- <AutomaticMessagesDialog ref="automat  icMessagesDialog" /> -->
     <CustomizeOdrAddressDialog ref="customizeOdrAddressDialog" />
     <BadFaithLitigantDialog ref="badFaithLitigantDialog" />
     <CommunicationBlockListDialog ref="communicationBlockListDialog" />
@@ -105,7 +105,8 @@ export default {
 
   computed: {
     ...mapGetters({
-      featuresAndModules: 'getFeaturesAndModules'
+      featuresAndModules: 'getFeaturesAndModules',
+      isJusttoAdmin: 'isJusttoAdmin'
     }),
 
     filteredFeatures() {
@@ -114,14 +115,15 @@ export default {
 
     hasConfiguration() {
       return [
-        'API_INTEGRATION',
-        // 'AUTOMATIC_MESSAGES',
-        'CUSTOMIZE_ODR_ADDRESS',
-        'CONFIGURE_CUSTOMIZATIONS',
-        'BAD_FAITH_LITIGANT',
-        'COMMUNICATION_BLOCK_LIST',
-        'DRAFT_MANAGEMENT',
-        'PRE_NEGOTIATION'
+        ...[
+          'CUSTOMIZE_ODR_ADDRESS',
+          'CONFIGURE_CUSTOMIZATIONS',
+          'BAD_FAITH_LITIGANT',
+          'COMMUNICATION_BLOCK_LIST',
+          'DRAFT_MANAGEMENT',
+          'PRE_NEGOTIATION'
+        ],
+        ...(this.isJusttoAdmin ? ['API_INTEGRATION'] : [])
       ]
     }
   },
