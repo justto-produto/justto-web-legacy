@@ -41,7 +41,7 @@
           </el-col>
           <!-- MOTIVOS DE PRENEGOCIACAO -->
           <el-col
-            v-if="!loading"
+            v-if="!loading && (isPreNegotiation || isAll)"
             :span="12"
           >
             <el-form-item label="Palavras de pré-negociação">
