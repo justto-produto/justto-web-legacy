@@ -63,18 +63,34 @@ const actionsActions = {
     })
   },
 
-  sendTicketAction({ _ }, params) {
+  sendTicketAction({ rootState }, params) {
     let { data, action, disputeId } = params
     action = action.toLowerCase()
+
     const mutations = {
       paused: 'pauseTicket',
-      resume: 'resumeTicket'
+      resume: 'resumeTicket',
+      negotiators: 'updateTicketNegotiator'
     }
+
+    const payload = { disputeId }
+
+    if (action === 'negotiators') {
+      const { negotiatorsId } = data
+
+      payload.negotiatorsId = negotiatorsId
+
+      payload.negotiators = rootState.workspaceModule.workspace.members.filter(({ personId }) => {
+        return negotiatorsId.includes(personId)
+      })
+    }
+
     return axiosDispatch({
       url: `${disputesPath}/${disputeId}/${action}`,
       method: 'PUT',
       data,
-      mutation: mutations[action]
+      mutation: mutations[action],
+      payload
     })
   },
 
