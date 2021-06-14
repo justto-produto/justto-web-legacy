@@ -527,7 +527,6 @@ export default {
 
     openEditNegotiatorsDialog(action) {
       this.editNegotiatorsForm = this.ticketNegotiators.map(negotiator => negotiator.person.id)
-      console.log('editNegotiatorsForm', this.ticketNegotiators)
       this.editNegotiatorsDialogVisible = true
     },
 
