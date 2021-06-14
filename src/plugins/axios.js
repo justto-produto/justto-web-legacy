@@ -32,10 +32,12 @@ _axios.interceptors.request.use(
       }
     }
 
-    _axios.defaults.headers.common.UserLanguage = _axios.defaults.headers.common.UserLanguage || store.getters.getUserLanguage
-    _axios.defaults.headers.common.UserTimeZone = _axios.defaults.headers.common.UserTimeZone || store.getters.getUserTimeZone
-    _axios.defaults.headers.common.UserBrowserName = _axios.defaults.headers.common.UserBrowserName || store.getters.getUserBrowserName
-    _axios.defaults.headers.common.UserOS = _axios.defaults.headers.common.UserOS || store.getters.getUserOS
+    const { UserLanguage, UserTimeZone, UserBrowserName, UserOS } = _axios.defaults.headers.common
+
+    _axios.defaults.headers.common.UserLanguage = UserLanguage || store.getters.getUserLanguage
+    _axios.defaults.headers.common.UserTimeZone = UserTimeZone || store.getters.getUserTimeZone
+    _axios.defaults.headers.common.UserBrowserName = UserBrowserName || store.getters.getUserBrowserName
+    _axios.defaults.headers.common.UserOS = UserOS || store.getters.getUserOS
 
     return config
   },
