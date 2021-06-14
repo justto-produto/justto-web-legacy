@@ -723,9 +723,6 @@ export default {
     },
 
     startReply(params) {
-      if (this.$refs.messageEditor) {
-        this.$refs.messageEditor.quill.container.firstChild.innerHTML = ''
-      }
       const { type, senders } = params
       const messageType = type.toLowerCase()
       this.setMessageType(messageType)
