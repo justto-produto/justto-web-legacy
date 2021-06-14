@@ -23,6 +23,7 @@
           Início das ocorrências
         </div>
       </infinite-loading>
+
       <component
         :is="occurrence.id === null ? 'Date': 'Occurrence'"
         v-for="(occurrence, occurrenceIndex) in occurrences"
@@ -30,12 +31,14 @@
         :value="occurrence"
         class="occurrences-container__occurrences-item"
       />
+
       <dispute-tips
         v-if="activeTab === 'MESSAGES'"
         :value="dispute"
       />
     </div>
   </section>
+
   <section
     v-else
     class="occurrences-container"
