@@ -209,9 +209,18 @@ const workspaceActions = {
     })
   },
 
+  createPortifolio({ _ }, name) {
+    return axiosDispatch({
+      url: `${workspacesPath}/portifolio`,
+      method: 'POST',
+      data: { name },
+      mutation: 'addPortifolio'
+    })
+  },
+
   getPortifolioAssociated({ _ }, workspaceId) {
     return axiosDispatch({
-      url: `api/associateds/${workspaceId}`
+      url: `${workspacesPath}/portifolio/associateds/${workspaceId}`
     })
   },
 

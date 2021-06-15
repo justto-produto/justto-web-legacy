@@ -70,6 +70,11 @@ const workspaceMutations = {
   setWorkspaceKeyAccounts: (state, keyAccounts) => Vue.set(state.workspace, 'keyAccounts', keyAccounts),
   setAssociatedKeyAccount: (state, { keyAccount }) => Vue.set(state.workspace, 'associatedKeyAccount', keyAccount),
   setPortifolio: (state, portifolios) => Vue.set(state, 'portifolios', portifolios),
+  addPortifolio: (state, portifolio) => {
+    const index = state.portifolios.length
+
+    Vue.set(state.portifolios, index, portifolio)
+  },
   setPortifolioToWorkspace: (state, { payload }) => {
     console.log(state, payload)
   },

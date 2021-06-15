@@ -50,34 +50,10 @@
       </el-table-column>
 
       <el-table-column
+        align="right"
         prop="portifolios"
-        label="Portifolios"
       >
-        <template v-slot="scope">
-          <span
-            :style="{ cursor: 'pointer' }"
-            @click="openPortifolioDialog(scope.row.id)"
-          >Ver portifolios</span>
-          <!-- <el-select
-            :value="scope.row.portifolios"
-            size="small"
-            multiple
-            @change="setPortifolioToWorkspace($event, scope.row)"
-          >
-            <el-option
-              v-for="(portifolio) in portifolios"
-              :key="`portifolio-${portifolio.id}-workspace-${scope.row.id}`"
-              :value="portifolio.id"
-              :label="portifolio.name"
-            />
-          </el-select> -->
-        </template>
-      </el-table-column>
-
-      <el-table-column align="right">
-        <template
-          slot="header"
-        >
+        <template slot="header">
           <div class="el-input el-input--mini">
             <input
               v-model="search"
@@ -87,18 +63,9 @@
             >
           </div>
         </template>
-      </el-table-column>
 
-      <el-table-column
-        align="right"
-        width="60"
-      >
         <template>
-          <el-button
-            icon="el-icon-edit"
-            size="small"
-            circle
-          />
+          <a>Ver portifólios</a>
         </template>
       </el-table-column>
     </el-table>
@@ -107,8 +74,23 @@
       title="Portifolios"
       :visible.sync="dialog.visible"
       append-to-body
+      custom-class="portifolios-dialog"
     >
-      <span>This is a message</span>
+      <el-select
+        v-model="handledDialogPortifolios"
+        size="small"
+        default-first-option
+        allow-create
+        filterable
+        multiple
+      >
+        <el-option
+          v-for="portifolio in portifolios"
+          :key="`portifolio-${portifolio.id}`"
+          :value="portifolio.id"
+          :label="portifolio.name"
+        />
+      </el-select>
     </el-dialog>
   </section>
 </template>
@@ -123,7 +105,8 @@ export default {
     search: '',
     dialog: {
       visible: false,
-      workspace: null
+      workspace: null,
+      portifolios: []
     },
     activeRow: null
   }),
@@ -149,6 +132,26 @@ export default {
           return lowerCaseTeamName.includes(lowerCaseSearch) || lowerCaseName.includes(lowerCaseSearch) || lowerCaseKeyAccount.includes(this.search)
         })
       }
+    },
+
+    handledDialogPortifolios: {
+      get() {
+        return this.dialog.portifolios
+      },
+      set(values) {
+        this.dialog.portifolios = values.map(value => {
+          console.log(typeof value)
+          if (typeof value === 'string') {
+            this.createPortifolio(value).then(portifolio => {
+              return portifolio?.id || value
+            }).catch(() => {
+              return value
+            })
+          } else {
+            return value
+          }
+        })
+      }
     }
   },
 
@@ -160,6 +163,7 @@ export default {
     ...mapActions([
       'myWorkspace',
       'getPortifolios',
+      'createPortifolio',
       'getPortifolioAssociated',
       'getWorkspaceKeyAccounts',
       'setPortifolioToWorkspace',
@@ -193,10 +197,12 @@ export default {
     openPortifolioDialog(workspaceId) {
       this.isLoading = true
 
-      this.getPortifolioAssociated(workspaceId).then(res => {
-        console.log(res)
-        this.dialog.workspace = workspaceId
-        this.dialog.visible = true
+      this.getPortifolioAssociated(workspaceId).then(portifolios => {
+        this.dialog = {
+          portifolios,
+          visible: true,
+          workspace: workspaceId
+        }
       }).finally(() => {
         this.isLoading = false
       })
@@ -213,6 +219,9 @@ export default {
 
     handleRowClick(row, column, _event) {
       switch (column.property) {
+        case 'portifolios':
+          this.openPortifolioDialog(row.id)
+          break
         case 'keyAccountId':
           this.setActiveRow(row.id)
           break
@@ -239,6 +248,16 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.portifolios-dialog {
+  .el-dialog__body {
+    .el-select {
+      width: 100%;
+    }
+  }
+}
+</style>
 
 <style lang="scss" scoped>
 .workspace-container {
