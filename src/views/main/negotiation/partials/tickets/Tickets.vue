@@ -197,7 +197,7 @@ export default {
           break
         case 'finished':
           this.setTicketsQuery({ key: 'prescriptions', value: ['NEWLY_FINISHED'] })
-          this.setTicketsQuery({ key: 'sort', value: ['visualized,asc', 'conclusionDate,asc', 'lastReceivedMessage,asc', 'id,desc'] })
+          this.setTicketsQuery({ key: 'sort', value: ['visualized,asc', 'conclusionDate,asc', 'expirationDate,asc', 'lastReceivedMessage,asc', 'id,desc'] })
           break
       }
 
