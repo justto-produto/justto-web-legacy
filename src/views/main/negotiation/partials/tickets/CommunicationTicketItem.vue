@@ -62,7 +62,7 @@
       <el-step />
     </el-steps>
     <span class="communication-ticket-item-container__time">
-      {{ getLastInteraction(lastInboundInteraction.dateTime) }}
+      {{ lastInboundInteraction.typeMessage || '' }} {{ getLastInteraction(lastInboundInteraction.dateTime) }}
     </span>
   </li>
 </template>
@@ -110,7 +110,6 @@ export default {
       if (this.isAcceptedTab || this.isFinishedTab) {
         if (conclusionDate?.dateTime) {
           return {
-            typeMessage: 'Concluída em:',
             message: 'Disputa ' + this.$t(`ticket-status.${disputeStatus}`),
             dateTime: conclusionDate?.dateTime
           }
@@ -136,6 +135,7 @@ export default {
         }
       } else {
         return {
+          typeMessage: 'Expirada em:',
           message: 'Disputa ' + this.$t(`ticket-status.${disputeStatus}`),
           dateTime: expirationDate.dateTime || '--/--/--'
         }
