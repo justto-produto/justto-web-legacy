@@ -124,6 +124,7 @@
           </el-select>
           <el-tooltip content="Filtrar disputas">
             <el-button
+              class="view-management__buttons-button"
               :plain="!hasFilters"
               :type="hasFilters ? 'primary' : ''"
               @click="showManagementFilters"
@@ -137,6 +138,7 @@
           </el-tooltip>
           <el-tooltip content="Importar disputas">
             <el-button
+              class="view-management__buttons-button"
               plain
               @click="showImportDialog"
             >
@@ -148,6 +150,7 @@
           </el-tooltip>
           <el-tooltip content="Exportar">
             <el-button
+              class="view-management__buttons-button"
               :disabled="disputes.length === 0"
               plain
               icon="el-icon-download"
@@ -893,6 +896,11 @@ export default {
     //   width: 180px;
     //   vertical-align: middle;
     // }
+    display: flex;
+
+    .view-management__buttons-button {
+      height: 40px;
+    }
 
     .view-management__buttons-select {
       margin: 0 8px;
