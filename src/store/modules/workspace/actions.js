@@ -224,12 +224,12 @@ const workspaceActions = {
     })
   },
 
-  updateWorkspaceKeyAccount({ getters }, keyAccountId) {
+  updateWorkspaceKeyAccount({ getters }, { keyAccountId, workspaceId = null }) {
     return axiosDispatch({
-      url: `${accountsWorkspaceApi}/${getters.workspaceId}/keyAccount/${keyAccountId}`,
+      url: `${accountsWorkspaceApi}/${workspaceId || getters.workspaceId}/keyAccount/${keyAccountId}`,
       method: 'patch',
-      mutation: 'updateAssociatedKeyAccount',
-      payload: { keyAccountId }
+      mutation: workspaceId ? 'updateWorkspaceKeyAccount' : 'updateAssociatedKeyAccount',
+      payload: { keyAccountId, workspaceId }
     })
   },
 

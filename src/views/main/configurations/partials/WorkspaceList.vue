@@ -8,6 +8,7 @@
       style="width: 100%"
       height="95vh"
       class="workspace-container__table"
+      @row-click="handleRowClick"
     >
       <el-table-column
         prop="name"
@@ -24,9 +25,12 @@
       >
         <template v-slot="scope">
           <el-select
+            v-if="scope.row.id === activeRow"
+            :id="`ka-select-${scope.row.id}`"
             :value="scope.row.keyAccountId"
             size="small"
             filterable
+            @change="saveKeyAccountInToWorkspace($event, scope.row)"
           >
             <el-option
               v-for="keyAccount in keyAccounts"
@@ -35,6 +39,13 @@
               :label="keyAccountTemplate(keyAccount)"
             />
           </el-select>
+
+          <span
+            v-else
+            :style="{cursor: 'pointer'}"
+          >
+            {{ keyAccountTemplate(findKeyAccount(scope.row.keyAccountId)) }}
+          </span>
         </template>
       </el-table-column>
 
@@ -62,6 +73,7 @@
           </el-select> -->
         </template>
       </el-table-column>
+
       <el-table-column align="right">
         <template
           slot="header"
@@ -76,6 +88,7 @@
           </div>
         </template>
       </el-table-column>
+
       <el-table-column
         align="right"
         width="60"
@@ -111,7 +124,8 @@ export default {
     dialog: {
       visible: false,
       workspace: null
-    }
+    },
+    activeRow: null
   }),
 
   computed: {
@@ -148,7 +162,8 @@ export default {
       'getPortifolios',
       'getPortifolioAssociated',
       'getWorkspaceKeyAccounts',
-      'setPortifolioToWorkspace'
+      'setPortifolioToWorkspace',
+      'updateWorkspaceKeyAccount'
     ]),
 
     init() {
@@ -161,6 +176,10 @@ export default {
       ]).then(() => {}).finally(() => {
         this.isLoading = false
       })
+    },
+
+    findKeyAccount(keyAccountId) {
+      return this.keyAccounts.find(({ id }) => Number(id) === Number(keyAccountId))
     },
 
     keyAccountTemplate(ka) {
@@ -190,6 +209,32 @@ export default {
         console.log('remover')
       }
       // this.setPortifolioToWorkspace()
+    },
+
+    handleRowClick(row, column, _event) {
+      switch (column.property) {
+        case 'keyAccountId':
+          this.setActiveRow(row.id)
+          break
+        default:
+          console.log(column)
+          break
+      }
+    },
+
+    setActiveRow(row) {
+      this.activeRow = row
+      this.$nextTick(() => {
+        if (document.querySelector(`#ka-select-${row}`)) {
+          document.querySelector(`#ka-select-${row}`).click()
+        }
+      })
+    },
+
+    saveKeyAccountInToWorkspace(keyAccountId, { id }) {
+      this.updateWorkspaceKeyAccount({ keyAccountId, workspaceId: id }).then(() => {
+        this.setActiveRow(null)
+      })
     }
   }
 }
