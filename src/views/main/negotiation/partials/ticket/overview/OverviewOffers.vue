@@ -7,7 +7,7 @@
       <div>
         <CurrencyInlieEditorInner
           v-model="plaintiffOffer.value"
-          :is-editable="!isPreNegotiation && !isPaused && !isCanceled"
+          :is-editable="canEditPlaintiffOffer"
           class="overview-offers__proposal-value overview-offers__proposal-value--full-line"
           @change="updatePlaintiffOffer"
         />
@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
 import preNegotiation from '@/utils/mixins/ticketPreNegotiation'
 
 export default {
@@ -87,6 +87,11 @@ export default {
 
     disputeId() {
       return Number(this.$route.params.id)
+    },
+
+    canEditPlaintiffOffer() {
+      const { status } = this
+      return ['ENGAGEMENT', 'PENDING', 'RUNNING', 'IMPORTED', 'ENRICHED'].includes(status) && !this.isCanceled && !this.isPaused
     }
   },
   methods: {
@@ -96,7 +101,12 @@ export default {
       'setTicketOverviewDefendantProposal'
     ]),
 
+    ...mapMutations({
+      updateTicketOverview: 'updateTicketOverview'
+    }),
+
     updatePlaintiffOffer(value) {
+      const polarityObjectKey = 'plaintiffOffer'
       const { disputeId, plaintiffOffer } = this
       const { roleId } = plaintiffOffer
 
@@ -108,11 +118,56 @@ export default {
         roleId: roleId || (ticketPlaintiffLawyer?.disputeRoleId || ticketPlaintiffParty?.disputeRoleId),
         value,
         note: '',
-        updateUpperRage: false
+        updateUpperRange: false
       }
-
-      const polarityObjectKey = 'plaintiffOffer'
-      this.sendOffer({ data, disputeId, polarityObjectKey })
+      if (this.upperRange === 0) {
+        const tag = this.$createElement
+        this.$confirm(tag('div', null, [
+          tag('p', null, 'Valor da contraproposta é maior que o da alçada máxima!'),
+          tag('br', null, ''),
+          tag('p', null, [
+            tag('span', { style: { color: '#FF4B54' } }, '*'),
+            tag('small', null, [
+              'Ao clicar em ',
+              tag('strong', null, 'Majorar'),
+              ', será feita a ',
+              tag('strong', null, 'contraproposta'),
+              ', a ',
+              tag('strong', null, 'alçada máxima'),
+              ' será majorada para o ',
+              tag('strong', null, 'valor'),
+              ' da contraproposta e a disputa será alterada para ',
+              tag('strong', null, 'Proposta Aceita'),
+              '.'
+            ])
+          ]),
+          tag('br', null, ''),
+          tag('p', null, [
+            tag('span', { style: { color: '#FF4B54' } }, '*'),
+            tag('small', null, [
+              'Ao clicar em ',
+              tag('strong', null, 'Não majorar'),
+              ', somente será feita a contraproposta, sem alterações no status da disputa.'
+            ])
+          ])
+        ]), 'Majorar a alçada máxima?', {
+          distinguishCancelAndClose: true,
+          dangerouslyUseHTMLString: true,
+          closeOnClickModal: false,
+          closeOnPressEscape: false,
+          showClose: false,
+          confirmButtonText: 'Não majorar',
+          cancelButtonText: 'Majorar'
+        }).catch(() => {
+          const { disputeId } = this
+          const updateUpperRangeObj = { upperRange: value }
+          data.updateUpperRange = true
+          this.sendOffer({ data, disputeId, polarityObjectKey })
+            .then(() => this.updateTicketOverview({ payload: { ...updateUpperRangeObj } }))
+        })
+      } else {
+        this.sendOffer({ data, disputeId, polarityObjectKey })
+      }
     },
 
     updateDefendantOffer(value) {

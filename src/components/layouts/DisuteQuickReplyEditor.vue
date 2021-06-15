@@ -66,7 +66,7 @@ export default {
         body: ''
       },
       editorLoaded: false,
-      useMenstionPlugin: true,
+      useMentionPlugin: true,
       usePreviewPlugin: true
     }
   },

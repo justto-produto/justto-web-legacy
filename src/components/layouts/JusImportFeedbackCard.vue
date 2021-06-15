@@ -189,42 +189,55 @@
         </div>
         <el-switch v-model="businessHoursEngagement" />
       </div>
+
       <div class="jus-import-feedback-card__switch">
         <i class="el-icon-circle-check el-input__icon--success" />
+
         <div class="content">
-          <div>Sempre engajar o autor</div>
+          <div>Enviar mensagem para autor e advogado</div>
+
           <p>
-            Deixando <b>selecionada</b> esta opção, <b>sempre</b> iremos enviar mensagens para o autor.
+            Deixando <b>selecionada</b> esta opção, também iremos enviar mensagens para o autor.
           </p>
         </div>
+
         <el-switch v-model="awaysContactParty" />
       </div>
+
       <div
         v-if="!awaysContactParty"
         class="jus-import-feedback-card__switch"
       >
         <i class="el-icon-circle-check el-input__icon--success" />
+
         <div class="content">
-          <div>Engajar autor se não tiver advogado</div>
+          <div>Enviar mensagem para o autor somente se não tiver advogado</div>
+
           <p>
             Deixando <b>selecionada</b> esta opção, iremos enviar mensagens para o autor quando não houver advogado constituído.
           </p>
         </div>
+
         <el-switch v-model="contactPartyWhenNoLowyer" />
       </div>
+
       <div
         v-if="!awaysContactParty"
         class="jus-import-feedback-card__switch"
       >
         <i class="el-icon-circle-check el-input__icon--success" />
+
         <div class="content">
-          <div>Engajar autor se advogado não possuir contatos válidos para ser engajado</div>
+          <div>Enviar mensagem para autor somente se advogado não possuir contatos válidos para ser engajado</div>
+
           <p>
             Deixando <b>selecionada</b> esta opção, iremos enviar mensagens para o autor se o <b>advogado não possuir dados válidos</b> para ser contatado.
           </p>
         </div>
+
         <el-switch v-model="contactPartyWhenInvalidLowyer" />
       </div>
+
       <div class="jus-import-feedback-card__switch">
         <i class="el-icon-circle-check el-input__icon--success" />
         <div class="content">

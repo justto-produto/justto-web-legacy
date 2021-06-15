@@ -4,7 +4,8 @@ import actions from './actions'
 
 const ManagementModule = {
   state: {
-    activeOccurrency: {}
+    activeOccurrency: {},
+    selectedIds: []
   },
   actions,
   getters,

@@ -725,7 +725,7 @@ export default {
           if (fo.interaction && fo.interaction.message && fo.interaction.message.communicationType === 'WHATSAPP') return
           let similarity
           if (fo.interaction && fo.interaction.type) {
-            similarity = ['MANUAL_COUNTERPROPOSAL', 'NEGOTIATOR_PROPOSAL', 'NEGOTIATOR_COUNTERPROSAL', 'MANUAL_PROPOSAL'].includes(fo.interaction.type) ? 100 : 75
+            similarity = ['ATTACHMENT', 'MANUAL_COUNTERPROPOSAL', 'NEGOTIATOR_PROPOSAL', 'NEGOTIATOR_COUNTERPROSAL', 'MANUAL_PROPOSAL'].includes(fo.interaction.type) ? 100 : 75
           } else {
             similarity = 75
           }
@@ -946,6 +946,7 @@ export default {
     isJusttineMessage(occurrence) {
       return occurrence.interaction &&
       occurrence.interaction.message &&
+      ['EMAIL', 'WHATSAPP'].includes(occurrence.interaction.message.communicationType) &&
       occurrence.interaction.message.status !== 'PROCESSED_BY_USER' &&
       occurrence.interaction.message.createdBy === 'system' &&
       occurrence.interaction.direction === 'OUTBOUND'

@@ -526,7 +526,7 @@ export default {
     },
 
     openEditNegotiatorsDialog(action) {
-      this.editNegotiatorsForm = this.ticketNegotiators.map(negotiator => negotiator.personId)
+      this.editNegotiatorsForm = this.ticketNegotiators.map(negotiator => negotiator.person.id)
       this.editNegotiatorsDialogVisible = true
     },
 

@@ -2,6 +2,7 @@
   <div class="communication-editor">
     <el-dialog
       v-if="visible"
+      ref="communication-editor-dialog"
       :visible.sync="isVisible"
       class="communication-editor__dialog"
     >
@@ -72,6 +73,7 @@
             v-if="isVisible"
             ref="edit"
             v-model="template.body"
+            :class="`ckeditor-${_uid}`"
             :editor="editor"
             :config="editorConfig"
             type="classic"
@@ -167,6 +169,7 @@ export default {
 
   computed: {
     ...mapGetters({
+      seeSource: 'getEditorSourcePreview',
       templateVariables: 'getAvaliableVariablesToTemplate'
     }),
 
@@ -220,8 +223,12 @@ export default {
       this.$forceUpdate()
     }
   },
+
   methods: {
-    ...mapActions(['changeCommunicationTemplate']),
+    ...mapActions([
+      'toggleEditorSourcePreview',
+      'changeCommunicationTemplate'
+    ]),
 
     onNamespaceLoaded(CKEDITOR) {
       // Add external `placeholder` plugin which will be available for each
@@ -261,7 +268,9 @@ export default {
             ${body}
           </body>
         </html>`
-      this.template.body = fullTemplate
+      if (!body.endsWith('</html>')) {
+        this.template.body = fullTemplate
+      }
       this.saveTemplate()
     },
 

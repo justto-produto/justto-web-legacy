@@ -1,6 +1,6 @@
 <template>
   <el-card
-    v-if="showTips && showProtocol"
+    v-if="showTips && showProtocol && hasDraftFeatureActive"
     class="dispute-tips el-card--bordered el-card--info"
   >
     <div slot="header">
@@ -65,18 +65,22 @@
 
 <script>
 import { getDocumentStep } from '@/utils'
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
+
 export default {
   name: 'DisputeTips',
+
   components: {
     JusProtocolDialog: () => import('@/components/dialogs/JusProtocolDialog')
   },
+
   props: {
     value: {
       type: Object,
       default: () => ({})
     }
   },
+
   data() {
     return {
       showTips: true,
@@ -84,20 +88,29 @@ export default {
       document: {}
     }
   },
+
   computed: {
+    ...mapGetters({
+      hasDraftFeatureActive: 'getIsDraftManagementActive'
+    }),
+
     dispute() {
       return Object.keys(this.value).length > 0 ? this.value : this.$store.getters.dispute
     },
+
     documentStep() {
       return getDocumentStep(this.dispute.hasDocument, this.dispute.signStatus)
     },
+
     showProtocol() {
       return ['ACCEPTED', 'CHECKOUT', 'SETTLED'].includes(this.dispute.status)
     },
+
     hasDocumentSignURL() {
       return this.document.signedDocument && this.document.signedDocument.signKey
     }
   },
+
   created() {
     if (this.documentStep >= 2) {
       this.getDocumentByDisputeId(this.dispute.id).then(document => {

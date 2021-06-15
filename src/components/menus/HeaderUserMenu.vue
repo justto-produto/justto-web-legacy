@@ -159,13 +159,15 @@ export default {
   mounted() {
     this.myWorkspace()
     this.setPersonName()
+    this.getFeaturesAndModules()
   },
 
   methods: {
     ...mapActions([
-      'setGhostMode',
       'myWorkspace',
-      'changeMemberName'
+      'setGhostMode',
+      'changeMemberName',
+      'getFeaturesAndModules'
     ]),
 
     changeWorkspace() {

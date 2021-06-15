@@ -51,6 +51,28 @@
               </el-select>
             </el-form-item>
           </el-col>
+          <!-- MOTIVO DE PRE-NEGOCIACAO -->
+          <el-col
+            v-if="!loading && isPreNegotiation"
+            :span="12"
+          >
+            <el-form-item label="Palavras de pré-negociação">
+              <el-select
+                v-model="filters.preNegotiationKeywords"
+                multiple
+                filterable
+                placeholder="Selecione uma opção"
+                @clear="clearPreNegotitationKeyWorks"
+              >
+                <el-option
+                  v-for="keyword in preNegotiationKeywords.keyWords"
+                  :key="keyword"
+                  :value="keyword"
+                  :label="keyword"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
           <!-- ESTRATÉGIA -->
           <el-col
             v-if="!loading"
@@ -188,6 +210,15 @@
                   @change="canSelectNotPaused"
                 />
               </div>
+              <div v-if="isEngagement || isRunning">
+                <div>
+                  <i class="el-icon-warning-outline" /> Advogados ofensores
+                </div>
+                <el-switch
+                  v-model="filters.vexatiousLawyer"
+                  data-testid="filters-advogados-ofensores"
+                />
+              </div>
             </el-form-item>
           </el-col>
           <!-- FAVORITOS -->
@@ -302,7 +333,8 @@ export default {
       respondents: 'respondents',
       workspaceTags: 'workspaceTags',
       negotiatorsList: 'workspaceMembers',
-      ticketsQuery: 'getTicketsQuery'
+      ticketsQuery: 'getTicketsQuery',
+      preNegotiationKeywords: 'getPreNegotiation'
     }),
 
     isPreNegotiation() {
@@ -391,7 +423,8 @@ export default {
       'getRespondents',
       'getWorkspaceTags',
       'setTicketsFilters',
-      'getTickets'
+      'getTickets',
+      'getWorkspacePreNegotiationKeywords'
     ]),
     canSelectPaused(_value) {
       const { onlyPaused, onlyNotPaused } = this.filters
@@ -411,7 +444,8 @@ export default {
         this.getCampaigns(),
         this.getMyStrategiesLite(),
         this.getRespondents(),
-        this.getWorkspaceTags()
+        this.getWorkspaceTags(),
+        this.getWorkspacePreNegotiationKeywords()
       ]).finally(_responses => {
         this.loading = false
       })
@@ -456,6 +490,7 @@ export default {
       if (filters.expirationDate && filters.expirationDate.length) {
         this.$jusSegment('Filtro por data fim negociação')
       }
+      // add last filters]
     },
     clearFilters() {
       const { filters } = this
@@ -470,11 +505,13 @@ export default {
       this.changeExpirationDate()
       this.changeimportingDate()
       this.clearInteraction()
+      this.clearPreNegotitationKeyWorks()
       this.warningSixtyLastDaysRange = false
       this.filters.onlyFavorite = false
       this.filters.onlyPaused = false
       this.filters.onlyNotPaused = false
       this.filters.hasCounterproposal = false
+      this.filters.vexatiousLawyer = false
       this.setTicketsFilters({ filters, hasFilters: false })
       this.advancedFiltersDialogVisible = false
       delete this.filters.onlyNotVisualized
@@ -497,6 +534,9 @@ export default {
     },
     clearCampaign() {
       this.filters.campaigns = []
+    },
+    clearPreNegotitationKeyWorks() {
+      this.filters.preNegotiationKeywords = []
     },
     changeDealDate(value) {
       if (value) {

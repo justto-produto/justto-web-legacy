@@ -40,7 +40,16 @@ const workspaceGetters = {
   getFeaturesAndModules: state => state.featuresAndModules,
   getWorkspaceKeyAccounts: (state) => state.workspace.keyAccounts,
   getPortifolios: (state) => state.portifolios,
-  getAssociatedKeyAccount: (state) => state.workspace.associatedKeyAccount
+  getAssociatedKeyAccount: (state) => state.workspace.associatedKeyAccount,
+  getIsDraftManagementActive: state => {
+    const draftFeature = {
+      active: true,
+      ...state.featuresAndModules[4]
+    }
+
+    return draftFeature.active
+  },
+  getApiIntegrationConfiguration: (state) => state.workspace.apiIntegrationConfiguration
 }
 
 export default workspaceGetters

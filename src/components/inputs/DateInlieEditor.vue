@@ -66,7 +66,10 @@ export default {
   }),
   computed: {
     newDateValue() {
-      return new Date(this.value)
+      const timestamp = Date.parse(this.value)
+      if (!isNaN(timestamp)) {
+        return new Date(this.value)
+      } else return new Date()
     },
     vModel: {
       get() {
@@ -91,7 +94,7 @@ export default {
   },
   methods: {
     enableEdit() {
-      this.model = this.newDateValue || new Date()
+      this.model = this.newDateValue
       this.isEditing = true
       this.$nextTick(() => {
         this.$forceUpdate()
@@ -109,8 +112,10 @@ export default {
       this.isEditing = false
       window.removeEventListener('click', this.blurEvent)
     },
-    blurEvent() {
-      const targetId = event.target.id
+    blurEvent(event) {
+      const targetId = event.target.id.length === 0
+        ? event.target.lastChild.ownerDocument.activeElement.id
+        : event.target.id
       if (!targetId.startsWith('datepickerIcons') && !targetId.startsWith('datepickerInput')) this.disableEdit()
     },
     copyValue() {
@@ -158,14 +163,6 @@ export default {
       }
     }
   }
-
-  // .request-succes {
-  //   color: $--color-primary;
-  // }
-
-  // .request-fail {
-  //   color: $--color-danger;
-  // }
 }
 </style>
 

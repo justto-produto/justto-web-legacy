@@ -180,9 +180,10 @@ export default {
 .management-prescriptions {
   margin: 6px 192px 6px 0px;
   display: flex;
+  gap: 10px;
 
   .management-prescriptions__popover-trigger {
-    margin-left: 10px;
+    /*margin-left: 10px;*/
 
     .management-prescriptions__popover-icon {
       width: 14px
@@ -199,6 +200,7 @@ export default {
 
 .management-prescriptions__button {
   vertical-align: middle;
+  margin: auto 0 !important;
 
   &.el-button.is-plain:focus {
     color: #424242;

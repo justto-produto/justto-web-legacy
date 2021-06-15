@@ -170,7 +170,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="tab3 || tab4"
+        v-if="(tab3 || tab4) && showDraft"
         label="Minuta"
         width="110px"
         class-name="management-table__row-actions"
@@ -416,7 +416,8 @@ export default {
       loading: 'loading',
       disputes: 'disputes',
       lastAccess: 'lastAccess',
-      onlineDocuments: 'onlineDocuments'
+      onlineDocuments: 'onlineDocuments',
+      showDraft: 'getIsDraftManagementActive'
     }),
 
     selectedIdsComp: {

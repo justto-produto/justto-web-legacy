@@ -39,6 +39,28 @@
               </el-select>
             </el-form-item>
           </el-col>
+          <!-- MOTIVOS DE PRENEGOCIACAO -->
+          <el-col
+            v-if="!loading && (isPreNegotiation || isAll)"
+            :span="12"
+          >
+            <el-form-item label="Palavras de pré-negociação">
+              <el-select
+                v-model="filters.preNegotiationKeywords"
+                multiple
+                filterable
+                placeholder="Selecione uma opção"
+                @clear="clearPreNegotitationKeyWorks"
+              >
+                <el-option
+                  v-for="keyword in preNegotiationKeywords.keyWords"
+                  :key="keyword"
+                  :value="keyword"
+                  :label="keyword"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
           <!-- ESTRATÉGIA -->
           <el-col
             v-if="!loading"
@@ -165,6 +187,15 @@
                   data-testid="filters-only-paused"
                 />
               </div>
+              <div v-if="isEngagement || isInteration || isAll">
+                <div>
+                  <i class="el-icon-warning-outline" /> Advogados ofensores
+                </div>
+                <el-switch
+                  v-model="filters.vexatiousLawyer"
+                  data-testid="filters-advogados-ofensores"
+                />
+              </div>
             </el-form-item>
           </el-col>
           <!-- FAVORITOS -->
@@ -277,7 +308,8 @@ export default {
       campaigns: 'campaignList',
       respondents: 'respondents',
       workspaceTags: 'workspaceTags',
-      negotiatorsList: 'workspaceMembers'
+      negotiatorsList: 'workspaceMembers',
+      preNegotiationKeywords: 'getPreNegotiation'
     }),
 
     isPreNegotiation() {
@@ -383,7 +415,8 @@ export default {
       'getCampaigns',
       'getMyStrategiesLite',
       'getRespondents',
-      'getWorkspaceTags'
+      'getWorkspaceTags',
+      'getWorkspacePreNegotiationKeywords'
     ]),
     fetchData() {
       this.loading = true
@@ -391,7 +424,8 @@ export default {
         this.getCampaigns(),
         this.getMyStrategiesLite(),
         this.getRespondents(),
-        this.getWorkspaceTags()
+        this.getWorkspaceTags(),
+        this.getWorkspacePreNegotiationKeywords()
       ]).finally(responses => {
         this.loading = false
       })
@@ -430,9 +464,6 @@ export default {
       }
     },
     clearFilters() {
-      if (this.tabIndex === '4') {
-        this.filters.status = []
-      }
       this.clearCampaign()
       this.clearStrategy()
       this.clearTags()
@@ -442,13 +473,16 @@ export default {
       this.changeimportingDate()
       this.clearInteraction()
       this.clearStatuses()
+      this.clearPreNegotitationKeyWorks()
       this.filters.onlyFavorite = false
       this.filters.onlyPaused = false
       this.filters.hasCounterproposal = false
+      this.filters.vexatiousLawyer = false
       this.$store.commit('setDisputeHasFilters', false)
       this.$store.commit('setDisputeQuery', this.filters)
       this.visibleFilters = false
       delete this.filters.onlyNotVisualized
+      delete this.filters.onlyPaused
     },
     restoreFilters() {
       this.filters = JSON.parse(JSON.stringify(this.$store.getters.disputeQuery))
@@ -476,7 +510,21 @@ export default {
       }
     },
     clearStatuses() {
-      this.filters.status = []
+      if (this.isFinished || this.isEngagement || this.isAll) {
+        switch (this.tabIndex) {
+          case '1':
+            this.filters.status = ['IMPORTED', 'ENRICHED', 'ENGAGEMENT', 'PENDING']
+            break
+          case '4':
+          case '9':
+          default:
+            this.filters.status = []
+            break
+        }
+      }
+    },
+    clearPreNegotitationKeyWorks() {
+      this.filters.preNegotiationKeywords = []
     },
     changeExpirationDate(value) {
       if (value) {

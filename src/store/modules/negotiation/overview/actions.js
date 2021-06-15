@@ -106,7 +106,6 @@ const overviewActions = {
 
   setTicketOverviewInfo({ _ }, params) {
     const { data, disputeId } = params
-
     return validateCurrentId(disputeId, () => axiosDispatch({
       url: `${disputeApi}/${disputeId}/info`,
       method: 'PATCH',
@@ -309,7 +308,9 @@ const overviewActions = {
   setNamesakeTicketOptions({ _ }, { personId, document, disputeId }) {
     return axiosDispatch({
       url: `${fusionRunnerApi}/set-document/person/${personId}/${document}/${disputeId}`,
-      method: 'PATCH'
+      method: 'PATCH',
+      mutation: 'setNamesake',
+      payload: { personId, document, disputeId }
     })
   },
 

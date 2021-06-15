@@ -45,13 +45,13 @@
     </div>
     <!-- <div class="communication-ticket-item-container__gray" /> -->
     <span
-      v-if="isAcceptedTab || (isFinishedTab && isSettled)"
+      v-if="(isAcceptedTab || (isFinishedTab && isSettled)) && showDraft"
       class="communication-ticket-item-container__minuta"
     >
       Minuta
     </span>
     <el-steps
-      v-if="isAcceptedTab || (isFinishedTab && isSettled)"
+      v-if="(isAcceptedTab || (isFinishedTab && isSettled)) && showDraft"
       :active="documentStep"
       finish-status="success"
       class="communication-ticket-item-container__minuta-steps"
@@ -85,7 +85,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      activeTab: 'getTicketsActiveTab'
+      activeTab: 'getTicketsActiveTab',
+      showDraft: 'getIsDraftManagementActive'
     }),
     documentStep() {
       const signStatus = this.ticket?.draftStatus ? this.ticket.draftStatus : this.ticket.signStatus

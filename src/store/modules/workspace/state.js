@@ -22,6 +22,7 @@ export default {
       limitValue: 0,
       keyWords: []
     },
+    apiIntegrationConfiguration: {},
     associatedKeyAccount: {
       workspace: { name: '', teamName: '' },
       keyAccount: { name: '', email: '' },

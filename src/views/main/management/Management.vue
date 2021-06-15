@@ -443,7 +443,7 @@ export default {
       termDebounce: () => {},
       ufDebounce: () => {},
       disputeDebounce: '',
-      selectedIds: [],
+      // selectedIds: [],
       importDialogVisible: false,
       exportDisputesDialog: false,
       checkedNodes: 0,
@@ -472,8 +472,18 @@ export default {
       hasNew: 'disputeHasNew',
       exportHistory: 'exportHistory',
       loadingDisputes: 'loadingDisputes',
-      workspaceProperties: 'workspaceProperties'
+      workspaceProperties: 'workspaceProperties',
+      getSelectedIds: 'getSelectedIds'
     }),
+
+    selectedIds: {
+      get() {
+        return this.getSelectedIds
+      },
+      set(ids) {
+        this.setSelectedIds(ids)
+      }
+    },
 
     columns() {
       let result = []
@@ -561,6 +571,7 @@ export default {
 
   methods: {
     ...mapActions([
+      'setSelectedIds',
       'exportDisputes',
       'exportProtocols',
       'getExportColumns',
