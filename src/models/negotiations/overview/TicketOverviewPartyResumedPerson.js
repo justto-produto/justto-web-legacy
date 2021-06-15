@@ -15,7 +15,7 @@ export default class PersonDto {
   }
 
   get isNamesake() {
-    return this.namesake
+    return this.namesake && this.document.length === 0
   }
 
   get isVexatious() {

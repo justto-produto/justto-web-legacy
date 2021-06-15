@@ -21,26 +21,24 @@ const _axios = axios.create(config)
 _axios.CancelToken = axios.CancelToken
 _axios.isCancel = axios.isCancel
 
+// De quando vai a request
 _axios.interceptors.request.use(
   function(config) {
     const storageWorkspace = JSON.parse(localStorage.getItem('jusworkspace'))
+
     if (store.getters.isLoggedIn && store.getters.hasWorkspace && storageWorkspace && storageWorkspace.subDomain) {
       if (config.headers.common.Workspace !== storageWorkspace.subDomain) {
         window.location.reload()
       }
     }
-    if (!axios.defaults.headers.common.UserLanguage) {
-      axios.defaults.headers.common.UserLanguage = store.getters.getUserLanguage
-    }
-    if (!axios.defaults.headers.common.UserTimeZone) {
-      axios.defaults.headers.common.UserTimeZone = store.getters.getUserTimeZone
-    }
-    if (!axios.defaults.headers.common.UserBrowserName) {
-      axios.defaults.headers.common.UserBrowserName = store.getters.getUserBrowserName
-    }
-    if (!axios.defaults.headers.common.UserOS) {
-      axios.defaults.headers.common.UserOS = store.getters.getUserOS
-    }
+
+    const { UserLanguage, UserTimeZone, UserBrowserName, UserOS } = _axios.defaults.headers.common
+
+    _axios.defaults.headers.common.UserLanguage = UserLanguage || store.getters.getUserLanguage
+    _axios.defaults.headers.common.UserTimeZone = UserTimeZone || store.getters.getUserTimeZone
+    _axios.defaults.headers.common.UserBrowserName = UserBrowserName || store.getters.getUserBrowserName
+    _axios.defaults.headers.common.UserOS = UserOS || store.getters.getUserOS
+
     return config
   },
   function(error) {
@@ -48,6 +46,7 @@ _axios.interceptors.request.use(
   }
 )
 
+// De quando chega a request
 _axios.interceptors.response.use(
   function(response) {
     if (response.status !== 401 && response.headers && response.headers.authorization) {

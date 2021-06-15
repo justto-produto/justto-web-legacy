@@ -177,6 +177,34 @@ const overviewMutations = {
     Vue.set(state.ticketOverview, 'paused', false)
   },
 
+  updateTicketNegotiator(state, { payload: { negotiators = [], negotiatorsId } }) {
+    const updatedParties = state.ticketOverviewParties.filter(({ roles, person }, index) => {
+      if (!roles.includes('NEGOTIATOR') && negotiatorsId.includes(person.id)) {
+        Vue.set(state.ticketOverviewParties[index], 'roles', [...roles, 'NEGOTIATOR'])
+      }
+      return (!roles.includes('NEGOTIATOR') || negotiatorsId.includes(person.id))
+    })
+
+    const negotiatorsInstances = negotiators.filter(n => {
+      return updatedParties.findIndex(p => p.person.id === n.person.id) === -1
+    }).map(item => new TicketOverviewParties({
+      phones: [],
+      emails: [],
+      oabs: [],
+      bankAccounts: [],
+      personProperties: item.person.properties,
+      ...item,
+      ...item.person,
+      roles: ['NEGOTIATOR'],
+      polarity: 'RESPONDENT'
+    }))
+
+    Vue.set(state, 'ticketOverviewParties', [
+      ...updatedParties,
+      ...negotiatorsInstances
+    ])
+  },
+
   setAttachmentConfidentiality: (state, { payload: { id } }) => {
     state.ticketOverviewAttachments.forEach((attach, attachIndex) => {
       if (attach.id === id) {
