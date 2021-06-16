@@ -1,10 +1,14 @@
 <template>
-  <section class="workspace-container">
+  <section
+    v-loading="isLoading"
+    class="workspace-container"
+  >
     <el-table
       :data="filteredWorkspaces"
       style="width: 100%"
       height="95vh"
       class="workspace-container__table"
+      @row-click="handleRowClick"
     >
       <el-table-column
         prop="name"
@@ -14,18 +18,42 @@
         prop="teamName"
         label="Equipe"
       />
+
       <el-table-column
         prop="keyAccountId"
         label="Key Account"
       >
         <template v-slot="scope">
-          {{ keyAccountTemplate(scope.row.keyAccountId) }}
+          <el-select
+            v-if="scope.row.id === activeRow"
+            :id="`ka-select-${scope.row.id}`"
+            :value="scope.row.keyAccountId"
+            size="small"
+            filterable
+            @change="saveKeyAccountInToWorkspace($event, scope.row)"
+          >
+            <el-option
+              v-for="keyAccount in keyAccounts"
+              :key="`key-account-${keyAccount.id}`"
+              :value="keyAccount.id"
+              :label="keyAccountTemplate(keyAccount)"
+            />
+          </el-select>
+
+          <span
+            v-else
+            :style="{cursor: 'pointer'}"
+          >
+            {{ keyAccountTemplate(findKeyAccount(scope.row.keyAccountId)) }}
+          </span>
         </template>
       </el-table-column>
-      <el-table-column align="right">
-        <template
-          slot="header"
-        >
+
+      <el-table-column
+        align="right"
+        prop="portifolios"
+      >
+        <template slot="header">
           <div class="el-input el-input--mini">
             <input
               v-model="search"
@@ -35,23 +63,72 @@
             >
           </div>
         </template>
+
+        <template>
+          <a>Ver portifólios</a>
+        </template>
       </el-table-column>
     </el-table>
+
+    <el-dialog
+      title="Tipos de carteira"
+      :visible.sync="dialog.visible"
+      append-to-body
+      custom-class="portifolios-dialog"
+    >
+      <el-select
+        v-model="handledDialogPortifolios"
+        v-loading="isLoading"
+        size="small"
+        default-first-option
+        allow-create
+        filterable
+        multiple
+      >
+        <el-option
+          v-for="portifolio in portifolios"
+          :key="`portifolio-${portifolio.id}`"
+          :value="portifolio.id"
+          :label="portifolio.name"
+        />
+      </el-select>
+
+      <span slot="footer">
+        <el-button @click="closeDialog()">Cancelar</el-button>
+        <el-button
+          type="primary"
+          :disabled="disableSavePortifolios"
+          @click="salvarPortifolios"
+        >
+          Salvar
+        </el-button>
+      </span>
+    </el-dialog>
   </section>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
+import _ from 'lodash'
 
 export default {
   data: () => ({
-    search: ''
+    isLoading: false,
+    search: '',
+    dialog: {
+      visible: false,
+      workspace: null,
+      portifolios: []
+    },
+    activeRow: null
   }),
 
   computed: {
     ...mapGetters({
       workspaces: 'getMyWorkspaces',
-      keyAccounts: 'getWorkspaceKeyAccounts'
+      keyAccounts: 'getWorkspaceKeyAccounts',
+      portifolios: 'getPortifolios',
+      portifoliosByWorkspace: 'getPortifoliosByWorkspace'
     }),
 
     filteredWorkspaces() {
@@ -68,33 +145,176 @@ export default {
           return lowerCaseTeamName.includes(lowerCaseSearch) || lowerCaseName.includes(lowerCaseSearch) || lowerCaseKeyAccount.includes(this.search)
         })
       }
+    },
+
+    handledDialogPortifolios: {
+      get() {
+        return this.portifoliosByWorkspace[this.dialog.workspace] || []
+      },
+
+      set(values) {
+        const portifolios = values.filter(name => {
+          if (typeof name === 'string') {
+            this.createPortifolioAndInsert({
+              name,
+              workspaceId: this.dialog.workspace
+            }).finally(() => this.$forceUpdate())
+
+            return false
+          }
+
+          return true
+        })
+
+        this.insertPortifolios({
+          portifolios,
+          workspaceId: this.dialog.workspace
+        })
+      }
+    },
+
+    disableSavePortifolios() {
+      return _.isEqual(this.handledDialogPortifolios, this.dialog.portifolios)
     }
   },
 
-  mounted() {
+  beforeMount() {
     this.init()
   },
 
   methods: {
     ...mapActions([
       'myWorkspace',
-      'getWorkspaceKeyAccounts'
+      'getPortifolios',
+      'getPortifolioAssociated',
+      'getWorkspaceKeyAccounts',
+      'setPortifolioToWorkspace',
+      'updateWorkspaceKeyAccount',
+      'createPortifolioAndInsert',
+      'associatePortifolioToWorkspace',
+      'disassociatePortifolioToWorkspace'
+    ]),
+
+    ...mapMutations([
+      'insertPortifolios'
     ]),
 
     init() {
-      this.myWorkspace()
-      this.getWorkspaceKeyAccounts()
+      this.isLoading = true
+
+      Promise.all([
+        this.myWorkspace(),
+        this.getPortifolios(),
+        this.getWorkspaceKeyAccounts()
+      ]).then(() => {}).finally(() => {
+        this.isLoading = false
+      })
     },
 
-    keyAccountTemplate(keyAccountId) {
-      const ka = this.keyAccounts.find(({ id }) => Number(id) === Number(keyAccountId))
+    findKeyAccount(keyAccountId) {
+      return this.keyAccounts.find(({ id }) => Number(id) === Number(keyAccountId))
+    },
 
+    keyAccountTemplate(ka) {
       if (ka) {
         return (ka.name ? `${ka.name} - ` : '') + `${ka.email}`
       } else {
         return '-'
       }
+    },
+
+    openPortifolioDialog(workspaceId) {
+      this.isLoading = true
+
+      this.getPortifolioAssociated(workspaceId).then(portifolios => {
+        this.dialog = {
+          portifolios: portifolios.map(({ id }) => Number(id)),
+          visible: true,
+          workspace: workspaceId
+        }
+
+        this.handledDialogPortifolios = portifolios.map(({ id }) => Number(id))
+      }).finally(() => {
+        this.isLoading = false
+      })
+    },
+
+    salvarPortifolios() {
+      const toSave = _.difference(this.handledDialogPortifolios, this.dialog.portifolios)
+      const toRemove = _.difference(this.dialog.portifolios, this.handledDialogPortifolios)
+      const workspaceId = this.dialog.workspace
+
+      this.isLoading = true
+
+      Promise.all([
+        ...toRemove.map(portifolioId => this.disassociatePortifolioToWorkspace({ portifolioId, workspaceId })),
+        ...toSave.map(portifolioId => this.associatePortifolioToWorkspace({ portifolioId, workspaceId }))
+      ]).then(() => {
+        this.$jusNotification({
+          type: 'success',
+          title: 'Yay!',
+          message: 'Tipos de carteira salvos com sucesso'
+        })
+        this.closeDialog()
+      }).finally(() => {
+        this.isLoading = false
+      })
+
+      console.log(toSave, toRemove)
+    },
+
+    closeDialog() {
+      this.dialog = {
+        portifolios: [],
+        visible: false,
+        workspace: null
+      }
+    },
+
+    handleRowClick(row, column, _event) {
+      switch (column.property) {
+        case 'portifolios':
+          this.openPortifolioDialog(row.id)
+          break
+        case 'keyAccountId':
+          this.setActiveRow(row.id)
+          break
+        default:
+          console.log(column)
+          break
+      }
+    },
+
+    setActiveRow(row) {
+      this.activeRow = row
+      this.$nextTick(() => {
+        if (document.querySelector(`#ka-select-${row}`)) {
+          document.querySelector(`#ka-select-${row}`).click()
+        }
+      })
+    },
+
+    saveKeyAccountInToWorkspace(keyAccountId, { id }) {
+      this.updateWorkspaceKeyAccount({ keyAccountId, workspaceId: id }).then(() => {
+        this.setActiveRow(null)
+      })
     }
   }
 }
 </script>
+
+<style lang="scss">
+.portifolios-dialog {
+  .el-dialog__body {
+    .el-select {
+      width: 100%;
+    }
+  }
+}
+</style>
+
+<style lang="scss" scoped>
+.workspace-container {
+  width: 100%;
+}
+</style>

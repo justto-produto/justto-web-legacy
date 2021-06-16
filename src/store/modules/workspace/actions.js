@@ -88,6 +88,14 @@ const workspaceActions = {
   getWorkspaces({ _ }) {
     return axiosDispatch({ url: `${workspacesPath}?size=999&` })
   },
+
+  getPortifolio({ _ }) {
+    return axiosDispatch({
+      url: `${workspacesPath}/portifolio`,
+      mutation: 'setPortifolio'
+    })
+  },
+
   removeWorkspaceMember({ _ }, id) {
     return axiosDispatch({
       url: `${workspacesPath}/members/${id}`,
@@ -187,19 +195,65 @@ const workspaceActions = {
     })
   },
 
-  getAssociatedKeyAccount({ getters }) {
+  getAssociatedKeyAccount({ getters: { workspaceId } }) {
     return axiosDispatch({
-      url: `${accountsWorkspaceApi}/${getters.workspaceId}/keyAccount`,
+      url: `${accountsWorkspaceApi}/${workspaceId}/keyAccount`,
       mutation: 'setAssociatedKeyAccount'
     })
   },
 
-  updateWorkspaceKeyAccount({ getters }, keyAccountId) {
+  getPortifolios({ _ }) {
     return axiosDispatch({
-      url: `${accountsWorkspaceApi}/${getters.workspaceId}/keyAccount/${keyAccountId}`,
+      url: `${workspacesPath}/portifolio`,
+      mutation: 'setPortifolio'
+    })
+  },
+
+  createPortifolioAndInsert({ _ }, { name, workspaceId }) {
+    return axiosDispatch({
+      url: `${workspacesPath}/portifolio`,
+      method: 'POST',
+      data: { name },
+      mutation: 'addPortifolio',
+      payload: { workspaceId }
+    })
+  },
+
+  getPortifolioAssociated({ _ }, workspaceId) {
+    return axiosDispatch({
+      url: `${workspacesPath}/portifolio/associateds/${workspaceId}`
+    })
+  },
+
+  setPortifolioToWorkspace({ _ }, { workspaceId, portifolioId }) {
+    return axiosDispatch({
+      url: `api/${portifolioId}/workspace/${workspaceId}`,
+      method: 'PUT',
+      mutation: 'setPortifolioToWorkspace',
+      payload: { workspaceId, portifolioId }
+    })
+  },
+
+  associatePortifolioToWorkspace({ _ }, { portifolioId, workspaceId }) {
+    return axiosDispatch({
+      url: `${workspacesPath}/portifolio/${portifolioId}/workspace/${workspaceId}`,
+      method: 'PUT'
+    })
+  },
+
+  disassociatePortifolioToWorkspace({ _ }, { portifolioId, workspaceId }) {
+    return axiosDispatch({
+      url: `${workspacesPath}/portifolio/${portifolioId}/workspace/${workspaceId}`,
+      method: 'DELETE'
+    })
+  },
+
+  updateWorkspaceKeyAccount({ getters }, { keyAccountId, workspaceId = null }) {
+    return axiosDispatch({
+      url: `${accountsWorkspaceApi}/${workspaceId || getters.workspaceId}/keyAccount/${keyAccountId}`,
       method: 'patch',
-      mutation: 'updateAssociatedKeyAccount',
-      payload: { keyAccountId }
+      mutation: workspaceId ? 'updateWorkspaceKeyAccount' : 'updateAssociatedKeyAccount',
+      payload: { keyAccountId, workspaceId }
     })
   },
 
