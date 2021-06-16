@@ -339,6 +339,13 @@ export default {
       if (filters && element.value > 0) {
         this.$store.commit('clearDisputeQuery')
         this.$store.commit('updateDisputeQuery', { key: 'status', value: [] })
+        this.$store.commit('updateDisputeQuery', {
+          key: 'sort',
+          value: [
+            'visualized,asc',
+            'expirationDate,asc'
+          ]
+        })
         for (const key in filters) {
           // eslint-disable-next-line no-prototype-builtins
           if (filters.hasOwnProperty(key)) {
