@@ -260,6 +260,15 @@ router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (Store.getters.isLoggedIn) {
       if (Store.getters.hasWorkspace) {
+        if (to.name === 'workspaces') {
+          if (!Store.getters.isJusttoAdmin) {
+            if (localStorage.getItem('jusprofile') === 'ADMINISTRATOR') {
+              next('dashboard')
+            } else {
+              next('negotiation')
+            }
+          }
+        }
         if (to.name === 'onboarding' && !Store.getters.redirectNewWorkspace) {
           next('/')
         } else next()
