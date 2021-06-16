@@ -142,6 +142,16 @@
         </div>
       </div>
     </div>
+
+    <div class="strategy-card__footer">
+      <span v-if="strategyData.createdAt">Criado em {{ formatDate(strategyData.createdAt) }} por {{ strategyData.createdBy }}</span>
+      <span
+        v-if="strategyData.updatedAt"
+        class="strategy-card__footer-updated"
+      >
+        Atualizado em {{ formatDate(strategyData.updatedAt) }} por {{ strategyData.updatedBy }}
+      </span>
+    </div>
   </div>
 </template>
 
@@ -246,6 +256,10 @@ export default {
 
     emitDeleteStrategy() {
       this.$emit('deleteStrategy', this.strategyData)
+    },
+
+    formatDate(date) {
+      return this.$moment(new Date(date)).format('DD/MM/YYYY')
     }
   }
 }
@@ -274,6 +288,22 @@ export default {
   &:hover {
     border: 1px solid $--color-primary;
     color: $--color-primary;
+    .strategy-card__header {
+      .strategy-card__action-area {
+        display: flex;
+      }
+    }
+    .strategy-card__footer {
+      display: flex;
+      color: $--color-gray;
+      font-size: 11px;
+      margin-top: 8px;
+      .strategy-card__footer-updated {
+        position: absolute;
+        right: 0;
+        margin-right: 30px;
+      }
+    }
   }
 
   .strategy-card__header {
@@ -300,14 +330,6 @@ export default {
 
       .el-icon-delete {
         color: $--color-danger;
-      }
-    }
-  }
-
-  &:hover {
-    .strategy-card__header {
-      .strategy-card__action-area {
-        display: flex;
       }
     }
   }
@@ -347,6 +369,10 @@ export default {
         font-size: 12px;
       }
     }
+  }
+
+  .strategy-card__footer {
+    display: none;
   }
 }
 
