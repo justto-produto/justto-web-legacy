@@ -144,12 +144,12 @@
     </div>
 
     <div class="strategy-card__footer">
-      <span v-if="strategyData.createdAt">Criado em {{ formatDate(strategyData.createdAt) }} por Siclano</span>
+      <span v-if="strategyData.createdAt">Criado em {{ formatDate(strategyData.createdAt) }} por {{ strategyData.createdBy }}</span>
       <span
         v-if="strategyData.updatedAt"
         class="strategy-card__footer-updated"
       >
-        Atualizado em {{ formatDate(strategyData.updatedAt) }} por Funalo Silva
+        Atualizado em {{ formatDate(strategyData.updatedAt) }} por {{ strategyData.updatedBy }}
       </span>
     </div>
   </div>

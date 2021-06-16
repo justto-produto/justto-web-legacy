@@ -16,16 +16,16 @@
       <div class="communication-editor__data-area">
         <div class="communication-editor__statuses">
           <div
-            v-if="communication.createdAt"
+            v-if="template.createdAt"
             class="communication-editor__statuses-item"
           >
-            <span> Criado em {{ formatDate(communication.createdAt) }} por Siclano</span>
+            <span> Criado em {{ formatDate(template.createdAt) }} por {{ template.createdBy }}</span>
           </div>
-          <div v-if="communication.updatedAt">
+          <div v-if="template.updatedAt">
             <span
               class="communication-editor__statuses-updated"
             >
-              Atualizado em {{ formatDate(communication.updatedAt) }} por Funalo Silva
+              Atualizado em {{ formatDate(template.updatedAt) }} por {{ template.updatedBy }}
             </span>
           </div>
         </div>
