@@ -71,13 +71,14 @@
     </el-table>
 
     <el-dialog
-      title="Portifolios"
+      title="Tipos de carteira"
       :visible.sync="dialog.visible"
       append-to-body
       custom-class="portifolios-dialog"
     >
       <el-select
         v-model="handledDialogPortifolios"
+        v-loading="isLoading"
         size="small"
         default-first-option
         allow-create
@@ -91,6 +92,17 @@
           :label="portifolio.name"
         />
       </el-select>
+
+      <span slot="footer">
+        <el-button @click="closeDialog()">Cancelar</el-button>
+        <el-button
+          type="primary"
+          :disabled="disableSavePortifolios"
+          @click="salvarPortifolios"
+        >
+          Salvar
+        </el-button>
+      </span>
     </el-dialog>
   </section>
 </template>
@@ -147,6 +159,7 @@ export default {
               name,
               workspaceId: this.dialog.workspace
             }).finally(() => this.$forceUpdate())
+
             return false
           }
 
@@ -158,6 +171,10 @@ export default {
           workspaceId: this.dialog.workspace
         })
       }
+    },
+
+    disableSavePortifolios() {
+      return _.isEqual(this.handledDialogPortifolios, this.dialog.portifolios)
     }
   },
 
@@ -173,7 +190,9 @@ export default {
       'getWorkspaceKeyAccounts',
       'setPortifolioToWorkspace',
       'updateWorkspaceKeyAccount',
-      'createPortifolioAndInsert'
+      'createPortifolioAndInsert',
+      'associatePortifolioToWorkspace',
+      'disassociatePortifolioToWorkspace'
     ]),
 
     ...mapMutations([
@@ -209,22 +228,47 @@ export default {
 
       this.getPortifolioAssociated(workspaceId).then(portifolios => {
         this.dialog = {
-          portifolios,
+          portifolios: portifolios.map(({ id }) => Number(id)),
           visible: true,
           workspace: workspaceId
         }
+
+        this.handledDialogPortifolios = portifolios.map(({ id }) => Number(id))
       }).finally(() => {
         this.isLoading = false
       })
     },
 
-    setPortifolioToWorkspace(portifolio, workspace) {
-      if (_.difference(portifolio, workspace.portifolios).length) {
-        console.log('inserir')
-      } else if (_.difference(workspace.portifolios, portifolio).length) {
-        console.log('remover')
+    salvarPortifolios() {
+      const toSave = _.difference(this.handledDialogPortifolios, this.dialog.portifolios)
+      const toRemove = _.difference(this.dialog.portifolios, this.handledDialogPortifolios)
+      const workspaceId = this.dialog.workspace
+
+      this.isLoading = true
+
+      Promise.all([
+        ...toRemove.map(portifolioId => this.disassociatePortifolioToWorkspace({ portifolioId, workspaceId })),
+        ...toSave.map(portifolioId => this.associatePortifolioToWorkspace({ portifolioId, workspaceId }))
+      ]).then(() => {
+        this.$jusNotification({
+          type: 'success',
+          title: 'Yay!',
+          message: 'Tipos de carteira salvos com sucesso'
+        })
+        this.closeDialog()
+      }).finally(() => {
+        this.isLoading = false
+      })
+
+      console.log(toSave, toRemove)
+    },
+
+    closeDialog() {
+      this.dialog = {
+        portifolios: [],
+        visible: false,
+        workspace: null
       }
-      // this.setPortifolioToWorkspace()
     },
 
     handleRowClick(row, column, _event) {

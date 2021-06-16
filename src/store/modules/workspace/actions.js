@@ -234,6 +234,20 @@ const workspaceActions = {
     })
   },
 
+  associatePortifolioToWorkspace({ _ }, { portifolioId, workspaceId }) {
+    return axiosDispatch({
+      url: `${workspacesPath}/portifolio/${portifolioId}/workspace/${workspaceId}`,
+      method: 'PUT'
+    })
+  },
+
+  disassociatePortifolioToWorkspace({ _ }, { portifolioId, workspaceId }) {
+    return axiosDispatch({
+      url: `${workspacesPath}/portifolio/${portifolioId}/workspace/${workspaceId}`,
+      method: 'DELETE'
+    })
+  },
+
   updateWorkspaceKeyAccount({ getters }, { keyAccountId, workspaceId = null }) {
     return axiosDispatch({
       url: `${accountsWorkspaceApi}/${workspaceId || getters.workspaceId}/keyAccount/${keyAccountId}`,
