@@ -49,6 +49,9 @@ const workspaceGetters = {
 
     return draftFeature.active
   },
+  getPortifoliosByWorkspace: (state) => {
+    return state.portifoliosByWorkspace
+  },
   getApiIntegrationConfiguration: (state) => state.workspace.apiIntegrationConfiguration
 }
 

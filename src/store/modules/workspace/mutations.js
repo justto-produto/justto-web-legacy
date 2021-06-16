@@ -70,13 +70,27 @@ const workspaceMutations = {
   setWorkspaceKeyAccounts: (state, keyAccounts) => Vue.set(state.workspace, 'keyAccounts', keyAccounts),
   setAssociatedKeyAccount: (state, { keyAccount }) => Vue.set(state.workspace, 'associatedKeyAccount', keyAccount),
   setPortifolio: (state, portifolios) => Vue.set(state, 'portifolios', portifolios),
-  addPortifolio: (state, portifolio) => {
-    const index = state.portifolios.length
 
-    Vue.set(state.portifolios, index, portifolio)
+  addPortifolio: (state, { data: { id, name }, payload: { workspaceId } }) => {
+    Vue.set(state, 'portifolios', [
+      ...state.portifolios,
+      { id: Number(id), name }
+    ])
+
+    Vue.nextTick(() => {
+      Vue.set(state.portifoliosByWorkspace, workspaceId, [
+        ...state.portifoliosByWorkspace[workspaceId],
+        Number(id)
+      ])
+    })
   },
-  setPortifolioToWorkspace: (state, { payload }) => {
-    console.log(state, payload)
+
+  insertPortifolios: (state, { portifolios, workspaceId }) => {
+    Vue.set(state.portifoliosByWorkspace, workspaceId, portifolios)
+  },
+
+  setPortifolioToWorkspace: (state, { data, payload }) => {
+    console.log(data, payload)
   },
   updateAssociatedKeyAccount: (state, { payload: { keyAccountId } }) => {
     const keyAccount = state.workspace.keyAccounts.find(({ id }) => id === keyAccountId)

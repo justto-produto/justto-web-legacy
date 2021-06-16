@@ -209,12 +209,13 @@ const workspaceActions = {
     })
   },
 
-  createPortifolio({ _ }, name) {
+  createPortifolioAndInsert({ _ }, { name, workspaceId }) {
     return axiosDispatch({
       url: `${workspacesPath}/portifolio`,
       method: 'POST',
       data: { name },
-      mutation: 'addPortifolio'
+      mutation: 'addPortifolio',
+      payload: { workspaceId }
     })
   },
 

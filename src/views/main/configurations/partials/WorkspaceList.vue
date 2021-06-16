@@ -96,7 +96,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
 import _ from 'lodash'
 
 export default {
@@ -115,7 +115,8 @@ export default {
     ...mapGetters({
       workspaces: 'getMyWorkspaces',
       keyAccounts: 'getWorkspaceKeyAccounts',
-      portifolios: 'getPortifolios'
+      portifolios: 'getPortifolios',
+      portifoliosByWorkspace: 'getPortifoliosByWorkspace'
     }),
 
     filteredWorkspaces() {
@@ -136,20 +137,25 @@ export default {
 
     handledDialogPortifolios: {
       get() {
-        return this.dialog.portifolios
+        return this.portifoliosByWorkspace[this.dialog.workspace] || []
       },
+
       set(values) {
-        this.dialog.portifolios = values.map(value => {
-          console.log(typeof value)
-          if (typeof value === 'string') {
-            this.createPortifolio(value).then(portifolio => {
-              return portifolio?.id || value
-            }).catch(() => {
-              return value
-            })
-          } else {
-            return value
+        const portifolios = values.filter(name => {
+          if (typeof name === 'string') {
+            this.createPortifolioAndInsert({
+              name,
+              workspaceId: this.dialog.workspace
+            }).finally(() => this.$forceUpdate())
+            return false
           }
+
+          return true
+        })
+
+        this.insertPortifolios({
+          portifolios,
+          workspaceId: this.dialog.workspace
         })
       }
     }
@@ -163,11 +169,15 @@ export default {
     ...mapActions([
       'myWorkspace',
       'getPortifolios',
-      'createPortifolio',
       'getPortifolioAssociated',
       'getWorkspaceKeyAccounts',
       'setPortifolioToWorkspace',
-      'updateWorkspaceKeyAccount'
+      'updateWorkspaceKeyAccount',
+      'createPortifolioAndInsert'
+    ]),
+
+    ...mapMutations([
+      'insertPortifolios'
     ]),
 
     init() {

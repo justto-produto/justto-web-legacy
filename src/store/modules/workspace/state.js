@@ -31,5 +31,6 @@ export default {
     keyAccounts: []
   },
   portifolios: [],
+  portifoliosByWorkspace: {},
   redirectNewWorkspace: false
 }
