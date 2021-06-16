@@ -202,7 +202,7 @@ export default {
 
     connectKeyAccount(_event) {
       if (this.selectedKeyAccountId) {
-        this.updateWorkspaceKeyAccount(this.selectedKeyAccountId).then(() => {
+        this.updateWorkspaceKeyAccount({ keyAccountId: this.selectedKeyAccountId }).then(() => {
           this.$jusNotification({
             title: 'Yay!',
             message: 'Key Account associado com sucesso.',

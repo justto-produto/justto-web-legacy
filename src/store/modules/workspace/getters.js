@@ -39,6 +39,7 @@ const workspaceGetters = {
   getPreNegotiation: state => state.workspace.preNegotiation,
   getFeaturesAndModules: state => state.featuresAndModules,
   getWorkspaceKeyAccounts: (state) => state.workspace.keyAccounts,
+  getPortifolios: (state) => state.portifolios,
   getAssociatedKeyAccount: (state) => state.workspace.associatedKeyAccount,
   getIsDraftManagementActive: state => {
     const draftFeature = {
@@ -47,6 +48,9 @@ const workspaceGetters = {
     }
 
     return draftFeature.active
+  },
+  getPortifoliosByWorkspace: (state) => {
+    return state.portifoliosByWorkspace
   },
   getApiIntegrationConfiguration: (state) => state.workspace.apiIntegrationConfiguration
 }

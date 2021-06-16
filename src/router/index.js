@@ -159,6 +159,16 @@ const router = new Router({
             trackPage: true,
             title: 'Configurações'
           }
+        },
+        {
+          name: 'workspaces',
+          path: 'workspaces',
+          component: () => import(/* webpackChunkName: "workspaces" */ '@/views/main/configurations/partials/WorkspaceList'),
+          meta: {
+            requiresAuth: true,
+            trackPage: true,
+            title: 'Workspaces'
+          }
         }
       ]
     },
@@ -170,16 +180,6 @@ const router = new Router({
         requiresAuth: false,
         trackPage: true,
         title: 'Justto - Login'
-      }
-    },
-    {
-      name: 'workspaces',
-      path: '/workspaces',
-      component: () => import(/* webpackChunkName: "workspaces" */ '@/views/main/configurations/partials/WorkspaceList'),
-      meta: {
-        requiresAuth: false,
-        trackPage: true,
-        title: 'Justto'
       }
     },
     {
@@ -260,6 +260,15 @@ router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (Store.getters.isLoggedIn) {
       if (Store.getters.hasWorkspace) {
+        if (to.name === 'workspaces') {
+          if (!Store.getters.isJusttoAdmin) {
+            if (localStorage.getItem('jusprofile') === 'ADMINISTRATOR') {
+              next('dashboard')
+            } else {
+              next('negotiation')
+            }
+          }
+        }
         if (to.name === 'onboarding' && !Store.getters.redirectNewWorkspace) {
           next('/')
         } else next()
