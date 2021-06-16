@@ -68,8 +68,8 @@ const accountActions = {
   },
   updatePassword({ _ }, form) {
     return axiosDispatch({
-      url: `${accountsPath}/my/update-password`,
-      method: 'POST',
+      url: `${accountsPath}/my/password`,
+      method: 'PATCH',
       data: form
     })
   },
