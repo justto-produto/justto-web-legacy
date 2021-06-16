@@ -276,3 +276,8 @@ i.el-icon-delete {
 .ck-balloon-panel {
   z-index: 3000 !important;
 }
+
+.el-select .el-input {
+  overflow: scroll;
+  padding-bottom: 1px;
+}

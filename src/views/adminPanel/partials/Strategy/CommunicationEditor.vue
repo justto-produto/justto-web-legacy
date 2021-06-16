@@ -14,6 +14,21 @@
       </div>
 
       <div class="communication-editor__data-area">
+        <div class="communication-editor__statuses">
+          <div
+            v-if="template.createdAt"
+            class="communication-editor__statuses-item"
+          >
+            <span> Criado em {{ formatDate(template.createdAt) }} por {{ template.createdBy }}</span>
+          </div>
+          <div v-if="template.updatedAt">
+            <span
+              class="communication-editor__statuses-updated"
+            >
+              Atualizado em {{ formatDate(template.updatedAt) }} por {{ template.updatedBy }}
+            </span>
+          </div>
+        </div>
         <div class="communication-editor__header">
           <div class="communication-editor__header-item">
             <span class="communication-editor__input-label">Assunto da mensagem: </span>
@@ -69,15 +84,6 @@
           ref="editor-fieldset"
           class="communication-editor__editor-fieldset show-toolbar jus-ckeditor__parent"
         >
-          <!-- <ckeditor
-            v-if="isVisible"
-            ref="edit"
-            v-model="template.body"
-            :class="`ckeditor-${_uid}`"
-            :editor="editor"
-            :config="editorConfig"
-            type="classic"
-          /> -->
           <ckeditor
             v-show="editorRedy"
             ref="edit"
@@ -230,6 +236,10 @@ export default {
       'changeCommunicationTemplate'
     ]),
 
+    formatDate(date) {
+      return this.$moment(new Date(date)).format('DD/MM/YYYY')
+    },
+
     onNamespaceLoaded(CKEDITOR) {
       // Add external `placeholder` plugin which will be available for each
       // editor instance on the page.
@@ -281,23 +291,12 @@ export default {
 }
 </script>
 
-<style lang="scss">
-/* .communication-editor__editor-fieldset {
-  .ck-editor {
-    .ck-editor__main {
-      .ck-editor__editable {
-        height: 75vh !important;
-      }
-    }
-  }
-} */
-</style>
-
 <style lang="scss" scoped>
 @import '@/styles/colors.scss';
 
 .communication-editor {
   display: flex;
+  position: absolute;
 
   .communication-editor__status {
     color: $--color-text-secondary;
@@ -312,6 +311,21 @@ export default {
     flex-direction: column;
     justify-content: center;
 
+    .communication-editor__statuses {
+      display: flex;
+      color: $--color-gray;
+      font-size: 11px;
+      margin-top: 8px;
+      .communication-editor__statuses-item {
+        flex: 1;
+        margin-bottom: 5px;
+      }
+      // .communication-editor__statuses-updated {
+      //   position: absolute;
+      //   right: 0;
+      //   margin-right: 30px;
+      // }
+    }
     .communication-editor__header {
       display: flex;
       padding-right: 24px;
