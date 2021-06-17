@@ -62,7 +62,7 @@
       <el-step />
     </el-steps>
     <span class="communication-ticket-item-container__time">
-      {{ getLastInteraction(lastInboundInteraction.dateTime) }}
+      {{ lastInboundInteraction.typeMessage || '' }} {{ getLastInteraction(lastInboundInteraction.dateTime) }}
     </span>
   </li>
 </template>
@@ -106,8 +106,21 @@ export default {
     },
 
     lastInboundInteraction() {
-      const { lastInboundInteraction, lastReceivedMessage, disputeStatus, expirationDate } = this.ticket
-      if (lastInboundInteraction?.type && lastInboundInteraction?.type !== 'COMMUNICATION') {
+      const { lastInboundInteraction, lastReceivedMessage, disputeStatus, expirationDate, conclusionDate } = this.ticket
+      if (this.isAcceptedTab || this.isFinishedTab) {
+        if (conclusionDate?.dateTime) {
+          return {
+            message: 'Disputa ' + this.$t(`ticket-status.${disputeStatus}`),
+            dateTime: conclusionDate?.dateTime
+          }
+        } else {
+          return {
+            typeMessage: 'Expirada em:',
+            message: 'Disputa ' + this.$t(`ticket-status.${disputeStatus}`),
+            dateTime: expirationDate.dateTime || '--/--/--'
+          }
+        }
+      } else if (lastInboundInteraction?.type && lastInboundInteraction?.type !== 'COMMUNICATION') {
         const { type, dateTime } = lastInboundInteraction
         return {
           icon: type ? this.$t(`interaction-types.${type}.icon`) : null,
@@ -122,6 +135,7 @@ export default {
         }
       } else {
         return {
+          typeMessage: 'Expirada em:',
           message: 'Disputa ' + this.$t(`ticket-status.${disputeStatus}`),
           dateTime: expirationDate.dateTime || '--/--/--'
         }
