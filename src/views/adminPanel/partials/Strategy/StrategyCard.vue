@@ -294,15 +294,7 @@ export default {
       }
     }
     .strategy-card__footer {
-      display: flex;
       color: $--color-gray;
-      font-size: 11px;
-      margin-top: 8px;
-      .strategy-card__footer-updated {
-        position: absolute;
-        right: 0;
-        margin-right: 30px;
-      }
     }
   }
 
@@ -372,7 +364,15 @@ export default {
   }
 
   .strategy-card__footer {
-    display: none;
+    display: flex;
+    color: white;
+    font-size: 11px;
+    margin-top: 8px;
+    .strategy-card__footer-updated {
+      position: absolute;
+      right: 0;
+      margin-right: 30px;
+    }
   }
 }
 
