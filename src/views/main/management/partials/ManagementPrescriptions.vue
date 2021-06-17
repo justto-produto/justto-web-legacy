@@ -29,7 +29,24 @@
       class="management-prescriptions__popover-trigger"
       trigger="click"
     >
-      <el-button
+      <span
+        v-for="prescription in hiddenPrescriptions"
+        v-show="prescription.tabs.includes(parseInt(activeTab, 10))"
+        :ref="prescription.prescription"
+        :key="prescription.prescription"
+        :class="{'management-prescriptions__button-active': hasPrescription(prescription.prescription)}"
+        class="management-prescriptions__button"
+        @click="handlePrescriptionClick(prescription.prescription)"
+      >
+        <jus-icon
+          :class="{ 'management-prescriptions__filter-icon--selected' : hasPrescription(prescription.prescription) }"
+          class="management-prescriptions__filter-icon"
+          icon="filter"
+        />
+
+        {{ prescription.description | capitalize }}
+      </span>
+      <!-- <el-button
         v-for="prescription in hiddenPrescriptions"
         v-show="prescription.tabs.includes(parseInt(activeTab, 10))"
         :ref="prescription.prescription"
@@ -41,14 +58,10 @@
         @click="handlePrescriptionClick(prescription.prescription)"
       >
         <div>
-          <jus-icon
-            :class="{ 'management-prescriptions__filter-icon--selected' : hasPrescription(prescription.prescription) }"
-            class="management-prescriptions__filter-icon"
-            icon="filter"
-          />
           {{ prescription.description | capitalize }}
         </div>
-      </el-button>
+      </el-button> -->
+
       <el-button
         slot="reference"
         size="small"
@@ -243,11 +256,47 @@ export default {
 </style>
 
 <style lang="scss">
+@import '@/styles/colors.scss';
+
 .management-prescriptions__prescriptions-popover {
   padding: 4px;
 
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
   .management-prescriptions__button {
-    margin: 4px;
+    cursor: pointer;
+    padding: 6px 24px;
+    word-break: break-word;
+    text-align: left;
+
+    .management-prescriptions__filter-icon {
+      display: none;
+    }
+
+    &:hover {
+      background-color: #f3f4f5;
+
+      .management-prescriptions__filter-icon {
+        display: none;
+      }
+    }
+  }
+
+  .management-prescriptions__button-active {
+    color: $--color-primary;
+    font-weight: 600;
+
+    .management-prescriptions__filter-icon {
+      display: inline;
+    }
+
+    &:hover {
+      .management-prescriptions__filter-icon {
+        display: inline;
+      }
+    }
   }
 }
 </style>
