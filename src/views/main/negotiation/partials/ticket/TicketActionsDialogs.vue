@@ -354,7 +354,8 @@ export default {
     ...mapGetters({
       ticketParties: 'getTicketOverviewParties',
       workspaceMembers: 'workspaceMembers',
-      outcomeReasons: 'getOutcomeReasons'
+      outcomeReasons: 'getOutcomeReasons',
+      lastTicketOffers: 'getLastTicketOffers'
     }),
 
     isInsufficientUpperRange() {
@@ -362,8 +363,8 @@ export default {
     },
 
     ticketResume() {
-      const { disputeId, code, plaintiffProposal } = this.ticket
-
+      const { disputeId, code } = this.ticket
+      const { plaintiffOffer } = this.lastTicketOffers
       return [
         {
           key: 'id',
@@ -402,7 +403,7 @@ export default {
         {
           key: 'value',
           label: 'Valor do acordo',
-          value: this.$options.filters.currency(plaintiffProposal?.value)
+          value: this.$options.filters.currency(plaintiffOffer?.value)
         }
       ]
     },

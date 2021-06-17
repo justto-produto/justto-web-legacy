@@ -447,6 +447,85 @@
         </el-button>
       </div>
     </el-dialog>
+
+    <el-dialog
+      :visible.sync="ticketResumeDialogVisible"
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      append-to-body
+      width="500px"
+      title="Resumo da disputa"
+      class="dialog-actions__ticket-resume"
+    >
+      <strong class="dialog-actions__ticket-resume-subtitle">
+        Confira os dados da disputa:
+      </strong>
+      <p
+        class="dialog-actions__ticket-resume-infoline"
+      >
+        <b>Nº da disputa: </b>
+        <span>#{{ dispute.id }}</span>
+      </p>
+      <p
+        class="dialog-actions__ticket-resume-infoline"
+      >
+        <b>Nº do processo: </b>
+        <span>{{ dispute.code }}</span>
+      </p>
+      <p
+        class="dialog-actions__ticket-resume-infoline"
+      >
+        <b>Réu(s): </b>
+        <span>{{ respondentsResume.toUpperCase() || ' - ' }}</span>
+      </p>
+      <p
+        class="dialog-actions__ticket-resume-infoline"
+      >
+        <b>Autor(es): </b>
+        <span>{{ c }}</span>
+      </p>
+      <p
+        class="dialog-actions__ticket-resume-infoline"
+      >
+        <b>Advogado(s) do autor(es): </b>
+        <span>{{ lawyersResume.toUpperCase() || ' - ' }}</span>
+      </p>
+      <p
+        class="dialog-actions__ticket-resume-infoline"
+      >
+        <b>Advogado(s) do autor(es): </b>
+        <span>{{ lawyersResume.toUpperCase() || ' - ' }}</span>
+      </p>
+      <p
+        class="dialog-actions__ticket-resume-infoline"
+      >
+        <b>Valor do acordo: </b>
+        <span>{{ (counterOfferForm.lastCounterOfferValue || dispute.disputeDealValue) | currency }}</span>
+      </p>
+      <el-input
+        v-model="winNote"
+        type="textarea"
+        rows="4"
+      />
+      <div slot="footer">
+        <el-button
+          :disabled="modalLoading"
+          plain
+          @click="ticketResumeDialogVisible = false"
+        >
+          Cancelar
+        </el-button>
+        <el-button
+          v-loading="modalLoading"
+          :disabled="modalLoading"
+          type="primary"
+          @click.prevent="handleSettled"
+        >
+          Ganhar
+        </el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -485,9 +564,11 @@ export default {
       editNegotiatorDialogVisible: false,
       counterproposalDialogVisible: false,
       uploadAttacmentDialogVisable: false,
+      ticketResumeDialogVisible: false,
       settledDialogVisible: false,
       dropLawsuitDialogVisible: false,
       modalLoading: false,
+      winNote: '',
       counterOfferForm: {
         lastCounterOfferValue: '',
         selectedRoleId: '',
@@ -795,18 +876,14 @@ export default {
             }
             this.doAction('resume', message).then(() => {
               if (this.dispute.status === 'CHECKOUT' || this.dispute.status === 'ACCEPTED') {
-                this.showDisputeResume('WIN').then(() => {
-                  this.doAction(action, message)
-                })
+                this.ticketResumeDialogVisible = true
               } else {
                 this.openSettledDialog(action)
               }
             })
           } else {
             if (this.dispute.status === 'CHECKOUT' || this.dispute.status === 'ACCEPTED') {
-              this.showDisputeResume('WIN').then(() => {
-                this.doAction(action, message)
-              })
+              this.ticketResumeDialogVisible = true
             } else {
               this.openSettledDialog(action)
             }
@@ -941,6 +1018,16 @@ export default {
           break
       }
     },
+
+    handleSettled() {
+      const message = {
+        content: 'Tem certeza que deseja realizar esta ação?',
+        title: this.$options.filters.capitalize(this.$t('action.SETTLED'))
+      }
+      this.counterOfferForm.note = this.winNote
+      this.doAction('settled', message)
+    },
+
     closeCounterProposalModal() {
       this.counterOfferForm.note = ''
       this.settledDialogVisible = false
@@ -965,6 +1052,10 @@ export default {
               type: 'success',
               dangerouslyUseHTMLString: true
             })
+            this.counterOfferForm.note = ''
+            if (action === 'settled') {
+              this.ticketResumeDialogVisible = false
+            }
           }).catch(error => {
             reject(error)
             this.$jusNotification({ error })
@@ -1199,51 +1290,6 @@ export default {
           } else {
             reject(new Error('Invalid Fields'))
           }
-        })
-      })
-    },
-    showDisputeResume(actionType) {
-      return new Promise((resolve, reject) => {
-        const h = this.$createElement
-        const detailsMessage = [
-          h('strong', { style: 'margin-bottom: 6px; display: flex' }, 'Confira os dados da disputa:'),
-          h('p', null, [
-            h('b', null, 'Nº da disputa: '),
-            h('span', null, '#' + this.dispute.id)
-          ]),
-          h('p', null, [
-            h('b', null, 'Nº do processo: '),
-            h('span', null, this.dispute.code)
-          ]),
-          h('p', null, [
-            h('b', null, 'Réu(s): '),
-            h('span', null, this.respondentsResume.toUpperCase() || ' - ')
-          ]),
-          h('p', null, [
-            h('b', null, 'Autor(es): '),
-            h('span', null, this.authorsResume.toUpperCase() || ' - ')
-          ]),
-          h('p', null, [
-            h('b', null, 'Advogado(s) do autor(es): '),
-            h('span', null, this.lawyersResume.toUpperCase() || ' - ')
-          ]),
-          h('p', null, [
-            h('b', null, 'Valor do acordo: '),
-            h('span', null, this.$options.filters.currency(this.counterOfferForm.lastCounterOfferValue || this.dispute.disputeDealValue))
-          ]),
-          h('b', { style: 'margin-top: 16px' }, `${this.$t('dispute.labels.note')}:`)
-        ]
-        actionType = actionType === 'ACCEPT' ? 'Fechar acordo' : 'Ganhar'
-        this.$prompt(h('div', null, detailsMessage), actionType, {
-          confirmButtonText: 'Continuar',
-          cancelButtonText: 'Cancelar',
-          cancelButtonClass: 'is-plain',
-          showClose: false
-        }).then(({ value }) => {
-          this.counterOfferForm.note = value ? this.scapeHtml(value) : ''
-          resolve()
-        }).catch(e => {
-          reject(e)
         })
       })
     }
