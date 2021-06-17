@@ -186,7 +186,7 @@ export default {
 
     saveFile(file, confidential = false) {
       this.isAttachmentLoading = true
-      const segmentLog = `Solicitação de upload do arquivo ${file.name} com tamanho de ${file.size}`
+      const segmentLog = `Solicitação de upload do arquivo`
       const disputeId = this.$route.params.id
       const formData = new FormData()
       formData.append('file', file)
