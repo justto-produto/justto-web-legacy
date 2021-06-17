@@ -317,6 +317,7 @@ export default {
     },
 
     handleClose(done) {
+      this.apiIntegrationDialogVisible = false
       this.activeStandartWebhook = false
       this.formStandartWebhook.urlStandartWebhook = ''
       this.activeWebServiceFinch = false
