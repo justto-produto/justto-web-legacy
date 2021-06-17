@@ -20,7 +20,7 @@ export default class TicketTicketOverviewPartyResumed {
   }
 
   get hasDocumentNumber() {
-    return !!this.documentNumber
+    return !!this.documentNumber.length
   }
 
   get personId() {
@@ -32,7 +32,7 @@ export default class TicketTicketOverviewPartyResumed {
   }
 
   get documentType() {
-    return this.documentNumber.length <= 14 ? 'CPF' : 'CNPJ'
+    return this.documentNumber.length <= 11 ? 'CPF' : 'CNPJ'
   }
 
   get isDead() {
@@ -44,7 +44,7 @@ export default class TicketTicketOverviewPartyResumed {
   }
 
   get isNamesake() {
-    return this.person.isNamesake
+    return this.person.isNamesake && !this.documentNumber.length
   }
 
   get hasAlert() {

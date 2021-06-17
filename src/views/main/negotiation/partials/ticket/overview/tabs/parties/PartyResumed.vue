@@ -90,7 +90,7 @@ export default {
     },
 
     documentType() {
-      return this.party.documentNumber?.length <= 14 ? 'CPF' : 'CNPJ'
+      return this.party.documentNumber?.length <= 11 ? 'CPF' : 'CNPJ'
     },
 
     partyType() {
