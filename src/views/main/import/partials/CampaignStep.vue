@@ -288,7 +288,7 @@ export default {
         await new Promise((resolve) => setTimeout(resolve, round * 3000))
         if (this.loading) {
           this.getMyStrategiesLite().then(this.hideLoading).catch(() => {
-            this.$jusSegment(`Tentativa ${(Number(round) + Number(1))} de buscar as estratégias para a importação do arquivo ${this.importedFileName}.`)
+            this.$jusSegment(`Tentativa ${(Number(round) + Number(1))} de buscar as estratégias para a importação`)
           })
         } else {
           this.loadingStrategies = false

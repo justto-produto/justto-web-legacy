@@ -217,13 +217,16 @@ export default {
 
     editPassword() {
       this.localLoading = true
-      this.$refs.editUserForm.validateField(['password', 'confirmPassword', 'oldPassword'], hasError => {
+      // ['password', 'confirmPassword', 'oldPassword']
+      this.$refs.editUserForm.validate(isValid => {
         const { password, oldPassword } = this.form
-        if (!hasError && password !== oldPassword) {
+
+        if (isValid && password !== oldPassword) {
           this.updatePassword({
             password, oldPassword
           }).then(() => {
             // SEGMENT TRACK
+            this.form.oldPassword = password
             this.$jusSegment('Senha do usuário alterada')
             this.$jusNotification({
               title: 'Yay!',
