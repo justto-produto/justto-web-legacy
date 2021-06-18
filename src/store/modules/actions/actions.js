@@ -103,14 +103,21 @@ const actionsActions = {
     })
   },
 
-  cancelTicket({ _ }, payload) {
+  cancelTicket({ commit }, payload) {
     const { disputeId } = payload
-    return axiosDispatch({
-      url: `${disputesPath}/v2/${disputeId}/cancel`,
-      method: 'PATCH',
-      mutation: 'cancelTicket',
-      payload: payload,
-      data: payload
+    return new Promise((resolve, reject) => {
+      axiosDispatch({
+        url: `${disputesPath}/v2/${disputeId}/cancel`,
+        method: 'PATCH',
+        mutation: 'cancelTicket',
+        payload: payload,
+        data: payload
+      }).then((res) => {
+        commit('updateTicketOverview', { payload: { status: 'CANCELED' } })
+        resolve(res)
+      }).catch((err) => {
+        reject(err)
+      })
     })
   },
 
