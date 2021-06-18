@@ -483,13 +483,7 @@
         class="dialog-actions__ticket-resume-infoline"
       >
         <b>Autor(es): </b>
-        <span>{{ c }}</span>
-      </p>
-      <p
-        class="dialog-actions__ticket-resume-infoline"
-      >
-        <b>Advogado(s) do autor(es): </b>
-        <span>{{ lawyersResume.toUpperCase() || ' - ' }}</span>
+        <span>{{ authorsResume.toUpperCase() || ' - ' }}</span>
       </p>
       <p
         class="dialog-actions__ticket-resume-infoline"
