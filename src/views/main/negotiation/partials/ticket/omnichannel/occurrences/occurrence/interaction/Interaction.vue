@@ -32,6 +32,50 @@
         @click="reply"
       />
     </span>
+    <el-dialog
+      :close-on-click-modal="false"
+      :show-close="false"
+      :close-on-press-escape="false"
+      :visible.sync="LGPDWarningDialogVisible"
+      append-to-body
+      width="604px"
+    >
+      <div class="party-contacts__lgpd-header">
+        <jusIcon
+          class="party-contacts__lgpd-header__icon"
+          icon="alert-active"
+        />
+        <div class="party-contacts__lgpd-header__label">
+          ATENÇÃO
+        </div>
+      </div>
+      <div class="party-contacts__lgpd-body">
+        <span class="party-contacts__lgpd-body-item-alert">Alerta sobre Lei Geral de Proteção de Dados</span>
+        <span class="party-contacts__lgpd-body-item">
+          <span class="party-contacts__lgpd-body-item-person-name">
+            {{ personName.toLowerCase() }}
+          </span>
+          optou por não ser receber mensagens nesse contato!</span>
+        <span class="party-contacts__lgpd-body-item">Ao realizar essa ação voce está violando as regras da LGPD.</span>
+        <strong class="party-contacts__lgpd-body-item">Quer mesmo continuar?</strong>
+      </div>
+      <span class="party-contacts__lgpd-footer">
+        <el-button
+          :disabled="modalLoading"
+          plain
+          @click="LGPDWarningDialogVisible = false"
+        >
+          Cancelar
+        </el-button>
+        <el-button
+          :loading="modalLoading"
+          type="primary"
+          @click="reply"
+        >
+          Continuar
+        </el-button>
+      </span>
+    </el-dialog>
   </section>
 </template>
 
@@ -61,6 +105,14 @@ export default {
       required: true
     }
   },
+
+  data() {
+    return {
+      modalLoading: false,
+      LGPDWarningDialogVisible: false
+    }
+  },
+
   computed: {
     ...mapGetters({
       recipients: 'getEditorRecipients',
@@ -148,8 +200,10 @@ export default {
       return null
     }
   },
+
+  // TODO 4055
   methods: {
-    ...mapActions(['addRecipient']),
+    ...mapActions(['addRecipient', 'verifyRecipient']),
 
     reply(_event) {
       let inReplyTo = null
@@ -157,12 +211,21 @@ export default {
         inReplyTo = this.value.interaction.message.messageId
       }
       const reply = {
+        disputeId: this.$route.params.id,
         type: this.messageType,
         value: this.replyAdress,
         key: 'address',
         inReplyTo
       }
-      this.addRecipient(reply)
+      this.verifyRecipient(reply)
+        .then((data) => {
+          if (data.value === 'AUTHORIZED') {
+            delete reply.disputeId
+            this.addRecipient(reply)
+          } else {
+            this.LGPDWarningDialogVisible = true
+          }
+        })
     }
   }
 }

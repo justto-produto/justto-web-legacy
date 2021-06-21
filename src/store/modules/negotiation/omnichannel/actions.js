@@ -104,7 +104,7 @@ const omnichannelActions = {
   addRecipient({ commit, dispatch, getters }, recipient) {
     const { type, value } = recipient
     const { getEditorMessageType, getEditorRecipients } = getters
-
+    debugger
     if (getEditorRecipients.find(el => el.value === value)) {
       commit('removeRecipient', value)
     } else {
@@ -112,6 +112,18 @@ const omnichannelActions = {
       if (type === 'whatsapp') commit('resetRecipients')
       if (value) commit('setRecipients', recipient)
     }
+  },
+
+  // TODO 4055
+  verifyRecipient({ _ }, recipient) {
+    const { value, disputeId } = recipient
+    const params = {
+      adress: value
+    }
+    return axiosDispatch({
+      url: `api/disputes/${disputeId}/communications/status-2-send`,
+      params
+    })
   },
 
   resetRecipients: ({ commit }) => commit('resetRecipients'),
