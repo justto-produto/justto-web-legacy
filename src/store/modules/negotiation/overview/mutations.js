@@ -129,8 +129,6 @@ const overviewMutations = {
       state.ticketOverviewParties[indexPartie].bankAccountsDto.forEach((item, index) => {
         if (item.id === bankAccountId && !item.associatedInDispute) {
           Vue.set(state.ticketOverviewParties[indexPartie].bankAccountsDto[index], 'associatedInDispute', true)
-        } else {
-          Vue.set(state.ticketOverviewParties[indexPartie].bankAccountsDto[index], 'associatedInDispute', false)
         }
       })
     }
