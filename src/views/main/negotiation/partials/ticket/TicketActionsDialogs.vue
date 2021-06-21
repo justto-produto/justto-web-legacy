@@ -224,7 +224,7 @@
           v-loading="modalLoading"
           :disabled="modalLoading"
           type="primary"
-          @click.prevent="handleIncreaseManualOffer(isSettledIncreaseAlertType)"
+          @click.prevent="isSettledIncreaseAlertType ? handleIncreaseManualOffer(isSettledIncreaseAlertType) : confirmIncreaseUpperrangeDialogVisible = false"
         >
           {{ isSettledIncreaseAlertType ? 'Majorar' : 'Não majorar' }}
         </el-button>
