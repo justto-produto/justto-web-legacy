@@ -461,7 +461,7 @@ export default {
     ]),
 
     confirmAction(action, message = 'Tem certeza que deseja realizar está ação?') {
-      const title = this.$options.filters.capitalize(this.$t(`actions.${action}.name`))
+      const title = this.ticket.status === 'RUNNING' ? this.$options.filters.capitalize(this.$tc(`actions.${action}.name`, 0)) : this.$options.filters.capitalize(this.$tc(`actions.${action}.name`, 1))
       const options = {
         confirmButtonText: 'Continuar',
         cancelButtonText: 'Cancelar',
