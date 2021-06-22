@@ -33,6 +33,7 @@
         v-if="activeTab === 'MESSAGES'"
         :show-title="!haveRecipients"
       />
+      <!-- ADICIONAR O ICONE AQUI -->
       <recipients class="editor-container__recipients" />
     </div>
   </section>
