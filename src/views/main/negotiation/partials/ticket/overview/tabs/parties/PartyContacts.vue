@@ -37,7 +37,6 @@
           placement="left"
           content="Ver mais informações"
         >
-          <!-- TODO: Componente de busca no CNA. -->
           <el-popover
             v-if="isOabContacts && false"
             :ref="`popover-${contact.number}-${contact.state}`"
@@ -99,7 +98,7 @@
         {{ expandLinkText }}
       </a>
     </div>
-    <el-dialog
+    <!-- <el-dialog
       :close-on-click-modal="false"
       :show-close="false"
       :close-on-press-escape="false"
@@ -142,7 +141,7 @@
           Continuar
         </el-button>
       </span>
-    </el-dialog>
+    </el-dialog> -->
   </article>
 </template>
 
@@ -197,10 +196,10 @@ export default {
     isAllContactsVisible: false,
     isAddingNewContact: false,
     newContactModel: '',
-    modalLoading: false,
-    LGPDDialogVisible: false,
-    currentContactValue: '',
-    currentValid: false
+    modalLoading: false
+    // LGPDDialogVisible: false,
+    // currentContactValue: '',
+    // currentValid: false
   }),
   computed: {
     ...mapGetters({
@@ -263,20 +262,21 @@ export default {
       this.$emit('post', contactValue)
     },
     selectContact(contactValue, isValid, isMain) {
-      if (!isMain && !this.mappedRecipients.includes(contactValue)) {
-        this.LGPDDialogVisible = true
-        this.currentContactValue = contactValue
-        this.currentValid = isValid
-      } else {
-        this.emitClick(contactValue, isValid)
-      }
+      debugger
+      this.emitClick(contactValue, isValid, isMain)
+      // if (!isMain && !this.mappedRecipients.includes(contactValue)) {
+      //   this.LGPDDialogVisible = true
+      //   this.currentContactValue = contactValue
+      //   this.currentValid = isValid
+      // } else {
+      // }
     },
 
-    emitClick(contactValue, isValid) {
+    emitClick(contactValue, isValid, isMain) {
       if (isValid) {
-        this.$emit('click', contactValue, 'address')
+        this.$emit('click', contactValue, 'address', isMain)
       }
-      this.LGPDDialogVisible = false
+      // this.LGPDDialogVisible = false
     },
 
     searchThisLawyer(lawyer, ref) {
