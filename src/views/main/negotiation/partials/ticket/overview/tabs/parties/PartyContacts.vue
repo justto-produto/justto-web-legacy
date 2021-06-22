@@ -262,14 +262,7 @@ export default {
       this.$emit('post', contactValue)
     },
     selectContact(contactValue, isValid, isMain) {
-      debugger
       this.emitClick(contactValue, isValid, isMain)
-      // if (!isMain && !this.mappedRecipients.includes(contactValue)) {
-      //   this.LGPDDialogVisible = true
-      //   this.currentContactValue = contactValue
-      //   this.currentValid = isValid
-      // } else {
-      // }
     },
 
     emitClick(contactValue, isValid, isMain) {
