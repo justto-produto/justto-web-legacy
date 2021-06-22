@@ -375,7 +375,6 @@ export default {
           label: 'Nº do processo',
           value: code
         },
-        // Autor
         ...this.ticketParties.filter(({ polarity, roles }) => {
           return (polarity === 'CLAIMANT' && roles.includes('PARTY'))
         }).map(({ name }, i) => ({
@@ -563,7 +562,6 @@ export default {
 
     handleManualOffer(action) {
       const { disputeId } = this.ticket
-
       this.validateOfferForm()
         .then(() => {
           if (this.offerForm.value > this.ticket.upperRange) {
