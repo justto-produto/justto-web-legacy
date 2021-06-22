@@ -287,7 +287,6 @@
       <span />
     </el-dialog>
 
-    <!-- CRIAR DIALOG AQUI BASEADO NO PERDER -->
     <el-dialog
       :visible.sync="dropLawsuitDialogVisible"
       :show-close="false"
