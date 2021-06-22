@@ -224,7 +224,7 @@
           v-loading="modalLoading"
           :disabled="modalLoading"
           type="primary"
-          @click.prevent="isSettledIncreaseAlertType ? handleIncreaseManualOffer(isSettledIncreaseAlertType) : confirmIncreaseUpperrangeDialogVisible = false"
+          @click.prevent="handleIncreaseManualOffer(isSettledIncreaseAlertType)"
         >
           {{ isSettledIncreaseAlertType ? 'Majorar' : 'Não majorar' }}
         </el-button>
@@ -375,7 +375,6 @@ export default {
           label: 'Nº do processo',
           value: code
         },
-        // Autor
         ...this.ticketParties.filter(({ polarity, roles }) => {
           return (polarity === 'CLAIMANT' && roles.includes('PARTY'))
         }).map(({ name }, i) => ({
@@ -477,6 +476,7 @@ export default {
     },
 
     concludeAction(action, disputeId, param = false) {
+      if (action === 'MANUAL_COUNTERPROPOSAL') param = !param
       const message = this.$tc(`actions.${action}.feedback-message`, param)
 
       this.$jusNotification({
@@ -562,7 +562,6 @@ export default {
 
     handleManualOffer(action) {
       const { disputeId } = this.ticket
-
       this.validateOfferForm()
         .then(() => {
           if (this.offerForm.value > this.ticket.upperRange) {
