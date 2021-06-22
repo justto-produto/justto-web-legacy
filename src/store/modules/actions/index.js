@@ -8,7 +8,8 @@ const actions = {
       UNSETTLED: {},
       ARCHIVED: {}
     },
-    dropLawsuitReasons: {}
+    dropLawsuitReasons: {},
+    thamirisAlertVisible: true
   },
   actions: acts,
   getters,

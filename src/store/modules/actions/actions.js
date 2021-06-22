@@ -139,6 +139,13 @@ const actionsActions = {
         polarityObjectKey
       }
     })
+  },
+
+  getThamirisAlerts({ _ }) {
+    // return axiosDispatch({
+    //   url: `${disputesPath}/outcome-reasons/CANCELED`,
+    //   mutation: 'changeThamirisAlertsVisibility'
+    // })
   }
 }
 
