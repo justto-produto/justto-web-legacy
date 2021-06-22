@@ -83,6 +83,7 @@
     </el-container>
     <JusShortchts />
     <jusMessagePreview />
+    <ThamirisAlerts :is-visible="hasThamirisAlerts" />
   </el-container>
 </template>
 
@@ -96,7 +97,8 @@ export default {
     jusMessagePreview: () => import('@/components/dialogs/JusMessagePreviewDialog'),
     JusHeaderMain: () => import('@/components/layouts/JusHeaderMain'),
     JusTeamMenu: () => import('@/components/layouts/JusTeamMenu'),
-    JusShortchts: () => import('@/components/others/JusShortcuts')
+    JusShortchts: () => import('@/components/others/JusShortcuts'),
+    ThamirisAlerts: () => import('@/components/dialogs/ThamirisAlerts.vue')
   },
 
   data() {
@@ -114,7 +116,8 @@ export default {
       personId: 'loggedPersonId',
       workspace: 'workspaceSubdomain',
       authorization: 'accountToken',
-      userPreferences: 'userPreferences'
+      userPreferences: 'userPreferences',
+      hasThamirisAlerts: 'hasThamirisAlerts'
     }),
 
     canAccessNegotiationScreen() {
@@ -199,6 +202,7 @@ export default {
     this.subscribe()
     window.addEventListener('resize', this.handleResize)
     eventBus.$on('SEE-PREVIEW', this.getPreview)
+    this.getThamirisAlerts()
   },
 
   beforeDestroy() {
@@ -219,7 +223,8 @@ export default {
       loadAccountProperty: 'loadAccountProperty',
       setAccountProperty: 'setAccountProperty',
       setWindowGeometry: 'setWindowGeometry',
-      getPreview: 'getMessageToPreview'
+      getPreview: 'getMessageToPreview',
+      getThamirisAlerts: 'getThamirisAlerts'
     }),
 
     handleResize({ target }) {
