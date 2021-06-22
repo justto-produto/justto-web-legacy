@@ -39,6 +39,12 @@
         </el-tooltip>
       </div>
     </div>
+    <div
+      v-if="activeTab === 'engagement'"
+      class="communication-ticket-item-container__status"
+    >
+      {{ $t(`occurrence.type.${ticket.disputeStatus}`) | capitalize }}
+    </div>
   </li>
 </template>
 
@@ -172,6 +178,20 @@ export default {
     right: 18px;
     font-size: 12px;
   }
+
+  .communication-ticket-item-container__status {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin-top: 6px;
+    font-weight: 500;
+    font-size: 12px;
+    color: #898686;
+    padding: 0px 10px;
+    background-color: $--color-light-gray;
+    border-radius: 8px;
+  }
+
 }
 
 @media (max-height: 900px) {
