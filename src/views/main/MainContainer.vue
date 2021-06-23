@@ -83,12 +83,12 @@
     </el-container>
     <JusShortchts />
     <jusMessagePreview />
-    <ThamirisAlerts :is-visible="hasThamirisAlerts" />
+    <ThamirisAlerts :is-visible="areThamirisAlertsVisible" />
   </el-container>
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapActions, mapMutations } from 'vuex'
 import { eventBus } from '@/utils'
 
 export default {
@@ -117,7 +117,8 @@ export default {
       workspace: 'workspaceSubdomain',
       authorization: 'accountToken',
       userPreferences: 'userPreferences',
-      hasThamirisAlerts: 'hasThamirisAlerts'
+      areThamirisAlertsVisible: 'areThamirisAlertsVisible',
+      notifications: 'notifications'
     }),
 
     canAccessNegotiationScreen() {
@@ -202,7 +203,8 @@ export default {
     this.subscribe()
     window.addEventListener('resize', this.handleResize)
     eventBus.$on('SEE-PREVIEW', this.getPreview)
-    this.getThamirisAlerts()
+    // this.getThamirisAlerts()
+    this.setNotifications(this.notifications)
   },
 
   beforeDestroy() {
@@ -225,6 +227,10 @@ export default {
       setWindowGeometry: 'setWindowGeometry',
       getPreview: 'getMessageToPreview',
       getThamirisAlerts: 'getThamirisAlerts'
+    }),
+
+    ...mapMutations({
+      setNotifications: 'setNotifications'
     }),
 
     handleResize({ target }) {
