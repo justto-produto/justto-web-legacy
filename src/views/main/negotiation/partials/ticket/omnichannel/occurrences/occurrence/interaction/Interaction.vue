@@ -32,6 +32,13 @@
         @click="reply"
       />
     </span>
+    <!-- Dialog de warning para LGPD -->
+    <WarningLGPD
+      :lgpd-dialog-visible="LGPDWarningDialogVisible"
+      :is-phone-number="messageType === 'whatsapp' || messageType === 'sms'"
+      :party-name="personName"
+      @click="(ok) => handleLgpdWarning(ok)"
+    />
   </section>
 </template>
 
@@ -53,7 +60,8 @@ export default {
     NEGOTIATOR: () => import('./partials/Negotiator'),
     MANUAL: () => import('./partials/Manual'),
     SCHEDULER: () => import('./partials/Scheduler'),
-    NPS: () => import('./partials/Nps')
+    NPS: () => import('./partials/Nps'),
+    WarningLGPD: () => import('@/components/dialogs/WarningLGPD')
   },
   props: {
     value: {
@@ -61,6 +69,14 @@ export default {
       required: true
     }
   },
+
+  data() {
+    return {
+      modalLoading: false,
+      LGPDWarningDialogVisible: false
+    }
+  },
+
   computed: {
     ...mapGetters({
       recipients: 'getEditorRecipients',
@@ -148,8 +164,16 @@ export default {
       return null
     }
   },
+
   methods: {
-    ...mapActions(['addRecipient']),
+    ...mapActions(['addRecipient', 'verifyRecipient']),
+
+    handleLgpdWarning(ok) {
+      if (ok) {
+        this.reply()
+      }
+      this.LGPDWarningDialogVisible = false
+    },
 
     reply(_event) {
       let inReplyTo = null
@@ -157,12 +181,21 @@ export default {
         inReplyTo = this.value.interaction.message.messageId
       }
       const reply = {
+        disputeId: this.$route.params.id,
         type: this.messageType,
         value: this.replyAdress,
         key: 'address',
         inReplyTo
       }
-      this.addRecipient(reply)
+      this.verifyRecipient(reply)
+        .then((data) => {
+          if (data.value === 'AUTHORIZED') {
+            delete reply.disputeId
+            this.addRecipient(reply)
+          } else {
+            this.LGPDWarningDialogVisible = true
+          }
+        })
     }
   }
 }

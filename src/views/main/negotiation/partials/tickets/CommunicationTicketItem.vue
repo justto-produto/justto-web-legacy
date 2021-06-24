@@ -64,6 +64,12 @@
     <span class="communication-ticket-item-container__time">
       {{ lastInboundInteraction.typeMessage || '' }} {{ getLastInteraction(lastInboundInteraction.dateTime) }}
     </span>
+    <div
+      v-if="isFinishedTab"
+      class="communication-ticket-item-container__status"
+    >
+      {{ $t(`occurrence.type.${ticket.disputeStatus}`) | capitalize }}
+    </div>
   </li>
 </template>
 
@@ -227,6 +233,19 @@ export default {
     bottom: 3px;
     right: 18px;
     font-size: 10px;
+  }
+
+  .communication-ticket-item-container__status {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin-top: 6px;
+    font-weight: 500;
+    font-size: 12px;
+    color: #898686;
+    padding: 2px 10px;
+    background-color: $--color-light-gray;
+    border-radius: 8px;
   }
 
   .communication-ticket-item-container__minuta {
