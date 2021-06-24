@@ -25,75 +25,33 @@
         <h1 class="thamiris__alerts__shadow-title">
           Bom dia! Olha só as dicas que temos pra você :)
         </h1>
+        <span class="thamiris__alerts__shadow-subtitle">
+          Pegue o café e confira os alertas para ter um dia mais produtivo!
+        </span>
       </div>
       <div class="thamiris__alerts__body">
         <span class="thamiris__alerts__body-title">
           Hoje você tem:
         </span>
         <div class="thamiris__alerts__body-items">
-          <div class="thamiris__alerts__body-items-item">
+          <div
+            v-for="notification in notifications"
+            :key="`${notification.quantity}-${notification.type}`"
+            class="thamiris__alerts__body-items-item"
+          >
             <div class="thamiris__alerts__body-items-item-circle">
               <div class="thamiris__alerts__body-items-item-circle-style">
-                <div class="thamiris__alerts__body-items-item-circle-style-al">
-                  <span class="thamiris__alerts__body-items-item-circle-style-al-num">04</span>
+                <div
+                  class="thamiris__alerts__body-items-item-circle-style-al"
+                  @click="applyFilters(notification)"
+                >
+                  <span class="thamiris__alerts__body-items-item-circle-style-al-num">{{ notification.quantity }}</span>
                   <span class="thamiris__alerts__body-items-item-circle-style-al-disp">disputas</span>
                 </div>
               </div>
             </div>
             <span class="thamiris__alerts__body-items-item-message">
-              Esperando você responder
-            </span>
-          </div>
-          <div class="thamiris__alerts__body-items-item">
-            <div class="thamiris__alerts__body-items-item-circle">
-              <div class="thamiris__alerts__body-items-item-circle-style">
-                <div class="thamiris__alerts__body-items-item-circle-style-al">
-                  <span class="thamiris__alerts__body-items-item-circle-style-al-num">04</span>
-                  <span class="thamiris__alerts__body-items-item-circle-style-al-disp">disputas</span>
-                </div>
-              </div>
-            </div>
-            <span class="thamiris__alerts__body-items-item-message">
-              Esperando você responder
-            </span>
-          </div>
-          <div class="thamiris__alerts__body-items-item">
-            <div class="thamiris__alerts__body-items-item-circle">
-              <div class="thamiris__alerts__body-items-item-circle-style">
-                <div class="thamiris__alerts__body-items-item-circle-style-al">
-                  <span class="thamiris__alerts__body-items-item-circle-style-al-num">04</span>
-                  <span class="thamiris__alerts__body-items-item-circle-style-al-disp">disputas</span>
-                </div>
-              </div>
-            </div>
-            <span class="thamiris__alerts__body-items-item-message">
-              Esperando você responder
-            </span>
-          </div>
-          <div class="thamiris__alerts__body-items-item">
-            <div class="thamiris__alerts__body-items-item-circle">
-              <div class="thamiris__alerts__body-items-item-circle-style">
-                <div class="thamiris__alerts__body-items-item-circle-style-al">
-                  <span class="thamiris__alerts__body-items-item-circle-style-al-num">04</span>
-                  <span class="thamiris__alerts__body-items-item-circle-style-al-disp">disputas</span>
-                </div>
-              </div>
-            </div>
-            <span class="thamiris__alerts__body-items-item-message">
-              Esperando você responder
-            </span>
-          </div>
-          <div class="thamiris__alerts__body-items-item">
-            <div class="thamiris__alerts__body-items-item-circle">
-              <div class="thamiris__alerts__body-items-item-circle-style">
-                <div class="thamiris__alerts__body-items-item-circle-style-al">
-                  <span class="thamiris__alerts__body-items-item-circle-style-al-num">04</span>
-                  <span class="thamiris__alerts__body-items-item-circle-style-al-disp">disputas</span>
-                </div>
-              </div>
-            </div>
-            <span class="thamiris__alerts__body-items-item-message">
-              Esperando você responder
+              {{ notification.name }}
             </span>
           </div>
         </div>
@@ -108,7 +66,7 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import { mapGetters, mapActions, mapMutations } from 'vuex'
 export default {
   props: {
     isVisible: {
@@ -122,15 +80,50 @@ export default {
   }),
 
   computed: {
+    ...mapGetters({
+      notifications: 'notificationsNotEmptyDisputes'
+    }),
+
     coffee() {
       return require('@/assets/img/coffee.png')
     }
   },
 
   methods: {
+    ...mapActions({
+      setTicketsFilters: 'setTicketsFilters',
+      setTicketsActiveTab: 'setTicketsActiveTab',
+      getTickets: 'getTickets'
+    }),
+
     ...mapMutations({
       hideThamirisAlerts: 'hideThamirisAlerts'
     }),
+
+    applyFilters({ filter: { prescriptions, status }, tab }) {
+      const filters = {
+        prescriptions
+      }
+
+      if (status) {
+        filters.status = status.split(',')
+      }
+
+      this.setTicketsActiveTab(tab.toLowerCase())
+
+      this.setTicketsFilters({
+        filters,
+        hasFilters: true
+      })
+
+      this.getTickets()
+
+      if (this.$route.name !== 'negotitation') {
+        this.$router.push('/negotiation')
+      }
+
+      this.closeDialog()
+    },
 
     closeDialog() {
       this.hideThamirisAlerts()
@@ -238,6 +231,7 @@ export default {
             background-color: $--color-primary;
             border-radius: 100%;
             .thamiris__alerts__body-items-item-circle-style-al {
+              cursor: pointer;
               display: flex;
               flex-direction: column;
               align-items: center;
@@ -252,6 +246,9 @@ export default {
                 font-size: 10px;
               }
             }
+          }
+          .thamiris__alerts__body-items-item-circle-style:hover {
+            background-color: $--color-primary-light-2;
           }
         }
 
