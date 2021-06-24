@@ -268,4 +268,10 @@ export default {
   }
 }
 
+@media (min-width: 1200px) {
+  .thamiris__alerts__shadow {
+    margin-bottom: 30px;
+  }
+}
+
 </style>
