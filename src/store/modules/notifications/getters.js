@@ -9,7 +9,9 @@ const gettersNotifications = {
       prescriptions: 'PENDING'
     }
   }],
-  areThamirisAlertsVisible: ({ thamirisAlertVisible }) => thamirisAlertVisible
+  qtdNotifications: ({ notifications }) => notifications.length,
+  areThamirisAlertsVisible: ({ thamirisAlertVisible }) => thamirisAlertVisible,
+  areNotificationsVisible: ({ notificationsVisible }) => notificationsVisible
 }
 
 export default gettersNotifications

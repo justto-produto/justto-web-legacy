@@ -1,6 +1,7 @@
 const stateNotifications = {
   notifications: [],
-  thamirisAlertVisible: false
+  thamirisAlertVisible: false,
+  notificationsVisible: false
 }
 
 export default stateNotifications

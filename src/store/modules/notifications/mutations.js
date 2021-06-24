@@ -23,6 +23,10 @@ const mutationsNotifications = {
     Vue.set(state, 'thamirisAlertVisible', false)
     const now = moment().format('DD/MM/YYYY')
     localStorage.setItem('jusAlertsLastView', now)
+  },
+
+  toggleShowNotifications: (state, _data) => {
+    Vue.set(state, 'notificationsVisible', !state.notificationsVisible)
   }
 }
 
