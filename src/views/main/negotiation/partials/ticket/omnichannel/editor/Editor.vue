@@ -29,11 +29,41 @@
       v-if="!isPreNegotiation"
       class="editor-container__after-tabs"
     >
-      <quick-reply
-        v-if="activeTab === 'MESSAGES'"
-        :show-title="!haveRecipients"
-      />
-      <!-- ADICIONAR O ICONE AQUI -->
+      <div class="editor-container__after-tabs-align">
+        <quick-reply
+          v-if="activeTab === 'MESSAGES'"
+          :show-title="!haveRecipients"
+        />
+        <el-popover
+          placement="bottom-start"
+          width="360"
+          trigger="click"
+        >
+          <div class="editor-container__after-tabs-align-popover">
+            <strong>
+              Dica importante!
+            </strong>
+            <span>
+              Sabia que você <br> pode customizar suas mensagens rápidas?
+            </span>
+            <br>
+            <span
+              class="editor-container__after-tabs-align-popover-button"
+            >
+              CLIQUE AQUI
+            </span>
+            <span>
+              e saiva como fazer!
+            </span>
+          </div>
+          <div
+            slot="reference"
+            class="editor-container__after-tabs-info"
+          >
+            ?
+          </div>
+        </el-popover>
+      </div>
       <recipients class="editor-container__recipients" />
     </div>
   </section>
@@ -136,6 +166,7 @@ export default {
 </style>
 
 <style lang="scss">
+@import '@/styles/colors.scss';
 .editor-container {
   .el-tabs__header {
     margin-bottom: 0px !important;
@@ -175,6 +206,24 @@ export default {
     @media (max-height: 780px) {
       height: 36px;
     }
+
+    .editor-container__after-tabs-align {
+      display: flex;
+      flex-direction: row;
+    }
+
+    .editor-container__after-tabs-info {
+      text-align: center;
+      color: white;
+      font-weight: bold;
+      font-size: 16px;
+      height: 20px;
+      width: 20px;
+      border-radius: 50px;
+      background-color: $--color-primary;
+      margin-top: 4px;
+      margin-left: 10px;
+    }
   }
 
   .el-tabs__item {
@@ -183,5 +232,14 @@ export default {
   .el-tabs__nav-wrap:after {
     display: none;
   }
+
+}
+.editor-container__after-tabs-align-popover-button {
+  background-color: $--color-primary;
+  color: white;
+  padding: 2px 3px;
+  border-radius: 4px;
+  text-align: center;
+  margin-right: 3px;
 }
 </style>
