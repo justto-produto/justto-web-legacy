@@ -25,8 +25,8 @@ const mutationsNotifications = {
     localStorage.setItem('jusAlertsLastView', now)
   },
 
-  toggleShowNotifications: (state, _data) => {
-    Vue.set(state, 'notificationsVisible', !state.notificationsVisible)
+  toggleShowNotifications: (state, close = false) => {
+    Vue.set(state, 'notificationsVisible', close ? false : !state.notificationsVisible)
   }
 }
 
