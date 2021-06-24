@@ -13,7 +13,9 @@
       />
     </el-tooltip>
 
-    <JusAcademy class="usermenu-container__jus-academy" />
+    <JusAcademy />
+
+    <Notification class="usermenu-container__jus-academy" />
 
     <el-dropdown
       trigger="click"
@@ -107,7 +109,8 @@ export default {
   components: {
     JusAcademy: () => import('@/components/dialogs/JusAcademy'),
     JusChangeWorkspace: () => import('@/components/dialogs/JusChangeWorkspace'),
-    JusEditUser: () => import('@/components/dialogs/JusEditUserDialog')
+    JusEditUser: () => import('@/components/dialogs/JusEditUserDialog'),
+    Notification: () => import('@/components/drawer/NotificationIcon')
   },
   data: () => ({
     selectedWorkspace: '',

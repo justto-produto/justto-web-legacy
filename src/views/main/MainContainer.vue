@@ -84,6 +84,7 @@
     <JusShortchts />
     <jusMessagePreview />
     <ThamirisAlerts :is-visible="areThamirisAlertsVisible" />
+    <NotificationDrawer :is-visible="areNotificationsVisible" />
   </el-container>
 </template>
 
@@ -98,12 +99,15 @@ export default {
     JusHeaderMain: () => import('@/components/layouts/JusHeaderMain'),
     JusTeamMenu: () => import('@/components/layouts/JusTeamMenu'),
     JusShortchts: () => import('@/components/others/JusShortcuts'),
-    ThamirisAlerts: () => import('@/components/dialogs/ThamirisAlerts.vue')
+    ThamirisAlerts: () => import('@/components/dialogs/ThamirisAlerts.vue'),
+    NotificationDrawer: () => import('@/components/drawer/NotificationDrawer')
   },
 
   data() {
     return {
+      timer: null,
       subscriptions: [],
+      drawer: true,
       isTeamSectionExpanded: false
     }
   },
@@ -117,8 +121,9 @@ export default {
       workspace: 'workspaceSubdomain',
       authorization: 'accountToken',
       userPreferences: 'userPreferences',
+      notifications: 'notifications',
       areThamirisAlertsVisible: 'areThamirisAlertsVisible',
-      notifications: 'notifications'
+      areNotificationsVisible: 'areNotificationsVisible'
     }),
 
     canAccessNegotiationScreen() {
@@ -147,13 +152,6 @@ export default {
         index: 'disputes',
         name: 'Todas as disputas',
         childs: [
-          // {
-          //   index: '/negotiation',
-          //   title: 'Negociação',
-          //   icon: 'negotiation-window',
-          //   isVisible: true,
-          //   action: () => {}
-          // },
           {
             index: '/management',
             title: 'Gerenciamento',
@@ -170,13 +168,6 @@ export default {
           }
         ]
       })
-      // itemsMenu.push({
-      //   index: '/management/all',
-      //   title: 'Todas as disputas',
-      //   icon: 'full-folder',
-      //   isVisible: true,
-      //   action: () => this.setTabQuery('allDisputes')
-      // })
       itemsMenu.push({
         index: '/import',
         title: 'Importação',
@@ -199,12 +190,15 @@ export default {
     this.$store.commit('clearDisputeQuery')
   },
 
+  created() {
+    this.pollData()
+  },
+
   beforeMount() {
     this.subscribe()
     window.addEventListener('resize', this.handleResize)
     eventBus.$on('SEE-PREVIEW', this.getPreview)
     // this.getThamirisAlerts()
-    this.setNotifications(this.notifications)
   },
 
   beforeDestroy() {
@@ -232,6 +226,13 @@ export default {
     ...mapMutations({
       setNotifications: 'setNotifications'
     }),
+
+    pollData() {
+      this.setNotifications(this.notifications)
+      this.timer = setInterval(() => {
+        this.setNotifications(this.notifications)
+      }, 120000)
+    },
 
     handleResize({ target }) {
       this.setWindowGeometry(target)
