@@ -97,9 +97,11 @@ export default {
       default: () => ({})
     }
   },
+
   data: () => ({
     isAllAccountsVisible: false
   }),
+
   computed: {
     disputeId() {
       return Number(this.$route.params.id)
@@ -188,6 +190,8 @@ export default {
 
     updateBankAccounts(link = [], unlink = []) {
       const { disputeId } = this
+
+      console.log('updateBankAccounts', link, unlink)
 
       Promise.all([
         ...link.map(({ id, personId }) => this.linkAccount({ bankAccountId: id, personId, disputeId })),
