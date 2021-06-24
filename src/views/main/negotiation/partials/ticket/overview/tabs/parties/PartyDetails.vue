@@ -49,7 +49,13 @@
         </el-button>
       </span>
     </el-dialog>
-
+    <!-- Dialog de warning para LGPD -->
+    <WarningLGPD
+      :lgpd-dialog-visible="LGPDWarningDialogVisible"
+      :is-phone-number="selectContactObj.type === 'whatsapp' || selectContactObj.type === 'sms'"
+      :party-name="party.name"
+      @click="(ok) => handleLgpdWarning(ok)"
+    />
     <div
       v-if="!isNegotiator && !isPreNegotiation"
       class="party-details__infoline party-details__infoline--center"
@@ -297,7 +303,8 @@ export default {
     InfoMergeDialog: () => import('./partial/InfoMergeDialog'),
     PartyBankAccounts: () => import('./PartyBankAccounts'),
     PartyContacts: () => import('./PartyContacts'),
-    LawyerDetail: () => import('@/components/others/LawyerDetail')
+    LawyerDetail: () => import('@/components/others/LawyerDetail'),
+    WarningLGPD: () => import('@/components/dialogs/WarningLGPD')
   },
 
   mixins: [preNegotiation],
@@ -311,8 +318,10 @@ export default {
 
   data: () => ({
     chooseRemoveLawyerDialogVisible: false,
+    LGPDWarningDialogVisible: false,
     activeAddingData: '',
-    mergePartyInfos: {}
+    mergePartyInfos: {},
+    selectContactObj: {}
   }),
 
   computed: {
@@ -403,6 +412,7 @@ export default {
       'getDispute',
       'searchLawyers',
       'addRecipient',
+      'verifyRecipient',
       'searchPersonByOab',
       'setTicketOverviewParty',
       'deleteTicketOverviewParty',
@@ -619,9 +629,36 @@ export default {
       })
     },
 
-    selectContact(value, key, type) {
-      if (!this.isNegotiator) {
-        this.addRecipient({ value, key, type })
+    handleLgpdWarning(ok) {
+      if (ok) {
+        const { value, key, type } = this.selectContactObj
+        this.selectContact(value, key, true, type)
+      }
+      this.LGPDWarningDialogVisible = false
+    },
+
+    selectContact(value, key, isMain, type) {
+      const reply = {
+        disputeId: this.$route.params.id,
+        type,
+        value,
+        key
+      }
+      if (!isMain) {
+        this.selectContactObj = reply
+        this.LGPDWarningDialogVisible = true
+      } else {
+        if (!this.isNegotiator) {
+          this.verifyRecipient(reply)
+            .then((data) => {
+              if (data.value === 'AUTHORIZED') {
+                delete reply.disputeId
+                this.addRecipient({ value, key, type })
+              } else {
+                this.LGPDWarningDialogVisible = true
+              }
+            })
+        }
       }
     },
 
