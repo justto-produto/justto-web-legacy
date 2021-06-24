@@ -159,7 +159,7 @@ const overviewActions = {
     return validateCurrentId(disputeId, () => axiosDispatch({
       url: `${disputeApiLegacy}/${disputeId}/bank-accounts/${bankAccountId}`,
       method: 'POST',
-      payload: { bankAccountId, personId },
+      payload: { bankAccountId, personId, link: true },
       mutation: 'updateTicketRoleBankAccount'
     }).finally(() => commit('decrementTicketOverviewCountGetters')))
   },
@@ -248,7 +248,7 @@ const overviewActions = {
     return axiosDispatch({
       url: `${disputeApiLegacy}/${disputeId}/bank-accounts/${bankAccountId}`,
       method: 'DELETE',
-      payload: { bankAccountId, personId },
+      payload: { bankAccountId, personId, link: false },
       mutation: 'updateTicketRoleBankAccount'
     }).finally(() => commit('decrementTicketOverviewCountGetters'))
   },

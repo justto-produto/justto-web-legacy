@@ -118,19 +118,15 @@ const overviewMutations = {
     Vue.delete(contactTypeList, contactToDelete)
   },
 
-  updateTicketRoleBankAccount: (state, { payload }) => {
-    const { bankAccountId, personId } = payload
-
+  updateTicketRoleBankAccount: (state, { payload: { bankAccountId, personId, link } }) => {
     const indexPartie = state.ticketOverviewParties.findIndex(partie => {
       return partie.person.id === personId
     })
 
     if (indexPartie >= 0) {
       state.ticketOverviewParties[indexPartie].bankAccountsDto.forEach((item, index) => {
-        if (item.id === bankAccountId && !item.associatedInDispute) {
-          Vue.set(state.ticketOverviewParties[indexPartie].bankAccountsDto[index], 'associatedInDispute', true)
-        } else {
-          Vue.set(state.ticketOverviewParties[indexPartie].bankAccountsDto[index], 'associatedInDispute', false)
+        if (item.id === bankAccountId) {
+          Vue.set(state.ticketOverviewParties[indexPartie].bankAccountsDto[index], 'associatedInDispute', link)
         }
       })
     }
