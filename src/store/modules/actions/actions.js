@@ -63,14 +63,34 @@ const actionsActions = {
     })
   },
 
-  sendTicketAction({ rootState }, params) {
+  sendTicketAction({ rootState, commit }, params) {
     let { data, action, disputeId } = params
     action = action.toLowerCase()
-
     const mutations = {
-      paused: 'pauseTicket',
-      resume: 'resumeTicket',
-      negotiators: 'updateTicketNegotiator'
+      paused: ['pauseTicket'],
+      resume: ['resumeTicket'],
+      negotiators: ['updateTicketNegotiator'],
+      unsettled: ['updateTicketOverview', 'deleteTicket'],
+      settled: ['updateTicketOverview', 'deleteTicket']
+    }
+
+    // não remove o ticket se já estiver na ultima aba
+    if (rootState.negotiationTicketsModule.ticketsActiveTab === 'finished') {
+      mutations.unsettled.pop()
+    }
+
+    const payloads = {
+      negotiators: [],
+      unsettled:
+      [
+        { payload: { status: 'UNSETTLED' } },
+        { payload: disputeId }
+      ],
+      settled:
+      [
+        { payload: { status: 'SETTLED' } },
+        { payload: disputeId }
+      ]
     }
 
     const payload = { disputeId }
@@ -83,14 +103,32 @@ const actionsActions = {
       payload.negotiators = rootState.workspaceModule.workspace.members.filter(({ personId }) => {
         return negotiatorsId.includes(personId)
       })
+      payloads.negotiators.push(payload)
     }
 
-    return axiosDispatch({
-      url: `${disputesPath}/${disputeId}/${action}`,
-      method: 'PUT',
-      data,
-      mutation: mutations[action],
-      payload
+    return new Promise((resolve, reject) => {
+      axiosDispatch({
+        url: `${disputesPath}/${disputeId}/${action}`,
+        method: 'PUT',
+        data
+      }).then((res) => {
+        if (mutations[action]) {
+          mutations[action].forEach((mutation, index) => {
+            if (payloads[action]) {
+              if (payloads[action][index]) {
+                commit(mutation, payloads[action][index])
+              } else {
+                commit(mutation)
+              }
+            } else {
+              commit(mutation)
+            }
+          })
+          resolve(res)
+        }
+      }).catch((res) => {
+        reject(res)
+      })
     })
   },
 
@@ -128,16 +166,20 @@ const actionsActions = {
     })
   },
 
-  sendOffer({ _ }, { data, disputeId, polarityObjectKey }) {
-    return axiosDispatch({
-      url: `${disputesPath}/v2/${disputeId}/counterproposal`,
-      method: 'POST',
-      data,
-      mutation: 'updateLastTicketOffers',
-      payload: {
-        value: data.value,
-        polarityObjectKey
-      }
+  sendOffer({ commit }, { data, disputeId, polarityObjectKey }) {
+    return new Promise((resolve, reject) => {
+      axiosDispatch({
+        url: `${disputesPath}/v2/${disputeId}/counterproposal`,
+        method: 'POST',
+        data
+      }).then((res) => {
+        commit('updateLastTicketOffers', { payload: { value: data.value, polarityObjectKey } })
+        commit('updateTicketOverview', { payload: { status: 'ACCEPTED' } })
+        commit('deleteTicket', { payload: disputeId })
+        resolve(res)
+      }).catch((res) => {
+        reject(res)
+      })
     })
   }
 }
