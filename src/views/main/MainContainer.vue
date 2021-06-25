@@ -83,7 +83,10 @@
     </el-container>
     <JusShortchts />
     <jusMessagePreview />
-    <ThamirisAlerts :is-visible="areThamirisAlertsVisible" />
+    <ThamirisAlerts
+      v-if="isJusttoAdmin"
+      :is-visible="areThamirisAlertsVisible"
+    />
     <!-- <NotificationDrawer :is-visible="areNotificationsVisible" /> -->
   </el-container>
 </template>

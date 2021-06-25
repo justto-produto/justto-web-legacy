@@ -15,7 +15,10 @@
 
     <JusAcademy />
 
-    <Notification class="usermenu-container__jus-academy" />
+    <Notification
+      v-if="isJusttoAdmin"
+      class="usermenu-container__jus-academy"
+    />
 
     <el-dropdown
       trigger="click"
