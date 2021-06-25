@@ -1,14 +1,19 @@
 <template>
   <div class="notification">
-    <div
-      class="notification__icon"
-      @click="toggleShowNotifications(false)"
+    <el-tooltip
+      content="Notificações"
+      :open-delay="200"
     >
-      <div class="notification__icon__counter">
-        {{ qtdNotifications }}
+      <div
+        class="notification__icon"
+        @click="toggleShowNotifications(true)"
+      >
+        <div class="notification__icon__counter">
+          {{ qtdNotifications }}
+        </div>
+        <i class="el-icon-bell" />
       </div>
-      <i class="el-icon-bell" />
-    </div>
+    </el-tooltip>
   </div>
 </template>
 
@@ -34,18 +39,19 @@ export default {
 
 .notification {
   text-align: center;
+  margin-top: 8px;
 
   .notification__icon {
     text-align: center;
     height: 30px;
     width: 30px;
-    background-color: #979797;
     -moz-border-radius: 50px;
     -webkit-border-radius: 50px;
     border-radius: 50px;
     font-size: 22px;
-    color: white;
+    color: rgb(95, 93, 93);
     position: relative;
+    cursor: pointer;
     .notification__icon__counter {
       text-align: center;
       position: absolute;
@@ -57,6 +63,7 @@ export default {
       background-color: red;
       border-radius: 50px;
       padding: 1px 4px;
+      color: white;
     }
   }
 }

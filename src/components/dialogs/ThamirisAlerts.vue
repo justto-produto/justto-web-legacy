@@ -7,11 +7,14 @@
     :show-close="false"
     destroy-on-close
     append-to-body
-    width="40%"
+    :width="calcWidth"
   >
     <div class="thamiris__alerts">
       <div class="thamiris__alerts__header">
-        <img :src="coffee">
+        <div class="thamiris__alerts__header-icon">
+          <div class="thamiris__alerts__header-icon-red" />
+          <i class="el-icon-bell" />
+        </div>
         <h1 class="thamiris__alerts__header-title">
           Bom dia! Olha só as dicas que temos pra você :)
         </h1>
@@ -31,7 +34,7 @@
       </div>
       <div class="thamiris__alerts__body">
         <span class="thamiris__alerts__body-title">
-          Hoje você tem:
+          Você ainda tem:
         </span>
         <div class="thamiris__alerts__body-items">
           <div
@@ -45,19 +48,37 @@
                   class="thamiris__alerts__body-items-item-circle-style-al"
                   @click="applyFilters(notification)"
                 >
-                  <span class="thamiris__alerts__body-items-item-circle-style-al-num">{{ notification.quantity }}</span>
-                  <span class="thamiris__alerts__body-items-item-circle-style-al-disp">disputas</span>
+                  <div class="thamiris__alerts__body-items-item-circle-style-al-num">
+                    {{ handleQuantity(notification.quantity) }}
+                  </div>
+                  <div class="thamiris__alerts__body-items-item-circle-style-al-disp">
+                    disputas
+                  </div>
                 </div>
               </div>
             </div>
-            <span class="thamiris__alerts__body-items-item-message">
+            <div
+              v-if="notification.quantity !== 0"
+              class="thamiris__alerts__body-items-item-message"
+            >
               {{ notification.name }}
-            </span>
+            </div>
+            <div
+              v-else
+              class="thamiris__alerts__body-items-item-message-line-through"
+            >
+              {{ notification.name }}
+            </div>
           </div>
         </div>
       </div>
-      <div class="thamiris__alerts__confirm">
-        <el-button @click="closeDialog">
+      <div
+        class="thamiris__alerts__confirm"
+      >
+        <el-button
+          class="thamiris__alerts__confirm-button"
+          @click="closeDialog"
+        >
           Fechar
         </el-button>
       </div>
@@ -75,18 +96,34 @@ export default {
     }
   },
 
-  data: () => ({
-    // isVisbible: true
-  }),
+  data() {
+    return {
+      innerWidth: window.innerWidth
+    }
+  },
 
   computed: {
     ...mapGetters({
-      notifications: 'notificationsNotEmptyDisputes'
+      notifications: 'notifications'
     }),
 
     coffee() {
       return require('@/assets/img/coffee.png')
+    },
+
+    calcWidth() {
+      if (this.innerWidth > 1300) return '40%'
+      const pattern = 1300
+      const porc = 55
+      const x = 100 - (this.innerWidth * porc) / pattern
+      return `${x}%`
     }
+  },
+
+  mounted() {
+    window.addEventListener('resize', () => {
+      this.innerWidth = window.innerWidth
+    })
   },
 
   methods: {
@@ -129,8 +166,8 @@ export default {
       this.hideThamirisAlerts()
     },
 
-    openDialogEditor() {
-      this.isVisbible = true
+    handleQuantity(num) {
+      return num < 100 ? num : num >= 1000 ? '1k+' : '99+'
     }
   }
 }
@@ -149,12 +186,30 @@ export default {
     align-items: center;
     justify-content: center;
     text-align: center;
-    background-color: #FF9300;
+    background-color: $--color-primary;
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     padding: 30px;
+    .thamiris__alerts__header-icon {
+      font-size: 45px;
+      background-color: white;
+      color: $--color-primary;
+      height: 55px;
+      width: 55px;
+      border-radius: 50px;
+      position: relative;
+      .thamiris__alerts__header-icon-red {
+        position: absolute;
+        top: 0;
+        right: 0;
+        height: 15px;
+        width: 15px;
+        border-radius: 50px;
+        background-color: $--color-nps-detractor;
+      }
+    }
     .thamiris__alerts__header-title {
       color: white;
       font-weight: bold;
@@ -215,7 +270,7 @@ export default {
       margin-bottom: 15px;
 
       .thamiris__alerts__body-items-item {
-        flex: 0 0 20%;
+        flex: 0 0 33%;
         margin-bottom: 10px;
 
         .thamiris__alerts__body-items-item-circle {
@@ -226,8 +281,8 @@ export default {
           text-align: center;
           color: white;
           .thamiris__alerts__body-items-item-circle-style {
-            height: 55px;
-            width: 55px;
+            height: 65px;
+            width: 65px;
             background-color: $--color-primary;
             border-radius: 100%;
             .thamiris__alerts__body-items-item-circle-style-al {
@@ -240,10 +295,11 @@ export default {
               .thamiris__alerts__body-items-item-circle-style-al-num {
                 font-size: 23px;
                 font-weight: bold;
-                padding-top: 4px;
+                padding-top: 13px;
               }
               .thamiris__alerts__body-items-item-circle-style-al-disp {
-                font-size: 10px;
+                font-size: 8px;
+                margin-top: -3px;
               }
             }
           }
@@ -253,8 +309,19 @@ export default {
         }
 
         .thamiris__alerts__body-items-item-message {
-          color:  $--color-primary;
-          font-size: 10px;
+          color:  $--color-black;
+          font-size: 12px;
+          margin: 8px 20px 0px 20px;
+          text-align: center;
+          font-weight: 600;
+        }
+        .thamiris__alerts__body-items-item-message-line-through {
+          font-size: 12px;
+          margin: 8px 20px 0px 20px;
+          text-align: center;
+          font-weight: 600;
+          text-decoration: line-through;
+          color: $--color-gray;
         }
       }
 
@@ -265,6 +332,10 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
+    .thamiris__alerts__confirm-button {
+      padding: 6px 30px;
+      color: $--color-gray;
+    }
   }
 }
 

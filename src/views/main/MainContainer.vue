@@ -84,7 +84,7 @@
     <JusShortchts />
     <jusMessagePreview />
     <ThamirisAlerts :is-visible="areThamirisAlertsVisible" />
-    <NotificationDrawer :is-visible="areNotificationsVisible" />
+    <!-- <NotificationDrawer :is-visible="areNotificationsVisible" /> -->
   </el-container>
 </template>
 
@@ -100,7 +100,7 @@ export default {
     JusTeamMenu: () => import('@/components/layouts/JusTeamMenu'),
     JusShortchts: () => import('@/components/others/JusShortcuts'),
     ThamirisAlerts: () => import('@/components/dialogs/ThamirisAlerts.vue'),
-    NotificationDrawer: () => import('@/components/drawer/NotificationDrawer')
+    // NotificationDrawer: () => import('@/components/drawer/NotificationDrawer')
   },
 
   data() {
@@ -198,7 +198,6 @@ export default {
     this.subscribe()
     window.addEventListener('resize', this.handleResize)
     eventBus.$on('SEE-PREVIEW', this.getPreview)
-    // this.getThamirisAlerts()
   },
 
   beforeDestroy() {

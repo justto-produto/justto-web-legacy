@@ -2,7 +2,34 @@ const gettersNotifications = {
   // notifications: (state) => state.notifications,
   notifications: (state) => [
     {
-      name: 'Pendentes',
+      name: 'Esperando você responder',
+      quantity: 750,
+      tab: 'ENGAGEMENT',
+      type: 'PENDING',
+      filter: {
+        prescriptions: 'PENDING'
+      }
+    },
+    {
+      name: 'Aguardando resposta da parte',
+      quantity: 25,
+      tab: 'ENGAGEMENT',
+      type: 'PENDING',
+      filter: {
+        prescriptions: 'PENDING'
+      }
+    },
+    {
+      name: 'Sem resposta mas que possuem mensagens agendadas',
+      quantity: 1800,
+      tab: 'ENGAGEMENT',
+      type: 'PENDING',
+      filter: {
+        prescriptions: 'PENDING'
+      }
+    },
+    {
+      name: 'C. Propostas(s) acima de 20% da alçada',
       quantity: 0,
       tab: 'ENGAGEMENT',
       type: 'PENDING',
@@ -20,61 +47,7 @@ const gettersNotifications = {
       }
     },
     {
-      name: 'Essa é uma mussum ipsum grande loren descrição',
-      quantity: 0,
-      tab: 'ENGAGEMENT',
-      type: 'PENDING',
-      filter: {
-        prescriptions: 'PENDING'
-      }
-    },
-    {
-      name: 'Pendentes',
-      quantity: 12,
-      tab: 'ENGAGEMENT',
-      type: 'PENDING',
-      filter: {
-        prescriptions: 'PENDING'
-      }
-    },
-    {
-      name: 'Teste testando',
-      quantity: 25,
-      tab: 'ENGAGEMENT',
-      type: 'PENDING',
-      filter: {
-        prescriptions: 'PENDING'
-      }
-    },
-    {
-      name: 'Essa é uma mussum ipsum grande loren descrição',
-      quantity: 100,
-      tab: 'ENGAGEMENT',
-      type: 'PENDING',
-      filter: {
-        prescriptions: 'PENDING'
-      }
-    },
-    {
-      name: 'Pendentes',
-      quantity: 12,
-      tab: 'ENGAGEMENT',
-      type: 'PENDING',
-      filter: {
-        prescriptions: 'PENDING'
-      }
-    },
-    {
-      name: 'Teste testando',
-      quantity: 25,
-      tab: 'ENGAGEMENT',
-      type: 'PENDING',
-      filter: {
-        prescriptions: 'PENDING'
-      }
-    },
-    {
-      name: 'Essa é uma mussum ipsum grande loren descrição',
+      name: 'C. Proposta(s) até 20% da alçada',
       quantity: 100,
       tab: 'ENGAGEMENT',
       type: 'PENDING',
