@@ -227,9 +227,9 @@ export default {
     }),
 
     pollData() {
-      this.setNotifications(this.notifications)
+      this.getThamirisAlerts()
       this.timer = setInterval(() => {
-        this.setNotifications(this.notifications)
+        this.getThamirisAlerts()
       }, 120000)
     },
 

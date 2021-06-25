@@ -43,7 +43,10 @@
             class="thamiris__alerts__body-items-item"
           >
             <div class="thamiris__alerts__body-items-item-circle">
-              <div class="thamiris__alerts__body-items-item-circle-style">
+              <div
+                v-if="notification.quantity !== 0"
+                class="thamiris__alerts__body-items-item-circle-style"
+              >
                 <div
                   class="thamiris__alerts__body-items-item-circle-style-al"
                   @click="applyFilters(notification)"
@@ -55,6 +58,14 @@
                     disputas
                   </div>
                 </div>
+              </div>
+              <div
+                v-else
+                class="thamiris__alerts__body-items-item-circle-img"
+              >
+                <img
+                  src="https://storage.googleapis.com/justto_app/conteudos/Componente-27-1.png"
+                >
               </div>
             </div>
             <div
@@ -137,19 +148,16 @@ export default {
       hideThamirisAlerts: 'hideThamirisAlerts'
     }),
 
-    applyFilters({ filter: { prescriptions, status }, tab }) {
-      const filters = {
-        prescriptions
-      }
-
-      if (status) {
-        filters.status = status.split(',')
-      }
-
+    applyFilters({ filter, tab }) {
       this.setTicketsActiveTab(tab.toLowerCase())
 
       this.setTicketsFilters({
-        filters,
+        filters: {},
+        hasFilters: true
+      })
+
+      this.setTicketsFilters({
+        filters: filter,
         hasFilters: true
       })
 
@@ -280,6 +288,11 @@ export default {
           justify-content: center;
           text-align: center;
           color: white;
+
+          .thamiris__alerts__body-items-item-circle-img img {
+            height: 80px;
+          }
+
           .thamiris__alerts__body-items-item-circle-style {
             height: 65px;
             width: 65px;
