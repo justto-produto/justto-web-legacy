@@ -128,16 +128,20 @@ const actionsActions = {
     })
   },
 
-  sendOffer({ _ }, { data, disputeId, polarityObjectKey }) {
-    return axiosDispatch({
-      url: `${disputesPath}/v2/${disputeId}/counterproposal`,
-      method: 'POST',
-      data,
-      mutation: 'updateLastTicketOffers',
-      payload: {
-        value: data.value,
-        polarityObjectKey
-      }
+  sendOffer({ commit }, { data, disputeId, polarityObjectKey }) {
+    return new Promise((resolve, reject) => {
+      axiosDispatch({
+        url: `${disputesPath}/v2/${disputeId}/counterproposal`,
+        method: 'POST',
+        data
+      }).then((res) => {
+        commit('updateLastTicketOffers', { payload: { value: data.value, polarityObjectKey } })
+        commit('updateTicketOverview', { payload: { status: 'CHECKOUT' } })
+        commit('deleteTicket', disputeId)
+        resolve(res)
+      }).catch((res) => {
+        reject(res)
+      })
     })
   }
 }
