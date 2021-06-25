@@ -596,7 +596,7 @@ export default {
         const { disputeId } = this.ticket
 
         const { value, roleId, note } = this.offerForm
-        const data = { value, note, roleId, updateUpperRange }
+        const data = { value, note, conclusionNote: note, roleId, updateUpperRange }
         const polarityObjectKey = 'plaintiffOffer'
 
         this.sendOffer({ disputeId, data, polarityObjectKey })
@@ -622,11 +622,13 @@ export default {
     handleSettled() {
       const { disputeId } = this.ticket
       const action = 'SETTLED'
+      const { note } = this.offerForm
+      const data = { note, conclusionNote: note }
 
       this.confirmAction(action)
         .then(() => {
           this.modalLoading = true
-          this.sendTicketAction({ disputeId, action })
+          this.sendTicketAction({ disputeId, action, data })
             .then(_success => this.concludeAction(action, disputeId))
             .catch(error => this.$jusNotification({ error }))
             .finally(() => (this.modalLoading = false))
