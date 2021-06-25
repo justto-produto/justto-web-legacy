@@ -354,7 +354,8 @@ export default {
       ticketParties: 'getTicketOverviewParties',
       workspaceMembers: 'workspaceMembers',
       outcomeReasons: 'getOutcomeReasons',
-      lastTicketOffers: 'getLastTicketOffers'
+      lastTicketOffers: 'getLastTicketOffers',
+      activeTab: 'getActiveTab'
     }),
 
     isInsufficientUpperRange() {
@@ -459,7 +460,8 @@ export default {
     ]),
 
     confirmAction(action, message = 'Tem certeza que deseja realizar está ação?') {
-      const title = this.ticket.status === 'RUNNING' ? this.$options.filters.capitalize(this.$tc(`actions.${action}.name`, 0)) : this.$options.filters.capitalize(this.$tc(`actions.${action}.name`, 1))
+      const title = (this.activeTab === 'engagement' || this.activeTab === 'running')
+        ? this.$options.filters.capitalize(this.$tc(`actions.${action}.name`, 1)) : this.$options.filters.capitalize(this.$tc(`actions.${action}.name`, 0))
       const options = {
         confirmButtonText: 'Continuar',
         cancelButtonText: 'Cancelar',
@@ -641,7 +643,6 @@ export default {
       const { disputeId } = ticket
       const data = { note, reason: unsettledOutcomeReasons[unsettledType] }
       const action = 'UNSETTLED'
-
       if (this.isInsufficientUpperRange) {
         this.validateOfferForm()
           .then(() => this.confirmAction(action)

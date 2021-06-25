@@ -165,11 +165,11 @@ const overviewMutations = {
     }
   },
 
-  pauseTicket(state, { _ }) {
+  pauseTicket(state, _payload) {
     Vue.set(state.ticketOverview, 'paused', true)
   },
 
-  resumeTicket(state, { _ }) {
+  resumeTicket(state, _payload) {
     Vue.set(state.ticketOverview, 'paused', false)
   },
 
