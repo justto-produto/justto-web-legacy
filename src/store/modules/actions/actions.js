@@ -136,7 +136,7 @@ const actionsActions = {
         data
       }).then((res) => {
         commit('updateLastTicketOffers', { payload: { value: data.value, polarityObjectKey } })
-        commit('updateTicketOverview', { payload: { status: 'CHECKOUT' } })
+        commit('updateTicketOverview', { payload: { status: 'ACCEPTED' } })
         commit('deleteTicket', disputeId)
         resolve(res)
       }).catch((res) => {
