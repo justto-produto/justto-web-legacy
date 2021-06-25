@@ -83,11 +83,16 @@
     </el-container>
     <JusShortchts />
     <jusMessagePreview />
+    <ThamirisAlerts
+      v-if="isJusttoAdmin"
+      :is-visible="areThamirisAlertsVisible"
+    />
+    <!-- <NotificationDrawer :is-visible="areNotificationsVisible" /> -->
   </el-container>
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapActions, mapMutations } from 'vuex'
 import { eventBus } from '@/utils'
 
 export default {
@@ -96,12 +101,16 @@ export default {
     jusMessagePreview: () => import('@/components/dialogs/JusMessagePreviewDialog'),
     JusHeaderMain: () => import('@/components/layouts/JusHeaderMain'),
     JusTeamMenu: () => import('@/components/layouts/JusTeamMenu'),
-    JusShortchts: () => import('@/components/others/JusShortcuts')
+    JusShortchts: () => import('@/components/others/JusShortcuts'),
+    ThamirisAlerts: () => import('@/components/dialogs/ThamirisAlerts.vue'),
+    // NotificationDrawer: () => import('@/components/drawer/NotificationDrawer')
   },
 
   data() {
     return {
+      timer: null,
       subscriptions: [],
+      drawer: true,
       isTeamSectionExpanded: false
     }
   },
@@ -114,7 +123,10 @@ export default {
       personId: 'loggedPersonId',
       workspace: 'workspaceSubdomain',
       authorization: 'accountToken',
-      userPreferences: 'userPreferences'
+      userPreferences: 'userPreferences',
+      notifications: 'notifications',
+      areThamirisAlertsVisible: 'areThamirisAlertsVisible',
+      areNotificationsVisible: 'areNotificationsVisible'
     }),
 
     canAccessNegotiationScreen() {
@@ -143,13 +155,6 @@ export default {
         index: 'disputes',
         name: 'Todas as disputas',
         childs: [
-          // {
-          //   index: '/negotiation',
-          //   title: 'Negociação',
-          //   icon: 'negotiation-window',
-          //   isVisible: true,
-          //   action: () => {}
-          // },
           {
             index: '/management',
             title: 'Gerenciamento',
@@ -166,13 +171,6 @@ export default {
           }
         ]
       })
-      // itemsMenu.push({
-      //   index: '/management/all',
-      //   title: 'Todas as disputas',
-      //   icon: 'full-folder',
-      //   isVisible: true,
-      //   action: () => this.setTabQuery('allDisputes')
-      // })
       itemsMenu.push({
         index: '/import',
         title: 'Importação',
@@ -193,6 +191,10 @@ export default {
 
   beforeCreate() {
     this.$store.commit('clearDisputeQuery')
+  },
+
+  created() {
+    this.pollData()
   },
 
   beforeMount() {
@@ -219,8 +221,20 @@ export default {
       loadAccountProperty: 'loadAccountProperty',
       setAccountProperty: 'setAccountProperty',
       setWindowGeometry: 'setWindowGeometry',
-      getPreview: 'getMessageToPreview'
+      getPreview: 'getMessageToPreview',
+      getThamirisAlerts: 'getThamirisAlerts'
     }),
+
+    ...mapMutations({
+      setNotifications: 'setNotifications'
+    }),
+
+    pollData() {
+      this.getThamirisAlerts()
+      this.timer = setInterval(() => {
+        this.getThamirisAlerts()
+      }, 120000)
+    },
 
     handleResize({ target }) {
       this.setWindowGeometry(target)
