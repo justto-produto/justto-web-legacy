@@ -1036,7 +1036,14 @@ export default {
           showClose: false
         }).then(() => {
           this.modalLoading = true
-          let params = { action: action, disputeId: this.dispute.id, body: { note: this.counterOfferForm.note } }
+          let params = {
+            action,
+            disputeId: this.dispute.id,
+            body: {
+              note: this.counterOfferForm.note,
+              conclusionNote: this.counterOfferForm.note
+            }
+          }
           if (additionParams) params = { ...params, ...additionParams }
           this.sendDisputeAction(params).then(() => {
             resolve()
