@@ -158,7 +158,7 @@ export default {
           const lowerCaseKeyAccount = (this.keyAccountTemplate(this.findKeyAccount(keyAccountId)) || '').toLocaleLowerCase()
           const lowerCaseName = (name || '').toLocaleLowerCase()
 
-          return lowerCaseTeamName.includes(lowerCaseSearch) || lowerCaseName.includes(lowerCaseSearch) || lowerCaseKeyAccount.includes(this.search)
+          return lowerCaseTeamName.includes(lowerCaseSearch) || lowerCaseName.includes(lowerCaseSearch) || lowerCaseKeyAccount.includes(lowerCaseSearch)
         }).map(item => ({
           portifolios: [],
           ...item
