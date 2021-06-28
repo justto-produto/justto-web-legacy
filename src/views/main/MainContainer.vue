@@ -117,6 +117,7 @@ export default {
 
   computed: {
     ...mapGetters({
+      workspaceId: 'workspaceId',
       isAdminProfile: 'isAdminProfile',
       isJusttoAdmin: 'isJusttoAdmin',
       workspaceMembersSorted: 'workspaceMembersSorted',
@@ -230,9 +231,9 @@ export default {
     }),
 
     pollData() {
-      this.getThamirisAlerts()
+      if (this.workspaceId.length !== 0) this.getThamirisAlerts()
       this.timer = setInterval(() => {
-        this.getThamirisAlerts()
+        if (this.workspaceId.length !== 0) this.getThamirisAlerts()
       }, 120000)
     },
 
