@@ -52,6 +52,7 @@
       <el-table-column
         align="right"
         prop="portifolios"
+        class-name="portifolios-column"
       >
         <template slot="header">
           <div class="el-input el-input--mini">
@@ -64,8 +65,16 @@
           </div>
         </template>
 
-        <template>
-          <a>Ver portifólios</a>
+        <template v-slot="scope">
+          <el-tag
+            v-for="tag in scope.row.portifolios"
+            :key="tag.id"
+            size="mini"
+          >
+            {{ portifolioById(tag.id).name }}
+          </el-tag>
+
+          <a v-if="scope.row.portifolios.length === 0">Ver tipos de carteira</a>
         </template>
       </el-table-column>
     </el-table>
@@ -131,19 +140,29 @@ export default {
       portifoliosByWorkspace: 'getPortifoliosByWorkspace'
     }),
 
+    portifolioById() {
+      return (id) => this.portifolios.find(portifolio => Number(portifolio.id) === Number(id))
+    },
+
     filteredWorkspaces() {
       if (!this.search) {
-        return this.workspaces
+        return this.workspaces.map(item => ({
+          portifolios: [],
+          ...item
+        }))
       } else {
         return this.workspaces.filter(({ name, teamName, keyAccountId }) => {
           const lowerCaseSearch = this.search.toLocaleLowerCase()
 
           const lowerCaseTeamName = (teamName || '').toLocaleLowerCase()
-          const lowerCaseKeyAccount = this.keyAccountTemplate(keyAccountId).toLocaleLowerCase()
+          const lowerCaseKeyAccount = (this.keyAccountTemplate(this.findKeyAccount(keyAccountId)) || '').toLocaleLowerCase()
           const lowerCaseName = (name || '').toLocaleLowerCase()
 
-          return lowerCaseTeamName.includes(lowerCaseSearch) || lowerCaseName.includes(lowerCaseSearch) || lowerCaseKeyAccount.includes(this.search)
-        })
+          return lowerCaseTeamName.includes(lowerCaseSearch) || lowerCaseName.includes(lowerCaseSearch) || lowerCaseKeyAccount.includes(lowerCaseSearch)
+        }).map(item => ({
+          portifolios: [],
+          ...item
+        }))
       }
     },
 
@@ -223,10 +242,16 @@ export default {
       }
     },
 
+    updateWorkspacePortifolios(workspaceId, portifolios) {
+      this.$set(this.workspaces.find(({ id }) => Number(id) === Number(workspaceId)), 'portifolios', portifolios)
+    },
+
     openPortifolioDialog(workspaceId) {
       this.isLoading = true
 
       this.getPortifolioAssociated(workspaceId).then(portifolios => {
+        this.updateWorkspacePortifolios(workspaceId, portifolios)
+
         this.dialog = {
           portifolios: portifolios.map(({ id }) => Number(id)),
           visible: true,
@@ -250,6 +275,8 @@ export default {
         ...toRemove.map(portifolioId => this.disassociatePortifolioToWorkspace({ portifolioId, workspaceId })),
         ...toSave.map(portifolioId => this.associatePortifolioToWorkspace({ portifolioId, workspaceId }))
       ]).then(() => {
+        this.updateWorkspacePortifolios(workspaceId, this.handledDialogPortifolios.map(id => ({ id })))
+
         this.$jusNotification({
           type: 'success',
           title: 'Yay!',
@@ -259,8 +286,6 @@ export default {
       }).finally(() => {
         this.isLoading = false
       })
-
-      console.log(toSave, toRemove)
     },
 
     closeDialog() {
@@ -308,6 +333,16 @@ export default {
   .el-dialog__body {
     .el-select {
       width: 100%;
+    }
+  }
+}
+
+.portifolios-column {
+  padding: 4px 0 !important;
+
+  .cell {
+    .el-tag {
+      margin: 4px;
     }
   }
 }
