@@ -1789,6 +1789,7 @@ export default {
     LawyerDetail: () => import('@/components/others/LawyerDetail'),
     AssociateContactsModal: () => import('@/components/dialogs/AssociateContactsModal')
   },
+
   props: {
     loading: {
       default: false,
@@ -1799,6 +1800,7 @@ export default {
       type: Number
     }
   },
+
   data() {
     return {
       isEditingRule: false,
@@ -1917,6 +1919,7 @@ export default {
       tempRole: {}
     }
   },
+
   computed: {
     ...mapGetters({
       disputeStatuses: 'disputeStatuses',
@@ -2064,6 +2067,7 @@ export default {
     isAccepted() {
       return this.dispute ? ['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(this.dispute.status) : false
     },
+
     showAssociateContacts: {
       get() {
         const condition = (
@@ -2088,6 +2092,7 @@ export default {
       }
     }
   },
+
   watch: {
     activeRoleId: function(newActiveRole) {
       if (newActiveRole === 0) this.handleChange('')
@@ -2102,23 +2107,7 @@ export default {
     },
     dispute(newew, old) {
       if ((!old || !old.id) && newew.properties) {
-        const { id } = this.$route.params
-
-        this.getDisputeMetadata(id).then(() => {
-          switch (this.dispute.properties['CONTATOS ASSOCIADOS']) {
-            case 'MAIS TARDE':
-              this.showAssociateContacts = 'NAO'
-              break
-            case 'NAO':
-              this.showAssociateContacts = 'NAO'
-              break
-            case 'SIM':
-              this.showAssociateContacts = 'SIM'
-              break
-            default:
-              break
-          }
-        })
+        this.checkMetadata()
       }
     }
   },
@@ -2153,6 +2142,7 @@ export default {
 
     init() {
       this.populateTimeline()
+      this.checkMetadata()
       this.checkTabByAssociatedContractValue()
     },
 
@@ -2235,6 +2225,27 @@ export default {
           type: 'success'
         })
       }
+    },
+
+    checkMetadata() {
+      const { id } = this.$route.params
+
+      this.getDisputeMetadata(id).then(() => {
+        switch (this.dispute.properties['CONTATOS ASSOCIADOS']) {
+          case 'MAIS TARDE':
+            this.showAssociateContacts = 'NAO'
+            break
+          case 'NAO':
+            this.showAssociateContacts = 'NAO'
+            break
+          case 'SIM':
+            this.showAssociateContacts = 'SIM'
+            break
+          default:
+            this.showAssociateContacts = 'NAO'
+            break
+        }
+      })
     },
 
     checkTabByAssociatedContractValue(flag = false) {

@@ -29,7 +29,6 @@
             class="el-badge--absolute"
           />
         </span>
-        <!-- <vue-perfect-scrollbar> -->
         <ul
           v-if="activeTab === tab.name"
           class="tickets-container__list"
@@ -61,7 +60,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
 import events from '@/constants/negotiationEvents'
 import { eventBus } from '@/utils'
 
@@ -79,13 +78,15 @@ export default {
   computed: {
     ...mapGetters({
       tickets: 'getTickets',
+      hasFilters: 'getTicketsHasFilters',
       ticketsActiveTab: 'getTicketsActiveTab',
       isLoading: 'getTicketsIsLoading',
       preNegotiationLenght: 'disputeNotVisualizedPreNegotiation',
       engagementLength: 'disputeNearExpirationsEngajement',
       interactionLength: 'disputeNotVisualizedInteration',
       newDealsLength: 'disputeNotVisualizedNewDeal',
-      finishedLenght: 'disputeNotVisualizedFinished'
+      finishedLenght: 'disputeNotVisualizedFinished',
+      preventFilters: 'getTicketsPreventFilters'
     }),
 
     tabs() {
@@ -124,6 +125,7 @@ export default {
       },
       set(value) {
         this.setTicketsActiveTab(value)
+        this.handleChangeTab({ name: value })
       }
     },
 
@@ -138,13 +140,11 @@ export default {
     }
   },
 
-  watch: {
-    activeTab(currentActiveTab) {
-      this.handleChangeTab({ name: currentActiveTab })
-    }
-  },
-
   beforeMount() {
+    if (localStorage.getItem('TICKET_ACTIVE_TAB')) {
+      this.setTicketsActiveTab(localStorage.getItem('TICKET_ACTIVE_TAB'))
+    }
+
     this.handleChangeTab({ name: this.activeTab })
   },
 
@@ -173,37 +173,43 @@ export default {
       'getTicketsFilteredTags'
     ]),
 
-    handleChangeTab(tab) {
-      this.setTicketsQuery({ key: 'status', value: [] })
-      this.setTicketsQuery({ key: 'prescriptions', value: [] })
-      this.setTicketsQuery({ key: 'sort', value: [] })
+    ...mapMutations(['setPreventFilters']),
 
-      switch (tab.name) {
-        case 'pre-negotiation':
-          this.setTicketsQuery({ key: 'status', value: ['PRE_NEGOTIATION'] })
-          this.setTicketsQuery({ key: 'sort', value: ['expirationDate,asc', 'id,desc'] })
-          break
-        case 'engagement':
-          this.setTicketsQuery({ key: 'status', value: ['IMPORTED', 'ENRICHED', 'ENGAGEMENT', 'PENDING'] })
-          this.setTicketsQuery({ key: 'sort', value: ['expirationDate,asc', 'id,desc'] })
-          break
-        case 'running':
-          this.setTicketsQuery({ key: 'status', value: ['RUNNING'] })
-          this.setTicketsQuery({ key: 'sort', value: ['visualized,asc', 'lastInboundInteraction.createdAt,desc', 'expirationDate,asc', 'id,desc'] })
-          break
-        case 'accepted':
-          this.setTicketsQuery({ key: 'status', value: ['ACCEPTED', 'CHECKOUT'] })
-          this.setTicketsQuery({ key: 'sort', value: ['visualized,asc', 'conclusionDate,asc', 'id,desc'] })
-          break
-        case 'finished':
-          this.setTicketsQuery({ key: 'prescriptions', value: ['NEWLY_FINISHED'] })
-          this.setTicketsQuery({ key: 'sort', value: ['visualized,asc', 'conclusionDate,asc', 'expirationDate,asc', 'lastReceivedMessage,asc', 'id,desc'] })
-          break
+    handleChangeTab(tab) {
+      if (!this.preventFilters) {
+        this.setTicketsQuery({ key: 'status', value: [] })
+        this.setTicketsQuery({ key: 'prescriptions', value: [] })
+        this.setTicketsQuery({ key: 'sort', value: [] })
+
+        switch (tab.name) {
+          case 'pre-negotiation':
+            this.setTicketsQuery({ key: 'status', value: ['PRE_NEGOTIATION'] })
+            this.setTicketsQuery({ key: 'sort', value: ['expirationDate,asc', 'id,desc'] })
+            break
+          case 'engagement':
+            this.setTicketsQuery({ key: 'status', value: ['IMPORTED', 'ENRICHED', 'ENGAGEMENT', 'PENDING'] })
+            this.setTicketsQuery({ key: 'sort', value: ['expirationDate,asc', 'id,desc'] })
+            break
+          case 'running':
+            this.setTicketsQuery({ key: 'status', value: ['RUNNING'] })
+            this.setTicketsQuery({ key: 'sort', value: ['visualized,asc', 'lastInboundInteraction.createdAt,desc', 'expirationDate,asc', 'id,desc'] })
+            break
+          case 'accepted':
+            this.setTicketsQuery({ key: 'status', value: ['ACCEPTED', 'CHECKOUT'] })
+            this.setTicketsQuery({ key: 'sort', value: ['visualized,asc', 'conclusionDate,asc', 'id,desc'] })
+            break
+          case 'finished':
+            this.setTicketsQuery({ key: 'prescriptions', value: ['NEWLY_FINISHED'] })
+            this.setTicketsQuery({ key: 'sort', value: ['visualized,asc', 'conclusionDate,asc', 'expirationDate,asc', 'lastReceivedMessage,asc', 'id,desc'] })
+            break
+        }
+      } else {
+        this.setPreventFilters(false)
       }
 
       this.getTicketsFilteredTags()
       this.getTickets()
-        .then(() => {
+        .then((response) => {
           this.getNearExpirations()
           this.getNotVisualizeds()
         })
