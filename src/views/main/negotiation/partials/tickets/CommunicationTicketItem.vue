@@ -62,13 +62,6 @@
       <el-step />
     </el-steps>
     <span
-      v-if="!((isAcceptedTab || (isFinishedTab && isSettled)) && showDraft)"
-      class="communication-ticket-item-container__time"
-    >
-      {{ lastInboundInteraction.typeMessage || '' }} {{ getLastInteraction(lastInboundInteraction.dateTime) }}
-    </span>
-    <span
-      v-else
       class="communication-ticket-item-container__time"
     >
       {{ getLastInteraction(lastInboundInteraction.dateTime) }}
