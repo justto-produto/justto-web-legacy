@@ -80,7 +80,8 @@ export default {
       'getAssociatedContacts',
       'getQuickReplyTemplates',
       'getTicketOverviewParties',
-      'getTicketMetadata'
+      'getTicketMetadata',
+      'setDisputeProperty'
     ]),
 
     fetchData(id) {
@@ -89,7 +90,13 @@ export default {
       this.getTicketOverview(id).catch(error => this.$jusNotification({ error }))
       this.getTicketOverviewParties(id).then(() => {
         this.getTicketMetadata(id).then(() => {
-          this.getAssociatedContacts(id)
+          this.getAssociatedContacts(id).then(res => {
+            if (res['CONTATOS ASSOCIADOS'] === 'MAIS TARDE') {
+              this.setDisputeProperty({ key: 'CONTATOS ASSOCIADOS', disputeId: id, value: 'NAO' }).then(() => {
+                this.getAssociatedContacts(id)
+              })
+            }
+          })
         })
       })
       this.getDisputeTags(id)
