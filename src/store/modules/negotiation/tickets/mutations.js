@@ -62,6 +62,8 @@ const ticketsMutations = {
 
   setPreventFilters: (state, preventFilters) => Vue.set(state, 'ticketsPreventFilters', preventFilters),
 
+  setPreventSocket: (state, preventSocket) => Vue.set(state, 'ticketsPreventSocket', preventSocket),
+
   setTicketsActiveTab: (state, activeTab) => Vue.set(state, 'ticketsActiveTab', activeTab),
 
   updateTicketItemFromDisputeRole: ({ tickets }, disputeRole) => {

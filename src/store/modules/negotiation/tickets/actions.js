@@ -60,10 +60,11 @@ const overviewActions = {
     commit('unsetTicketPrescription', prescription)
   },
 
-  setTicketsFilters({ commit }, { filters, hasFilters, preventFilters }) {
+  setTicketsFilters({ commit }, { filters, hasFilters, preventFilters, preventSocket }) {
     commit('setTicketsFilters', filters)
     commit('setTicketsHasFilters', Boolean(hasFilters))
     commit('setPreventFilters', Boolean(preventFilters))
+    commit('setPreventSocket', Boolean(preventSocket))
   },
 
   setTicketsActiveTab({ commit }, activeTab) {
@@ -80,12 +81,16 @@ const overviewActions = {
 
   SOCKET_ADD_DISPUTE({ rootState, state, commit }, dispute) {
     const correspondingTab = getCorrespondingTab(dispute.status)
+
+    if (rootState.negotiationTicketsModule.ticketsPreventSocket) return
+
     if (rootState.negotiationOverviewModule.ticketOverview.disputeId === dispute.id) {
       if (correspondingTab !== state.ticketsActiveTab) {
         commit('setTicketsActiveTab', correspondingTab)
       } else {
         commit('updateTicketItem', dispute)
       }
+
       commit('updateTicket', dispute)
     } else {
       if (correspondingTab !== state.ticketsActiveTab) {

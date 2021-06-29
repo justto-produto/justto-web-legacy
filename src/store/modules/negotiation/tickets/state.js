@@ -36,6 +36,7 @@ const ticketsState = {
   ticketsMap: {},
   ticketsHasFilters: false,
   ticketsPreventFilters: false,
+  ticketsPreventSocket: false,
   ticketsQuery: {
     status: ['RUNNING'],
     sort: [
