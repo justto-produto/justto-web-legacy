@@ -29,12 +29,50 @@
       v-if="!isPreNegotiation"
       class="editor-container__after-tabs"
     >
-      <quick-reply
-        v-if="activeTab === 'MESSAGES'"
-        :show-title="!haveRecipients"
-      />
+      <div class="editor-container__after-tabs-align">
+        <quick-reply
+          v-if="activeTab === 'MESSAGES'"
+          :show-title="!haveRecipients"
+        />
+        <el-popover
+          v-if="isJusttoAdmin"
+          placement="bottom-end"
+          width="360"
+          trigger="click"
+        >
+          <div class="editor-container__after-tabs-align-popover">
+            <strong>
+              Dica importante!
+            </strong>
+            <span>
+              Sabia que você <br> pode customizar suas mensagens rápidas?
+            </span>
+            <br>
+            <strong
+              class="editor-container__after-tabs-align-popover-button"
+              @click="isVisibleSlider = true"
+            >
+              CLIQUE AQUI
+            </strong>
+            <span>
+              e saiba como fazer!
+            </span>
+          </div>
+          <div
+            slot="reference"
+            class="editor-container__after-tabs-info"
+          >
+            ?
+          </div>
+        </el-popover>
+      </div>
       <recipients class="editor-container__recipients" />
     </div>
+    <SlideInfo
+      :images="itemsSlider"
+      :is-visible="isVisibleSlider"
+      @close="isVisibleSlider = false"
+    />
   </section>
 </template>
 
@@ -51,19 +89,36 @@ export default {
     QuickReply: () => import('./partials/QuickReply'),
     recipients: () => import('./partials/Recipients'),
     messages: () => import('./partials/Messages'),
-    notes: () => import('./partials/Notes')
+    notes: () => import('./partials/Notes'),
+    SlideInfo: () => import('@/components/dialogs/SlideInfo')
   },
 
   mixins: [ticketPreNegotiation],
 
   data: () => ({
-    needFocus: false
+    needFocus: false,
+    isVisibleSlider: false,
+    itemsSlider: [
+      {
+        title: 'Customizando suas mensagens rápidas',
+        src: 'https://storage.googleapis.com/justto_app/conteudos/customizando-mensagens1.png'
+      },
+      {
+        title: 'Customizando suas mensagens rápidas',
+        src: 'https://storage.googleapis.com/justto_app/conteudos/customizando-mensagens2.png'
+      },
+      {
+        title: 'Customizando suas mensagens rápidas',
+        src: 'https://storage.googleapis.com/justto_app/conteudos/customizando-mensagens3.png'
+      }
+    ]
   }),
 
   computed: {
     ...mapGetters({
       activeTab: 'getActiveTab',
-      recipients: 'getEditorRecipients'
+      recipients: 'getEditorRecipients',
+      isJusttoAdmin: 'isJusttoAdmin'
     }),
 
     tabs() {
@@ -135,6 +190,7 @@ export default {
 </style>
 
 <style lang="scss">
+@import '@/styles/colors.scss';
 .editor-container {
   .el-tabs__header {
     margin-bottom: 0px !important;
@@ -174,6 +230,24 @@ export default {
     @media (max-height: 780px) {
       height: 36px;
     }
+
+    .editor-container__after-tabs-align {
+      display: flex;
+      flex-direction: row;
+    }
+
+    .editor-container__after-tabs-info {
+      text-align: center;
+      color: white;
+      font-weight: bold;
+      font-size: 16px;
+      height: 20px;
+      width: 20px;
+      border-radius: 50px;
+      background-color: $--color-primary;
+      margin-top: 4px;
+      margin-left: 10px;
+    }
   }
 
   .el-tabs__item {
@@ -182,5 +256,15 @@ export default {
   .el-tabs__nav-wrap:after {
     display: none;
   }
+
+}
+.editor-container__after-tabs-align-popover-button {
+  background-color: $--color-primary;
+  color: white;
+  padding: 2px 3px;
+  border-radius: 4px;
+  text-align: center;
+  margin-right: 3px;
+  cursor: pointer;
 }
 </style>

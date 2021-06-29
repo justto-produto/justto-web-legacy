@@ -69,6 +69,27 @@
         />
       </div>
     </DialogEditor>
+    <div
+      v-if="isJusttoAdmin"
+      class="messages-container__hint"
+    >
+      <strong class="messages-container__hint-hint">Dica importante!</strong>
+      <div class="messages-container__hint-text">
+        <div>Clique</div>
+        <div
+          class="messages-container__hint-text-click"
+          @click="isSlideInfoVisible = true"
+        >
+          AQUI
+        </div>
+        <div>e saiba como utilizar variáveis e preview das mensagens rápidas</div>
+      </div>
+    </div>
+    <SlideInfo
+      :images="itemsSlider"
+      :is-visible="isSlideInfoVisible"
+      @close="isSlideInfoVisible = false"
+    />
   </section>
   <section
     v-else
@@ -92,7 +113,8 @@ export default {
     QuickReply: () => import('./QuickReply'),
     Recipients: () => import('./Recipients'),
     Attachments: () => import('./AttachemntsIndicator'),
-    DialogEditor: () => import('@/components/dialogs/DialogEditor')
+    DialogEditor: () => import('@/components/dialogs/DialogEditor'),
+    SlideInfo: () => import('@/components/dialogs/SlideInfo')
   },
 
   mixins: [ckeditor],
@@ -112,7 +134,24 @@ export default {
     return {
       localLoading: false,
       useMenstionPlugin: false,
-      usePreviewPlugin: false
+      usePreviewPlugin: false,
+      isSlideInfoVisible: false,
+      itemsSlider: [
+        {
+          title: 'Utilizando variáveis da disputa em suas mensagens rápidas',
+          subtitle: 'São inumeras variáveis que você pode utilizar para compor suas mensagens rápidas. No local em que você coloca uma variável, o sistema vai utilizar os dados da disputa na mensagem.',
+          src: 'https://storage.googleapis.com/justto_app/conteudos/variaveis%26preview1.png'
+        },
+        {
+          title: 'Utilizando variáveis da disputa em suas mensagens rápidas',
+          src: 'https://storage.googleapis.com/justto_app/conteudos/variaveis%26preview2.png'
+        },
+        {
+          title: 'Visualizando como ficará sua mensagem',
+          src: 'https://storage.googleapis.com/justto_app/conteudos/variaveis%26preview3.png',
+          footer: 'Pronto! Agora você tem o template prontinho para usar sempre que precisar!'
+        }
+      ]
     }
   },
 
@@ -123,7 +162,8 @@ export default {
       editorRecipients: 'getEditorRecipients',
       messageType: 'getEditorMessageType',
       editorText: 'getEditorText',
-      ticket: 'getTicketOverview'
+      ticket: 'getTicketOverview',
+      isJusttoAdmin: 'isJusttoAdmin'
     }),
 
     sendMessagetext() {
@@ -319,6 +359,31 @@ export default {
     display: flex;
     justify-content: flex-end;
     margin-top: 6px;
+  }
+
+  .messages-container__hint {
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+    font-size: 11px;
+    .messages-container__hint-hint {
+      margin-right: 4px;
+    }
+    .messages-container__hint-text {
+      display: flex;
+      flex-direction: row;
+      .messages-container__hint-text-click {
+        font-size: 9px;
+        text-align: center;
+        background-color: $--color-primary;
+        padding: 3px 4px;
+        color: white;
+        margin: 0px 4px;
+        font-weight: 700;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+    }
   }
 }
 
