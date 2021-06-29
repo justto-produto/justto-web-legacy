@@ -90,7 +90,6 @@ const workspaceMutations = {
   },
 
   setPortifolioToWorkspace: (state, { data, payload }) => {
-    console.log(data, payload)
   },
   updateAssociatedKeyAccount: (state, { payload: { keyAccountId } }) => {
     const keyAccount = state.workspace.keyAccounts.find(({ id }) => id === keyAccountId)

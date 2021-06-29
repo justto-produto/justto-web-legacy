@@ -4,8 +4,6 @@ const pluginsAction = {
   },
 
   saveImageInBucket({ _ }, { file }) {
-    // console.log(file)
-
     return new Promise((resolve) => {
       setTimeout(() => resolve({ url: 'https://storage.googleapis.com/justto_app/emails/logo-justto-email.png' }), 1000)
     })

@@ -11,7 +11,6 @@
       v-model="activeTab"
       class="tickets-container__tabs"
     >
-      <!-- @tab-click="handleChangeTab" -->
       <el-tab-pane
         v-for="tab in tabs"
         :key="tab.name"
@@ -21,6 +20,7 @@
       >
         <span slot="label">
           {{ $t(`tickets-tabs.${tab.name}`) | capitalize }}
+
           <el-badge
             :hidden="!tab.counter"
             :value="tab.counter"
@@ -29,6 +29,7 @@
             class="el-badge--absolute"
           />
         </span>
+
         <ul
           v-if="activeTab === tab.name"
           class="tickets-container__list"
@@ -39,6 +40,7 @@
             :key="ticket.disputeId"
             :ticket="ticket"
           />
+
           <infinite-loading
             :identifier="activeTab"
             spinner="spiral"
@@ -48,12 +50,12 @@
             <div slot="no-more">
               Fim das disputas
             </div>
+
             <div slot="no-results">
               Nada por aqui
             </div>
           </infinite-loading>
         </ul>
-        <!-- </vue-perfect-scrollbar> -->
       </el-tab-pane>
     </el-tabs>
   </nav>

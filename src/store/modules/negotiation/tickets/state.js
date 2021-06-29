@@ -35,6 +35,7 @@ const ticketsState = {
   ticketsActiveTab: 'running',
   ticketsMap: {},
   ticketsHasFilters: false,
+  ticketsPreventFilters: false,
   ticketsQuery: {
     status: ['RUNNING'],
     sort: [

@@ -35,7 +35,9 @@ const ticketsMutations = {
     Vue.set(state.tickets, 'content', content)
   },
 
-  setTicketsQuery: ({ ticketsQuery }, { key, value }) => Vue.set(ticketsQuery, key, value),
+  setTicketsQuery: (state, { key, value }) => {
+    Vue.set(state.ticketsQuery, key, value)
+  },
 
   addTicketQueryPage: ({ ticketsQuery }) => (ticketsQuery.page += 1),
 
@@ -51,11 +53,14 @@ const ticketsMutations = {
 
   setTicketsFilters: (state, filters) => {
     const { ticketsQuery } = state
+
     Vue.set(state, 'ticketsQuery', filters)
     Vue.set(ticketsQuery, 'page', 1)
   },
 
   setTicketsHasFilters: (state, hasFilters) => Vue.set(state, 'ticketsHasFilters', hasFilters),
+
+  setPreventFilters: (state, preventFilters) => Vue.set(state, 'ticketsPreventFilters', preventFilters),
 
   setTicketsActiveTab: (state, activeTab) => Vue.set(state, 'ticketsActiveTab', activeTab),
 

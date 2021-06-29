@@ -1,7 +1,6 @@
 <template>
   <el-dialog
     ref="thamiresalerts"
-    :close-on-click-modal="false"
     :visible.sync="isVisible"
     :before-close="closeDialog"
     :show-close="false"
@@ -54,6 +53,7 @@
                   <div class="thamiris__alerts__body-items-item-circle-style-al-num">
                     {{ handleQuantity(notification.quantity) }}
                   </div>
+
                   <div class="thamiris__alerts__body-items-item-circle-style-al-disp">
                     disputas
                   </div>
@@ -63,9 +63,7 @@
                 v-else
                 class="thamiris__alerts__body-items-item-circle-img"
               >
-                <img
-                  src="https://storage.googleapis.com/justto_app/conteudos/Componente-27-1.png"
-                >
+                <img src="https://storage.googleapis.com/justto_app/conteudos/Componente-27-1.png">
               </div>
             </div>
             <div
@@ -153,18 +151,20 @@ export default {
 
       this.setTicketsFilters({
         filters: {},
-        hasFilters: true
+        hasFilters: true,
+        preventFilters: true
       })
 
       this.setTicketsFilters({
-        filters: filter,
-        hasFilters: true
+        filters: Object.assign({}, filter),
+        hasFilters: true,
+        preventFilters: true
       })
 
-      this.getTickets()
-
-      if (this.$route.name !== 'negotitation') {
+      if (this.$route.name !== 'negotiation') {
         this.$router.push('/negotiation')
+      } else {
+        this.getTickets()
       }
 
       this.closeDialog()

@@ -81,18 +81,20 @@
         </transition>
       </el-main>
     </el-container>
+
     <JusShortchts />
+
     <jusMessagePreview />
+
     <ThamirisAlerts
       v-if="isJusttoAdmin"
       :is-visible="areThamirisAlertsVisible"
     />
-    <!-- <NotificationDrawer :is-visible="areNotificationsVisible" /> -->
   </el-container>
 </template>
 
 <script>
-import { mapGetters, mapActions, mapMutations } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import { eventBus } from '@/utils'
 
 export default {
@@ -102,8 +104,7 @@ export default {
     JusHeaderMain: () => import('@/components/layouts/JusHeaderMain'),
     JusTeamMenu: () => import('@/components/layouts/JusTeamMenu'),
     JusShortchts: () => import('@/components/others/JusShortcuts'),
-    ThamirisAlerts: () => import('@/components/dialogs/ThamirisAlerts.vue'),
-    // NotificationDrawer: () => import('@/components/drawer/NotificationDrawer')
+    ThamirisAlerts: () => import('@/components/dialogs/ThamirisAlerts.vue')
   },
 
   data() {
@@ -224,10 +225,6 @@ export default {
       setWindowGeometry: 'setWindowGeometry',
       getPreview: 'getMessageToPreview',
       getThamirisAlerts: 'getThamirisAlerts'
-    }),
-
-    ...mapMutations({
-      setNotifications: 'setNotifications'
     }),
 
     pollData() {
