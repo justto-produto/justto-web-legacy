@@ -83,7 +83,6 @@
       </div>
     </div>
     <SlideInfo
-      title="Customizando suas mensagens rápidas"
       :images="itemsSlider"
       :is-visible="isSlideInfoVisible"
       @close="isSlideInfoVisible = false"

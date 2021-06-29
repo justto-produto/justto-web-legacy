@@ -68,7 +68,6 @@
       <recipients class="editor-container__recipients" />
     </div>
     <SlideInfo
-      title="Customizando suas mensagens rápidas"
       :images="itemsSlider"
       :is-visible="isVisibleSlider"
       @close="isVisibleSlider = false"

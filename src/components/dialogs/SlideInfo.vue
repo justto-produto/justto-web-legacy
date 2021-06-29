@@ -6,10 +6,17 @@
     :visible.sync="isVisible"
     append-to-body
     width="40%"
+    @close="clear"
   >
     <div class="info">
       <div class="info__title">
         {{ currentTitle }}
+      </div>
+      <div
+        v-if="currentSubtitle.length !== 0"
+        class="info__subtitle"
+      >
+        {{ currentSubtitle }}
       </div>
       <el-carousel
         ref="slider"
@@ -17,6 +24,7 @@
         height="450px"
         indicator-position="outside"
         trigger="click"
+        :arrow="arrow"
         :autoplay="false"
         @change="changeSlide"
       >
@@ -37,6 +45,12 @@
           </div>
         </el-carousel-item>
       </el-carousel>
+      <div
+        v-if="currentFooter.length !== 0"
+        class="info__footer__message"
+      >
+        {{ currentFooter }}
+      </div>
       <div
         class="info__footer"
       >
@@ -75,17 +89,13 @@ export default {
       type: Boolean,
       required: true
     },
-    title: {
-      type: String,
-      required: true
-    },
-    subtitle: {
-      type: String,
-      default: () => ''
-    },
     images: {
       type: Array,
       required: true
+    },
+    arrow: {
+      type: String,
+      default: () => 'never'
     }
   },
   data() {
@@ -96,6 +106,12 @@ export default {
   computed: {
     currentTitle() {
       return this.images.filter((_item, index) => index === this.currentIndex)[0].title
+    },
+    currentSubtitle() {
+      return this.images.filter((_item, index) => index === this.currentIndex)[0].subtitle || ''
+    },
+    currentFooter() {
+      return this.images.filter((_item, index) => index === this.currentIndex)[0].footer || ''
     }
   },
   methods: {
@@ -110,6 +126,9 @@ export default {
     },
     close() {
       this.$emit('close')
+    },
+    clear() {
+      this.currentIndex = 0
     }
   }
 }
@@ -119,12 +138,17 @@ export default {
 @import '@/styles/colors.scss';
 
 .info {
-  height: 75%;
+  height: 70%;
   .info__title {
     font-size: 21px;
     text-align: center;
     font-weight: 700;
-    margin: 0 22%;
+    margin: 0 12%;
+  }
+  .info__subtitle {
+    text-align: center;
+    font-weight: 200;
+    margin: 10px 12% 0px 12%;
   }
   .info__caurosel {
     .info__caurosel__item {
@@ -133,6 +157,13 @@ export default {
       align-content: center;
       justify-content: center;
     }
+  }
+  .info__footer__message {
+    text-align: center;
+    font-weight: bold;
+    margin: 12px 18% 24px 18%;
+    color: $--color-secondary;
+    font-size: 13px;
   }
   .info__footer {
     display: flex;
