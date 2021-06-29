@@ -4,6 +4,7 @@
 $--color-white: #fff !default;
 $--color-black: #424242 !default;
 $--color-gray: #979797 !default;
+$--color-gray-light-1: mix($--color-white, $--color-gray, 10%) !default;
 $--color-light-gray: #f3f4f5 !default;
 
 $--color-primary: #9461f7 !default;
@@ -33,6 +34,7 @@ $--color-warning: #FFC900 !default;
 $--color-danger: #FF4B54 !default;
 $--color-info: #2FBBEC !default;
 
+$--color-success-light-1: mix($--color-white, $--color-success, 10%) !default;
 $--color-success-light-5: mix($--color-white, $--color-success, 50%) !default;
 $--color-warning-light-5: mix($--color-white, $--color-warning, 50%) !default;
 $--color-danger-light-5: mix($--color-white, $--color-danger, 50%) !default;
