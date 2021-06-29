@@ -87,7 +87,6 @@
     <jusMessagePreview />
 
     <ThamirisAlerts
-      v-if="isJusttoAdmin"
       :is-visible="areThamirisAlertsVisible"
     />
   </el-container>
