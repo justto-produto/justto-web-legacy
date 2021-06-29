@@ -5,7 +5,7 @@
     :show-close="false"
     :visible.sync="isVisible"
     append-to-body
-    width="40%"
+    :width="calcWidth"
     @close="clear"
   >
     <div class="info">
@@ -100,7 +100,8 @@ export default {
   },
   data() {
     return {
-      currentIndex: 0
+      currentIndex: 0,
+      innerWidth: window.innerWidth
     }
   },
   computed: {
@@ -112,8 +113,22 @@ export default {
     },
     currentFooter() {
       return this.images.filter((_item, index) => index === this.currentIndex)[0].footer || ''
+    },
+    calcWidth() {
+      if (this.innerWidth > 1300) return '40%'
+      const pattern = 1300
+      const porc = 55
+      const x = 100 - (this.innerWidth * porc) / pattern
+      return `${x}%`
     }
   },
+
+  mounted() {
+    window.addEventListener('resize', () => {
+      this.innerWidth = window.innerWidth
+    })
+  },
+
   methods: {
     changeSlide(newIndex, _oldIndex) {
       this.currentIndex = newIndex
