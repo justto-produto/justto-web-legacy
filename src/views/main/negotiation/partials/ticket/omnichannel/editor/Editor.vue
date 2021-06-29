@@ -35,7 +35,8 @@
           :show-title="!haveRecipients"
         />
         <el-popover
-          placement="bottom-start"
+          v-if="isJusttoAdmin"
+          placement="bottom-end"
           width="360"
           trigger="click"
         >
@@ -47,12 +48,12 @@
               Sabia que você <br> pode customizar suas mensagens rápidas?
             </span>
             <br>
-            <span
+            <strong
               class="editor-container__after-tabs-align-popover-button"
               @click="isVisibleSlider = true"
             >
               CLIQUE AQUI
-            </span>
+            </strong>
             <span>
               e saiba como fazer!
             </span>
@@ -116,7 +117,8 @@ export default {
   computed: {
     ...mapGetters({
       activeTab: 'getActiveTab',
-      recipients: 'getEditorRecipients'
+      recipients: 'getEditorRecipients',
+      isJusttoAdmin: 'isJusttoAdmin'
     }),
 
     tabs() {

@@ -69,7 +69,10 @@
         />
       </div>
     </DialogEditor>
-    <div class="messages-container__hint">
+    <div
+      v-if="isJusttoAdmin"
+      class="messages-container__hint"
+    >
       <strong class="messages-container__hint-hint">Dica importante!</strong>
       <div class="messages-container__hint-text">
         <div>Clique</div>
@@ -137,15 +140,15 @@ export default {
         {
           title: 'Utilizando variáveis da disputa em suas mensagens rápidas',
           subtitle: 'São inumeras variáveis que você pode utilizar para compor suas mensagens rápidas. No local em que você coloca uma variável, o sistema vai utilizar os dados da disputa na mensagem.',
-          src: 'https://storage.googleapis.com/justto_app/conteudos/customizando-mensagens1.png'
+          src: 'https://storage.googleapis.com/justto_app/conteudos/variaveis%26preview1.png'
         },
         {
           title: 'Utilizando variáveis da disputa em suas mensagens rápidas',
-          src: 'https://storage.googleapis.com/justto_app/conteudos/customizando-mensagens2.png'
+          src: 'https://storage.googleapis.com/justto_app/conteudos/variaveis%26preview2.png'
         },
         {
           title: 'Visualizando como ficará sua mensagem',
-          src: 'https://storage.googleapis.com/justto_app/conteudos/customizando-mensagens3.png',
+          src: 'https://storage.googleapis.com/justto_app/conteudos/variaveis%26preview3.png',
           footer: 'Pronto! Agora você tem o template prontinho para usar sempre que precisar!'
         }
       ]
@@ -159,7 +162,8 @@ export default {
       editorRecipients: 'getEditorRecipients',
       messageType: 'getEditorMessageType',
       editorText: 'getEditorText',
-      ticket: 'getTicketOverview'
+      ticket: 'getTicketOverview',
+      isJusttoAdmin: 'isJusttoAdmin'
     }),
 
     sendMessagetext() {
