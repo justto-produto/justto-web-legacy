@@ -49,11 +49,12 @@
             <br>
             <span
               class="editor-container__after-tabs-align-popover-button"
+              @click="isVisibleSlider = true"
             >
               CLIQUE AQUI
             </span>
             <span>
-              e saiva como fazer!
+              e saiba como fazer!
             </span>
           </div>
           <div
@@ -66,6 +67,12 @@
       </div>
       <recipients class="editor-container__recipients" />
     </div>
+    <SlideInfo
+      title="Customizando suas mensagens rápidas"
+      :images="itemsSlider"
+      :is-visible="isVisibleSlider"
+      @close="isVisibleSlider = false"
+    />
   </section>
 </template>
 
@@ -82,13 +89,29 @@ export default {
     QuickReply: () => import('./partials/QuickReply'),
     recipients: () => import('./partials/Recipients'),
     messages: () => import('./partials/Messages'),
-    notes: () => import('./partials/Notes')
+    notes: () => import('./partials/Notes'),
+    SlideInfo: () => import('@/components/dialogs/SlideInfo')
   },
 
   mixins: [ticketPreNegotiation],
 
   data: () => ({
-    needFocus: false
+    needFocus: false,
+    isVisibleSlider: false,
+    itemsSlider: [
+      {
+        title: 'Customizando suas mensagens rápidas',
+        src: 'https://storage.googleapis.com/justto_app/conteudos/customizando-mensagens1.png'
+      },
+      {
+        title: 'Customizando suas mensagens rápidas',
+        src: 'https://storage.googleapis.com/justto_app/conteudos/customizando-mensagens2.png'
+      },
+      {
+        title: 'Customizando suas mensagens rápidas',
+        src: 'https://storage.googleapis.com/justto_app/conteudos/customizando-mensagens3.png'
+      }
+    ]
   }),
 
   computed: {
@@ -241,5 +264,6 @@ export default {
   border-radius: 4px;
   text-align: center;
   margin-right: 3px;
+  cursor: pointer;
 }
 </style>
