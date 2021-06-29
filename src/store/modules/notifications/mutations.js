@@ -6,8 +6,10 @@ const mutationsNotifications = {
   setNotifications: (state, data) => {
     const notifications = (data.data ? data.data : data)
       .map(notification => new Notification(notification))
+
     if (notifications.length !== 0) {
       const jusAlertsLastView = localStorage.getItem('jusAlertsLastView')
+
       if (jusAlertsLastView) {
         if (moment().isAfter(moment(jusAlertsLastView, 'DD/MM/YYYY'), 'day')) {
           Vue.set(state, 'thamirisAlertVisible', true)
@@ -16,6 +18,7 @@ const mutationsNotifications = {
         Vue.set(state, 'thamirisAlertVisible', true)
       }
     }
+
     Vue.set(state, 'notifications', notifications)
   },
 

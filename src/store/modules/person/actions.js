@@ -11,8 +11,6 @@ const personActions = {
     return axiosDispatch({ url: `${personsPath}/${id}` })
   },
   refreshPerson({ _ }, id) {
-    console.log('refreshPerson', id)
-
     return axiosDispatch({
       url: `${personsPath}/${id}`,
       mutation: 'setLoggedPerson'
@@ -59,8 +57,6 @@ const personActions = {
         method: 'PATCH',
         data: { value: name }
       }).then(() => {
-        console.log('getters.loggedPersonId', getters.loggedPersonId, updatePerson)
-
         Promise.all([
           updateWorkspace ? dispatch('getWorkspaceTeam') : () => {},
           updatePerson ? dispatch('refreshPerson', getters.loggedPersonId) : () => {}

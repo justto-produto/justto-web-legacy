@@ -72,7 +72,6 @@ export default new Vuex.Store({
   },
   actions: {
     toggleEditorSourcePreview({ commit }) {
-      console.log('toggleEditorSourcePreview')
       commit('toggleEditorSourcePreview')
     },
     setGhostMode({ commit }, value) {

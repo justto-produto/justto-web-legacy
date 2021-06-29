@@ -305,7 +305,6 @@ export default {
           this.setActiveRow(row.id)
           break
         default:
-          console.log(column)
           break
       }
     },
