@@ -116,6 +116,7 @@ export default {
     },
     calcWidth() {
       if (this.innerWidth > 1300) return '40%'
+      if (this.innerWidth <= 800) return '95%'
       const pattern = 1300
       const porc = 55
       const x = 100 - (this.innerWidth * porc) / pattern
@@ -140,39 +141,52 @@ export default {
       this.$refs.slider.prev()
     },
     close() {
+      this.clear()
       this.$emit('close')
     },
     clear() {
+      this.$refs.slider.setActiveItem(0)
       this.currentIndex = 0
     }
   }
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import '@/styles/colors.scss';
 
 .info {
-  height: 70%;
+  display: flex;
+  flex-direction: column;
+  height: 87vh;
+  justify-content: space-between;
+
   .info__title {
     font-size: 21px;
     text-align: center;
     font-weight: 700;
     margin: 0 12%;
   }
+
   .info__subtitle {
     text-align: center;
     font-weight: 200;
     margin: 10px 12% 0px 12%;
   }
+
   .info__caurosel {
     .info__caurosel__item {
       display: flex;
       align-items: center;
       align-content: center;
       justify-content: center;
+
+      &img {
+        height: 45vh;
+      }
     }
   }
+
   .info__footer__message {
     text-align: center;
     font-weight: bold;
@@ -180,36 +194,43 @@ export default {
     color: $--color-secondary;
     font-size: 13px;
   }
+
   .info__footer {
     display: flex;
     align-items: center;
     justify-content: center;
+
     .info__footer__prev {
       border-color: white;
       color: white;
       font-weight: 600;
       background-color: $--color-gray;
       border-radius: 10px;
+
       &:hover {
         background-color: $--color-gray-light-1;
       }
     }
+
     .info__footer__next {
       background-color: $--color-secondary;
       border-color: white;
       color: white;
       font-weight: 600;
       border-radius: 10px;
+
       &:hover {
         background-color: $--color-secondary-light-1;
       }
     }
+
     .info__footer__ok {
       border-color: white;
       background-color: $--color-success;
       color: white;
       font-weight: 600;
       border-radius: 10px;
+
       &:hover {
         background-color: $--color-success-light-1;
       }
