@@ -52,7 +52,9 @@
             </div>
 
             <div slot="no-results">
-              Nada por aqui
+              <span v-if="tickets.content.length === 0">
+                Sem disputas
+              </span>
             </div>
           </infinite-loading>
         </ul>
@@ -175,10 +177,11 @@ export default {
       'getTicketsFilteredTags'
     ]),
 
-    ...mapMutations(['setPreventFilters']),
+    ...mapMutations(['setPreventFilters', 'setPreventSocket']),
 
     handleChangeTab(tab) {
       if (!this.preventFilters) {
+        this.setPreventSocket(false)
         this.setTicketsQuery({ key: 'status', value: [] })
         this.setTicketsQuery({ key: 'prescriptions', value: [] })
         this.setTicketsQuery({ key: 'sort', value: [] })

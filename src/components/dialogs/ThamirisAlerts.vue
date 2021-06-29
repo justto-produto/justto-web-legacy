@@ -152,13 +152,15 @@ export default {
       this.setTicketsFilters({
         filters: {},
         hasFilters: true,
-        preventFilters: true
+        preventFilters: true,
+        preventSocket: true
       })
 
       this.setTicketsFilters({
         filters: Object.assign({}, filter),
         hasFilters: true,
-        preventFilters: true
+        preventFilters: true,
+        preventSocket: true
       })
 
       if (this.$route.name !== 'negotiation') {
