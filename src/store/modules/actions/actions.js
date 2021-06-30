@@ -159,10 +159,16 @@ const actionsActions = {
     })
   },
 
-  startNegotiation({ _ }, disputeId) {
-    return axiosDispatch({
-      url: `${disputesPath}/${disputeId}/start-negotiation`,
-      method: 'PATCH'
+  startNegotiation({ commit }, disputeId) {
+    return new Promise((resolve, reject) => {
+      axiosDispatch({
+        url: `${disputesPath}/${disputeId}/start-negotiation`,
+        method: 'PATCH'
+      }).then((res) => {
+        commit('updateTicketOverview', { payload: { status: 'ENGAGEMENT' } })
+        commit('deleteTicket', { payload: disputeId })
+        resolve(res)
+      }).then((err) => reject(err))
     })
   },
 
