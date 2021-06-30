@@ -607,7 +607,7 @@ export default {
         const data = { value, note, conclusionNote: note, roleId, updateUpperRange }
         const polarityObjectKey = 'plaintiffOffer'
 
-        this.sendOffer({ disputeId, data, polarityObjectKey })
+        this.sendOffer({ disputeId, data, polarityObjectKey, change: true })
           .then(success => resolve(success))
           .catch(error => {
             return reject(error)

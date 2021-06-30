@@ -176,7 +176,7 @@ const actionsActions = {
     })
   },
 
-  sendOffer({ commit }, { data, disputeId, polarityObjectKey }) {
+  sendOffer({ commit }, { data, disputeId, polarityObjectKey, change = false }) {
     return new Promise((resolve, reject) => {
       axiosDispatch({
         url: `${disputesPath}/v2/${disputeId}/counterproposal`,
@@ -184,6 +184,10 @@ const actionsActions = {
         data
       }).then((res) => {
         commit('updateLastTicketOffers', { payload: { value: data.value, polarityObjectKey } })
+        if (change) {
+          commit('updateTicketOverview', { payload: { status: 'ACCEPTED' } })
+          commit('deleteTicket', { payload: disputeId })
+        }
         resolve(res)
       }).catch((res) => {
         reject(res)
