@@ -33,16 +33,10 @@
           :key="`${item.src}-${item.title}`"
           class="info__caurosel__item"
         >
-          <div v-if="item.subtitle && item.subtitle.length !== 0">
-            {{ item.subtitle }}
-          </div>
           <img
             :src="item.src"
             class="info__caurosel__item-img"
           >
-          <div v-if="item.footer && item.footer.length !== 0">
-            {{ item.footer }}
-          </div>
         </el-carousel-item>
       </el-carousel>
       <div
