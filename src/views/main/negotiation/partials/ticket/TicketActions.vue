@@ -408,11 +408,11 @@ export default {
     },
 
     handleRestartEngagement(action) {
-      const { disputeId } = this.ticket
+      const { disputeId, status } = this.ticket
 
       this.handleManualStrategy(action)
         .then(() => this.confirmAction(action)
-          .then(() => this.revertStatus({ disputeId, action })
+          .then(() => this.revertStatus({ disputeId, action, status })
             .then(() => this.concludeAction(action, disputeId))
             .catch(error => this.$jusNotification({ error }))
           )
@@ -458,10 +458,10 @@ export default {
     },
 
     handleRenegotiate(action) {
-      const { disputeId, hasDraft } = this.ticket
+      const { disputeId, hasDraft, status } = this.ticket
 
       this.confirmAction(action)
-        .then(() => this.revertStatus({ disputeId, action, remove: true })
+        .then(() => this.revertStatus({ disputeId, action, status })
           .then(() => {
             if (hasDraft) {
               const confirmMessage = 'Esta disputa possui documento gerado, deseja exclui-lo?'

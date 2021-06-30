@@ -38,14 +38,18 @@ const actionsActions = {
     })
   },
 
-  revertStatus({ _ }, params) {
-    let { disputeId, action, remove = false } = params
+  revertStatus({ commit }, params) {
+    let { disputeId, action, status } = params
     action = action.toLowerCase().replace('_', '-')
-    return axiosDispatch({
-      url: `${disputesPath}/${disputeId}/${action}`,
-      method: 'PATCH',
-      payload: { disputeId, remove },
-      mutation: 'removeCanceledTicket'
+    return new Promise((resolve, reject) => {
+      axiosDispatch({
+        url: `${disputesPath}/${disputeId}/${action}`,
+        method: 'PATCH'
+      }).then((res) => {
+        commit('updateTicketOverview', { payload: { status: status === 'CANCELED' ? 'PRE_NEGOTIATION' : 'RUNNING' } })
+        commit('deleteTicket', { payload: disputeId })
+        resolve(res)
+      }).catch(err => reject(err))
     })
   },
 
