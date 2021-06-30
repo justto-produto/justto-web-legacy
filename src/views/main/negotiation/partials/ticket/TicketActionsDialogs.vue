@@ -460,8 +460,15 @@ export default {
     ]),
 
     confirmAction(action, message = 'Tem certeza que deseja realizar está ação?') {
-      const title = (this.activeTab === 'engagement' || this.activeTab === 'running')
-        ? this.$options.filters.capitalize(this.$tc(`actions.${action}.name`, 1)) : this.$options.filters.capitalize(this.$tc(`actions.${action}.name`, 0))
+      const { status } = this.ticket
+      let title = this.$options.filters.capitalize(this.$tc(`actions.${action}.name`, 1))
+      if (action === 'SETTLED') {
+        if (status !== 'ACCEPTED') {
+          title = this.$options.filters.capitalize(this.$tc(`actions.${action}.name`, 0))
+        } else {
+          title = this.$options.filters.capitalize(this.$tc(`actions.${action}.name`, 1))
+        }
+      }
       const options = {
         confirmButtonText: 'Continuar',
         cancelButtonText: 'Cancelar',
@@ -469,7 +476,6 @@ export default {
         dangerouslyUseHTMLString: true,
         showClose: false
       }
-
       return new Promise((resolve, reject) => {
         this.$confirm(message, title, options)
           .then(success => resolve(success))
@@ -478,7 +484,7 @@ export default {
     },
 
     concludeAction(action, disputeId, param = false) {
-      if (action === 'MANUAL_COUNTERPROPOSAL') param = !param
+      if (action === 'MANUAL_COUNTERPROPOSAL' || action === 'SETTLED') param = !param
       const message = this.$tc(`actions.${action}.feedback-message`, param)
 
       this.$jusNotification({
