@@ -166,8 +166,8 @@ export default {
           name: 'RENEGOTIATE',
           icon: 'move-to-running',
           method: (action) => this.handleRenegotiate(action),
-          isVisible: this.canRenegotiate || this.isCanceled,
-          isDynamic: this.isCanceled
+          isVisible: this.canRenegotiate,
+          isDynamic: this.isCanceled || this.isSettled || this.isUnsettled
         },
         {
           name: 'UPLOAD_ATTACHMENT',
@@ -205,6 +205,8 @@ export default {
           return this.pausedDisputeActionList.includes(action.name)
         } else if (this.isCanceled) {
           return this.canceledDisputeActionList.includes(action.name)
+        } else if (this.isSettled || this.isUnsettled) {
+          return !(action.name === 'CANCEL_MESSAGES') && action.isVisible
         } else return action.isVisible
       })
     },
@@ -227,6 +229,14 @@ export default {
     isCanceled() {
       const { status } = this.ticket
       return status === 'CANCELED'
+    },
+    isSettled() {
+      const { status } = this.ticket
+      return status === 'SETTLED'
+    },
+    isUnsettled() {
+      const { status } = this.ticket
+      return status === 'UNSETTLED'
     },
     canSettled() {
       const { isPreNegotiation, ticket } = this
@@ -262,7 +272,7 @@ export default {
     },
     canRenegotiate() {
       const { isPreNegotiation, ticket } = this
-      return ticket.status && ['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(ticket.status) && !isPreNegotiation
+      return ticket.status && ['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED', 'CANCELED'].includes(ticket.status) && !isPreNegotiation
     }
   },
   methods: {
@@ -398,11 +408,11 @@ export default {
     },
 
     handleRestartEngagement(action) {
-      const { disputeId } = this.ticket
+      const { disputeId, status } = this.ticket
 
       this.handleManualStrategy(action)
         .then(() => this.confirmAction(action)
-          .then(() => this.revertStatus({ disputeId, action })
+          .then(() => this.revertStatus({ disputeId, action, status })
             .then(() => this.concludeAction(action, disputeId))
             .catch(error => this.$jusNotification({ error }))
           )
@@ -448,10 +458,10 @@ export default {
     },
 
     handleRenegotiate(action) {
-      const { disputeId, hasDraft } = this.ticket
+      const { disputeId, hasDraft, status } = this.ticket
 
       this.confirmAction(action)
-        .then(() => this.revertStatus({ disputeId, action, remove: true })
+        .then(() => this.revertStatus({ disputeId, action, status })
           .then(() => {
             if (hasDraft) {
               const confirmMessage = 'Esta disputa possui documento gerado, deseja exclui-lo?'
