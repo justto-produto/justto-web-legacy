@@ -6,7 +6,7 @@
     >
       <div
         class="notification__icon"
-        @click="toggleShowNotifications(true)"
+        @click="toggle()"
       >
         <div
           v-if="qtdNotifications !== 0"
@@ -25,14 +25,24 @@ import { mapGetters, mapMutations } from 'vuex'
 export default {
   computed: {
     ...mapGetters({
-      qtdNotifications: 'qtdNotifications'
+      qtdNotifications: 'qtdNotifications',
+      workspaceId: 'workspaceId',
+      loggedPersonId: 'loggedPersonId'
     })
   },
 
   methods: {
     ...mapMutations({
       toggleShowNotifications: 'toggleShowNotifications'
-    })
+    }),
+
+    toggle() {
+      this.$jusSegment('Clique Notificações',
+        {
+          qtdNotifications: this.qtdNotifications
+        })
+      this.toggleShowNotifications(true)
+    }
   }
 }
 </script>
