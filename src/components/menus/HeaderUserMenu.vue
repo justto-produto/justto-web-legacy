@@ -16,7 +16,6 @@
     <JusAcademy />
 
     <Notification
-      v-if="isJusttoAdmin"
       class="usermenu-container__jus-academy"
     />
 

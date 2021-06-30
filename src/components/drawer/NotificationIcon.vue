@@ -8,7 +8,10 @@
         class="notification__icon"
         @click="toggleShowNotifications(true)"
       >
-        <div class="notification__icon__counter">
+        <div
+          v-if="qtdNotifications !== 0"
+          class="notification__icon__counter"
+        >
           {{ qtdNotifications }}
         </div>
         <i class="el-icon-bell" />
