@@ -207,6 +207,8 @@ export default {
           return this.canceledDisputeActionList.includes(action.name)
         } else if (this.isSettled || this.isUnsettled) {
           return !(action.name === 'CANCEL_MESSAGES') && action.isVisible
+        } else if (this.isExpired) {
+          return !['SETTLED', 'UNSETTLED', 'MANUAL_COUNTERPROPOSAL', 'RESTART_ENGAGEMENT', 'CANCEL_MESSAGES'].includes(action.name) && action.isVisible
         } else return action.isVisible
       })
     },
@@ -237,6 +239,10 @@ export default {
     isUnsettled() {
       const { status } = this.ticket
       return status === 'UNSETTLED'
+    },
+    isExpired() {
+      const { status } = this.ticket
+      return status === 'EXPIRED'
     },
     canSettled() {
       const { isPreNegotiation, ticket } = this
