@@ -109,7 +109,7 @@ export default {
       return this.images.filter((_item, index) => index === this.currentIndex)[0].footer || ''
     },
     calcWidth() {
-      if (this.innerWidth > 1300) return '40%'
+      if (this.innerWidth > 1300) return '42%'
       if (this.innerWidth <= 800) return '95%'
       const pattern = 1300
       const porc = 55
