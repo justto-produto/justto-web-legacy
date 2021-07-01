@@ -463,10 +463,10 @@ export default {
       const { status } = this.ticket
       let title = this.$options.filters.capitalize(this.$tc(`actions.${action}.name`, 1))
       if (action === 'SETTLED') {
-        if (status !== 'ACCEPTED') {
-          title = this.$options.filters.capitalize(this.$tc(`actions.${action}.name`, 0))
-        } else {
+        if (status === 'ACCEPTED' || status === 'CHECKOUT') {
           title = this.$options.filters.capitalize(this.$tc(`actions.${action}.name`, 1))
+        } else {
+          title = this.$options.filters.capitalize(this.$tc(`actions.${action}.name`, 0))
         }
       }
       const options = {
