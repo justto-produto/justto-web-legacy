@@ -152,7 +152,7 @@ export default {
 .info {
   display: flex;
   flex-direction: column;
-  height: 87vh;
+  height: 72vh;
   justify-content: space-between;
 
   .info__title {
@@ -176,7 +176,7 @@ export default {
       justify-content: center;
 
       &img {
-        height: 45vh;
+        height: 55vh;
       }
     }
   }

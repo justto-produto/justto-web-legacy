@@ -75,12 +75,11 @@
     >
       <strong class="messages-container__hint-hint">Dica importante!</strong>
       <div class="messages-container__hint-text">
-        <div>Clique</div>
         <div
           class="messages-container__hint-text-click"
           @click="isSlideInfoVisible = true"
         >
-          AQUI
+          CLIQUE AQUI
         </div>
         <div>e saiba como utilizar variáveis e preview das mensagens rápidas</div>
       </div>
