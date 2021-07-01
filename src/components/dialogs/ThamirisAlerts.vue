@@ -32,8 +32,17 @@
         </span>
       </div>
       <div class="thamiris__alerts__body">
-        <span class="thamiris__alerts__body-title">
+        <span
+          v-if="notifications.length !== 0"
+          class="thamiris__alerts__body-title"
+        >
           Você ainda tem:
+        </span>
+        <span
+          v-else
+          class="thamiris__alerts__body-title"
+        >
+          Você não tem alertas
         </span>
         <div class="thamiris__alerts__body-items">
           <div
@@ -54,9 +63,9 @@
                     {{ handleQuantity(notification.quantity) }}
                   </div>
 
-                  <div class="thamiris__alerts__body-items-item-circle-style-al-disp">
+                  <!-- <div class="thamiris__alerts__body-items-item-circle-style-al-disp">
                     disputas
-                  </div>
+                  </div> -->
                 </div>
               </div>
               <div
@@ -308,9 +317,9 @@ export default {
               justify-content: center;
               text-align: center;
               .thamiris__alerts__body-items-item-circle-style-al-num {
-                font-size: 23px;
+                font-size: 30px;
                 font-weight: bold;
-                padding-top: 13px;
+                padding-top: 15px;
               }
               .thamiris__alerts__body-items-item-circle-style-al-disp {
                 font-size: 8px;
