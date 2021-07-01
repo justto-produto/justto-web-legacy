@@ -61,17 +61,18 @@ export default {
     -moz-border-radius: 50px;
     -webkit-border-radius: 50px;
     border-radius: 50px;
-    font-size: 22px;
+    font-size: 25px;
     color: rgb(95, 93, 93);
     position: relative;
     cursor: pointer;
+    margin-bottom: 10px;
     .notification__icon__counter {
       text-align: center;
       position: absolute;
       right: 0;
       top: 0;
       margin: -2px -2px 0 0;
-      font-size: 8px;
+      font-size: 10px;
       font-weight: bold;
       background-color: red;
       border-radius: 50px;
