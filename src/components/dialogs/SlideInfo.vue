@@ -33,16 +33,10 @@
           :key="`${item.src}-${item.title}`"
           class="info__caurosel__item"
         >
-          <div v-if="item.subtitle && item.subtitle.length !== 0">
-            {{ item.subtitle }}
-          </div>
           <img
             :src="item.src"
             class="info__caurosel__item-img"
           >
-          <div v-if="item.footer && item.footer.length !== 0">
-            {{ item.footer }}
-          </div>
         </el-carousel-item>
       </el-carousel>
       <div
@@ -115,7 +109,7 @@ export default {
       return this.images.filter((_item, index) => index === this.currentIndex)[0].footer || ''
     },
     calcWidth() {
-      if (this.innerWidth > 1300) return '40%'
+      if (this.innerWidth > 1300) return '42%'
       if (this.innerWidth <= 800) return '95%'
       const pattern = 1300
       const porc = 55
