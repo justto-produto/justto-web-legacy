@@ -105,7 +105,7 @@ export default {
       },
       {
         title: 'Customizando suas mensagens rápidas',
-        src: 'https://storage.googleapis.com/justto_app/conteudos/customizando-mensagens2.png'
+        src: 'https://storage.googleapis.com/justto_app/conteudos/customizando-mensagens-2.png'
       },
       {
         title: 'Customizando suas mensagens rápidas',
