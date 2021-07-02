@@ -35,16 +35,19 @@
           :show-title="!haveRecipients"
         />
         <el-popover
-          v-if="isJusttoAdmin"
-          placement="bottom-end"
-          width="360"
+          placement="bottom"
+          width="305"
           trigger="click"
         >
           <div class="editor-container__after-tabs-align-popover">
-            <strong>
+            <strong
+              class="editor-container__after-tabs-align-popover-strong"
+            >
               Dica importante!
             </strong>
-            <span>
+            <span
+              class="editor-container__after-tabs-align-popover-span"
+            >
               Sabia que você <br> pode customizar suas mensagens rápidas?
             </span>
             <br>
@@ -54,7 +57,9 @@
             >
               CLIQUE AQUI
             </strong>
-            <span>
+            <span
+              class="editor-container__after-tabs-align-popover-span"
+            >
               e saiba como fazer!
             </span>
           </div>
@@ -258,13 +263,23 @@ export default {
   }
 
 }
-.editor-container__after-tabs-align-popover-button {
-  background-color: $--color-primary;
-  color: white;
-  padding: 2px 3px;
-  border-radius: 4px;
-  text-align: center;
-  margin-right: 3px;
-  cursor: pointer;
+.editor-container__after-tabs-align-popover {
+  .editor-container__after-tabs-align-popover-span {
+    font-size: 12px;
+  }
+  .editor-container__after-tabs-align-popover-strong {
+    font-size: 12px;
+  }
+
+  .editor-container__after-tabs-align-popover-button {
+    background-color: $--color-primary;
+    color: white;
+    padding: 1px 3px 3px 3px;
+    border-radius: 4px;
+    text-align: center;
+    margin-right: 3px;
+    cursor: pointer;
+    font-size: 10px;
+  }
 }
 </style>
