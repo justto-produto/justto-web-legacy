@@ -1,12 +1,10 @@
 <template>
   <el-dialog
     ref="slideInfo"
-    :close-on-click-modal="false"
-    :show-close="false"
     :visible.sync="isVisible"
     append-to-body
     :width="calcWidth"
-    @close="clear"
+    @close="close"
   >
     <div class="info">
       <div class="info__title">
