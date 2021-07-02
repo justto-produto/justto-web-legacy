@@ -70,7 +70,6 @@
       </div>
     </DialogEditor>
     <div
-      v-if="isJusttoAdmin"
       class="messages-container__hint"
     >
       <strong class="messages-container__hint-hint">Dica importante!</strong>
