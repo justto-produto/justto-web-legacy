@@ -73,6 +73,7 @@
           />
         </template>
       </el-table-column>
+
       <el-table-column
         prop="status"
         label="Status"
@@ -89,6 +90,24 @@
           </span>
         </template>
       </el-table-column>
+
+      <!-- Reports -->
+
+      <el-table-column
+        prop="personProperties.MANAGEMENT"
+        label="Gerênciamento"
+        width="180px"
+      >
+        <template v-slot="scope">
+          <PopoverInlineEditor
+            v-model="scope.row.personProperties.MANAGEMENT"
+            :width="180"
+            :options="reportsOptions"
+            @change="handleEditReport('MANAGEMENT', $event, scope.row)"
+          />
+        </template>
+      </el-table-column>
+
       <el-table-column width="60px">
         <template v-slot="scope">
           <i
@@ -98,6 +117,7 @@
         </template>
       </el-table-column>
     </el-table>
+
     <el-button
       type="secondary"
       class="team-container__button"
@@ -107,10 +127,12 @@
         icon="logo-small"
         class="team-container__button-icon"
       />
+
       Criar uma nova equipe
     </el-button>
 
     <TeamDialogs ref="teamDialogs" />
+
     <RemoveTeamMemberDialog
       ref="removeTeamMemberDialog"
       @createMember="handleInviteMember"
@@ -142,8 +164,41 @@ export default {
       team: 'workspaceTeam'
     }),
 
+    reportsOptions() {
+      return [
+        {
+          value: 'UNKNOWN',
+          label: this.$tc('reports.UNKNOWN')
+        },
+        {
+          value: 'DAILY',
+          label: this.$tc('reports.DAILY')
+        },
+        {
+          value: 'WEEKLY',
+          label: this.$tc('reports.WEEKLY')
+        },
+        {
+          value: 'FORTNIGHT',
+          label: this.$tc('reports.FORTNIGHT')
+        },
+        {
+          value: 'MONTHLY',
+          label: this.$tc('reports.MONTHLY')
+        }
+      ]
+    },
+
     filteredTeam() {
-      return filterByTerm(this.searchTerm, this.team, 'name', 'email')
+      return filterByTerm(this.searchTerm, this.team, 'name', 'email').map(el => ({
+        personProperties: {
+          MANAGEMENT: 'UNKNOWN',
+          EXPIRED: 'UNKNOWN',
+          NPS: 'UNKNOWN',
+          DASHBOARD: 'UNKNOWN'
+        },
+        ...el
+      }))
     },
 
     profileOptions() {
@@ -166,6 +221,7 @@ export default {
 
   methods: {
     ...mapActions([
+      'setPersonProperties',
       'getWorkspaceTeam',
       'removeWorkspaceMember',
       'changeMemberName',
@@ -179,6 +235,12 @@ export default {
 
     handleEditMemberName(name, accountId) {
       this.changeMemberName({ name, accountId, updateWorkspace: true })
+    },
+
+    handleEditReport(report, value, { personProperties, personId }) {
+      const properties = { ...personProperties }
+      properties[report] = value
+      this.setPersonProperties(properties, personId)
     },
 
     handleEditMemberProfile(profile, personId) {

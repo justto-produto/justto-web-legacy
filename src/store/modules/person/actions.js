@@ -83,6 +83,11 @@ const personActions = {
       url: `api/fusion-runner/enrich/person/${personId}`,
       method: 'PATCH'
     })
+  },
+
+  setPersonProperties({ _ }, properties, personId) {
+    // TODO: SAAS-4200 Implementar action/mutations que atualiza as properties da person
+    // return axiosDispatch()
   }
 }
 

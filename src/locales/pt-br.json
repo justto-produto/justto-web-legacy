@@ -725,5 +725,12 @@
     "title": {
       "my-data": "Meus dados"
     }
+  },
+  "reports": {
+    "UNKNOWN": "Desconhecido | Desconhecida",
+    "DAILY": "Diário | Diária",
+    "WEEKLY": "Semanal",
+    "FORTNIGHT": "Quinzenal",
+    "MONTHLY": "Mensal"
   }
 }
