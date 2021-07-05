@@ -154,7 +154,11 @@
             v-model="offerForm.note"
             type="textarea"
             rows="4"
+            :maxlength="255"
           />
+          <div style="text-align: right;">
+            {{ offerForm.note.length }}/255
+          </div>
         </el-form-item>
       </el-form>
       <div slot="footer">

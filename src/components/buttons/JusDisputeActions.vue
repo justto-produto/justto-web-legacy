@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div
     :class="tableActions ? 'jus-dispute-actions--table' : 'jus-dispute-actions--dispute'"
     class="jus-dispute-actions"
@@ -501,7 +501,11 @@
         v-model="winNote"
         type="textarea"
         rows="4"
+        :maxlength="255"
       />
+      <div style="text-align: right;">
+        {{ winNote.length }}/255
+      </div>
       <div slot="footer">
         <el-button
           :disabled="modalLoading"
