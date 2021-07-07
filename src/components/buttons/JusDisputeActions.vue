@@ -140,6 +140,7 @@
         </el-button>
       </span>
     </el-dialog>
+
     <el-dialog
       :close-on-click-modal="false"
       :show-close="false"
@@ -154,11 +155,13 @@
       <div class="el-message-box__content">
         <div class="el-message-box__container">
           <div class="el-message-box__status el-icon-warning" />
+
           <div class="el-message-box__message">
             <p>Tem certeza que deseja realizar esta ação?</p>
           </div>
         </div>
       </div>
+
       <el-select
         v-model="unsettledType"
         data-testid="select-unsettled"
@@ -171,6 +174,7 @@
           :value="index"
         />
       </el-select>
+
       <el-form
         v-if="isInsufficientUpperRange"
         ref="counterOfferForm"
@@ -193,6 +197,7 @@
               />
             </el-form-item>
           </el-col>
+
           <el-col :span="12">
             <el-form-item
               label="Proposto por"
@@ -214,6 +219,7 @@
           </el-col>
         </el-row>
       </el-form>
+
       <el-form>
         <el-form-item
           :label="`${$t('dispute.labels.note')}:`"
@@ -221,17 +227,26 @@
           <el-input
             v-model="counterOfferForm.note"
             type="textarea"
-            :rows="4"
             placeholder="Informe uma nota"
+            :rows="4"
+            :maxlength="255"
           />
+
+          <div style="text-align: right;">
+            {{ (counterOfferForm.note || '').length }}/255
+          </div>
         </el-form-item>
       </el-form>
+
       <span slot="footer">
         <el-button
           :disabled="modalLoading"
           plain
           @click="chooseUnsettledDialogVisible = false"
-        >Cancelar</el-button>
+        >
+          Cancelar
+        </el-button>
+
         <el-button
           :loading="modalLoading"
           :disabled="!unsettledType"
@@ -242,6 +257,7 @@
         </el-button>
       </span>
     </el-dialog>
+
     <el-dialog
       :close-on-click-modal="false"
       :show-close="false"
@@ -268,19 +284,26 @@
           filterable
         />
       </el-form>
+
       <span slot="footer">
         <el-button
           :disabled="modalLoading"
           plain
           @click="editNegotiatorDialogVisible = false"
-        >Cancelar</el-button>
+        >
+          Cancelar
+        </el-button>
+
         <el-button
           :loading="modalLoading"
           type="primary"
           @click.prevent="disputeAction('edit-negotiators', disputeNegotiators)"
-        >Editar dados</el-button>
+        >
+          Editar dados
+        </el-button>
       </span>
     </el-dialog>
+
     <el-dialog
       :visible.sync="counterproposalDialogVisible"
       :close-on-click-modal="false"
@@ -311,6 +334,7 @@
               />
             </el-form-item>
           </el-col>
+
           <el-col :span="12">
             <el-form-item
               label="Proposto por"
@@ -332,34 +356,47 @@
             </el-form-item>
           </el-col>
         </el-row>
+
         <el-row :gutter="20">
           <el-col :span="24">
             <el-form-item
-              label="Nota"
+              label="Nota:"
               prop="note"
             >
               <el-input
                 v-model="counterOfferForm.note"
                 type="textarea"
                 rows="4"
+                :maxlength="255"
               />
+
+              <div style="text-align: right;">
+                {{ (counterOfferForm.note || '').length }}/255
+              </div>
             </el-form-item>
           </el-col>
         </el-row>
       </el-form>
+
       <span slot="footer">
         <el-button
           :disabled="modalLoading"
           plain
           @click="counterproposalDialogVisible = false"
-        >Cancelar</el-button>
+        >
+          Cancelar
+        </el-button>
+
         <el-button
           :loading="modalLoading"
           type="primary"
           @click.prevent="disputeAction('send-counterproposal')"
-        >Atualizar contraproposta</el-button>
+        >
+          Atualizar contraproposta
+        </el-button>
       </span>
     </el-dialog>
+
     <el-dialog
       :close-on-click-modal="false"
       :visible.sync="uploadAttacmentDialogVisable"
@@ -374,6 +411,7 @@
         @closeDialog="handleAttachmentDialogVisable()"
       />
     </el-dialog>
+
     <!-- Dialog para baixa definitiva -->
     <el-dialog
       :visible.sync="dropLawsuitDialogVisible"
@@ -392,9 +430,7 @@
         :disabled="modalLoading"
         label-position="top"
       >
-        <el-row
-          :gutter="20"
-        >
+        <el-row :gutter="20">
           <el-col :span="24">
             <el-form-item
               label="Motivo do cancelamento:"
@@ -415,6 +451,7 @@
             </el-form-item>
           </el-col>
         </el-row>
+
         <el-row>
           <el-col :span="24">
             <el-form-item
@@ -425,7 +462,12 @@
                 v-model="dropLawsuitForm.conclusionNote"
                 type="textarea"
                 rows="4"
+                :maxlength="255"
               />
+
+              <div style="text-align: right;">
+                {{ (dropLawsuitForm.conclusionNote || '').length }}/255
+              </div>
             </el-form-item>
           </el-col>
         </el-row>
