@@ -415,6 +415,7 @@
             </el-form-item>
           </el-col>
         </el-row>
+
         <el-row>
           <el-col :span="24">
             <el-form-item
@@ -425,7 +426,11 @@
                 v-model="dropLawsuitForm.conclusionNote"
                 type="textarea"
                 rows="4"
+                :maxlength="255"
               />
+              <div style="text-align: right;">
+                {{ (dropLawsuitForm.conclusionNote || '').length }}/255
+              </div>
             </el-form-item>
           </el-col>
         </el-row>
