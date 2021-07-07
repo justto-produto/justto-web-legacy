@@ -95,7 +95,7 @@
 
       <el-table-column
         prop="personProperties.MANAGEMENT"
-        label="Gerênciamento"
+        label="Gestão"
         width="180px"
       >
         <template v-slot="scope">
@@ -190,15 +190,7 @@ export default {
     },
 
     filteredTeam() {
-      return filterByTerm(this.searchTerm, this.team, 'name', 'email').map(el => ({
-        personProperties: {
-          MANAGEMENT: 'UNKNOWN',
-          EXPIRED: 'UNKNOWN',
-          NPS: 'UNKNOWN',
-          DASHBOARD: 'UNKNOWN'
-        },
-        ...el
-      }))
+      return filterByTerm(this.searchTerm, this.team, 'name', 'email')
     },
 
     profileOptions() {
@@ -240,7 +232,8 @@ export default {
     handleEditReport(report, value, { personProperties, personId }) {
       const properties = { ...personProperties }
       properties[report] = value
-      this.setPersonProperties(properties, personId)
+
+      this.setPersonProperties({ properties, personId })
     },
 
     handleEditMemberProfile(profile, personId) {

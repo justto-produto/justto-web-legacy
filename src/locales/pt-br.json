@@ -727,7 +727,7 @@
     }
   },
   "reports": {
-    "UNKNOWN": "Desconhecido | Desconhecida",
+    "UNKNOWN": "Desabilitado | Desabilitada",
     "DAILY": "Diário | Diária",
     "WEEKLY": "Semanal",
     "FORTNIGHT": "Quinzenal",
