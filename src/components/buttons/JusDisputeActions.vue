@@ -65,6 +65,7 @@
       data-testid="choose-unsettled-dialog"
     >
       <p>Confirme o valor do acordo nos campos abaixo:</p>
+
       <el-form
         ref="counterOfferForm"
         v-loading="modalLoading"
@@ -86,6 +87,7 @@
               />
             </el-form-item>
           </el-col>
+
           <el-col :span="12">
             <el-form-item
               label="Proposto por"
@@ -107,6 +109,7 @@
             </el-form-item>
           </el-col>
         </el-row>
+
         <el-row :hutter="20">
           <el-form>
             <el-form-item
@@ -116,13 +119,19 @@
                 v-model="counterOfferForm.note"
                 class="dialog__textarea-note"
                 type="textarea"
-                :rows="4"
                 placeholder="Informe uma nota"
+                :rows="4"
+                :maxlength="255"
               />
+
+              <div style="text-align: right;">
+                {{ (counterOfferForm.note || '').length }}/255
+              </div>
             </el-form-item>
           </el-form>
         </el-row>
       </el-form>
+
       <span slot="footer">
         <el-button
           :disabled="modalLoading"
@@ -131,6 +140,7 @@
         >
           Cancelar
         </el-button>
+
         <el-button
           :loading="modalLoading"
           type="primary"

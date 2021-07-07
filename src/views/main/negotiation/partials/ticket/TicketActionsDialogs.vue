@@ -42,6 +42,7 @@
             </el-form-item>
           </el-col>
         </el-row>
+
         <el-row :gutter="20">
           <el-col
             v-if="offerFormType !== 'UNSETTLED' || isInsufficientUpperRange"
@@ -61,6 +62,7 @@
               </div>
             </el-form-item>
           </el-col>
+
           <el-col
             v-if="offerFormType !== 'UNSETTLED' || isInsufficientUpperRange"
             :span="12"
@@ -83,6 +85,7 @@
               </el-select>
             </el-form-item>
           </el-col>
+
           <el-col :span="24">
             <el-form-item
               label="Nota:"
@@ -92,11 +95,17 @@
                 v-model="offerForm.note"
                 type="textarea"
                 rows="4"
+                :maxlength="255"
               />
+
+              <div style="text-align: right;">
+                {{ (offerForm.note || '').length }}/255
+              </div>
             </el-form-item>
           </el-col>
         </el-row>
       </el-form>
+
       <div slot="footer">
         <el-button
           :disabled="modalLoading"
@@ -105,6 +114,7 @@
         >
           Cancelar
         </el-button>
+
         <el-button
           v-loading="modalLoading"
           :disabled="modalLoading"
@@ -129,6 +139,7 @@
       <strong class="dialog-actions__ticket-resume-subtitle">
         Confira os dados da disputa para {{ ticketResumeType.toLowerCase() }}:
       </strong>
+
       <div class="dialog-actions__ticket-resume-infobox">
         <p
           v-for="resume in ticketResume"
@@ -136,9 +147,11 @@
           class="dialog-actions__ticket-resume-infoline"
         >
           <b>{{ resume.label }}</b>:
+
           <span>{{ resume.value }}</span>
         </p>
       </div>
+
       <el-form
         ref="offerForm"
         :model="offerForm"
@@ -156,11 +169,13 @@
             rows="4"
             :maxlength="255"
           />
+
           <div style="text-align: right;">
             {{ offerForm.note.length }}/255
           </div>
         </el-form-item>
       </el-form>
+
       <div slot="footer">
         <el-button
           :disabled="modalLoading"
@@ -169,6 +184,7 @@
         >
           Cancelar
         </el-button>
+
         <el-button
           v-loading="modalLoading"
           :disabled="modalLoading"
@@ -193,20 +209,25 @@
       <strong class="dialog-actions__increase-alert-subtitle">
         Valor da contraproposta é maior que o da alçada máxima!
       </strong>
+
       <div class="dialog-actions__increase-alert-infobox">
         <p class="dialog-actions__increase-alert-infoline">
           <span>*</span>
+
           <small>
             Ao clicar em <strong>majorar</strong>, será feita a <strong>contraproposta</strong>. A <strong>alçada máxima</strong> será majorada para o <strong>valor</strong> da contraproposta e a disputa será alterada para <strong>proposta aceita</strong>.
           </small>
         </p>
+
         <p class="dialog-actions__increase-alert-infoline">
           <span>*</span>
+
           <small>
             Ao clicar em <strong>não majorar</strong>, somente será feita a <strong>contraproposta</strong>, sem alterações no status da disputa.
           </small>
         </p>
       </div>
+
       <div slot="footer">
         <el-button
           :disabled="modalLoading"
@@ -215,6 +236,7 @@
         >
           Cancelar
         </el-button>
+
         <el-button
           v-if="!isSettledIncreaseAlertType"
           v-loading="modalLoading"
@@ -224,6 +246,7 @@
         >
           Majorar
         </el-button>
+
         <el-button
           v-loading="modalLoading"
           :disabled="modalLoading"
@@ -259,6 +282,7 @@
           filterable
         />
       </el-form>
+
       <div slot="footer">
         <el-button
           :disabled="modalLoading"
@@ -267,6 +291,7 @@
         >
           Cancelar
         </el-button>
+
         <el-button
           v-loading="modalLoading"
           :disabled="modalLoading"
