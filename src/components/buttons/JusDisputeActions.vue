@@ -311,6 +311,7 @@
               />
             </el-form-item>
           </el-col>
+
           <el-col :span="12">
             <el-form-item
               label="Proposto por"
@@ -332,34 +333,47 @@
             </el-form-item>
           </el-col>
         </el-row>
+
         <el-row :gutter="20">
           <el-col :span="24">
             <el-form-item
-              label="Nota"
+              label="Nota:"
               prop="note"
             >
               <el-input
                 v-model="counterOfferForm.note"
                 type="textarea"
                 rows="4"
+                :maxlength="255"
               />
+
+              <div style="text-align: right;">
+                {{ (counterOfferForm.note || '').length }}/255
+              </div>
             </el-form-item>
           </el-col>
         </el-row>
       </el-form>
+
       <span slot="footer">
         <el-button
           :disabled="modalLoading"
           plain
           @click="counterproposalDialogVisible = false"
-        >Cancelar</el-button>
+        >
+          Cancelar
+        </el-button>
+
         <el-button
           :loading="modalLoading"
           type="primary"
           @click.prevent="disputeAction('send-counterproposal')"
-        >Atualizar contraproposta</el-button>
+        >
+          Atualizar contraproposta
+        </el-button>
       </span>
     </el-dialog>
+
     <el-dialog
       :close-on-click-modal="false"
       :visible.sync="uploadAttacmentDialogVisable"
@@ -374,6 +388,7 @@
         @closeDialog="handleAttachmentDialogVisable()"
       />
     </el-dialog>
+
     <!-- Dialog para baixa definitiva -->
     <el-dialog
       :visible.sync="dropLawsuitDialogVisible"
@@ -392,9 +407,7 @@
         :disabled="modalLoading"
         label-position="top"
       >
-        <el-row
-          :gutter="20"
-        >
+        <el-row :gutter="20">
           <el-col :span="24">
             <el-form-item
               label="Motivo do cancelamento:"
@@ -428,6 +441,7 @@
                 rows="4"
                 :maxlength="255"
               />
+
               <div style="text-align: right;">
                 {{ (dropLawsuitForm.conclusionNote || '').length }}/255
               </div>
