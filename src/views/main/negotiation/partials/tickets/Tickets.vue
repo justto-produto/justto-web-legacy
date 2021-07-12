@@ -257,8 +257,14 @@ export default {
     },
 
     handleNextTab() {
-      if (this.activeTabIndex >= 0 && this.activeTabIndex < (this.tabs.length - 1)) {
+      if (this.activeTabIndex > 0 && this.activeTabIndex < (this.tabs.length - 1)) {
         const { name } = this.tabs[this.activeTabIndex + 1]
+        this.setTicketsActiveTab(name)
+      } else if (this.activeTabIndex === 0) {
+        const { name } = this.tabs[this.tabs.length - 1]
+        this.setTicketsActiveTab(name)
+      } else if (this.activeTabIndex === (this.tabs.length - 1)) {
+        const { name } = this.tabs[0]
         this.setTicketsActiveTab(name)
       }
     },
@@ -266,6 +272,12 @@ export default {
     handlePreviousTab() {
       if (this.activeTabIndex > 0 && this.activeTabIndex <= (this.tabs.length - 1)) {
         const { name } = this.tabs[this.activeTabIndex - 1]
+        this.setTicketsActiveTab(name)
+      } else if (this.activeTabIndex === 0) {
+        const { name } = this.tabs[this.tabs.length - 1]
+        this.setTicketsActiveTab(name)
+      } else if (this.activeTabIndex === (this.tabs.length - 1)) {
+        const { name } = this.tabs[0]
         this.setTicketsActiveTab(name)
       }
     },
