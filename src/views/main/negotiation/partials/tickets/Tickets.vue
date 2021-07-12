@@ -7,15 +7,29 @@
       target-path="negotiation"
       :active-tab="activeTab"
     />
+
+    <span
+      class="left-arrow"
+      @click="handlePreviousTab()"
+    >
+      <i class="el-icon-arrow-left" />
+    </span>
+
+    <span
+      class="right-arrow"
+      @click="handleNextTab()"
+    >
+      <i class="el-icon-arrow-right" />
+    </span>
+
     <el-tabs
       v-model="activeTab"
       class="tickets-container__tabs"
     >
       <el-tab-pane
-        v-for="tab in tabs"
+        v-for="tab in filteredTabs"
         :key="tab.name"
         :name="tab.name"
-        stretch
         lazy
       >
         <span slot="label">
@@ -123,6 +137,13 @@ export default {
       ]
     },
 
+    filteredTabs() {
+      return [
+        ...this.tabs.slice(this.activeTabIndex - 1, this.tabs.length + 1),
+        ...this.tabs.slice(0, this.activeTabIndex - 1)
+      ]
+    },
+
     activeTab: {
       get() {
         return this.ticketsActiveTab
@@ -157,6 +178,10 @@ export default {
     eventBus.$on(events.TICKET_PREVIOUS_TAB.callback, this.handlePreviousTab)
     eventBus.$on(events.TICKET_DOWN.callback, this.handleNextTicket)
     eventBus.$on(events.TICKET_UP.callback, this.handlePreviousTicket)
+
+    setTimeout(() => {
+      this.$forceUpdate()
+    }, 250)
   },
 
   beforeDestroy() {
@@ -302,12 +327,29 @@ export default {
 @import '@/styles/colors.scss';
 
 .tickets-container {
+  position: relative;
+
+  .left-arrow {
+    position: absolute;
+    left: 0;
+    top: 0;
+    margin: 64px 0 0 16px;
+    cursor: pointer;
+    z-index: 2;
+  }
+
+  .right-arrow {
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin: 64px 16px 0 0;
+    cursor: pointer;
+    z-index: 2;
+  }
+
   .tickets-container__tabs {
     .el-tabs__content {
       overflow: auto;
-      // .tickets-container__tab-pane {
-      //   height: 100%;
-      // }
     }
   }
 
@@ -320,6 +362,7 @@ export default {
     .el-tabs__nav-prev,
     .el-tabs__nav-next {
       font-size: 18px !important;
+      display: none;
     }
 
     @media (max-height: 900px) {
