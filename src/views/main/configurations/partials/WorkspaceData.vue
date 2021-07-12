@@ -8,7 +8,7 @@
       <div class="workspace-data-container__form-group">
         <div class="workspace-data-container__form-item">
           <span class="workspace-data-container__input-label">
-            Nome da <b>equipe</b> ou <b>time</b> de necogiação
+            Nome da <b>equipe</b> ou <b>time</b> de negogiação
           </span>
           <el-input v-model="teamName">
             <el-button
