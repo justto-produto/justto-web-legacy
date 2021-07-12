@@ -524,7 +524,7 @@
                 <div>
                   <!-- TODO: Componente de busca no CNA. -->
                   <el-popover
-                    v-if="role.roles.includes('LAWYER') && false"
+                    v-if="role.roles.includes('LAWYER')"
                     :ref="`popover-${role.name}`"
                     popper-class="dispute-overview-view__info-popover-lawyer"
                     :placement="'top-end'"
