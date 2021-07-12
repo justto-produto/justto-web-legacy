@@ -665,8 +665,12 @@ export default {
     oabMask(value = '') {
       const oab = value?.replace(/[^\w*]/g, '').toUpperCase()
 
+      console.log(oab, oab.charAt(4))
+
       if (/[ABDENPabdenp]/.test(oab.charAt(2))) {
         return '##D.###/AA'
+      } else if (/[A-Z]/.test(oab.charAt(4))) {
+        return '#.###/AA'
       } else if (/[A-Z]/.test(oab.charAt(5))) {
         return '##.###/AA'
       } else {
