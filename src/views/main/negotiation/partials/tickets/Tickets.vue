@@ -257,11 +257,8 @@ export default {
     },
 
     handleNextTab() {
-      if (this.activeTabIndex > 0 && this.activeTabIndex < (this.tabs.length - 1)) {
+      if (this.activeTabIndex >= 0 && this.activeTabIndex < (this.tabs.length - 1)) {
         const { name } = this.tabs[this.activeTabIndex + 1]
-        this.setTicketsActiveTab(name)
-      } else if (this.activeTabIndex === 0) {
-        const { name } = this.tabs[this.tabs.length - 1]
         this.setTicketsActiveTab(name)
       } else if (this.activeTabIndex === (this.tabs.length - 1)) {
         const { name } = this.tabs[0]
@@ -341,22 +338,28 @@ export default {
 .tickets-container {
   position: relative;
 
-  .left-arrow {
+  .left-arrow,
+  .right-arrow {
     position: absolute;
-    left: 0;
     top: 0;
-    margin: 64px 0 0 16px;
     cursor: pointer;
     z-index: 2;
+
+    & > i {
+      font-size: 18px !important;
+    }
+  }
+
+  .left-arrow {
+    left: 0;
+    margin: 64px 0 0 14px;
+    margin: 63px 0 0 4px;
   }
 
   .right-arrow {
-    position: absolute;
     right: 0;
-    top: 0;
-    margin: 64px 16px 0 0;
-    cursor: pointer;
-    z-index: 2;
+    margin: 64px 12px 0 0;
+    margin: 63px 0px 0 0;
   }
 
   .tickets-container__tabs {
@@ -366,7 +369,9 @@ export default {
   }
 
   .el-tabs__header {
-    padding: 12px;
+    /*padding: 12px;*/
+    padding-left: 0 !important;
+    padding-right: 0 !important;
     margin: 0;
     border-bottom: 2px solid $--color-light-gray;
     border-top: 2px solid $--color-light-gray;
