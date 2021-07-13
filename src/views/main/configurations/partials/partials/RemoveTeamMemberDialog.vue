@@ -17,7 +17,7 @@
         Remover {{ member.name }}?
       </span>
       <span v-else>
-        Não há outro negociadore disponível
+        Não há outro negociador disponível
       </span>
     </span>
 
@@ -110,9 +110,7 @@
       v-else
       class="remove-team-member__without-outers-negotiators"
     >
-      <p>
-        Mussum Ipsum, cacilds vidis litro abertis. Não sou faixa preta cumpadi, sou preto inteiris, inteiris. Si u mundo tá muito paradis? Toma um mé que o mundo vai girarzis! Praesent malesuada urna nisi, quis volutpat erat hendrerit non. Nam vulputate dapibus. Nullam volutpat risus nec leo commodo, ut interdum diam laoreet. Sed non consequat odio.
-      </p>
+      <p></p>
     </span>
 
     <span slot="footer">
