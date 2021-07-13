@@ -10,14 +10,14 @@
 
     <span
       class="left-arrow"
-      @click="handlePreviousTab()"
+      @click="handlePreviousScroll()"
     >
       <i class="el-icon-arrow-left" />
     </span>
 
     <span
       class="right-arrow"
-      @click="handleNextTab()"
+      @click="handleNextScroll()"
     >
       <i class="el-icon-arrow-right" />
     </span>
@@ -25,6 +25,7 @@
     <el-tabs
       v-model="activeTab"
       class="tickets-container__tabs"
+      ref="tabs"
     >
       <el-tab-pane
         v-for="tab in filteredTabs"
@@ -203,6 +204,27 @@ export default {
     ]),
 
     ...mapMutations(['setPreventFilters', 'setPreventSocket']),
+
+    handlePreviousScroll() {},
+
+    handleNextScroll() {
+      const tabs = document.querySelector('div.el-tabs__header.is-top div .el-tabs__nav-scroll')
+      const step = tabs.scrollWidth / 3
+
+      console.table({
+        scrollLeft: tabs.scrollLeft,
+        scrollWidth: tabs.scrollWidth,
+        step,
+        current: tabs.scrollLeft + step,
+        next: tabs.scrollLeft + step + step
+      })
+
+      if ((tabs.scrollLeft + step) >= tabs.scrollWidth) {
+        tabs.scroll(0, 0)
+      } else {
+        tabs.scroll(tabs.scrollLeft + step, 0)
+      }
+    },
 
     handleChangeTab(tab) {
       if (!this.preventFilters) {
