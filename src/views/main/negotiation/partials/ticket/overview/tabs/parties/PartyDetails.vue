@@ -98,7 +98,7 @@
         >
           <!-- TODO: Componente de busca no CNA. -->
           <el-popover
-            v-if="isLawyer && !resumedState.isVexatious && false"
+            v-if="isLawyer && !resumedState.isVexatious"
             :ref="`popover-${party.name}`"
             popper-class="party-details__info-popover-lawyer"
             :placement="'top-end'"

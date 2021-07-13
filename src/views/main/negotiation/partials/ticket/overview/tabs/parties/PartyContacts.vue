@@ -37,8 +37,9 @@
           placement="left"
           content="Ver mais informações"
         >
+          <!-- Componente de busca na CNA -->
           <el-popover
-            v-if="isOabContacts && false"
+            v-if="isOabContacts"
             :ref="`popover-${contact.number}-${contact.state}`"
             popper-class="party-contacts__info-popover-lawyer"
             :placement="'top-end'"

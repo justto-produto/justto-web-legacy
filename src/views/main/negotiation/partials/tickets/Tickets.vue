@@ -45,6 +45,10 @@
           />
         </span>
 
+        <div class="tickets-container__counter">
+          {{ tickets.content.length }} {{ $tc('labels.dispute', tickets.content.length) }}
+        </div>
+
         <ul
           v-if="activeTab === tab.name"
           class="tickets-container__list"
@@ -346,9 +350,24 @@ export default {
     flex-direction: column;
   }
 
+  .tickets-container__counter {
+    text-align: center;
+
+    font-weight: 600;
+    background-color: #F4EFFF;
+    padding: 4px 0 6px;
+
+    font-size: 12px;
+
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+
   .tickets-container__list {
     list-style: none;
-    margin: 0 ;
+    margin: 0;
     padding: 0;
   }
 }
