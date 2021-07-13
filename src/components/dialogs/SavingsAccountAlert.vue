@@ -22,6 +22,7 @@
       <el-button
         type="primary"
         size="small"
+        @click="save()"
       >
         ADICIONAR CONTA
       </el-button>
@@ -29,11 +30,11 @@
         type="danger"
         size="small"
         plain
+        @click="close()"
       >
         FECHAR
       </el-button>
     </div>
-    <!-- :width="calcWidth" -->
   </el-dialog>
 </template>
 
@@ -54,7 +55,6 @@ export default {
 
   computed: {
     calcWidth() {
-      console.log(this.innerWidth)
       if (this.innerWidth <= 600) return '98%'
       if (this.innerWidth >= 1000) return '35%'
       const pattern = 1300
@@ -69,6 +69,16 @@ export default {
       this.innerWidth = window.innerWidth
     })
   },
+
+  methods: {
+    save() {
+      this.$emit('save')
+      this.close()
+    },
+    close() {
+      this.isVisible = false
+    }
+  }
 
 }
 </script>
