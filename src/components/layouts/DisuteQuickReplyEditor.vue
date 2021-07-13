@@ -24,16 +24,37 @@
           :span="10"
           class="reply-editor__footer-column"
         >
-          <el-button @click="cancel()">
-            Cancelar
-          </el-button>
-          <el-button
-            type="primary"
-            :disabled="loading"
-            @click="save()"
+          <div
+            class="messages-container__hint"
           >
-            Salvar
-          </el-button>
+            <strong class="messages-container__hint-hint">Dica importante!</strong>
+            <div class="messages-container__hint-text">
+              <div
+                class="messages-container__hint-text-click"
+                @click="isSlideInfoVisible = true"
+              >
+                CLIQUE AQUI
+              </div>
+              <div>e saiba como utilizar variáveis e preview das mensagens rápidas</div>
+            </div>
+          </div>
+          <SlideInfo
+            :images="itemsSlider"
+            :is-visible="isSlideInfoVisible"
+            @close="isSlideInfoVisible = false"
+          />
+          <div>
+            <el-button @click="cancel()">
+              Cancelar
+            </el-button>
+            <el-button
+              type="primary"
+              :disabled="loading"
+              @click="save()"
+            >
+              Salvar
+            </el-button>
+          </div>
         </el-col>
       </el-row>
     </div>
@@ -45,6 +66,10 @@ import { mapActions, mapGetters } from 'vuex'
 import ckeditor from '@/utils/mixins/ckeditor'
 
 export default {
+  components: {
+    SlideInfo: () => import('@/components/dialogs/SlideInfo')
+  },
+
   mixins: [ckeditor],
 
   props: {
@@ -67,7 +92,24 @@ export default {
       },
       editorLoaded: false,
       useMentionPlugin: true,
-      usePreviewPlugin: true
+      usePreviewPlugin: true,
+      isSlideInfoVisible: false,
+      itemsSlider: [
+        {
+          title: 'Utilizando variáveis da disputa em suas mensagens rápidas',
+          subtitle: 'São inumeras variáveis que você pode utilizar para compor suas mensagens rápidas. No local em que você coloca uma variável, o sistema vai utilizar os dados da disputa na mensagem.',
+          src: 'https://storage.googleapis.com/justto_app/conteudos/variaveis%26preview1.png'
+        },
+        {
+          title: 'Utilizando variáveis da disputa em suas mensagens rápidas',
+          src: 'https://storage.googleapis.com/justto_app/conteudos/variaveis%26preview2.png'
+        },
+        {
+          title: 'Visualizando como ficará sua mensagem',
+          src: 'https://storage.googleapis.com/justto_app/conteudos/variaveis%26preview3.png',
+          footer: 'Pronto! Agora você tem o template prontinho para usar sempre que precisar!'
+        }
+      ]
     }
   },
 
@@ -172,6 +214,7 @@ export default {
 </style>
 
 <style lang="scss" scoped>
+@import '@/styles/colors.scss';
 .reply-editor__container {
   margin: 16px 0px;
   padding: 16px 0px;
@@ -193,8 +236,33 @@ export default {
       .reply-editor__footer-column {
         width: 100%;
         display: flex;
-        justify-content: flex-end;
+        justify-content: space-between;
       }
+    }
+  }
+}
+
+.messages-container__hint {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  font-size: 11px;
+  .messages-container__hint-hint {
+    margin-right: 4px;
+  }
+  .messages-container__hint-text {
+    display: flex;
+    flex-direction: row;
+    .messages-container__hint-text-click {
+      font-size: 9px;
+      text-align: center;
+      background-color: $--color-primary;
+      padding: 3px 4px;
+      color: white;
+      margin-right: 4px;
+      font-weight: 700;
+      border-radius: 4px;
+      cursor: pointer;
     }
   }
 }
