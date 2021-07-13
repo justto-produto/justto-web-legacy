@@ -23,9 +23,9 @@
     </span>
 
     <el-tabs
+      ref="tabs"
       v-model="activeTab"
       class="tickets-container__tabs"
-      ref="tabs"
     >
       <el-tab-pane
         v-for="tab in filteredTabs"
@@ -156,6 +156,7 @@ export default {
       set(value) {
         this.setTicketsActiveTab(value)
         this.handleChangeTab({ name: value })
+        this.resetTabsScroll()
       }
     },
 
@@ -209,21 +210,33 @@ export default {
 
     ...mapMutations(['setPreventFilters', 'setPreventSocket']),
 
-    handlePreviousScroll() {},
+    resetTabsScroll() {
+      this.$refs.tabs.$el.childNodes[0].childNodes[0].childNodes[2].scroll(0, 0)
+    },
 
-    handleNextScroll() {
-      const tabs = document.querySelector('div.el-tabs__header.is-top div .el-tabs__nav-scroll')
+    handlePreviousScroll() {
+      const tabs = this.$refs.tabs.$el.childNodes[0].childNodes[0].childNodes[2] // document.querySelector('div.el-tabs__header.is-top div .el-tabs__nav-scroll')
       const step = tabs.scrollWidth / 3
 
       console.table({
         scrollLeft: tabs.scrollLeft,
         scrollWidth: tabs.scrollWidth,
         step,
-        current: tabs.scrollLeft + step,
-        next: tabs.scrollLeft + step + step
+        current: tabs.scrollLeft - step
       })
 
-      if ((tabs.scrollLeft + step) >= tabs.scrollWidth) {
+      if ((tabs.scrollLeft) <= 0) {
+        tabs.scroll(tabs.scrollWidth, 0)
+      } else {
+        tabs.scroll(tabs.scrollLeft - step, 0)
+      }
+    },
+
+    handleNextScroll() {
+      const tabs = this.$refs.tabs.$el.childNodes[0].childNodes[0].childNodes[2] // document.querySelector('div.el-tabs__header.is-top div .el-tabs__nav-scroll')
+      const step = tabs.scrollWidth / 3
+
+      if ((tabs.scrollLeft + (step * 2)) > tabs.scrollWidth) {
         tabs.scroll(0, 0)
       } else {
         tabs.scroll(tabs.scrollLeft + step, 0)
@@ -421,6 +434,10 @@ export default {
     .el-tabs__nav-next {
       font-size: 18px !important;
       display: none;
+    }
+
+    .el-tabs__nav-scroll {
+      scroll-behavior: smooth;
     }
 
     @media (max-height: 900px) {
