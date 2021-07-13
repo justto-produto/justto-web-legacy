@@ -106,12 +106,6 @@
         Tem certeza que dexeja excluir <b>{{ member.name }}</b> da sua workspace?<br>Esta ação é irreversível.
       </p>
     </span>
-    <span
-      v-else
-      class="remove-team-member__without-outers-negotiators"
-    >
-      <p></p>
-    </span>
 
     <span slot="footer">
       <el-button
