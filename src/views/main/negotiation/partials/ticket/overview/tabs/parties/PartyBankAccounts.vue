@@ -99,7 +99,7 @@ export default {
   },
 
   data: () => ({
-    isAllAccountsVisible: false
+    isAllAccountsVisible: true
   }),
 
   computed: {
