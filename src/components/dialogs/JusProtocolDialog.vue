@@ -1229,9 +1229,9 @@ export default {
   .jus-protocol-dialog__status {
     display: flex;
     align-items: center;
-    justify-content: space-around;
+    justify-content: space-between;
     padding: 24px 8px;
-    // margin: 0px 15vw;
+    margin: 0px 10vw;
     &:hover {
       background-color: #f6f6f6;
     }
