@@ -235,6 +235,13 @@ const omnichannelActions = {
       mutation: 'updateNpsReply',
       payload: { occurrenceId, data }
     })
+  },
+
+  getDisputeProtocol({ state }, { disputeId, docNumber, canSetDisputeProtocol = true }) {
+    return axiosDispatch({
+      url: `/api/office/documents/${disputeId}/to-signer/${docNumber}`,
+      mutation: canSetDisputeProtocol ? 'setDisputeProtocol' : null
+    })
   }
 }
 

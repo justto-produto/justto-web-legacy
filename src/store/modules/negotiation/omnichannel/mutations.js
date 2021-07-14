@@ -185,6 +185,10 @@ const omnichannelMutations = {
       Vue.set(occurrence.interaction.properties, 'NPS_REPLY_DATE', moment().format('YYYY-MM-DD[T]HH:mm:ss.SSS[Z]'))
       Vue.set(occurrence.interaction.properties, 'NPS_REPLY', response)
     }
+  },
+
+  setDisputeProtocol: (state, { data }) => {
+    Vue.set(state, 'disputeProtocol', data)
   }
 }
 
