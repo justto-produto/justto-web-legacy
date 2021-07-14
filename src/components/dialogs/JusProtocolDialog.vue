@@ -297,6 +297,7 @@
                 icon="el-icon-thumb"
                 type="success"
                 style="font-weight: bold"
+                @click="signDraftVisible = true"
               >
                 ASSINAR MINUTA AQUI
               </el-button>
@@ -474,6 +475,21 @@
         </el-button>
       </span>
     </el-dialog>
+    <el-dialog
+      :visible.sync="signDraftVisible"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      :show-close="true"
+      append-to-body
+      width="100%"
+    >
+      <iframe
+        class="iframe-dialog"
+        :src="document.url"
+        frameborder="0"
+        allowfullscreen
+      />
+    </el-dialog>
   </div>
 </template>
 
@@ -508,6 +524,7 @@ export default {
       loadingDownload: false,
       loadingChooseRecipients: false,
       confirmChooseRecipientsVisible: false,
+      signDraftVisible: false,
       fullscreen: false,
       models: [],
       emails: {},
@@ -550,7 +567,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      defaultSigners: 'availableSigners'
+      defaultSigners: 'availableSigners',
+      accountEmail: 'accountEmail'
     }),
     disputeRoles() {
       return this.dispute.disputeRoles
@@ -606,6 +624,8 @@ export default {
       }
     },
     title() {
+      // TODO remover
+      console.log(this.dispute)
       switch (this.step) {
         case 0:
           return this.models.length > 1 ? 'Escolha um modelo para iniciar' : 'Carregando...'
@@ -653,11 +673,6 @@ export default {
     },
     buttonSize() {
       return IS_SMALL_WINDOW ? 'mini' : 'medium'
-    },
-    thamiris() {
-      return this.dispute.disputeRoles.filter((role) => {
-        return role.roles.includes('NEGOTIATOR') && role.documentNumber
-      }).map(item => item.documentNumber)
     }
   },
   watch: {
@@ -1085,6 +1100,11 @@ export default {
       const firstLine = words[0].replaceAll('_', ' ') + ' - ' + words[1].replaceAll('_', ' ')
       const secondLine = words[2].replaceAll('_', ' ') + ' - ' + words[3].replaceAll('_', ' ')
       return [firstLine, secondLine]
+    },
+    thamiris(signer) {
+      return this.dispute.disputeRoles.filter((role) => {
+        return role.roles.includes('NEGOTIATOR') && role.documentNumber
+      }).map(item => item.documentNumber).includes(signer.documentNumber) && signer.email === this.accountEmail
     }
   }
 }
@@ -1287,5 +1307,9 @@ export default {
     justify-content: center;
     margin-bottom: 18px;
   }
+}
+.iframe-dialog {
+  width: 100%;
+  height: 80vh;
 }
 </style>
