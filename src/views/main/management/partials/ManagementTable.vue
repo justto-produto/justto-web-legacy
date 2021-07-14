@@ -246,7 +246,7 @@
               <jus-icon icon="clock" />
               <i class="management-table__interaction-pulse el-icon-warning el-icon-pulse el-icon-primary" />
             </span>
-            <span v-else>-</span>
+            <!-- <span v-else>-</span> -->
           </el-tooltip>
           <span v-if="scope.row.expirationDate">{{ scope.row.expirationDate.dateTime | moment('DD/MM/YY') }}</span>
         </template>
