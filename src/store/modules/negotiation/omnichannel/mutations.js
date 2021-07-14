@@ -187,7 +187,8 @@ const omnichannelMutations = {
     }
   },
 
-  setDisputeProtocol: (state, { data }) => {
+  setDisputeProtocol: (state, data) => {
+    console.log('setDisputeProtocol', data)
     Vue.set(state, 'disputeProtocol', data)
   }
 }
