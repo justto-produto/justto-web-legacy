@@ -292,12 +292,12 @@
             <div class="jus-protocol-dialog__status-icon">
               <span v-if="signer.signed">Assinado <jus-icon icon="success" /></span>
               <el-button
-                v-else-if="thamiris.includes(signer.documentNumber)"
+                v-else-if="isThamirisSigner(signer)"
                 :size="buttonSize"
                 icon="el-icon-thumb"
                 type="success"
                 style="font-weight: bold"
-                @click="signDraftVisible = true"
+                @click="signDraft(signer)"
               >
                 ASSINAR MINUTA AQUI
               </el-button>
@@ -485,7 +485,7 @@
     >
       <iframe
         class="iframe-dialog"
-        :src="document.url"
+        :src="disputeProtocol.urlToSign"
         frameborder="0"
         allowfullscreen
       />
@@ -568,7 +568,8 @@ export default {
   computed: {
     ...mapGetters({
       defaultSigners: 'availableSigners',
-      accountEmail: 'accountEmail'
+      accountEmail: 'accountEmail',
+      disputeProtocol: 'getDisputeProtocol'
     }),
     disputeRoles() {
       return this.dispute.disputeRoles
@@ -624,8 +625,6 @@ export default {
       }
     },
     title() {
-      // TODO remover
-      console.log(this.dispute)
       switch (this.step) {
         case 0:
           return this.models.length > 1 ? 'Escolha um modelo para iniciar' : 'Carregando...'
@@ -724,7 +723,8 @@ export default {
       'setDocumentSigners',
       'cleanSelectedSigners',
       'cleanSelectedSigners',
-      'fillerDisputeRole'
+      'fillerDisputeRole',
+      'getDisputeProtocol'
     ]),
     disputeRolesFiller() {
       return new Promise((resolve, reject) => {
@@ -1101,10 +1101,17 @@ export default {
       const secondLine = words[2].replaceAll('_', ' ') + ' - ' + words[3].replaceAll('_', ' ')
       return [firstLine, secondLine]
     },
-    thamiris(signer) {
-      return this.dispute.disputeRoles.filter((role) => {
-        return role.roles.includes('NEGOTIATOR') && role.documentNumber
-      }).map(item => item.documentNumber).includes(signer.documentNumber) && signer.email === this.accountEmail
+    isThamirisSigner(signer) {
+      const isThamiris = this.dispute.disputeRoles.filter((role) => {
+        return role.roles.includes('NEGOTIATOR')
+      }).map(item => item.email).includes(signer.email)
+      const isThamirisEmail = signer.email === this.accountEmail
+      const isThamirisSigner = isThamiris && isThamirisEmail
+      return isThamirisSigner
+    },
+    signDraft(signer) {
+      this.getDisputeProtocol({ disputeId: this.dispute.id, docNumber: signer.documentNumber })
+      this.signDraftVisible = true
     }
   }
 }
@@ -1311,5 +1318,6 @@ export default {
 .iframe-dialog {
   width: 100%;
   height: 80vh;
+  margin-top: 20px;
 }
 </style>
