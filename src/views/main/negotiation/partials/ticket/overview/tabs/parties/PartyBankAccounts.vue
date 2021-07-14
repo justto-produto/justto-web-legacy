@@ -44,13 +44,19 @@
       </div>
     </div>
 
-    <a
-      v-if="(isAllAccountsVisible || !accountsLength) && !disabled"
-      class="bank-accounts__link"
-      @click="openBankAccountDialog()"
+    <PartyBankAccountDialog
+      ref="partyBankAccountDialog"
+      @create="addBankAccount"
+      @edit="editBankAccount"
     >
-      Adicionar
-    </a>
+      <a
+        v-if="(isAllAccountsVisible || !accountsLength) && !disabled"
+        class="bank-accounts__link"
+        @click="openBankAccountDialog()"
+      >
+        Adicionar
+      </a>
+    </PartyBankAccountDialog>
     <a
       v-if="accountsLength"
       class="bank-accounts__link"
@@ -58,12 +64,6 @@
     >
       {{ expandLinkText }}
     </a>
-
-    <PartyBankAccountDialog
-      ref="partyBankAccountDialog"
-      @create="addBankAccount"
-      @edit="editBankAccount"
-    />
   </article>
 </template>
 
@@ -99,7 +99,7 @@ export default {
   },
 
   data: () => ({
-    isAllAccountsVisible: false
+    isAllAccountsVisible: true
   }),
 
   computed: {

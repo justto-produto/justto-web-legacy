@@ -1,10 +1,16 @@
 <template>
-  <el-dialog
-    title="Conta bancária"
-    :visible.sync="bankAccountDialogVisible"
-    append-to-body
+  <el-popover
+    v-model="bankAccountDialogVisible"
+    popper-class="bank-account__popover"
+    placement="top-start"
+    title="Adicionar conta bancária"
+    trigger="manual"
   >
     <span class="bank-account__container">
+      <span class="bank-account__container-person">
+        para:
+        {{ account.name | firstName }}
+      </span>
       <el-form
         ref="addBankForm"
         :model="account"
@@ -12,16 +18,18 @@
         label-position="top"
         @submit.native.prevent
       >
-        <el-form-item
+        <!-- <el-form-item
           label="Nome"
           prop="name"
         >
           <el-input
             v-model="account.name"
+            size="mini"
             disabled
           />
-        </el-form-item>
-        <el-form-item
+        </el-form-item> -->
+
+        <!-- <el-form-item
           label="Email"
           prop="email"
         >
@@ -29,8 +37,9 @@
             v-model="account.email"
             disabled
           />
-        </el-form-item>
-        <el-form-item
+        </el-form-item> -->
+
+        <!-- <el-form-item
           label="CPF ou CNPJ"
           prop="document"
         >
@@ -38,9 +47,11 @@
             ref="accountDocumentInput"
             v-model="account.document"
             v-mask="['###.###.###-##', '##.###.###/####-##']"
+            size="mini"
             disabled
           />
-        </el-form-item>
+        </el-form-item> -->
+
         <el-form-item
           label="Banco"
           prop="bank"
@@ -48,6 +59,7 @@
           <el-select
             v-model="account.bank"
             class="select-full-width"
+            size="mini"
             filterable
           >
             <el-option
@@ -62,13 +74,19 @@
           label="Agência"
           prop="agency"
         >
-          <el-input v-model="account.agency" />
+          <el-input
+            v-model="account.agency"
+            size="mini"
+          />
         </el-form-item>
         <el-form-item
           label="Número do Conta"
           prop="number"
         >
-          <el-input v-model="account.number" />
+          <el-input
+            v-model="account.number"
+            size="mini"
+          />
         </el-form-item>
         <el-form-item
           label="Tipo de Conta"
@@ -77,6 +95,7 @@
           <el-select
             v-model="account.type"
             class="select-full-width"
+            size="mini"
           >
             <el-option
               v-for="type in accountTypes"
@@ -87,23 +106,36 @@
           </el-select>
         </el-form-item>
       </el-form>
+
+      <span class="bank-account__container-footer">
+        <el-button
+          size="mini"
+          @click="closeDialog()"
+        >
+          Cancelar
+        </el-button>
+
+        <el-dropdown>
+          <el-button
+            type="primary"
+            size="mini"
+          >
+            Cadastrar
+            <i class="el-icon-arrow-down el-icon--right" />
+          </el-button>
+
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item>Cadastrar</el-dropdown-item>
+            <el-dropdown-item>Cadastrar e associar</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </span>
     </span>
 
-    <span slot="footer">
-      <el-button
-        plain
-        @click="closeDialog()"
-      >
-        Cancelar
-      </el-button>
-      <el-button
-        type="primary"
-        @click="emitEvent()"
-      >
-        Salvar
-      </el-button>
+    <span slot="reference">
+      <slot />
     </span>
-  </el-dialog>
+  </el-popover>
 </template>
 
 <script>
@@ -125,10 +157,7 @@ export default {
       number: '',
       type: ''
     },
-    accountTypes: [
-      { label: 'Poupança', type: 'SAVING' },
-      { label: 'Corrente', type: 'CHECKING' }
-    ],
+
     addBankRules: {
       name: [{ required: false, message: 'Campo obrigatório', trigger }],
       email: [{ type: 'email', required: false, message: 'Insira um e-mail válido', trigger }],
@@ -151,6 +180,13 @@ export default {
 
     action() {
       return Object.keys(this.account).includes('id') ? 'edit' : 'create'
+    },
+
+    accountTypes() {
+      return [
+        { label: 'Poupança', type: 'SAVING' },
+        { label: 'Corrente', type: 'CHECKING' }
+      ]
     }
   },
 
@@ -190,6 +226,61 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+@import '@/styles/colors.scss';
+@import '@/styles/variables.scss';
+
+.bank-account__popover {
+  border-width: 2px;
+  border: $--color-primary-light-7 solid 1px;
+  /* box-shadow: 0 2px 8px 0 $--color-primary-light-5; */
+  box-shadow: $--box-shadow-dark;
+  border-radius: 8px;
+
+  .bank-account__container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    .el-form {
+      display: flex;
+      flex-direction: column;
+
+      gap: 8px;
+
+      .el-form-item {
+        margin: 0;
+
+        .el-form-item__label {
+          font-size: 12px !important;
+          line-height: 12px !important;
+        }
+
+        .el-form-item__content {
+          line-height: 14px;
+
+          .el-select {
+            .el-input {
+              width: 102%;
+            }
+          }
+        }
+      }
+    }
+
+    .bank-account__container-footer {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+
+  .popper__arrow {
+    border-top: $--color-primary-light-7 solid 2px !important;
+  }
+}
+
+</style>
 
 <style lang="scss" scoped>
   .select-full-width {
