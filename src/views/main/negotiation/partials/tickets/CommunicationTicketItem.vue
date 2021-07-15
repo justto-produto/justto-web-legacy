@@ -4,13 +4,13 @@
     class="communication-ticket-item-container"
     @click="handleSelectTicket"
   >
-    <JusAvatarUser
+    <!-- <JusAvatarUser
       :name="plaintiffName"
       :status="ticket.plaintiff ? ticket.plaintiff.status : ''"
       class="communication-ticket-item-container__avatar"
       size="sm"
       purple
-    />
+    /> -->
     <div class="communication-ticket-item-container__resume">
       <div class="communication-ticket-item-container__parties">
         <span
@@ -61,6 +61,10 @@
       <el-step />
       <el-step />
     </el-steps>
+    <div
+      v-if="ticket.plaintiff && ticket.plaintiff.status === 'ONLINE'"
+      class="communication-ticket-item-container__online"
+    />
     <span
       class="communication-ticket-item-container__time"
     >
@@ -254,10 +258,20 @@ export default {
   .communication-ticket-item-container__minuta {
     position: absolute;
     bottom: 3px;
-    left: 78px;
+    left: 35px;
     font-size: 10px;
     color: $--color-primary !important;
     font-weight: 500;
+  }
+
+  .communication-ticket-item-container__online {
+    position: absolute;
+    top: 25px;
+    left: 15px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: $--color-success;
   }
 
   .communication-ticket-item-container__gray {
@@ -303,7 +317,7 @@ export default {
 .communication-ticket-item-container__minuta-steps {
   position: absolute;
   bottom: 7px;
-  left: 122px;
+  left: 80px;
   .el-step {
     .is-success {
       border-color: $--color-primary !important;
