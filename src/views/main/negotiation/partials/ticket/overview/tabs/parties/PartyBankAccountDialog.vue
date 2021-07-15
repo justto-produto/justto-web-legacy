@@ -112,10 +112,10 @@
           size="mini"
           @click="closeDialog()"
         >
-          Cancelar
+          Fechar
         </el-button>
 
-        <el-dropdown>
+        <el-dropdown @command="emitEvent">
           <el-button
             type="primary"
             size="mini"
@@ -124,10 +124,14 @@
             <i class="el-icon-arrow-down el-icon--right" />
           </el-button>
 
-          <!-- TODO: Falta salvar, ou salvar e vincular. -->
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>Cadastrar</el-dropdown-item>
-            <el-dropdown-item>Cadastrar e associar</el-dropdown-item>
+            <el-dropdown-item :command="false">
+              Cadastrar
+            </el-dropdown-item>
+
+            <el-dropdown-item :command="true">
+              Cadastrar e associar
+            </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </span>
@@ -141,7 +145,7 @@
 
 <script>
 import { validateDocument } from '@/utils/validations'
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 const trigger = 'submit'
 
@@ -156,7 +160,7 @@ export default {
       agency: '',
       bank: '',
       number: '',
-      type: ''
+      type: 'CHECKING'
     },
 
     addBankRules: {
@@ -176,7 +180,8 @@ export default {
 
   computed: {
     ...mapGetters({
-      banks: 'banksList'
+      banks: 'banksList',
+      ticketInfo: 'getTicketOverviewInfo'
     }),
 
     action() {
@@ -184,8 +189,10 @@ export default {
     },
 
     accountTypes() {
-      return [
-        { label: 'Poupança', type: 'SAVING' },
+      return !this.ticketInfo?.denySavingDeposit ? [
+        { label: 'Corrente', type: 'CHECKING' },
+        { label: 'Poupança', type: 'SAVING' }
+      ] : [
         { label: 'Corrente', type: 'CHECKING' }
       ]
     }
@@ -197,15 +204,24 @@ export default {
         this.$delete(this.account, 'bank')
         this.$delete(this.account, 'agency')
         this.$delete(this.account, 'number')
-        this.$delete(this.account, 'type')
       }
     }
   },
 
   methods: {
-    openBankAccountDialog(account) {
+    ...mapActions(['getTicketOverviewInfo']),
+
+    async openBankAccountDialog(account) {
+      if (!Object.keys(this.ticketInfo).length) {
+        await this.getTicketOverviewInfo(this.$route.params.id)
+      }
+
       this.bankAccountDialogVisible = true
+
       Object.keys(account).forEach(key => this.$set(this.account, key, account[key]))
+
+      this.$set(this.account, 'type', 'CHECKING')
+
       if (account.document) {
         const { cpfCnpj } = this.$options.filters
         this.$set(this.account, 'document', cpfCnpj(account.document))
@@ -217,10 +233,10 @@ export default {
       this.bankAccountDialogVisible = false
     },
 
-    emitEvent() {
+    emitEvent(associate) {
       this.$refs.addBankForm.validate(isValid => {
         if (isValid) {
-          this.$emit(this.action, this.account)
+          this.$emit(this.action, { account: this.account, associate })
         }
       })
     }

@@ -75,6 +75,7 @@ export default {
   components: {
     PartyBankAccountDialog: () => import('./PartyBankAccountDialog')
   },
+
   props: {
     accounts: {
       type: Array,
@@ -117,6 +118,7 @@ export default {
       return this.accounts.filter(({ associatedInDispute }) => associatedInDispute).map(({ id }) => id)
     }
   },
+
   methods: {
     ...mapActions({
       linkAccount: 'setTicketRoleBankAccount',
@@ -150,10 +152,22 @@ export default {
       })
     },
 
-    addBankAccount(account) {
+    addBankAccount({ account, associate }) {
       const { disputeId, personId } = this
 
-      this.createBankAccount({ disputeId, account, personId }).then(_ => {
+      this.createBankAccount({ disputeId, account, personId }).then(response => {
+        if (associate) {
+          const baccount = response.bankAccounts.find(baccount => {
+            return baccount.agency === account.agency &&
+              baccount.document === account.document &&
+              baccount.number === account.number &&
+              baccount.bank === account.bank &&
+              baccount.type === account.type
+          })
+
+          this.linkAccount({ bankAccountId: baccount.id, personId, disputeId })
+        }
+
         this.$jusNotification({
           title: 'Yay!',
           dangerouslyUseHTMLString: true,
@@ -167,10 +181,22 @@ export default {
       })
     },
 
-    editBankAccount(account) {
+    editBankAccount({ account, associate }) {
       const { disputeId, personId } = this
 
-      this.updateBankAccount({ disputeId, account, personId }).then(_ => {
+      this.updateBankAccount({ disputeId, account, personId }).then(response => {
+        if (associate) {
+          const baccount = response.bankAccounts.find(baccount => {
+            return baccount.agency === account.agency &&
+              baccount.document === account.document &&
+              baccount.number === account.number &&
+              baccount.bank === account.bank &&
+              baccount.type === account.type
+          })
+
+          this.linkAccount({ bankAccountId: baccount.id, personId, disputeId })
+        }
+
         this.$jusNotification({
           title: 'Yay!',
           dangerouslyUseHTMLString: true,
