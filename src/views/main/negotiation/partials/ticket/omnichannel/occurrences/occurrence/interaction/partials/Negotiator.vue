@@ -47,21 +47,37 @@
       </el-tooltip>
     </span>
 
-    <el-button
-      v-if="['NEGOTIATOR_CHECKOUT'].includes(interaction.type)"
-      class="negotiator-container__checkout_btn"
-      type="text"
-      size="small"
+    <PartyBankAccountDialog
+      v-if="showRegisterBankAccountButton"
+      ref="partyBankAccountDialog"
+      placement="right"
+      @create="handleAddAccount"
     >
-      Cadastrar
-    </el-button>
+      <el-button
+        class="negotiator-container__checkout_btn"
+        type="text"
+        size="small"
+        @click="registerBankAccount()"
+      >
+        Cadastrar
+      </el-button>
+    </PartyBankAccountDialog>
+    <SavingsAccountAlert
+      ref="savingAccountAlert"
+    />
   </section>
 </template>
 
 <script>
 import communicationSendStatus from '@/utils/mixins/communicationSendStatus'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
+  components: {
+    SavingsAccountAlert: () => import('@/components/dialogs/SavingsAccountAlert.vue'),
+    PartyBankAccountDialog: () => import('@/views/main/negotiation/partials/ticket/overview/tabs/parties/PartyBankAccountDialog.vue')
+  },
+
   mixins: [communicationSendStatus],
 
   props: {
@@ -76,8 +92,44 @@ export default {
   },
 
   computed: {
+    ...mapGetters({ ticketParties: 'getTicketOverviewParties' }),
+
     interaction() {
       return this.value
+    },
+
+    bankAccount() {
+      function extractInfo(str, token, defaultValue = '') {
+        return str.split(`${token}: `)[1].split(',')[0] || defaultValue
+      }
+
+      const accountTypes = {
+        Corrente: 'CHECKING',
+        Poupança: 'SAVING'
+      }
+
+      return ['NEGOTIATOR_CHECKOUT'].includes(this.interaction.type) ? {
+        name: extractInfo(this.interaction.properties.BANK_INFO, 'Nome'),
+        email: extractInfo(this.interaction.properties.BANK_INFO, 'E-mail'),
+        document: extractInfo(this.interaction.properties.BANK_INFO, 'Documento'),
+        agency: extractInfo(this.interaction.properties.BANK_INFO, 'Agência'),
+        bank: extractInfo(this.interaction.properties.BANK_INFO, 'Banco'),
+        number: extractInfo(this.interaction.properties.BANK_INFO, 'Conta'),
+        type: accountTypes[extractInfo(this.interaction.properties.BANK_INFO, 'Tipo')]
+      } : {}
+    },
+
+    showRegisterBankAccountButton() {
+      const accounts = this.ticketParties.filter(partie => {
+        return partie.documentNumber === this.bankAccount.document && partie.polarity === 'CLAIMANT' && Object.keys(partie).includes('bankAccountsDto')
+      }).map(({ bankAccountsDto }) => (bankAccountsDto || []))
+
+      return ['NEGOTIATOR_CHECKOUT'].includes(this.interaction.type) && accounts.length && !accounts.filter(baccount => {
+        return baccount.agency === this.bankAccount.agency &&
+            baccount.number === this.bankAccount.number &&
+            baccount.bank === this.bankAccount.bank &&
+            baccount.type === this.bankAccount.type
+      }).length
     },
 
     message() {
@@ -150,6 +202,53 @@ export default {
 
   mounted() {
     this.$set(this.value, 'renderCompleted', true)
+  },
+
+  methods: {
+    ...mapActions([
+      'getTicketOverviewParties',
+      'setTicketRoleBankAccount',
+      'createTicketRoleBankAccount'
+    ]),
+
+    registerBankAccount() {
+      this.$refs.partyBankAccountDialog.openBankAccountDialog(this.bankAccount)
+    },
+
+    handleAddAccount(model) {
+      if (model.account.type === 'SAVING') {
+        this.$refs.savingAccountAlert.open(model)
+      } else {
+        this.addBankAccount(model)
+      }
+    },
+
+    addBankAccount({ account, associate }) {
+      // TODO: Fazer não aparecer o botão de cadastrar depois de salvar a conta bancária.
+      const { cpfCnpj } = this.$options.filters
+      const disputeId = Number(this.$route.params.id)
+
+      const party = this.ticketParties.find(({ documentNumber, polarity }) => cpfCnpj(documentNumber) === cpfCnpj(account.document) && polarity === 'CLAIMANT')
+      const personId = party.person.id
+
+      console.table({ account, personId, disputeId })
+
+      this.createTicketRoleBankAccount({ account, personId, disputeId }).then(response => {
+        if (associate) {
+          const baccount = response.bankAccounts.find(baccount => {
+            return baccount.agency === account.agency &&
+              baccount.document === account.document &&
+              baccount.number === account.number &&
+              baccount.bank === account.bank &&
+              baccount.type === account.type
+          })
+
+          this.setTicketRoleBankAccount({ bankAccountId: baccount.id, personId, disputeId })
+        }
+      }).finally(() => {
+        this.$refs.partyBankAccountDialog.closeDialog()
+      })
+    }
   }
 }
 </script>

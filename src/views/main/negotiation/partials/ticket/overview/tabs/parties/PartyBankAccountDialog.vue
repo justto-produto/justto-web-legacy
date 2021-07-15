@@ -2,9 +2,9 @@
   <el-popover
     v-model="bankAccountDialogVisible"
     popper-class="bank-account__popover"
-    placement="top-start"
     title="Adicionar conta bancária"
     trigger="manual"
+    :placement="placement"
   >
     <span class="bank-account__container">
       <span class="bank-account__container-person">
@@ -18,40 +18,6 @@
         label-position="top"
         @submit.native.prevent
       >
-        <!-- <el-form-item
-          label="Nome"
-          prop="name"
-        >
-          <el-input
-            v-model="account.name"
-            size="mini"
-            disabled
-          />
-        </el-form-item> -->
-
-        <!-- <el-form-item
-          label="Email"
-          prop="email"
-        >
-          <el-input
-            v-model="account.email"
-            disabled
-          />
-        </el-form-item> -->
-
-        <!-- <el-form-item
-          label="CPF ou CNPJ"
-          prop="document"
-        >
-          <el-input
-            ref="accountDocumentInput"
-            v-model="account.document"
-            v-mask="['###.###.###-##', '##.###.###/####-##']"
-            size="mini"
-            disabled
-          />
-        </el-form-item> -->
-
         <el-form-item
           label="Banco"
           prop="bank"
@@ -88,6 +54,7 @@
             size="mini"
           />
         </el-form-item>
+
         <el-form-item
           label="Tipo de Conta"
           prop="type"
@@ -105,6 +72,15 @@
             />
           </el-select>
         </el-form-item>
+
+        <el-form-item>
+          <el-checkbox
+            v-model="toAssociate"
+            size="mini"
+          >
+            Associar nesta disputa
+          </el-checkbox>
+        </el-form-item>
       </el-form>
 
       <span class="bank-account__container-footer">
@@ -115,25 +91,13 @@
           Fechar
         </el-button>
 
-        <el-dropdown @command="emitEvent">
-          <el-button
-            type="primary"
-            size="mini"
-          >
-            Cadastrar
-            <i class="el-icon-arrow-down el-icon--right" />
-          </el-button>
-
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item :command="false">
-              Cadastrar
-            </el-dropdown-item>
-
-            <el-dropdown-item :command="true">
-              Cadastrar e associar
-            </el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
+        <el-button
+          type="primary"
+          size="mini"
+          @click="emitEvent(toAssociate)"
+        >
+          Cadastrar
+        </el-button>
       </span>
     </span>
 
@@ -152,6 +116,13 @@ const trigger = 'submit'
 export default {
   name: 'PartyBankAccountsDialog',
 
+  props: {
+    placement: {
+      type: String,
+      default: () => 'top-start'
+    }
+  },
+
   data: () => ({
     account: {
       name: '',
@@ -162,7 +133,7 @@ export default {
       number: '',
       type: 'CHECKING'
     },
-
+    toAssociate: true,
     addBankRules: {
       name: [{ required: false, message: 'Campo obrigatório', trigger }],
       email: [{ type: 'email', required: false, message: 'Insira um e-mail válido', trigger }],
@@ -218,9 +189,11 @@ export default {
 
       this.bankAccountDialogVisible = true
 
-      Object.keys(account).forEach(key => this.$set(this.account, key, account[key]))
+      this.$nextTick().then(() => {
+        Object.keys(account).forEach(key => this.$set(this.account, key, account[key]))
 
-      this.$set(this.account, 'type', 'CHECKING')
+        this.$set(this.account, 'type', 'CHECKING')
+      })
 
       if (account.document) {
         const { cpfCnpj } = this.$options.filters
@@ -250,8 +223,7 @@ export default {
 
 .bank-account__popover {
   border-width: 2px;
-  border: $--color-primary-light-7 solid 1px;
-  /* box-shadow: 0 2px 8px 0 $--color-primary-light-5; */
+  border: solid $--color-light-gray thin;
   box-shadow: $--box-shadow-dark;
   border-radius: 8px;
 
@@ -293,7 +265,7 @@ export default {
   }
 
   .popper__arrow {
-    border-top: $--color-primary-light-7 solid 2px !important;
+    border-top: $--color-light-gray solid 2px !important;
   }
 }
 
