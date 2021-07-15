@@ -46,6 +46,15 @@
         />
       </el-tooltip>
     </span>
+
+    <el-button
+      v-if="['NEGOTIATOR_CHECKOUT'].includes(interaction.type)"
+      class="negotiator-container__checkout_btn"
+      type="text"
+      size="small"
+    >
+      Cadastrar
+    </el-button>
   </section>
 </template>
 
@@ -186,6 +195,11 @@ export default {
     .negotiator-container__about__icon {
       width: 14px;
     }
+  }
+
+  .negotiator-container__checkout_btn {
+    display: flex;
+    margin: 0 auto;
   }
 }
 </style>
