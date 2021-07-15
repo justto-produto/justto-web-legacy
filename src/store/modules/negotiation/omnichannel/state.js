@@ -36,6 +36,7 @@ const omnichannelMutations = {
     recipients: [],
     attachments: []
   },
+  disputeProtocol: {},
   exportTicketModalVisible: false
 }
 

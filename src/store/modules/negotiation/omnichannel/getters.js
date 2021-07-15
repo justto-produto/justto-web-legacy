@@ -33,7 +33,8 @@ const omnichannelGetters = {
   getOccurrencesFilter: state => ({
     ...state.occurrences.filter,
     type: mapTabOccurrenceType[state.activeTab]
-  })
+  }),
+  getDisputeProtocol: state => (state.disputeProtocol)
 }
 
 export default omnichannelGetters
