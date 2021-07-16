@@ -731,7 +731,8 @@
     "DAILY": "Diário | Diária",
     "WEEKLY": "Semanal",
     "FORTNIGHT": "Quinzenal",
-    "MONTHLY": "Mensal"
+    "MONTHLY": "Mensal",
+    "INACTIVE": "Inativo | Inativa"
   },
   "labels": {
     "dispute": "disputa | disputas"

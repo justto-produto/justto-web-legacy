@@ -18,7 +18,7 @@
             'popover-inline-editor__option--disabled': option.disabled
           }"
           class="popover-inline-editor__option"
-          @click="handleSelect(option.value)"
+          @click="handleSelect(option)"
         >
           <i
             v-if="option.icon"
@@ -78,11 +78,14 @@ export default {
     }
   },
   methods: {
-    handleSelect(value) {
-      if (this.value !== value) {
-        this.$emit('change', value)
+    handleSelect({ disabled, value }) {
+      if (!disabled) {
+        if (this.value !== value) {
+          this.$emit('change', value)
+        }
+
+        this.$refs.popoverEditor.doToggle()
       }
-      this.$refs.popoverEditor.doToggle()
     }
   }
 }

@@ -59,6 +59,7 @@
           </span>
         </template>
       </el-table-column>
+
       <el-table-column
         prop="profile"
         label="Perfil"
@@ -92,20 +93,25 @@
       </el-table-column>
 
       <!-- Reports -->
-
       <el-table-column
-        prop="personProperties.MANAGEMENT"
-        label="Gestão"
-        width="180px"
+        v-if="isJustto"
+        prop="personProperties"
+        label="Envio de relatôrios"
+        center
       >
-        <template v-slot="scope">
-          <PopoverInlineEditor
-            v-model="scope.row.personProperties.MANAGEMENT"
-            :width="180"
-            :options="reportsOptions"
-            @change="handleEditReport('MANAGEMENT', $event, scope.row)"
-          />
-        </template>
+        <el-table-column
+          prop="personProperties.MANAGEMENT"
+          label="Gestão"
+        >
+          <template v-slot="scope">
+            <PopoverInlineEditor
+              v-model="scope.row.personProperties.MANAGEMENT"
+              :width="180"
+              :options="reportsOptions"
+              @change="handleEditReport('MANAGEMENT', $event, scope.row)"
+            />
+          </template>
+        </el-table-column>
       </el-table-column>
 
       <el-table-column width="60px">
@@ -161,11 +167,17 @@ export default {
 
   computed: {
     ...mapGetters({
-      team: 'workspaceTeam'
+      team: 'workspaceTeam',
+      isJustto: 'isJusttoAdmin'
     }),
 
     reportsOptions() {
       return [
+        {
+          value: '',
+          label: this.$tc('reports.INACTIVE'),
+          disabled: true
+        },
         {
           value: 'UNKNOWN',
           label: this.$tc('reports.UNKNOWN')
@@ -316,19 +328,37 @@ export default {
     flex: 1;
     display: flex;
     flex-direction: column;
+    border: none;
+
     &:before { display: none; }
 
     .el-table__header-wrapper {
       font-size: 16px;
+      border: none;
+
       tr th {
         color: $--color-text-primary;
         font-weight: 500;
       }
+
+      thead tr th {
+        background-color: #fff;
+        border: none;
+
+        /* Alinha os textos do header ao topo.
+        height: 100%;
+        vertical-align: top; */
+      }
     }
 
     .el-table__body-wrapper {
+      border-top: solid thin #ebeef5;
       flex: 1;
       overflow: auto;
+
+      .el-table__body tbody tr td {
+        border-right: none;
+      }
     }
 
     .el-table__row {
