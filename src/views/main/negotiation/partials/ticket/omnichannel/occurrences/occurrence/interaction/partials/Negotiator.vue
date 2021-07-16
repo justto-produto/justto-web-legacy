@@ -46,13 +46,65 @@
         />
       </el-tooltip>
     </span>
+
+    <PartyBankAccountDialog
+      v-if="showRegisterBankAccountButton"
+      ref="partyBankAccountDialog"
+      placement="right"
+      @create="handleAddAccount"
+    >
+      <el-button
+        class="negotiator-container__checkout_btn"
+        :class="{ 'has-error': denyRegister }"
+        :disabled="denyRegister"
+        type="text"
+        size="small"
+        @click="registerBankAccount()"
+      >
+        <span v-if="denyRegister">
+          Esta disputa não permite cadastro de conta poupança
+        </span>
+        <span v-else>
+          Cadastrar
+        </span>
+      </el-button>
+    </PartyBankAccountDialog>
+
+    <el-button
+      v-if="!showRegisterBankAccountButton && isBankAccountCheckout && partyBankAccount.length"
+      class="negotiator-container__checkout_btn"
+      :class="{ 'registered': !needAssociate.length }"
+      :disabled="!needAssociate.length"
+      type="text"
+      size="small"
+      @click="assicateBankAccount()"
+    >
+      <span v-if="needAssociate.length > 0">
+        Associar
+      </span>
+      <span v-else>
+        Conta associada!
+      </span>
+    </el-button>
+
+    <SavingsAccountAlert
+      ref="savingAccountAlert"
+      @save="addBankAccount"
+      @close="hideBankAccountDialog()"
+    />
   </section>
 </template>
 
 <script>
 import communicationSendStatus from '@/utils/mixins/communicationSendStatus'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
+  components: {
+    SavingsAccountAlert: () => import('@/components/dialogs/SavingsAccountAlert.vue'),
+    PartyBankAccountDialog: () => import('@/views/main/negotiation/partials/ticket/overview/tabs/parties/PartyBankAccountDialog.vue')
+  },
+
   mixins: [communicationSendStatus],
 
   props: {
@@ -67,8 +119,65 @@ export default {
   },
 
   computed: {
+    ...mapGetters({
+      ticketParties: 'getTicketOverviewParties',
+      ticketInfo: 'getTicketOverviewInfo'
+    }),
+
     interaction() {
       return this.value
+    },
+
+    denyRegister() {
+      return this.ticketInfo?.denySavingDeposit && this.bankAccount.type === 'SAVING'
+    },
+
+    isBankAccountCheckout() {
+      return ['NEGOTIATOR_CHECKOUT'].includes(this.interaction.type)
+    },
+
+    bankAccount() {
+      function extractInfo(str, token, defaultValue = '') {
+        return str.split(`${token}: `)[1].split(',')[0] || defaultValue
+      }
+
+      const accountTypes = {
+        Corrente: 'CHECKING',
+        Poupança: 'SAVING'
+      }
+
+      return this.isBankAccountCheckout ? {
+        name: extractInfo(this.interaction.properties.BANK_INFO, 'Nome'),
+        email: extractInfo(this.interaction.properties.BANK_INFO, 'E-mail'),
+        document: extractInfo(this.interaction.properties.BANK_INFO, 'Documento'),
+        agency: extractInfo(this.interaction.properties.BANK_INFO, 'Agência'),
+        bank: extractInfo(this.interaction.properties.BANK_INFO, 'Banco'),
+        number: extractInfo(this.interaction.properties.BANK_INFO, 'Conta'),
+        type: accountTypes[extractInfo(this.interaction.properties.BANK_INFO, 'Tipo')]
+      } : {}
+    },
+
+    partyBankAccount() {
+      return this.ticketParties.filter(partie => {
+        return partie.documentNumber === this.bankAccount.document && partie.polarity === 'CLAIMANT' && Object.keys(partie).includes('bankAccountsDto')
+      }).map(({ bankAccountsDto }) => (bankAccountsDto || []))
+    },
+
+    showRegisterBankAccountButton() {
+      return this.isBankAccountCheckout && this.partyBankAccount.length && !this.partyBankAccount.filter(baccounts => {
+        return baccounts.filter(baccount => this.isSameBankAccount(baccount, this.bankAccount)).length
+      }).length
+    },
+
+    needAssociate() {
+      if (this.partyBankAccount.length) {
+        return this.partyBankAccount
+          .find(baccounts => baccounts
+            .filter(baccount => baccount.associatedInDispute))
+          .filter(baccount => !baccount.associatedInDispute && this.isSameBankAccount(baccount, this.bankAccount))
+      } else {
+        return []
+      }
     },
 
     message() {
@@ -141,6 +250,73 @@ export default {
 
   mounted() {
     this.$set(this.value, 'renderCompleted', true)
+  },
+
+  methods: {
+    ...mapActions([
+      'getTicketOverviewParties',
+      'setTicketRoleBankAccount',
+      'createTicketRoleBankAccount'
+    ]),
+
+    isSameBankAccount(baccount = {}, bankAccount) {
+      return baccount.agency === bankAccount.agency &&
+        baccount.number === bankAccount.number &&
+        baccount.bank === bankAccount.bank &&
+        baccount.type === bankAccount.type
+    },
+
+    registerBankAccount() {
+      this.$refs.partyBankAccountDialog.openBankAccountDialog(this.bankAccount)
+    },
+
+    handleAddAccount(model) {
+      if (model.account.type === 'SAVING' && model.associate) {
+        this.$refs.savingAccountAlert.open(model)
+      } else {
+        this.addBankAccount(model)
+      }
+    },
+
+    addBankAccount({ account, associate }) {
+      const { cpfCnpj } = this.$options.filters
+      const disputeId = Number(this.$route.params.id)
+
+      const party = this.ticketParties.find(({ documentNumber, polarity }) => cpfCnpj(documentNumber) === cpfCnpj(account.document) && polarity === 'CLAIMANT')
+      const personId = party.person.id
+
+      console.table({ account, personId, disputeId })
+
+      this.createTicketRoleBankAccount({ account, personId, disputeId }).then(response => {
+        if (associate) {
+          const baccount = response.bankAccounts.find(baccount => {
+            return baccount.agency === account.agency &&
+              baccount.document === account.document &&
+              baccount.number === account.number &&
+              baccount.bank === account.bank &&
+              baccount.type === account.type
+          })
+
+          this.setTicketRoleBankAccount({ bankAccountId: baccount.id, personId, disputeId })
+        }
+      }).finally(() => {
+        this.hideBankAccountDialog()
+      })
+    },
+
+    assicateBankAccount() {
+      const disputeId = Number(this.$route.params.id)
+
+      this.needAssociate.forEach(account => {
+        const { personId, id } = account
+
+        this.setTicketRoleBankAccount({ bankAccountId: id, personId, disputeId })
+      })
+    },
+
+    hideBankAccountDialog() {
+      this.$refs.partyBankAccountDialog.closeDialog()
+    }
   }
 }
 </script>
@@ -185,6 +361,19 @@ export default {
 
     .negotiator-container__about__icon {
       width: 14px;
+    }
+  }
+
+  .negotiator-container__checkout_btn {
+    display: flex;
+    margin: 0 auto;
+
+    &.has-error {
+      color: $--color-danger;
+    }
+
+    &.registered {
+      color: $--color-success;
     }
   }
 }
