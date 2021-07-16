@@ -732,5 +732,8 @@
     "WEEKLY": "Semanal",
     "FORTNIGHT": "Quinzenal",
     "MONTHLY": "Mensal"
+  },
+  "labels": {
+    "dispute": "disputa | disputas"
   }
 }

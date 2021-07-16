@@ -21,7 +21,19 @@
             target="_blank"
             @click="openDocumentInNewTab"
           >
-            {{ title }}
+            <div v-if="step !== 3">
+              {{ title }}
+            </div>
+            <div
+              v-else
+            >
+              <div
+                v-for="(lineTitle, index) in title"
+                :key="`${lineTitle}+${index}`"
+              >
+                {{ lineTitle }}
+              </div>
+            </div>
             <sup>
               <jus-icon
                 icon="external-link"
@@ -262,19 +274,33 @@
           </el-form>
         </div>
         <!-- FEEDBACK DE ASSINATURAS -->
+        <!-- TODO -->
         <div v-if="step === 3">
           <div
             v-for="(signer, index) in signers"
             :key="index"
             class="jus-protocol-dialog__status"
           >
-            <jus-avatar-user :name="signer.name" />
             <div class="jus-protocol-dialog__status-role">
-              {{ signer.name }}<br>
-              {{ signer.email }}
+              <div class="jus-protocol-dialog__status-role-name">
+                {{ signer.name }}<br>
+              </div>
+              <div class="jus-protocol-dialog__status-role-email">
+                {{ signer.email }}
+              </div>
             </div>
             <div class="jus-protocol-dialog__status-icon">
               <span v-if="signer.signed">Assinado <jus-icon icon="success" /></span>
+              <el-button
+                v-else-if="isThamirisSigner(signer)"
+                :size="buttonSize"
+                icon="el-icon-thumb"
+                type="success"
+                style="font-weight: bold"
+                @click="signDraft(signer)"
+              >
+                ASSINAR MINUTA AQUI
+              </el-button>
               <span v-else>Aguardando assinatura</span>
             </div>
           </div>
@@ -297,37 +323,32 @@
         slot="footer"
         class="dialog-footer"
       >
-        <el-button
-          v-if="![0, 4].includes(step)"
-          :disabled="loading"
-          icon="el-icon-delete"
-          plain
-          :size="buttonSize"
-          type="danger"
-          @click="deleteDocument"
-        >
-          Excluir Minuta
-        </el-button>
-        <el-button
-          v-if="step !== 4"
-          :disabled="loading"
-          :size="buttonSize"
-          plain
-          @click="visible = false"
-        >
-          {{ [3, 4].includes(step) ? 'Fechar' : 'Cancelar' }}
-        </el-button>
         <el-tooltip
           v-if="document.canEdit && [2, 3, 4].includes(step)"
           content="Volta documento para edição."
         >
           <el-button
             :disabled="loading"
-            type="secondary"
+            type="primary"
+            icon="el-icon-refresh-left"
             :size="buttonSize"
             @click="backDocumentToEditing"
           >
             Voltar para edição
+          </el-button>
+        </el-tooltip>
+        <el-tooltip
+          v-if="step === 3"
+          content="Baixar minuta."
+        >
+          <el-button
+            v-loading="loadingDownload"
+            icon="el-icon-download"
+            type="primary"
+            :size="buttonSize"
+            @click="downloadDocument"
+          >
+            Baixar
           </el-button>
         </el-tooltip>
         <el-button
@@ -358,20 +379,6 @@
           Enviar para Assinatura
         </el-button>
         <el-tooltip
-          v-if="step === 3"
-          content="Baixar minuta."
-        >
-          <el-button
-            v-loading="loadingDownload"
-            icon="el-icon-download"
-            type="primary"
-            :size="buttonSize"
-            @click="downloadDocument"
-          >
-            Baixar
-          </el-button>
-        </el-tooltip>
-        <el-tooltip
           v-if="canResendNotification && step === 3"
           content="Reenvia notificação para todos os contatos que ainda não assinaram a minuta."
         >
@@ -393,6 +400,29 @@
           @click="visualizePdf"
         >
           Visualizar
+        </el-button>
+        <el-button
+          v-if="![0, 4].includes(step)"
+          :disabled="loading"
+          :size="buttonSize"
+          type="danger"
+          @click="deleteDocument"
+        >
+          <i
+            class="el-icon-delete"
+            style="color: white; margin-right: 4px;"
+          />
+          Excluir Minuta
+        </el-button>
+        <el-button
+          v-if="step !== 4"
+          :disabled="loading"
+          :size="buttonSize"
+          plain
+          type="danger"
+          @click="visible = false"
+        >
+          {{ [3, 4].includes(step) ? 'Fechar' : 'Cancelar' }}
         </el-button>
       </div>
     </el-dialog>
@@ -445,6 +475,21 @@
         </el-button>
       </span>
     </el-dialog>
+    <el-dialog
+      :visible.sync="signDraftVisible"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      :show-close="true"
+      append-to-body
+      width="100%"
+    >
+      <iframe
+        class="iframe-dialog"
+        :src="disputeProtocol.urlToSign"
+        frameborder="0"
+        allowfullscreen
+      />
+    </el-dialog>
   </div>
 </template>
 
@@ -479,6 +524,7 @@ export default {
       loadingDownload: false,
       loadingChooseRecipients: false,
       confirmChooseRecipientsVisible: false,
+      signDraftVisible: false,
       fullscreen: false,
       models: [],
       emails: {},
@@ -515,12 +561,15 @@ export default {
           { required: true, message: 'Campo obrigatório', trigger: 'submit' }
         ]
       },
-      isLowHeight: false
+      isLowHeight: false,
+      innerWidth: window.innerWidth
     }
   },
   computed: {
     ...mapGetters({
-      defaultSigners: 'availableSigners'
+      defaultSigners: 'availableSigners',
+      accountEmail: 'accountEmail',
+      disputeProtocol: 'getDisputeProtocol'
     }),
     disputeRoles() {
       return this.dispute.disputeRoles
@@ -582,11 +631,12 @@ export default {
         case 1: return 'Visualização da Minuta'
         case 2: return 'Enviar Minuta'
         case 3:
-        case 4: return this.document.name
+        case 4: return this.handleTitle(this.document.name)
         default: return 'Minuta'
       }
     },
     width() {
+      if (this.innerWidth <= 950) return '100%'
       if (this.step === 1 && this.fullscreen === true) {
         return '100%'
       }
@@ -652,9 +702,15 @@ export default {
           this.showARoleButton = false
         })
       }
+    },
+    loading(value) {
+      console.log(value)
     }
   },
   mounted() {
+    window.addEventListener('resize', () => {
+      this.innerWidth = window.innerWidth
+    })
     if (IS_SMALL_WINDOW) {
       this.isLowHeight = true
       this.fullscreen = true
@@ -670,7 +726,8 @@ export default {
       'setDocumentSigners',
       'cleanSelectedSigners',
       'cleanSelectedSigners',
-      'fillerDisputeRole'
+      'fillerDisputeRole',
+      'getDisputeProtocol'
     ]),
     disputeRolesFiller() {
       return new Promise((resolve, reject) => {
@@ -1040,6 +1097,29 @@ export default {
     },
     changeFullscreen() {
       this.fullscreen = !this.fullscreen
+    },
+    handleTitle(title) {
+      if (title.includes('_-_')) {
+        const words = title.split('_-_')
+        const firstLine = words[0].replaceAll('_', ' ') + ' - ' + words[1].replaceAll('_', ' ')
+        const secondLine = words[2].replaceAll('_', ' ') + ' - ' + words[3].replaceAll('_', ' ')
+        return [firstLine, secondLine]
+      } else {
+        return [title, '']
+      }
+    },
+    isThamirisSigner(signer) {
+      const isThamirisSigner = this.dispute.disputeRoles.filter((role) => {
+        return role.roles.includes('NEGOTIATOR')
+      }).filter(t => {
+        return t.emails.filter(email => email.address === signer.email).length > 0
+      }).length > 0
+      const isThamirisEmail = signer.email === this.accountEmail
+      return isThamirisSigner && isThamirisEmail
+    },
+    signDraft(signer) {
+      this.getDisputeProtocol({ disputeId: this.dispute.id, docNumber: signer.documentNumber })
+      this.signDraftVisible = true
     }
   }
 }
@@ -1052,8 +1132,15 @@ export default {
   .jus-protocol-dialog__header {
     padding-top: 8px;
     .jus-protocol-dialog__title {
+      display: flex;
+      align-content: center;
+      align-items: center;
+      text-align: center;
+      width: 100%;
+      color: $--color-black;
       font-weight: bold;
       font-size: 20px;
+      // margin: 30px 8vw 0px 8vw;
     }
     .jus-protocol-dialog__dispute-link-icon {
       width: 16px;
@@ -1177,14 +1264,16 @@ export default {
   .jus-protocol-dialog__status {
     display: flex;
     align-items: center;
-    padding: 36px 8px;
+    justify-content: space-between;
+    padding: 24px 8px;
+    margin: 0px 10vw;
     &:hover {
       background-color: #f6f6f6;
     }
   }
   .jus-protocol-dialog__status-icon {
     color: $--color-text-secondary;
-    margin-left: auto;
+    // margin-left: auto;
     img {
       width: 14px;
       vertical-align: middle;
@@ -1192,7 +1281,13 @@ export default {
     }
   }
   .jus-protocol-dialog__status-role {
+    display: flex;
+    flex-direction: column;
     margin-left: 10px;
+    font-weight: 600;
+    &-name {
+      color: $--color-primary;
+    }
   }
   &__confirm-recipients {
     display: flex;
@@ -1221,5 +1316,16 @@ export default {
     width: 100%;
     height: 99%;
   }
+  .dialog-footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-bottom: 18px;
+  }
+}
+.iframe-dialog {
+  width: 100%;
+  height: 80vh;
+  margin-top: 20px;
 }
 </style>

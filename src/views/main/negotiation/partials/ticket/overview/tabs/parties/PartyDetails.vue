@@ -96,9 +96,8 @@
           placement="left"
           content="Ver mais informações"
         >
-          <!-- TODO: Componente de busca no CNA. -->
           <el-popover
-            v-if="isLawyer && !resumedState.isVexatious && false"
+            v-if="isLawyer && !resumedState.isVexatious"
             :ref="`popover-${party.name}`"
             popper-class="party-details__info-popover-lawyer"
             :placement="'top-end'"
@@ -665,8 +664,12 @@ export default {
     oabMask(value = '') {
       const oab = value?.replace(/[^\w*]/g, '').toUpperCase()
 
+      console.log(oab, oab.charAt(4))
+
       if (/[ABDENPabdenp]/.test(oab.charAt(2))) {
         return '##D.###/AA'
+      } else if (/[A-Z]/.test(oab.charAt(4))) {
+        return '#.###/AA'
       } else if (/[A-Z]/.test(oab.charAt(5))) {
         return '##.###/AA'
       } else {

@@ -5,6 +5,13 @@ Vue.filter('oab', function(value) {
   let template = 'A.B/C'
   const oabValue = value.replace(/[-/.] /, '')
 
+  if (oabValue.length === 6) {
+    return template
+      .replace('A', oabValue.substr(0, 1))
+      .replace('B', oabValue.substr(1, 3))
+      .replace('C', oabValue.substr(4, 2))
+  }
+
   if (oabValue.length === 7) {
     return template
       .replace('A', oabValue.substr(0, 2))
@@ -17,6 +24,7 @@ Vue.filter('oab', function(value) {
       .replace('B', oabValue.substr(3, 3))
       .replace('C', oabValue.substr(6, 2))
   }
+
   if (![7, 8].includes(oabValue.length)) {
     template = value.replace('null', '')
   }

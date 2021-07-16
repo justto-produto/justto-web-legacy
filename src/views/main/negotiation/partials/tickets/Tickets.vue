@@ -7,15 +7,30 @@
       target-path="negotiation"
       :active-tab="activeTab"
     />
+
+    <span
+      class="left-arrow"
+      @click="handlePreviousScroll()"
+    >
+      <i class="el-icon-arrow-left" />
+    </span>
+
+    <span
+      class="right-arrow"
+      @click="handleNextScroll()"
+    >
+      <i class="el-icon-arrow-right" />
+    </span>
+
     <el-tabs
+      ref="tabs"
       v-model="activeTab"
       class="tickets-container__tabs"
     >
       <el-tab-pane
-        v-for="tab in tabs"
+        v-for="tab in filteredTabs"
         :key="tab.name"
         :name="tab.name"
-        stretch
         lazy
       >
         <span slot="label">
@@ -29,6 +44,10 @@
             class="el-badge--absolute"
           />
         </span>
+
+        <div class="tickets-container__counter">
+          {{ tickets.content.length }} {{ $tc('labels.dispute', tickets.content.length) }}
+        </div>
 
         <ul
           v-if="activeTab === tab.name"
@@ -123,6 +142,13 @@ export default {
       ]
     },
 
+    filteredTabs() {
+      return [
+        ...this.tabs.slice(this.activeTabIndex - 1, this.tabs.length + 1),
+        ...this.tabs.slice(0, this.activeTabIndex - 1)
+      ]
+    },
+
     activeTab: {
       get() {
         return this.ticketsActiveTab
@@ -130,6 +156,7 @@ export default {
       set(value) {
         this.setTicketsActiveTab(value)
         this.handleChangeTab({ name: value })
+        this.resetTabsScroll()
       }
     },
 
@@ -157,6 +184,10 @@ export default {
     eventBus.$on(events.TICKET_PREVIOUS_TAB.callback, this.handlePreviousTab)
     eventBus.$on(events.TICKET_DOWN.callback, this.handleNextTicket)
     eventBus.$on(events.TICKET_UP.callback, this.handlePreviousTicket)
+
+    setTimeout(() => {
+      this.$forceUpdate()
+    }, 250)
   },
 
   beforeDestroy() {
@@ -178,6 +209,39 @@ export default {
     ]),
 
     ...mapMutations(['setPreventFilters', 'setPreventSocket']),
+
+    resetTabsScroll() {
+      this.$refs.tabs.$el.childNodes[0].childNodes[0].childNodes[2].scroll(0, 0)
+    },
+
+    handlePreviousScroll() {
+      const tabs = this.$refs.tabs.$el.childNodes[0].childNodes[0].childNodes[2] // document.querySelector('div.el-tabs__header.is-top div .el-tabs__nav-scroll')
+      const step = tabs.scrollWidth / 3
+
+      console.table({
+        scrollLeft: tabs.scrollLeft,
+        scrollWidth: tabs.scrollWidth,
+        step,
+        current: tabs.scrollLeft - step
+      })
+
+      if ((tabs.scrollLeft) <= 0) {
+        tabs.scroll(tabs.scrollWidth, 0)
+      } else {
+        tabs.scroll(tabs.scrollLeft - step, 0)
+      }
+    },
+
+    handleNextScroll() {
+      const tabs = this.$refs.tabs.$el.childNodes[0].childNodes[0].childNodes[2] // document.querySelector('div.el-tabs__header.is-top div .el-tabs__nav-scroll')
+      const step = tabs.scrollWidth / 3
+
+      if ((tabs.scrollLeft + (step * 2)) > tabs.scrollWidth) {
+        tabs.scroll(0, 0)
+      } else {
+        tabs.scroll(tabs.scrollLeft + step, 0)
+      }
+    },
 
     handleChangeTab(tab) {
       if (!this.preventFilters) {
@@ -235,12 +299,21 @@ export default {
       if (this.activeTabIndex >= 0 && this.activeTabIndex < (this.tabs.length - 1)) {
         const { name } = this.tabs[this.activeTabIndex + 1]
         this.setTicketsActiveTab(name)
+      } else if (this.activeTabIndex === (this.tabs.length - 1)) {
+        const { name } = this.tabs[0]
+        this.setTicketsActiveTab(name)
       }
     },
 
     handlePreviousTab() {
       if (this.activeTabIndex > 0 && this.activeTabIndex <= (this.tabs.length - 1)) {
         const { name } = this.tabs[this.activeTabIndex - 1]
+        this.setTicketsActiveTab(name)
+      } else if (this.activeTabIndex === 0) {
+        const { name } = this.tabs[this.tabs.length - 1]
+        this.setTicketsActiveTab(name)
+      } else if (this.activeTabIndex === (this.tabs.length - 1)) {
+        const { name } = this.tabs[0]
         this.setTicketsActiveTab(name)
       }
     },
@@ -290,9 +363,24 @@ export default {
     flex-direction: column;
   }
 
+  .tickets-container__counter {
+    text-align: center;
+
+    font-weight: 600;
+    background-color: #F4EFFF;
+    padding: 4px 0 6px;
+
+    font-size: 12px;
+
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+
   .tickets-container__list {
     list-style: none;
-    margin: 0 ;
+    margin: 0;
     padding: 0;
   }
 }
@@ -302,17 +390,42 @@ export default {
 @import '@/styles/colors.scss';
 
 .tickets-container {
+  position: relative;
+
+  .left-arrow,
+  .right-arrow {
+    position: absolute;
+    top: 0;
+    cursor: pointer;
+    z-index: 2;
+
+    & > i {
+      font-size: 18px !important;
+    }
+  }
+
+  .left-arrow {
+    left: 0;
+    margin: 64px 0 0 14px;
+    margin: 63px 0 0 4px;
+  }
+
+  .right-arrow {
+    right: 0;
+    margin: 64px 12px 0 0;
+    margin: 63px 0px 0 0;
+  }
+
   .tickets-container__tabs {
     .el-tabs__content {
       overflow: auto;
-      // .tickets-container__tab-pane {
-      //   height: 100%;
-      // }
     }
   }
 
   .el-tabs__header {
-    padding: 12px;
+    /*padding: 12px;*/
+    padding-left: 0 !important;
+    padding-right: 0 !important;
     margin: 0;
     border-bottom: 2px solid $--color-light-gray;
     border-top: 2px solid $--color-light-gray;
@@ -320,6 +433,11 @@ export default {
     .el-tabs__nav-prev,
     .el-tabs__nav-next {
       font-size: 18px !important;
+      display: none;
+    }
+
+    .el-tabs__nav-scroll {
+      scroll-behavior: smooth;
     }
 
     @media (max-height: 900px) {
