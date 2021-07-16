@@ -37,7 +37,6 @@
           placement="left"
           content="Ver mais informações"
         >
-          <!-- Componente de busca na CNA -->
           <el-popover
             v-if="isOabContacts"
             :ref="`popover-${contact.number}-${contact.state}`"
@@ -99,50 +98,6 @@
         {{ expandLinkText }}
       </a>
     </div>
-    <!-- <el-dialog
-      :close-on-click-modal="false"
-      :show-close="false"
-      :close-on-press-escape="false"
-      :visible.sync="LGPDDialogVisible"
-      append-to-body
-      width="604px"
-    >
-      <div class="party-contacts__lgpd-header">
-        <jusIcon
-          class="party-contacts__lgpd-header__icon"
-          icon="alert-active"
-        />
-        <div class="party-contacts__lgpd-header__label">
-          ATENÇÃO
-        </div>
-      </div>
-      <div class="party-contacts__lgpd-body">
-        <span class="party-contacts__lgpd-body-item-alert">Alerta sobre Lei Geral de Proteção de Dados</span>
-        <span class="party-contacts__lgpd-body-item">
-          <span class="party-contacts__lgpd-body-item-person-name">
-            {{ partyName.toLowerCase() }}
-          </span>
-          optou por não ser contatado nesse {{ isPhoneNumber ? 'telefone' : 'e-mail' }}!</span>
-        <span class="party-contacts__lgpd-body-item">Ao realizar essa ação voce está violando as regras da LGPD.</span>
-        <strong class="party-contacts__lgpd-body-item">Quer mesmo continuar?</strong>
-      </div>
-      <span class="party-contacts__lgpd-footer">
-        <el-button
-          :disabled="modalLoading"
-          plain
-          @click="LGPDDialogVisible = false"
-        >
-          Cancelar
-        </el-button>
-        <el-button
-          :loading="modalLoading"
-          type="primary"
-          @click="emitClick(currentContactValue, currentValid)"
-        >
-          Continuar
-        </el-button>
-      </span>
-    </el-dialog> -->
   </article>
 </template>
 
