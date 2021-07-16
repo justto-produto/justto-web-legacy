@@ -124,11 +124,13 @@ export default {
         return partie.documentNumber === this.bankAccount.document && partie.polarity === 'CLAIMANT' && Object.keys(partie).includes('bankAccountsDto')
       }).map(({ bankAccountsDto }) => (bankAccountsDto || []))
 
-      return ['NEGOTIATOR_CHECKOUT'].includes(this.interaction.type) && accounts.length && !accounts.filter(baccount => {
-        return baccount.agency === this.bankAccount.agency &&
-            baccount.number === this.bankAccount.number &&
-            baccount.bank === this.bankAccount.bank &&
-            baccount.type === this.bankAccount.type
+      return ['NEGOTIATOR_CHECKOUT'].includes(this.interaction.type) && accounts.length && !accounts.filter(baccounts => {
+        return baccounts.filter(baccount => (
+          baccount.agency === this.bankAccount.agency &&
+          baccount.number === this.bankAccount.number &&
+          baccount.bank === this.bankAccount.bank &&
+          baccount.type === this.bankAccount.type
+        )).length
       }).length
     },
 
