@@ -4,13 +4,6 @@
     class="communication-ticket-item-container"
     @click="handleSelectTicket"
   >
-    <JusAvatarUser
-      :name="plaintiffName"
-      :status="ticket.plaintiff ? ticket.plaintiff.status : ''"
-      class="communication-ticket-item-container__avatar"
-      size="sm"
-      purple
-    />
     <div class="communication-ticket-item-container__resume">
       <div class="communication-ticket-item-container__parties">
         <span
@@ -39,6 +32,10 @@
         </el-tooltip>
       </div>
     </div>
+    <div
+      v-if="ticket.plaintiff && ticket.plaintiff.status === 'ONLINE'"
+      class="communication-ticket-item-container__online"
+    />
     <div
       v-if="activeTab === 'engagement'"
       class="communication-ticket-item-container__status"
@@ -162,6 +159,17 @@ export default {
     }
 
   }
+
+  .communication-ticket-item-container__online {
+    position: absolute;
+    top: 25px;
+    left: 15px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: $--color-success;
+  }
+
   .communication-ticket-item-container__gray {
     position: absolute;
     bottom: 0;
