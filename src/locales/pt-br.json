@@ -732,7 +732,7 @@
     "WEEKLY": "Semanal",
     "FORTNIGHT": "Quinzenal",
     "MONTHLY": "Mensal",
-    "INACTIVE": "Inativo | Inativa"
+    "INACTIVE": "Desabilitado | Desabilitada"
   },
   "labels": {
     "dispute": "disputa | disputas"
