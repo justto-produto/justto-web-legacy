@@ -81,13 +81,15 @@ export default {
       'getQuickReplyTemplates',
       'getTicketOverviewParties',
       'getTicketMetadata',
-      'setDisputeProperty'
+      'setDisputeProperty',
+      'getTicketOverviewInfo'
     ]),
 
     fetchData(id) {
       this.socketAction('subscribe', id)
       this.cleanRecentMessages()
       this.getTicketOverview(id).catch(error => this.$jusNotification({ error }))
+      this.getTicketOverviewInfo(id)
       this.getTicketOverviewParties(id).then(() => {
         this.getTicketMetadata(id).then(() => {
           this.getAssociatedContacts(id).then(res => {

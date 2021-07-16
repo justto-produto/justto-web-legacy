@@ -72,6 +72,12 @@
               :value="type.type"
             />
           </el-select>
+          <span
+            v-if="accountTypes.length <= 1"
+            class="form-item-alert"
+          >
+            Disputa só aceita cadastro de conta corrente.
+          </span>
         </el-form-item>
 
         <el-form-item>
@@ -254,6 +260,11 @@ export default {
             .el-input {
               width: 102%;
             }
+          }
+
+          .form-item-alert {
+            font-size: 10px;
+            font-style: oblique;
           }
         }
       }

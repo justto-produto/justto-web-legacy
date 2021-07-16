@@ -75,7 +75,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'PartyBankAccounts',
@@ -113,6 +113,10 @@ export default {
   }),
 
   computed: {
+    ...mapGetters({
+      ticketInfo: 'getTicketOverviewInfo'
+    }),
+
     disputeId() {
       return Number(this.$route.params.id)
     },
@@ -140,11 +144,17 @@ export default {
       updateBankAccount: 'updateTicketRoleBankAccount'
     }),
 
-    handleClick({ id, personId }) {
-      if (this.selectedAccounts.includes(id)) {
-        this.updateBankAccounts([], [{ id, personId }])
+    handleClick(account) {
+      const { id, personId, type } = account
+
+      if (type === 'SAVING' && this.ticketInfo.denySavingDeposit) {
+        this.$refs.savingAccountAlert.open()
       } else {
-        this.updateBankAccounts([{ id, personId }], [])
+        if (this.selectedAccounts.includes(id)) {
+          this.updateBankAccounts([], [{ id, personId }])
+        } else {
+          this.updateBankAccounts([{ id, personId }], [])
+        }
       }
     },
 
