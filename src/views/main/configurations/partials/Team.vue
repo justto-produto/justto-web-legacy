@@ -330,7 +330,8 @@ export default {
     flex-direction: column;
     border: none;
 
-    &:before { display: none; }
+    &::before { display: none; }
+    &::after { display: none; }
 
     .el-table__header-wrapper {
       font-size: 16px;
