@@ -702,6 +702,9 @@ export default {
           this.showARoleButton = false
         })
       }
+    },
+    loading(value) {
+      console.log(value)
     }
   },
   mounted() {
@@ -1096,10 +1099,14 @@ export default {
       this.fullscreen = !this.fullscreen
     },
     handleTitle(title) {
-      const words = title.split('_-_')
-      const firstLine = words[0].replaceAll('_', ' ') + ' - ' + words[1].replaceAll('_', ' ')
-      const secondLine = words[2].replaceAll('_', ' ') + ' - ' + words[3].replaceAll('_', ' ')
-      return [firstLine, secondLine]
+      if (title.includes('_-_')) {
+        const words = title.split('_-_')
+        const firstLine = words[0].replaceAll('_', ' ') + ' - ' + words[1].replaceAll('_', ' ')
+        const secondLine = words[2].replaceAll('_', ' ') + ' - ' + words[3].replaceAll('_', ' ')
+        return [firstLine, secondLine]
+      } else {
+        return [title, '']
+      }
     },
     isThamirisSigner(signer) {
       const isThamirisSigner = this.dispute.disputeRoles.filter((role) => {
