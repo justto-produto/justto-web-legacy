@@ -1102,12 +1102,13 @@ export default {
       return [firstLine, secondLine]
     },
     isThamirisSigner(signer) {
-      const isThamiris = this.dispute.disputeRoles.filter((role) => {
+      const isThamirisSigner = this.dispute.disputeRoles.filter((role) => {
         return role.roles.includes('NEGOTIATOR')
-      }).map(item => item.email).includes(signer.email)
+      }).filter(t => {
+        return t.emails.filter(email => email.address === signer.email).length > 0
+      }).length > 0
       const isThamirisEmail = signer.email === this.accountEmail
-      const isThamirisSigner = isThamiris && isThamirisEmail
-      return isThamirisSigner
+      return isThamirisSigner && isThamirisEmail
     },
     signDraft(signer) {
       this.getDisputeProtocol({ disputeId: this.dispute.id, docNumber: signer.documentNumber })
