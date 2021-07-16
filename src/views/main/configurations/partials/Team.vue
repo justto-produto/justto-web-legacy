@@ -96,7 +96,7 @@
       <el-table-column
         v-if="isJustto"
         prop="personProperties"
-        label="Envio de relatôrios"
+        label="Envio de relatórios"
         center
       >
         <el-table-column
