@@ -96,7 +96,6 @@
           placement="left"
           content="Ver mais informações"
         >
-          <!-- TODO: Componente de busca no CNA. -->
           <el-popover
             v-if="isLawyer && !resumedState.isVexatious"
             :ref="`popover-${party.name}`"
