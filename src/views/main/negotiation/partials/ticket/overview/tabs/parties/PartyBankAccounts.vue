@@ -46,7 +46,7 @@
 
     <PartyBankAccountDialog
       ref="partyBankAccountDialog"
-      @create="addBankAccount"
+      @create="handleNewBankAccount"
       @edit="editBankAccount"
     >
       <a
@@ -57,6 +57,7 @@
         Adicionar
       </a>
     </PartyBankAccountDialog>
+
     <a
       v-if="accountsLength"
       class="bank-accounts__link"
@@ -64,6 +65,12 @@
     >
       {{ expandLinkText }}
     </a>
+
+    <SavingsAccountAlert
+      ref="savingAccountAlert"
+      @save="addBankAccount"
+      @close="closeBankAccountDialog()"
+    />
   </article>
 </template>
 
@@ -72,8 +79,10 @@ import { mapActions } from 'vuex'
 
 export default {
   name: 'PartyBankAccounts',
+
   components: {
-    PartyBankAccountDialog: () => import('./PartyBankAccountDialog')
+    PartyBankAccountDialog: () => import('./PartyBankAccountDialog'),
+    SavingsAccountAlert: () => import('@/components/dialogs/SavingsAccountAlert.vue')
   },
 
   props: {
@@ -107,13 +116,16 @@ export default {
     disputeId() {
       return Number(this.$route.params.id)
     },
+
     accountsLength() {
       return this.accounts.length
     },
+
     expandLinkText() {
       const { isAllAccountsVisible, accountsLength } = this
       return !isAllAccountsVisible ? `Ver dados bancários (+${accountsLength})` : `Esconder dados bancários (-${accountsLength})`
     },
+
     selectedAccounts() {
       return this.accounts.filter(({ associatedInDispute }) => associatedInDispute).map(({ id }) => id)
     }
@@ -152,8 +164,18 @@ export default {
       })
     },
 
+    handleNewBankAccount(model) {
+      if (model.account?.type === 'SAVING' && model.associate) {
+        this.$refs.savingAccountAlert.open(model)
+      } else {
+        this.addBankAccount(model)
+      }
+    },
+
     addBankAccount({ account, associate }) {
       const { disputeId, personId } = this
+
+      console.log(account, associate)
 
       this.createBankAccount({ disputeId, account, personId }).then(response => {
         if (associate) {

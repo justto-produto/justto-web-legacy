@@ -61,6 +61,7 @@
         >
           <el-select
             v-model="account.type"
+            :disabled="accountTypes.length <= 1"
             class="select-full-width"
             size="mini"
           >

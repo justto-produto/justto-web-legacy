@@ -19,9 +19,8 @@
     </div>
 
     <div class="savings__account__body">
-      Você está adicionando uma conta poupança.
-      Mesmo sendo adicionada aos dados bancários
-      ela não pode ser associada à disputa.
+      Esta disputa foi configurada para não aceitar depósito em conta poupança.
+      Por favor, associe apenas conta corrente.
     </div>
 
     <div
@@ -37,13 +36,13 @@
         Fechar
       </el-button>
 
-      <el-button
+      <!-- <el-button
         type="primary"
         size="small"
         @click="save()"
       >
         Adicionar conta
-      </el-button>
+      </el-button> -->
     </div>
   </el-dialog>
 </template>
