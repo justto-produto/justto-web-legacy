@@ -2,6 +2,7 @@ import { axiosDispatch } from '@/utils/'
 
 const accountsPath = 'api/accounts'
 const personsPath = 'api/persons'
+const disputesPath = 'api/disputes'
 
 const personActions = {
   SOCKET_REFRESH_PERSON_STATUS({ commit }, document) {
@@ -82,6 +83,17 @@ const personActions = {
     return axiosDispatch({
       url: `api/fusion-runner/enrich/person/${personId}`,
       method: 'PATCH'
+    })
+  },
+
+  setPersonProperties({ _ }, { properties, personId }) {
+    // TODO: SAAS-4200 Implementar action/mutations que atualiza as properties da person
+    return axiosDispatch({
+      url: `${disputesPath}/person/${personId}/properties`,
+      method: 'PUT',
+      data: properties,
+      mutation: 'setMemberProperties',
+      payload: { properties, personId }
     })
   }
 }

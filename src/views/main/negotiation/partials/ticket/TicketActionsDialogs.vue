@@ -169,7 +169,6 @@
             rows="4"
             :maxlength="255"
           />
-
           <div style="text-align: right;">
             {{ offerForm.note.length }}/255
           </div>
