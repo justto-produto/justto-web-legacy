@@ -10,6 +10,7 @@
         class="el-input__icon el-icon-search"
       />
     </el-input>
+
     <article class="features-modules-container__list">
       <div
         v-for="feature in filteredFeatures"
@@ -21,10 +22,12 @@
             :icon="$t(`configurations.${feature.code}.icon`)"
             class="features-modules-container__header-icon"
           />
+
           <span class="features-modules-container__header-sub">
             <span>
               {{ $tc('configurations.value', feature.free) | capitalize }}
             </span>
+
             <i
               v-if="!feature.free"
               class="el-icon-question icon--active icon--pointer"
@@ -32,20 +35,24 @@
             />
           </span>
         </header>
+
         <div class="features-modules-container__body">
           <div class="features-modules-container__body-title">
             {{ feature.name }}
+
             <el-switch
               v-model="feature.active"
               :disabled="feature.alwaysActive"
               @change="handleToggleConfiguration($event, feature.id, feature.free)"
             />
           </div>
+
           <highlight
             :queries="[searchTerm]"
             class="features-modules-container__body-description"
             v-html="feature.description"
           />
+
           <a
             v-if="feature.active && hasConfiguration.includes(feature.code)"
             class="features-modules-container__body-button-link"
@@ -53,6 +60,7 @@
           >
             Configurar
           </a>
+
           <a
             v-else-if="hasConfiguration.includes(feature.code)"
             class="features-modules-container__body-button-link"
@@ -73,7 +81,7 @@
       ref="apiIntegrationDialog"
       :feature="getFeatureIdByCode('API_INTEGRATION')"
     />
-    <!-- <AutomaticMessagesDialog ref="automat  icMessagesDialog" /> -->
+    <AutomaticMessagesDialog ref="automaticMessagesDialog" />
     <CustomizeOdrAddressDialog ref="customizeOdrAddressDialog" />
     <BadFaithLitigantDialog ref="badFaithLitigantDialog" />
     <CommunicationBlockListDialog ref="communicationBlockListDialog" />
@@ -91,7 +99,7 @@ export default {
   components: {
     highlight: () => import('vue-text-highlight'),
     ApiIntegrationDialog: () => import('./FeaturesAndModulesDialogs/ApiIntegrationDialog'),
-    // AutomaticMessagesDialog: () => import('./FeaturesAndModulesDialogs/AutomaticMessagesDialog'),
+    AutomaticMessagesDialog: () => import('./FeaturesAndModulesDialogs/AutomaticMessagesDialog'),
     CustomizeOdrAddressDialog: () => import('./FeaturesAndModulesDialogs/CustomizeOdrAddressDialog'),
     BadFaithLitigantDialog: () => import('./FeaturesAndModulesDialogs/BadFaithLitigantDialog'),
     CommunicationBlockListDialog: () => import('./FeaturesAndModulesDialogs/CommunicationBlockListDialog'),
@@ -121,7 +129,8 @@ export default {
           'BAD_FAITH_LITIGANT',
           'COMMUNICATION_BLOCK_LIST',
           'DRAFT_MANAGEMENT',
-          'PRE_NEGOTIATION'
+          'PRE_NEGOTIATION',
+          'AUTOMATIC_MESSAGES'
         ],
         ...(this.isJusttoAdmin ? ['API_INTEGRATION'] : [])
       ]
@@ -169,6 +178,8 @@ export default {
         .replace(/([_][a-z])/g, (group) => group.toUpperCase().replace('_', ''))
 
       const ref = featureCodeCamelCase(featureCode) + 'Dialog'
+
+      console.log(ref)
 
       if (this.$refs[ref]) {
         this.$refs[ref].openFeatureDialog()
