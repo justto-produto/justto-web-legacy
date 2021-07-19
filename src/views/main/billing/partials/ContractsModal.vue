@@ -63,18 +63,6 @@
                 <el-form-item
                   label="Dias para vencimento da fatura"
                 >
-                  <!-- <el-select
-                    v-model="contract.invoiceDueDays"
-                    :disabled="isContractInactive(contract)"
-                    placeholder="Dia do mês"
-                  >
-                    <el-option
-                      v-for="(day, dayCount) in 29"
-                      :key="dayCount - 1"
-                      :label="day - 1"
-                      :value="day - 1"
-                    />
-                  </el-select> -->
                   <el-input-number
                     v-model="contract.invoiceDueDays"
                     :disabled="isContractInactive(contract)"
