@@ -101,6 +101,14 @@ const workspaceMutations = {
       payload[key] = value
     })
     Vue.set(state.workspace, 'apiIntegrationConfiguration', new ApiConfiguration(payload))
+  },
+
+  setMemberProperties(state, { payload: { properties, personId } }) {
+    state.workspace.team.forEach((member, memberIndex) => {
+      if (Number(member.personId) === Number(personId)) {
+        Vue.set(state.workspace.team[memberIndex], 'personProperties', properties)
+      }
+    })
   }
 }
 

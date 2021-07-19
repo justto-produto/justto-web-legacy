@@ -726,6 +726,14 @@
       "my-data": "Meus dados"
     }
   },
+  "reports": {
+    "UNKNOWN": "Desabilitado | Desabilitada",
+    "DAILY": "Diário | Diária",
+    "WEEKLY": "Semanal",
+    "FORTNIGHT": "Quinzenal",
+    "MONTHLY": "Mensal",
+    "INACTIVE": "Desabilitado | Desabilitada"
+  },
   "labels": {
     "dispute": "disputa | disputas"
   }

@@ -6,50 +6,54 @@
     destroy-on-close
     append-to-body
     :width="calcWidth"
+    @closed="close()"
   >
-    <div class="savings__account__header">
+    <div
+      slot="title"
+      class="savings__account__header"
+    >
       <i class="el-icon-warning" />
       <div>
         AVISO
       </div>
     </div>
+
     <div class="savings__account__body">
-      Você está adicionando uma conta poupança.
-      Mesmo sendo adicionada aos dados bancários
-      ela não pode ser associada à disputa.
+      Esta disputa foi configurada para não aceitar depósito em conta poupança.
+      Por favor, associe apenas conta corrente.
     </div>
-    <div class="savings__account__footer">
-      <el-button
-        type="primary"
-        size="small"
-        @click="save()"
-      >
-        ADICIONAR CONTA
-      </el-button>
+
+    <div
+      slot="footer"
+      class="savings__account__footer"
+    >
       <el-button
         type="danger"
         size="small"
         plain
         @click="close()"
       >
-        FECHAR
+        Fechar
       </el-button>
+
+      <!-- <el-button
+        type="primary"
+        size="small"
+        @click="save()"
+      >
+        Adicionar conta
+      </el-button> -->
     </div>
   </el-dialog>
 </template>
 
 <script>
 export default {
-  props: {
-    isVisible: {
-      type: Boolean,
-      required: true
-    }
-  },
-
   data() {
     return {
-      innerWidth: window.innerWidth
+      innerWidth: window.innerWidth,
+      transientModel: {},
+      isVisible: false
     }
   },
 
@@ -71,12 +75,19 @@ export default {
   },
 
   methods: {
+    open(model) {
+      this.transientModel = model
+      this.isVisible = true
+    },
+
     save() {
-      this.$emit('save')
+      this.$emit('save', this.transientModel)
       this.close()
     },
+
     close() {
       this.isVisible = false
+      this.transientModel = {}
     }
   }
 
@@ -85,25 +96,27 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/styles/colors.scss';
+
 .savings__account__header {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 10px;
   color: $--color-danger;
-  font-size: 20px;
+  font-size: 24px;
   font-weight: bold;
+
   & .el-icon-warning {
     margin-right: 8px;
   }
 }
 
 .savings__account__body {
-  margin: 10px 1.5vw 20px 1.5vw;
   text-align: center;
   font-weight: bold;
   color: $--color-black;
   font-size: 15px;
+  word-break: keep-all;
+  margin: -30px 0;
 }
 
 .savings__account__footer {

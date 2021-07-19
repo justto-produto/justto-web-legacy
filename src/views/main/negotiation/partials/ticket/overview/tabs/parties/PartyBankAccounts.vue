@@ -44,13 +44,20 @@
       </div>
     </div>
 
-    <a
-      v-if="(isAllAccountsVisible || !accountsLength) && !disabled"
-      class="bank-accounts__link"
-      @click="openBankAccountDialog()"
+    <PartyBankAccountDialog
+      ref="partyBankAccountDialog"
+      @create="handleNewBankAccount"
+      @edit="editBankAccount"
     >
-      Adicionar
-    </a>
+      <a
+        v-if="(isAllAccountsVisible || !accountsLength) && !disabled"
+        class="bank-accounts__link"
+        @click="openBankAccountDialog()"
+      >
+        Adicionar
+      </a>
+    </PartyBankAccountDialog>
+
     <a
       v-if="accountsLength"
       class="bank-accounts__link"
@@ -59,22 +66,25 @@
       {{ expandLinkText }}
     </a>
 
-    <PartyBankAccountDialog
-      ref="partyBankAccountDialog"
-      @create="addBankAccount"
-      @edit="editBankAccount"
+    <SavingsAccountAlert
+      ref="savingAccountAlert"
+      @save="addBankAccount"
+      @close="closeBankAccountDialog()"
     />
   </article>
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'PartyBankAccounts',
+
   components: {
-    PartyBankAccountDialog: () => import('./PartyBankAccountDialog')
+    PartyBankAccountDialog: () => import('./PartyBankAccountDialog'),
+    SavingsAccountAlert: () => import('@/components/dialogs/SavingsAccountAlert.vue')
   },
+
   props: {
     accounts: {
       type: Array,
@@ -99,24 +109,32 @@ export default {
   },
 
   data: () => ({
-    isAllAccountsVisible: false
+    isAllAccountsVisible: true
   }),
 
   computed: {
+    ...mapGetters({
+      ticketInfo: 'getTicketOverviewInfo'
+    }),
+
     disputeId() {
       return Number(this.$route.params.id)
     },
+
     accountsLength() {
       return this.accounts.length
     },
+
     expandLinkText() {
       const { isAllAccountsVisible, accountsLength } = this
       return !isAllAccountsVisible ? `Ver dados bancários (+${accountsLength})` : `Esconder dados bancários (-${accountsLength})`
     },
+
     selectedAccounts() {
       return this.accounts.filter(({ associatedInDispute }) => associatedInDispute).map(({ id }) => id)
     }
   },
+
   methods: {
     ...mapActions({
       linkAccount: 'setTicketRoleBankAccount',
@@ -126,11 +144,17 @@ export default {
       updateBankAccount: 'updateTicketRoleBankAccount'
     }),
 
-    handleClick({ id, personId }) {
-      if (this.selectedAccounts.includes(id)) {
-        this.updateBankAccounts([], [{ id, personId }])
+    handleClick(account) {
+      const { id, personId, type } = account
+
+      if (type === 'SAVING' && this.ticketInfo.denySavingDeposit) {
+        this.$refs.savingAccountAlert.open()
       } else {
-        this.updateBankAccounts([{ id, personId }], [])
+        if (this.selectedAccounts.includes(id)) {
+          this.updateBankAccounts([], [{ id, personId }])
+        } else {
+          this.updateBankAccounts([{ id, personId }], [])
+        }
       }
     },
 
@@ -150,10 +174,32 @@ export default {
       })
     },
 
-    addBankAccount(account) {
+    handleNewBankAccount(model) {
+      if (model.account?.type === 'SAVING' && model.associate) {
+        this.$refs.savingAccountAlert.open(model)
+      } else {
+        this.addBankAccount(model)
+      }
+    },
+
+    addBankAccount({ account, associate }) {
       const { disputeId, personId } = this
 
-      this.createBankAccount({ disputeId, account, personId }).then(_ => {
+      console.log(account, associate)
+
+      this.createBankAccount({ disputeId, account, personId }).then(response => {
+        if (associate) {
+          const baccount = response.bankAccounts.find(baccount => {
+            return baccount.agency === account.agency &&
+              baccount.document === account.document &&
+              baccount.number === account.number &&
+              baccount.bank === account.bank &&
+              baccount.type === account.type
+          })
+
+          this.linkAccount({ bankAccountId: baccount.id, personId, disputeId })
+        }
+
         this.$jusNotification({
           title: 'Yay!',
           dangerouslyUseHTMLString: true,
@@ -167,10 +213,22 @@ export default {
       })
     },
 
-    editBankAccount(account) {
+    editBankAccount({ account, associate }) {
       const { disputeId, personId } = this
 
-      this.updateBankAccount({ disputeId, account, personId }).then(_ => {
+      this.updateBankAccount({ disputeId, account, personId }).then(response => {
+        if (associate) {
+          const baccount = response.bankAccounts.find(baccount => {
+            return baccount.agency === account.agency &&
+              baccount.document === account.document &&
+              baccount.number === account.number &&
+              baccount.bank === account.bank &&
+              baccount.type === account.type
+          })
+
+          this.linkAccount({ bankAccountId: baccount.id, personId, disputeId })
+        }
+
         this.$jusNotification({
           title: 'Yay!',
           dangerouslyUseHTMLString: true,
