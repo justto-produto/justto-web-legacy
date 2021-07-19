@@ -13,8 +13,11 @@
           :value="interaction"
           :occurrence="value"
         />
+
+        <Recomendation v-if="showRecomendation" />
       </div>
     </div>
+
     <span
       v-if="showReply && !flat"
       :class="{ 'active-icon': isInRecipients }"
@@ -32,6 +35,7 @@
         @click="reply"
       />
     </span>
+
     <!-- Dialog de warning para LGPD -->
     <WarningLGPD
       :lgpd-dialog-visible="LGPDWarningDialogVisible"
@@ -44,6 +48,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+
 const negotiatorTypes = [
   'NEGOTIATOR_ACCESS',
   'NEGOTIATOR_PROPOSAL',
@@ -61,7 +66,8 @@ export default {
     MANUAL: () => import('./partials/Manual'),
     SCHEDULER: () => import('./partials/Scheduler'),
     NPS: () => import('./partials/Nps'),
-    WarningLGPD: () => import('@/components/dialogs/WarningLGPD')
+    WarningLGPD: () => import('@/components/dialogs/WarningLGPD'),
+    Recomendation: () => import('@/components/buttons/Recomendation.vue')
   },
   props: {
     value: {
@@ -162,6 +168,10 @@ export default {
         return this.interaction.message.parameters.SENDER
       }
       return null
+    },
+
+    showRecomendation() {
+      return this.isInboundInteraction // TODO: Adicionar restante das regras aqui.
     }
   },
 
@@ -208,7 +218,6 @@ export default {
   display: flex;
   gap: 6px;
   align-items: center;
-
   height: auto;
   margin: 10px 24px 0px 24px;
 
@@ -248,6 +257,7 @@ export default {
 
     .interaction-container__balloon-content {
       width: 100%;
+      position: relative;
     }
 
     &.INBOUND {
