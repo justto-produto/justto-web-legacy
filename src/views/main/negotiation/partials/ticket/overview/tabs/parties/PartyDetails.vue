@@ -287,6 +287,8 @@ import { mapActions, mapGetters } from 'vuex'
 import { isSimilarStrings } from '@/utils'
 import { isValid, strip } from '@fnando/cpf'
 
+import brazilianStates from '@/constants/brazilianStates'
+
 import preNegotiation from '@/utils/mixins/ticketPreNegotiation'
 import TicketTicketOverviewPartyResumed from '@/models/negotiations/overview/TicketOverviewPartyResumed'
 
@@ -518,6 +520,12 @@ export default {
       }
     },
 
+    isValidOab(oab) {
+      const oabState = oab.split('/')[1] || ''
+
+      return !(oab.length < 8 || oab.length > 10 || !brazilianStates.map(({ value }) => value).includes(oabState[1]))
+    },
+
     addContact(contactValue, contactType) {
       const { disputeId, party } = this
       const params = {
@@ -529,9 +537,19 @@ export default {
 
       if (contactType === 'oab') {
         delete params.contactData.value
+
         const oabSplited = contactValue.split('/')
         params.contactData.number = oabSplited[0]
         params.contactData.state = oabSplited[1]
+
+        if (!this.isValidOab(contactValue)) {
+          this.$jusNotification({
+            title: 'Ops!',
+            message: 'OAB inválida',
+            type: 'error'
+          })
+          return
+        }
 
         let phones = []
         let emails = []
@@ -608,6 +626,15 @@ export default {
       }
 
       if (contactType === 'oab') {
+        if (!this.isValidOab(contactValue)) {
+          this.$jusNotification({
+            title: 'Ops!',
+            message: 'OAB inválida',
+            type: 'error'
+          })
+          return
+        }
+
         delete params.contactData.value
         const oabSplited = contactValue.split('/')
         params.contactData.number = oabSplited[0]
@@ -663,8 +690,6 @@ export default {
 
     oabMask(value = '') {
       const oab = value?.replace(/[^\w*]/g, '').toUpperCase()
-
-      console.log(oab, oab.charAt(4))
 
       if (/[ABDENPabdenp]/.test(oab.charAt(2))) {
         return '##D.###/AA'

@@ -185,8 +185,6 @@ export default {
     addBankAccount({ account, associate }) {
       const { disputeId, personId } = this
 
-      console.log(account, associate)
-
       this.createBankAccount({ disputeId, account, personId }).then(response => {
         if (associate) {
           const baccount = response.bankAccounts.find(baccount => {
