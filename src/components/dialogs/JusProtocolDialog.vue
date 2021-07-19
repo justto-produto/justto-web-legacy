@@ -1101,6 +1101,7 @@ export default {
     handleTitle(title) {
       if (title.includes('_-_')) {
         const words = title.split('_-_')
+        if (words.length < 4) return [title, '']
         const firstLine = words[0].replaceAll('_', ' ') + ' - ' + words[1].replaceAll('_', ' ')
         const secondLine = words[2].replaceAll('_', ' ') + ' - ' + words[3].replaceAll('_', ' ')
         return [firstLine, secondLine]
