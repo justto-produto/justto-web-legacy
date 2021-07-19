@@ -647,17 +647,15 @@ export default {
         this.selectContactObj = reply
         this.LGPDWarningDialogVisible = true
       } else {
-        if (!this.isNegotiator) {
-          this.verifyRecipient(reply)
-            .then((data) => {
-              if (data.value === 'AUTHORIZED') {
-                delete reply.disputeId
-                this.addRecipient({ value, key, type })
-              } else {
-                this.LGPDWarningDialogVisible = true
-              }
-            })
-        }
+        this.verifyRecipient(reply)
+          .then((data) => {
+            if (data.value === 'AUTHORIZED') {
+              delete reply.disputeId
+              this.addRecipient({ value, key, type })
+            } else {
+              this.LGPDWarningDialogVisible = true
+            }
+          })
       }
     },
 
