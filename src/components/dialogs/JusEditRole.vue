@@ -1,7 +1,7 @@
 <template>
   <!-- Dialog para edição de parte -->
   <el-dialog
-    close-on-click-modal
+    :close-on-click-modal="false"
     :show-close="false"
     :visible.sync="visible"
     width="40%"
