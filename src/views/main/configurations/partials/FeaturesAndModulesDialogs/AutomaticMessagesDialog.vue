@@ -2,16 +2,10 @@
   <el-dialog
     :close-on-click-modal="false"
     :visible.sync="automaticMessagesDialogVisible"
+    title="Defina quando o sistema deve automatizar ações"
     custom-class="automatic-messages-dialog"
     width="50%"
   >
-    <span
-      slot="title"
-      class="el-dialog__header-title"
-    >
-      Defina quando o sistema deve automatizar ações
-    </span>
-
     <span class="el-dialog__body-container">
       <el-form ref="form">
         <el-form-item>
@@ -111,7 +105,6 @@ export default {
       line-height: 24px;
       font-size: 20px;
       color: $--color-black;
-      margin-bottom: 10px;
       font-weight: bold;
     }
   }
