@@ -14,7 +14,10 @@
           :occurrence="value"
         />
 
-        <Recomendation v-if="showRecomendation" />
+        <Recomendation
+          v-if="showRecomendation"
+          :interaction-id="interaction.id"
+        />
       </div>
     </div>
 
@@ -69,6 +72,7 @@ export default {
     WarningLGPD: () => import('@/components/dialogs/WarningLGPD'),
     Recomendation: () => import('@/components/buttons/Recomendation.vue')
   },
+
   props: {
     value: {
       type: Object,
@@ -258,6 +262,8 @@ export default {
     .interaction-container__balloon-content {
       width: 100%;
       position: relative;
+
+      display: flex;
     }
 
     &.INBOUND {

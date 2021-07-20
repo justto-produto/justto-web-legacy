@@ -242,6 +242,12 @@ const omnichannelActions = {
       url: `/api/office/documents/${disputeId}/to-signer/${docNumber}`,
       mutation: canSetDisputeProtocol ? 'setDisputeProtocol' : null
     })
+  },
+
+  getRecomendations({ _ }, interactionId) {
+    return axiosDispatch({
+      url: `api/rpa/recommendation/interaction/${interactionId}`
+    })
   }
 }
 

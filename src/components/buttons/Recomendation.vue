@@ -18,19 +18,36 @@
 </template>
 
 <script>
-export default {
+import { mapActions } from 'vuex'
 
+export default {
+  props: {
+    interactionId: {
+      type: Number,
+      required: true
+    }
+  },
+
+  data: () => ({
+    recomendations: []
+  }),
+
+  mounted() {
+    this.getRecomendations(this.interactionId).then(res => {
+      console.log('mounted', this.interactionId)
+      console.log(res)
+    })
+  },
+
+  methods: {
+    ...mapActions(['getRecomendations'])
+  }
 }
 </script>
 
 <style scoped>
 .recomendations-container {
   cursor: pointer;
-
-  position: absolute;
-  top: 0;
-  right: 0;
-
-  margin: 4px 8px 0 0;
+  margin: 8px 8px 0 -4px;
 }
 </style>
