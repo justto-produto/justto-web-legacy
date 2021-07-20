@@ -9,7 +9,8 @@
         :key="account.id"
         :class="{
           'is-checked': selectedAccounts.includes(account.id),
-          'is-not-checked': !selectedAccounts.includes(account.id)
+          'is-not-checked': !selectedAccounts.includes(account.id),
+          'is-not-checkable': ticketInfo.denySavingDeposit === true && account.type === 'SAVING'
         }"
         class="bank-accounts__container-account"
       >
@@ -18,6 +19,10 @@
           @click="handleClick(account)"
         >
           <div class="bank-accounts__account-info-title">
+            <JusIcon
+              icon="chain"
+              is-active
+            />
             Conta {{ $t(`bank-account.type.${account.type}`) }}
           </div>
           <div class="bank-accounts__account-info">
@@ -185,8 +190,6 @@ export default {
     addBankAccount({ account, associate }) {
       const { disputeId, personId } = this
 
-      console.log(account, associate)
-
       this.createBankAccount({ disputeId, account, personId }).then(response => {
         if (associate) {
           const baccount = response.bankAccounts.find(baccount => {
@@ -281,6 +284,7 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/styles/colors.scss';
+
 .bank-accounts {
   display: flex;
   flex-direction: column;
@@ -334,7 +338,11 @@ export default {
         }
       }
 
-      &:hover {
+      &:not(.is-checked) .bank-accounts__container-inner .bank-accounts__account-info-title img {
+        display: none;
+      }
+
+      &:not(.is-not-checkable):hover {
         background-color: $--color-light-gray;
         .bank-accounts__container-inner { opacity: .85; }
         .bank-accounts__account-icons { opacity: 1; }
@@ -344,21 +352,29 @@ export default {
         background-color: $--color-light-gray;
 
         .bank-accounts__container-inner {
-          border-left: solid $--color-primary 2px;
           border-top-left-radius: 0px;
           border-bottom-left-radius: 0px;
 
-          .el-checkbox__label .bank-accounts__account-info-title {
-            font-weight: 500;
+          .bank-accounts__account-info-title {
+            font-weight: 600;
           }
         }
       }
 
       &.is-not-checked {
         .bank-accounts__container-inner {
-          border-left: solid $--color-text-secondary 1px;
           border-top-left-radius: 0px;
           border-bottom-left-radius: 0px;
+        }
+      }
+
+      &.is-not-checkable {
+        cursor: not-allowed;
+
+        .bank-accounts__container-inner {
+          .bank-accounts__account-info-title {
+            color: $--color-text-secondary;
+          }
         }
       }
     }

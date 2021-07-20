@@ -703,9 +703,7 @@ export default {
         })
       }
     },
-    loading(value) {
-      console.log(value)
-    }
+    loading(value) { }
   },
   mounted() {
     window.addEventListener('resize', () => {
