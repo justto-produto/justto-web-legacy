@@ -1,31 +1,14 @@
 <template>
   <!-- Dialog para edição de parte -->
   <el-dialog
-    :close-on-click-modal="false"
+    close-on-click-modal
+    :show-close="false"
     :visible.sync="visible"
     width="40%"
+    class="party__form"
   >
-    <span
-      slot="title"
-      class="el-dialog__title"
-    >
-      Alterar dados de {{ party.title }}
-    </span>
-    <!-- <el-alert
-      v-show="editRoleDialogError"
-      type="error"
-      @close="editRoleDialogError = false"
-    >
-      <ul>
-        <li
-          v-for="(error, index) in editRoleDialogErrorList"
-          :key="`${index}-${error}`"
-        >
-          {{ error }}
-        </li>
-      </ul>
-    </el-alert> -->
     <el-form
+      v-if="Boolean(party)"
       ref="party"
       v-loading="loading"
       :model="party"
@@ -62,7 +45,7 @@
             prop="birthday"
           >
             <el-date-picker
-              v-model="birthday"
+              v-model="party.birthday"
               :disabled="!canEditBirthday"
               :clearable="false"
               format="dd/MM/yyyy"
@@ -203,6 +186,7 @@
             </el-tooltip>
             <a
               href="#"
+              style="margin-left: 5px;"
               @click.prevent="removePhone(scope.$index)"
             >
               <jus-icon icon="trash" />
@@ -266,6 +250,7 @@
             </el-tooltip>
             <a
               href="#"
+              style="margin-left: 5px;"
               @click.prevent="removeEmail(scope.$index)"
             >
               <jus-icon icon="trash" />
@@ -278,11 +263,18 @@
         <a
           href="#"
           style="float: right;width: 16px;margin-top: 1px;margin-right: 23px;"
-          @click.prevent="openAddBankDialog()"
+          @click.prevent="openTabEditBank()"
         >
-          <el-tooltip content="Adicionar conta bancária">
-            <i class="el-icon-plus icon-white" />
-          </el-tooltip>
+          <PartyBankAccountDialog
+            ref="partyBankAccountDialog"
+            @create="handleNewBankAccount"
+          >
+            <a
+              class="bank-accounts__link"
+            >
+              <i class="el-icon-plus icon-white" />
+            </a>
+          </PartyBankAccountDialog>
         </a>
       </h4>
       <el-table
@@ -341,6 +333,10 @@
 import { mapActions } from 'vuex'
 import { validateName, validateDocument, validatePhone } from '@/utils/validations'
 export default {
+  components: {
+    PartyBankAccountDialog: () => import('@/views/main/negotiation/partials/ticket/overview/tabs/parties/PartyBankAccountDialog.vue')
+  },
+
   props: {
     party: {
       type: Object,
@@ -354,6 +350,8 @@ export default {
 
   data() {
     return {
+      originalRole: {},
+      bankAccountIdstoUnlink: [],
       loading: false,
       documentNumberHasChanged: false,
       roleRules: {
@@ -380,31 +378,29 @@ export default {
       return this.party.party === 'CLAIMANT' && this.party.personType === 'NATURAL' && this.party.roles && (this.party.roles.includes('LAWYER') || this.party.roles.includes('PARTY'))
     },
 
-    birthDay() {
-      return this.$moment(new Date(this.party.birthday)).format('YYYY-MM-DD') || ''
+    validateDocumentNumber() {
+      if (this.documentNumberHasChanged) {
+        return [{ validator: validateDocument, message: 'CPF/CNPJ inválido.', trigger: 'submit' }]
+      }
+      return []
     }
+  },
+
+  mounted() {
+    this.originalRole = this.party
   },
 
   methods: {
     ...mapActions([
       'editRole',
       'addPhoneToDisputeRole',
-      'addOabToDisputeRole'
+      'addOabToDisputeRole',
+      'createTicketRoleBankAccount',
+      'getTicketOverviewParty'
     ]),
 
-    open() {
-      this.visible = true
-    },
-
-    close() {
-      this.visible = false
-    },
-
-    validateDocumentNumber() {
-      if (this.documentNumberHasChanged) {
-        return [{ validator: validateDocument, message: 'CPF/CNPJ inválido.', trigger: 'submit' }]
-      }
-      return []
+    openTabEditBank() {
+      this.$refs.partyBankAccountDialog.openBankAccountDialog({})
     },
 
     addPhone() {
@@ -469,15 +465,209 @@ export default {
 
     removeOab(index) {
       this.party.oabs.splice(index, 1)
+    },
+
+    handleNewBankAccount(model) {
+      if (model.account?.type === 'SAVING' && model.associate) {
+        this.$refs.savingAccountAlert.open(model)
+      } else {
+        this.addBankAccount(model)
+      }
+    },
+
+    addBankAccount({ account, associate }) {
+      const { personId } = this.party
+      const disputeId = this.$route.params.id
+
+      this.createTicketRoleBankAccount({ disputeId, account, personId }).then(response => {
+        if (associate) {
+          const baccount = response.bankAccounts.find(baccount => {
+            return baccount.agency === account.agency &&
+              baccount.document === account.document &&
+              baccount.number === account.number &&
+              baccount.bank === account.bank &&
+              baccount.type === account.type
+          })
+
+          this.linkAccount({ bankAccountId: baccount.id, personId, disputeId })
+        }
+
+        this.$jusNotification({
+          title: 'Yay!',
+          dangerouslyUseHTMLString: true,
+          message: 'Conta bancária <strong>criada</strong> com sucesso.',
+          type: 'success'
+        })
+      }).catch(err => {
+        this.$jusNotification(err)
+      }).finally(_ => {
+        this.closeBankAccountDialog()
+      })
+    },
+
+    removeBankData(index, id) {
+      this.bankAccountIdstoUnlink.push(id)
+      this.party.bankAccounts.splice(index, 1)
+    },
+
+    closeBankAccountDialog() {
+      this.$refs.partyBankAccountDialog.closeDialog()
+    },
+
+    editRole() {
+      let isValid = true
+      this.$refs.party.validateField(['name', 'documentNumber'], errorMessage => {
+        if (errorMessage) isValid = false
+      })
+      if (isValid) {
+        if (this.bankAccountIdstoUnlink.length) {
+          this.linkBankAccountLoading = true
+          const promise = []
+          for (const id of this.bankAccountIdstoUnlink) {
+            promise.push(
+              this.$store.dispatch('unlinkDisputeBankAccounts', {
+                disputeId: this.$route.params.id,
+                bankAccountId: id
+              })
+            )
+          }
+          Promise.all(promise).then(() => {
+            this.editRoleAction()
+          }).catch(error => {
+            this.$jusNotification({ error })
+          }).finally(() => {
+            this.linkBankAccountLoading = false
+          })
+        } else {
+          this.editRoleAction()
+        }
+      }
+    },
+
+    editRoleAction() {
+      const hasNewBankAccount = this.party.bankAccounts.filter(account => !account.id).length
+      delete this.party.personProperties.BIRTHDAY
+      const roleToEdit = JSON.parse(JSON.stringify(this.party))
+      delete roleToEdit.title
+      this.editRoleDialogLoading = true
+
+      const disputeId = this.$route.params.id
+      const disputeRole = roleToEdit
+      const disputeRoleId = { roleToEdit }
+      this.$store.dispatch('editRole', {
+        disputeId,
+        disputeRole
+      }).then(response => {
+        // SEGMENT TRACK
+        this.$jusSegment('Editar partes da disputa', { description: `Usuário ${roleToEdit.name} alterado` })
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Os dados foram alterados com sucesso.',
+          type: 'success'
+        })
+        const roleDataDifference = this.verifyChangedRoleData(this.party, this.originalRole)
+        if (roleDataDifference.length) {
+          this.$confirm(this.$t('dispute.overview.confirm.restart.engagement.question'), 'Atenção!', {
+            confirmButtonText: this.$t('dispute.overview.confirm.restart.engagement.confirm'),
+            cancelButtonText: this.$t('dispute.overview.confirm.restart.engagement.cancel'),
+            type: 'warning',
+            cancelButtonClass: 'is-plain'
+          }).then(() => this.$jusNotification({
+            title: 'Cuidado!',
+            message: this.$t('dispute.notification.will-not-restart'),
+            type: 'warning',
+            dangerouslyUseHTMLString: true
+          })).catch(() => {
+            const contacts = []
+            for (const contact of roleDataDifference) {
+              contacts.push(
+                this.$store.dispatch('restartEngagementByContact', {
+                  disputeId: this.dispute.id,
+                  contact: contact.address || contact.number
+                })
+              )
+            }
+            Promise.all(contacts).then(() => {
+              this.$jusNotification({
+                title: 'Yay!',
+                message: this.$t('dispute.notification.restarted'),
+                type: 'success'
+              })
+            })
+          })
+        }
+        if (hasNewBankAccount) {
+          this.$confirm('Você adicionou contas bancárias a esta parte. Deseja vincular estas contas a disputa?', 'Atenção', {
+            confirmButtonText: 'Vincular',
+            cancelButtonText: 'Cancelar',
+            type: 'warning',
+            cancelButtonClass: 'is-plain'
+          }).then(() => {
+            const bankAccounts = response.bankAccounts
+            const newBankAccounts = bankAccounts.sort((accountA, accountB) => {
+              if (accountA.createdAt > accountB.createdAt) {
+                return 1
+              } else if (accountA.createdAt < accountB.createdAt) {
+                return -1
+              } else {
+                return 0
+              }
+            }).slice(-hasNewBankAccount).map(ba => ba.id)
+            this.disputeBankAccountsIds = ([...this.disputeBankAccountsIds, ...newBankAccounts])
+            // this.updateDisputeBankAccounts(newBankAccount.id)
+          }).finally(() => {
+            this.linkBankAccountLoading = false
+          })
+        }
+        this.editRoleDialogVisible = false
+        setTimeout(function() {
+          this.$emit('fetch-data')
+        }.bind(this), 200)
+      }).catch(error => {
+        console.error(error)
+        if (error.status === 400) {
+          this.editRoleDialogError = true
+          this.editRoleDialogErrorList.push(error.data.message)
+        } else this.$jusNotification({ error })
+      }).finally(() => {
+        this.getTicketOverviewParty({ disputeId, disputeRoleId })
+        this.$emit('closeEdit')
+      })
+    },
+
+    verifyChangedRoleData(editedRole, originalRole) {
+      const changed = {
+        newPhones: [],
+        newEmails: []
+      }
+      if (editedRole.phones.length) {
+        const mappedPhones = originalRole.phones.map(phone => phone.number)
+        changed.newPhones = editedRole.phones.filter(phone => {
+          if (!mappedPhones.includes(phone.number)) return phone.number
+        })
+      }
+      if (editedRole.emails.length) {
+        const mappedEmails = originalRole.emails.map(email => email.address)
+        changed.newEmails = editedRole.emails.filter(email => {
+          if (!mappedEmails.includes(email.address)) return email.address
+        })
+      }
+      return [...changed.newPhones, ...changed.newEmails]
     }
   }
 }
 </script>
 
-<style scoped>
-
-.flex-row {
-  display: flex;
-  gap: 1vw;
+<style lang="scss">
+.party__form {
+  .el-dialog__header {
+    padding: 0;
+    margin: 0;
+  }
+  .flex-row {
+    display: flex;
+    gap: 1vw;
+  }
 }
+
 </style>
