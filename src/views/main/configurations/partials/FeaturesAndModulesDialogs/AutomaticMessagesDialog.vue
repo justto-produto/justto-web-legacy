@@ -2,6 +2,7 @@
   <el-dialog
     :close-on-click-modal="false"
     :visible.sync="automaticMessagesDialogVisible"
+    :fullscreen="windowMode !== 'desktop'"
     title="Defina quando o sistema deve automatizar ações"
     custom-class="automatic-messages-dialog"
     width="50%"
@@ -69,7 +70,8 @@ export default {
 
   computed: {
     ...mapGetters({
-      properties: 'workspaceProperties'
+      properties: 'workspaceProperties',
+      windowMode: 'getWindowMode'
     })
   },
 
