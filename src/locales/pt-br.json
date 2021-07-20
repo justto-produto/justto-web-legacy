@@ -510,7 +510,7 @@
     },
     "AUTOMATIC_MESSAGES": {
       "label": "automação de mensagens",
-      "icon": "gears"
+      "icon": "automatic-massage"
     },
     "DRAFT_MANAGEMENT": {
       "label": "gestão de minutas",
