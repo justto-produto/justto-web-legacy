@@ -179,8 +179,6 @@ export default {
 
       const ref = featureCodeCamelCase(featureCode) + 'Dialog'
 
-      console.log(ref)
-
       if (this.$refs[ref]) {
         this.$refs[ref].openFeatureDialog()
       }

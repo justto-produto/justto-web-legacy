@@ -34,7 +34,7 @@
 
           <el-radio
             v-model="sendAutomaticMessage"
-            label="AKS"
+            label="ASK"
           >
             Permitir que o negociador decida
           </el-radio>
@@ -46,7 +46,20 @@
       slot="footer"
       class="el-dialog__footer-container"
     >
-      <!-- TODO: SAAS-4075 Implementar botões de cancelar e salvar -->
+      <el-button
+        size="small"
+        @click="close()"
+      >
+        Cancelar
+      </el-button>
+
+      <el-button
+        type="success"
+        size="small"
+        @click="save()"
+      >
+        Confirmar
+      </el-button>
     </span>
   </el-dialog>
 </template>
@@ -66,23 +79,24 @@ export default {
     })
   },
 
-  beforeMount() {
-    this.sendAutomaticMessage = this.properties.SEND_AUTOMATIC_MESSAGES || ''
-  },
-
   methods: {
     ...mapActions({
       editProperties: 'editWorkpaceProperties'
     }),
 
     openFeatureDialog() {
+      this.sendAutomaticMessage = this.properties.SEND_AUTOMATIC_MESSAGES || ''
       this.automaticMessagesDialogVisible = true
+    },
+
+    close() {
+      this.automaticMessagesDialogVisible = false
     },
 
     save() {
       this.editProperties({
         SEND_AUTOMATIC_MESSAGES: this.sendAutomaticMessage
-      })
+      }).finally(() => this.close())
     }
   }
 }
