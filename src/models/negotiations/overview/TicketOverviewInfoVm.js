@@ -15,7 +15,7 @@ export default class DisputeOverviewInfoVm {
     contactPartyWhenInvalidLawyer, contactPartyWhenInvalidLowyer,
     contactPartyWhenNoLawyer, contactPartyWhenNoLowyer,
     businessHoursEngagement,
-    awaysContactParty,
+    alwaysContactParty,
     skipEnrichment,
     denySavingDeposit,
     campaignName,
@@ -35,7 +35,7 @@ export default class DisputeOverviewInfoVm {
     this.contactPartyWhenInvalidLawyer = contactPartyWhenInvalidLawyer || (contactPartyWhenInvalidLowyer || campaign.contactPartyWhenInvalidLowyer)
     this.contactPartyWhenNoLawyer = contactPartyWhenNoLawyer || (contactPartyWhenNoLowyer || campaign.contactPartyWhenNoLowyer)
     this.businessHoursEngagement = businessHoursEngagement || campaign.businessHoursEngagement
-    this.awaysContactParty = awaysContactParty || campaign.awaysContactParty
+    this.alwaysContactParty = alwaysContactParty || campaign.alwaysContactParty
     this.denySavingDeposit = denySavingDeposit || campaign.denySavingDeposit
     this.skipEnrichment = skipEnrichment || campaign.skipEnrichment
     this.campaignName = campaignName || campaign.name

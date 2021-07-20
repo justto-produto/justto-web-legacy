@@ -198,7 +198,7 @@ export default {
         skipEnrichment,
         denySavingDeposit,
         businessHoursEngagement,
-        awaysContactParty,
+        alwaysContactParty,
         contactPartyWhenNoLawyer,
         contactPartyWhenInvalidLawyer
       } = this.ticketInfo
@@ -207,7 +207,7 @@ export default {
         skipEnrichment: !skipEnrichment,
         denySavingDeposit,
         businessHoursEngagement,
-        awaysContactParty,
+        alwaysContactParty,
         contactPartyWhenNoLawyer,
         contactPartyWhenInvalidLawyer
       }

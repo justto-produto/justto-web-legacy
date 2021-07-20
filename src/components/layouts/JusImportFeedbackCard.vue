@@ -201,11 +201,11 @@
           </p>
         </div>
 
-        <el-switch v-model="awaysContactParty" />
+        <el-switch v-model="alwaysContactParty" />
       </div>
 
       <div
-        v-if="!awaysContactParty"
+        v-if="!alwaysContactParty"
         class="jus-import-feedback-card__switch"
       >
         <i class="el-icon-circle-check el-input__icon--success" />
@@ -222,7 +222,7 @@
       </div>
 
       <div
-        v-if="!awaysContactParty"
+        v-if="!alwaysContactParty"
         class="jus-import-feedback-card__switch"
       >
         <i class="el-icon-circle-check el-input__icon--success" />
@@ -305,7 +305,7 @@ export default {
       negotiatorIds: [],
       businessHoursEngagement: true,
       contactPartyWhenNoLowyer: false,
-      awaysContactParty: false,
+      alwaysContactParty: false,
       contactPartyWhenInvalidLowyer: false,
       skipEnrichment: false,
       denySavingDeposit: false,
@@ -368,8 +368,8 @@ export default {
     contactPartyWhenNoLowyer(value) {
       this.mappedCampaign.contactPartyWhenNoLowyer = value
     },
-    awaysContactParty(value) {
-      this.mappedCampaign.awaysContactParty = value
+    alwaysContactParty(value) {
+      this.mappedCampaign.alwaysContactParty = value
     },
     contactPartyWhenInvalidLowyer(value) {
       this.mappedCampaign.contactPartyWhenInvalidLowyer = value
@@ -434,7 +434,7 @@ export default {
     this.mappedCampaign.businessHoursEngagement = this.businessHoursEngagement
     this.mappedCampaign.contactPartyWhenNoLowyer = this.contactPartyWhenNoLowyer
     this.mappedCampaign.contactPartyWhenInvalidLowyer = this.contactPartyWhenInvalidLowyer
-    this.mappedCampaign.awaysContactParty = this.awaysContactParty
+    this.mappedCampaign.alwaysContactParty = this.alwaysContactParty
     this.mappedCampaign.skipEnrichment = this.skipEnrichment
     this.mappedCampaign.denySavingDeposit = this.denySavingDeposit
     this.mappedCampaign.paymentDeadLine = this.paymentDeadLine

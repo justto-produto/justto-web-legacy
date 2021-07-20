@@ -80,14 +80,14 @@ export default {
     },
     selectableConfigurations() {
       const {
-        awaysContactParty,
+        alwaysContactParty,
         contactPartyWhenNoLawyer,
         contactPartyWhenInvalidLawyer
       } = this.value
 
       let model
-      if (awaysContactParty) {
-        model = 'awaysContactParty'
+      if (alwaysContactParty) {
+        model = 'alwaysContactParty'
       } else if (contactPartyWhenNoLawyer && contactPartyWhenInvalidLawyer) {
         model = 'contactPartyWhenInvalidLawyerOrNoLawyer'
       } else if (contactPartyWhenNoLawyer && !contactPartyWhenInvalidLawyer) {
@@ -100,8 +100,8 @@ export default {
 
       const options = [
         {
-          value: 'awaysContactParty',
-          label: this.$t('ticket-labels.awaysContactParty'),
+          value: 'alwaysContactParty',
+          label: this.$t('ticket-labels.alwaysContactParty'),
           icon: 'el-icon-check'
         },
         {
@@ -147,37 +147,37 @@ export default {
       let data
 
       switch (value) {
-        case 'awaysContactParty':
+        case 'alwaysContactParty':
           data = {
-            awaysContactParty: true,
+            alwaysContactParty: true,
             contactPartyWhenNoLawyer: false,
             contactPartyWhenInvalidLawyer: false
           }
           break
         case 'contactPartyWhenInvalidLawyerOrNoLawyer':
           data = {
-            awaysContactParty: false,
+            alwaysContactParty: false,
             contactPartyWhenNoLawyer: true,
             contactPartyWhenInvalidLawyer: true
           }
           break
         case 'contactPartyWhenNoLawyer':
           data = {
-            awaysContactParty: false,
+            alwaysContactParty: false,
             contactPartyWhenNoLawyer: true,
             contactPartyWhenInvalidLawyer: false
           }
           break
         case 'contactPartyWhenInvalidLawyer':
           data = {
-            awaysContactParty: false,
+            alwaysContactParty: false,
             contactPartyWhenNoLawyer: false,
             contactPartyWhenInvalidLawyer: true
           }
           break
         case 'neverContactParty':
           data = {
-            awaysContactParty: false,
+            alwaysContactParty: false,
             contactPartyWhenNoLawyer: false,
             contactPartyWhenInvalidLawyer: false
           }

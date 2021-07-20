@@ -288,7 +288,7 @@
                 Contatar autor?
                 <div>
                   <i :class="(dispute.contactPartyWhenNoLowyer || dispute.contactPartyWhenInvalidLowyer) ? 'el-icon-check' : 'el-icon-close'" />
-                  <span v-if="dispute.awaysContactParty">
+                  <span v-if="dispute.alwaysContactParty">
                     Sempre
                   </span>
                   <span v-else-if="dispute.contactPartyWhenNoLowyer && dispute.contactPartyWhenInvalidLowyer">
@@ -1120,17 +1120,17 @@
                 <p>Deixando <b>selecionada</b> esta opção, <b>sempre</b> iremos enviar mensagens automáticas para o autor.</p>
               </div>
               <el-switch
-                v-model="disputeForm.awaysContactParty"
+                v-model="disputeForm.alwaysContactParty"
                 @input="$forceUpdate()"
               />
             </el-col>
             <el-tooltip
               content="Sempre engaja autor está habilitado"
-              :disabled="!disputeForm.awaysContactParty"
+              :disabled="!disputeForm.alwaysContactParty"
             >
               <el-col
                 :span="24"
-                :style="disputeForm.awaysContactParty ? 'cursor: not-allowed' : ''"
+                :style="disputeForm.alwaysContactParty ? 'cursor: not-allowed' : ''"
                 class="dispute-overview-view__select-switch"
               >
                 <div class="content">
@@ -1141,17 +1141,17 @@
                 </div>
                 <el-switch
                   v-model="disputeForm.contactPartyWhenNoLowyer"
-                  :disabled="disputeForm.awaysContactParty"
+                  :disabled="disputeForm.alwaysContactParty"
                 />
               </el-col>
             </el-tooltip>
             <el-tooltip
               content="Sempre engaja autor está habilitado"
-              :disabled="!disputeForm.awaysContactParty"
+              :disabled="!disputeForm.alwaysContactParty"
             >
               <el-col
                 :span="24"
-                :style="disputeForm.awaysContactParty ? 'cursor: not-allowed' : ''"
+                :style="disputeForm.alwaysContactParty ? 'cursor: not-allowed' : ''"
                 class="dispute-overview-view__select-switch"
               >
                 <div class="content">
@@ -1162,7 +1162,7 @@
                 </div>
                 <el-switch
                   v-model="disputeForm.contactPartyWhenInvalidLowyer"
-                  :disabled="disputeForm.awaysContactParty"
+                  :disabled="disputeForm.alwaysContactParty"
                 />
               </el-col>
             </el-tooltip>
@@ -2615,7 +2615,7 @@ export default {
       this.disputeForm.classification = dispute.classification && dispute.classification.name ? dispute.classification.name : ''
       this.disputeForm.contactPartyWhenNoLowyer = dispute.contactPartyWhenNoLowyer
       this.disputeForm.contactPartyWhenInvalidLowyer = dispute.contactPartyWhenInvalidLowyer
-      this.disputeForm.awaysContactParty = dispute.awaysContactParty
+      this.disputeForm.alwaysContactParty = dispute.alwaysContactParty
       this.disputeForm.denySavingDeposit = dispute.denySavingDeposit
       this.disputeForm.zeroUpperRange = !parseFloat(dispute.disputeUpperRange)
       this.editDisputeDialogVisible = true
@@ -2657,7 +2657,7 @@ export default {
             disputeToEdit.classification = { name: this.disputeForm.classification }
             disputeToEdit.contactPartyWhenNoLowyer = this.disputeForm.contactPartyWhenNoLowyer
             disputeToEdit.contactPartyWhenInvalidLowyer = this.disputeForm.contactPartyWhenInvalidLowyer
-            disputeToEdit.awaysContactParty = this.disputeForm.awaysContactParty
+            disputeToEdit.alwaysContactParty = this.disputeForm.alwaysContactParty
             disputeToEdit.denySavingDeposit = this.disputeForm.denySavingDeposit
             disputeToEdit.lastOfferRoleId = this.selectedNegotiatorId
             disputeToEdit.lastOfferValue = this.disputeForm.lastOfferValue
@@ -2673,7 +2673,7 @@ export default {
             const newDate = disputeToEdit.expirationDate.dateTime
             const contactPartyWhenNoLowyer = this.dispute.contactPartyWhenNoLowyer
             const contactPartyWhenInvalidLowyer = this.dispute.contactPartyWhenInvalidLowyer
-            const awaysContactParty = this.dispute.awaysContactParty
+            const alwaysContactParty = this.dispute.alwaysContactParty
             this.$store.dispatch('editDispute', disputeToEdit).then(() => {
               // SEGMENT TRACK
               this.$jusSegment('Editar disputa', { disputeId: disputeToEdit.id })
@@ -2689,8 +2689,8 @@ export default {
               const isExpirationDateChanged = this.$moment(currentDate).isBefore(this.$moment()) && this.$moment(newDate).isSameOrAfter(this.$moment())
               const contactPartyWhenNoLowyerHasChanged = this.disputeForm.contactPartyWhenNoLowyer !== contactPartyWhenNoLowyer
               const contactPartyWhenInvalidLowyerHasChanged = this.disputeForm.contactPartyWhenInvalidLowyer !== contactPartyWhenInvalidLowyer
-              const awaysContactPartyChanged = this.disputeForm.awaysContactParty !== awaysContactParty
-              const contactPartyHasChanged = contactPartyWhenInvalidLowyerHasChanged || contactPartyWhenNoLowyerHasChanged || awaysContactPartyChanged
+              const alwaysContactPartyChanged = this.disputeForm.alwaysContactParty !== alwaysContactParty
+              const contactPartyHasChanged = contactPartyWhenInvalidLowyerHasChanged || contactPartyWhenNoLowyerHasChanged || alwaysContactPartyChanged
               const onlyResendMessaged = this.dispute.status === 'RUNNING'
               if (contactPartyHasChanged || isExpirationDateChanged) {
                 const action = onlyResendMessaged ? 'reenviar mensagens automáticas' : 'reiniciar esta disputa'

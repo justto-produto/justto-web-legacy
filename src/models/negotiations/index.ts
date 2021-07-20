@@ -46,7 +46,7 @@ interface DisputeRoleDto extends EntityDto {
 //   contactPartyWhenInvalidLawyer: boolean;
 //   contactPartyWhenNoLawyer: boolean;
 //   businessHoursEngagement: boolean;
-//   awaysContactParty: boolean;
+//   alwaysContactParty: boolean;
 //   skipEnrichment: boolean;
 //   denySavingDeposit: boolean;
 //   ownerProposalRoleId: number;
