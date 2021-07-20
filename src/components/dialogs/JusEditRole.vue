@@ -62,7 +62,7 @@
             prop="birthday"
           >
             <el-date-picker
-              v-model="party.birthday"
+              v-model="birthday"
               :disabled="!canEditBirthday"
               :clearable="false"
               format="dd/MM/yyyy"
@@ -74,7 +74,7 @@
       </el-row>
       <div
         v-if="party.roles && party.roles.includes('LAWYER')"
-        class="dispute-overview-view__oab-form"
+        class="flex-row"
       >
         <el-form-item
           class="oab"
@@ -112,6 +112,7 @@
         </el-form-item>
         <el-button
           class="button"
+          style="height: 40px; margin-top: 30px;"
           type="primary"
           @click="addOab(party.personId, party.oabs)"
         >
@@ -150,19 +151,21 @@
         label="Telefone"
         prop="phone"
       >
-        <el-input
-          v-model="party.phone"
-          v-mask="['(##) ####-####', '(##) #####-####']"
-          @keydown.enter.native="addPhone()"
-          @blur="addPhone()"
-        >
+        <div class="flex-row">
+          <el-input
+            v-model="party.phone"
+            v-mask="['(##) ####-####', '(##) #####-####']"
+            @keydown.enter.native="addPhone()"
+            @blur="addPhone()"
+          />
           <el-button
-            slot="append"
+            type="primary"
+            :plain="false"
             @click="addPhone()"
           >
             <i class="el-icon-plus icon--white" />
           </el-button>
-        </el-input>
+        </div>
       </el-form-item>
       <el-table
         :data="party.phones"
@@ -211,20 +214,21 @@
         label="E-mail"
         prop="email"
       >
-        <el-input
-          v-model="party.email"
-          data-testid="input-email"
-          @keydown.enter.native="addEmail()"
-          @blur="addEmail()"
-        >
+        <div class="flex-row">
+          <el-input
+            v-model="party.email"
+            data-testid="input-email"
+            @keydown.enter.native="addEmail()"
+            @blur="addEmail()"
+          />
           <el-button
-            slot="append"
+            type="primary"
             data-testid="add-email"
             @click="addEmail()"
           >
             <i class="el-icon-plus icon--white" />
           </el-button>
-        </el-input>
+        </div>
       </el-form-item>
       <el-table
         :data="party.emails"
@@ -317,8 +321,10 @@
     <span slot="footer">
       <el-button
         plain
-        @click="editRoleDialogVisible = false"
-      >Cancelar</el-button>
+        @click="$emit('closeEdit')"
+      >
+        Cancelar
+      </el-button>
       <el-button
         :loading="loading"
         type="primary"
@@ -332,6 +338,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import { validateName, validateDocument, validatePhone } from '@/utils/validations'
 export default {
   props: {
@@ -344,9 +351,11 @@ export default {
       required: true
     }
   },
+
   data() {
     return {
       loading: false,
+      documentNumberHasChanged: false,
       roleRules: {
         name: [
           { required: true, message: 'Campo obrigatório', trigger: 'submit' },
@@ -365,17 +374,101 @@ export default {
       }
     }
   },
+
   computed: {
     canEditBirthday() {
-      return this.roleForm.party === 'CLAIMANT' && this.roleForm.personType === 'NATURAL' && this.roleForm.roles && (this.roleForm.roles.includes('LAWYER') || this.roleForm.roles.includes('PARTY'))
+      return this.party.party === 'CLAIMANT' && this.party.personType === 'NATURAL' && this.party.roles && (this.party.roles.includes('LAWYER') || this.party.roles.includes('PARTY'))
+    },
+
+    birthDay() {
+      return this.$moment(new Date(this.party.birthday)).format('YYYY-MM-DD') || ''
     }
   },
+
   methods: {
+    ...mapActions([
+      'editRole',
+      'addPhoneToDisputeRole',
+      'addOabToDisputeRole'
+    ]),
+
+    open() {
+      this.visible = true
+    },
+
+    close() {
+      this.visible = false
+    },
+
     validateDocumentNumber() {
       if (this.documentNumberHasChanged) {
         return [{ validator: validateDocument, message: 'CPF/CNPJ inválido.', trigger: 'submit' }]
       }
       return []
+    },
+
+    addPhone() {
+      let isValid = true
+      this.party.phone = this.party.phone.trim()
+      this.$refs.party.validateField('phone', errorMessage => {
+        if (errorMessage || !this.party.phone) isValid = false
+      })
+      if (isValid) {
+        const self = this
+        this.party.phone = this.party.phone.replace(/ /g, '').replace(/\D/g, '')
+        const isDuplicated = this.party.phones.findIndex(p => {
+          const number = p.number.startsWith('55') ? p.number.replace('55', '') : p.number
+          return number === self.party.phone
+        })
+        if (isDuplicated < 0) this.party.phones.push({ number: this.party.phone, isMain: true })
+        this.party.phone = ''
+      }
+    },
+
+    removePhone(index) {
+      this.party.phones.splice(index, 1)
+    },
+
+    addEmail() {
+      let isValid = true
+      this.party.email = this.party.email.trim()
+      this.$refs.party.validateField('email', errorMessage => {
+        if (errorMessage || !this.party.email) isValid = false
+      })
+      if (isValid) {
+        const self = this
+        const isDuplicated = this.party.emails.findIndex(e => e.address === self.party.email)
+        if (isDuplicated < 0) this.party.emails.push({ address: this.party.email, isMain: true })
+        this.party.email = ''
+      }
+    },
+
+    removeEmail(index) {
+      this.party.emails.splice(index, 1)
+    },
+
+    addOab() {
+      let isValid = true
+      this.$refs.party.validateField(['oab', 'state'], errorMessage => {
+        if (errorMessage || !this.party.oab || !this.party.state) isValid = false
+      })
+      if (isValid) {
+        const self = this
+        this.party.oab = this.party.oab.replace(/ /g, '')
+        const isDuplicated = this.party.oabs.findIndex(o => o.number === self.party.oab && o.state === self.party.state)
+        if (isDuplicated < 0) {
+          this.party.oabs.push({
+            number: this.party.oab,
+            state: this.party.state
+          })
+        }
+        this.party.oab = ''
+        this.party.state = ''
+      }
+    },
+
+    removeOab(index) {
+      this.party.oabs.splice(index, 1)
     }
   }
 }
@@ -383,4 +476,8 @@ export default {
 
 <style scoped>
 
+.flex-row {
+  display: flex;
+  gap: 1vw;
+}
 </style>
