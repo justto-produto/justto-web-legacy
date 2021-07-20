@@ -58,12 +58,14 @@
     />
 
     <JusEditRole
+      v-if="Boolean(party.legacyDto) && !isNegotiator && isJusttoAdmin"
       :visible="editRoleDialogVisible"
       :party="party.legacyDto"
       @closeEdit="editRoleDialogVisible = false"
     />
 
     <el-button
+      v-if="!isNegotiator && isJusttoAdmin"
       class="party-details__edit"
       type="primary"
       icon="el-icon-edit"
@@ -345,7 +347,8 @@ export default {
 
   computed: {
     ...mapGetters({
-      ticketStatus: 'getticketOverviewStatus'
+      ticketStatus: 'getticketOverviewStatus',
+      isJusttoAdmin: 'isJusttoAdmin'
     }),
 
     disputeId() {
