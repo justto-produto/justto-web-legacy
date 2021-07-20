@@ -44,7 +44,7 @@ const workspaceGetters = {
   getIsDraftManagementActive: state => {
     const draftFeature = {
       active: true,
-      ...state.featuresAndModules[4]
+      ...state.featuresAndModules.find((id) => id === 4)
     }
 
     return draftFeature.active
