@@ -1,54 +1,5 @@
 <template>
   <article class="party-details">
-    <!-- Dialog para exclusão de parte cascateda ou não -->
-    <el-dialog
-      :close-on-click-modal="false"
-      :show-close="false"
-      :close-on-press-escape="false"
-      :visible.sync="chooseRemoveLawyerDialogVisible"
-      title="Excluir parte"
-      width="520px"
-    >
-      <div class="el-message-box__content">
-        <div class="el-message-box__container">
-          <div class="el-message-box__status el-icon-warning" />
-          <div class="el-message-box__message">
-            <p>Tem certeza que deseja excluir esta parte?</p>
-            <p>Esta ação é irreversível.</p>
-          </div>
-        </div>
-      </div>
-      <span slot="footer">
-        <el-tooltip
-          :open-delay="600"
-          :content="`Remover ${partName} de todas as disputas com mesmo réu.`"
-          placement="top"
-        >
-          <el-button
-            @click="removeLawyer(true)"
-          >
-            De todas as disputas
-          </el-button>
-        </el-tooltip>
-        <el-tooltip
-          :open-delay="600"
-          :content="`Remover ${partName} somente desta disputa.`"
-          placement="top"
-        >
-          <el-button
-            @click="removeLawyer(false)"
-          >
-            Desta disputa
-          </el-button>
-        </el-tooltip>
-        <el-button
-          type="primary"
-          @click="chooseRemoveLawyerDialogVisible = false"
-        >
-          Cancelar
-        </el-button>
-      </span>
-    </el-dialog>
     <!-- Dialog de warning para LGPD -->
     <WarningLGPD
       :lgpd-dialog-visible="LGPDWarningDialogVisible"
@@ -63,16 +14,6 @@
       :party="party.legacyDto"
       @closeEdit="editRoleDialogVisible = false"
     />
-
-    <el-button
-      v-if="!isNegotiator && isJusttoAdmin"
-      class="party-details__edit"
-      type="primary"
-      icon="el-icon-edit"
-      @click="editRoleDialogVisible = true"
-    >
-      Editar
-    </el-button>
 
     <div
       v-if="!isNegotiator && !isPreNegotiation"
@@ -288,6 +229,66 @@
       />
       <!-- class="party-details__infoline-data" -->
     </div>
+
+    <!-- Dialog para exclusão de parte cascateda ou não -->
+    <el-dialog
+      :close-on-click-modal="false"
+      :show-close="false"
+      :close-on-press-escape="false"
+      :visible.sync="chooseRemoveLawyerDialogVisible"
+      title="Excluir parte"
+      width="520px"
+    >
+      <div class="el-message-box__content">
+        <div class="el-message-box__container">
+          <div class="el-message-box__status el-icon-warning" />
+          <div class="el-message-box__message">
+            <p>Tem certeza que deseja excluir esta parte?</p>
+            <p>Esta ação é irreversível.</p>
+          </div>
+        </div>
+      </div>
+      <span slot="footer">
+        <el-tooltip
+          :open-delay="600"
+          :content="`Remover ${partName} de todas as disputas com mesmo réu.`"
+          placement="top"
+        >
+          <el-button
+            @click="removeLawyer(true)"
+          >
+            De todas as disputas
+          </el-button>
+        </el-tooltip>
+        <el-tooltip
+          :open-delay="600"
+          :content="`Remover ${partName} somente desta disputa.`"
+          placement="top"
+        >
+          <el-button
+            @click="removeLawyer(false)"
+          >
+            Desta disputa
+          </el-button>
+        </el-tooltip>
+        <el-button
+          type="primary"
+          @click="chooseRemoveLawyerDialogVisible = false"
+        >
+          Cancelar
+        </el-button>
+      </span>
+    </el-dialog>
+
+    <el-button
+      v-if="!isNegotiator && isJusttoAdmin"
+      class="party-details__edit"
+      type="text"
+      icon="el-icon-edit"
+      @click="editRoleDialogVisible = true"
+    >
+      Editar parte
+    </el-button>
 
     <InfoMergeDialog
       ref="mergeInfoDialog"
@@ -896,7 +897,9 @@ export default {
 .party-details {
   .party-details__edit {
     width: 100%;
+    margin: 16px 0 0;
   }
+
   .party-details__infoline {
     margin-top: 6px;
     line-height: normal;
