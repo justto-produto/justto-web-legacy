@@ -56,6 +56,24 @@
       :party-name="party.name"
       @click="(ok) => handleLgpdWarning(ok)"
     />
+
+    <JusEditRole
+      v-if="Boolean(party.legacyDto) && !isNegotiator && isJusttoAdmin"
+      :visible="editRoleDialogVisible"
+      :party="party.legacyDto"
+      @closeEdit="editRoleDialogVisible = false"
+    />
+
+    <el-button
+      v-if="!isNegotiator && isJusttoAdmin"
+      class="party-details__edit"
+      type="primary"
+      icon="el-icon-edit"
+      @click="editRoleDialogVisible = true"
+    >
+      Editar
+    </el-button>
+
     <div
       v-if="!isNegotiator && !isPreNegotiation"
       class="party-details__infoline party-details__infoline--center"
@@ -305,7 +323,8 @@ export default {
     PartyBankAccounts: () => import('./PartyBankAccounts'),
     PartyContacts: () => import('./PartyContacts'),
     LawyerDetail: () => import('@/components/others/LawyerDetail'),
-    WarningLGPD: () => import('@/components/dialogs/WarningLGPD')
+    WarningLGPD: () => import('@/components/dialogs/WarningLGPD'),
+    JusEditRole: () => import('@/components/dialogs/JusEditRole')
   },
 
   mixins: [preNegotiation],
@@ -320,6 +339,7 @@ export default {
   data: () => ({
     chooseRemoveLawyerDialogVisible: false,
     LGPDWarningDialogVisible: false,
+    editRoleDialogVisible: false,
     activeAddingData: '',
     mergePartyInfos: {},
     selectContactObj: {}
@@ -327,7 +347,8 @@ export default {
 
   computed: {
     ...mapGetters({
-      ticketStatus: 'getticketOverviewStatus'
+      ticketStatus: 'getticketOverviewStatus',
+      isJusttoAdmin: 'isJusttoAdmin'
     }),
 
     disputeId() {
@@ -875,6 +896,9 @@ export default {
 @import '@/styles/colors.scss';
 
 .party-details {
+  .party-details__edit {
+    width: 100%;
+  }
   .party-details__infoline {
     margin-top: 6px;
     line-height: normal;
