@@ -443,6 +443,81 @@
               </el-col>
             </el-row>
 
+            <div
+              v-for="(discount, index) in discountsOfNewContract"
+              :key="`${discount.id}--${discount.minVolume}`"
+              class="flex-row"
+            >
+              <el-form-item
+                label="Volume de importações"
+              >
+                <el-input-number
+                  v-model="discount.minVolume"
+                  :min="0"
+                  step-strictly
+                  controls-position="right"
+                />
+              </el-form-item>
+              <el-form-item
+                label="Valor do desconto"
+              >
+                <money
+                  v-model="discount.value"
+                  class="el-input__inner"
+                />
+                <el-form-item />
+              </el-form-item>
+              <el-form-item>
+                <el-button
+                  icon="el-icon-edit"
+                  @click="discountsOfNewContract[index] = { ...discountForm, type: 'MONTHLY_SUBSCRIPTION_VALUE'}"
+                />
+              </el-form-item>
+              <el-form-item>
+                <el-button
+                  type="danger"
+                  @click="discountsOfNewContract = discountsOfNewContract.filter((disc) => disc !== discount)"
+                >
+                  <i
+                    class="el-icon-delete"
+                    style="color: white"
+                  />
+                </el-button>
+              </el-form-item>
+            </div>
+            <div
+              class="flex-row"
+            >
+              <el-form-item
+                label="Volume de importações"
+              >
+                <el-input-number
+                  v-model="discountForm.minVolume"
+                  :min="0"
+                  step-strictly
+                  controls-position="right"
+                />
+              </el-form-item>
+              <el-form-item
+                label="Valor do desconto"
+              >
+                <money
+                  v-model="discountForm.value"
+                  class="el-input__inner"
+                />
+                <el-form-item />
+              </el-form-item>
+              <el-form-item>
+                <el-button
+                  type="primary"
+                  :plain="false"
+                  @click="discountsOfNewContract.push({...discountForm, type: 'MONTHLY_SUBSCRIPTION_VALUE'})"
+                >
+                  Adicionar desconto
+                </el-button>
+              </el-form-item>
+            </div>
+
             <el-row :gutter="24">
               <el-col
                 v-if="newContract.planId === 6"
@@ -551,6 +626,7 @@ export default {
   data() {
     return {
       discountForm: {},
+      discountsOfNewContract: [],
       form: {},
       isFormVisible: false,
       formRules: {
@@ -692,11 +768,17 @@ export default {
       this.addContract({
         customerId,
         contract: newContract
-      }).then(() => this.$jusNotification({
-        type: 'success',
-        title: 'Yay!',
-        message: 'Contrato adicionado com sucesso.'
-      })).catch(error => {
+      }).then((res) => {
+        Promise.all(
+          this.discountsOfNewContract.map((discount) => this.addDiscount({ contractId: res.id, discount }))
+        ).then((res) => {
+          this.$jusNotification({
+            type: 'success',
+            title: 'Yay!',
+            message: 'Contrato adicionado com sucesso.'
+          })
+        })
+      }).catch(error => {
         this.$jusNotification({ error })
       }).finally(() => {
         this.saving = false
@@ -767,6 +849,7 @@ export default {
     },
 
     addDiscount(data) {
+      this.discountForm = {}
       this.addContractDiscount(data)
         .then((res) => {
           this.$jusNotification({
