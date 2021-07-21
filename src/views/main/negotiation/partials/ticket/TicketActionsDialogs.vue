@@ -332,6 +332,23 @@
         @submit="handleDropLawsuit($event)"
       />
     </el-dialog>
+
+    <el-dialog
+      :visible.sync="dropLawsuitDialogVisible"
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      append-to-body
+      destroy-on-close
+      width="604px"
+      title="Quer notificar o Dr Cleiton desta ação?"
+      class="dialog-actions__increase-alert"
+    >
+      <span>Vamos enviar a mensagem abaixo:</span>
+      <div class="el-dialog__footer">
+        <el-button>Não noti</el-button>
+      </div>
+    </el-dialog>
   </section>
 </template>
 
@@ -634,7 +651,7 @@ export default {
         const { value, roleId, note } = this.offerForm
         const data = { value, note, conclusionNote: note, roleId, updateUpperRange }
         const polarityObjectKey = 'plaintiffOffer'
-        debugger
+
         this.sendOffer({ disputeId, data, polarityObjectKey, change: updateUpperRange })
           .then(success => resolve(success))
           .catch(error => {
