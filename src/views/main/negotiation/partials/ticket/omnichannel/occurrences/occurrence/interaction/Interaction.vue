@@ -89,6 +89,7 @@ export default {
 
   computed: {
     ...mapGetters({
+      isJusttoAdmin: 'isJusttoAdmin',
       recipients: 'getEditorRecipients',
       flat: 'getExportTicketModalVisible',
       lastInteraction: 'disputeLastInteractions'
@@ -175,7 +176,7 @@ export default {
     },
 
     showRecomendation() {
-      return this.isInboundInteraction // TODO: Adicionar restante das regras aqui.
+      return this.isJusttoAdmin && this.isInboundInteraction && ['COMMUNICATION'].includes(this.interaction.type) && !!this.interaction.message
     }
   },
 

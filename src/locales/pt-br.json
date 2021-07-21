@@ -736,5 +736,39 @@
   },
   "labels": {
     "dispute": "disputa | disputas"
+  },
+  "recomendations": {
+    "COUNTEROFFER": {
+      "option": "Enviar contraproposta",
+      "title": "Gostaria de enviar uma contraproposta?",
+      "buttons": {
+        "primary": "ENVIAR",
+        "secondary": "EDITAR RESPOSTA"
+      }
+    },
+    "NEW_PARTY": {
+      "option": "Cadastrar nova parte",
+      "title": "Gostaria de cadastrar uma nova parte?",
+      "buttons": {
+        "primary": "ENVIAR",
+        "secondary": ""
+      }
+    },
+    "NEW_CONTACT": {
+      "option": "Adicionar novo contato",
+      "title": "Gostaria de adicionar um novo contato?",
+      "buttons": {
+        "primary": "ADICIONAR",
+        "secondary": ""
+      }
+    },
+    "DISPUTE_MESSAGE": {
+      "option": "Responder mensagem",
+      "title": "Gostaria de responder de forma rápida?",
+      "buttons": {
+        "primary": "ENVIAR",
+        "secondary": "EDITAR RESPOSTA"
+      }
+    }
   }
 }
