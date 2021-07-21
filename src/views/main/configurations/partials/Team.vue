@@ -5,6 +5,7 @@
         v-model="searchTerm"
         placeholder="Busque por um membro"
         class="team-container__header-input"
+        size="small"
       >
         <i
           slot="prefix"
@@ -15,6 +16,7 @@
         type="primary"
         icon="el-icon-plus"
         class="team-container__header-button"
+        size="small"
         @click="handleInviteMember"
       >
         Cadastrar novo membro
@@ -112,9 +114,37 @@
             />
           </template>
         </el-table-column>
+
+        <el-table-column
+          prop="personProperties.EXPIRED"
+          label="Expiradas"
+        >
+          <template v-slot="scope">
+            <PopoverInlineEditor
+              v-model="scope.row.personProperties.EXPIRED"
+              :width="180"
+              :options="reportsOptions"
+              @change="handleEditReport('EXPIRED', $event, scope.row)"
+            />
+          </template>
+        </el-table-column>
+
+        <el-table-column
+          prop="personProperties.NPS"
+          label="NPS"
+        >
+          <template v-slot="scope">
+            <PopoverInlineEditor
+              v-model="scope.row.personProperties.NPS"
+              :width="180"
+              :options="reportsOptions"
+              @change="handleEditReport('NPS', $event, scope.row)"
+            />
+          </template>
+        </el-table-column>
       </el-table-column>
 
-      <el-table-column width="60px">
+      <el-table-column width="80px">
         <template v-slot="scope">
           <i
             class="el-icon-delete team-container__table-action"
@@ -324,6 +354,7 @@ export default {
   height: 100%;
 
   .team-container__table {
+    max-width: 93vw;
     margin-top: 3px;
     flex: 1;
     display: flex;
@@ -359,6 +390,10 @@ export default {
 
       .el-table__body tbody tr td {
         border-right: none;
+      }
+
+      &.is-scrolling-none {
+        overflow-x: hidden;
       }
     }
 
