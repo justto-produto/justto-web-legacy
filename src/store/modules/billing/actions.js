@@ -230,7 +230,8 @@ const billingActions = {
   getContractDiscountList: ({ _ }, contractId) => {
     return axiosDispatch({
       url: `${billingPath}/contract/${contractId}/discount`,
-      mutation: 'setContractDiscountList'
+      mutation: 'setContractDiscountList',
+      payload: contractId
     })
   },
 

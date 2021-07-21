@@ -1,3 +1,4 @@
+import Vue from 'vue'
 const billingMutations = {
   setAllCustomers: (state, customers) => (state.allCustomers = customers.content),
   setMyCustomers: (state, customers) => (state.myCustomers = customers),
@@ -19,7 +20,11 @@ const billingMutations = {
   setTerm: (state, term) => (state.query.term = term),
   setTableLoading: (state, tableLoading) => (state.tableLoading = tableLoading),
   addTransactionsQueryPage: (state) => (state.query.page += 1),
-  resetTransactionsQueryPage: (state) => (state.query.page = 1)
+  resetTransactionsQueryPage: (state) => (state.query.page = 1),
+  setContractDiscountList: (state, { data, payload }) => {
+    debugger
+    Vue.set(state.contractDiscountList, payload, data)
+  }
 }
 
 export default billingMutations

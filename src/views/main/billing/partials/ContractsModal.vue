@@ -18,6 +18,7 @@
           accordion
           class="transition-none"
           @item-click="resetNewContract"
+          @change="handleCurrentContract"
         >
           <el-collapse-item
             v-for="(contract, contractCount) in allFilteredContracts"
@@ -150,6 +151,31 @@
               <el-col :span="24">
                 <el-form-item
                   label="Mensalidade"
+                >
+                  <money
+                    v-model="contract.monthlySubscriptionFee"
+                    :disabled="isContractInactive(contract)"
+                    :class="{'is-inactive': isContractInactive(contract)}"
+                    class="el-input__inner"
+                  />
+                  <el-form-item />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="12">
+                <el-form-item
+                  label="Quantidade de importações"
+                >
+                  <el-input
+                    placeholder="Quantidade de importações"
+                  />
+                  <el-form-item />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item
+                  label="Valor do desconto"
                 >
                   <money
                     v-model="contract.monthlySubscriptionFee"
@@ -495,7 +521,8 @@ export default {
   computed: {
     ...mapGetters({
       clientData: 'getCurrentCustomer',
-      workspaceId: 'currentWorkspace'
+      workspaceId: 'currentWorkspace',
+      contractDiscountList: 'contractDiscountList'
     }),
     contractStatus: self => self.$t('billing.contract.status'),
     filteredContracts() {
@@ -562,7 +589,8 @@ export default {
   methods: {
     ...mapActions([
       'addContract',
-      'updateContract'
+      'updateContract',
+      'getContractDiscountList'
     ]),
     changeHasWorkspaceValue(newValue) {
       this.hasWorkspace = newValue
@@ -570,10 +598,18 @@ export default {
     changeAllFilteredContracts(newValue) {
       this.allFilteredContracts = newValue
     },
-    resetNewContract() {
+    resetNewContract(here) {
       const tariffs = []
       Object.keys(TARIFF_TYPES).map(key => tariffs.push(new TariffModel({ type: key })))
       this.newContract = new ContractModel({ tariffs })
+    },
+    handleCurrentContract(index) {
+      debugger
+      const currentContract = this.allFilteredContracts[index] || {}
+      const hasDiscounts = currentContract.hasDiscounts
+      if (hasDiscounts) {
+        this.getContractDiscountList(currentContract.id)
+      }
     },
     getTariffIndex(contract, tariffType) {
       let tariffIndex
