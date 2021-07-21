@@ -60,8 +60,10 @@ const omnichannelActions = {
   cleanRecentMessages: ({ commit }) => commit('cleanRecentMessages'),
 
   deleteTicketNote: ({ _ }, id) => axiosDispatch({
-    url: `${disputeApi}/note/${id}`,
-    method: 'DELETE'
+    url: `api/disputes/note/${id}`,
+    method: 'DELETE',
+    mutation: 'removeTicketNote',
+    payload: { id }
   }),
 
   saveTicketNote({ _ }, params) {
