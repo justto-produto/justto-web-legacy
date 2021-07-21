@@ -287,7 +287,7 @@
       icon="el-icon-edit"
       @click="editRoleDialogVisible = true"
     >
-      Editar parte
+      Editar
     </el-button>
 
     <InfoMergeDialog
