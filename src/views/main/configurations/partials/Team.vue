@@ -377,9 +377,9 @@ export default {
         background-color: #fff;
         border: none;
 
-        /* Alinha os textos do header ao topo.
+        /* Alinha os textos do header ao topo. */
         height: 100%;
-        vertical-align: top; */
+        vertical-align: top;
       }
     }
 
