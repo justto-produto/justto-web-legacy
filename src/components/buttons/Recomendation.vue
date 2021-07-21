@@ -71,6 +71,7 @@
                 v-if="$t(`recomendations.${currentRecomendation.type}.buttons.secondary`).length"
                 type="secondary"
                 size="mini"
+                @click="handleSecondaryAction"
               >
                 {{ $t(`recomendations.${currentRecomendation.type}.buttons.secondary`) }}
                 <i class="el-icon-edit" />
@@ -160,6 +161,10 @@ export default {
 
         this.closePopover()
       }).catch(error => this.$jusNotification({ error }))
+    },
+
+    handleSecondaryAction() {
+      // TODO: SAAS-4074 Implementar edição de mensagem e de contra proposta.
     }
   }
 }
