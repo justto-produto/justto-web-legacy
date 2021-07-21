@@ -18,6 +18,7 @@
           accordion
           class="transition-none"
           @item-click="resetNewContract"
+          @change="handleCurrentContract"
         >
           <el-collapse-item
             v-for="(contract, contractCount) in allFilteredContracts"
@@ -161,6 +162,80 @@
                 </el-form-item>
               </el-col>
             </el-row>
+            <div
+              v-for="discount in contractDiscountList[contract.id]"
+              :key="`${discount.id}--${discount.minVolume}`"
+              class="flex-row"
+            >
+              <el-form-item
+                label="Volume de importações"
+              >
+                <el-input-number
+                  v-model="discount.minVolume"
+                  :min="0"
+                  step-strictly
+                  controls-position="right"
+                />
+              </el-form-item>
+              <el-form-item
+                label="Valor do desconto"
+              >
+                <money
+                  v-model="discount.value"
+                  class="el-input__inner"
+                />
+                <el-form-item />
+              </el-form-item>
+              <el-form-item>
+                <el-button
+                  icon="el-icon-edit"
+                  @click="changeDiscount({ contractId: contract.id, discountId: discount.id, discount })"
+                />
+              </el-form-item>
+              <el-form-item>
+                <el-button
+                  type="danger"
+                  @click="deleteDiscount({ contractId: contract.id, discountId: discount.id })"
+                >
+                  <i
+                    class="el-icon-delete"
+                    style="color: white"
+                  />
+                </el-button>
+              </el-form-item>
+            </div>
+            <div
+              class="flex-row"
+            >
+              <el-form-item
+                label="Volume de importações"
+              >
+                <el-input-number
+                  v-model="discountForm.minVolume"
+                  :min="0"
+                  step-strictly
+                  controls-position="right"
+                />
+              </el-form-item>
+              <el-form-item
+                label="Valor do desconto"
+              >
+                <money
+                  v-model="discountForm.value"
+                  class="el-input__inner"
+                />
+                <el-form-item />
+              </el-form-item>
+              <el-form-item>
+                <el-button
+                  type="primary"
+                  :plain="false"
+                  @click="addDiscount({ contractId: contract.id, discount: {...discountForm, type: 'MONTHLY_SUBSCRIPTION_VALUE'} })"
+                >
+                  Adicionar desconto
+                </el-button>
+              </el-form-item>
+            </div>
             <el-row :gutter="24">
               <el-col
                 v-if="contract.planId === 6"
@@ -475,6 +550,7 @@ export default {
   },
   data() {
     return {
+      discountForm: {},
       form: {},
       isFormVisible: false,
       formRules: {
@@ -495,7 +571,8 @@ export default {
   computed: {
     ...mapGetters({
       clientData: 'getCurrentCustomer',
-      workspaceId: 'currentWorkspace'
+      workspaceId: 'currentWorkspace',
+      contractDiscountList: 'contractDiscountList'
     }),
     contractStatus: self => self.$t('billing.contract.status'),
     filteredContracts() {
@@ -562,7 +639,11 @@ export default {
   methods: {
     ...mapActions([
       'addContract',
-      'updateContract'
+      'updateContract',
+      'getContractDiscountList',
+      'addContractDiscount',
+      'changeContractDiscount',
+      'deleteContractDiscount'
     ]),
     changeHasWorkspaceValue(newValue) {
       this.hasWorkspace = newValue
@@ -570,10 +651,17 @@ export default {
     changeAllFilteredContracts(newValue) {
       this.allFilteredContracts = newValue
     },
-    resetNewContract() {
+    resetNewContract(here) {
       const tariffs = []
       Object.keys(TARIFF_TYPES).map(key => tariffs.push(new TariffModel({ type: key })))
       this.newContract = new ContractModel({ tariffs })
+    },
+    handleCurrentContract(index) {
+      const currentContract = this.allFilteredContracts[index] || {}
+      const hasDiscounts = currentContract.hasDiscounts
+      if (hasDiscounts) {
+        this.getContractDiscountList(currentContract.id)
+      }
     },
     getTariffIndex(contract, tariffType) {
       let tariffIndex
@@ -676,6 +764,39 @@ export default {
       if (this.haveContracts) {
         this.newContract.startedDate = new Date()
       }
+    },
+
+    addDiscount(data) {
+      this.addContractDiscount(data)
+        .then((res) => {
+          this.$jusNotification({
+            type: 'success',
+            title: 'Yay!',
+            message: 'Desconto criado com sucesso.'
+          })
+        })
+    },
+
+    changeDiscount(data) {
+      this.changeContractDiscount(data)
+        .then((res) => {
+          this.$jusNotification({
+            type: 'success',
+            title: 'Yay!',
+            message: 'Desconto alterado com sucesso.'
+          })
+        })
+    },
+
+    deleteDiscount(data) {
+      this.deleteContractDiscount(data)
+        .then((res) => {
+          this.$jusNotification({
+            type: 'success',
+            title: 'Yay!',
+            message: 'Desconto deletado com sucesso.'
+          })
+        })
     }
   }
 }
@@ -739,6 +860,13 @@ export default {
 .custom_input_number::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+
+.flex-row {
+  display: flex;
+  gap: 5px;
+  width: 100%;
+  align-items: flex-end;
 }
 
 </style>

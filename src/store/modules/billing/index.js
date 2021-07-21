@@ -23,7 +23,8 @@ const billing = {
     },
     plans: [],
     billingDashboard: {},
-    tableLoading: false
+    tableLoading: false,
+    contractDiscountList: {}
   },
   mutations: mutations,
   actions: actions,
