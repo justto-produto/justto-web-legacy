@@ -22,7 +22,6 @@ const billingMutations = {
   addTransactionsQueryPage: (state) => (state.query.page += 1),
   resetTransactionsQueryPage: (state) => (state.query.page = 1),
   setContractDiscountList: (state, { data, payload }) => {
-    debugger
     Vue.set(state.contractDiscountList, payload, data)
   }
 }

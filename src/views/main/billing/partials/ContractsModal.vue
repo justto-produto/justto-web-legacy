@@ -162,31 +162,80 @@
                 </el-form-item>
               </el-col>
             </el-row>
-            <el-row>
-              <el-col :span="12">
-                <el-form-item
-                  label="Quantidade de importações"
+            <div
+              v-for="discount in contractDiscountList[contract.id]"
+              :key="`${discount.id}--${discount.minVolume}`"
+              class="flex-row"
+            >
+              <el-form-item
+                label="Volume de importações"
+              >
+                <el-input-number
+                  v-model="discount.minVolume"
+                  :min="0"
+                  step-strictly
+                  controls-position="right"
+                />
+              </el-form-item>
+              <el-form-item
+                label="Valor do desconto"
+              >
+                <money
+                  v-model="discount.value"
+                  class="el-input__inner"
+                />
+                <el-form-item />
+              </el-form-item>
+              <el-form-item>
+                <el-button
+                  icon="el-icon-edit"
+                  @click="changeDiscount({ contractId: contract.id, discountId: discount.id, discount })"
+                />
+              </el-form-item>
+              <el-form-item>
+                <el-button
+                  type="danger"
+                  @click="deleteDiscount({ contractId: contract.id, discountId: discount.id })"
                 >
-                  <el-input
-                    placeholder="Quantidade de importações"
+                  <i
+                    class="el-icon-delete"
+                    style="color: white"
                   />
-                  <el-form-item />
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item
-                  label="Valor do desconto"
+                </el-button>
+              </el-form-item>
+            </div>
+            <div
+              class="flex-row"
+            >
+              <el-form-item
+                label="Volume de importações"
+              >
+                <el-input-number
+                  v-model="discountForm.minVolume"
+                  :min="0"
+                  step-strictly
+                  controls-position="right"
+                />
+              </el-form-item>
+              <el-form-item
+                label="Valor do desconto"
+              >
+                <money
+                  v-model="discountForm.value"
+                  class="el-input__inner"
+                />
+                <el-form-item />
+              </el-form-item>
+              <el-form-item>
+                <el-button
+                  type="primary"
+                  :plain="false"
+                  @click="addDiscount({ contractId: contract.id, discount: {...discountForm, type: 'MONTHLY_SUBSCRIPTION_VALUE'} })"
                 >
-                  <money
-                    v-model="contract.monthlySubscriptionFee"
-                    :disabled="isContractInactive(contract)"
-                    :class="{'is-inactive': isContractInactive(contract)}"
-                    class="el-input__inner"
-                  />
-                  <el-form-item />
-                </el-form-item>
-              </el-col>
-            </el-row>
+                  Adicionar desconto
+                </el-button>
+              </el-form-item>
+            </div>
             <el-row :gutter="24">
               <el-col
                 v-if="contract.planId === 6"
@@ -501,6 +550,7 @@ export default {
   },
   data() {
     return {
+      discountForm: {},
       form: {},
       isFormVisible: false,
       formRules: {
@@ -590,7 +640,10 @@ export default {
     ...mapActions([
       'addContract',
       'updateContract',
-      'getContractDiscountList'
+      'getContractDiscountList',
+      'addContractDiscount',
+      'changeContractDiscount',
+      'deleteContractDiscount'
     ]),
     changeHasWorkspaceValue(newValue) {
       this.hasWorkspace = newValue
@@ -604,7 +657,6 @@ export default {
       this.newContract = new ContractModel({ tariffs })
     },
     handleCurrentContract(index) {
-      debugger
       const currentContract = this.allFilteredContracts[index] || {}
       const hasDiscounts = currentContract.hasDiscounts
       if (hasDiscounts) {
@@ -712,6 +764,39 @@ export default {
       if (this.haveContracts) {
         this.newContract.startedDate = new Date()
       }
+    },
+
+    addDiscount(data) {
+      this.addContractDiscount(data)
+        .then((res) => {
+          this.$jusNotification({
+            type: 'success',
+            title: 'Yay!',
+            message: 'Desconto criado com sucesso.'
+          })
+        })
+    },
+
+    changeDiscount(data) {
+      this.changeContractDiscount(data)
+        .then((res) => {
+          this.$jusNotification({
+            type: 'success',
+            title: 'Yay!',
+            message: 'Desconto alterado com sucesso.'
+          })
+        })
+    },
+
+    deleteDiscount(data) {
+      this.deleteContractDiscount(data)
+        .then((res) => {
+          this.$jusNotification({
+            type: 'success',
+            title: 'Yay!',
+            message: 'Desconto deletado com sucesso.'
+          })
+        })
     }
   }
 }
@@ -775,6 +860,13 @@ export default {
 .custom_input_number::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+
+.flex-row {
+  display: flex;
+  gap: 5px;
+  width: 100%;
+  align-items: flex-end;
 }
 
 </style>
