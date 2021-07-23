@@ -553,7 +553,7 @@ export default {
 
       const disputeId = this.$route.params.id
       const disputeRole = roleToEdit
-      const disputeRoleId = { roleToEdit }
+      const disputeRoleId = roleToEdit?.id
       this.$store.dispatch('editRole', {
         disputeId,
         disputeRole
@@ -582,7 +582,7 @@ export default {
             for (const contact of roleDataDifference) {
               contacts.push(
                 this.$store.dispatch('restartEngagementByContact', {
-                  disputeId: this.dispute.id,
+                  disputeId: this.$route.params.id,
                   contact: contact.address || contact.number
                 })
               )
