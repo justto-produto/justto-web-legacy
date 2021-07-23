@@ -545,7 +545,7 @@ export default {
     isValidOab(oab) {
       const oabState = oab.split('/')[1] || ''
 
-      return !(oab.length < 8 || oab.length > 10 || !brazilianStates.map(({ value }) => value).includes(oabState[1]))
+      return (oab.length >= 8 && oab.length <= 10) && brazilianStates.map(({ value }) => value).includes(oabState)
     },
 
     addContact(contactValue, contactType) {
