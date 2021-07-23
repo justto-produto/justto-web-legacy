@@ -338,7 +338,9 @@ export default {
           margin: 8px 20px 0px 20px;
           text-align: center;
           font-weight: 600;
+          word-break: break-word;
         }
+
         .thamiris__alerts__body-items-item-message-line-through {
           font-size: 12px;
           margin: 8px 20px 0px 20px;
@@ -346,6 +348,7 @@ export default {
           font-weight: 600;
           text-decoration: line-through;
           color: $--color-gray;
+          word-break: break-word;
         }
       }
 
