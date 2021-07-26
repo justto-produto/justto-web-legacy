@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <article class="overview-tags">
     <el-popover
       v-if="showPopover"
@@ -436,10 +436,12 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/styles/colors.scss';
+
 @mixin selected-tag($--border-color, $--icon-url) {
   border: 2px solid $--border-color;
   position: relative;
   padding: 0 9px;
+
   &::after {
     content: url($--icon-url);
     position: absolute;
@@ -506,6 +508,7 @@ export default {
 
 <style lang="scss">
 @import '@/styles/colors.scss';
+
 @mixin selected-tag($--border-color, $--icon-url) {
   border: 2px solid $--border-color;
   position: relative;
@@ -630,6 +633,27 @@ export default {
 
   &:hover .el-icon-delete {
     visibility: visible;
+  }
+}
+
+.overview-tags__select-popper {
+  .el-scrollbar {
+    .el-select-dropdown__wrap.el-scrollbar__wrap {
+      .el-scrollbar__view.el-select-dropdown__list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        .el-select-dropdown__item {
+          display: flex;
+          width: 100%;
+
+          .overview-tags__option {
+            width: 100%;
+          }
+        }
+      }
+    }
   }
 }
 </style>
