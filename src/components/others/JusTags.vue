@@ -366,11 +366,13 @@ export default {
     width: 310px;
     margin-left: -10px;
     .el-select-dropdown__list {
-      padding-top: 10px;
-      padding-right: 10px;
+      padding: 8px 16px 8px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
     }
     .el-select-dropdown__item {
-      padding: 0 10px;
+      padding: 0;
       height: 32px;
       line-height: 32px;
     }
@@ -450,5 +452,9 @@ export default {
 
 .tag-text-light {
   color: white;
+}
+
+.el-tag--etiqueta:not(.tag-text-light) {
+  color: $--color-text-primary;
 }
 </style>
