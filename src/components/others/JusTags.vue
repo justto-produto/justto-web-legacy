@@ -52,8 +52,8 @@
             >
               <el-tag
                 :color="tag.color"
-                class="jus-tags__option el-tag--etiqueta el-tag--etiqueta-select"
                 :class="{'tag-text-light': isDackColor(tag.color)}"
+                class="jus-tags__option el-tag--etiqueta el-tag--etiqueta-select"
               >
                 <div>
                   <i :class="`el-icon-${tag.icon}`" />
@@ -365,6 +365,7 @@ export default {
   &__select-popper {
     width: 310px;
     margin-left: -10px;
+
     .el-select-dropdown__list {
       padding: 8px 16px 8px 8px;
       display: flex;
@@ -450,11 +451,36 @@ export default {
   }
 }
 
+.jus-tags__select-popper {
+  .el-scrollbar {
+    .el-select-dropdown__wrap.el-scrollbar__wrap {
+      .el-scrollbar__view.el-select-dropdown__list {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+
+        .el-select-dropdown__item {
+          display: flex;
+          width: 100%;
+
+          .jus-tags__option {
+            width: 100%;
+
+            .el-icon-delete {
+              color: inherit;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 .tag-text-light {
-  color: white;
+  color: white !important;
 }
 
 .el-tag--etiqueta:not(.tag-text-light) {
-  color: $--color-text-primary;
+  color: $--color-text-primary !important;
 }
 </style>

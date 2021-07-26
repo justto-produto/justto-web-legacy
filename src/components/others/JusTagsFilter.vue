@@ -46,7 +46,8 @@
         :color="tag.color"
         :class="{
           'jus-tags-filter__tag--inclusive-is-active': tag.activeType === 'inclusive',
-          'jus-tags-filter__tag--exclusive-is-active': tag.activeType === 'exclusive'
+          'jus-tags-filter__tag--exclusive-is-active': tag.activeType === 'exclusive',
+          'jus-tags-filter__tag--text-light': isDackColor(tag.color)
         }"
         class="jus-tags-filter__tag jus-tags-filter__tag--round"
         @click="filterByTag(tag, 'nextState')"
@@ -63,7 +64,7 @@
     >
       <div class="jus-tags-filter__tags-popover-container">
         <el-popover
-          v-for="tag in workspaceTags.slice(0, workspaceTags.length - 3).reverse()"
+          v-for="tag in workspaceTags.reverse()"
           :key="tag.id"
           :open-delay="400"
           popper-class="jus-tags-filter__actions-popover"
@@ -106,7 +107,6 @@
               'jus-tags-filter__tag--text-light': isDackColor(tag.color)
             }"
             class="el-tag--etiqueta el-tag--click jus-tags-filter__tag"
-            size="small"
           >
             <div
               class="jus-tags-filter__tag-container"
@@ -284,8 +284,10 @@ export default {
 }
 
 .jus-tags-filter__tags-popover {
-  padding: 8px;
+  padding: 8px 0 8px 8px;
   width: auto !important;
+  max-height: 50vh;
+  overflow-y: scroll;
 
   .jus-tags-filter__tags-popover-container {
     display: flex;
@@ -298,7 +300,10 @@ export default {
 
         .jus-tags-filter__tag {
           display: flex;
-          border: none;
+
+          &:not(.jus-tags-filter__tag--inclusive-is-active):not(.jus-tags-filter__tag--exclusive-is-active) {
+            border: none;
+          }
 
           &.jus-tags-filter__tag--text-light {
             .jus-tags-filter__tag-container {
