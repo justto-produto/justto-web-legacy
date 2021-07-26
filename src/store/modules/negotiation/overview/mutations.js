@@ -173,7 +173,15 @@ const overviewMutations = {
     Vue.set(state.ticketOverview, 'paused', false)
   },
 
-  updateTicketNegotiator(state, { payload: { negotiators = [], negotiatorsId } }) {
+  updateTicketNegotiator(state, data) {
+    let negotiators, negotiatorsId
+    if (data.payload) {
+      negotiators = data.payload.negotiators
+      negotiatorsId = data.payload.negotiatorsId
+    } else {
+      negotiators = data.negotiators
+      negotiatorsId = data.negotiatorsId
+    }
     const updatedParties = state.ticketOverviewParties.filter(({ roles, person }, index) => {
       if (!roles.includes('NEGOTIATOR') && negotiatorsId.includes(person.id)) {
         Vue.set(state.ticketOverviewParties[index], 'roles', [...roles, 'NEGOTIATOR'])
