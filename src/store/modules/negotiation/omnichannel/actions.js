@@ -217,11 +217,13 @@ const omnichannelActions = {
   },
 
   SOCKET_ADD_OCCURRENCE({ commit }, occurrence) {
-    if (window.location.href.includes('negotiation')) {
-      commit('addNegotiationOccurrence', occurrence)
-    }
-    if (window.location.href.includes('dispute')) {
-      commit('addDisputeOccurrence', occurrence)
+    if (!occurrence.archived) {
+      if (window.location.href.includes('negotiation')) {
+        commit('addNegotiationOccurrence', occurrence)
+      }
+      if (window.location.href.includes('dispute')) {
+        commit('addDisputeOccurrence', occurrence)
+      }
     }
   },
 

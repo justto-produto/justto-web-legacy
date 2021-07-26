@@ -175,6 +175,10 @@ const omnichannelMutations = {
 
   removeTicketNote: (state, { payload: { id } }) => {
     Vue.set(state.occurrences, 'list', state.occurrences.list.filter(note => Number(note.id) !== Number(id)))
+
+    if (!state.occurrences.list[state.occurrences.list.length - 1].id) {
+      Vue.delete(state.occurrences.list, state.occurrences.list.length - 1)
+    }
   },
 
   resetRecipients: (state) => Vue.set(state.editor, 'recipients', []),

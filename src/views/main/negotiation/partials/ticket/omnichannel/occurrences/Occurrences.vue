@@ -84,15 +84,19 @@ export default {
       messageType: 'getEditorMessageType',
       isPrinting: 'getExportTicketModalVisible'
     }),
+
     infiniteLoadingIdentifier() {
       return `${this.activeTab}-${this.id}`
     },
+
     countRendereds() {
       return this.occurrences.filter(o => (o.renderCompleted) || (o.interaction && o.interaction.countRendereds)).length
     },
+
     id() {
       return Number(this.$route.params.id)
     },
+
     dispute() {
       return {
         ...this.ticket,
@@ -102,8 +106,11 @@ export default {
         signStatus: this.ticket.draftStatus
       }
     },
+
     lastMessage() {
-      return this.occurrences[this.occurrences.length - 1] || { disputeId: this.id }
+      const occurrences = this.occurrences.filter(({ id }) => id)
+
+      return occurrences[this.occurrences.length - 1] || { disputeId: this.id }
     }
   },
 
