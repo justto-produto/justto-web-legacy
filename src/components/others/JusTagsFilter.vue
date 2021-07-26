@@ -63,8 +63,24 @@
       trigger="click"
     >
       <div class="jus-tags-filter__tags-popover-container">
+        <!-- <div class="el-input el-input--small">
+          <input
+            v-model="tagsFilterText"
+            type="text"
+            class="el-input__inner"
+            placeholder="Filtrar tags"
+          >
+        </div> -->
+        <el-input
+          v-model="tagsFilterText"
+          prefix-icon="el-icon-search"
+          placeholder="Filtrar tags"
+          size="small"
+          clearable
+        />
+
         <el-popover
-          v-for="tag in workspaceTags.reverse()"
+          v-for="tag in filteredWorkspaceTags.reverse()"
           :key="tag.id"
           :open-delay="400"
           popper-class="jus-tags-filter__actions-popover"
@@ -137,11 +153,19 @@ const _ = require('lodash')
 export default {
   name: 'JusTagsFilter',
 
+  data: () => ({
+    tagsFilterText: ''
+  }),
+
   computed: {
     ...mapGetters([
       'disputeQuery',
       'filteredTags'
     ]),
+
+    filteredWorkspaceTags() {
+      return (this.workspaceTags || []).filter(({ name }) => name.toLowerCase().includes(this.tagsFilterText.toLowerCase()))
+    },
 
     workspaceTags() {
       return this.filteredTags.map(t => {
