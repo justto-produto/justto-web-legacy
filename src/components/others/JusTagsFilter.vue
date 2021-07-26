@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="jus-tags-filter">
     <el-popover
       v-for="(tag, index) in workspaceTags.slice(-3).reverse()"
@@ -61,7 +61,7 @@
       popper-class="jus-tags-filter__tags-popover"
       trigger="click"
     >
-      <div>
+      <div class="jus-tags-filter__tags-popover-container">
         <el-popover
           v-for="tag in workspaceTags.slice(0, workspaceTags.length - 3).reverse()"
           :key="tag.id"
@@ -106,7 +106,10 @@
             }"
             class="el-tag--etiqueta el-tag--click jus-tags-filter__tag"
           >
-            <div @click="filterByTag(tag, 'nextState')">
+            <div
+              class="jus-tags-filter__tag-container"
+              @click="filterByTag(tag, 'nextState')"
+            >
               <i :class="`el-icon-${tag.icon}`" />
               {{ tag.name }}
             </div>
@@ -272,6 +275,30 @@ export default {
 
 .jus-tags-filter__tags-popover {
   padding: 6px;
+  width: auto !important;
+
+  .jus-tags-filter__tags-popover-container {
+    display: flex;
+    flex-direction: column;
+
+    span {
+      .el-popover__reference-wrapper {
+        width: 100%;
+
+        .jus-tags-filter__tag {
+          display: flex;
+
+          .jus-tags-filter__tag-container {
+            display: flex;
+            width: 100%;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+          }
+        }
+      }
+    }
+  }
 }
 
 .jus-tags-filter__actions-popover {
