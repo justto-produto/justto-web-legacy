@@ -4,12 +4,15 @@
       v-for="tag in disputeTags"
       :key="tag.id"
       :color="tag.color"
+      :class="{'tag-text-light': isDackColor(tag.color)}"
       class="el-tag--etiqueta el-tag--click"
     >
       <div @click="filterByTag(tag.id)">
         <i :class="`el-icon-${tag.icon}`" />
+
         {{ tag.name }}
       </div>
+
       <el-button
         type="text"
         icon="el-icon-close"
@@ -17,6 +20,7 @@
         @click.prevent="removeTag(tag.id)"
       />
     </el-tag>
+
     <el-popover
       v-if="showPopover"
       ref="main-popover"
@@ -49,17 +53,21 @@
               <el-tag
                 :color="tag.color"
                 class="jus-tags__option el-tag--etiqueta el-tag--etiqueta-select"
+                :class="{'tag-text-light': isDackColor(tag.color)}"
               >
                 <div>
                   <i :class="`el-icon-${tag.icon}`" />
+
                   {{ tag.name }}
                 </div>
+
                 <i
                   class="el-icon-delete"
                   @click.stop.prevent="handleDeleteTag(tag.id)"
                 />
               </el-tag>
             </el-option>
+
             <div slot="empty">
               <el-button
                 type="text"
@@ -72,6 +80,7 @@
             </div>
           </el-select>
         </div>
+
         <!-- NOVA ETIQUETA -->
         <div
           v-if="showForm"
@@ -141,6 +150,7 @@
           </div>
         </div>
       </div>
+
       <el-tooltip
         id="idTagTooltip"
         slot="reference"
@@ -163,9 +173,11 @@
 
 <script>
 import { mapActions } from 'vuex'
+import { calcBrightness } from '@/utils'
 
 export default {
   name: 'JusTags',
+
   data() {
     return {
       loading: false,
@@ -237,6 +249,10 @@ export default {
   },
   methods: {
     ...mapActions(['deleteTag']),
+
+    isDackColor(color) {
+      return calcBrightness(color) <= 175
+    },
 
     closeOnCLick(e) {
       if (!e.target.id.startsWith('idTag') && !e.target.textContent.includes('Adicionar nova etiqueta')) {
@@ -430,5 +446,9 @@ export default {
   &:hover .el-icon-delete {
     visibility: visible;
   }
+}
+
+.tag-text-light {
+  color: white;
 }
 </style>

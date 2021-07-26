@@ -131,6 +131,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { calcBrightness } from '@/utils'
 const _ = require('lodash')
 
 export default {
@@ -166,12 +167,7 @@ export default {
 
   methods: {
     isDackColor(color) {
-      const hex = color.replace('#', '')
-      const red = parseInt(hex.substr(0, 2), 16)
-      const green = parseInt(hex.substr(2, 2), 16)
-      const blue = parseInt(hex.substr(4, 2), 16)
-      const brightness = ((red * 299) + (green * 587) + (blue * 114)) / 1000
-      return brightness <= 175
+      return calcBrightness(color) <= 175
     },
 
     filterByTag(tag, command) {
@@ -313,7 +309,7 @@ export default {
           .jus-tags-filter__tag-container {
             display: flex;
             width: 100%;
-            justify-content: center;
+            justify-content: flex-start;
             align-items: center;
             gap: 8px;
 
