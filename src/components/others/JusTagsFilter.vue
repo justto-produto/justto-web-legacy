@@ -102,9 +102,11 @@
             :color="tag.color"
             :class="{
               'jus-tags-filter__tag--inclusive-is-active': tag.activeType === 'inclusive',
-              'jus-tags-filter__tag--exclusive-is-active': tag.activeType === 'exclusive'
+              'jus-tags-filter__tag--exclusive-is-active': tag.activeType === 'exclusive',
+              'jus-tags-filter__tag--text-light': isDackColor(tag.color)
             }"
             class="el-tag--etiqueta el-tag--click jus-tags-filter__tag"
+            size="small"
           >
             <div
               class="jus-tags-filter__tag-container"
@@ -133,6 +135,7 @@ const _ = require('lodash')
 
 export default {
   name: 'JusTagsFilter',
+
   computed: {
     ...mapGetters([
       'disputeQuery',
@@ -160,7 +163,17 @@ export default {
       })
     }
   },
+
   methods: {
+    isDackColor(color) {
+      const hex = color.replace('#', '')
+      const red = parseInt(hex.substr(0, 2), 16)
+      const green = parseInt(hex.substr(2, 2), 16)
+      const blue = parseInt(hex.substr(4, 2), 16)
+      const brightness = ((red * 299) + (green * 587) + (blue * 114)) / 1000
+      return brightness <= 175
+    },
+
     filterByTag(tag, command) {
       const currentTags = _.cloneDeep(this.disputeQuery.tags || [])
       const currentNoTags = _.cloneDeep(this.disputeQuery.noTags || [])
@@ -229,6 +242,7 @@ export default {
   border: 2px solid $--border-color;
   position: relative;
   padding: 0 9px;
+
   &::after {
     content: url($--icon-url);
     position: absolute;
@@ -248,7 +262,7 @@ export default {
   .jus-tags-filter__item {
     cursor: pointer;
     margin-left: -10px;
-    border-radius: 50%;
+    border-radius: 50% !important;
   }
 
   .jus-tags-filter__plus-counter-button {
@@ -274,12 +288,13 @@ export default {
 }
 
 .jus-tags-filter__tags-popover {
-  padding: 6px;
+  padding: 8px;
   width: auto !important;
 
   .jus-tags-filter__tags-popover-container {
     display: flex;
     flex-direction: column;
+    gap: 4px;
 
     span {
       .el-popover__reference-wrapper {
@@ -287,6 +302,13 @@ export default {
 
         .jus-tags-filter__tag {
           display: flex;
+          border: none;
+
+          &.jus-tags-filter__tag--text-light {
+            .jus-tags-filter__tag-container {
+              color: white !important;
+            }
+          }
 
           .jus-tags-filter__tag-container {
             display: flex;
@@ -294,6 +316,8 @@ export default {
             justify-content: center;
             align-items: center;
             gap: 8px;
+
+            color: $--color-text-primary;
           }
         }
       }
@@ -304,7 +328,6 @@ export default {
 .jus-tags-filter__actions-popover {
   padding: 6px;
   color: $--color-text-secondary;
-  // background-color: $--color-primary-light-9;
 
   .jus-tags-filter__state-button {
     color: $--color-text-secondary;
@@ -323,13 +346,6 @@ export default {
     font-weight: bold;
     color: $--color-text-primary;
   }
-
-  // .popper__arrow {
-  //   border-color: $--color-primary-light-9;
-  //   &::after {
-  //     border-color: $--color-primary-light-9;
-  //   }
-  // }
 }
 
 </style>
