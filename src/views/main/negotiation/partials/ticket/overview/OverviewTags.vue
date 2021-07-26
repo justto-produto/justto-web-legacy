@@ -30,7 +30,7 @@
             >
               <el-tag
                 :color="tag.color"
-                :style="`color: hsl(0, 10%, calc(${getFontColor(tag.color)} * -10000000%))`"
+                :style="{ color: isDarkColor(tag.color) ? '#FFFFFF' : '#424242'}"
                 class="overview-tags__option el-tag--etiqueta el-tag--etiqueta-select"
               >
                 <div>
@@ -141,7 +141,7 @@
       v-for="tag in disputeTags.slice(-3).reverse()"
       :key="tag.id"
       :color="tag.color"
-      :style="`color: hsl(0, 10%, calc(${getFontColor(tag.color)} * -10000000%))`"
+      :style="{ color: isDarkColor(tag.color) ? '#FFFFFF' : '#424242'}"
       :class="{
         'overview-tags__tag--inclusive-is-active': tag.activeType === 'inclusive',
         'overview-tags__tag--exclusive-is-active': tag.activeType === 'exclusive'
@@ -171,7 +171,7 @@
         v-for="tag in disputeTags.slice(0, disputeTags.length - 3).reverse()"
         :key="tag.id"
         :color="tag.color"
-        :style="`color: hsl(0, 10%, calc(${getFontColor(tag.color)} * -10000000%))`"
+        :style="{ color: isDarkColor(tag.color) ? '#FFFFFF' : '#424242'}"
         :class="{
           'overview-tags__tag--inclusive-is-active': tag.activeType === 'inclusive',
           'overview-tags__tag--exclusive-is-active': tag.activeType === 'exclusive'
@@ -202,6 +202,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import { calcBrightness } from '@/utils'
 const _ = require('lodash')
 
 export default {
@@ -295,6 +296,10 @@ export default {
       'setTicketsQuery',
       'getTickets'
     ]),
+
+    isDarkColor(color) {
+      return calcBrightness(color) <= 175
+    },
 
     getFontColor(bgColor) {
       const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(bgColor)

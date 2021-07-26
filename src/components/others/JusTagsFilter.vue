@@ -47,7 +47,7 @@
         :class="{
           'jus-tags-filter__tag--inclusive-is-active': tag.activeType === 'inclusive',
           'jus-tags-filter__tag--exclusive-is-active': tag.activeType === 'exclusive',
-          'jus-tags-filter__tag--text-light': isDackColor(tag.color)
+          'jus-tags-filter__tag--text-light': isDarkColor(tag.color)
         }"
         class="jus-tags-filter__tag jus-tags-filter__tag--round"
         @click="filterByTag(tag, 'nextState')"
@@ -104,7 +104,7 @@
             :class="{
               'jus-tags-filter__tag--inclusive-is-active': tag.activeType === 'inclusive',
               'jus-tags-filter__tag--exclusive-is-active': tag.activeType === 'exclusive',
-              'jus-tags-filter__tag--text-light': isDackColor(tag.color)
+              'jus-tags-filter__tag--text-light': isDarkColor(tag.color)
             }"
             class="el-tag--etiqueta el-tag--click jus-tags-filter__tag"
           >
@@ -166,7 +166,7 @@ export default {
   },
 
   methods: {
-    isDackColor(color) {
+    isDarkColor(color) {
       return calcBrightness(color) <= 175
     },
 

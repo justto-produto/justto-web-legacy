@@ -4,7 +4,7 @@
       v-for="tag in disputeTags"
       :key="tag.id"
       :color="tag.color"
-      :class="{'tag-text-light': isDackColor(tag.color)}"
+      :class="{'tag-text-light': isDarkColor(tag.color)}"
       class="el-tag--etiqueta el-tag--click"
     >
       <div @click="filterByTag(tag.id)">
@@ -52,7 +52,7 @@
             >
               <el-tag
                 :color="tag.color"
-                :class="{'tag-text-light': isDackColor(tag.color)}"
+                :class="{'tag-text-light': isDarkColor(tag.color)}"
                 class="jus-tags__option el-tag--etiqueta el-tag--etiqueta-select"
               >
                 <div>
@@ -250,7 +250,7 @@ export default {
   methods: {
     ...mapActions(['deleteTag']),
 
-    isDackColor(color) {
+    isDarkColor(color) {
       return calcBrightness(color) <= 175
     },
 
