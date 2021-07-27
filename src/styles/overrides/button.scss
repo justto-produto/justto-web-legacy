@@ -4,13 +4,14 @@
   font-family: 'Montserrat', sans-serif !important;
 }
 .el-button--secondary {
-  color: #fff;
-  background-color: $--color-secondary;
-  border-color: $--color-secondary;
+  color: #fff !important;
+  background-color: $--color-secondary !important;
+  border-color: $--color-secondary !important;
+
   &:hover {
-    background: $--color-secondary-light-2;
-    border-color: $--color-secondary-light-2;
-    color: #fff;
+    background: $--color-secondary-light-2 !important;
+    border-color: $--color-secondary-light-2 !important;
+    color: #fff !important;
   }
 }
 
