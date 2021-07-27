@@ -130,8 +130,10 @@ export default {
       'getTicketOverviewAttachments'
     ]),
 
-    handleDragenter(_evt) {
-      this.isDragging = true
+    handleDragenter(evt) {
+      if (evt.dataTransfer.types.includes('Files')) {
+        this.isDragging = true
+      }
     },
 
     handleDragleave(_evt) {

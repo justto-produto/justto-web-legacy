@@ -917,6 +917,7 @@ export default {
         content: 'Tem certeza que deseja realizar esta ação?',
         title: this.$options.filters.capitalize(this.$t('action.' + action.toUpperCase()))
       }
+
       switch (action) {
         case 'settled':
           if (this.dispute.paused) {
@@ -1312,31 +1313,14 @@ export default {
                 note: this.scapeHtml(this.counterOfferForm.note),
                 updateUpperRange: updateUpperRange || false
               }).then(() => {
-                if (this.counterOfferForm.note) {
-                  this.modalLoading = true
-                  const people = this.disputeClaimants.filter(d => d.id === this.counterOfferForm.selectedRoleId)[0]
-                  const note = '<b>Contraproposta manual no valor de ' + this.$options.filters.currency(this.counterOfferForm.lastCounterOfferValue) + ', realizada por ' + people.name + ', com a nota:</b> <br/>' + this.counterOfferForm.note
-                  this.sendDisputeNote({
-                    note,
-                    disputeId: this.dispute.id
-                  }).then(() => {
-                    resolve()
-                    this.counterproposalDialogVisible = false
-                  }).catch(e => {
-                    reject(e)
-                  }).finally(() => {
-                    this.modalLoading = false
-                  })
-                } else {
-                  resolve()
-                  this.counterproposalDialogVisible = false
-                  this.settledDialogVisible = false
-                  this.$jusNotification({
-                    title: 'Yay!',
-                    message: updateUpperRange ? 'Proposta aceita com sucesso.' : 'Contraproposta enviada com sucesso.',
-                    type: 'success'
-                  })
-                }
+                resolve()
+                this.counterproposalDialogVisible = false
+                this.settledDialogVisible = false
+                this.$jusNotification({
+                  title: 'Yay!',
+                  message: updateUpperRange ? 'Proposta aceita com sucesso.' : 'Contraproposta enviada com sucesso.',
+                  type: 'success'
+                })
               }).catch(error => {
                 reject(error)
                 this.$jusNotification({ error })

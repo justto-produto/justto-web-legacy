@@ -121,7 +121,7 @@
           type="primary"
           @click.prevent="handleDialogAction"
         >
-          {{ offerFormType !== 'UNSETTLED' || isInsufficientUpperRange ? 'Atualizar contraproposta' : 'Continuar' }}
+          Continuar
         </el-button>
       </div>
     </el-dialog>
@@ -660,7 +660,6 @@ export default {
         const { value, roleId, note } = this.offerForm
         const data = { value, note, conclusionNote: note, roleId, updateUpperRange }
         const polarityObjectKey = 'plaintiffOffer'
-
         this.sendOffer({ disputeId, data, polarityObjectKey, change: updateUpperRange })
           .then(success => resolve(success))
           .catch(error => {

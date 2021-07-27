@@ -8,6 +8,7 @@
     <template slot="title">
       <h2>Filtrar {{ activeTabLabel }}</h2>
     </template>
+
     <div class="management-filters">
       <el-form
         v-loading="loading"
@@ -39,6 +40,7 @@
               </el-select>
             </el-form-item>
           </el-col>
+
           <!-- MOTIVOS DE PRENEGOCIACAO -->
           <el-col
             v-if="!loading && (isPreNegotiation || isAll)"
@@ -61,6 +63,7 @@
               </el-select>
             </el-form-item>
           </el-col>
+
           <!-- ESTRATÉGIA -->
           <el-col
             v-if="!loading"
@@ -84,6 +87,7 @@
               </el-select>
             </el-form-item>
           </el-col>
+
           <!-- DATA DO ACORDO -->
           <el-col
             v-if="isNewAgreements"
@@ -105,6 +109,7 @@
               />
             </el-form-item>
           </el-col>
+
           <el-col :span="12">
             <el-form-item label="Data limite para negociar">
               <el-date-picker
@@ -122,6 +127,7 @@
               />
             </el-form-item>
           </el-col>
+
           <!-- IMPORTAÇÃO -->
           <el-col :span="12">
             <el-form-item label="Data da Importação">
@@ -140,6 +146,7 @@
               />
             </el-form-item>
           </el-col>
+
           <el-col
             v-if="!loading && isFinished || isPreNegotiation"
             :span="12"
@@ -163,6 +170,7 @@
               </el-select>
             </el-form-item>
           </el-col>
+
           <!-- FAVORITOS -->
           <el-col :span="12">
             <el-form-item
@@ -198,6 +206,7 @@
               </div>
             </el-form-item>
           </el-col>
+
           <!-- FAVORITOS -->
           <el-col
             v-if="isInteration"
@@ -227,6 +236,7 @@
               </div>
             </el-form-item>
           </el-col>
+
           <!-- MEIO DE INTERAÇÃO -->
           <el-col
             v-if="isInteration || isAll"
@@ -249,6 +259,7 @@
               </el-select>
             </el-form-item>
           </el-col>
+
           <el-col
             v-if="isFinished || isEngagement || isAll"
             :span="24"
@@ -268,6 +279,7 @@
         </el-row>
       </el-form>
     </div>
+
     <span slot="footer">
       <el-button
         plain
@@ -397,7 +409,7 @@ export default {
             'EXPIRED',
             'SETTLED',
             'UNSETTLED',
-            'REFUSED',
+            // 'REFUSED',
             'CANCELED'
           ]
       }
