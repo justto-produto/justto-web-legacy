@@ -360,6 +360,7 @@
         <el-button
           size="small"
           type="default"
+          @click="handleCompanyAnalysisAction('NEVER')"
         >
           Não notificar
         </el-button>
@@ -367,6 +368,7 @@
         <el-button
           size="small"
           type="secondary"
+          @click="handleCompanyAnalysisAction('ALWAYS')"
         >
           Sempre notificar
         </el-button>
@@ -374,6 +376,7 @@
         <el-button
           size="small"
           type="primary"
+          @click="handleCompanyAnalysisAction('ASK')"
         >
           Notificar somente dessa vez
         </el-button>
@@ -402,7 +405,7 @@ export default {
   data: () => ({
     modalLoading: false,
     offerDialogVisible: false,
-    sendNotificationAwaitingCompanyAnalysisVisible: true,
+    sendNotificationAwaitingCompanyAnalysisVisible: false,
     offerFormType: 'MANUAL_COUNTERPROPOSAL',
     offerForm: {
       roleId: null,
@@ -533,7 +536,8 @@ export default {
       'sendTicketAction',
       'sendOffer',
       'cancelTicket',
-      'setAccountProperty'
+      'setAccountProperty',
+      'getAccountProperty'
     ]),
 
     confirmAction(action, message = 'Tem certeza que deseja realizar está ação?') {
@@ -627,6 +631,49 @@ export default {
 
     openDropLawsuitDialog(action) {
       this.dropLawsuitDialogVisible = true
+    },
+
+    openSendNotificationAwaitingCompanyAnalysis() {
+      this.getAccountProperty('FAVORITE_NOTIFICATION').then(({ FAVORITE_NOTIFICATION = '' }) => {
+        if (['ALWAYS'].includes(FAVORITE_NOTIFICATION)) {
+          this.sendCompanyAnalysisActionMessage()
+        } else {
+          this.sendNotificationAwaitingCompanyAnalysisVisible = true
+        }
+      })
+    },
+
+    closeSendNotificationAwaitingCompanyAnalysis() {
+      this.sendNotificationAwaitingCompanyAnalysisVisible = false
+    },
+
+    handleCompanyAnalysisAction(action) {
+      switch (action) {
+        case 'ALWAYS':
+          this.sendCompanyAnalysisActionMessage()
+          this.setAccountProperty({ FAVORITE_NOTIFICATION: 'ALWAYS' })
+          break
+        default:
+          if (action === 'ASK') {
+            this.sendCompanyAnalysisActionMessage()
+          }
+          this.setAccountProperty({ FAVORITE_NOTIFICATION: '' })
+          break
+      }
+
+      this.closeSendNotificationAwaitingCompanyAnalysis()
+    },
+
+    sendCompanyAnalysisActionMessage() {
+      // TODO: Enviar mensagem
+      console.log('Envia mensagem aqui')
+      this.$jusNotification({
+        type: 'success',
+        title: 'Yay!',
+        message: 'Notificação enviada com sucesso'
+      })
+
+      this.sendNotificationAwaitingCompanyAnalysisVisible = false
     },
 
     handleDialogAction() {
