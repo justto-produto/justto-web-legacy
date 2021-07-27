@@ -333,7 +333,7 @@
       />
     </el-dialog>
 
-    <!-- TODO FAZER DIALOG AQUI -->
+    <!-- TODO: SAAS-4223 FAZER DIALOG AQUI -->
     <el-dialog
       :visible.sync="sendNotificationAwaitingCompanyAnalysisVisible"
       :show-close="false"
@@ -343,17 +343,40 @@
       destroy-on-close
       width="604px"
       title="Quer notificar o Dr Cleiton desta ação?"
-      class="dialog-actions__increase-alert"
+      custom-class="dialog-actions__increase-alert"
     >
-      <span>Vamos enviar a mensagem abaixo:</span>
-      <!--  -->
-      <div>
+      <article class="dialog-actions__increase-alert-body">
+        <span>Vamos enviar a mensagem abaixo:</span>
+        <!--  -->
+        <div>
+          <p>Mensagem aqui</p>
+        </div>
+      </article>
 
-      </div>
-      <div class="el-dialog__footer">
-        <el-button>Não notificar</el-button>
-        <el-button>Sempre notificar</el-button>
-        <el-button>Notificar somente dessa vez</el-button>
+      <div
+        slot="footer"
+        class="dialog-actions__increase-alert-footer"
+      >
+        <el-button
+          size="small"
+          type="default"
+        >
+          Não notificar
+        </el-button>
+
+        <el-button
+          size="small"
+          type="secondary"
+        >
+          Sempre notificar
+        </el-button>
+
+        <el-button
+          size="small"
+          type="primary"
+        >
+          Notificar somente dessa vez
+        </el-button>
       </div>
     </el-dialog>
   </section>
@@ -798,9 +821,25 @@ export default {
 }
 
 .dialog-actions__increase-alert {
+  .el-dialog__header {}
+
+  .el-dialog__body {
+    .dialog-actions__increase-alert-body {
+    }
+  }
+
+  .el-dialog__footer {
+    .dialog-actions__increase-alert-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+  }
+
   .dialog-actions__increase-alert-subtitle {
     color: $--color-text-secondary;
   }
+
   .dialog-actions__increase-alert-infobox {
     margin: 12px 0 24px;
 

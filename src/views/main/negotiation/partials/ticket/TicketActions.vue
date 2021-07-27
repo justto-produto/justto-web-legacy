@@ -52,7 +52,7 @@
       </el-button>
     </el-popover>
 
-    <DialogAction
+    <TicketActionsDialogs
       ref="dialogActions"
       :ticket="ticket"
     />
@@ -65,7 +65,7 @@ import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'TicketActions',
   components: {
-    DialogAction: () => import('./TicketActionsDialogs')
+    TicketActionsDialogs: () => import('./TicketActionsDialogs')
   },
   props: {
     ticket: {
