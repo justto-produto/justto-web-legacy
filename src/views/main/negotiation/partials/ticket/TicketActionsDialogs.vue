@@ -333,8 +333,9 @@
       />
     </el-dialog>
 
+    <!-- TODO FAZER DIALOG AQUI -->
     <el-dialog
-      :visible.sync="dropLawsuitDialogVisible"
+      :visible.sync="sendNotificationAwaitingCompanyAnalysisVisible"
       :show-close="false"
       :close-on-click-modal="false"
       :close-on-press-escape="false"
@@ -345,8 +346,14 @@
       class="dialog-actions__increase-alert"
     >
       <span>Vamos enviar a mensagem abaixo:</span>
+      <!--  -->
+      <div>
+
+      </div>
       <div class="el-dialog__footer">
-        <el-button>Não noti</el-button>
+        <el-button>Não notificar</el-button>
+        <el-button>Sempre notificar</el-button>
+        <el-button>Notificar somente dessa vez</el-button>
       </div>
     </el-dialog>
   </section>
@@ -372,6 +379,7 @@ export default {
   data: () => ({
     modalLoading: false,
     offerDialogVisible: false,
+    sendNotificationAwaitingCompanyAnalysisVisible: true,
     offerFormType: 'MANUAL_COUNTERPROPOSAL',
     offerForm: {
       roleId: null,
@@ -501,7 +509,8 @@ export default {
       'getOutcomeReasons',
       'sendTicketAction',
       'sendOffer',
-      'cancelTicket'
+      'cancelTicket',
+      'setAccountProperty'
     ]),
 
     confirmAction(action, message = 'Tem certeza que deseja realizar está ação?') {
@@ -763,6 +772,11 @@ export default {
       }).catch(error => this.$jusNotification({ error })).finally(() => {
         this.modalLoading = false
       })
+    },
+
+    // TODO fazer função que trata botões da analise da empresa
+    sendNotificationAwaitingCompanyAnalysis(frequency) {
+      // do something
     }
   }
 }
