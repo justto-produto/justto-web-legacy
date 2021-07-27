@@ -402,7 +402,7 @@ export default {
             'EXPIRED',
             'SETTLED',
             'UNSETTLED',
-            'REFUSED',
+            // 'REFUSED',
             'CANCELED'
           ]
       }

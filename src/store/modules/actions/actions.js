@@ -117,10 +117,12 @@ const actionsActions = {
         data
       }).then((res) => {
         if (mutations[action]) {
-          mutations[action].forEach((mutation, index) => {
+          const currentAction = mutations[action]
+          currentAction.forEach((mutation, index) => {
             if (payloads[action]) {
-              if (payloads[action][index]) {
-                commit(mutation, payloads[action][index])
+              const currentPayload = payloads[action][index]
+              if (currentPayload) {
+                commit(mutation, currentPayload)
               } else {
                 commit(mutation)
               }
