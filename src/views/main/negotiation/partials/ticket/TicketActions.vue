@@ -326,7 +326,7 @@ export default {
       })
       this.$jusSegment(message, { disputeId })
 
-      if (['DISFAVOR', 'FAVORITE'].includes(action)) {
+      if (['DISFAVOR', 'FAVORITE'].includes(action) && this.isJusttoAdmin) {
         this.$refs.notifyOnCompanyAnalysis.open(action, this.ticket)
       }
     },
