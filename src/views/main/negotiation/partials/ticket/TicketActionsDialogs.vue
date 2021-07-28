@@ -332,56 +332,6 @@
         @submit="handleDropLawsuit($event)"
       />
     </el-dialog>
-
-    <!-- TODO: SAAS-4223 FAZER DIALOG AQUI -->
-    <el-dialog
-      :visible.sync="sendNotificationAwaitingCompanyAnalysisVisible"
-      :show-close="false"
-      :close-on-click-modal="false"
-      :close-on-press-escape="false"
-      append-to-body
-      destroy-on-close
-      width="604px"
-      title="Quer notificar o Dr Cleiton desta ação?"
-      custom-class="dialog-actions__increase-alert"
-    >
-      <article class="dialog-actions__increase-alert-body">
-        <span>Vamos enviar a mensagem abaixo:</span>
-        <!--  -->
-        <div>
-          <p>Mensagem aqui</p>
-        </div>
-      </article>
-
-      <div
-        slot="footer"
-        class="dialog-actions__increase-alert-footer"
-      >
-        <el-button
-          size="small"
-          type="default"
-          @click="handleCompanyAnalysisAction('NEVER')"
-        >
-          Não notificar
-        </el-button>
-
-        <el-button
-          size="small"
-          type="secondary"
-          @click="handleCompanyAnalysisAction('ALWAYS')"
-        >
-          Sempre notificar
-        </el-button>
-
-        <el-button
-          size="small"
-          type="primary"
-          @click="handleCompanyAnalysisAction('ASK')"
-        >
-          Notificar somente dessa vez
-        </el-button>
-      </div>
-    </el-dialog>
   </section>
 </template>
 
@@ -631,49 +581,6 @@ export default {
 
     openDropLawsuitDialog(action) {
       this.dropLawsuitDialogVisible = true
-    },
-
-    openSendNotificationAwaitingCompanyAnalysis() {
-      this.getAccountProperty('FAVORITE_NOTIFICATION').then(({ FAVORITE_NOTIFICATION = '' }) => {
-        if (['ALWAYS'].includes(FAVORITE_NOTIFICATION)) {
-          this.sendCompanyAnalysisActionMessage()
-        } else {
-          this.sendNotificationAwaitingCompanyAnalysisVisible = true
-        }
-      })
-    },
-
-    closeSendNotificationAwaitingCompanyAnalysis() {
-      this.sendNotificationAwaitingCompanyAnalysisVisible = false
-    },
-
-    handleCompanyAnalysisAction(action) {
-      switch (action) {
-        case 'ALWAYS':
-          this.sendCompanyAnalysisActionMessage()
-          this.setAccountProperty({ FAVORITE_NOTIFICATION: 'ALWAYS' })
-          break
-        default:
-          if (action === 'ASK') {
-            this.sendCompanyAnalysisActionMessage()
-          }
-          this.setAccountProperty({ FAVORITE_NOTIFICATION: '' })
-          break
-      }
-
-      this.closeSendNotificationAwaitingCompanyAnalysis()
-    },
-
-    sendCompanyAnalysisActionMessage() {
-      // TODO: Enviar mensagem
-      console.log('Envia mensagem aqui')
-      this.$jusNotification({
-        type: 'success',
-        title: 'Yay!',
-        message: 'Notificação enviada com sucesso'
-      })
-
-      this.sendNotificationAwaitingCompanyAnalysisVisible = false
     },
 
     handleDialogAction() {

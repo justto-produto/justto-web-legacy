@@ -56,6 +56,10 @@
       ref="dialogActions"
       :ticket="ticket"
     />
+
+    <NotifyOnCompanyAnalysis
+      ref="notifyOnCompanyAnalysis"
+    />
   </article>
 </template>
 
@@ -65,7 +69,8 @@ import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'TicketActions',
   components: {
-    TicketActionsDialogs: () => import('./TicketActionsDialogs')
+    TicketActionsDialogs: () => import('./TicketActionsDialogs'),
+    NotifyOnCompanyAnalysis: () => import('@/components/dialogs/NotifyOnCompanyAnalysis.vue')
   },
   props: {
     ticket: {
@@ -321,8 +326,8 @@ export default {
       })
       this.$jusSegment(message, { disputeId })
 
-      if (action === 'DISFAVOR') {
-        this.$refs.dialogActions.openSendNotificationAwaitingCompanyAnalysis()
+      if (['DISFAVOR', 'FAVORITE'].includes(action)) {
+        this.$refs.notifyOnCompanyAnalysis.open(action, this.ticket)
       }
     },
 
