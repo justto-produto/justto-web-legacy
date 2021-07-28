@@ -69,6 +69,8 @@
         />
       </div>
     </DialogEditor>
+
+    <ExpiredDisputeAlert ref="expiredDisputeAlert" />
   </section>
   <section
     v-else
@@ -92,7 +94,8 @@ export default {
     QuickReply: () => import('./QuickReply'),
     Recipients: () => import('./Recipients'),
     Attachments: () => import('./AttachemntsIndicator'),
-    DialogEditor: () => import('@/components/dialogs/DialogEditor')
+    DialogEditor: () => import('@/components/dialogs/DialogEditor'),
+    ExpiredDisputeAlert: () => import('@/components/dialogs/ExpiredDisputeAlert')
   },
 
   mixins: [ckeditor],
@@ -192,22 +195,37 @@ export default {
       this.$refs.fullScreenEditor.openDialogEditor(this.showCKEditor ? this.editorText : this.editorTextScaped)
     },
 
+    validateSendMessage() {
+      if (['EXPIRED'].includes(this.ticket.status)) {
+        return this.$refs.expiredDisputeAlert.open()
+      } else {
+        return new Promise(resolve => resolve())
+      }
+    },
+
     send(_) {
       this.localLoading = true
       const { id } = this.$route.params
-      this.sendMessage(Number(id)).then(res => {
-        this.resetRecipients()
-        this.setEditorText('')
-        this.$jusNotification({
-          title: 'Yay!',
-          message: 'Mensagem enviado com sucesso.',
-          type: 'success'
+
+      console.log('STATUS AQUI', ['EXPIRED'].includes(this.ticket.status))
+
+      this.validateSendMessage().then(() => {
+        this.sendMessage(Number(id)).then(res => {
+          this.resetRecipients()
+          this.setEditorText('')
+          this.$jusNotification({
+            title: 'Yay!',
+            message: 'Mensagem enviado com sucesso.',
+            type: 'success'
+          })
+        }).catch(error => {
+          try {
+            const parsedError = JSON.parse(error)
+            this.$jusNotification(parsedError)
+          } catch (e) {}
+        }).finally(() => {
+          this.localLoading = false
         })
-      }).catch(error => {
-        try {
-          const parsedError = JSON.parse(error)
-          this.$jusNotification(parsedError)
-        } catch (e) {}
       }).finally(() => {
         this.localLoading = false
       })
