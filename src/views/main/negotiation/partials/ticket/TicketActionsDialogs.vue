@@ -355,6 +355,7 @@ export default {
   data: () => ({
     modalLoading: false,
     offerDialogVisible: false,
+    sendNotificationAwaitingCompanyAnalysisVisible: false,
     offerFormType: 'MANUAL_COUNTERPROPOSAL',
     offerForm: {
       roleId: null,
@@ -484,7 +485,9 @@ export default {
       'getOutcomeReasons',
       'sendTicketAction',
       'sendOffer',
-      'cancelTicket'
+      'cancelTicket',
+      'setAccountProperty',
+      'getAccountProperty'
     ]),
 
     confirmAction(action, message = 'Tem certeza que deseja realizar está ação?') {
@@ -745,6 +748,11 @@ export default {
       }).catch(error => this.$jusNotification({ error })).finally(() => {
         this.modalLoading = false
       })
+    },
+
+    // TODO fazer função que trata botões da analise da empresa
+    sendNotificationAwaitingCompanyAnalysis(frequency) {
+      // do something
     }
   }
 }
@@ -767,9 +775,25 @@ export default {
 }
 
 .dialog-actions__increase-alert {
+  .el-dialog__header {}
+
+  .el-dialog__body {
+    .dialog-actions__increase-alert-body {
+    }
+  }
+
+  .el-dialog__footer {
+    .dialog-actions__increase-alert-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+  }
+
   .dialog-actions__increase-alert-subtitle {
     color: $--color-text-secondary;
   }
+
   .dialog-actions__increase-alert-infobox {
     margin: 12px 0 24px;
 

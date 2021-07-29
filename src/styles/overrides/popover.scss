@@ -4,20 +4,23 @@
   padding: 0 !important;
 
   &--dark {
-    background-color: $--color-text-primary;
-    color: white;
-    border-color: $--color-text-primary;
-    font-size: 12px;
-    padding: 10px;
+    background-color: $--color-text-primary !important;
+    color: white !important;
+    border-color: $--color-text-primary !important;
+    font-size: 12px !important;
+    padding: 10px !important;
+
     img {
       width: 14px;
       margin-right: 4px;
     }
+
     .subtitle {
       display: flex;
       align-items: center;
       margin-bottom: 4px;
     }
+
     .popper__arrow {
       border-bottom-color: #343b4b !important;
       &::after {

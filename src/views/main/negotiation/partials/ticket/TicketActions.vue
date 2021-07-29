@@ -52,9 +52,13 @@
       </el-button>
     </el-popover>
 
-    <DialogAction
+    <TicketActionsDialogs
       ref="dialogActions"
       :ticket="ticket"
+    />
+
+    <NotifyOnCompanyAnalysis
+      ref="notifyOnCompanyAnalysis"
     />
   </article>
 </template>
@@ -65,7 +69,8 @@ import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'TicketActions',
   components: {
-    DialogAction: () => import('./TicketActionsDialogs')
+    TicketActionsDialogs: () => import('./TicketActionsDialogs'),
+    NotifyOnCompanyAnalysis: () => import('@/components/dialogs/NotifyOnCompanyAnalysis.vue')
   },
   props: {
     ticket: {
@@ -320,6 +325,10 @@ export default {
         dangerouslyUseHTMLString: true
       })
       this.$jusSegment(message, { disputeId })
+
+      if (['DISFAVOR', 'FAVORITE'].includes(action) && this.isJusttoAdmin) {
+        this.$refs.notifyOnCompanyAnalysis.open(action, this.ticket)
+      }
     },
 
     handleFavorite() {
@@ -602,10 +611,11 @@ export default {
   .ticket-actions__actions-list {
     list-style: none;
     padding: 0;
+    margin: 8px 0;
 
     .ticket-actions__list-item {
       cursor: pointer;
-      padding: 3px 30px;
+      padding: 3px 16px;
       &--hidden { display: none; }
       &:hover { background-color: $--color-light-gray; }
     }
