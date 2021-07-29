@@ -115,7 +115,6 @@ const omnichannelActions = {
     }
   },
 
-  // TODO 4055
   verifyRecipient({ _ }, recipient) {
     const { value, disputeId } = recipient
     const params = {
