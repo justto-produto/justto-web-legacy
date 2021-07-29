@@ -207,8 +207,6 @@ export default {
       this.localLoading = true
       const { id } = this.$route.params
 
-      console.log('STATUS AQUI', ['EXPIRED'].includes(this.ticket.status))
-
       this.validateSendMessage().then(() => {
         this.sendMessage(Number(id)).then(res => {
           this.resetRecipients()
