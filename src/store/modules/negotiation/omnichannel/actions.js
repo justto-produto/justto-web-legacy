@@ -60,8 +60,10 @@ const omnichannelActions = {
   cleanRecentMessages: ({ commit }) => commit('cleanRecentMessages'),
 
   deleteTicketNote: ({ _ }, id) => axiosDispatch({
-    url: `${disputeApi}/note/${id}`,
-    method: 'DELETE'
+    url: `api/disputes/note/${id}`,
+    method: 'DELETE',
+    mutation: 'removeTicketNote',
+    payload: { id }
   }),
 
   saveTicketNote({ _ }, params) {
@@ -113,7 +115,6 @@ const omnichannelActions = {
     }
   },
 
-  // TODO 4055
   verifyRecipient({ _ }, recipient) {
     const { value, disputeId } = recipient
     const params = {
@@ -215,11 +216,13 @@ const omnichannelActions = {
   },
 
   SOCKET_ADD_OCCURRENCE({ commit }, occurrence) {
-    if (window.location.href.includes('negotiation')) {
-      commit('addNegotiationOccurrence', occurrence)
-    }
-    if (window.location.href.includes('dispute')) {
-      commit('addDisputeOccurrence', occurrence)
+    if (!occurrence.archived) {
+      if (window.location.href.includes('negotiation')) {
+        commit('addNegotiationOccurrence', occurrence)
+      }
+      if (window.location.href.includes('dispute')) {
+        commit('addDisputeOccurrence', occurrence)
+      }
     }
   },
 

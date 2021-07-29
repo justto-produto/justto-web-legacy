@@ -62,12 +62,15 @@ export default {
   mounted() {
     this.fetchData(Number(this.$route.params.id))
     eventBus.$on(events.TICKET_CHANGE.callback, this.fetchData)
+    eventBus.$on(events.TICKET_WEB_SOCKET_DISCONNECT.callback, this.socketAction)
   },
 
   beforeDestroy() {
     const { id } = this.$route.params
+
     this.socketAction('unsubscribe', id)
     eventBus.$off(events.TICKET_CHANGE.callback, this.fetchData)
+    eventBus.$off(events.TICKET_WEB_SOCKET_DISCONNECT.callback, this.socketAction)
   },
 
   methods: {

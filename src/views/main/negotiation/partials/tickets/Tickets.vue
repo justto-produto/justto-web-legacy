@@ -46,7 +46,7 @@
         </span>
 
         <div class="tickets-container__counter">
-          {{ tickets.content.length }} {{ $tc('labels.dispute', tickets.content.length) }}
+          {{ tickets.totalElements || '-' }} {{ $tc('labels.dispute', tickets.totalElements || 0) }}
         </div>
 
         <ul

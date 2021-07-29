@@ -81,8 +81,9 @@ const billingActions = {
         inactivatedDate,
         invoiceClosingDay,
         monthlySubscriptionFee
-      }
-    }).then(() => dispatch('getContracts'))
+      },
+      action: 'getContracts'
+    })
   },
 
   updateContract: ({ dispatch }, { customerId, contract }) => {
@@ -224,6 +225,45 @@ const billingActions = {
     }).then(() => {
       dispatch('getBillingDashboard')
       dispatch('getTransactions')
+    })
+  },
+
+  getContractDiscountList: ({ _ }, contractId) => {
+    return axiosDispatch({
+      url: `${billingPath}/contract/${contractId}/discount`,
+      mutation: 'setContractDiscountList',
+      payload: contractId
+    })
+  },
+
+  addContractDiscount: ({ dispatch }, { contractId, discount }) => {
+    return axiosDispatch({
+      url: `${billingPath}/contract/${contractId}/discount`,
+      method: 'POST',
+      data: discount,
+      payload: discount
+    }).then(({ _ }) => {
+      dispatch('getContractDiscountList', contractId)
+    })
+  },
+
+  changeContractDiscount: ({ dispatch }, { contractId, discountId, discount }) => {
+    return axiosDispatch({
+      url: `${billingPath}/contract/${contractId}/discount/${discountId}`,
+      method: 'PATCH',
+      data: discount,
+      payload: discount
+    }).then(({ _ }) => {
+      dispatch('getContractDiscountList', contractId)
+    })
+  },
+
+  deleteContractDiscount: ({ dispatch }, { contractId, discountId }) => {
+    return axiosDispatch({
+      url: `${billingPath}/contract/${contractId}/discount/${discountId}`,
+      method: 'DELETE'
+    }).then(({ _ }) => {
+      dispatch('getContractDiscountList', contractId)
     })
   }
 }

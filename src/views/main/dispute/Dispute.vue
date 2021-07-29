@@ -383,6 +383,8 @@
           </div>
         </div>
       </JusDragArea>
+
+      <ExpiredDisputeAlert ref="expiredDisputeAlert" />
     </template>
     <!-- DADOS DO CASO -->
     <template slot="right-card">
@@ -430,6 +432,7 @@ export default {
     DisputeNegotiation: () => import('./partials/DisputeNegotiation'),
     VueDraggableResizable: () => import('vue-draggable-resizable'),
     DisputeQuickReplyEditor: () => import('@/components/layouts/DisuteQuickReplyEditor'),
+    ExpiredDisputeAlert: () => import('@/components/dialogs/ExpiredDisputeAlert'),
     JusDragArea,
     quillEditor
   },
@@ -863,107 +866,120 @@ export default {
       })
     },
 
-    sendMessage() {
+    validateSendMessage() {
       if (!this.$refs.messageEditor.quill.getText().trim()) {
-        return false
+        return new Promise((resolve, reject) => reject(Error()))
+      } else if (['EXPIRED'].includes(this.dispute.status)) {
+        return this.$refs.expiredDisputeAlert.open()
+      } else {
+        return new Promise((resolve) => resolve())
       }
-      if (this.messageType === 'negotiation') {
-        const role = this.dispute.disputeRoles.find(role => {
-          return role.roles.includes('NEGOTIATOR')
-        })
-        const to = this.selectedContacts.filter(contact => {
-          return !!contact.address
-        }).map(contact => contact.address)
-        this.loadingTextarea = true
-        this.sendNegotiator({
-          disputeId: this.id,
-          data: {
-            message: this.$refs.messageEditor.quill.getText(),
-            roleId: role.id,
-            email: to[0] || ''
-          }
-        }).then(() => {
-          setTimeout(function() {
-            this.$refs.messageEditor.quill.deleteText(0, 9999999999)
-          }.bind(this), 200)
-          this.$jusNotification({
-            title: 'Yay!',
-            message: 'Mensagem enviado com sucesso.',
-            type: 'success'
+    },
+
+    sendMessage() {
+      this.validateSendMessage().then(() => {
+        if (this.messageType === 'negotiation') {
+          const role = this.dispute.disputeRoles.find(role => {
+            return role.roles.includes('NEGOTIATOR')
           })
-        }).catch(error => {
-          this.$jusNotification({ error })
-        }).finally(() => {
-          this.loadingTextarea = false
-        })
-        return
-      }
-      const quillMessage = this.messageType === 'email'
-        ? this.$refs.messageEditor.quill.container.firstChild.innerHTML : this.$refs.messageEditor.quill.getText()
-      if (this.selectedContacts.map(c => c.id).length) {
-        this.loadingTextarea = true
-        this.verifyWhatsappMessage(quillMessage).then(() => {
-          const to = []
-          if (this.directContactAddress.length) {
-            this.directContactAddress.forEach(email => {
-              to.push({ address: email })
-            })
-          } else {
-            to.push({
-              roleId: this.activeRole.id,
-              contactsId: this.selectedContacts.map(c => c.id)
-            })
-          }
-          const externalIdentification = +new Date()
-          const inReplyTo = this.inReplyTo
-          for (const contact of this.selectedContacts) {
-            this.addLoadingOccurrence({
+
+          const to = this.selectedContacts.filter(contact => {
+            return !!contact.address
+          }).map(contact => contact.address)
+
+          this.loadingTextarea = true
+
+          this.sendNegotiator({
+            disputeId: this.id,
+            data: {
               message: this.$refs.messageEditor.quill.getText(),
-              type: this.messageType,
-              receiver: this.messageType === 'email' ? contact.address : contact.phone,
-              externalIdentification
-            })
-          }
-          const messageData = {
-            to,
-            message: quillMessage,
-            disputeId: this.dispute.id,
-            externalIdentification,
-            inReplyTo
-          }
-          if (this.messageType === 'email') messageData.attachments = this.selectedAttachments
-          this.$store.dispatch('send' + this.messageType, messageData).then(() => {
-            // SEGMENT TRACK
-            if (this.directContactAddress.length) {
-              this.$jusSegment(`Envio de ${this.messageType} via resposta rápida`)
-            } else {
-              this.$jusSegment(`Envio de ${this.messageType} manual`)
+              roleId: role.id,
+              email: to[0] || ''
             }
-            this.selectedAttachments = []
-            this.$jusNotification({
-              title: 'Yay!',
-              message: this.messageType + ' enviado com sucesso.',
-              type: 'success'
-            })
+          }).then(() => {
             setTimeout(function() {
               this.$refs.messageEditor.quill.deleteText(0, 9999999999)
             }.bind(this), 200)
+            this.$jusNotification({
+              title: 'Yay!',
+              message: 'Mensagem enviado com sucesso.',
+              type: 'success'
+            })
           }).catch(error => {
             this.$jusNotification({ error })
           }).finally(() => {
             this.loadingTextarea = false
           })
-        }).finally(() => {
-          this.loadingTextarea = false
-        })
-      } else {
-        this.$jusNotification({
-          title: 'Ops!',
-          dangerouslyUseHTMLString: true,
-          message: `Selecione ao menos um contato do tipo <b>${this.messageType.toUpperCase()}</b> para envio.`,
-          type: 'warning'
-        })
-      }
+          return
+        }
+
+        const quillMessage = this.messageType === 'email'
+          ? this.$refs.messageEditor.quill.container.firstChild.innerHTML : this.$refs.messageEditor.quill.getText()
+        if (this.selectedContacts.map(c => c.id).length) {
+          this.loadingTextarea = true
+          this.verifyWhatsappMessage(quillMessage).then(() => {
+            const to = []
+            if (this.directContactAddress.length) {
+              this.directContactAddress.forEach(email => {
+                to.push({ address: email })
+              })
+            } else {
+              to.push({
+                roleId: this.activeRole.id,
+                contactsId: this.selectedContacts.map(c => c.id)
+              })
+            }
+            const externalIdentification = +new Date()
+            const inReplyTo = this.inReplyTo
+            for (const contact of this.selectedContacts) {
+              this.addLoadingOccurrence({
+                message: this.$refs.messageEditor.quill.getText(),
+                type: this.messageType,
+                receiver: this.messageType === 'email' ? contact.address : contact.phone,
+                externalIdentification
+              })
+            }
+            const messageData = {
+              to,
+              message: quillMessage,
+              disputeId: this.dispute.id,
+              externalIdentification,
+              inReplyTo
+            }
+            if (this.messageType === 'email') messageData.attachments = this.selectedAttachments
+            this.$store.dispatch('send' + this.messageType, messageData).then(() => {
+              // SEGMENT TRACK
+              if (this.directContactAddress.length) {
+                this.$jusSegment(`Envio de ${this.messageType} via resposta rápida`)
+              } else {
+                this.$jusSegment(`Envio de ${this.messageType} manual`)
+              }
+              this.selectedAttachments = []
+              this.$jusNotification({
+                title: 'Yay!',
+                message: this.messageType + ' enviado com sucesso.',
+                type: 'success'
+              })
+              setTimeout(function() {
+                this.$refs.messageEditor.quill.deleteText(0, 9999999999)
+              }.bind(this), 200)
+            }).catch(error => {
+              this.$jusNotification({ error })
+            }).finally(() => {
+              this.loadingTextarea = false
+            })
+          }).finally(() => {
+            this.loadingTextarea = false
+          })
+        } else {
+          this.$jusNotification({
+            title: 'Ops!',
+            dangerouslyUseHTMLString: true,
+            message: `Selecione ao menos um contato do tipo <b>${this.messageType.toUpperCase()}</b> para envio.`,
+            type: 'warning'
+          })
+        }
+      })
     },
 
     addLoadingOccurrence(params) {

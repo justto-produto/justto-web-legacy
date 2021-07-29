@@ -269,6 +269,11 @@ router.beforeEach((to, from, next) => {
             }
           }
         }
+
+        if (from.name === 'ticket' && from.params?.id) {
+          eventBus.$emit(events.TICKET_WEB_SOCKET_DISCONNECT.callback, 'unsubscribe', from?.params?.id)
+        }
+
         if (to.name === 'onboarding' && !Store.getters.redirectNewWorkspace) {
           next('/')
         } else next()

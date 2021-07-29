@@ -8,14 +8,17 @@ class StrategyVm {
 
 export default class DisputeOverviewVm {
   constructor({
-    disputeId, id,
-    internalId, externalId,
+    disputeId,
+    id,
+    internalId,
+    externalId,
     code,
     status,
     description,
     paused,
     favorite,
-    upperRange, disputeUpperRange,
+    upperRange,
+    disputeUpperRange,
     hasDraft,
     hasDocument,
     signStatus,
@@ -23,7 +26,8 @@ export default class DisputeOverviewVm {
     strategy,
     strategyId,
     hasOBFInStrategy,
-    manualStrategy
+    manualStrategy,
+    lastReceivedMessage
   }) {
     this.disputeId = disputeId || id
     this.internalId = internalId || externalId
@@ -40,5 +44,6 @@ export default class DisputeOverviewVm {
       isObrigacaoFazer: hasOBFInStrategy,
       isManual: manualStrategy
     })
+    this.lastReceivedMessage = lastReceivedMessage || {}
   }
 }

@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="jus-tags-filter">
     <el-popover
       v-for="(tag, index) in workspaceTags.slice(-3).reverse()"
@@ -46,7 +46,8 @@
         :color="tag.color"
         :class="{
           'jus-tags-filter__tag--inclusive-is-active': tag.activeType === 'inclusive',
-          'jus-tags-filter__tag--exclusive-is-active': tag.activeType === 'exclusive'
+          'jus-tags-filter__tag--exclusive-is-active': tag.activeType === 'exclusive',
+          'jus-tags-filter__tag--text-light': isDarkColor(tag.color)
         }"
         class="jus-tags-filter__tag jus-tags-filter__tag--round"
         @click="filterByTag(tag, 'nextState')"
@@ -61,9 +62,25 @@
       popper-class="jus-tags-filter__tags-popover"
       trigger="click"
     >
-      <div>
+      <div class="jus-tags-filter__tags-popover-container">
+        <!-- <div class="el-input el-input--small">
+          <input
+            v-model="tagsFilterText"
+            type="text"
+            class="el-input__inner"
+            placeholder="Filtrar tags"
+          >
+        </div> -->
+        <el-input
+          v-model="tagsFilterText"
+          prefix-icon="el-icon-search"
+          placeholder="Filtrar tags"
+          size="small"
+          clearable
+        />
+
         <el-popover
-          v-for="tag in workspaceTags.slice(0, workspaceTags.length - 3).reverse()"
+          v-for="tag in filteredWorkspaceTags.reverse()"
           :key="tag.id"
           :open-delay="400"
           popper-class="jus-tags-filter__actions-popover"
@@ -102,11 +119,15 @@
             :color="tag.color"
             :class="{
               'jus-tags-filter__tag--inclusive-is-active': tag.activeType === 'inclusive',
-              'jus-tags-filter__tag--exclusive-is-active': tag.activeType === 'exclusive'
+              'jus-tags-filter__tag--exclusive-is-active': tag.activeType === 'exclusive',
+              'jus-tags-filter__tag--text-light': isDarkColor(tag.color)
             }"
             class="el-tag--etiqueta el-tag--click jus-tags-filter__tag"
           >
-            <div @click="filterByTag(tag, 'nextState')">
+            <div
+              class="jus-tags-filter__tag-container"
+              @click="filterByTag(tag, 'nextState')"
+            >
               <i :class="`el-icon-${tag.icon}`" />
               {{ tag.name }}
             </div>
@@ -126,15 +147,25 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { calcBrightness } from '@/utils'
 const _ = require('lodash')
 
 export default {
   name: 'JusTagsFilter',
+
+  data: () => ({
+    tagsFilterText: ''
+  }),
+
   computed: {
     ...mapGetters([
       'disputeQuery',
       'filteredTags'
     ]),
+
+    filteredWorkspaceTags() {
+      return (this.workspaceTags || []).filter(({ name }) => name.toLowerCase().includes(this.tagsFilterText.toLowerCase()))
+    },
 
     workspaceTags() {
       return this.filteredTags.map(t => {
@@ -157,7 +188,12 @@ export default {
       })
     }
   },
+
   methods: {
+    isDarkColor(color) {
+      return calcBrightness(color) <= 175
+    },
+
     filterByTag(tag, command) {
       const currentTags = _.cloneDeep(this.disputeQuery.tags || [])
       const currentNoTags = _.cloneDeep(this.disputeQuery.noTags || [])
@@ -226,6 +262,7 @@ export default {
   border: 2px solid $--border-color;
   position: relative;
   padding: 0 9px;
+
   &::after {
     content: url($--icon-url);
     position: absolute;
@@ -245,7 +282,7 @@ export default {
   .jus-tags-filter__item {
     cursor: pointer;
     margin-left: -10px;
-    border-radius: 50%;
+    border-radius: 50% !important;
   }
 
   .jus-tags-filter__plus-counter-button {
@@ -271,13 +308,51 @@ export default {
 }
 
 .jus-tags-filter__tags-popover {
-  padding: 6px;
+  padding: 8px 0 8px 8px;
+  width: auto !important;
+  max-height: 50vh;
+  overflow-y: scroll;
+
+  .jus-tags-filter__tags-popover-container {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    span {
+      .el-popover__reference-wrapper {
+        width: 100%;
+
+        .jus-tags-filter__tag {
+          display: flex;
+
+          &:not(.jus-tags-filter__tag--inclusive-is-active):not(.jus-tags-filter__tag--exclusive-is-active) {
+            border: none;
+          }
+
+          &.jus-tags-filter__tag--text-light {
+            .jus-tags-filter__tag-container {
+              color: white !important;
+            }
+          }
+
+          .jus-tags-filter__tag-container {
+            display: flex;
+            width: 100%;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 8px;
+
+            color: $--color-text-primary;
+          }
+        }
+      }
+    }
+  }
 }
 
 .jus-tags-filter__actions-popover {
   padding: 6px;
   color: $--color-text-secondary;
-  // background-color: $--color-primary-light-9;
 
   .jus-tags-filter__state-button {
     color: $--color-text-secondary;
@@ -296,13 +371,6 @@ export default {
     font-weight: bold;
     color: $--color-text-primary;
   }
-
-  // .popper__arrow {
-  //   border-color: $--color-primary-light-9;
-  //   &::after {
-  //     border-color: $--color-primary-light-9;
-  //   }
-  // }
 }
 
 </style>

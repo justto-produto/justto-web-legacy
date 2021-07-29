@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <ul
     v-loading="loading"
     v-chat-scroll="{always: false, smooth: true, scrollonremoved: true }"
@@ -141,9 +141,9 @@ export default {
     },
     buildContent(occurrence) {
       if (occurrence.updateAt) {
-        return this.splitModified(occurrence.description)[1]
+        return this.splitModified(occurrence.description)[1].replace(/\n/g, '<br />')
       }
-      return this.splitNew(occurrence.description)[1]
+      return this.splitNew(occurrence.description)[1].replace(/\n/g, '<br />')
     },
     buildSender(occurrence) {
       if (occurrence.updateAt) {

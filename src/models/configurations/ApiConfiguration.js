@@ -4,14 +4,17 @@ export default class ApiConfiguration {
     FINCH_ACTIVE,
     FINCH_USERNAME,
     FINCH_PASSWORD,
-    JUSTTO_ACTIVE,
-    JUSTTO_ENDPOINT,
+    JUSTTO_WEBHOOK_ACTIVE,
+    JUSTTO_WEBHOOK_ENDPOINT,
+    JUSTTO_WEBHOOK_USERNAME,
+    JUSTTO_WEBHOOK_PASSWORD,
     workspaceId
   }) {
     this.workspaceId = workspaceId
+
     this.properties = [
       { key: 'FINCH_ACTIVE', value: FINCH_ACTIVE || 'false' },
-      { key: 'JUSTTO_ACTIVE', value: JUSTTO_ACTIVE || 'false' }
+      { key: 'JUSTTO_WEBHOOK_ACTIVE', value: JUSTTO_WEBHOOK_ACTIVE || 'false' }
     ]
     if (FINCH_ACTIVE === 'true') {
       this.properties.push({ key: 'FINCH_ENDPOINT', value: FINCH_ENDPOINT })
@@ -20,8 +23,13 @@ export default class ApiConfiguration {
         this.properties.push({ key: 'FINCH_PASSWORD', value: FINCH_PASSWORD })
       }
     }
-    if (JUSTTO_ACTIVE === 'true') {
-      this.properties.push({ key: 'JUSTTO_ENDPOINT', value: JUSTTO_ENDPOINT })
+    if (JUSTTO_WEBHOOK_ACTIVE === 'true') {
+      this.properties.push({ key: 'JUSTTO_WEBHOOK_ENDPOINT', value: JUSTTO_WEBHOOK_ENDPOINT })
+
+      this.properties.push({ key: 'JUSTTO_WEBHOOK_USERNAME', value: JUSTTO_WEBHOOK_USERNAME })
+      if (JUSTTO_WEBHOOK_PASSWORD !== '******') {
+        this.properties.push({ key: 'JUSTTO_WEBHOOK_PASSWORD', value: JUSTTO_WEBHOOK_PASSWORD })
+      }
     }
   }
 }

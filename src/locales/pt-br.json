@@ -460,7 +460,7 @@
     "denySavingDeposit": "somente depósito em conta-corrente",
     "businessHoursEngagement": "mensagens somente em horário comercial",
     "contactParty": "contatar autor",
-    "awaysContactParty": "sempre",
+    "alwaysContactParty": "sempre",
     "neverContactParty": "nunca",
     "contactPartyWhenNoLawyer": "somente quando não houver advogado constituído",
     "contactPartyWhenInvalidLawyer": "somente quando não for possível contatar o advogado existente",

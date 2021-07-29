@@ -148,7 +148,8 @@ export default {
     ...mapActions({
       setTicketsFilters: 'setTicketsFilters',
       setTicketsActiveTab: 'setTicketsActiveTab',
-      getTickets: 'getTickets'
+      getTickets: 'getTickets',
+      resetOccurrences: 'resetOccurrences'
     }),
 
     ...mapMutations({
@@ -157,6 +158,8 @@ export default {
 
     applyFilters({ filter, tab }) {
       this.setTicketsActiveTab(tab.toLowerCase())
+
+      this.resetOccurrences()
 
       this.setTicketsFilters({
         filters: {},
@@ -211,6 +214,7 @@ export default {
     left: 0;
     width: 100%;
     padding: 30px;
+
     .thamiris__alerts__header-icon {
       font-size: 45px;
       background-color: white;
@@ -219,6 +223,7 @@ export default {
       width: 55px;
       border-radius: 50px;
       position: relative;
+
       .thamiris__alerts__header-icon-red {
         position: absolute;
         top: 0;
@@ -229,17 +234,21 @@ export default {
         background-color: $--color-nps-detractor;
       }
     }
+
     .thamiris__alerts__header-title {
       color: white;
       font-weight: bold;
       padding-left: 40px;
       padding-right: 40px;
+      word-break: break-word;
     }
+
     .thamiris__alerts__header-subtitle {
       color: white;
       font-size: 12px;
       padding-left: 55px;
       padding-right: 55px;
+      word-break: break-word;
     }
   }
 
@@ -253,12 +262,14 @@ export default {
     width: 100%;
     padding: 30px 30px 0px 30px;
     color: white;
+
     .thamiris__alerts__shadow-title {
       color: white;
       font-weight: bold;
       padding-left: 38px;
       padding-right: 38px;
     }
+
     .thamiris__alerts__shadow-subtitle {
       color: white;
       font-size: 10px;
@@ -309,6 +320,7 @@ export default {
             width: 65px;
             background-color: $--color-primary;
             border-radius: 100%;
+
             .thamiris__alerts__body-items-item-circle-style-al {
               cursor: pointer;
               display: flex;
@@ -316,17 +328,20 @@ export default {
               align-items: center;
               justify-content: center;
               text-align: center;
+
               .thamiris__alerts__body-items-item-circle-style-al-num {
                 font-size: 30px;
                 font-weight: bold;
                 padding-top: 15px;
               }
+
               .thamiris__alerts__body-items-item-circle-style-al-disp {
                 font-size: 8px;
                 margin-top: -3px;
               }
             }
           }
+
           .thamiris__alerts__body-items-item-circle-style:hover {
             background-color: $--color-primary-light-2;
           }
@@ -338,7 +353,9 @@ export default {
           margin: 8px 20px 0px 20px;
           text-align: center;
           font-weight: 600;
+          word-break: break-word;
         }
+
         .thamiris__alerts__body-items-item-message-line-through {
           font-size: 12px;
           margin: 8px 20px 0px 20px;
@@ -346,6 +363,7 @@ export default {
           font-weight: 600;
           text-decoration: line-through;
           color: $--color-gray;
+          word-break: break-word;
         }
       }
 
@@ -356,6 +374,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
+
     .thamiris__alerts__confirm-button {
       padding: 6px 30px;
       color: $--color-gray;

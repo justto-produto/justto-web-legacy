@@ -576,6 +576,10 @@
         </el-button>
       </div>
     </el-dialog>
+
+    <NotifyOnCompanyAnalysis
+      ref="notifyOnCompanyAnalysis"
+    />
   </div>
 </template>
 
@@ -587,7 +591,8 @@ import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'JusDisputeActions',
   components: {
-    JusDragArea
+    JusDragArea,
+    NotifyOnCompanyAnalysis: () => import('@/components/dialogs/NotifyOnCompanyAnalysis.vue')
   },
   props: {
     dispute: {
@@ -812,7 +817,7 @@ export default {
       return this.dispute && this.dispute.paused && !this.isPreNegotiation
     },
     canPause() {
-      return this.dispute && !this.dispute.paused && !this.isPreNegotiation
+      return this.dispute && !this.dispute.paused && !this.isPreNegotiation && !['EXPIRED'].includes(this.dispute?.status)
     },
     canMarkAsNotRead() {
       return this.dispute?.status && !['IMPORTED', 'ENRICHED', 'ENGAGEMENT'].includes(this.dispute.status) && !this.isPreNegotiation
@@ -824,7 +829,7 @@ export default {
       return this.dispute?.status && ['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED', 'CANCELED'].includes(this.dispute.status) && !this.isPreNegotiation
     },
     canRestartEngagement() {
-      return this.dispute?.status && !['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(this.dispute.status) && !this.isPreNegotiation
+      return this.dispute?.status && !['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED', 'EXPIRED'].includes(this.dispute.status) && !this.isPreNegotiation
     },
     isPreNegotiation() {
       return this.dispute.status === 'PRE_NEGOTIATION'
@@ -917,6 +922,7 @@ export default {
         content: 'Tem certeza que deseja realizar esta ação?',
         title: this.$options.filters.capitalize(this.$t('action.' + action.toUpperCase()))
       }
+
       switch (action) {
         case 'settled':
           if (this.dispute.paused) {
@@ -1082,6 +1088,7 @@ export default {
       this.counterOfferForm.note = ''
       this.settledDialogVisible = false
     },
+
     doAction(action, message, additionParams) {
       return new Promise((resolve, reject) => {
         this.$confirm(message.content, message.title, {
@@ -1092,6 +1099,7 @@ export default {
           showClose: false
         }).then(() => {
           this.modalLoading = true
+
           let params = {
             action,
             disputeId: this.dispute.id,
@@ -1100,18 +1108,27 @@ export default {
               conclusionNote: this.counterOfferForm.note
             }
           }
+
           if (additionParams) params = { ...params, ...additionParams }
+
           this.sendDisputeAction(params).then(() => {
             resolve()
+
             this.$jusNotification({
               title: 'Yay!',
               message: 'Ação <b>' + message.title.toUpperCase() + '</b> realizada com sucesso.',
               type: 'success',
               dangerouslyUseHTMLString: true
             })
+
             this.counterOfferForm.note = ''
+
             if (action === 'settled') {
               this.ticketResumeDialogVisible = false
+            }
+
+            if (['disfavor', 'favorite'].includes(action) && this.isJusttoAdmin) {
+              this.$refs.notifyOnCompanyAnalysis.open(action.toUpperCase(), this.dispute)
             }
           }).catch(error => {
             reject(error)
@@ -1312,31 +1329,14 @@ export default {
                 note: this.scapeHtml(this.counterOfferForm.note),
                 updateUpperRange: updateUpperRange || false
               }).then(() => {
-                if (this.counterOfferForm.note) {
-                  this.modalLoading = true
-                  const people = this.disputeClaimants.filter(d => d.id === this.counterOfferForm.selectedRoleId)[0]
-                  const note = '<b>Contraproposta manual no valor de ' + this.$options.filters.currency(this.counterOfferForm.lastCounterOfferValue) + ', realizada por ' + people.name + ', com a nota:</b> <br/>' + this.counterOfferForm.note
-                  this.sendDisputeNote({
-                    note,
-                    disputeId: this.dispute.id
-                  }).then(() => {
-                    resolve()
-                    this.counterproposalDialogVisible = false
-                  }).catch(e => {
-                    reject(e)
-                  }).finally(() => {
-                    this.modalLoading = false
-                  })
-                } else {
-                  resolve()
-                  this.counterproposalDialogVisible = false
-                  this.settledDialogVisible = false
-                  this.$jusNotification({
-                    title: 'Yay!',
-                    message: updateUpperRange ? 'Proposta aceita com sucesso.' : 'Contraproposta enviada com sucesso.',
-                    type: 'success'
-                  })
-                }
+                resolve()
+                this.counterproposalDialogVisible = false
+                this.settledDialogVisible = false
+                this.$jusNotification({
+                  title: 'Yay!',
+                  message: updateUpperRange ? 'Proposta aceita com sucesso.' : 'Contraproposta enviada com sucesso.',
+                  type: 'success'
+                })
               }).catch(error => {
                 reject(error)
                 this.$jusNotification({ error })

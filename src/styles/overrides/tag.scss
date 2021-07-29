@@ -18,21 +18,26 @@
   height: 28px;
   line-height: 28px;
   font-weight: 600 !important;
+
   .el-button.el-button--text {
     color: inherit !important;
     padding: 6px 0;
   }
+
   div {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
   }
+
   i {
     font-size: 14px;
   }
+
   .el-icon-close:hover {
     background-color: rgba(255, 255, 255, 0.5);
   }
+
   &.active {
     border: 2px solid $--color-primary;
     padding: 0 9px;
@@ -42,6 +47,7 @@
 .el-tag--new, .el-tag--etiqueta {
   display: inline-flex;
   color: #424242;
+
   .el-button.el-button--text {
     color: inherit !important;
   }
@@ -86,11 +92,13 @@
   border: solid 1px $--color-primary !important;
   color: #fff !important;
   padding-right: 30px !important;
+
   .el-tag__close {
     color: #fff !important;
     top: 8px !important;
     right: 8px !important;
     position: absolute !important;
+  
     &:hover {
       background-color: $--color-primary-light-3 !important;
       color: #fff !important;
@@ -112,6 +120,7 @@
 .el-tag--drag-add {
   @extend .el-tag--drag;
   cursor: pointer;
+  color: $--color-text-primary !important;
 }
 
 .el-tag--drag-container {

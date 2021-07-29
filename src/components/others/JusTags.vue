@@ -4,12 +4,15 @@
       v-for="tag in disputeTags"
       :key="tag.id"
       :color="tag.color"
+      :class="{'tag-text-light': isDarkColor(tag.color)}"
       class="el-tag--etiqueta el-tag--click"
     >
       <div @click="filterByTag(tag.id)">
         <i :class="`el-icon-${tag.icon}`" />
+
         {{ tag.name }}
       </div>
+
       <el-button
         type="text"
         icon="el-icon-close"
@@ -17,6 +20,7 @@
         @click.prevent="removeTag(tag.id)"
       />
     </el-tag>
+
     <el-popover
       v-if="showPopover"
       ref="main-popover"
@@ -48,18 +52,22 @@
             >
               <el-tag
                 :color="tag.color"
+                :class="{'tag-text-light': isDarkColor(tag.color)}"
                 class="jus-tags__option el-tag--etiqueta el-tag--etiqueta-select"
               >
                 <div>
                   <i :class="`el-icon-${tag.icon}`" />
+
                   {{ tag.name }}
                 </div>
+
                 <i
                   class="el-icon-delete"
                   @click.stop.prevent="handleDeleteTag(tag.id)"
                 />
               </el-tag>
             </el-option>
+
             <div slot="empty">
               <el-button
                 type="text"
@@ -72,6 +80,7 @@
             </div>
           </el-select>
         </div>
+
         <!-- NOVA ETIQUETA -->
         <div
           v-if="showForm"
@@ -141,6 +150,7 @@
           </div>
         </div>
       </div>
+
       <el-tooltip
         id="idTagTooltip"
         slot="reference"
@@ -163,9 +173,11 @@
 
 <script>
 import { mapActions } from 'vuex'
+import { calcBrightness } from '@/utils'
 
 export default {
   name: 'JusTags',
+
   data() {
     return {
       loading: false,
@@ -237,6 +249,10 @@ export default {
   },
   methods: {
     ...mapActions(['deleteTag']),
+
+    isDarkColor(color) {
+      return calcBrightness(color) <= 175
+    },
 
     closeOnCLick(e) {
       if (!e.target.id.startsWith('idTag') && !e.target.textContent.includes('Adicionar nova etiqueta')) {
@@ -349,12 +365,15 @@ export default {
   &__select-popper {
     width: 310px;
     margin-left: -10px;
+
     .el-select-dropdown__list {
-      padding-top: 10px;
-      padding-right: 10px;
+      padding: 8px 16px 8px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
     }
     .el-select-dropdown__item {
-      padding: 0 10px;
+      padding: 0;
       height: 32px;
       line-height: 32px;
     }
@@ -430,5 +449,38 @@ export default {
   &:hover .el-icon-delete {
     visibility: visible;
   }
+}
+
+.jus-tags__select-popper {
+  .el-scrollbar {
+    .el-select-dropdown__wrap.el-scrollbar__wrap {
+      .el-scrollbar__view.el-select-dropdown__list {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+
+        .el-select-dropdown__item {
+          display: flex;
+          width: 100%;
+
+          .jus-tags__option {
+            width: 100%;
+
+            .el-icon-delete {
+              color: inherit;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.tag-text-light {
+  color: white !important;
+}
+
+.el-tag--etiqueta:not(.tag-text-light) {
+  color: $--color-text-primary !important;
 }
 </style>

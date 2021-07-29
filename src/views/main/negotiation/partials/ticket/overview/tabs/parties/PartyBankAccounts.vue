@@ -180,11 +180,7 @@ export default {
     },
 
     handleNewBankAccount(model) {
-      if (model.account?.type === 'SAVING' && model.associate) {
-        this.$refs.savingAccountAlert.open(model)
-      } else {
-        this.addBankAccount(model)
-      }
+      this.addBankAccount(model)
     },
 
     addBankAccount({ account, associate }) {
