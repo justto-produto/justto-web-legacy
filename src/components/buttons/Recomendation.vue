@@ -9,6 +9,7 @@
         <el-popover
           v-model="showRecomendationPopover"
           :title="currentRecomendation ? $t(`recomendations.${currentRecomendation.type}.title`) : ''"
+          popper-class="popover-recomendation"
           trigger="manual"
         >
           <span slot="reference">
@@ -59,9 +60,10 @@
                     Mensagem:
                   </label>
 
-                  <span class="popover-recomendation-container__body-item-container-value">
-                    {{ value }}
-                  </span>
+                  <span
+                    class="popover-recomendation-container__body-item-container-value"
+                    v-html="value"
+                  />
                 </span>
               </div>
             </div>
@@ -180,7 +182,9 @@ export default {
 <style lang="scss">
 @import '@/styles/colors.scss';
 
-.el-popover.el-popper {
+.popover-recomendation {
+  padding: 16px !important;
+
   .popover-recomendation-container {
     display: flex;
     flex-direction: column;
