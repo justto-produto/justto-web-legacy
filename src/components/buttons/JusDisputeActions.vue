@@ -812,7 +812,7 @@ export default {
       return this.dispute && this.dispute.paused && !this.isPreNegotiation
     },
     canPause() {
-      return this.dispute && !this.dispute.paused && !this.isPreNegotiation
+      return this.dispute && !this.dispute.paused && !this.isPreNegotiation && !['EXPIRED'].includes(this.dispute?.status)
     },
     canMarkAsNotRead() {
       return this.dispute?.status && !['IMPORTED', 'ENRICHED', 'ENGAGEMENT'].includes(this.dispute.status) && !this.isPreNegotiation
@@ -824,7 +824,7 @@ export default {
       return this.dispute?.status && ['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED', 'CANCELED'].includes(this.dispute.status) && !this.isPreNegotiation
     },
     canRestartEngagement() {
-      return this.dispute?.status && !['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(this.dispute.status) && !this.isPreNegotiation
+      return this.dispute?.status && !['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED', 'EXPIRED'].includes(this.dispute.status) && !this.isPreNegotiation
     },
     isPreNegotiation() {
       return this.dispute.status === 'PRE_NEGOTIATION'

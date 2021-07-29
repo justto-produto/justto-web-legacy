@@ -148,7 +148,8 @@ export default {
     ...mapActions({
       setTicketsFilters: 'setTicketsFilters',
       setTicketsActiveTab: 'setTicketsActiveTab',
-      getTickets: 'getTickets'
+      getTickets: 'getTickets',
+      resetOccurrences: 'resetOccurrences'
     }),
 
     ...mapMutations({
@@ -157,6 +158,8 @@ export default {
 
     applyFilters({ filter, tab }) {
       this.setTicketsActiveTab(tab.toLowerCase())
+
+      this.resetOccurrences()
 
       this.setTicketsFilters({
         filters: {},
