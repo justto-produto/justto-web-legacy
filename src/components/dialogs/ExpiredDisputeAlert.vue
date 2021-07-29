@@ -1,3 +1,7 @@
+<template>
+  <span />
+</template>
+
 <script>
 export default {
   methods: {
