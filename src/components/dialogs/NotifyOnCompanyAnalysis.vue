@@ -11,8 +11,13 @@
     custom-class="dialog-actions__increase-alert"
   >
     <article class="dialog-actions__increase-alert-body">
-      <label>Vamos enviar a mensagem abaixo:</label>
-      <div v-html="message" />
+      <label class="dialog-actions__increase-alert-body-label">
+        Mensagem que será enviada:
+      </label>
+      <div
+        class="dialog-actions__increase-alert-body-text"
+        v-html="message"
+      />
     </article>
 
     <div
@@ -75,7 +80,7 @@ export default {
       if (Object.keys(ticket.lastReceivedMessage?.properties).length > 0) {
         const { PERSON_EMAIL, PERSON_NAME } = ticket.lastReceivedMessage?.properties
 
-        if (ticket.lastReceivedMessage?.properties?.PERSON_EMAIL) {
+        if (!ticket.lastReceivedMessage?.properties?.PERSON_EMAIL) {
           this.$jusNotification({
             type: 'error',
             title: 'Ops!',
@@ -170,3 +175,21 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.dialog-actions__increase-alert {
+  .el-dialog__body {
+    margin-top: 0 !important;
+
+    .dialog-actions__increase-alert-body {
+      .dialog-actions__increase-alert-body-label {
+        font-weight: 600;
+      }
+
+      .dialog-actions__increase-alert-body-text {
+        word-break: keep-all;
+      }
+    }
+  }
+}
+</style>
