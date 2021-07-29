@@ -576,6 +576,10 @@
         </el-button>
       </div>
     </el-dialog>
+
+    <NotifyOnCompanyAnalysis
+      ref="notifyOnCompanyAnalysis"
+    />
   </div>
 </template>
 
@@ -587,7 +591,8 @@ import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'JusDisputeActions',
   components: {
-    JusDragArea
+    JusDragArea,
+    NotifyOnCompanyAnalysis: () => import('@/components/dialogs/NotifyOnCompanyAnalysis.vue')
   },
   props: {
     dispute: {
@@ -1083,6 +1088,7 @@ export default {
       this.counterOfferForm.note = ''
       this.settledDialogVisible = false
     },
+
     doAction(action, message, additionParams) {
       return new Promise((resolve, reject) => {
         this.$confirm(message.content, message.title, {
@@ -1093,6 +1099,7 @@ export default {
           showClose: false
         }).then(() => {
           this.modalLoading = true
+
           let params = {
             action,
             disputeId: this.dispute.id,
@@ -1101,18 +1108,27 @@ export default {
               conclusionNote: this.counterOfferForm.note
             }
           }
+
           if (additionParams) params = { ...params, ...additionParams }
+
           this.sendDisputeAction(params).then(() => {
             resolve()
+
             this.$jusNotification({
               title: 'Yay!',
               message: 'Ação <b>' + message.title.toUpperCase() + '</b> realizada com sucesso.',
               type: 'success',
               dangerouslyUseHTMLString: true
             })
+
             this.counterOfferForm.note = ''
+
             if (action === 'settled') {
               this.ticketResumeDialogVisible = false
+            }
+
+            if (['disfavor', 'favorite'].includes(action) && this.isJusttoAdmin) {
+              this.$refs.notifyOnCompanyAnalysis.open(action.toUpperCase(), this.dispute)
             }
           }).catch(error => {
             reject(error)

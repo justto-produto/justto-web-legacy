@@ -72,6 +72,7 @@ export default {
     ]),
 
     open(action, ticket) {
+      console.log('open', action, ticket.lastReceivedMessage?.properties)
       if (Object.keys(ticket.lastReceivedMessage?.properties).length > 0) {
         const { PERSON_EMAIL, PERSON_NAME } = ticket.lastReceivedMessage?.properties
 
@@ -82,7 +83,7 @@ export default {
         return
       }
 
-      this.getQuickReplyTemplates(ticket.disputeId).then(res => {
+      this.getQuickReplyTemplates(this.$route.params.id).then(res => {
         res.forEach(({ parsed: { body, referenceTemplateId } }) => {
           if (referenceTemplateId === actionToTemplateId[action]) {
             this.message = body
