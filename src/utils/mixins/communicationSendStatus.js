@@ -8,11 +8,16 @@ export default {
     }),
 
     person() {
-      if (this?.interaction?.properties?.PERSON_NAME) {
+      const key = this.directionIn ? 'SENDER_NAME' : 'RECEIVER_NAME'
+
+      if (this.interaction?.message?.parameters[key]) {
+        const name = this.interaction?.message?.parameters[key]
+
+        return this.$options.filters.resumedName(name || '')
+      } else if (this?.interaction?.properties?.PERSON_NAME) {
         return this.$options.filters.resumedName(this?.interaction?.properties?.PERSON_NAME)
       } else {
-        const name = this.interaction?.message?.parameters[this.directionIn ? 'SENDER_NAME' : 'RECEIVER_NAME']
-        return this.$options.filters.resumedName(name || '')
+        return ''
       }
     },
 
