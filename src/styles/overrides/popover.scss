@@ -1,6 +1,8 @@
 @import '../colors';
 
 .el-popover {
+  padding: 0 !important;
+
   &--dark {
     background-color: $--color-text-primary;
     color: white;
