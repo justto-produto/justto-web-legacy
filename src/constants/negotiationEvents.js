@@ -54,5 +54,9 @@ export default {
   CKEDITOR_UPLOAD_DIALOG: {
     isShortcut: false,
     callback: 'CKEDITOR_UPLOAD_DIALOG'
-  }
+  },
+  TICKET_WEB_SOCKET_DISCONNECT: {
+    isShortcut: false,
+    callback: 'TICKET_WEB_SOCKET_DISCONNECT'
+  },
 }
