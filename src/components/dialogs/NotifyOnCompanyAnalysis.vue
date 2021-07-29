@@ -71,25 +71,47 @@ export default {
       'sendemail'
     ]),
 
-    open(action, ticket) {
-      console.log('open', action, ticket.lastReceivedMessage?.properties)
+    async open(action, ticket) {
       if (Object.keys(ticket.lastReceivedMessage?.properties).length > 0) {
         const { PERSON_EMAIL, PERSON_NAME } = ticket.lastReceivedMessage?.properties
 
-        this.email = PERSON_EMAIL
-        this.name = PERSON_NAME
+        if (ticket.lastReceivedMessage?.properties?.PERSON_EMAIL) {
+          this.$jusNotification({
+            type: 'error',
+            title: 'Ops!',
+            message: 'E-mail do destinatário não foi encontrado'
+          })
+          close()
+          return
+        } else if (!ticket.lastReceivedMessage?.properties?.PERSON_NAME) {
+          this.$jusNotification({
+            type: 'error',
+            title: 'Ops!',
+            message: 'Nome do destinatário não foi encontrado'
+          })
+          close()
+          return
+        } else {
+          this.email = PERSON_EMAIL
+          this.name = PERSON_NAME
+        }
       } else {
         close()
         return
       }
 
-      this.getQuickReplyTemplates(this.$route.params.id).then(res => {
+      await this.getQuickReplyTemplates(this.$route.params.id).then(res => {
         res.forEach(({ parsed: { body, referenceTemplateId } }) => {
           if (referenceTemplateId === actionToTemplateId[action]) {
             this.message = body
           }
         })
       })
+
+      if (!this.message) {
+        close()
+        return
+      }
 
       this.getAccountProperty('FAVORITE_NOTIFICATION').then(({ FAVORITE_NOTIFICATION = '' }) => {
         if (['ALWAYS'].includes(FAVORITE_NOTIFICATION)) {
