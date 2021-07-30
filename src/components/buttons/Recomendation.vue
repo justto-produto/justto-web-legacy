@@ -65,6 +65,36 @@
                     v-html="value"
                   />
                 </span>
+
+                <span
+                  v-if="key === 'PERSON_NAME'"
+                  class="popover-recomendation-container__body-item-container"
+                >
+                  <label class="popover-recomendation-container__body-item-container-label">
+                    Nome:
+                  </label>
+
+                  <span
+                    class="popover-recomendation-container__body-item-container-value"
+                  >
+                    {{ value || capitalize }}
+                  </span>
+                </span>
+
+                <span
+                  v-if="key === 'ROLE_NAME'"
+                  class="popover-recomendation-container__body-item-container"
+                >
+                  <label class="popover-recomendation-container__body-item-container-label">
+                    Função:
+                  </label>
+
+                  <span
+                    class="popover-recomendation-container__body-item-container-value"
+                  >
+                    {{ $tc(`roles.${value}.CLAIMANT`) || capitalize }}
+                  </span>
+                </span>
               </div>
             </div>
 
@@ -193,6 +223,10 @@ export default {
     max-width: 30vw;
 
     .popover-recomendation-container__body {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+
       .popover-recomendation-container__body-item {
         .popover-recomendation-container__body-item-container {
           .popover-recomendation-container__body-item-container-label {

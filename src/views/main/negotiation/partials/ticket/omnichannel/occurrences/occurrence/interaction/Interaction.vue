@@ -15,7 +15,7 @@
         />
 
         <Recomendation
-          v-if="showRecomendation"
+          v-if="showRecomendation && needRecomendationList.includes(interaction.id)"
           :interaction-id="interaction.id"
         />
       </div>
@@ -92,7 +92,8 @@ export default {
       isJusttoAdmin: 'isJusttoAdmin',
       recipients: 'getEditorRecipients',
       flat: 'getExportTicketModalVisible',
-      lastInteraction: 'disputeLastInteractions'
+      lastInteraction: 'disputeLastInteractions',
+      unanswered: 'getUnansweredOccurrences'
     }),
 
     type() {
@@ -177,6 +178,10 @@ export default {
 
     showRecomendation() {
       return this.isJusttoAdmin && this.isInboundInteraction && ['COMMUNICATION'].includes(this.interaction.type) && !!this.interaction.message
+    },
+
+    needRecomendationList() {
+      return this.unanswered.map(({ interaction: { id } }) => (id))
     }
   },
 

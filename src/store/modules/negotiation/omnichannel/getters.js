@@ -6,6 +6,10 @@ const mapTabOccurrenceType = {
   OCCURRENCES: 'LOG'
 }
 
+const dateKey = (occ) => {
+  return occ.updateAt ? 'updateAt' : 'createAt'
+}
+
 const omnichannelGetters = {
   getActiveTab: state => (state.activeTab),
   isOccurrencesLoading: state => (state.countOmnichannelGetters > 0),
@@ -34,7 +38,15 @@ const omnichannelGetters = {
     ...state.occurrences.filter,
     type: mapTabOccurrenceType[state.activeTab]
   }),
-  getDisputeProtocol: state => (state.disputeProtocol)
+  getDisputeProtocol: state => (state.disputeProtocol),
+  getUnansweredOccurrences: state => {
+    const reverseOccurrences = [...state.occurrences.list].reverse()
+    const firstOutboundDate = reverseOccurrences.find(occ => occ.interaction.direction !== 'INBOUND') || { createAt: { dateTime: new Date().toISOString() } }
+
+    return reverseOccurrences.filter(occ => {
+      return new Date(occ[dateKey(occ)].dateTime) > new Date(firstOutboundDate[dateKey(firstOutboundDate)].dateTime)
+    })
+  }
 }
 
 export default omnichannelGetters
