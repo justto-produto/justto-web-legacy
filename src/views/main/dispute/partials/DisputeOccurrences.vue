@@ -277,7 +277,7 @@
                       v-html="buildContent(occurrence)"
                     />
                     <span
-                      v-if="buildCommunicationType(occurrence).startsWith('WHATSAPP') && buildWhatsappStatus(occurrence.interaction.message, occurrence.executionDateTime || occurrence.createAt)"
+                      v-if="buildCommunicationType(occurrence).startsWith('WHATSAPP') && buildWhatsappStatus(occurrence.interaction.message, occurrence.executionDateTime || occurrence.createAt) && occurrence.interaction.direction !== 'INBOUND'"
                       class="dispute-view-occurrences__whats-status"
                     >
                       <el-tooltip popper-class="mw400">
