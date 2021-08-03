@@ -20,13 +20,14 @@ export class StateOccurrences {
     this.summary = summary || new OccurrenceSummary()
     this.fullMessages = fullMessages || {}
     this.renderedCounts = renderedCounts || 0
-    this.totalElements = totalElements || 0
+    this.totalElements = totalElements || this.totalElements
   }
 }
 
 const omnichannelMutations = {
   activeTab: EDITOR_CONSTANTS.MESSAGES,
   countOmnichannelGetters: 0,
+  totalOfOccurrences: 20,
   occurrences: new StateOccurrences(),
   editor: {
     messageText: '',

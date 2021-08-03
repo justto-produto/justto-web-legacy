@@ -56,6 +56,7 @@ const omnichannelMutations = {
 
     state.occurrences.filter.page += 1
     Vue.set(state.occurrences, 'totalElements', totalElements)
+    Vue.set(state, 'totalOfOccurrences', totalElements)
   },
 
   incrementOccurrencesCountGetters: (state) => (state.countOmnichannelGetters += 1),

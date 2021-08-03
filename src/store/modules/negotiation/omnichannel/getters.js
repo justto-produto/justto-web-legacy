@@ -24,7 +24,7 @@ const omnichannelGetters = {
   getOccurrencesList: state => (state.occurrences.list),
   getFullMessages: state => (state.occurrences.fullMessages),
   getOccurrencesSummary: state => (state.occurrences.summary),
-  getTotalOccurrences: state => (state.occurrences.totalElements),
+  getTotalOccurrences: state => (state.totalOfOccurrences),
   getOccurrencesSummaryKeys: state => ({
     SMS: Object.keys(state.occurrences.summary.SMS).map(Number),
     EMAIL: Object.keys(state.occurrences.summary.EMAIL).map(Number),
