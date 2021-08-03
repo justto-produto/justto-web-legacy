@@ -60,6 +60,50 @@
     <NotifyOnCompanyAnalysis
       ref="notifyOnCompanyAnalysis"
     />
+
+    <el-dialog
+      ref="confirmDialog"
+      :title="confirmDialog.title"
+      :visible.sync="confirmDialog.visible"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      :show-close="false"
+      custom-class="confirm-dialog"
+    >
+      <article class="confirm-dialog__container">
+        <span>{{ confirmDialog.message }}</span>
+      </article>
+
+      <span
+        slot="footer"
+        class="el-dialog__footer-container"
+      >
+        <el-checkbox
+          v-if="confirmDialog.showNotifyInput"
+          v-model="confirmDialog.notify"
+          class="el-dialog__footer-container__checkbox"
+          @change="confirmDialog.notifyAction"
+        >
+          Sempre notificar
+        </el-checkbox>
+
+        <div class="el-dialog__footer-container__buttons">
+          <el-button
+            @click="confirmDialog.visible = false; confirmDialog.cancelAction()"
+          >
+            Cancelar
+          </el-button>
+
+          <el-button
+            type="primary"
+            @click="confirmDialog.visible = false; confirmDialog.confirmAction()"
+          >
+            Confirmar
+          </el-button>
+        </div>
+
+      </span>
+    </el-dialog>
   </article>
 </template>
 
@@ -68,21 +112,38 @@ import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'TicketActions',
+
   components: {
     TicketActionsDialogs: () => import('./TicketActionsDialogs'),
     NotifyOnCompanyAnalysis: () => import('@/components/dialogs/NotifyOnCompanyAnalysis.vue')
   },
+
   props: {
     ticket: {
       type: Object,
       required: true
     }
   },
+
+  data: () => ({
+    confirmDialog: {
+      visible: false,
+      title: 'Confirm',
+      message: 'Tem certeza que deseja realizar está ação?',
+      showNotifyInput: false,
+      notify: false,
+      notifyAction: () => {},
+      cancelAction: () => {},
+      confirmAction: () => {}
+    }
+  }),
+
   computed: {
     ...mapGetters({
       isGhost: 'ghostMode',
       activeTab: 'getActiveTab',
-      isJusttoAdmin: 'isJusttoAdmin'
+      isJusttoAdmin: 'isJusttoAdmin',
+      userPreferences: 'userPreferences'
     }),
 
     actionsList() {
@@ -286,6 +347,7 @@ export default {
       return ticket.status && ['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED', 'CANCELED'].includes(ticket.status) && !isPreNegotiation
     }
   },
+
   methods: {
     ...mapActions([
       'toggleExportTicketModalVisible',
@@ -299,7 +361,9 @@ export default {
       'sendTicketAction',
       'deleteDocument',
       'favoriteTicket',
-      'disfavorTicket'
+      'disfavorTicket',
+      'setAccountProperty',
+      'loadAccountProperty'
     ]),
 
     confirmAction(action, message = 'Tem certeza que deseja realizar está ação?') {
@@ -331,24 +395,68 @@ export default {
       }
     },
 
+    handleActionNotify(insert, action, disputeId) {
+      const notify = { action, disputeId }
+      const ACTION_NOTIFICATION = JSON.parse(this.userPreferences.properties.ACTION_NOTIFICATION || '[]')
+
+      if (insert) {
+        this.setAccountProperty({ ACTION_NOTIFICATION: JSON.stringify([...ACTION_NOTIFICATION, notify]) })
+      } else {
+        this.setAccountProperty({
+          ACTION_NOTIFICATION: JSON.stringify([
+            ...ACTION_NOTIFICATION.filter(item => !(item.action === notify.action && item.disputeId === notify.disputeId))
+          ])
+        })
+      }
+    },
+
     handleFavorite() {
       const { id: disputeId } = this.$route.params
 
-      this.confirmAction('FAVORITE').then(() => {
-        this.favoriteTicket(disputeId).then(() => {
-          this.concludeAction('FAVORITE', disputeId)
-        }).catch(error => this.$jusNotification({ error }))
-      })
+      const ACTION_NOTIFICATION = JSON.parse(this.userPreferences.properties.ACTION_NOTIFICATION || '[]')
+
+      this.confirmDialog.title = this.$options.filters.capitalize(this.$t('actions.FAVORITE.name'))
+      this.confirmDialog.confirmAction = this.handleConfirmFavoriteTicket
+      this.confirmDialog.notifyAction = (value) => this.handleActionNotify(value, 'FAVORITE', Number(this.$route.params.id))
+      this.confirmDialog.notify = ACTION_NOTIFICATION.filter(item => {
+        console.log(disputeId, 'FAVORITE')
+        console.table(item)
+
+        return item.action === 'FAVORITE' && Number(item.disputeId) === Number(disputeId)
+      }).length > 0
+      this.confirmDialog.showNotifyInput = true
+      this.confirmDialog.visible = true
+    },
+
+    handleConfirmFavoriteTicket() {
+      const { id: disputeId } = this.$route.params
+
+      this.favoriteTicket(disputeId).then(() => {
+        this.concludeAction('FAVORITE', disputeId)
+      }).catch(error => this.$jusNotification({ error }))
+    },
+
+    handleConfirmDisfavorTicket() {
+      const { id: disputeId } = this.$route.params
+
+      this.disfavorTicket(disputeId).then(() => {
+        this.concludeAction('DISFAVOR', disputeId)
+      }).catch(error => this.$jusNotification({ error }))
     },
 
     handleDisfavor() {
       const { id: disputeId } = this.$route.params
 
-      this.confirmAction('DISFAVOR').then(() => {
-        this.disfavorTicket(disputeId).then(() => {
-          this.concludeAction('DISFAVOR', disputeId)
-        }).catch(error => this.$jusNotification({ error }))
-      })
+      const ACTION_NOTIFICATION = JSON.parse(this.userPreferences.properties.ACTION_NOTIFICATION || '[]')
+
+      this.confirmDialog.title = this.$options.filters.capitalize(this.$t('actions.DISFAVOR.name'))
+      this.confirmDialog.confirmAction = this.handleConfirmDisfavorTicket
+      this.confirmDialog.notifyAction = (value) => this.handleActionNotify(value, 'DISFAVOR', Number(this.$route.params.id))
+      this.confirmDialog.notify = ACTION_NOTIFICATION.filter(item => {
+        return item.action === 'DISFAVOR' && Number(item.disputeId) === Number(disputeId)
+      }).length > 0
+      this.confirmDialog.showNotifyInput = true
+      this.confirmDialog.visible = true
     },
 
     handleSettled(action) {
@@ -572,6 +680,35 @@ export default {
   }
 }
 
+.el-dialog.confirm-dialog {
+  .el-dialog__body {
+    .confirm-dialog__container {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+  .el-dialog__footer {
+    .el-dialog__footer-container {
+      display: flex;
+      justify-content: space-between;
+
+      .el-dialog__footer-container__checkbox {
+        flex: 1;
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-start;
+      }
+
+      .el-dialog__footer-container__buttons {
+        flex: 1;
+        display: flex;
+        justify-content: flex-end;
+      }
+    }
+  }
+}
+
 @media (max-width: 900px) {
   .ticket-actions {
     min-width: 44px;
@@ -584,6 +721,7 @@ export default {
     }
   }
 }
+
 @media (max-height: 900px) {
   .ticket-actions {
     .ticket-actions__buttons {

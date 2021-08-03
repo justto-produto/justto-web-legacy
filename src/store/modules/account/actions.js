@@ -92,7 +92,8 @@ const accountActions = {
     return axiosDispatch({
       url: `${accountsPath}/my/property`,
       method: 'PUT',
-      data
+      data,
+      action: 'loadAccountProperty'
     })
   },
   getAccountProperty({ _ }, property) {

@@ -1,5 +1,6 @@
 <template>
   <el-dialog
+    v-if="visible"
     :visible.sync="visible"
     :show-close="false"
     :close-on-click-modal="false"
@@ -24,35 +25,50 @@
       slot="footer"
       class="dialog-actions__increase-alert-footer"
     >
-      <el-button
-        size="small"
-        type="default"
-        @click="handleCompanyAnalysisAction('NEVER')"
+      <el-tooltip
+        content="Não notificará desta vez, porém perguntará se deve notificar na próxima."
+        placement="top"
       >
-        Não notificar
-      </el-button>
+        <el-button
+          size="small"
+          type="default"
+          @click="handleCompanyAnalysisAction('NEVER')"
+        >
+          Não notificar
+        </el-button>
+      </el-tooltip>
 
-      <el-button
-        size="small"
-        type="secondary"
-        @click="handleCompanyAnalysisAction('ALWAYS')"
+      <el-tooltip
+        content="Notificará desta vez, e todas as próximas."
+        placement="top"
       >
-        Sempre notificar
-      </el-button>
+        <el-button
+          size="small"
+          type="secondary"
+          @click="handleCompanyAnalysisAction('ALWAYS')"
+        >
+          Sempre notificar
+        </el-button>
+      </el-tooltip>
 
-      <el-button
-        size="small"
-        type="primary"
-        @click="handleCompanyAnalysisAction('ASK')"
+      <el-tooltip
+        content="Notificará desta vez e perguntará se deve notificar na próxima."
+        placement="top"
       >
-        Notificar somente dessa vez
-      </el-button>
+        <el-button
+          size="small"
+          type="primary"
+          @click="handleCompanyAnalysisAction('ASK')"
+        >
+          Notificar somente dessa vez
+        </el-button>
+      </el-tooltip>
     </div>
   </el-dialog>
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 const actionToTemplateId = {
   DISFAVOR: 4500,
@@ -64,9 +80,16 @@ export default {
     disputeId: null,
     visible: false,
     message: '',
+    action: '',
     email: '',
     name: ''
   }),
+
+  computed: {
+    ...mapGetters({
+      userPreferences: 'userPreferences'
+    })
+  },
 
   methods: {
     ...mapActions([
@@ -80,20 +103,7 @@ export default {
       if (Object.keys(ticket.lastReceivedMessage?.properties).length > 0) {
         const { PERSON_EMAIL, PERSON_NAME } = ticket.lastReceivedMessage?.properties
 
-        if (!ticket.lastReceivedMessage?.properties?.PERSON_EMAIL) {
-          this.$jusNotification({
-            type: 'error',
-            title: 'Ops!',
-            message: 'E-mail do destinatário não foi encontrado'
-          })
-          close()
-          return
-        } else if (!ticket.lastReceivedMessage?.properties?.PERSON_NAME) {
-          this.$jusNotification({
-            type: 'error',
-            title: 'Ops!',
-            message: 'Nome do destinatário não foi encontrado'
-          })
+        if (!ticket.lastReceivedMessage?.properties?.PERSON_EMAIL || !ticket.lastReceivedMessage?.properties?.PERSON_NAME) {
           close()
           return
         } else {
@@ -104,6 +114,8 @@ export default {
         close()
         return
       }
+
+      this.disputeId = Number(this.$route.params.id)
 
       await this.getQuickReplyTemplates(this.$route.params.id).then(res => {
         res.forEach(({ parsed: { body, referenceTemplateId } }) => {
@@ -118,8 +130,10 @@ export default {
         return
       }
 
-      this.getAccountProperty('FAVORITE_NOTIFICATION').then(({ FAVORITE_NOTIFICATION = '' }) => {
-        if (['ALWAYS'].includes(FAVORITE_NOTIFICATION)) {
+      this.action = action
+
+      this.getAccountProperty('ACTION_NOTIFICATION').then(({ ACTION_NOTIFICATION = '[]' }) => {
+        if (JSON.parse(ACTION_NOTIFICATION).filter(item => (Number(item.disputeId) === Number(this.disputeId) && item.action === action)).length) {
           this.sendMessage()
         } else {
           this.visible = true
@@ -131,21 +145,36 @@ export default {
       this.disputeId = null
       this.visible = false
       this.message = ''
+      this.action = ''
       this.email = ''
       this.name = ''
     },
 
-    handleCompanyAnalysisAction(action) {
-      switch (action) {
+    handleCompanyAnalysisAction(key) {
+      const { action, disputeId } = this
+
+      const ACTION_NOTIFICATION = JSON.parse(this.userPreferences.properties.ACTION_NOTIFICATION || '[]')
+
+      switch (key) {
         case 'ALWAYS':
           this.sendMessage()
-          this.setAccountProperty({ FAVORITE_NOTIFICATION: 'ALWAYS' })
+          this.setAccountProperty({
+            ACTION_NOTIFICATION: JSON.stringify([
+              ...ACTION_NOTIFICATION,
+              { action, disputeId }
+            ])
+          })
           break
         default:
-          if (action === 'ASK') {
+          if (key === 'ASK') {
             this.sendMessage()
           }
-          this.setAccountProperty({ FAVORITE_NOTIFICATION: '' })
+
+          this.setAccountProperty({
+            ACTION_NOTIFICATION: JSON.stringify([
+              ...ACTION_NOTIFICATION.filter(item => !(item.action === action && Number(item.disputeId) === Number(disputeId)))
+            ])
+          })
           break
       }
 
