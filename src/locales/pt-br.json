@@ -171,7 +171,8 @@
     "RECOVERY": "cobrança",
     "OBLIGATION": "obrigação de fazer",
     "DISCOUNT": "desconto",
-		"MULTI_PARTY_NEGOTIATION": "Negociação com multiplas partes"
+		"MULTI_PARTY_NEGOTIATION": "Negociação com multiplas partes",
+		"LEGAL_MKT": "Marketing jurídico"
   },
   "occurrence": {
     "type": {
