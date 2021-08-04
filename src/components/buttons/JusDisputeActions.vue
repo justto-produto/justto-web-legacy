@@ -580,6 +580,10 @@
     <NotifyOnCompanyAnalysis
       ref="notifyOnCompanyAnalysis"
     />
+
+    <ConfirmActionDialog
+      ref="confirmActionDialog"
+    />
   </div>
 </template>
 
@@ -590,10 +594,13 @@ import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'JusDisputeActions',
+
   components: {
     JusDragArea,
+    ConfirmActionDialog: () => import('@/components/dialogs/ConfirmActionDialog'),
     NotifyOnCompanyAnalysis: () => import('@/components/dialogs/NotifyOnCompanyAnalysis.vue')
   },
+
   props: {
     dispute: {
       type: Object,
@@ -608,6 +615,7 @@ export default {
       default: false
     }
   },
+
   data() {
     return {
       settledValue: 0,
@@ -642,12 +650,14 @@ export default {
       }
     }
   },
+
   computed: {
     ...mapGetters({
       disputeStatuses: 'disputeStatuses',
       isJusttoAdmin: 'isJusttoAdmin',
       ghostMode: 'ghostMode',
-      dropLawsuitReasons: 'getDropLawsuitReasons'
+      dropLawsuitReasons: 'getDropLawsuitReasons',
+      userPreferences: 'userPreferences'
     }),
 
     collapsed: {
@@ -658,6 +668,7 @@ export default {
         this.$emit('update:isCollapsed', value)
       }
     },
+
     actionsList() {
       return [
         {
@@ -801,54 +812,71 @@ export default {
         }
       ]
     },
+
     isPaused() {
       return this.dispute?.paused
     },
+
     isCanceled() {
       return this.dispute?.status === 'CANCELED'
     },
+
     canSettled() {
       return this.dispute?.status !== 'SETTLED' && !this.isPreNegotiation
     },
+
     canUnsettled() {
       return this.dispute?.status !== 'UNSETTLED' && !this.isPreNegotiation
     },
+
     canResume() {
       return this.dispute && this.dispute.paused && !this.isPreNegotiation
     },
+
     canPause() {
       return this.dispute && !this.dispute.paused && !this.isPreNegotiation && !['EXPIRED'].includes(this.dispute?.status)
     },
+
     canMarkAsNotRead() {
       return this.dispute?.status && !['IMPORTED', 'ENRICHED', 'ENGAGEMENT'].includes(this.dispute.status) && !this.isPreNegotiation
     },
+
     canSendCounterproposal() {
       return this.dispute?.status && !['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(this.dispute.status) && !this.isPreNegotiation
     },
+
     canMoveToRunning() {
       return this.dispute?.status && ['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED', 'CANCELED'].includes(this.dispute.status) && !this.isPreNegotiation
     },
+
     canRestartEngagement() {
       return this.dispute?.status && !['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED', 'EXPIRED'].includes(this.dispute.status) && !this.isPreNegotiation
     },
+
     isPreNegotiation() {
       return this.dispute.status === 'PRE_NEGOTIATION'
     },
+
     isInNegotiation() {
       return this.dispute.status === 'RUNNING'
     },
+
     canResendMessages() {
       return !this.tableActions && !this.isPreNegotiation
     },
+
     isAccepted() {
       return this.dispute ? ['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(this.dispute.status) : null
     },
+
     checkUpperRangeCounterOffer() {
       return this.counterOfferForm.lastCounterOfferValue > this.dispute.disputeUpperRange
     },
+
     isInsufficientUpperRange() {
       return this.unsettledType === 'INSUFFICIENT_UPPER_RANGE'
     },
+
     workspaceNegotiators() {
       return this.$store.getters.workspaceMembers.map(member => {
         const newMember = {}
@@ -858,12 +886,14 @@ export default {
         return newMember
       })
     },
+
     disputeClaimants() {
       if (this.dispute && this.dispute.disputeRoles) {
         return getRoles(this.dispute.disputeRoles, 'CLAIMANT')
       }
       return []
     },
+
     authorsResume() {
       if (this.dispute && this.dispute.disputeRoles) {
         return getRoles(this.dispute.disputeRoles, 'CLAIMANT', 'PARTY').map(role => {
@@ -872,6 +902,7 @@ export default {
       }
       return []
     },
+
     lawyersResume() {
       if (this.dispute && this.dispute.disputeRoles) {
         return getRoles(this.dispute.disputeRoles, 'CLAIMANT', 'LAWYER').map(role => {
@@ -880,6 +911,7 @@ export default {
       }
       return []
     },
+
     respondentsResume() {
       if (this.dispute && this.dispute.disputeRoles) {
         return getRoles(this.dispute.disputeRoles, 'RESPONDENT', 'PARTY').map(role => {
@@ -889,11 +921,13 @@ export default {
       return []
     }
   },
+
   beforeMount() {
     if (!Object.keys(this.dropLawsuitReasons).length) {
       this.getDropLawsuitReasons()
     }
   },
+
   methods: {
     ...mapActions([
       'deleteDocument',
@@ -903,7 +937,8 @@ export default {
       'sendDisputeNote',
       'startNegotiation',
       'getDropLawsuitReasons',
-      'cancelTicket'
+      'cancelTicket',
+      'setAccountProperty'
     ]),
 
     redirectNegotiation() {
@@ -915,6 +950,21 @@ export default {
     // TODO: Transformar isso em um util
     scapeHtml(text) {
       return text.replace(/(<([^>]+)>)/gi, '')
+    },
+
+    handleActionNotify(insert, action, disputeId) {
+      const notify = { action, disputeId }
+      const ACTION_NOTIFICATION = JSON.parse(this.userPreferences.properties.ACTION_NOTIFICATION || '[]')
+
+      if (insert) {
+        this.setAccountProperty({ ACTION_NOTIFICATION: JSON.stringify([...ACTION_NOTIFICATION, notify]) })
+      } else {
+        this.setAccountProperty({
+          ACTION_NOTIFICATION: JSON.stringify([
+            ...ACTION_NOTIFICATION.filter(item => !(item.action === notify.action && item.disputeId === notify.disputeId))
+          ])
+        })
+      }
     },
 
     disputeAction(action, additionParams) {
@@ -1067,12 +1117,62 @@ export default {
           }
           break
         case 'favorite':
-          this.doAction(action, message)
+          this.handleFavorite()
           break
         case 'disfavor':
-          this.doAction(action, message)
+          this.handleDisfavor()
           break
       }
+    },
+
+    handleFavorite() {
+      const { id: disputeId } = this.$route.params
+
+      const ACTION_NOTIFICATION = JSON.parse(this.userPreferences.properties.ACTION_NOTIFICATION || '[]')
+
+      this.$refs.confirmActionDialog.handleNotify = (value) => this.handleActionNotify(value, 'FAVORITE', Number(this.$route.params.id))
+      this.$refs.confirmActionDialog.handleConfirm = () => this.handleAction('favorite', {}).then(() => {
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Ação <b>' + this.$options.filters.capitalize(this.$t('actions.FAVORITE.name')) + '</b> realizada com sucesso.',
+          type: 'success',
+          dangerouslyUseHTMLString: true
+        })
+
+        this.$refs.notifyOnCompanyAnalysis.open('FAVORITE', this.dispute)
+      })
+
+      this.$refs.confirmActionDialog.open({
+        visible: true,
+        showNotifyInput: true,
+        title: this.$options.filters.capitalize(this.$t('actions.FAVORITE.name')),
+        notify: ACTION_NOTIFICATION.filter(item => (item.action === 'FAVORITE' && Number(item.disputeId) === Number(disputeId))).length > 0
+      })
+    },
+
+    handleDisfavor() {
+      const { id: disputeId } = this.$route.params
+
+      const ACTION_NOTIFICATION = JSON.parse(this.userPreferences.properties.ACTION_NOTIFICATION || '[]')
+
+      this.$refs.confirmActionDialog.handleNotify = (value) => this.handleActionNotify(value, 'DISFAVOR', Number(this.$route.params.id))
+      this.$refs.confirmActionDialog.handleConfirm = () => this.handleAction('disfavor', {}).then(() => {
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Ação <b>' + this.$options.filters.capitalize(this.$t('actions.DISFAVOR.name')) + '</b> realizada com sucesso.',
+          type: 'success',
+          dangerouslyUseHTMLString: true
+        })
+
+        this.$refs.notifyOnCompanyAnalysis.open('DISFAVOR', this.dispute)
+      })
+
+      this.$refs.confirmActionDialog.open({
+        visible: true,
+        showNotifyInput: true,
+        title: this.$options.filters.capitalize(this.$t('actions.DISFAVOR.name')),
+        notify: ACTION_NOTIFICATION.filter(item => (item.action === 'DISFAVOR' && Number(item.disputeId) === Number(disputeId))).length > 0
+      })
     },
 
     handleSettled() {
@@ -1089,6 +1189,21 @@ export default {
       this.settledDialogVisible = false
     },
 
+    handleAction(action, additionParams) {
+      let params = {
+        action,
+        disputeId: this.dispute.id,
+        body: {
+          note: this.counterOfferForm.note,
+          conclusionNote: this.counterOfferForm.note
+        }
+      }
+
+      if (additionParams) params = { ...params, ...additionParams }
+
+      return this.sendDisputeAction(params)
+    },
+
     doAction(action, message, additionParams) {
       return new Promise((resolve, reject) => {
         this.$confirm(message.content, message.title, {
@@ -1100,18 +1215,7 @@ export default {
         }).then(() => {
           this.modalLoading = true
 
-          let params = {
-            action,
-            disputeId: this.dispute.id,
-            body: {
-              note: this.counterOfferForm.note,
-              conclusionNote: this.counterOfferForm.note
-            }
-          }
-
-          if (additionParams) params = { ...params, ...additionParams }
-
-          this.sendDisputeAction(params).then(() => {
+          this.handleAction(action, additionParams).then(() => {
             resolve()
 
             this.$jusNotification({
@@ -1139,6 +1243,7 @@ export default {
         })
       })
     },
+
     checkIsntManualStrategy(action) {
       return new Promise((resolve, reject) => {
         if ((['restart-engagement', 'resend-messages', 'cancel-messages'].includes(action)) && (this.dispute.strategyId === 25 || this.dispute.strategyId === 26)) {
@@ -1154,6 +1259,7 @@ export default {
         }
       })
     },
+
     setAsUnread() {
       this.disputeSetVisualized({
         visualized: false,
@@ -1166,6 +1272,7 @@ export default {
         this.$jusNotification({ error })
       })
     },
+
     validateForm(ref) {
       return new Promise((resolve, reject) => {
         this.$refs[ref].validate(valid => {
@@ -1174,6 +1281,7 @@ export default {
         })
       })
     },
+
     handleDropLawsuit() {
       this.modalLoading = true
       const disputeId = this.$route.params.id
@@ -1194,18 +1302,22 @@ export default {
         })
         .finally(() => { this.modalLoading = false })
     },
+
     goToNegotiation() {
       this.startNegotiation(this.dispute.id)
       this.$jusSegment('Negociação iniciada na disputa', { disputeId: this.dispute.id })
     },
+
     openNewTab() {
       const routeData = this.$router.resolve({ name: 'dispute', params: { id: this.dispute.id } })
       window.open(routeData.href, '_blank')
       this.$emit('open:newtab')
     },
+
     togleCollapsed() {
       this.collapsed = !this.collapsed
     },
+
     openSettledDialog(action) {
       this.modalLoading = false
       this.counterOfferForm.lastCounterOfferValue = this.dispute.lastCounterOfferValue || this.dispute.lastOfferValue
@@ -1227,6 +1339,7 @@ export default {
         this.$refs.counterOfferForm.clearValidate()
       }
     },
+
     openEditNegotiatorsDialog() {
       this.modalLoading = false
       this.disputeNegotiators = this.dispute.disputeRoles.filter(member => {
@@ -1234,6 +1347,7 @@ export default {
       }).map(member => member.personId)
       this.editNegotiatorDialogVisible = true
     },
+
     openCounterproposalDialog() {
       this.modalLoading = false
       this.counterOfferForm.lastCounterOfferValue = ''
@@ -1243,9 +1357,11 @@ export default {
         this.$refs.counterOfferForm.clearValidate()
       }
     },
+
     handleAttachmentDialogVisable() {
       this.uploadAttacmentDialogVisable = !this.uploadAttacmentDialogVisable
     },
+
     checkCounterproposal(actionType) {
       return new Promise((resolve, reject) => {
         this.$refs.counterOfferForm.validate(valid => {
@@ -1315,6 +1431,7 @@ export default {
         })
       })
     },
+
     sendCounterproposal(updateUpperRange) {
       return new Promise((resolve, reject) => {
         this.$refs.counterOfferForm.validate(valid => {
