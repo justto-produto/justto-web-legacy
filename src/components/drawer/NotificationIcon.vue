@@ -10,7 +10,7 @@
       >
         <div
           v-if="qtdNotifications !== 0"
-          class="notification__icon__counter"
+          class="notification__icon__counter el-icon-pulse"
         >
           {{ qtdNotifications }}
         </div>
@@ -66,17 +66,18 @@ export default {
     position: relative;
     cursor: pointer;
     margin-bottom: 10px;
+
     .notification__icon__counter {
       text-align: center;
       position: absolute;
-      right: 0;
       top: 0;
+      right: 0;
       margin: -2px -2px 0 0;
-      font-size: 10px;
+      font-size: 14px;
       font-weight: bold;
       background-color: red;
       border-radius: 50px;
-      padding: 1px 4px;
+      padding: 2px 6px;
       color: white;
     }
   }
