@@ -138,7 +138,7 @@ export default {
           const customer = this.custumerList[0]
           resolve(customer)
         } else {
-          const planId = this.plans.find(plan => plan.name === 'Escritório').id
+          const planId = this.plans.find(plan => [10, 5, 8].includes(Number(plan.id))).id
           for (const customer of this.custumerList) {
             for (const contract of customer.contracts) {
               if (contract.planId === planId) {
