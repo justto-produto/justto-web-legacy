@@ -138,14 +138,20 @@ export default {
           const customer = this.custumerList[0]
           resolve(customer)
         } else {
-          const planId = this.plans.find(plan => [10, 5, 8].includes(Number(plan.id))).id
-          for (const customer of this.custumerList) {
-            for (const contract of customer.contracts) {
-              if (contract.planId === planId) {
-                resolve(customer)
+          // const planId = this.plans.find(plan => [10, 5, 8].includes(Number(plan.id))).id
+
+          for (const plan of this.plans) {
+            if (![10, 5, 8].includes(Number(plan.id))) {
+              for (const customer of this.custumerList) {
+                for (const contract of customer.contracts) {
+                  if (contract.planId === plan.id) {
+                    resolve(customer)
+                  }
+                }
               }
             }
           }
+
           reject(new Error('Sem customers com clientes com contratos do tipo Escritório.'))
         }
       })
