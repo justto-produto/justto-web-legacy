@@ -8,40 +8,59 @@
       name="parties"
       lazy
     >
-      <i
+      <el-tooltip
         slot="label"
-        class="el-icon-user"
-      />
+        content="Partes da disputa"
+        :open-delay="500"
+      >
+        <i class="el-icon-user" />
+      </el-tooltip>
+
       <OverviewParties />
     </el-tab-pane>
+
     <el-tab-pane
       name="info"
       lazy
     >
-      <i
+      <el-tooltip
         slot="label"
-        class="el-icon-warning-outline"
-      />
+        content="Informações gerais"
+        :open-delay="500"
+      >
+        <i class="el-icon-warning-outline" />
+      </el-tooltip>
+
       <OverviewInfo />
     </el-tab-pane>
+
     <el-tab-pane
       name="properties"
       lazy
     >
-      <i
+      <el-tooltip
         slot="label"
-        class="el-icon-setting"
-      />
+        content="Propriedades adicionais"
+        :open-delay="500"
+      >
+        <i class="el-icon-setting" />
+      </el-tooltip>
+
       <OverviewProperties />
     </el-tab-pane>
+
     <el-tab-pane
       name="attachments"
       lazy
     >
-      <i
+      <el-tooltip
         slot="label"
-        class="el-icon-paperclip"
-      />
+        content="Anexos"
+        :open-delay="500"
+      >
+        <i class="el-icon-paperclip" />
+      </el-tooltip>
+
       <OverviewAttachments />
     </el-tab-pane>
   </el-tabs>
