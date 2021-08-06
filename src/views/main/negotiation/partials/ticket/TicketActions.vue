@@ -343,34 +343,25 @@ export default {
       }
     },
 
-    handleActionNotify(insert, action, disputeId) {
-      const notify = { action, disputeId }
-      const ACTION_NOTIFICATION = JSON.parse(this.userPreferences.properties.ACTION_NOTIFICATION || '[]')
+    handleActionNotify(key, value) {
+      const propertie = {}
 
-      if (insert) {
-        this.setAccountProperty({ ACTION_NOTIFICATION: JSON.stringify([...ACTION_NOTIFICATION, notify]) })
-      } else {
-        this.setAccountProperty({
-          ACTION_NOTIFICATION: JSON.stringify([
-            ...ACTION_NOTIFICATION.filter(item => !(item.action === notify.action && item.disputeId === notify.disputeId))
-          ])
-        })
-      }
+      propertie[key] = value
+
+      this.setAccountProperty(propertie)
     },
 
     handleFavorite() {
-      const { id: disputeId } = this.$route.params
+      const showNotify = this.userPreferences.properties?.FAVORITE_NOTIFICATION === 'ALWAYS'
 
-      const ACTION_NOTIFICATION = JSON.parse(this.userPreferences.properties.ACTION_NOTIFICATION || '[]')
-
-      this.$refs.confirmActionDialog.handleNotify = (value) => this.handleActionNotify(value, 'FAVORITE', Number(this.$route.params.id))
+      this.$refs.confirmActionDialog.handleNotify = (value) => this.handleActionNotify('FAVORITE_NOTIFICATION', value ? 'ALWAYS' : '')
       this.$refs.confirmActionDialog.handleConfirm = this.handleConfirmFavoriteTicket
 
       this.$refs.confirmActionDialog.open({
         visible: true,
-        showNotifyInput: true,
+        showNotifyInput: showNotify,
         title: this.$options.filters.capitalize(this.$t('actions.FAVORITE.name')),
-        notify: ACTION_NOTIFICATION.filter(item => (item.action === 'FAVORITE' && Number(item.disputeId) === Number(disputeId))).length > 0
+        notify: showNotify
       })
     },
 
@@ -391,18 +382,16 @@ export default {
     },
 
     handleDisfavor() {
-      const { id: disputeId } = this.$route.params
+      const showNotify = this.userPreferences.properties?.FAVORITE_NOTIFICATION === 'ALWAYS'
 
-      const ACTION_NOTIFICATION = JSON.parse(this.userPreferences.properties.ACTION_NOTIFICATION || '[]')
-
-      this.$refs.confirmActionDialog.handleNotify = (value) => this.handleActionNotify(value, 'DISFAVOR', Number(this.$route.params.id))
+      this.$refs.confirmActionDialog.handleNotify = (value) => this.handleActionNotify('FAVORITE_NOTIFICATION', value ? 'ALWAYS' : '')
       this.$refs.confirmActionDialog.handleConfirm = this.handleConfirmDisfavorTicket
 
       this.$refs.confirmActionDialog.open({
         visible: true,
-        showNotifyInput: true,
+        showNotifyInput: showNotify,
         title: this.$options.filters.capitalize(this.$t('actions.DISFAVOR.name')),
-        notify: ACTION_NOTIFICATION.filter(item => (item.action === 'DISFAVOR' && Number(item.disputeId) === Number(disputeId))).length > 0
+        notify: showNotify
       })
     },
 

@@ -58,5 +58,5 @@ export default {
   TICKET_WEB_SOCKET_DISCONNECT: {
     isShortcut: false,
     callback: 'TICKET_WEB_SOCKET_DISCONNECT'
-  },
+  }
 }

@@ -5,20 +5,29 @@
     :show-close="false"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
-    :title="`Quer notificar ${$options.filters.resumedName(name)} desta ação?`"
+    :title="`Quer notificar ${name ? $options.filters.resumedName(name) : emailmonimo} desta ação?`"
     append-to-body
     destroy-on-close
     width="604px"
     custom-class="dialog-actions__increase-alert"
   >
-    <article class="dialog-actions__increase-alert-body">
+    <article class="dialog-actions__increase-alert-body jus-ckeditor__parent">
       <label class="dialog-actions__increase-alert-body-label">
-        Mensagem que será enviada:
+        <div class="dialog-actions__increase-alert-body-label-text">
+          Mensagem que será enviada:
+        </div>
       </label>
-      <div
-        class="dialog-actions__increase-alert-body-text"
-        v-html="message"
+      <ckeditor
+        v-if="visible"
+        ref="messageEditor"
+        v-model="message"
+        :editor="editor"
+        :config="editorConfig"
+        type="classic"
       />
+      <!-- <div class="dialog-actions__increase-alert-body-text">
+        <div v-html="message" />
+      </div> -->
     </article>
 
     <div
@@ -69,13 +78,21 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import ckeditor from '@/utils/mixins/ckeditor'
 
 const actionToTemplateId = {
   DISFAVOR: 4500,
   FAVORITE: 4494
 }
 
+const actionToPropertieKey = {
+  DISFAVOR: 'FAVORITE_NOTIFICATION',
+  FAVORITE: 'FAVORITE_NOTIFICATION'
+}
+
 export default {
+  mixins: [ckeditor],
+
   data: () => ({
     disputeId: null,
     visible: false,
@@ -103,12 +120,12 @@ export default {
       if (Object.keys(ticket.lastReceivedMessage?.properties).length > 0) {
         const { PERSON_EMAIL, PERSON_NAME } = ticket.lastReceivedMessage?.properties
 
-        if (!ticket.lastReceivedMessage?.properties?.PERSON_EMAIL || !ticket.lastReceivedMessage?.properties?.PERSON_NAME) {
+        if (!ticket.lastReceivedMessage?.properties?.PERSON_EMAIL) {
           close()
           return
         } else {
           this.email = PERSON_EMAIL
-          this.name = PERSON_NAME
+          this.name = PERSON_NAME || ''
         }
       } else {
         close()
@@ -132,8 +149,8 @@ export default {
 
       this.action = action
 
-      this.getAccountProperty('ACTION_NOTIFICATION').then(({ ACTION_NOTIFICATION = '[]' }) => {
-        if (JSON.parse(ACTION_NOTIFICATION).filter(item => (Number(item.disputeId) === Number(this.disputeId) && item.action === action)).length) {
+      this.getAccountProperty(actionToPropertieKey[this.action]).then((res = {}) => {
+        if (res[actionToPropertieKey[this.action]] === 'ALWAYS') {
           this.sendMessage()
         } else {
           this.visible = true
@@ -151,33 +168,26 @@ export default {
     },
 
     handleCompanyAnalysisAction(key) {
-      const { action, disputeId } = this
+      const { action } = this
 
-      const ACTION_NOTIFICATION = JSON.parse(this.userPreferences.properties.ACTION_NOTIFICATION || '[]')
+      const res = {}
 
       switch (key) {
         case 'ALWAYS':
           this.sendMessage()
-          this.setAccountProperty({
-            ACTION_NOTIFICATION: JSON.stringify([
-              ...ACTION_NOTIFICATION,
-              { action, disputeId }
-            ])
-          })
+
+          res[actionToPropertieKey[action]] = 'ALWAYS'
+
           break
         default:
-          if (key === 'ASK') {
-            this.sendMessage()
-          }
+          res[actionToPropertieKey[action]] = ''
 
-          this.setAccountProperty({
-            ACTION_NOTIFICATION: JSON.stringify([
-              ...ACTION_NOTIFICATION.filter(item => !(item.action === action && Number(item.disputeId) === Number(disputeId)))
-            ])
-          })
+          if (key === 'ASK') this.sendMessage()
+
           break
       }
 
+      this.setAccountProperty(res)
       this.close()
     },
 
@@ -200,19 +210,25 @@ export default {
       }).catch(error => {
         this.$jusNotification({ error })
       }).finally(this.close)
-    }
+    },
+
+    editMessage() {}
   }
 }
 </script>
 
 <style lang="scss">
+@import '@/styles/colors.scss';
+
 .dialog-actions__increase-alert {
   .el-dialog__body {
     margin-top: 0 !important;
 
     .dialog-actions__increase-alert-body {
       .dialog-actions__increase-alert-body-label {
+        display: block;
         font-weight: 600;
+        margin-bottom: 16px;
       }
 
       .dialog-actions__increase-alert-body-text {

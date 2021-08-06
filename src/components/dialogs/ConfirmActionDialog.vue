@@ -5,6 +5,7 @@
     :close-on-click-modal="false"
     :close-on-press-escape="false"
     :show-close="false"
+    center
     append-to-body
     custom-class="confirm-dialog"
   >
@@ -16,15 +17,6 @@
       slot="footer"
       class="el-dialog__footer-container"
     >
-      <el-checkbox
-        v-if="state.showNotifyInput"
-        v-model="state.notify"
-        class="el-dialog__footer-container__checkbox"
-        @change="notifyAction"
-      >
-        Sempre notificar
-      </el-checkbox>
-
       <div class="el-dialog__footer-container__buttons">
         <el-button
           @click="cancelAction()"
@@ -39,6 +31,15 @@
           Confirmar
         </el-button>
       </div>
+
+      <el-checkbox
+        v-if="state.showNotifyInput"
+        v-model="state.notify"
+        class="el-dialog__footer-container__checkbox"
+        @change="notifyAction"
+      >
+        Sempre notificar parte
+      </el-checkbox>
 
     </span>
   </el-dialog>
@@ -110,25 +111,27 @@ export default {
     .confirm-dialog__container {
       display: flex;
       flex-direction: column;
+      text-align: center;
     }
   }
 
   .el-dialog__footer {
     .el-dialog__footer-container {
       display: flex;
-      justify-content: space-between;
+      flex-direction: column;
+      gap: 24px;
 
       .el-dialog__footer-container__checkbox {
-        flex: 1;
         display: flex;
-        justify-content: flex-start;
+        justify-content: center;
         align-items: center;
       }
 
       .el-dialog__footer-container__buttons {
-        flex: 1;
         display: flex;
-        justify-content: flex-end;
+        justify-content: center;
+
+        gap: 32px;
       }
     }
   }
