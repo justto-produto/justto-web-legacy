@@ -12,6 +12,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 export default {
   name: 'CommunicationBlockListDialog',
   components: {
@@ -21,8 +22,11 @@ export default {
     communicationBlockListDialogVisible: false
   }),
   methods: {
+    ...mapActions(['getWorkspace']),
+
     openFeatureDialog() {
       this.communicationBlockListDialogVisible = true
+      this.getWorkspace()
     }
   }
 }
