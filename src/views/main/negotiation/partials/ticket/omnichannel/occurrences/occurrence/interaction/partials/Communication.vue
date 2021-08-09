@@ -68,7 +68,7 @@
         :disabled="!sendStatusDate"
       >
         <span slot="content">
-          {{ {'readed': 'Lida', 'recived': 'Recebida', 'sent': 'enviada'}[sendStatus] }}
+          {{ {'readed': 'Lida', 'recived': 'Recebida', 'sent': 'Enviada'}[sendStatus] }}
           {{ sendStatusDate | moment('[ em ] DD/MM/YYYY [ às ] HH:mm') }}
         </span>
 
