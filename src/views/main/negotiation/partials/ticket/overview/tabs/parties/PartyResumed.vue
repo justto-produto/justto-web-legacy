@@ -29,6 +29,11 @@
       />
 
       <article>
+        <JusIcon
+          v-if="isOnline"
+          class="party-resumed__header-online"
+          icon="online"
+        />
         <span class="party-resumed__header-name">
           {{ party.name | resumedName }}
         </span>
@@ -61,6 +66,7 @@
 
 <script>
 import TicketTicketOverviewPartyResumed from '@/models/negotiations/overview/TicketOverviewPartyResumed'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'PartyResumed',
@@ -85,8 +91,17 @@ export default {
   },
 
   computed: {
+    ...mapGetters({
+      online: 'onlineDocuments'
+    }),
+
     isActiveCollapseItem() {
       return this.party.disputeRoleId === this.activeCollapseItem
+    },
+
+    isOnline() {
+      const docs = Object.keys(this.online)
+      return this.party.status === 'ONLINE' || docs.includes(this.party.documentNumber) || (this.party.oabs || []).filter(oab => docs.includes(oab)).length
     },
 
     documentType() {
@@ -162,6 +177,11 @@ export default {
 
 @media (max-height: 900px) {
   .party-resumed {
+    .party-resumed__header-online {
+      width: 10px;
+      height: 10px;
+    }
+
     .party-resumed__header-name {
       font-size: 16px;
     }

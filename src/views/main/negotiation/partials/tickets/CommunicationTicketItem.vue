@@ -61,10 +61,13 @@
       <el-step />
       <el-step />
     </el-steps>
-    <div
-      v-if="ticket.plaintiff && ticket.plaintiff.status === 'ONLINE'"
+
+    <JusIcon
+      v-if="isOnline"
       class="communication-ticket-item-container__online"
+      icon="online"
     />
+
     <span
       class="communication-ticket-item-container__time"
     >
@@ -101,19 +104,24 @@ export default {
       activeTab: 'getTicketsActiveTab',
       showDraft: 'getIsDraftManagementActive'
     }),
+
     documentStep() {
       const signStatus = this.ticket?.draftStatus ? this.ticket.draftStatus : this.ticket.signStatus
       return this.getDocumentStep(this.ticket.hasDraft, signStatus)
     },
+
     isAcceptedTab() {
       return this.activeTab === 'accepted'
     },
+
     isFinishedTab() {
       return this.activeTab === 'finished'
     },
+
     isSettled() {
       return this.ticket.disputeStatus === 'SETTLED'
     },
+
     isActive() {
       return Number(this.$route.params.id) === Number(this.ticket?.disputeId)
     },
@@ -270,8 +278,6 @@ export default {
     left: 15px;
     width: 10px;
     height: 10px;
-    border-radius: 50%;
-    background-color: $--color-success;
   }
 
   .communication-ticket-item-container__gray {

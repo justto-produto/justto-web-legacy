@@ -33,7 +33,7 @@
       </div>
     </div>
     <div
-      v-if="ticket.plaintiff && ticket.plaintiff.status === 'ONLINE'"
+      v-if="isOnline"
       class="communication-ticket-item-container__online"
     />
     <div
