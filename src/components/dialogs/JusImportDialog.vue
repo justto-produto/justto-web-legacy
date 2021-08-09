@@ -169,6 +169,14 @@ export default {
       } else if (error.data.error) {
         errorMessage.message = 'Arquivo vazio ou fora do formato padrão. Verifique o seu conteúdo e tente novamente.'
         errorMessage.type = 'warning'
+      } else if (error.data.file.length) {
+        errorMessage.message = ''
+
+        error.data.file.forEach(err => {
+          errorMessage.message = `${errorMessage.message}${err}<br>`
+        })
+
+        errorMessage.type = 'error'
       } else {
         errorMessage.message = 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.'
         errorMessage.type = 'error'
@@ -177,6 +185,7 @@ export default {
       this.$jusNotification({
         title: 'Ops!',
         message: errorMessage.message,
+        dangerouslyUseHTMLString: true,
         type: errorMessage.type
       })
     },
