@@ -21,7 +21,7 @@ export default {
     isSelfCause() {
       const { lawyer, plaintiff } = this.ticket
 
-      return !!(lawyer && plaintiff && (lawyer.personId === plaintiff.personId || lawyer.documentNumber === plaintiff.documentNumber))
+      return !!(lawyer && plaintiff && (lawyer.personId === plaintiff.personId || lawyer.documentNumber === plaintiff.documentNumber || (lawyer.oabNumber === plaintiff.oabNumber && lawyer.oabState === plaintiff.oabState)))
     },
 
     lawyerName() {
