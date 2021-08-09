@@ -27,13 +27,13 @@
         label="Trocar polaridade"
         @change="updatePolarity"
       />
-      <a
+      <!-- <a
         v-if="!isNegotiator"
         class="party-details__infoline-link party-details__infoline-link--danger"
         @click="removeParty"
       >
         <i class="el-icon-delete" />
-      </a>
+      </a> -->
     </div>
 
     <div class="party-details__infoline">
@@ -280,15 +280,27 @@
       </span>
     </el-dialog>
 
-    <el-button
-      v-if="!isNegotiator && isJusttoAdmin"
-      class="party-details__edit"
-      type="text"
-      icon="el-icon-edit"
-      @click="editRoleDialogVisible = true"
-    >
-      Editar
-    </el-button>
+    <div class="party-details__edit">
+      <el-button
+        v-if="!isNegotiator"
+        class="party-details__edit-button--danger"
+        type="text"
+        icon="el-icon-delete"
+        @click="removeParty"
+      >
+        Excluir
+      </el-button>
+
+      <el-button
+        v-if="!isNegotiator && isJusttoAdmin"
+        class="party-details__edit-button"
+        type="text"
+        icon="el-icon-edit"
+        @click="editRoleDialogVisible = true"
+      >
+        Editar
+      </el-button>
+    </div>
 
     <InfoMergeDialog
       ref="mergeInfoDialog"
@@ -896,8 +908,13 @@ export default {
 
 .party-details {
   .party-details__edit {
-    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
     margin: 16px 0 0;
+
+    .party-details__edit-button--danger {
+      color: $--color-danger;
+    }
   }
 
   .party-details__infoline {
