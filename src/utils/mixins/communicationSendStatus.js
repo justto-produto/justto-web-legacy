@@ -48,6 +48,21 @@ export default {
       }
     },
 
+    sendStatusDate() {
+      const parameters = this.interaction?.message?.parameters || {}
+      const keys = Object.keys(parameters)
+
+      if (keys.includes('READ_DATE')) {
+        return parameters.READ_DATE
+      } else if (keys.includes('RECEIVER_DATE')) {
+        return parameters.RECEIVER_DATE
+      } else if (keys.includes('SEND_DATE')) {
+        return parameters.SEND_DATE
+      } else {
+        return this.interaction?.createAt?.dateTime
+      }
+    },
+
     properties() {
       return this.occurrence?.properties
     },
