@@ -15,7 +15,7 @@ export default {
     },
 
     hasLawyer() {
-      return this.ticket?.lawyer !== null && !!this.lawyer?.name
+      return Object.keys(this.ticket?.lawyer || {}).length && !!this.ticket?.lawyer?.name
     },
 
     isSelfCause() {
