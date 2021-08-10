@@ -27,13 +27,6 @@
         label="Trocar polaridade"
         @change="updatePolarity"
       />
-      <!-- <a
-        v-if="!isNegotiator"
-        class="party-details__infoline-link party-details__infoline-link--danger"
-        @click="removeParty"
-      >
-        <i class="el-icon-delete" />
-      </a> -->
     </div>
 
     <div class="party-details__infoline">
