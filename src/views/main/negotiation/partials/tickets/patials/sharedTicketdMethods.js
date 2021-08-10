@@ -15,7 +15,7 @@ export default {
     },
 
     hasLawyer() {
-      return this.ticket?.lawyer !== null
+      return this.ticket?.lawyer !== null && !!this.lawyer?.name
     },
 
     isSelfCause() {
@@ -25,8 +25,7 @@ export default {
     },
 
     lawyerName() {
-      const { lawyer } = this.ticket
-      return lawyer ? lawyer.name : 'Sem advogado'
+      return this.ticket?.lawyer?.name || ''
     }
   },
 
