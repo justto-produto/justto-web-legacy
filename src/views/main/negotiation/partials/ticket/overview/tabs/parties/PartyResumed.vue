@@ -160,6 +160,11 @@ export default {
 @import '@/styles/colors.scss';
 
 .party-resumed {
+  .party-resumed__header-online {
+    width: 10px;
+    height: 10px;
+  }
+
   .party-resumed__header-avatar {
     margin-right: 10px;
   }
@@ -177,11 +182,6 @@ export default {
 
 @media (max-height: 900px) {
   .party-resumed {
-    .party-resumed__header-online {
-      width: 10px;
-      height: 10px;
-    }
-
     .party-resumed__header-name {
       font-size: 16px;
     }
