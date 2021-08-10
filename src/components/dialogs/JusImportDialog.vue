@@ -173,7 +173,11 @@ export default {
         errorMessage.message = ''
 
         error.data.file.forEach(err => {
-          errorMessage.message = `${errorMessage.message}${err}<br>`
+          if (err.startsWith('Ensure this filename')) {
+            errorMessage.message = `${errorMessage.message}Nome do arquivo deve ter no máximo 100 caracteres.<br>`
+          } else {
+            errorMessage.message = `${errorMessage.message}${err}<br>`
+          }
         })
 
         errorMessage.type = 'error'
