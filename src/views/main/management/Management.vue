@@ -563,6 +563,7 @@ export default {
 
   mounted() {
     this.init()
+    this.$jusSegment('Acesso tela Gerenciamento', {})
     eventBus.$on(events.TICKET_NEXT_TAB.callback, this.handleNextTab)
     eventBus.$on(events.TICKET_PREVIOUS_TAB.callback, this.handlePreviousTab)
   },
@@ -756,7 +757,7 @@ export default {
       this.$store.commit('clearDisputeQueryByTab')
       this.$store.commit('setDisputeHasFilters', false)
       // SEGMENT TRACK
-      this.$jusSegment(`Navegação na aba ${this.$t('tab.' + tab).toUpperCase()}`)
+      this.$jusSegment(`Navegação na aba ${this.$t('tab.' + tab).toUpperCase()} do Gerenciamento`)
       switch (tab) {
         case '0':
           this.$store.commit('updateDisputeQuery', { key: 'status', value: ['PRE_NEGOTIATION'] })
