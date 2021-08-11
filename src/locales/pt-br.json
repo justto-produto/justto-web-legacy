@@ -441,6 +441,7 @@
     }
   },
   "ticket-labels": {
+    "upperRange": "alçada máxima",
     "courtHearingDate": "data de audiência",
     "importedDate": "data de importação",
     "campaignName": "campanha",
@@ -469,8 +470,8 @@
   },
   "boolean": "sim | não",
   "ticket-status": {
-    "ACCEPTED": "aceita",
-    "CHECKOUT": "sem dados bancarios",
+    "CHECKOUT": "aceita",
+    "ACCEPTED": "sem dados bancarios",
     "ENGAGEMENT": "sem resposta da parte",
     "ENRICHED": "enriquecida",
     "EXPIRED": "expirada",

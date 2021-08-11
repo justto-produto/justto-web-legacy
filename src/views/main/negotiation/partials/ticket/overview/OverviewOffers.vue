@@ -1,6 +1,27 @@
 <template>
   <section class="overview-offers">
-    <article class="overview-offers__proposal overview-offers__proposal--plaintiff">
+    <article
+      v-if="isAccepted"
+      class="overview-offers__proposal overview-offers__proposal--accepted"
+    >
+      <JusIcon icon="ticket-accepted" />
+      <div>
+        <div>
+          Valor do acordo
+        </div>
+        <CurrencyInlieEditorInner
+          v-model="plaintiffOffer.value"
+          :is-editable="canEditPlaintiffOffer"
+          class="overview-offers__proposal-value overview-offers__proposal-value--full-line"
+          @change="updatePlaintiffOffer"
+        />
+      </div>
+    </article>
+
+    <article
+      v-if="!isAccepted"
+      class="overview-offers__proposal overview-offers__proposal--plaintiff"
+    >
       <div>
         {{ ['ACCEPTED', 'CHECKOUT'].includes(status) ? 'Valor do acordo' : 'Proposta da parte' }}
       </div>
@@ -13,7 +34,11 @@
         />
       </div>
     </article>
-    <article class="overview-offers__proposal overview-offers__proposal--defendant">
+
+    <article
+      v-if="!isAccepted"
+      class="overview-offers__proposal overview-offers__proposal--defendant"
+    >
       <div>
         <span>Sua proposta: </span>
         <CurrencyInlieEditorInner
@@ -83,6 +108,10 @@ export default {
     isCanceled() {
       const { status } = this.ticket
       return status === 'CANCELED'
+    },
+
+    isAccepted() {
+      return ['SETTLED', 'ACCEPTED', 'CHECKOUT'].includes(this.ticket.status)
     },
 
     disputeId() {
@@ -268,6 +297,14 @@ export default {
       border-right: 3px solid $--color-secondary;
       text-align: right;
       margin-top: 16px;
+    }
+
+    &--accepted {
+      text-align: center;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      gap: 16px;
     }
   }
 }

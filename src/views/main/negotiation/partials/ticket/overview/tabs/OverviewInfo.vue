@@ -80,6 +80,7 @@ export default {
         classification,
         courtHearingDate
       } = this.ticketInfo
+
       return [
         {
           key: 'importedDate',
@@ -121,6 +122,13 @@ export default {
           component: 'TextInlineEditor',
           isEditable: false
         },
+        {
+          key: 'upperRange',
+          value: this.ticket.upperRange,
+          component: 'CurrencyInlieEditor',
+          isEditable: false
+        },
+        // TODO: SAAS-4353 Implementar listagem de Propostas/Contrapropostas aqui.
         {
           key: 'expireDate',
           value: expireDate?.dateTime,
