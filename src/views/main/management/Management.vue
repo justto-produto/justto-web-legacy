@@ -563,6 +563,7 @@ export default {
 
   mounted() {
     this.init()
+    this.$jusSegment('Acesso tela Gerenciamento', {})
     eventBus.$on(events.TICKET_NEXT_TAB.callback, this.handleNextTab)
     eventBus.$on(events.TICKET_PREVIOUS_TAB.callback, this.handlePreviousTab)
   },
