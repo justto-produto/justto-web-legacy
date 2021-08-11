@@ -1,5 +1,6 @@
 <template>
   <section class="communication-container">
+    <el-skeleton v-if="!occurrence.renderCompleted" />
     <div
       v-if="toPrint"
       class="date-to-print"
