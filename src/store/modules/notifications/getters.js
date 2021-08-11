@@ -8,7 +8,7 @@ const gettersNotifications = {
   qtdNotifications: ({ notifications }) => notifications.filter(({ quantity }) => quantity > 0).length,
   areThamirisAlertsVisible: ({ thamirisAlertVisible }) => thamirisAlertVisible,
   areNotificationsVisible: ({ notificationsVisible }) => notificationsVisible,
-  notificationDiff: () => {
+  notificationHoursDiff: () => {
     return moment().diff(moment(localStorage.getItem('jusAlertsLastView')), 'hours')
   }
 }

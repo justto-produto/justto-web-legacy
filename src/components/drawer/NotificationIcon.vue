@@ -27,8 +27,17 @@ export default {
     ...mapGetters({
       qtdNotifications: 'qtdNotifications',
       workspaceId: 'workspaceId',
-      loggedPersonId: 'loggedPersonId'
+      loggedPersonId: 'loggedPersonId',
+      hoursDiff: 'notificationHoursDiff'
     })
+  },
+
+  watch: {
+    hoursDiff(current) {
+      if (current >= 3) {
+        this.toggleShowNotifications(true)
+      }
+    }
   },
 
   methods: {
