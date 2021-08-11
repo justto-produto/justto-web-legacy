@@ -20,7 +20,7 @@ const mutationsNotifications = {
       const jusAlertsLastView = localStorage.getItem('jusAlertsLastView')
 
       if (jusAlertsLastView) {
-        if (moment().diff(moment(localStorage.getItem('jusAlertsLastView')), 'hours') > 3) {
+        if (moment().diff(moment(localStorage.getItem('jusAlertsLastView')), 'hours') >= 3) {
           setValueThamirisAlert(state, true)
         }
       } else {
