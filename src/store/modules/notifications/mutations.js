@@ -24,12 +24,12 @@ const mutationsNotifications = {
 
   hideThamirisAlerts: (state, _data) => {
     Vue.set(state, 'thamirisAlertVisible', false)
-    const now = moment().format()
-    localStorage.setItem('jusAlertsLastView', now)
   },
 
   toggleShowNotifications: (state, open) => {
     Vue.set(state, 'thamirisAlertVisible', open)
+    const now = moment().format()
+    localStorage.setItem('jusAlertsLastView', now)
   }
 }
 
