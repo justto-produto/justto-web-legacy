@@ -244,6 +244,8 @@ export default {
     },
 
     handleChangeTab(tab) {
+      this.$jusSegment(`Navegação na aba ${this.$t('tickets-tabs.' + tab.name).toUpperCase()} da Negociação`)
+
       if (!this.preventFilters) {
         this.setPreventSocket(false)
         this.setTicketsQuery({ key: 'status', value: [] })
