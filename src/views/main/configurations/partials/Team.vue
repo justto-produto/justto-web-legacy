@@ -22,6 +22,7 @@
         Cadastrar novo membro
       </el-button>
     </div>
+
     <el-table
       :data="filteredTeam"
       class="team-container__table"
@@ -65,7 +66,6 @@
       <el-table-column
         prop="profile"
         label="Perfil"
-        width="300px"
       >
         <template v-slot="scope">
           <PopoverInlineEditor
@@ -80,7 +80,6 @@
       <el-table-column
         prop="status"
         label="Status"
-        width="180px"
       >
         <template v-slot="scope">
           <span
@@ -103,7 +102,7 @@
       >
         <el-table-column
           prop="personProperties.MANAGEMENT"
-          label="Gestão"
+          label="Gerencial"
         >
           <template v-slot="scope">
             <PopoverInlineEditor
@@ -139,6 +138,20 @@
               :width="180"
               :options="reportsOptions"
               @change="handleEditReport('NPS', $event, scope.row)"
+            />
+          </template>
+        </el-table-column>
+
+        <el-table-column
+          prop="personProperties.MANAGER"
+          label="Gestão"
+        >
+          <template v-slot="scope">
+            <PopoverInlineEditor
+              v-model="scope.row.personProperties.MANAGER"
+              :width="180"
+              :options="reportsOptions"
+              @change="handleEditReport('MANAGER', $event, scope.row)"
             />
           </template>
         </el-table-column>

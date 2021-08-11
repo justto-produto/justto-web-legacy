@@ -63,11 +63,21 @@
       <span v-if="sendStatus !== 'default' && !directionIn">
         •
       </span>
-      <JusIcon
-        v-if="sendStatus !== 'default' && !directionIn"
-        class="communication-container__about-icon"
-        :icon="`status-${sendStatus}`"
-      />
+      <!-- :content="sendStatusDate" -->
+      <el-tooltip
+        :disabled="!sendStatusDate"
+      >
+        <span slot="content">
+          {{ {'readed': 'Lida', 'recived': 'Recebida', 'sent': 'Enviada'}[sendStatus] }}
+          {{ sendStatusDate | moment('[ em ] DD/MM/YYYY [ às ] HH:mm') }}
+        </span>
+
+        <JusIcon
+          v-if="sendStatus !== 'default' && !directionIn"
+          class="communication-container__about-icon"
+          :icon="`status-${sendStatus}`"
+        />
+      </el-tooltip>
       <GroupedOccurrences
         :have="haveGroupedOccurrences"
         :occurrences="groupedOccurrences"

@@ -6,12 +6,14 @@
     append-to-body
     width="50%"
   >
-    <!-- <span>Lista de bloqueio de endereços</span> -->
-    <ConfigurationBlacklist />
+    <ConfigurationBlacklist
+      v-if="communicationBlockListDialogVisible"
+    />
   </el-dialog>
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 export default {
   name: 'CommunicationBlockListDialog',
   components: {
@@ -21,8 +23,11 @@ export default {
     communicationBlockListDialogVisible: false
   }),
   methods: {
+    ...mapActions(['getWorkspace']),
+
     openFeatureDialog() {
       this.communicationBlockListDialogVisible = true
+      this.getWorkspace()
     }
   }
 }

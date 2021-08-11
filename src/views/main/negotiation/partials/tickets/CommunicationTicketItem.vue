@@ -4,25 +4,56 @@
     class="communication-ticket-item-container"
     @click="handleSelectTicket"
   >
-    <!-- <JusAvatarUser
-      :name="plaintiffName"
-      :status="ticket.plaintiff ? ticket.plaintiff.status : ''"
-      class="communication-ticket-item-container__avatar"
-      size="sm"
-      purple
-    /> -->
     <div class="communication-ticket-item-container__resume">
       <div class="communication-ticket-item-container__parties">
         <span
-          :class="{ 'communication-ticket-item-container__plaintiff--danger': !ticket.plaintiff }"
+          v-if="hasLawyer"
+          :class="{ 'communication-ticket-item-container__plaintiff--active': !ticket.visualized }"
           class="communication-ticket-item-container__plaintiff"
         >
+          <el-tooltip
+            placement="top"
+            :open-delay="500"
+          >
+            <span slot="content">
+              {{ isSelfCause ? 'Advogado e Parte' : 'Advogado' }}
+            </span>
+
+            <JusIcon
+              :icon="isSelfCause ? 'party-lawyer-icon' : 'lawyer-icon'"
+              :is-active="!ticket.visualized"
+            />
+          </el-tooltip>
+
+          {{ lawyerName | resumedName }}
+        </span>
+
+        <span
+          v-if="!isSelfCause"
+          :class="{
+            'communication-ticket-item-container__plaintiff--active': !ticket.visualized
+          }"
+          class="communication-ticket-item-container__plaintiff"
+        >
+
+          <el-tooltip
+            placement="top"
+            :open-delay="500"
+          >
+            <span slot="content">
+              {{ 'Parte' }}
+            </span>
+
+            <JusIcon
+              icon="party-icon"
+              :is-active="!ticket.visualized"
+            />
+          </el-tooltip>
+
           {{ plaintiffName | resumedName }}
         </span>
-        <span class="communication-ticket-item-container__negotiator">
-          &gt; {{ ticket.negotiatorName | resumedName }}
-        </span>
       </div>
+
       <el-tooltip
         :open-delay="800"
         :content="lastInboundInteraction.message"
@@ -37,23 +68,29 @@
             :icon="lastInboundInteraction.icon"
             class="communication-ticket-item-container__message-icon"
           />
-          <span class="communication-ticket-item-container__message-content">
+          <span
+            :class="{ 'communication-ticket-item-container__message-content--active': !ticket.visualized }"
+            class="communication-ticket-item-container__message-content"
+          >
             {{ lastInboundInteraction.message }}
           </span>
         </div>
       </el-tooltip>
     </div>
-    <!-- <div class="communication-ticket-item-container__gray" /> -->
+
     <span
       v-if="(isAcceptedTab || (isFinishedTab && isSettled)) && showDraft"
+      :class="{ 'communication-ticket-item-container__minuta--active': !ticket.visualized }"
       class="communication-ticket-item-container__minuta"
     >
       Minuta
     </span>
+
     <el-steps
       v-if="(isAcceptedTab || (isFinishedTab && isSettled)) && showDraft"
       :active="documentStep"
       finish-status="success"
+      :class="{ 'communication-ticket-item-container__minuta-steps--active': !ticket.visualized }"
       class="communication-ticket-item-container__minuta-steps"
       style="width: 100px"
     >
@@ -61,11 +98,15 @@
       <el-step />
       <el-step />
     </el-steps>
-    <div
-      v-if="ticket.plaintiff && ticket.plaintiff.status === 'ONLINE'"
+
+    <JusIcon
+      v-if="isOnline"
       class="communication-ticket-item-container__online"
+      icon="online"
     />
+
     <span
+      :class="{ 'communication-ticket-item-container__time--active': !ticket.visualized }"
       class="communication-ticket-item-container__time"
     >
       {{ getLastInteraction(lastInboundInteraction.dateTime) }}
@@ -96,24 +137,30 @@ export default {
       required: true
     }
   },
+
   computed: {
     ...mapGetters({
       activeTab: 'getTicketsActiveTab',
       showDraft: 'getIsDraftManagementActive'
     }),
+
     documentStep() {
       const signStatus = this.ticket?.draftStatus ? this.ticket.draftStatus : this.ticket.signStatus
       return this.getDocumentStep(this.ticket.hasDraft, signStatus)
     },
+
     isAcceptedTab() {
       return this.activeTab === 'accepted'
     },
+
     isFinishedTab() {
       return this.activeTab === 'finished'
     },
+
     isSettled() {
       return this.ticket.disputeStatus === 'SETTLED'
     },
+
     isActive() {
       return Number(this.$route.params.id) === Number(this.ticket?.disputeId)
     },
@@ -169,6 +216,8 @@ export default {
 <style lang="scss" scoped>
 @import '@/styles/colors.scss';
 
+/* $--color-primary-dark */
+
 .communication-ticket-item-container {
   position: relative;
   display: flex;
@@ -198,16 +247,21 @@ export default {
 
     .communication-ticket-item-container__parties {
       margin-bottom: 6px;
+      display: flex;
+      gap: 24px;
+      justify-content: flex-start;
+      align-items: center;
 
       .communication-ticket-item-container__plaintiff {
-        color: $--color-primary;
-        font-weight: 700;
-        font-size: 16px;
+        color: $--color-gray;
+        font-size: 14px;
+
         &--danger { color: $--color-danger; }
-      }
-      .communication-ticket-item-container__negotiator {
-        color: $--color-text-secondary;
-        font-size: 13px;
+
+        &--active {
+          color: $--color-primary-dark;
+          font-weight: 700;
+        }
       }
     }
 
@@ -224,6 +278,11 @@ export default {
         white-space: nowrap;
         text-overflow: ellipsis;
         overflow-x: hidden;
+        color: $--color-gray;
+
+        &--active {
+          color: $--color-black;
+        }
       }
 
       .communication-ticket-item-container__message-icon {
@@ -240,6 +299,12 @@ export default {
     bottom: 3px;
     right: 18px;
     font-size: 10px;
+    color: $--color-gray;
+
+    &--active {
+      color: $--color-black;
+      font-weight: 600;
+    }
   }
 
   .communication-ticket-item-container__status {
@@ -260,8 +325,13 @@ export default {
     bottom: 3px;
     left: 35px;
     font-size: 10px;
-    color: $--color-primary !important;
+    color: $--color-gray;
     font-weight: 500;
+
+    &--active {
+      color: $--color-primary !important;
+      font-weight: 600;
+    }
   }
 
   .communication-ticket-item-container__online {
@@ -270,8 +340,6 @@ export default {
     left: 15px;
     width: 10px;
     height: 10px;
-    border-radius: 50%;
-    background-color: $--color-success;
   }
 
   .communication-ticket-item-container__gray {
@@ -318,11 +386,13 @@ export default {
   position: absolute;
   bottom: 7px;
   left: 80px;
+
   .el-step {
     .is-success {
-      border-color: $--color-primary !important;
+      border-color: $--color-gray !important;
+
       .is-text {
-        background-color: $--color-primary !important;;
+        background-color: $--color-gray !important;;
       }
     }
 
@@ -335,10 +405,25 @@ export default {
       border-color: #C0C4CC !important;
       color: white !important;
     }
-    .el-step__icon{
+
+    .el-step__icon {
       width: 14px;
       height: 14px;
       font-size: 6px;
+      color: $--color-gray;
+    }
+  }
+
+  &--active .el-step{
+    .is-success {
+      border-color: $--color-primary !important;
+
+      .is-text {
+        background-color: $--color-primary !important;;
+      }
+    }
+
+    .el-step__icon {
       color: $--color-primary;
     }
   }

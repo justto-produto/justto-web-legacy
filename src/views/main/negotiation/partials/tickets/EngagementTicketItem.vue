@@ -7,16 +7,58 @@
     <div class="communication-ticket-item-container__resume">
       <div class="communication-ticket-item-container__parties">
         <span
-          :class="{ 'communication-ticket-item-container__plaintiff--danger': !ticket.plaintiff }"
+          v-if="hasLawyer"
+          :class="{ 'communication-ticket-item-container__plaintiff--active': !ticket.visualized }"
           class="communication-ticket-item-container__plaintiff"
         >
+          <el-tooltip
+            placement="top"
+            :open-delay="500"
+          >
+            <span slot="content">
+              {{ isSelfCause ? 'Advogado e Parte' : 'Advogado' }}
+            </span>
+
+            <JusIcon
+              :icon="isSelfCause ? 'party-lawyer-icon' : 'lawyer-icon'"
+              :is-active="!ticket.visualized"
+            />
+          </el-tooltip>
+
+          {{ lawyerName | resumedName }}
+        </span>
+
+        <span
+          v-if="!isSelfCause"
+          :class="{
+            'communication-ticket-item-container__plaintiff--danger': !ticket.plaintiff,
+            'communication-ticket-item-container__plaintiff--active': !ticket.visualized
+          }"
+          class="communication-ticket-item-container__plaintiff"
+        >
+
+          <el-tooltip
+            placement="top"
+            :open-delay="500"
+          >
+            <span slot="content">
+              {{ 'Parte' }}
+            </span>
+
+            <JusIcon
+              icon="party-icon"
+              :is-active="!ticket.visualized"
+            />
+          </el-tooltip>
+
           {{ plaintiffName | resumedName }}
         </span>
-        <span class="communication-ticket-item-container__negotiator">
-          &lt; {{ ticket.negotiatorName | resumedName }}
-        </span>
       </div>
-      <div class="communication-ticket-item-container__message">
+
+      <div
+        :class="{ 'communication-ticket-item-container__message--active': !ticket.visualized }"
+        class="communication-ticket-item-container__message"
+      >
         <el-tooltip
           :disabled="!isInPreNegotiaionTab"
           :open-delay="250"
@@ -32,10 +74,12 @@
         </el-tooltip>
       </div>
     </div>
+
     <div
-      v-if="ticket.plaintiff && ticket.plaintiff.status === 'ONLINE'"
+      v-if="isOnline"
       class="communication-ticket-item-container__online"
     />
+
     <div
       v-if="activeTab === 'engagement'"
       class="communication-ticket-item-container__status"
@@ -135,16 +179,21 @@ export default {
 
     .communication-ticket-item-container__parties {
       margin-bottom: 6px;
+      display: flex;
+      gap: 24px;
+      justify-content: flex-start;
+      align-items: center;
 
       .communication-ticket-item-container__plaintiff {
-        color: $--color-primary;
-        font-weight: 700;
-        font-size: 16px;
+        color: $--color-gray;
+        font-size: 14px;
+
         &--danger { color: $--color-danger; }
-      }
-      .communication-ticket-item-container__negotiator {
-        color: $--color-text-secondary;
-        font-size: 13px;
+
+        &--active {
+          color: $--color-primary-dark;
+          font-weight: 700;
+        }
       }
     }
 
@@ -156,6 +205,12 @@ export default {
       white-space: nowrap;
       text-overflow: ellipsis;
       overflow-x: hidden;
+      color: $--color-gray;
+
+      &--active {
+        color: $--color-primary-dark;
+        font-weight: 700;
+      }
     }
 
   }

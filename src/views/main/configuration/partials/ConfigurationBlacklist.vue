@@ -17,10 +17,11 @@
           slot="header"
           class="configuration-blackList-view__column-header"
         >
-          <el-input
+          <input
             v-model="search"
+            class="el-input__inner"
             placeholder="Buscar"
-          />
+          >
           <el-button
             type="primary"
             icon="el-icon-plus"
@@ -29,6 +30,7 @@
             Adicionar
           </el-button>
         </div>
+
         <div slot-scope="props">
           <el-tooltip content="Excluir">
             <el-button
@@ -96,6 +98,7 @@
 <script>
 export default {
   name: 'ConfigurationBlackList',
+
   data() {
     return {
       blackListDialogVisible: false,
@@ -104,6 +107,7 @@ export default {
       blackListRules: { contact: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }] }
     }
   },
+
   computed: {
     filteredBlackList() {
       return this.$store.getters.workspaceBlackList.filter(minute => {
@@ -114,6 +118,11 @@ export default {
       })
     }
   },
+
+  mounted() {
+    this.search = ''
+  },
+
   methods: {
     addBlackList() {
       this.$refs.blackListForm.validate(valid => {
