@@ -44,6 +44,7 @@
     <OverviewTags />
 
     <OverviewOffers
+      v-if="isOverviewActive"
       :defendant-offer="lastOffers.defendantOffer"
       :plaintiff-offer="lastOffers.plaintiffOffer"
       :upper-range="ticket.upperRange"
