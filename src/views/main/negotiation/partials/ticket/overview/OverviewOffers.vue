@@ -4,10 +4,11 @@
       v-if="isAccepted"
       class="overview-offers__proposal overview-offers__proposal--accepted"
     >
-      <JusIcon icon="ticket-accepted" />
+      <!-- <JusIcon icon="ticket-accepted" /> -->
       <div>
         <div>
-          Valor do acordo
+          ACORDO
+          <i class="el-icon-info" />
         </div>
         <CurrencyInlieEditorInner
           v-model="plaintiffOffer.value"
@@ -305,6 +306,11 @@ export default {
       flex-direction: row;
       justify-content: center;
       gap: 16px;
+
+      div {
+        font-size: 16px;
+        font-weight: 500;
+      }
     }
   }
 }
