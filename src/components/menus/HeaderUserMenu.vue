@@ -302,22 +302,6 @@ export default {
     .small-team-name-container {
       max-width: 130px;
     }
-
-    .use-marquee-animation:hover {
-      display: inline-block;
-      overflow-x: visible;
-      animation: marquee 5s linear infinite;
-    }
-  }
-}
-
-/* Make it move */
-@keyframes marquee {
-  10% {
-    transform: translateX(0);
-  }
-  90% {
-    transform: translateX(-100%);
   }
 }
 

@@ -25,7 +25,18 @@
             />
           </el-tooltip>
 
-          {{ lawyerName | resumedName }}
+          <el-tooltip
+            placement="top"
+            :open-delay="500"
+          >
+            <span slot="content">
+              {{ lawyerName }}
+            </span>
+
+            <div>
+              {{ lawyerName | resumedName }}
+            </div>
+          </el-tooltip>
         </span>
 
         <span
@@ -51,7 +62,18 @@
             />
           </el-tooltip>
 
-          {{ plaintiffName | resumedName }}
+          <el-tooltip
+            placement="top"
+            :open-delay="500"
+          >
+            <span slot="content">
+              {{ plaintiffName }}
+            </span>
+
+            <div>
+              {{ plaintiffName | resumedName }}
+            </div>
+          </el-tooltip>
         </span>
       </div>
 
@@ -175,9 +197,11 @@ export default {
 
   .communication-ticket-item-container__resume {
     margin: 6px 0px 6px 12px;
+    width: 100%;
     flex: 1;
 
     .communication-ticket-item-container__parties {
+      width: 100%;
       margin-bottom: 6px;
       display: flex;
       gap: 24px;
@@ -185,8 +209,20 @@ export default {
       align-items: center;
 
       .communication-ticket-item-container__plaintiff {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
         color: $--color-gray;
         font-size: 14px;
+        width: calc(50% - 12px);
+
+        div.el-tooltip {
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow-x: hidden;
+        }
+
+        &--text-complete { width: 100%; }
 
         &--danger { color: $--color-danger; }
 
