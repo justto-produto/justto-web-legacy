@@ -5,17 +5,54 @@
       class="overview-offers__proposal overview-offers__proposal--accepted"
     >
       <!-- <JusIcon icon="ticket-accepted" /> -->
-      <div>
-        <div>
+      <div overview-offers__proposal>
+        <div class="overview-offers__proposal-label">
           ACORDO
-          <i class="el-icon-info" />
         </div>
-        <CurrencyInlieEditorInner
-          v-model="plaintiffOffer.value"
-          :is-editable="canEditPlaintiffOffer"
-          class="overview-offers__proposal-value overview-offers__proposal-value--full-line"
-          @change="updatePlaintiffOffer"
-        />
+
+        <div class="overview-offers__proposal-container">
+          <div>&nbsp;</div>
+
+          <CurrencyInlieEditorInner
+            v-model="plaintiffOffer.value"
+            :is-editable="canEditPlaintiffOffer"
+            class="overview-offers__proposal-value overview-offers__proposal-value--full-line"
+            @change="updatePlaintiffOffer"
+          />
+
+          <el-popover
+            placement="top-end"
+            trigger="hover"
+            content="this is content, this is content, this is content"
+            :open-delay="500"
+            :close-delay="500"
+          >
+            <div>
+              <span>Sua proposta: </span>
+              <CurrencyInlieEditorInner
+                v-model="defendantOffer.value"
+                :is-editable="false"
+                icon-side="left"
+                class="overview-offers__proposal-value"
+                @change="updateDefendantOffer"
+              />
+              <br>
+              <span>Alçada Máx.: </span>
+              <CurrencyInlieEditorInner
+                v-model="upperRange"
+                :is-editable="false"
+                icon-side="left"
+                class="overview-offers__proposal-value"
+                @change="updateUpperRange"
+              />
+            </div>
+
+            <i
+              slot="reference"
+              class="el-icon-info"
+            />
+          </el-popover>
+        </div>
       </div>
     </article>
 
@@ -283,12 +320,34 @@ export default {
       font-size: 20px;
       font-weight: 400;
       max-width: calc(100% - 82px);
+
       &--full-line {
         max-width: 100% !important;
       }
     }
 
-    & > div:last-child { margin-top: 3px;}
+    .overview-offers__proposal-container {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+
+      i.el-icon-info {
+        opacity: 0;
+        cursor: pointer;
+        font-size: 14px;
+      }
+    }
+
+    &:hover {
+      .overview-offers__proposal-container {
+        i.el-icon-info {
+          transition: opacity 0.5s ease-out;
+          opacity: 1;
+        }
+      }
+    }
+
+    div:last-child { margin-top: 3px;}
 
     &--plaintiff {
       border-left: 3px solid $--color-primary;
