@@ -36,8 +36,8 @@
     </span>
 
     <Summary
-      v-for="summary in (isSummary ? summaryDetail : [])"
-      :key="`summary-${summary.summary}`"
+      v-for="(summary, summaryIndex) in (isSummary ? summaryDetail : [])"
+      :key="`summary-${summaryIndex}`"
       :occurrence="occurrence"
       :summary="summary"
     />

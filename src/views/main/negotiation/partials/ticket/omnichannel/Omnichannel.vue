@@ -1,5 +1,6 @@
 <template>
   <section
+    v-if="isInNegotiation"
     v-loading="isLoading"
     class="omnichannel-container"
   >
@@ -28,7 +29,11 @@ export default {
   computed: {
     ...mapGetters({
       isLoading: 'isOccurrencesLoading'
-    })
+    }),
+
+    isInNegotiation() {
+      return this.$route.name === 'ticket'
+    }
   }
 }
 </script>
