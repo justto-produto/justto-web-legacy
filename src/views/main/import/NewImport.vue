@@ -66,6 +66,8 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import { normalizeString } from '@/utils'
+
 /* eslint-disable no-prototype-builtins */
 export default {
   name: 'NewImport',
@@ -99,20 +101,40 @@ export default {
   methods: {
     ...mapActions(['setErrorFields']),
 
+    setMapImportColumns() {
+      this.$store.dispatch('mapImportColumns', this.$store.state.importModule.map).then(response => {
+        // SEGMENT TRACK
+        this.$jusSegment('Importação 3/4 Mapeamento concluido', {
+          fileName: this.$store.getters.importedFileName
+        })
+        this.mappedCampaigns = response
+
+        this.campaignIsMapped = true
+
+        this.activeStep += 1
+      })
+    },
+
     nextStep() {
       if (this.activeStep === 1) {
-        this.$store.dispatch('mapImportColumns', this.$store.state.importModule.map).then(response => {
-          // SEGMENT TRACK
-          this.$jusSegment('Importação 3/4 Mapeamento concluido', {
-            fileName: this.$store.getters.importedFileName
-          })
-          this.mappedCampaigns = response
+        const hasUnlinkedDefendant = this.$store.state.importModule.map.filter(({ name, tag }) => normalizeString(name) === 'reu' && tag === null).length > 0
 
-          this.campaignIsMapped = true
-        })
+        if (hasUnlinkedDefendant) {
+          this.$confirm('Detectamos que não mapeou a coluna <b>réu</b>.<br/>É um dos campos que mais evitam erros na importação. Tem certeza que deseja continuar sem mapear esta coluna?', 'Réu não mapeado', {
+            confirmButtonText: 'OK',
+            cancelButtonText: 'Cancelar',
+            dangerouslyUseHTMLString: true,
+            showClose: false,
+            center: true
+          }).then(() => this.setMapImportColumns())
+        } else {
+          this.setMapImportColumns()
+        }
+      } else {
+        this.activeStep += 1
       }
-      this.activeStep += 1
     },
+
     previousStep() {
       this.$store.dispatch('hideLoading')
       if (this.activeStep) {
@@ -258,8 +280,9 @@ export default {
 .new-import-view__steps, .new-import-view__actions {
   width: 500px;
 }
+
 .new-import-view__steps {
-  margin-top: 20px;
+  margin: 0;
 }
 .new-import-view__content {
   margin-top: 32px;

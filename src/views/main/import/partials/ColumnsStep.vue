@@ -3,10 +3,15 @@
     <h2 class="new-import-view__title">
       Mapeamento de colunas
     </h2>
-    <el-row :gutter="60">
+
+    <el-row
+      :gutter="60"
+      class="columns-step__container"
+    >
       <el-col
         :span="12"
         data-testid="import-columns"
+        class="columns-step__container-column"
       >
         <h3>Colunas do arquivo</h3>
         <p>
@@ -62,9 +67,11 @@
           </div>
         </div>
       </el-col>
+
       <el-col
         :span="12"
         data-testid="import-tags"
+        class="columns-step__container-column"
       >
         <h3>Campos do Sistema</h3>
         <p>
@@ -386,9 +393,22 @@ export default {
 
 .columns-step {
   margin: 0 40px;
+
+  .new-import-view__title {
+    margin: 0 0 16px;
+  }
+
+  .columns-step__container {
+    .columns-step__container-column {
+      max-height: 60vh;
+      overflow-y: scroll;
+    }
+  }
+
   p {
     height: 80px;
   }
+
   .file-column {
     margin-bottom: 20px;
     .el-tag {
