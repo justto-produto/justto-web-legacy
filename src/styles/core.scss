@@ -281,3 +281,27 @@ i.el-icon-delete {
   overflow: scroll;
   padding-bottom: 1px;
 }
+
+/* Make it move */
+@keyframes marquee {
+  10% {
+    transform: translateX(0);
+  }
+  90% {
+    transform: translateX(-100%);
+  }
+}
+
+.use-marquee-animation {
+  display: inline-block;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow-x: hidden;
+
+  &:hover {
+    display: inline-block;
+    overflow-x: visible !important;
+    animation: marquee 5s linear infinite;
+    text-overflow: unset !important;
+  }
+}

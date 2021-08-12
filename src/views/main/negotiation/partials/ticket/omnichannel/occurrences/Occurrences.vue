@@ -124,6 +124,7 @@ export default {
     eventBus.$on('NEGOTIATION_WEBSOCKET_NEW_OCCURRENCE', () => {
       this.needScroll = true
     })
+
     eventBus.$on(events.TICKET_CHANGE.callback, this.resetTicket)
 
     if (Number(this.lastMessage.disputeId) !== Number(this.id)) {
@@ -131,10 +132,12 @@ export default {
 
       this.resetTicket(id)
     }
+
+    this.adjustScroll(true)
   },
 
   updated() {
-    if (this.needScroll) this.adjustScroll(true)
+    if (this.needScroll) this.adjustScroll()
   },
 
   beforeDestroy() {
