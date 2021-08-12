@@ -8,7 +8,10 @@
       <div class="communication-ticket-item-container__parties">
         <span
           v-if="hasLawyer"
-          :class="{ 'communication-ticket-item-container__plaintiff--active': !ticket.visualized }"
+          :class="{
+            'communication-ticket-item-container__plaintiff--text-complete': isSelfCause,
+            'communication-ticket-item-container__plaintiff--active': !ticket.visualized
+          }"
           class="communication-ticket-item-container__plaintiff"
         >
           <el-tooltip
@@ -42,6 +45,7 @@
         <span
           v-if="!isSelfCause"
           :class="{
+            'communication-ticket-item-container__plaintiff--text-complete': !hasLawyer,
             'communication-ticket-item-container__plaintiff--danger': !ticket.plaintiff,
             'communication-ticket-item-container__plaintiff--active': !ticket.visualized
           }"
