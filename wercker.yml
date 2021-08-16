@@ -14,6 +14,11 @@ build:
   # Read more about steps on our dev center:
   # https://devcenter.wercker.com/development/steps/
   steps:
+    - add-to-known_hosts:
+        hostname: github.com
+        fingerprint: SHA256:nThbg6kXUpJWGl7E1IGOCspRomTxdCARLviKw6E5SY8
+    - add-ssh-key:
+        keyname: werker
     - script:
       name: Configure project informations
       code: |
@@ -25,7 +30,7 @@ build:
       name: Configure git
       code: |
         git config --global user.name "wercker" && git config --global user.email "dev@justto.com.br"
-        git remote set-url origin https://dev%40justto.com.br:hMcF2TEAz6Ec22@github.com/justto-produto/justto-web.git
+        git remote set-url origin git@github.com:justto-produto/justto-web.git
     - script:
       name: Prepare release branch
       code: |
