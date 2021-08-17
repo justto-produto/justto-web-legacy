@@ -18,7 +18,7 @@ const buildQuery = (q, command, disputesLength, noSort) => {
         query = `${query}${key}Start=${startDate}&${key}End=${endDate}&`
       } else {
         for (const v of value) {
-          query = query + key + '=' + v + '&'
+          query = query + key + '=' + encodeURIComponent(v) + '&'
         }
       }
     } else if (noSort) {
