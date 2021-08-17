@@ -123,6 +123,10 @@ export default {
       type: Object,
       default: () => ({})
     },
+    acceptedValue: {
+      type: Object,
+      default: () => ({})
+    },
     upperRange: {
       type: Number,
       default: 0

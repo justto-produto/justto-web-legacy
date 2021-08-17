@@ -361,7 +361,7 @@ export default {
     bottom: 3px;
     left: 35px;
     font-size: 10px;
-    color: $--color-gray;
+    color: $--color-primary;
     font-weight: 500;
 
     &--active {
@@ -427,20 +427,20 @@ export default {
 
   .el-step {
     .is-success {
-      border-color: $--color-gray !important;
+      border-color: $--color-primary !important;
 
       .is-text {
-        background-color: $--color-gray !important;;
+        background-color: $--color-primary !important;;
       }
     }
 
     .is-wait {
-      border-color: #C0C4CC !important;
+      border-color: $--color-primary !important;
       color: white !important;
     }
 
     .is-process {
-      border-color: #C0C4CC !important;
+      border-color: $--color-primary !important;
       color: white !important;
     }
 
@@ -448,7 +448,7 @@ export default {
       width: 14px;
       height: 14px;
       font-size: 6px;
-      color: $--color-gray;
+      color: $--color-primary;
     }
   }
 

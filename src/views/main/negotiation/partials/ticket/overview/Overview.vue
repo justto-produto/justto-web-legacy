@@ -47,6 +47,7 @@
       v-if="isOverviewActive"
       :defendant-offer="lastOffers.defendantOffer"
       :plaintiff-offer="lastOffers.plaintiffOffer"
+      :accepted-value="lastOffers.acceptedValue"
       :upper-range="ticket.upperRange"
       :status="ticket.status"
     />
@@ -63,6 +64,7 @@
       :status="ticket.status"
       :dispute-id="ticket.disputeId || routeId"
     />
+
     <AssociateContactsModal
       :value="showAssociatedContacts"
       :current="associateContactsPropertie"
