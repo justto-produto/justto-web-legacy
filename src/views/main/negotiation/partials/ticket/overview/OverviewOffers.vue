@@ -14,6 +14,15 @@
           <div>&nbsp;</div>
 
           <CurrencyInlieEditorInner
+            v-if="acceptedValue > 0"
+            v-model="acceptedValue"
+            :is-editable="canEditPlaintiffOffer"
+            class="overview-offers__proposal-value overview-offers__proposal-value--full-line"
+            @change="updatePlaintiffOffer"
+          />
+
+          <CurrencyInlieEditorInner
+            v-else
             v-model="plaintiffOffer.value"
             :is-editable="canEditPlaintiffOffer"
             class="overview-offers__proposal-value overview-offers__proposal-value--full-line"
@@ -124,8 +133,8 @@ export default {
       default: () => ({})
     },
     acceptedValue: {
-      type: Object,
-      default: () => ({})
+      type: Number,
+      default: () => (0)
     },
     upperRange: {
       type: Number,
