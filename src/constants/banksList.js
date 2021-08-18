@@ -256,5 +256,6 @@ export default
   { code: '085', name: 'COOP CENTRAL AILOS' },
   { code: '290', name: 'PAGSEGURO INTERNET S. A (PAGBANK)' },
   { code: '136', name: 'UNICRED COOPERATIVA LTDA' },
-  { code: '99', name: 'UNIPRIME CENTRAL - CENTRAL INT DE COOP DE CRED LTD' }
+  { code: '99', name: 'UNIPRIME CENTRAL - CENTRAL INT DE COOP DE CRED LTD' },
+  { code: '323', name: 'MERCADO PAGO - CONTA DO MERCADO LIVRE' }
 ]
