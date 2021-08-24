@@ -258,7 +258,7 @@ export default {
   .communication-ticket-item-container__online {
     position: absolute;
     top: 25px;
-    left: 15px;
+    left: 4px;
     width: 10px;
     height: 10px;
     border-radius: 50%;
@@ -299,7 +299,7 @@ export default {
 
 @media (max-height: 900px) {
   .communication-ticket-item-container {
-    padding: 18px 18px 18px 23px;
+    padding: 18px 24px 18px 0px;
 
     .communication-ticket-item-container__resume {
       margin: 4px 0px 4px 12px;
