@@ -40,7 +40,7 @@ export default {
 
   data: () => ({
     localLoading: false,
-    useMenstionPlugin: false,
+    useMentionPlugin: true,
     usePreviewPlugin: false
   }),
 
