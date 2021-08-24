@@ -34,7 +34,8 @@ export default {
 
   computed: {
     ...mapGetters({
-      variables: 'getAvaliableVariablesToTemplate'
+      variables: 'getAvaliableVariablesToTemplate',
+      members: 'workspaceMembers'
     }),
 
     editorConfig() {
@@ -73,6 +74,12 @@ export default {
               feed: this.getFeedItems,
               minimumCharacters: 1,
               itemRenderer: this.customItemRenderer
+            },
+            {
+              marker: '@',
+              feed: this.getFeedPersonItems,
+              minimumCharacters: 0,
+              itemRenderer: this.customMemberItemRenderer
             }
           ]
         } : {},
@@ -274,6 +281,10 @@ export default {
       return item.name
     },
 
+    customMemberItemRenderer(item) {
+      return item.person?.name || item.accountEmail
+    },
+
     getFeedItems(queryText) {
       function isItemMatching({ name, id }) {
         const searchString = normalizeString(queryText).replace(/{/g, '')
@@ -282,6 +293,20 @@ export default {
       }
 
       return this.variablesList.filter(isItemMatching)
+    },
+
+    getFeedPersonItems(queryText) {
+      function isItemMatching({ name, person }) {
+        const searchString = normalizeString(queryText).replace(/{/g, '')
+
+        if (person) {
+          return normalizeString(person.name).includes(searchString)
+        } else {
+          return normalizeString(name).includes(searchString)
+        }
+      }
+
+      return this.members.filter(isItemMatching)
     },
 
     ckeditorFocus() {
