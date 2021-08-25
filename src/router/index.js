@@ -183,6 +183,14 @@ const router = new Router({
       }
     },
     {
+      name: 'Redirect',
+      path: '/redirect',
+      component: () => import(/* webpackChunkName: "redirect" */ '@/views/main/Redirect'),
+      meta: {
+        title: 'Redirecionando'
+      }
+    },
+    {
       name: 'register',
       path: '/register',
       component: () => import(/* webpackChunkName: "register" */ '@/views/external/Register'),
@@ -257,6 +265,7 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
+  console.log(from)
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (Store.getters.isLoggedIn) {
       if (Store.getters.hasWorkspace) {
@@ -282,7 +291,10 @@ router.beforeEach((to, from, next) => {
           next()
         } else next('onboarding')
       }
-    } else next('login')
+    } else {
+      console.log(from)
+      next('login')
+    }
   } else if (from.query.token) next(false)
   else next()
 

@@ -270,6 +270,31 @@ export default {
       return new Promise((resolve, reject) => {
         this.$store.dispatch('myWorkspace').then(response => {
           this.$jusSegment('Usuário logado')
+          // Encontra Workspace que vai logar.
+          if (Object.keys(localStorage).includes('jusredirect')) {
+            const { wid, did } = JSON.parse(localStorage.getItem('jusredirect'))
+
+            const workspaceIndex = response.findIndex(({ workspace: { id } }) => Number(id) === Number(wid))
+
+            if (workspaceIndex >= 0 && did) {
+              this.$nextTick().then(() => {
+                this.workspaceForm.selectedWorkspaceIndex = workspaceIndex
+                this.selectWorkspace()
+              })
+            } else {
+              localStorage.removeItem('jusredirect')
+              this.$confirm('Você não possui privilégios para visualizar esta página', 'Warning', {
+                closeOnPressEscape: false,
+                closeOnClickModal: false,
+                confirmButtonText: 'OK',
+                showCancelButton: false,
+                showClose: false,
+                type: 'warning',
+                center: true
+              })
+            }
+          }
+          // Encontra Workspace que vai logar.
           if (response.length > 1) {
             this.showLoading = false
             this.workspaces = response
@@ -301,10 +326,14 @@ export default {
 
         this.$store.dispatch('getWorkspaceMembers')
           .then(() => {
-            if (response.profile === 'ADMINISTRATOR' && !isJustto) {
+            if (Object.keys(localStorage).includes('jusredirect')) {
+              this.showLoading = false
+              const redirect = JSON.parse(localStorage.getItem('jusredirect'))
+              const params = new URLSearchParams(redirect).toString()
+              this.$router.push(`/redirect?${params}`)
+            } else if (response.profile === 'ADMINISTRATOR' && !isJustto) {
               this.$router.push('/')
             } else {
-              // this.$router.push('/')
               this.$router.push('/negotiation')
             }
           }).catch(error => {
