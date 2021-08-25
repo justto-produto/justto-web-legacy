@@ -84,7 +84,7 @@
 
 <script>
 import events from '@/constants/negotiationEvents'
-import { eventBus } from '@/utils'
+import { eventBus, extractMentions } from '@/utils'
 import ckeditor from '@/utils/mixins/ckeditor'
 
 import { mapActions, mapGetters } from 'vuex'
@@ -114,7 +114,7 @@ export default {
   data() {
     return {
       localLoading: false,
-      useMenstionPlugin: false,
+      useMentionPlugin: true,
       usePreviewPlugin: false
     }
   },
@@ -187,6 +187,7 @@ export default {
   methods: {
     ...mapActions([
       'resetRecipients',
+      'sendDisputeNote',
       'setEditorText',
       'sendMessage'
     ]),
@@ -198,9 +199,42 @@ export default {
     validateSendMessage() {
       if (['EXPIRED'].includes(this.ticket.status)) {
         return this.$refs.expiredDisputeAlert.open()
+      } else if (extractMentions(this.editorText).length) {
+        return new Promise((resolve, reject) => {
+          const message = '<p>Você está enviando uma mensagem mencionando pessoas do seu time.<br><br>Sua intenção é registrar uma nota privada para seu time ou realmente deseja enviar uma mensagem mencionando pessoas do seu time?</p>'
+          this.$confirm(message, 'Menção detectada', {
+            confirmButtonText: 'Registrar nota',
+            cancelButtonText: 'Enviar mensagem',
+            dangerouslyUseHTMLString: true,
+            center: true
+          }).then(() => {
+            // TODO: Enviar nota.
+            this.sendNote()
+            reject(new Error('Registrando nota'))
+          }).catch(() => {
+            // TODO: Enviar mensagem
+            resolve()
+          })
+        })
       } else {
         return new Promise(resolve => resolve())
       }
+    },
+
+    sendNote() {
+      this.sendDisputeNote({
+        disputeId: Number(this.$route.params.id),
+        note: this.editorText
+      }).then(() => {
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Nota gravada com sucesso.',
+          type: 'success'
+        })
+      }).catch(error => this.$jusNotification({ error })).finally(() => {
+        this.resetRecipients()
+        this.setEditorText('')
+      })
     },
 
     send(_) {

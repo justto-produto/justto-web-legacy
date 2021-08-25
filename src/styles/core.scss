@@ -305,3 +305,10 @@ i.el-icon-delete {
     text-overflow: unset !important;
   }
 }
+
+// Menções no editor.
+.ck.ck-content.ck-editor__editable, .note-container__body, .communication-container__message {
+  *.justto-mention {
+    color: $--color-primary;
+  }
+}

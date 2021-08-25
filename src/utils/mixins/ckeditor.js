@@ -156,6 +156,7 @@ export default {
         model: {
           key: 'mention',
           value: viewItem => {
+            console.log('viewItem', viewItem)
             // The mention feature expects that the mention attribute value
             // in the model is a plain object with a set of additional attributes.
             // In order to create a proper object use the toMentionAttribute() helper method:
@@ -182,13 +183,19 @@ export default {
             return
           }
           const isImage = modelAttributeValue.type === 'image'
+          const isMemberMention = modelAttributeValue.type === 'memberMention'
 
           return writer.createAttributeElement(
-            isImage ? 'img' : 'span',
+            isImage ? 'img' : (isMemberMention ? 'em' : 'span'),
             {
               class: 'justto-variable',
               'data-mention': modelAttributeValue.id,
-              src: modelAttributeValue.id
+              src: modelAttributeValue.id,
+              ...(isMemberMention ? {
+                // style: 'color: #9461f7;',
+                class: 'justto-mention',
+                'account-id': modelAttributeValue.accountId
+              } : {})
             },
             {
               // Make mention attribute to be wrapped by other attribute elements.
@@ -306,7 +313,11 @@ export default {
         }
       }
 
-      return this.members.filter(isItemMatching)
+      return this.members.filter(isItemMatching).map(member => ({
+        ...member,
+        type: 'memberMention',
+        id: `@${this.customMemberItemRenderer(member)}`
+      }))
     },
 
     ckeditorFocus() {

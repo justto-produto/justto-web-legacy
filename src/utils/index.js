@@ -11,6 +11,7 @@ import showUnavailableLoading from './utils/showUnavailableLoading'
 import uuidv4 from './utils/uuidv4'
 import calcBrightness from './utils/calcBrightness'
 import validateCurrentId from './utils/validateCurrentId'
+import extractMentions from './utils/extractMentions'
 import { eventBus } from './utils/eventBus'
 import {
   getRoles,
@@ -41,6 +42,7 @@ export {
   axiosDispatch,
   calcBrightness,
   buildRoleTitle,
+  extractMentions,
   getDocumentStep,
   getFormatedDate,
   normalizeString,

@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import moment from 'moment'
-import { axiosDispatch, buildQuery } from '@/utils'
+import { axiosDispatch, buildQuery, extractMentions } from '@/utils'
 
 // const FileSaver = require('file-saver')
 let removeDebounce = 0
@@ -361,10 +361,12 @@ const disputeActions = {
     })
   },
   sendDisputeNote({ _ }, data) {
+    const { note } = data
+
     return axiosDispatch({
       url: `${disputesPath}/${data.disputeId}/note`,
       method: 'post',
-      data
+      data: { ...data, mentionedPeople: extractMentions(note) }
     })
   },
   deleteDisputeNote({ commit }, noteId) {

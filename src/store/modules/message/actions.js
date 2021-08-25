@@ -1,4 +1,4 @@
-import { axiosDispatch } from '@/utils'
+import { axiosDispatch, extractMentions } from '@/utils'
 
 const messagesPath = 'api/messages'
 
@@ -17,7 +17,7 @@ const messageActions = {
     return axiosDispatch({
       url: `${messagesPath}/send/email`,
       method: 'post',
-      data: data
+      data: { ...data, mentionedPeople: extractMentions(data.message) }
     })
   },
   sendNegotiator({ _ }, params) {
@@ -25,7 +25,7 @@ const messageActions = {
     return axiosDispatch({
       url: `api/negotiations/${disputeId}/messages`,
       method: 'POST',
-      data,
+      data: { ...data, mentionedPeople: extractMentions(data.message) },
       action: 'SOCKET_ADD_OCCURRENCE'
     })
   },
