@@ -40,13 +40,14 @@ export default {
 
   data: () => ({
     localLoading: false,
-    useMentionPlugin: true,
+    // useMentionPlugin: true,
     usePreviewPlugin: false
   }),
 
   computed: {
     ...mapGetters({
-      editorText: 'getNoteEditorText'
+      editorText: 'getNoteEditorText',
+      useMentionPlugin: 'isJusttoAdmin'
     }),
 
     body: {
