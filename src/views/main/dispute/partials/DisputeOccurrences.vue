@@ -761,9 +761,10 @@ export default {
   },
   mounted() {
     this.clearOccurrences()
+    this.resetOccurrences()
   },
   methods: {
-    ...mapActions(['setActiveactiveOccurrency']),
+    ...mapActions(['setActiveactiveOccurrency', 'resetOccurrences']),
 
     isCanceled(occurrence) {
       return occurrence?.status === 'CANCELED'
