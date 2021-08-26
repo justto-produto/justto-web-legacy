@@ -57,14 +57,14 @@ export default {
     },
     owner() {
       const { CREATED_BY, UPDATED_BY } = this.value.properties
-      const name = this.$options.filters.resumedName(UPDATED_BY || CREATED_BY)
+      const name = this.$options.filters.resumedName(UPDATED_BY || CREATED_BY) || this.value.description.split('adicionou uma nota.')[0].trim()
 
       return UPDATED_BY
         ? `Modificada por ${name}`
         : `Adicionada por ${name}`
     },
     description() {
-      return this.value.description + '<span style="display: inline-block; width: 36px" />'
+      return this.value.description.split('adicionou uma nota.').slice(-1)[0].trim() + '<span style="display: inline-block; width: 36px" />'
     }
   },
   updated() {
