@@ -10,6 +10,10 @@ const actionsNotifications = {
     })
   },
 
+  setNotificationsVisible({ commit }, visibility) {
+    commit('setNotificationsVisible', visibility)
+  },
+
   SOCKET_ADD_NOTIFICATIONS({ commit }, notification) {
 
   }

@@ -6,20 +6,17 @@
     @close="toggleShowNotifications(true)"
   >
     <div class="notification__drawer__header">
-      <div class="notification__drawer__header-orangeline" />
-      <div class="notification__drawer__header-hello">
-        Olá Thamiris ;)
-      </div>
-      <div class="notification__drawer__header-subtitle">
-        Estas são suas tarefas de hoje:
+      <div class="notification__drawer__header-line" />
+      <div class="notification__drawer__header-label">
+        Notificações <sup />
       </div>
     </div>
+
     <div
       v-for="notification in notifications"
       :key="`${notification.quantity}-${notification.type}`"
       class="notification__drawer__list"
     >
-      <div class="notification__drawer__list-grayline" />
       <div
         v-if="notification.quantity === 0"
         class="notification__drawer__list-item"
@@ -53,14 +50,15 @@
         </div>
       </div>
     </div>
+
     <div class="notification__drawer__footer">
-      <div class="notification__drawer__footer-grayline" />
+      <div class="notification__drawer__grayline" />
       <el-button
         class="notification__drawer__footer-button"
-        type="danger"
+        type="text"
         @click="toggleShowNotifications"
       >
-        Fechar
+        Ver lista de alertas
       </el-button>
     </div>
   </el-drawer>
@@ -69,24 +67,28 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 export default {
-  props: {
-    isVisible: {
-      type: Boolean,
-      default: false
-    }
-  },
-
   computed: {
     ...mapGetters({
-      notifications: 'notifications'
-    })
+      notifications: 'notifications',
+      notificationVisible: 'areNotificationsVisible'
+    }),
+
+    isVisible: {
+      get() {
+        return this.notificationVisible
+      },
+      set(visible) {
+        this.setVisibility(visible)
+      }
+    }
   },
 
   methods: {
     ...mapActions({
       setTicketsFilters: 'setTicketsFilters',
       setTicketsActiveTab: 'setTicketsActiveTab',
-      getTickets: 'getTickets'
+      getTickets: 'getTickets',
+      setVisibility: 'setNotificationsVisible'
     }),
 
     ...mapMutations({
@@ -125,59 +127,81 @@ export default {
 .el-drawer__body {
   background-color: white;
 }
+
+.el-drawer__container.el-drawer__open {
+  height: auto;
+  top: 10vh;
+  bottom: 10vh;
+
+  .el-drawer {
+    min-height: 80vh;
+  }
+}
 </style>
 
 <style lang="scss" scoped>
 @import '@/styles/colors.scss';
+
 .notification__drawer {
   .notification__drawer__header {
     position: relative;
-    padding: 55px 45px 20px 45px;
-    color: $--color-secondary;
-    .notification__drawer__header-orangeline {
+    padding: 48px 24px 24px;
+    color: $--color-primary;
+
+    .notification__drawer__header-line {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 8px;
-      background-color: $--color-secondary;
+      background-color: $--color-primary;
     }
-    .notification__drawer__header-hello {
+
+    .notification__drawer__header-label {
       font-weight: bold;
       font-size: 19px;
+
+      border-bottom: solid #F1F1F3 2px;
     }
+
     .notification__drawer__header-subtitle {
       font-size: 15px;
       font-weight: 500;
     }
   }
+
   .notification__drawer__list {
-    .notification__drawer__list-grayline {
-      width: 90%;
-      height: 1px;
-      background-color: #F1F1F3;
-    }
-    .notification__drawer__list-item:hover {
-      background-color: $--color-light-gray;
-    }
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
     .notification__drawer__list-item {
+      width: 100%;
       padding: 14px 14px 14px 45px;
       display: flex;
       flex-direction: row;
       cursor: pointer;
+
+      &:hover {
+        background-color: $--color-light-gray;
+      }
+
       .notification__drawer__list-item-icon {
         display: flex;
         align-items: center;
         justify-content: center;
         margin-right: 12px;
+
         .el-icon-success {
           color: $--color-success;
         }
       }
+
       .notification__drawer__list-item-label-gray {
         font-size: 14px;
         color: $--color-gray;
       }
+
       .notification__drawer__list-item-label-black {
         color: $--color-black;
         font-size: 14px;
@@ -186,15 +210,20 @@ export default {
     }
   }
   .notification__drawer__footer {
-    .notification__drawer__footer-grayline {
-      width: 90%;
-      height: 1px;
-      background-color: #F1F1F3;
-    }
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
     .notification__drawer__footer-button {
       margin: 20px 0px 20px 45px;
     }
   }
+}
+
+.notification__drawer__grayline {
+  width: 50%;
+  height: 1px;
+  background-color: #F1F1F3;
 }
 
 </style>

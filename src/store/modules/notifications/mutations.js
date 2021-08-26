@@ -37,6 +37,11 @@ const mutationsNotifications = {
 
   toggleShowNotifications: (state, open) => {
     setValueThamirisAlert(state, open)
+    state.notificationsVisible = false
+  },
+
+  setNotificationsVisible: (state, visibility) => {
+    state.notificationsVisible = visibility
   }
 }
 

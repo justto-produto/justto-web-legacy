@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
 export default {
   computed: {
     ...mapGetters({
@@ -45,12 +45,15 @@ export default {
       toggleShowNotifications: 'toggleShowNotifications'
     }),
 
+    ...mapActions(['setNotificationsVisible']),
+
     toggle() {
       this.$jusSegment('Clique Notificações',
         {
           qtdNotifications: this.qtdNotifications
         })
-      this.toggleShowNotifications(true)
+      this.setNotificationsVisible(true)
+      // this.toggleShowNotifications(true)
     }
   }
 }
