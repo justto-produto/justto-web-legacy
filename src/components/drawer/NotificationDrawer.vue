@@ -2,76 +2,94 @@
   <el-drawer
     class="notification__drawer"
     :visible.sync="isVisible"
-    :with-header="false"
-    @close="toggleShowNotifications(true)"
+    @close="setVisibility(false)"
   >
-    <div class="notification__drawer__header">
-      <div class="notification__drawer__header-line" />
+    <div
+      slot="title"
+      class="notification__drawer__header"
+    >
       <div class="notification__drawer__header-label">
-        Notificações <sup />
+        <el-badge
+          is-dot
+          :hidden="qtdMentions <= 0"
+        >
+          Notificações
+        </el-badge>
       </div>
     </div>
 
     <div
-      v-for="notification in notifications"
-      :key="`${notification.quantity}-${notification.type}`"
       class="notification__drawer__list"
     >
       <div
-        v-if="notification.quantity === 0"
+        v-for="(notification, notificationIndex) in notifications"
+        :key="`${notificationIndex}-${notification.type}`"
         class="notification__drawer__list-item"
-        @click="applyFilters(notification)"
+        @click="openMention(notification)"
       >
-        <div
-          class="notification__drawer__list-item-icon"
-        >
-          <i
-            class="el-icon-success"
+        <span class="notification__drawer__list-item-name">
+          <jus-avatar-user
+            :name="getMemberName(notification.fromAccountId)"
+            purple
+            :size="width <= 1400 ? 'small' : 'sm'"
           />
-        </div>
-        <div class="notification__drawer__list-item-label-gray">
-          {{ notification.name }}
-        </div>
-      </div>
-      <div
-        v-else
-        class="notification__drawer__list-item"
-        @click="applyFilters(notification)"
-      >
-        <div
-          class="notification__drawer__list-item-icon"
-        >
-          <i
-            class="el-icon-circle-check"
-          />
-        </div>
-        <div class="notification__drawer__list-item-label-black">
-          {{ notification.name }}
-        </div>
-      </div>
-    </div>
 
-    <div class="notification__drawer__footer">
-      <div class="notification__drawer__grayline" />
-      <el-button
-        class="notification__drawer__footer-button"
-        type="text"
-        @click="toggleShowNotifications"
-      >
-        Ver lista de alertas
-      </el-button>
+          <strong>
+            {{ getMemberName(notification.fromAccountId) | resumedName }}
+          </strong>
+
+          <span>
+            mencionou você.
+          </span>
+        </span>
+
+        <span class="notification__drawer__list-item-date">
+          {{ new Date(notification.dateNotified) | moment('DD:MM [às] HH:mm') }}
+        </span>
+      </div>
+
+      <div class="notification__drawer__footer">
+        <div class="notification__drawer__grayline" />
+        <el-button
+          class="notification__drawer__footer-button"
+          type="text"
+          @click="toggleShowNotifications"
+        >
+          <el-badge
+            :value="qtdThamirisAlerts"
+            :hidden="qtdThamirisAlerts <= 0"
+          >
+            <span>
+              Ver lista de alertas
+            </span>
+          </el-badge>
+        </el-button>
+      </div>
     </div>
   </el-drawer>
 </template>
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex'
+
 export default {
   computed: {
     ...mapGetters({
-      notifications: 'notifications',
-      notificationVisible: 'areNotificationsVisible'
+      notifications: 'mentionNotifications',
+      notificationVisible: 'areNotificationsVisible',
+      qtdThamirisAlerts: 'qtdThamirisPendingAlerts',
+      qtdMentions: 'qtdMentionsPending',
+      members: 'workspaceMembers',
+      width: 'getWindowWidth'
     }),
+
+    getMemberName() {
+      return (fromAccountId) => {
+        const member = this.members.find(({ accountId }) => Number(accountId) === Number(fromAccountId))
+
+        return member.person?.name || member.accountEmail
+      }
+    },
 
     isVisible: {
       get() {
@@ -118,12 +136,18 @@ export default {
       }
 
       this.toggleShowNotifications()
+    },
+
+    openMention(mention) {
+      console.log('mention', mention)
     }
   }
 }
 </script>
 
 <style lang="scss">
+@import '@/styles/colors.scss';
+
 .el-drawer__body {
   background-color: white;
 }
@@ -133,8 +157,19 @@ export default {
   top: 10vh;
   bottom: 10vh;
 
+  .el-drawer__header {
+    background-color: white;
+    border-bottom: solid #F1F1F3 2px;
+    margin: 0 5%;
+  }
+
   .el-drawer {
     min-height: 80vh;
+    background-color: white;
+
+    border-top: solid $--color-primary 8px;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
   }
 }
 </style>
@@ -145,28 +180,11 @@ export default {
 .notification__drawer {
   .notification__drawer__header {
     position: relative;
-    padding: 48px 24px 24px;
     color: $--color-primary;
-
-    .notification__drawer__header-line {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 8px;
-      background-color: $--color-primary;
-    }
 
     .notification__drawer__header-label {
       font-weight: bold;
       font-size: 19px;
-
-      border-bottom: solid #F1F1F3 2px;
-    }
-
-    .notification__drawer__header-subtitle {
-      font-size: 15px;
-      font-weight: 500;
     }
   }
 
@@ -177,10 +195,27 @@ export default {
 
     .notification__drawer__list-item {
       width: 100%;
-      padding: 14px 14px 14px 45px;
+      padding: 14px 5%;
+      cursor: pointer;
+
       display: flex;
       flex-direction: row;
-      cursor: pointer;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: nowrap;
+      gap: 4px;
+
+      .notification__drawer__list-item-name {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        flex-wrap: nowrap;
+      }
+
+      .notification__drawer__list-item-date {
+        font-size: 12px;
+        color: $--color-text-secondary;
+      }
 
       &:hover {
         background-color: $--color-light-gray;
@@ -216,6 +251,10 @@ export default {
 
     .notification__drawer__footer-button {
       margin: 20px 0px 20px 45px;
+
+      span > .el-badge > span {
+        margin-right: 8px;
+      }
     }
   }
 }

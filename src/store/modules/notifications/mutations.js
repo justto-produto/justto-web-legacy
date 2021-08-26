@@ -31,6 +31,10 @@ const mutationsNotifications = {
     Vue.set(state, 'notifications', notifications)
   },
 
+  setMentions: (state, mentions) => Vue.set(state, 'mentionNotifications', mentions),
+
+  setMentionsSummary: (state, data) => Vue.set(state, 'mentionNotificationsSummary', data),
+
   hideThamirisAlerts: (state, _data) => {
     setValueThamirisAlert(state, false)
   },
