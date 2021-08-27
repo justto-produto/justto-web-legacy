@@ -1,5 +1,6 @@
 const stateNotifications = {
   notifications: [],
+  seeMentionsReaded: true,
   mentionNotifications: {
     content: [],
     pageable: {

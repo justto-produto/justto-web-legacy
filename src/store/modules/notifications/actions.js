@@ -1,4 +1,4 @@
-import { axiosDispatch, buildQuery } from '@/utils/'
+import { axiosDispatch } from '@/utils/'
 
 const urlBase = '/api/disputes/v2'
 const mentionsUrl = '/api/disputes/mention'
@@ -12,14 +12,17 @@ const actionsNotifications = {
     })
   },
 
-  getMentions({ getters: { mentionNotificationsFilter } }, command = '') {
+  getMentions({ getters: { mentionNotificationsFilter: { page, read } } }, command = '') {
     const filters = command === 'nextPage' ? {
-      ...mentionNotificationsFilter,
-      page: mentionNotificationsFilter.page + 1
-    } : {}
+      read: read ? false : null,
+      page: page + 1
+    } : {
+      read: read ? false : null
+    }
 
     return axiosDispatch({
-      url: `${mentionsUrl}${buildQuery(filters)}`,
+      url: `${mentionsUrl}`,
+      params: filters,
       mutation: 'setMentions'
     })
   },
@@ -39,12 +42,18 @@ const actionsNotifications = {
   setMentionReaded({ _ }, mentionId) {
     return axiosDispatch({
       url: `${mentionsUrl}/${mentionId}/read`,
-      method: 'PATCH'
+      method: 'PATCH',
+      payload: { mentionId },
+      mutation: 'setMentionReaded'
     })
   },
 
   SOCKET_ADD_NOTIFICATIONS({ _ }, notification) {
     console.log('SOCKET_ADD_NOTIFICATIONS', notification)
+  },
+
+  SOCKET_NOTIFY_MENTION_SUMMARY({ _ }, mention) {
+    console.log('SOCKET_NOTIFY_MENTION_SUMMARY', mention)
   }
 }
 

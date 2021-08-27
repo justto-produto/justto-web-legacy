@@ -46,6 +46,18 @@ const mutationsNotifications = {
 
   setNotificationsVisible: (state, visibility) => {
     state.notificationsVisible = visibility
+  },
+
+  setMentionReaded: (state, { payload: { mentionId } }) => {
+    state.mentionNotifications.content.forEach((item, index) => {
+      if (Number(item.id) === Number(mentionId)) {
+        Vue.set(state.mentionNotifications.content[index], 'readDate', new Date().getTime())
+      }
+    })
+  },
+
+  setMentionsOnlyRead(state, onlyRead) {
+    Vue.set(state, 'seeMentionsReaded', onlyRead)
   }
 }
 

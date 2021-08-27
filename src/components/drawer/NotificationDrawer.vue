@@ -1,6 +1,8 @@
 <template>
   <el-drawer
+    id="notification__drawer"
     class="notification__drawer"
+    size="35%"
     :visible.sync="isVisible"
     @close="setVisibility(false)"
   >
@@ -15,6 +17,16 @@
         >
           Notificações
         </el-badge>
+
+        <div class="notification__drawer__header-label-switch">
+          {{ onlyRead ? 'Mostrar apenas não lidas' : 'Mostrar tudo' }}
+
+          <el-switch
+            v-model="onlyRead"
+            active-color="#9461f7"
+            inactive-color="#979797"
+          />
+        </div>
       </div>
     </div>
 
@@ -22,6 +34,19 @@
       v-loading="loading"
       class="notification__drawer__list"
     >
+      <div
+        v-if="notifications.content.length"
+        class="notification__drawer__list-top"
+      >
+        <div />
+        <a
+          class="notification__drawer__list-top-mark-as-readed"
+          @click="setAllReaded"
+        >
+          Marcar tudo como lido
+        </a>
+      </div>
+
       <div
         v-for="(notification, notificationIndex) in notifications.content"
         :key="`${notificationIndex}-${notification.type}`"
@@ -37,9 +62,13 @@
             :size="width <= 1400 ? 'small' : 'sm'"
           />
 
-          <strong>
+          <strong v-if="!notification.readDate">
             {{ getMemberName(notification.fromAccountId) | resumedName }}
           </strong>
+
+          <div v-else>
+            {{ getMemberName(notification.fromAccountId) | resumedName }}
+          </div>
 
           <span>
             mencionou você.
@@ -56,6 +85,7 @@
           placement="bottom-start"
         >
           <div
+            v-if="!notification.readDate"
             class="notification__drawer__list-item-status el-icon-pulse"
             @click="setReaded(notification.id)"
           />
@@ -102,9 +132,11 @@ export default {
 
   computed: {
     ...mapGetters({
+      mentionsOnlyRead: 'mentionsOnlyRead',
       notifications: 'mentionNotifications',
       notificationVisible: 'areNotificationsVisible',
       qtdThamirisAlerts: 'qtdThamirisPendingAlerts',
+      mentions: 'mentionNotificationsGroupped',
       qtdMentions: 'qtdMentionsPending',
       members: 'workspaceMembers',
       width: 'getWindowWidth'
@@ -130,6 +162,31 @@ export default {
 
         this.setVisibility(visible)
       }
+    },
+
+    onlyRead: {
+      get() {
+        return this.mentionsOnlyRead
+      },
+
+      set(value) {
+        this.setMentionsOnlyRead(value)
+        this.getMentions()
+      }
+    }
+  },
+
+  watch: {
+    isVisible(visible) {
+      if (visible) {
+        this.getMentions()
+
+        setTimeout(() => {
+          document.addEventListener('click', this.clickTracker)
+        }, 250)
+      } else {
+        document.removeEventListener('click', this.clickTracker)
+      }
     }
   },
 
@@ -144,8 +201,17 @@ export default {
     }),
 
     ...mapMutations({
-      toggleShowNotifications: 'toggleShowNotifications'
+      toggleShowNotifications: 'toggleShowNotifications',
+      setMentionsOnlyRead: 'setMentionsOnlyRead'
     }),
+
+    clickTracker(event) {
+      const drawer = document.querySelector('.notification__drawer .el-drawer.rtl')
+
+      const clickIn = event.path.includes(drawer)
+
+      if (!clickIn) { this.setVisibility(false) }
+    },
 
     applyFilters({ filter: { prescriptions, status }, tab }) {
       const filters = {
@@ -187,6 +253,14 @@ export default {
       return this.setMentionReaded(mentionId)
     },
 
+    setAllReaded() {
+      Promise.all([
+        ...this.notifications.content.filter(({ readDate }) => !readDate).map(({ id }) => this.setReaded(id))
+      ]).then(() => {
+        this.setVisibility(false)
+      })
+    },
+
     seeNextpage() {
       this.getMentions('nextPage')
     }
@@ -209,7 +283,7 @@ export default {
   .el-drawer__header {
     background-color: white;
     border-bottom: solid #F1F1F3 2px;
-    margin: 0 5%;
+    margin: 0;
   }
 
   .el-drawer {
@@ -234,6 +308,18 @@ export default {
     .notification__drawer__header-label {
       font-weight: bold;
       font-size: 19px;
+
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: nowrap;
+
+      .notification__drawer__header-label-switch {
+        display: flex;
+        gap: 8px;
+        font-size: 14px;
+        font-weight: normal;
+        color: $--color-text-secondary;
+      }
     }
   }
 
@@ -241,6 +327,7 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: flex-start;
 
     .notification__drawer__list-item {
       width: 100%;
@@ -298,6 +385,22 @@ export default {
         font-size: 14px;
         font-weight: 500;
       }
+    }
+
+    .notification__drawer__list-top {
+      padding: 16px 5% 8px;
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+
+      .notification__drawer__list-top-mark-as-readed {
+        display: flex;
+        justify-self: flex-end;
+      }
+    }
+
+    .notification__drawer__list-close {
+      justify-self: flex-end;
     }
   }
 
