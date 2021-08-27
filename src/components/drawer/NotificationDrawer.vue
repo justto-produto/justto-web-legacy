@@ -139,7 +139,8 @@ export default {
       setTicketsActiveTab: 'setTicketsActiveTab',
       getTickets: 'getTickets',
       setVisibility: 'setNotificationsVisible',
-      setMentionReaded: 'setMentionReaded'
+      setMentionReaded: 'setMentionReaded',
+      getMentions: 'getMentions'
     }),
 
     ...mapMutations({
@@ -186,7 +187,9 @@ export default {
       return this.setMentionReaded(mentionId)
     },
 
-    seeNextpage() {}
+    seeNextpage() {
+      this.getMentions('nextPage')
+    }
   }
 }
 </script>

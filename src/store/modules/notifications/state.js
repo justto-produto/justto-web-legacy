@@ -1,6 +1,11 @@
 const stateNotifications = {
   notifications: [],
-  mentionNotifications: [],
+  mentionNotifications: {
+    content: [],
+    pageable: {
+      pageNumber: 0
+    }
+  },
   mentionNotificationsSummary: {
     timestamp: null,
     total: 0,

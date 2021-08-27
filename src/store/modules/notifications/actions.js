@@ -1,4 +1,4 @@
-import { axiosDispatch } from '@/utils/'
+import { axiosDispatch, buildQuery } from '@/utils/'
 
 const urlBase = '/api/disputes/v2'
 const mentionsUrl = '/api/disputes/mention'
@@ -12,9 +12,14 @@ const actionsNotifications = {
     })
   },
 
-  getMentions({ _ }) {
+  getMentions({ getters: { mentionNotificationsFilter } }, command = '') {
+    const filters = command === 'nextPage' ? {
+      ...mentionNotificationsFilter,
+      page: mentionNotificationsFilter.page + 1
+    } : {}
+
     return axiosDispatch({
-      url: `${mentionsUrl}`,
+      url: `${mentionsUrl}${buildQuery(filters)}`,
       mutation: 'setMentions'
     })
   },
