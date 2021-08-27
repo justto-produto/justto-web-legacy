@@ -156,6 +156,7 @@ export default {
     position: absolute;
     top: 54px;
     left: 16px;
+    cursor: default;
     z-index: 1;
   }
 

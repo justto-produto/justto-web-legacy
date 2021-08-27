@@ -19,15 +19,18 @@
     </div>
 
     <div
+      v-loading="loading"
       class="notification__drawer__list"
     >
       <div
-        v-for="(notification, notificationIndex) in notifications"
+        v-for="(notification, notificationIndex) in notifications.content"
         :key="`${notificationIndex}-${notification.type}`"
         class="notification__drawer__list-item"
-        @click="openMention(notification)"
       >
-        <span class="notification__drawer__list-item-name">
+        <span
+          class="notification__drawer__list-item-name"
+          @click="openMention(notification)"
+        >
           <jus-avatar-user
             :name="getMemberName(notification.fromAccountId)"
             purple
@@ -44,12 +47,32 @@
         </span>
 
         <span class="notification__drawer__list-item-date">
-          {{ new Date(notification.dateNotified) | moment('DD:MM [às] HH:mm') }}
+          {{ new Date(notification.createdAt) | moment('DD:MM [às] HH:mm') }}
         </span>
+
+        <el-tooltip
+          :open-delay="500"
+          content="Marcar como lida"
+          placement="bottom-start"
+        >
+          <div
+            class="notification__drawer__list-item-status el-icon-pulse"
+            @click="setReaded(notification.id)"
+          />
+        </el-tooltip>
       </div>
 
       <div class="notification__drawer__footer">
+        <span
+          v-if="!notifications.last"
+          class="notification__drawer__footer-see-more"
+          @click="seeNextpage()"
+        >
+          ver mais
+        </span>
+
         <div class="notification__drawer__grayline" />
+
         <el-button
           class="notification__drawer__footer-button"
           type="text"
@@ -73,6 +96,10 @@
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 
 export default {
+  data: () => ({
+    loading: false
+  }),
+
   computed: {
     ...mapGetters({
       notifications: 'mentionNotifications',
@@ -95,7 +122,12 @@ export default {
       get() {
         return this.notificationVisible
       },
+
       set(visible) {
+        if (visible) {
+          this.loading = false
+        }
+
         this.setVisibility(visible)
       }
     }
@@ -106,7 +138,8 @@ export default {
       setTicketsFilters: 'setTicketsFilters',
       setTicketsActiveTab: 'setTicketsActiveTab',
       getTickets: 'getTickets',
-      setVisibility: 'setNotificationsVisible'
+      setVisibility: 'setNotificationsVisible',
+      setMentionReaded: 'setMentionReaded'
     }),
 
     ...mapMutations({
@@ -138,9 +171,22 @@ export default {
       this.toggleShowNotifications()
     },
 
-    openMention(mention) {
-      console.log('mention', mention)
-    }
+    openMention({ workspaceId, disputeId, id }) {
+      this.loading = true
+
+      this.setReaded(id).then(() => {
+        this.setVisibility(false)
+        this.$router.push(`/redirect?wid=${workspaceId}&did=${disputeId}`)
+      }).finally(() => {
+        this.loading = false
+      })
+    },
+
+    setReaded(mentionId) {
+      return this.setMentionReaded(mentionId)
+    },
+
+    seeNextpage() {}
   }
 }
 </script>
@@ -217,6 +263,13 @@ export default {
         color: $--color-text-secondary;
       }
 
+      .notification__drawer__list-item-status {
+        background-color: $--color-primary;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+      }
+
       &:hover {
         background-color: $--color-light-gray;
       }
@@ -244,14 +297,22 @@ export default {
       }
     }
   }
+
   .notification__drawer__footer {
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 100%;
+    padding: 0 5%;
+
+    .notification__drawer__footer-see-more {
+      color: $--color-text-secondary;
+      font-size: 12px;
+      cursor: pointer;
+      margin: 16px auto;
+    }
 
     .notification__drawer__footer-button {
-      margin: 20px 0px 20px 45px;
-
       span > .el-badge > span {
         margin-right: 8px;
       }
@@ -260,7 +321,7 @@ export default {
 }
 
 .notification__drawer__grayline {
-  width: 50%;
+  width: 100%;
   height: 1px;
   background-color: #F1F1F3;
 }

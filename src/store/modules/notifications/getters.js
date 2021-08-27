@@ -2,7 +2,7 @@ import moment from 'moment'
 
 const gettersNotifications = {
   notifications: (state) => state.notifications,
-  mentionNotifications: (state) => state.mentionNotifications.content,
+  mentionNotifications: (state) => state.mentionNotifications,
   notificationsNotEmptyDisputes: ({ notifications }) => notifications.filter(({ quantity }) => quantity > 0),
   qtdThamirisPendingAlerts: ({ notifications }) => notifications.filter(({ quantity }) => quantity > 0).length,
   qtdMentionsPending: ({ mentionNotificationsSummary: { unread } }) => Number(unread),
