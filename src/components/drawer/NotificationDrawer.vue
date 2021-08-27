@@ -47,7 +47,7 @@
         </span>
 
         <span class="notification__drawer__list-item-date">
-          {{ new Date(notification.createdAt) | moment('DD:MM [às] HH:mm') }}
+          {{ new Date(notification.createdAt) | moment('DD/MM [às] HH:mm') }}
         </span>
 
         <el-tooltip
@@ -114,7 +114,7 @@ export default {
       return (fromAccountId) => {
         const member = this.members.find(({ accountId }) => Number(accountId) === Number(fromAccountId))
 
-        return member.person?.name || member.accountEmail
+        return member?.person?.name || member?.accountEmail || ''
       }
     },
 
