@@ -15,9 +15,11 @@ const actionsNotifications = {
   getMentions({ getters: { mentionNotificationsFilter: { page, read } } }, command = '') {
     const filters = command === 'nextPage' ? {
       read: read ? false : null,
-      page: page + 1
+      page: page + 1,
+      sort: 'createdAt,desc'
     } : {
-      read: read ? false : null
+      read: read ? false : null,
+      sort: 'createdAt,desc'
     }
 
     return axiosDispatch({

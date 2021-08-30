@@ -47,49 +47,61 @@
         </a>
       </div>
 
-      <div
-        v-for="(notification, notificationIndex) in notifications.content"
-        :key="`${notificationIndex}-${notification.type}`"
-        class="notification__drawer__list-item"
-      >
-        <span
-          class="notification__drawer__list-item-name"
-          @click="openMention(notification)"
+      <div class="notification__drawer__list-notifications">
+        <div
+          v-for="(notifications, date) in notificationsGrouped"
+          :key="date"
+          class="notification__drawer__list-notifications-item"
         >
-          <jus-avatar-user
-            :name="getMemberName(notification.fromAccountId)"
-            purple
-            :size="width <= 1400 ? 'small' : 'sm'"
-          />
-
-          <strong v-if="!notification.readDate">
-            {{ getMemberName(notification.fromAccountId) | resumedName }}
-          </strong>
-
-          <div v-else>
-            {{ getMemberName(notification.fromAccountId) | resumedName }}
+          <div class="notification__drawer__list-item-date">
+            {{ date | capitalize }}
           </div>
 
-          <span>
-            mencionou você.
-          </span>
-        </span>
-
-        <span class="notification__drawer__list-item-date">
-          {{ new Date(notification.createdAt) | moment('DD/MM [às] HH:mm') }}
-        </span>
-
-        <el-tooltip
-          :open-delay="500"
-          content="Marcar como lida"
-          placement="bottom-start"
-        >
           <div
-            v-if="!notification.readDate"
-            class="notification__drawer__list-item-status el-icon-pulse"
-            @click="setReaded(notification.id)"
-          />
-        </el-tooltip>
+            v-for="(notification, notificationIndex) in notifications"
+            :key="`${notificationIndex}-${notification.type}`"
+            class="notification__drawer__list-item"
+          >
+            <span
+              class="notification__drawer__list-item-name"
+              @click="openMention(notification)"
+            >
+              <jus-avatar-user
+                :name="getMemberName(notification.fromAccountId)"
+                purple
+                :size="width <= 1400 ? 'small' : 'sm'"
+              />
+
+              <strong v-if="!notification.readDate">
+                {{ getMemberName(notification.fromAccountId) | resumedName }}
+              </strong>
+
+              <div v-else>
+                {{ getMemberName(notification.fromAccountId) | resumedName }}
+              </div>
+
+              <span>
+                mencionou você.
+              </span>
+            </span>
+
+            <span class="notification__drawer__list-item-date">
+              {{ parseDate(notification.createdAt) }}
+            </span>
+
+            <el-tooltip
+              :open-delay="500"
+              content="Marcar como lida"
+              placement="bottom-start"
+            >
+              <div
+                v-if="!notification.readDate"
+                class="notification__drawer__list-item-status el-icon-pulse"
+                @click="setReaded(notification.id)"
+              />
+            </el-tooltip>
+          </div>
+        </div>
       </div>
 
       <div class="notification__drawer__footer">
@@ -124,6 +136,7 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex'
+import { approximateTime } from '@/utils'
 
 export default {
   data: () => ({
@@ -134,6 +147,7 @@ export default {
     ...mapGetters({
       mentionsOnlyRead: 'mentionsOnlyRead',
       notifications: 'mentionNotifications',
+      notificationsGrouped: 'mentionNotificationsGroupped',
       notificationVisible: 'areNotificationsVisible',
       qtdThamirisAlerts: 'qtdThamirisPendingAlerts',
       mentions: 'mentionNotificationsGroupped',
@@ -173,6 +187,10 @@ export default {
         this.setMentionsOnlyRead(value)
         this.getMentions()
       }
+    },
+
+    parseDate() {
+      return (date) => approximateTime(date)
     }
   },
 
@@ -206,7 +224,7 @@ export default {
     }),
 
     clickTracker(event) {
-      const drawer = document.querySelector('.notification__drawer .el-drawer.rtl')
+      const drawer = document.querySelector('.notification__drawer .el-drawer__open .el-drawer.rtl')
 
       const clickIn = event.path.includes(drawer)
 
@@ -273,6 +291,7 @@ export default {
 
 .el-drawer__body {
   background-color: white;
+  /* overflow-y: hidden !important; */
 }
 
 .el-drawer__container.el-drawer__open {
@@ -329,66 +348,78 @@ export default {
     align-items: center;
     justify-content: flex-start;
 
-    .notification__drawer__list-item {
+    .notification__drawer__list-notifications {
       width: 100%;
-      padding: 14px 5%;
-      cursor: pointer;
+      overflow-y: scroll;
+      max-height: 60vh;
+      margin: 0;
+      padding: 0;
 
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: nowrap;
-      gap: 4px;
+      .notification__drawer__list-notifications-item {
+        width: 100%;
+        padding: 14px 5%;
+        cursor: pointer;
 
-      .notification__drawer__list-item-name {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        flex-wrap: nowrap;
-      }
+        .notification__drawer__list-item {
+          padding: 8px 2%;
+          border-radius: 4px;
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+          flex-wrap: nowrap;
+          gap: 4px;
 
-      .notification__drawer__list-item-date {
-        font-size: 12px;
-        color: $--color-text-secondary;
-      }
+          .notification__drawer__list-item-name {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-wrap: nowrap;
+          }
 
-      .notification__drawer__list-item-status {
-        background-color: $--color-primary;
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-      }
+          .notification__drawer__list-item-date {
+            font-size: 12px;
+            color: $--color-text-secondary;
+          }
 
-      &:hover {
-        background-color: $--color-light-gray;
-      }
+          .notification__drawer__list-item-status {
+            background-color: $--color-primary;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+          }
 
-      .notification__drawer__list-item-icon {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-right: 12px;
+          &:hover {
+            background-color: $--color-light-gray;
+          }
 
-        .el-icon-success {
-          color: $--color-success;
+          .notification__drawer__list-item-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+
+            .el-icon-success {
+              color: $--color-success;
+            }
+          }
+
+          .notification__drawer__list-item-label-gray {
+            font-size: 14px;
+            color: $--color-gray;
+          }
+
+          .notification__drawer__list-item-label-black {
+            color: $--color-black;
+            font-size: 14px;
+            font-weight: 500;
+          }
         }
-      }
-
-      .notification__drawer__list-item-label-gray {
-        font-size: 14px;
-        color: $--color-gray;
-      }
-
-      .notification__drawer__list-item-label-black {
-        color: $--color-black;
-        font-size: 14px;
-        font-weight: 500;
       }
     }
 
     .notification__drawer__list-top {
-      padding: 16px 5% 8px;
+      padding: 8px 5%;
       display: flex;
       justify-content: space-between;
       width: 100%;

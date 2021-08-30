@@ -1,11 +1,17 @@
 import moment from 'moment'
 
+import { approximateDate } from '@/utils'
+
 const gettersNotifications = {
   notifications: (state) => state.notifications,
   mentionNotifications: (state) => state.mentionNotifications,
-  mentionNotificationsGroupped: (state) => {
-    const dates = state.mentionNotifications.content.map(({ createdAt }) => moment().format(''))
-    return dates
+  mentionNotificationsGroupped: ({ mentionNotifications }) => {
+    return mentionNotifications.content.reduce((acc, mention) => {
+      const date = approximateDate(mention.createdAt.split('T')[0])
+
+      acc[date] = [...(acc[date] || []), mention]
+      return acc
+    }, {})
   },
   mentionNotificationsFilter: state => ({
     page: state.mentionNotifications.pageable.pageNumber + 1,
