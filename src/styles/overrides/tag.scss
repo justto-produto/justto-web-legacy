@@ -48,19 +48,23 @@
   display: inline-flex;
   color: #424242;
 
+  width: 80%;
+
   .el-button.el-button--text {
     color: inherit !important;
   }
 }
 
 .el-tag--new {
-  width: 100%;
+  width: 92.5%;
   height: 36px;
   align-items: center;
   margin: 0;
+
   i {
     font-size: 18px;
   }
+
   .el-input__inner {
     padding: 0px 8px;
     font-size: 18px;
@@ -69,6 +73,7 @@
     font-weight: 500;
     height: 28px;
   }
+
   .el-button.el-button--text {
     transform: rotate(90deg);
     padding-top: 4px;
