@@ -14,6 +14,12 @@
           }"
           class="communication-ticket-item-container__plaintiff"
         >
+          <JusIcon
+            v-if="isLawyerOnline || (isOnline && isSelfCause)"
+            class="communication-ticket-item-container__online"
+            icon="online"
+          />
+
           <el-tooltip
             placement="top"
             :open-delay="500"
@@ -50,6 +56,11 @@
           }"
           class="communication-ticket-item-container__plaintiff"
         >
+          <JusIcon
+            v-if="isOnline"
+            class="communication-ticket-item-container__online"
+            icon="online"
+          />
 
           <el-tooltip
             placement="top"
@@ -125,11 +136,11 @@
       <el-step />
     </el-steps>
 
-    <JusIcon
+    <!-- <JusIcon
       v-if="isOnline"
       class="communication-ticket-item-container__online"
       icon="online"
-    />
+    /> -->
 
     <span
       :class="{ 'communication-ticket-item-container__time--active': !ticket.visualized }"
@@ -370,13 +381,13 @@ export default {
     }
   }
 
-  .communication-ticket-item-container__online {
+  /*.communication-ticket-item-container__online {
     position: absolute;
     top: 25px;
     left: 4px;
     width: 10px;
     height: 10px;
-  }
+  }*/
 
   .communication-ticket-item-container__gray {
     position: absolute;

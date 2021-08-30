@@ -14,6 +14,13 @@ export default {
       return this.ticket?.plaintiff?.status === 'ONLINE' || docs.includes(this.ticket?.plaintiff?.documentNumber) || docs.includes(oab)
     },
 
+    isLawyerOnline() {
+      const docs = Object.keys(this.online)
+      const oab = `${this.ticket?.lawyer?.oabNumber}/${this.ticket?.lawyer?.oabState}`
+
+      return this.ticket?.lawyer?.status === 'ONLINE' || docs.includes(this.ticket?.lawyer?.documentNumber) || docs.includes(oab)
+    },
+
     hasLawyer() {
       return Object.keys(this.ticket?.lawyer || {}).length && !!this.ticket?.lawyer?.name
     },

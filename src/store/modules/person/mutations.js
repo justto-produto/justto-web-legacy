@@ -17,10 +17,10 @@ const personMutations = {
         Vue.delete(state.onlineDocuments, doc.documentNumber)
       }
       /** Validação da OAB */
-      if (doc.oab && doc.online) {
-        Vue.set(state.onlineDocuments, doc.oab, 'ONLINE')
-      } else if (state.onlineDocuments[doc.oab]) {
-        Vue.delete(state.onlineDocuments, doc.oab)
+      if (doc.oabNumber && doc.oabState && doc.online) {
+        Vue.set(state.onlineDocuments, `${doc.oabNumber}/${doc.oabState}`, 'ONLINE')
+      } else if (state.onlineDocuments[`${doc.oabNumber}/${doc.oabState}`]) {
+        Vue.delete(state.onlineDocuments, `${doc.oabNumber}/${doc.oabState}`)
       }
     })
   },
