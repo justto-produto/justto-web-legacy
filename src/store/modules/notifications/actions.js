@@ -56,6 +56,10 @@ const actionsNotifications = {
 
   SOCKET_NOTIFY_MENTION_SUMMARY({ _ }, mention) {
     console.log('SOCKET_NOTIFY_MENTION_SUMMARY', mention)
+  },
+
+  SOCKET_ADD_MENTION({ _ }, mention) {
+    console.log('SOCKET_ADD_MENTION', mention)
   }
 }
 
