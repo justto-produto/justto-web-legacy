@@ -167,9 +167,11 @@ export default {
   }
 }
 
-.ck.ck-content.ck-editor__editable {
-  background-color: #F4EFFE !important;
-  color: #9461F7;
-  text-indent: 80px;
+.notes-container {
+  .ck.ck-content.ck-editor__editable {
+    background-color: #F4EFFE !important;
+    color: #9461F7;
+    text-indent: 80px;
+  }
 }
 </style>
