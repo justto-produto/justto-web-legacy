@@ -168,6 +168,7 @@
     </el-table>
 
     <el-button
+      v-if="isJustto"
       type="secondary"
       class="team-container__button"
       @click="createNewTeam"
