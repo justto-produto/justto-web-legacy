@@ -1,10 +1,13 @@
-import { axiosDispatch, eventBus } from '@/utils/'
+import { axiosDispatch } from '@/utils/'
 
-import events from '@/constants/negotiationEvents'
-
-const { SOCKET_NOTIFY_MENTION } = events
 const urlBase = '/api/disputes/v2'
 const mentionsUrl = '/api/disputes/mention'
+
+function getMemberName({ workspaceMembers }, fromAccountId) {
+  const member = workspaceMembers.find(({ accountId }) => Number(accountId) === Number(fromAccountId))
+
+  return member?.person?.name || member?.accountEmail || ''
+}
 
 const actionsNotifications = {
   getThamirisAlerts({ _ }) {
@@ -18,7 +21,7 @@ const actionsNotifications = {
   getMentions({ getters: { mentionNotificationsFilter: { page, read } } }, command = '') {
     const filters = command === 'nextPage' ? {
       read: read ? false : null,
-      page: page + 1,
+      page: page,
       sort: 'createdAt,desc'
     } : {
       read: read ? false : null,
@@ -61,9 +64,25 @@ const actionsNotifications = {
     dispatch('getMentionsSummary')
   },
 
-  SOCKET_ADD_MENTION({ dispatch }, mention) {
+  SOCKET_ADD_MENTION({ dispatch, getters }, mention) {
     dispatch('getMentions')
-    eventBus.$emit(SOCKET_NOTIFY_MENTION.callback, mention)
+
+    const audio = new Audio('https://storage.googleapis.com/justto_app/audio/NotificacaoJusttoApp.mp3')
+
+    audio.play()
+
+    const { disputeId, workspaceId, fromAccountId } = mention
+    const vue = document.getElementById('app').__vue__
+
+    vue.$notify({
+      title: getMemberName(getters, fromAccountId),
+      message: `Mencionou você #${disputeId}`,
+      customClass: 'primary',
+      duration: 5000,
+      position: 'top-right',
+      iconClass: 'el-icon-message-solid',
+      onClick: () => vue.$router.push(`/redirect?wid=${workspaceId}&did=${disputeId}`)
+    })
   }
 }
 

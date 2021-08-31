@@ -2,6 +2,7 @@
 
 .el-notification {
   border-left-width: 4px !important;
+
   &.success{
     border-left-color: $--color-success;
   }
@@ -15,26 +16,8 @@
     border-left-color: $--color-info;
   }
   &.primary {
-    background-color: $--color-primary;
+    border-left-color: $--color-primary;
     cursor: pointer;
-
-    .el-notification__icon.el-icon-message-solid::before {
-      color: white;
-    }
-
-    .el-notification__group {
-      .el-notification__title,
-      .el-notification__content,
-      .el-notification__closeBtn {
-        color: white;
-      }
-
-
-      .el-notification__closeBtn {
-        color: white;
-        font-weight: bold;
-      }
-    }
   }
 }
 

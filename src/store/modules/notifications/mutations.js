@@ -31,7 +31,14 @@ const mutationsNotifications = {
     Vue.set(state, 'notifications', notifications)
   },
 
-  setMentions: (state, mentions) => Vue.set(state, 'mentionNotifications', mentions),
+  setMentions: (state, mentions) => {
+    const { number, content } = mentions
+
+    Vue.set(state, 'mentionNotifications', {
+      ...mentions,
+      content: number > 0 ? [...state.mentionNotifications.content, ...content] : content
+    })
+  },
 
   setMentionsSummary: (state, data) => Vue.set(state, 'mentionNotificationsSummary', data),
 

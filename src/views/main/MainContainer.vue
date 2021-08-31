@@ -90,7 +90,7 @@
       :is-visible="areThamirisAlertsVisible"
     />
 
-    <NotificationDrawer />
+    <!-- <NotificationDrawer /> -->
   </el-container>
 </template>
 
@@ -105,8 +105,8 @@ export default {
     JusHeaderMain: () => import('@/components/layouts/JusHeaderMain'),
     JusTeamMenu: () => import('@/components/layouts/JusTeamMenu'),
     JusShortchts: () => import('@/components/others/JusShortcuts'),
-    ThamirisAlerts: () => import('@/components/dialogs/ThamirisAlerts.vue'),
-    NotificationDrawer: () => import('@/components/drawer/NotificationDrawer.vue')
+    ThamirisAlerts: () => import('@/components/dialogs/ThamirisAlerts.vue')
+    // NotificationDrawer: () => import('@/components/drawer/NotificationDrawer.vue')
   },
 
   data() {

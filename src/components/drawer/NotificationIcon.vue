@@ -1,6 +1,27 @@
 <template>
   <div class="notification">
-    <el-tooltip
+    <el-popover
+      placement="bottom"
+      width="450"
+      trigger="click"
+      popper-class="notification-popover"
+    >
+      <NotificationDrawer />
+
+      <div
+        slot="reference"
+        class="notification__icon"
+      >
+        <div
+          v-if="qtdNotifications !== 0"
+          class="notification__icon__counter el-icon-pulse"
+          v-text="qtdNotifications"
+        />
+
+        <i class="el-icon-bell" />
+      </div>
+    </el-popover>
+    <!-- <el-tooltip
       content="Notificações"
       :open-delay="200"
     >
@@ -16,13 +37,18 @@
         </div>
         <i class="el-icon-bell" />
       </div>
-    </el-tooltip>
+    </el-tooltip> -->
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex'
+
 export default {
+  components: {
+    NotificationDrawer: () => import('@/components/drawer/NotificationDrawer.vue')
+  },
+
   computed: {
     ...mapGetters({
       qtdNotifications: 'qtdNotifications',

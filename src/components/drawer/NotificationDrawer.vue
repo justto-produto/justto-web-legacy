@@ -1,11 +1,5 @@
 <template>
-  <el-drawer
-    id="notification__drawer"
-    class="notification__drawer"
-    size="35%"
-    :visible.sync="isVisible"
-    @close="setVisibility(false)"
-  >
+  <article class="notification__drawer">
     <div
       slot="title"
       class="notification__drawer__header"
@@ -21,10 +15,9 @@
         <div class="notification__drawer__header-label-switch">
           {{ onlyRead ? 'Mostrar apenas não lidas' : 'Mostrar tudo' }}
 
-          <el-switch
-            v-model="onlyRead"
-            active-color="#9461f7"
-            inactive-color="#979797"
+          <i
+            :class="{'el-icon-open active': onlyRead, 'el-icon-turn-off inactive': !onlyRead}"
+            @click="onlyRead = !onlyRead"
           />
         </div>
       </div>
@@ -61,28 +54,16 @@
             v-for="(notification, notificationIndex) in notifications"
             :key="`${notificationIndex}-${notification.type}`"
             class="notification__drawer__list-item"
+            :class="{'notification__drawer__list-item-pendent': !notification.readDate}"
           >
             <span
               class="notification__drawer__list-item-name"
               @click="openMention(notification)"
             >
-              <jus-avatar-user
-                :name="getMemberName(notification.fromAccountId)"
-                purple
-                :size="width <= 1400 ? 'small' : 'sm'"
-              />
-
-              <strong v-if="!notification.readDate">
+              <div>
                 {{ getMemberName(notification.fromAccountId) | resumedName }}
-              </strong>
-
-              <div v-else>
-                {{ getMemberName(notification.fromAccountId) | resumedName }}
-              </div>
-
-              <span>
                 mencionou você.
-              </span>
+              </div>
             </span>
 
             <span class="notification__drawer__list-item-date">
@@ -131,7 +112,7 @@
         </el-button>
       </div>
     </div>
-  </el-drawer>
+  </article>
 </template>
 
 <script>
@@ -201,14 +182,6 @@ export default {
   watch: {
     isVisible(visible) {
       this.getMentionsSummary()
-
-      if (visible) {
-        setTimeout(() => {
-          document.addEventListener('click', this.clickTracker)
-        }, 250)
-      } else {
-        document.removeEventListener('click', this.clickTracker)
-      }
     }
   },
 
@@ -300,14 +273,14 @@ export default {
     notifyMention(mention) {
       this.$jusNotification({
         title: this.getMemberName(mention.fromAccountId),
-        message: `Mencionou você na disputa #${mention.disputeId}`,
+        message: `Mencionou você #${mention.disputeId}`,
         type: 'primary',
         duration: 2500,
         position: 'top-right',
         iconClass: 'el-icon-message-solid',
         onClick: () => this.openMention(mention)
       })
-      console.log('notifyMention', mention)
+      // console.log('notifyMention', mention)
     }
   }
 }
@@ -316,30 +289,8 @@ export default {
 <style lang="scss">
 @import '@/styles/colors.scss';
 
-.el-drawer__body {
-  background-color: white;
-  /* overflow-y: hidden !important; */
-}
-
-.el-drawer__container.el-drawer__open {
-  height: auto;
-  top: 10vh;
-  bottom: 10vh;
-
-  .el-drawer__header {
-    background-color: white;
-    border-bottom: solid #F1F1F3 2px;
-    margin: 0;
-  }
-
-  .el-drawer {
-    min-height: 80vh;
-    background-color: white;
-
-    border-top: solid $--color-primary 8px;
-    border-top-left-radius: 4px;
-    border-bottom-left-radius: 4px;
-  }
+.notification-popover .popper__arrow::after {
+  border-bottom-color: $--color-primary !important;
 }
 </style>
 
@@ -347,6 +298,13 @@ export default {
 @import '@/styles/colors.scss';
 
 .notification__drawer {
+  margin: -8px;
+  padding: 8px 16px;
+  border-radius: 4px;
+  min-width: 350px;
+
+  border-top: solid 8px $--color-primary;
+
   .notification__drawer__header {
     position: relative;
     color: $--color-primary;
@@ -360,11 +318,25 @@ export default {
       flex-wrap: nowrap;
 
       .notification__drawer__header-label-switch {
-        display: flex;
-        gap: 8px;
-        font-size: 14px;
+        font-size: 12px;
         font-weight: normal;
         color: $--color-text-secondary;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+
+        i {
+          cursor: pointer;
+          font-size: 24px;
+
+          &.active {
+            color: #9461f7;
+          }
+
+          &.inactive {
+            color: #979797;
+          }
+        }
       }
     }
   }
@@ -375,16 +347,29 @@ export default {
     align-items: center;
     justify-content: flex-start;
 
+    .notification__drawer__list-top {
+      padding: 8px 0;
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+
+      .notification__drawer__list-top-mark-as-readed {
+        display: flex;
+        justify-self: flex-end;
+        font-size: 12px;
+      }
+    }
+
     .notification__drawer__list-notifications {
       width: 100%;
       overflow-y: scroll;
-      max-height: 60vh;
+      max-height: 55vh;
       margin: 0;
       padding: 0;
 
       .notification__drawer__list-notifications-item {
         width: 100%;
-        padding: 14px 5%;
+        padding: 14px 0;
         cursor: pointer;
 
         .notification__drawer__list-item {
@@ -402,6 +387,21 @@ export default {
             align-items: center;
             gap: 4px;
             flex-wrap: nowrap;
+            color: $--color-text-secondary;
+
+            * {
+              flex-wrap: nowrap;
+            }
+          }
+
+          &.notification__drawer__list-item-pendent {
+            .notification__drawer__list-item-name {
+              color: $--color-black;
+
+              div {
+                font-weight: bold;
+              }
+            }
           }
 
           .notification__drawer__list-item-date {
@@ -445,18 +445,6 @@ export default {
       }
     }
 
-    .notification__drawer__list-top {
-      padding: 8px 5%;
-      display: flex;
-      justify-content: space-between;
-      width: 100%;
-
-      .notification__drawer__list-top-mark-as-readed {
-        display: flex;
-        justify-self: flex-end;
-      }
-    }
-
     .notification__drawer__list-close {
       justify-self: flex-end;
     }
@@ -473,7 +461,7 @@ export default {
       color: $--color-text-secondary;
       font-size: 12px;
       cursor: pointer;
-      margin: 16px auto;
+      margin: 8px auto;
     }
 
     .notification__drawer__footer-button {
