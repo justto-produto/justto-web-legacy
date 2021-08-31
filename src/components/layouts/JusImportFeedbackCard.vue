@@ -241,22 +241,29 @@
       <div class="jus-import-feedback-card__switch">
         <i class="el-icon-circle-check el-input__icon--success" />
         <div class="content">
-          <div>Não enriquecer disputas automaticamente</div>
-          <p>
-            Deixando <b>selecionada</b> esta opção, as os dados das partes como e-mail, telefone e OAB, <b>não serão enriquecidos automaticamente</b>.
-          </p>
-        </div>
-        <el-switch v-model="skipEnrichment" />
-      </div>
-      <div class="jus-import-feedback-card__switch">
-        <i class="el-icon-circle-check el-input__icon--success" />
-        <div class="content">
           <div>Permitir somente depósito em conta-corrente</div>
           <p>
             Deixando <b>selecionada</b> esta opção, em caso de acordo fechado será bloqueado o depósito em conta poupança, sendo permitido somente <b>depósito em conta corrente</b>.
           </p>
         </div>
         <el-switch v-model="denySavingDeposit" />
+      </div>
+
+      <div class="jus-import-feedback-card__switch">
+        <i class="el-icon-circle-check el-input__icon--success" />
+        <div class="content">
+          <div>Não enriquecer disputas automaticamente <strong>(Atenção: informação importante)</strong></div>
+          <p>
+            Deixando <b>selecionada</b> esta opção, os dados das partes como email, telefone e OAB, <b>não serão enriquecidos automaticamente</b>.
+            <br>
+            Esta opção é efetivada <b>somente mediante solicitação do usuário</b>, sendo a ação de sua total responsabilidade.
+            <br>
+            Coletamos os dados a fim exclusivamente de enriquecer a disputa e não somos detentores de tais informações.
+            <br>
+            Ao ativar você está de acordo com o nosso termo de uso.
+          </p>
+        </div>
+        <el-switch v-model="skipEnrichment" />
       </div>
     </el-card>
 
@@ -509,33 +516,40 @@ export default {
 .jus-import-feedback-card {
   width: 100%;
   margin-top: 30px;
+
   .el-tag--mapped-campaign-tag {
     margin-bottom: 10px;
     text-align: center;
     color: #ffffff;
   }
+
   .el-autocomplete, .el-select, .el-input, .select-strategy__messages {
     width: 100%;
   }
+
   .el-card .el-input__inner {
     border-bottom: 1px solid #dcdfe6 !important;
     border-top: 0;
     border-left: 0;
     border-right: 0;
   }
+
   .select-strategy{
     .el-input__inner {
       border: 0 !important;
     }
   }
+
   .el-input-number {
     margin: 0 8px;
     width: 100px;
+
     .el-input__inner {
       border-top: 0;
       border-bottom: 0;
     }
   }
+
   .el-card__body {
     padding: 0;
     .el-select:last-of-type {
@@ -592,8 +606,13 @@ export default {
     display: flex;
     padding: 12px 13px;
     border-bottom: 1px solid #dcdfe6;
+
     .content  {
       width: 100%;
+
+      strong {
+        color: $--color-danger;
+      }
     }
     p {
       font-style: italic;

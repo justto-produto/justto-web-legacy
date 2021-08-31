@@ -14,6 +14,12 @@
           }"
           class="communication-ticket-item-container__plaintiff"
         >
+          <JusIcon
+            v-if="isLawyerOnline || (isOnline && isSelfCause)"
+            class="communication-ticket-item-container__online"
+            icon="online"
+          />
+
           <el-tooltip
             placement="top"
             :open-delay="500"
@@ -51,6 +57,11 @@
           }"
           class="communication-ticket-item-container__plaintiff"
         >
+          <JusIcon
+            v-if="isOnline"
+            class="communication-ticket-item-container__online"
+            icon="online"
+          />
 
           <el-tooltip
             placement="top"
@@ -100,11 +111,6 @@
         </el-tooltip>
       </div>
     </div>
-
-    <div
-      v-if="isOnline"
-      class="communication-ticket-item-container__online"
-    />
 
     <div
       v-if="activeTab === 'engagement'"
@@ -256,9 +262,6 @@ export default {
   }
 
   .communication-ticket-item-container__online {
-    position: absolute;
-    top: 25px;
-    left: 4px;
     width: 10px;
     height: 10px;
     border-radius: 50%;

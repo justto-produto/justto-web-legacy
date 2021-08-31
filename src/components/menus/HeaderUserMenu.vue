@@ -104,7 +104,6 @@
 </template>
 
 <script>
-import { IS_SMALL_WINDOW } from '@/constants/variables'
 import { mapActions, mapGetters } from 'vuex'
 
 export default {
@@ -123,6 +122,7 @@ export default {
     ...mapGetters({
       accountId: 'accountId',
       ghostMode: 'ghostMode',
+      width: 'getWindowWidth',
       name: 'loggedPersonName',
       loggedPerson: 'loggedPerson',
       teamName: 'workspaceTeamName',
@@ -149,7 +149,7 @@ export default {
       }
     },
     avatarSize() {
-      return IS_SMALL_WINDOW ? 'mini' : 'sm'
+      return this.width <= 1600 ? 'mini' : 'sm'
     }
   },
 

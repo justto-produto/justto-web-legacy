@@ -25,25 +25,30 @@
               slot="header"
               class="dispute-view-occurrences__card--note-header"
             >
-              <i
-                class="el-icon-edit"
-                @click="openEditDialog(occurrence)"
-              />
-              <i
-                class="el-icon-delete"
-                @click="removeNote(occurrence, index)"
-              />
+              <span v-html="buildSender(occurrence)" />
+
+              <div>
+                <i
+                  class="el-icon-edit"
+                  @click="openEditDialog(occurrence)"
+                />
+
+                <i
+                  class="el-icon-delete"
+                  @click="removeNote(occurrence, index)"
+                />
+              </div>
             </div>
             <span v-html="buildContent(occurrence)" />
           </el-card>
           <div class="OUTBOUND dispute-view-occurrences__card-info">
             <span v-html="buildHour(occurrence)" />
-            <div>•</div>
-            <span v-html="buildSender(occurrence)" />
+            <!-- <div>•</div> -->
           </div>
         </div>
       </div>
     </li>
+
     <el-dialog
       :visible.sync="editDialog"
       width="60%"
@@ -77,6 +82,7 @@
         </el-button>
       </span>
     </el-dialog>
+
     <li
       v-if="!loading && !occurrences.length"
       class="dispute-view-occurrences__empty"
@@ -90,6 +96,7 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex'
+
 export default {
   name: 'DisputeNotes',
   props: {
@@ -211,3 +218,36 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.dispute-view-occurrences__card-box {
+  position: relative;
+
+  .dispute-view-occurrences__card--note {
+    .el-card__header {
+      .dispute-view-occurrences__card--note-header {
+        font-weight: normal;
+        text-transform: lowercase;
+        display: flex;
+        justify-content: space-between;
+
+        span {
+          margin: 0;
+        }
+      }
+    }
+
+    .el-card__body {
+      padding-bottom: 24px !important;
+    }
+  }
+
+  .OUTBOUND.dispute-view-occurrences__card-info {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin-bottom: 4px;
+  }
+}
+
+</style>
