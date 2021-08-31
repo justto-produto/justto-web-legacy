@@ -1,5 +1,8 @@
-import { axiosDispatch } from '@/utils/'
+import { axiosDispatch, eventBus } from '@/utils/'
 
+import events from '@/constants/negotiationEvents'
+
+const { SOCKET_NOTIFY_MENTION } = events
 const urlBase = '/api/disputes/v2'
 const mentionsUrl = '/api/disputes/mention'
 
@@ -54,12 +57,13 @@ const actionsNotifications = {
     console.log('SOCKET_ADD_NOTIFICATIONS', notification)
   },
 
-  SOCKET_NOTIFY_MENTION_SUMMARY({ _ }, mention) {
-    console.log('SOCKET_NOTIFY_MENTION_SUMMARY', mention)
+  SOCKET_NOTIFY_MENTION_SUMMARY({ dispatch }, _mention) {
+    dispatch('getMentionsSummary')
   },
 
-  SOCKET_ADD_MENTION({ _ }, mention) {
-    console.log('SOCKET_ADD_MENTION', mention)
+  SOCKET_ADD_MENTION({ dispatch }, mention) {
+    dispatch('getMentions')
+    eventBus.$emit(SOCKET_NOTIFY_MENTION.callback, mention)
   }
 }
 

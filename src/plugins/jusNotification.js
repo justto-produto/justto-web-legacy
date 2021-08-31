@@ -52,10 +52,10 @@ const NotificationMessage = {
       if (!config.type) config.type = 'error'
       if (!config.message) config.message = ERROR + TRY
       if (!config.title) config.title = 'Ops!'
+      if (!config.position) config.position = 'bottom-right'
       config.customClass = config.type
-      config.position = 'bottom-right'
       config.offset = 84
-      Notification.closeAll()
+      // Notification.closeAll()
       Notification(config)
     }
   }

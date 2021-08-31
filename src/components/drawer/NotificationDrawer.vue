@@ -136,7 +136,11 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex'
-import { approximateTime } from '@/utils'
+import { approximateTime, eventBus } from '@/utils'
+
+import events from '@/constants/negotiationEvents'
+
+const { SOCKET_NOTIFY_MENTION } = events
 
 export default {
   data: () => ({
@@ -185,7 +189,7 @@ export default {
 
       set(value) {
         this.setMentionsOnlyRead(value)
-        this.getMentions()
+        this.getMentionsSummary()
       }
     },
 
@@ -196,9 +200,9 @@ export default {
 
   watch: {
     isVisible(visible) {
-      if (visible) {
-        this.getMentions()
+      this.getMentionsSummary()
 
+      if (visible) {
         setTimeout(() => {
           document.addEventListener('click', this.clickTracker)
         }, 250)
@@ -208,6 +212,15 @@ export default {
     }
   },
 
+  beforeMount() {
+    eventBus.$off(SOCKET_NOTIFY_MENTION.callback, this.notifyMention)
+    eventBus.$on(SOCKET_NOTIFY_MENTION.callback, this.notifyMention)
+  },
+
+  beforeDestroy() {
+    eventBus.$off(SOCKET_NOTIFY_MENTION.callback, this.notifyMention)
+  },
+
   methods: {
     ...mapActions({
       setTicketsFilters: 'setTicketsFilters',
@@ -215,6 +228,7 @@ export default {
       getTickets: 'getTickets',
       setVisibility: 'setNotificationsVisible',
       setMentionReaded: 'setMentionReaded',
+      getMentionsSummary: 'getMentionsSummary',
       getMentions: 'getMentions'
     }),
 
@@ -281,6 +295,19 @@ export default {
 
     seeNextpage() {
       this.getMentions('nextPage')
+    },
+
+    notifyMention(mention) {
+      this.$jusNotification({
+        title: this.getMemberName(mention.fromAccountId),
+        message: `Mencionou você na disputa #${mention.disputeId}`,
+        type: 'primary',
+        duration: 2500,
+        position: 'top-right',
+        iconClass: 'el-icon-message-solid',
+        onClick: () => this.openMention(mention)
+      })
+      console.log('notifyMention', mention)
     }
   }
 }
