@@ -161,6 +161,12 @@ export default {
     width: 3.5rem;
     height: 3.5rem;
   }
+  &.jus-avatar-user--small {
+    vertical-align: top;
+    font-size: 9px;
+    width: 1.7rem;
+    height: 1.7rem;
+  }
   &.jus-avatar-user--mini {
     vertical-align: top;
     font-size: 9px;

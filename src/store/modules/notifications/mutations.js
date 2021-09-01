@@ -31,12 +31,40 @@ const mutationsNotifications = {
     Vue.set(state, 'notifications', notifications)
   },
 
+  setMentions: (state, mentions) => {
+    const { number, content } = mentions
+
+    Vue.set(state, 'mentionNotifications', {
+      ...mentions,
+      content: number > 0 ? [...state.mentionNotifications.content, ...content] : content
+    })
+  },
+
+  setMentionsSummary: (state, data) => Vue.set(state, 'mentionNotificationsSummary', data),
+
   hideThamirisAlerts: (state, _data) => {
     setValueThamirisAlert(state, false)
   },
 
   toggleShowNotifications: (state, open) => {
     setValueThamirisAlert(state, open)
+    state.notificationsVisible = false
+  },
+
+  setNotificationsVisible: (state, visibility) => {
+    state.notificationsVisible = visibility
+  },
+
+  setMentionReaded: (state, { payload: { mentionId } }) => {
+    state.mentionNotifications.content.forEach((item, index) => {
+      if (Number(item.id) === Number(mentionId)) {
+        Vue.set(state.mentionNotifications.content[index], 'readDate', new Date().getTime())
+      }
+    })
+  },
+
+  setMentionsOnlyRead(state, onlyRead) {
+    Vue.set(state, 'seeMentionsReaded', onlyRead)
   }
 }
 

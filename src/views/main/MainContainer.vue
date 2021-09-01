@@ -89,6 +89,8 @@
     <ThamirisAlerts
       :is-visible="areThamirisAlertsVisible"
     />
+
+    <!-- <NotificationDrawer /> -->
   </el-container>
 </template>
 
@@ -104,6 +106,7 @@ export default {
     JusTeamMenu: () => import('@/components/layouts/JusTeamMenu'),
     JusShortchts: () => import('@/components/others/JusShortcuts'),
     ThamirisAlerts: () => import('@/components/dialogs/ThamirisAlerts.vue')
+    // NotificationDrawer: () => import('@/components/drawer/NotificationDrawer.vue')
   },
 
   data() {
@@ -127,7 +130,8 @@ export default {
       userPreferences: 'userPreferences',
       notifications: 'notifications',
       areThamirisAlertsVisible: 'areThamirisAlertsVisible',
-      areNotificationsVisible: 'areNotificationsVisible'
+      areNotificationsVisible: 'areNotificationsVisible',
+      accountId: 'accountId'
     }),
 
     canAccessNegotiationScreen() {
@@ -262,6 +266,10 @@ export default {
           headers,
           channel: `${baseUrl}/${this.personId}/dispute/summary`
         })
+        this.subscriptions.push({
+          headers,
+          channel: `/topic/account/${this.accountId}`
+        })
 
         this.subscriptions.forEach(subscription => this.$socket.emit('subscribe', subscription))
         this.loadAccountProperty().then(this.checkAcceptterms)
@@ -272,6 +280,7 @@ export default {
       const key = 'LAST_ACCEPTED_DATE'
       const lastTermDate = this.$moment('20/04/2021', 'DD/MM/YYYY')
       let lastAcceptedDate = response[key] ? this.$moment(response[key], 'DD/MM/YYYY') : Boolean(response[key])
+
       if (!lastAcceptedDate || lastTermDate.isAfter(lastAcceptedDate, 'day')) {
         const docs = [
           {

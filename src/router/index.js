@@ -183,7 +183,7 @@ const router = new Router({
       }
     },
     {
-      name: 'Redirect',
+      name: 'redirect',
       path: '/redirect',
       component: () => import(/* webpackChunkName: "redirect" */ '@/views/main/Redirect'),
       meta: {
@@ -265,7 +265,6 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  console.log(from)
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (Store.getters.isLoggedIn) {
       if (Store.getters.hasWorkspace) {
@@ -278,6 +277,9 @@ router.beforeEach((to, from, next) => {
             }
           }
         }
+        // else if (to.name === 'redirect' && from.name === 'ticket') {
+        //   console.log(to, from)
+        // }
 
         if (from.name === 'ticket' && from.params?.id) {
           eventBus.$emit(events.TICKET_WEB_SOCKET_DISCONNECT.callback, 'unsubscribe', from?.params?.id)

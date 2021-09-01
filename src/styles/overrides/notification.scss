@@ -2,6 +2,7 @@
 
 .el-notification {
   border-left-width: 4px !important;
+
   &.success{
     border-left-color: $--color-success;
   }
@@ -13,6 +14,10 @@
   }
   &.info{
     border-left-color: $--color-info;
+  }
+  &.primary {
+    border-left-color: $--color-primary;
+    cursor: pointer;
   }
 }
 

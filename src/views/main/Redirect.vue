@@ -22,6 +22,7 @@ export default {
 
   beforeMount() {
     localStorage.removeItem('jusredirect')
+    this.resetOccurrences()
   },
 
   mounted() {
@@ -54,8 +55,6 @@ export default {
             })
           } else {
             this.$refs.workspaceSwitcher.goToWorkspace(destinyWokspace)
-            // SAAS-4441
-            // redirect?wid=626&did=252813
           }
         })
       }
@@ -63,7 +62,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(['myWorkspace'])
+    ...mapActions(['myWorkspace', 'resetOccurrences'])
   }
 }
 </script>
