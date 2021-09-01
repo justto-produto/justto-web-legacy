@@ -26,6 +26,7 @@ import workspaceModule from './modules/workspace'
 import configurationsModule from './modules/configurations'
 import pluginsModule from './modules/plugins'
 import notifications from './modules/notifications'
+import dialerModule from './modules/dialer'
 
 // CONSTANTS
 import banksList from '@/constants/banksList'
@@ -116,6 +117,7 @@ export default new Vuex.Store({
     userModule,
     workspaceModule,
     configurationsModule,
-    notifications
+    notifications,
+    dialerModule
   }
 })
