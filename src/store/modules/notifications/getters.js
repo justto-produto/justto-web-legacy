@@ -21,7 +21,7 @@ const gettersNotifications = {
   notificationsNotEmptyDisputes: ({ notifications }) => notifications.filter(({ quantity }) => quantity > 0),
   qtdThamirisPendingAlerts: ({ notifications }) => notifications.filter(({ quantity }) => quantity > 0).length,
   qtdMentionsPending: ({ mentionNotificationsSummary: { unread } }) => Number(unread),
-  qtdNotifications: ({ notifications, mentionNotificationsSummary: { unread } }) => notifications.filter(({ quantity }) => quantity > 0).length + unread,
+  qtdNotifications: ({ notifications, mentionNotificationsSummary: { unread = 0 } }) => notifications.filter(({ quantity }) => quantity > 0).length + unread,
   areThamirisAlertsVisible: ({ thamirisAlertVisible }) => Boolean(thamirisAlertVisible),
   areNotificationsVisible: ({ notificationsVisible }) => notificationsVisible,
   notificationHoursDiff: () => {
