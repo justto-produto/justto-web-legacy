@@ -114,7 +114,7 @@ export default {
   data() {
     return {
       localLoading: false,
-      // useMentionPlugin: true,
+      useMentionPlugin: true,
       usePreviewPlugin: false
     }
   },
@@ -129,10 +129,6 @@ export default {
       ticket: 'getTicketOverview',
       isJusttoAdmin: 'isJusttoAdmin'
     }),
-
-    useMentionPlugin() {
-      return this.isJusttoAdmin
-    },
 
     sendMessagetext() {
       return this.editorRecipients.length ? 'Enviar mensagem' : 'Selecione um destinatário'

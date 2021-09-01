@@ -49,14 +49,13 @@ export default {
 
   data: () => ({
     localLoading: false,
-    // useMentionPlugin: true,
+    useMentionPlugin: true,
     usePreviewPlugin: false
   }),
 
   computed: {
     ...mapGetters({
-      editorText: 'getNoteEditorText',
-      useMentionPlugin: 'isJusttoAdmin'
+      editorText: 'getNoteEditorText'
     }),
 
     body: {
