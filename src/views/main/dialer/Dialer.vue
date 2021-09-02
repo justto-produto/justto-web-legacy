@@ -1,12 +1,12 @@
 <template>
   <article class="dialer">
-    <el-button
+    <!-- <el-button
       class="dialer__button"
       type="text"
       icon="el-icon-phone"
       round
       @click="visible = !visible"
-    />
+    /> -->
 
     <div
       v-if="visible"
@@ -39,7 +39,7 @@
 
           <i
             class="el-icon-close"
-            @click="visible = !visible"
+            @click="close"
           />
         </div>
       </div>
@@ -58,8 +58,14 @@
       >
         <el-input
           v-model="number"
+          v-mask="['(##) 9 ####-####']"
+          :disabled="!!currentCall"
           size="small"
-        />
+        >
+          <template slot="prepend">
+            +55
+          </template>
+        </el-input>
 
         <div class="dialer__container-body-buttons">
           <!-- <div class="dialer__container-body-buttons-line">
@@ -133,11 +139,12 @@
 
           <div class="dialer__container-body-buttons-line">
             <el-button
+              v-if="!!currentCall"
               type="danger"
               size="small"
               round
               icon="el-icon-error"
-              @click="clearCurrentCall"
+              @click="shutdownCall"
             />
 
             <!-- <el-button
@@ -148,6 +155,7 @@
             /> -->
 
             <el-button
+              v-if="!currentCall"
               type="success"
               size="small"
               round
@@ -162,7 +170,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 import SIPml from 'ecmascript-webrtc-sipml'
 import DialerUserModel from '@/store/modules/dialer/model/DialerUserModel'
@@ -175,8 +183,8 @@ export default {
       visible: false,
       bodyVisible: true,
       top: 100,
-      left: 600,
-      number: '88996877608',
+      left: 450,
+      number: '',
       configs: null,
       session: null,
       ua: null,
@@ -184,6 +192,12 @@ export default {
       registerSession: null,
       user
     }
+  },
+
+  computed: {
+    ...mapGetters({
+      currentCall: 'getCurrentCallId'
+    })
   },
 
   watch: {
@@ -210,11 +224,17 @@ export default {
       'availableServerStatus'
     ]),
 
+    open(number) {
+      this.number = number
+      this.visible = true
+    },
+
     doLogin() {
       return this.dialerLogin(this.user)
     },
 
     async startConection() {
+      console.log('startConection')
       this.loading = true
 
       this.configs = await this.loadVoiceServer()
@@ -242,6 +262,8 @@ export default {
           }
         })
 
+        console.log(self)
+
         self.sipStack.start()
       })
     },
@@ -260,6 +282,12 @@ export default {
         this.doLogin()
       ]).then(this.startConection).finally(() => {
         this.loading = false
+
+        this.$nextTick(() => {
+          if (this.number.length === 16) {
+            this.call()
+          }
+        })
       })
     },
 
@@ -284,31 +312,41 @@ export default {
       })
     },
 
-    makeCall(e) {
-      console.log('makeCall')
-      let callSession
-
-      if (e.session === this.registerSession) {
-        e.session.audioLocal = document.getElementById('localAudio')
-
-        callSession = this.sipStack.newSession('call-audio', {
-          audio_remote: document.getElementById('remoteAudio'),
-          events_listener: { events: '*', listener: this.eventHub }
-        })
-
-        callSession.call('Justto')
-      } else {
-        console.log('Sessão errada')
-      }
+    acceptedCallConditions() {
+      console.log('acceptedCallConditions')
     },
 
-    async call() {
-      try {
-        const callInfo = await this.createNewCall(`+55${this.destinationNumber}`)
-        console.log(callInfo)
-      } catch (error) {
-        this.deleteCurrentCall()
-      }
+    rejectedCallConditions() {
+      console.log('rejectedCallConditions')
+    },
+
+    call() {
+      const text = 'Todas as ligações realizadas pela plataforma são gravadas e são disponibilizadas para os participantes da disputa e para os administradores dos times.<br><br>Você entende e concorda que a JUSTTO grave todas suas ligações com as partes da disputa para auditorias futuras da negociação?'
+
+      this.$confirm(text, 'Iniciando ligação', {
+        dangerouslyUseHTMLString: true,
+        confirmButtonText: 'Sim',
+        cancelButtonText: 'Não',
+        center: true
+      }).then(() => {
+        this.acceptedCallConditions()
+        this.loading = true
+
+        this.createNewCall(`+55${this.number}`).then(callInfo => {
+          this.$jusSegment('ligação', {
+            numebr: this.number,
+            ...callInfo
+          })
+        }).catch(() => {
+          this.deleteCurrentCall()
+        }).finally(() => {
+          this.loading = false
+        })
+      }).catch(() => this.rejectedCallConditions())
+    },
+
+    shutdownCall() {
+      this.deleteCurrentCall()
     },
 
     eventHub(e) {
@@ -319,9 +357,6 @@ export default {
         case 'i_new_call':
           this.acceptCall(e)
           break
-        case 'connected':
-          // this.makeCall(e)
-          break
         case 'terminated':
           this.clearCurrentCall()
           break
@@ -329,12 +364,19 @@ export default {
           console.log(e)
           break
       }
+    },
+
+    close() {
+      // if (this.sipStack) {
+      //   this.sipStack.stop()
+      // }
+      this.visible = false
     }
   }
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import '@/styles/colors.scss';
 
 .dialer {
@@ -392,6 +434,16 @@ export default {
       flex-direction: column;
       gap: 8px;
 
+      .el-input {
+        .el-input-group__prepend {
+          padding: 0 8px;
+        }
+
+        .el-input__inner {
+          text-align: right;
+        }
+      }
+
       .dialer__container-body-buttons {
         display: flex;
         flex-direction: column;
@@ -399,7 +451,7 @@ export default {
 
         .dialer__container-body-buttons-line {
           display: flex;
-          justify-content: space-between;
+          justify-content: space-around;
 
           .el-button {
             min-width: 48px;

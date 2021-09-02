@@ -39,11 +39,15 @@ const dialerMutations = {
     }
   },
 
-  setCurrentCallId(state, currentCallId) {
+  setCurrentCallId(state, { _id }) {
     if (!state.call) {
-      this.createCall(state)
+      state.call = {
+        id: _id,
+        status: 'STARTING'
+      }
+    } else {
+      state.call.id = _id
     }
-    state.call.id = currentCallId
   },
 
   clearCall(state) {

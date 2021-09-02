@@ -59,6 +59,15 @@
         <div class="usermenu-container__version">
           Versão {{ appVersion }}
         </div>
+        <!-- <a
+          v-if="canAccessDialer"
+          href="#"
+          @click.prevent="openDialer('')"
+        >
+          <el-dropdown-item>
+            Discador
+          </el-dropdown-item>
+        </a> -->
         <router-link
           v-if="showConfigs"
           to="/configurations"
@@ -113,6 +122,7 @@ export default {
     JusEditUser: () => import('@/components/dialogs/JusEditUserDialog'),
     Notification: () => import('@/components/drawer/NotificationIcon')
   },
+
   data: () => ({
     selectedWorkspace: '',
     changeWorkspaceDialogVisible: false
@@ -128,6 +138,7 @@ export default {
       teamName: 'workspaceTeamName',
       isJusttoAdmin: 'isJusttoAdmin',
       isAdminProfile: 'isAdminProfile',
+      canAccessDialer: 'canAccessDialer',
       workspacesList: 'getUserWorkspaces',
       loggedPersonHasName: 'loggedPersonHasName'
     }),
@@ -169,6 +180,7 @@ export default {
 
   methods: {
     ...mapActions([
+      'openDialer',
       'myWorkspace',
       'setGhostMode',
       'changeMemberName',

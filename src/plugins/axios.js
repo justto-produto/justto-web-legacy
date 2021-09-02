@@ -32,12 +32,14 @@ _axios.interceptors.request.use(
       }
     }
 
-    const { UserLanguage, UserTimeZone, UserBrowserName, UserOS } = _axios.defaults.headers.common
+    if (_axios.defaults.baseURL === 'https://justto.app/') {
+      const { UserLanguage, UserTimeZone, UserBrowserName, UserOS } = _axios.defaults.headers.common
 
-    _axios.defaults.headers.common.UserLanguage = UserLanguage || store.getters.getUserLanguage
-    _axios.defaults.headers.common.UserTimeZone = UserTimeZone || store.getters.getUserTimeZone
-    _axios.defaults.headers.common.UserBrowserName = UserBrowserName || store.getters.getUserBrowserName
-    _axios.defaults.headers.common.UserOS = UserOS || store.getters.getUserOS
+      _axios.defaults.headers.common.UserLanguage = UserLanguage || store.getters.getUserLanguage
+      _axios.defaults.headers.common.UserTimeZone = UserTimeZone || store.getters.getUserTimeZone
+      _axios.defaults.headers.common.UserBrowserName = UserBrowserName || store.getters.getUserBrowserName
+      _axios.defaults.headers.common.UserOS = UserOS || store.getters.getUserOS
+    }
 
     return config
   },

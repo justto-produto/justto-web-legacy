@@ -1,9 +1,27 @@
 import { axiosDispatch } from '@/utils/'
+import axios from 'axios'
 
 const dialerPath = 'https://api-webphone.mozaik.cloud/v1'
+const dialerAdapter = axios.create({
+  baseURL: dialerPath,
+  headers: {}
+})
 
 const dialerActions = {
-  // eslint-disable-next-line
+  openDialer({ getters: { canAccessDialer } }, number) {
+    const DialerComponent = document.getElementsByClassName('dialer')[0]?.__vue__
+
+    if (canAccessDialer && [0, 10, 11].includes(number.length)) {
+      DialerComponent.open([0, 11].includes(number.length) ? number : `${number.slice(0, 2)}9${number.slice(2)}`)
+    } else {
+      DialerComponent.$jusNotification({
+        title: 'Ops!',
+        type: 'error',
+        message: 'Número inválido'
+      })
+    }
+  },
+
   dialerLogin({ _ }, loginRequest) {
     return axiosDispatch({
       url: `${dialerPath}/webphone/auth`,
@@ -13,13 +31,19 @@ const dialerActions = {
     })
   },
 
-  loadVoiceServer({ state }) {
-    return axiosDispatch({
-      url: `${dialerPath}/webphone/voiceserver`,
-      mutation: 'setVoiceServer',
-      headers: {
-        authorization: `Bearer ${state.currentDialerUser.token}`
-      }
+  loadVoiceServer({ state, commit }) {
+    return new Promise((resolve, reject) => {
+      dialerAdapter.get(
+        '/webphone/voiceserver',
+        {
+          headers: {
+            authorization: `Bearer ${state.currentDialerUser.token}`
+          }
+        }
+      ).then(({ data }) => {
+        commit('setVoiceServer', data)
+        resolve(data)
+      }).catch(err => reject(err))
     })
   },
 
@@ -30,7 +54,7 @@ const dialerActions = {
       headers: {
         authorization: `Bearer ${state.currentDialerUser.token}`
       }
-    })
+    }, dialerAdapter)
   },
 
   changeServerStatus({ state }, { method, data }) {
@@ -40,7 +64,7 @@ const dialerActions = {
       method,
       headers: { authorization: `Bearer ${state.currentDialerUser.token}` },
       data
-    })
+    }, dialerAdapter)
   },
 
   startServerStatus({ dispatch }) {
@@ -74,7 +98,7 @@ const dialerActions = {
         authorization: `Bearer ${state.currentDialerUser.token}`
       },
       data: requestCallCommand
-    })
+    }, dialerAdapter)
   },
 
   clearCurrentCall({ commit }) {
@@ -83,6 +107,7 @@ const dialerActions = {
 
   deleteCurrentCall({ state }) {
     const currentCallId = state.call.id
+
     return axiosDispatch({
       url: `${dialerPath}/webphone/call/${currentCallId}`,
       action: this.clearCurrentCall,
@@ -90,7 +115,7 @@ const dialerActions = {
       headers: {
         authorization: `Bearer ${state.currentDialerUser.token}`
       }
-    })
+    }, dialerAdapter)
   }
 }
 

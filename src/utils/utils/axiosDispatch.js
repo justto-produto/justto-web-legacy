@@ -1,6 +1,8 @@
+/* global axios */
+
 import store from '@/store'
 
-const axiosDispatch = (params) => {
+const axiosDispatch = (params, drive = axios) => {
   return new Promise((resolve, reject) => {
     const opt = { method: params.method || 'get' }
     if (params.url) opt.url = params.url
@@ -8,8 +10,7 @@ const axiosDispatch = (params) => {
     if (params.headers) opt.headers = params.headers
     if (params.data) opt.data = params.data
     if (params.params) opt.params = params.params
-    // eslint-disable-next-line
-    axios(opt).then(response => {
+    drive(opt).then(response => {
       if (params.mutation) {
         if (params.payload) store.commit(params.mutation, { data: response.data, payload: params.payload })
         else store.commit(params.mutation, response.data)
