@@ -7,7 +7,8 @@ const accountGetters = {
   accountId: state => state.id,
   accountEmail: state => state.email,
   isJusttoAdmin: state => isJusttoUser(state.email),
-  isJusttoDev: state => state.devs.indexOf(state.email) !== -1
+  isJusttoDev: state => state.devs.indexOf(state.email) !== -1,
+  canAccessDialer: state => state.preferences.properties.DIALER_ACCESS === 'AUTHORIZED'
 }
 
 export default accountGetters

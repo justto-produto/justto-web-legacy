@@ -12,6 +12,11 @@
       </span>
       <span class="text-inline-editor__icons">
         <i
+          v-if="['phoneNumber'].includes(filter) && canAccessDialer"
+          class="text-inline-editor__icon el-icon-phone"
+          @click="callNumber"
+        />
+        <i
           v-if="isCopyble"
           class="text-inline-editor__icon el-icon-copy-document"
           @click="copyValue"
@@ -43,6 +48,7 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
 import HandleKeys from './handleKeys'
 
 export default {
@@ -84,6 +90,10 @@ export default {
   }),
 
   computed: {
+    ...mapGetters({
+      canAccessDialer: 'canAccessDialer'
+    }),
+
     vModel: {
       get() {
         return this.isEditing ? this.model : this.value
@@ -136,6 +146,8 @@ export default {
   },
 
   methods: {
+    ...mapActions(['openDialer']),
+
     handleEnter(event) {
       this.escaping = false
       event.target.blur()
@@ -182,6 +194,13 @@ export default {
     },
     deletElement() {
       this.$emit('delete')
+    },
+
+    callNumber() {
+      const number = this.value.split('55').slice(-1)[0]
+
+      this.openDialer(number)
+      this.$emit('call', number)
     }
   }
 }

@@ -10,6 +10,8 @@
         </router-link>
       </div>
 
+      <dialer />
+
       <el-menu
         ref="sideMenu"
         class="container-aside__menu el-menu--main-menu"
@@ -105,7 +107,8 @@ export default {
     JusHeaderMain: () => import('@/components/layouts/JusHeaderMain'),
     JusTeamMenu: () => import('@/components/layouts/JusTeamMenu'),
     JusShortchts: () => import('@/components/others/JusShortcuts'),
-    ThamirisAlerts: () => import('@/components/dialogs/ThamirisAlerts.vue')
+    ThamirisAlerts: () => import('@/components/dialogs/ThamirisAlerts.vue'),
+    Dialer: () => import('@/views/main/dialer/Dialer')
     // NotificationDrawer: () => import('@/components/drawer/NotificationDrawer.vue')
   },
 
