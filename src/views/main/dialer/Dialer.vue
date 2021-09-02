@@ -196,8 +196,17 @@ export default {
 
   computed: {
     ...mapGetters({
-      currentCall: 'getCurrentCallId'
-    })
+      currentCall: 'getCurrentCallId',
+      preferences: 'userPreferences'
+    }),
+
+    hasAcceptTerms() {
+      return !!this.preferences.properties.ACCEPT_DIALER_TERMS
+    },
+
+    hasNotAcceptTerms() {
+      return !!this.preferences.properties.REJECT_DIALER_TERMS
+    }
   },
 
   watch: {
@@ -221,7 +230,8 @@ export default {
       'loadVoiceServer',
       'changeServerStatus',
       'startServerStatus',
-      'availableServerStatus'
+      'availableServerStatus',
+      'setAccountProperty'
     ]),
 
     open(number) {
@@ -234,7 +244,6 @@ export default {
     },
 
     async startConection() {
-      console.log('startConection')
       this.loading = true
 
       this.configs = await this.loadVoiceServer()
@@ -261,8 +270,6 @@ export default {
             listener: self.eventHub
           }
         })
-
-        console.log(self)
 
         self.sipStack.start()
       })
@@ -313,36 +320,73 @@ export default {
     },
 
     acceptedCallConditions() {
-      console.log('acceptedCallConditions')
+      this.setAccountProperty({
+        ACCEPT_DIALER_TERMS: this.$moment().toISOString()
+      }).then(() => this.setAccountProperty({
+        REJECT_DIALER_TERMS: null
+      }))
     },
 
     rejectedCallConditions() {
-      console.log('rejectedCallConditions')
+      this.setAccountProperty({
+        ACCEPT_DIALER_TERMS: null
+      }).then(() => this.setAccountProperty({
+        REJECT_DIALER_TERMS: this.$moment().toISOString()
+      }))
     },
 
-    call() {
-      const text = 'Todas as ligações realizadas pela plataforma são gravadas e são disponibilizadas para os participantes da disputa e para os administradores dos times.<br><br>Você entende e concorda que a JUSTTO grave todas suas ligações com as partes da disputa para auditorias futuras da negociação?'
+    validateCallTerms() {
+      const text = 'Todas as ligações realizadas pela plataforma são gravadas e são disponibilizadas para os participantes da disputa e para os administradores dos times.<br><br>Você entende e concorda que a JUSTTO grave todas as suas ligações com as partes da disputa para auditorias futuras da negociação?'
 
-      this.$confirm(text, 'Iniciando ligação', {
+      return this.$confirm(text, 'Iniciando ligação', {
         dangerouslyUseHTMLString: true,
         confirmButtonText: 'Sim',
         cancelButtonText: 'Não',
+        showClose: false,
         center: true
       }).then(() => {
         this.acceptedCallConditions()
-        this.loading = true
-
-        this.createNewCall(`+55${this.number}`).then(callInfo => {
-          this.$jusSegment('ligação', {
-            numebr: this.number,
-            ...callInfo
-          })
-        }).catch(() => {
-          this.deleteCurrentCall()
-        }).finally(() => {
-          this.loading = false
-        })
+        this.startCall()
       }).catch(() => this.rejectedCallConditions())
+    },
+
+    revalidateCallTerms() {
+      const rejectDate = this.$moment(this.preferences.properties.REJECT_DIALER_TERMS).format('DD/MM/YYYY')
+      const text = `Não é possível realizar ligações porque em ${rejectDate} você não concordou em ter suas conversas gravadas e o sistema não oferece ligações sem monitoramento.`
+
+      return this.$confirm(text, 'Ops! Você não pode fazer ligações.', {
+        confirmButtonText: 'Ok, entendo',
+        cancelButtonText: 'Quero aceitar',
+        showClose: false,
+        center: true
+      })
+    },
+
+    call() {
+      if (!this.hasAcceptTerms && !this.hasNotAcceptTerms) {
+        this.validateCallTerms()
+      } else if (this.hasNotAcceptTerms) {
+        this.revalidateCallTerms().then(this.close).catch(() => {
+          this.validateCallTerms()
+        })
+      } else if (this.hasAcceptTerms) {
+        this.startCall()
+      }
+    },
+
+    startCall() {
+      this.loading = true
+
+      this.createNewCall(`+55${this.number}`).then(callInfo => {
+        this.$jusSegment('ligação', {
+          numebr: this.number,
+          ...callInfo
+        })
+      }).catch(() => {
+        this.deleteCurrentCall()
+      }).finally(() => {
+        this.loading = false
+      })
     },
 
     shutdownCall() {
@@ -361,15 +405,14 @@ export default {
           this.clearCurrentCall()
           break
         default:
-          console.log(e)
+          if (process.env.NODE_ENV === 'development') {
+            console.log(e)
+          }
           break
       }
     },
 
     close() {
-      // if (this.sipStack) {
-      //   this.sipStack.stop()
-      // }
       this.visible = false
     }
   }

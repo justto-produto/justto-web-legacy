@@ -280,7 +280,6 @@ export default {
         iconClass: 'el-icon-message-solid',
         onClick: () => this.openMention(mention)
       })
-      // console.log('notifyMention', mention)
     }
   }
 }

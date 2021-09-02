@@ -56,9 +56,7 @@ const actionsNotifications = {
     })
   },
 
-  SOCKET_ADD_NOTIFICATIONS({ _ }, notification) {
-    console.log('SOCKET_ADD_NOTIFICATIONS', notification)
-  },
+  SOCKET_ADD_NOTIFICATIONS({ _ }, notification) {},
 
   SOCKET_NOTIFY_MENTION_SUMMARY({ dispatch }, _mention) {
     dispatch('getMentionsSummary')

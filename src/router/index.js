@@ -277,10 +277,6 @@ router.beforeEach((to, from, next) => {
             }
           }
         }
-        // else if (to.name === 'redirect' && from.name === 'ticket') {
-        //   console.log(to, from)
-        // }
-
         if (from.name === 'ticket' && from.params?.id) {
           eventBus.$emit(events.TICKET_WEB_SOCKET_DISCONNECT.callback, 'unsubscribe', from?.params?.id)
         }
@@ -294,7 +290,6 @@ router.beforeEach((to, from, next) => {
         } else next('onboarding')
       }
     } else {
-      console.log(from)
       next('login')
     }
   } else if (from.query.token) next(false)
