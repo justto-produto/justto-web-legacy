@@ -252,18 +252,22 @@
       <div class="jus-import-feedback-card__switch">
         <i class="el-icon-circle-check el-input__icon--success" />
         <div class="content">
-          <div>Não enriquecer disputas automaticamente <strong>(Atenção: informação importante)</strong></div>
+          <div>Enriquecer disputas automaticamente <strong>(Atenção: informação importante)</strong></div>
           <p>
-            Deixando <b>selecionada</b> esta opção, os dados das partes como email, telefone e OAB, <b>não serão enriquecidos automaticamente</b>.
+            Deixando <b>selecionada</b> esta opção, os dados das partes como email, telefone e OAB, <b>serão enriquecidos automaticamente</b>.
             <br>
             Esta opção é efetivada <b>somente mediante solicitação do usuário</b>, sendo a ação de sua total responsabilidade.
             <br>
             Coletamos os dados a fim exclusivamente de enriquecer a disputa e não somos detentores de tais informações.
             <br>
-            Ao ativar você está de acordo com o nosso termo de uso.
+            Ao ativar você está de acordo com os nossos
+            <a
+              href="http://https://justto.com.br/termos-de-uso"
+              target="_blank"
+            >termos de uso</a>.
           </p>
         </div>
-        <el-switch v-model="skipEnrichment" />
+        <el-switch v-model="enrichDisputes" />
       </div>
     </el-card>
 
@@ -314,7 +318,8 @@ export default {
       contactPartyWhenNoLowyer: false,
       alwaysContactParty: false,
       contactPartyWhenInvalidLowyer: false,
-      skipEnrichment: false,
+      skipEnrichment: true,
+      enrichDisputes: true,
       denySavingDeposit: false,
       datePickerOptions: {
         disabledDate(date) {
@@ -381,6 +386,11 @@ export default {
     contactPartyWhenInvalidLowyer(value) {
       this.mappedCampaign.contactPartyWhenInvalidLowyer = value
     },
+
+    enrichDisputes(enrich) {
+      this.mappedCampaign.skipEnrichment = !enrich
+    },
+
     skipEnrichment(value) {
       this.mappedCampaign.skipEnrichment = value
     },
