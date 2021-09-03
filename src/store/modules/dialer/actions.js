@@ -12,7 +12,9 @@ const dialerActions = {
     const DialerComponent = document.getElementsByClassName('dialer')[0]?.__vue__
 
     if (canAccessDialer && [0, 10, 11].includes(number.length)) {
-      DialerComponent.open([0, 11].includes(number.length) ? number : `${number.slice(0, 2)}9${number.slice(2)}`)
+      DialerComponent.close().then(() => {
+        DialerComponent.open([0, 11].includes(number.length) ? number : `${number.slice(0, 2)}9${number.slice(2)}`)
+      })
     } else {
       DialerComponent.$jusNotification({
         title: 'Ops!',

@@ -197,7 +197,15 @@ export default {
     },
 
     callNumber() {
-      const number = this.value.split('55').slice(-1)[0]
+      let number
+
+      if (this.vModel.startsWith('55')) {
+        number = this.vModel.slice(2)
+      } else if (this.vModel.startsWith('55')) {
+        number = this.vModel.slice(3)
+      } else {
+        number = this.vModel
+      }
 
       this.openDialer(number)
       this.$emit('call', number)

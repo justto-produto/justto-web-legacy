@@ -413,7 +413,10 @@ export default {
     },
 
     close() {
-      this.visible = false
+      return new Promise((resolve) => {
+        this.visible = false
+        resolve()
+      })
     }
   }
 }
