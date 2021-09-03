@@ -911,10 +911,10 @@ export default {
     getModels() {
       this.loading = true
       this.getDocumentModels().then(models => {
-        this.models = models
-        const isUnique = models.length && models.length === 1
+        this.models = models.filter(({ archived }) => !archived)
+        const isUnique = this.models.length && this.models.length === 1
         if (isUnique) {
-          this.selectModel(models[0].id, isUnique)
+          this.selectModel(this.models[0].id, isUnique)
         }
       }).catch(error => {
         this.visible = false
