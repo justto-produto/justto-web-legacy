@@ -59,7 +59,7 @@
         <div class="usermenu-container__version">
           Versão {{ appVersion }}
         </div>
-        <!-- <a
+        <a
           v-if="canAccessDialer"
           href="#"
           @click.prevent="openDialer('')"
@@ -67,7 +67,7 @@
           <el-dropdown-item>
             Discador
           </el-dropdown-item>
-        </a> -->
+        </a>
         <router-link
           v-if="showConfigs"
           to="/configurations"
