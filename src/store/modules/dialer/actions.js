@@ -30,7 +30,7 @@ const dialerActions = {
       method: 'POST',
       mutation: 'setLoggedToken',
       data: loginRequest
-    })
+    }, dialerAdapter)
   },
 
   loadVoiceServer({ state, commit }) {

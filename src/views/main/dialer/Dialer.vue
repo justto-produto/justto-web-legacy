@@ -21,7 +21,7 @@
         :class="{'without-border': !bodyVisible}"
       >
         <div class="dialer__container-title-text">
-          Discador
+          {{ !currentCall ? 'Discador' : 'Em ligação' }}
         </div>
 
         <div class="dialer__container-title-actions">
