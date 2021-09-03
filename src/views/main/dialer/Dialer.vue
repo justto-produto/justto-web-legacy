@@ -165,6 +165,16 @@
           </div>
         </div>
       </div>
+
+      <div class="dialer__container-footer">
+        <p
+          v-if="!!currentCall"
+          class="dialer__container-footer-alert"
+        >
+          <sup>*</sup>
+          Esta ligação está sendo gravada.
+        </p>
+      </div>
     </div>
   </article>
 </template>
@@ -320,6 +330,8 @@ export default {
     },
 
     acceptedCallConditions() {
+      this.loading = true
+
       this.setAccountProperty({
         ACCEPT_DIALER_TERMS: this.$moment().toISOString()
       }).then(() => this.setAccountProperty({
@@ -328,11 +340,15 @@ export default {
     },
 
     rejectedCallConditions() {
+      this.loading = true
+
       this.setAccountProperty({
         ACCEPT_DIALER_TERMS: null
       }).then(() => this.setAccountProperty({
         REJECT_DIALER_TERMS: this.$moment().toISOString()
-      }))
+      })).finally(() => {
+        this.close()
+      })
     },
 
     validateCallTerms() {
@@ -414,6 +430,7 @@ export default {
 
     close() {
       return new Promise((resolve) => {
+        this.loading = false
         this.visible = false
         resolve()
       })
@@ -430,7 +447,7 @@ export default {
     position: absolute;
     z-index: 100 !important;
 
-    width: 200px;
+    width: 250px;
 
     background-color: white;
     border: solid $--color-primary 2px;
@@ -502,6 +519,17 @@ export default {
           .el-button {
             min-width: 48px;
           }
+        }
+      }
+    }
+
+    .dialer__container-footer {
+      .dialer__container-footer-alert {
+        font-size: 12px;
+        text-align: center;
+
+        sup {
+          color: $--color-danger;
         }
       }
     }
