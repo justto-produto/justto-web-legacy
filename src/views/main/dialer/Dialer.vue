@@ -356,6 +356,7 @@ export default {
 
       return this.$confirm(text, 'Iniciando ligação', {
         dangerouslyUseHTMLString: true,
+        closeOnClickModal: false,
         confirmButtonText: 'Sim',
         cancelButtonText: 'Não',
         showClose: false,
@@ -373,6 +374,8 @@ export default {
       return this.$confirm(text, 'Ops! Você não pode fazer ligações.', {
         confirmButtonText: 'Ok, entendo',
         cancelButtonText: 'Quero aceitar',
+        closeOnPressEscape: false,
+        closeOnClickModal: false,
         showClose: false,
         center: true
       })
