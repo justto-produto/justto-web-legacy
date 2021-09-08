@@ -315,8 +315,10 @@ export default {
       }))
     },
 
-    ckeditorFocus() {
-      if (this.editorInstance) {
+    ckeditorFocus(editorInstance) {
+      if (editorInstance) {
+        editorInstance.$_instance.editing.view.focus()
+      } else if (this.editorInstance) {
         this.editorInstance.$_instance.editing.view.focus()
       }
     }

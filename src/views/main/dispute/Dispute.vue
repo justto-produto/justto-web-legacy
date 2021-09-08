@@ -240,7 +240,7 @@
                   <div
                     v-if="validName"
                     :class="{ 'show-toolbar small-container': ['email', 'negotiation'].includes(messageType)}"
-                    class="dispute-view__quill"
+                    class="dispute-view__quill jus-ckeditor__parent"
                   >
                     <!-- placement="top" -->
                     <el-popover
@@ -273,11 +273,26 @@
                     </el-popover>
 
                     <!-- placement="top" -->
-                    <quill-editor
+                    <!-- <quill-editor
                       ref="messageEditor"
                       :options="editorOptions"
                       data-testid="email-editor"
                       @focus="$refs.disputeOverview.overviewTab = 'roles'"
+                    /> -->
+                    <ckeditor
+                      v-if="!hasWhatsAppContactSelect"
+                      ref="messageEditor"
+                      v-model="messageText"
+                      :editor="editor"
+                      :config="editorConfig"
+                      class="dispute-view__quill-note"
+                      type="classic"
+                    />
+                    <el-input
+                      v-else
+                      v-model="messageText"
+                      type="textarea"
+                      placeholder="Escreva alguma coisa"
                     />
                     <el-dialog
                       :visible.sync="editTemplateQuickReply.visible"
@@ -294,6 +309,7 @@
                       />
                     </el-dialog>
                   </div>
+
                   <div class="dispute-view__send-message-actions">
                     <el-tooltip
                       v-if="!validName"
@@ -344,6 +360,7 @@
                   </div>
                 </el-card>
               </el-tab-pane>
+
               <el-tab-pane
                 v-loading="loadingTextarea"
                 label="Notas"
@@ -353,12 +370,23 @@
                   shadow="always"
                   class="dispute-view__send-message-box"
                 >
-                  <div class="dispute-view__quill">
-                    <quill-editor
+                  <div class="dispute-view__quill jus-ckeditor__parent jus-ckeditor-note">
+                    <el-button
+                      class="jus-ckeditor-note__marker-btn"
+                      type="primary"
+                      icon="el-icon-document-add"
+                      size="mini"
+                      @click="focusOnEditor()"
+                    >
+                      NOTA
+                    </el-button>
+                    <ckeditor
                       ref="noteEditor"
-                      :options="editorOptions"
+                      v-model="noteText"
+                      :editor="editor"
+                      :config="editorConfig"
                       class="dispute-view__quill-note"
-                      data-testid="input-note"
+                      type="classic"
                     />
                   </div>
                   <div class="dispute-view__send-message-actions note">
@@ -373,6 +401,7 @@
                   </div>
                 </el-card>
               </el-tab-pane>
+
               <el-tab-pane
                 label="Ocorrências"
                 name="3"
@@ -407,22 +436,13 @@
 import { isSimilarStrings, eventBus } from '@/utils'
 import { mapGetters, mapActions } from 'vuex'
 import { JusDragArea } from '@/components/JusDragArea'
-import { quillEditor } from 'vue-quill-editor'
+import ckeditor from '@/utils/mixins/ckeditor'
 
 import events from '@/constants/negotiationEvents'
 
-import 'quill/dist/quill.core.css'
-import 'quill/dist/quill.snow.css'
-import 'quill/dist/quill.bubble.css'
-
-import Quill from 'quill'
-const SizeStyle = Quill.import('attributors/style/size')
-const AlignStyle = Quill.import('attributors/style/align')
-Quill.register(AlignStyle, true)
-Quill.register(SizeStyle, true)
-
 export default {
   name: 'Dispute',
+
   components: {
     DisputeOccurrences: () => import('./partials/DisputeOccurrences'),
     DisputeNotes: () => import('./partials/DisputeNotes'),
@@ -433,9 +453,10 @@ export default {
     VueDraggableResizable: () => import('vue-draggable-resizable'),
     DisputeQuickReplyEditor: () => import('@/components/layouts/DisuteQuickReplyEditor'),
     ExpiredDisputeAlert: () => import('@/components/dialogs/ExpiredDisputeAlert'),
-    JusDragArea,
-    quillEditor
+    JusDragArea
   },
+
+  mixins: [ckeditor],
 
   data() {
     return {
@@ -474,9 +495,12 @@ export default {
           ]
         }
       },
+      noteText: '',
+      messageText: '',
       isDeletingRole: false,
       deletingRoleText: 'Por favor, aguarde enquanto carregamos a disputa...',
-      inReplyTo: null
+      inReplyTo: null,
+      useMentionPlugin: true
     }
   },
 
@@ -505,6 +529,7 @@ export default {
           return '50px'
       }
     },
+
     validName() {
       if (this.$store.getters.loggedPersonName && this.$store.getters.loggedPersonName !== this.$store.state.accountModule.email) {
         return true
@@ -516,35 +541,44 @@ export default {
 
       return null
     },
+
     dispute() {
       return this.$store.getters.dispute
     },
+
     isPaused() {
       return this.dispute ? this.dispute.paused : false
     },
+
     isPreNegotiation() {
       return this.dispute.status === 'PRE_NEGOTIATION'
     },
+
     isCanceled() {
       return this.dispute?.status === 'CANCELED'
     },
+
     loadingText() {
       if (this.isPaused || this.isCanceled) {
         return `Disputa ${this.isPaused ? 'pausada' : 'cancelada'}. Retome a disputa para enviar mensagens`
       } else return 'Disputa em pré negociação. Inicie a disputa para enviar mensagens'
     },
+
     isFavorite() {
       return this.dispute ? this.dispute.favorite : false
     },
+
     socketHeaders() {
       return {
         Authorization: this.$store.getters.accountToken,
         Workspace: this.$store.getters.workspaceSubdomain
       }
     },
+
     recentMessages() {
       return this.$store.getters.messageRecentMessages
     },
+
     selectedContacts() {
       if (this.directContactAddress.length) {
         return this.directContactAddress.map(contact => ({ id: 0, address: contact }))
@@ -558,6 +592,13 @@ export default {
           return []
       }
     },
+
+    hasWhatsAppContactSelect() {
+      return this.selectedContacts.some(contact => {
+        return Object.keys(contact).includes('number')
+      }) || this.messageType === 'whatsapp'
+    },
+
     invalidReceiver() {
       switch (this.messageType) {
         case 'email':
@@ -643,9 +684,9 @@ export default {
 
     focusOnEditor() {
       if (this.typingTab === '1' && this.$refs.messageEditor) {
-        this.$refs.messageEditor.quill.focus()
+        this.ckeditorFocus(this.$refs.messageEditor)
       } else if (this.typingTab === '2' && this.$refs.messageEditor) {
-        this.$refs.noteEditor.quill.focus()
+        this.ckeditorFocus(this.$refs.noteEditor)
       } else if (this.typingTab === '3') {
         this.typingTab = '1'
         this.$nextTick(this.focusOnEditor)
@@ -731,7 +772,7 @@ export default {
       this.setMessageType(messageType)
       if (['email'].includes(messageType)) {
         const { quill } = this.$refs.messageEditor
-        const peviewText = quill.getText()
+        const peviewText = this.messageText
         const peviewResume = ''
         quill.setContents([
           { insert: peviewText },
@@ -748,7 +789,7 @@ export default {
       this.messageType = ''
       this.messageType = type
       this.handleTabClick({ name: '1' })
-      this.$nextTick(() => this.$refs.messageEditor.quill.focus())
+      this.$nextTick(() => this.ckeditorFocus(this.$refs.messageEditor))
     },
 
     updateActiveRole(params) {
@@ -867,7 +908,7 @@ export default {
     },
 
     validateSendMessage() {
-      if (!this.$refs.messageEditor.quill.getText().trim()) {
+      if (!this.messageText.trim()) {
         return new Promise((resolve, reject) => reject(Error()))
       } else if (['EXPIRED'].includes(this.dispute.status)) {
         return this.$refs.expiredDisputeAlert.open()
@@ -892,13 +933,13 @@ export default {
           this.sendNegotiator({
             disputeId: this.id,
             data: {
-              message: this.$refs.messageEditor.quill.getText(),
+              message: this.messageText,
               roleId: role.id,
               email: to[0] || ''
             }
           }).then(() => {
             setTimeout(function() {
-              this.$refs.messageEditor.quill.deleteText(0, 9999999999)
+              this.messageText = ''
             }.bind(this), 200)
             this.$jusNotification({
               title: 'Yay!',
@@ -913,8 +954,7 @@ export default {
           return
         }
 
-        const quillMessage = this.messageType === 'email'
-          ? this.$refs.messageEditor.quill.container.firstChild.innerHTML : this.$refs.messageEditor.quill.getText()
+        const quillMessage = this.messageText
         if (this.selectedContacts.map(c => c.id).length) {
           this.loadingTextarea = true
           this.verifyWhatsappMessage(quillMessage).then(() => {
@@ -933,7 +973,7 @@ export default {
             const inReplyTo = this.inReplyTo
             for (const contact of this.selectedContacts) {
               this.addLoadingOccurrence({
-                message: this.$refs.messageEditor.quill.getText(),
+                message: this.messageText,
                 type: this.messageType,
                 receiver: this.messageType === 'email' ? contact.address : contact.phone,
                 externalIdentification
@@ -961,7 +1001,7 @@ export default {
                 type: 'success'
               })
               setTimeout(function() {
-                this.$refs.messageEditor.quill.deleteText(0, 9999999999)
+                this.messageText = ''
               }.bind(this), 200)
             }).catch(error => {
               this.$jusNotification({ error })
@@ -990,7 +1030,7 @@ export default {
     },
 
     sendNote() {
-      const note = this.$refs.noteEditor.quill.getText()
+      const note = this.noteText
       if (note.trim()) {
         this.loadingTextarea = true
         this.$store.dispatch('sendDisputeNote', {
@@ -999,7 +1039,7 @@ export default {
         }).then(() => {
           // SEGMENT TRACK
           this.$jusSegment('Nova nota salva')
-          this.$refs.noteEditor.quill.deleteText(0, 9999999999)
+          this.noteText = ''
           this.$jusNotification({
             title: 'Yay!',
             message: 'Nota gravada com sucesso.',
@@ -1069,6 +1109,70 @@ export default {
     .el-tabs__content, .dispute-view__send-message-box, .ql-container {
       height: calc(100% - 30px);
     }
+
+    .dispute-view__send-message-box {
+      .el-card__body {
+        padding-bottom: 0;
+        min-height: 20vh;
+
+        .jus-ckeditor__parent {
+          margin: -10px;
+
+          .ck-editor {
+            border: none !important;
+          }
+
+          .el-textarea {
+            .el-textarea__inner {
+              min-height: 20vh;
+              border: none;
+            }
+          }
+
+          &.jus-ckeditor-note {
+            margin: -10px;
+            height: 20vh;
+            background-color: #F4EFFE !important;
+
+            .ck-editor {
+              .ck-editor__top {
+                background: white;
+              }
+
+              .ck-editor__editable {
+                background-color: #F4EFFE !important;
+                color: #9461F7;
+                text-indent: 88px;
+              }
+            }
+
+            .jus-ckeditor-note__marker-btn {
+              position: absolute;
+              z-index: 1;
+              margin: 44px 0 0 4px;
+              cursor: default;
+            }
+          }
+        }
+
+        .dispute-view__send-message-actions {
+          z-index: 0;
+
+          div > span > .el-button {
+            z-index: 5;
+          }
+
+          &.note {
+            background: transparent;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            margin: 0 16px 16px 0;
+          }
+        }
+      }
+    }
+
     .ql-container {
       margin-bottom: 10px;
     }
@@ -1133,8 +1237,9 @@ export default {
     .dispute-view__attach {
       position: absolute;
       top: 10px;
-      left: 348px;
+      left: 480px;
       cursor: pointer;
+      z-index: 1;
 
       .el-icon-paperclip {
         font-size: 18px;
@@ -1207,6 +1312,7 @@ export default {
     align-items: flex-end;
     &.note {
       justify-content: flex-end;
+      z-index: 0;
     }
   }
   &__disabled-text {

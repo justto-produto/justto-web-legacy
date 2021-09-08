@@ -47,7 +47,7 @@
                 <jus-avatar-user
                   :name="occurrence.sender"
                   :src="buildAvatar(occurrence)"
-                  :purple="occurrence(occurrence)"
+                  :purple="buildColor(occurrence)"
                   shape="circle"
                   size="sm"
                 />
