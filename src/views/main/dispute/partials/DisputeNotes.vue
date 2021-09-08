@@ -99,12 +99,14 @@ import { mapActions, mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'DisputeNotes',
+
   props: {
     disputeId: {
       type: String,
       default: ''
     }
   },
+
   data() {
     return {
       noteLoading: 0,
@@ -113,12 +115,14 @@ export default {
       newNoteContent: ''
     }
   },
+
   computed: {
     ...mapGetters([
       'loading',
       'occurrences'
     ])
   },
+
   watch: {
     disputeId() {
       if (this.disputeId) {
@@ -126,11 +130,14 @@ export default {
       }
     }
   },
+
   mounted() {
     this.init()
   },
+
   methods: {
     ...mapActions(['getDisputeNotes']),
+
     ...mapMutations(['clearDisputeOccurrences']),
 
     init() {
@@ -143,21 +150,30 @@ export default {
     splitModified(description) {
       return description.split(' modificou uma nota. ')
     },
+
     splitNew(description) {
       return description.split(' adicionou uma nota. ')
     },
+
     buildContent(occurrence) {
       if (occurrence.updateAt) {
         return this.splitModified(occurrence.description)[1].replace(/\n/g, '<br />')
       }
       return this.splitNew(occurrence.description)[1].replace(/\n/g, '<br />')
     },
+
     buildSender(occurrence) {
-      if (occurrence.updateAt) {
+      if (occurrence?.properties?.UPDATED_BY) {
+        return `Modificado por ${this.$options.filters.resumedName(occurrence.properties.UPDATED_BY)}`
+      } else if (occurrence?.properties?.CREATED_BY) {
+        return `Adicionado por ${this.$options.filters.resumedName(occurrence.properties.CREATED_BY)}`
+      } else if (occurrence.updateAt) {
         return 'Modificado por ' + this.splitModified(occurrence.description)[0]
+      } else {
+        return 'Adicionado por ' + this.splitNew(occurrence.description)[0]
       }
-      return 'Adicionado por ' + this.splitNew(occurrence.description)[0]
     },
+
     buildHour(occurrence) {
       if (occurrence.updateAt) {
         return this.$moment(occurrence.updateAt.dateTime).format('DD/MM/YY [às] HH:mm')
