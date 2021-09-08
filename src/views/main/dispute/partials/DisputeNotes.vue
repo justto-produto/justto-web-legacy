@@ -236,33 +236,35 @@ export default {
 </script>
 
 <style lang="scss">
-.dispute-view-occurrences__card-box {
-  position: relative;
+.dispute-view-occurrences__note {
+  .dispute-view-occurrences__card-box {
+    position: relative;
 
-  .dispute-view-occurrences__card--note {
-    .el-card__header {
-      .dispute-view-occurrences__card--note-header {
-        font-weight: normal;
-        text-transform: lowercase;
-        display: flex;
-        justify-content: space-between;
+    .dispute-view-occurrences__card--note {
+      .el-card__header {
+        .dispute-view-occurrences__card--note-header {
+          font-weight: normal;
+          text-transform: lowercase;
+          display: flex;
+          justify-content: space-between;
 
-        span {
-          margin: 0;
+          span {
+            margin: 0;
+          }
         }
+      }
+
+      .el-card__body {
+        padding-bottom: 24px !important;
       }
     }
 
-    .el-card__body {
-      padding-bottom: 24px !important;
+    .OUTBOUND.dispute-view-occurrences__card-info {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      margin-bottom: 4px;
     }
-  }
-
-  .OUTBOUND.dispute-view-occurrences__card-info {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    margin-bottom: 4px;
   }
 }
 
