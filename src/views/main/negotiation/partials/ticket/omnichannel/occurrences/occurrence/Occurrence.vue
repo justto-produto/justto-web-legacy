@@ -14,11 +14,13 @@
 <script>
 export default {
   name: 'Occurrence',
+
   components: {
     LOG: () => import('./log/Log'),
     NOTE: () => import('./note/Note'),
     INTERACTION: () => import('./interaction/Interaction')
   },
+
   props: {
     value: {
       type: Object,
@@ -29,15 +31,18 @@ export default {
       default: () => ({})
     }
   },
+
   data: () => ({
     summaryTypes: ['EMAIL', 'WHATSAPP', 'SMS']
   }),
+
   computed: {
     occurrence: {
       get() {
         return this.value
       }
     },
+
     component() {
       const mapType = {
         NOTE: ['NOTE'],

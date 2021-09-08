@@ -34,7 +34,7 @@ const overviewGetters = {
   getticketOverviewStatus: ({ ticketOverview }) => ticketOverview.status || '',
   AssociatedContactsPropertie: ({ haveAssociatedContacts }) => haveAssociatedContacts,
   showAssociatedContacts: ({ haveAssociatedContacts }) => (!!haveAssociatedContacts && ['NAO'].includes(haveAssociatedContacts)),
-  getTicketOverviewNegotiators: ({ ticketOverviewParties }) => ticketOverviewParties.filter(({ roles }) => roles.includes('NEGOTIATOR'))
+  getTicketOverviewNegotiators: ({ ticketOverviewParties = [] }) => ticketOverviewParties.filter(({ roles }) => roles.includes('NEGOTIATOR'))
 }
 
 export default overviewGetters

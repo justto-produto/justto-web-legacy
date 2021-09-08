@@ -3,7 +3,21 @@
     class="interaction-container"
     :class="`${interaction.direction} ${type}`"
   >
-    <!-- class="interaction-container__balloon" -->
+    <el-tooltip
+      placement="top-end"
+      :open-delay="500"
+    >
+      <div
+        slot="content"
+        style="text-align: center;"
+        v-html="avatarProps.name"
+      />
+      <JusAvatarUser
+        v-if="showAvatar"
+        v-bind="avatarProps"
+      />
+    </el-tooltip>
+
     <div
       :class="`${interaction.direction} ${!flat ? 'interaction-container__balloon' : ''}`"
     >
@@ -15,6 +29,7 @@
         />
       </div>
     </div>
+
     <span
       v-if="showReply && !flat"
       :class="{ 'active-icon': isInRecipients }"
@@ -63,6 +78,7 @@ export default {
     NPS: () => import('./partials/Nps'),
     WarningLGPD: () => import('@/components/dialogs/WarningLGPD')
   },
+
   props: {
     value: {
       type: Object,
@@ -81,7 +97,11 @@ export default {
     ...mapGetters({
       recipients: 'getEditorRecipients',
       flat: 'getExportTicketModalVisible',
-      lastInteraction: 'disputeLastInteractions'
+      lastInteraction: 'disputeLastInteractions',
+      with: 'getWindowWidth',
+      isJusttoAdmin: 'isJusttoAdmin',
+      isAdminProfile: 'isAdminProfile',
+      negotiators: 'getTicketOverviewNegotiators'
     }),
 
     type() {
@@ -132,12 +152,41 @@ export default {
       return this.interaction.direction === 'INBOUND'
     },
 
+    showAvatar() {
+      // TODO: Critérios de aceite: https://justto.atlassian.net/browse/SAAS-4454
+
+      return this.isJusttineMessage || (
+        !this.isInboundInteraction &&
+        (this.isJusttoAdmin || this.isAdminProfile || this.negotiators.length > 1)
+      )
+    },
+
     avatarProps() {
-      return {
-        name: this.personName,
-        size: 'md',
-        purple: this.isInboundInteraction && this.type !== 'MANUAL'
+      if (this.isJusttineMessage) {
+        const justtineMessage = `
+        Sou JUSTTINE, sua assistente virtual<br>
+        Enviei esta mensagem para você, ok?<br>
+        Criei ela a partir da estratégia que você definiu na disputa.`
+
+        return {
+          name: justtineMessage,
+          src: require('@/assets/justtine/profile.png'),
+          size: this.with < 1400 ? 'sm' : 'md'
+        }
+      } else {
+        return {
+          name: this.personName || this.interaction.createdBy,
+          size: this.with < 1400 ? 'sm' : 'md',
+          purple: this.isInboundInteraction && this.type !== 'MANUAL'
+        }
       }
+    },
+
+    isJusttineMessage() {
+      return ['EMAIL', 'WHATSAPP', 'SMS'].includes(this.interaction?.message?.communicationType) &&
+      this.interaction?.message?.status !== 'PROCESSED_BY_USER' &&
+      this.interaction?.message?.createdBy === 'system' &&
+      this.interaction?.direction === 'OUTBOUND'
     },
 
     showReply() {
@@ -210,7 +259,7 @@ export default {
   align-items: center;
 
   height: auto;
-  margin: 10px 24px 0px 24px;
+  margin: 10px 0px 0px 24px;
 
   &.INBOUND {
     flex-direction: row;
@@ -228,6 +277,10 @@ export default {
 
   &.MANUAL {
     flex-direction: row-reverse;
+  }
+
+  .jus-avatar-user {
+    align-self: baseline;
   }
 
   .interaction-container__balloon {
