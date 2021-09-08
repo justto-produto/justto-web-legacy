@@ -171,12 +171,12 @@ export default {
         return {
           name: justtineMessage,
           src: require('@/assets/justtine/profile.png'),
-          size: this.with < 1400 ? 'sm' : 'md'
+          size: 'sm'
         }
       } else {
         return {
           name: this.personName || this.interaction.createdBy,
-          size: this.with < 1400 ? 'sm' : 'md',
+          size: 'sm',
           purple: this.isInboundInteraction && this.type !== 'MANUAL'
         }
       }
