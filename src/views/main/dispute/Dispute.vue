@@ -672,14 +672,15 @@ export default {
 
   methods: {
     ...mapActions([
+      'setHeight',
+      'sendNegotiator',
+      'getDisputeNotes',
       'getDisputeStatuses',
       'getLastInteractions',
       'disputeSetVisualized',
       'getQuickReplyTemplates',
       'resetQuickReplyTemplate',
-      'archiveQuickReplyTemplate',
-      'sendNegotiator',
-      'setHeight'
+      'archiveQuickReplyTemplate'
     ]),
 
     focusOnEditor() {
@@ -1045,6 +1046,7 @@ export default {
           this.$jusNotification({ error })
         }).finally(() => {
           this.loadingTextarea = false
+          this.getDisputeNotes(Number(this.$route.params.id))
         })
       }
     },

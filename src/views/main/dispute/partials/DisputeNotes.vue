@@ -157,9 +157,9 @@ export default {
 
     buildContent(occurrence) {
       if (occurrence.updateAt) {
-        return this.splitModified(occurrence.description)[1].replace(/\n/g, '<br />')
+        return this.splitModified(occurrence.description).slice(-1)[0].replace(/\n/g, '<br />')
       }
-      return this.splitNew(occurrence.description)[1].replace(/\n/g, '<br />')
+      return this.splitNew(occurrence.description).slice(-1)[0].replace(/\n/g, '<br />')
     },
 
     buildSender(occurrence) {
