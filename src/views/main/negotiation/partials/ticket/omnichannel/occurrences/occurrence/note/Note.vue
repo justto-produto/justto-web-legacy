@@ -91,7 +91,7 @@ export default {
     },
 
     description() {
-      return this.text || this.value.description.split('adicionou uma nota.').slice(-1)[0].trim() + '<span style="display: inline-block; width: 36px" />'
+      return this.text || this.value.description.split('uma nota.').slice(-1)[0].trim() + '<span style="display: inline-block; width: 36px" />'
     }
   },
   updated() {
