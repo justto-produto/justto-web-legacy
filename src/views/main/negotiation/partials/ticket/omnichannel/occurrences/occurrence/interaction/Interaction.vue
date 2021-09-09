@@ -140,11 +140,14 @@ export default {
         return this.interaction?.properties?.USER
       }
 
-      if (this.interaction?.properties?.PERSON_NAME) {
+      if (this.interaction?.message?.parameters?.SENDER_NAME) {
+        return this.interaction?.message?.parameters?.SENDER_NAME
+      } else if (this.interaction?.message?.parameters?.SENDER_EMAIL) {
+        return this.interaction?.message?.parameters?.SENDER_EMAIL
+      } else if (this.interaction?.properties?.PERSON_NAME) {
         return this.interaction.properties.PERSON_NAME
-      } else if (this.interaction?.message?.parameters?.SENDER_NAME) {
-        return this.interaction.message.parameters.SENDER_NAME
       }
+
       return ''
     },
 
