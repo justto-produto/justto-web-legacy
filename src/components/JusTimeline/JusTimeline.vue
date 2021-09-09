@@ -74,6 +74,7 @@
             <description
               class="jus-timeline__header-subtitle"
               :lawsuit-dispute="process"
+              @add:part="$emit('update:contact', $event)"
             />
             <div class="jus-timeline__header-tags">
               <el-tag

@@ -189,6 +189,7 @@
 import { mapActions } from 'vuex'
 export default {
   name: 'AssociateContactsModal',
+
   props: {
     value: {
       required: true,
@@ -212,6 +213,7 @@ export default {
       default: () => []
     }
   },
+
   data() {
     return {
       loading: false,
@@ -219,6 +221,7 @@ export default {
       phones: []
     }
   },
+
   computed: {
     disputeRoles() {
       return (this.parties).filter(({ party, polarity, roles }) => {
@@ -241,17 +244,21 @@ export default {
       return (phones + email) > 0
     }
   },
+
   watch: {
     metadata() {
       this.update()
     }
   },
+
   mounted() {
     this.update()
   },
+
   beforeDestroy() {
     this.loading = false
   },
+
   methods: {
     ...mapActions([
       'addPhoneToDisputeRole',
@@ -330,6 +337,10 @@ export default {
       Promise.all(promisses).then(() => {
         this.loading = false
       }).finally(() => {
+        if (promisses.length > 0) {
+          // TODO: Validar como reengajar mais de um contato.
+          // this.$emit('update:contacts', { disputeRoleId: associateWith })
+        }
         this.$emit('input', 'SIM')
       })
     }

@@ -427,15 +427,10 @@ const disputeActions = {
         })
     })
   },
-  restartDisputeRoleEngagement({ commit }, params) {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.patch(`${disputesPath}/${params.disputeId}/restart-engagement/${params.disputeRoleId}`)
-        .then(response => {
-          resolve(response.data)
-        }).catch(error => {
-          reject(error)
-        })
+  restartDisputeRoleEngagement({ _ }, { disputeId, disputeRoleId }) {
+    return axiosDispatch({
+      url: `${disputesPath}/${disputeId}/restart-engagement/${disputeRoleId}`,
+      method: 'patch'
     })
   },
   restartEngagementByContact({ commit }, params) {

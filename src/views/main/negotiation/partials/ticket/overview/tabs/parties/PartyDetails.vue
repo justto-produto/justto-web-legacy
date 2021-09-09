@@ -313,6 +313,7 @@ import { isValid, strip } from '@fnando/cpf'
 
 import brazilianStates from '@/constants/brazilianStates'
 
+import restartEngagement from '@/utils/mixins/restartEngagement'
 import preNegotiation from '@/utils/mixins/ticketPreNegotiation'
 import TicketTicketOverviewPartyResumed from '@/models/negotiations/overview/TicketOverviewPartyResumed'
 
@@ -333,7 +334,7 @@ export default {
     JusEditRole: () => import('@/components/dialogs/JusEditRole')
   },
 
-  mixins: [preNegotiation],
+  mixins: [preNegotiation, restartEngagement],
 
   props: {
     party: {

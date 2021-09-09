@@ -529,19 +529,19 @@
         class="dialog-actions__ticket-resume-infoline"
       >
         <b>Réu(s): </b>
-        <span>{{ respondentsResume.toUpperCase() || ' - ' }}</span>
+        <span>{{ (respondentsResume || ' - ') | uppercase }}</span>
       </p>
       <p
         class="dialog-actions__ticket-resume-infoline"
       >
         <b>Autor(es): </b>
-        <span>{{ authorsResume.toUpperCase() || ' - ' }}</span>
+        <span>{{ authorsResume | uppercase }}</span>
       </p>
       <p
         class="dialog-actions__ticket-resume-infoline"
       >
         <b>Advogado(s) do autor(es): </b>
-        <span>{{ lawyersResume.toUpperCase() || ' - ' }}</span>
+        <span>{{ lawyersResume | uppercase }}</span>
       </p>
       <p
         class="dialog-actions__ticket-resume-infoline"

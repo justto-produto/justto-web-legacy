@@ -5,3 +5,7 @@ Vue.filter('capitalize', function(value) {
   value = value.toString().toLowerCase()
   return value.charAt(0).toUpperCase() + value.slice(1)
 })
+
+Vue.filter('uppercase', function(value) {
+  return !value ? '' : value.toString().toUpperCase()
+})
