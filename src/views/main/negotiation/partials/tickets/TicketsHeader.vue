@@ -102,8 +102,13 @@ export default {
       }
     },
 
-    goToTicket({ disputeId, disputeStatus }) {
-      this.$router.push(`/${this.targetPath}/${disputeId}`)
+    goToTicket({ disputeId }) {
+      if (this.$route.name === 'dispute') {
+        this.$router.push(`/${this.targetPath}/${disputeId}`)
+        window.location.reload(false)
+      } else {
+        this.$router.push(`/${this.targetPath}/${disputeId}`)
+      }
     },
 
     focusOnSearch(_) {
