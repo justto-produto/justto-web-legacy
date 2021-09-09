@@ -1,10 +1,13 @@
 <template>
-  <article>
+  <article :class="{'note-component__realign': resumed}">
     <div
       v-loading="isLoadingNote"
       class="note-container"
     >
-      <div class="note-container__header">
+      <div
+        v-if="!resumed"
+        class="note-container__header"
+      >
         <div>{{ owner }}</div>
         <span>
           <i
@@ -17,9 +20,19 @@
           />
         </span>
       </div>
+
+      <div
+        v-else
+        class="note-container__header"
+      >
+        Observações:
+      </div>
       <div class="note-container__body">
         <span v-html="description" />
-        <span class="note-container__body-time">
+        <span
+          v-if="!resumed"
+          class="note-container__body-time"
+        >
           {{ time | moment('HH:mm') }}
         </span>
       </div>
@@ -45,16 +58,29 @@ export default {
     value: {
       type: Object,
       required: true
+    },
+
+    text: {
+      type: String,
+      default: () => ''
+    },
+
+    resumed: {
+      type: Boolean,
+      default: false
     }
   },
+
   data: () => ({
     isLoadingNote: false
   }),
+
   computed: {
     time() {
       const { createAt, updateAt } = this.value
       return updateAt ? updateAt.dateTime : createAt.dateTime
     },
+
     owner() {
       const { CREATED_BY, UPDATED_BY } = this.value.properties
       const name = this.$options.filters.resumedName(UPDATED_BY || CREATED_BY) || this.value.description.split('adicionou uma nota.')[0].trim()
@@ -63,8 +89,9 @@ export default {
         ? `Modificada por ${name}`
         : `Adicionada por ${name}`
     },
+
     description() {
-      return this.value.description.split('adicionou uma nota.').slice(-1)[0].trim() + '<span style="display: inline-block; width: 36px" />'
+      return this.text || this.value.description.split('adicionou uma nota.').slice(-1)[0].trim() + '<span style="display: inline-block; width: 36px" />'
     }
   },
   updated() {
@@ -166,6 +193,16 @@ article {
         font-size: 13px;
         color: $--color-text-secondary;
       }
+    }
+  }
+
+  &.note-component__realign {
+    align-self: flex-end;
+    margin: 0;
+    width: 100%;
+
+    .note-container {
+      width: 100%;
     }
   }
 }

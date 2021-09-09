@@ -10,6 +10,14 @@
       class="manual-container__text"
       v-html="text"
     />
+
+    <Note
+      v-if="hasNote"
+      :value="value"
+      :text="interaction.properties.NOTE"
+      resumed
+    />
+
     <span
       v-if="!toPrint"
       class="communication-container__about negotiation-occurrence-about"
@@ -24,21 +32,33 @@ import { addInvisibleStatus } from '@/utils'
 import communicationSendStatus from '@/utils/mixins/communicationSendStatus'
 
 export default {
+  components: {
+    Note: () => import('@/views/main/negotiation/partials/ticket/omnichannel/occurrences/occurrence/note/Note.vue')
+  },
+
   mixins: [communicationSendStatus],
+
   props: {
     value: {
       type: Object,
       required: true
     },
+
     occurrence: {
       type: Object,
       required: true
     }
   },
+
   computed: {
     interaction() {
       return this.value
     },
+
+    hasNote() {
+      return !!this.interaction?.properties?.NOTE
+    },
+
     text() {
       const { USER, VALUE, PERSON_NAME } = this.interaction.properties
 
@@ -63,6 +83,7 @@ export default {
   background-color: transparent;
   display: flex;
   flex-direction: column;
+  gap: 8px;
 
   overflow: hidden;
   margin: 12px 6px;

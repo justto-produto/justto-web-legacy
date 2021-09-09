@@ -989,6 +989,8 @@ export default {
       return canHandleParty
     },
     buildContent(occurrence) {
+      const temĺateNote = (note) => (`<div style="display: flex; margin-top: 8px; flex-direction:column; background-color: #f6f1ff"><div style="background-color: #efe7ff; padding: 8px;">Observações:</div><div style="padding: 8px 16px;">${note}</div></div>`)
+
       if (!occurrence) return ''
       if (occurrence.type === 'LOG' || (occurrence.interaction && ['VISUALIZATION', 'CLICK', 'NEGOTIATOR_ACCESS'].includes(occurrence.interaction.type))) {
         if (occurrence.interaction && occurrence.interaction.type === 'NEGOTIATOR_ACCESS') {
@@ -1006,11 +1008,11 @@ export default {
           return `
             Negociador <b>${occurrence.interaction.properties.USER ? occurrence.interaction.properties.USER : ''}</b>
             informou uma proposta realizada por <b>${occurrence.interaction.properties.PERSON_NAME}</b>
-            no valor de <b>${occurrence.interaction.properties.VALUE}</b>${occurrence.interaction.properties.NOTE ? ' com a observação: ' + occurrence.interaction.properties.NOTE : ''}.`
+            no valor de <b>${occurrence.interaction.properties.VALUE}</b>.${occurrence.interaction.properties.NOTE ? temĺateNote(occurrence.interaction.properties.NOTE) : ''}`
         } else if (['NEGOTIATOR_COUNTERPROSAL', 'NEGOTIATOR_PROPOSAL'].includes(occurrence.interaction.type)) {
           return `
             Proposta realizada por <b>${occurrence.interaction.properties.PERSON_NAME}</b>
-            no valor de <b>${occurrence.interaction.properties.VALUE}</b>${occurrence.interaction.properties.NOTE ? ' com a observação: ' + occurrence.interaction.properties.NOTE : ''}.`
+            no valor de <b>${occurrence.interaction.properties.VALUE}</b>.${occurrence.interaction.properties.NOTE ? temĺateNote(occurrence.interaction.properties.NOTE) : ''}`
         } else if (['COMMUNICATION'].includes(occurrence.interaction.type) && occurrence.interaction.message && ['NEGOTIATOR_MESSAGE', 'WHATSAPP', 'EMAIL'].includes(occurrence.interaction.message.communicationType)) {
           if (this.showResume(occurrence)) {
             return occurrence.interaction.message.resume + '...'
