@@ -741,7 +741,7 @@ export default {
 
     inputTemplate(template) {
       this.closeTemplateMenu()
-      this.$refs.messageEditor.quill.container.firstChild.innerHTML = this.formatBody(template.parsed.body)
+      this.messageText = template.parsed.body
     },
 
     updateWindowHeight() {
@@ -771,13 +771,9 @@ export default {
       const messageType = type.toLowerCase()
       this.setMessageType(messageType)
       if (['email'].includes(messageType)) {
-        const { quill } = this.$refs.messageEditor
         const peviewText = this.messageText
-        const peviewResume = ''
-        quill.setContents([
-          { insert: peviewText },
-          { insert: peviewResume }
-        ])
+
+        this.messageText = `${peviewText}`
       }
       this.activeRoleId = 0
       this.directContactAddress = senders
