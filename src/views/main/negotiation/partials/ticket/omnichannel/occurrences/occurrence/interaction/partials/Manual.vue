@@ -11,13 +11,6 @@
       v-html="text"
     />
 
-    <Note
-      v-if="hasNote"
-      :value="value"
-      :text="interaction.properties.NOTE"
-      resumed
-    />
-
     <span
       v-if="!toPrint"
       class="communication-container__about negotiation-occurrence-about"
@@ -32,10 +25,6 @@ import { addInvisibleStatus } from '@/utils'
 import communicationSendStatus from '@/utils/mixins/communicationSendStatus'
 
 export default {
-  components: {
-    Note: () => import('@/views/main/negotiation/partials/ticket/omnichannel/occurrences/occurrence/note/Note.vue')
-  },
-
   mixins: [communicationSendStatus],
 
   props: {
@@ -60,11 +49,11 @@ export default {
     },
 
     text() {
-      const { USER, VALUE, PERSON_NAME } = this.interaction.properties
-
+      const { USER, VALUE, PERSON_NAME, NOTE } = this.interaction.properties
       const text = `Negociador(a) <strong>${USER}</strong> informou uma proposta realizada por <strong>${PERSON_NAME}</strong> no valor de <strong>${VALUE}</strong>`
+      const note = NOTE ? ` com a observação: ${NOTE}.` : '.'
 
-      return addInvisibleStatus(text)
+      return addInvisibleStatus(text + note)
     }
   },
   updated() {
