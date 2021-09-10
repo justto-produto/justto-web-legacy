@@ -1,7 +1,7 @@
 import { stripHtml } from '@/utils'
 
 const mapTabOccurrenceType = {
-  MESSAGES: 'INTERACTION',
+  MESSAGES: ['INTERACTION', 'NOTE'],
   NOTES: 'NOTE',
   OCCURRENCES: 'LOG'
 }

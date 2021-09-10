@@ -4,10 +4,12 @@ const disputeApi = 'api/disputes/v2'
 const messagesPath = 'api/messages'
 
 const omnichannelActions = {
-  setOmnichannelActiveTab({ commit }, tab) {
-    commit('setOmnichannelActiveTab', tab)
-    commit('resetRecipients')
-    commit('resetOccurrences')
+  setOmnichannelActiveTab({ commit, getters: { getActiveTab } }, tab) {
+    if (getActiveTab !== tab) {
+      commit('setOmnichannelActiveTab', tab)
+      commit('resetRecipients')
+      commit('resetOccurrences')
+    }
   },
 
   setEditorText: ({ commit }, message) => commit('setEditorText', message),
