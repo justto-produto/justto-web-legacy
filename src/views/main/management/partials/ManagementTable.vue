@@ -90,7 +90,7 @@
                 style="height: 8px; width: 8px;"
               />
             </el-tooltip>
-            {{ scope.row.firstClaimant || '-' }}
+            {{ scope.row.firstClaimant || '-' | capitalize }}
           </div>
         </template>
       </el-table-column>
@@ -124,9 +124,8 @@
                 style="height: 8px; width: 8px;"
               />
             </el-tooltip>
-            {{ scope.row.firstClaimantLawyer || '-' }}
+            {{ scope.row.firstClaimantLawyer || '-' | capitalize }}
           </div>
-          <!-- {{ firstClaimantLawyerStatus ? 'ONLINE' : 'OFFLINE' }} -->
         </template>
       </el-table-column>
       <el-table-column
@@ -246,7 +245,6 @@
               <jus-icon icon="clock" />
               <i class="management-table__interaction-pulse el-icon-warning el-icon-pulse el-icon-primary" />
             </span>
-            <!-- <span v-else>-</span> -->
           </el-tooltip>
           <span v-if="scope.row.expirationDate">{{ scope.row.expirationDate.dateTime | moment('DD/MM/YY') }}</span>
         </template>
