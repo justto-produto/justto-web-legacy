@@ -15,7 +15,7 @@ export default class DialerUserModel {
   token;
 
   constructor() {
-    this.user_name = 'lucas@justto.com.br '
+    this.user_name = 'lucas@justto.com.br'
     this.user_passwd = 'HWG49ig7CMqXHj#'
   }
 }
