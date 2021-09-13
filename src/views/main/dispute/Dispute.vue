@@ -1154,10 +1154,14 @@ export default {
         }
 
         .dispute-view__send-message-actions {
-          z-index: 0;
+          z-index: 1;
 
           div > span > .el-button {
             z-index: 5;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            margin: 0 12px 12px 0;
           }
 
           &.note {
