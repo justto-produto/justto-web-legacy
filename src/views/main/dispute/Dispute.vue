@@ -326,10 +326,10 @@
                     <div>
                       <el-tooltip
                         :key="buttonKey"
-                        :disabled="!validName || invalidReceiver === false"
+                        :disabled="!validName || invalidReceiver === false || selectedContacts.length > 0"
                       >
                         <div slot="content">
-                          <span v-if="!activeRole.personId">
+                          <span v-if="selectedContacts.length === 0">
                             Escolha um destinatário ao lado para receber sua mensagem
                           </span>
                           <span v-else-if="invalidReceiver">
