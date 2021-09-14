@@ -83,7 +83,7 @@ export default {
 
     owner() {
       const { CREATED_BY, UPDATED_BY } = this.value.properties
-      const name = this.$options.filters.resumedName(UPDATED_BY || CREATED_BY) || this.value.description.split('adicionou uma nota.')[0].trim()
+      const name = this.$options.filters.resumedName(UPDATED_BY || CREATED_BY)
 
       return UPDATED_BY
         ? `Modificada por ${name}`

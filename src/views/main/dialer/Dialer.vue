@@ -1,5 +1,14 @@
 <template>
-  <article class="dialer">
+  <article
+    v-if="canAccessDialer"
+    class="dialer"
+  >
+    <div
+      class="dialer__button"
+      @click="visible = !visible"
+    >
+      <JusIcon :icon="dialerIcon" />
+    </div>
     <!-- <el-button
       class="dialer__button"
       type="text"
@@ -181,6 +190,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import { CALL_STATUS } from '@/constants/callStatus'
 
 import SIPml from 'ecmascript-webrtc-sipml'
 import DialerUserModel from '@/store/modules/dialer/model/DialerUserModel'
@@ -206,9 +216,16 @@ export default {
 
   computed: {
     ...mapGetters({
+      preferences: 'userPreferences',
       currentCall: 'getCurrentCallId',
-      preferences: 'userPreferences'
+      isActiveToCall: 'isActiveToCall',
+      canAccessDialer: 'canAccessDialer',
+      currentActiveCall: 'getCurrentCall'
     }),
+
+    dialerIcon() {
+      return !this.isActiveToCall ? 'not-main-phone-active' : [CALL_STATUS.ACTIVE_CALL].includes(this.currentActiveCall.status) ? 'ic-phone-active' : 'tts'
+    },
 
     hasAcceptTerms() {
       return !!this.preferences.properties.ACCEPT_DIALER_TERMS
@@ -446,6 +463,13 @@ export default {
 @import '@/styles/colors.scss';
 
 .dialer {
+  .dialer__button {
+    text-align: center;
+    cursor: pointer;
+
+    margin: 0 auto 16px;
+  }
+
   .dialer__container {
     position: absolute;
     z-index: 100 !important;

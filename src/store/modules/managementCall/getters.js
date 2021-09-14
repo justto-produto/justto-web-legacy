@@ -13,5 +13,9 @@ export default {
 
   getDialer(state) {
     return state.dialer
+  },
+
+  getCurrentCall(state) {
+    return state.currentCall
   }
 }

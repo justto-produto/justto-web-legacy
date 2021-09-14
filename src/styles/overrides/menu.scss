@@ -1,8 +1,8 @@
 .el-menu--main-menu {
-  margin-top: 16px;
+  margin-top: 0px;
 
   @media (max-height: 780px) {
-    margin-top: 40px;
+    margin-top: 0px;
   }
 }
 
@@ -22,6 +22,7 @@
     line-height: 58px;
     width: 58px;
     padding: 0 18px !important;
+
     .el-tooltip {
       padding: 0 18px !important;
     }
@@ -46,6 +47,7 @@
     right: 0;
     display: flex !important;
     justify-content: space-around !important;
+
     .el-menu-item {
       width: 25%;
       text-align: center;
