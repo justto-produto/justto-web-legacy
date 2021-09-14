@@ -1,0 +1,138 @@
+import { CALL_STATUS } from '@/constants/callStatus'
+import Vue from 'vue'
+
+function updateManagementCall({ appInstance, currentCall, callQueue }) {
+  const vue = document.getElementById('app').__vue__
+
+  localStorage.setItem('JUSTTO_MANAGEMENT_CALL', JSON.stringify({ appInstance, currentCall, callQueue }))
+  vue.$socket.emit('REFRESH_MANAGEMENT_CALL', { appInstance })
+}
+
+export default {
+  setCurrentCallStatus(state, status) {
+    if (state.currentCall && [CALL_STATUS.RECEIVING_CALL].includes(state.currentCall.status)) {
+      Vue.set(state.currentCall, 'status', CALL_STATUS[status])
+    }
+  },
+
+  endCall(state, { id }) {
+    if (state.currentCall && state.currentCall.id === id) {
+      Vue.set(state.currentCall, 'status', CALL_STATUS.COMPLETED_CALL)
+    }
+
+    Vue.set(state, 'callQueue', state.callQueue.filter(call => call.id === id))
+    Vue.set(state, 'dialer', null)
+    Vue.set(state, 'currentCall', null)
+
+    updateManagementCall(state)
+  },
+
+  addCallInQueue(state, call) {
+    function calcFirstAvailablePos(queue) {
+      let pos = queue.length
+
+      queue.filter((call, index) => {
+        if (![
+          CALL_STATUS.WAITING_NEW_CALL,
+          CALL_STATUS.RECEIVING_CALL,
+          CALL_STATUS.ACTIVE_CALL
+        ].includes(call.status)) {
+          pos = index
+        }
+      })
+
+      return pos
+    }
+
+    const position = !call.priority ? state.callQueue.length : calcFirstAvailablePos(state.callQueue)
+
+    if (call.priority) {
+      const tempStatus = state.callQueue[position].status
+
+      Vue.set(state.callQueue, 'position', CALL_STATUS.ENQUEUED)
+      Vue.set(call, 'status', tempStatus)
+    }
+
+    if (position === 0) {
+      Vue.set(state, 'currentCall', call)
+    }
+
+    state.callQueue.splice(position, 0, call)
+
+    updateManagementCall(state)
+  },
+
+  addDialerDetail(state, dialer) {
+    Vue.set(state, 'dialer', dialer)
+  },
+
+  setRequestProvideNewInterval(state) {
+    Vue.set(state, 'requestProvideNewInterval', setInterval(() => this.dispatch('managementCall/requestProvide', {}), (5 * 1000)))
+  },
+
+  clearActiveRequestInterval(state) {
+    clearInterval(state.requestProvideNewInterval)
+    Vue.set(state, 'requestProvideNewInterval', null)
+  },
+
+  setTimeoutDialerDetail(state) {
+    Vue.set(state, 'timeoutDialerDetail', setTimeout(() => {
+      if (state.callQueue.length > 0) {
+        Vue.set(state.callQueue[0], 'status', CALL_STATUS.ENQUEUED)
+      }
+      this.dispatch('managementCall/startDialerRequester')
+    }))
+  },
+
+  clearTimeoutDialerDetail(state) {
+    clearTimeout(state.timeoutDialerDetail)
+    Vue.set(state, 'timeoutDialerDetail', null)
+  },
+
+  setReceivedCall(state) {
+    Vue.set(state.currentCall, 'status', CALL_STATUS.RECEIVING_CALL)
+  },
+
+  setCallHeartbeatInterval(state) {
+    Vue.set(state, 'callHeartbeatInterval', setInterval(() => this.dispatch('managementCall/startDialerRequester')), ((state.dialer?.keepAlive?.timeout || 10) * 1000) / 4)
+  },
+
+  clearCallHeartbeatInterval(state) {
+    clearInterval(state.callHeartbeatInterval)
+    Vue.set(state, 'callHeartbeatInterval', null)
+  },
+
+  setCallDetail(state, _interaction) {
+    /**
+     *  TODO: Validar dados da interaction para atualizar a currentCall
+     *  id da call (interaction.properties.value)
+     *  number
+     *  disputeId
+     *  Status para WAITING_NEW_CALL
+     */
+
+    Vue.set(state, 'currentCall', {
+      ...state.currentCall,
+      // id: ?,
+      // number: ?,
+      // disputeId: ?,
+      status: CALL_STATUS.WAITING_NEW_CALL
+    })
+
+    updateManagementCall(state)
+  },
+
+  setRequestProvide(state, { appInstance }) {
+    Vue.set(state.currentCall, 'status', CALL_STATUS.WAITING_DIALER)
+    console.log('setRequestProvide', appInstance)
+  },
+
+  SOCKET_REFRESH_MANAGEMENT_CALL(state, { appInstance }) {
+    if (appInstance !== state.appInstance) {
+      const { currentCall, callQueue } = JSON.parse(localStorage.getItem('JUSTTO_MANAGEMENT_CALL'))
+
+      Vue.set(state, 'currentCall', currentCall)
+      Vue.set(state, 'callQueue', callQueue)
+    }
+  }
+}

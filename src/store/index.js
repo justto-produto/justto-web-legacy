@@ -12,6 +12,7 @@ import documentModule from './modules/document'
 import enrichmentModule from './modules/enrichment'
 import importModule from './modules/import'
 import managementModule from './modules/management'
+import managementCallModule from './modules/managementCall'
 import messageModule from './modules/message'
 import negotiationOmnichannelModule from './modules/negotiation/omnichannel'
 import negotiationOverviewModule from './modules/negotiation/overview'
@@ -104,6 +105,7 @@ export default new Vuex.Store({
     enrichmentModule,
     importModule,
     managementModule,
+    managementCallModule,
     messageModule,
     negotiationOmnichannelModule,
     negotiationOverviewModule,
