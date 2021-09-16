@@ -4,6 +4,8 @@ import { axiosDispatch } from '@/utils'
 
 import { CALL_STATUS } from '@/constants/callStatus'
 
+const DEFAULT_JUSTTO_MANAGEMENT_CALL = '{"currentCall":null,"callQueue":[],"appInstance":null}'
+
 export default {
   addCall({ commit }, callRequester) {
     if (callRequester.activeToCall) {
@@ -16,6 +18,29 @@ export default {
       commit('addCallInQueue', call)
     } else {
       // publicar o parâmetro callRequester no websocket com a operação ADD_CALL para que a aplicação que esteja gerenciando a fila adicione na fila;
+    }
+  },
+
+  setAppInstance({ commit }, appInstance) {
+    commit('setAppInstance', appInstance)
+  },
+
+  startManagementCall({ commit, dispatch, getters: { getAppInstance } }) {
+    const { appInstance, currentCall } = JSON.parse(localStorage.getItem('JUSTTO_MANAGEMENT_CALL') || DEFAULT_JUSTTO_MANAGEMENT_CALL)
+
+    if (appInstance === getAppInstance) {
+      // TODO SAAS-4523: Fazer oq tem pra fazer
+    } else {
+      if (currentCall !== null && [CALL_STATUS.WAITING_DIALER_DETAIL, CALL_STATUS.WAITING_NEW_CALL, CALL_STATUS.ACTIVE_CALL].includes(currentCall?.status)) {
+        const vue = document.getElementById('app').__vue__
+
+        vue.$socket.emit('REQUEST_CALL_STATUS', { appInstance })
+
+        commit('setBroadcastRequestCallStatus', () => {
+          vue.$socket.emit('SOCKET_KILL_ACTIVE_CALL', { callId: currentCall.id })
+        })
+        // TODO SAAS-4523: Realizar um broadcast perguntando se a ligação ainda está ativa.
+      }
     }
   },
 
@@ -73,6 +98,12 @@ export default {
     commit('setCurrentCallStatus', CALL_STATUS.ACTIVE_CALL)
   },
 
+  responseCallStatus({ _ }, { appInstance }) {
+    const vue = document.getElementById('app').__vue__
+
+    vue.$socket.emit('RESPONSE_CALL_STATUS', { appInstance })
+  },
+
   SOCKET_KILL_ACTIVE_CALL({ dispatch, getters: { getDialer } }, callId) {
     // TODO SAAS-4522: Rever validações
     dispatch('endCall', {
@@ -89,5 +120,11 @@ export default {
   SOCKET_AVAILABLE_DIALER({ commit, dispatch }, { id }) {
     commit('clearActiveRequestInterval')
     dispatch('getDialerDetails', { id })
+  },
+
+  SOCKET_REQUEST_CALL_STATUS({ getters: { getAppInstance }, dispatch }, { appInstance }) {
+    if (getAppInstance === appInstance) {
+      dispatch('responseCallStatus', { appInstance })
+    }
   }
 }

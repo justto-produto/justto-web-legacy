@@ -1,11 +1,17 @@
 import { CALL_STATUS } from '@/constants/callStatus'
 import Vue from 'vue'
 
+const DEFAULT_JUSTTO_MANAGEMENT_CALL = '{"currentCall":null,"callQueue":[],"appInstance":null}'
+
 function updateManagementCall({ appInstance, currentCall, callQueue }) {
   const vue = document.getElementById('app').__vue__
 
-  localStorage.setItem('JUSTTO_MANAGEMENT_CALL', JSON.stringify({ appInstance, currentCall, callQueue }))
-  vue.$socket.emit('REFRESH_MANAGEMENT_CALL', { appInstance })
+  const { appInstance: sharedAppInstance } = JSON.parse(localStorage.getItem('') || DEFAULT_JUSTTO_MANAGEMENT_CALL)
+
+  if (appInstance !== null && appInstance === sharedAppInstance) {
+    localStorage.setItem('JUSTTO_MANAGEMENT_CALL', JSON.stringify({ appInstance, currentCall, callQueue }))
+    vue.$socket.emit('REFRESH_MANAGEMENT_CALL', { appInstance })
+  }
 }
 
 export default {
@@ -122,9 +128,17 @@ export default {
     updateManagementCall(state)
   },
 
+  setAppInstance(state, appInstance) {
+    Vue.set(state, 'appInstance', appInstance)
+  },
+
   setRequestProvide(state, { appInstance }) {
     Vue.set(state.currentCall, 'status', CALL_STATUS.WAITING_DIALER)
     console.log('setRequestProvide', appInstance)
+  },
+
+  setBroadcastRequestCallStatus(state, callback) {
+    Vue.set(state, 'broadcastRequestCallStatus', setTimeout(callback, 4 * 1000))
   },
 
   SOCKET_REFRESH_MANAGEMENT_CALL(state, { appInstance }) {
@@ -134,5 +148,17 @@ export default {
       Vue.set(state, 'currentCall', currentCall)
       Vue.set(state, 'callQueue', callQueue)
     }
+  },
+
+  SOCKET_KILL_MANAGEMENT_CALL(state) {
+    Vue.set(state, 'activeToCall', false)
+    Vue.set(state, 'callQueue', [])
+  },
+
+  SOCKET_RESPONSE_CALL_STATUS(state) {
+    clearTimeout(state.broadcastRequestCallStatus)
+
+    Vue.set(state, 'broadcastRequestCallStatus', null)
+    Vue.set(state, 'activeToCall', false)
   }
 }

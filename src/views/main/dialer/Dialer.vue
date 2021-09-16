@@ -191,6 +191,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 import { CALL_STATUS } from '@/constants/callStatus'
+import { uuidv4 } from '@/utils'
 
 import SIPml from 'ecmascript-webrtc-sipml'
 import DialerUserModel from '@/store/modules/dialer/model/DialerUserModel'
@@ -242,6 +243,10 @@ export default {
         this.init()
       }
     }
+  },
+
+  created() {
+    console.log('Criado aqui', uuidv4())
   },
 
   methods: {

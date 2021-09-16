@@ -17,5 +17,9 @@ export default {
 
   getCurrentCall(state) {
     return state.currentCall
+  },
+
+  getAppInstance(state) {
+    return state.appInstance
   }
 }
