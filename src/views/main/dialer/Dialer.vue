@@ -60,6 +60,16 @@
         autoplay="autoplay"
       />
 
+      <audio
+        v-if="isActiveToCall"
+        id="speakerAudio"
+        :src="activeRingtone"
+        class="dialer__container-audio"
+        controls
+        loop
+        autoplay="autoplay"
+      />
+
       <div
         v-if="bodyVisible"
         v-loading="loading"
@@ -217,15 +227,26 @@ export default {
 
   computed: {
     ...mapGetters({
+      workspaceId: 'workspaceId',
+      appInstance: 'getAppInstance',
       preferences: 'userPreferences',
       currentCall: 'getCurrentCallId',
       isActiveToCall: 'isActiveToCall',
       canAccessDialer: 'canAccessDialer',
-      currentActiveCall: 'getCurrentCall'
+      currentActiveCall: 'getCurrentCall',
+      workspaceTeamName: 'workspaceTeamName'
     }),
 
+    activeRingtone() {
+      if ([CALL_STATUS.RECEIVING_CALL].includes(this.currentActiveCall)) {
+        return 'https://storage.googleapis.com/justto_app/audio/justto_auto_answer_ring.wav'
+      } else {
+        return ''
+      }
+    },
+
     dialerIcon() {
-      return !this.isActiveToCall ? 'not-main-phone-active' : [CALL_STATUS.ACTIVE_CALL].includes(this.currentActiveCall.status) ? 'ic-phone-active' : 'tts'
+      return !this.isActiveToCall ? 'not-main-phone-active' : [CALL_STATUS.ACTIVE_CALL].includes(this.currentActiveCall?.status) ? 'ic-phone-active' : 'tts'
     },
 
     hasAcceptTerms() {
@@ -241,29 +262,35 @@ export default {
     visible(current) {
       if (current) {
         this.init()
+      } else {
+        this.ativeAppToCall()
       }
     }
   },
 
   created() {
-    console.log('Criado aqui', uuidv4())
+    this.setAppInstance(uuidv4())
   },
 
   methods: {
     ...mapActions([
+      'addCall',
       'dialerLogin',
-      'loadVoiceServer',
-      'startServerStatus',
-      'availableServerStatus',
-      'refreshServiceStatus',
       'createNewCall',
+      'ativeAppToCall',
+      'setAppInstance',
+      'loadVoiceServer',
+      'loadVoiceServer',
       'clearCurrentCall',
       'deleteCurrentCall',
-      'loadVoiceServer',
-      'changeServerStatus',
       'startServerStatus',
+      'startServerStatus',
+      'changeServerStatus',
+      'setAccountProperty',
+      'refreshServiceStatus',
+      'startDialerRequester',
       'availableServerStatus',
-      'setAccountProperty'
+      'availableServerStatus'
     ]),
 
     open(number) {
@@ -284,7 +311,6 @@ export default {
 
       this.loading = false
 
-      // update debug level to be sure new values will be used if the user haven't updated the page
       SIPml.setDebugLevel((window.localStorage && window.localStorage.getItem('org.doubango.expert.disable_debug') === 'Justto') ? 'error' : 'info')
 
       const self = this
@@ -318,7 +344,8 @@ export default {
       this.loading = true
 
       Promise.all([
-        this.doLogin()
+        this.doLogin(),
+        this.ativeAppToCall(true)
       ]).then(this.startConection).finally(() => {
         this.loading = false
 
@@ -418,16 +445,28 @@ export default {
     startCall() {
       this.loading = true
 
-      this.createNewCall(`+55${this.number}`).then(callInfo => {
-        this.$jusSegment('ligação', {
-          numebr: this.number,
-          ...callInfo
-        })
-      }).catch(() => {
-        this.deleteCurrentCall()
+      this.addCall({
+        // disptueId,
+        // toRoleId,
+        // toRoleName,
+        number: `+55${this.number}`,
+        workspaceId: this.workspaceId,
+        teamName: this.workspaceTeamName,
+        appInstance: this.appInstance
       }).finally(() => {
         this.loading = false
       })
+
+      // this.createNewCall(`+55${this.number}`).then(callInfo => {
+      //   this.$jusSegment('ligação', {
+      //     numebr: this.number,
+      //     ...callInfo
+      //   })
+      // }).catch(() => {
+      //   this.deleteCurrentCall()
+      // }).finally(() => {
+      //   this.loading = false
+      // })
     },
 
     shutdownCall() {

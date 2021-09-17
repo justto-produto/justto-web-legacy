@@ -6,15 +6,21 @@ const DEFAULT_JUSTTO_MANAGEMENT_CALL = '{"currentCall":null,"callQueue":[],"appI
 function updateManagementCall({ appInstance, currentCall, callQueue }) {
   const vue = document.getElementById('app').__vue__
 
-  const { appInstance: sharedAppInstance } = JSON.parse(localStorage.getItem('') || DEFAULT_JUSTTO_MANAGEMENT_CALL)
+  const { appInstance: sharedAppInstance } = JSON.parse(localStorage.getItem('JUSTTO_MANAGEMENT_CALL') || DEFAULT_JUSTTO_MANAGEMENT_CALL)
 
-  if (appInstance !== null && appInstance === sharedAppInstance) {
+  console.log('updateManagementCall', appInstance !== null && appInstance === sharedAppInstance)
+
+  if (appInstance !== null && (appInstance === sharedAppInstance || sharedAppInstance === null)) {
     localStorage.setItem('JUSTTO_MANAGEMENT_CALL', JSON.stringify({ appInstance, currentCall, callQueue }))
     vue.$socket.emit('REFRESH_MANAGEMENT_CALL', { appInstance })
   }
 }
 
 export default {
+  setAtiveAppToCall(state, active) {
+    Vue.set(state, 'activeToCall', active)
+  },
+
   setCurrentCallStatus(state, status) {
     if (state.currentCall && [CALL_STATUS.RECEIVING_CALL].includes(state.currentCall.status)) {
       Vue.set(state.currentCall, 'status', CALL_STATUS[status])
@@ -73,7 +79,7 @@ export default {
   },
 
   setRequestProvideNewInterval(state) {
-    Vue.set(state, 'requestProvideNewInterval', setInterval(() => this.dispatch('managementCall/requestProvide', {}), (5 * 1000)))
+    Vue.set(state, 'requestProvideNewInterval', setInterval(() => this.dispatch('requestProvide', {}), (5 * 1000)))
   },
 
   clearActiveRequestInterval(state) {
@@ -86,7 +92,6 @@ export default {
       if (state.callQueue.length > 0) {
         Vue.set(state.callQueue[0], 'status', CALL_STATUS.ENQUEUED)
       }
-      this.dispatch('managementCall/startDialerRequester')
     }))
   },
 
