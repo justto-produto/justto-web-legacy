@@ -21,5 +21,9 @@ export default {
 
   getAppInstance(state) {
     return state.appInstance
+  },
+
+  getCallQueue(state) {
+    return state.callQueue || []
   }
 }
