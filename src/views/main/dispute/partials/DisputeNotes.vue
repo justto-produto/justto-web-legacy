@@ -27,7 +27,7 @@
             >
               <span v-html="buildSender(occurrence)" />
 
-              <div>
+              <!-- <div>
                 <i
                   class="el-icon-edit"
                   @click="openEditDialog(occurrence)"
@@ -37,7 +37,7 @@
                   class="el-icon-delete"
                   @click="removeNote(occurrence, index)"
                 />
-              </div>
+              </div> -->
             </div>
             <span v-html="buildContent(occurrence)" />
           </el-card>
@@ -169,8 +169,10 @@ export default {
         return `Adicionado por ${this.$options.filters.resumedName(occurrence.properties.CREATED_BY)}`
       } else if (occurrence.updateAt) {
         return 'Modificado por ' + this.splitModified(occurrence.description)[0]
-      } else {
+      } else if (occurrence.description.includes('Adicionado por')) {
         return 'Adicionado por ' + this.splitNew(occurrence.description)[0]
+      } else {
+        return ''
       }
     },
 
@@ -241,12 +243,15 @@ export default {
     position: relative;
 
     .dispute-view-occurrences__card--note {
+      min-width: 160px;
+
       .el-card__header {
         .dispute-view-occurrences__card--note-header {
           font-weight: normal;
           text-transform: lowercase;
           display: flex;
           justify-content: space-between;
+          min-height: 16px;
 
           span {
             margin: 0;

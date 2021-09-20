@@ -9,7 +9,7 @@
         class="note-container__header"
       >
         <div>{{ owner }}</div>
-        <span>
+        <!-- <span>
           <i
             class="note-container__header-icon el-icon-edit"
             @click="openEditDialog"
@@ -18,7 +18,7 @@
             class="note-container__header-icon el-icon-delete"
             @click="removeNote"
           />
-        </span>
+        </span> -->
       </div>
 
       <div
@@ -87,7 +87,7 @@ export default {
 
       return UPDATED_BY
         ? `Modificada por ${name}`
-        : `Adicionada por ${name}`
+        : name ? `Adicionada por ${name}` : ''
     },
 
     description() {
@@ -173,6 +173,7 @@ article {
       justify-content: space-between;
       padding: 6px 12px;
       background-color: #efe7ff;
+      min-height: 24px;
 
       .note-container__header-icon {
         margin-left: 6px;
