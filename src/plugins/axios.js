@@ -32,7 +32,7 @@ _axios.interceptors.request.use(
       }
     }
 
-    if (_axios.defaults.baseURL === 'https://api.justto.app/') {
+    if (_axios.defaults.baseURL === 'https://justto.app/') {
       const { UserLanguage, UserTimeZone, UserBrowserName, UserOS } = _axios.defaults.headers.common
 
       _axios.defaults.headers.common.UserLanguage = UserLanguage || store.getters.getUserLanguage
