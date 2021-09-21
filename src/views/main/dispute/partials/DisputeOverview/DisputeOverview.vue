@@ -1066,7 +1066,7 @@
               >
                 <el-input
                   v-model="disputeForm.disputeCode"
-                  v-mask="'XXXXXXX-XX.XXXX.X.XX.XXXX'"
+                  v-mask="['XXXXXXX-XX.XXXX.X.XX.XXXX', 'XXXXXXX-XX.XXXX.X.XX.XXXXX']"
                 />
               </el-form-item>
             </el-col>
