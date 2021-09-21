@@ -5,10 +5,25 @@ import { axiosDispatch } from '@/utils'
 import { CALL_STATUS } from '@/constants/callStatus'
 
 const DEFAULT_JUSTTO_MANAGEMENT_CALL = '{"currentCall":null,"callQueue":[],"appInstance":null}'
+const dialerApi = 'api/dialer'
 
 export default {
-  addCall({ commit }, callRequester) {
-    if (callRequester.activeToCall) {
+  ativeAppToCall({ commit, getters: { getAppInstance } }, active = false) {
+    return new Promise((resolve, reject) => {
+      const { appInstance: sharedAppInstance } = JSON.parse(localStorage.getItem('JUSTTO_MANAGEMENT_CALL') || DEFAULT_JUSTTO_MANAGEMENT_CALL)
+
+      if (sharedAppInstance === getAppInstance) {
+        commit('setAtiveAppToCall', active)
+        if (!active) { commit('clearActiveRequestInterval') }
+        resolve()
+      } else {
+        reject(new Error('Aba inapta para chamadas.'))
+      }
+    })
+  },
+
+  addCall({ commit, dispatch, getters: { isActiveToCall, getAppInstance } }, callRequester) {
+    if (isActiveToCall && callRequester.appInstance === getAppInstance) {
       const call = new Call({
         ...callRequester,
         status: CALL_STATUS.ENQUEUED,
@@ -16,8 +31,7 @@ export default {
       })
 
       commit('addCallInQueue', call)
-    } else {
-      // publicar o parâmetro callRequester no websocket com a operação ADD_CALL para que a aplicação que esteja gerenciando a fila adicione na fila;
+      dispatch('startDialerRequester')
     }
   },
 
@@ -77,21 +91,19 @@ export default {
     })
   },
 
-  getDialerDetails({ _ }, { id }) {
+  getDialerDetails({ _ }, { dialerId }) {
     return axiosDispatch({
-      url: `api/dialer/${id}/detail`,
+      url: `api/dialer/${dialerId}/detail`,
       mutation: 'setTimeoutDialerDetail'
     })
   },
 
   requestProvide({ getters: { isActiveToCall, hasCallInQueue, firstCallInQueue } }) {
-    // TODO: Rever descrição
-
     return isActiveToCall && hasCallInQueue && [CALL_STATUS.WAITING_DIALER, CALL_STATUS.ENQUEUED].includes(firstCallInQueue.status) ? axiosDispatch({
-      // url: 'api/dialer/provide-new',
-      url: 'api/dialer/request'
-      // mutation: 'setRequestProvide'
-    }) : new Promise((resolve, reject) => reject(new Error('Nenhuma ligação esperando na fila')))
+      url: `${dialerApi}/request`,
+      method: 'PATCH',
+      data: {}
+    }) : new Promise((resolve, reject) => reject(new Error('Sem chamada ativa')))
   },
 
   answerCurrentCall({ commit }) {
@@ -117,9 +129,9 @@ export default {
     commit('clearTimeoutDialerDetail')
   },
 
-  SOCKET_AVAILABLE_DIALER({ commit, dispatch }, { id }) {
+  SOCKET_AVAILABLE_DIALER({ commit, dispatch }, { dialerId }) {
     commit('clearActiveRequestInterval')
-    dispatch('getDialerDetails', { id })
+    dispatch('getDialerDetails', { dialerId })
   },
 
   SOCKET_REQUEST_CALL_STATUS({ getters: { getAppInstance }, dispatch }, { appInstance }) {
