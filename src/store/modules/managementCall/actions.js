@@ -29,8 +29,9 @@ export default {
 
       commit('addCallInQueue', { call, globalAuthenticationObject: getGlobalAuthenticationObject })
       dispatch('startDialerRequester')
-    } else if (hasOtherTabActive) {
+    } else if (hasOtherTabActive && !callRequester.published) {
       const channel = `/topic/account/${getGlobalAuthenticationObject?.accountId}`
+      callRequester.published = true
       publishWebsocket(channel, 'ADD_CALL', callRequester, getGlobalAuthenticationObject)
     }
   },
@@ -150,6 +151,16 @@ export default {
   SOCKET_REQUEST_CALL_STATUS({ getters: { getAppInstance }, dispatch }, { appInstance }) {
     if (getAppInstance === appInstance) {
       dispatch('responseCallStatus', { appInstance })
+    }
+  },
+
+  SOCKET_REMOVE_CALL({ commit, getters: { isActiveToCall, getGlobalAuthenticationObject } }, removeCommand) {
+    if (isActiveToCall) {
+      commit('removeCallById', { callId: removeCommand.callId, globalAuthenticationObject: getGlobalAuthenticationObject })
+    } else if (!removeCommand.published) {
+      removeCommand.published = true
+      const channel = `/topic/account/${getGlobalAuthenticationObject?.accountId}`
+      publishWebsocket(channel, 'REMOVE_CALL', removeCommand, getGlobalAuthenticationObject)
     }
   }
 }

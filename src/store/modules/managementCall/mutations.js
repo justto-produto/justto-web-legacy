@@ -163,5 +163,10 @@ export default {
 
     Vue.set(state, 'broadcastRequestCallStatus', null)
     Vue.set(state, 'activeToCall', false)
+  },
+
+  removeCallById(state, { callId, globalAuthenticationObject }) {
+    Vue.set(state, 'callQueue', state.callQueue.filter(call => call.id !== callId))
+    updateManagementCall(state, globalAuthenticationObject)
   }
 }

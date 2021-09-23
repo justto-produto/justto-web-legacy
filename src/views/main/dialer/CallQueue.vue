@@ -17,6 +17,7 @@
             type="info"
             size="mini"
             plain
+            @click="openBuyDialerDialog"
           >
             Adquira discadores dedicados
           </el-button>
@@ -56,7 +57,7 @@
           size="mini"
           circle
           plain
-          @click="remove"
+          @click="remove(call.id)"
         />
       </div>
     </div>
@@ -64,7 +65,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   computed: {
@@ -79,8 +80,12 @@ export default {
   },
 
   methods: {
-    remove() {
-      // TODO: Remove discador da fila.
+    ...mapActions({
+      openBuyDialerDialog: 'openBuyDialerDialog',
+      removeCall: 'SOCKET_REMOVE_CALL'
+    }),
+    remove(id) {
+      this.removeCall({ callId: id })
     }
   }
 }
