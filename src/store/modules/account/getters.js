@@ -8,7 +8,19 @@ const accountGetters = {
   accountEmail: state => state.email,
   isJusttoAdmin: state => isJusttoUser(state.email),
   isJusttoDev: state => state.devs.indexOf(state.email) !== -1,
-  canAccessDialer: state => state.preferences.properties.DIALER_ACCESS === 'AUTHORIZED'
+  canAccessDialer: state => state.preferences.properties.DIALER_ACCESS === 'AUTHORIZED',
+
+  getGlobalAuthenticationObject(state, getters) {
+    return {
+      headers: {
+        Authorization: getters.accountToken,
+        Workspace: getters.workspaceSubdomain
+      },
+      email: getters.accountEmail,
+      accountId: getters.accountId,
+      personId: getters.loggedPersonId
+    }
+  }
 }
 
 export default accountGetters

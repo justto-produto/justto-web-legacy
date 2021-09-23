@@ -22,7 +22,7 @@ export default {
     })
   },
 
-  addCall({ commit, dispatch, getters: { isActiveToCall, getAppInstance } }, callRequester) {
+  addCall({ commit, dispatch, getters: { isActiveToCall, getAppInstance, getGlobalAuthenticationObject } }, callRequester) {
     console.log('addCall', isActiveToCall, callRequester.appInstance === getAppInstance)
     if (callRequester.appInstance === getAppInstance) {
       if (!isActiveToCall) {
@@ -35,7 +35,7 @@ export default {
         enqueuedDate: new Date().toISOString()
       })
 
-      commit('addCallInQueue', call)
+      commit('addCallInQueue', { call, globalAuthenticationObject: getGlobalAuthenticationObject })
       dispatch('startDialerRequester')
     }
   },
@@ -67,11 +67,12 @@ export default {
     commit('setRequestProvideNewInterval')
   },
 
-  endCall({ _ }, { dialerId, callId }) {
+  endCall({ commit, getters }, { dialerId, callId }) {
     return axiosDispatch({
       url: `api/dialer/${dialerId}/call/${callId}`,
       method: 'DELETE',
-      mutation: 'endCall'
+      mutation: 'endCall',
+      payload: { globalAuthenticationObject: getters.getGlobalAuthenticationObject }
     }).catch(() => {
       // Chamada Encerrada.
     })
@@ -84,14 +85,15 @@ export default {
     })
   },
 
-  requestDialerCall({ commit }, { number, dialerId }) {
+  requestDialerCall({ commit, getters }, { number, dialerId }) {
     commit('setCurrentCallStatus', CALL_STATUS.WAITING_DIALER_DETAIL)
 
     return axiosDispatch({
       url: `api/disputes/${dialerId}/call`,
       method: 'POST',
       data: { number },
-      mutation: 'setCallDetail'
+      mutation: 'setCallDetail',
+      payload: { globalAuthenticationObject: getters.getGlobalAuthenticationObject }
       // TODO: Chamar mutation de Ocorrência.
     })
   },

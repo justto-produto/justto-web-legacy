@@ -1,25 +1,15 @@
 import { CALL_STATUS } from '@/constants/callStatus'
+import { publishWebsocket } from '@/utils/utils/others'
 import Vue from 'vue'
 
-function publishWebsocket(channel, event, object) {
-  const vue = document.getElementById('app').__vue__
-  const socketData = {
-    event,
-    channel,
-    data: object
-  }
-  console.log('Sending object to websocket', socketData)
-  vue.$socket.emit('send', socketData)
-}
-
-function updateManagementCall({ appInstance, currentCall, callQueue, activeToCall }, { getGlobalAuthenticationObject }) {
-  if (activeToCall) {
+function updateManagementCall({ appInstance, currentCall, callQueue, activeToCall }, globalAuthenticationObject) {
+  if (activeToCall && globalAuthenticationObject) {
     const newSharedInstance = { appInstance, currentCall, callQueue }
     console.log('updateManagementCall', newSharedInstance)
 
     localStorage.setItem('JUSTTO_MANAGEMENT_CALL', JSON.stringify(newSharedInstance))
-    const channel = `/topic/account/${getGlobalAuthenticationObject?.accountId}`
-    this.publishWebsocket(channel, 'REFRESH_MANAGEMENT_CALL', { appInstance })
+    const channel = `/topic/account/${globalAuthenticationObject?.accountId}`
+    publishWebsocket(channel, 'REFRESH_MANAGEMENT_CALL', { appInstance }, globalAuthenticationObject)
   }
 }
 
@@ -35,7 +25,7 @@ export default {
     }
   },
 
-  endCall(state, { id }) {
+  endCall(state, { id, globalAuthenticationObject }) {
     if (state.currentCall && state.currentCall.id === id) {
       Vue.set(state.currentCall, 'status', CALL_STATUS.COMPLETED_CALL)
     }
@@ -44,10 +34,10 @@ export default {
     Vue.set(state, 'dialer', null)
     Vue.set(state, 'currentCall', null)
 
-    updateManagementCall(state)
+    updateManagementCall(state, globalAuthenticationObject)
   },
 
-  addCallInQueue(state, call) {
+  addCallInQueue(state, { call, globalAuthenticationObject }) {
     function calcFirstAvailablePos(queue) {
       let pos = queue.length
 
@@ -79,7 +69,7 @@ export default {
 
     state.callQueue.splice(position, 0, call)
 
-    updateManagementCall(state)
+    updateManagementCall(state, globalAuthenticationObject)
   },
 
   addDialerDetail(state, dialer) {
@@ -121,7 +111,7 @@ export default {
     Vue.set(state, 'callHeartbeatInterval', null)
   },
 
-  setCallDetail(state, _interaction) {
+  setCallDetail(state, { _interaction, globalAuthenticationObject }) {
     /**
      *  TODO: Validar dados da interaction para atualizar a currentCall
      *  id da call (interaction.properties.value)
@@ -138,7 +128,7 @@ export default {
       status: CALL_STATUS.WAITING_NEW_CALL
     })
 
-    updateManagementCall(state)
+    updateManagementCall(state, globalAuthenticationObject)
   },
 
   setAppInstance(state, appInstance) {
