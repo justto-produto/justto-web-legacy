@@ -9,25 +9,17 @@ const DEFAULT_JUSTTO_MANAGEMENT_CALL = '{"currentCall":null,"callQueue":[],"appI
 const dialerApi = 'api/dialer'
 
 export default {
-  ativeAppToCall({ commit, getters: { getAppInstance } }, active = false) {
-    return new Promise((resolve, reject) => {
-      const managementCall = JSON.parse(localStorage.getItem('JUSTTO_MANAGEMENT_CALL'))
-
-      if (managementCall === null || managementCall?.appInstance === getAppInstance) {
-        commit('setAtiveAppToCall', active)
-        if (!active) { commit('clearActiveRequestInterval') }
-        resolve()
-      } else {
-        reject(new Error('Aba inapta para chamadas.'))
-      }
-    })
+  activeAppToCall({ commit, getters: { hasOtherTabActive, isActiveToCall } }, active = false) {
+    if (isActiveToCall || !hasOtherTabActive) {
+      commit('setActiveAppToCall', active)
+    }
   },
 
   addCall({ commit, dispatch, getters: { isActiveToCall, getAppInstance, getGlobalAuthenticationObject, hasOtherTabActive } }, callRequester) {
     console.log('addCall', isActiveToCall, callRequester.appInstance === getAppInstance)
     if (isActiveToCall || !hasOtherTabActive) {
       if (!hasOtherTabActive) {
-        commit('setAtiveAppToCall', true)
+        commit('setActiveAppToCall', true)
       }
       const call = new Call({
         ...callRequester,

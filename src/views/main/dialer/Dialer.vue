@@ -279,7 +279,7 @@ export default {
       if (current) {
         this.init()
       } else {
-        this.ativeAppToCall()
+        this.activeAppToCall()
       }
     }
   },
@@ -293,7 +293,7 @@ export default {
       'addCall',
       'dialerLogin',
       'createNewCall',
-      'ativeAppToCall',
+      'activeAppToCall',
       'setAppInstance',
       'loadVoiceServer',
       'loadVoiceServer',
@@ -357,7 +357,7 @@ export default {
     },
 
     init() {
-      this.ativeAppToCall(true)
+      this.activeAppToCall(true)
     },
 
     login() {

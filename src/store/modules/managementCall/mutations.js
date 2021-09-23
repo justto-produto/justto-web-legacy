@@ -14,8 +14,7 @@ function updateManagementCall({ appInstance, currentCall, callQueue, activeToCal
 }
 
 export default {
-  setAtiveAppToCall(state, active) {
-    console.log('setAtiveAppToCall', active)
+  setActiveAppToCall(state, active) {
     Vue.set(state, 'activeToCall', active)
   },
 
