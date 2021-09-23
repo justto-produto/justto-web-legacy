@@ -247,6 +247,14 @@ const omnichannelActions = {
       url: `/api/office/documents/${disputeId}/to-signer/${docNumber}`,
       mutation: canSetDisputeProtocol ? 'setDisputeProtocol' : null
     })
+  },
+
+  setInteractionMessageContent({ _ }, { disputeId, content, communicationMessageId }) {
+    return axiosDispatch({
+      url: `api/disputes/${disputeId}/communications/${communicationMessageId}`,
+      method: 'PATCH',
+      data: { content }
+    })
   }
 }
 
