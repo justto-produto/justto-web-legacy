@@ -1,6 +1,7 @@
 // https://justto.atlassian.net/browse/SAAS-4522
 import { Call } from '@/models/managementCall/currentCall'
 import { axiosDispatch } from '@/utils'
+import { publishWebsocket } from '@/utils/utils/others'
 
 import { CALL_STATUS } from '@/constants/callStatus'
 
@@ -22,13 +23,12 @@ export default {
     })
   },
 
-  addCall({ commit, dispatch, getters: { isActiveToCall, getAppInstance, getGlobalAuthenticationObject } }, callRequester) {
+  addCall({ commit, dispatch, getters: { isActiveToCall, getAppInstance, getGlobalAuthenticationObject, hasOtherTabActive } }, callRequester) {
     console.log('addCall', isActiveToCall, callRequester.appInstance === getAppInstance)
-    if (callRequester.appInstance === getAppInstance) {
-      if (!isActiveToCall) {
+    if (isActiveToCall || !hasOtherTabActive) {
+      if (!hasOtherTabActive) {
         commit('setAtiveAppToCall', true)
       }
-
       const call = new Call({
         ...callRequester,
         status: CALL_STATUS.ENQUEUED,
@@ -37,6 +37,9 @@ export default {
 
       commit('addCallInQueue', { call, globalAuthenticationObject: getGlobalAuthenticationObject })
       dispatch('startDialerRequester')
+    } else if (hasOtherTabActive) {
+      const channel = `/topic/account/${getGlobalAuthenticationObject?.accountId}`
+      publishWebsocket(channel, 'ADD_CALL', callRequester, getGlobalAuthenticationObject)
     }
   },
 
@@ -136,6 +139,12 @@ export default {
     if (isActiveToCall) {
       commit('addDialerDetail', dialer)
       commit('clearTimeoutDialerDetail')
+    }
+  },
+
+  SOCKET_ADD_CALL({ getters: { isActiveToCall }, dispatch }, callRequester) {
+    if (isActiveToCall) {
+      dispatch('addCall', callRequester)
     }
   },
 

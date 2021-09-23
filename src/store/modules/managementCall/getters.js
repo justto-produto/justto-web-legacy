@@ -12,7 +12,9 @@ export default {
   },
 
   getCurrentCall(state) {
-    return state.activeToCall ? state.currentCall : state.sharedManagementCall?.currentCall
+    return state.activeToCall
+      ? state.currentCall
+      : state.sharedManagementCall?.currentCall
   },
 
   getAppInstance(state) {
@@ -20,7 +22,9 @@ export default {
   },
 
   getCallQueue(state) {
-    return state.activeToCall ? (state.callQueue || []) : (state.sharedManagementCall.callQueue || [])
+    return state.activeToCall
+      ? state.callQueue || []
+      : state.sharedManagementCall.callQueue || []
   },
 
   hasCallInQueue(state, getters) {
@@ -30,5 +34,11 @@ export default {
   isOpenCall(state, getters) {
     const currentCall = getters.getCurrentCall
     return currentCall?.state === 'ACTIVE'
+  },
+
+  hasOtherTabActive(state) {
+    return !state.activeToCall &&
+            state.sharedManagementCall?.appInstance &&
+            state.sharedManagementCall?.appInstance !== state.appInstance
   }
 }
