@@ -3,6 +3,8 @@ import DialerUserModel from './model/DialerUserModel'
 import VoiceServerModel from './model/VoiceServerModel'
 import ServiceStatusModel from './model/ServiceStatusModel'
 
+import Vue from 'vue'
+
 const dialerMutations = {
   setVoiceServer(state, server) {
     state.voiceServer = new VoiceServerModel(server)
@@ -59,6 +61,10 @@ const dialerMutations = {
       id: null,
       status: 'STARTING'
     }
+  },
+
+  setBuyDialerVisible(state, visible) {
+    Vue.set(state, 'buyDialogVisible', Boolean(visible))
   }
 }
 

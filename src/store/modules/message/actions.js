@@ -82,6 +82,14 @@ const messageActions = {
       commit('setShowPreview', visibility)
       resolve()
     })
+  },
+
+  requestBuyDialers({ _ }, data) {
+    return axiosDispatch({
+      url: `${messagesPath}/email/send`,
+      method: 'POST',
+      data
+    })
   }
 }
 
