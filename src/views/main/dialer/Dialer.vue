@@ -20,50 +20,11 @@
         />
       </el-popover>
     </div>
-    <!-- <el-button
-      class="dialer__button"
-      type="text"
-      icon="el-icon-phone"
-      round
-      @click="visible = !visible"
-    /> -->
 
     <div
       v-if="isActiveToCall"
       class="dialer__container"
-      :style="{
-        left: `${left}px`,
-        top: `${top}px`
-      }"
     >
-      <div
-        class="dialer__container-title"
-        :class="{'without-border': !bodyVisible}"
-      >
-        <div class="dialer__container-title-text">
-          {{ !currentCall ? 'Discador' : 'Em ligação' }}
-        </div>
-
-        <div class="dialer__container-title-actions">
-          <i
-            class="el-icon-rank"
-            draggable="true"
-            @drag="drag"
-            @dragend="drag"
-          />
-
-          <i
-            class="el-icon-minus"
-            @click="bodyVisible = !bodyVisible"
-          />
-
-          <i
-            class="el-icon-close"
-            @click="close"
-          />
-        </div>
-      </div>
-
       <audio
         id="remoteAudio"
         class="dialer__container-audio"
@@ -80,131 +41,6 @@
         loop
         autoplay="autoplay"
       />
-
-      <div
-        v-if="bodyVisible"
-        v-loading="loading"
-        class="dialer__container-body"
-      >
-        <el-input
-          v-mask="['+55 (##) 9 ####-####']"
-          :value="!!currentActiveCall ? currentActiveCall.number : ''"
-          disabled
-          size="small"
-        >
-          <!-- <template slot="prepend">
-            +55
-          </template> -->
-        </el-input>
-
-        <div class="dialer__container-body-buttons">
-          <!-- <div class="dialer__container-body-buttons-line">
-            <el-button
-              type="primary"
-              size="small"
-              round
-              v-text="1"
-            />
-
-            <el-button
-              type="primary"
-              size="small"
-              round
-              v-text="2"
-            />
-
-            <el-button
-              type="primary"
-              size="small"
-              round
-              v-text="3"
-            />
-          </div> -->
-
-          <!-- <div class="dialer__container-body-buttons-line">
-            <el-button
-              type="primary"
-              size="small"
-              round
-              v-text="4"
-            />
-
-            <el-button
-              type="primary"
-              size="small"
-              round
-              v-text="5"
-            />
-
-            <el-button
-              type="primary"
-              size="small"
-              round
-              v-text="6"
-            />
-          </div> -->
-
-          <!-- <div class="dialer__container-body-buttons-line">
-            <el-button
-              type="primary"
-              size="small"
-              round
-              v-text="7"
-            />
-
-            <el-button
-              type="primary"
-              size="small"
-              round
-              v-text="8"
-            />
-
-            <el-button
-              type="primary"
-              size="small"
-              round
-              v-text="9"
-            />
-          </div> -->
-
-          <div class="dialer__container-body-buttons-line">
-            <el-button
-              v-if="!!currentCall"
-              type="danger"
-              size="small"
-              round
-              icon="el-icon-error"
-              @click="shutdownCall"
-            />
-
-            <!-- <el-button
-              type="primary"
-              size="small"
-              round
-              v-text="0"
-            /> -->
-
-            <el-button
-              v-if="!currentCall"
-              type="success"
-              size="small"
-              round
-              icon="el-icon-success"
-              @click="call()"
-            />
-          </div>
-        </div>
-      </div>
-
-      <div class="dialer__container-footer">
-        <p
-          v-if="!!currentCall"
-          class="dialer__container-footer-alert"
-        >
-          <sup>*</sup>
-          Esta ligação está sendo gravada.
-        </p>
-      </div>
     </div>
   </article>
 </template>
@@ -312,6 +148,7 @@ export default {
     open(number) {
       this.number = number
       this.visible = true
+      this.showPopover = true
     },
 
     doLogin() {
@@ -518,10 +355,6 @@ export default {
   }
 
   .dialer__container {
-    position: absolute;
-    z-index: 100 !important;
-
-    width: 250px;
 
     background-color: white;
     border: solid $--color-primary 2px;
