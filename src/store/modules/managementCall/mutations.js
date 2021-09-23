@@ -1,16 +1,16 @@
 import { CALL_STATUS } from '@/constants/callStatus'
 import Vue from 'vue'
 
-const DEFAULT_JUSTTO_MANAGEMENT_CALL = '{"currentCall":null,"callQueue":[],"appInstance":null}'
-
 function updateManagementCall({ appInstance, currentCall, callQueue }) {
   const vue = document.getElementById('app').__vue__
 
-  const { appInstance: sharedAppInstance } = JSON.parse(localStorage.getItem('JUSTTO_MANAGEMENT_CALL') || DEFAULT_JUSTTO_MANAGEMENT_CALL)
+  const sharedManagementCall = JSON.parse(localStorage.getItem('JUSTTO_MANAGEMENT_CALL'))
 
-  console.log('updateManagementCall', appInstance !== null && appInstance === sharedAppInstance)
+  const canUpdateShadedManagementCall = sharedManagementCall === null && appInstance !== null && appInstance === sharedManagementCall?.appInstance
 
-  if (appInstance !== null && (appInstance === sharedAppInstance || sharedAppInstance === null)) {
+  console.log('updateManagementCall', canUpdateShadedManagementCall)
+
+  if (canUpdateShadedManagementCall) {
     localStorage.setItem('JUSTTO_MANAGEMENT_CALL', JSON.stringify({ appInstance, currentCall, callQueue }))
     vue.$socket.emit('REFRESH_MANAGEMENT_CALL', { appInstance })
   }
@@ -18,6 +18,7 @@ function updateManagementCall({ appInstance, currentCall, callQueue }) {
 
 export default {
   setAtiveAppToCall(state, active) {
+    console.log('setAtiveAppToCall', active)
     Vue.set(state, 'activeToCall', active)
   },
 

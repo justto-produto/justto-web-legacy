@@ -5,9 +5,20 @@
   >
     <div
       class="dialer__button"
-      @click="visible = !visible"
+      @click="showPopover = !showPopover"
     >
-      <JusIcon :icon="dialerIcon" />
+      <el-popover
+        v-model="showPopover"
+        trigger="manual"
+        placement="right-start"
+      >
+        <CallQueue />
+
+        <JusIcon
+          slot="reference"
+          :icon="dialerIcon"
+        />
+      </el-popover>
     </div>
     <!-- <el-button
       class="dialer__button"
@@ -18,7 +29,7 @@
     /> -->
 
     <div
-      v-if="visible"
+      v-if="isActiveToCall"
       class="dialer__container"
       :style="{
         left: `${left}px`,
@@ -76,14 +87,14 @@
         class="dialer__container-body"
       >
         <el-input
-          v-model="number"
-          v-mask="['(##) 9 ####-####']"
-          :disabled="!!currentCall"
+          v-mask="['+55 (##) 9 ####-####']"
+          :value="!!currentActiveCall ? currentActiveCall.number : ''"
+          disabled
           size="small"
         >
-          <template slot="prepend">
+          <!-- <template slot="prepend">
             +55
-          </template>
+          </template> -->
         </el-input>
 
         <div class="dialer__container-body-buttons">
@@ -207,11 +218,16 @@ import SIPml from 'ecmascript-webrtc-sipml'
 import DialerUserModel from '@/store/modules/dialer/model/DialerUserModel'
 
 export default {
+  components: {
+    CallQueue: () => import('./CallQueue.vue')
+  },
+
   data() {
     const user = new DialerUserModel()
     return {
       loading: false,
       visible: false,
+      showPopover: false,
       bodyVisible: true,
       top: 100,
       left: 450,
@@ -341,20 +357,7 @@ export default {
     },
 
     init() {
-      this.loading = true
-
-      Promise.all([
-        this.doLogin(),
-        this.ativeAppToCall(true)
-      ]).then(this.startConection).finally(() => {
-        this.loading = false
-
-        this.$nextTick(() => {
-          if (this.number.length === 16) {
-            this.call()
-          }
-        })
-      })
+      this.ativeAppToCall(true)
     },
 
     login() {
@@ -443,19 +446,19 @@ export default {
     },
 
     startCall() {
-      this.loading = true
+      // this.loading = true
 
-      this.addCall({
-        // disptueId,
-        // toRoleId,
-        // toRoleName,
-        number: `+55${this.number}`,
-        workspaceId: this.workspaceId,
-        teamName: this.workspaceTeamName,
-        appInstance: this.appInstance
-      }).finally(() => {
-        this.loading = false
-      })
+      // this.addCall({
+      //   // disptueId,
+      //   // toRoleId,
+      //   // toRoleName,
+      //   number: `+55${this.number}`,
+      //   workspaceId: this.workspaceId,
+      //   teamName: this.workspaceTeamName,
+      //   appInstance: this.appInstance
+      // }).finally(() => {
+      //   this.loading = false
+      // })
 
       // this.createNewCall(`+55${this.number}`).then(callInfo => {
       //   this.$jusSegment('ligação', {

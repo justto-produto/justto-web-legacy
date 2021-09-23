@@ -10,9 +10,9 @@ const dialerApi = 'api/dialer'
 export default {
   ativeAppToCall({ commit, getters: { getAppInstance } }, active = false) {
     return new Promise((resolve, reject) => {
-      const { appInstance: sharedAppInstance } = JSON.parse(localStorage.getItem('JUSTTO_MANAGEMENT_CALL') || DEFAULT_JUSTTO_MANAGEMENT_CALL)
+      const managementCall = JSON.parse(localStorage.getItem('JUSTTO_MANAGEMENT_CALL'))
 
-      if (sharedAppInstance === getAppInstance) {
+      if (managementCall === null || managementCall?.appInstance === getAppInstance) {
         commit('setAtiveAppToCall', active)
         if (!active) { commit('clearActiveRequestInterval') }
         resolve()
@@ -23,7 +23,12 @@ export default {
   },
 
   addCall({ commit, dispatch, getters: { isActiveToCall, getAppInstance } }, callRequester) {
-    if (isActiveToCall && callRequester.appInstance === getAppInstance) {
+    console.log('addCall', isActiveToCall, callRequester.appInstance === getAppInstance)
+    if (callRequester.appInstance === getAppInstance) {
+      if (!isActiveToCall) {
+        commit('setAtiveAppToCall', true)
+      }
+
       const call = new Call({
         ...callRequester,
         status: CALL_STATUS.ENQUEUED,
@@ -99,6 +104,7 @@ export default {
   },
 
   requestProvide({ getters: { isActiveToCall, hasCallInQueue, firstCallInQueue } }) {
+    console.table({ isActiveToCall, hasCallInQueue, status: firstCallInQueue.status })
     return isActiveToCall && hasCallInQueue && [CALL_STATUS.WAITING_DIALER, CALL_STATUS.ENQUEUED].includes(firstCallInQueue.status) ? axiosDispatch({
       url: `${dialerApi}/request`,
       method: 'PATCH',

@@ -161,6 +161,7 @@
         :contacts="phonesList"
         :disabled="isNegotiator || isPreNegotiation"
         :party-name="party.name"
+        :party="party"
         filter="phoneNumber"
         model="number"
         :mask="phoneMask"
@@ -178,6 +179,7 @@
       <span class="party-details__infoline-label">Emails:</span>
       <PartyContacts
         :party-name="party.name"
+        :party="party"
         :contacts="emailsList"
         :disabled="isNegotiator || isPreNegotiation"
         model="address"
@@ -353,7 +355,7 @@ export default {
 
   computed: {
     ...mapGetters({
-      ticketStatus: 'getticketOverviewStatus',
+      ticketStatus: 'getTicketOverviewStatus',
       isJusttoAdmin: 'isJusttoAdmin'
     }),
 
