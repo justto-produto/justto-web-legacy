@@ -12,5 +12,9 @@ export default {
     appInstance: null,
     callQueue: [],
     currentCall: null
+  },
+  sipConnection: {
+    stack: null,
+    session: null
   }
 }

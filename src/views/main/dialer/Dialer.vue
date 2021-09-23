@@ -86,7 +86,8 @@ export default {
       isActiveToCall: 'isActiveToCall',
       canAccessDialer: 'canAccessDialer',
       currentActiveCall: 'getCurrentCall',
-      workspaceTeamName: 'workspaceTeamName'
+      workspaceTeamName: 'workspaceTeamName',
+      isPendingToAnswerCurrentCall: 'isPendingToAnswerCurrentCall'
     }),
 
     activeRingtone() {

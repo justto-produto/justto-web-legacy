@@ -10,18 +10,37 @@
         </p>
       </div>
       <div v-if="!isOpenCall && hasCallInQueue">
-        <p>
-          Aguardando disponibilidade de discador
+        <div v-if="isPendingToAnswerCurrentCall">
+          <p>Linha disponível</p>
           <el-button
-            v-if="isActiveToCall"
-            type="info"
+            type="danger"
             size="mini"
-            plain
-            @click="openBuyDialerDialog"
+            @click="answerCurrentCall(false)"
           >
-            Adquira discadores dedicados
+            Não ligar
           </el-button>
-        </p>
+          <el-button
+            type="primary"
+            size="mini"
+            @click="answerCurrentCall(true)"
+          >
+            Ligar agora
+          </el-button>
+        </div>
+        <div v-else>
+          <p>
+            Aguardando disponibilidade de discador
+            <el-button
+              v-if="isActiveToCall"
+              type="info"
+              size="mini"
+              plain
+              @click="openBuyDialerDialog"
+            >
+              Adquira discadores dedicados
+            </el-button>
+          </p>
+        </div>
       </div>
     </div>
 
@@ -75,14 +94,16 @@ export default {
       currentAppInstance: 'getAppInstance',
       isActiveToCall: 'isActiveToCall',
       hasCallInQueue: 'hasCallInQueue',
-      isOpenCall: 'isOpenCall'
+      isOpenCall: 'isOpenCall',
+      isPendingToAnswerCurrentCall: 'isPendingToAnswerCurrentCall'
     })
   },
 
   methods: {
     ...mapActions({
       openBuyDialerDialog: 'openBuyDialerDialog',
-      removeCall: 'SOCKET_REMOVE_CALL'
+      removeCall: 'SOCKET_REMOVE_CALL',
+      answerCurrentCall: 'answerCurrentCall'
     }),
     remove(id) {
       this.removeCall({ callId: id })

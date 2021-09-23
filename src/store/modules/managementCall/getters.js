@@ -1,3 +1,4 @@
+import { CALL_STATUS } from '@/constants/callStatus'
 export default {
   isActiveToCall(state) {
     return state.activeToCall
@@ -40,5 +41,9 @@ export default {
     return !state.activeToCall &&
             state.sharedManagementCall?.appInstance &&
             state.sharedManagementCall?.appInstance !== state.appInstance
+  },
+
+  isPendingToAnswerCurrentCall(state) {
+    return state.activeToCall && state?.currentCall?.status === CALL_STATUS.RECEIVING_CALL
   }
 }

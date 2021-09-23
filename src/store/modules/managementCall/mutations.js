@@ -19,7 +19,8 @@ export default {
   },
 
   setCurrentCallStatus(state, status) {
-    if (state.currentCall && [CALL_STATUS.RECEIVING_CALL].includes(state.currentCall.status)) {
+    // if (state.currentCall && [CALL_STATUS.RECEIVING_CALL].includes(state.currentCall.status)) {
+    if (state.currentCall) {
       Vue.set(state.currentCall, 'status', CALL_STATUS[status])
     }
   },
@@ -110,24 +111,17 @@ export default {
     Vue.set(state, 'callHeartbeatInterval', null)
   },
 
-  setCallDetail(state, { _interaction, globalAuthenticationObject }) {
-    /**
-     *  TODO: Validar dados da interaction para atualizar a currentCall
-     *  id da call (interaction.properties.value)
-     *  number
-     *  disputeId
-     *  Status para WAITING_NEW_CALL
-     */
+  setCallDetail(state, receivedCallDetails) {
+    console.log('setCallDetail', receivedCallDetails)
+    const occurrence = receivedCallDetails.data
+    const callDetail = occurrence?.interaction?.properties
+    if (callDetail && callDetail.VALUE) {
+      const backCallId = Number(callDetail.VALUE)
+      Vue.set(state.currentCall, 'detail', callDetail)
+      Vue.set(state.currentCall, 'id', backCallId)
+    }
 
-    Vue.set(state, 'currentCall', {
-      ...state.currentCall,
-      // id: ?,
-      // number: ?,
-      // disputeId: ?,
-      status: CALL_STATUS.WAITING_NEW_CALL
-    })
-
-    updateManagementCall(state, globalAuthenticationObject)
+    updateManagementCall(state, receivedCallDetails.globalAuthenticationObject)
   },
 
   setAppInstance(state, appInstance) {
@@ -144,7 +138,6 @@ export default {
   },
 
   SOCKET_REFRESH_MANAGEMENT_CALL(state, publisherAppInstance) {
-    console.log('Receiving RefreshManagementCall Notification', publisherAppInstance)
     if (publisherAppInstance !== state.appInstance) {
       const sharedManagementCall = JSON.parse(localStorage.getItem('JUSTTO_MANAGEMENT_CALL'))
       console.log('Received new SharedManagementCall', sharedManagementCall)
@@ -168,5 +161,26 @@ export default {
   removeCallById(state, { callId, globalAuthenticationObject }) {
     Vue.set(state, 'callQueue', state.callQueue.filter(call => call.id !== callId))
     updateManagementCall(state, globalAuthenticationObject)
+  },
+  setSipStack(state, stack) {
+    Vue.set(state.sipConnection, 'stack', stack)
+  },
+  setSipSession(state, session) {
+    Vue.set(state.sipConnection, 'session', session)
+  },
+  answerCurrentCall(state, { acceptedCall, globalAuthenticationObject }) {
+    if (state.currentCall) {
+      if (state.sipConnection?.session) {
+        if (acceptedCall) {
+          Vue.set(state.currentCall, 'status', CALL_STATUS.ACTIVE_CALL)
+          state.sipConnection.session.accept({
+            audio_remote: document.getElementById('remoteAudio')
+          })
+        } else {
+          Vue.set(state.currentCall, 'status', CALL_STATUS.COMPLETED_CALL)
+          state.sipConnection.session.reject()
+        }
+      }
+    }
   }
 }

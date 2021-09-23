@@ -12,8 +12,15 @@ const axiosDispatch = (params, drive = axios) => {
     if (params.params) opt.params = params.params
     drive(opt).then(response => {
       if (params.mutation) {
-        if (params.payload) store.commit(params.mutation, { data: response.data, payload: params.payload })
-        else store.commit(params.mutation, response.data)
+        if (Array.isArray(params.mutation)) {
+          params.mutation.forEach(mutation => {
+            if (params.payload) store.commit(mutation, { data: response.data, payload: params.payload })
+            else store.commit(mutation, response.data)
+          })
+        } else {
+          if (params.payload) store.commit(params.mutation, { data: response.data, payload: params.payload })
+          else store.commit(params.mutation, response.data)
+        }
       }
       if (params.action) {
         if (params.payload) {
