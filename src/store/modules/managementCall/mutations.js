@@ -1,18 +1,25 @@
 import { CALL_STATUS } from '@/constants/callStatus'
 import Vue from 'vue'
 
-function updateManagementCall({ appInstance, currentCall, callQueue }) {
+function publishWebsocket(channel, event, object) {
   const vue = document.getElementById('app').__vue__
+  const socketData = {
+    event,
+    channel,
+    data: object
+  }
+  console.log('Sending object to websocket', socketData)
+  vue.$socket.emit('send', socketData)
+}
 
-  const sharedManagementCall = JSON.parse(localStorage.getItem('JUSTTO_MANAGEMENT_CALL'))
+function updateManagementCall({ appInstance, currentCall, callQueue, activeToCall }, { getGlobalAuthenticationObject }) {
+  if (activeToCall) {
+    const newSharedInstance = { appInstance, currentCall, callQueue }
+    console.log('updateManagementCall', newSharedInstance)
 
-  const canUpdateShadedManagementCall = sharedManagementCall === null && appInstance !== null && appInstance === sharedManagementCall?.appInstance
-
-  console.log('updateManagementCall', canUpdateShadedManagementCall)
-
-  if (canUpdateShadedManagementCall) {
-    localStorage.setItem('JUSTTO_MANAGEMENT_CALL', JSON.stringify({ appInstance, currentCall, callQueue }))
-    vue.$socket.emit('REFRESH_MANAGEMENT_CALL', { appInstance })
+    localStorage.setItem('JUSTTO_MANAGEMENT_CALL', JSON.stringify(newSharedInstance))
+    const channel = `/topic/account/${getGlobalAuthenticationObject?.accountId}`
+    this.publishWebsocket(channel, 'REFRESH_MANAGEMENT_CALL', { appInstance })
   }
 }
 
@@ -147,12 +154,13 @@ export default {
     Vue.set(state, 'broadcastRequestCallStatus', setTimeout(callback, 4 * 1000))
   },
 
-  SOCKET_REFRESH_MANAGEMENT_CALL(state, { appInstance }) {
-    if (appInstance !== state.appInstance) {
-      const { currentCall, callQueue } = JSON.parse(localStorage.getItem('JUSTTO_MANAGEMENT_CALL'))
+  SOCKET_REFRESH_MANAGEMENT_CALL(state, publisherAppInstance) {
+    console.log('Receiving RefreshManagementCall Notification', publisherAppInstance)
+    if (publisherAppInstance !== state.appInstance) {
+      const sharedManagementCall = JSON.parse(localStorage.getItem('JUSTTO_MANAGEMENT_CALL'))
+      console.log('Received new SharedManagementCall', sharedManagementCall)
 
-      Vue.set(state, 'currentCall', currentCall)
-      Vue.set(state, 'callQueue', callQueue)
+      Vue.set(state, 'sharedManagementCall', sharedManagementCall)
     }
   },
 

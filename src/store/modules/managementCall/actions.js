@@ -130,14 +130,18 @@ export default {
     })
   },
 
-  SOCKET_ADD_DIALER_DETAIL({ commit }, dialer) {
-    commit('addDialerDetail', dialer)
-    commit('clearTimeoutDialerDetail')
+  SOCKET_ADD_DIALER_DETAIL({ getters: { isActiveToCall }, commit }, dialer) {
+    if (isActiveToCall) {
+      commit('addDialerDetail', dialer)
+      commit('clearTimeoutDialerDetail')
+    }
   },
 
-  SOCKET_AVAILABLE_DIALER({ commit, dispatch }, { dialerId }) {
-    commit('clearActiveRequestInterval')
-    dispatch('getDialerDetails', { dialerId })
+  SOCKET_AVAILABLE_DIALER({ commit, dispatch, getters: { isActiveToCall } }, { dialerId }) {
+    if (isActiveToCall) {
+      commit('clearActiveRequestInterval')
+      dispatch('getDialerDetails', { dialerId })
+    }
   },
 
   SOCKET_REQUEST_CALL_STATUS({ getters: { getAppInstance }, dispatch }, { appInstance }) {

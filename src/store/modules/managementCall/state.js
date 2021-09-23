@@ -7,5 +7,10 @@ export default {
   broadcastRequestCallStatus: null, // setTimeoutCallStatus(),
   activeToCall: false,
   dialer: null,
-  currentCall: null
+  currentCall: null,
+  sharedManagementCall: {
+    appInstance: null,
+    callQueue: [],
+    currentCall: null
+  }
 }

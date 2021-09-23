@@ -1,7 +1,27 @@
 <template>
   <article class="call-queue__container">
-    <div>
-      {{ tabCanMakeCalls }}
+    <div class="call-queue__container-feedback">
+      <div v-if="isActiveToCall && isOpenCall">
+        <p>
+          Ligação ativa
+          <spam class="call-queue__container-feedback-time-running-call">
+            3:15
+          </spam>
+        </p>
+      </div>
+      <div v-if="!isOpenCall && hasCallInQueue">
+        <p>
+          Aguardando disponibilidade de discador
+          <el-button
+            v-if="isActiveToCall"
+            type="info"
+            size="mini"
+            plain
+          >
+            Adquira discadores dedicados
+          </el-button>
+        </p>
+      </div>
     </div>
 
     <div
@@ -40,20 +60,6 @@
         />
       </div>
     </div>
-
-    <div class="call-queue__container-feedback">
-      feedback aqui
-    </div>
-
-    <div>
-      <!-- v-if="tabCanMakeCalls === 'CURRENT'" -->
-      <el-button
-        type="primary"
-        size="mini"
-      >
-        Desabilitar discador
-      </el-button>
-    </div>
   </article>
 </template>
 
@@ -61,36 +67,15 @@
 import { mapGetters } from 'vuex'
 
 export default {
-  data() {
-    return {
-      sharedManagementCall: null
-    }
-  },
-
   computed: {
     ...mapGetters({
       dialer: 'getDialer',
       callQueue: 'getCallQueue',
-      currentAppInstance: 'getAppInstance'
-    }),
-
-    tabCanMakeCalls() {
-      if (this.sharedManagementCall === null) {
-        return 'NONE'
-      } else if (this.sharedManagementCall?.appInstance === this.currentAppInstance) {
-        return 'CURRENT'
-      } else {
-        return 'ANOTHER'
-      }
-    }
-  },
-
-  created() {
-    this.sharedManagementCall = JSON.parse(localStorage.getItem('JUSTTO_MANAGEMENT_CALL'))
-  },
-
-  updated() {
-    this.sharedManagementCall = JSON.parse(localStorage.getItem('JUSTTO_MANAGEMENT_CALL'))
+      currentAppInstance: 'getAppInstance',
+      isActiveToCall: 'isActiveToCall',
+      hasCallInQueue: 'hasCallInQueue',
+      isOpenCall: 'isOpenCall'
+    })
   },
 
   methods: {
@@ -108,6 +93,10 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 16px;
+
+  .call-queue__container-feedback-time-running-call {
+    display: block;
+  }
 
   .call-queue__container-call-queue {
     border: solid thin $--color-gray;

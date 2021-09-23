@@ -3,10 +3,6 @@ export default {
     return state.activeToCall
   },
 
-  hasCallInQueue(state) {
-    return state.callQueue.length > 0
-  },
-
   firstCallInQueue(state) {
     return state.callQueue[0] || {}
   },
@@ -16,7 +12,7 @@ export default {
   },
 
   getCurrentCall(state) {
-    return state.currentCall
+    return state.activeToCall ? state.currentCall : state.sharedManagementCall?.currentCall
   },
 
   getAppInstance(state) {
@@ -24,6 +20,15 @@ export default {
   },
 
   getCallQueue(state) {
-    return state.callQueue || []
+    return state.activeToCall ? (state.callQueue || []) : (state.sharedManagementCall.callQueue || [])
+  },
+
+  hasCallInQueue(state, getters) {
+    return getters.getCallQueue?.length > 0
+  },
+
+  isOpenCall(state, getters) {
+    const currentCall = getters.getCurrentCall
+    return currentCall?.state === 'ACTIVE'
   }
 }
