@@ -194,7 +194,7 @@ export default {
       return contactsFiltered?.slice(0, arrayCut)
     },
     isOabContacts() {
-      return Object.values(this.party).length > 0
+      return Object.values(this.party).length > 0 && this.filter === 'oab'
     }
   },
 
