@@ -201,7 +201,7 @@ export default {
   },
 
   mounted() {
-    this.editorText = this.value?.message?.content || ''
+    this.editorText = this.value?.message?.resume || ''
 
     this.$set(this.value, 'renderCompleted', true)
     this.$set(this.occurrence, 'renderCompleted', true)
