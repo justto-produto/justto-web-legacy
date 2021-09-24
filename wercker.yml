@@ -24,7 +24,7 @@ build:
       code: |
         export PROJECT_NAME=justto-web
         unset VUE_APP_BASE_URL
-        export VUE_APP_BASE_URL=https://justto.app/
+        export VUE_APP_BASE_URL=https://api.justto.app/
     - install-packages:
         packages: curl
     - script:

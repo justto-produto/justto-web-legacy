@@ -44,7 +44,7 @@ Cypress.Commands.add('upload_file', (fileName, fileType = ' ', selector) => {
 
 Cypress.Commands.add('prepair_testes', (method, endPoint) => {
   // Faz requisição para preparar ambiente especifico de teste
-  cy.request(method, 'https://justto.app/api/disputes/' + endPoint)
+  cy.request(method, 'https://api.justto.app/api/disputes/' + endPoint)
 })
 
 Cypress.Commands.add('login', (email, password, workspace) => {
