@@ -1,6 +1,9 @@
 <template>
   <article class="call-queue__container">
-    <div class="call-queue__container-feedback">
+    <div
+      v-if="isActiveToCall || hasCallInQueue"
+      class="call-queue__container-feedback"
+    >
       <div v-if="isActiveToCall && isOpenCall">
         <p>
           Ligação ativa
@@ -80,6 +83,20 @@
         />
       </div>
     </div>
+
+    <div
+      v-if="callQueue.length === 0"
+      class="call-queue__container-empty-queue"
+    >
+      <jus-icon
+        class="call-queue__container-empty-queue-icon"
+        icon="checked"
+      />
+
+      <div class="call-queue__container-empty-queue-label">
+        Sem ligações pendentes
+      </div>
+    </div>
   </article>
 </template>
 
@@ -147,6 +164,22 @@ export default {
           color: white;
         }
       }
+    }
+  }
+
+  .call-queue__container-empty-queue {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+
+    .call-queue__container-empty-queue-icon {
+      height: 24px;
+      width: 24px;
+    }
+
+    .call-queue__container-empty-queue-label {
+      font-weight: 600;
     }
   }
 }
