@@ -1,6 +1,7 @@
 <template>
   <article class="phone-container">
     <div
+      v-if="!hideInfo"
       class="phone-container__contact"
       @click="copyContact"
     >
@@ -16,6 +17,15 @@
       </span>
 
       {{ contact }}
+    </div>
+
+    <div
+      v-else
+      class="phone-container__editor"
+    >
+      <div class="phone-container__editor-label">
+        {{ occurrence.description }}
+      </div>
     </div>
 
     <div
@@ -110,7 +120,10 @@
       </em>
     </div>
 
-    <span class="phone-container__about negotiation-occurrence-about">
+    <span
+      v-if="!hideInfo"
+      class="phone-container__about negotiation-occurrence-about"
+    >
       <span class="phone-container__about__time">
         {{ sendDate | moment('HH:mm') }}
       </span>
@@ -134,6 +147,11 @@ export default {
     occurrence: {
       type: Object,
       required: true
+    },
+
+    hideInfo: {
+      type: Boolean,
+      default: false
     }
   },
 

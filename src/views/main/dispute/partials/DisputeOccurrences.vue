@@ -253,6 +253,14 @@
                 :value="occurrence.interaction"
                 class="dispute-view-occurrences__card-box-nps"
               />
+              <PhoneCallOccurrence
+                v-else-if="occurrence.interaction.type === 'PHONE_CALL'"
+                :occurrence="occurrence"
+                :value="occurrence.interaction"
+                class="dispute-view-occurrences__card-box-nps"
+                hide-info
+              />
+
               <el-card
                 v-else
                 :class="(occurrence.interaction ? occurrence.interaction.type : '') + ' ' + buildCommunicationType(occurrence) + ' ' + (occurrence.interaction && occurrence.interaction.message ? occurrence.interaction.message.status : '')"
@@ -287,6 +295,7 @@
                         >
                           <span v-html="buildWhatsappStatus(occurrence.interaction.message, occurrence.executionDateTime || occurrence.createAt).message" />
                         </div>
+
                         <jus-icon :icon="buildWhatsappStatus(occurrence.interaction.message, occurrence.executionDateTime || occurrence.createAt).icon" />
                       </el-tooltip>
                     </span>
@@ -347,6 +356,7 @@
                   </i>
                 </div>
               </el-card>
+
               <div
                 :class="getDirection(occurrence.interaction)"
                 class="dispute-view-occurrences__card-info"
@@ -400,6 +410,7 @@
                 </span>
               </div>
             </div>
+
             <div
               v-if="showReply(occurrence)"
               class="dispute-view-occurrences__side-icon"
@@ -418,6 +429,7 @@
             </div>
           </div>
         </div>
+
         <div
           v-if="activeOccurrency.id === occurrence.id"
           class="dispute-view-occurrences__occurrence-merged"
@@ -456,6 +468,14 @@
                 :value="mergedOccurency.interaction"
                 class="dispute-view-occurrences__card-box-nps"
               />
+              <PhoneCallOccurrence
+                v-else-if="mergedOccurency.interaction.type === 'PHONE_CALL'"
+                :occurrence="mergedOccurency"
+                :value="mergedOccurency.interaction"
+                class="dispute-view-occurrences__card-box-nps"
+                hide-info
+              />
+
               <el-card
                 v-else
                 :class="(mergedOccurency.interaction ? mergedOccurency.interaction.type : '') + ' ' + buildCommunicationType(mergedOccurency) + ' ' + (mergedOccurency.interaction && mergedOccurency.interaction.message ? mergedOccurency.interaction.message.status : '')"
@@ -618,6 +638,7 @@
         >Fechar</el-button>
       </span>
     </el-dialog>
+
     <div style="margin-top: 20px">
       <slot />
     </div>
@@ -634,8 +655,9 @@ export default {
   name: 'DisputeOccurrences',
   components: {
     InfiniteLoading,
+    AttachmentOccurrence: () => import('./partials/AttachmentOccurrence'),
     NpsInteraction: () => import('@/views/main/negotiation/partials/ticket/omnichannel/occurrences/occurrence/interaction/partials/Nps'),
-    AttachmentOccurrence: () => import('./partials/AttachmentOccurrence')
+    PhoneCallOccurrence: () => import('@/views/main/negotiation/partials/ticket/omnichannel/occurrences/occurrence/interaction/partials/Phone')
   },
   props: {
     disputeId: {
@@ -721,28 +743,38 @@ export default {
       Object.keys(datedOccurrences).forEach((item) => {
         const datedOccurrence = datedOccurrences[item]
         let previousOccurrenceIndex
+
         datedOccurrence.forEach((fo, index) => {
           if (fo.interaction && fo.interaction.message && fo.interaction.message.communicationType === 'WHATSAPP') return
+          if (fo.interaction?.type === 'PHONE_CALL') return
+
           let similarity
+
           if (fo.interaction && fo.interaction.type) {
             similarity = ['ATTACHMENT', 'MANUAL_COUNTERPROPOSAL', 'NEGOTIATOR_PROPOSAL', 'NEGOTIATOR_COUNTERPROSAL', 'MANUAL_PROPOSAL'].includes(fo.interaction.type) ? 100 : 75
           } else {
             similarity = 75
           }
+
           const previous = datedOccurrence[previousOccurrenceIndex]
+
           if (previous && isSimilarStrings(this.buildContent(fo), this.buildContent(previous), similarity) && (fo.interaction && previous.interaction && fo.interaction.direction === previous.interaction.direction)) {
             fo.toDelete = true
+
             if (!previous.merged) {
               previous.merged = []
               previous.toDelete = false
             }
+
             if (!previous.merged.map(i => i.id).includes(fo.id)) {
               previous.merged.push(fo)
             }
           } else previousOccurrenceIndex = index
         })
+
         datedOccurrences[item] = datedOccurrence.filter(fo => !fo.toDelete)
       })
+
       return datedOccurrences
     },
     fetchAction() {
@@ -914,11 +946,17 @@ export default {
         if (this.isJusttineMessage(occurrence)) {
           return ''
         }
+
         if (occurrence.interaction.type &&
         ['ATTACHMENT'].includes(occurrence.interaction.type)
         ) {
           return occurrence.properties.SENDER_NAME
         }
+
+        if (['PHONE_CALL'].includes(occurrence?.interaction?.type)) {
+          return occurrence?.interaction?.properties?.TO_PERSON_NAME || ''
+        }
+
         if (occurrence.interaction.type &&
           ['MANUAL_COUNTERPROPOSAL', 'MANUAL_PROPOSAL', 'CLICK'].includes(occurrence.interaction.type) &&
           occurrence.interaction.properties.USER) {

@@ -99,7 +99,7 @@ export default {
     },
 
     dialerIcon() {
-      return !this.isActiveToCall ? 'not-main-phone-active' : [CALL_STATUS.ACTIVE_CALL].includes(this.currentActiveCall?.status) ? 'ic-phone-active' : 'tts'
+      return !this.isActiveToCall ? 'not-main-phone-active' : [CALL_STATUS.ACTIVE_CALL].includes(this.currentActiveCall?.status) ? 'phone-active' : 'tts'
     },
 
     hasAcceptTerms() {
