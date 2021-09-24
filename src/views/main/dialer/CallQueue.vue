@@ -7,11 +7,17 @@
       <div v-if="isActiveToCall && isOpenCall">
         <p>
           Ligação ativa
-          <spam class="call-queue__container-feedback-time-running-call">
-            3:15
-          </spam>
         </p>
+
+        <el-button
+          type="danger"
+          size="mini"
+          @click="hangUpCall()"
+        >
+          Desligar
+        </el-button>
       </div>
+
       <div v-if="!isOpenCall && hasCallInQueue">
         <div v-if="isPendingToAnswerCurrentCall">
           <p>Linha disponível</p>
@@ -33,16 +39,16 @@
         <div v-else>
           <p>
             Aguardando disponibilidade de discador
-            <el-button
-              v-if="isActiveToCall"
-              type="info"
-              size="mini"
-              plain
-              @click="openBuyDialerDialog"
-            >
-              Adquira discadores dedicados
-            </el-button>
           </p>
+          <el-button
+            v-if="isActiveToCall"
+            type="info"
+            size="mini"
+            plain
+            @click="openBuyDialerDialog"
+          >
+            Adquira discadores dedicados
+          </el-button>
         </div>
       </div>
     </div>
@@ -96,6 +102,17 @@
       <div class="call-queue__container-empty-queue-label">
         Sem ligações pendentes
       </div>
+
+      <div v-if="!hasCallInQueue">
+        <el-button
+          type="info"
+          size="mini"
+          plain
+          @click="openBuyDialerDialog"
+        >
+          Adquira discadores dedicados
+        </el-button>
+      </div>
     </div>
   </article>
 </template>
@@ -112,6 +129,7 @@ export default {
       isActiveToCall: 'isActiveToCall',
       hasCallInQueue: 'hasCallInQueue',
       isOpenCall: 'isOpenCall',
+      currentCall: 'getCurrentCall',
       isPendingToAnswerCurrentCall: 'isPendingToAnswerCurrentCall'
     })
   },
@@ -120,10 +138,21 @@ export default {
     ...mapActions({
       openBuyDialerDialog: 'openBuyDialerDialog',
       removeCall: 'SOCKET_REMOVE_CALL',
-      answerCurrentCall: 'answerCurrentCall'
+      answerCurrentCall: 'answerCurrentCall',
+      endCall: 'endCall'
     }),
+
     remove(id) {
       this.removeCall({ callId: id })
+    },
+
+    hangUpCall() {
+      const data = {
+        dialerId: this.dialer.id,
+        callId: this.currentCall?.detail?.VALUE
+      }
+
+      this.endCall(data)
     }
   }
 }
@@ -136,6 +165,12 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 16px;
+
+  .call-queue__container-feedback {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
 
   .call-queue__container-feedback-time-running-call {
     display: block;

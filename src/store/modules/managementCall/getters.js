@@ -28,13 +28,12 @@ export default {
       : state.sharedManagementCall.callQueue || []
   },
 
-  hasCallInQueue(state, getters) {
-    return getters.getCallQueue?.length > 0
+  hasCallInQueue(state) {
+    return state.callQueue?.length > 0
   },
 
-  isOpenCall(state, getters) {
-    const currentCall = getters.getCurrentCall
-    return currentCall?.state === 'ACTIVE'
+  isOpenCall(state) {
+    return state.currentCall?.status === CALL_STATUS.ACTIVE_CALL
   },
 
   hasOtherTabActive(state) {
