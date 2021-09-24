@@ -656,7 +656,7 @@ export default {
     },
     pdfUrl() {
       if (this.disputeId) {
-        return 'https://api.justto.app/api/office/documents/download-signed/' + this.disputeId
+        return 'https://justto.app/api/office/documents/download-signed/' + this.disputeId
       }
 
       return ''
