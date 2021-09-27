@@ -4,7 +4,9 @@ export default (html) => {
 
   tempEl.innerHTML = html
 
-  tempEl.getElementsByClassName('justto-mention').forEach(el => {
+  const mentionsList = [].slice.call(tempEl.getElementsByClassName('justto-mention') || [])
+
+  mentionsList.forEach(el => {
     mentions.push({ accountId: Number(el.getAttribute('account-id')) })
   })
 
