@@ -1783,6 +1783,7 @@ import { validateName, validateDocument, validatePhone, validateZero } from '@/u
 import { mapGetters, mapActions } from 'vuex'
 
 import restartEngagement from '@/utils/mixins/restartEngagement'
+import _ from 'lodash'
 
 export default {
   name: 'DisputeOverview',
@@ -2179,6 +2180,7 @@ export default {
 
     updateDisputeRoleField(disputeRole, { field, value }) {
       let message = ''
+
       if (field === 'oab') {
         const { number, state } = value
 
@@ -2322,6 +2324,7 @@ export default {
         this.disputeForm.lastOfferValue = this.disputeForm.disputeUpperRange
       }
     },
+
     isToShowChangeParty({ party, roles }) {
       return this.isEditingRule && party !== 'UNKNOWN'
     },
@@ -2394,6 +2397,7 @@ export default {
 
     buildRoleTitle: (...i) => buildRoleTitle(...i),
     getRoleIcon: (...i) => getRoleIcon(...i),
+
     openRemoveDisputeDialog() {
       if (this.dispute.status === 'PRE_NEGOTIATION') {
         this.deleteType = 'DISPUTE_DROPPED'
@@ -2409,6 +2413,7 @@ export default {
         this.chooseDeleteDialogVisible = true
       }
     },
+
     deleteDispute() {
       this.modalLoading = true
       this.removeDispute({
@@ -2424,16 +2429,20 @@ export default {
         this.modalLoading = false
       })
     },
+
     showNamesake(role) {
       return role.namesake && !role.documentNumber
     },
+
     showVexatious(personProperties) {
       if (personProperties.IS_VEXATIOUS_AUTHOR === 'true' || personProperties.IS_VEXATIOUS_LAWYER === 'true' || personProperties.IS_VEXATIOUS_PARTY === 'true') return true
       return false
     },
+
     showIsDead(role) {
       return role.dead
     },
+
     buildContactStatus(contact) {
       if (!contact.address && !contact.isMobile) {
         return 'Não é possível enviar WhatsApp para números de telefones fixo'
@@ -2443,6 +2452,7 @@ export default {
         return 'Contato adicionado manualmente'
       }
     },
+
     openAddBankDialog() {
       this.addBankForm.name = this.roleForm.name
       this.addBankForm.document = this.roleForm.documentNumber
@@ -2455,6 +2465,7 @@ export default {
       }
       this.addBankDialogVisible = true
     },
+
     closeNamesakes() {
       this.namesakeDialogVisible = false
       this.selectedNamesake = ''
@@ -2462,6 +2473,7 @@ export default {
       this.cityFilter = null
       this.ufFilter = null
     },
+
     selectNamesake() {
       if (this.selectedNamesake) {
         this.namesakeDialogLoading = true
@@ -2482,11 +2494,13 @@ export default {
           })
       }
     },
+
     handleCurrentChange(val) {
       if (val) {
         this.selectedNamesake = val
       }
     },
+
     namesakeDialog(name, personId) {
       if (['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(this.dispute.status)) {
         this.$confirm(`Você está solicitando o tratamento de homônimo de uma disputa que já
@@ -2503,6 +2517,7 @@ export default {
         this.opeNnamesakeDialog(name, personId)
       }
     },
+
     opeNnamesakeDialog(name, personId) {
       this.selectedNamesakePersonId = personId
       this.namesakeButtonLoading = true
@@ -2519,6 +2534,7 @@ export default {
           this.namesakeButtonLoading = false
         })
     },
+
     updateDisputeRole(activeRole, messageType) {
       const disputeRoles = this.dispute.disputeRoles.map(dr => {
         if (dr.id === activeRole.id) {
@@ -2552,6 +2568,7 @@ export default {
       this.$store.commit('setDisputeRoles', disputeRoles)
       this.$emit('updateActiveRole', { activeRole, messageType })
     },
+
     updateDisputeBankAccounts(roleBankAccountIds) {
       let action, bankAccountId
       for (const roleAccount of roleBankAccountIds) {
@@ -2598,6 +2615,7 @@ export default {
         this.linkBankAccountLoading = false
       })
     },
+
     roleTitleSort(title) {
       if (title) {
         const sortedArray = title.slice(0) || []
@@ -2606,6 +2624,7 @@ export default {
         })
       } return []
     },
+
     openDisputeDialog() {
       this.disputeUpperRangeHasChanged = false
       this.lastOfferValueHasChanged = false
@@ -2642,11 +2661,13 @@ export default {
       this.editDisputeDialogVisible = true
       this.$nextTick(() => { this.$refs.disputeForm.clearValidate() })
     },
+
     checkZeroUpperRange() {
       if (this.disputeForm.zeroUpperRange) {
         this.$nextTick(() => { this.$refs.disputeForm.validate() })
       }
     },
+
     editDispute() {
       this.$refs.disputeForm.validate(valid => {
         if (valid) {
@@ -2762,6 +2783,7 @@ export default {
         }
       })
     },
+
     handleChange(val) {
       if (!val) {
         this.selectedPhone = 0
@@ -2774,6 +2796,7 @@ export default {
       }
       this.isEditingRule = false
     },
+
     openRoleDialog(role) {
       this.bankAccountIdstoUnlink = []
       this.editRoleDialogError = false
@@ -2790,11 +2813,14 @@ export default {
       if (this.roleForm.phones.length) this.roleForm.phones = this.roleForm.phones.sort(p => p.isMain ? -1 : 1)
       if (this.$refs.roleForm) this.$refs.roleForm.clearValidate()
     },
+
     editRole() {
       let isValid = true
+
       this.$refs.roleForm.validateField(['name', 'documentNumber'], errorMessage => {
         if (errorMessage) isValid = false
       })
+
       if (isValid) {
         if (this.bankAccountIdstoUnlink.length) {
           this.linkBankAccountLoading = true
@@ -2819,12 +2845,15 @@ export default {
         }
       }
     },
+
     editRoleAction() {
       const hasNewBankAccount = this.roleForm.bankAccounts.filter(account => !account.id).length
       delete this.roleForm.personProperties.BIRTHDAY
       const roleToEdit = JSON.parse(JSON.stringify(this.roleForm))
       delete roleToEdit.title
+
       this.editRoleDialogLoading = true
+
       this.$store.dispatch('editRole', {
         disputeId: this.dispute.id,
         disputeRole: roleToEdit
@@ -2836,7 +2865,9 @@ export default {
           message: 'Os dados foram alterados com sucesso.',
           type: 'success'
         })
+
         const roleDataDifference = this.verifyChangedRoleData(this.roleForm, this.originalRole)
+
         if (roleDataDifference.length) {
           this.$confirm(this.$t('dispute.overview.confirm.restart.engagement.question'), 'Atenção!', {
             confirmButtonText: this.$t('dispute.overview.confirm.restart.engagement.confirm'),
@@ -2867,6 +2898,7 @@ export default {
             })
           })
         }
+
         if (hasNewBankAccount) {
           this.$confirm('Você adicionou contas bancárias a esta parte. Deseja vincular estas contas a disputa?', 'Atenção', {
             confirmButtonText: 'Vincular',
@@ -2890,12 +2922,15 @@ export default {
             this.linkBankAccountLoading = false
           })
         }
+
         this.editRoleDialogVisible = false
+
         setTimeout(function() {
           this.$emit('fetch-data')
         }.bind(this), 200)
       }).catch(error => {
         console.error(error)
+
         if (error.status === 400) {
           this.editRoleDialogError = true
           this.editRoleDialogErrorList.push(error.data.message)
@@ -2904,7 +2939,12 @@ export default {
         const { name, party, id: roleId } = roleToEdit
         const { status, id } = this.dispute
 
-        this.verifyRestartEngagement({ name, party, status, disputeId: id, disputeRoleId: roleId })
+        const needRestartEngagement = _.difference(this.roleForm.phones, this.originalRole.phones).length || _.difference(this.roleForm.emails, this.originalRole.emails).length
+
+        if (needRestartEngagement) {
+          this.verifyRestartEngagement({ name, party, status, disputeId: id, disputeRoleId: roleId })
+        }
+
         this.editRoleDialogLoading = false
       })
     },
