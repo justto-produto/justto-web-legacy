@@ -12,7 +12,8 @@ const dialer = {
     pauseReasons: [],
     dialerAssets: new DialerMediaAssets(),
     dialerOrganizationId: '5c60c99d7b2e323f65954af5',
-    call: null
+    call: null,
+    buyDialogVisible: false
   },
   mutations,
   actions,

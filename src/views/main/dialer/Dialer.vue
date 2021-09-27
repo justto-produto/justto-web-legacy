@@ -1,49 +1,30 @@
 <template>
-  <article class="dialer">
-    <!-- <el-button
+  <article
+    v-if="canAccessDialer"
+    class="dialer"
+  >
+    <div
       class="dialer__button"
-      type="text"
-      icon="el-icon-phone"
-      round
-      @click="visible = !visible"
-    /> -->
+      @click="showPopover = !showPopover"
+    >
+      <el-popover
+        v-model="showPopover"
+        trigger="manual"
+        placement="right-start"
+      >
+        <CallQueue />
+
+        <JusIcon
+          slot="reference"
+          :icon="dialerIcon"
+        />
+      </el-popover>
+    </div>
 
     <div
-      v-if="visible"
+      v-if="isActiveToCall"
       class="dialer__container"
-      :style="{
-        left: `${left}px`,
-        top: `${top}px`
-      }"
     >
-      <div
-        class="dialer__container-title"
-        :class="{'without-border': !bodyVisible}"
-      >
-        <div class="dialer__container-title-text">
-          {{ !currentCall ? 'Discador' : 'Em ligação' }}
-        </div>
-
-        <div class="dialer__container-title-actions">
-          <i
-            class="el-icon-rank"
-            draggable="true"
-            @drag="drag"
-            @dragend="drag"
-          />
-
-          <i
-            class="el-icon-minus"
-            @click="bodyVisible = !bodyVisible"
-          />
-
-          <i
-            class="el-icon-close"
-            @click="close"
-          />
-        </div>
-      </div>
-
       <audio
         id="remoteAudio"
         class="dialer__container-audio"
@@ -51,146 +32,38 @@
         autoplay="autoplay"
       />
 
-      <div
-        v-if="bodyVisible"
-        v-loading="loading"
-        class="dialer__container-body"
-      >
-        <el-input
-          v-model="number"
-          v-mask="['(##) 9 ####-####']"
-          :disabled="!!currentCall"
-          size="small"
-        >
-          <template slot="prepend">
-            +55
-          </template>
-        </el-input>
-
-        <div class="dialer__container-body-buttons">
-          <!-- <div class="dialer__container-body-buttons-line">
-            <el-button
-              type="primary"
-              size="small"
-              round
-              v-text="1"
-            />
-
-            <el-button
-              type="primary"
-              size="small"
-              round
-              v-text="2"
-            />
-
-            <el-button
-              type="primary"
-              size="small"
-              round
-              v-text="3"
-            />
-          </div> -->
-
-          <!-- <div class="dialer__container-body-buttons-line">
-            <el-button
-              type="primary"
-              size="small"
-              round
-              v-text="4"
-            />
-
-            <el-button
-              type="primary"
-              size="small"
-              round
-              v-text="5"
-            />
-
-            <el-button
-              type="primary"
-              size="small"
-              round
-              v-text="6"
-            />
-          </div> -->
-
-          <!-- <div class="dialer__container-body-buttons-line">
-            <el-button
-              type="primary"
-              size="small"
-              round
-              v-text="7"
-            />
-
-            <el-button
-              type="primary"
-              size="small"
-              round
-              v-text="8"
-            />
-
-            <el-button
-              type="primary"
-              size="small"
-              round
-              v-text="9"
-            />
-          </div> -->
-
-          <div class="dialer__container-body-buttons-line">
-            <el-button
-              v-if="!!currentCall"
-              type="danger"
-              size="small"
-              round
-              icon="el-icon-error"
-              @click="shutdownCall"
-            />
-
-            <!-- <el-button
-              type="primary"
-              size="small"
-              round
-              v-text="0"
-            /> -->
-
-            <el-button
-              v-if="!currentCall"
-              type="success"
-              size="small"
-              round
-              icon="el-icon-success"
-              @click="call()"
-            />
-          </div>
-        </div>
-      </div>
-
-      <div class="dialer__container-footer">
-        <p
-          v-if="!!currentCall"
-          class="dialer__container-footer-alert"
-        >
-          <sup>*</sup>
-          Esta ligação está sendo gravada.
-        </p>
-      </div>
+      <audio
+        v-if="isActiveToCall"
+        id="speakerAudio"
+        :src="activeRingtone"
+        class="dialer__container-audio"
+        controls
+        loop
+        autoplay="autoplay"
+      />
     </div>
   </article>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import { CALL_STATUS } from '@/constants/callStatus'
+import { uuidv4 } from '@/utils'
 
 import SIPml from 'ecmascript-webrtc-sipml'
 import DialerUserModel from '@/store/modules/dialer/model/DialerUserModel'
 
 export default {
+  components: {
+    CallQueue: () => import('./CallQueue.vue')
+  },
+
   data() {
     const user = new DialerUserModel()
     return {
       loading: false,
       visible: false,
+      showPopover: false,
       bodyVisible: true,
       top: 100,
       left: 450,
@@ -206,9 +79,28 @@ export default {
 
   computed: {
     ...mapGetters({
+      workspaceId: 'workspaceId',
+      appInstance: 'getAppInstance',
+      preferences: 'userPreferences',
       currentCall: 'getCurrentCallId',
-      preferences: 'userPreferences'
+      isActiveToCall: 'isActiveToCall',
+      canAccessDialer: 'canAccessDialer',
+      currentActiveCall: 'getCurrentCall',
+      workspaceTeamName: 'workspaceTeamName',
+      isPendingToAnswerCurrentCall: 'isPendingToAnswerCurrentCall'
     }),
+
+    activeRingtone() {
+      if ([CALL_STATUS.RECEIVING_CALL].includes(this.currentActiveCall)) {
+        return 'https://storage.googleapis.com/justto_app/audio/justto_auto_answer_ring.wav'
+      } else {
+        return ''
+      }
+    },
+
+    dialerIcon() {
+      return !this.isActiveToCall ? 'not-main-phone-active' : [CALL_STATUS.ACTIVE_CALL].includes(this.currentActiveCall?.status) ? 'phone-active' : 'tts'
+    },
 
     hasAcceptTerms() {
       return !!this.preferences.properties.ACCEPT_DIALER_TERMS
@@ -223,30 +115,41 @@ export default {
     visible(current) {
       if (current) {
         this.init()
+      } else {
+        this.activeAppToCall()
       }
     }
   },
 
+  created() {
+    this.setAppInstance(uuidv4())
+  },
+
   methods: {
     ...mapActions([
+      'addCall',
       'dialerLogin',
-      'loadVoiceServer',
-      'startServerStatus',
-      'availableServerStatus',
-      'refreshServiceStatus',
       'createNewCall',
+      'activeAppToCall',
+      'setAppInstance',
+      'loadVoiceServer',
+      'loadVoiceServer',
       'clearCurrentCall',
       'deleteCurrentCall',
-      'loadVoiceServer',
-      'changeServerStatus',
       'startServerStatus',
+      'startServerStatus',
+      'changeServerStatus',
+      'setAccountProperty',
+      'refreshServiceStatus',
+      'startDialerRequester',
       'availableServerStatus',
-      'setAccountProperty'
+      'availableServerStatus'
     ]),
 
     open(number) {
       this.number = number
       this.visible = true
+      this.showPopover = true
     },
 
     doLogin() {
@@ -262,7 +165,6 @@ export default {
 
       this.loading = false
 
-      // update debug level to be sure new values will be used if the user haven't updated the page
       SIPml.setDebugLevel((window.localStorage && window.localStorage.getItem('org.doubango.expert.disable_debug') === 'Justto') ? 'error' : 'info')
 
       const self = this
@@ -293,19 +195,7 @@ export default {
     },
 
     init() {
-      this.loading = true
-
-      Promise.all([
-        this.doLogin()
-      ]).then(this.startConection).finally(() => {
-        this.loading = false
-
-        this.$nextTick(() => {
-          if (this.number.length === 16) {
-            this.call()
-          }
-        })
-      })
+      this.activeAppToCall(true)
     },
 
     login() {
@@ -394,18 +284,30 @@ export default {
     },
 
     startCall() {
-      this.loading = true
+      // this.loading = true
 
-      this.createNewCall(`+55${this.number}`).then(callInfo => {
-        this.$jusSegment('ligação', {
-          numebr: this.number,
-          ...callInfo
-        })
-      }).catch(() => {
-        this.deleteCurrentCall()
-      }).finally(() => {
-        this.loading = false
-      })
+      // this.addCall({
+      //   // disptueId,
+      //   // toRoleId,
+      //   // toRoleName,
+      //   number: `+55${this.number}`,
+      //   workspaceId: this.workspaceId,
+      //   teamName: this.workspaceTeamName,
+      //   appInstance: this.appInstance
+      // }).finally(() => {
+      //   this.loading = false
+      // })
+
+      // this.createNewCall(`+55${this.number}`).then(callInfo => {
+      //   this.$jusSegment('ligação', {
+      //     numebr: this.number,
+      //     ...callInfo
+      //   })
+      // }).catch(() => {
+      //   this.deleteCurrentCall()
+      // }).finally(() => {
+      //   this.loading = false
+      // })
     },
 
     shutdownCall() {
@@ -446,11 +348,14 @@ export default {
 @import '@/styles/colors.scss';
 
 .dialer {
-  .dialer__container {
-    position: absolute;
-    z-index: 100 !important;
+  .dialer__button {
+    text-align: center;
+    cursor: pointer;
 
-    width: 250px;
+    margin: 0 auto 16px;
+  }
+
+  .dialer__container {
 
     background-color: white;
     border: solid $--color-primary 2px;

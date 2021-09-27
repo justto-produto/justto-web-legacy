@@ -67,6 +67,7 @@
             'party-contacts__infoline-data--secondary': !contact.isMain
           }"
           class="party-contacts__infoline-data"
+          @call="makeCall"
           @change="updateContact(contact.id, $event)"
           @delete="removeContact(contact.id)"
           @click="selectContact(contact[model], contact.isValid, contact.isMain)"
@@ -106,10 +107,12 @@ import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'PartyContacts',
+
   components: {
     TextInlineEditor: () => import('@/components/inputs/TextInlineEditor'),
     LawyerDetail: () => import('@/components/others/LawyerDetail')
   },
+
   props: {
     party: {
       type: Object,
@@ -148,6 +151,7 @@ export default {
       default: () => ''
     }
   },
+
   data: () => ({
     isAllContactsVisible: false,
     isAddingNewContact: false,
@@ -157,9 +161,12 @@ export default {
     // currentContactValue: '',
     // currentValid: false
   }),
+
   computed: {
     ...mapGetters({
-      recipients: 'getEditorRecipients'
+      appInstance: 'getAppInstance',
+      recipients: 'getEditorRecipients',
+      ticketStatus: 'getTicketOverviewStatus'
     }),
     isPhoneNumber() {
       return this.model === 'number'
@@ -187,36 +194,46 @@ export default {
       return contactsFiltered?.slice(0, arrayCut)
     },
     isOabContacts() {
-      return Object.values(this.party).length > 0
+      return Object.values(this.party).length > 0 && this.filter === 'oab'
     }
   },
+
   methods: {
     ...mapActions([
+      'addCall',
       'searchLawyers',
       'hideSearchLawyerLoading'
     ]),
+
     toggleContactsVisible() {
       this.isAllContactsVisible = !this.isAllContactsVisible
     },
+
     startAddNewContact() {
       this.isAddingNewContact = true
     },
+
     enableEdit() {
       if (this.isAddingNewContact) this.$refs.newContactInput.enableEdit()
     },
+
     stopAddNewContact() {
       this.isAddingNewContact = false
       this.newContactModel = ''
     },
+
     updateContact(contactId, contactValue) {
       this.$emit('change', contactId, contactValue)
     },
+
     removeContact(contactId) {
       this.$emit('delete', contactId)
     },
+
     addContact(contactValue) {
       this.$emit('post', contactValue)
     },
+
     selectContact(contactValue, isValid, isMain) {
       this.emitClick(contactValue, isValid, isMain)
     },
@@ -241,6 +258,17 @@ export default {
 
     emitUpdate(payload) {
       this.$emit('update', payload)
+    },
+
+    makeCall(number) {
+      this.addCall({
+        disputeId: Number(this.$route.params.id),
+        disputeStatus: this.ticketStatus,
+        toRoleId: this.party.disputeRoleId,
+        toRoleName: this.party.name,
+        number: `+55${number}`,
+        appInstance: this.appInstance
+      })
     }
   }
 }

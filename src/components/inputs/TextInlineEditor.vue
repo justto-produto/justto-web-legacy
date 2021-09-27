@@ -201,13 +201,12 @@ export default {
 
       if (this.vModel.startsWith('55')) {
         number = this.vModel.slice(2)
-      } else if (this.vModel.startsWith('55')) {
+      } else if (this.vModel.startsWith('+55')) {
         number = this.vModel.slice(3)
       } else {
         number = this.vModel
       }
 
-      this.openDialer(number)
       this.$emit('call', number)
     }
   }

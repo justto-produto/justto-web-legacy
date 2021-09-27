@@ -738,5 +738,22 @@
   },
   "labels": {
     "dispute": "disputa | disputas"
+  },
+  "call": {
+    "status": {
+      "ENQUEUED": "Na fila",
+      "WAITING_DIALER": "Buscando discador",
+      "WAITING_DIALER_DETAIL": "Reservando discador",
+      "WAITING_NEW_CALL": "Processando chamada",
+      "RECEIVING_CALL": "Entrando na chamada",
+      "ACTIVE_CALL": "Em chamada",
+      "COMPLETED_CALL": "Chamada encerrada"
+    },
+    "interaction": {
+      "status": {
+        "DIFFERENT_OWNER": "Contato de outra pessoa",
+        "NONEXISTENT": "Contato não existe"
+      }
+    }
   }
 }

@@ -24,6 +24,10 @@ const dialerActions = {
     }
   },
 
+  openBuyDialerDialog({ commit }) {
+    commit('setBuyDialerVisible', true)
+  },
+
   dialerLogin({ _ }, loginRequest) {
     return axiosDispatch({
       url: `${dialerPath}/webphone/auth`,

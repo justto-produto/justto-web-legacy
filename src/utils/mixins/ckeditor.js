@@ -57,11 +57,10 @@ export default {
             Link,
             Paragraph,
             RemoveFormat,
-            Table,
-            TableToolbar,
             TextTransformation,
             Underline
           ],
+          ...(this.dontUseTablePlugin ? [] : [Table, TableToolbar]),
           ...(this.useImageAttachmentPlugin ? [this.ImageAttachmentPlugin] : []),
           ...(this.useSourceCodePlugin ? [this.SourceCodeViewPlugin] : []),
           ...(this.useMentionPlugin ? [Mention, this.MentionCustomization] : []),

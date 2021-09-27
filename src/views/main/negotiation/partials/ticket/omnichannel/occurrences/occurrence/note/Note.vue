@@ -9,7 +9,7 @@
         class="note-container__header"
       >
         <div>{{ owner }}</div>
-        <span>
+        <!-- <span>
           <i
             class="note-container__header-icon el-icon-edit"
             @click="openEditDialog"
@@ -18,7 +18,7 @@
             class="note-container__header-icon el-icon-delete"
             @click="removeNote"
           />
-        </span>
+        </span> -->
       </div>
 
       <div
@@ -83,11 +83,11 @@ export default {
 
     owner() {
       const { CREATED_BY, UPDATED_BY } = this.value.properties
-      const name = this.$options.filters.resumedName(UPDATED_BY || CREATED_BY) || this.value.description.split('adicionou uma nota.')[0].trim()
+      const name = this.$options.filters.resumedName(UPDATED_BY || CREATED_BY)
 
       return UPDATED_BY
         ? `Modificada por ${name}`
-        : `Adicionada por ${name}`
+        : name ? `Adicionada por ${name}` : ''
     },
 
     description() {
@@ -173,6 +173,7 @@ article {
       justify-content: space-between;
       padding: 6px 12px;
       background-color: #efe7ff;
+      min-height: 24px;
 
       .note-container__header-icon {
         margin-left: 6px;

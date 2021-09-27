@@ -1068,7 +1068,7 @@
               >
                 <el-input
                   v-model="disputeForm.disputeCode"
-                  v-mask="'XXXXXXX-XX.XXXX.X.XX.XXXX'"
+                  v-mask="['XXXXXXX-XX.XXXX.X.XX.XXXX', 'XXXXXXX-XX.XXXX.X.XX.XXXXX']"
                 />
               </el-form-item>
             </el-col>
@@ -2626,7 +2626,7 @@ export default {
       this.disputeForm.disputeCode = dispute.code
       this.disputeForm.disputeUpperRange = parseFloat(dispute.disputeUpperRange)
       this.disputeForm.lastOfferValue = parseFloat(dispute.lastOfferValue)
-      this.disputeForm.expirationDate = dispute.expirationDate.dateTime
+      this.disputeForm.expirationDate = dispute.expirationDate?.dateTime
       this.disputeForm.description = dispute.description
       this.disputeForm.materialDamage = dispute.materialDamage || ''
       this.disputeForm.moralDamage = dispute.moralDamage || ''

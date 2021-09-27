@@ -73,8 +73,9 @@ export default {
     COMMUNICATION: () => import('./partials/Communication'),
     ATTACHMENT: () => import('@/views/main/dispute/partials/partials/AttachmentOccurrence'),
     NEGOTIATOR: () => import('./partials/Negotiator'),
-    MANUAL: () => import('./partials/Manual'),
     SCHEDULER: () => import('./partials/Scheduler'),
+    PHONE: () => import('./partials/Phone.vue'),
+    MANUAL: () => import('./partials/Manual'),
     NPS: () => import('./partials/Nps'),
     WarningLGPD: () => import('@/components/dialogs/WarningLGPD')
   },

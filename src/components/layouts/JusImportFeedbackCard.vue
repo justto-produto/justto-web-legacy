@@ -445,7 +445,7 @@ export default {
     this.businessHoursEngagement = preferences.businessHoursEngagement || true
     this.contactPartyWhenNoLowyer = preferences.contactPartyWhenNoLowyer || false
     this.contactPartyWhenInvalidLowyer = preferences.contactPartyWhenInvalidLowyer || false
-    this.skipEnrichment = preferences.skipEnrichment || false
+    this.skipEnrichment = false
     this.denySavingDeposit = preferences.denySavingDeposit || false
 
     this.mappedCampaign.businessHoursEngagement = this.businessHoursEngagement

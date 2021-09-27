@@ -4,10 +4,12 @@ const disputeApi = 'api/disputes/v2'
 const messagesPath = 'api/messages'
 
 const omnichannelActions = {
-  setOmnichannelActiveTab({ commit }, tab) {
-    commit('setOmnichannelActiveTab', tab)
-    commit('resetRecipients')
-    commit('resetOccurrences')
+  setOmnichannelActiveTab({ commit, getters: { getActiveTab } }, tab) {
+    if (getActiveTab !== tab) {
+      commit('setOmnichannelActiveTab', tab)
+      commit('resetRecipients')
+      commit('resetOccurrences')
+    }
   },
 
   setEditorText: ({ commit }, message) => commit('setEditorText', message),
@@ -244,6 +246,14 @@ const omnichannelActions = {
     return axiosDispatch({
       url: `/api/office/documents/${disputeId}/to-signer/${docNumber}`,
       mutation: canSetDisputeProtocol ? 'setDisputeProtocol' : null
+    })
+  },
+
+  setInteractionMessageContent({ _ }, { disputeId, content, communicationMessageId }) {
+    return axiosDispatch({
+      url: `api/disputes/${disputeId}/communications/${communicationMessageId}`,
+      method: 'PATCH',
+      data: { content }
     })
   }
 }

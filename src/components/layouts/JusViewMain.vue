@@ -139,8 +139,10 @@ export default {
   }
   &.fullScreen {
     height: 100%;
+
     .jus-main-view__container {
       height: 100%;
+      padding-bottom: 0;
     }
     .jus-main-view__right-card {
       height: calc(100% - 20px);

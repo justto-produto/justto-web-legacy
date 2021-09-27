@@ -251,6 +251,19 @@ const formatHtml = (html) => {
   return result.substring(1, result.length - 3)
 }
 
+const publishWebsocket = (channel, event, object, globalAuthenticationObject) => {
+  const vue = document.getElementById('app').__vue__
+  const socketData = {
+    headers: globalAuthenticationObject.headers,
+    event,
+    channel,
+    data: object
+  }
+  console.log('Sending object to websocket', socketData)
+  vue.$socket.emit('send', socketData)
+  return 'PUBLISHED'
+}
+
 export {
   getRoles,
   formatHtml,
@@ -265,5 +278,6 @@ export {
   getLastInteraction,
   getInteractionIcon,
   getTracktitleByAction,
-  getLastInteractionTooltip
+  getLastInteractionTooltip,
+  publishWebsocket
 }
