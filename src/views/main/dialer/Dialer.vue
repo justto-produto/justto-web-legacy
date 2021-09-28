@@ -118,6 +118,12 @@ export default {
       } else {
         this.activeAppToCall()
       }
+    },
+
+    isActiveToCall(is) {
+      if (is) {
+        this.showPopover = true
+      }
     }
   },
 
