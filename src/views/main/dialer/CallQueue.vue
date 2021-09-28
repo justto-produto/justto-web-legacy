@@ -4,6 +4,13 @@
       v-if="isActiveToCall || hasCallInQueue"
       class="call-queue__container-feedback"
     >
+      <audio
+        v-if="currentCall && ['RECEIVING_CALL'].includes(currentCall.status)"
+        src="https://storage.googleapis.com/justto_app/audio/ChamadaEsperaJustto.mp3"
+        autoplay
+        loop
+      />
+
       <div v-if="isActiveToCall && isOpenCall">
         <p>
           Ligação ativa
@@ -21,6 +28,7 @@
       <div v-if="!isOpenCall && hasCallInQueue">
         <div v-if="isPendingToAnswerCurrentCall">
           <p>Linha disponível</p>
+
           <el-button
             type="danger"
             size="mini"
@@ -28,6 +36,7 @@
           >
             Não ligar
           </el-button>
+
           <el-button
             type="primary"
             size="mini"
@@ -36,9 +45,11 @@
             Ligar agora
           </el-button>
         </div>
+
         <div v-else>
           <p>
             Aguardando disponibilidade de discador
+            <i class="el-icon-loading" />
           </p>
           <el-button
             v-if="isActiveToCall"
@@ -169,11 +180,17 @@ export default {
   .call-queue__container-feedback {
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 8px;
+
+    * {
+      text-align: center;
+    }
   }
 
   .call-queue__container-feedback-time-running-call {
     display: block;
+    text-align: center;
   }
 
   .call-queue__container-call-queue {
