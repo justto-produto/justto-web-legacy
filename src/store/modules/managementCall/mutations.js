@@ -25,14 +25,14 @@ export default {
     }
   },
 
-  endCall(state, { id, globalAuthenticationObject }) {
+  endCall(state, { payload: { id, globalAuthenticationObject } }) {
     if (state.currentCall && state.currentCall.id === id) {
       Vue.set(state.currentCall, 'status', CALL_STATUS.COMPLETED_CALL)
     }
 
-    Vue.set(state, 'callQueue', state.callQueue.filter(call => call.id === id))
+    Vue.set(state, 'callQueue', state.callQueue.filter(call => call.id !== id))
     Vue.set(state, 'dialer', null)
-    Vue.set(state, 'currentCall', null)
+    Vue.set(state, 'currentCall', (state.callQueue[0] || null))
 
     updateManagementCall(state, globalAuthenticationObject)
   },
@@ -103,7 +103,9 @@ export default {
   },
 
   setCallHeartbeatInterval(state) {
-    Vue.set(state, 'callHeartbeatInterval', setInterval(() => this.dispatch('managementCall/startDialerRequester')), ((state.dialer?.keepAlive?.timeout || 10) * 1000) / 4)
+    const interval = ((state.dialer?.keepAlive?.timeout || 10) * 1000) / 4
+
+    Vue.set(state, 'callHeartbeatInterval', setInterval(() => this.dispatch('sendHeartBeat'), interval))
   },
 
   clearCallHeartbeatInterval(state) {
@@ -112,13 +114,15 @@ export default {
   },
 
   setCallDetail(state, receivedCallDetails) {
-    console.log('setCallDetail', receivedCallDetails)
     const occurrence = receivedCallDetails.data
     const callDetail = occurrence?.interaction?.properties
+
     if (callDetail && callDetail.VALUE) {
       const backCallId = Number(callDetail.VALUE)
       Vue.set(state.currentCall, 'detail', callDetail)
       Vue.set(state.currentCall, 'id', backCallId)
+
+      this.commit('setCallHeartbeatInterval')
     }
 
     updateManagementCall(state, receivedCallDetails.globalAuthenticationObject)

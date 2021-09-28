@@ -68,16 +68,29 @@ export default {
       url: `api/dialer/${dialerId}/call/${callId}`,
       method: 'DELETE',
       mutation: 'endCall',
-      payload: { globalAuthenticationObject: getters.getGlobalAuthenticationObject }
+      payload: {
+        id: Number(callId),
+        globalAuthenticationObject: getters.getGlobalAuthenticationObject
+      }
     }).catch(() => {
       // Chamada Encerrada.
+    }).finally(() => {
+      commit('clearCallHeartbeatInterval')
     })
   },
 
-  sendCallHeartbeat({ _ }, { dialerId, callId }) {
+  // TODO: Verificar se isso vai servir pra alguma coisa
+  // sendCallHeartbeat({ _ }, { dialerId, callId }) {
+  //   return axiosDispatch({
+  //     url: `api/dialer/${dialerId}/call/${callId}`,
+  //     method: 'POST'
+  //   })
+  // },
+
+  sendHeartBeat({ getters: { getDialer: { id: dialerId }, getCurrentCall: { id: callId } } }) {
     return axiosDispatch({
-      url: `api/dialer/${dialerId}/call/${callId}`,
-      method: 'POST'
+      url: `api/dialer/${dialerId}/call/${callId}/heartbeat`,
+      method: 'PATCH'
     })
   },
 
@@ -105,11 +118,16 @@ export default {
       url: `${dialerApi}/request`,
       method: 'PATCH',
       data: {}
-    }) : new Promise((resolve, reject) => reject(new Error('Sem chamada ativa')))
+    }) : new Promise((resolve, reject) => reject(new Error('Sem chamada esperando')))
   },
 
-  answerCurrentCall({ commit, getters: { getGlobalAuthenticationObject: globalAuthenticationObject } }, acceptedCall) {
+  answerCurrentCall({ commit, dispatch, getters: { getDialer: { id: dialerId }, getCurrentCall: { id: callId }, getGlobalAuthenticationObject: globalAuthenticationObject } }, acceptedCall) {
     commit('answerCurrentCall', { acceptedCall, globalAuthenticationObject })
+
+    if (!acceptedCall) {
+      commit('clearCallHeartbeatInterval')
+      dispatch('endCall', { dialerId, callId })
+    }
   },
 
   responseCallStatus({ _ }, { appInstance }) {
@@ -131,6 +149,7 @@ export default {
       commit('setCurrentCallStatus', CALL_STATUS.WAITING_NEW_CALL)
       commit('addDialerDetail', dialer)
       commit('clearTimeoutDialerDetail')
+      commit('clearActiveRequestInterval')
 
       SIPml.setDebugLevel((window.localStorage && window.localStorage.getItem('org.doubango.expert.disable_debug') === 'Justto') ? 'error' : 'info')
       const sipListener = (e) => {
@@ -179,6 +198,7 @@ export default {
         sipStack.start()
         commit('setSipStack', sipStack)
       })
+
       const requestDialerCommand = {
         phoneNumber: getCurrentCall.number,
         dialerId: dialer.id,
@@ -186,7 +206,9 @@ export default {
         contactRoleId: getCurrentCall.toRoleId,
         apiKey: dialer?.sipServer?.apiKey
       }
+
       dispatch('requestDialerCall', requestDialerCommand)
+      commit('clearActiveRequestInterval')
     }
   },
 
