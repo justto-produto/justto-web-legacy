@@ -8,6 +8,7 @@ export default {
   activeToCall: false,
   dialer: null,
   currentCall: null,
+  ignoreDialer: false,
   sharedManagementCall: {
     appInstance: null,
     callQueue: [],

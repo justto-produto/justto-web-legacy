@@ -34,6 +34,8 @@ export default {
     Vue.set(state, 'dialer', null)
     Vue.set(state, 'currentCall', (state.callQueue[0] || null))
 
+    this.commit('clearCallHeartbeatInterval')
+
     updateManagementCall(state, globalAuthenticationObject)
   },
 
@@ -106,11 +108,13 @@ export default {
     const interval = ((state.dialer?.keepAlive?.timeout || 10) * 1000) / 4
 
     Vue.set(state, 'callHeartbeatInterval', setInterval(() => this.dispatch('sendHeartBeat'), interval))
+    console.log('setCallHeartbeatInterval', state.callHeartbeatInterval)
   },
 
   clearCallHeartbeatInterval(state) {
     clearInterval(state.callHeartbeatInterval)
     Vue.set(state, 'callHeartbeatInterval', null)
+    console.log('clearCallHeartbeatInterval', state.callHeartbeatInterval)
   },
 
   setCallDetail(state, receivedCallDetails) {
@@ -163,15 +167,28 @@ export default {
   },
 
   removeCallById(state, { callId, globalAuthenticationObject }) {
-    Vue.set(state, 'callQueue', state.callQueue.filter(call => call.id !== callId))
-    updateManagementCall(state, globalAuthenticationObject)
+    if (state.currentCall?.id === callId) {
+      this.commit('endCall', { payload: { id: callId, globalAuthenticationObject } })
+      this.commit('clearActiveRequestInterval')
+      this.commit('setIgnoreDialer', true)
+    } else {
+      Vue.set(state, 'callQueue', state.callQueue.filter(call => call.id !== callId))
+      updateManagementCall(state, globalAuthenticationObject)
+    }
   },
+
   setSipStack(state, stack) {
     Vue.set(state.sipConnection, 'stack', stack)
   },
+
   setSipSession(state, session) {
     Vue.set(state.sipConnection, 'session', session)
   },
+
+  setIgnoreDialer(state, ignore) {
+    Vue.set(state, 'ignoreDialer', Boolean(ignore))
+  },
+
   answerCurrentCall(state, { acceptedCall, globalAuthenticationObject }) {
     if (state.currentCall) {
       if (state.sipConnection?.session) {

@@ -44,5 +44,9 @@ export default {
 
   isPendingToAnswerCurrentCall(state) {
     return state.activeToCall && state?.currentCall?.status === CALL_STATUS.RECEIVING_CALL
+  },
+
+  isToIgnoreDialer(state) {
+    return state.ignoreDialer
   }
 }
