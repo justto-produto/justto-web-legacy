@@ -8,7 +8,9 @@ const accountGetters = {
   accountEmail: state => state.email,
   isJusttoAdmin: state => isJusttoUser(state.email),
   isJusttoDev: state => state.devs.indexOf(state.email) !== -1,
-  canAccessDialer: state => state.preferences.properties.DIALER_ACCESS === 'AUTHORIZED',
+  canAccessDialer: (state, getters) => {
+    return state.preferences?.properties?.DIALER_ACCESS === 'AUTHORIZED' || getters.workspaceProperties?.WORKSPACE_DIALER_ACCESS === 'AUTHORIZED'
+  },
 
   getGlobalAuthenticationObject(state, getters) {
     return {
