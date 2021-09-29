@@ -19,7 +19,6 @@ export default {
   },
 
   setCurrentCallStatus(state, status) {
-    // if (state.currentCall && [CALL_STATUS.RECEIVING_CALL].includes(state.currentCall.status)) {
     if (state.currentCall) {
       Vue.set(state.currentCall, 'status', CALL_STATUS[status])
     }
@@ -148,15 +147,16 @@ export default {
   SOCKET_REFRESH_MANAGEMENT_CALL(state, publisherAppInstance) {
     if (publisherAppInstance !== state.appInstance) {
       const sharedManagementCall = JSON.parse(localStorage.getItem('JUSTTO_MANAGEMENT_CALL'))
-      console.log('Received new SharedManagementCall', sharedManagementCall)
+      // console.log('Received new SharedManagementCall', sharedManagementCall)
 
       Vue.set(state, 'sharedManagementCall', sharedManagementCall)
     }
   },
 
+  // TODO: Não foi implementadp no back
   SOCKET_KILL_MANAGEMENT_CALL(state) {
     Vue.set(state, 'activeToCall', false)
-    Vue.set(state, 'callQueue', [])
+    // Vue.set(state, 'callQueue', []) TODO: Só remover o item comrespondente à chamada ativa.
   },
 
   SOCKET_RESPONSE_CALL_STATUS(state) {
@@ -179,6 +179,17 @@ export default {
 
   setSipStack(state, stack) {
     Vue.set(state.sipConnection, 'stack', stack)
+  },
+
+  clearSipStack(state) {
+    try {
+      state.sipConnection.stack.stop()
+    } catch (error) {}
+
+    Vue.set(state, 'sipConnection', {
+      stack: null,
+      session: null
+    })
   },
 
   setSipSession(state, session) {
