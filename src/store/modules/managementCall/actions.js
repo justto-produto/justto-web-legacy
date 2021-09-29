@@ -7,6 +7,7 @@ import { CALL_STATUS } from '@/constants/callStatus'
 
 const DEFAULT_JUSTTO_MANAGEMENT_CALL = '{"currentCall":null,"callQueue":[],"appInstance":null}'
 const dialerApi = 'api/dialer'
+const disputeApi = 'api/disputes/v2'
 
 export default {
   activeAppToCall({ commit, getters: { hasOtherTabActive, isActiveToCall } }, active = false) {
@@ -134,6 +135,13 @@ export default {
     const vue = document.getElementById('app').__vue__
     // TODO usar publishWebsocket
     vue.$socket.emit('RESPONSE_CALL_STATUS', { appInstance })
+  },
+
+  setInvalidNumberInCall({ getters: { getCurrentCall: { disputeId, interactionId } } }, { reason }) {
+    return axiosDispatch({
+      url: `${disputeApi}/${disputeId}/interaction/${interactionId}/invalid-contact/${reason}`,
+      method: 'PATCH'
+    })
   },
 
   SOCKET_KILL_ACTIVE_CALL({ dispatch, getters: { getDialer } }, callId) {

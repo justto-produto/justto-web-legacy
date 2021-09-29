@@ -108,23 +108,23 @@ export default {
     const interval = ((state.dialer?.keepAlive?.timeout || 10) * 1000) / 4
 
     Vue.set(state, 'callHeartbeatInterval', setInterval(() => this.dispatch('sendHeartBeat'), interval))
-    console.log('setCallHeartbeatInterval', state.callHeartbeatInterval)
   },
 
   clearCallHeartbeatInterval(state) {
     clearInterval(state.callHeartbeatInterval)
     Vue.set(state, 'callHeartbeatInterval', null)
-    console.log('clearCallHeartbeatInterval', state.callHeartbeatInterval)
   },
 
   setCallDetail(state, receivedCallDetails) {
     const occurrence = receivedCallDetails.data
     const callDetail = occurrence?.interaction?.properties
+    const interactionId = occurrence?.interaction?.id
 
     if (callDetail && callDetail.VALUE) {
       const backCallId = Number(callDetail.VALUE)
       Vue.set(state.currentCall, 'detail', callDetail)
       Vue.set(state.currentCall, 'id', backCallId)
+      Vue.set(state.currentCall, 'interactionId', interactionId)
 
       this.commit('setCallHeartbeatInterval')
     }
