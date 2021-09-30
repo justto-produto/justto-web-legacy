@@ -18,6 +18,7 @@ export default {
 
   addCall({ commit, dispatch, getters: { isActiveToCall, getAppInstance, getGlobalAuthenticationObject, hasOtherTabActive } }, callRequester) {
     console.log('addCall', isActiveToCall, callRequester.appInstance === getAppInstance)
+
     if (isActiveToCall || !hasOtherTabActive) {
       if (!hasOtherTabActive) {
         commit('setActiveAppToCall', true)
@@ -73,20 +74,12 @@ export default {
         id: Number(callId),
         globalAuthenticationObject: getters.getGlobalAuthenticationObject
       }
-    }).catch(() => {
-      // Chamada Encerrada.
     }).finally(() => {
+      console.log('finally', 'endCall')
       commit('clearCallHeartbeatInterval')
+      commit('clearSipStack')
     })
   },
-
-  // TODO: Verificar se isso vai servir pra alguma coisa
-  // sendCallHeartbeat({ _ }, { dialerId, callId }) {
-  //   return axiosDispatch({
-  //     url: `api/dialer/${dialerId}/call/${callId}`,
-  //     method: 'POST'
-  //   })
-  // },
 
   sendHeartBeat({ getters: { getDialer: { id: dialerId }, getCurrentCall: { id: callId } } }) {
     return axiosDispatch({
@@ -95,7 +88,7 @@ export default {
     })
   },
 
-  requestDialerCall({ commit, getters }, requestCallCommand) {
+  requestDialerCall({ commit, getters, dispatch }, requestCallCommand) {
     commit('setCurrentCallStatus', CALL_STATUS.WAITING_NEW_CALL)
 
     return axiosDispatch({
@@ -104,6 +97,10 @@ export default {
       data: requestCallCommand,
       mutation: 'setCallDetail',
       payload: { globalAuthenticationObject: getters.getGlobalAuthenticationObject }
+    }).catch(() => {
+      commit('addDialerDetail', null)
+      commit('setCurrentCallStatus', CALL_STATUS.WAITING_DIALER)
+      dispatch('startDialerRequester')
     })
   },
 
@@ -160,6 +157,7 @@ export default {
       commit('clearActiveRequestInterval')
 
       SIPml.setDebugLevel((window.localStorage && window.localStorage.getItem('org.doubango.expert.disable_debug') === 'Justto') ? 'error' : 'info')
+
       const sipListener = (e) => {
         switch (e.type) {
           case 'started': {
@@ -187,6 +185,7 @@ export default {
             break
         }
       }
+
       let sipStack = null
       // faltando add no back
       SIPml.init(_ => {
