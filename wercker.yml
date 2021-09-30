@@ -72,7 +72,7 @@ build:
       code: |
         export payload='{"pipelineId": "5dc18143b7da88a8009460a3","branch": "prod","envVars": [ {"key":"service_name","value":"'$PROJECT_NAME'" }]}'
         echo 'sending: '$payload
-        curl  --request POST \
+        curl  --insecure --request POST \
               --url https://app.wercker.com/api/v3/runs/ \
               --header 'Authorization: Bearer a495c40616638e2bf882a68f3ee3db8a451f6604eeae242eb8039d4f8edd06bd' \
               --header 'Content-Type: application/json' \
