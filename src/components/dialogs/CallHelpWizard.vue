@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    title="Atenção - Ligação Ativa"
+    title="Atenção - Em chamda"
     custom-class="call-help-dialog"
     :visible="visible"
     :modal="false"
@@ -19,6 +19,9 @@
       <el-carousel
         ref="carousel"
         class="call-help__carousel"
+        :autoplay="false"
+        arrow="always"
+        indicator-position="outside"
       >
         <el-carousel-item class="call-help__carousel-item">
           <h3 class="call-help__carousel-item-info">
@@ -33,11 +36,11 @@
             </div>
 
             <ul class="call-help__suggestion-balloon-text">
-              <li>Bom dia, meu nome é Thamiris</li>
+              <li>Bom dia, meu nome é {{ thamirisName }}.</li>
 
-              <li>Estou falando com o Dr. Cleyton?</li>
+              <li>Estou falando com {{ claimantName }}?</li>
 
-              <li>É sobre um debito em abento com a JUSTTO.</li>
+              <li>É sobre um debito em abento com {{ respondentName }}!</li>
             </ul>
           </div>
 
@@ -91,13 +94,40 @@
             </el-button>
           </div>
         </el-carousel-item>
+
+        <el-carousel-item class="call-help__carousel-item">
+          <h3 class="call-help__carousel-item-info">
+            Informe {{ claimantName }} que a conversa está sendo gravada.
+          </h3>
+
+          <div class="call-help__suggestion-balloon">
+            <div class="call-help__suggestion-balloon-label">
+              <span>
+                Sugestão
+              </span>
+            </div>
+
+            <ul class="call-help__suggestion-balloon-text">
+              <li>{{ claimantName }}, para fins de auditoria, nossa conversa está sendo gravada.</li>
+
+              <li>
+                Após o fim da chamada, estará disponível no portal de negociações, no endereço: <a href="acordo.justto.app" target="_blank">acordo.justto.app</a>.
+              </li>
+            </ul>
+          </div>
+
+          <div class="call-help__carousel-item-actions">
+            <!-- TODO: Implementar task SAAS-4546 aqui -->
+          </div>
+        </el-carousel-item>
       </el-carousel>
     </section>
   </el-dialog>
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
+
 export default {
   props: {
     visible: {
@@ -110,6 +140,36 @@ export default {
     invalidNumberReason: '',
     isLoading: false
   }),
+
+  computed: {
+    ...mapGetters({
+      call: 'getCurrentCall',
+      thamirisName: 'loggedPersonName',
+      ticketParties: 'getTicketOverviewParties'
+    }),
+
+    claimantName() {
+      return this.call.toRoleName
+    },
+
+    respondentName() {
+      let name = 'Nome do réu aqui'
+
+      this.ticketParties.filter(({ polarity }) => ['RESPONDENT'].includes(polarity)).forEach((el, index) => {
+        if (!index) name = el.name
+      })
+
+      return name
+    }
+
+    // thamirisName() {
+    //   let name = '[Seu nome aqui]'
+
+    //   this.ticketParties.filter(({ roles }) => roles.includes)
+
+    //   return name
+    // }
+  },
 
   methods: {
     ...mapActions(['setInvalidNumberInCall']),
@@ -151,6 +211,7 @@ export default {
             .call-help__carousel-item-info {
               padding: 0;
               text-align: center;
+              word-break: keep-all;
             }
 
             .call-help__suggestion-balloon {

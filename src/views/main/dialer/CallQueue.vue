@@ -12,9 +12,7 @@
       />
 
       <div v-if="isActiveToCall && isOpenCall">
-        <p>
-          Ligação ativa
-        </p>
+        <p>Em chamada</p>
 
         <el-button
           type="danger"

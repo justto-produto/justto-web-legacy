@@ -75,7 +75,6 @@ export default {
         globalAuthenticationObject: getters.getGlobalAuthenticationObject
       }
     }).finally(() => {
-      console.log('finally', 'endCall')
       commit('clearCallHeartbeatInterval')
       commit('clearSipStack')
     })
@@ -179,7 +178,8 @@ export default {
             commit('setSipSession', e.newSession)
             break
           case 'terminated':
-            dispatch('endCall', { dialerId: dialer.id, callId: getCurrentCall.id })
+            commit('clearCallHeartbeatInterval')
+            commit('clearSipStack')
             break
           default:
             if (process.env.NODE_ENV === 'development') {
