@@ -91,6 +91,7 @@
         </div>
 
         <el-button
+          v-if="call.id !== currentCall.id"
           type="danger"
           icon="el-icon-delete"
           size="mini"
@@ -154,10 +155,15 @@ export default {
     }),
 
     remove(id) {
-      this.removeCall({ callId: id })
+      if (id === this.currentCall.id) {
+        this.hangUpCall()
+      } else {
+        this.removeCall({ callId: id })
+      }
     },
 
     hangUpCall() {
+      // TODO: Tratar pra quando não tiver discador disponíveis.
       const data = {
         dialerId: this.dialer.id,
         callId: this.currentCall?.detail?.VALUE

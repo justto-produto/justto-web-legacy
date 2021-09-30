@@ -99,6 +99,7 @@ export default {
     }).catch(() => {
       commit('addDialerDetail', null)
       commit('setCurrentCallStatus', CALL_STATUS.WAITING_DIALER)
+      commit('clearSipStack')
       dispatch('startDialerRequester')
     })
   },
