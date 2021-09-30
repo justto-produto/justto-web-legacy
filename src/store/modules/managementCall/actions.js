@@ -112,11 +112,13 @@ export default {
     })
   },
 
-  requestProvide({ getters: { isActiveToCall, hasCallInQueue, firstCallInQueue } }) {
+  requestProvide({ getters: { isActiveToCall, hasCallInQueue, firstCallInQueue, isJusttoAdmin } }) {
     return isActiveToCall && hasCallInQueue && [CALL_STATUS.WAITING_DIALER, CALL_STATUS.ENQUEUED].includes(firstCallInQueue.status) ? axiosDispatch({
       url: `${dialerApi}/request`,
       method: 'PATCH',
-      data: {}
+      data: {
+        owner: isJusttoAdmin ? 'DEV' : 'JUSTTO'
+      }
     }) : new Promise((resolve, reject) => reject(new Error('Sem chamada esperando')))
   },
 
