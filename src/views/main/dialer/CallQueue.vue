@@ -126,6 +126,11 @@
         </el-button>
       </div>
     </div>
+
+    <CallHelp
+      :visible="isOpenCall"
+      @call:end="hangUpCall()"
+    />
   </article>
 </template>
 
@@ -133,6 +138,12 @@
 import { mapActions, mapGetters } from 'vuex'
 
 export default {
+  components: {
+    CallHelp: () => import('@/components/dialogs/CallHelpWizard.vue')
+  },
+
+  data: () => ({}),
+
   computed: {
     ...mapGetters({
       dialer: 'getDialer',
@@ -239,6 +250,10 @@ export default {
     .call-queue__container-empty-queue-label {
       font-weight: 600;
     }
+  }
+
+  div:not(.el-dialog__wrapper) {
+    z-index: 3000;
   }
 }
 </style>
