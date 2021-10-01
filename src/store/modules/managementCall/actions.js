@@ -17,8 +17,6 @@ export default {
   },
 
   addCall({ commit, dispatch, getters: { isActiveToCall, getAppInstance, getGlobalAuthenticationObject, hasOtherTabActive } }, callRequester) {
-    console.log('addCall', isActiveToCall, callRequester.appInstance === getAppInstance)
-
     if (isActiveToCall || !hasOtherTabActive) {
       if (!hasOtherTabActive) {
         commit('setActiveAppToCall', true)
@@ -77,6 +75,7 @@ export default {
     }).finally(() => {
       commit('clearCallHeartbeatInterval')
       commit('clearSipStack')
+      commit('setActiveAppToCall', false)
     })
   },
 
@@ -180,6 +179,7 @@ export default {
           case 'terminated':
             commit('clearCallHeartbeatInterval')
             commit('clearSipStack')
+            commit('setActiveAppToCall', false)
             break
           default:
             if (process.env.NODE_ENV === 'development') {

@@ -259,7 +259,6 @@ const publishWebsocket = (channel, event, object, globalAuthenticationObject) =>
     channel,
     data: object
   }
-  console.log('Sending object to websocket', socketData)
   vue.$socket.emit('send', socketData)
   return 'PUBLISHED'
 }

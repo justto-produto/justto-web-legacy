@@ -5,7 +5,6 @@ import Vue from 'vue'
 function updateManagementCall({ appInstance, currentCall, callQueue, activeToCall }, globalAuthenticationObject) {
   if (activeToCall && globalAuthenticationObject) {
     const newSharedInstance = { appInstance, currentCall, callQueue }
-    console.log('updateManagementCall', newSharedInstance)
 
     localStorage.setItem('JUSTTO_MANAGEMENT_CALL', JSON.stringify(newSharedInstance))
     const channel = `/topic/account/${globalAuthenticationObject?.accountId}`
@@ -137,7 +136,6 @@ export default {
 
   setRequestProvide(state, { appInstance }) {
     Vue.set(state.currentCall, 'status', CALL_STATUS.WAITING_DIALER)
-    console.log('setRequestProvide', appInstance)
   },
 
   setBroadcastRequestCallStatus(state, callback) {
@@ -147,7 +145,6 @@ export default {
   SOCKET_REFRESH_MANAGEMENT_CALL(state, publisherAppInstance) {
     if (publisherAppInstance !== state.appInstance) {
       const sharedManagementCall = JSON.parse(localStorage.getItem('JUSTTO_MANAGEMENT_CALL'))
-      // console.log('Received new SharedManagementCall', sharedManagementCall)
 
       Vue.set(state, 'sharedManagementCall', sharedManagementCall)
     }
@@ -205,11 +202,13 @@ export default {
       if (state.sipConnection?.session) {
         if (acceptedCall) {
           Vue.set(state.currentCall, 'status', CALL_STATUS.ACTIVE_CALL)
+
           state.sipConnection.session.accept({
             audio_remote: document.getElementById('remoteAudio')
           })
         } else {
           Vue.set(state.currentCall, 'status', CALL_STATUS.COMPLETED_CALL)
+
           state.sipConnection.session.reject()
         }
       }
