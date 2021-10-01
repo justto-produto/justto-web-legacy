@@ -237,9 +237,14 @@ export default {
     }),
 
     pollData() {
-      if (this.workspaceId.length !== 0) this.getThamirisAlerts()
+      if (this.workspaceId.length !== 0 && !['admin-panel'].includes(this.$route.name)) {
+        this.getThamirisAlerts()
+      }
+
       this.timer = setInterval(() => {
-        if (this.workspaceId.length !== 0) this.getThamirisAlerts()
+        if (this.workspaceId.length !== 0 && !['admin-panel'].includes(this.$route.name)) {
+          this.getThamirisAlerts()
+        }
       }, 120000)
     },
 

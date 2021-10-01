@@ -155,7 +155,7 @@ const workspaceActions = {
       axios({
         ...headers,
         ...{
-          url: params.url || `${workspacesPath}/${params.workspaceId || ''}`,
+          url: params.url || `https://api.justto.app/${workspacesPath}/${params.workspaceId || ''}`,
           method: params.method,
           params: params.params,
           data: params.data
