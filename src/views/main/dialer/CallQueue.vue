@@ -126,7 +126,6 @@
     </div>
 
     <CallHelp
-      :visible="isOpenCall"
       @call:end="hangUpCall()"
     />
   </article>

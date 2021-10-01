@@ -2,14 +2,14 @@
   <el-dialog
     title="Atenção - Em chamda"
     custom-class="call-help-dialog"
-    :visible="visible"
+    :visible.sync="visible"
     :modal="false"
-    :show-close="false"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
     :modal-append-to-body="false"
     :append-to-body="false"
     destroy-on-close
+    show-close
     center
   >
     <section
@@ -127,18 +127,14 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import { CALL_STATUS } from '@/constants/callStatus'
 
 export default {
-  props: {
-    visible: {
-      type: Boolean,
-      required: true
-    }
-  },
 
   data: () => ({
     invalidNumberReason: '',
-    isLoading: false
+    isLoading: false,
+    visible: false
   }),
 
   computed: {
@@ -149,7 +145,7 @@ export default {
     }),
 
     claimantName() {
-      return this.call.toRoleName
+      return this.call?.toRoleName || '[Nome da Parte aqui]'
     },
 
     respondentName() {
@@ -161,14 +157,15 @@ export default {
 
       return name
     }
+  },
 
-    // thamirisName() {
-    //   let name = '[Seu nome aqui]'
-
-    //   this.ticketParties.filter(({ roles }) => roles.includes)
-
-    //   return name
-    // }
+  watch: {
+    call: {
+      deep: true,
+      handler(call) {
+        this.visible = call?.status === CALL_STATUS.ACTIVE_CALL
+      }
+    }
   },
 
   methods: {
