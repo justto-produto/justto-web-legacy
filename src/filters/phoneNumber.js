@@ -2,10 +2,11 @@ import Vue from 'vue'
 
 function formatNumber(value) {
   if (!value) return ''
-  if (!/^\d+$/.test(value)) return value
+  if (!/[+^\d]+$/.test(value)) return value
   const template1 = 'C-D'
   const template2 = '(B) C-D'
   const template3 = '+A (B) C-D'
+
   if (value.length === 8) {
     return template1
       .replace('C', value.substr(0, 4))
@@ -41,6 +42,13 @@ function formatNumber(value) {
       .replace('B', value.substr(2, 2))
       .replace('C', value.substr(4, 5))
       .replace('D', value.substr(9, 4))
+  }
+  if (value.length === 14) {
+    return template3
+      .replace('A', value.substr(1, 2))
+      .replace('B', value.substr(3, 2))
+      .replace('C', value.substr(5, 5))
+      .replace('D', value.substr(10, 4))
   }
   return value
 }
