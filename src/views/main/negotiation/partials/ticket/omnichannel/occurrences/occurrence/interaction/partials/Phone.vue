@@ -167,7 +167,7 @@ export default {
   computed: {
     contact() {
       const personName = this.$options.filters.resumedName(this.value?.properties?.TO_PERSON_NAME || '')
-      const number = this.value?.message?.receiver ? '<' + this.value?.message?.receiver + '>' : ''
+      const number = this.value?.message?.receiver ? '<' + this.$options.filters.phoneNumber(this.value?.message?.receiver) + '>' : ''
 
       return `${personName} ${number}`
     },
