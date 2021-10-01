@@ -13,6 +13,7 @@
     center
   >
     <section
+      v-if="call"
       v-loading="isLoading"
       class="call-help__container"
     >
@@ -68,7 +69,7 @@
               </el-select>
 
               <el-button
-                type="danger"
+                type="primary"
                 size="small"
                 :disabled="!invalidNumberReason"
                 @click="registerProblemWithNumber()"
@@ -102,22 +103,124 @@
 
           <div class="call-help__suggestion-balloon">
             <div class="call-help__suggestion-balloon-label">
-              <span>
-                Sugestão
-              </span>
+              <span>Sugestão</span>
             </div>
 
             <ul class="call-help__suggestion-balloon-text">
               <li>{{ claimantName }}, para fins de auditoria, nossa conversa está sendo gravada.</li>
 
               <li>
-                Após o fim da chamada, estará disponível no portal de negociações, no endereço: <a href="acordo.justto.app" target="_blank">acordo.justto.app</a>.
+                Após o fim da chamada, estará disponível no portal de negociações, no endereço:
+                <a
+                  href="acordo.app"
+                  target="_blank"
+                >acordo.justto.app</a>.
               </li>
             </ul>
           </div>
 
           <div class="call-help__carousel-item-actions">
-            <!-- TODO: Implementar task SAAS-4546 aqui -->
+            <el-popover
+              ref="dontRecCallPopover"
+              v-loading="isLoading"
+              placement="top-start"
+              trigger="click"
+              title="Peça um contato válido!"
+              popper-class="dont-rec-call__popover"
+            >
+              <p class="dont-rec-call__help">
+                Qual outro canal de comunicação podemos conversar?
+              </p>
+
+              <el-radio-group
+                v-model="newContactType"
+                @input="() => {newContactModel = ''}"
+              >
+                <el-radio label="email">
+                  E-mail
+                </el-radio>
+
+                <el-radio label="whatsapp">
+                  WhatsApp
+                </el-radio>
+              </el-radio-group>
+
+              <div class="dont-rec-call__add-contact">
+                <div
+                  v-if="newContactType === 'whatsapp'"
+                  class="el-input el-input--mini"
+                >
+                  <input
+                    v-model="newContactModel"
+                    v-mask="['(##) ####-####', '(##) 9 ####-####']"
+                    class="el-input__inner dont-rec-call__add-contact-input"
+                    type="text"
+                    size="small"
+                  >
+                </div>
+
+                <el-input
+                  v-else
+                  v-model="newContactModel"
+                  class="dont-rec-call__add-contact-input"
+                  type="email"
+                  size="mini"
+                />
+
+                <el-button
+                  type="primary"
+                  size="mini"
+                  :disabled="!canSaveNewContact"
+                  @click="addNewContact"
+                >
+                  Adicionar
+                </el-button>
+              </div>
+
+              <!--  -->
+
+              <div class="dont-rec-call__label-contacts">
+                Contatos cadastratos:
+              </div>
+
+              <div
+                v-for="(value, key, index) of call.contacts || {}"
+                :key="`${key}-${index}`"
+                class="dont-rec-call__contacts"
+              >
+                <div
+                  v-for="(contact, contactId) in value"
+                  :key="`contact-${key}-${contactId}`"
+                  class="dont-rec-call__contacts-value"
+                >
+                  {{ contact.address || contact.number | phoneOrEmail }}
+                </div>
+              </div>
+
+              <el-button
+                type="danger"
+                size="small"
+                @click="closeCall()"
+              >
+                Encerrar chamada
+              </el-button>
+
+              <el-button
+                slot="reference"
+                type="danger"
+                size="small"
+              >
+                Não concordou
+              </el-button>
+            </el-popover>
+
+            <el-button
+              type="success"
+              size="small"
+              @click="close()"
+            >
+              Concordou
+            </el-button>
           </div>
         </el-carousel-item>
       </el-carousel>
@@ -130,11 +233,16 @@ import { mapActions, mapGetters } from 'vuex'
 import { CALL_STATUS } from '@/constants/callStatus'
 
 export default {
-
   data: () => ({
     invalidNumberReason: '',
     isLoading: false,
-    visible: false
+    visible: false,
+    newContactType: 'email',
+    newContactModel: '',
+    contactsAddedRecent: {
+      emails: [],
+      phones: []
+    }
   }),
 
   computed: {
@@ -156,6 +264,12 @@ export default {
       })
 
       return name
+    },
+
+    canSaveNewContact() {
+      const emailRegEx = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+
+      return (this.newContactType === 'whatsapp' && this.newContactModel.length === 16) || emailRegEx.test(String(this.newContactModel).toLowerCase())
     }
   },
 
@@ -169,10 +283,74 @@ export default {
   },
 
   methods: {
-    ...mapActions(['setInvalidNumberInCall']),
+    ...mapActions([
+      'setInvalidNumberInCall',
+      'setTicketOverviewPartyContact',
+      'setInteractionMessageContent'
+    ]),
 
     next() {
       this.$refs.carousel.next()
+    },
+
+    close() {
+      this.visible = false
+    },
+
+    closeCall() {
+      const { emails, phones } = this.contactsAddedRecent
+
+      const emailsTemplate = emails.length ? `<br>Email(s): ${emails.join(', ')}` : ''
+      const phonesTemplate = phones.length ? `<br>Telefone(s): ${phones.join(', ')}` : ''
+      const hasEnteredNewData = (emails.length || phones.length) ? '<br>Informou novos dados de contato para negociar:' : ''
+
+      const template = `<p>${this.claimantName} atendeu, mas se recusou a prosseguir com ligação por estar sendo gravada.${hasEnteredNewData}${emailsTemplate}${phonesTemplate}</p>`
+
+      this.saveMassageContent(template)
+    },
+
+    saveMassageContent(content) {
+      this.isLoading = true
+
+      this.setInteractionMessageContent({
+        disputeId: this.call?.disputeId,
+        content: content,
+        communicationMessageId: this.call?.messageId
+      }).then(() => {
+        this.$emit('call:end')
+        this.$refs.dontRecCallPopover.doClose()
+      }).catch((error) => {
+        this.$jusNotification({ error })
+      }).finally(() => {
+        this.isLoading = false
+      })
+    },
+
+    addNewContact() {
+      const params = {
+        roleId: this.call?.toRoleId,
+        disputeId: this.call?.disputeId,
+        contactType: this.newContactType === 'whatsapp' ? 'phone' : 'email',
+        contactData: { value: this.newContactModel }
+      }
+
+      this.isLoading = true
+
+      this.setTicketOverviewPartyContact(params).then(({ emails, phones }) => {
+        const target = this.newContactType === 'whatsapp' ? 'phones' : 'emails'
+
+        this.$set(this.call.contacts, target, this.newContactType === 'whatsapp' ? phones : emails)
+
+        this.contactsAddedRecent[target] = [
+          ...this.contactsAddedRecent[target],
+          this.newContactModel
+        ]
+      }).catch((error) => {
+        this.$jusNotification({ error })
+      }).finally(() => {
+        this.isLoading = false
+        this.newContactModel = ''
+      })
     },
 
     registerProblemWithNumber() {
@@ -240,7 +418,8 @@ export default {
   }
 }
 
-.incorrect-contact__popover {
+.incorrect-contact__popover,
+.dont-rec-call__popover {
   padding: 16px !important;
   display: flex;
   flex-direction: column;
@@ -249,6 +428,28 @@ export default {
   .el-popover__title {
     margin: 0;
     font-weight: 600;
+    text-align: center;
+  }
+
+  .dont-rec-call__label-contacts {
+    font-weight: 600;
+    text-transform: capitalize;
+    margin-bottom: -16px;
+    font-size: 14px;
+  }
+
+  .dont-rec-call__contacts {
+    margin-bottom: -16px;
+  }
+
+  .dont-rec-call__contacts:last-of-type {
+    margin-bottom: 16px;
+  }
+
+  .dont-rec-call__add-contact {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
   }
 }
 </style>

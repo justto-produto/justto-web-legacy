@@ -117,11 +117,13 @@ export default {
     const occurrence = receivedCallDetails.data
     const callDetail = occurrence?.interaction?.properties
     const interactionId = occurrence?.interaction?.id
+    const messageId = occurrence?.interaction?.message?.messageId
 
     if (callDetail && callDetail.VALUE) {
       const backCallId = Number(callDetail.VALUE)
       Vue.set(state.currentCall, 'detail', callDetail)
       Vue.set(state.currentCall, 'id', backCallId)
+      Vue.set(state.currentCall, 'messageId', messageId)
       Vue.set(state.currentCall, 'interactionId', interactionId)
 
       this.commit('setCallHeartbeatInterval')
