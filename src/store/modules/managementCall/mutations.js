@@ -206,9 +206,10 @@ export default {
       if (state.sipConnection?.session) {
         if (acceptedCall) {
           Vue.set(state.currentCall, 'status', CALL_STATUS.ACTIVE_CALL)
-
-          state.sipConnection.session.accept({
-            audio_remote: document.getElementById('remoteAudio'),
+          const audioElement = document.getElementById('remoteAudio')
+          console.log('Status ACTIVE_CALL', 'AudioElement: ', audioElement)
+          const makeCall = state.sipConnection.session.accept({
+            audio_remote: audioElement,
             events_listener: {
               events: '*',
               listener: (e) => {
@@ -222,6 +223,7 @@ export default {
               }
             }
           })
+          console.log('Status makeCall: ', makeCall)
         } else {
           Vue.set(state.currentCall, 'status', CALL_STATUS.COMPLETED_CALL)
           this.dispatch('callTerminated')
