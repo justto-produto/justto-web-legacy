@@ -200,8 +200,9 @@ export default {
         note: '',
         updateUpperRange: false
       }
-      if (this.upperRange === 0) {
+      if (this.upperRange === 0 || value > this.upperRange) {
         const tag = this.$createElement
+
         this.$confirm(tag('div', null, [
           tag('p', null, 'Valor da contraproposta é maior que o da alçada máxima!'),
           tag('br', null, ''),
