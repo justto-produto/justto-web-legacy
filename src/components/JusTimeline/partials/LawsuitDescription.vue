@@ -137,6 +137,9 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 import { isSimilarStrings } from '@/utils'
+
+import brazilianStates from '@/constants/brazilianStates'
+
 export default {
   components: {
     jusIcon: () => import('@/components/images/JusIcon')
@@ -195,17 +198,23 @@ export default {
       })
     },
 
-    addLawyer({ name = '', oab = '', partyName = '' }) {
+    addLawyer({ name = '', document = '', oab = '', partyName = '' }) {
       const disputeId = this.$route.params.id
       const { type } = this.state.parties.find(p => isSimilarStrings(partyName, p.name, 75))
       const polarity = this.isClaimant(type) ? 'CLAIMANT' : 'RESPONDENT'
+
+      const oabState = brazilianStates.find(({ value: uf }) => oab.includes(uf)).value || ''
+      const [oabNumber] = oab.replace(oabState, '').match(/[\dA-Z]+/g).join('').match(/[\dABENP]+/g)
+
       const data = {
+        oabs: oab === '' ? [] : [{ number: oabNumber, state: oabState }],
+        documentNumber: document === '' ? null : document,
+        roles: ['LAWYER'],
         party: polarity,
-        documentNumber: oab,
-        name,
         main: true,
-        roles: ['LAWYER']
+        name
       }
+
       this.setTicketOverviewParty({ disputeId, data, isNew: true }).then(() => {
         this.$jusNotification({
           title: 'Yay!',
