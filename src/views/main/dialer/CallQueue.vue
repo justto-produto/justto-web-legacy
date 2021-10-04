@@ -89,7 +89,6 @@
         </div>
 
         <el-button
-          v-if="call.id !== currentCall.id"
           type="danger"
           icon="el-icon-delete"
           size="mini"
@@ -157,8 +156,9 @@ export default {
   methods: {
     ...mapActions({
       openBuyDialerDialog: 'openBuyDialerDialog',
-      removeCall: 'SOCKET_REMOVE_CALL',
       answerCurrentCall: 'answerCurrentCall',
+      removeCall: 'SOCKET_REMOVE_CALL',
+      callTerminated: 'callTerminated',
       endCall: 'endCall'
     }),
 
@@ -171,13 +171,7 @@ export default {
     },
 
     hangUpCall() {
-      // TODO: Tratar pra quando não tiver discador disponíveis.
-      const data = {
-        dialerId: this.dialer.id,
-        callId: this.currentCall?.detail?.VALUE
-      }
-
-      this.endCall(data)
+      this.callTerminated()
     }
   }
 }

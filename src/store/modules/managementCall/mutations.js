@@ -28,7 +28,9 @@ export default {
       Vue.set(state.currentCall, 'status', CALL_STATUS.COMPLETED_CALL)
     }
 
-    Vue.set(state, 'callQueue', state.callQueue.filter(call => call.id !== id))
+    const remainingCalls = state.callQueue.filter(call => (call.id !== id || call.number !== state.currentCall.number))
+
+    Vue.set(state, 'callQueue', remainingCalls)
     Vue.set(state, 'dialer', null)
     Vue.set(state, 'currentCall', (state.callQueue[0] || null))
 

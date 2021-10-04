@@ -75,7 +75,6 @@ export default {
     }).finally(() => {
       commit('clearCallHeartbeatInterval')
       commit('clearSipStack')
-      commit('setActiveAppToCall', false)
     })
   },
 
@@ -122,7 +121,8 @@ export default {
       }
     }) : new Promise((resolve, reject) => {
       commit('clearActiveRequestInterval')
-      reject(new Error('Sem chamada esperando'))
+      commit('clearTimeoutDialerDetail')
+      resolve()
     })
   },
 
@@ -159,7 +159,6 @@ export default {
   callTerminated({ commit, getters: { getCurrentCall: { id }, getGlobalAuthenticationObject: globalAuthenticationObject } }) {
     commit('clearCallHeartbeatInterval')
     commit('clearSipStack')
-    commit('setActiveAppToCall', false)
     commit('endCall', {
       payload: {
         id, globalAuthenticationObject
@@ -177,8 +176,6 @@ export default {
       SIPml.setDebugLevel((window.localStorage && window.localStorage.getItem('org.doubango.expert.disable_debug') === 'Justto') ? 'error' : 'info')
 
       const sipListener = (e) => {
-        console.log('sipListener', e)
-
         switch (e.type) {
           case 'started': {
             const registerSession = sipStack.newSession('register', {
@@ -191,7 +188,8 @@ export default {
             commit('setSipSession', registerSession)
             break
           }
-          case 'i_new_call':
+
+          case 'i_new_call': {
             commit('setCurrentCallStatus', CALL_STATUS.RECEIVING_CALL)
             commit('setSipSession', e.newSession)
 
@@ -199,9 +197,8 @@ export default {
               console.log('CHegou mensagem no WS', msg)
             }
             break
-          case 'terminated':
-            dispatch('callTerminated')
-            break
+          }
+
           default:
             if (process.env.NODE_ENV === 'development') {
               console.log('EVENT_NOT_RECORDED', e)
