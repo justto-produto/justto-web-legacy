@@ -79,10 +79,13 @@ export default {
     })
   },
 
-  sendHeartBeat({ getters: { getDialer: { id: dialerId }, getCurrentCall: { id: callId } } }) {
+  sendHeartBeat({ dispatch, getters: { getDialer: { id: dialerId }, getCurrentCall: { id: callId } } }) {
     return axiosDispatch({
       url: `api/dialer/${dialerId}/call/${callId}/heartbeat`,
       method: 'PATCH'
+    }).catch(error => {
+      this.$jusNotification({ error })
+      dispatch('endCall', { dialerId, callId })
     })
   },
 
@@ -110,14 +113,17 @@ export default {
     })
   },
 
-  requestProvide({ getters: { isActiveToCall, hasCallInQueue, firstCallInQueue, isJusttoAdmin } }) {
+  requestProvide({ commit, getters: { isActiveToCall, hasCallInQueue, firstCallInQueue, isJusttoAdmin } }) {
     return isActiveToCall && hasCallInQueue && [CALL_STATUS.WAITING_DIALER, CALL_STATUS.ENQUEUED].includes(firstCallInQueue.status) ? axiosDispatch({
       url: `${dialerApi}/request`,
       method: 'PATCH',
       data: {
         owner: isJusttoAdmin ? 'DEV' : 'JUSTTO'
       }
-    }) : new Promise((resolve, reject) => reject(new Error('Sem chamada esperando')))
+    }) : new Promise((resolve, reject) => {
+      commit('clearActiveRequestInterval')
+      reject(new Error('Sem chamada esperando'))
+    })
   },
 
   answerCurrentCall({ commit, dispatch, getters: { getDialer: { id: dialerId }, getCurrentCall: { id: callId }, getGlobalAuthenticationObject: globalAuthenticationObject } }, acceptedCall) {
@@ -150,6 +156,17 @@ export default {
     })
   },
 
+  callTerminated({ commit, getters: { getCurrentCall: { id }, getGlobalAuthenticationObject: globalAuthenticationObject } }) {
+    commit('clearCallHeartbeatInterval')
+    commit('clearSipStack')
+    commit('setActiveAppToCall', false)
+    commit('endCall', {
+      payload: {
+        id, globalAuthenticationObject
+      }
+    })
+  },
+
   SOCKET_ADD_DIALER_DETAIL({ dispatch, getters: { isActiveToCall, getCurrentCall, isToIgnoreDialer }, commit }, dialer) {
     if (isActiveToCall && !isToIgnoreDialer) {
       commit('setCurrentCallStatus', CALL_STATUS.WAITING_NEW_CALL)
@@ -160,6 +177,8 @@ export default {
       SIPml.setDebugLevel((window.localStorage && window.localStorage.getItem('org.doubango.expert.disable_debug') === 'Justto') ? 'error' : 'info')
 
       const sipListener = (e) => {
+        console.log('sipListener', e)
+
         switch (e.type) {
           case 'started': {
             const registerSession = sipStack.newSession('register', {
@@ -175,15 +194,17 @@ export default {
           case 'i_new_call':
             commit('setCurrentCallStatus', CALL_STATUS.RECEIVING_CALL)
             commit('setSipSession', e.newSession)
+
+            e.o_event.o_message.onmessage = (msg) => {
+              console.log('CHegou mensagem no WS', msg)
+            }
             break
           case 'terminated':
-            commit('clearCallHeartbeatInterval')
-            commit('clearSipStack')
-            commit('setActiveAppToCall', false)
+            dispatch('callTerminated')
             break
           default:
             if (process.env.NODE_ENV === 'development') {
-              console.log(e)
+              console.log('EVENT_NOT_RECORDED', e)
             }
             break
         }
