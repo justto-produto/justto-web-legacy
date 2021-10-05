@@ -200,6 +200,24 @@ export default {
 
       SIPml.setDebugLevel((window.localStorage && window.localStorage.getItem('org.doubango.expert.disable_debug') === 'Justto') ? 'error' : 'info')
 
+      const setSipStack = () => {
+        sipStack = new SIPml.Stack({
+          realm: dialer.sipServer.signalingHost,
+          impi: dialer.sipServer.username,
+          impu: dialer.sipServer.url,
+          password: dialer.sipServer.password,
+          display_name: 'Justto',
+          websocket_proxy_url: dialer.sipServer.websocketHost,
+          events_listener: {
+            events: '*',
+            listener: sipListener
+          }
+        })
+
+        sipStack.start()
+        commit('setSipStack', sipStack)
+      }
+
       const sipListener = (e) => {
         switch (e.type) {
           case 'started': {
@@ -217,16 +235,12 @@ export default {
           case 'i_new_call': {
             commit('setCurrentCallStatus', CALL_STATUS.RECEIVING_CALL)
             commit('setSipSession', e.newSession)
-
-            e.o_event.o_message.onmessage = (msg) => {
-              console.log('CHegou mensagem no WS', msg)
-            }
             break
           }
 
           default:
             if (process.env.NODE_ENV === 'development') {
-              console.log('EVENT_NOT_RECORDED', e)
+              console.table(e)
             }
             break
         }
@@ -234,23 +248,12 @@ export default {
 
       let sipStack = null
       // faltando add no back
-      SIPml.init(_ => {
-        sipStack = new SIPml.Stack({
-          realm: dialer.sipServer.signalingHost,
-          impi: dialer.sipServer.username,
-          impu: dialer.sipServer.url,
-          password: dialer.sipServer.password,
-          display_name: 'Justto',
-          websocket_proxy_url: dialer.sipServer.websocketHost,
-          events_listener: {
-            events: '*',
-            listener: sipListener
-          }
-        })
 
-        sipStack.start()
-        commit('setSipStack', sipStack)
-      })
+      if (!SIPml.isInitialized()) {
+        SIPml.init(setSipStack)
+      } else {
+        setSipStack()
+      }
 
       const requestDialerCommand = {
         phoneNumber: getCurrentCall.number,
