@@ -140,7 +140,9 @@ export default {
                   dispatch('callTerminated')
                   break
                 default:
-                  console.log(e)
+                  if (process.env.NODE_ENV === 'development') {
+                    console.table(e)
+                  }
               }
             }
           }
