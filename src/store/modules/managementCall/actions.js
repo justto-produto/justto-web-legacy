@@ -193,8 +193,8 @@ export default {
     })
   },
 
-  SOCKET_ADD_DIALER_DETAIL({ dispatch, getters: { isActiveToCall, getCurrentCall, isToIgnoreDialer }, commit }, dialer) {
-    if (isActiveToCall && !isToIgnoreDialer && getCurrentCall) {
+  SOCKET_ADD_DIALER_DETAIL({ dispatch, getters: { isActiveToCall, getCurrentCall, isToIgnoreDialer, getDialer }, commit }, dialer) {
+    if (isActiveToCall && !isToIgnoreDialer && getCurrentCall && !getDialer) {
       commit('setCurrentCallStatus', CALL_STATUS.WAITING_NEW_CALL)
       commit('addDialerDetail', dialer)
       commit('clearTimeoutDialerDetail')
