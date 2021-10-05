@@ -126,13 +126,38 @@ export default {
     })
   },
 
-  answerCurrentCall({ commit, dispatch, getters: { getDialer: { id: dialerId }, getCurrentCall: { id: callId }, getGlobalAuthenticationObject: globalAuthenticationObject } }, acceptedCall) {
-    commit('answerCurrentCall', { acceptedCall, globalAuthenticationObject })
+  answerCurrentCall({ state, commit, dispatch, getters: { hasSipSession, getDialer: { id: dialerId }, getCurrentCall: { id: callId } } }, acceptedCall) {
+    return new Promise((resolve) => {
+      if (state.currentCall && hasSipSession && acceptedCall) {
+        const audioElement = document.getElementById('remoteAudio')
+        const successfulJoiningCall = state.sipConnection.session.accept({
+          audio_remote: audioElement,
+          events_listener: {
+            events: '*',
+            listener: (e) => {
+              switch (e.type) {
+                case 'terminated':
+                  dispatch('callTerminated')
+                  break
+                default:
+                  console.log(e)
+              }
+            }
+          }
+        })
 
-    if (!acceptedCall) {
-      commit('clearCallHeartbeatInterval')
-      dispatch('endCall', { dialerId, callId })
-    }
+        commit('answerCurrentCall', {
+          acceptedCall: !successfulJoiningCall,
+          dialerId,
+          callId
+        })
+
+        resolve(successfulJoiningCall === 0)
+      } else {
+        resolve(false)
+        commit('answerCurrentCall', { acceptedCall: false, dialerId, callId })
+      }
+    })
   },
 
   responseCallStatus({ _ }, { appInstance }) {
@@ -167,7 +192,7 @@ export default {
   },
 
   SOCKET_ADD_DIALER_DETAIL({ dispatch, getters: { isActiveToCall, getCurrentCall, isToIgnoreDialer }, commit }, dialer) {
-    if (isActiveToCall && !isToIgnoreDialer) {
+    if (isActiveToCall && !isToIgnoreDialer && getCurrentCall) {
       commit('setCurrentCallStatus', CALL_STATUS.WAITING_NEW_CALL)
       commit('addDialerDetail', dialer)
       commit('clearTimeoutDialerDetail')

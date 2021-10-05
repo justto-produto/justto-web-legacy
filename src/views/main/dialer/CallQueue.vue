@@ -30,7 +30,7 @@
           <el-button
             type="danger"
             size="mini"
-            @click="answerCurrentCall(false)"
+            @click="answerCall(false)"
           >
             Não ligar
           </el-button>
@@ -38,7 +38,7 @@
           <el-button
             type="primary"
             size="mini"
-            @click="answerCurrentCall(true)"
+            @click="answerCall(true)"
           >
             Ligar agora
           </el-button>
@@ -161,6 +161,28 @@ export default {
       callTerminated: 'callTerminated',
       endCall: 'endCall'
     }),
+
+    answerCall(answer) {
+      this.answerCurrentCall(answer).then(hasConected => {
+        if (answer) {
+          if (hasConected) {
+            this.redirectToDispute()
+          } else {
+            this.$jusNotification({
+              title: 'Ops!',
+              message: 'Não foi possível continuar a chamada.',
+              type: 'warning'
+            })
+          }
+        }
+      })
+    },
+
+    redirectToDispute() {
+      if (this.$route.name === 'ticket' && Number(this.$route.params.id) === this.currentCall.disputeId) {} else {
+        this.$router.push(`negotiation/${this.currentCall.disputeId}`)
+      }
+    },
 
     remove(id) {
       if (id === this.currentCall.id) {

@@ -201,35 +201,13 @@ export default {
     Vue.set(state, 'ignoreDialer', Boolean(ignore))
   },
 
-  answerCurrentCall(state, { acceptedCall, globalAuthenticationObject }) {
-    if (state.currentCall) {
-      if (state.sipConnection?.session) {
-        if (acceptedCall) {
-          Vue.set(state.currentCall, 'status', CALL_STATUS.ACTIVE_CALL)
-          const audioElement = document.getElementById('remoteAudio')
-          console.log('Status ACTIVE_CALL', 'AudioElement: ', audioElement)
-          const makeCall = state.sipConnection.session.accept({
-            audio_remote: audioElement,
-            events_listener: {
-              events: '*',
-              listener: (e) => {
-                switch (e.type) {
-                  case 'terminated':
-                    this.dispatch('callTerminated')
-                    break
-                  default:
-                    console.log(e)
-                }
-              }
-            }
-          })
-          console.log('Status makeCall: ', makeCall)
-        } else {
-          Vue.set(state.currentCall, 'status', CALL_STATUS.COMPLETED_CALL)
-          this.dispatch('callTerminated')
-          state.sipConnection.session.reject()
-        }
-      }
+  answerCurrentCall(state, { acceptedCall, dialerId, callId }) {
+    if (acceptedCall) {
+      Vue.set(state.currentCall, 'status', CALL_STATUS.ACTIVE_CALL)
+    } else {
+      Vue.set(state.currentCall, 'status', CALL_STATUS.COMPLETED_CALL)
+      this.commit('clearCallHeartbeatInterval')
+      this.dispatch('endCall', { dialerId, callId })
     }
   }
 }

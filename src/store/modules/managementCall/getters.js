@@ -32,6 +32,10 @@ export default {
     return state.callQueue?.length > 0
   },
 
+  hasSipSession(state) {
+    return !!state.sipConnection.session
+  },
+
   isOpenCall(state) {
     return state.currentCall?.status === CALL_STATUS.ACTIVE_CALL
   },
