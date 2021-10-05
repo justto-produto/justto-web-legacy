@@ -45,8 +45,8 @@ function formatNumber(value) {
         .replace('D', value.substr(9, 4))
     } else {
       return template3
-        .replace('A', value.substr(1, 2))
-        .replace('B', value.substr(3, 2))
+        .replace('A', value.substr(0, 2))
+        .replace('B', value.substr(2, 2))
         .replace('C', value.substr(4, 5))
         .replace('D', value.substr(9, 4))
     }
