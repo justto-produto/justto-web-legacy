@@ -179,8 +179,11 @@ export default {
     },
 
     redirectToDispute() {
-      if (this.$route.name === 'ticket' && Number(this.$route.params.id) === this.currentCall.disputeId) {} else {
-        this.$router.push(`negotiation/${this.currentCall.disputeId}`)
+      if (this.$route.name === 'ticket' && Number(this.$route.params.id) === this.currentCall.disputeId) {
+        // Está na rota certa
+      } else {
+        const path = `/negotiation/${this.currentCall.disputeId}`
+        this.$router.push({ path })
       }
     },
 
