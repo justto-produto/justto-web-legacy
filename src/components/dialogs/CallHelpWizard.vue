@@ -114,7 +114,7 @@
                 <a
                   href="acordo.app"
                   target="_blank"
-                >acordo.justto.app</a>.
+                >acordo.app</a>.
               </li>
             </ul>
           </div>
