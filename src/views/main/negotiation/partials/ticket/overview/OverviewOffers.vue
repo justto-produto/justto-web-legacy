@@ -239,6 +239,11 @@ export default {
           showClose: false,
           confirmButtonText: 'Não majorar',
           cancelButtonText: 'Majorar'
+        }).then(() => {
+          // TODO: Registar contraproposta sem alterar a alçada.
+          const { disputeId } = this
+
+          this.sendOffer({ data, disputeId, polarityObjectKey })
         }).catch(() => {
           const { disputeId } = this
           const updateUpperRangeObj = { upperRange: value }
