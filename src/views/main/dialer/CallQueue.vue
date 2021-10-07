@@ -138,8 +138,6 @@ export default {
     CallHelp: () => import('@/components/dialogs/CallHelpWizard.vue')
   },
 
-  data: () => ({}),
-
   computed: {
     ...mapGetters({
       dialer: 'getDialer',

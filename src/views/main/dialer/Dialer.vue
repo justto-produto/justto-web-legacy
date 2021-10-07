@@ -79,6 +79,7 @@ export default {
 
   computed: {
     ...mapGetters({
+      listCallQueue: 'getCallQueue',
       workspaceId: 'workspaceId',
       appInstance: 'getAppInstance',
       preferences: 'userPreferences',
@@ -124,6 +125,11 @@ export default {
       if (is) {
         this.showPopover = true
       }
+    },
+
+    listCallQueue: {
+      deep: true,
+      handler: 'handleQueueChange'
     }
   },
 
@@ -156,6 +162,15 @@ export default {
       this.number = number
       this.visible = true
       this.showPopover = true
+    },
+
+    handleQueueChange(current, old) {
+      const isBigger = current.length > old.length
+      const isWaiting = current.length > 0 && ![CALL_STATUS.ENQUEUED, CALL_STATUS.COMPLETED_CALL].includes(current[0].status)
+
+      if (isBigger || isWaiting) {
+        this.showPopover = true
+      }
     },
 
     doLogin() {
