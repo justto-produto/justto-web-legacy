@@ -18,6 +18,7 @@
           <el-button
             v-if="action.tabs.includes(activeTab)"
             :data-testid="`batch-${action.name.toLowerCase()}`"
+            :disabled="!canDoAction(action.name)"
             plain
             @click="sendBatchAction(action.name)"
           >
@@ -441,7 +442,8 @@ export default {
   computed: {
     ...mapGetters({
       disputeStatuses: 'disputeStatuses',
-      strategies: 'getMyStrategiesLite'
+      strategies: 'getMyStrategiesLite',
+      canDoAction: 'getCanUseBatchAction'
     }),
 
     selectedIdsComp: {

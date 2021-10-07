@@ -53,7 +53,8 @@ const dispute = {
     exportHistory: {},
     exportHistoryPage: 0,
     prescriptionsList: [],
-    timeline: {}
+    timeline: {},
+    batchActionsLastUse: {}
   },
   mutations: mutations,
   actions: actions,

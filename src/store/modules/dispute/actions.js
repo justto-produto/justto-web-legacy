@@ -358,6 +358,8 @@ const disputeActions = {
       url: `${disputesPath}/actions/batch${buildQuery(state.query)}`,
       method: 'PUT',
       data: params
+    }).finally(() => {
+      commit('setBatchActionsLastUse', { action: params.type })
     })
   },
   sendDisputeNote({ _ }, data) {
