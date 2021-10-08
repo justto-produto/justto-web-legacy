@@ -136,7 +136,9 @@ const overviewMutations = {
 
   setTicketOverviewAttachments: (state, params) => Vue.set(state, 'ticketOverviewAttachments', params),
 
-  setLastTicketOffers: (state, params) => Vue.set(state, 'lastTicketOffers', params),
+  setLastTicketOffers: (state, params) => {
+    Vue.set(state, 'lastTicketOffers', params)
+  },
 
   updateLastTicketOffers: (state, { payload }) => {
     const { polarityObjectKey, value } = payload
@@ -148,6 +150,7 @@ const overviewMutations = {
     Vue.set(state, 'ticketOverviewInfo', new TicketOverviewInfo(dispute))
     Vue.set(state, 'ticketOverviewParties', dispute.disputeRoles.map(party => new TicketOverviewParties(party)))
     dispute.lastCounterOfferRoleId = state.lastTicketOffers?.plaintiffOffer?.roleId
+
     Vue.set(state, 'lastTicketOffers', new TicketOverviewLastOffers(dispute))
   },
 
