@@ -32,7 +32,7 @@
       v-if="mediaLink && !badStatus"
       class="phone-container__audio"
     >
-      <!-- <audio
+      <audio
         class="phone-container__audio-component"
         controls
       >
@@ -41,7 +41,7 @@
           type="audio/mpeg"
         >
         Your browser does not support the audio tag.
-      </audio> -->
+      </audio>
 
       <el-button
         class="phone-container__audio-share"
