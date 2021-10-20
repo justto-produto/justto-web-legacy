@@ -2,7 +2,6 @@
 import { Call } from '@/models/managementCall/currentCall'
 import { axiosDispatch } from '@/utils'
 import { publishWebsocket } from '@/utils/utils/others'
-// import SIPml from 'ecmascript-webrtc-sipml'
 import JsSIP from 'jssip'
 import { CALL_STATUS } from '@/constants/callStatus'
 
@@ -129,33 +128,23 @@ export default {
 
   answerCurrentCall({ state, commit, dispatch, getters: { hasSipSession, getDialer: { id: dialerId }, getCurrentCall: { id: callId } } }, acceptedCall) {
     return new Promise((resolve) => {
-      if (state.currentCall && hasSipSession && acceptedCall) {
-        const audioElement = document.getElementById('remoteAudio')
-        const successfulJoiningCall = state.sipConnection.session.accept({
-          audio_remote: audioElement,
-          events_listener: {
-            events: '*',
-            listener: (e) => {
-              switch (e.type) {
-                case 'terminated':
-                  dispatch('callTerminated')
-                  break
-                default:
-                  if (process.env.NODE_ENV === 'development') {
-                    console.table(e)
-                  }
-              }
-            }
+      if (state.currentCall && hasSipSession) {
+        const callOptions = {
+          mediaConstraints: {
+            audio: true, // only audio calls
+            video: false
           }
-        })
+        }
 
-        commit('answerCurrentCall', {
-          acceptedCall: !successfulJoiningCall,
-          dialerId,
-          callId
-        })
+        if (acceptedCall) {
+          state.sipConnection.session.answer(callOptions)
+        } else {
+          state.sipConnection.session.terminate()
+        }
 
-        resolve(successfulJoiningCall === 0)
+        commit('answerCurrentCall', { acceptedCall, dialerId, callId })
+
+        resolve(acceptedCall)
       } else {
         resolve(false)
         commit('answerCurrentCall', { acceptedCall: false, dialerId, callId })
@@ -201,135 +190,91 @@ export default {
       commit('clearTimeoutDialerDetail')
       commit('clearActiveRequestInterval')
 
-      //Usando exemplo simples copiado daqui: https://jssip.net/documentation/3.8.x/getting_started/
+      // Usando exemplo simples copiado daqui: https://jssip.net/documentation/3.8.x/getting_started/
       const remoteAudio = document.getElementById('remoteAudio')
       const socket = new JsSIP.WebSocketInterface(dialer.sipServer.websocketHost)
+
       const configuration = {
         sockets: [socket],
         uri: dialer.sipServer.url,
         password: dialer.sipServer.password
       }
-      const callOptions = {
-        mediaConstraints: {
-          audio: true, // only audio calls
-          video: false
-        }
-      }
+
       const phone = new JsSIP.UA(configuration)
+
+      commit('setSipStack', phone)
+
       phone.on('connected', function(e) {
+        // Quando conecta no SIP
         console.log('connected', e)
       })
+
       phone.on('disconnected', function(e) {
+        // Quando finaliza a sessão do SIP.
         console.log('disconnected', e)
       })
+
       phone.on('newRTCSession', function(data) {
-        console.log('newRTCSession', data)
+        console.table('newRTCSession', data)
         const session = data.session
+        commit('setSipSession', session)
 
         if (session.direction === 'incoming') {
           // incoming call here
           session.on('accepted', function() {
             console.log('newRTCSession.accepted')
           })
+
           session.on('confirmed', function(e) {
             console.log('newRTCSession.confirmed', e, JsSIP.RTCSession)
           })
+
           session.on('ended', function(e) {
             console.log('newRTCSession.ended', e)
+            dispatch('callTerminated')
           })
+
           session.on('failed', function(e) {
             console.log('newRTCSession.failed', e)
+            dispatch('callTerminated')
           })
+
           session.on('peerconnection', function(e) {
             console.log('newRTCSession.addstream', e)
-            const peerconnection = e.peerconnection //https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection
+
+            const peerconnection = e.peerconnection // https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection
+
             peerconnection.ontrack = function(event) {
-              console.log(event)
               remoteAudio.srcObject = event.streams[0]
               remoteAudio.play()
             }
+
             peerconnection.onremovestream = function(e2) {
               remoteAudio.src = null
-              remoteAudio.scrollTop()
+              remoteAudio.pause()
             }
           })
 
-          // Answer call
-          session.answer(callOptions)
-
-          // Reject call (or hang up it)
-          // session.terminate()
+          commit('setCurrentCallStatus', CALL_STATUS.RECEIVING_CALL)
         }
       })
+
       phone.on('registered', function(e) {
         console.log('registered', e)
         // FIXME aqui já pode disparar a ligação. Mover pra ca a chamada do back
         // dispatch('requestDialerCall', requestDialerCommand)
       })
+
       phone.on('unregistered', function(e) {
         console.log('unregistered', e)
       })
+
       phone.on('registrationFailed', function(e) {
         console.log('registrationFailed', e)
       })
+
       phone.start()
-
-      // SIPml.setDebugLevel((window.localStorage && window.localStorage.getItem('org.doubango.expert.disable_debug') === 'Justto') ? 'error' : 'info')
-
-      // const setSipStack = () => {
-      //   sipStack = new SIPml.Stack({
-      //     realm: dialer.sipServer.signalingHost,
-      //     impi: dialer.sipServer.username,
-      //     impu: dialer.sipServer.url,
-      //     password: dialer.sipServer.password,
-      //     display_name: 'Justto',
-      //     websocket_proxy_url: dialer.sipServer.websocketHost,
-      //     events_listener: {
-      //       events: '*',
-      //       listener: sipListener
-      //     }
-      //   })
-
-      //   sipStack.start()
-      //   commit('setSipStack', sipStack)
-      // }
-
-      // const sipListener =  (e) => {
-      //   switch (e.type) {
-      //     case 'started': {
-      //       const registerSession = sipStack.newSession('register', {
-      //         events_listener: {
-      //           events: '*',
-      //           listener: sipListener
-      //         }
-      //       })
-      //       registerSession.register()
-      //       commit('setSipSession', registerSession)
-      //       break
-      //     }
-
-      //     case 'i_new_call': {
-      //       commit('setCurrentCallStatus', CALL_STATUS.RECEIVING_CALL)
-      //       commit('setSipSession', e.newSession)
-      //       break
-      //     }
-
-      //     default:
-      //       if (process.env.NODE_ENV === 'development') {
-      //         console.table (e)
-      //       }
-      //       break
-      //   }
-      // }
-
-      // let sipStack = null
-      // // faltando add no back
-
-      // if (!SIPml.isInitialized()) {
-      //   SIPml.init(setSipStack)
-      // } else {
-      //   setSipStack()
-      // }
+      commit('setCurrentCallStatus', CALL_STATUS.WAITING_NEW_CALL)
 
       const requestDialerCommand = {
         phoneNumber: getCurrentCall.number,

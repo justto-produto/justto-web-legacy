@@ -4,10 +4,10 @@
       v-if="isActiveToCall || hasCallInQueue"
       class="call-queue__container-feedback"
     >
+      <!-- v-if="currentCall && ['RECEIVING_CALL'].includes(currentCall.status)" -->
       <audio
-        v-if="currentCall && ['RECEIVING_CALL'].includes(currentCall.status)"
+        ref="ringAudio"
         src="https://storage.googleapis.com/justto_app/audio/ChamadaEsperaJustto.mp3"
-        autoplay
         loop
       />
 
@@ -151,6 +151,13 @@ export default {
     })
   },
 
+  watch: {
+    currentCall: {
+      deep: true,
+      handler: 'handleCallUpdate'
+    }
+  },
+
   methods: {
     ...mapActions({
       openBuyDialerDialog: 'openBuyDialerDialog',
@@ -194,7 +201,18 @@ export default {
     },
 
     hangUpCall() {
-      this.callTerminated()
+      this.endCall({
+        dialerId: this.dialer.id,
+        callId: this.currentCall.id
+      })
+    },
+
+    handleCallUpdate(call) {
+      if (['RECEIVING_CALL'].includes(call?.status) && document.hidden) {
+        this.$refs.ringAudio.play()
+      } else if (!['RECEIVING_CALL'].includes(call?.status) && this.$refs.ringAudio) {
+        this.$refs.ringAudio.pause()
+      }
     }
   }
 }

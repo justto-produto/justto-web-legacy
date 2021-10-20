@@ -41,7 +41,8 @@
 
               <li>Estou falando com {{ claimantName }}?</li>
 
-              <li>É sobre um debito em abento com {{ respondentName }}!</li>
+              <!-- TODO: Validar tipo(ativo/passivo) da estratégia e variar o texto -->
+              <li>É sobre um caso envolvendo {{ respondentName }}!</li>
             </ul>
           </div>
 
