@@ -112,7 +112,7 @@
               <li>
                 Após o fim da chamada, estará disponível no portal de negociações, no endereço:
                 <a
-                  href="acordo.app"
+                  href="https://acordo.app"
                   target="_blank"
                 >acordo.app</a>.
               </li>

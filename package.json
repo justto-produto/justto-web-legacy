@@ -60,6 +60,7 @@
     "ecmascript-webrtc-sipml": "^1.0.11",
     "element-ui": "^2.15.5",
     "file-saver": "^2.0.2",
+    "jssip": "^3.8.2",
     "lodash": "^4.17.19",
     "moment-timezone": "^0.5.26",
     "monaco-editor": "^0.20.0",
