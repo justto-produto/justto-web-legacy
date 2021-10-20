@@ -188,6 +188,7 @@ export default {
     ...mapActions([
       'resetRecipients',
       'sendDisputeNote',
+      'disfavorTicket',
       'setEditorText',
       'sendMessage'
     ]),
@@ -199,6 +200,23 @@ export default {
     validateSendMessage() {
       if (['EXPIRED'].includes(this.ticket.status)) {
         return this.$refs.expiredDisputeAlert.open()
+      } else if (this.ticket?.favorite) {
+        return new Promise((resolve, reject) => {
+          this.$confirm('<p>Olá Lucas, esta disputa está marcada como <b>Aguardando análise da empresa</b>.<br><br>Estamos respondendo todas as mensagens da parte contrária informando que o processo está em análise pela empresa.<br><br>Gostaria de desmarcar esta opção?</p>', 'Aguardando análise pela empresa', {
+            cancelButtonText: 'Desmarcar e enviar',
+            confirmButtonText: 'Não enviar',
+            dangerouslyUseHTMLString: true,
+            closeOnPressEscape: false,
+            closeOnClickModal: false,
+            showClose: false,
+            center: true
+          }).then(() => {
+            reject(new Error('Ticket aguardando análise da empresa.'))
+          }).catch(() => {
+            this.disfavorTicket(Number(this.ticket?.disputeId || this.$route.params.id))
+            resolve()
+          })
+        })
       } else if (extractMentions(this.editorText).length) {
         return new Promise((resolve, reject) => {
           const message = '<p>Você está enviando uma mensagem mencionando pessoas do seu time.<br><br>Sua intenção é registrar uma nota privada para seu time ou realmente deseja enviar uma mensagem mencionando pessoas do seu time?</p>'
@@ -260,7 +278,7 @@ export default {
         })
       }).finally(() => {
         this.localLoading = false
-      })
+      }).catch(() => {})
     },
 
     focusOnEditor() {
