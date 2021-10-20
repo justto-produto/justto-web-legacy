@@ -1137,7 +1137,8 @@ export default {
         visible: true,
         showNotifyInput: showNotify,
         title: this.$options.filters.capitalize(this.$t('actions.FAVORITE.name')),
-        notify: showNotify
+        notify: showNotify,
+        action: 'FAVORITE'
       })
     },
 

@@ -10,7 +10,13 @@
     custom-class="confirm-dialog"
   >
     <article class="confirm-dialog__container">
-      <span>{{ state.message }}</span>
+      <p>
+        {{ state.message }}
+      </p>
+
+      <p v-if="state.action === 'FAVORITE' && features.AUTOMATIC_MESSAGES">
+        <sup>*</sup>Ao <b>aguardar análise da empresa</b>, novas mensagens serão respondidas automaticamente informando, a parte contraria, que o processo está em análise pela empresa.
+      </p>
     </article>
 
     <span
@@ -46,6 +52,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   data: () => ({
     state: {
@@ -56,6 +63,12 @@ export default {
       message: 'Tem certeza que deseja realizar esta ação?'
     }
   }),
+
+  computed: {
+    ...mapGetters({
+      features: 'getMappedFeaturesAndModules'
+    })
+  },
 
   methods: {
     open(state) {
