@@ -16,6 +16,9 @@ export default {
   },
   sipConnection: {
     stack: null,
-    session: null
+    session: null,
+    socket: null,
+    configuration: null,
+    phone: null
   }
 }
