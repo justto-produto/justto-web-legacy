@@ -706,10 +706,10 @@ export default {
         {
           name: 'restart-engagement',
           icon: 'refresh',
-          disabled: this.isPaused || this.isCanceled,
+          disabled: this.isPaused || this.isCanceled || this.dispute?.favorite,
           condition: () => this.canRestartEngagement,
           action: () => this.disputeAction('restart-engagement'),
-          tooltip: 'Reiniciar disputa'
+          tooltip: this.dispute?.favorite ? 'Disputa aguardando análise da empresa não permite reiniciar' : 'Reiniciar disputa'
         },
         {
           name: 'resend-messages',
@@ -738,10 +738,10 @@ export default {
         {
           name: 'enrich',
           icon: 'enrich',
-          disabled: this.isPaused || this.isCanceled,
+          disabled: this.isPaused || this.isCanceled || this.dispute?.favorite,
           condition: () => !this.tableActions && !this.isPreNegotiation,
           action: () => this.disputeAction('enrich'),
-          tooltip: 'Enriquecer disputa'
+          tooltip: this.dispute?.favorite ? 'Disputa aguardando análise da empresa não permite enriquecer' : 'Enriquecer disputa'
         },
         {
           name: 'counterproposal',
