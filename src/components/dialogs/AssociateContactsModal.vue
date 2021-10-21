@@ -261,9 +261,10 @@ export default {
 
   methods: {
     ...mapActions([
+      'setDisputeProperty',
       'addPhoneToDisputeRole',
       'addEmailToDisputeRole',
-      'setDisputeProperty'
+      'restartDisputeRoleEngagement'
     ]),
 
     handleBeforeClose(done) {
@@ -299,8 +300,8 @@ export default {
       this.loading = true
     },
 
-    submit() {
-      const { id } = this.$route.params
+    handleAssociateContacts() {
+      const { id: disputeId } = this.$route.params
 
       const promisses = []
 
@@ -309,40 +310,69 @@ export default {
       this.phones.filter(phone => {
         return !!phone.associateWith
       }).map(({ address, associateWith }) => {
-        promisses.push(
-          new Promise((resolve, reject) => {
-            this.addPhoneToDisputeRole({
-              disputeId: id,
-              disputeRoleId: associateWith,
-              value: address
-            }).then(resolve).catch(reject)
-          })
-        )
+        promisses.push(this.addPhoneToDisputeRole({
+          disputeId,
+          disputeRoleId: associateWith,
+          value: address
+        }))
       })
 
       this.emails.filter(email => {
         return !!email.associateWith
       }).map(({ address, associateWith }) => {
-        promisses.push(
-          new Promise((resolve, reject) => {
-            this.addEmailToDisputeRole({
-              disputeId: id,
-              disputeRoleId: associateWith,
-              value: address
-            }).then(resolve).catch(reject)
-          })
-        )
+        promisses.push(this.addEmailToDisputeRole({
+          disputeId,
+          disputeRoleId: associateWith,
+          value: address
+        }))
       })
 
       Promise.all(promisses).then(() => {
         this.loading = false
       }).finally(() => {
-        if (promisses.length > 0) {
-          // TODO: Validar como reengajar mais de um contato.
-          // this.$emit('update:contacts', { disputeRoleId: associateWith })
-        }
         this.$emit('input', 'SIM')
       })
+    },
+
+    submit() {
+      const { id: disputeId } = this.$route.params
+
+      const ids = [
+        ...this.phones.filter(({
+          associateWith: id
+        }, i, phones) => !!id && phones.findIndex(({
+          associateWith
+        }) => associateWith === id) === i).map(({
+          associateWith
+        }) => associateWith),
+
+        ...this.emails.filter(({
+          associateWith: id
+        }, i, emails) => !!id && emails.findIndex(({
+          associateWith
+        }) => associateWith === id) === i).map(({
+          associateWith
+        }) => associateWith)
+      ]
+
+      if (ids.length) {
+        const msg = 'Detectamos alterações nos dados de contato. Quer reagendar as mensagens da(s) parte(s) para incluir o(s) novo(s) contato(s)?'
+        this.$confirm(msg, 'Reengajar', {
+          confirmButtonText: 'Sim',
+          cancelButtonText: 'Não',
+          closeOnPressEscape: false,
+          closeOnClickModal: false,
+          showClose: false,
+          center: true
+        }).then(() => {
+          Promise.all(ids.map(disputeRoleId => this.restartDisputeRoleEngagement({
+            disputeRoleId,
+            disputeId
+          })))
+        }).catch(() => {}).finally(() => this.handleAssociateContacts())
+      } else {
+        this.handleAssociateContacts()
+      }
     }
   }
 }

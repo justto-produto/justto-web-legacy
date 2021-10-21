@@ -5,6 +5,7 @@ export default {
     ...mapActions(['restartDisputeRoleEngagement']),
 
     verifyRestartEngagement({ status, party, name, disputeId, disputeRoleId }) {
+      console.table({ status, party, name, disputeId, disputeRoleId })
       if (['CLAIMANT'].includes(party) && ['PENDING', 'ENGAGEMENT'].includes(status)) {
         const msg = `Detectamos alterações nos dados de contato. Quer reagendar as mensagens de ${name} para incluir o novo contato?`
         this.$confirm(msg, 'Reengajar', {

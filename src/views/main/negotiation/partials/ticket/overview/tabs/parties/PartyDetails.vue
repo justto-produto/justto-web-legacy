@@ -12,6 +12,7 @@
       v-if="Boolean(party.legacyDto) && !isNegotiator && isJusttoAdmin"
       :visible="editRoleDialogVisible"
       :party="party.legacyDto"
+      :ticket-status="ticketStatus"
       @closeEdit="editRoleDialogVisible = false"
     />
 
@@ -638,12 +639,14 @@ export default {
           }).catch(error => this.$jusNotification({ error }))
         })
       } else {
+        this.handleRestartEngagement()
         this.setTicketOverviewPartyContact(params)
       }
     },
 
     updateContacts(contactId, contactValue, contactType) {
       if (!contactValue) { return }
+
       const { disputeId, party } = this
       const params = {
         roleId: party.disputeRoleId,

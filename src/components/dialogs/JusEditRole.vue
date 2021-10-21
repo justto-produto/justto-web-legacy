@@ -4,7 +4,7 @@
     :close-on-click-modal="false"
     :show-close="false"
     :visible.sync="visible"
-    width="40%"
+    width="45%"
     class="party__form"
   >
     <el-form
@@ -321,7 +321,7 @@
         :loading="loading"
         type="primary"
         data-testid="edit-data-part"
-        @click="editRole"
+        @click="handleEditRole"
       >
         Editar dados
       </el-button>
@@ -332,19 +332,30 @@
 <script>
 import { mapActions } from 'vuex'
 import { validateName, validateDocument, validatePhone } from '@/utils/validations'
+
+import restartEngagement from '@/utils/mixins/restartEngagement'
+
 export default {
   components: {
     PartyBankAccountDialog: () => import('@/views/main/negotiation/partials/ticket/overview/tabs/parties/PartyBankAccountDialog.vue')
   },
+
+  mixins: [restartEngagement],
 
   props: {
     party: {
       type: Object,
       required: true
     },
+
     visible: {
       type: Boolean,
       required: true
+    },
+
+    ticketStatus: {
+      type: String,
+      default: () => ''
     }
   },
 
@@ -387,7 +398,7 @@ export default {
   },
 
   mounted() {
-    this.originalRole = this.party
+    this.originalRole = { ...this.party }
   },
 
   methods: {
@@ -514,7 +525,7 @@ export default {
       this.$refs.partyBankAccountDialog.closeDialog()
     },
 
-    editRole() {
+    handleEditRole() {
       let isValid = true
       this.$refs.party.validateField(['name', 'documentNumber'], errorMessage => {
         if (errorMessage) isValid = false
@@ -566,6 +577,13 @@ export default {
           type: 'success'
         })
         const roleDataDifference = this.verifyChangedRoleData(this.party, this.originalRole)
+        this.verifyRestartEngagement({
+          name: this.party.name,
+          status: this.ticketStatus,
+          party: this.party.party,
+          disputeId: Number(this.$route.params.id),
+          disputeRoleId: this.party.id
+        })
         if (roleDataDifference.length) {
           this.$confirm(this.$t('dispute.overview.confirm.restart.engagement.question'), 'Atenção!', {
             confirmButtonText: this.$t('dispute.overview.confirm.restart.engagement.confirm'),
