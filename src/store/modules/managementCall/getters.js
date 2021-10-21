@@ -32,6 +32,10 @@ export default {
     return state.callQueue?.length > 0
   },
 
+  hasSipSession(state) {
+    return !!state.sipConnection.session
+  },
+
   isOpenCall(state) {
     return state.currentCall?.status === CALL_STATUS.ACTIVE_CALL
   },
@@ -44,5 +48,9 @@ export default {
 
   isPendingToAnswerCurrentCall(state) {
     return state.activeToCall && state?.currentCall?.status === CALL_STATUS.RECEIVING_CALL
+  },
+
+  isToIgnoreDialer(state) {
+    return state.ignoreDialer
   }
 }

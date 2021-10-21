@@ -8,6 +8,7 @@ export default {
   activeToCall: false,
   dialer: null,
   currentCall: null,
+  ignoreDialer: false,
   sharedManagementCall: {
     appInstance: null,
     callQueue: [],
@@ -15,6 +16,9 @@ export default {
   },
   sipConnection: {
     stack: null,
-    session: null
+    session: null,
+    socket: null,
+    configuration: null,
+    phone: null
   }
 }

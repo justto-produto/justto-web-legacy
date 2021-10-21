@@ -243,6 +243,9 @@ const disputeMutations = {
   },
   setDisputeMetadata: (state, metadata) => {
     Vue.set(state, 'metadata', metadata)
+  },
+  setBatchActionsLastUse: (state, { action }) => {
+    state.batchActionsLastUse[action] = moment().toISOString()
   }
 }
 

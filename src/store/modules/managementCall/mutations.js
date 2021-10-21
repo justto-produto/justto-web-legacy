@@ -5,7 +5,6 @@ import Vue from 'vue'
 function updateManagementCall({ appInstance, currentCall, callQueue, activeToCall }, globalAuthenticationObject) {
   if (activeToCall && globalAuthenticationObject) {
     const newSharedInstance = { appInstance, currentCall, callQueue }
-    console.log('updateManagementCall', newSharedInstance)
 
     localStorage.setItem('JUSTTO_MANAGEMENT_CALL', JSON.stringify(newSharedInstance))
     const channel = `/topic/account/${globalAuthenticationObject?.accountId}`
@@ -19,20 +18,23 @@ export default {
   },
 
   setCurrentCallStatus(state, status) {
-    // if (state.currentCall && [CALL_STATUS.RECEIVING_CALL].includes(state.currentCall.status)) {
     if (state.currentCall) {
       Vue.set(state.currentCall, 'status', CALL_STATUS[status])
     }
   },
 
-  endCall(state, { id, globalAuthenticationObject }) {
+  endCall(state, { payload: { id, globalAuthenticationObject } }) {
     if (state.currentCall && state.currentCall.id === id) {
       Vue.set(state.currentCall, 'status', CALL_STATUS.COMPLETED_CALL)
     }
 
-    Vue.set(state, 'callQueue', state.callQueue.filter(call => call.id === id))
+    const remainingCalls = state.callQueue.filter(call => (call.id !== id || call.number !== state.currentCall.number))
+
+    Vue.set(state, 'callQueue', remainingCalls)
     Vue.set(state, 'dialer', null)
-    Vue.set(state, 'currentCall', null)
+    Vue.set(state, 'currentCall', (state.callQueue[0] || null))
+
+    this.commit('clearCallHeartbeatInterval')
 
     updateManagementCall(state, globalAuthenticationObject)
   },
@@ -103,7 +105,9 @@ export default {
   },
 
   setCallHeartbeatInterval(state) {
-    Vue.set(state, 'callHeartbeatInterval', setInterval(() => this.dispatch('managementCall/startDialerRequester')), ((state.dialer?.keepAlive?.timeout || 10) * 1000) / 4)
+    const interval = ((state.dialer?.keepAlive?.timeout || 10) * 1000) / 4
+
+    Vue.set(state, 'callHeartbeatInterval', setInterval(() => this.dispatch('sendHeartBeat'), interval))
   },
 
   clearCallHeartbeatInterval(state) {
@@ -112,13 +116,19 @@ export default {
   },
 
   setCallDetail(state, receivedCallDetails) {
-    console.log('setCallDetail', receivedCallDetails)
     const occurrence = receivedCallDetails.data
     const callDetail = occurrence?.interaction?.properties
+    const interactionId = occurrence?.interaction?.id
+    const messageId = occurrence?.interaction?.message?.messageId
+
     if (callDetail && callDetail.VALUE) {
       const backCallId = Number(callDetail.VALUE)
       Vue.set(state.currentCall, 'detail', callDetail)
       Vue.set(state.currentCall, 'id', backCallId)
+      Vue.set(state.currentCall, 'messageId', messageId)
+      Vue.set(state.currentCall, 'interactionId', interactionId)
+
+      this.commit('setCallHeartbeatInterval')
     }
 
     updateManagementCall(state, receivedCallDetails.globalAuthenticationObject)
@@ -130,7 +140,6 @@ export default {
 
   setRequestProvide(state, { appInstance }) {
     Vue.set(state.currentCall, 'status', CALL_STATUS.WAITING_DIALER)
-    console.log('setRequestProvide', appInstance)
   },
 
   setBroadcastRequestCallStatus(state, callback) {
@@ -140,15 +149,15 @@ export default {
   SOCKET_REFRESH_MANAGEMENT_CALL(state, publisherAppInstance) {
     if (publisherAppInstance !== state.appInstance) {
       const sharedManagementCall = JSON.parse(localStorage.getItem('JUSTTO_MANAGEMENT_CALL'))
-      console.log('Received new SharedManagementCall', sharedManagementCall)
 
       Vue.set(state, 'sharedManagementCall', sharedManagementCall)
     }
   },
 
+  // TODO: Não foi implementadp no back
   SOCKET_KILL_MANAGEMENT_CALL(state) {
     Vue.set(state, 'activeToCall', false)
-    Vue.set(state, 'callQueue', [])
+    // Vue.set(state, 'callQueue', []) TODO: Só remover o item comrespondente à chamada ativa.
   },
 
   SOCKET_RESPONSE_CALL_STATUS(state) {
@@ -159,28 +168,46 @@ export default {
   },
 
   removeCallById(state, { callId, globalAuthenticationObject }) {
-    Vue.set(state, 'callQueue', state.callQueue.filter(call => call.id !== callId))
-    updateManagementCall(state, globalAuthenticationObject)
+    if (state.currentCall?.id === callId) {
+      this.commit('endCall', { payload: { id: callId, globalAuthenticationObject } })
+      this.commit('clearActiveRequestInterval')
+      this.commit('setIgnoreDialer', true)
+    } else {
+      Vue.set(state, 'callQueue', state.callQueue.filter(call => call.id !== callId))
+      updateManagementCall(state, globalAuthenticationObject)
+    }
   },
+
   setSipStack(state, stack) {
     Vue.set(state.sipConnection, 'stack', stack)
   },
+
+  clearSipStack(state) {
+    try {
+      state.sipConnection.stack.stop()
+    } catch (error) {}
+
+    Vue.set(state, 'sipConnection', {
+      stack: null,
+      session: null
+    })
+  },
+
   setSipSession(state, session) {
     Vue.set(state.sipConnection, 'session', session)
   },
-  answerCurrentCall(state, { acceptedCall, globalAuthenticationObject }) {
-    if (state.currentCall) {
-      if (state.sipConnection?.session) {
-        if (acceptedCall) {
-          Vue.set(state.currentCall, 'status', CALL_STATUS.ACTIVE_CALL)
-          state.sipConnection.session.accept({
-            audio_remote: document.getElementById('remoteAudio')
-          })
-        } else {
-          Vue.set(state.currentCall, 'status', CALL_STATUS.COMPLETED_CALL)
-          state.sipConnection.session.reject()
-        }
-      }
+
+  setIgnoreDialer(state, ignore) {
+    Vue.set(state, 'ignoreDialer', Boolean(ignore))
+  },
+
+  answerCurrentCall(state, { acceptedCall, dialerId, callId }) {
+    if (acceptedCall) {
+      Vue.set(state.currentCall, 'status', CALL_STATUS.ACTIVE_CALL)
+    } else {
+      Vue.set(state.currentCall, 'status', CALL_STATUS.COMPLETED_CALL)
+      this.commit('clearCallHeartbeatInterval')
+      this.dispatch('endCall', { dialerId, callId })
     }
   }
 }

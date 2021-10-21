@@ -49,7 +49,20 @@ const disputeGetters = {
   prescriptionsList: state => state.prescriptionsList.sort(),
   partyAnalysisByDocument: state => (documentNumber) => state.partyAnalysis[documentNumber],
   lastAccess: state => state.lastAccess,
-  disputeLastInteractions: state => state.disputeLastInteractions
+  disputeLastInteractions: state => state.disputeLastInteractions,
+  getCanUseBatchAction: state => (action) => {
+    if (!state.batchActionsLastUse[action]) return true
+
+    const actionLastTime = moment(state.batchActionsLastUse[action])
+    const diferece = moment().diff(actionLastTime, 'seconds')
+
+    switch (action) {
+      case 'CHANGE_NEGOTIATOR':
+        return diferece >= 120
+      default:
+        return diferece >= 30
+    }
+  }
 }
 
 export default disputeGetters

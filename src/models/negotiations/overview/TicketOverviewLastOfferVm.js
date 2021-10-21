@@ -16,8 +16,11 @@ export default class LastOfferVm {
     lastCounterOfferRoleId,
     lastCounterOfferValue,
     lastCounterOfferName,
-    disputeUpperRange
+    disputeUpperRange,
+    disputeDealValue
   }) {
+    this.acceptedValue = disputeDealValue || 0
+
     if (disputeUpperRange) {
       this.defendantOffer = new ProposalVm(defendantOffer || {
         roleId: lastOfferRoleId,

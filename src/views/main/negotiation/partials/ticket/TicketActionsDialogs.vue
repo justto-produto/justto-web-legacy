@@ -393,7 +393,7 @@ export default {
 
     ticketResume() {
       const { disputeId, code } = this.ticket
-      const { plaintiffOffer } = this.lastTicketOffers
+      const { plaintiffOffer, acceptedValue } = this.lastTicketOffers
       return [
         {
           key: 'id',
@@ -431,7 +431,7 @@ export default {
         {
           key: 'value',
           label: 'Valor do acordo',
-          value: this.$options.filters.currency(plaintiffOffer?.value)
+          value: this.$options.filters.currency(acceptedValue || plaintiffOffer?.value)
         }
       ]
     },

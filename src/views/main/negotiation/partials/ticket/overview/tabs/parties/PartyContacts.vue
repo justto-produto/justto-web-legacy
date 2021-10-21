@@ -267,7 +267,11 @@ export default {
         toRoleId: this.party.disputeRoleId,
         toRoleName: this.party.name,
         number: `+55${number}`,
-        appInstance: this.appInstance
+        appInstance: this.appInstance,
+        contacts: {
+          emails: this.party.emailsDto,
+          phones: this.party.phonesDto
+        }
       })
     }
   }

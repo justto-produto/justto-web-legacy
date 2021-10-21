@@ -257,5 +257,6 @@ export default
   { code: '290', name: 'PAGSEGURO INTERNET S. A (PAGBANK)' },
   { code: '136', name: 'UNICRED COOPERATIVA LTDA' },
   { code: '99', name: 'UNIPRIME CENTRAL - CENTRAL INT DE COOP DE CRED LTD' },
-  { code: '323', name: 'MERCADO PAGO - CONTA DO MERCADO LIVRE' }
+  { code: '323', name: 'MERCADO PAGO - CONTA DO MERCADO LIVRE' },
+  { code: '197', name: 'STONE PAGAMENTOS S. A.' }
 ]

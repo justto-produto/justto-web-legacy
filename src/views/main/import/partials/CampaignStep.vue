@@ -89,7 +89,7 @@
       </div>
     </el-alert>
     <el-alert
-      v-if="!validationInProgress && duplicatedDisputes.length"
+      v-if="!validationInProgress && ((duplicatedDisputes.length + summaryWarnings.duplicated + summaryWarnings.expired) > 0)"
       type="error"
     >
       <h2>Atenção!</h2>
@@ -124,10 +124,15 @@
           </el-radio-group>
         </div>
 
-        <a @click="showDetails = !showDetails">
+        <a @click="handleValidateDisputes">
           {{ showDetails ? 'ocultar detalhes' : 'ver detalhes' }}
         </a>
       </div>
+
+      <span v-if="showDetails && !duplicatedDisputes.length">
+        Carregando disputas duplicadas
+        <i class="el-icon-loading" />
+      </span>
 
       <ul
         v-for="(d, index) in duplicatedDisputes"
@@ -219,6 +224,10 @@ export default {
   data() {
     return {
       duplicatedDisputes: [],
+      summaryWarnings: {
+        duplicated: 0,
+        expired: 0
+      },
       loadingStrategies: false,
       showDetails: false
     }
@@ -233,12 +242,12 @@ export default {
       validationInProgress: 'validationInProgress'
     }),
 
-    summaryWarnings() {
-      return {
-        duplicated: this.duplicatedDisputes.filter(w => w.status === 'DUPLICATED_DISPUTE' || w.status === 'DUPLICATED' || w.status === 'DUPLICATED_ROW').length,
-        expired: this.duplicatedDisputes.filter(w => w.status === 'EXPIRED' || w.status === 'DUPLICATE_AND_EXPIRED').length
-      }
-    },
+    // summaryWarnings() {
+    //   return {
+    //     duplicated: this.duplicatedDisputes.filter(w => w.status === 'DUPLICATED_DISPUTE' || w.status === 'DUPLICATED' || w.status === 'DUPLICATED_ROW').length,
+    //     expired: this.duplicatedDisputes.filter(w => w.status === 'EXPIRED' || w.status === 'DUPLICATE_AND_EXPIRED').length
+    //   }
+    // },
 
     duplicatedActionToDo: {
       get() {
@@ -254,9 +263,7 @@ export default {
   watch: {
     campaignIsMapped(current) {
       if (current) {
-        this.$store.dispatch('validateGeneseRunner').then(response => {
-          this.duplicatedDisputes = response.disputes
-        }).finally(() => (this.finishDuplicateValidations()))
+        this.handleValidateSummary()
       }
     }
   },
@@ -267,9 +274,7 @@ export default {
       this.getStrategies()
     }
 
-    this.$store.dispatch('validateGeneseRunner').then(response => {
-      this.duplicatedDisputes = response.disputes
-    }).finally(() => (this.finishDuplicateValidations()))
+    this.handleValidateSummary()
   },
 
   methods: {
@@ -277,8 +282,10 @@ export default {
       'showLoading',
       'hideLoading',
       'getMyStrategiesLite',
+      'validateGeneseRunner',
       'startDuplicateValidations',
-      'finishDuplicateValidations'
+      'finishDuplicateValidations',
+      'validateGeneseRunnerSummary'
     ]),
 
     async getStrategies() {
@@ -296,6 +303,26 @@ export default {
         }
       }
       this.loadingStrategies = false
+    },
+
+    handleValidateSummary() {
+      this.validateGeneseRunnerSummary().then(({ summary }) => {
+        this.summaryWarnings = summary
+      }).catch(error => {
+        this.$jusNotification({ error })
+        this.finishDuplicateValidations()
+      }).finally(this.finishDuplicateValidations)
+    },
+
+    handleValidateDisputes() {
+      if (this.showDetails) {
+        this.showDetails = !this.showDetails
+      } else {
+        this.$store.dispatch('validateGeneseRunner').then(({ disputes }) => {
+          this.duplicatedDisputes = disputes
+          this.showDetails = !this.showDetails
+        }).catch(error => this.$jusNotification({ error }))
+      }
     }
   }
 }

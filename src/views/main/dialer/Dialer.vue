@@ -50,7 +50,6 @@ import { mapActions, mapGetters } from 'vuex'
 import { CALL_STATUS } from '@/constants/callStatus'
 import { uuidv4 } from '@/utils'
 
-import SIPml from 'ecmascript-webrtc-sipml'
 import DialerUserModel from '@/store/modules/dialer/model/DialerUserModel'
 
 export default {
@@ -79,6 +78,7 @@ export default {
 
   computed: {
     ...mapGetters({
+      listCallQueue: 'getCallQueue',
       workspaceId: 'workspaceId',
       appInstance: 'getAppInstance',
       preferences: 'userPreferences',
@@ -118,6 +118,17 @@ export default {
       } else {
         this.activeAppToCall()
       }
+    },
+
+    isActiveToCall(is) {
+      if (is) {
+        this.showPopover = true
+      }
+    },
+
+    listCallQueue: {
+      deep: true,
+      handler: 'handleQueueChange'
     }
   },
 
@@ -152,39 +163,17 @@ export default {
       this.showPopover = true
     },
 
-    doLogin() {
-      return this.dialerLogin(this.user)
+    handleQueueChange(current, old) {
+      const isBigger = current.length > old.length
+      const isWaiting = current.length > 0 && ![CALL_STATUS.ENQUEUED, CALL_STATUS.COMPLETED_CALL].includes(current[0].status)
+
+      if (isBigger || isWaiting) {
+        this.showPopover = true
+      }
     },
 
-    async startConection() {
-      this.loading = true
-
-      this.configs = await this.loadVoiceServer()
-      await this.startServerStatus()
-      await this.availableServerStatus()
-
-      this.loading = false
-
-      SIPml.setDebugLevel((window.localStorage && window.localStorage.getItem('org.doubango.expert.disable_debug') === 'Justto') ? 'error' : 'info')
-
-      const self = this
-
-      return SIPml.init(_ => {
-        self.sipStack = new SIPml.Stack({
-          realm: self.configs.rtcSignalingServer,
-          impi: self.configs.rtcUAUsername,
-          impu: self.configs.rtcURIAddr,
-          password: self.configs.rtcUAPassword,
-          display_name: 'Justto',
-          websocket_proxy_url: self.configs.rtcWsServer,
-          events_listener: {
-            events: '*',
-            listener: self.eventHub
-          }
-        })
-
-        self.sipStack.start()
-      })
+    doLogin() {
+      return this.dialerLogin(this.user)
     },
 
     drag(event) {

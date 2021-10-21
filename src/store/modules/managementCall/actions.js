@@ -2,11 +2,12 @@
 import { Call } from '@/models/managementCall/currentCall'
 import { axiosDispatch } from '@/utils'
 import { publishWebsocket } from '@/utils/utils/others'
-import SIPml from 'ecmascript-webrtc-sipml'
+import JsSIP from 'jssip'
 import { CALL_STATUS } from '@/constants/callStatus'
 
-const DEFAULT_JUSTTO_MANAGEMENT_CALL = '{"currentCall":null,"callQueue":[],"appInstance":null}'
+const DEFAULT_JUSTTO_MANAGEMENT_CALL = "{'currentCall':null,'callQueue':[],'appInstance':null}"
 const dialerApi = 'api/dialer'
+const disputeApi = 'api/disputes/v2'
 
 export default {
   activeAppToCall({ commit, getters: { hasOtherTabActive, isActiveToCall } }, active = false) {
@@ -16,7 +17,6 @@ export default {
   },
 
   addCall({ commit, dispatch, getters: { isActiveToCall, getAppInstance, getGlobalAuthenticationObject, hasOtherTabActive } }, callRequester) {
-    console.log('addCall', isActiveToCall, callRequester.appInstance === getAppInstance)
     if (isActiveToCall || !hasOtherTabActive) {
       if (!hasOtherTabActive) {
         commit('setActiveAppToCall', true)
@@ -68,20 +68,27 @@ export default {
       url: `api/dialer/${dialerId}/call/${callId}`,
       method: 'DELETE',
       mutation: 'endCall',
-      payload: { globalAuthenticationObject: getters.getGlobalAuthenticationObject }
-    }).catch(() => {
-      // Chamada Encerrada.
+      payload: {
+        id: Number(callId),
+        globalAuthenticationObject: getters.getGlobalAuthenticationObject
+      }
+    }).finally(() => {
+      commit('clearCallHeartbeatInterval')
+      commit('clearSipStack')
     })
   },
 
-  sendCallHeartbeat({ _ }, { dialerId, callId }) {
+  sendHeartBeat({ dispatch, getters: { getDialer: { id: dialerId }, getCurrentCall: { id: callId } } }) {
     return axiosDispatch({
-      url: `api/dialer/${dialerId}/call/${callId}`,
-      method: 'POST'
+      url: `api/dialer/${dialerId}/call/${callId}/heartbeat`,
+      method: 'PATCH'
+    }).catch(error => {
+      this.$jusNotification({ error })
+      dispatch('endCall', { dialerId, callId })
     })
   },
 
-  requestDialerCall({ commit, getters }, requestCallCommand) {
+  requestDialerCall({ commit, getters, dispatch }, requestCallCommand) {
     commit('setCurrentCallStatus', CALL_STATUS.WAITING_NEW_CALL)
 
     return axiosDispatch({
@@ -90,6 +97,11 @@ export default {
       data: requestCallCommand,
       mutation: 'setCallDetail',
       payload: { globalAuthenticationObject: getters.getGlobalAuthenticationObject }
+    }).catch(() => {
+      commit('addDialerDetail', null)
+      commit('setCurrentCallStatus', CALL_STATUS.WAITING_DIALER)
+      commit('clearSipStack')
+      dispatch('startDialerRequester')
     })
   },
 
@@ -100,22 +112,57 @@ export default {
     })
   },
 
-  requestProvide({ getters: { isActiveToCall, hasCallInQueue, firstCallInQueue } }) {
+  requestProvide({ commit, getters: { isActiveToCall, hasCallInQueue, firstCallInQueue, isJusttoAdmin } }) {
     return isActiveToCall && hasCallInQueue && [CALL_STATUS.WAITING_DIALER, CALL_STATUS.ENQUEUED].includes(firstCallInQueue.status) ? axiosDispatch({
       url: `${dialerApi}/request`,
       method: 'PATCH',
-      data: {}
-    }) : new Promise((resolve, reject) => reject(new Error('Sem chamada ativa')))
+      data: {
+        owner: isJusttoAdmin ? 'DEV' : 'JUSTTO'
+      }
+    }) : new Promise((resolve, reject) => {
+      commit('clearActiveRequestInterval')
+      commit('clearTimeoutDialerDetail')
+      resolve()
+    })
   },
 
-  answerCurrentCall({ commit, getters: { getGlobalAuthenticationObject: globalAuthenticationObject } }, acceptedCall) {
-    commit('answerCurrentCall', { acceptedCall, globalAuthenticationObject })
+  answerCurrentCall({ state, commit, dispatch, getters: { hasSipSession, getDialer: { id: dialerId }, getCurrentCall: { id: callId } } }, acceptedCall) {
+    return new Promise((resolve) => {
+      if (state.currentCall && hasSipSession) {
+        const callOptions = {
+          mediaConstraints: {
+            audio: true, // only audio calls
+            video: false
+          }
+        }
+
+        if (acceptedCall) {
+          state.sipConnection.session.answer(callOptions)
+        } else {
+          state.sipConnection.session.terminate()
+        }
+
+        commit('answerCurrentCall', { acceptedCall, dialerId, callId })
+
+        resolve(acceptedCall)
+      } else {
+        resolve(false)
+        commit('answerCurrentCall', { acceptedCall: false, dialerId, callId })
+      }
+    })
   },
 
   responseCallStatus({ _ }, { appInstance }) {
     const vue = document.getElementById('app').__vue__
     // TODO usar publishWebsocket
     vue.$socket.emit('RESPONSE_CALL_STATUS', { appInstance })
+  },
+
+  setInvalidNumberInCall({ getters: { getCurrentCall: { disputeId, interactionId } } }, { reason }) {
+    return axiosDispatch({
+      url: `${disputeApi}/${disputeId}/interaction/${interactionId}/invalid-contact/${reason}`,
+      method: 'PATCH'
+    })
   },
 
   SOCKET_KILL_ACTIVE_CALL({ dispatch, getters: { getDialer } }, callId) {
@@ -126,59 +173,109 @@ export default {
     })
   },
 
-  SOCKET_ADD_DIALER_DETAIL({ dispatch, getters: { isActiveToCall, getCurrentCall }, commit }, dialer) {
-    if (isActiveToCall) {
+  callTerminated({ commit, getters: { getCurrentCall: { id }, getGlobalAuthenticationObject: globalAuthenticationObject } }) {
+    commit('clearCallHeartbeatInterval')
+    commit('clearSipStack')
+    commit('endCall', {
+      payload: {
+        id, globalAuthenticationObject
+      }
+    })
+  },
+
+  SOCKET_ADD_DIALER_DETAIL({ dispatch, getters: { isActiveToCall, getCurrentCall, isToIgnoreDialer, getDialer }, commit }, dialer) {
+    if (isActiveToCall && !isToIgnoreDialer && getCurrentCall && !getDialer) {
       commit('setCurrentCallStatus', CALL_STATUS.WAITING_NEW_CALL)
       commit('addDialerDetail', dialer)
       commit('clearTimeoutDialerDetail')
+      commit('clearActiveRequestInterval')
 
-      SIPml.setDebugLevel((window.localStorage && window.localStorage.getItem('org.doubango.expert.disable_debug') === 'Justto') ? 'error' : 'info')
-      const sipListener = (e) => {
-        switch (e.type) {
-          case 'started': {
-            const registerSession = sipStack.newSession('register', {
-              events_listener: {
-                events: '*',
-                listener: sipListener
-              }
-            })
-            registerSession.register()
-            commit('setSipSession', registerSession)
-            break
-          }
-          case 'i_new_call':
-            commit('setCurrentCallStatus', CALL_STATUS.RECEIVING_CALL)
-            commit('setSipSession', e.newSession)
-            break
-          case 'terminated':
-            dispatch('endCall', { dialerId: dialer.id, callId: getCurrentCall.id })
-            break
-          default:
-            if (process.env.NODE_ENV === 'development') {
-              console.log(e)
-            }
-            break
-        }
+      // Usando exemplo simples copiado daqui: https://jssip.net/documentation/3.8.x/getting_started/
+      const remoteAudio = document.getElementById('remoteAudio')
+      const socket = new JsSIP.WebSocketInterface(dialer.sipServer.websocketHost)
+
+      const configuration = {
+        sockets: [socket],
+        uri: dialer.sipServer.url,
+        password: dialer.sipServer.password
       }
-      let sipStack = null
-      // faltando add no back
-      SIPml.init(_ => {
-        sipStack = new SIPml.Stack({
-          realm: dialer.sipServer.signalingHost,
-          impi: dialer.sipServer.username,
-          impu: dialer.sipServer.url,
-          password: dialer.sipServer.password,
-          display_name: 'Justto',
-          websocket_proxy_url: dialer.sipServer.websocketHost,
-          events_listener: {
-            events: '*',
-            listener: sipListener
-          }
-        })
 
-        sipStack.start()
-        commit('setSipStack', sipStack)
+      const phone = new JsSIP.UA(configuration)
+
+      commit('setSipStack', phone)
+
+      phone.on('connected', function(e) {
+        // Quando conecta no SIP
+        console.log('connected', e)
       })
+
+      phone.on('disconnected', function(e) {
+        // Quando finaliza a sessão do SIP.
+        console.log('disconnected', e)
+      })
+
+      phone.on('newRTCSession', function(data) {
+        console.table('newRTCSession', data)
+        const session = data.session
+        commit('setSipSession', session)
+
+        if (session.direction === 'incoming') {
+          // incoming call here
+          session.on('accepted', function() {
+            console.log('newRTCSession.accepted')
+          })
+
+          session.on('confirmed', function(e) {
+            console.log('newRTCSession.confirmed', e, JsSIP.RTCSession)
+          })
+
+          session.on('ended', function(e) {
+            console.log('newRTCSession.ended', e)
+            dispatch('callTerminated')
+          })
+
+          session.on('failed', function(e) {
+            console.log('newRTCSession.failed', e)
+            dispatch('callTerminated')
+          })
+
+          session.on('peerconnection', function(e) {
+            console.log('newRTCSession.addstream', e)
+
+            const peerconnection = e.peerconnection // https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection
+
+            peerconnection.ontrack = function(event) {
+              remoteAudio.srcObject = event.streams[0]
+              remoteAudio.play()
+            }
+
+            peerconnection.onremovestream = function(e2) {
+              remoteAudio.src = null
+              remoteAudio.pause()
+            }
+          })
+
+          commit('setCurrentCallStatus', CALL_STATUS.RECEIVING_CALL)
+        }
+      })
+
+      phone.on('registered', function(e) {
+        console.log('registered', e)
+        // FIXME aqui já pode disparar a ligação. Mover pra ca a chamada do back
+        // dispatch('requestDialerCall', requestDialerCommand)
+      })
+
+      phone.on('unregistered', function(e) {
+        console.log('unregistered', e)
+      })
+
+      phone.on('registrationFailed', function(e) {
+        console.log('registrationFailed', e)
+      })
+
+      phone.start()
+      commit('setCurrentCallStatus', CALL_STATUS.WAITING_NEW_CALL)
+
       const requestDialerCommand = {
         phoneNumber: getCurrentCall.number,
         dialerId: dialer.id,
@@ -186,7 +283,11 @@ export default {
         contactRoleId: getCurrentCall.toRoleId,
         apiKey: dialer?.sipServer?.apiKey
       }
+
       dispatch('requestDialerCall', requestDialerCommand)
+      commit('clearActiveRequestInterval')
+    } else if (isToIgnoreDialer) {
+      commit('setIgnoreDialer', false)
     }
   },
 

@@ -4,10 +4,15 @@
       v-if="isActiveToCall || hasCallInQueue"
       class="call-queue__container-feedback"
     >
+      <!-- v-if="currentCall && ['RECEIVING_CALL'].includes(currentCall.status)" -->
+      <audio
+        ref="ringAudio"
+        src="https://storage.googleapis.com/justto_app/audio/ChamadaEsperaJustto.mp3"
+        loop
+      />
+
       <div v-if="isActiveToCall && isOpenCall">
-        <p>
-          Ligação ativa
-        </p>
+        <p>Em chamada</p>
 
         <el-button
           type="danger"
@@ -21,24 +26,28 @@
       <div v-if="!isOpenCall && hasCallInQueue">
         <div v-if="isPendingToAnswerCurrentCall">
           <p>Linha disponível</p>
+
           <el-button
             type="danger"
             size="mini"
-            @click="answerCurrentCall(false)"
+            @click="answerCall(false)"
           >
             Não ligar
           </el-button>
+
           <el-button
             type="primary"
             size="mini"
-            @click="answerCurrentCall(true)"
+            @click="answerCall(true)"
           >
             Ligar agora
           </el-button>
         </div>
+
         <div v-else>
           <p>
             Aguardando disponibilidade de discador
+            <i class="el-icon-loading" />
           </p>
           <el-button
             v-if="isActiveToCall"
@@ -114,6 +123,10 @@
         </el-button>
       </div>
     </div>
+
+    <CallHelp
+      @call:end="hangUpCall()"
+    />
   </article>
 </template>
 
@@ -121,6 +134,10 @@
 import { mapActions, mapGetters } from 'vuex'
 
 export default {
+  components: {
+    CallHelp: () => import('@/components/dialogs/CallHelpWizard.vue')
+  },
+
   computed: {
     ...mapGetters({
       dialer: 'getDialer',
@@ -134,25 +151,68 @@ export default {
     })
   },
 
+  watch: {
+    currentCall: {
+      deep: true,
+      handler: 'handleCallUpdate'
+    }
+  },
+
   methods: {
     ...mapActions({
       openBuyDialerDialog: 'openBuyDialerDialog',
-      removeCall: 'SOCKET_REMOVE_CALL',
       answerCurrentCall: 'answerCurrentCall',
+      removeCall: 'SOCKET_REMOVE_CALL',
+      callTerminated: 'callTerminated',
       endCall: 'endCall'
     }),
 
+    answerCall(answer) {
+      this.answerCurrentCall(answer).then(hasConected => {
+        if (answer) {
+          if (hasConected) {
+            this.redirectToDispute()
+          } else {
+            this.$jusNotification({
+              title: 'Ops!',
+              message: 'Não foi possível continuar a chamada.',
+              type: 'warning'
+            })
+          }
+        }
+      })
+    },
+
+    redirectToDispute() {
+      if (this.$route.name === 'ticket' && Number(this.$route.params.id) === this.currentCall.disputeId) {
+        // Está na rota certa
+      } else {
+        const path = `/negotiation/${this.currentCall.disputeId}`
+        this.$router.push({ path })
+      }
+    },
+
     remove(id) {
-      this.removeCall({ callId: id })
+      if (id === this.currentCall.id) {
+        this.hangUpCall()
+      } else {
+        this.removeCall({ callId: id })
+      }
     },
 
     hangUpCall() {
-      const data = {
+      this.endCall({
         dialerId: this.dialer.id,
-        callId: this.currentCall?.detail?.VALUE
-      }
+        callId: this.currentCall.id
+      })
+    },
 
-      this.endCall(data)
+    handleCallUpdate(call) {
+      if (['RECEIVING_CALL'].includes(call?.status) && document.hidden) {
+        this.$refs.ringAudio.play()
+      } else if (!['RECEIVING_CALL'].includes(call?.status) && this.$refs.ringAudio) {
+        this.$refs.ringAudio.pause()
+      }
     }
   }
 }
@@ -169,11 +229,17 @@ export default {
   .call-queue__container-feedback {
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 8px;
+
+    * {
+      text-align: center;
+    }
   }
 
   .call-queue__container-feedback-time-running-call {
     display: block;
+    text-align: center;
   }
 
   .call-queue__container-call-queue {
@@ -216,6 +282,10 @@ export default {
     .call-queue__container-empty-queue-label {
       font-weight: 600;
     }
+  }
+
+  div:not(.el-dialog__wrapper) {
+    z-index: 3000;
   }
 }
 </style>
