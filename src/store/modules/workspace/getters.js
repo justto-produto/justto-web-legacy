@@ -38,6 +38,19 @@ const workspaceGetters = {
   getWorkspaceDefaultSigners: state => state.workspace.defaultSigners,
   getPreNegotiation: state => state.workspace.preNegotiation,
   getFeaturesAndModules: state => state.featuresAndModules,
+  getMappedFeaturesAndModules: state => state.featuresAndModules.reduce((acc, cur, i) => {
+    let res = {}
+    
+    if (i === 1) {
+      res[acc.code] = acc.active
+    } else {
+      res = { ...acc }
+    }
+
+    res[cur.code] = cur.active
+
+    return res
+  }),
   getWorkspaceKeyAccounts: (state) => state.workspace.keyAccounts,
   getPortifolios: (state) => state.portifolios,
   getAssociatedKeyAccount: (state) => state.workspace.associatedKeyAccount,

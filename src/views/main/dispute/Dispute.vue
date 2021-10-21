@@ -674,6 +674,7 @@ export default {
     ...mapActions([
       'setHeight',
       'sendNegotiator',
+      'disfavorTicket',
       'getDisputeNotes',
       'getDisputeStatuses',
       'getLastInteractions',
@@ -909,6 +910,24 @@ export default {
         return new Promise((resolve, reject) => reject(Error()))
       } else if (['EXPIRED'].includes(this.dispute.status)) {
         return this.$refs.expiredDisputeAlert.open()
+      } else if (this.ticket?.favorite) {
+        return new Promise((resolve, reject) => {
+          this.$confirm('<p>Olá Lucas, esta disputa está marcada como <b>Aguardando análise da empresa</b>.<br><br>Estamos respondendo todas as mensagens da parte contrária informando que o processo está em análise pela empresa.<br><br>Gostaria de desmarcar esta opção?</p>', 'Aguardando análise pela empresa', {
+            cancelButtonText: 'Desmarcar e enviar',
+            confirmButtonText: 'Não enviar',
+            dangerouslyUseHTMLString: true,
+            closeOnPressEscape: false,
+            closeOnClickModal: false,
+            showClose: false,
+            center: true
+          }).then(() => {
+            reject(new Error('Ticket aguardando análise da empresa.'))
+          }).catch(() => {
+            // Refatorar isso pra Disputa.
+            this.disfavorTicket(Number(this.dispute?.id || this.$route.params.id))
+            resolve()
+          })
+        })
       } else {
         return new Promise((resolve) => resolve())
       }

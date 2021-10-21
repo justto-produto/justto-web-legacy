@@ -154,7 +154,7 @@ export default {
         {
           name: 'RESTART_ENGAGEMENT',
           method: (action) => this.handleRestartEngagement(action),
-          isVisible: !this.isPreNegotiation
+          isVisible: this.canRestartEngagement
         },
         {
           name: 'RESEND_MESSAGES',
@@ -174,7 +174,7 @@ export default {
         {
           name: 'ENRICH',
           method: (action) => this.handleEnrich(action),
-          isVisible: !this.isPreNegotiation
+          isVisible: !this.isPreNegotiation && !this.isFavorite
         },
         {
           name: 'RENEGOTIATE',
@@ -283,8 +283,8 @@ export default {
       return !ticket.paused && !isPreNegotiation
     },
     canRestartEngagement() {
-      const { isPreNegotiation, ticket } = this
-      return ticket.status && !['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(ticket.status) && !isPreNegotiation
+      const { isPreNegotiation, ticket, isFavorite } = this
+      return ticket.status && !['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(ticket.status) && !isPreNegotiation && !isFavorite
     },
     canResendMessages() {
       const { isPreNegotiation, ticket } = this
@@ -361,7 +361,8 @@ export default {
         visible: true,
         showNotifyInput: showNotify,
         title: this.$options.filters.capitalize(this.$t('actions.FAVORITE.name')),
-        notify: showNotify
+        notify: showNotify,
+        action: 'FAVORITE'
       })
     },
 
