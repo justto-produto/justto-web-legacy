@@ -48,9 +48,15 @@ const importActions = {
       method: 'POST'
     })
   },
+
   validateGeneseRunner({ state }) {
     return axiosDispatch({ url: `api/geneserunner/${state.file.id}/validate` })
   },
+
+  validateGeneseRunnerSummary({ state }) {
+    return axiosDispatch({ url: `api/imports/${state.file.id}/resume?loadSummary=true&loadDisputes=false` })
+  },
+
   setErrorFields({ commit }, fields) {
     commit('setErrorFields', fields)
   },
