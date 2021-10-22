@@ -186,7 +186,8 @@ export default {
         main: true,
         roles: ['PARTY']
       }
-      this.setTicketOverviewParty({ disputeId, data, isNew: true }).then(() => {
+      this.setTicketOverviewParty({ disputeId, data, isNew: true }).then(part => {
+        this.$emit('add:part', part)
         this.$jusNotification({
           title: 'Yay!',
           message: 'Parte cadastrada com sucesso!',

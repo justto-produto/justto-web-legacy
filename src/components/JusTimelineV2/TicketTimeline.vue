@@ -331,7 +331,8 @@ export default {
         main: true,
         roles: ['PARTY']
       }
-      this.setTicketOverviewParty({ disputeId, data, isNew: true }).then(() => {
+      this.setTicketOverviewParty({ disputeId, data, isNew: true }).then(disputeRole => {
+        this.$emit('update:contact', disputeRole)
         this.$jusNotification({
           title: 'Yay!',
           message: 'Parte cadastrada com sucesso!',

@@ -12,6 +12,7 @@
       v-if="Boolean(party.legacyDto) && !isNegotiator && isJusttoAdmin"
       :visible="editRoleDialogVisible"
       :party="party.legacyDto"
+      :ticket-status="ticketStatus"
       @closeEdit="editRoleDialogVisible = false"
     />
 
@@ -315,6 +316,7 @@ import { isValid, strip } from '@fnando/cpf'
 
 import brazilianStates from '@/constants/brazilianStates'
 
+import restartEngagement from '@/utils/mixins/restartEngagement'
 import preNegotiation from '@/utils/mixins/ticketPreNegotiation'
 import TicketTicketOverviewPartyResumed from '@/models/negotiations/overview/TicketOverviewPartyResumed'
 
@@ -335,7 +337,7 @@ export default {
     JusEditRole: () => import('@/components/dialogs/JusEditRole')
   },
 
-  mixins: [preNegotiation],
+  mixins: [preNegotiation, restartEngagement],
 
   props: {
     party: {
@@ -637,14 +639,14 @@ export default {
           }).catch(error => this.$jusNotification({ error }))
         })
       } else {
+        this.handleRestartEngagement()
         this.setTicketOverviewPartyContact(params)
       }
     },
 
     updateContacts(contactId, contactValue, contactType) {
-      if (!contactValue) {
-        return
-      }
+      if (!contactValue) { return }
+
       const { disputeId, party } = this
       const params = {
         roleId: party.disputeRoleId,
@@ -668,6 +670,8 @@ export default {
         const oabSplited = contactValue.split('/')
         params.contactData.number = oabSplited[0]
         params.contactData.state = oabSplited[1]
+      } else {
+        this.handleRestartEngagement()
       }
 
       this.updateTicketOverviewPartyContact(params)
@@ -782,6 +786,16 @@ export default {
       this.$refs[ref].$el.classList.remove('active-popover')
     },
 
+    handleRestartEngagement() {
+      this.verifyRestartEngagement({
+        status: this.ticketStatus,
+        party: this.party.polarity,
+        name: this.party.name,
+        disputeId: Number(this.$route.params.id),
+        disputeRoleId: this.party.disputeRoleId
+      })
+    },
+
     updateDisputeRoleField(disputeRole, { field, value }) {
       let message = ''
       const id = this.$route.params.id
@@ -827,6 +841,7 @@ export default {
             disputeRoleId: disputeRole.id || disputeRole.disputeRoleId,
             value
           }).then(() => {
+            this.handleRestartEngagement()
             this.$jusNotification({
               title: 'Yay!',
               message: 'Nº de Telefone adicionada.',
