@@ -2084,6 +2084,7 @@ export default {
       get() {
         const condition = (
           this.dispute &&
+          ['IMPORTED', 'ENGAGEMENT', 'PENDING'].includes(this.dispute.status) &&
           this.dispute.properties &&
           (
             !Object.keys(this.dispute.properties).includes('CONTATOS ASSOCIADOS') ||

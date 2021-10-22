@@ -33,7 +33,12 @@ const overviewGetters = {
   getTicketMetadata: ({ ticketMetadata }) => ticketMetadata,
   getTicketOverviewStatus: ({ ticketOverview }) => ticketOverview.status || '',
   AssociatedContactsPropertie: ({ haveAssociatedContacts }) => haveAssociatedContacts,
-  showAssociatedContacts: ({ haveAssociatedContacts }) => (!!haveAssociatedContacts && ['NAO'].includes(haveAssociatedContacts)),
+  showAssociatedContacts: ({
+    haveAssociatedContacts,
+    ticketOverview: {
+      status
+    }
+  }) => (['IMPORTED', 'ENGAGEMENT', 'PENDING'].includes(status) && !!haveAssociatedContacts && ['NAO'].includes(haveAssociatedContacts)),
   getTicketOverviewNegotiators: ({ ticketOverviewParties = [] }) => ticketOverviewParties.filter(({ roles }) => roles.includes('NEGOTIATOR'))
 }
 
