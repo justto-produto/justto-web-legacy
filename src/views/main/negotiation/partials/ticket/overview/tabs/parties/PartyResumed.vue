@@ -6,19 +6,19 @@
   >
     <template slot="title">
       <JusIcon
-        v-if="state.hasAlert && state.isDead"
+        v-if="state.hasAlert && !hideArrows && state.isDead"
         class="el-icon-pulse vexatious-alert"
         icon="flat-alert"
       />
 
       <i
-        v-else-if="state.hasAlert && state.isNamesake"
+        v-else-if="state.hasAlert && !hideArrows && state.isNamesake"
         class="el-icon-warning el-icon-pulse vexatious-alert"
         :style="{ color: state.alertColor }"
       />
 
       <JusIcon
-        v-else-if="state.hasAlert && state.isVexatious"
+        v-else-if="state.hasAlert && !hideArrows && state.isVexatious"
         class="el-icon-pulse vexatious-alert"
         icon="flat-alert-yellow"
       />

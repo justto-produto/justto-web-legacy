@@ -157,6 +157,7 @@ export default {
 
   .ticket-container__overview {
     width: 310px;
+    max-width: 310px;
     height: 100%;
     background-color: #fff;
     border-left: 1px solid $--color-light-gray;
@@ -175,6 +176,8 @@ export default {
       right: 0;
       transform: translateX(100%);
       width: 300px;
+      max-width: 300px;
+
       &--active {
         transform: translateX(0);
       }

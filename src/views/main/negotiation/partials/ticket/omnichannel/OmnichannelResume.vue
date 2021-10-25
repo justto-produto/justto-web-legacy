@@ -79,7 +79,7 @@ export default {
     }),
 
     occurrences() {
-      return this.allOccurrences.filter(({ id, archived, interaction }) => (Boolean(id) && !archived && interaction.archived !== true))
+      return this.allOccurrences.filter(({ id, archived, interaction }) => (Boolean(id) && !archived && interaction?.archived !== true))
     }
   }
 }

@@ -126,7 +126,7 @@ export default {
 
     startPrint() {
       this.$nextTick().then(() => {
-        setTimeout(this.print, 250)
+        setTimeout(this.print, 2500)
       })
     },
 
