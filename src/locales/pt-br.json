@@ -268,7 +268,7 @@
     "SEND_BILK_MESSAGE": "Enviar mensagens em massa",
     "tooltip": {
       "BULK_COMPOSE_MESSAGE": "Compor mensagem em massa",
-      "SETTLE_DISPUTE": "Ganhar disputa | Ganhar disputas"
+      "SETTLE_DISPUTE": "Aceitar e Ganhar disputa | Aceitar e Ganhar disputas"
     }
   },
   "actions": {
