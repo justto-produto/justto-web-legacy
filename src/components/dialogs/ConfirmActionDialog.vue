@@ -14,9 +14,20 @@
         {{ state.message }}
       </p>
 
-      <p v-if="state.action === 'FAVORITE' && features.AUTOMATIC_MESSAGES">
-        <sup>*</sup>Ao <b>aguardar análise da empresa</b>, novas mensagens serão respondidas automaticamente informando, a parte contraria, que o processo está em análise pela empresa.
-      </p>
+      <div
+        v-if="state.action === 'FAVORITE' && features.AUTOMATIC_MESSAGES"
+        class="confirm-dialog__container-favorite"
+      >
+        <p>
+          <sup>*</sup>
+          Ao confirmar esta ação, se receber novas mensagens da parte iremos responder automaticamente com a mensagem a seguir:
+        </p>
+
+        <p
+          class="confirm-dialog__container-favorite-message"
+          v-html="parsedTemplatesById[5111] || ''"
+        />
+      </div>
     </article>
 
     <span
@@ -66,8 +77,16 @@ export default {
 
   computed: {
     ...mapGetters({
+      templates: 'quickReplyTemplates',
       features: 'getMappedFeaturesAndModules'
-    })
+    }),
+
+    parsedTemplatesById() {
+      return (this.templates || []).reduce((acc, { parsed }) => {
+        acc[parsed.referenceTemplateId] = parsed.body
+        return acc
+      }, {})
+    }
   },
 
   methods: {
@@ -125,6 +144,16 @@ export default {
       display: flex;
       flex-direction: column;
       text-align: center;
+
+      .confirm-dialog__container-favorite {
+        word-break: break-word;
+
+        .confirm-dialog__container-favorite-message {
+          border: solid thin lightgray;
+          padding: 8px;
+          border-radius: 10px;
+        }
+      }
     }
   }
 
