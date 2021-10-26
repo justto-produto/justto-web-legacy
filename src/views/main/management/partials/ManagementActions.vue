@@ -24,7 +24,7 @@
           >
             <el-tooltip
               :disabled="!action.tooltip"
-              :content="action.tooltip ? $t(`action.tooltip.${action.tooltip}`) : ''"
+              :content="action.tooltip ? $tc(`action.tooltip.${action.tooltip}`, selectedLenghtToShow) : ''"
             >
               <jus-icon
                 v-if="action.icon"
@@ -465,7 +465,11 @@ export default {
 
     actionsList() {
       return [
-        { name: 'SETTLED', tabs: ['1', '2', '3', '4', '9'] },
+        {
+          name: 'SETTLED',
+          tabs: ['1', '2', '3', '4', '9'],
+          tooltip: 'SETTLE_DISPUTE'
+        },
         { name: 'UNSETTLED', tabs: ['1', '2', '3', '4', '9'] },
         { name: 'PAUSED', tabs: ['1', '2', '3', '4', '9'] },
         { name: 'RESUME', tabs: ['1', '2', '3', '4', '9'] },

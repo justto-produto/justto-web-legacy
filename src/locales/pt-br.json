@@ -267,7 +267,8 @@
     "START_NEGOTIATON": "inicar negociação",
     "SEND_BILK_MESSAGE": "Enviar mensagens em massa",
     "tooltip": {
-      "BULK_COMPOSE_MESSAGE": "Compor mensagem em massa"
+      "BULK_COMPOSE_MESSAGE": "Compor mensagem em massa",
+      "SETTLE_DISPUTE": "Ganhar disputa | Ganhar disputas"
     }
   },
   "actions": {
