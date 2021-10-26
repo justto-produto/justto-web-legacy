@@ -4,10 +4,9 @@
       v-if="isActiveToCall || hasCallInQueue"
       class="call-queue__container-feedback"
     >
-      <!-- v-if="currentCall && ['RECEIVING_CALL'].includes(currentCall.status)" -->
       <audio
         ref="ringAudio"
-        src="https://storage.googleapis.com/justto_app/audio/ChamadaEsperaJustto.mp3"
+        src="https://s3.sa-east-1.amazonaws.com/justto.com.br/external-content/notification-new-dialer.mp3"
         loop
       />
 
