@@ -24,6 +24,7 @@
         </p>
 
         <p
+          v-if="parsedTemplatesById[5111]"
           class="confirm-dialog__container-favorite-message"
           v-html="parsedTemplatesById[5111] || ''"
         />
