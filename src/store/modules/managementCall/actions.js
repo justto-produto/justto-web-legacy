@@ -130,7 +130,7 @@ export default {
     const vue = document.getElementById('app').__vue__
 
     return new Promise((resolve) => {
-      vue.$jusSegment('answerCurrentCall', { hasSipSession, state, acceptedCall, dialerId, callId })
+      vue.$jusSegment('answerCurrentCall', { currentCall: state.currentCall, hasSipSession, acceptedCall, dialerId, callId })
       if (state.currentCall && hasSipSession) {
         const callOptions = {
           mediaConstraints: {
