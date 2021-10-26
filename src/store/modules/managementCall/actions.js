@@ -126,11 +126,8 @@ export default {
     })
   },
 
-  answerCurrentCall({ state, commit, dispatch, getters: { hasSipSession, getDialer: { id: dialerId }, getCurrentCall: { id: callId } } }, acceptedCall) {
-    const vue = document.getElementById('app').__vue__
-
+  answerCurrentCall({ state, commit, dispatch, getters: { isJusttoAdmin, hasSipSession, getDialer: { id: dialerId }, getCurrentCall: { id: callId } } }, acceptedCall) {
     return new Promise((resolve) => {
-      vue.$jusSegment('answerCurrentCall', { currentCall: state.currentCall, hasSipSession, acceptedCall, dialerId, callId })
       if (state.currentCall && hasSipSession) {
         const callOptions = {
           mediaConstraints: {
