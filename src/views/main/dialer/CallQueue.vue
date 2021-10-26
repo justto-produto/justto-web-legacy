@@ -50,7 +50,7 @@
             <i class="el-icon-loading" />
           </p>
           <el-button
-            v-if="isActiveToCall"
+            v-if="isActiveToCall && (isAdminProfile || isJusttoAdmin)"
             type="info"
             size="mini"
             plain
@@ -112,7 +112,7 @@
         Sem ligações pendentes
       </div>
 
-      <div v-if="!hasCallInQueue">
+      <div v-if="!hasCallInQueue && (isAdminProfile || isJusttoAdmin)">
         <el-button
           type="info"
           size="mini"
@@ -147,7 +147,9 @@ export default {
       hasCallInQueue: 'hasCallInQueue',
       isOpenCall: 'isOpenCall',
       currentCall: 'getCurrentCall',
-      isPendingToAnswerCurrentCall: 'isPendingToAnswerCurrentCall'
+      isPendingToAnswerCurrentCall: 'isPendingToAnswerCurrentCall',
+      isAdminProfile: 'isAdminProfile',
+      isJusttoAdmin: 'isJusttoAdmin'
     })
   },
 
