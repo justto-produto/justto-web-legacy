@@ -117,7 +117,7 @@ export default {
       url: `${dialerApi}/request`,
       method: 'PATCH',
       data: {
-        owner: isJusttoAdmin ? 'DEV' : 'JUSTTO'
+        owner: 'JUSTTO' // isJusttoAdmin ? 'DEV' : 'JUSTTO'
       }
     }) : new Promise((resolve, reject) => {
       commit('clearActiveRequestInterval')
