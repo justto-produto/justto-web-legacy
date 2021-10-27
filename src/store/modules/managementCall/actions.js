@@ -204,43 +204,62 @@ export default {
 
       commit('setSipStack', phone)
 
-      phone.on('connected', function(e) {
-        // Quando conecta no SIP
-        console.log('connected', e)
-      })
+      if (process.env.NODE_ENV === 'development') {
+        phone.on('connected', function(e) {
+          // Quando conecta no SIP
+          console.log('connected', e)
+        })
 
-      phone.on('disconnected', function(e) {
-        // Quando finaliza a sessão do SIP.
-        console.log('disconnected', e)
-      })
+        phone.on('disconnected', function(e) {
+          // Quando finaliza a sessão do SIP.
+          console.log('disconnected', e)
+        })
+
+        phone.on('registered', function(e) {
+          console.log('registered', e)
+          // FIXME aqui já pode disparar a ligação. Mover pra ca a chamada do back
+          // dispatch('requestDialerCall', requestDialerCommand)
+        })
+
+        phone.on('unregistered', function(e) {
+          console.log('unregistered', e)
+        })
+
+        phone.on('registrationFailed', function(e) {
+          console.log('registrationFailed', e)
+        })
+      }
 
       phone.on('newRTCSession', function(data) {
-        console.table('newRTCSession', data)
         const session = data.session
+
         commit('setSipSession', session)
 
         if (session.direction === 'incoming') {
           // incoming call here
-          session.on('accepted', function() {
-            console.log('newRTCSession.accepted')
-          })
 
-          session.on('confirmed', function(e) {
-            console.log('newRTCSession.confirmed', e, JsSIP.RTCSession)
-          })
+          if (process.env.NODE_ENV === 'development') {
+            session.on('accepted', function() {
+              console.log('newRTCSession.accepted')
+            })
+
+            session.on('confirmed', function(e) {
+              console.log('newRTCSession.confirmed', e, JsSIP.RTCSession)
+            })
+          }
 
           session.on('ended', function(e) {
-            console.log('newRTCSession.ended', e)
+            if (process.env.NODE_ENV === 'development') console.log('newRTCSession.ended', e)
             dispatch('callTerminated')
           })
 
           session.on('failed', function(e) {
-            console.log('newRTCSession.failed', e)
+            if (process.env.NODE_ENV === 'development') console.log('newRTCSession.failed', e)
             dispatch('callTerminated')
           })
 
           session.on('peerconnection', function(e) {
-            console.log('newRTCSession.addstream', e)
+            if (process.env.NODE_ENV === 'development') console.log('newRTCSession.addstream', e)
 
             const peerconnection = e.peerconnection // https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection
 
@@ -259,26 +278,12 @@ export default {
         }
       })
 
-      phone.on('registered', function(e) {
-        console.log('registered', e)
-        // FIXME aqui já pode disparar a ligação. Mover pra ca a chamada do back
-        // dispatch('requestDialerCall', requestDialerCommand)
-      })
-
-      phone.on('unregistered', function(e) {
-        console.log('unregistered', e)
-      })
-
-      phone.on('registrationFailed', function(e) {
-        console.log('registrationFailed', e)
-      })
-
       new Promise(function(resolve, reject) {
         try {
           phone.stop()
           phone.start()
 
-          if (isJusttoAdmin) { console.log('PHONE STARTED') }
+          console.log('SIP STARTED')
 
           resolve()
         } catch (e) {
@@ -295,7 +300,7 @@ export default {
           apiKey: dialer?.sipServer?.apiKey
         }
 
-        if (isJusttoAdmin) { console.log('MAKE CALL') }
+        console.log('MAKE CALL')
 
         dispatch('requestDialerCall', requestDialerCommand)
         commit('clearActiveRequestInterval')
