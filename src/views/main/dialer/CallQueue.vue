@@ -6,7 +6,7 @@
     >
       <audio
         ref="ringAudio"
-        src="https://s3.sa-east-1.amazonaws.com/justto.com.br/external-content/notification-new-dialer.mp3"
+        src="https://s3.sa-east-1.amazonaws.com/novo.justto.app/notification-new-dialer.mp3"
         loop
       />
 
@@ -209,7 +209,7 @@ export default {
     },
 
     handleCallUpdate(call) {
-      if (['RECEIVING_CALL'].includes(call?.status) && document.hidden) {
+      if (['RECEIVING_CALL'].includes(call?.status)) {
         this.$refs.ringAudio.play()
       } else if (!['RECEIVING_CALL'].includes(call?.status) && this.$refs.ringAudio) {
         this.$refs.ringAudio.pause()

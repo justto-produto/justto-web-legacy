@@ -205,7 +205,7 @@ export default {
     if (acceptedCall) {
       Vue.set(state.currentCall, 'status', CALL_STATUS.ACTIVE_CALL)
     } else {
-      Vue.set(state.currentCall, 'status', CALL_STATUS.COMPLETED_CALL)
+      if (state.currentCall) { Vue.set(state.currentCall, 'status', CALL_STATUS.COMPLETED_CALL) }
       this.commit('clearCallHeartbeatInterval')
       this.dispatch('endCall', { dialerId, callId })
     }
