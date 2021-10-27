@@ -88,7 +88,7 @@ export default {
     })
   },
 
-  requestDialerCall({ commit, getters, dispatch }, requestCallCommand) {
+  requestDialerCall({ commit, dispatch, getters: { getGlobalAuthenticationObject } }, requestCallCommand) {
     commit('setCurrentCallStatus', CALL_STATUS.WAITING_NEW_CALL)
 
     return axiosDispatch({
@@ -96,7 +96,7 @@ export default {
       method: 'POST',
       data: requestCallCommand,
       mutation: 'setCallDetail',
-      payload: { globalAuthenticationObject: getters.getGlobalAuthenticationObject }
+      payload: { globalAuthenticationObject: getGlobalAuthenticationObject }
     }).catch(() => {
       commit('addDialerDetail', null)
       commit('setCurrentCallStatus', CALL_STATUS.WAITING_DIALER)
@@ -183,7 +183,7 @@ export default {
     })
   },
 
-  SOCKET_ADD_DIALER_DETAIL({ dispatch, getters: { isActiveToCall, getCurrentCall, isToIgnoreDialer, getDialer }, commit }, dialer) {
+  SOCKET_ADD_DIALER_DETAIL({ dispatch, getters: { isActiveToCall, getCurrentCall, isToIgnoreDialer, getDialer, isJusttoAdmin }, commit }, dialer) {
     if (isActiveToCall && !isToIgnoreDialer && getCurrentCall && !getDialer) {
       commit('setCurrentCallStatus', CALL_STATUS.WAITING_NEW_CALL)
       commit('addDialerDetail', dialer)
@@ -273,19 +273,33 @@ export default {
         console.log('registrationFailed', e)
       })
 
-      phone.start()
-      commit('setCurrentCallStatus', CALL_STATUS.WAITING_NEW_CALL)
+      new Promise(function(resolve, reject) {
+        try {
+          phone.stop()
+          phone.start()
 
-      const requestDialerCommand = {
-        phoneNumber: getCurrentCall.number,
-        dialerId: dialer.id,
-        disputeId: getCurrentCall.disputeId,
-        contactRoleId: getCurrentCall.toRoleId,
-        apiKey: dialer?.sipServer?.apiKey
-      }
+          if (isJusttoAdmin) { console.log('PHONE STARTED') }
 
-      dispatch('requestDialerCall', requestDialerCommand)
-      commit('clearActiveRequestInterval')
+          resolve()
+        } catch (e) {
+          reject(e)
+        }
+      }).then(() => {
+        commit('setCurrentCallStatus', CALL_STATUS.WAITING_NEW_CALL)
+
+        const requestDialerCommand = {
+          phoneNumber: getCurrentCall.number,
+          dialerId: dialer.id,
+          disputeId: getCurrentCall.disputeId,
+          contactRoleId: getCurrentCall.toRoleId,
+          apiKey: dialer?.sipServer?.apiKey
+        }
+
+        if (isJusttoAdmin) { console.log('MAKE CALL') }
+
+        dispatch('requestDialerCall', requestDialerCommand)
+        commit('clearActiveRequestInterval')
+      })
     } else if (isToIgnoreDialer) {
       commit('setIgnoreDialer', false)
     }

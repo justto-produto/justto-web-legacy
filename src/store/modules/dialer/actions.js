@@ -92,9 +92,7 @@ const dialerActions = {
   createNewCall({ state, commit }, destination) {
     commit('createCall')
 
-    const requestCallCommand = state.voiceServer.createRequestCallCommand(
-      destination
-    )
+    const requestCallCommand = state.voiceServer.createRequestCallCommand(destination)
 
     return axiosDispatch({
       url: `${dialerPath}/webphone/call/create`,
