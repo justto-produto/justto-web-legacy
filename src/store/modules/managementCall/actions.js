@@ -183,8 +183,13 @@ export default {
     })
   },
 
-  SOCKET_ADD_DIALER_DETAIL({ dispatch, getters: { isActiveToCall, getCurrentCall, isToIgnoreDialer, getDialer, isJusttoAdmin }, commit }, dialer) {
-    if (isActiveToCall && !isToIgnoreDialer && getCurrentCall && !getDialer) {
+  SOCKET_ADD_DIALER_DETAIL({ dispatch, getters: { isActiveToCall, getCurrentCall, isToIgnoreDialer, getDialer }, commit }, dialer) {
+    const acceptDialer = isActiveToCall && !isToIgnoreDialer && getCurrentCall && !getDialer
+
+    console.log(`${acceptDialer ? '' : 'Não'} Aceitou o discador.`)
+    console.log(isActiveToCall, !isToIgnoreDialer, getCurrentCall, !getDialer)
+
+    if (acceptDialer) {
       commit('setCurrentCallStatus', CALL_STATUS.WAITING_NEW_CALL)
       commit('addDialerDetail', dialer)
       commit('clearTimeoutDialerDetail')
