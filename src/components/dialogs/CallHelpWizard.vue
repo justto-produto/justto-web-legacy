@@ -46,46 +46,41 @@
             </ul>
           </div>
 
-          <div class="call-help__carousel-item-actions">
-            <el-popover
-              ref="incorrectContactPopover"
-              placement="bottom"
-              trigger="click"
-              title="Qual o problema com o contato?"
-              popper-class="incorrect-contact__popover"
+          <div
+            v-if="showIncorrectContactForm"
+            class="call-help__carousel-item-incorrect-contact"
+          >
+            <el-select
+              v-model="invalidNumberReason"
+              class="incorrect-contact__select"
             >
-              <el-select
-                v-model="invalidNumberReason"
-                class="incorrect-contact__select"
-                size="small"
-              >
-                <el-option
-                  :label="$tc('call.interaction.status.DIFFERENT_OWNER')"
-                  value="DIFFERENT_OWNER"
-                />
-                <el-option
-                  :label="$tc('call.interaction.status.NONEXISTENT')"
-                  value="NONEXISTENT"
-                />
-              </el-select>
+              <el-option
+                :label="$tc('call.interaction.status.DIFFERENT_OWNER')"
+                value="DIFFERENT_OWNER"
+              />
+              <el-option
+                :label="$tc('call.interaction.status.NONEXISTENT')"
+                value="NONEXISTENT"
+              />
+            </el-select>
 
-              <el-button
-                type="primary"
-                size="small"
-                :disabled="!invalidNumberReason"
-                @click="registerProblemWithNumber()"
-              >
-                Registrar problema
-              </el-button>
+            <el-button
+              type="primary"
+              :disabled="!invalidNumberReason"
+              @click="registerProblemWithNumber()"
+            >
+              Registrar problema
+            </el-button>
+          </div>
 
-              <el-button
-                slot="reference"
-                type="danger"
-                size="small"
-              >
-                Contato incorreto
-              </el-button>
-            </el-popover>
+          <div class="call-help__carousel-item-actions">
+            <el-button
+              type="danger"
+              size="small"
+              @click="showIncorrectContactForm = !showIncorrectContactForm"
+            >
+              Contato incorreto
+            </el-button>
 
             <el-button
               type="success"
@@ -240,6 +235,7 @@ export default {
     visible: false,
     newContactType: 'email',
     newContactModel: '',
+    showIncorrectContactForm: false,
     contactsAddedRecent: {
       emails: [],
       phones: []
@@ -359,7 +355,8 @@ export default {
 
       this.setInvalidNumberInCall({ reason: this.invalidNumberReason }).then(() => {
         this.$emit('call:end')
-        this.$refs.incorrectContactPopover.doClose()
+        // this.$refs.incorrectContactPopover.doClose()
+        this.showIncorrectContactForm = false
       }).catch((error) => {
         this.$jusNotification({ error })
       }).finally(() => {
@@ -404,6 +401,20 @@ export default {
                   background-color: white;
                   font-weight: 600;
                 }
+              }
+            }
+
+            .call-help__carousel-item-incorrect-contact {
+              display: flex;
+              justify-content: space-between;
+
+              .el-select {
+                flex: 3;
+              }
+
+              .el-button {
+                flex: 1;
+                height: 40px;
               }
             }
 
