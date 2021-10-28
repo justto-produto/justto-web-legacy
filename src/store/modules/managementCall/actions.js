@@ -204,23 +204,20 @@ export default {
 
       commit('setSipStack', phone)
 
+      phone.on('connected', function(e) {
+        const requestDialerCommand = {
+          phoneNumber: getCurrentCall.number,
+          dialerId: dialer.id,
+          disputeId: getCurrentCall.disputeId,
+          contactRoleId: getCurrentCall.toRoleId,
+          apiKey: dialer?.sipServer?.apiKey
+        }
+        console.log('MAKE CALL')
+
+        dispatch('requestDialerCall', requestDialerCommand)
+      })
+
       if (process.env.NODE_ENV === 'development') {
-        phone.on('connected', function(e) {
-          // Quando conecta no SIP
-          console.log('connected', e)
-
-          const requestDialerCommand = {
-            phoneNumber: getCurrentCall.number,
-            dialerId: dialer.id,
-            disputeId: getCurrentCall.disputeId,
-            contactRoleId: getCurrentCall.toRoleId,
-            apiKey: dialer?.sipServer?.apiKey
-          }
-          console.log('MAKE CALL')
-
-          dispatch('requestDialerCall', requestDialerCommand)
-        })
-
         phone.on('disconnected', function(e) {
           // Quando finaliza a sessão do SIP.
           console.log('disconnected', e)
