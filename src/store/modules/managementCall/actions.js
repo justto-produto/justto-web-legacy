@@ -208,6 +208,17 @@ export default {
         phone.on('connected', function(e) {
           // Quando conecta no SIP
           console.log('connected', e)
+
+          const requestDialerCommand = {
+            phoneNumber: getCurrentCall.number,
+            dialerId: dialer.id,
+            disputeId: getCurrentCall.disputeId,
+            contactRoleId: getCurrentCall.toRoleId,
+            apiKey: dialer?.sipServer?.apiKey
+          }
+          console.log('MAKE CALL')
+
+          dispatch('requestDialerCall', requestDialerCommand)
         })
 
         phone.on('disconnected', function(e) {
@@ -291,18 +302,6 @@ export default {
         }
       }).then(() => {
         commit('setCurrentCallStatus', CALL_STATUS.WAITING_NEW_CALL)
-
-        const requestDialerCommand = {
-          phoneNumber: getCurrentCall.number,
-          dialerId: dialer.id,
-          disputeId: getCurrentCall.disputeId,
-          contactRoleId: getCurrentCall.toRoleId,
-          apiKey: dialer?.sipServer?.apiKey
-        }
-
-        console.log('MAKE CALL')
-
-        dispatch('requestDialerCall', requestDialerCommand)
         commit('clearActiveRequestInterval')
       })
     } else if (isToIgnoreDialer) {
