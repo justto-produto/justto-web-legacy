@@ -116,7 +116,7 @@ export default {
       if (current) {
         this.init()
       } else {
-        this.activeAppToCall()
+        this.activeAppToCall(true)
       }
     },
 

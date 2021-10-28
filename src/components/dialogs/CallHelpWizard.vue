@@ -8,6 +8,7 @@
     :close-on-press-escape="false"
     :modal-append-to-body="false"
     :append-to-body="false"
+    :lock-scroll="false"
     destroy-on-close
     show-close
     center
@@ -116,99 +117,14 @@
           </div>
 
           <div class="call-help__carousel-item-actions">
-            <el-popover
-              ref="dontRecCallPopover"
-              v-loading="isLoading"
-              placement="top-start"
-              trigger="click"
-              title="Peça um contato válido!"
-              popper-class="dont-rec-call__popover"
+            <el-button
+              slot="reference"
+              type="danger"
+              size="small"
+              @click="showDontRecCallForm = !showDontRecCallForm"
             >
-              <p class="dont-rec-call__help">
-                Qual outro canal de comunicação podemos conversar?
-              </p>
-
-              <el-radio-group
-                v-model="newContactType"
-                @input="() => {newContactModel = ''}"
-              >
-                <el-radio label="email">
-                  E-mail
-                </el-radio>
-
-                <el-radio label="whatsapp">
-                  WhatsApp
-                </el-radio>
-              </el-radio-group>
-
-              <div class="dont-rec-call__add-contact">
-                <div
-                  v-if="newContactType === 'whatsapp'"
-                  class="el-input el-input--mini"
-                >
-                  <input
-                    v-model="newContactModel"
-                    v-mask="['(##) ####-####', '(##) 9 ####-####']"
-                    class="el-input__inner dont-rec-call__add-contact-input"
-                    type="text"
-                    size="small"
-                  >
-                </div>
-
-                <el-input
-                  v-else
-                  v-model="newContactModel"
-                  class="dont-rec-call__add-contact-input"
-                  type="email"
-                  size="mini"
-                />
-
-                <el-button
-                  type="primary"
-                  size="mini"
-                  :disabled="!canSaveNewContact"
-                  @click="addNewContact"
-                >
-                  Adicionar
-                </el-button>
-              </div>
-
-              <!--  -->
-
-              <div class="dont-rec-call__label-contacts">
-                Contatos cadastratos:
-              </div>
-
-              <div
-                v-for="(value, key, index) of call.contacts || {}"
-                :key="`${key}-${index}`"
-                class="dont-rec-call__contacts"
-              >
-                <div
-                  v-for="(contact, contactId) in value"
-                  :key="`contact-${key}-${contactId}`"
-                  class="dont-rec-call__contacts-value"
-                >
-                  {{ contact.address || contact.number | phoneOrEmail }}
-                </div>
-              </div>
-
-              <el-button
-                type="danger"
-                size="small"
-                @click="closeCall()"
-              >
-                Encerrar chamada
-              </el-button>
-
-              <el-button
-                slot="reference"
-                type="danger"
-                size="small"
-              >
-                Não concordou
-              </el-button>
-            </el-popover>
+              Não concordou
+            </el-button>
 
             <el-button
               type="success"
@@ -216,6 +132,86 @@
               @click="close()"
             >
               Concordou
+            </el-button>
+          </div>
+
+          <div
+            v-if="showDontRecCallForm"
+            class="call-help__dont-rec-call"
+          >
+            <p class="dont-rec-call__help">
+              Qual outro canal de comunicação podemos conversar?
+            </p>
+
+            <el-radio-group
+              v-model="newContactType"
+              @input="() => {newContactModel = ''}"
+            >
+              <el-radio label="email">
+                E-mail
+              </el-radio>
+
+              <el-radio label="whatsapp">
+                WhatsApp
+              </el-radio>
+            </el-radio-group>
+
+            <div class="dont-rec-call__add-contact">
+              <div
+                v-if="newContactType === 'whatsapp'"
+                class="el-input el-input--mini"
+              >
+                <input
+                  v-model="newContactModel"
+                  v-mask="['(##) ####-####', '(##) 9 ####-####']"
+                  class="el-input__inner dont-rec-call__add-contact-input"
+                  type="text"
+                  size="small"
+                >
+              </div>
+
+              <el-input
+                v-else
+                v-model="newContactModel"
+                class="dont-rec-call__add-contact-input"
+                type="email"
+                size="mini"
+              />
+
+              <el-button
+                type="primary"
+                size="mini"
+                :disabled="!canSaveNewContact"
+                @click="addNewContact"
+              >
+                Adicionar
+              </el-button>
+            </div>
+
+            <div class="dont-rec-call__label-contacts">
+              Contatos cadastratos:
+            </div>
+
+            <div
+              v-for="(value, key, index) of call.contacts || {}"
+              :key="`${key}-${index}`"
+              class="dont-rec-call__contacts"
+            >
+              <div
+                v-for="(contact, contactId) in value"
+                :key="`contact-${key}-${contactId}`"
+                class="dont-rec-call__contacts-value"
+              >
+                {{ contact.address || contact.number | phoneOrEmail }}
+              </div>
+            </div>
+
+            <el-button
+              type="danger"
+              size="small"
+              @click="closeCall()"
+            >
+              Encerrar chamada
             </el-button>
           </div>
         </el-carousel-item>
@@ -236,6 +232,7 @@ export default {
     newContactType: 'email',
     newContactModel: '',
     showIncorrectContactForm: false,
+    showDontRecCallForm: false,
     contactsAddedRecent: {
       emails: [],
       phones: []
@@ -381,6 +378,10 @@ export default {
             flex-direction: column;
             gap: 16px;
 
+            &.call-help__carousel-item {
+              overflow-y: scroll;
+            }
+
             .call-help__carousel-item-info {
               padding: 0;
               text-align: center;
@@ -402,6 +403,36 @@ export default {
                   font-weight: 600;
                 }
               }
+            }
+
+            .call-help__dont-rec-call {
+              margin-top: 24px;
+              display: flex;
+              flex-direction: column;
+              gap: 8px;
+              align-items: center;
+
+              border: solid #424242 1px;
+              border-radius: 10px;
+              padding: 8px;
+
+              .dont-rec-call__help {
+                margin-top: -16px;
+                background: white;
+                padding: 0 8px;
+                font-weight: 600;
+              }
+
+              .dont-rec-call__add-contact {
+                display: flex;
+                flex-direction: row;
+                gap: 4px;
+              }
+
+              /*.dont-rec-call__contacts,
+              .dont-rec-call__label-contacts {
+                align-self: flex-start;
+              }*/
             }
 
             .call-help__carousel-item-incorrect-contact {
