@@ -701,7 +701,7 @@
                 <span
                   v-for="(email, email_index) in role.emails.filter(e => !e.archived)"
                   :key="`${email_index}-${email.id}`"
-                  :class="{'is-main': email.isMain}"
+                  :class="{'is-main': email.isMain && !email.blocked}"
                 >
                   <el-checkbox
                     v-model="email.selected"
@@ -2445,7 +2445,9 @@ export default {
     },
 
     buildContactStatus(contact) {
-      if (!contact.address && !contact.isMobile) {
+      if (contact.blocked) {
+        return 'Este contato foi bloqueado pelo usuário.'
+      } else if (!contact.address && !contact.isMobile) {
         return 'Não é possível enviar WhatsApp para números de telefones fixo'
       } else if (contact.source === 'ENRICHMENT') {
         return 'Contato enriquecido pelo sistema Justto'
