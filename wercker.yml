@@ -35,7 +35,6 @@ build:
     - script:
       name: Prepare release branch
       code: |
-        git clean -fdx
         git reset --hard
         git checkout master
         git pull origin master
