@@ -25,7 +25,10 @@
         arrow="always"
         indicator-position="outside"
       >
-        <el-carousel-item class="call-help__carousel-item">
+        <el-carousel-item
+          ref="carouselItemCallHelp"
+          class="call-help__carousel-item"
+        >
           <h3 class="call-help__carousel-item-info">
             Se identifique e confirme com quem está falando!
           </h3>
@@ -121,7 +124,7 @@
               slot="reference"
               type="danger"
               size="small"
-              @click="showDontRecCallForm = !showDontRecCallForm"
+              @click="toggleDontRecCallForm()"
             >
               Não concordou
             </el-button>
@@ -360,6 +363,23 @@ export default {
         this.isLoading = false
         this.invalidNumberReason = ''
       })
+    },
+
+    toggleDontRecCallForm() {
+      this.showDontRecCallForm = !this.showDontRecCallForm
+      const ref = this.$refs?.carouselItemCallHelp?.$el
+
+      if (ref) {
+        if (this.showDontRecCallForm) {
+          const maxScroll = ref.scrollHeight + 50
+          console.log(maxScroll, ref)
+          ref.scrollTop = maxScroll
+
+          // setTimeout(() => { ref.scrollTo(0, maxScroll) }, 2 * 1000)
+        } else {
+          ref.scrollTo(0, 0)
+        }
+      }
     }
   }
 }
