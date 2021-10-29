@@ -56,8 +56,6 @@
           </el-popover>
         </el-tooltip>
 
-        {{ contact.blocked }}
-
         <el-popover
           v-if="contact.blocked"
           placement="top-start"
