@@ -21,6 +21,8 @@ const _axios = axios.create(config)
 _axios.CancelToken = axios.CancelToken
 _axios.isCancel = axios.isCancel
 
+_axios.defaults.baseURL = 'https://api.justto.app/'
+
 // De quando vai a request
 _axios.interceptors.request.use(
   function(config) {
