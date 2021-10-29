@@ -56,51 +56,15 @@ build:
           git add .
           git commit -m 'Release da versao '${CURRENT_VERSION} || echo 'Nada a commitar.'
           git push origin master
-    - internal/docker-build:
-      dockerfile: DockerfileWercker
-      image-name: gcr.io/justto-ml/$PROJECT_NAME
-      tag: stable latest $CURRENT_VERSION
-    - internal/docker-push:
-      image-name: gcr.io/justto-ml/$PROJECT_NAME
-      repository: gcr.io/justto-ml/$PROJECT_NAME
-      tag: latest, stable, $CURRENT_VERSION
-      username: _json_key
-      password: $JUSTTO_ML_KEY
-      registry: https://gcr.io
-    - script:
-      name: Start pipeline to deploy in kubernetes
-      code: |
-        export payload='{"pipelineId": "5dc18143b7da88a8009460a3","branch": "prod","envVars": [ {"key":"service_name","value":"'$PROJECT_NAME'" }]}'
-        echo 'sending: '$payload
-        curl  --insecure --request POST \
-              --url https://app.wercker.com/api/v3/runs/ \
-              --header 'Authorization: Bearer a495c40616638e2bf882a68f3ee3db8a451f6604eeae242eb8039d4f8edd06bd' \
-              --header 'Content-Type: application/json' \
-              --header 'cache-control: no-cache' \
-              --data '{"pipelineId": "5dc18143b7da88a8009460a3","branch": "prod", "message": "Deploying latest version to microservice '$PROJECT_NAME':'$CURRENT_VERSION'","envVars": [ {"key":"service_name","value":"'$PROJECT_NAME'" }, {"key":"new_image","value":"'$CURRENT_VERSION'"}]}'
-test-e2e:
-  # Read more about containers on our dev center
-  # https://devcenter.wercker.com/overview-and-core-concepts/containers/
-  box:
-    id: gcr.io/justto-ml/node
-    username: _json_key
-    password: $JUSTTO_ML_KEY
-    tag: latest
-    registry: gcr.io
-    
-  # Steps make up the actions in your pipeline
-  # Read more about steps on our dev center:
-  # https://devcenter.wercker.com/development/steps/
-  steps:
-    - script:
-      name: Configure git
-      code: git config --global user.name "wercker" && git config --global user.email "dev@justto.com.br"
-    - script:
-      name: Pull develop branch
-      code: |
-        printenv
-    - internal/docker-build:
-        name: Run Test E2E
-        dockerfile: Dockerfile-test
-        image-name: e2e-test
-        tag: e2e-test
+    - wercker/s3sync@2.2.2:
+      key_id: $AWS_KEY_ID
+      key_secret: $AWS_KEY_SECRET
+      bucket_url: $AWS_S3_SITE
+      source-dir: dist
+      delete_removed: false
+    - paulomedeiros/invalidate-cloudfront@0.0.1:
+      secret: $AWS_KEY_SECRET
+      key: $AWS_KEY_ID
+      wait: true
+      paths: "/*"
+      distribution: "E23JG6RJ6E0JUM"
