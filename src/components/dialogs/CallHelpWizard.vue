@@ -9,6 +9,7 @@
     :modal-append-to-body="false"
     :append-to-body="false"
     :lock-scroll="false"
+    width="40%"
     destroy-on-close
     show-close
     center
@@ -389,7 +390,19 @@ export default {
 @import '@/styles/colors.scss';
 
 .call-help-dialog {
+  .el-dialog__header {
+    background: #9461f7;
+    color: white;
+
+    .el-dialog__title {
+      color: white;
+    }
+  }
+
   .el-dialog__body {
+    margin: 0 !important;
+    padding: 0 !important;
+
     .call-help__container {
       .call-help__carousel {
         .el-carousel__container {
