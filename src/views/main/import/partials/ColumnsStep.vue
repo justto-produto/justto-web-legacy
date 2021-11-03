@@ -38,7 +38,7 @@
           >
             <span v-if="column.tag">
               <span v-if="column.index !== undefined && column.index !== null">
-                {{ $t('fields.' + getColumnTitle(column.tag.id)) }} {{ column.index + 1 }} -
+                {{ $t('fields.' + getColumnTitle(column.tag.id)) }} {{ column.tag.index + 1 }} -
               </span>
               {{ $t(column.tag.key) | capitalize }}
             </span>
@@ -261,6 +261,7 @@ export default {
       if (!loadingTags && !this.loading) this.$store.dispatch('hideLoading')
     }
   },
+
   beforeMount() {
     this.$store.dispatch('showLoading')
     if (!this.$store.state.importModule.map.length) {
