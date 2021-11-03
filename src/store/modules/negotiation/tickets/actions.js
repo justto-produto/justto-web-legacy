@@ -74,8 +74,20 @@ const overviewActions = {
 
   updateActiveTab({ state, commit }, disputeStatus) {
     const correspondingTab = getCorrespondingTab(disputeStatus)
+
     if (correspondingTab !== state.ticketsActiveTab) {
-      commit('setTicketsActiveTab', correspondingTab)
+      const vue = document.querySelector('#app').__vue__
+
+      vue.$jusNotification({
+        title: 'Há atualizações nessa disputa',
+        message: 'Clique aqui para recarregar!',
+        type: 'info',
+        iconClass: 'el-icon-info',
+        onClick: () => {
+          document.querySelector('.el-notification.info.right').__vue__.$parent.close()
+          commit('setTicketsActiveTab', correspondingTab)
+        }
+      })
     }
   },
 
@@ -86,7 +98,18 @@ const overviewActions = {
 
     if (rootState.negotiationOverviewModule.ticketOverview.disputeId === dispute.id) {
       if (correspondingTab !== state.ticketsActiveTab) {
-        commit('setTicketsActiveTab', correspondingTab)
+        const vue = document.querySelector('#app').__vue__
+
+        vue.$jusNotification({
+          title: 'Há atualizações nessa disputa',
+          message: 'Clique aqui para recarregar',
+          type: 'info',
+          iconClass: 'el-icon-info',
+          onClick: () => {
+            document.querySelector('.el-notification.info.right').__vue__.$parent.close()
+            commit('setTicketsActiveTab', correspondingTab)
+          }
+        })
       } else {
         commit('updateTicketItem', dispute)
       }
