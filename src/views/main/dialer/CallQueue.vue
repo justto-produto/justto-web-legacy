@@ -242,7 +242,8 @@ export default {
   }
 
   .call-queue__container-call-queue {
-    border: solid thin $--color-gray;
+    border: none;
+    box-shadow: 0px 3px 6px #00000029;
     border-radius: 6px;
     padding: 8px;
     display: flex;
