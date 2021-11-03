@@ -50,9 +50,8 @@
           </p>
           <el-button
             v-if="isActiveToCall && (isAdminProfile || isJusttoAdmin)"
-            type="info"
+            type="primary"
             size="mini"
-            plain
             @click="openBuyDialerDialog"
           >
             Adquira discadores dedicados
@@ -113,9 +112,8 @@
 
       <div v-if="!hasCallInQueue && (isAdminProfile || isJusttoAdmin)">
         <el-button
-          type="info"
+          type="primary"
           size="mini"
-          plain
           @click="openBuyDialerDialog"
         >
           Adquira discadores dedicados
