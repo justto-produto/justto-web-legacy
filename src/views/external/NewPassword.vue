@@ -146,6 +146,7 @@ export default {
               this.showLoading = false
               this.newPasswordForm.password = ''
               this.newPasswordForm.confirmPassword = ''
+              this.$router.push('/login')
             })
             .catch(() => {
               this.showError = true
