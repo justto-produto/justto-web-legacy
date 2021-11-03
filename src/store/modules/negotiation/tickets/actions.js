@@ -79,8 +79,8 @@ const overviewActions = {
       const vue = document.querySelector('#app').__vue__
 
       vue.$jusNotification({
-        title: 'Há atualizações nessa disputa',
-        message: 'Clique aqui para recarregar!',
+        title: 'há atualizações nesta disputa',
+        message: 'Clique se quiser recarregar ou feche se quiser continuar nesta página.',
         type: 'info',
         iconClass: 'el-icon-info',
         onClick: () => {
@@ -101,8 +101,8 @@ const overviewActions = {
         const vue = document.querySelector('#app').__vue__
 
         vue.$jusNotification({
-          title: 'Há atualizações nessa disputa',
-          message: 'Clique aqui para recarregar',
+          title: 'há atualizações nesta disputa',
+          message: 'Clique se quiser recarregar ou feche se quiser continuar nesta página.',
           type: 'info',
           iconClass: 'el-icon-info',
           onClick: () => {
