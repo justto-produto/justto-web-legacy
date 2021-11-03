@@ -405,6 +405,8 @@ export default {
 
     .call-help__container {
       .call-help__carousel {
+        padding: 0;
+
         .el-carousel__container {
           .el-carousel__item {
             display: flex;
@@ -413,6 +415,8 @@ export default {
 
             &.call-help__carousel-item {
               overflow-y: scroll;
+              padding: 0 24px;
+              width: 100%;
             }
 
             .call-help__carousel-item-info {
@@ -422,7 +426,8 @@ export default {
             }
 
             .call-help__suggestion-balloon {
-              border: solid $--color-black 1px;
+              border: none;
+              box-shadow: 0px 3px 6px #00000029;
               border-radius: 10px;
               padding: 8px;
 
@@ -445,7 +450,8 @@ export default {
               gap: 8px;
               align-items: center;
 
-              border: solid #424242 1px;
+              border: none;
+              box-shadow: 0px 3px 6px #00000029;
               border-radius: 10px;
               padding: 8px;
 
