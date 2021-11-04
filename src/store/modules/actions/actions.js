@@ -114,7 +114,7 @@ const actionsActions = {
       axiosDispatch({
         url: `${disputesPath}/${disputeId}/${action}`,
         method: 'PUT',
-        data
+        data: { ...data, conclusionNote: data.note }
       }).then((res) => {
         if (mutations[action]) {
           const currentAction = mutations[action]
