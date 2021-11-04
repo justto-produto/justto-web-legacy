@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    title="Atenção - Em chamda"
+    title="Atenção - Em chamada"
     custom-class="call-help-dialog"
     :visible.sync="visible"
     :modal="false"
@@ -109,14 +109,6 @@
 
             <ul class="call-help__suggestion-balloon-text">
               <li>{{ claimantName }}, para fins de auditoria, nossa conversa está sendo gravada.</li>
-
-              <li>
-                Após o fim da chamada, estará disponível no portal de negociações, no endereço:
-                <a
-                  href="https://acordo.app"
-                  target="_blank"
-                >acordo.app</a>.
-              </li>
             </ul>
           </div>
 
