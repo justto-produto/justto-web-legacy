@@ -11,10 +11,11 @@
     >
       <el-button
         slot="prepend"
+        icon="el-icon-search"
+        :type="isCollapsed ? 'default' : 'primary'"
+        :disabled="false"
         @click="toggle()"
-      >
-        <jus-icon icon="search" />
-      </el-button>
+      />
       <i
         v-if="!isCollapsed"
         slot="suffix"
@@ -85,12 +86,12 @@ export default {
 
 .jus-filter-button {
   display: inline-block;
-  .el-input {
-  }
+
   .el-input__inner {
     transition: width 0.5s ease, padding 0.5s ease;
     width: 180px;
     border-left: 0;
+
     &:hover {
       border-left: 1px solid $--color-text-primary;
     }
@@ -100,11 +101,24 @@ export default {
   }
   .el-input-group__prepend {
     border-right: 1px solid #dcdfe6;
-    background-color: $--color-white;
+
     &:hover {
-      border-color: $--color-primary;;
+      border-color: $--color-primary;
+    }
+
+    .el-button {
+      &.el-button--primary {
+        background-color: $--color-primary;
+        color: white;
+      }
+
+      &.el-button--default {
+        background-color: white;
+        color: #424242;
+      }
     }
   }
+
   &--collapse {
     .el-input__inner {
       width: 0px;

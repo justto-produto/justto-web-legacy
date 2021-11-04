@@ -26,6 +26,7 @@
         type="selection"
         width="44px"
       />
+
       <el-table-column
         :sortable="false"
         label="Processo"
@@ -43,6 +44,7 @@
           />
         </template>
       </el-table-column>
+
       <el-table-column
         :sortable="false"
         prop="campaignName"
@@ -64,6 +66,7 @@
           </el-tooltip>
         </template>
       </el-table-column>
+
       <el-table-column
         :sortable="false"
         prop="firstClaimant"
@@ -94,6 +97,7 @@
           </div>
         </template>
       </el-table-column>
+
       <el-table-column
         :sortable="false"
         prop="firstClaimantLawyer"
@@ -109,6 +113,7 @@
               :alerts="scope.row.firstClaimantLawyerAlerts"
               style="display: flex;"
             />
+
             <el-tooltip
               v-if="scope.row.firstClaimantLawyer"
               :content="`${$options.filters.capitalize(scope.row.firstClaimantLawyer.toLowerCase().split(' ')[0])} está online`"
@@ -124,7 +129,16 @@
                 style="height: 8px; width: 8px;"
               />
             </el-tooltip>
-            {{ scope.row.firstClaimantLawyer || '-' | capitalize }}
+
+            <el-tooltip
+              content="Buscar disputas com este advogado"
+              :disabled="(scope.row.firstClaimantLawyer || '-') === '-'"
+              :open-delay="500"
+            >
+              <div>
+                {{ scope.row.firstClaimantLawyer || '-' | capitalize }}
+              </div>
+            </el-tooltip>
           </div>
         </template>
       </el-table-column>
@@ -542,6 +556,8 @@ export default {
     handleRowClick(row, column, event) {
       if (!event.ctrlKey && !event.metaKey && column.property === 'firstClaimant' && event.target.className.split(' ').includes('online-icon')) {
         this.openActiveMessageModal(row)
+      } else if (!event.ctrlKey && !event.metaKey && column.property === 'firstClaimantLawyer') {
+        this.$emit('search:lawyer', { lawyer: row.firstClaimantLawyer })
       } else if (row.id && !['IMG', 'SPAN', 'BUTTON', 'I'].includes(event.target.tagName)) {
         if (event.ctrlKey || event.metaKey) {
           window.open(`/#/management/dispute/${row.id}`, '_blank')

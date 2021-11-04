@@ -9,6 +9,7 @@
         :selected-ids.sync="selectedIds"
         @disputes:clear="clearSelection"
       />
+
       <div class="view-management__filters">
         <span
           v-if="isManagementAll"
@@ -16,6 +17,7 @@
         >
           Todas as disputas
         </span>
+
         <el-tabs
           v-else
           ref="disputeTabs"
@@ -95,13 +97,18 @@
             </span>
           </el-tab-pane>
         </el-tabs>
+
         <div class="view-management__buttons">
           <!-- <el-input
             v-model="term"
             clearable
             prefix-icon="el-icon-search"
           /> -->
-          <JusFilterButton @getDisputes="getDisputes" />
+          <JusFilterButton
+            ref="JusFilterButton"
+            @getDisputes="getDisputes"
+          />
+
           <el-select
             v-model="ufFilterValue"
             :filter-method="ufSearch"
@@ -122,6 +129,7 @@
               <span class="view-management__select-options">{{ state.value }}</span>
             </el-option>
           </el-select>
+
           <el-tooltip content="Filtrar disputas">
             <el-button
               class="view-management__buttons-button"
@@ -136,6 +144,7 @@
               />
             </el-button>
           </el-tooltip>
+
           <el-tooltip content="Importar disputas">
             <el-button
               class="view-management__buttons-button"
@@ -148,6 +157,7 @@
               />
             </el-button>
           </el-tooltip>
+
           <el-tooltip content="Exportar">
             <el-button
               class="view-management__buttons-button"
@@ -158,6 +168,7 @@
               @click="showExportDisputesDialog"
             />
           </el-tooltip>
+
           <jus-import-dialog :dialog-visible.sync="importDialogVisible" />
         </div>
       </div>
@@ -183,6 +194,7 @@
         :selected-ids.sync="selectedIds"
         :loading-disputes.sync="loadingDisputes"
         @getDisputes="getDisputes"
+        @search:lawyer="filterLawyer"
       />
       <div
         v-show="hasNew"
@@ -206,6 +218,7 @@
           />
         </div>
       </div>
+
       <el-dialog
         :close-on-click-modal="false"
         :visible.sync="exportDisputesDialog"
@@ -719,12 +732,14 @@ export default {
         this.$refs.tree.setChecked(draggingNode.data.key, draggingNode.checked)
       }, 100)
     },
+
     allowDrop(_draggingNode, _dropNode, type) {
       if (type === 'prev') {
         return true
       }
       return false
     },
+
     getDisputes() {
       clearTimeout(this.disputeDebounce)
       this.disputeDebounce = setTimeout(() => {
@@ -744,9 +759,11 @@ export default {
         })
       }, 300)
     },
+
     clearSelection() {
       this.$refs.managementTable.clearSelection()
     },
+
     handleChangeTab(tab) {
       if (this.$refs.managementTable) {
         this.$refs.managementTable.clearHighlight()
@@ -786,6 +803,7 @@ export default {
       }
       this.getDisputes()
     },
+
     showExportDisputesDialog() {
       this.exportDisputesDialog = true
       this.getAccountProperty('JUS_EXPORT_COLUMNS').then(res => {
@@ -805,6 +823,7 @@ export default {
         this.handlerChangeTree('', { checkedKeys: this.$refs.tree.getCheckedKeys() })
       })
     },
+
     handleExportReports() {
       const action = this.isExportingProtocol ? this.exportProtocols() : this.exportDisputes(this.$refs.tree.getCheckedKeys())
       this.loadingExport = true
@@ -820,6 +839,7 @@ export default {
         this.exportDisputesDialog = false
       })
     },
+
     exportSituation(request) {
       if (request.error) {
         return 'FAILED'
@@ -831,9 +851,11 @@ export default {
         return 'QUEUE'
       }
     },
+
     exportDateTime(requestTime) {
       return this.$moment(requestTime * 1000).format('DD/MM/YYYY | HH:mm')
     },
+
     buildSituationTooltip(request) {
       if (this.exportSituation(request) === 'FAILED') {
         return `Exportação iniciada em: ${this.exportDateTime(request.exportStartedAt)} <br> Falha na exportação: ${request.error} <br> `
@@ -843,6 +865,7 @@ export default {
         return `Exportação iniciada em: ${this.exportDateTime(request.exportStartedAt)}`
       }
     },
+
     exportHistoryRowClass({ row }) {
       switch (this.exportSituation(row)) {
         case 'FAILED':
@@ -855,6 +878,7 @@ export default {
           return 'queue-row'
       }
     },
+
     infiniteHandler($state) {
       this.getExportHistory('isInfinit').then(response => {
         if (response.last) {
@@ -864,10 +888,16 @@ export default {
         }
       })
     },
+
     showImportDialog() {
       // SEGMENT TRACK
       this.$jusSegment('Botão importação rápida')
       this.importDialogVisible = true
+    },
+
+    filterLawyer({ lawyer }) {
+      this.$refs.JusFilterButton.toggle()
+      this.$store.commit('updateDisputeQuery', { key: 'term', value: lawyer })
     }
   }
 }
