@@ -119,6 +119,9 @@
   "expirationDate": {
     "dateTime": "fim da negociação"
   },
+  "disputeTag": {
+    "code": "Etiqueta da disputa"
+  },
   "courtHearingDate": {
     "dateTime": "data da audiência"
   },
