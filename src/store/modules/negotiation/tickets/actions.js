@@ -78,6 +78,8 @@ const overviewActions = {
     if (correspondingTab !== state.ticketsActiveTab) {
       const vue = document.querySelector('#app').__vue__
 
+      document.querySelectorAll('.el-notification.info.right').forEach(tag => tag.__vue__.$parent.close())
+
       vue.$jusNotification({
         title: 'há atualizações nesta disputa',
         message: 'Clique se quiser recarregar ou feche se quiser continuar nesta página.',
@@ -100,11 +102,14 @@ const overviewActions = {
       if (correspondingTab !== state.ticketsActiveTab) {
         const vue = document.querySelector('#app').__vue__
 
+        document.querySelectorAll('.el-notification.info.right').forEach(tag => tag.__vue__.$parent.close())
+
         vue.$jusNotification({
           title: 'há atualizações nesta disputa',
           message: 'Clique se quiser recarregar ou feche se quiser continuar nesta página.',
           type: 'info',
           iconClass: 'el-icon-info',
+          duration: 50000,
           onClick: () => {
             document.querySelector('.el-notification.info.right').__vue__.$parent.close()
             commit('setTicketsActiveTab', correspondingTab)
