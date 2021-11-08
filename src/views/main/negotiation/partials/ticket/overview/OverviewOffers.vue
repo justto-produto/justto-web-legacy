@@ -153,7 +153,7 @@ export default {
     }),
 
     isRecoveryStrategy() {
-      return this.ticket?.strategy?.type === 'RECOVERY'
+      return (this.ticket?.strategy?.types || []).includes('RECOVERY')
     },
 
     isPaused() {

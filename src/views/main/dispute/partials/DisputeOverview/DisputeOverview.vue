@@ -161,7 +161,7 @@
               class="dispute-overview-view__info-line"
               data-testid="dispute-infoline"
             >
-              <span class="title">Alçada máxima:</span>
+              <span class="title">{{ isRecoveryStrategy ? 'Valor limite' : 'Alçada máxima' }}:</span>
               <span data-testid="overview-upperrange">{{ dispute.disputeUpperRange | currency }}</span>
             </div>
             <div
@@ -1942,6 +1942,11 @@ export default {
       onlineDocuments: 'onlineDocuments',
       strategies: 'getMyStrategiesLite'
     }),
+
+    isRecoveryStrategy() {
+      return (this.dispute?.strategy?.types || []).includes('RECOVERY')
+    },
+
     campaign() {
       return this.dispute?.campaign
     },
