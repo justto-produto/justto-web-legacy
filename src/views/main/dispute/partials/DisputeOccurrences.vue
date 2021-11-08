@@ -954,7 +954,7 @@ export default {
         }
 
         if (['PHONE_CALL'].includes(occurrence?.interaction?.type)) {
-          return occurrence?.interaction?.properties?.TO_PERSON_NAME || ''
+          return occurrence?.interaction?.properties?.FROM_PERSON_NAME || occurrence?.interaction?.createdBy
         }
 
         if (occurrence.interaction.type &&
