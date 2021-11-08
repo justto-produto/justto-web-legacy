@@ -8,6 +8,7 @@ const disputesPath = 'api/disputes'
 
 const disputeActions = {
   SOCKET_ADD_DISPUTE({ commit, state }, disputeChanged) {
+    // TODO: SAAS-4634 Checkpoint
     if (state.dispute.id === disputeChanged.id) {
       if (!disputeChanged.properties) {
         disputeChanged.properties = state.dispute.properties

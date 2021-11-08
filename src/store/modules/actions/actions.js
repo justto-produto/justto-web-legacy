@@ -187,6 +187,7 @@ const actionsActions = {
       }).then((res) => {
         commit('updateLastTicketOffers', { payload: { value: data.value, polarityObjectKey } })
         if (change) {
+          // TODO: SAAS-4634 checkpoint
           commit('updateTicketOverview', { payload: { status: 'ACCEPTED' } })
           commit('deleteTicket', { payload: disputeId })
         }
