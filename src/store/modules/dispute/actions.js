@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import moment from 'moment'
 import { axiosDispatch, buildQuery, extractMentions } from '@/utils'
+import { Validate } from 'validate-cnj'
 
 // const FileSaver = require('file-saver')
 let removeDebounce = 0
@@ -248,7 +249,16 @@ const disputeActions = {
   },
   getDisputeTimeline({ commit }, disputeCode) {
     if (!disputeCode) return
+
     commit('showLoading')
+    try {
+      Validate.load(disputeCode)
+    } catch (error) {
+      commit('setDisputeTimeline', { timeline: { lastUpdated: '', lawsuits: [] }, code: disputeCode })
+      commit('hideLoading')
+      return
+    }
+
     return axiosDispatch({
       url: `/api/fusion/lawsuit/timeline/${disputeCode}`
     }).then(res => {
