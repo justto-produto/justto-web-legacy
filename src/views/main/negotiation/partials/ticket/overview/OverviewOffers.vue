@@ -97,7 +97,7 @@
         />
       </div>
       <div>
-        <span>Alçada Máx.: </span>
+        <span>{{ isRecoveryStrategy? 'Valor limite' : 'Alçada Máx.' }}: </span>
         <CurrencyInlieEditorInner
           v-model="upperRange"
           :is-editable="!isPreNegotiation"
@@ -151,6 +151,10 @@ export default {
       ticketParties: 'getTicketOverviewParties',
       ticket: 'getTicketOverview'
     }),
+
+    isRecoveryStrategy() {
+      return this.ticket?.strategy?.type === 'RECOVERY'
+    },
 
     isPaused() {
       return this.ticket.paused

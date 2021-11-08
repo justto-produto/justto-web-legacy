@@ -1,8 +1,6 @@
 class StrategyVm {
-  constructor({ id, isObrigacaoFazer, isManual }) {
-    this.id = id
-    this.isObrigacaoFazer = isObrigacaoFazer
-    this.isManual = isManual
+  constructor(strategy) {
+    Object.keys(strategy).forEach(key => (this[key] = strategy[key]))
   }
 }
 
