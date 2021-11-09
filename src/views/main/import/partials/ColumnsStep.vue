@@ -102,6 +102,7 @@
             </span>
           </el-collapse-item>
         </el-collapse>
+
         <h3 v-show="!loadingTags">
           Partes contrárias
           <a
@@ -109,8 +110,9 @@
             @click="addTagList(claimantParties)"
           ><i class="el-icon-plus right" /></a>
         </h3>
+
         <div
-          v-for="(claimantPartyIndex, index) in claimantParties"
+          v-for="claimantPartyIndex in claimantParties"
           :key="'claimantParty' + claimantPartyIndex"
           class="drag-group"
         >
@@ -119,10 +121,10 @@
               <span
                 v-for="tag in tags.claimantParty.tags"
                 :key="`${tag.id}-${tag.name}`"
-                :class="{'el-tag--drag-active': !isMultipleAvailable(tag, index)}"
+                :class="{'el-tag--drag-active': !isMultipleAvailable(tag, claimantPartyIndex)}"
                 class="el-tag--drag-container"
                 draggable="true"
-                @dragstart.self="dragTag($event, JSON.stringify({tag, index}))"
+                @dragstart.self="dragTag($event, JSON.stringify({tag, index: claimantPartyIndex}))"
               >
                 <el-tag class="el-tag--drag">
                   Parte contrária {{ claimantPartyIndex + ' - ' }}{{ $t(tag.key) | capitalize }}
@@ -142,6 +144,7 @@
             style="margin-left: 24px;"
           />
         </div>
+
         <h3 v-show="!loadingTags">
           Advogados
           <a
@@ -149,8 +152,9 @@
             @click="addTagList(claimantLawyers)"
           ><i class="el-icon-plus right" /></a>
         </h3>
+
         <div
-          v-for="(claimantLawyerIndex, index) in claimantLawyers"
+          v-for="claimantLawyerIndex in claimantLawyers"
           :key="'claimantLawyer' + claimantLawyerIndex"
           class="drag-group"
         >
@@ -159,10 +163,10 @@
               <span
                 v-for="tag in tags.claimantLawyer.tags"
                 :key="`${tag.id}-${tag.name}`"
-                :class="{'el-tag--drag-active': !isMultipleAvailable(tag, index)}"
+                :class="{'el-tag--drag-active': !isMultipleAvailable(tag, claimantLawyerIndex)}"
                 class="el-tag--drag-container"
                 draggable="true"
-                @dragstart.self="dragTag($event, JSON.stringify({tag, index}))"
+                @dragstart.self="dragTag($event, JSON.stringify({tag, index: claimantLawyerIndex}))"
               >
                 <el-tag class="el-tag--drag">
                   Advogado {{ claimantLawyerIndex + ' - ' }}{{ $t(tag.key) | capitalize }}
@@ -190,7 +194,7 @@
           ><i class="el-icon-plus right" /></a>
         </h3>
         <div
-          v-for="(respondentPartyIndex, index) in respondentParties"
+          v-for="respondentPartyIndex in respondentParties"
           :key="respondentPartyIndex"
           class="drag-group"
         >
@@ -199,10 +203,10 @@
               <span
                 v-for="tag in tags.respondentParty.tags"
                 :key="`${tag.id}-${tag.name}`"
-                :class="{'el-tag--drag-active': !isMultipleAvailable(tag, index)}"
+                :class="{'el-tag--drag-active': !isMultipleAvailable(tag, respondentPartyIndex)}"
                 class="el-tag--drag-container"
                 draggable="true"
-                @dragstart.self="dragTag($event, JSON.stringify({tag, index}))"
+                @dragstart.self="dragTag($event, JSON.stringify({tag, index: respondentPartyIndex }))"
               >
                 <el-tag class="el-tag--drag">
                   Réu {{ respondentPartyIndex + ' - ' }}{{ $t(tag.key) | capitalize }}
@@ -230,6 +234,7 @@
 <script>
 export default {
   name: 'ColumnsStep',
+
   data() {
     return {
       tags: {},
@@ -243,6 +248,7 @@ export default {
       loading: false
     }
   },
+
   computed: {
     columns: {
       get() {
@@ -253,6 +259,7 @@ export default {
       }
     }
   },
+
   watch: {
     loading(loading) {
       if (!loading && !this.loadingTags) this.$store.dispatch('hideLoading')
@@ -284,18 +291,31 @@ export default {
       this.$jusNotification({ error })
     })
   },
+
   mounted() {
     document.querySelector('.jus-main-view__container').setAttribute('class', 'jus-main-view__container jus-main-view--full-height')
   },
+
   destroyed() {
     document.querySelector('.jus-main-view__container').setAttribute('class', 'jus-main-view__container')
   },
+
   methods: {
-    dragTag(event, data) {
-      event.dataTransfer.setData('data', data)
+    dragTag(event, strData) {
+      const data = JSON.parse(strData)
+
+      event.dataTransfer.setData('data', JSON.stringify({
+        ...data,
+        tag: {
+          ...(data?.tag || {}),
+          index: data?.index - 1
+        }
+      }))
     },
+
     dropTag(event, column, index) {
       const data = JSON.parse(event.dataTransfer.getData('data'))
+
       this.columns.find(element => {
         if (column.id === element.id) {
           element.tag = data.tag
@@ -313,6 +333,7 @@ export default {
         }
       })
     },
+
     isAvailable(tag) {
       let isAvailable = true
       this.columns.find(element => {
@@ -326,6 +347,7 @@ export default {
       })
       return isAvailable
     },
+
     isMultipleAvailable(tag, index) {
       let isAvailable = true
       this.columns.find(column => {
@@ -340,14 +362,17 @@ export default {
       })
       return isAvailable
     },
+
     addTagList(list) {
       const lastIndex = list.slice(-1)[0]
       list.push(lastIndex + 1)
     },
+
     removeTagList(list, tags) {
       this.removeLink(list, tags)
       list.splice(-1, 1)
     },
+
     removeLink(array, tags) {
       const indexToRemove = array.length - 1
       this.columns.find(column => {
@@ -360,6 +385,7 @@ export default {
       // eslint-disable-next-line no-self-assign
       this.columns = this.columns
     },
+
     matchTagId(id, tags) {
       let match = false
       tags.find(tag => {
@@ -369,6 +395,7 @@ export default {
       })
       return match
     },
+
     getColumnTitle(id) {
       let title = ''
       for (const tagList in this.tags) {
