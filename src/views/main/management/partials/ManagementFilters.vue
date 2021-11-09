@@ -558,11 +558,14 @@ export default {
 
 <style lang="scss">
 .management-filters {
+  overflow-x: hidden;
+
   .el-select, .el-date-editor, .el-radio-group {
     width: 100%;
   }
   .el-form-item__content {
     line-height: 36px;
+    width: 100%;
   }
   &__switch {
     margin-bottom: 18px;
@@ -594,6 +597,16 @@ export default {
   }
   .el-tag {
     overflow: hidden;
+  }
+
+  .el-form {
+    .el-row {
+      .el-col {
+        .el-form-item {
+          max-width: 100%;
+        }
+      }
+    }
   }
 }
 </style>
