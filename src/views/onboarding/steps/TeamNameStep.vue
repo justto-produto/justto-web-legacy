@@ -30,6 +30,24 @@
           data-testid="teamname-form"
         />
       </el-form-item>
+
+      <el-form-item
+        label="Tipo de estratégia"
+        prop="negotiationType"
+      >
+        <el-select
+          v-model="nameForm.negotiationType"
+          filterable
+          placeholder="Selecione tipo"
+        >
+          <el-option
+            v-for="(type, index) in defaultStrategyTypes"
+            :key="index"
+            :label="$t(`strategyTypes.${type}`).toUpperCase()"
+            :value="type"
+          />
+        </el-select>
+      </el-form-item>
     </el-form>
     <el-button
       type="primary"
@@ -52,11 +70,14 @@ export default {
   data() {
     return {
       nameForm: {
-        name: ''
+        name: '',
+        negotiationType: ''
       },
       nameFormRules: {
-        name: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
-      }
+        name: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+        negotiationType: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
+      },
+      defaultStrategyTypes: ['PAYMENT', 'RECOVERY']
     }
   },
   computed: {
@@ -71,7 +92,10 @@ export default {
     submitForm() {
       this.$refs.nameForm.validate(valid => {
         if (valid) {
-          this.$emit('onboarding:createSubdomain', { team: this.nameForm.name })
+          this.$emit('onboarding:createSubdomain', {
+            team: this.nameForm.name,
+            negotiationType: this.nameForm.negotiationType
+          })
         } else {
           return false
         }

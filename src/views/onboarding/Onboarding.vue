@@ -140,9 +140,11 @@ export default {
       return ''
     }
   },
+
   beforeCreate() {
     this.$store.commit('redirectNewWorkspaceFalse')
   },
+
   created() {
     setTimeout(function() {
       this.left = 6
@@ -151,26 +153,34 @@ export default {
       this.right = 18
     }.bind(this), 1200)
   },
+
   methods: {
     updateProgress(progress) {
       this.progressPercentage = Math.round((progress * 100) * 0.2) / 0.2
     },
+
     slideChange() {
       this.currentStep = this.$refs.swiper.swiper.activeIndex
     },
+
     nextStep(responseObj) {
       Object.assign(this.responses, responseObj)
       this.$refs.swiper.swiper.slideNext(800)
     },
+
     previousStep() {
       this.$refs.swiper.swiper.slidePrev(800)
     },
+
     createSubdomain(responseObj) {
       if (!this.$store.getters.creatingWorkspace) {
         this.$store.dispatch('showLoading')
+
         Object.assign(this.responses, responseObj)
+
         this.$store.dispatch('createWorkpace', {
           name: this.responses.team,
+          negotiationType: this.responses.negotiationType,
           subDomain: uuidv4()
         }).then(() => {
           this.$store.dispatch('refreshToken').then(() => {
