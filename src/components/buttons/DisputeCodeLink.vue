@@ -23,6 +23,7 @@
             />
           </div>
           <JusTjIdentifier
+            v-if="isValidCNJ"
             :code="code"
             :disabled="!isJusttoAdmin"
             :placement="tjPlacement"
@@ -71,8 +72,13 @@ export default {
       disputeTimeline: 'getDisputesTimeline'
     }),
 
+    isValidCNJ() {
+      return Object.keys(this.disputeTimeline).includes(this.code) && this.disputeTimeline[this.code].isValid
+    },
+
     status() {
       const defaultMessage = 'Até este momento, não conseguimos capturar este processo.'
+
       if (this.disputeTimeline && this.disputeTimeline[this.code]) {
         if (this.disputeTimeline[this.code].lawsuits.length) {
           return {
@@ -90,7 +96,7 @@ export default {
           return {
             available: false,
             icon: 'el-icon-error',
-            text: defaultMessage
+            text: this.disputeTimeline[this.code].isValid ? defaultMessage : 'Número CNJ inválido'
           }
         }
       } else {

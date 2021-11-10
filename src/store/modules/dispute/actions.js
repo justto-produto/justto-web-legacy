@@ -254,7 +254,7 @@ const disputeActions = {
     try {
       Validate.load(disputeCode)
     } catch (error) {
-      commit('setDisputeTimeline', { timeline: { lastUpdated: '', lawsuits: [] }, code: disputeCode })
+      commit('setDisputeTimeline', { timeline: { lastUpdated: '', lawsuits: [], isValid: false }, code: disputeCode })
       commit('hideLoading')
       return
     }
@@ -262,9 +262,9 @@ const disputeActions = {
     return axiosDispatch({
       url: `/api/fusion/lawsuit/timeline/${disputeCode}`
     }).then(res => {
-      commit('setDisputeTimeline', { timeline: res, code: disputeCode })
+      commit('setDisputeTimeline', { timeline: { ...res, isValid: true }, code: disputeCode })
     }).catch(() => {
-      commit('setDisputeTimeline', { timeline: { lastUpdated: '', lawsuits: [] }, code: disputeCode })
+      commit('setDisputeTimeline', { timeline: { lastUpdated: '', lawsuits: [], isValid: true }, code: disputeCode })
     }).finally(() => commit('hideLoading'))
   },
   exportProtocols({ state }) {
