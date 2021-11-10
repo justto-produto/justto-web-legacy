@@ -174,6 +174,7 @@
 
       <el-select
         v-model="unsettledType"
+        filterable
         data-testid="select-unsettled"
         placeholder="Escolha o motivo da perda"
       >
