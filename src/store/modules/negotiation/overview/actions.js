@@ -10,10 +10,17 @@ const overviewActions = {
   getTicketOverview({ commit, dispatch }, disputeId) {
     commit('incrementTicketOverviewCountGetters')
 
-    return validateCurrentId(disputeId, () => axiosDispatch({
-      url: `${disputeApi}/${disputeId}`,
-      mutation: 'setTicketOverview'
-    }).then(({ status }) => dispatch('updateActiveTab', status)).finally(() => commit('decrementTicketOverviewCountGetters')))
+    return validateCurrentId(disputeId, () => {
+      return new Promise((resolve, reject) => {
+        axiosDispatch({
+          url: `${disputeApi}/${disputeId}`,
+          mutation: 'setTicketOverview'
+        }).then((res) => {
+          resolve(res)
+          dispatch('updateActiveTab', res.status)
+        }).catch(error => reject(error)).finally(() => commit('decrementTicketOverviewCountGetters'))
+      })
+    })
   },
 
   getTicketOverviewInfo({ commit }, disputeId) {
