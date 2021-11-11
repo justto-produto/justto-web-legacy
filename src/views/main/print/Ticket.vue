@@ -46,7 +46,7 @@ export default {
   },
 
   mounted() {
-    // window.onload = setTimeout(this.handlePrint, (7.5 * 1000))
+    window.onload = setTimeout(this.handlePrint, (7.5 * 1000))
 
     document.addEventListener('keydown', (event) => {
       const name = event.key
