@@ -34,6 +34,10 @@ export default {
   computed: {
     ticketId() {
       return this.$route?.params?.id
+    },
+
+    activeTab() {
+      return this.$route?.query?.tab || 'MESSAGES'
     }
   },
 
@@ -42,7 +46,7 @@ export default {
   },
 
   mounted() {
-    window.onload = setTimeout(this.handlePrint, (7.5 * 1000))
+    // window.onload = setTimeout(this.handlePrint, (7.5 * 1000))
 
     document.addEventListener('keydown', (event) => {
       const name = event.key
@@ -60,6 +64,7 @@ export default {
       'getFullMessage',
       'getAllOccurrences',
       'getTicketOverview',
+      'setOmnichannelActiveTab',
       'getTicketOverviewParties'
     ]),
 
@@ -72,14 +77,16 @@ export default {
     },
 
     getTicketOccurrences() {
-      return this.getAllOccurrences(this.ticketId).then(({ content }) => {
-        Promise.all(
-          content.filter(
-            ({ id, interaction }) => id && interaction?.message?.messageId
-          ).map(
-            ({ interaction }) => this.getFullMessage(interaction?.message?.messageId)
+      return this.setOmnichannelActiveTab(this.activeTab).finally(() => {
+        this.getAllOccurrences(this.ticketId).then(({ content }) => {
+          Promise.all(
+            content.filter(
+              ({ id, interaction }) => id && interaction?.message?.messageId
+            ).map(
+              ({ interaction }) => this.getFullMessage(interaction?.message?.messageId)
+            )
           )
-        )
+        })
       })
     },
 

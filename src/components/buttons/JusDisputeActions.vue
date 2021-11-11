@@ -621,6 +621,10 @@ export default {
     isCollapsed: {
       type: Boolean,
       default: false
+    },
+    tab: {
+      type: String,
+      default: '1'
     }
   },
 
@@ -816,8 +820,8 @@ export default {
           icon: 'el-icon-printer',
           isElementIcon: true,
           condition: () => true,
-          action: () => window.open(`/#/print/negotiation/${this.$route.params.id}`, '_blank'),
-          tooltip: 'Imprimir disputa.'
+          action: () => window.open(`/#/print/negotiation/${this.$route.params.id}?tab=${this.disputeTabToTicketTab}`, '_blank'),
+          tooltip: 'Imprimir disputa'
         },
         {
           name: 'redirect',
@@ -827,6 +831,10 @@ export default {
           tooltip: 'Ir para negociação'
         }
       ]
+    },
+
+    disputeTabToTicketTab() {
+      return { 1: 'MESSAGES', 2: 'NOTES', 3: 'OCCURRENCES' }[Number(this.tab)]
     },
 
     isPaused() {

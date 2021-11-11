@@ -204,7 +204,7 @@ export default {
         },
         {
           name: `PRINT_TICKET_${this.activeTab}`,
-          method: (_action) => (window.open(`/#/print/negotiation/${this.$route.params.id}`, '_blank')),
+          method: (_action) => (window.open(`/#/print/negotiation/${this.$route.params.id}?tab=${this.activeTab}`, '_blank')),
           isVisible: true
         },
         {
