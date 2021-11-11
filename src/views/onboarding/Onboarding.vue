@@ -180,22 +180,28 @@ export default {
 
         this.$store.dispatch('createWorkpace', {
           name: this.responses.team,
-          negotiationType: this.responses.negotiationType,
           subDomain: uuidv4()
-        }).then(() => {
-          this.$store.dispatch('refreshToken').then(() => {
-            this.$refs.swiper.swiper.slideNext(800)
-            this.$socket.emit('subscribe', {
-              headers: {
-                Authorization: this.$store.getters.accountToken,
-                Workspace: this.$store.getters.workspaceSubdomain
-              },
-              channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/whatsapp'
-            })
-          }).catch(error => {
-            this.$jusNotification({ error })
+        }).then(({ id }) => {
+          this.$store.dispatch('editCustomWorkpaceProperties', {
+            workspaceId: id,
+            properties: {
+              NEGOTIATION_TYPE: responseObj?.negotiationType
+            }
           }).finally(() => {
-            this.$store.dispatch('hideLoading')
+            this.$store.dispatch('refreshToken').then(() => {
+              this.$refs.swiper.swiper.slideNext(800)
+              this.$socket.emit('subscribe', {
+                headers: {
+                  Authorization: this.$store.getters.accountToken,
+                  Workspace: this.$store.getters.workspaceSubdomain
+                },
+                channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/whatsapp'
+              })
+            }).catch(error => {
+              this.$jusNotification({ error })
+            }).finally(() => {
+              this.$store.dispatch('hideLoading')
+            })
           })
         }).catch(error => {
           this.$jusNotification({ error })
