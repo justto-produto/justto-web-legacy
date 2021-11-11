@@ -204,7 +204,7 @@ export default {
         },
         {
           name: `PRINT_TICKET_${this.activeTab}`,
-          method: (_action) => this.toggleExportTicketModalVisible(true),
+          method: (_action) => (window.open(`/#/print/negotiation/${this.$route.params.id}`, '_blank')),
           isVisible: true
         },
         {

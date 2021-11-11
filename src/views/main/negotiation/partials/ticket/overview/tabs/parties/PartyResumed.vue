@@ -52,7 +52,7 @@
           <b>OAB: </b>{{ party.oabs[0] }}
         </div>
         <div
-          :class="{ 'party-resumed__header-document--hidden': !isActiveCollapseItem }"
+          :class="{ 'party-resumed__header-document--hidden': !isActiveCollapseItem && !hideArrows }"
           class="party-resumed__header-document"
         >
           {{ translatedPartyType | capitalize }}

@@ -32,8 +32,15 @@
             @click="action.action()"
           >
             <jus-icon
+              v-if="!action.isElementIcon"
               :icon="action.icon"
               class="jus-dispute-actions__actions-icons"
+            />
+
+            <i
+              v-else
+              :class="action.icon"
+              class="jus-dispute-actions__actions-icons el-icon"
             />
           </el-button>
         </span>
@@ -805,6 +812,14 @@ export default {
           tooltip: `${this.$t('action.FAVORITE')} (${this.$t('fields.respondentParty')})`
         },
         {
+          name: 'export',
+          icon: 'el-icon-printer',
+          isElementIcon: true,
+          condition: () => true,
+          action: () => window.open(`/#/print/negotiation/${this.$route.params.id}`, '_blank'),
+          tooltip: 'Imprimir disputa.'
+        },
+        {
           name: 'redirect',
           icon: 'switch',
           condition: () => true,
@@ -1496,6 +1511,12 @@ export default {
     .jus-dispute-actions__actions-icons {
       width: 16px;
       height: 16px;
+
+      &.el-icon {
+        font-size: 19px;
+        width: 19px;
+        height: 19px;
+      }
     }
   }
 
