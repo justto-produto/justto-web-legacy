@@ -46,7 +46,7 @@
                 @change="updateDefendantOffer"
               />
               <br>
-              <span>Alçada Máx.: </span>
+              <span>{{ isRecoveryStrategy ? 'Valor limite' : 'Alçada Máx.' }}:</span>
               <CurrencyInlieEditorInner
                 v-model="upperRange"
                 :is-editable="false"
@@ -97,7 +97,7 @@
         />
       </div>
       <div>
-        <span>{{ isRecoveryStrategy? 'Valor limite' : 'Alçada Máx.' }}: </span>
+        <span>{{ isRecoveryStrategy ? 'Valor limite' : 'Alçada Máx.' }}:</span>
         <CurrencyInlieEditorInner
           v-model="upperRange"
           :is-editable="!isPreNegotiation"
@@ -149,12 +149,9 @@ export default {
   computed: {
     ...mapGetters({
       ticketParties: 'getTicketOverviewParties',
-      ticket: 'getTicketOverview'
+      ticket: 'getTicketOverview',
+      isRecoveryStrategy: 'isWorkspaceRecovery'
     }),
-
-    isRecoveryStrategy() {
-      return (this.ticket?.strategy?.types || []).includes('RECOVERY')
-    },
 
     isPaused() {
       return this.ticket.paused
