@@ -6,14 +6,14 @@
     />
     <OmnichannelResume />
 
-    <el-button
+    <!-- <el-button
       id="print-button"
       circle
       type="primary"
       icon="el-icon-printer"
       class="print-button"
       @click="handlePrint()"
-    />
+    /> -->
   </div>
 </template>
 
