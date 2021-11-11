@@ -1,7 +1,7 @@
 export default (disputeId, callback) => {
   const idIndex = location.href.split('/').length - 1
 
-  const routeId = location.href.split('/')[idIndex]
+  const routeId = location.href.split('/')[idIndex].split('?')[0]
 
   return Number(disputeId) === Number(routeId) ? callback() : new Promise((resolve) => {
     window.analytics.track('Id da disputa diferente da rota', { routeId, disputeId }, () => {

@@ -140,6 +140,23 @@ const router = new Router({
           ]
         },
         {
+          name: 'print',
+          path: 'print',
+          component: () => import(/* webpackChunkName: "print" */ '@/views/main/print/index'),
+          children: [
+            {
+              name: 'printTicket',
+              path: 'negotiation/:id',
+              component: () => import(/* webpackChunkName: "printTicket" */ '@/views/main/print/Ticket'),
+              meta: {
+                requiresAuth: true,
+                trackPage: true,
+                title: 'Imprimir Negociação'
+              }
+            }
+          ]
+        },
+        {
           name: 'configuration',
           path: 'configuration',
           component: () => import(/* webpackChunkName: "configurationIndex" */ '@/views/main/configuration/Configuration'),
