@@ -38,12 +38,7 @@ export default {
   },
 
   created() {
-    this.getTicket().finally(
-      this.getTicketParties().finally(
-        this.getTicketOccurrences()
-        // .finally(() => setTimeout(this.handlePrint, (7.5 * 1000)))
-      )
-    )
+    this.getTicket().finally(() => this.getTicketParties().finally(() => this.getTicketOccurrences()))
   },
 
   mounted() {
@@ -88,13 +83,14 @@ export default {
       })
     },
 
-    async handlePrint() {
+    handlePrint() {
       const customContent = document.querySelector('.export-ticket').innerHTML
-      const originalContent = document.body.innerHTML
 
-      document.body.innerHTML = customContent
-      await window.print()
-      document.body.innerHTML = originalContent
+      window.onbeforeprint = () => (document.body.innerHTML = customContent)
+
+      window.onafterprint = () => setTimeout(window.close, 500)
+
+      window.print()
     }
   }
 }
