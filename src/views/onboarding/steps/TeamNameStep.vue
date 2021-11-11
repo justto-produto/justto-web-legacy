@@ -20,7 +20,7 @@
       @submit.native.prevent="submitForm"
     >
       <el-form-item
-        label="Equipe"
+        label="Nome da Equipe"
         prop="name"
       >
         <el-input
@@ -32,13 +32,13 @@
       </el-form-item>
 
       <el-form-item
-        label="Tipo de estratégia"
+        label="Qual tipo de carteira irá negociar?"
         prop="negotiationType"
       >
         <el-select
           v-model="nameForm.negotiationType"
           filterable
-          placeholder="Selecione tipo"
+          placeholder="Selecione um tipo"
         >
           <el-option
             v-for="(type, index) in defaultStrategyTypes"
