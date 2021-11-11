@@ -34,6 +34,16 @@ const workspaceActions = {
       data: properties
     })
   },
+
+  editCustomWorkpaceProperties({ _ }, { properties, workspaceId }) {
+    return axiosDispatch({
+      url: `${workspacesPath}/${workspaceId}/properties`,
+      method: 'PUT',
+      mutation: 'setWorkspace',
+      data: properties
+    })
+  },
+
   updateWorkspaceLogoUrl({ commit }, logoUrl) {
     commit('updateWorkspaceLogoUrl', logoUrl)
   },
