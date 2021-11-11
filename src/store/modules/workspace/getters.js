@@ -56,7 +56,8 @@ const workspaceGetters = {
   getPortifoliosByWorkspace: (state) => {
     return state.portifoliosByWorkspace
   },
-  getApiIntegrationConfiguration: (state) => state.workspace.apiIntegrationConfiguration
+  getApiIntegrationConfiguration: (state) => state.workspace.apiIntegrationConfiguration,
+  isWorkspaceRecovery: state => state?.workspace?.properties?.NEGOTIATION_TYPE === 'RECOVERY'
 }
 
 export default workspaceGetters

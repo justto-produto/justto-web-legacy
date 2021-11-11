@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import moment from 'moment'
 import { axiosDispatch, buildQuery, extractMentions } from '@/utils'
+import { Validate } from 'validate-cnj'
 
 // const FileSaver = require('file-saver')
 let removeDebounce = 0
@@ -8,6 +9,7 @@ const disputesPath = 'api/disputes'
 
 const disputeActions = {
   SOCKET_ADD_DISPUTE({ commit, state }, disputeChanged) {
+    // TODO: SAAS-4634 Checkpoint
     if (state.dispute.id === disputeChanged.id) {
       if (!disputeChanged.properties) {
         disputeChanged.properties = state.dispute.properties
@@ -247,13 +249,22 @@ const disputeActions = {
   },
   getDisputeTimeline({ commit }, disputeCode) {
     if (!disputeCode) return
+
     commit('showLoading')
+    try {
+      Validate.load(disputeCode)
+    } catch (error) {
+      commit('setDisputeTimeline', { timeline: { lastUpdated: '', lawsuits: [], isValid: false }, code: disputeCode })
+      commit('hideLoading')
+      return
+    }
+
     return axiosDispatch({
       url: `/api/fusion/lawsuit/timeline/${disputeCode}`
     }).then(res => {
-      commit('setDisputeTimeline', { timeline: res, code: disputeCode })
+      commit('setDisputeTimeline', { timeline: { ...res, isValid: true }, code: disputeCode })
     }).catch(() => {
-      commit('setDisputeTimeline', { timeline: { lastUpdated: '', lawsuits: [] }, code: disputeCode })
+      commit('setDisputeTimeline', { timeline: { lastUpdated: '', lawsuits: [], isValid: true }, code: disputeCode })
     }).finally(() => commit('hideLoading'))
   },
   exportProtocols({ state }) {

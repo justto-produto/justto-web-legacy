@@ -40,6 +40,7 @@
           <jus-dispute-actions
             :dispute="dispute"
             :is-collapsed.sync="isCollapsed"
+            :tab="typingTab"
             @fetch-data="fetchData"
           />
           <!-- MESSAGES -->

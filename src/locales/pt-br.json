@@ -759,5 +759,8 @@
         "NONEXISTENT": "Contato não existe"
       }
     }
+  },
+  "administrativeProceedingCode": {
+    "code": "nº do processo"
   }
 }

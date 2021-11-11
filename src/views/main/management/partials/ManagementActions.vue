@@ -93,6 +93,7 @@
       <el-select
         v-model="unsettledType"
         v-loading="$store.state.loading"
+        filterable
         data-testid="select-unsettled"
         placeholder="Escolha o motivo da perda"
       >

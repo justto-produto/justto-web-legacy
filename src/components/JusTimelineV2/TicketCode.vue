@@ -24,6 +24,7 @@
             @click.stop="copyProccessCode"
           />
           <JusTjIdentifier
+            v-if="isValidCNJ"
             :code="code"
             :disabled="!isJusttoAdmin"
             class="jus-dispute-code__icon hidden-icon"
@@ -86,6 +87,10 @@ export default {
       return ''
     },
 
+    isValidCNJ() {
+      return this.currentDiputeTimeline?.isValid
+    },
+
     timelineStatus() {
       const textDefault = 'Até este momento, não conseguimos capturar este processo'
 
@@ -105,7 +110,7 @@ export default {
         return {
           available: false,
           icon: 'el-icon-error',
-          text: textDefault
+          text: this.currentDiputeTimeline?.isValid ? textDefault : 'Número CNJ inválido'
         }
       } else {
         return {

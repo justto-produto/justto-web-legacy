@@ -5,11 +5,16 @@ const messagesPath = 'api/messages'
 
 const omnichannelActions = {
   setOmnichannelActiveTab({ commit, getters: { getActiveTab } }, tab) {
-    if (getActiveTab !== tab) {
-      commit('setOmnichannelActiveTab', tab)
-      commit('resetRecipients')
-      commit('resetOccurrences')
-    }
+    return new Promise(resolve => {
+      if (getActiveTab !== tab) {
+        commit('setOmnichannelActiveTab', tab)
+        commit('resetRecipients')
+        commit('resetOccurrences')
+        resolve(tab)
+      } else {
+        resolve(tab)
+      }
+    })
   },
 
   setEditorText: ({ commit }, message) => commit('setEditorText', message),
