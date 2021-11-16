@@ -15,7 +15,7 @@
         class="alert-container__first-claimant"
       >
         <i class="icon el-icon-info" />
-        O réu <span class="alert-container__name">{{ dispute.firstClaimant.toLowerCase() }}</span>
+        {{ isRecovery ? 'A' : 'O' }} {{ $tc('PARTY_RESPONDENT', isRecovery) }} <span class="alert-container__name">{{ dispute.firstClaimant.toLowerCase() }}</span>
         está <span class="alert-container__status">{{ dispute.firstClaimantStatus || 'OFFLINE' }}</span> no momento.
       </span>
       <span
@@ -34,7 +34,7 @@
           v-model="messageDialogReplyEditor"
           type="textarea"
           rows="4"
-          placeholder="Escreva alguma coisa para o réu"
+          :placeholder="`Escreva alguma coisa para ${isRecovery ? 'a' : 'o'} ${$tc('PARTY_RESPONDENT', isRecovery)}`"
           style="padding-bottom: 10px"
         />
         <div class="dialog-reply-negotiator__footer">
@@ -60,9 +60,11 @@
 
 <script>
 import negotiatorActiveContact from '@/utils/mixins/negotiatorActiveContact'
+import { mapGetters } from 'vuex'
 
 export default {
   mixins: [negotiatorActiveContact],
+
   props: {
     visible: {
       type: Boolean,
@@ -73,11 +75,19 @@ export default {
       required: true
     }
   },
+
   data() {
     return {
       messageDialogReplyEditor: ''
     }
   },
+
+  computed: {
+    ...mapGetters({
+      isRecovery: 'isWorkspaceRecovery'
+    })
+  },
+
   methods: {
     async handleClose(done) {
       await this.handleVisibilityEditor(false)

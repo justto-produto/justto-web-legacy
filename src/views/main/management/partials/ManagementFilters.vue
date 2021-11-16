@@ -151,7 +151,7 @@
             v-if="!loading && isFinished || isPreNegotiation"
             :span="12"
           >
-            <el-form-item label="Réu">
+            <el-form-item :label="$tc('PARTY_RESPONDENT', isRecovery)">
               <el-select
                 v-model="filters.respondentNames"
                 multiple
@@ -301,12 +301,14 @@ import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'ManagementFilters',
+
   props: {
     tabIndex: {
       type: String,
       required: true
     }
   },
+
   data() {
     return {
       visibleFilters: false,
@@ -314,6 +316,7 @@ export default {
       filters: {}
     }
   },
+
   computed: {
     ...mapGetters({
       strategies: 'getMyStrategiesLite',
@@ -321,7 +324,8 @@ export default {
       respondents: 'respondents',
       workspaceTags: 'workspaceTags',
       negotiatorsList: 'workspaceMembers',
-      preNegotiationKeywords: 'getPreNegotiation'
+      preNegotiationKeywords: 'getPreNegotiation',
+      isRecovery: 'isWorkspaceRecovery'
     }),
 
     isPreNegotiation() {

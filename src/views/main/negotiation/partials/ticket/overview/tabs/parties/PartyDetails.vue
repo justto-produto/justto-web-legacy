@@ -247,7 +247,7 @@
       <span slot="footer">
         <el-tooltip
           :open-delay="600"
-          :content="`Remover ${partName} de todas as disputas com mesmo réu.`"
+          :content="`Remover ${partName} de todas as disputas com ${isRecovery ? 'a mesma' : 'o mesmo'} ${$tc('PARTY_RESPONDENT', isRecovery)}.`"
           placement="top"
         >
           <el-button
@@ -358,7 +358,8 @@ export default {
   computed: {
     ...mapGetters({
       ticketStatus: 'getTicketOverviewStatus',
-      isJusttoAdmin: 'isJusttoAdmin'
+      isJusttoAdmin: 'isJusttoAdmin',
+      isRecovery: 'isWorkspaceRecovery'
     }),
 
     disputeId() {

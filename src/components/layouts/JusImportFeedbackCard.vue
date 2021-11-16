@@ -11,7 +11,7 @@
         v-model="respondent"
         :class="{'has-error': errorFields.includes('respondent')}"
         data-testid="feedback-respondent"
-        placeholder="Dê um nome para o seu Réu"
+        :placeholder="`Dê um nome para ${isWorkspaceRecovery ? 'a sua' : 'o seu'} ${$tc('PARTY_RESPONDENT', isWorkspaceRecovery)}`"
         @input="clearErrorField('respondent')"
       >
         <div slot="prefix">
@@ -285,9 +285,11 @@ import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'JusImportFeedbackCard',
+
   components: {
     JusEngagementsDialog: () => import('@/components/dialogs/JusEngagementsDialog')
   },
+
   props: {
     mappedCampaign: {
       type: Object,
@@ -298,6 +300,7 @@ export default {
       default: 1
     }
   },
+
   data() {
     return {
       color: '#ff9300',
@@ -340,6 +343,7 @@ export default {
       }
     }
   },
+
   computed: {
     ...mapGetters([
       'isJusttoDev',

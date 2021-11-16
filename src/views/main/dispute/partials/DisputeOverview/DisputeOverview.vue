@@ -861,7 +861,7 @@
                 </div>
                 <span slot="footer">
                   <el-tooltip
-                    :content="`Remover ${deletingLawyer.name} de todas as disputas com mesmo réu.`"
+                    :content="`Remover ${deletingLawyer.name} de todas as disputas com ${isRecoveryStrategy ? 'a mesma' : 'o mesmo'} ${$tc('PARTY_RESPONDENT', isRecoveryStrategy)}.`"
                     placement="top"
                   >
                     <el-button
@@ -1918,16 +1918,6 @@ export default {
       lastOfferValueHasChanged: false,
       cityFilter: null,
       ufFilter: null,
-      dispuesToUnknownParties: [
-        {
-          value: { party: 'RESPONDENT' },
-          label: 'Réu'
-        },
-        {
-          value: { party: 'CLAIMANT' },
-          label: 'Parte contrária'
-        }
-      ],
       tempRole: {}
     }
   },
@@ -1943,6 +1933,19 @@ export default {
       strategies: 'getMyStrategiesLite',
       isRecoveryStrategy: 'isWorkspaceRecovery'
     }),
+
+    dispuesToUnknownParties() {
+      return [
+        {
+          value: { party: 'RESPONDENT' },
+          label: this.$tc('PARTY_RESPONDENT', this.isRecoveryStrategy)
+        },
+        {
+          value: { party: 'CLAIMANT' },
+          label: 'Parte contrária'
+        }
+      ]
+    },
 
     campaign() {
       return this.dispute?.campaign
@@ -2032,8 +2035,6 @@ export default {
           if (dr.archived) return false
           return true
         })
-        // Ocultar o advogado do reu
-        // sortedArray = sortedArray.filter(({ party, roles }) => !(party === 'RESPONDENT' && roles.includes('LAWYER')))
         return sortedArray.sort((a, b) => {
           if (a.party === b.party) {
             return (a.roles[0] > b.roles[0]) ? -1 : (a.roles[0] < b.roles[0]) ? 1 : 0
@@ -2339,12 +2340,12 @@ export default {
     getDisputePartys(roles) {
       if (roles.includes('PARTY')) {
         return [
-          { value: 'RESPONDENT', label: 'Réu' },
+          { value: 'RESPONDENT', label: this.$tc('PARTY_RESPONDENT', this.isRecoveryStrategy) },
           { value: 'CLAIMANT', label: 'Parte contrária' }
         ]
       } else if (roles.includes('LAWYER')) {
         return [
-          { value: 'RESPONDENT', label: 'Advogado do réu' },
+          { value: 'RESPONDENT', label: this.$tc('LAWYER_RESPONDENT', this.isRecoveryStrategy) },
           { value: 'CLAIMANT', label: 'Advogado da parte contrária' }
         ]
       } else {

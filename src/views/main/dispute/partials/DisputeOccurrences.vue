@@ -653,12 +653,14 @@ import { uniq } from 'lodash'
 
 export default {
   name: 'DisputeOccurrences',
+
   components: {
     InfiniteLoading,
     AttachmentOccurrence: () => import('./partials/AttachmentOccurrence'),
     NpsInteraction: () => import('@/views/main/negotiation/partials/ticket/omnichannel/occurrences/occurrence/interaction/partials/Nps'),
     PhoneCallOccurrence: () => import('@/views/main/negotiation/partials/ticket/omnichannel/occurrences/occurrence/interaction/partials/Phone')
   },
+
   props: {
     disputeId: {
       type: String,
@@ -669,6 +671,7 @@ export default {
       default: '1'
     }
   },
+
   data() {
     return {
       loadingMessage: 'false',
@@ -679,20 +682,6 @@ export default {
       fullMessageBank: {},
       infiniteId: +new Date(),
       handlePartyId: {},
-      disputePartys: [
-        {
-          value: 'RESPONDENT',
-          label: 'Advogado do réu'
-        },
-        {
-          value: 'CLAIMANT',
-          label: 'Advogado da parte contrária'
-        },
-        {
-          value: 'UNKNOWN',
-          label: 'Desconhecido'
-        }
-      ],
       negotiatorTypes: [
         'NEGOTIATOR_ACCESS',
         'NEGOTIATOR_PROPOSAL',
@@ -706,8 +695,26 @@ export default {
   computed: {
     ...mapGetters([
       'activeOccurrency',
-      'disputeLastInteractions'
+      'disputeLastInteractions',
+      'isWorkspaceRecovery'
     ]),
+
+    disputePartys() {
+      return [
+        {
+          value: 'RESPONDENT',
+          label: this.$tc('LAWYER_RESPONDENT', this.isWorkspaceRecovery)
+        },
+        {
+          value: 'CLAIMANT',
+          label: 'Advogado da parte contrária'
+        },
+        {
+          value: 'UNKNOWN',
+          label: 'Desconhecido'
+        }
+      ]
+    },
 
     onlineEmails() {
       let emails = []

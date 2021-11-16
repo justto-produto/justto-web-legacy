@@ -536,7 +536,7 @@
       <p
         class="dialog-actions__ticket-resume-infoline"
       >
-        <b>Réu(s): </b>
+        <b>{{ $tc('PARTY_RESPONDENT', isRecovery) }}: </b>
         <span>{{ (respondentsResume || ' - ') | uppercase }}</span>
       </p>
       <p

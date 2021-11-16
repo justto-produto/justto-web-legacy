@@ -71,11 +71,13 @@ import { normalizeString } from '@/utils'
 /* eslint-disable no-prototype-builtins */
 export default {
   name: 'NewImport',
+
   components: {
     CheckLinesStep: () => import('./partials/CheckLinesStep'),
     ColumnsStep: () => import('./partials/ColumnsStep'),
     CampaignStep: () => import('./partials/CampaignStep')
   },
+
   data() {
     return {
       uploadId: undefined,
@@ -85,8 +87,9 @@ export default {
       duplicatedAction: 'IGNORE'
     }
   },
+
   computed: {
-    ...mapGetters(['errorFields', 'validationInProgress']),
+    ...mapGetters(['errorFields', 'validationInProgress', 'isWorkspaceRecovery']),
 
     isMapped() {
       return this.campaignIsMapped
@@ -120,7 +123,7 @@ export default {
         const hasUnlinkedDefendant = this.$store.state.importModule.map.filter(({ name, tag }) => normalizeString(name) === 'reu' && tag === null).length > 0
 
         if (hasUnlinkedDefendant) {
-          this.$confirm('Detectamos que não mapeou a coluna <b>réu</b>.<br/>É um dos campos que mais evitam erros na importação. Tem certeza que deseja continuar sem mapear esta coluna?', 'Réu não mapeado', {
+          this.$confirm(`Detectamos que não mapeou a coluna <b>${this.$tc('PARTY_RESPONDENT', this.isWorkspaceRecovery)}</b>.<br/>É um dos campos que mais evitam erros na importação. Tem certeza que deseja continuar sem mapear esta coluna?`, `${this.$tc('PARTY_RESPONDENT', this.isWorkspaceRecovery)} não ${this.isWorkspaceRecovery ? 'mapeada' : 'mapeado'}`, {
             confirmButtonText: 'OK',
             cancelButtonText: 'Cancelar',
             dangerouslyUseHTMLString: true,

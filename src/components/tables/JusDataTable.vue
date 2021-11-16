@@ -39,7 +39,7 @@
     </el-table-column>
     <el-table-column
       prop="respondent"
-      label="Réu"
+      :label="$tc('PARTY_RESPONDENT', isWorkspaceRecovery)"
       width="160"
     >
       <template v-slot="scope">
@@ -153,10 +153,12 @@
 import { mapGetters } from 'vuex'
 export default {
   name: 'JusDataTable',
+
   components: {
     InfiniteLoading: () => import('vue-infinite-loading'),
     JusFloatActions: () => import('@/components/others/JusFloatActions')
   },
+
   props: {
     data: {
       type: Array,
@@ -176,12 +178,15 @@ export default {
       default: 'Carregando...'
     }
   },
+
   data() {
     return { }
   },
+
   computed: {
     ...mapGetters([
-      'isJusttoAdmin'
+      'isJusttoAdmin',
+      'isWorkspaceRecovery'
     ]),
 
     availableActions() {

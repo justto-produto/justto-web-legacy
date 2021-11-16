@@ -199,7 +199,7 @@
           class="drag-group"
         >
           <el-collapse class="el-collapse--drag">
-            <el-collapse-item :title="'Réu ' + respondentPartyIndex">
+            <el-collapse-item :title="`${$tc('PARTY_RESPONDENT', isRecovery)} ${respondentPartyIndex}`">
               <span
                 v-for="tag in tags.respondentParty.tags"
                 :key="`${tag.id}-${tag.name}`"
@@ -209,7 +209,7 @@
                 @dragstart.self="dragTag($event, JSON.stringify({tag, index: respondentPartyIndex }))"
               >
                 <el-tag class="el-tag--drag">
-                  Réu {{ respondentPartyIndex + ' - ' }}{{ $t(tag.key) | capitalize }}
+                  {{ $tc('PARTY_RESPONDENT', isRecovery) }} {{ respondentPartyIndex + ' - ' }}{{ $t(tag.key) | capitalize }}
                 </el-tag>
               </span>
             </el-collapse-item>
@@ -232,6 +232,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: 'ColumnsStep',
 
@@ -250,6 +251,10 @@ export default {
   },
 
   computed: {
+    ...mapGetters({
+      isRecovery: 'isWorkspaceRecovery'
+    }),
+
     columns: {
       get() {
         return this.$store.state.importModule.map

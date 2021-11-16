@@ -239,7 +239,8 @@ export default {
     ...mapGetters({
       call: 'getCurrentCall',
       thamirisName: 'loggedPersonName',
-      ticketParties: 'getTicketOverviewParties'
+      ticketParties: 'getTicketOverviewParties',
+      isRecoveryStrategy: 'isWorkspaceRecovery'
     }),
 
     claimantName() {
@@ -247,7 +248,7 @@ export default {
     },
 
     respondentName() {
-      let name = 'Nome do réu aqui'
+      let name = `Nome ${this.isRecoveryStrategy ? 'da' : 'do'} ${this.$tc('PARTY_RESPONDENT', this.isRecoveryStrategy)} aqui`
 
       this.ticketParties.filter(({ polarity }) => ['RESPONDENT'].includes(polarity)).forEach((el, index) => {
         if (!index) name = el.name

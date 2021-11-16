@@ -8,7 +8,7 @@
     </h2>
     <p>
       O sistema trabalha com o conceito de campanhas. Campanha é um agrupamento de
-      disputas dentro da mesma importação com um réu em comum. Por isso, ao importar,
+      disputas dentro da mesma importação com {{ $tc('PARTY_RESPONDENT', isRecoveryStrategy)+'s' }} em comum. Por isso, ao importar,
       o sistema automaticamente divide suas disputas em campanhas para que você possa
       configurá-las separadamente.
       <br><br><br>
@@ -239,15 +239,9 @@ export default {
       isJusttoAdmin: 'isJusttoAdmin',
       strategyList: 'getMyStrategiesLite',
       importedFileName: 'importedFileName',
-      validationInProgress: 'validationInProgress'
+      validationInProgress: 'validationInProgress',
+      isRecoveryStrategy: 'isWorkspaceRecovery'
     }),
-
-    // summaryWarnings() {
-    //   return {
-    //     duplicated: this.duplicatedDisputes.filter(w => w.status === 'DUPLICATED_DISPUTE' || w.status === 'DUPLICATED' || w.status === 'DUPLICATED_ROW').length,
-    //     expired: this.duplicatedDisputes.filter(w => w.status === 'EXPIRED' || w.status === 'DUPLICATE_AND_EXPIRED').length
-    //   }
-    // },
 
     duplicatedActionToDo: {
       get() {

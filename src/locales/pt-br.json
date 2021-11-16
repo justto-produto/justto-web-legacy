@@ -653,6 +653,8 @@
   "LAST_RECEIVED_MESSAGE": "Última mensagem recebida",
   "LAST_NOTE": "Última nota",
   "CONCLUSION_DATE": "Data de conclusão",
+  "PARTY_RESPONDENT": "Réu | Empresa",
+  "LAWYER_RESPONDENT": "Advogado do Réu | Advogado da Empresa",
   "workspace": {
     "READY": "ativo",
     "CREATING": "em criação",

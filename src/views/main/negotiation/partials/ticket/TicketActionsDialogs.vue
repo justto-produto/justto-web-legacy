@@ -426,7 +426,7 @@ export default {
           return (polarity === 'RESPONDENT' && roles.includes('PARTY'))
         }).map(({ name }, i) => ({
           key: `defendant-${i + 1}`,
-          label: 'Réu',
+          label: this.$tc('PARTY_RESPONDENT', this.isRecoveryStrategy),
           value: this.$options.filters.capitalize(name)
         })),
         {
