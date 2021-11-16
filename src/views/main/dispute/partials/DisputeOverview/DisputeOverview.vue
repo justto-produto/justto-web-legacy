@@ -161,7 +161,7 @@
               class="dispute-overview-view__info-line"
               data-testid="dispute-infoline"
             >
-              <span class="title">Alçada máxima:</span>
+              <span class="title">{{ $tc('UPPER_RANGE', isRecoveryStrategy) }}:</span>
               <span data-testid="overview-upperrange">{{ dispute.disputeUpperRange | currency }}</span>
             </div>
             <div
@@ -1178,7 +1178,7 @@
                 prop="lastOfferValue"
               >
                 <el-tooltip
-                  content="Alçada máxima zerada. Coloque uma alçada máxima para poder alterar o valor proposto."
+                  :content="`${$tc('UPPER_RANGE', isRecoveryStrategy)} zerad${isRecoveryStrategy ? 'o' : 'a'}. Coloque um${isRecoveryStrategy ? '' : 'a'} ${$tc('UPPER_RANGE', isRecoveryStrategy)} para poder alterar o valor proposto.`"
                   :disabled="!!disputeForm.disputeUpperRange"
                 >
                   <div
@@ -1223,7 +1223,7 @@
             <el-col :span="6">
               <el-form-item
                 :rules="validateDisputeUpperRange"
-                label="Alçada máxima"
+                :label="$tc('UPPER_RANGE', isRecoveryStrategy)"
                 prop="disputeUpperRange"
               >
                 <money
@@ -1940,8 +1940,10 @@ export default {
       disputeMetadata: 'disputeMetadata',
       dispute: 'dispute',
       onlineDocuments: 'onlineDocuments',
-      strategies: 'getMyStrategiesLite'
+      strategies: 'getMyStrategiesLite',
+      isRecoveryStrategy: 'isWorkspaceRecovery'
     }),
+
     campaign() {
       return this.dispute?.campaign
     },
@@ -2676,12 +2678,17 @@ export default {
         if (valid) {
           this.editDisputeDialogLoading = true
           const h = this.$createElement
+
+          const hasUpperRangeProblem = this.isRecoveryStrategy ? this.disputeForm.lastOfferValue < this.disputeForm.disputeUpperRange : this.disputeForm.lastOfferValue > this.disputeForm.disputeUpperRange
+
+          const hasUpperRangeProblemText = `- ${this.$tc('UPPER_RANGE', this.isRecoveryStrategy)} está ${this.isRecoveryStrategy ? 'acima' : 'abaixo'} do valor proposto.`
+
           this.$msgbox({
             title: 'Atenção!',
             message: h('p', null, [
               h('div', null, '- As novas informações vão sobrescrever as antigas.'),
-              this.disputeForm.lastOfferValue > this.disputeForm.disputeUpperRange
-                ? h('div', null, '- Alçada máxima está abaixo do valor proposto.') : null,
+              hasUpperRangeProblem
+                ? h('div', null, hasUpperRangeProblemText) : null,
               h('br', null, null),
               h('div', null, 'Deseja continuar?')
             ]),

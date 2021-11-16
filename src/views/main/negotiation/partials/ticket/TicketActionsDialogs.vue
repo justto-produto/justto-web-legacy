@@ -202,11 +202,11 @@
       :close-on-press-escape="false"
       append-to-body
       width="400px"
-      title="Majorar a alçada máxima?"
+      :title="`Majorar ${$tc('UPPER_RANGE_WITH_ARTICLE', isRecoveryStrategy)}?`"
       class="dialog-actions__increase-alert"
     >
       <strong class="dialog-actions__increase-alert-subtitle">
-        Valor da contraproposta é maior que o da alçada máxima!
+        Valor da contraproposta é {{ isRecoveryStrategy ? 'menor' : 'maior' }} que o {{ 'd'+$tc('UPPER_RANGE_WITH_ARTICLE', isRecoveryStrategy) }}!
       </strong>
 
       <div class="dialog-actions__increase-alert-infobox">
@@ -214,7 +214,7 @@
           <span>*</span>
 
           <small>
-            Ao clicar em <strong>majorar</strong>, será feita a <strong>contraproposta</strong>. A <strong>alçada máxima</strong> será majorada para o <strong>valor</strong> da contraproposta e a disputa será alterada para <strong>proposta aceita</strong>.
+            Ao clicar em <strong>majorar</strong>, será feita a <strong>contraproposta</strong>. {{ isRecoveryStrategy ? 'O' : 'A' }} <strong>{{ $tc('UPPER_RANGE', isRecoveryStrategy) }}</strong> será majorada para o <strong>valor</strong> da contraproposta e a disputa será alterada para <strong>proposta aceita</strong>.
           </small>
         </p>
 
@@ -384,7 +384,8 @@ export default {
       workspaceMembers: 'workspaceMembers',
       outcomeReasons: 'getOutcomeReasons',
       lastTicketOffers: 'getLastTicketOffers',
-      activeTab: 'getActiveTab'
+      activeTab: 'getActiveTab',
+      isRecoveryStrategy: 'isWorkspaceRecovery'
     }),
 
     isInsufficientUpperRange() {

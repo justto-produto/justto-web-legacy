@@ -168,14 +168,14 @@
       <div class="jus-import-feedback-card__switch">
         <i class="el-icon-circle-check el-input__icon--success" />
         <div class="content">
-          <div>Percentual da primeira proposta sobre a alçada máxima</div>
+          <div>Percentual da primeira proposta sobre {{ $tc('UPPER_RANGE_WITH_ARTICLE', isWorkspaceRecovery) }}</div>
           <el-slider
             v-model="initialOfferPercentage"
             :min="0"
             :max="100"
             :show-stops="true"
             :marks="marks"
-            label="Percentual da primeira proposta sobre a alçada máxima"
+            :label="`Percentual da primeira proposta sobre ${$tc('UPPER_RANGE_WITH_ARTICLE', isWorkspaceRecovery)}`"
           />
         </div>
       </div>
@@ -344,6 +344,7 @@ export default {
     ...mapGetters([
       'isJusttoDev',
       'errorFields',
+      'isWorkspaceRecovery',
       'getMyStrategiesLite'
     ]),
 
