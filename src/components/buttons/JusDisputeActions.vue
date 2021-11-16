@@ -669,7 +669,8 @@ export default {
       isJusttoAdmin: 'isJusttoAdmin',
       ghostMode: 'ghostMode',
       dropLawsuitReasons: 'getDropLawsuitReasons',
-      userPreferences: 'userPreferences'
+      userPreferences: 'userPreferences',
+      isRecovery: 'isWorkspaceRecovery'
     }),
 
     collapsed: {
@@ -1382,7 +1383,7 @@ export default {
         this.$refs.counterOfferForm.validate(valid => {
           if (valid) {
             if (this.checkUpperRangeCounterOffer) {
-              const winTxt = 'O valor inserido <b>irá mojorar</b> alçada máxima. Deseja continuar?'
+              const winTxt = `O valor inserido <b>irá mojorar</b> ${this.$tc('UPPER_RANGE', this.isRecovery)}. Deseja continuar?`
               if (actionType === 'WIN') {
                 this.$confirm(winTxt, 'Atenção!', {
                   confirmButtonText: 'Continuar',
@@ -1396,7 +1397,7 @@ export default {
               } else {
                 const tag = this.$createElement
                 this.$confirm(tag('div', null, [
-                  tag('p', null, 'Valor da contraproposta é maior que o da alçada máxima!'),
+                  tag('p', null, `Valor da contraproposta é maior que o d${this.$tc('UPPER_RANGE_WITH_ARTICLE', this.isRecovery)}!`),
                   tag('br', null, ''),
                   tag('p', null, [
                     tag('span', { style: { color: '#FF4B54' } }, '*'),
@@ -1406,7 +1407,7 @@ export default {
                       ', será feita a ',
                       tag('strong', null, 'contraproposta'),
                       ', a ',
-                      tag('strong', null, 'alçada máxima'),
+                      tag('strong', null, this.$tc('UPPER_RANGE', this.isRecovery)),
                       ' será majorada para o ',
                       tag('strong', null, 'valor'),
                       ' da contraproposta e a disputa será alterada para ',
@@ -1423,7 +1424,7 @@ export default {
                       ', somente será feita a contraproposta, sem alterações no status da disputa.'
                     ])
                   ])
-                ]), 'Majorar a alçada máxima?', {
+                ]), `Majorar ${this.$tc('UPPER_RANGE_WITH_ARTICLE', this.isRecovery)}?`, {
                   distinguishCancelAndClose: true,
                   dangerouslyUseHTMLString: true,
                   closeOnClickModal: false,

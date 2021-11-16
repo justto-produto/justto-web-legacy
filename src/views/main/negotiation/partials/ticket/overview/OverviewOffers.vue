@@ -46,7 +46,7 @@
                 @change="updateDefendantOffer"
               />
               <br>
-              <span>{{ isRecoveryStrategy ? 'Valor limite' : 'Alçada Máx.' }}:</span>
+              <span>{{ $tc('UPPER_RANGE', isRecoveryStrategy) }}:</span>
               <CurrencyInlieEditorInner
                 v-model="upperRange"
                 :is-editable="false"
@@ -97,7 +97,7 @@
         />
       </div>
       <div>
-        <span>{{ isRecoveryStrategy ? 'Valor limite' : 'Alçada Máx.' }}:</span>
+        <span>{{ $tc('UPPER_RANGE', isRecoveryStrategy) }}:</span>
         <CurrencyInlieEditorInner
           v-model="upperRange"
           :is-editable="!isPreNegotiation"
@@ -204,8 +204,10 @@ export default {
       if (this.upperRange === 0 || value > this.upperRange) {
         const tag = this.$createElement
 
+        const text = `Valor da contraproposta é ${this.isRecoveryStrategy ? 'menor' : 'maior'} que o ${'d' + this.$tc('UPPER_RANGE_WITH_ARTICLE', this.isRecoveryStrategy)}!`
+
         this.$confirm(tag('div', null, [
-          tag('p', null, 'Valor da contraproposta é maior que o da alçada máxima!'),
+          tag('p', null, text),
           tag('br', null, ''),
           tag('p', null, [
             tag('span', { style: { color: '#FF4B54' } }, '*'),
@@ -215,7 +217,7 @@ export default {
               ', será feita a ',
               tag('strong', null, 'contraproposta'),
               ', a ',
-              tag('strong', null, 'alçada máxima'),
+              tag('strong', null, this.$tc('UPPER_RANGE_WITH_ARTICLE', this.isRecoveryStrategy)),
               ' será majorada para o ',
               tag('strong', null, 'valor'),
               ' da contraproposta e a disputa será alterada para ',
@@ -232,7 +234,7 @@ export default {
               ', somente será feita a contraproposta, sem alterações no status da disputa.'
             ])
           ])
-        ]), 'Majorar a alçada máxima?', {
+        ]), `Majorar ${this.$tc('UPPER_RANGE_WITH_ARTICLE', this.isRecoveryStrategy)}?`, {
           distinguishCancelAndClose: true,
           dangerouslyUseHTMLString: true,
           closeOnClickModal: false,
@@ -241,7 +243,6 @@ export default {
           confirmButtonText: 'Não majorar',
           cancelButtonText: 'Majorar'
         }).then(() => {
-          // TODO: Registar contraproposta sem alterar a alçada.
           const { disputeId } = this
 
           this.sendOffer({ data, disputeId, polarityObjectKey })
@@ -266,7 +267,7 @@ export default {
       let data
       if (value > this.upperRange) {
         data = this.mountObjectToChangeUpperRangeAndDefendantProposal(value, true)
-        this.$confirm(`A alçada máxima é de R$ ${new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2 }).format(this.upperRange)} e sua nova proposta é de R$ ${new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2 }).format(value)}. Ao continuar esta operação, você <strong>irá majorar</strong> a alçada máxima.<br> Deseja continuar?`, 'Proposta acima da alçada', {
+        this.$confirm(`${this.$tc('UPPER_RANGE_WITH_ARTICLE', this.isRecoveryStrategy)} é de R$ ${new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2 }).format(this.upperRange)} e sua nova proposta é de R$ ${new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2 }).format(value)}. Ao continuar esta operação, você <strong>irá majorar</strong> ${this.$tc('UPPER_RANGE_WITH_ARTICLE', this.isRecoveryStrategy)}.<br> Deseja continuar?`, 'Proposta acima da alçada', {
           confirmButtonText: 'Continuar e majorar alçada',
           cancelButtonText: 'Cancelar',
           cancelButtonClass: 'is-plain',
@@ -295,7 +296,7 @@ export default {
         if (alterDefendantProposal) {
           this.$jusNotification({
             title: 'Hey!',
-            message: 'Sua proposta foi reduzada para a alçada máxima!',
+            message: `Sua proposta foi ajustada para a ${this.$tc('UPPER_RANGE', this.isRecoveryStrategy)}!`,
             type: 'warning'
           })
         }

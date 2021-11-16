@@ -145,7 +145,7 @@
       <el-table-column
         v-if="tab1 || tab2"
         :sortable="false"
-        label="Alçada máxima"
+        :label="$tc('UPPER_RANGE', isRecoveryStrategy)"
         align="center"
         prop="disputeUpperRange"
         min-width="118px"
@@ -368,6 +368,7 @@ import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'ManagementTable',
+
   filters: {
     counterProposal: function({ lastCounterOfferValue, disputeUpperRange, lastOfferValue }) {
       if (lastCounterOfferValue) {
@@ -379,6 +380,7 @@ export default {
       }
     }
   },
+
   components: {
     NegotiatorActiveReply: () => import('./partials/NegotiatorActiveReply'),
     DisputeCodeLink: () => import('@/components/buttons/DisputeCodeLink'),
@@ -389,6 +391,7 @@ export default {
     InfiniteLoading: () => import('vue-infinite-loading'),
     JusVexatiousAlert: () => import('@/components/dialogs/JusVexatiousAlert')
   },
+
   props: {
     activeTab: {
       type: String,
@@ -403,6 +406,7 @@ export default {
       default: false
     }
   },
+
   data() {
     return {
       currentDisputeCode: null,
@@ -423,6 +427,7 @@ export default {
       lastAccessTooltipTimeout: () => {}
     }
   },
+
   computed: {
     ...mapGetters({
       disputeTimeline: 'getDisputesTimeline',
@@ -430,7 +435,8 @@ export default {
       disputes: 'disputes',
       lastAccess: 'lastAccess',
       onlineDocuments: 'onlineDocuments',
-      showDraft: 'getIsDraftManagementActive'
+      showDraft: 'getIsDraftManagementActive',
+      isRecoveryStrategy: 'isWorkspaceRecovery'
     }),
 
     selectedIdsComp: {

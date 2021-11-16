@@ -96,7 +96,7 @@
           v-if="dispute.disputeUpperRange"
           class="jus-dispute-resume__body-item"
         >
-          Alçada máxima: <b>{{ dispute.disputeUpperRange | currency }}</b>
+          {{ $tc('UPPER_RANGE', isRecovery) }}: <b>{{ dispute.disputeUpperRange | currency }}</b>
         </div>
         <div
           v-if="dispute.lastOfferValue"
@@ -135,6 +135,7 @@
 
 <script>
 import { getRoles, getLastInteraction } from '@/utils'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'JusDisputeResume',
@@ -145,6 +146,10 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      isRecovery: 'isWorkspaceRecovery'
+    }),
+
     disabled() {
       return this.dispute.isMy === false || this.dispute.archived === true
     },

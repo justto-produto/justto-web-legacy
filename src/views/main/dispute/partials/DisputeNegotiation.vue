@@ -13,7 +13,7 @@
       range
     />
     <div class="subtitle">
-      <span>AM:</span> <b>Alçada máxima</b>
+      <span>AM:</span> <b>{{ this.$tc('UPPER_RANGE', isRecovery) }}</b>
       <div
         v-for="(sub, index) in subtitles"
         :key="index + sub.label"
@@ -25,17 +25,21 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: 'DisputeNegotiation',
+
   components: {
     JusElementSlider: () => import('@/components/others/JusElementSlider')
   },
+
   props: {
     dispute: {
       type: Object,
       default: () => {}
     }
   },
+
   data() {
     return {
       loading: false,
@@ -47,6 +51,13 @@ export default {
       min: 100000000
     }
   },
+
+  computed: {
+    ...mapGetters({
+      isRecovery: 'isWorkspaceRecovery'
+    })
+  },
+
   watch: {
     dispute: {
       handler(value) {
@@ -55,9 +66,11 @@ export default {
       deep: true
     }
   },
+
   mounted() {
     this.fetch()
   },
+
   methods: {
     fetch() {
       this.loading = true
