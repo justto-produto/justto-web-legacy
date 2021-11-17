@@ -2,7 +2,7 @@
   <el-dialog
     :close-on-click-modal="false"
     :visible.sync="advancedFiltersDialogVisible"
-    width="650px"
+    width="60%"
     destroy-on-close
     append-to-body
     @open="restoreFilters()"
@@ -596,9 +596,15 @@ export default {
   .el-select, .el-date-editor, .el-radio-group {
     width: 100%;
   }
+
   .el-form-item__content {
     line-height: 36px;
+
+    .el-input__inner {
+      width: 100%;
+    }
   }
+
   &__switch {
     margin-bottom: 18px;
     .el-form-item__content {
