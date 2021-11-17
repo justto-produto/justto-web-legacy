@@ -46,7 +46,7 @@ const omnichannelActions = {
       type: getters.getOccurrencesFilter.type === 'LOG' ? null : getters.getOccurrencesFilter.type
     }
 
-    const url = `${disputeApi}/${disputeId}/occurrences${buildQuery(params)}`
+    const url = `${disputeApi}/${disputeId}/occurrences${buildQuery(params)}`.slice(0, -1)
 
     return validateCurrentId(disputeId, () => axiosDispatch({
       url, params: { resumed: false }, mutation: 'setOccurrences'
