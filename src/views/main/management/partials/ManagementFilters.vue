@@ -193,8 +193,21 @@
                 <el-switch
                   v-model="filters.onlyPaused"
                   data-testid="filters-only-paused"
+                  @change="toggleOnlyPaused"
                 />
               </div>
+
+              <div v-if="!isPreNegotiation">
+                <div>
+                  <jus-icon icon="pause" /> Somente não pausadas
+                </div>
+                <el-switch
+                  v-model="filters.onlyNotPaused"
+                  data-testid="filters-only-not-paused"
+                  @change="toggleOnlyNotPaused"
+                />
+              </div>
+
               <div v-if="isEngagement || isInteration || isAll">
                 <div>
                   <i class="el-icon-warning-outline" /> Advogados ofensores
@@ -434,6 +447,7 @@ export default {
       'getWorkspaceTags',
       'getWorkspacePreNegotiationKeywords'
     ]),
+
     fetchData() {
       this.loading = true
       Promise.all([
@@ -446,15 +460,43 @@ export default {
         this.loading = false
       })
     },
+
     openDialog() {
       this.visibleFilters = true
     },
+
+    toggleOnlyPaused(active) {
+      this.filters.onlyPaused = active
+
+      if (active) {
+        this.filters.onlyNotPaused = !active
+      } else {
+        delete this.filters.onlyPaused
+      }
+      this.$forceUpdate()
+    },
+
+    toggleOnlyNotPaused(active) {
+      this.filters.onlyNotPaused = active
+
+      if (active) {
+        this.filters.onlyPaused = !active
+      } else {
+        delete this.filters.onlyNotPaused
+
+        if (this.filters.onlyPaused === false) delete this.filters.onlyPaused
+      }
+      this.$forceUpdate()
+    },
+
     applyFilters() {
+      // debugger
       if (!this.filters.onlyNotVisualized) delete this.filters.onlyNotVisualized
+
       this.$store.commit('setDisputeHasFilters', true)
       this.$store.commit('setDisputeQuery', this.filters)
       this.visibleFilters = false
-      // SEGMENT TRACK
+
       if (this.filters.status) {
         if (this.filters.status.includes('EXPIRED')) {
           this.$jusSegment('Filtro por status expirado')
@@ -492,6 +534,7 @@ export default {
       this.clearPreNegotitationKeyWorks()
       this.filters.onlyFavorite = false
       this.filters.onlyPaused = false
+      this.filters.onlyNotPaused = false
       this.filters.hasCounterproposal = false
       this.filters.vexatiousLawyer = false
       this.$store.commit('setDisputeHasFilters', false)
