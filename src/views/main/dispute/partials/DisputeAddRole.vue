@@ -23,7 +23,7 @@
           <el-option
             v-for="(party, index) in roleParty"
             :key="`${index}-${party}`"
-            :label="$t('fields.' + party)"
+            :label="$tc(`fields.${party}`, isRecovery)"
             :value="party"
           />
         </el-select>
@@ -299,9 +299,11 @@
 
 <script>
 import { validateName, validateDocument, validatePhone } from '@/utils/validations'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'DisputeAddRole',
+
   props: {
     visible: {
       type: Boolean,
@@ -320,6 +322,7 @@ export default {
       default: () => []
     }
   },
+
   data() {
     return {
       secondStep: false,
@@ -354,7 +357,12 @@ export default {
       }
     }
   },
+
   computed: {
+    ...mapGetters({
+      isRecovery: 'isWorkspaceRecovery'
+    }),
+
     dialogVisible: {
       get() {
         return this.visible
@@ -363,7 +371,9 @@ export default {
         this.$emit('update:visible', value)
       }
     },
+
     roleParty: () => ['claimantParty', 'claimantLawyer', 'respondentParty', 'respondentLawyer'],
+
     partySelected() {
       if (this.newRole.party) {
         if (['claimantParty', 'respondentParty'].includes(this.newRole.party)) {
@@ -374,6 +384,7 @@ export default {
       return undefined
     }
   },
+
   watch: {
     dialogVisible() {
       this.secondStep = false
@@ -387,6 +398,7 @@ export default {
       }
     }
   },
+
   methods: {
     continueWithoutDocument() {
       this.newRole.documentNumber = this.newRole.searchDocumentNumber

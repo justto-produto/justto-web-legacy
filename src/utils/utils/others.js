@@ -1,6 +1,10 @@
 import moment from 'moment'
 
+const vue = () => document.getElementById('app')?.__vue__
+
 const buildRoleTitle = function(party, title) {
+  const isRecovery = vue()?.$store?.getters?.isWorkspaceRecovery
+
   if (party === 'UNKNOWN') {
     switch (title) {
       case 'PARTY':
@@ -13,9 +17,9 @@ const buildRoleTitle = function(party, title) {
       case 'NEGOTIATOR':
         return 'Negociador'
       case 'PARTY':
-        return 'Réu'
+        return vue().$tc('PARTY_RESPONDENT', isRecovery)
       case 'LAWYER':
-        return 'Advogado do réu'
+        return vue().$tc('LAWYER_RESPONDENT', isRecovery)
     }
   } else {
     if (title === 'PARTY') {
@@ -252,14 +256,13 @@ const formatHtml = (html) => {
 }
 
 const publishWebsocket = (channel, event, object, globalAuthenticationObject) => {
-  const vue = document.getElementById('app').__vue__
   const socketData = {
     headers: globalAuthenticationObject.headers,
     event,
     channel,
     data: object
   }
-  vue.$socket.emit('send', socketData)
+  vue().$socket.emit('send', socketData)
   return 'PUBLISHED'
 }
 

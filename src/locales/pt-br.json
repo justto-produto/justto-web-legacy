@@ -419,12 +419,12 @@
   },
   "roles": {
     "PARTY": {
-      "RESPONDENT": "réu",
+      "RESPONDENT": "empresa | réu",
       "CLAIMANT": "autor",
       "UNKNOWN": "parte desconhecida"
     },
     "LAWYER": {
-      "RESPONDENT": "advogado do réu",
+      "RESPONDENT": "advogado da empresa | advogado do réu",
       "CLAIMANT": "advogado do autor",
       "UNKNOWN": "advogado desconhecido"
     },
@@ -553,8 +553,8 @@
     "claimantParty": "Parte contrária",
     "claimantLawyer": "Advogado(a) da parte",
     "dispute": "disputa",
-    "respondentParty": "Réu",
-    "respondentLawyer": "Advogado(a) do Réu",
+    "respondentParty": "Empresa | Réu",
+    "respondentLawyer": "Advogado da Empresa | Advogado(a) do Réu",
     "respondentNegotiator": "Negociador",
     "impartialParty": "Arbitro"
   },
@@ -653,8 +653,8 @@
   "LAST_RECEIVED_MESSAGE": "Última mensagem recebida",
   "LAST_NOTE": "Última nota",
   "CONCLUSION_DATE": "Data de conclusão",
-  "PARTY_RESPONDENT": "Réu | Empresa",
-  "LAWYER_RESPONDENT": "Advogado do Réu | Advogado da Empresa",
+  "PARTY_RESPONDENT": "Empresa | Réu",
+  "LAWYER_RESPONDENT": "Advogado da Empresa | Advogado do Réu",
   "workspace": {
     "READY": "ativo",
     "CREATING": "em criação",

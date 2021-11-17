@@ -385,12 +385,12 @@ export default {
     roleOptions() {
       const { roles } = this.party
       const partyOptions = [
-        { value: 'RESPONDENT', label: this.$t('roles.PARTY.RESPONDENT') },
-        { value: 'CLAIMANT', label: this.$t('roles.PARTY.CLAIMANT') }
+        { value: 'RESPONDENT', label: this.$tc('PARTY_RESPONDENT', this.isRecovery) },
+        { value: 'CLAIMANT', label: this.$tc('roles.PARTY.CLAIMANT') }
       ]
       const lawyerOptions = [
-        { value: 'RESPONDENT', label: this.$t('roles.LAWYER.RESPONDENT') },
-        { value: 'CLAIMANT', label: this.$t('roles.LAWYER.CLAIMANT') }
+        { value: 'RESPONDENT', label: this.$tc('LAWYER_RESPONDENT', this.isRecovery) },
+        { value: 'CLAIMANT', label: this.$tc('roles.LAWYER.CLAIMANT') }
       ]
 
       if (roles.includes('PARTY')) {

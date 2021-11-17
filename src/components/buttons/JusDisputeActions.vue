@@ -814,7 +814,7 @@ export default {
           icon: this.dispute.favorite ? 'offices-tower-active' : 'offices-tower',
           condition: () => !this.isPreNegotiation,
           action: () => this.disputeAction(this.dispute.favorite ? 'disfavor' : 'favorite'),
-          tooltip: `${this.$t('action.FAVORITE')} (${this.$t('fields.respondentParty')})`
+          tooltip: `${this.$t('action.FAVORITE')}`
         },
         {
           name: 'export',

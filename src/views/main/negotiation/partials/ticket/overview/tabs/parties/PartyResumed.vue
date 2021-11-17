@@ -92,7 +92,8 @@ export default {
 
   computed: {
     ...mapGetters({
-      online: 'onlineDocuments'
+      online: 'onlineDocuments',
+      isRecovery: 'isWorkspaceRecovery'
     }),
 
     isActiveCollapseItem() {
@@ -146,7 +147,7 @@ export default {
           break
       }
 
-      return this.$t(`roles.${role}.${this.party.polarity}`)
+      return this.$tc(`roles.${role}.${this.party.polarity}`, this.isRecovery)
     },
 
     state() {
