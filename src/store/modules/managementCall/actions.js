@@ -165,6 +165,13 @@ export default {
     })
   },
 
+  setValidNumberInCall({ _ }, { interactionId, disputeId }) {
+    return axiosDispatch({
+      url: `${disputeApi}/${disputeId}/interaction/${interactionId}/last-inbound`,
+      method: 'PATCH'
+    })
+  },
+
   SOCKET_KILL_ACTIVE_CALL({ dispatch, getters: { getDialer } }, callId) {
     // TODO SAAS-4522: Rever validações
     dispatch('endCall', {

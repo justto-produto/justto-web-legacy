@@ -23,8 +23,8 @@
         ref="carousel"
         class="call-help__carousel"
         :autoplay="false"
-        arrow="always"
-        indicator-position="outside"
+        arrow="never"
+        indicator-position="none"
       >
         <el-carousel-item
           ref="carouselItemCallHelp"
@@ -82,7 +82,7 @@
             <el-button
               type="danger"
               size="small"
-              @click="showIncorrectContactForm = !showIncorrectContactForm"
+              @click="handleIncorrectContact"
             >
               Contato incorreto
             </el-button>
@@ -90,7 +90,7 @@
             <el-button
               type="success"
               size="small"
-              @click="next()"
+              @click="next('contact')"
             >
               Contato correto
             </el-button>
@@ -229,6 +229,7 @@ export default {
     newContactModel: '',
     showIncorrectContactForm: false,
     showDontRecCallForm: false,
+    contactValidityBrand: false,
     contactsAddedRecent: {
       emails: [],
       phones: []
@@ -244,7 +245,7 @@ export default {
     }),
 
     claimantName() {
-      return this.call?.toRoleName || '[Nome da Parte aqui]'
+      return this.call?.toRoleName || ''
     },
 
     respondentName() {
@@ -267,21 +268,45 @@ export default {
   watch: {
     call: {
       deep: true,
-      handler(call) {
+      handler(call, oldCall) {
         this.visible = call?.status === CALL_STATUS.ACTIVE_CALL
+        if (this.visible) {
+          this.contactValidityBrand = false
+        }
+
+        if (oldCall?.status === CALL_STATUS.COMPLETED_CALL && call === null) {
+          this.handleCloseCall(oldCall)
+        }
       }
-    }
+    },
   },
 
   methods: {
     ...mapActions([
+      'setValidNumberInCall',
       'setInvalidNumberInCall',
       'setTicketOverviewPartyContact',
       'setInteractionMessageContent'
     ]),
 
-    next() {
+    next(item) {
+      if (item === 'contact') {
+        this.setValidNumberInCall(this.call)
+        this.contactValidityBrand = true
+      }
+
       this.$refs.carousel.next()
+    },
+
+    handleIncorrectContact() {
+      this.showIncorrectContactForm = !this.showIncorrectContactForm
+      this.contactValidityBrand = true
+    },
+
+    handleCloseCall({ interactionId, disputeId }) {
+      if (!this.contactValidityBrand) {
+        this.setValidNumberInCall({ interactionId, disputeId })
+      }
     },
 
     close() {
