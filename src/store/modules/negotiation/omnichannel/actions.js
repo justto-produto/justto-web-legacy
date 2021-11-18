@@ -43,7 +43,7 @@ const omnichannelActions = {
       ...getters.getOccurrencesFilter,
       size: getters.getTotalOccurrences,
       page: 1,
-      type: getters.getOccurrencesFilter.type === 'LOG' ? null : getters.getOccurrencesFilter.type
+      type: { MESSAGES: 'INTERACTION', NOTES: 'NOTE', OCCURRENCES: null }[getters.getActiveTab]
     }
 
     const url = `${disputeApi}/${disputeId}/occurrences${buildQuery(params)}`.slice(0, -1)
