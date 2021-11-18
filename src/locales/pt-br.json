@@ -163,7 +163,7 @@
     "documentNumber": "CPF"
   },
   "attributeBoundary": {
-    "boundary": "alçada máxima"
+    "boundary": "valor limite| alçada máxima"
   },
   "recipients": {
     "LAWYER": "advogado",
@@ -550,11 +550,15 @@
     }
   },
   "fields": {
-    "claimantParty": "Parte contrária",
-    "claimantLawyer": "Advogado(a) da parte",
+    "claimantParty": "Réu | Parte contrária",
+    "claimantParties": "Réus | Partes contrárias",
+    "claimantLawyer": "Advogado do Réu | Advogado da parte",
+    "claimantLawyers": "Advogados do Réu | Advogados da parte",
     "dispute": "disputa",
     "respondentParty": "Empresa | Réu",
-    "respondentLawyer": "Advogado da Empresa | Advogado(a) do Réu",
+    "respondentParties": "Empresas | Réus",
+    "respondentLawyer": "Advogado da Empresa | Advogado do Réu",
+    "respondentLawyers": "Advogados da Empresa | Advogados do Réu",
     "respondentNegotiator": "Negociador",
     "impartialParty": "Arbitro"
   },

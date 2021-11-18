@@ -38,9 +38,9 @@
           >
             <span v-if="column.tag">
               <span v-if="column.index !== undefined && column.index !== null">
-                {{ $t('fields.' + getColumnTitle(column.tag.id)) }} {{ column.tag.index + 1 }} -
+                {{ $tc(`fields.${getColumnTitle(column.tag.id)}`, isRecovery) | capitalize }} {{ column.tag.index + 1 }} -
               </span>
-              {{ $t(column.tag.key) | capitalize }}
+              {{ $tc(column.tag.key, isRecovery) | capitalize }}
             </span>
             <span v-else>Arraste a coluna aqui</span>
           </el-tag>
@@ -97,14 +97,14 @@
               @dragstart.self="dragTag($event, JSON.stringify({ tag, index }))"
             >
               <el-tag class="el-tag--drag">
-                {{ $t(tag.key) | capitalize }}
+                {{ $tc(tag.key, isRecovery) | capitalize }}
               </el-tag>
             </span>
           </el-collapse-item>
         </el-collapse>
 
         <h3 v-show="!loadingTags">
-          Partes contrárias
+          {{ $tc('fields.' + pluralizesTerm('claimantParty', claimantParties.length > 1), isRecovery) }}
           <a
             href="#"
             @click="addTagList(claimantParties)"
@@ -117,7 +117,7 @@
           class="drag-group"
         >
           <el-collapse class="el-collapse--drag">
-            <el-collapse-item :title="'Parte Contrária ' + claimantPartyIndex">
+            <el-collapse-item :title="`${$tc('fields.claimantParty', isRecovery)} ${claimantPartyIndex}`">
               <span
                 v-for="tag in tags.claimantParty.tags"
                 :key="`${tag.id}-${tag.name}`"
@@ -127,7 +127,7 @@
                 @dragstart.self="dragTag($event, JSON.stringify({tag, index: claimantPartyIndex}))"
               >
                 <el-tag class="el-tag--drag">
-                  Parte contrária {{ claimantPartyIndex + ' - ' }}{{ $t(tag.key) | capitalize }}
+                  {{ $tc('fields.claimantParty', isRecovery) }} {{ claimantPartyIndex }} - {{ $t(tag.key) | capitalize }}
                 </el-tag>
               </span>
             </el-collapse-item>
@@ -146,7 +146,7 @@
         </div>
 
         <h3 v-show="!loadingTags">
-          Advogados
+          {{ $tc('fields.' + pluralizesTerm('claimantLawyer', claimantLawyers.length > 1), isRecovery) }}
           <a
             href="#"
             @click="addTagList(claimantLawyers)"
@@ -159,7 +159,7 @@
           class="drag-group"
         >
           <el-collapse class="el-collapse--drag">
-            <el-collapse-item :title="'Advogado ' + claimantLawyerIndex">
+            <el-collapse-item :title="`${$tc('fields.claimantLawyer', isRecovery)} ${claimantLawyerIndex}`">
               <span
                 v-for="tag in tags.claimantLawyer.tags"
                 :key="`${tag.id}-${tag.name}`"
@@ -169,7 +169,7 @@
                 @dragstart.self="dragTag($event, JSON.stringify({tag, index: claimantLawyerIndex}))"
               >
                 <el-tag class="el-tag--drag">
-                  Advogado {{ claimantLawyerIndex + ' - ' }}{{ $t(tag.key) | capitalize }}
+                  {{ $tc('fields.claimantLawyer', isRecovery) }} {{ claimantLawyerIndex + ' - ' }}{{ $t(tag.key) | capitalize }}
                 </el-tag>
               </span>
             </el-collapse-item>
@@ -186,8 +186,9 @@
             style="margin-left: 24px;"
           />
         </div>
+
         <h3 v-show="!loadingTags">
-          Réus
+          {{ $tc('fields.' + pluralizesTerm('respondentParty', respondentParties.length > 1), isRecovery) }}
           <a
             href="#"
             @click="addTagList(respondentParties)"
@@ -199,7 +200,7 @@
           class="drag-group"
         >
           <el-collapse class="el-collapse--drag">
-            <el-collapse-item :title="`${$tc('PARTY_RESPONDENT', isRecovery)} ${respondentPartyIndex}`">
+            <el-collapse-item :title="`${$tc('fields.respondentParty', isRecovery)} ${respondentPartyIndex}`">
               <span
                 v-for="tag in tags.respondentParty.tags"
                 :key="`${tag.id}-${tag.name}`"
@@ -209,7 +210,7 @@
                 @dragstart.self="dragTag($event, JSON.stringify({tag, index: respondentPartyIndex }))"
               >
                 <el-tag class="el-tag--drag">
-                  {{ $tc('PARTY_RESPONDENT', isRecovery) }} {{ respondentPartyIndex + ' - ' }}{{ $t(tag.key) | capitalize }}
+                  {{ $tc('fields.respondentParty', isRecovery) }} {{ respondentPartyIndex + ' - ' }}{{ $t(tag.key) | capitalize }}
                 </el-tag>
               </span>
             </el-collapse-item>
@@ -262,6 +263,27 @@ export default {
       set(value) {
         this.$store.commit('setImportsMap', value)
       }
+    },
+
+    pluralizesTerm: () => (therm, isPlural) => {
+      return {
+        claimantParty: {
+          0: 'claimantParty',
+          1: 'claimantParties'
+        },
+        claimantLawyer: {
+          0: 'claimantLawyer',
+          1: 'claimantLawyers'
+        },
+        respondentParty: {
+          0: 'respondentParty',
+          1: 'respondentParties'
+        },
+        respondentLawyer: {
+          0: 'respondentLawyer',
+          1: 'respondentLawyers'
+        }
+      }[therm][Number(isPlural)]
     }
   },
 
