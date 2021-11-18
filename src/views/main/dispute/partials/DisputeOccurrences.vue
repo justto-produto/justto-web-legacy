@@ -707,7 +707,7 @@ export default {
         },
         {
           value: 'CLAIMANT',
-          label: 'Advogado da parte contrária'
+          label: this.$tc('fields.claimantLawyer', this.isWorkspaceRecovery)
         },
         {
           value: 'UNKNOWN',

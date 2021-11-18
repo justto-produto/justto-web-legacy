@@ -56,14 +56,14 @@
           :key="dispute.id + claiment.name + index + 'claimant'"
           class="jus-dispute-resume__body-item jus-dispute-resume__body-item--list"
         >
-          Parte contrária: <b>{{ claiment.name | resumedName }}</b>
+          {{ $tc('fields.claimantParty', isRecovery) }}: <b>{{ claiment.name | resumedName }}</b>
         </div>
         <div
           v-for="(lawyer, index) in getClaimants(dispute.disputeRoles, 'CLAIMANT', 'LAWYER')"
           :key="dispute.id + lawyer.name + index + 'lawyer'"
           class="jus-dispute-resume__body-item jus-dispute-resume__body-item--list"
         >
-          Advogado: <b>{{ lawyer.name }}</b>
+          {{ $tc('fields.claimantLawyer', isRecovery) }}: <b>{{ lawyer.name }}</b>
         </div>
       </div>
 

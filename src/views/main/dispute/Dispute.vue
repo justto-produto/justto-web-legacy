@@ -513,7 +513,8 @@ export default {
       'ghostMode',
       'quickReplyTemplates',
       'loggedPersonId',
-      'workspaceSubdomain'
+      'workspaceSubdomain',
+      'isWorkspaceRecovery'
     ]),
 
     isSmall() {
@@ -913,7 +914,9 @@ export default {
         return this.$refs.expiredDisputeAlert.open()
       } else if (this.ticket?.favorite) {
         return new Promise((resolve, reject) => {
-          this.$confirm('<p>Olá Lucas, esta disputa está marcada como <b>Aguardando análise da empresa</b>.<br><br>Estamos respondendo todas as mensagens da parte contrária informando que o processo está em análise pela empresa.<br><br>Gostaria de desmarcar esta opção?</p>', 'Aguardando análise pela empresa', {
+          const text = `<p>Olá Lucas, esta disputa está marcada como <b>Aguardando análise da empresa</b>.<br><br>Estamos respondendo todas as mensagens d${this.$tc('ARTICLE', this.isWorkspaceRecovery)} ${this.$tc('fields.claimantParty', this.isWorkspaceRecovery)} informando que o processo está em análise pela empresa.<br><br>Gostaria de desmarcar esta opção?</p>`
+
+          this.$confirm(text, 'Aguardando análise pela empresa', {
             cancelButtonText: 'Desmarcar e enviar',
             confirmButtonText: 'Não enviar',
             dangerouslyUseHTMLString: true,

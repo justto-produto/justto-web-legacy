@@ -23,9 +23,9 @@ const buildRoleTitle = function(party, title) {
     }
   } else {
     if (title === 'PARTY') {
-      return 'Parte contrária'
+      return vue().$tc('fields.claimantParty', isRecovery)
     } else if (title === 'LAWYER') {
-      return 'Advogado da parte'
+      return vue().$tc('fields.claimantLawyer', isRecovery)
     } else {
       return ''
     }

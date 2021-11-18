@@ -123,7 +123,7 @@
               v-if="role.party && role.roles.length"
               class="subtitle"
             >
-              {{ $t('fields.' + role.party.toLocaleLowerCase() + role.roles[0].charAt(0).toUpperCase() + role.roles[0].slice(1).toLocaleLowerCase()) }}
+              {{ $tc('fields.' + role.party.toLocaleLowerCase() + role.roles[0].charAt(0).toUpperCase() + role.roles[0].slice(1).toLocaleLowerCase(), isRecovery) }}
             </div>
             <div
               v-if="role.documentNumber && isValidCpfOrCnpj(role.documentNumber)"
@@ -516,6 +516,7 @@ export default {
       })
     }
   },
+
   data() {
     return {
       step: 0,
@@ -565,11 +566,13 @@ export default {
       innerWidth: window.innerWidth
     }
   },
+
   computed: {
     ...mapGetters({
       defaultSigners: 'availableSigners',
       accountEmail: 'accountEmail',
-      disputeProtocol: 'getDisputeProtocol'
+      disputeProtocol: 'getDisputeProtocol',
+      isRecovery: 'isWorkspaceRecovery'
     }),
     disputeRoles() {
       return this.dispute.disputeRoles

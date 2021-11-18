@@ -420,12 +420,12 @@
   "roles": {
     "PARTY": {
       "RESPONDENT": "empresa | réu",
-      "CLAIMANT": "autor",
+      "CLAIMANT": "réu | autor",
       "UNKNOWN": "parte desconhecida"
     },
     "LAWYER": {
       "RESPONDENT": "advogado da empresa | advogado do réu",
-      "CLAIMANT": "advogado do autor",
+      "CLAIMANT": "advogado do réu | advogado do autor",
       "UNKNOWN": "advogado desconhecido"
     },
     "NEGOTIATOR": {
@@ -659,6 +659,7 @@
   "CONCLUSION_DATE": "Data de conclusão",
   "PARTY_RESPONDENT": "Empresa | Réu",
   "LAWYER_RESPONDENT": "Advogado da Empresa | Advogado do Réu",
+  "ARTICLE": "o | a",
   "workspace": {
     "READY": "ativo",
     "CREATING": "em criação",

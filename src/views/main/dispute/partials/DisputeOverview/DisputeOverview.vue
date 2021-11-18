@@ -1942,7 +1942,7 @@ export default {
         },
         {
           value: { party: 'CLAIMANT' },
-          label: 'Parte contrária'
+          label: this.$tc('fields.claimantParty', this.isRecoveryStrategy)
         }
       ]
     },
@@ -2341,12 +2341,12 @@ export default {
       if (roles.includes('PARTY')) {
         return [
           { value: 'RESPONDENT', label: this.$tc('PARTY_RESPONDENT', this.isRecoveryStrategy) },
-          { value: 'CLAIMANT', label: 'Parte contrária' }
+          { value: 'CLAIMANT', label: this.$tc('fields.claimantParty', this.isRecoveryStrategy) }
         ]
       } else if (roles.includes('LAWYER')) {
         return [
           { value: 'RESPONDENT', label: this.$tc('LAWYER_RESPONDENT', this.isRecoveryStrategy) },
-          { value: 'CLAIMANT', label: 'Advogado da parte contrária' }
+          { value: 'CLAIMANT', label: this.$tc('fields.claimantLawyer', this.isRecoveryStrategy) }
         ]
       } else {
         return []
