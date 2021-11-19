@@ -89,6 +89,13 @@
           Última interação:
           <b>{{ getLastInteraction(dispute.lastInteraction.createAt.dateTime) }}</b>
         </div>
+        <div
+          v-if="firstNegotiator"
+          class="jus-dispute-resume__body-item"
+        >
+          Negociador:
+          <b>{{ firstNegotiator }}</b>
+        </div>
       </div>
 
       <div class="jus-dispute-resume__values">
@@ -155,6 +162,10 @@ export default {
     },
     archived() {
       return this.dispute.archived
+    },
+
+    firstNegotiator() {
+      return this.dispute?.disputeRoles?.find(({ roles = [], party }) => party === 'RESPONDENT' && roles.includes('NEGOTIATOR'))?.name || false
     }
   },
   methods: {
