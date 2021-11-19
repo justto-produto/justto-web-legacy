@@ -70,7 +70,7 @@
       class="overview-offers__proposal overview-offers__proposal--plaintiff"
     >
       <div>
-        {{ ['ACCEPTED', 'CHECKOUT'].includes(status) ? 'Valor do acordo' : 'Proposta da parte' }}
+        {{ ['ACCEPTED', 'CHECKOUT'].includes(status) ? 'Valor do acordo' : ( isRecoveryStrategy ? 'Proposta do réu' : 'Proposta da parte') }}
       </div>
       <div>
         <CurrencyInlieEditorInner

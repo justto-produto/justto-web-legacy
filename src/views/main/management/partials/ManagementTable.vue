@@ -208,7 +208,7 @@
       <el-table-column
         v-if="tab2"
         :sortable="false"
-        label="Proposta da parte"
+        :label="isRecoveryStrategy ? 'Proposta do réu' : 'Proposta da parte'"
         align="center"
         prop="lastCounterOfferValue"
         min-width="120px"
