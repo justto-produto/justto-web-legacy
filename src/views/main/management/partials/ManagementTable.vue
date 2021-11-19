@@ -72,7 +72,7 @@
         prop="firstClaimant"
         min-width="140px"
         class-name="text-ellipsis first-claimant-container"
-        label="Parte(s) contrária(s)"
+        :label="$tc('fields.claimantParty', isRecoveryStrategy)"
       >
         <template v-slot="scope">
           <div class="first-claimant-container__cell">
@@ -102,7 +102,7 @@
         :sortable="false"
         prop="firstClaimantLawyer"
         class-name="text-ellipsis first-claimant-container"
-        label="Advogado(s) da parte"
+        :label="$tc('fields.claimantLawyer', isRecoveryStrategy)"
         min-width="154px"
       >
         <template v-slot="scope">
