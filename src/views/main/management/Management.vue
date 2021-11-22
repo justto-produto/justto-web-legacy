@@ -344,7 +344,7 @@
           <p class="view-management__export-dialog-subtitle">
             {{
               isExportingProtocol
-                ? 'Exporte as minutas para o seu emial'
+                ? 'Exporte as minutas para o seu email'
                 : 'Selecione e ordene as colunas desejadas para exportação:'
             }}
           </p>
