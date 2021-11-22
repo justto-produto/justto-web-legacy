@@ -96,7 +96,7 @@ const workspaceActions = {
     })
   },
   getWorkspaces({ _ }) {
-    return axiosDispatch({ url: `${workspacesPath}?size=999&` })
+    return axiosDispatch({ url: `${workspacesPath}?size=9999` })
   },
 
   getPortifolio({ _ }) {
@@ -159,17 +159,9 @@ const workspaceActions = {
   },
   adminWorkspaces({ _ }, params) {
     return new Promise((resolve, reject) => {
-      const headers = {}
-      if (params.headers && Object.keys(params.headers).length) headers.headers = params.headers
-      // eslint-disable-next-line
-      axios({
-        ...headers,
-        ...{
-          url: params.url || `https://api.justto.app/${workspacesPath}/${params.workspaceId || ''}`,
-          method: params.method,
-          params: params.params,
-          data: params.data
-        }
+      axiosDispatch({
+        ...params,
+        url: params.url || `https://api.justto.app/${workspacesPath}/${params.workspaceId || ''}`
       }).then(response => {
         resolve(response.data)
       }).catch(error => {
