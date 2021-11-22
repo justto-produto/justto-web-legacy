@@ -362,7 +362,7 @@ export default {
     fetchData() {
       this.loading = true
       this.$store.dispatch('adminWorkspaces', { method: 'get', params: { size: 99999 } }).then(response => {
-        this.workspaces = response.content
+        this.workspaces = response?.content || []
         this.tableKey += 1
       }).catch(error => {
         this.$jusNotification({ error })

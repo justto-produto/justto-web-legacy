@@ -163,7 +163,7 @@ const workspaceActions = {
         ...params,
         url: params.url || `https://api.justto.app/${workspacesPath}/${params.workspaceId || ''}`
       }).then(response => {
-        resolve(response.data)
+        resolve(response)
       }).catch(error => {
         reject(error)
       })
