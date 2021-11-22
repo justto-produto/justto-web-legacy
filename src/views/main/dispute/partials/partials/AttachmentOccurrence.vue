@@ -1,5 +1,6 @@
 <template>
   <el-card
+    v-if="isLengthValid"
     shadow="never"
     class="attachment__card red"
     :class="`${occurrence.properties.FILE_TYPE || ''}`"
@@ -49,6 +50,7 @@
 <script>
 export default {
   name: 'AttachmentOccurrence',
+
   filters: {
     sizeFormat: (size) => {
       const kb = size / 1024
@@ -59,6 +61,7 @@ export default {
       else return `${size} bytes`
     }
   },
+
   props: {
     value: {
       type: Object,
@@ -69,6 +72,7 @@ export default {
       required: true
     }
   },
+
   computed: {
     interaction() {
       return this.value
@@ -76,8 +80,13 @@ export default {
 
     available() {
       return !this.interaction.archived
+    },
+
+    isLengthValid() {
+      return !this.occurrence?.properties?.FILE_SIZE || Number(this.occurrence?.properties?.FILE_SIZE) >= 1024
     }
   },
+
   methods: {
     downloadAttachment(url) {
       window.open(url, '_blank')
