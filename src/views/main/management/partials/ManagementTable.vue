@@ -562,7 +562,7 @@ export default {
     handleRowClick(row, column, event) {
       if (!event.ctrlKey && !event.metaKey && column.property === 'firstClaimant' && event.target.className.split(' ').includes('online-icon')) {
         this.openActiveMessageModal(row)
-      } else if (!event.ctrlKey && !event.metaKey && column.property === 'firstClaimantLawyer') {
+      } else if (!event.ctrlKey && !event.metaKey && column.property === 'firstClaimantLawyer' && row.firstClaimantLawyer) {
         this.$emit('search:lawyer', { lawyer: row.firstClaimantLawyer })
       } else if (row.id && !['IMG', 'SPAN', 'BUTTON', 'I'].includes(event.target.tagName)) {
         if (event.ctrlKey || event.metaKey) {
