@@ -324,13 +324,19 @@ export default {
     DisputeCodeLink: () => import('@/components/buttons/DisputeCodeLink')
   },
 
+  props: {
+    dispute: {
+      type: Object,
+      required: true
+    }
+  },
+
   data: () => ({
     descriptionCollapse: true
   }),
 
   computed: {
     ...mapGetters({
-      dispute: 'dispute',
       isRecoveryStrategy: 'isWorkspaceRecovery'
     }),
 
