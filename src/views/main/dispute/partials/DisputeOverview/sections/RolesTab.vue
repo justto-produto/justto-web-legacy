@@ -585,6 +585,18 @@ export default {
       set(model) { this.$emit('update:editingRole', model) }
     },
 
+    disputeBankAccountsIds: {
+      get() {
+        if (this.dispute.bankAccounts || Array.isArray(this.dispute.bankAccounts)) {
+          return this.dispute.bankAccounts.map(dba => dba.id)
+        }
+        return []
+      },
+      set(bankAccountIds) {
+        this.$emit('update:bankAccounts', bankAccountIds)
+      }
+    },
+
     onlineList() {
       return Object.keys(this.onlineDocuments) || []
     },

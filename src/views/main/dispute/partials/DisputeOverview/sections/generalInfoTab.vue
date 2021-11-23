@@ -17,6 +17,7 @@
         <span>{{ dispute.createAt.dateTime | moment('DD/MM/YY') }}</span>
       </div>
       <div
+        v-if="dispute.code"
         class="dispute-overview-view__info-line"
         data-testid="dispute-infoline"
       >
