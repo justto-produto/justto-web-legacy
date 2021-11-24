@@ -262,7 +262,7 @@
               />
 
               <WhatsAppAttachment
-                v-else-if="occurrence.interaction.message.communicationType === 'WHATSAPP' && occurrence.interaction.message.contentType !== 'TEXT'"
+                v-else-if="isWhatsAppAttachment(occurrence)"
                 :occurrence="occurrence"
                 :value="occurrence.interaction"
                 class="dispute-view-occurrences__card-box-nps dispute-whatsapp"
@@ -485,7 +485,7 @@
               />
 
               <WhatsAppAttachment
-                v-else-if="mergedOccurency.interaction.message.communicationType === 'WHATSAPP' && mergedOccurency.interaction.message.contentType !== 'TEXT'"
+                v-else-if="isWhatsAppAttachment(mergedOccurency)"
                 :occurrence="mergedOccurency"
                 :value="mergedOccurency.interaction"
                 class="dispute-view-occurrences__card-box-nps dispute-whatsapp"
@@ -1158,6 +1158,10 @@ export default {
     isNegotiatorMessage(occurrence) {
       return this.negotiatorTypes.includes(occurrence.interaction.type) ||
         ['NEGOTIATOR_MESSAGE'].includes(occurrence.interaction.message.communicationType)
+    },
+
+    isWhatsAppAttachment(occurrence) {
+      return occurrence?.interaction?.message?.communicationType === 'WHATSAPP' && occurrence?.interaction?.message?.contentType !== 'TEXT'
     },
 
     startReply(occurrence) {
