@@ -821,7 +821,7 @@ export default {
           icon: 'el-icon-printer',
           isElementIcon: true,
           condition: () => true,
-          action: () => window.open(`/#/print/negotiation/${this.$route.params.id}?tab=${this.disputeTabToTicketTab}`, '_blank'),
+          action: () => window.open(`/#/print/negotiation/${this.$route?.params?.id || this.dispute?.id}?tab=${this.disputeTabToTicketTab}`, '_blank'),
           tooltip: 'Imprimir disputa'
         },
         {
@@ -1300,7 +1300,7 @@ export default {
 
     handleDropLawsuit() {
       this.modalLoading = true
-      const disputeId = this.$route.params.id
+      const disputeId = this.$route?.params?.id || this?.dispute?.id
       const { reason, conclusionNote } = this.dropLawsuitForm
       this.validateForm('dropLawsuitForm')
         .then(() => {
