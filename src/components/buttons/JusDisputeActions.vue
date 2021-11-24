@@ -460,10 +460,10 @@
                 style="width: 100%;"
               >
                 <el-option
-                  v-for="(key, value) in dropLawsuitReasons"
-                  :key="key"
-                  :value="value"
-                  :label="key"
+                  v-for="(reason, reasonIndex) in dropLawsuitReasons"
+                  :key="reasonIndex"
+                  :value="Object.entries(reason)[0][0]"
+                  :label="Object.entries(reason)[0][1]"
                 />
               </el-select>
             </el-form-item>
@@ -668,7 +668,8 @@ export default {
       disputeStatuses: 'disputeStatuses',
       isJusttoAdmin: 'isJusttoAdmin',
       ghostMode: 'ghostMode',
-      dropLawsuitReasons: 'getDropLawsuitReasons',
+      dropLawsuitReasons: 'getDropLawsuitReasonsArray',
+      // dropLawsuitReasonsList: 'getDropLawsuitReasonsArray',
       userPreferences: 'userPreferences',
       isRecovery: 'isWorkspaceRecovery'
     }),
