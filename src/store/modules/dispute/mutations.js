@@ -244,8 +244,20 @@ const disputeMutations = {
   setDisputeMetadata: (state, metadata) => {
     Vue.set(state, 'metadata', metadata)
   },
+
   setBatchActionsLastUse: (state, { action }) => {
     state.batchActionsLastUse[action] = moment().toISOString()
+    localStorage.setItem('BATCH_ACTIONS_LAST_USE', JSON.stringify(state.batchActionsLastUse))
+
+    const seconds = action === 'CHANGE_NEGOTIATOR' ? 60 : 30
+
+    setTimeout(() => {
+      Vue.delete(state.batchActionsLastUse, action)
+      localStorage.setItem('BATCH_ACTIONS_LAST_USE', JSON.stringify(state.batchActionsLastUse))
+
+      const vue = document.querySelector('.management-actions')?.parentElement?.__vue__
+      if (vue) vue.$forceUpdate()
+    }, seconds * 1000)
   }
 }
 

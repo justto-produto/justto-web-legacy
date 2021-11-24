@@ -443,9 +443,24 @@ export default {
   computed: {
     ...mapGetters({
       disputeStatuses: 'disputeStatuses',
-      strategies: 'getMyStrategiesLite',
-      canDoAction: 'getCanUseBatchAction'
+      strategies: 'getMyStrategiesLite'
     }),
+
+    canDoAction() {
+      return (action) => {
+        const batchActionsLastUse = JSON.parse(localStorage.getItem('BATCH_ACTIONS_LAST_USE') || '{}')
+
+        const actionLastTime = this.$moment(batchActionsLastUse[action])
+        const diferece = this.$moment().diff(actionLastTime, 'seconds')
+
+        switch (action) {
+          case 'CHANGE_NEGOTIATOR':
+            return diferece >= 60 || diferece === 0
+          default:
+            return diferece >= 30 || diferece === 0
+        }
+      }
+    },
 
     selectedIdsComp: {
       get() {
