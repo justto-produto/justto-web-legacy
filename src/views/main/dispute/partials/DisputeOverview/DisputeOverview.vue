@@ -712,7 +712,7 @@ export default {
     DisputeProperties: () => import('../DisputeProperties'),
     JusTimeline: () => import('@/components/JusTimeline/JusTimeline'),
     AssociateContactsModal: () => import('@/components/dialogs/AssociateContactsModal'),
-    GeneralInfoTab: () => import('./sections/GeneralInfoTab'),
+    GeneralInfoTab: () => import('./sections/GeneralInfoTab.vue'),
     RolesTab: () => import('./sections/RolesTab.vue'),
     EditRoleDialog: () => import('./dialogs/EditRoleDialog')
   },
