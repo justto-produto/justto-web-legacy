@@ -26,7 +26,7 @@ export default {
     },
 
     directionIn() {
-      return this.interaction.direction === 'INBOUND'
+      return this.interaction?.direction === 'INBOUND'
     },
 
     sendDate() {

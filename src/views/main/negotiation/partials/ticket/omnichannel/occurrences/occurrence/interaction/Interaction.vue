@@ -77,6 +77,7 @@ export default {
     PHONE: () => import('./partials/Phone.vue'),
     MANUAL: () => import('./partials/Manual'),
     NPS: () => import('./partials/Nps'),
+    WHATSAPP: () => import('./partials/Whatsapp.vue'),
     WarningLGPD: () => import('@/components/dialogs/WarningLGPD')
   },
 
@@ -106,6 +107,9 @@ export default {
     }),
 
     type() {
+      if (this.interaction?.message?.communicationType === 'WHATSAPP' && this.interaction?.message?.contentType !== 'TEXT') {
+        return 'WHATSAPP'
+      }
       return this.value.interaction.type.split('_')[0]
     },
 

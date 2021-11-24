@@ -261,6 +261,14 @@
                 hide-info
               />
 
+              <WhatsAppAttachment
+                v-else-if="occurrence.interaction.message.communicationType === 'WHATSAPP' && occurrence.interaction.message.contentType !== 'TEXT'"
+                :occurrence="occurrence"
+                :value="occurrence.interaction"
+                class="dispute-view-occurrences__card-box-nps dispute-whatsapp"
+                hide-info
+              />
+
               <el-card
                 v-else
                 :class="(occurrence.interaction ? occurrence.interaction.type : '') + ' ' + buildCommunicationType(occurrence) + ' ' + (occurrence.interaction && occurrence.interaction.message ? occurrence.interaction.message.status : '')"
@@ -476,6 +484,14 @@
                 hide-info
               />
 
+              <WhatsAppAttachment
+                v-else-if="mergedOccurency.interaction.message.communicationType === 'WHATSAPP' && mergedOccurency.interaction.message.contentType !== 'TEXT'"
+                :occurrence="mergedOccurency"
+                :value="mergedOccurency.interaction"
+                class="dispute-view-occurrences__card-box-nps dispute-whatsapp"
+                hide-info
+              />
+
               <el-card
                 v-else
                 :class="(mergedOccurency.interaction ? mergedOccurency.interaction.type : '') + ' ' + buildCommunicationType(mergedOccurency) + ' ' + (mergedOccurency.interaction && mergedOccurency.interaction.message ? mergedOccurency.interaction.message.status : '')"
@@ -658,7 +674,8 @@ export default {
     InfiniteLoading,
     AttachmentOccurrence: () => import('./partials/AttachmentOccurrence'),
     NpsInteraction: () => import('@/views/main/negotiation/partials/ticket/omnichannel/occurrences/occurrence/interaction/partials/Nps'),
-    PhoneCallOccurrence: () => import('@/views/main/negotiation/partials/ticket/omnichannel/occurrences/occurrence/interaction/partials/Phone')
+    PhoneCallOccurrence: () => import('@/views/main/negotiation/partials/ticket/omnichannel/occurrences/occurrence/interaction/partials/Phone'),
+    WhatsAppAttachment: () => import('@/views/main/negotiation/partials/ticket/omnichannel/occurrences/occurrence/interaction/partials/Whatsapp.vue')
   },
 
   props: {
