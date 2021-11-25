@@ -465,7 +465,7 @@
               placement="top"
             >
               <el-button
-                @click="removeLawyer(true)"
+                @click="handleRemoreLawyer(true)"
               >
                 De todas as disputas
               </el-button>
@@ -475,7 +475,7 @@
               placement="top"
             >
               <el-button
-                @click="removeLawyer(false)"
+                @click="handleRemoreLawyer(false)"
               >
                 Desta disputa
               </el-button>
@@ -532,7 +532,7 @@ export default {
       required: true
     },
 
-    removeLawyer: {
+    showRemoveLawyer: {
       type: Boolean,
       required: true
     },
@@ -576,8 +576,8 @@ export default {
     },
 
     chooseRemoveLawyerDialogVisible: {
-      get() { return this.removeLawyer },
-      set(model) { this.$emit('update:removeLawyer', model) }
+      get() { return this.showRemoveLawyer },
+      set(model) { this.$emit('update:showRemoveLawyer', model) }
     },
 
     isEditingRole: {
@@ -704,6 +704,10 @@ export default {
 
     handleUpdateDisputeRole(event) {
       this.$emit('updateDisputeRole', event)
+    },
+
+    handleRemoreLawyer(forAll) {
+      this.$emit('removeLawyer', forAll)
     },
 
     showNamesake(role) {
