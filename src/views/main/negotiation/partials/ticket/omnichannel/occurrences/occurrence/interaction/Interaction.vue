@@ -107,7 +107,7 @@ export default {
     }),
 
     type() {
-      if (this.interaction?.message?.communicationType === 'WHATSAPP' && this.interaction?.message?.contentType !== 'TEXT') {
+      if (this.interaction?.direction === 'INBOUND' && this.interaction?.message?.communicationType === 'WHATSAPP' && this.interaction?.message?.contentType !== 'TEXT') {
         return 'WHATSAPP'
       }
       return this.value.interaction.type.split('_')[0]

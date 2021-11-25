@@ -1161,7 +1161,7 @@ export default {
     },
 
     isWhatsAppAttachment(occurrence) {
-      return occurrence?.interaction?.message?.communicationType === 'WHATSAPP' && occurrence?.interaction?.message?.contentType !== 'TEXT'
+      return occurrence?.interaction?.direction === 'INBOUND' && occurrence?.interaction?.message?.communicationType === 'WHATSAPP' && occurrence?.interaction?.message?.contentType !== 'TEXT'
     },
 
     startReply(occurrence) {
