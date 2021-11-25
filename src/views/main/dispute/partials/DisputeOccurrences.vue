@@ -1161,7 +1161,7 @@ export default {
     },
 
     isWhatsAppAttachment(occurrence) {
-      return occurrence?.interaction?.direction === 'INBOUND' && occurrence?.interaction?.message?.communicationType === 'WHATSAPP' && occurrence?.interaction?.message?.contentType !== 'TEXT'
+      return occurrence?.interaction?.direction === 'INBOUND' && occurrence?.interaction?.message?.communicationType === 'WHATSAPP' && ['FILE', 'VIDEO', 'IMAGE', 'AUDIO'].includes(occurrence?.interaction?.message?.contentType)
     },
 
     startReply(occurrence) {
