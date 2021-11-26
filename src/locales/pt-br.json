@@ -774,9 +774,9 @@
   "blocked": {
     "email": {
       "UNKNOW": "Este contato foi bloqueado pelo usuário.",
-      "COMMUNICATION_OPT_OUT": "Usuário optou por não receber mensagens nesse email.",
-      "LAW_FIRM_DOMAIN": "Email pertence à usuário de escritório de advocacia.",
-      "WORKSPACE_BLOCK_LIST": "Email bloqueado nesta Workapace."
+      "COMMUNICATION_OPT_OUT": "Usuário optou por não receber mensagens nesse e-mail.",
+      "LAW_FIRM_DOMAIN": "Contato com domínio de e-mail bloqueado para recebimento de mensagem.",
+      "WORKSPACE_BLOCK_LIST": "Contato bloqueado pela configuração na workspace."
     }
   }
 }
