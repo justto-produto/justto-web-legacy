@@ -94,7 +94,6 @@ const overviewActions = {
   },
 
   SOCKET_ADD_DISPUTE({ rootState, state, commit }, dispute) {
-    // TODO: SAAS-4634 Checkpoint
     const correspondingTab = getCorrespondingTab(dispute.status)
 
     if (rootState.negotiationTicketsModule.ticketsPreventSocket) return
