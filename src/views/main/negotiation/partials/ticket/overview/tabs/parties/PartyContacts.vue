@@ -58,28 +58,30 @@
 
         <el-popover
           v-if="contact.blocked"
-          placement="top-start"
+          :content="$tc(`blocked.email.${contact.blockedType || 'UNKNOW'}`)"
+          :open-delay="500"
+          placement="top-end"
           trigger="hover"
-          content="Este contato foi bloqueado pelo usuário."
         >
-          <TextInlineEditor
-            slot="reference"
-            v-model="contact[model]"
-            :mask="mask"
-            :filter="filter"
-            :is-editable="!disabled"
-            :is-deletable="!disabled"
-            :class="{
-              'party-contacts__infoline-data--selected': mappedRecipients.includes(contact[model]),
-              'party-contacts__infoline-data--disabled': !contact.isValid || contact.blocked,
-              'party-contacts__infoline-data--secondary': !contact.isMain || contact.blocked
-            }"
-            class="party-contacts__infoline-data"
-            @call="makeCall"
-            @change="updateContact(contact.id, $event)"
-            @delete="removeContact(contact.id)"
-            @click="selectContact(contact[model], contact.isValid, (contact.isMain && !contact.blocked))"
-          />
+          <div slot="reference">
+            <TextInlineEditor
+              v-model="contact[model]"
+              :mask="mask"
+              :filter="filter"
+              :is-editable="!disabled"
+              :is-deletable="!disabled"
+              :class="{
+                'party-contacts__infoline-data--selected': mappedRecipients.includes(contact[model]),
+                'party-contacts__infoline-data--disabled': !contact.isValid || contact.blocked,
+                'party-contacts__infoline-data--secondary': !contact.isMain || contact.blocked
+              }"
+              class="party-contacts__infoline-data"
+              @call="makeCall"
+              @change="updateContact(contact.id, $event)"
+              @delete="removeContact(contact.id)"
+              @click="selectContact(contact[model], contact.isValid, (contact.isMain && !contact.blocked))"
+            />
+          </div>
         </el-popover>
 
         <TextInlineEditor
