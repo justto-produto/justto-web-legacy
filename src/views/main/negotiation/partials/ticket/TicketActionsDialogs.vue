@@ -202,7 +202,7 @@
       :close-on-press-escape="false"
       append-to-body
       width="400px"
-      :title="`Majorar ${$tc('UPPER_RANGE_WITH_ARTICLE', isRecoveryStrategy)}?`"
+      :title="`${isRecoveryStrategy ? 'Ajustar' : 'Majorar'} ${$tc('UPPER_RANGE_WITH_ARTICLE', isRecoveryStrategy)}?`"
       class="dialog-actions__increase-alert"
     >
       <strong class="dialog-actions__increase-alert-subtitle">
@@ -214,7 +214,7 @@
           <span>*</span>
 
           <small>
-            Ao clicar em <strong>majorar</strong>, será feita a <strong>contraproposta</strong>. {{ isRecoveryStrategy ? 'O' : 'A' }} <strong>{{ $tc('UPPER_RANGE', isRecoveryStrategy) }}</strong> será majorada para o <strong>valor</strong> da contraproposta e a disputa será alterada para <strong>proposta aceita</strong>.
+            Ao clicar em <strong>{{ isRecoveryStrategy ? 'ajustar' : 'majorar' }}</strong>, será feita a <strong>contraproposta</strong>. {{ isRecoveryStrategy ? 'O' : 'A' }} <strong>{{ $tc('UPPER_RANGE', isRecoveryStrategy) }}</strong> será {{ isRecoveryStrategy ? 'ajustada' : 'majorada' }} para o <strong>valor</strong> da contraproposta e a disputa será alterada para <strong>proposta aceita</strong>.
           </small>
         </p>
 
@@ -222,7 +222,7 @@
           <span>*</span>
 
           <small>
-            Ao clicar em <strong>não majorar</strong>, somente será feita a <strong>contraproposta</strong>, sem alterações no status da disputa.
+            Ao clicar em <strong>não {{ isRecoveryStrategy ? 'ajustar' : 'majorar' }}</strong>, somente será feita a <strong>contraproposta</strong>, sem alterações no status da disputa.
           </small>
         </p>
       </div>
@@ -243,7 +243,7 @@
           plain
           @click.prevent="handleIncreaseManualOffer(true)"
         >
-          Majorar
+          {{ isRecoveryStrategy ? 'Ajustar' : 'Majorar' }}
         </el-button>
 
         <el-button
@@ -252,7 +252,7 @@
           type="primary"
           @click.prevent="handleIncreaseManualOffer(isSettledIncreaseAlertType)"
         >
-          {{ isSettledIncreaseAlertType ? 'Majorar' : 'Não majorar' }}
+          {{ isSettledIncreaseAlertType ? (isRecoveryStrategy ? 'ajustar' : 'majorar') : (isRecoveryStrategy ? 'Não ajustar' : 'Não majorar') }}
         </el-button>
       </div>
     </el-dialog>
@@ -604,7 +604,7 @@ export default {
       const { disputeId } = this.ticket
       this.validateOfferForm()
         .then(() => {
-          if (this.offerForm.value > this.ticket.upperRange) {
+          if (this.isRecoveryStrategy ? this.offerForm.value < this.ticket.upperRange : this.offerForm.value > this.ticket.upperRange) {
             this.isSettledIncreaseAlertType = action === 'SETTLED'
             this.confirmIncreaseUpperrangeDialogVisible = true
           } else {
@@ -799,7 +799,8 @@ export default {
     margin: 12px 0 24px;
 
     .dialog-actions__increase-alert-infoline {
-      & > span { color: $--color-danger }
+      word-break: break-word;
+      span { color: $--color-danger }
     }
   }
 }

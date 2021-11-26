@@ -896,7 +896,7 @@ export default {
     },
 
     checkUpperRangeCounterOffer() {
-      return this.counterOfferForm.lastCounterOfferValue > this.dispute.disputeUpperRange
+      return this.isRecovery ? this.counterOfferForm.lastCounterOfferValue < this.dispute.disputeUpperRange : this.counterOfferForm.lastCounterOfferValue > this.dispute.disputeUpperRange
     },
 
     isInsufficientUpperRange() {
@@ -1384,7 +1384,7 @@ export default {
         this.$refs.counterOfferForm.validate(valid => {
           if (valid) {
             if (this.checkUpperRangeCounterOffer) {
-              const winTxt = `O valor inserido <b>irá mojorar</b> ${this.$tc('UPPER_RANGE', this.isRecovery)}. Deseja continuar?`
+              const winTxt = `O valor inserido <b>irá ${this.isRecovery ? 'adequar' : 'majorar'}</b> ${this.$tc('UPPER_RANGE', this.isRecovery)}. Deseja continuar?`
               if (actionType === 'WIN') {
                 this.$confirm(winTxt, 'Atenção!', {
                   confirmButtonText: 'Continuar',
@@ -1398,18 +1398,18 @@ export default {
               } else {
                 const tag = this.$createElement
                 this.$confirm(tag('div', null, [
-                  tag('p', null, `Valor da contraproposta é maior que o d${this.$tc('UPPER_RANGE_WITH_ARTICLE', this.isRecovery)}!`),
+                  tag('p', null, `Valor da contraproposta é ${this.isRecovery ? 'menor' : 'maior'} que o d${this.$tc('UPPER_RANGE_WITH_ARTICLE', this.isRecovery)}!`),
                   tag('br', null, ''),
                   tag('p', null, [
                     tag('span', { style: { color: '#FF4B54' } }, '*'),
                     tag('small', null, [
                       'Ao clicar em ',
-                      tag('strong', null, 'Majorar'),
+                      tag('strong', null, this.isRecovery ? 'Adequar' : 'Majorar'),
                       ', será feita a ',
                       tag('strong', null, 'contraproposta'),
-                      ', a ',
+                      (this.isRecovery ? ', o ' : ', a '),
                       tag('strong', null, this.$tc('UPPER_RANGE', this.isRecovery)),
-                      ' será majorada para o ',
+                      ' será ' + (this.isRecovery ? 'adequado' : 'majorada') + ' para o ',
                       tag('strong', null, 'valor'),
                       ' da contraproposta e a disputa será alterada para ',
                       tag('strong', null, 'Proposta Aceita'),
@@ -1421,18 +1421,18 @@ export default {
                     tag('span', { style: { color: '#FF4B54' } }, '*'),
                     tag('small', null, [
                       'Ao clicar em ',
-                      tag('strong', null, 'Não majorar'),
+                      tag('strong', null, `Não ${this.isRecovery ? 'adequar' : 'majorar'}`),
                       ', somente será feita a contraproposta, sem alterações no status da disputa.'
                     ])
                   ])
-                ]), `Majorar ${this.$tc('UPPER_RANGE_WITH_ARTICLE', this.isRecovery)}?`, {
+                ]), `${this.isRecovery ? 'Adequar' : 'Majorar'} ${this.$tc('UPPER_RANGE_WITH_ARTICLE', this.isRecovery)}?`, {
                   distinguishCancelAndClose: true,
                   dangerouslyUseHTMLString: true,
                   closeOnClickModal: false,
                   closeOnPressEscape: false,
                   showClose: false,
-                  confirmButtonText: 'Não majorar',
-                  cancelButtonText: 'Majorar'
+                  confirmButtonText: 'Não ' + (this.isRecovery ? 'Adequar' : 'Majorar'),
+                  cancelButtonText: this.isRecovery ? 'Adequar' : 'Majorar'
                 }).then(() => {
                   resolve(false)
                 }).catch(() => {

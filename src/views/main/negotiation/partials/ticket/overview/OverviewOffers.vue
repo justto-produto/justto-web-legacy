@@ -201,7 +201,7 @@ export default {
         note: '',
         updateUpperRange: false
       }
-      if (this.upperRange === 0 || value > this.upperRange) {
+      if (this.upperRange === 0 || (this.isRecoveryStrategy ? value < this.upperRange : value > this.upperRange)) {
         const tag = this.$createElement
 
         const text = `Valor da contraproposta é ${this.isRecoveryStrategy ? 'menor' : 'maior'} que o ${'d' + this.$tc('UPPER_RANGE_WITH_ARTICLE', this.isRecoveryStrategy)}!`
@@ -213,12 +213,12 @@ export default {
             tag('span', { style: { color: '#FF4B54' } }, '*'),
             tag('small', null, [
               'Ao clicar em ',
-              tag('strong', null, 'Majorar'),
+              tag('strong', null, this.isRecoveryStrategy ? 'Ajustar' : 'Majorar'),
               ', será feita a ',
               tag('strong', null, 'contraproposta'),
               ', a ',
               tag('strong', null, this.$tc('UPPER_RANGE_WITH_ARTICLE', this.isRecoveryStrategy)),
-              ' será majorada para o ',
+              ' será ' + (this.isRecoveryStrategy ? 'ajustada' : 'majorada') + ' para o ',
               tag('strong', null, 'valor'),
               ' da contraproposta e a disputa será alterada para ',
               tag('strong', null, 'Proposta Aceita'),
@@ -230,18 +230,18 @@ export default {
             tag('span', { style: { color: '#FF4B54' } }, '*'),
             tag('small', null, [
               'Ao clicar em ',
-              tag('strong', null, 'Não majorar'),
+              tag('strong', null, (this.isRecoveryStrategy ? 'Não ajustar' : 'Não majorar')),
               ', somente será feita a contraproposta, sem alterações no status da disputa.'
             ])
           ])
-        ]), `Majorar ${this.$tc('UPPER_RANGE_WITH_ARTICLE', this.isRecoveryStrategy)}?`, {
+        ]), `${this.isRecoveryStrategy ? 'Ajustar' : 'Majorar'} ${this.$tc('UPPER_RANGE_WITH_ARTICLE', this.isRecoveryStrategy)}?`, {
           distinguishCancelAndClose: true,
           dangerouslyUseHTMLString: true,
           closeOnClickModal: false,
           closeOnPressEscape: false,
           showClose: false,
-          confirmButtonText: 'Não majorar',
-          cancelButtonText: 'Majorar'
+          confirmButtonText: (this.isRecoveryStrategy ? 'Não ajustar' : 'Não majorar'),
+          cancelButtonText: (this.isRecoveryStrategy ? 'Ajustar' : 'Majorar')
         }).then(() => {
           const { disputeId } = this
 
@@ -258,6 +258,7 @@ export default {
       }
     },
 
+    // Ajusta proposta da empresa.
     updateDefendantOffer(value) {
       if (this.upperRange === 0) {
         return
@@ -265,10 +266,10 @@ export default {
       const polarityObjectKey = 'defendantOffer'
       const { disputeId } = this
       let data
-      if (value > this.upperRange) {
+      if (this.isRecoveryStrategy ? value < this.upperRange : value > this.upperRange) {
         data = this.mountObjectToChangeUpperRangeAndDefendantProposal(value, true)
-        this.$confirm(`${this.$tc('UPPER_RANGE_WITH_ARTICLE', this.isRecoveryStrategy)} é de R$ ${new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2 }).format(this.upperRange)} e sua nova proposta é de R$ ${new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2 }).format(value)}. Ao continuar esta operação, você <strong>irá majorar</strong> ${this.$tc('UPPER_RANGE_WITH_ARTICLE', this.isRecoveryStrategy)}.<br> Deseja continuar?`, 'Proposta acima da alçada', {
-          confirmButtonText: 'Continuar e majorar alçada',
+        this.$confirm(`${this.$tc('UPPER_RANGE_WITH_ARTICLE', this.isRecoveryStrategy)} é de R$ ${new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2 }).format(this.upperRange)} e sua nova proposta é de R$ ${new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2 }).format(value)}. Ao continuar esta operação, você <strong>irá ${this.isRecoveryStrategy ? 'ajustar' : 'majorar'}</strong> ${this.$tc('UPPER_RANGE_WITH_ARTICLE', this.isRecoveryStrategy)}.<br> Deseja continuar?`, `Proposta ${this.isRecoveryStrategy ? 'abaixo' : 'acima'} d${this.$tc('UPPER_RANGE_WITH_ARTICLE', this.isRecoveryStrategy)}`, {
+          confirmButtonText: 'Continuar e ' + (this.isRecoveryStrategy ? 'ajustar' : 'majorar'),
           cancelButtonText: 'Cancelar',
           cancelButtonClass: 'is-plain',
           showClose: false,
