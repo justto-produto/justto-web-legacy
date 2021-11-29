@@ -96,7 +96,7 @@
           :loading="namesakeButtonLoading || namesakeProcessing"
           :type="namesakeProcessing ? 'success' : 'warning'"
           style="width: 100%; margin-bottom: 14px;"
-          @click="namesakeDialog(role.name, role.personId)"
+          @click="handleNamesake(role.name, role.personId)"
         >
           <span v-if="namesakeProcessing">Enriquecendo...</span>
           <span v-else>Tratar homônimos</span>
@@ -537,6 +537,16 @@ export default {
       required: true
     },
 
+    namesakeProcessing: {
+      type: Boolean,
+      default: false
+    },
+
+    namesakeButtonLoading: {
+      type: Boolean,
+      default: false
+    },
+
     selectedRole: {
       type: Number,
       default: 0
@@ -745,6 +755,10 @@ export default {
       } else {
         return []
       }
+    },
+
+    handleNamesake(name, personId) {
+      this.$emit('handleNamesake', { name, personId })
     }
   }
 }

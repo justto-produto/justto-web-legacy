@@ -121,6 +121,8 @@
             :editing-role.sync="isEditingRole"
             :deleting-lawyer="deletingLawyer"
             :dispute-roles-sort="disputeRolesSort"
+            :namesake-processing="namesakeProcessing"
+            :namesake-button-loading="namesakeButtonLoading"
             @newRole="newRoleDialogVisible = $event"
             @removeRole="removeRole"
             @removeLawyer="removeLawyer"
@@ -129,6 +131,7 @@
             @handleEditRule="handleEditRule"
             @messageToNegotiator="sendMessageToNegotiator"
             @updateDisputeRole="updateDisputeRole($event.activeRole, $event.messageType)"
+            @handleNamesake="namesakeDialog"
             @update:bankAccounts="updateDisputeBankAccounts"
           />
         </el-tab-pane>
@@ -1336,7 +1339,7 @@ export default {
       }
     },
 
-    namesakeDialog(name, personId) {
+    namesakeDialog({ name, personId }) {
       if (['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(this.dispute.status)) {
         this.$confirm(`Você está solicitando o tratamento de homônimo de uma disputa que já
         foi finalizada. Este processo irá agendar novamente as mensagens
