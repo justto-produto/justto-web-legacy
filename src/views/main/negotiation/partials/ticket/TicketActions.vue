@@ -336,7 +336,7 @@ export default {
         type: 'success',
         dangerouslyUseHTMLString: true
       })
-      this.$jusSegment(message, { disputeId })
+      this.$jusSegment(`SUCCESSFUL_ACTION_${action}`, { ...this.ticket })
 
       if (['DISFAVOR', 'FAVORITE'].includes(action) && this.isJusttoAdmin) {
         this.$refs.notifyOnCompanyAnalysis.open(action, this.ticket)
@@ -370,6 +370,7 @@ export default {
       const { id: disputeId } = this.$route.params
 
       this.favoriteTicket(disputeId).then(() => {
+        this.$jusSegment('ACTIVE_fAVORITE', { ...this.ticket })
         this.concludeAction('FAVORITE', disputeId)
       }).catch(error => this.$jusNotification({ error }))
     },
@@ -378,6 +379,7 @@ export default {
       const { id: disputeId } = this.$route.params
 
       this.disfavorTicket(disputeId).then(() => {
+        this.$jusSegment('DEACTIVE_fAVORITE', { ...this.ticket })
         this.concludeAction('DISFAVOR', disputeId)
       }).catch(error => this.$jusNotification({ error }))
     },
