@@ -208,7 +208,9 @@ export default {
     },
 
     handleCallUpdate(call) {
-      if (['RECEIVING_CALL'].includes(call?.status)) {
+      if (['COMPLETED_CALL'].includes(call?.status)) {
+        this.$jusSegment('END_DIALER_CALL', { ...call })
+      } else if (['RECEIVING_CALL'].includes(call?.status)) {
         this.$refs.ringAudio.play()
       } else if (!['RECEIVING_CALL'].includes(call?.status) && this.$refs.ringAudio) {
         this.$refs.ringAudio.pause()
