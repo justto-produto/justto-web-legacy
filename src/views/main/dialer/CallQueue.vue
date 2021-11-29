@@ -170,6 +170,7 @@ export default {
       this.answerCurrentCall(answer).then(hasConected => {
         if (answer) {
           if (hasConected) {
+            this.$jusSegment('START_DIALER_CALL', { ...this.currentCall })
             this.redirectToDispute()
           } else {
             this.$jusNotification({

@@ -175,6 +175,8 @@ export default {
         preventSocket: true
       })
 
+      this.$jusSegment('CLICK_TODO_LIST', {})
+
       if (this.$route.name !== 'negotiation') {
         this.$router.push('/negotiation')
       } else {

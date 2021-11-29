@@ -669,7 +669,6 @@ export default {
       isJusttoAdmin: 'isJusttoAdmin',
       ghostMode: 'ghostMode',
       dropLawsuitReasons: 'getDropLawsuitReasonsArray',
-      // dropLawsuitReasonsList: 'getDropLawsuitReasonsArray',
       userPreferences: 'userPreferences',
       isRecovery: 'isWorkspaceRecovery'
     }),
@@ -1150,6 +1149,7 @@ export default {
 
       this.$refs.confirmActionDialog.handleNotify = (value) => this.handleActionNotify('FAVORITE_NOTIFICATION', value ? 'ALWAYS' : '')
       this.$refs.confirmActionDialog.handleConfirm = () => this.handleAction('favorite', {}).then(() => {
+        this.$jusSegment('ACTIVE_fAVORITE', { ...this.dispute })
         this.$jusNotification({
           title: 'Yay!',
           message: 'Ação <b>' + this.$options.filters.capitalize(this.$t('actions.FAVORITE.name')) + '</b> realizada com sucesso.',
@@ -1174,6 +1174,7 @@ export default {
 
       this.$refs.confirmActionDialog.handleNotify = (value) => this.handleActionNotify('FAVORITE_NOTIFICATION', value ? 'ALWAYS' : '')
       this.$refs.confirmActionDialog.handleConfirm = () => this.handleAction('disfavor', {}).then(() => {
+        this.$jusSegment('DEACTIVE_fAVORITE', { ...this.dispute })
         this.$jusNotification({
           title: 'Yay!',
           message: 'Ação <b>' + this.$options.filters.capitalize(this.$t('actions.DISFAVOR.name')) + '</b> realizada com sucesso.',
