@@ -165,7 +165,10 @@
           <span style="vertical-align: middle;margin-left: 10px;">{{ item.person.name }}</span>
         </el-option>
       </el-select>
-      <div class="jus-import-feedback-card__switch">
+      <div
+        v-if="!isWorkspaceRecovery"
+        class="jus-import-feedback-card__switch"
+      >
         <i class="el-icon-circle-check el-input__icon--success" />
         <div class="content">
           <div>Percentual da primeira proposta sobre {{ $tc('UPPER_RANGE_WITH_ARTICLE', isWorkspaceRecovery) }}</div>
@@ -460,7 +463,7 @@ export default {
     this.mappedCampaign.skipEnrichment = this.skipEnrichment
     this.mappedCampaign.denySavingDeposit = this.denySavingDeposit
     this.mappedCampaign.paymentDeadLine = this.paymentDeadLine
-    this.mappedCampaign.initialOfferPercentage = this.initialOfferPercentage
+    this.mappedCampaign.initialOfferPercentage = this.isWorkspaceRecovery ? 100 : this.initialOfferPercentage
 
     this.campaignName = this.mappedCampaign.campaign || ''
     this.respondent = this.mappedCampaign.respondent || ''
