@@ -24,7 +24,7 @@ export default {
   },
 
   mounted() {
-    this.$jusSegment('Acesso tela Negociação', {})
+    this.$jusSegment('ACCESS_NEGOTIATION', {})
   }
 }
 </script>
