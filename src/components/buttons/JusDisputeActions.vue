@@ -186,10 +186,10 @@
         placeholder="Escolha o motivo da perda"
       >
         <el-option
-          v-for="(type, index) in disputeStatuses.UNSETTLED"
+          v-for="(type, index) in unsettledReasonsSorted"
           :key="index"
-          :label="type"
-          :value="index"
+          :label="type[1]"
+          :value="type[0]"
         />
       </el-select>
 
@@ -672,6 +672,10 @@ export default {
       userPreferences: 'userPreferences',
       isRecovery: 'isWorkspaceRecovery'
     }),
+
+    unsettledReasonsSorted() {
+      return Object.entries(this.disputeStatuses.UNSETTLED || {}).sort((a, b) => (a[1] > b[1] ? 1 : -1))
+    },
 
     collapsed: {
       get() {

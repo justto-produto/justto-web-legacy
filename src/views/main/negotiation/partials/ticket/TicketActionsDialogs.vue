@@ -33,10 +33,10 @@
                 @change="handleUnsettledTypeChange"
               >
                 <el-option
-                  v-for="(label, key) in unsettledOutcomeReasons"
+                  v-for="(item, key) in unsettledOutcomeReasonsSorted"
                   :key="key"
-                  :value="key"
-                  :label="label"
+                  :value="item[0]"
+                  :label="item[1]"
                 />
               </el-select>
             </el-form-item>
@@ -451,6 +451,10 @@ export default {
 
     unsettledOutcomeReasons() {
       return this.outcomeReasons.UNSETTLED
+    },
+
+    unsettledOutcomeReasonsSorted() {
+      return Object.entries(this.outcomeReasons.UNSETTLED || {}).sort((a, b) => (a[1] > b[1] ? 1 : -1))
     },
 
     ticketPlaintiffs() {
