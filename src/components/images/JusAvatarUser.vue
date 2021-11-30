@@ -6,6 +6,7 @@
         'jus-avatar-user--shadow': shadow,
         'jus-avatar-user--active': active,
         'jus-avatar-user--purple': isRecovery ? !purple : purple,
+        'jus-avatar-user--recovery': isRecovery,
         'jus-avatar-user--status': status,
         'jus-avatar-user--online': status === 'ONLINE',
       }
@@ -114,11 +115,12 @@ export default {
     background-color: $--color-secondary;
   }
 
-  &.jus-avatar-user--purple {
-    span {
-      background-color: $--color-danger;
-      // background-color: $--color-primary;
-    }
+  &.jus-avatar-user--purple > span {
+    background-color: $--color-primary;
+  }
+
+  &.jus-avatar-user--recovery > span {
+    background-color: $--color-danger;
   }
 
   &.jus-avatar-user--shadow {
