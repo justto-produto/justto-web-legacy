@@ -28,7 +28,6 @@
 
 <script>
 import { getStringInitials } from '@/utils'
-import { mapGetters } from 'vuex'
 
 export default {
   name: 'JusAvatarUser',
@@ -63,10 +62,6 @@ export default {
     }
   },
   computed: {
-    ...mapGetters({
-      isRecovery: 'isWorkspaceRecovery'
-    }),
-
     showAvatar() {
       if (this.src) return true
       else if (this.name && this.name.trim()) return false
