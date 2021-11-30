@@ -6,7 +6,14 @@
     >
       <div class="container-aside__logo">
         <router-link to="/">
-          <img src="@/assets/logo-small.svg">
+          <img
+            v-if="isRecovery"
+            src="@/assets/logo-small-purple.svg"
+          >
+          <img
+            v-else
+            src="@/assets/logo-small.svg"
+          >
         </router-link>
       </div>
 
@@ -137,7 +144,8 @@ export default {
       notifications: 'notifications',
       areThamirisAlertsVisible: 'areThamirisAlertsVisible',
       areNotificationsVisible: 'areNotificationsVisible',
-      accountId: 'accountId'
+      accountId: 'accountId',
+      isRecovery: 'isWorkspaceRecovery'
     }),
 
     canAccessNegotiationScreen() {
