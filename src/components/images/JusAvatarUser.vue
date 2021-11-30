@@ -28,6 +28,7 @@
 
 <script>
 import { getStringInitials } from '@/utils'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'JusAvatarUser',
@@ -62,6 +63,10 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      isRecovery: 'isWorkspaceRecovery'
+    }),
+
     showAvatar() {
       if (this.src) return true
       else if (this.name && this.name.trim()) return false
@@ -110,12 +115,16 @@ export default {
     background-color: $--color-secondary;
   }
 
-  &.jus-avatar-user--purple > span {
-    background-color: $--color-primary;
+  &.jus-avatar-user--purple {
+    span {
+      background-color: $--color-primary;
+    }
   }
 
-  &.jus-avatar-user--recovery > span {
-    background-color: $--color-danger;
+  &.jus-avatar-user--recovery {
+    span {
+      background-color: $--color-danger;
+    }
   }
 
   &.jus-avatar-user--shadow {
