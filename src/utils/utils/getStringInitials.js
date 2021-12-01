@@ -1,5 +1,5 @@
 const getStringInitials = (str) => {
-  const stringSplited = str.trim().split(' ').filter(Boolean)
+  const stringSplited = (str || '').trim().split(' ').filter(Boolean)
 
   if (stringSplited.length > 1) {
     return stringSplited[0].substring(0, 1) + stringSplited[stringSplited.length - 1].substring(0, 1)
