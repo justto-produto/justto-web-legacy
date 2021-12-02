@@ -1820,9 +1820,6 @@ export default {
         this.roleForm.state = ''
       }
     },
-    removeOab(index) {
-      this.roleForm.oabs.splice(index, 1)
-    },
     removeRole(role) {
       if (this.isLawyer(role)) {
         this.deletingLawyer = role
