@@ -121,9 +121,15 @@ export default {
     }
   }
 
-  &.jus-avatar-user--recovery {
+  &.jus-avatar-user--purple.jus-avatar-user--recovery {
     span {
       background-color: $--color-danger;
+    }
+  }
+
+  &.jus-avatar-user--recovery {
+    span {
+      background-color: $--color-success;
     }
   }
 
