@@ -278,7 +278,7 @@ export default {
           this.handleCloseCall(oldCall)
         }
       }
-    },
+    }
   },
 
   methods: {

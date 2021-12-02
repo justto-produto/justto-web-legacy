@@ -11,7 +11,26 @@
       />
 
       <div v-if="isActiveToCall && isOpenCall">
-        <p>Em chamada</p>
+        <el-button
+          class="in-call-btn"
+          type="text"
+        >
+          Em chamada
+        </el-button>
+
+        <el-button
+          class="speed-btn"
+          :type="netSpeedBtnStatus"
+          size="mini"
+          icon="el-icon-phone-outline"
+          disabled
+          round
+          plain
+        >
+          {{ netSpeedMbps }}
+        </el-button>
+
+        <br>
 
         <el-button
           type="danger"
@@ -146,8 +165,17 @@ export default {
       currentCall: 'getCurrentCall',
       isPendingToAnswerCurrentCall: 'isPendingToAnswerCurrentCall',
       isAdminProfile: 'isAdminProfile',
-      isJusttoAdmin: 'isJusttoAdmin'
-    })
+      isJusttoAdmin: 'isJusttoAdmin',
+      netSpeed: 'getSipConnectionSpeed'
+    }),
+
+    netSpeedMbps() {
+      return (this.netSpeed / 1024).toFixed(0) + ' Mbps'
+    },
+
+    netSpeedBtnStatus() {
+      return this.netSpeed <= 1024 ? 'danger' : this.netSpeed <= (1024 * 5) ? 'warning' : 'success'
+    }
   },
 
   watch: {
@@ -236,6 +264,31 @@ export default {
 
     * {
       text-align: center;
+    }
+
+    div {
+      .in-call-btn {
+        cursor: text;
+
+        span {
+          font-weight: 600;
+        }
+      }
+
+      .speed-btn {
+        position: absolute;
+        top: 0;
+        right: 0;
+
+        border: none;
+        margin: 4px 4px 0 0;
+        padding: 4px 8px !important;
+        cursor: wait;
+
+        span {
+          font-size: 10px;
+        }
+      }
     }
   }
 
