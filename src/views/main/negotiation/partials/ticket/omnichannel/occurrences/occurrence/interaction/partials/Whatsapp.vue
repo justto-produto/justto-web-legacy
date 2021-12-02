@@ -36,24 +36,31 @@
       v-if="contentType === 'VIDEO'"
       class="whatsapp-container__video"
     >
-      <video controls>
-        <source
-          :src="url"
-          :type="type"
-        >
-      </video>
+      <JusMediaPlayer :type="contentType">
+        <video autoplay>
+          <source
+            :src="url"
+            :type="type"
+          >
+        </video>
+      </JusMediaPlayer>
     </div>
 
     <div
       v-if="contentType === 'AUDIO'"
       class="whatsapp-container__audio"
     >
-      <audio controls>
-        <source
-          :src="url"
-          :type="type"
+      <JusMediaPlayer :type="contentType">
+        <audio
+          autoplay
+          controls
         >
-      </audio>
+          <source
+            :src="url"
+            :type="type"
+          >
+        </audio>
+      </JusMediaPlayer>
     </div>
 
     <div
@@ -111,7 +118,8 @@ import communicationSendStatus from '@/utils/mixins/communicationSendStatus'
 
 export default {
   components: {
-    GroupedOccurrences: () => import('./partials/groupedOccurrence')
+    GroupedOccurrences: () => import('./partials/groupedOccurrence'),
+    JusMediaPlayer: () => import('@/components/others/JusMediaPlayer')
   },
 
   mixins: [communicationSendStatus],

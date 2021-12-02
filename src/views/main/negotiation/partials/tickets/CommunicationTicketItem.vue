@@ -93,9 +93,12 @@
 
       <el-tooltip
         :open-delay="800"
-        :content="lastInboundInteraction.message"
         popper-class="communication-ticket-item-container__message-tooltip"
       >
+        <span slot="content">
+          {{ lastInboundInteraction.message || '' }}
+        </span>
+
         <div
           :class="{ 'communication-ticket-item-container__message--bold': !ticket.visualized }"
           class="communication-ticket-item-container__message"
