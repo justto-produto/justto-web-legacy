@@ -459,6 +459,10 @@ export default {
       this.$emit('edit', this.$refs.roleForm)
     },
 
+    addOab(personId, oabs) {
+      this.$emit('addOab', { personId, oabs })
+    },
+
     openAddBankDialog() {
       this.$emit('addBankAccount', this.$refs.roleForm)
     },
