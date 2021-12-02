@@ -18,17 +18,21 @@
           Em chamada
         </el-button>
 
-        <el-button
-          class="speed-btn"
-          :type="netSpeedBtnStatus"
-          size="mini"
-          icon="el-icon-phone-outline"
-          disabled
-          round
-          plain
+        <el-tooltip
+          :content="netSpeedBtnText"
+          :open-delay="500"
         >
-          {{ netSpeedMbps }}
-        </el-button>
+          <el-button
+            class="speed-btn"
+            :type="netSpeedBtnStatus"
+            size="mini"
+            icon="el-icon-phone-outline"
+            round
+            plain
+          >
+            {{ netSpeedMbps }}
+          </el-button>
+        </el-tooltip>
 
         <br>
 
@@ -170,11 +174,19 @@ export default {
     }),
 
     netSpeedMbps() {
-      return (this.netSpeed / 1024).toFixed(0) + ' Mbps'
+      return (this.netSpeed / 1024).toFixed(0) + ' Kbps'
     },
 
     netSpeedBtnStatus() {
       return this.netSpeed <= 1024 ? 'danger' : this.netSpeed <= (1024 * 5) ? 'warning' : 'success'
+    },
+
+    netSpeedBtnText() {
+      const danger = 'Conexão muito instável.'
+      const warning = 'Conexão instável.'
+      const success = 'Conexão estável.'
+
+      return this.netSpeed <= 1024 ? danger : this.netSpeed <= (1024 * 5) ? warning : success
     }
   },
 
@@ -283,7 +295,6 @@ export default {
         border: none;
         margin: 4px 4px 0 0;
         padding: 4px 8px !important;
-        cursor: wait;
 
         span {
           font-size: 10px;
