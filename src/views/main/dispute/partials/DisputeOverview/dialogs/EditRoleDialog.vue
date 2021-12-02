@@ -463,6 +463,10 @@ export default {
       this.$emit('addOab', { personId, oabs })
     },
 
+    removeOab(index) {
+      this.roleForm.oabs.splice(index, 1)
+    },
+
     openAddBankDialog() {
       this.$emit('addBankAccount', this.$refs.roleForm)
     },
