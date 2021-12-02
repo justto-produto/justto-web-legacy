@@ -576,6 +576,7 @@
         :has-changed.sync="documentNumberHasChanged"
         @edit="editRole"
         @addBankAccount="openAddBankDialog"
+        @addOab="addOab"
         @removeBankData="removeBankData(...$event)"
       />
 
