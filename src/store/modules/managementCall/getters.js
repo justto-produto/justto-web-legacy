@@ -52,5 +52,9 @@ export default {
 
   isToIgnoreDialer(state) {
     return state.ignoreDialer
+  },
+
+  getSipConnectionSpeed(state) {
+    return state.sipConnection?.speed || 0
   }
 }

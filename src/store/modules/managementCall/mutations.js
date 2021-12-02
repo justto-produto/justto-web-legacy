@@ -197,6 +197,10 @@ export default {
     Vue.set(state.sipConnection, 'session', session)
   },
 
+  setSipConnectionSpeed(state, speed) {
+    Vue.set(state.sipConnection, 'speed', speed)
+  },
+
   setIgnoreDialer(state, ignore) {
     Vue.set(state, 'ignoreDialer', Boolean(ignore))
   },

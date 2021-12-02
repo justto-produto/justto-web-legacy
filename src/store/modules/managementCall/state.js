@@ -19,6 +19,7 @@ export default {
     session: null,
     socket: null,
     configuration: null,
-    phone: null
+    phone: null,
+    speed: 0
   }
 }

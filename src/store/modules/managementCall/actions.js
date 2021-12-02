@@ -1,10 +1,13 @@
 // https://justto.atlassian.net/browse/SAAS-4522
 import { Call } from '@/models/managementCall/currentCall'
 import { axiosDispatch } from '@/utils'
-import { publishWebsocket } from '@/utils/utils/others'
-import JsSIP from 'jssip'
 import { CALL_STATUS } from '@/constants/callStatus'
+import { publishWebsocket } from '@/utils/utils/others'
 
+import JsSIP from 'jssip'
+import getStats from 'getstats'
+
+const vue = () => document.getElementById('app')?.__vue__
 const DEFAULT_JUSTTO_MANAGEMENT_CALL = "{'currentCall':null,'callQueue':[],'appInstance':null}"
 const dialerApi = 'api/dialer'
 const disputeApi = 'api/disputes/v2'
@@ -253,8 +256,6 @@ export default {
         commit('setSipSession', session)
 
         if (session.direction === 'incoming') {
-          // incoming call here
-
           if (process.env.NODE_ENV === 'development') {
             session.on('accepted', function() {
               console.log('newRTCSession.accepted')
@@ -279,6 +280,26 @@ export default {
             if (process.env.NODE_ENV === 'development') console.log('newRTCSession.addstream', e)
 
             const peerconnection = e.peerconnection // https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection
+            const repeatInterval = 5000
+
+            getStats(peerconnection, ({ bandwidth, audio, results, connectionType, encryption, internal, isOfferer }) => {
+              commit('setSipConnectionSpeed', bandwidth.speed)
+
+              vue().$jusSegment('CALL_TRACK', {
+                track: {
+                  bandwidth,
+                  audio,
+                  results,
+                  connectionType,
+                  encryption,
+                  isOfferer
+                },
+                call: getCurrentCall,
+                dialer: dialer
+              })
+
+              console.log('audio', internal)
+            }, repeatInterval)
 
             peerconnection.ontrack = function(event) {
               remoteAudio.srcObject = event.streams[0]
