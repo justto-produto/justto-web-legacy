@@ -53,11 +53,11 @@ export default {
       const keys = Object.keys(parameters)
 
       if (keys.includes('READ_DATE')) {
-        return parameters.READ_DATE
+        return this.$moment.utc(parameters.READ_DATE).toISOString()
       } else if (keys.includes('RECEIVER_DATE')) {
-        return parameters.RECEIVER_DATE
+        return this.$moment.utc(parameters.RECEIVER_DATE).toISOString()
       } else if (keys.includes('SEND_DATE')) {
-        return parameters.SEND_DATE
+        return this.$moment.utc(parameters.SEND_DATE).toISOString()
       } else {
         return this.interaction?.createAt?.dateTime
       }
