@@ -1203,19 +1203,17 @@ export default {
     buildWhatsappStatus(message, executionDateTime) {
       if (!message) return null
       if (message.status.startsWith('PROCESSED')) {
-        const sendDate = message.parameters && message.parameters.SEND_DATE ? this.$moment.utc(message.parameters.SEND_DATE).toISOString() : this.$moment(executionDateTime.dateTime).format('DD/MM/YYYY [ às ] HH:mm')
-        const receiverDate = message.parameters ? this.$moment.utc(message.parameters.RECEIVER_DATE).toISOString() : ''
-        const readDate = (message.parameters && message.parameters.READ_DATE) ? this.$moment.utc(message.parameters.READ_DATE).toISOString() : ''
-        const momentFormat = (data) => this.$moment(data).format('DD/MM/YYYY [ às ] HH:mm')
-
+        const sendDate = message.parameters && message.parameters.SEND_DATE ? message.parameters.SEND_DATE : this.$moment(executionDateTime.dateTime).format('DD/MM/YYYY [ às ] HH:mm')
+        const receiverDate = message.parameters ? message.parameters.RECEIVER_DATE : ''
+        const readDate = (message.parameters && message.parameters.READ_DATE) ? this.$moment(message.parameters.READ_DATE).format('DD/MM/YYYY [ às ] HH:mm') : ''
         let icon = 'status-sent'
-        let msg = `Enviado em ${momentFormat(sendDate)}.`
+        let msg = `Enviado em ${sendDate}.`
         if (receiverDate) {
-          msg += `<br>Recebido em ${momentFormat(receiverDate)}.`
+          msg += `<br>Recebido em ${receiverDate}.`
           icon = 'status-recived'
         }
         if (readDate) {
-          msg += `<br>Lido em ${momentFormat(readDate)}.`
+          msg += `<br>Lido em ${readDate}.`
           icon = 'status-readed'
         }
         return { icon, message: msg }
