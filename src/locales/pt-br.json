@@ -720,6 +720,14 @@
             "count-email": "e-mail foi agendado para | e-mails foram agendados para",
             "count-whatsapp": "mensagem de whatsapp foi agendada para | mensagens de whatsspp foram agendadas para",
             "count-sms": "mensagem de texto foi agendada para | mensagens de texto foram agendadas para"
+          },
+          "COMMUNICATION": {
+            "WHATSAPP": {
+              "AUDIO": "Áudio recebido pelo WhatsApp",
+              "IMAGE": "Imagem recebida pelo WhatsApp",
+              "VIDEO": "Vídeo recebido pelo WhatsApp",
+              "FILE": "Arquivo recebido pelo WhatsApp"
+            }
           }
         }
       }
