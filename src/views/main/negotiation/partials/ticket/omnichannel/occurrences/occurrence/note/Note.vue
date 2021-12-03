@@ -9,7 +9,7 @@
         class="note-container__header"
       >
         <div>{{ owner }}</div>
-        <!-- <span>
+        <span>
           <i
             class="note-container__header-icon el-icon-edit"
             @click="openEditDialog"
@@ -18,7 +18,7 @@
             class="note-container__header-icon el-icon-delete"
             @click="removeNote"
           />
-        </span> -->
+        </span>
       </div>
 
       <div
@@ -103,7 +103,9 @@ export default {
   methods: {
     ...mapActions([
       'deleteTicketNote',
-      'saveTicketNote'
+      'saveTicketNote',
+      'getOccurrences',
+      'resetOccurrences'
     ]),
 
     concludeAction(message, disputeId) {
@@ -124,7 +126,11 @@ export default {
 
       this.isLoadingNote = true
       this.saveTicketNote({ disputeId, id, note })
-        .then(() => this.concludeAction('Nota editada', disputeId))
+        .then(() => {
+          this.concludeAction('Nota editada', disputeId)
+          this.resetOccurrences()
+          this.getOccurrences(disputeId)
+        })
         .catch(error => this.$jusNotification({ error }))
         .finally(() => {
           this.isLoadingNote = false
