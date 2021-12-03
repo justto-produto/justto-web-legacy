@@ -27,7 +27,7 @@
             >
               <span v-html="buildSender(occurrence)" />
 
-              <!-- <div>
+              <div>
                 <i
                   class="el-icon-edit"
                   @click="openEditDialog(occurrence)"
@@ -37,7 +37,7 @@
                   class="el-icon-delete"
                   @click="removeNote(occurrence, index)"
                 />
-              </div> -->
+              </div>
             </div>
             <span v-html="buildContent(occurrence)" />
           </el-card>
