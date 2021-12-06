@@ -66,9 +66,6 @@ export default {
   },
 
   beforeDestroy() {
-    const { id } = this.$route.params
-
-    this.socketAction('unsubscribe', id)
     eventBus.$off(events.TICKET_CHANGE.callback, this.fetchData)
     eventBus.$off(events.TICKET_WEB_SOCKET_DISCONNECT.callback, this.socketAction)
   },
@@ -116,9 +113,11 @@ export default {
 
     socketAction(action, id) {
       if (this.workspace && this.loggedPersonId) {
+        const channel = '/topic/' + this.workspace + '/' + this.loggedPersonId + '/dispute/' + id + '/occurrence'
+
         this.$socket.emit(action, {
           headers: this.socketHeaders,
-          channel: '/topic/' + this.workspace + '/' + this.loggedPersonId + '/dispute/' + id + '/occurrence'
+          channel
         })
       }
     },

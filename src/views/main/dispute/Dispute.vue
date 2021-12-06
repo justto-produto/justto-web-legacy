@@ -621,7 +621,6 @@ export default {
         this.$refs.messageEditor.quill.container.firstChild.innerHTML = ''
       }
       this.socketAction('unsubscribe', oldId)
-      this.unsubscribeOccurrences(oldId)
       this.fetchData()
       this.disputeOccurrencesKey += 1
     },
@@ -820,9 +819,11 @@ export default {
 
     socketAction(action, id) {
       if (this.workspaceSubdomain && this.loggedPersonId) {
+        const channel = '/topic/' + this.workspaceSubdomain + '/' + this.loggedPersonId + '/dispute/' + id + '/occurrence'
+
         this.$socket.emit(action, {
           headers: this.socketHeaders,
-          channel: '/topic/' + this.workspaceSubdomain + '/' + this.loggedPersonId + '/dispute/' + id + '/occurrence'
+          channel
         })
       }
     },
@@ -835,6 +836,7 @@ export default {
     fetchData() {
       this.loadingDispute = true
       this.socketAction('subscribe', this.id)
+      console.log('fetchData')
       this.$store.dispatch('getDispute', this.id).then(dispute => {
         if (!dispute || dispute.archived) this.backToManagement()
         else this.$store.dispatch('getDisputeTags', this.id)
