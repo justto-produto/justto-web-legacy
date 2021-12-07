@@ -834,9 +834,11 @@ export default {
     },
 
     fetchData() {
+      console.log('fetchData', this.id)
       this.loadingDispute = true
       this.socketAction('subscribe', this.id)
       console.log('fetchData')
+      this.$store.commit('clearDisputeOccurrences')
       this.$store.dispatch('getDispute', this.id).then(dispute => {
         if (!dispute || dispute.archived) this.backToManagement()
         else this.$store.dispatch('getDisputeTags', this.id)
