@@ -224,7 +224,6 @@ export default {
           contactRoleId: getCurrentCall.toRoleId,
           apiKey: dialer?.sipServer?.apiKey
         }
-        console.log('MAKE CALL')
 
         dispatch('requestDialerCall', requestDialerCommand)
       })
@@ -297,8 +296,6 @@ export default {
                 call: getCurrentCall,
                 dialer: dialer
               })
-
-              console.log('audio', internal)
             }, repeatInterval)
 
             peerconnection.ontrack = function(event) {
@@ -320,8 +317,6 @@ export default {
         try {
           phone.stop()
           phone.start()
-
-          console.log('SIP STARTED')
 
           resolve()
         } catch (e) {

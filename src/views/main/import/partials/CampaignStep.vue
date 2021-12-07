@@ -198,6 +198,7 @@
           :show="mappedCampaigns[0].replicate ? index === 0 : true"
           :mapped-campaign.sync="mappedCampaigns[index]"
           :index="index + 1"
+          :original-quantity="mappedCampaigns.length"
           data-testid="import-feedback"
         />
       </div>

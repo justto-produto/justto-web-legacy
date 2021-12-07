@@ -12,7 +12,7 @@
       </el-tag>
 
       <el-tooltip
-        v-if="index === 1"
+        v-if="index === 1 && originalQuantity > 1"
         content="Replica a configuração desta campanha para todas as outras."
         placement="top"
         :open-delay="500"
@@ -327,6 +327,11 @@ export default {
     show: {
       type: Boolean,
       default: true
+    },
+
+    originalQuantity: {
+      type: Number,
+      default: () => 1
     }
   },
 
