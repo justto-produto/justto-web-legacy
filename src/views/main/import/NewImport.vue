@@ -95,12 +95,14 @@ export default {
       return this.campaignIsMapped
     }
   },
+
   beforeCreate() {
     this.$store.commit('removeImportsMap')
     if (!this.$store.getters.hasImportsFile) {
       this.$router.push('/import')
     }
   },
+
   methods: {
     ...mapActions(['setErrorFields']),
 
@@ -146,57 +148,61 @@ export default {
         this.$router.push('/import')
       }
     },
+
     finalStep() {
       const campaignsTrack = []
+      const replicateFirst = this.mappedCampaigns[0].replicate
       let allValid = true
       let checked = false
       const promises = []
+
       for (const mappedCampaign of this.mappedCampaigns) {
-        const campaign = JSON.parse(JSON.stringify(mappedCampaign))
+        const campaign = JSON.parse(JSON.stringify(replicateFirst ? this.mappedCampaigns[0] : mappedCampaign))
+
         this.setErrorFields(this.campaignErrorFields(campaign))
-        if (!this.checkValidCampaign(campaign)) {
-          allValid = false
-        }
+
+        if (!this.checkValidCampaign(campaign)) { allValid = false }
+
         checked = true
       }
+
       if (checked && allValid) {
         for (const mappedCampaign of this.mappedCampaigns) {
           const campaign = JSON.parse(JSON.stringify(mappedCampaign))
-          campaignsTrack.push({
+
+          campaignsTrack.push({ name: campaign.name, strategy: campaign.strategy })
+
+          const parsedCampaing = {
+            ...(replicateFirst ? this.mappedCampaigns[0] : campaign),
             name: campaign.name,
-            strategy: campaign.strategy
-          })
-          campaign.paymentDeadLine = 'P' + campaign.paymentDeadLine + 'D'
-          delete campaign.campaign
-          delete campaign.rows
-          delete campaign.createdAt
-          delete campaign.createdBy
-          delete campaign.id
-          delete campaign.updatedAt
-          delete campaign.updatedBy
-          if (this.duplicatedAction === 'IGNORE') {
-            campaign.allowDuplicateDispute = false
-            campaign.allowUpdateDispute = false
-          }
-          if (this.duplicatedAction === 'UPDATE') {
-            campaign.allowDuplicateDispute = false
-            campaign.allowUpdateDispute = true
-          }
-          if (this.duplicatedAction === 'DUPLICATE') {
-            campaign.allowDuplicateDispute = true
-            campaign.allowUpdateDispute = false
+            respondent: campaign.respondent,
+            paymentDeadLine: 'P' + (replicateFirst ? this.mappedCampaigns[0] : campaign).paymentDeadLine + 'D',
+            allowDuplicateDispute: this.duplicatedAction === 'DUPLICATE',
+            allowUpdateDispute: this.duplicatedAction === 'UPDATE'
           }
 
-          promises.push(this.$store.dispatch('createCampaign', campaign))
+          delete parsedCampaing.campaign
+          delete parsedCampaing.rows
+          delete parsedCampaing.createdAt
+          delete parsedCampaing.createdBy
+          delete parsedCampaing.id
+          delete parsedCampaing.updatedAt
+          delete parsedCampaing.updatedBy
+          delete parsedCampaing.replicate
+
+          promises.push(this.$store.dispatch('createCampaign', parsedCampaing))
         }
+
         Promise.all(promises).then(() => {
           // SEGMENT TRACK
           this.$jusSegment('Importação 4/4 Importação Concluída', {
             fileName: this.$store.getters.importedFileName
           })
+
           this.$store.dispatch('startGeneseRunner').finally(() => {
             this.$store.commit('removeImportsFile')
           })
+
           this.$router.push('/import/loading')
         }).catch(error => {
           this.$jusNotification({ error })
@@ -208,7 +214,9 @@ export default {
           type: 'warning'
         })
       }
+
       const range = this.mappedCampaigns.length - 1
+
       localStorage.setItem('jusfeedbackpreferences', JSON.stringify({
         businessHoursEngagement: this.mappedCampaigns[range].businessHoursEngagement,
         contactPartyWhenNoLowyer: this.mappedCampaigns[range].contactPartyWhenNoLowyer,
@@ -217,6 +225,7 @@ export default {
         denySavingDeposit: this.mappedCampaigns[range].denySavingDeposit
       }))
     },
+
     campaignErrorFields(campaign) {
       const validations = [
         { value: 'respondent', validation: field => !!field.respondent },
@@ -231,6 +240,7 @@ export default {
         return !(campaign.hasOwnProperty(value) && validation(campaign))
       }).map(err => err.value)
     },
+
     checkValidCampaign(campaign) {
       if (
         campaign.hasOwnProperty('respondent') &&
@@ -251,6 +261,7 @@ export default {
       } else return false
     }
   },
+
   beforeRouteLeave(to, from, next) {
     if (to.path === '/import/loading') {
       next()

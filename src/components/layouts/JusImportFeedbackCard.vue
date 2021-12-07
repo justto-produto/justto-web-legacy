@@ -1,11 +1,31 @@
 <template>
-  <div class="jus-import-feedback-card">
-    <el-tag
-      :color="color"
-      class="el-tag--mapped-campaign-tag"
-    >
-      {{ campaignTitle }}
-    </el-tag>
+  <div
+    v-if="show"
+    class="jus-import-feedback-card"
+  >
+    <div class="jus-import-feedback-card-header">
+      <el-tag
+        :color="color"
+        class="el-tag--mapped-campaign-tag"
+      >
+        {{ campaignTitle }}
+      </el-tag>
+
+      <el-tooltip
+        v-if="index === 1"
+        content="Replica a configuração desta campanha para todas as outras."
+        placement="top"
+        :open-delay="500"
+      >
+        <el-checkbox
+          v-model="mappedCampaign.replicate"
+          label="Replicar"
+          size="mini"
+          border
+        />
+      </el-tooltip>
+    </div>
+
     <el-card :style="'border-left: solid 4px ' + color">
       <el-input
         v-model="respondent"
@@ -298,14 +318,21 @@ export default {
       type: Object,
       default: () => {}
     },
+
     index: {
       type: Number,
       default: 1
+    },
+
+    show: {
+      type: Boolean,
+      default: true
     }
   },
 
   data() {
     return {
+      replicateForAll: false,
       color: '#ff9300',
       initialCampaignName: '',
       mappedName: '',
@@ -381,6 +408,7 @@ export default {
       }
     }
   },
+
   watch: {
     businessHoursEngagement(value) {
       this.mappedCampaign.businessHoursEngagement = value
@@ -410,6 +438,7 @@ export default {
     },
     campaignName(value) {
       this.mappedCampaign.name = value
+
       if (value) {
         clearTimeout(this.campaignNameDebounce)
         this.campaignNameDebounce = setTimeout(() => {
@@ -474,6 +503,7 @@ export default {
       this.deadline = this.mappedCampaign.deadline
     }
   },
+
   methods: {
     ...mapActions(['clearErrorField']),
 
@@ -535,10 +565,16 @@ export default {
   width: 100%;
   margin-top: 30px;
 
-  .el-tag--mapped-campaign-tag {
-    margin-bottom: 10px;
-    text-align: center;
-    color: #ffffff;
+  .jus-import-feedback-card-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+
+    .el-tag--mapped-campaign-tag {
+      margin-bottom: 10px;
+      text-align: center;
+      color: #ffffff;
+    }
   }
 
   .el-autocomplete, .el-select, .el-input, .select-strategy__messages {
