@@ -6,6 +6,7 @@
     <h2 class="new-import-view__title">
       Configuração de campanhas
     </h2>
+
     <p>
       O sistema trabalha com o conceito de campanhas. Campanha é um agrupamento de
       disputas dentro da mesma importação com {{ $tc('PARTY_RESPONDENT', isRecoveryStrategy)+'s' }} em comum. Por isso, ao importar,
@@ -13,6 +14,7 @@
       configurá-las separadamente.
       <br><br><br>
     </p>
+
     <el-alert
       v-if="validationInProgress"
       :closable="false"
@@ -41,6 +43,7 @@
         Aguarde um momento enquanto o sistema valida disputas duplicadas e expiradas.
       </div>
     </el-alert>
+
     <el-alert
       v-if="!strategyList.length && !loadingStrategies"
       :closable="false"
@@ -60,6 +63,7 @@
         </p>
       </div>
     </el-alert>
+
     <el-alert
       v-if="!strategyList.length && loadingStrategies"
       :closable="false"
@@ -88,6 +92,7 @@
         <span>Aguarde um momento enquanto o sistema carrega as estratégias disponíveis para esta campanha.</span>
       </div>
     </el-alert>
+
     <el-alert
       v-if="!validationInProgress && ((duplicatedDisputes.length + summaryWarnings.duplicated + summaryWarnings.expired) > 0)"
       type="error"
@@ -188,9 +193,12 @@
       >
         <jus-import-feedback-card
           v-for="(mappedCampaign, index) in mappedCampaigns"
+          v-show="mappedCampaigns[0].replicate ? index === 0 : true"
           :key="mappedCampaign.cluster"
+          :show="mappedCampaigns[0].replicate ? index === 0 : true"
           :mapped-campaign.sync="mappedCampaigns[index]"
           :index="index + 1"
+          :original-quantity="mappedCampaigns.length"
           data-testid="import-feedback"
         />
       </div>
