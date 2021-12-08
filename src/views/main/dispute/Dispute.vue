@@ -418,8 +418,14 @@
     </template>
     <!-- DADOS DO CASO -->
     <template slot="right-card">
+      <TicketOverview
+        v-if="dispute && overviewType === 'TICKET'"
+        ref="disputeOverview"
+        :show-overview="false"
+        dispute-mode
+      />
       <dispute-overview
-        v-if="dispute"
+        v-else-if="dispute && overviewType === 'DISPUTE'"
         ref="disputeOverview"
         :loading.sync="loadingDispute"
         :active-role-id.sync="activeRoleId"
@@ -448,6 +454,7 @@ export default {
     DisputeOccurrences: () => import('./partials/DisputeOccurrences'),
     DisputeNotes: () => import('./partials/DisputeNotes'),
     DisputeOverview: () => import('./partials/DisputeOverview/DisputeOverview'),
+    TicketOverview: () => import('@/views/main/negotiation/partials/ticket/overview/Overview.vue'),
     JusDisputeActions: () => import('@/components/buttons/JusDisputeActions'),
     DisputeTips: () => import('./partials/DisputeTips'),
     DisputeNegotiation: () => import('./partials/DisputeNegotiation'),
@@ -514,11 +521,16 @@ export default {
       'quickReplyTemplates',
       'loggedPersonId',
       'workspaceSubdomain',
-      'isWorkspaceRecovery'
+      'isWorkspaceRecovery',
+      'userPreferences'
     ]),
 
     isSmall() {
       return this.width < 840 && this.selectedContacts.length > 0
+    },
+
+    overviewType() {
+      return this.userPreferences?.properties?.DISPUTE_OVERVIEW || 'DISPUTE'
     },
 
     sendMessageHeightComputed() {

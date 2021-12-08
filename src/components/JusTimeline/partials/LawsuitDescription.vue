@@ -204,11 +204,11 @@ export default {
       const { type } = this.state.parties.find(p => isSimilarStrings(partyName, p.name, 75))
       const polarity = this.isClaimant(type) ? 'CLAIMANT' : 'RESPONDENT'
 
-      const oabState = brazilianStates.find(({ value: uf }) => oab.includes(uf)).value || ''
-      const [oabNumber] = oab.replace(oabState, '').match(/[\dA-Z]+/g).join('').match(/[\dABENP]+/g)
+      const oabState = brazilianStates.find(({ value: uf }) => (oab || '').includes(uf))?.value || null
+      const [oabNumber] = oab?.length ? ((oab || '').replace(oabState, '').match(/[\dA-Z]+/g) || []).join('').match(/[\dABENP]+/g) : ''
 
       const data = {
-        oabs: oab === '' ? [] : [{ number: oabNumber, state: oabState }],
+        oabs: (oab === '' || !oab) ? [] : [{ number: oabNumber, state: oabState }],
         documentNumber: document === '' ? null : document,
         roles: ['LAWYER'],
         party: polarity,
