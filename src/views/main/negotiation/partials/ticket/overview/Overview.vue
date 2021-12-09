@@ -67,7 +67,9 @@
       v-model="ticket.description"
     />
 
-    <OverviewTabs />
+    <OverviewTabs
+      @addRecipient="addRecipient"
+    />
 
     <DeleteTicketDialog
       ref="deleteTicketDialog"
@@ -202,6 +204,11 @@ export default {
     openTimelineModal() {
       this.showTimelineModal = true
       this.$jusSegment('Linha do tempo visualizada por dentro da disputa', { disputeId: this.routeId })
+    },
+
+    addRecipient({ type, value }) {
+      // TODO SAAS-4688: Ver como usar multiplos destinatários.
+      if (this.disputeMode) this.$emit('addRecipient', { senders: [value], resume: '', type, inReplyTo: null })
     },
 
     restartEngagementFromTimeline(disputeRole) {

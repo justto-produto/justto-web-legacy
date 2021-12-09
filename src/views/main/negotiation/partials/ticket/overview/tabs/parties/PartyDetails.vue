@@ -446,6 +446,7 @@ export default {
       'searchLawyers',
       'addRecipient',
       'verifyRecipient',
+      'resetRecipients',
       'searchPersonByOab',
       'setTicketOverviewParty',
       'deleteTicketOverviewParty',
@@ -712,6 +713,10 @@ export default {
           .then((data) => {
             if (data.value === 'AUTHORIZED') {
               delete reply.disputeId
+              if (['dispute'].includes(this.$route.name)) {
+                this.resetRecipients()
+                this.$emit('addRecipient', { value, key, type })
+              }
               this.addRecipient({ value, key, type })
             } else {
               this.LGPDWarningDialogVisible = true

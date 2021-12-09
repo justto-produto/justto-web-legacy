@@ -55,14 +55,17 @@
           >
             <dispute-tips v-if="typingTab === '1'" />
           </dispute-occurrences>
+
           <dispute-notes
             v-else-if="typingTab === '2'"
             :dispute-id="id"
           />
+
           <dispute-negotiation
             v-else-if="typingTab === '4'"
             :dispute="dispute"
           />
+
           <div
             :style="{ height: sendMessageHeightComputed }"
             class="dispute-view__send-message"
@@ -423,6 +426,7 @@
         ref="disputeOverview"
         :show-overview="false"
         dispute-mode
+        @addRecipient="startReply"
       />
       <dispute-overview
         v-else-if="dispute && overviewType === 'DISPUTE'"
