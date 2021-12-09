@@ -526,7 +526,7 @@ export default {
       'loggedPersonId',
       'workspaceSubdomain',
       'isWorkspaceRecovery',
-      'userPreferences'
+      'workspaceProperties'
     ]),
 
     isSmall() {
@@ -534,7 +534,7 @@ export default {
     },
 
     overviewType() {
-      return this.userPreferences?.properties?.DISPUTE_OVERVIEW || 'DISPUTE'
+      return this.workspaceProperties.DISPUTE_OVERVIEW || 'TICKET'
     },
 
     sendMessageHeightComputed() {
