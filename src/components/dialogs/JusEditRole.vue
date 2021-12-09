@@ -39,18 +39,22 @@
             />
           </el-form-item>
         </el-col>
-        <el-col :span="12">
+        <el-col
+          v-if="party.birthday"
+          :span="12"
+        >
           <el-form-item
             label="Data de nascimento"
             prop="birthday"
           >
-            <el-date-picker
-              v-model="party.birthday"
-              :disabled="!canEditBirthday"
-              :clearable="false"
-              format="dd/MM/yyyy"
-              type="date"
-              value-format="yyyy-MM-dd"
+            <DateInlieEditor
+              :value="party.birthday"
+              :is-editable="canEditBirthday"
+              :processed-date="$moment(new Date(party.birthday)).fromNow(true)"
+              :is-date-time-format="false"
+              edit-on-click
+              class="birthday-editor"
+              @change="setBirthday"
             />
           </el-form-item>
         </el-col>
@@ -337,6 +341,7 @@ import restartEngagement from '@/utils/mixins/restartEngagement'
 
 export default {
   components: {
+    DateInlieEditor: () => import('@/components/inputs/DateInlieEditor'),
     PartyBankAccountDialog: () => import('@/views/main/negotiation/partials/ticket/overview/tabs/parties/PartyBankAccountDialog.vue')
   },
 
@@ -409,6 +414,10 @@ export default {
       'createTicketRoleBankAccount',
       'getTicketOverviewParty'
     ]),
+
+    setBirthday(newDate) {
+      if (['string'].includes(typeof newDate)) this.$set(this.party, 'birthday', newDate.split('-').map(Number))
+    },
 
     openTabEditBank() {
       this.$refs.partyBankAccountDialog.openBankAccountDialog({})
@@ -685,6 +694,15 @@ export default {
   .flex-row {
     display: flex;
     gap: 1vw;
+  }
+}
+
+.birthday-editor {
+  .date-inline-editor__value {
+    height: 40px !important;
+    border: solid #dcdfe6 thin !important;
+    border-radius: 2px;
+    padding: 0 15px;
   }
 }
 
