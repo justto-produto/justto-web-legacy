@@ -534,7 +534,7 @@ export default {
     },
 
     overviewType() {
-      return this.workspaceProperties.DISPUTE_OVERVIEW || 'TICKET'
+      return this.workspaceProperties.DISPUTE_OVERVIEW || 'DISPUTE'
     },
 
     sendMessageHeightComputed() {
