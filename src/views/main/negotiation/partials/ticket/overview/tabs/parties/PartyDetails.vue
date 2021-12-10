@@ -9,7 +9,7 @@
     />
 
     <JusEditRole
-      v-if="Boolean(party.legacyDto) && !isNegotiator && isJusttoAdmin"
+      v-if="Boolean(party.legacyDto) && !isNegotiator"
       :visible="editRoleDialogVisible"
       :party="party.legacyDto"
       :ticket-status="ticketStatus"
