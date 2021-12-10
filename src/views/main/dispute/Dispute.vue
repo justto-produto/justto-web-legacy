@@ -275,14 +275,6 @@
                         <b class="dispute-view__attach-counter">{{ selectedAttachments.length }}x</b>
                       </span>
                     </el-popover>
-
-                    <!-- placement="top" -->
-                    <!-- <quill-editor
-                      ref="messageEditor"
-                      :options="editorOptions"
-                      data-testid="email-editor"
-                      @focus="$refs.disputeOverview.overviewTab = 'roles'"
-                    /> -->
                     <ckeditor
                       v-if="!hasWhatsAppContactSelect"
                       ref="messageEditor"
@@ -411,7 +403,6 @@
                 name="3"
                 style="padding: 10px;"
               />
-              <!-- <el-tab-pane v-if="this.$store.getters.isJusttoAdmin" label="Negociação" name="4" style="padding: 10px;" /> -->
             </el-tabs>
           </div>
         </div>
@@ -534,7 +525,7 @@ export default {
     },
 
     overviewType() {
-      return this.workspaceProperties.DISPUTE_OVERVIEW || 'DISPUTE'
+      return this.workspaceProperties.DISPUTE_OVERVIEW || 'TICKET'
     },
 
     sendMessageHeightComputed() {
