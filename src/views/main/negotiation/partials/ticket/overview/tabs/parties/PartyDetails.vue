@@ -288,7 +288,7 @@
       </el-button>
 
       <el-button
-        v-if="!isNegotiator && isJusttoAdmin"
+        v-if="!isNegotiator"
         class="party-details__edit-button"
         type="text"
         icon="el-icon-edit"
