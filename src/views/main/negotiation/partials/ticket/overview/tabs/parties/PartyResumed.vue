@@ -60,7 +60,10 @@
       </article>
     </template>
 
-    <PartyDetails :party="party" />
+    <PartyDetails
+      :party="party"
+      @addRecipient="$emit('addRecipient', $event)"
+    />
   </el-collapse-item>
 </template>
 

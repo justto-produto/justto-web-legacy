@@ -11,7 +11,7 @@
       class="jus-timeline__title"
     >
       <span v-if="dispute.lastUpdated">
-        Pesquisado em {{ $moment(dispute.lastUpdated).format('DD/MM/YYYY [às] hh:mm') }}
+        Atualizado em {{ $moment(dispute.lastUpdated).format('DD/MM/YYYY [às] hh:mm') }}
       </span>
     </div>
 

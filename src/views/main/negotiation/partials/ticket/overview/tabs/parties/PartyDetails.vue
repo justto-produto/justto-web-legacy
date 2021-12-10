@@ -385,12 +385,12 @@ export default {
     roleOptions() {
       const { roles } = this.party
       const partyOptions = [
-        { value: 'RESPONDENT', label: this.$tc('PARTY_RESPONDENT', this.isRecovery) },
-        { value: 'CLAIMANT', label: this.$tc('roles.PARTY.CLAIMANT') }
+        { value: 'RESPONDENT', label: this.$tc('fields.respondentParty', this.isRecovery) },
+        { value: 'CLAIMANT', label: this.$tc('fields.claimantParty', this.isRecovery) }
       ]
       const lawyerOptions = [
-        { value: 'RESPONDENT', label: this.$tc('LAWYER_RESPONDENT', this.isRecovery) },
-        { value: 'CLAIMANT', label: this.$tc('roles.LAWYER.CLAIMANT') }
+        { value: 'RESPONDENT', label: this.$tc('fields.respondentLawyer', this.isRecovery) },
+        { value: 'CLAIMANT', label: this.$tc('fields.claimantLawyer', this.isRecovery) }
       ]
 
       if (roles.includes('PARTY')) {
@@ -446,6 +446,7 @@ export default {
       'searchLawyers',
       'addRecipient',
       'verifyRecipient',
+      'resetRecipients',
       'searchPersonByOab',
       'setTicketOverviewParty',
       'deleteTicketOverviewParty',
@@ -712,6 +713,10 @@ export default {
           .then((data) => {
             if (data.value === 'AUTHORIZED') {
               delete reply.disputeId
+              if (['dispute'].includes(this.$route.name)) {
+                this.resetRecipients()
+                this.$emit('addRecipient', { value, key, type })
+              }
               this.addRecipient({ value, key, type })
             } else {
               this.LGPDWarningDialogVisible = true

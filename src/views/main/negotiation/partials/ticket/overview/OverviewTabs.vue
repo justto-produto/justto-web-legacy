@@ -16,7 +16,9 @@
         <i class="el-icon-user" />
       </el-tooltip>
 
-      <OverviewParties />
+      <OverviewParties
+        @addRecipient="$emit('addRecipient', $event)"
+      />
     </el-tab-pane>
 
     <el-tab-pane

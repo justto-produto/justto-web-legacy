@@ -55,14 +55,17 @@
           >
             <dispute-tips v-if="typingTab === '1'" />
           </dispute-occurrences>
+
           <dispute-notes
             v-else-if="typingTab === '2'"
             :dispute-id="id"
           />
+
           <dispute-negotiation
             v-else-if="typingTab === '4'"
             :dispute="dispute"
           />
+
           <div
             :style="{ height: sendMessageHeightComputed }"
             class="dispute-view__send-message"
@@ -418,8 +421,15 @@
     </template>
     <!-- DADOS DO CASO -->
     <template slot="right-card">
+      <TicketOverview
+        v-if="dispute && overviewType === 'TICKET'"
+        ref="disputeOverview"
+        :show-overview="false"
+        dispute-mode
+        @addRecipient="startReply"
+      />
       <dispute-overview
-        v-if="dispute"
+        v-else-if="dispute && overviewType === 'DISPUTE'"
         ref="disputeOverview"
         :loading.sync="loadingDispute"
         :active-role-id.sync="activeRoleId"
@@ -448,6 +458,7 @@ export default {
     DisputeOccurrences: () => import('./partials/DisputeOccurrences'),
     DisputeNotes: () => import('./partials/DisputeNotes'),
     DisputeOverview: () => import('./partials/DisputeOverview/DisputeOverview'),
+    TicketOverview: () => import('@/views/main/negotiation/partials/ticket/overview/Overview.vue'),
     JusDisputeActions: () => import('@/components/buttons/JusDisputeActions'),
     DisputeTips: () => import('./partials/DisputeTips'),
     DisputeNegotiation: () => import('./partials/DisputeNegotiation'),
@@ -514,11 +525,16 @@ export default {
       'quickReplyTemplates',
       'loggedPersonId',
       'workspaceSubdomain',
-      'isWorkspaceRecovery'
+      'isWorkspaceRecovery',
+      'workspaceProperties'
     ]),
 
     isSmall() {
       return this.width < 840 && this.selectedContacts.length > 0
+    },
+
+    overviewType() {
+      return this.workspaceProperties.DISPUTE_OVERVIEW || 'TICKET'
     },
 
     sendMessageHeightComputed() {

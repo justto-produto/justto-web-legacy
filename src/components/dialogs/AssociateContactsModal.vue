@@ -232,7 +232,7 @@ export default {
       get() {
         return Boolean(this.value) && (this.emails?.length > 0 || this.phones?.length > 0)
       },
-      set(_value) {}
+      set(value) {}
     },
     hasAssociations() {
       const phones = this.phones.filter(phone => {
@@ -248,6 +248,10 @@ export default {
   watch: {
     metadata() {
       this.update()
+    },
+
+    toShow(value) {
+      if (!value) this.loading = false
     }
   },
 

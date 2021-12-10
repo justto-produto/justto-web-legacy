@@ -4,6 +4,7 @@
     class="overview-container"
   >
     <i
+      v-if="!disputeMode"
       :class="{ 'overview-container__button--active': isOverviewActive }"
       class="overview-container__button el-icon-arrow-left"
       @click="$emit('toggle-show-overview')"
@@ -11,7 +12,7 @@
 
     <HeaderUserMenu
       class="overview-container__menu"
-      :class="{'hidde-menu': showOverview}"
+      :class="{'hidde-menu': (showOverview || disputeMode)}"
     />
 
     <div>
@@ -27,6 +28,15 @@
           @click="deleteTicket(ticket.disputeId)"
         />
       </h1>
+
+      <dispute-code-link
+        v-if="ticket && !!ticket.code"
+        :code="ticket.code"
+        :custom-style="{ fontSize: '14x', fontWeight: 'normal', color: '#979797d'}"
+        :custom-icon-style="{ paddingRight: '8px' }"
+        @openTimeline="openTimelineModal"
+      />
+
       <h3
         v-if="ticket.internalId"
         class="overview-container__subtitle show-right-icon"
@@ -57,7 +67,9 @@
       v-model="ticket.description"
     />
 
-    <OverviewTabs />
+    <OverviewTabs
+      @addRecipient="addRecipient"
+    />
 
     <DeleteTicketDialog
       ref="deleteTicketDialog"
@@ -72,6 +84,13 @@
       :metadata="metadata"
       @input="handleChangeAssociatedContracts"
     />
+
+    <JusTimeline
+      v-if="showTimelineModal"
+      v-model="showTimelineModal"
+      :code="ticket.code"
+      @update:contact="restartEngagementFromTimeline"
+    />
   </section>
 </template>
 
@@ -79,6 +98,7 @@
 import { mapActions, mapGetters } from 'vuex'
 
 import preNegotiation from '@/utils/mixins/ticketPreNegotiation'
+import restartEngagement from '@/utils/mixins/restartEngagement'
 
 export default {
   name: 'Overview',
@@ -90,21 +110,29 @@ export default {
     OverviewOffers: () => import('./OverviewOffers'),
     DeleteTicketDialog: () => import('./DeleteTicketDialog'),
     HeaderUserMenu: () => import('@/components/menus/HeaderUserMenu'),
+    JusTimeline: () => import('@/components/JusTimeline/JusTimeline'),
+    DisputeCodeLink: () => import('@/components/buttons/DisputeCodeLink'),
     TextInlineEditor: () => import('@/components/inputs/TextInlineEditor'),
     AssociateContactsModal: () => import('@/components/dialogs/AssociateContactsModal')
   },
 
-  mixins: [preNegotiation],
+  mixins: [preNegotiation, restartEngagement],
 
   props: {
     showOverview: {
       type: Boolean,
       required: true
+    },
+
+    disputeMode: {
+      type: Boolean,
+      default: false
     }
   },
 
   data: () => ({
-    innerWidth: window.innerWidth
+    innerWidth: window.innerWidth,
+    showTimelineModal: false
   }),
 
   computed: {
@@ -128,9 +156,31 @@ export default {
   },
 
   beforeMount() {
+    const id = this.$route.params.id
+
     window.addEventListener('resize', event => {
       this.innerWidth = event.target.innerWidth
     })
+
+    if (this.disputeMode) {
+      const { getTicketMetadata, getAssociatedContacts, setDisputeProperty } = this
+      this.getTicketOverview(id).catch(error => this.$jusNotification({ error }))
+      this.getTicketOverviewInfo(id)
+      this.getTicketOverviewParties(id).then(() => {
+        getTicketMetadata(id).then(() => {
+          getAssociatedContacts(id).then(res => {
+            if (res['CONTATOS ASSOCIADOS'] === 'MAIS TARDE') {
+              setDisputeProperty({ key: 'CONTATOS ASSOCIADOS', disputeId: id, value: 'NAO' }).then(() => {
+                getAssociatedContacts(id)
+              })
+            }
+          })
+        })
+      })
+      this.getDisputeTags(id)
+      this.getLastTicketOffers(id)
+      this.populateTimeline()
+    }
   },
 
   beforeDestroy() {
@@ -141,8 +191,46 @@ export default {
     ...mapActions([
       'setTicketOverview',
       'setDisputeProperty',
-      'getAssociatedContacts'
+      'getAssociatedContacts',
+      'getDisputeTags',
+      'getTicketOverview',
+      'getTicketMetadata',
+      'getLastTicketOffers',
+      'getTicketOverviewInfo',
+      'getTicketOverviewParties',
+      'getDisputeTimeline'
     ]),
+
+    openTimelineModal() {
+      this.showTimelineModal = true
+      this.$jusSegment('Linha do tempo visualizada por dentro da disputa', { disputeId: this.routeId })
+    },
+
+    addRecipient({ type, value }) {
+      // TODO SAAS-4688: Ver como usar multiplos destinatários.
+      if (this.disputeMode) this.$emit('addRecipient', { senders: [value], resume: '', type, inReplyTo: null })
+    },
+
+    restartEngagementFromTimeline(disputeRole) {
+      const { name, party, id: roleId } = disputeRole
+      const { status, id } = this.dispute
+
+      this.verifyRestartEngagement({ name, party, status, disputeId: id, disputeRoleId: roleId })
+    },
+
+    async populateTimeline() {
+      let getting = true
+      for (const round in [0, 1, 2, 3, 4]) {
+        if (getting) {
+          await new Promise(resolve => { setTimeout(resolve, round * 2000) })
+          this.getDisputeTimeline(this.ticket.code).then(() => {
+            getting = false
+          })
+        } else {
+          break
+        }
+      }
+    },
 
     copy(value) {
       navigator.clipboard.writeText(value)

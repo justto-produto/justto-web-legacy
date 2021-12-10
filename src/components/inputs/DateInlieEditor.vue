@@ -1,12 +1,15 @@
 <template>
   <div class="date-inline-editor">
-    <div
+    <span
       v-if="!isEditing"
       class="date-inline-editor__value"
+      @click="editOnClick ? enableEdit() : () => {}"
     >
       <span class="date-inline-editor__inner">
         {{ newDateValue | moment('DD/MM/YYYY') }}
-        <span v-if="processedDate && value">({{ processedDate }})</span>
+        <span v-if="processedDate && value">
+          ({{ processedDate }})
+        </span>
       </span>
       <span class="date-inline-editor__icons">
         <i
@@ -20,7 +23,7 @@
           @click="enableEdit"
         />
       </span>
-    </div>
+    </span>
 
     <el-date-picker
       v-else
@@ -58,12 +61,18 @@ export default {
     isEditable: {
       type: Boolean,
       default: true
+    },
+    editOnClick: {
+      type: Boolean,
+      default: false
     }
   },
+
   data: () => ({
     isEditingActive: false,
     model: ''
   }),
+
   computed: {
     newDateValue() {
       const timestamp = Date.parse(this.value)
@@ -130,6 +139,7 @@ export default {
 
 .date-inline-editor {
   .date-inline-editor__value {
+    display: block;
     position: relative;
     border-bottom: 2px solid transparent;
 

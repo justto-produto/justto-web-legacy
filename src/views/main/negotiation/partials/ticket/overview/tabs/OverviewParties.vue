@@ -18,6 +18,7 @@
           :key="party.disputeRoleId"
           :active-collapse-item="activeCollapseItem"
           :party="party"
+          @addRecipient="$emit('addRecipient', $event)"
         />
       </el-collapse>
       <div class="overview-parties__link">
