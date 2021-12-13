@@ -87,10 +87,20 @@ export default {
             text: 'Abrir Timeline da disputa.'
           }
         } else if (this.disputeTimeline[this.code].error) {
-          return {
-            available: false,
-            icon: 'el-icon-question',
-            text: this.disputeTimeline[this.code].error?.description || defaultMessage
+          switch (this.disputeTimeline[this.code].error?.code) {
+            case 20:
+            case 21:
+              return {
+                available: false,
+                icon: 'el-icon-question',
+                text: 'Processo em segredo de Justiça.'
+              }
+            default:
+              return {
+                available: false,
+                icon: 'el-icon-question',
+                text: this.disputeTimeline[this.code].error?.description || defaultMessage
+              }
           }
         } else {
           return {

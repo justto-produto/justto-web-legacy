@@ -308,6 +308,10 @@ export default {
           .jus-timeline__header-tags {
             margin: 8px 0px auto auto;
             display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            max-height: 192px;
+            overflow-x: scroll;
 
             .jus-timeline__tag {
               max-width: 100%;

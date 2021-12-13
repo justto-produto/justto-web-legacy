@@ -101,10 +101,20 @@ export default {
           text: 'Abrir Timeline da disputa.'
         }
       } else if (this.currentDiputeTimeline?.error) {
-        return {
-          available: false,
-          icon: 'el-icon-question',
-          text: this.currentDiputeTimeline?.error?.description || textDefault
+        switch (this.currentDiputeTimeline?.error?.code) {
+          case 20:
+          case 21:
+            return {
+              available: false,
+              icon: 'el-icon-question',
+              text: 'Processo em segredo de Justiça.'
+            }
+          default:
+            return {
+              available: false,
+              icon: 'el-icon-question',
+              text: this.currentDiputeTimeline?.error?.description || textDefault
+            }
         }
       } else if (!this.currentDiputeTimeline.lawsuits.length) {
         return {

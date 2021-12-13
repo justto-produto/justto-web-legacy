@@ -30,7 +30,7 @@
       </h1>
 
       <dispute-code-link
-        v-if="ticket && !!ticket.code"
+        v-if="ticket && !!ticket.code && disputeMode"
         :code="ticket.code"
         :custom-style="{ fontSize: '14x', fontWeight: 'normal', color: '#979797d'}"
         :custom-icon-style="{ paddingRight: '8px' }"
@@ -392,7 +392,13 @@ export default {
     }
   }
 
+  div {
+    .dispute-code {
+      margin: 8px 0;
+    }
+  }
 }
+
 @media (max-height: 600px) {
   .overview-container {
     gap: 0px !important;
