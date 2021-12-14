@@ -123,7 +123,7 @@ const disputeActions = {
       method: 'DELETE'
     })
   },
-  getDisputeDTO({ commit }, id) {
+  getDisputeDTO({ _ }, id) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
       axios.get(`${disputesPath}/${id}`)
@@ -517,8 +517,12 @@ const disputeActions = {
     })
   },
   disputeSetVisualized({ _ }, params) {
+    const { disputeId } = params
+
+    delete params.disputeId
+
     return axiosDispatch({
-      url: `${disputesPath}/${params.disputeId}/visualized`,
+      url: `${disputesPath}/${disputeId}/visualized`,
       params,
       method: 'PATCH'
     })
