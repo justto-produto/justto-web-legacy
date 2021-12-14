@@ -10,11 +10,14 @@ class Plaintiff {
 }
 export default class TicketItemVm {
   constructor({
-    disputeId, id,
-    disputeStatus, status,
+    id,
+    disputeId,
+    disputeStatus,
+    status,
     negotiatorName,
     expirationDate,
-    conclusionDate, conclusion,
+    conclusionDate,
+    conclusion,
     visualized,
     favorite,
     plaintiff,
@@ -30,10 +33,20 @@ export default class TicketItemVm {
     signStatus,
     hasDraft,
     lawyer,
-    draftStatus
+    draftStatus,
+    alwaysContactParty,
+    contactPartyWhenInvalidLowyer,
+    contactPartyWhenInvalidLawyer,
+    contactPartyWhenNoLowyer,
+    contactPartyWhenNoLawyer
   }) {
     const oab = firstClaimantLawyerOab ? firstClaimantLawyerOab.split('/') : []
     this.disputeId = disputeId || id
+    this.alwaysContactParty = Boolean(alwaysContactParty)
+    this.contactPartyWhenInvalidLawyer = Boolean(contactPartyWhenInvalidLawyer || contactPartyWhenInvalidLowyer)
+    this.contactPartyWhenInvalidLowyer = Boolean(contactPartyWhenInvalidLawyer || contactPartyWhenInvalidLowyer)
+    this.contactPartyWhenNoLawyer = Boolean(contactPartyWhenNoLawyer || contactPartyWhenNoLowyer)
+    this.contactPartyWhenNoLowyer = Boolean(contactPartyWhenNoLawyer || contactPartyWhenNoLowyer)
     this.disputeStatus = disputeStatus || status
     this.negotiatorName = negotiatorName || disputeRoles?.find(role => role.roleNameNegotiator).name
     this.expirationDate = expirationDate
