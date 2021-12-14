@@ -32,7 +32,6 @@
     </div>
 
     <el-button
-      v-if="disputeMode"
       type="primary"
       size="small"
       icon="el-icon-edit"
