@@ -1108,6 +1108,7 @@ export default {
     height: 100%;
     position: relative;
   }
+
   &__send-message {
     position: relative;
     border-top: 1px solid #eeeeee;
@@ -1237,6 +1238,7 @@ export default {
       width: 20px;
     }
   }
+
   &__quill {
     height: calc(100% - 32px);
     position: relative;
@@ -1335,6 +1337,7 @@ export default {
       flex-direction: column;
     }
   }
+
   &__send-message-actions {
     margin-top: 6px;
     @media (max-height: 780px) {
@@ -1349,17 +1352,21 @@ export default {
       z-index: 0;
     }
   }
+
   &__disabled-text {
     color: $--color-text-secondary;
     cursor: default;
     align-self: center;
   }
+
   &__back {
     margin-right: 10px;
   }
+
   &__title {
     font-weight: 500;
   }
+
   &__steps {
     padding: 20px 0;
     ul {
@@ -1369,10 +1376,18 @@ export default {
       padding-top: 0;
     }
   }
+
+  .jus-main-view__right-card {
+    .el-card__body {
+      padding: 8px 16px;
+    }
+  }
+
   .jus-main-view__main-card {
     height: 100%;
     min-width: 532px;
     z-index: 0;
+
     > .el-card__body {
       height: 100%;
       display: flex;
@@ -1380,9 +1395,11 @@ export default {
       padding: 0;
     }
   }
+
   hr {
     margin: 1px -20px 20px;
   }
+
   &__search {
     visibility: hidden;
     transition: 0.3s ease all;

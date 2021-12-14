@@ -2,6 +2,7 @@
   <section
     v-loading="isLoading"
     class="overview-container"
+    :class="{'dispute': disputeMode}"
   >
     <i
       v-if="!disputeMode"
@@ -68,7 +69,9 @@
     />
 
     <OverviewTabs
+      :dispute-mode="disputeMode"
       @addRecipient="addRecipient"
+      @edit:dispute="editDispute"
     />
 
     <DeleteTicketDialog
@@ -91,6 +94,9 @@
       :code="ticket.code"
       @update:contact="restartEngagementFromTimeline"
     />
+
+    <!-- Edição de disputa -->
+    <EditDisputeDialog ref="editDisputeDialog" />
   </section>
 </template>
 
@@ -113,7 +119,8 @@ export default {
     JusTimeline: () => import('@/components/JusTimeline/JusTimeline'),
     DisputeCodeLink: () => import('@/components/buttons/DisputeCodeLink'),
     TextInlineEditor: () => import('@/components/inputs/TextInlineEditor'),
-    AssociateContactsModal: () => import('@/components/dialogs/AssociateContactsModal')
+    AssociateContactsModal: () => import('@/components/dialogs/AssociateContactsModal'),
+    EditDisputeDialog: () => import('@/views/main/dispute/partials/DisputeOverview/dialogs/EditDisputeDialog')
   },
 
   mixins: [preNegotiation, restartEngagement],
@@ -253,6 +260,10 @@ export default {
       this.setDisputeProperty({ key: 'CONTATOS ASSOCIADOS', disputeId, value }).then(() => {
         this.getAssociatedContacts(disputeId)
       })
+    },
+
+    editDispute() {
+      this.$refs.editDisputeDialog.show()
     }
   }
 }
@@ -311,6 +322,10 @@ export default {
     &--active:before {
       transform: rotate(180deg) translateY(50%) !important;
     }
+  }
+
+  &.dispute {
+    padding: 0;
   }
 }
 

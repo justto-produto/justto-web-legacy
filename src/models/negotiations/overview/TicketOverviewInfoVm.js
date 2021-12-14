@@ -9,35 +9,43 @@ class ClassificationVm {
 
 export default class DisputeOverviewInfoVm {
   constructor({
-    disputeId, id,
+    disputeId,
+    id,
     strategyId,
-    internalIdentification, externalId,
-    contactPartyWhenInvalidLawyer, contactPartyWhenInvalidLowyer,
-    contactPartyWhenNoLawyer, contactPartyWhenNoLowyer,
-    businessHoursEngagement,
+    internalIdentification,
+    externalId,
+    contactPartyWhenInvalidLawyer,
+    contactPartyWhenInvalidLowyer,
+    contactPartyWhenNoLawyer,
+    contactPartyWhenNoLowyer,
     alwaysContactParty,
+    businessHoursEngagement,
     skipEnrichment,
     denySavingDeposit,
     campaignName,
     campaign,
     requestedValue,
-    materialDamageValue, materialDamage,
-    moralDamageValue, moralDamage,
+    materialDamageValue,
+    materialDamage,
+    moralDamageValue,
+    moralDamage,
     provisionedValue,
-    importedDate, createAt,
-    expireDate, expirationDate,
+    importedDate,
+    createAt,
+    expireDate,
+    expirationDate,
     classification,
     courtHearingDate
   }) {
     this.disputeId = disputeId || id
     this.strategyId = strategyId
     this.internalIdentification = internalIdentification || externalId
-    this.contactPartyWhenInvalidLawyer = contactPartyWhenInvalidLawyer || (contactPartyWhenInvalidLowyer || campaign.contactPartyWhenInvalidLowyer)
-    this.contactPartyWhenNoLawyer = contactPartyWhenNoLawyer || (contactPartyWhenNoLowyer || campaign.contactPartyWhenNoLowyer)
-    this.businessHoursEngagement = businessHoursEngagement || campaign.businessHoursEngagement
-    this.alwaysContactParty = alwaysContactParty || campaign.alwaysContactParty
-    this.denySavingDeposit = denySavingDeposit || campaign.denySavingDeposit
-    this.skipEnrichment = skipEnrichment || campaign.skipEnrichment
+    this.contactPartyWhenInvalidLawyer = (contactPartyWhenInvalidLawyer || contactPartyWhenInvalidLowyer)
+    this.contactPartyWhenNoLawyer = (contactPartyWhenNoLawyer || contactPartyWhenNoLowyer)
+    this.businessHoursEngagement = typeof businessHoursEngagement === 'boolean' ? businessHoursEngagement : (businessHoursEngagement || campaign.businessHoursEngagement)
+    this.alwaysContactParty = typeof alwaysContactParty === 'boolean' ? alwaysContactParty : (alwaysContactParty || campaign.alwaysContactParty)
+    this.denySavingDeposit = typeof denySavingDeposit === 'boolean' ? denySavingDeposit : (denySavingDeposit || campaign.denySavingDeposit)
+    this.skipEnrichment = typeof skipEnrichment === 'boolean' ? skipEnrichment : (skipEnrichment || campaign.skipEnrichment)
     this.campaignName = campaignName || campaign.name
     this.requestedValue = requestedValue
     this.materialDamageValue = materialDamageValue || materialDamage

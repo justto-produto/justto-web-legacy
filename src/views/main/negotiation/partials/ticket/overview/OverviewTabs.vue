@@ -33,7 +33,10 @@
         <i class="el-icon-warning-outline" />
       </el-tooltip>
 
-      <OverviewInfo />
+      <OverviewInfo
+        :dispute-mode="disputeMode"
+        @dispute="editInfo"
+      />
     </el-tab-pane>
 
     <el-tab-pane
@@ -73,21 +76,32 @@ import { mapActions } from 'vuex'
 
 export default {
   name: 'OverviewTabs',
+
   components: {
     OverviewAttachments: () => import('./tabs/OverviewAttachments'),
     OverviewProperties: () => import('./tabs/OverviewProperties'),
     OverviewParties: () => import('./tabs/OverviewParties'),
     OverviewInfo: () => import('./tabs/OverviewInfo')
   },
+
+  props: {
+    disputeMode: {
+      type: Boolean,
+      default: false
+    }
+  },
+
   data: () => ({
     activeTab: 'parties',
     loadedTabs: ['parties']
   }),
+
   computed: {
     disputeId() {
       return Number(this.$route.params.id)
     }
   },
+
   watch: {
     'disputeId'(disputeId) {
       this.loadedTabs = ['parties']
@@ -95,10 +109,12 @@ export default {
       this.getTicketOverviewParties(this.disputeId)
     }
   },
+
   beforeMount() {
     this.getTicketOverviewParties(this.disputeId)
     this.getMyStrategiesLite()
   },
+
   methods: {
     ...mapActions([
       'getTicketOverviewInfo',
@@ -116,6 +132,10 @@ export default {
       if (!loadedTabs.includes(name)) {
         this[action](disputeId).then(() => loadedTabs.push(name))
       }
+    },
+
+    editInfo() {
+      this.$emit('edit:dispute')
     }
   }
 }

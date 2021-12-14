@@ -34,7 +34,7 @@
     <el-button
       v-if="!isPreNegotiation"
       type="primary"
-      size="medium"
+      size="small"
       icon="el-icon-plus"
       @click="addParty"
     >

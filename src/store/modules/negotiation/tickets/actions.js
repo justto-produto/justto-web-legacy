@@ -75,7 +75,8 @@ const overviewActions = {
   updateActiveTab({ state, commit }, disputeStatus) {
     const correspondingTab = getCorrespondingTab(disputeStatus)
 
-    if (correspondingTab !== state.ticketsActiveTab) {
+    if (correspondingTab !== state.ticketsActiveTab && ['ACCEPTED', 'CHECKOUT', 'SETTLED'].includes(disputeStatus)) {
+      console.table({ correspondingTab, ticketsActiveTab: state.ticketsActiveTab, disputeStatus })
       const vue = document.querySelector('#app').__vue__
 
       document.querySelectorAll('.el-notification.info.right').forEach(tag => tag.__vue__.$parent.close())
@@ -99,7 +100,7 @@ const overviewActions = {
     if (rootState.negotiationTicketsModule.ticketsPreventSocket) return
 
     if (rootState.negotiationOverviewModule.ticketOverview.disputeId === dispute.id) {
-      if (correspondingTab !== state.ticketsActiveTab) {
+      if (correspondingTab !== state.ticketsActiveTab && ['ACCEPTED', 'CHECKOUT', 'SETTLED'].includes(dispute.status)) {
         const vue = document.querySelector('#app').__vue__
 
         document.querySelectorAll('.el-notification.info.right').forEach(tag => tag.__vue__.$parent.close())
