@@ -2,6 +2,7 @@
   <el-dialog
     :close-on-click-modal="false"
     :visible.sync="editDisputeDialogVisible"
+    custom-class="dispute-form-dialog"
     title="Editar disputa"
     width="70%"
   >
@@ -12,7 +13,7 @@
       :model="disputeForm"
       :rules="disputeFormRules"
       label-position="top"
-      @submit.native.prevent="editDispute"
+      @submit.native.prevent="handleEditDispute"
     >
       <h3>Detalhes da Disputa</h3>
 
@@ -294,7 +295,7 @@
         :loading="editDisputeDialogLoading"
         type="primary"
         data-testid="confirm-edit-data"
-        @click="editDispute"
+        @click="handleEditDispute"
       >
         Editar dados
       </el-button>
@@ -367,6 +368,7 @@ export default {
 
   methods: {
     ...mapActions({
+      setDispute: 'editDispute',
       getDispute: 'getDisputeDTO',
       getStrategies: 'getMyStrategiesLite'
     }),
@@ -393,51 +395,151 @@ export default {
     },
 
     handleOpenDialog() {
-      this.disputeUpperRangeHasChanged = false
-      this.lastOfferValueHasChanged = false
-      const dispute = JSON.parse(JSON.stringify(this.dispute))
-
-      //   this.selectedClaimantId = this.disputeClaimants && this.disputeClaimants.length ? this.disputeClaimants[0].id : ''
-      this.selectedNegotiatorId = this.disputeNegotiations?.length ? this.disputeNegotiations[0].id : ''
-
       this.disputeForm = {
-        id: dispute?.id,
-        disputeCode: dispute?.code,
-        disputeUpperRange: parseFloat(dispute?.disputeUpperRange),
-        lastOfferValue: parseFloat(dispute?.lastOfferValue),
-        expirationDate: dispute?.expirationDate?.dateTime,
-        description: dispute?.description || '',
-        materialDamage: dispute?.materialDamage || '',
-        moralDamage: dispute?.moralDamage || '',
-        requestedValue: dispute?.requestedValue || '',
-        externalId: dispute?.externalId || '',
-        provisionedValue: dispute?.provisionedValue || '',
-        classification: dispute?.classification?.name || '',
-        contactPartyWhenNoLowyer: Boolean(dispute?.contactPartyWhenNoLowyer),
-        contactPartyWhenInvalidLowyer: Boolean(dispute?.contactPartyWhenInvalidLowyer),
-        alwaysContactParty: Boolean(dispute?.alwaysContactParty),
-        denySavingDeposit: Boolean(dispute?.denySavingDeposit),
-        zeroUpperRange: !parseFloat(dispute?.disputeUpperRange)
+        id: this.dispute?.id,
+        disputeCode: this.dispute?.code,
+        disputeUpperRange: parseFloat(this.dispute?.disputeUpperRange),
+        lastOfferValue: parseFloat(this.dispute?.lastOfferValue),
+        expirationDate: this.dispute?.expirationDate?.dateTime,
+        description: this.dispute?.description || '',
+        materialDamage: this.dispute?.materialDamage || '',
+        moralDamage: this.dispute?.moralDamage || '',
+        requestedValue: this.dispute?.requestedValue || '',
+        externalId: this.dispute?.externalId || '',
+        provisionedValue: this.dispute?.provisionedValue || '',
+        classification: this.dispute?.classification?.name || '',
+        contactPartyWhenNoLowyer: Boolean(this.dispute?.contactPartyWhenNoLowyer),
+        contactPartyWhenInvalidLowyer: Boolean(this.dispute?.contactPartyWhenInvalidLowyer),
+        alwaysContactParty: Boolean(this.dispute?.alwaysContactParty),
+        denySavingDeposit: Boolean(this.dispute?.denySavingDeposit),
+        zeroUpperRange: !parseFloat(this.dispute?.disputeUpperRange)
       }
 
+      this.selectedNegotiatorId = this.disputeNegotiations?.length ? this.disputeNegotiations[0].id : ''
+      this.disputeUpperRangeHasChanged = false
+      this.lastOfferValueHasChanged = false
       this.editDisputeDialogLoading = false
 
       this.$nextTick(() => { this.$refs.disputeForm.clearValidate() })
     },
 
-    editDispute(event) {
-      console.log('editDispute', event)
+    handleEditDispute() {
+      this.$refs.disputeForm.validate(valid => {
+        if (valid) {
+          this.editDisputeDialogLoading = true
+
+          const tag = this.$createElement
+          const hasUpperRangeProblem = this.isRecoveryStrategy ? this.disputeForm.lastOfferValue < this.disputeForm.disputeUpperRange : this.disputeForm.lastOfferValue > this.disputeForm.disputeUpperRange
+          const hasUpperRangeProblemText = `- ${this.$tc('UPPER_RANGE', this.isRecoveryStrategy)} está ${this.isRecoveryStrategy ? 'acima' : 'abaixo'} do valor proposto.`
+
+          this.$msgbox({
+            title: 'Atenção!',
+            message: tag('p', null, [
+              tag('div', null, '- As novas informações vão sobrescrever as antigas.'),
+              hasUpperRangeProblem ? tag('div', null, hasUpperRangeProblemText) : null,
+              tag('br', null, null),
+              tag('div', null, 'Deseja continuar?')
+            ]),
+            confirmButtonText: 'Continuar',
+            confirmButtonClass: 'edit-case-confirm-button',
+            cancelButtonClass: 'is-plain',
+            showCancelButton: true,
+            customClass: 'edit-case-confitm-dialog'
+          }).then(this.editDispute).catch(() => {
+            this.editDisputeDialogLoading = false
+          })
+        }
+      })
+    },
+
+    editDispute() {
+      const disputeToEdit = {
+        ...JSON.parse(JSON.stringify(this.dispute)),
+        strategyId: this.selectedStrategyId,
+        code: this.disputeForm?.disputeCode,
+        description: this.disputeForm?.description,
+        lastOfferRoleId: this.selectedNegotiatorId,
+        lastOfferValue: this.disputeForm?.lastOfferValue,
+        externalId: this.disputeForm?.externalId || null,
+        moralDamage: this.disputeForm?.moralDamage || null,
+        provisionedValue: this.disputeForm?.provisionedValue,
+        denySavingDeposit: this.disputeForm?.denySavingDeposit,
+        disputeUpperRange: this.disputeForm?.disputeUpperRange,
+        materialDamage: this.disputeForm?.materialDamage || null,
+        requestedValue: this.disputeForm?.requestedValue || null,
+        alwaysContactParty: this.disputeForm?.alwaysContactParty,
+        classification: { name: this.disputeForm?.classification },
+        contactPartyWhenNoLowyer: this.disputeForm?.contactPartyWhenNoLowyer,
+        contactPartyWhenInvalidLowyer: this.disputeForm?.contactPartyWhenInvalidLowyer,
+        expirationDate: { dateTime: this.$moment(this.disputeForm?.expirationDate).endOf('day').format('YYYY-MM-DD[T]HH:mm:ss[Z]') }
+      }
+
+      const currentDate = this.dispute.expirationDate.dateTime
+      const newDate = disputeToEdit.expirationDate.dateTime
+
+      this.setDispute(disputeToEdit).then(() => {
+        this.$jusSegment('Editar disputa', { disputeId: disputeToEdit.id }) // SEGMENT TRACK
+        this.$jusNotification({ title: 'Yay!', message: 'Os dados foram alterados com sucesso.', type: 'success' })
+        this.$nextTick().then(() => this.$emit('fetch-data'))
+        this.editDisputeDialogVisible = false
+
+        this.handleResendMessagesOnEdit({ ...this.dispute, currentDate, newDate })
+      }).catch(this.handleSetDisputeError).finally(() => {
+        this.editDisputeDialogLoading = false
+      })
+    },
+
+    handleSetDisputeError(error) {
+      if (error.response && error.response.data && error.response.status === 412 && error.response.data.code === 'DUPLICATED_VALIDATION') {
+        const { CAN_ACCESS_OTHER, OTHER_DISPUTE_ID, OTHER_NEGOTIATORS } = error.response.data.fields
+        const message = CAN_ACCESS_OTHER
+          ? `Este número de processo ja está sendo usado na disputa <a target="_blank" href="https://justto.app/#/management/dispute/${OTHER_DISPUTE_ID}">#OTHER_DISPUTE_ID</a>.`
+          : `Este número de processo ja está sendo usado na disputa <b>#${OTHER_DISPUTE_ID}</b>. Você não possui acesso a essa disputa. Verifique com um negociador responsável: <b>${OTHER_NEGOTIATORS}</b>`
+
+        this.$jusNotification({ title: 'Ops!', message: message, type: 'warning', dangerouslyUseHTMLString: true })
+      } else {
+        this.$jusNotification({ error })
+      }
+    },
+
+    handleResendMessagesOnEdit({ currentDate, newDate, contactPartyWhenNoLowyer, contactPartyWhenInvalidLowyer, alwaysContactParty }) {
+      const isExpirationDateChanged = this.$moment(currentDate).isBefore(this.$moment()) && this.$moment(newDate).isSameOrAfter(this.$moment())
+      const contactPartyWhenNoLowyerHasChanged = this.disputeForm.contactPartyWhenNoLowyer !== contactPartyWhenNoLowyer
+      const contactPartyWhenInvalidLowyerHasChanged = this.disputeForm.contactPartyWhenInvalidLowyer !== contactPartyWhenInvalidLowyer
+      const alwaysContactPartyChanged = this.disputeForm.alwaysContactParty !== alwaysContactParty
+      const contactPartyHasChanged = contactPartyWhenInvalidLowyerHasChanged || contactPartyWhenNoLowyerHasChanged || alwaysContactPartyChanged
+      const onlyResendMessaged = this.dispute.status === 'RUNNING'
+
+      if (contactPartyHasChanged || isExpirationDateChanged) {
+        const action = onlyResendMessaged ? 'reenviar mensagens automáticas' : 'reiniciar esta disputa'
+        const message = contactPartyHasChanged ? 'As configurações de engajamento foram alteradas. Deseja ' + action + '?' : 'A data de expiração foi alterada. Deseja ' + action + '?'
+
+        this.$confirm(message, 'Atenção!', {
+          confirmButtonText: onlyResendMessaged ? 'Reenviar' : 'Reiniciar',
+          cancelButtonText: 'Cancelar',
+          cancelButtonClass: 'is-plain',
+          type: 'warning'
+        }).then(() => {
+          this.$store.dispatch('sendDisputeAction', {
+            action: onlyResendMessaged ? 'resend-messages' : 'restart-engagement',
+            disputeId: this.dispute.id
+          }).then(() => {
+            const actionDone = onlyResendMessaged ? 'Reenvio de mensagens' : 'Reengajamento'
+            this.$jusNotification({ title: 'Yay!', message: `${actionDone} realizado com sucesso.`, type: 'success' })
+          })
+        })
+      }
     },
 
     disputeUpperRangeChangedHandler() {
       this.disputeUpperRangeHasChanged = true
+
       if (this.disputeForm.disputeUpperRange > 0) {
         this.disputeForm.lastOfferValue = this.disputeForm.disputeUpperRange
       }
     },
 
     // VALIDATIONS
-
     validateLastOfferValue() {
       if (this.lastOfferValueHasChanged && this.disputeForm.disputeUpperRange) {
         return [{ validator: validateZero, message: 'Valor precisa ser acima de 0', trigger: 'submit' }]
@@ -454,3 +556,39 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.dispute-form-dialog {
+  .el-dialog__body {
+    .el-form {
+      .el-row {
+        .dispute-overview-view__select-switch {
+          display: flex;
+          flex-direction: row;
+          align-items: flex-end;
+
+          .content {
+            flex: 1;
+            word-break: keep-all;
+
+            div {
+              font-weight: 600;
+              padding-top: 2px;
+            }
+
+            p {
+              font-style: italic;
+              font-size: 12px;
+              margin: 6px 20px 1em 0;
+            }
+          }
+
+          .el-switch {
+            margin-block-end: 1em;
+          }
+        }
+      }
+    }
+  }
+}
+</style>
