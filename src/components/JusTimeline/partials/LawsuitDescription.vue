@@ -159,6 +159,7 @@ export default {
   computed: {
     ...mapGetters({
       dispute: 'dispute',
+      isRecovery: 'isWorkspaceRecovery',
       negotiationParts: 'getTicketOverviewParties'
     }),
 
@@ -205,8 +206,7 @@ export default {
         type: ['autor', 'ativo'].includes(normalizeString(partyName)) ? 'ATIVO' : 'PASSIVO'
       }
 
-      console.log(type, this.isClaimant(type))
-
+      // TODO: Inverter ternário para Workspace de cobrança;
       const party = this.isClaimant(type) ? 'CLAIMANT' : 'RESPONDENT'
 
       const state = brazilianStates.find(({ value: uf }) => (oab || '').includes(uf))?.value || null
@@ -235,7 +235,9 @@ export default {
     },
 
     isClaimant(type) {
-      return type.toUpperCase().includes('ATIVO') || type.toUpperCase().includes('AUTOR')
+      const isAuthor = ['ATIVO', 'AUTOR', 'REQUERENTE'].includes(type.toUpperCase())
+
+      return this.isRecovery ? !isAuthor : isAuthor
     },
 
     isDisputePart({ name = '', document = '' }) {
