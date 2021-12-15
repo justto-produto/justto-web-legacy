@@ -251,6 +251,7 @@
     "UNSETTLED": "perder",
     "SEND-UNSETTLED": "perder",
     "SEND-COUNTERPROPOSAL": "perder",
+    "SEND_COUNTERPROPOSAL": "perder",
     "DELETE": "excluir",
     "PAUSED": "pausar",
     "RESUME": "retomar",
