@@ -606,6 +606,7 @@ export default {
 
     handleManualOffer(action) {
       const { disputeId } = this.ticket
+
       this.validateOfferForm()
         .then(() => {
           if (this.isRecoveryStrategy ? this.offerForm.value < this.ticket.upperRange : this.offerForm.value > this.ticket.upperRange) {
@@ -636,11 +637,20 @@ export default {
     },
 
     sendManualOffer(updateUpperRange = false) {
+      const { offerFormType } = this
+
       return new Promise((resolve, reject) => {
         const { disputeId } = this.ticket
 
         const { value, roleId, note } = this.offerForm
-        const data = { value, note, conclusionNote: note, roleId, updateUpperRange }
+        const data = {
+          value,
+          note,
+          conclusionNote: note,
+          roleId,
+          updateUpperRange,
+          action: offerFormType
+        }
         const polarityObjectKey = 'plaintiffOffer'
         this.sendOffer({ disputeId, data, polarityObjectKey, change: updateUpperRange })
           .then(success => resolve(success))
