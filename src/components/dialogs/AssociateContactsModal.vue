@@ -331,10 +331,12 @@ export default {
         }))
       })
 
-      Promise.all(promisses).then(() => {
-        this.loading = false
-      }).finally(() => {
-        this.$emit('input', 'SIM')
+      return new Promise((resolve, reject) => {
+        Promise.all(promisses).then(() => {
+          this.loading = false
+          this.$emit('input', 'SIM')
+          resolve()
+        }).catch(reject)
       })
     },
 
@@ -361,6 +363,7 @@ export default {
 
       if (ids.length) {
         const msg = 'Detectamos alterações nos dados de contato. Quer reagendar as mensagens da(s) parte(s) para incluir o(s) novo(s) contato(s)?'
+
         this.$confirm(msg, 'Reengajar', {
           confirmButtonText: 'Sim',
           cancelButtonText: 'Não',
@@ -369,11 +372,13 @@ export default {
           showClose: false,
           center: true
         }).then(() => {
-          Promise.all(ids.map(disputeRoleId => this.restartDisputeRoleEngagement({
-            disputeRoleId,
-            disputeId
-          })))
-        }).catch(() => {}).finally(() => this.handleAssociateContacts())
+          this.handleAssociateContacts().then(() => {
+            Promise.all(ids.map(disputeRoleId => this.restartDisputeRoleEngagement({
+              disputeRoleId,
+              disputeId
+            })))
+          })
+        })
       } else {
         this.handleAssociateContacts()
       }
