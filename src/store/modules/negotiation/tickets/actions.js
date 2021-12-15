@@ -74,12 +74,14 @@ const overviewActions = {
 
   updateActiveTab({ state, commit }, disputeStatus) {
     const correspondingTab = getCorrespondingTab(disputeStatus)
+    const isUpdate = ['ACCEPTED', 'CHECKOUT', 'SETTLED'].includes(disputeStatus) && state.tickets.content.length
 
-    if (correspondingTab !== state.ticketsActiveTab && ['ACCEPTED', 'CHECKOUT', 'SETTLED'].includes(disputeStatus)) {
-      console.table({ correspondingTab, ticketsActiveTab: state.ticketsActiveTab, disputeStatus })
+    if (correspondingTab !== state.ticketsActiveTab && isUpdate) {
       const vue = document.querySelector('#app').__vue__
 
       document.querySelectorAll('.el-notification.info.right').forEach(tag => tag.__vue__.$parent.close())
+
+      console.log('updateActiveTab', state)
 
       vue.$jusNotification({
         title: 'há atualizações nesta disputa',
@@ -100,7 +102,9 @@ const overviewActions = {
     if (rootState.negotiationTicketsModule.ticketsPreventSocket) return
 
     if (rootState.negotiationOverviewModule.ticketOverview.disputeId === dispute.id) {
-      if (correspondingTab !== state.ticketsActiveTab && ['ACCEPTED', 'CHECKOUT', 'SETTLED'].includes(dispute.status)) {
+      const isUpdate = ['ACCEPTED', 'CHECKOUT', 'SETTLED'].includes(dispute.status) && !['ACCEPTED', 'CHECKOUT', 'SETTLED'].includes(rootState.negotiationOverviewModule.ticketOverview.status)
+
+      if (correspondingTab !== state.ticketsActiveTab && isUpdate) {
         const vue = document.querySelector('#app').__vue__
 
         document.querySelectorAll('.el-notification.info.right').forEach(tag => tag.__vue__.$parent.close())
