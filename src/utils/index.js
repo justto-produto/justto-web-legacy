@@ -13,6 +13,7 @@ import calcBrightness from './utils/calcBrightness'
 import validateCurrentId from './utils/validateCurrentId'
 import extractMentions from './utils/extractMentions'
 import { eventBus } from './utils/eventBus'
+import normalizeDateToISO from './utils/normalizeDateToISO'
 import {
   getRoles,
   formatHtml,
@@ -56,6 +57,7 @@ export {
   addInvisibleStatus,
   getLastInteraction,
   getInteractionIcon,
+  normalizeDateToISO,
   getTracktitleByAction,
   registerServiceWorker,
   showUnavailableLoading,
