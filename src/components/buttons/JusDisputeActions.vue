@@ -151,7 +151,7 @@
         <el-button
           :loading="modalLoading"
           type="primary"
-          @click.prevent="disputeAction('send-settled', updateUpperRange = true)"
+          @click.prevent="disputeAction('send_settled', updateUpperRange = true)"
         >
           Continuar
         </el-button>
@@ -408,7 +408,7 @@
         <el-button
           :loading="modalLoading"
           type="primary"
-          @click.prevent="disputeAction('send-counterproposal')"
+          @click.prevent="disputeAction('send_counterproposal')"
         >
           Atualizar contraproposta
         </el-button>
@@ -1019,7 +1019,7 @@ export default {
             }
           }
           break
-        case 'send-settled':
+        case 'send_settled':
           this.sendCounterproposal(true)
           break
         case 'unsettled':
@@ -1028,7 +1028,7 @@ export default {
           break
         case 'send-unsettled':
           if (this.isInsufficientUpperRange) {
-            this.disputeAction('send-counterproposal')
+            this.disputeAction('send_counterproposal')
           } else {
             additionParams = {
               body: {
@@ -1114,7 +1114,7 @@ export default {
             this.openCounterproposalDialog()
           }
           break
-        case 'send-counterproposal':
+        case 'send_counterproposal':
           if (this.unsettledType === 'INSUFFICIENT_UPPER_RANGE') {
             this.sendCounterproposal().then(() => {
               additionParams = {
