@@ -136,7 +136,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
-import { isSimilarStrings } from '@/utils'
+import { isSimilarStrings, normalizeString } from '@/utils'
 
 import brazilianStates from '@/constants/brazilianStates'
 
@@ -201,18 +201,22 @@ export default {
 
     addLawyer({ name = '', document = '', oab = '', partyName = '' }) {
       const disputeId = this.$route.params.id
-      const { type } = this.state.parties.find(p => isSimilarStrings(partyName, p.name, 75))
-      const polarity = this.isClaimant(type) ? 'CLAIMANT' : 'RESPONDENT'
+      const { type } = this.state.parties.find(p => isSimilarStrings(partyName, p.name, 75)) || {
+        type: ['autor', 'ativo'].includes(normalizeString(partyName)) ? 'ATIVO' : 'PASSIVO'
+      }
 
-      const oabState = brazilianStates.find(({ value: uf }) => (oab || '').includes(uf))?.value || null
-      const [oabNumber] = oab?.length ? ((oab || '').replace(oabState, '').match(/[\dA-Z]+/g) || []).join('').match(/[\dABENP]+/g) : ''
+      const party = this.isClaimant(type) ? 'CLAIMANT' : 'RESPONDENT'
+
+      const state = brazilianStates.find(({ value: uf }) => (oab || '').includes(uf))?.value || null
+      const [oabNumber] = oab?.length ? ((oab || '').replace(state, '').match(/[\dA-Z]+/g) || []).join('').match(/[\dABENP]+/g) : ''
+      const number = oabNumber.length > 6 ? oabNumber.slice(oabNumber.length - 6) : oabNumber
 
       const data = {
-        oabs: (oab === '' || !oab) ? [] : [{ number: oabNumber, state: oabState }],
-        documentNumber: document === '' ? null : document,
+        oabs: (oab === '' || !oab) ? [] : [{ number, state }],
+        documentNumber: document || null,
         roles: ['LAWYER'],
-        party: polarity,
         main: true,
+        party,
         name
       }
 
