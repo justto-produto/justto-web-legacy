@@ -70,7 +70,6 @@
           •
         </span>
 
-        <!-- :content="sendStatusDate" -->
         <el-tooltip
           :disabled="!sendStatusDate"
         >
