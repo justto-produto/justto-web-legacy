@@ -205,6 +205,8 @@ export default {
         type: ['autor', 'ativo'].includes(normalizeString(partyName)) ? 'ATIVO' : 'PASSIVO'
       }
 
+      console.log(type, this.isClaimant(type))
+
       const party = this.isClaimant(type) ? 'CLAIMANT' : 'RESPONDENT'
 
       const state = brazilianStates.find(({ value: uf }) => (oab || '').includes(uf))?.value || null
@@ -233,7 +235,7 @@ export default {
     },
 
     isClaimant(type) {
-      return type.toUpperCase().includes('ATIVO')
+      return type.toUpperCase().includes('ATIVO') || type.toUpperCase().includes('AUTOR')
     },
 
     isDisputePart({ name = '', document = '' }) {
