@@ -14,7 +14,7 @@
         <strong
           class="grouped-occurrences__container-text"
         >
-          +{{ occurrences.length }} ocorrência(s) similare(s) à essa:
+          +{{ occurrences.length }} {{ plural('ocorrência', 's') }} {{ plural('similar', 'es') }} à essa {{ plural('enviada', 's') }} em:
         </strong>
         <div
           v-for="({ date }, index) in occurrences"
@@ -44,6 +44,12 @@ export default {
     have: {
       type: Boolean,
       default: false
+    }
+  },
+
+  computed: {
+    plural() {
+      return (msg, sufix) => this.occurrences.length > 1 ? `${msg}${sufix}` : msg
     }
   }
 }
