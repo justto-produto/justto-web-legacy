@@ -663,7 +663,7 @@
 
 <script>
 import InfiniteLoading from 'vue-infinite-loading'
-import { isSimilarStrings, normalizeString } from '@/utils'
+import { isSimilarStrings, normalizeString, normalizeDateToISO } from '@/utils'
 import { mapGetters, mapActions } from 'vuex'
 import { uniq } from 'lodash'
 
@@ -709,6 +709,7 @@ export default {
       ]
     }
   },
+
   computed: {
     ...mapGetters([
       'activeOccurrency',
@@ -801,6 +802,7 @@ export default {
 
       return datedOccurrences
     },
+
     fetchAction() {
       if (this.typingTab === '1') {
         return 'getDisputeCommunications'
@@ -809,16 +811,19 @@ export default {
       }
     }
   },
+
   watch: {
     typingTab() {
       this.clearOccurrences()
       this.infiniteId += 1
     }
   },
+
   mounted() {
     this.clearOccurrences()
     this.resetOccurrences()
   },
+
   methods: {
     ...mapActions(['setActiveactiveOccurrency', 'resetOccurrences']),
 
@@ -840,15 +845,19 @@ export default {
         occurrence.interaction.direction === 'INBOUND' &&
         !['MANUAL_COUNTERPROPOSAL'].includes(occurrence.interaction.type)
     },
+
     getIconIsMerged(occurrency) {
       return this.activeOccurrency.id === occurrency.id ? 'el-icon-arrow-up' : 'el-icon-arrow-down'
     },
+
     openOptionsParty(role) {
       this.$set(this.handlePartyId, 'party_role' + role.id, true)
     },
+
     closeOptionsParty(role) {
       this.$set(this.handlePartyId, 'party_role' + role.id, false)
     },
+
     setDisputeParty(role) {
       this.handlePartyId['party_role' + role.id] = false
       const params = {
@@ -868,6 +877,7 @@ export default {
         })
       })
     },
+
     clearOccurrences() {
       this.$store.commit('clearOccurrencesSize')
       this.$store.commit('clearDisputeOccurrences')
@@ -1037,9 +1047,11 @@ export default {
       }
       return occurrence.description
     },
+
     canHandleUnknowParty(occurrence) {
       return occurrence.properties && occurrence.properties.HANDLE_UNKNOW_PARTY && occurrence.properties.UNKNOW_ROLE_IDS
     },
+
     getUnknowPartys(occurrence) {
       const canHandleParty = this.canHandleUnknowParty(occurrence)
       if (canHandleParty) {
@@ -1050,6 +1062,7 @@ export default {
       }
       return canHandleParty
     },
+
     buildContent(occurrence) {
       // const templateNote = (note) => (`<div style="display: flex; margin-top: 8px; flex-direction:column; background-color: #f6f1ff"><div style="background-color: #efe7ff; padding: 8px;">Observações:</div><div style="padding: 8px 16px;">${note}</div></div>`)
       const templateNote = (note) => (` com a observação: ${note}.`)
@@ -1144,6 +1157,7 @@ export default {
       }
       return typeClass
     },
+
     showReply(occurrence) {
       if (occurrence.interaction &&
         (['EMAIL', 'WHATSAPP', 'NEGOTIATOR_MESSAGE'].includes(occurrence.interaction?.message?.communicationType) ||
@@ -1203,9 +1217,18 @@ export default {
     buildWhatsappStatus(message, executionDateTime) {
       if (!message) return null
       if (message.status.startsWith('PROCESSED')) {
-        const sendDate = message.parameters && message.parameters.SEND_DATE ? message.parameters.SEND_DATE : this.$moment(executionDateTime.dateTime).format('DD/MM/YYYY [ às ] HH:mm')
-        const receiverDate = message.parameters ? message.parameters.RECEIVER_DATE : ''
-        const readDate = (message.parameters && message.parameters.READ_DATE) ? this.$moment(message.parameters.READ_DATE).format('DD/MM/YYYY [ às ] HH:mm') : ''
+        const sendDate = message?.parameters?.SEND_DATE
+          ? this.$moment(normalizeDateToISO(message.parameters.SEND_DATE)).format('DD/MM/YYYY [ às ] HH:mm')
+          : this.$moment(executionDateTime.dateTime).format('DD/MM/YYYY [ às ] HH:mm')
+
+        const receiverDate = message?.parameters?.RECEIVER_DATE
+          ? this.$moment(normalizeDateToISO(message.parameters.RECEIVER_DATE)).format('DD/MM/YYYY [ às ] HH:mm')
+          : ''
+
+        const readDate = message?.parameters?.READ_DATE
+          ? this.$moment(normalizeDateToISO(message.parameters.READ_DATE)).format('DD/MM/YYYY [ às ] HH:mm')
+          : ''
+
         let icon = 'status-sent'
         let msg = `Enviado em ${sendDate}.`
         if (receiverDate) {

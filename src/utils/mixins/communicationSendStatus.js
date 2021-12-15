@@ -1,4 +1,4 @@
-import { isSimilarStrings } from '@/utils'
+import { isSimilarStrings, normalizeDateToISO } from '@/utils'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -53,11 +53,11 @@ export default {
       const keys = Object.keys(parameters)
 
       if (keys.includes('READ_DATE')) {
-        return this.$moment.utc(parameters.READ_DATE).toISOString()
+        return normalizeDateToISO(parameters.READ_DATE)
       } else if (keys.includes('RECEIVER_DATE')) {
-        return this.$moment.utc(parameters.RECEIVER_DATE).toISOString()
+        return normalizeDateToISO(parameters.RECEIVER_DATE)
       } else if (keys.includes('SEND_DATE')) {
-        return this.$moment.utc(parameters.SEND_DATE).toISOString()
+        return normalizeDateToISO(parameters.SEND_DATE)
       } else {
         return this.interaction?.createAt?.dateTime
       }
