@@ -151,7 +151,7 @@
         <el-button
           :loading="modalLoading"
           type="primary"
-          @click.prevent="disputeAction('send-counterproposal', updateUpperRange = true)"
+          @click.prevent="disputeAction('send-settled', updateUpperRange = true)"
         >
           Continuar
         </el-button>
@@ -995,6 +995,8 @@ export default {
         title: this.$options.filters.capitalize(this.$t('action.' + action.toUpperCase()))
       }
 
+      this.offerFormType = action.toUpperCase()
+
       switch (action) {
         case 'settled':
           if (this.dispute.paused) {
@@ -1016,6 +1018,9 @@ export default {
               this.openSettledDialog(action)
             }
           }
+          break
+        case 'send-settled':
+          this.sendCounterproposal(true)
           break
         case 'unsettled':
           this.unsettledType = null
@@ -1466,7 +1471,8 @@ export default {
                 value: this.counterOfferForm.lastCounterOfferValue.toString(),
                 roleId: this.counterOfferForm.selectedRoleId,
                 note: this.scapeHtml(this.counterOfferForm.note),
-                updateUpperRange: updateUpperRange || false
+                updateUpperRange: updateUpperRange || false,
+                action: this.offerFormType
               }).then(() => {
                 resolve()
                 this.counterproposalDialogVisible = false

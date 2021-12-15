@@ -605,6 +605,7 @@ const disputeActions = {
         role: { id: params.roleId },
         value: params.value,
         note: params.note,
+        action: params.action,
         updateUpperRange: params.updateUpperRange
       }).then(response => {
         resolve(response.data)
