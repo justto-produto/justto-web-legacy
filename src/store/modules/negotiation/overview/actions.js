@@ -23,6 +23,14 @@ const overviewActions = {
     })
   },
 
+  getContactBlockReason({ _ }, { disputeId, blockedType, addressType, contactId }) {
+    return validateCurrentId(disputeId, () => {
+      return axiosDispatch({
+        url: `${disputeApiLegacy}/${disputeId}/contact/${blockedType}/${addressType}/${contactId}`
+      })
+    })
+  },
+
   getTicketOverviewInfo({ commit }, disputeId) {
     commit('incrementTicketOverviewCountGetters')
 
