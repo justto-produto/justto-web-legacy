@@ -9,9 +9,8 @@
         v-if="mappedRecipients.includes(contact[model])"
         class="party-contacts__infoline-icon el-icon-s-promotion"
       />
-      <div
-        v-else-if="!contact.isMain"
-      >
+
+      <div v-else-if="!contact.isMain">
         <el-tooltip
           :open-delay="600"
           effect="dark"
@@ -30,6 +29,7 @@
           />
         </el-tooltip>
       </div>
+
       <div class="party-contacts__popover">
         <el-tooltip
           :open-delay="600"
@@ -56,13 +56,17 @@
           </el-popover>
         </el-tooltip>
 
+        <!-- :content="blocks[contact.id]" -->
         <el-popover
           v-if="contact.blocked"
-          :content="$tc(`blocked.email.${contact.blockedType || 'UNKNOW'}`)"
           :open-delay="500"
           placement="top-end"
           trigger="hover"
         >
+          <div>
+            {{ blocks[contact.id] || $tc(`blocked.email.${contact.blockedType || 'UNKNOW'}`) }}
+          </div>
+
           <div slot="reference">
             <TextInlineEditor
               v-model="contact[model]"
@@ -104,12 +108,14 @@
         />
       </div>
     </span>
+
     <div
       v-if="(isAllContactsVisible || contactsLength <= 3) && !isAddingNewContact && !disabled"
       class="party-contacts__infoline-link"
     >
       <a @click="startAddNewContact">Adicionar</a>
     </div>
+
     <TextInlineEditor
       v-if="isAddingNewContact"
       ref="newContactInput"
@@ -121,6 +127,7 @@
       @blur="stopAddNewContact"
       @enableEdit="enableEdit"
     />
+
     <div
       v-if="contactsLength > 3"
       class="party-contacts__infoline-link"
@@ -186,7 +193,8 @@ export default {
     isAllContactsVisible: false,
     isAddingNewContact: false,
     newContactModel: '',
-    modalLoading: false
+    modalLoading: false,
+    blocks: {}
     // LGPDDialogVisible: false,
     // currentContactValue: '',
     // currentValid: false
@@ -198,33 +206,54 @@ export default {
       recipients: 'getEditorRecipients',
       ticketStatus: 'getTicketOverviewStatus'
     }),
+
     isPhoneNumber() {
       return this.model === 'number'
     },
+
     LGPDMessage() {
       const type = this.isPhoneNumber ? 'telefone' : 'e-mail'
       return `Este ${type} está desabilitado para receber mensagens automáticas`
     },
+
     contactsFiltered() {
       return this.contacts.filter(({ archived }) => !archived)
     },
+
     mappedRecipients() {
       return this.recipients.map(({ value }) => (value))
     },
+
     contactsLength() {
       return this.contactsFiltered.length
     },
+
     expandLinkText() {
       const { isAllContactsVisible, contactsLength } = this
       return !isAllContactsVisible ? `Ver mais (+${contactsLength - 3})` : `Ver menos (-${contactsLength - 3})`
     },
+
     processedContacts() {
       const { contactsFiltered, isAllContactsVisible, contactsLength } = this
       const arrayCut = isAllContactsVisible ? contactsLength : 3
       return contactsFiltered?.slice(0, arrayCut)
     },
+
     isOabContacts() {
       return Object.values(this.party).length > 0 && this.filter === 'oab'
+    },
+
+    getBlockText() {
+      return (contact) => {
+        return Object.keys(this.blocks).includes(String(contact.id)) ? this.blocks[contact.id] : this.$tc(`blocked.email.${contact.blockedType || 'UNKNOW'}`)
+      }
+    }
+  },
+
+  watch: {
+    contacts: {
+      deep: true,
+      handler: 'handleValidateContacts'
     }
   },
 
@@ -232,8 +261,35 @@ export default {
     ...mapActions([
       'addCall',
       'searchLawyers',
+      'getContactBlockReason',
       'hideSearchLawyerLoading'
     ]),
+
+    handleValidateContacts() {
+      this.contacts.forEach(contact => {
+        if (contact.blocked) {
+          const disputeId = Number(this.$route?.params?.id)
+          const { blockedType, id } = contact
+
+          const addressType = {
+            number: 'phone',
+            address: 'email',
+            fullOab: 'oab'
+          }[this.model]
+
+          const params = {
+            disputeId,
+            blockedType,
+            addressType,
+            contactId: id
+          }
+
+          this.getContactBlockReason(params).then(({ reason }) => {
+            this.$set(this.blocks, Number(id), reason)
+          })
+        }
+      })
+    },
 
     toggleContactsVisible() {
       this.isAllContactsVisible = !this.isAllContactsVisible
