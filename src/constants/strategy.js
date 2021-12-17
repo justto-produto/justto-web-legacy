@@ -19,6 +19,11 @@ export const STRATEGY_COMMUNICATION_TYPES = {
     label: 'Whats App',
     icon: 'whatsapp'
   },
+  PHONE_CALL: {
+    key: 'PHONE_CALL',
+    label: 'Discador',
+    icon: 'phone'
+  },
   DELAY: {
     key: 'DELAY',
     label: 'Espera',
