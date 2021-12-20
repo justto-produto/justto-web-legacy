@@ -53,11 +53,23 @@ export default {
       const keys = Object.keys(parameters)
 
       if (keys.includes('READ_DATE')) {
-        return normalizeDateToISO(parameters.READ_DATE)
+        if (parameters?.READ_DATE?.includes('[UTC]')) {
+          return this.$moment(parameters?.READ_DATE.slice(parameters?.READ_DATE.indexOf('[UTC]')))
+        } else {
+          return normalizeDateToISO(parameters.READ_DATE)
+        }
       } else if (keys.includes('RECEIVER_DATE')) {
-        return normalizeDateToISO(parameters.RECEIVER_DATE)
+        if (parameters?.RECEIVER_DATE?.includes('[UTC]')) {
+          return this.$moment(parameters?.RECEIVER_DATE.slice(parameters?.RECEIVER_DATE.indexOf('[UTC]')))
+        } else {
+          return normalizeDateToISO(parameters.RECEIVER_DATE)
+        }
       } else if (keys.includes('SEND_DATE')) {
-        return normalizeDateToISO(parameters.SEND_DATE)
+        if (parameters?.SEND_DATE?.includes('[UTC]')) {
+          return this.$moment(parameters?.SEND_DATE.slice(parameters?.SEND_DATE.indexOf('[UTC]')))
+        } else {
+          return normalizeDateToISO(parameters.SEND_DATE)
+        }
       } else {
         return this.interaction?.createAt?.dateTime
       }
