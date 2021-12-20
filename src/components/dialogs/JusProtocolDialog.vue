@@ -290,9 +290,8 @@
               </div>
             </div>
             <div class="jus-protocol-dialog__status-icon">
-              <span v-if="signer.signed">Assinado <jus-icon icon="success" /></span>
               <el-button
-                v-else-if="isThamirisSigner(signer)"
+                v-if="isThamirisSigner(signer) && !signer.signed"
                 :size="buttonSize"
                 icon="el-icon-thumb"
                 type="success"
@@ -301,7 +300,11 @@
               >
                 ASSINAR MINUTA AQUI
               </el-button>
-              <span v-else>Aguardando assinatura</span>
+
+              <span v-if="signer.signatureStatus">
+                {{ $tc(`document.signature.status.${signer.signatureStatus}.text`) }}
+                <jus-icon :icon="$tc(`document.signature.status.${signer.signatureStatus}.icon`)" />
+              </span>
             </div>
           </div>
         </div>
@@ -1275,6 +1278,9 @@ export default {
   }
   .jus-protocol-dialog__status-icon {
     color: $--color-text-secondary;
+    display: flex;
+    align-items: center;
+    gap: 16px;
     // margin-left: auto;
     img {
       width: 14px;

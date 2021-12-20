@@ -787,5 +787,27 @@
       "LAW_FIRM_DOMAIN": "Contato com domínio de e-mail bloqueado para recebimento de mensagem.",
       "WORKSPACE_BLOCK_LIST": "Contato bloqueado pela configuração na workspace."
     }
+  },
+  "document": {
+    "signature": {
+      "status": {
+        "CREATED": {
+          "text": "Minuta criada",
+          "icon": "clock"
+        },
+        "PENDING": {
+          "text": "Assinatura pendente",
+          "icon": "clock-alert"
+        },
+        "COMPLETED": {
+          "text": "Assinado",
+          "icon": "success"
+        },
+        "REFUSED": {
+          "text": "Recusado",
+          "icon": "rejected"
+        }
+      }
+    }
   }
 }
