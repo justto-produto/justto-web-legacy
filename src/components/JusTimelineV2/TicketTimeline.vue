@@ -261,7 +261,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import { normalizeString, isSimilarStrings } from '@/utils'
+import { normalizeString, isSimilarStrings, isAutor } from '@/utils'
 
 export default {
   name: 'JusTimeline',
@@ -321,9 +321,10 @@ export default {
 
     // TODO: refatorar parar algum modelo de dados
     // TODO: ADD: get para enriquecimento
-    addPart({ document = '', type = '', name }) {
+    addPart({ document = '', type = '', profile = '', name }) {
       const disputeId = this.$route.params.id
-      const polarity = this.isClaimant(type) ? 'CLAIMANT' : 'RESPONDENT'
+      const polarity = this.isClaimant(type, profile) ? 'CLAIMANT' : 'RESPONDENT'
+
       const data = {
         party: polarity,
         documentNumber: document,
@@ -350,8 +351,8 @@ export default {
       this.dispute.lawsuits.map(lawsuit => {
         part = lawsuit.parties.find(p => isSimilarStrings(partyName, p.name, 75))
       })
-      const { type } = part
-      const polarity = this.isClaimant(type) ? 'CLAIMANT' : 'RESPONDENT'
+      const { type, profile } = part
+      const polarity = this.isClaimant(type, profile) ? 'CLAIMANT' : 'RESPONDENT'
       const data = {
         party: polarity,
         documentNumber: oab,
@@ -371,8 +372,9 @@ export default {
       })
     },
 
-    isClaimant(type) {
-      return type.toUpperCase().includes('ATIVO')
+    isClaimant(type, profile) {
+      // return type.toUpperCase().includes('ATIVO')
+      return isAutor([type, profile])
     },
 
     resetFiltre() {

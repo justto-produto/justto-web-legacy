@@ -14,6 +14,7 @@ import validateCurrentId from './utils/validateCurrentId'
 import extractMentions from './utils/extractMentions'
 import { eventBus } from './utils/eventBus'
 import normalizeDateToISO from './utils/normalizeDateToISO'
+import isAutor from './utils/isAuthor'
 import {
   getRoles,
   formatHtml,
@@ -33,6 +34,7 @@ import {
 
 export {
   uuidv4,
+  isAutor,
   eventBus,
   getRoles,
   scapeHtml,
