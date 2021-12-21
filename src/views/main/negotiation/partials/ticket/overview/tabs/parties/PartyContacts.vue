@@ -72,7 +72,7 @@
               v-model="contact[model]"
               :mask="mask"
               :filter="filter"
-              :is-editable="!disabled"
+              :is-editable="!disabled && !contact.blocked"
               :is-deletable="!disabled"
               :class="{
                 'party-contacts__infoline-data--selected': mappedRecipients.includes(contact[model]),
@@ -83,7 +83,7 @@
               @call="makeCall"
               @change="updateContact(contact.id, $event)"
               @delete="removeContact(contact.id)"
-              @click="selectContact(contact[model], contact.isValid, (contact.isMain && !contact.blocked))"
+              @click="selectContact(contact[model], contact.isValid, (contact.isMain && !contact.blocked), contact)"
             />
           </div>
         </el-popover>
@@ -93,7 +93,7 @@
           v-model="contact[model]"
           :mask="mask"
           :filter="filter"
-          :is-editable="!disabled"
+          :is-editable="!disabled && !contact.blocked"
           :is-deletable="!disabled"
           :class="{
             'party-contacts__infoline-data--selected': mappedRecipients.includes(contact[model]),
@@ -104,7 +104,7 @@
           @call="makeCall"
           @change="updateContact(contact.id, $event)"
           @delete="removeContact(contact.id)"
-          @click="selectContact(contact[model], contact.isValid, (contact.isMain && !contact.blocked))"
+          @click="selectContact(contact[model], contact.isValid, (contact.isMain && !contact.blocked), contact)"
         />
       </div>
     </span>
@@ -320,8 +320,8 @@ export default {
       this.$emit('post', contactValue)
     },
 
-    selectContact(contactValue, isValid, isMain) {
-      this.emitClick(contactValue, isValid, isMain)
+    selectContact(contactValue, isValid, isMain, contact) {
+      if (!['COMMUNICATION_OPT_OUT'].includes(contact?.blockedType)) this.emitClick(contactValue, isValid, isMain)
     },
 
     emitClick(contactValue, isValid, isMain) {
@@ -347,18 +347,22 @@ export default {
     },
 
     makeCall(number) {
-      this.addCall({
-        disputeId: Number(this.$route.params.id),
-        disputeStatus: this.ticketStatus,
-        toRoleId: this.party.disputeRoleId,
-        toRoleName: this.party.name,
-        number: `+55${number}`,
-        appInstance: this.appInstance,
-        contacts: {
-          emails: this.party.emailsDto,
-          phones: this.party.phonesDto
-        }
-      })
+      const contact = this.party.phonesDto.find(({ number: phone }) => phone.includes(number))
+
+      if (contact?.blocked === false) {
+        this.addCall({
+          disputeId: Number(this.$route.params.id),
+          disputeStatus: this.ticketStatus,
+          toRoleId: this.party.disputeRoleId,
+          toRoleName: this.party.name,
+          number: `+55${number}`,
+          appInstance: this.appInstance,
+          contacts: {
+            emails: this.party.emailsDto,
+            phones: this.party.phonesDto
+          }
+        })
+      }
     }
   }
 }
