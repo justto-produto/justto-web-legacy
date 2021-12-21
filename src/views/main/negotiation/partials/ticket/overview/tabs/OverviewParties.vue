@@ -158,7 +158,7 @@ export default {
 .overview-parties {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   height: 100%;
   gap: 10px;
 
@@ -170,6 +170,7 @@ export default {
   .overview-parties__list {
     overflow-y: auto;
     overflow-x: hidden;
+    height: 100%;
 
     .overview-parties__link {
       margin: 6px 0;
