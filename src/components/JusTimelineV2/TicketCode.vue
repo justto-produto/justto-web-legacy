@@ -33,7 +33,7 @@
       </div>
     </el-tooltip>
 
-    <TicketTimeline
+    <JusTimeline
       v-if="code && disputesTimeline[code]"
       v-model="showTimelineDialog"
       :code="code"
@@ -51,7 +51,7 @@ export default {
   name: 'JusDisputeCode',
   components: {
     JusTjIdentifier,
-    TicketTimeline: () => import('@/components/JusTimeline/JusTimeline')
+    JusTimeline: () => import('@/components/JusTimeline/JusTimeline')
   },
   props: {
     code: {

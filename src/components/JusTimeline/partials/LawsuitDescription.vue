@@ -136,7 +136,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
-import { isSimilarStrings, normalizeString } from '@/utils'
+import { isSimilarStrings, normalizeString, isAutor } from '@/utils'
 
 import brazilianStates from '@/constants/brazilianStates'
 
@@ -177,9 +177,9 @@ export default {
       'setTicketOverviewParty'
     ]),
 
-    addPart({ document = '', type = '', name }) {
+    addPart({ document = '', type = '', profile = '', name }) {
       const disputeId = this.$route.params.id
-      const polarity = this.isClaimant(type) ? 'CLAIMANT' : 'RESPONDENT'
+      const polarity = this.isClaimant(type, profile) ? 'CLAIMANT' : 'RESPONDENT'
       const data = {
         party: polarity,
         documentNumber: document,
@@ -187,6 +187,7 @@ export default {
         main: true,
         roles: ['PARTY']
       }
+
       this.setTicketOverviewParty({ disputeId, data, isNew: true }).then(part => {
         this.$emit('add:part', part)
         this.$jusNotification({
@@ -202,16 +203,18 @@ export default {
 
     addLawyer({ name = '', document = '', oab = '', partyName = '' }) {
       const disputeId = this.$route.params.id
-      const { type } = this.state.parties.find(p => isSimilarStrings(partyName, p.name, 75)) || {
-        type: ['autor', 'ativo'].includes(normalizeString(partyName)) ? 'ATIVO' : 'PASSIVO'
+      const claimantTypes = ['RECORRENTE', 'RÉU', 'REQUERIDO', 'SOLICITADO', 'EMBARGADO', 'REU', 'PASSIVO', 'PASSIVA', 'POLO PASSIVO', 'APELADO', 'RECLAMADO'].map(normalizeString)
+
+      const { type, profile } = this.state.parties.find(p => isSimilarStrings(partyName, p.name, 75)) || {
+        type: claimantTypes.includes(normalizeString(partyName)) ? 'ATIVO' : 'PASSIVO',
+        profile: claimantTypes.includes(normalizeString(partyName)) ? 'ATIVO' : 'PASSIVO'
       }
 
-      // TODO: Inverter ternário para Workspace de cobrança;
-      const party = this.isClaimant(type) ? 'CLAIMANT' : 'RESPONDENT'
+      const party = this.isClaimant(type, profile) ? 'CLAIMANT' : 'RESPONDENT'
 
       const state = brazilianStates.find(({ value: uf }) => (oab || '').includes(uf))?.value || null
       const [oabNumber] = oab?.length ? ((oab || '').replace(state, '').match(/[\dA-Z]+/g) || []).join('').match(/[\dABENP]+/g) : ''
-      const number = oabNumber.length > 6 ? oabNumber.slice(oabNumber.length - 6) : oabNumber
+      const number = oabNumber?.length > 6 ? oabNumber.slice(oabNumber.length - 6) : oabNumber
 
       const data = {
         oabs: (oab === '' || !oab) ? [] : [{ number, state }],
@@ -234,10 +237,8 @@ export default {
       })
     },
 
-    isClaimant(type) {
-      const isAuthor = ['ATIVO', 'AUTOR', 'REQUERENTE'].includes(type.toUpperCase())
-
-      return this.isRecovery ? !isAuthor : isAuthor
+    isClaimant(type, profile) {
+      return this.isRecovery ? !isAutor([type, profile]) : isAutor([type, profile])
     },
 
     isDisputePart({ name = '', document = '' }) {
