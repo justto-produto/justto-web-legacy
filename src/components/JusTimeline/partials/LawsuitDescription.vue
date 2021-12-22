@@ -180,25 +180,56 @@ export default {
     addPart({ document = '', type = '', profile = '', name }) {
       const disputeId = this.$route.params.id
       const polarity = this.isClaimant(type, profile) ? 'CLAIMANT' : 'RESPONDENT'
-      const data = {
-        party: polarity,
-        documentNumber: document,
-        name,
-        main: true,
-        roles: ['PARTY']
-      }
 
-      this.setTicketOverviewParty({ disputeId, data, isNew: true }).then(part => {
-        this.$emit('add:part', part)
-        this.$jusNotification({
-          title: 'Yay!',
-          message: 'Parte cadastrada com sucesso!',
-          type: 'success'
+      this.confirmAddPart({ name, polarity, role: 'PARTY' }).then(party => {
+        const data = {
+          party,
+          documentNumber: document,
+          name,
+          main: true,
+          roles: ['PARTY']
+        }
+
+        this.setTicketOverviewParty({ disputeId, data, isNew: true }).then(part => {
+          this.$emit('add:part', part)
+          this.$jusNotification({
+            title: 'Yay!',
+            message: this.$options.filters.capitalize(this.$tc(`roles.PARTY.${polarity}`, this.isRecovery)) + ' cadastrado com sucesso!',
+            type: 'success'
+          })
+          this.addedParts.push(data.name)
+        }).catch(error => this.$jusNotification({ error }))
+      }).catch(() => this.$jusNotification({
+        title: 'Certo!',
+        message: 'Cadastro cancelado.',
+        type: 'warning'
+      }))
+    },
+
+    async confirmAddPart({ name, polarity, role }) {
+      const polarityTranslated = this.$tc(`roles.${role}.${polarity}`, this.isRecovery)
+      const invertedPolarityTranslated = this.$tc(`roles.${role}.${polarity === 'CLAIMANT' ? 'RESPONDENT' : 'CLAIMANT'}`, this.isRecovery)
+      const text = `Cadastrada parte <strong>${name}</strong> como:`
+      const { capitalize } = this.$options.filters
+
+      try {
+        await this.$confirm(text, 'Confirmar cadastro', {
+          confirmButtonText: capitalize(polarityTranslated),
+          cancelButtonText: capitalize(invertedPolarityTranslated),
+          dangerouslyUseHTMLString: true,
+          customClass: 'add-party-confirm',
+          distinguishCancelAndClose: true,
+          center: true
         })
-        this.addedParts.push(data.name)
-      }).catch(error => {
-        this.$jusNotification({ error })
-      })
+
+        return Promise.resolve(polarity)
+      } catch (error) {
+        if (error === 'cancel') {
+          return Promise.resolve(polarity === 'CLAIMANT' ? 'RESPONDENT' : 'CLAIMANT')
+        } else {
+          return Promise.reject(error)
+        }
+      }
     },
 
     addLawyer({ name = '', document = '', oab = '', partyName = '' }) {
@@ -210,31 +241,37 @@ export default {
         profile: claimantTypes.includes(normalizeString(partyName)) ? 'ATIVO' : 'PASSIVO'
       }
 
-      const party = this.isClaimant(type, profile) ? 'CLAIMANT' : 'RESPONDENT'
+      const polarity = this.isClaimant(type, profile) ? 'CLAIMANT' : 'RESPONDENT'
 
       const state = brazilianStates.find(({ value: uf }) => (oab || '').includes(uf))?.value || null
       const [oabNumber] = oab?.length ? ((oab || '').replace(state, '').match(/[\dA-Z]+/g) || []).join('').match(/[\dABENP]+/g) : ''
       const number = oabNumber?.length > 6 ? oabNumber.slice(oabNumber.length - 6) : oabNumber
 
-      const data = {
-        oabs: (oab === '' || !oab) ? [] : [{ number, state }],
-        documentNumber: document || null,
-        roles: ['LAWYER'],
-        main: true,
-        party,
-        name
-      }
+      this.confirmAddPart({ name, polarity, role: 'LAWYER' }).then(party => {
+        const data = {
+          oabs: (oab === '' || !oab) ? [] : [{ number, state }],
+          documentNumber: document || null,
+          roles: ['LAWYER'],
+          main: true,
+          party,
+          name
+        }
 
-      this.setTicketOverviewParty({ disputeId, data, isNew: true }).then(() => {
-        this.$jusNotification({
-          title: 'Yay!',
-          message: 'Parte cadastrada com sucesso!',
-          type: 'success'
+        this.setTicketOverviewParty({ disputeId, data, isNew: true }).then(() => {
+          this.$jusNotification({
+            title: 'Yay!',
+            message: this.$options.filters.capitalize(this.$tc(`roles.LAWYER.${polarity}`, this.isRecovery)) + ' cadastrado com sucesso!',
+            type: 'success'
+          })
+          this.addedParts.push(data.name)
+        }).catch(error => {
+          this.$jusNotification({ error })
         })
-        this.addedParts.push(data.name)
-      }).catch(error => {
-        this.$jusNotification({ error })
-      })
+      }).catch(() => this.$jusNotification({
+        title: 'Certo!',
+        message: 'Cadastro cancelado.',
+        type: 'warning'
+      }))
     },
 
     isClaimant(type, profile) {
@@ -299,6 +336,18 @@ export default {
 
     div[role='tabpanel'] {
       margin-left: 16px !important;
+    }
+  }
+}
+
+.add-party-confirm {
+  width: 440px;
+
+  .el-message-box__content {
+    .el-message-box__container {
+      .el-message-box__message {
+        word-break: break-word;
+      }
     }
   }
 }
