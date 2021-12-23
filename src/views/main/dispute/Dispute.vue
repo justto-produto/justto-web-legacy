@@ -163,7 +163,7 @@
                 Destinatário(s):
                 <span
                   v-for="(selected, index) in selectedContacts"
-                  :key="selected.id"
+                  :key="`${index}-${selected.id}`"
                 >
                   <span v-if="index === 0">
                     <span v-if="selected.number">{{ selected.number | phoneNumber }}</span>
@@ -179,7 +179,7 @@
                   <div slot="content">
                     <span
                       v-for="(selected, index) in selectedContacts"
-                      :key="selected.id"
+                      :key="`${index}-${selected.id}`"
                     >
                       <span v-if="index !== 0">
                         <div v-if="selected.number">
@@ -417,7 +417,7 @@
         ref="disputeOverview"
         :show-overview="false"
         dispute-mode
-        @addRecipient="startReply"
+        @addRecipient="clearDirectContacts"
       />
       <dispute-overview
         v-else-if="dispute && overviewType === 'DISPUTE'"
@@ -517,7 +517,8 @@ export default {
       'loggedPersonId',
       'workspaceSubdomain',
       'isWorkspaceRecovery',
-      'workspaceProperties'
+      'workspaceProperties',
+      'getEditorRecipients'
     ]),
 
     isSmall() {
@@ -589,16 +590,21 @@ export default {
     },
 
     selectedContacts() {
+      const makeContact = (contact) => ({ id: 0, address: contact })
+      const recipientToContact = ({ value: address }) => ({ id: 0, address })
+
+      const recipients = this.getEditorRecipients.map(recipientToContact)
+
       if (this.directContactAddress.length) {
-        return this.directContactAddress.map(contact => ({ id: 0, address: contact }))
+        return this.directContactAddress.map(makeContact).concat(recipients)
       }
       switch (this.messageType) {
         case 'email':
-          return this.activeRole.emails ? this.activeRole.emails.filter(e => e.selected) : []
+          return this.activeRole.emails ? this.activeRole.emails.filter(e => e.selected).concat(recipients) : recipients
         case 'whatsapp':
-          return this.activeRole.phones ? this.activeRole.phones.filter(e => e.selected) : []
+          return this.activeRole.phones ? this.activeRole.phones.filter(e => e.selected) : recipients
         default:
-          return []
+          return recipients
       }
     },
 
@@ -684,6 +690,7 @@ export default {
       'sendNegotiator',
       'disfavorTicket',
       'getDisputeNotes',
+      'resetRecipients',
       'getDisputeStatuses',
       'getLastInteractions',
       'disputeSetVisualized',
@@ -707,6 +714,15 @@ export default {
       this.setMessageType('negotiation')
       this.activeRoleId = params.roleId
       this.directContactAddress = [params.email]
+    },
+
+    clearDirectContacts() {
+      this.directContactAddress = []
+      this.activeRoleId = 0
+
+      this.$nextTick().then(() => {
+        this.getEditorRecipients.slice(0, 1).forEach(({ type }) => this.setMessageType(type))
+      })
     },
 
     archiveTemplate(templateId) {
@@ -784,6 +800,8 @@ export default {
         const peviewText = this.messageText
 
         this.messageText = `${peviewText}`
+      } else if (this.messageType !== 'email') {
+        this.resetRecipients()
       }
       this.activeRoleId = 0
       this.directContactAddress = senders

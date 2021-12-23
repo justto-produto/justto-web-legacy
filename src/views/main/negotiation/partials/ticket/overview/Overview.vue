@@ -214,8 +214,9 @@ export default {
     },
 
     addRecipient({ type, value }) {
-      // TODO SAAS-4688: Ver como usar multiplos destinatários.
-      if (this.disputeMode) this.$emit('addRecipient', { senders: [value], resume: '', type, inReplyTo: null })
+      if (this.disputeMode) {
+        this.$emit('addRecipient')
+      }
     },
 
     restartEngagementFromTimeline(disputeRole) {

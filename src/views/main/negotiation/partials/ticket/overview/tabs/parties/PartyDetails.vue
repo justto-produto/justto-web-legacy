@@ -714,7 +714,7 @@ export default {
             if (data.value === 'AUTHORIZED') {
               delete reply.disputeId
               if (['dispute'].includes(this.$route.name)) {
-                this.resetRecipients()
+                if (!['email'].includes(type)) this.resetRecipients()
                 this.$emit('addRecipient', { value, key, type })
               }
               this.addRecipient({ value, key, type })
