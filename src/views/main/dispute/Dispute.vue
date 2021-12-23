@@ -595,9 +595,12 @@ export default {
 
       const recipients = this.getEditorRecipients.map(recipientToContact)
 
+      // Respostas rápidas
       if (this.directContactAddress.length) {
         return this.directContactAddress.map(makeContact).concat(recipients)
       }
+
+      // Contatos do Overview
       switch (this.messageType) {
         case 'email':
           return this.activeRole.emails ? this.activeRole.emails.filter(e => e.selected).concat(recipients) : recipients
@@ -795,6 +798,7 @@ export default {
     startReply(params) {
       const { type, senders } = params
       const messageType = type.toLowerCase()
+
       this.setMessageType(messageType)
       if (['email'].includes(messageType)) {
         const peviewText = this.messageText

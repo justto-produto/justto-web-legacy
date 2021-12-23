@@ -213,7 +213,7 @@ export default {
       this.$jusSegment('Linha do tempo visualizada por dentro da disputa', { disputeId: this.routeId })
     },
 
-    addRecipient({ type, value }) {
+    addRecipient({ _ }) {
       if (this.disputeMode) {
         this.$emit('addRecipient')
       }
