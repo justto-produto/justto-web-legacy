@@ -315,11 +315,12 @@ export default {
     },
 
     ckeditorFocus(editorInstance) {
-      if (editorInstance) {
-        editorInstance.$_instance.editing.view.focus()
-      } else if (this.editorInstance) {
-        this.editorInstance.$_instance.editing.view.focus()
-      }
+      // TODO: Rever foco do CKEditor.
+      // if (editorInstance) {
+      //   editorInstance.$_instance.editing.view.focus()
+      // } else if (this.editorInstance) {
+      //   this.editorInstance.$_instance.editing.view.focus()
+      // }
     }
   }
 }
