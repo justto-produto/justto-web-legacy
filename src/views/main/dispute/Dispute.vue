@@ -877,7 +877,7 @@ export default {
     verifyWhatsappMessage(quillMessage) {
       return new Promise((resolve, reject) => {
         if (this.messageType === 'whatsapp') {
-          this.$store.dispatch('canSendWhatsapp', this.directContactAddress[0] || this.selectedContacts[0].number).then(response => {
+          this.$store.dispatch('canSendWhatsapp', this.directContactAddress[0] || this.selectedContacts[0].number || this.selectedContacts[0].address).then(response => {
             if (response.canSend) {
               if (isSimilarStrings(quillMessage, this.recentMessages.map(rm => rm.messageBody), 75)) {
                 this.$jusNotification({
@@ -988,10 +988,11 @@ export default {
           this.loadingTextarea = true
           this.verifyWhatsappMessage(quillMessage).then(() => {
             const to = []
+
             if (this.directContactAddress.length) {
-              this.directContactAddress.forEach(email => {
-                to.push({ address: email })
-              })
+              this.directContactAddress.forEach(email => { to.push({ address: email }) })
+            } else if (this.getEditorRecipients.length) {
+              this.selectedContacts.forEach(({ address }) => { to.push({ address }) })
             } else {
               to.push({
                 roleId: this.activeRole.id,
