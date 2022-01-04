@@ -153,6 +153,14 @@ export default {
           justify-content: center;
         }
       }
+
+      @media (max-width: 1200px) {
+        width: calc(100% - 16px);
+      }
+
+      @media (min-width: 1920px) {
+        width: 30%;
+      }
     }
   }
 }
