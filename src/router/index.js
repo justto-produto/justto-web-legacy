@@ -89,6 +89,16 @@ const router = new Router({
           }
         },
         {
+          name: 'Whatsapp',
+          path: '/whatsapp',
+          component: () => import(/* webpackChunkName: "whatsappViews" */ '@/views/main/watsapp/Views'),
+          meta: {
+            requiresAuth: true,
+            trackPage: true,
+            title: 'Templates do WhatsApp'
+          }
+        },
+        {
           name: 'allDisputes',
           path: '/management/all',
           component: () => import(/* webpackChunkName: "managementAll" */ '@/views/main/management/Management'),
