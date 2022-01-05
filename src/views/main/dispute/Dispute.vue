@@ -688,7 +688,8 @@ export default {
   },
 
   beforeRouteUpdate(_to, _from, next) {
-    this.resetRecipients().then(next)
+    this.resetRecipients()
+    next()
   },
 
   methods: {
