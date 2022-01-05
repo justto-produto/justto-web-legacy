@@ -260,7 +260,7 @@ const router = new Router({
     {
       name: 'admin-panel',
       path: '/admin-panel',
-      component: () => import(/* webpackChunkName: "adminPanel" */ '@/views/adminPanel/AdminPanel'),
+      component: () => import(/* webpackChunkName: "adminPanelUpdated" */ '@/views/adminPanel/AdminPanel'),
       meta: {
         requiresAuth: false,
         trackPage: true,
