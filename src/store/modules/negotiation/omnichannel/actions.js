@@ -133,7 +133,7 @@ const omnichannelActions = {
     })
   },
 
-  resetRecipients: ({ commit }) => commit('resetRecipients'),
+  resetRecipients: ({ commit }) => Promise.resolve(commit('resetRecipients')),
 
   resetOccurrences: ({ commit }) => {
     commit('resetOccurrences')

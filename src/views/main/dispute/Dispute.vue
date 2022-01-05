@@ -683,8 +683,12 @@ export default {
   beforeDestroy() {
     eventBus.$off(events.EDITOR_FOCUS.callback, this.focusOnEditor)
     window.removeEventListener('resize', this.updateWindowHeight)
-
+    this.resetRecipients()
     this.unsubscribeOccurrences(this.id)
+  },
+
+  beforeRouteUpdate(_to, _from, next) {
+    this.resetRecipients().then(next)
   },
 
   methods: {
@@ -844,6 +848,7 @@ export default {
     removeReply() {
       this.inReplyTo = null
       this.directContactAddress = []
+      // this.resetRecipients()
     },
 
     socketAction(action, id) {
