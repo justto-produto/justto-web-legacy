@@ -15,7 +15,7 @@
 
     <ul class="whatsapp-views__templates">
       <li
-        v-for="(template, tIndex) in templates.templates"
+        v-for="(template, tIndex) in templatesFiltered"
         :key="`template-${tIndex}`"
         class="whatsapp-views__templates-item"
       >
@@ -35,14 +35,14 @@
             label="Criado"
             :span="template.modifiedOn ? 1 : 2"
           >
-            {{ new Date(template.createdOn) | moment('DD/MM/YY [ às ] HH:mm') }}
+            {{ template.createdOn | moment('DD/MM/YY [ às ] HH:mm') }}
           </el-descriptions-item>
 
           <el-descriptions-item
             v-if="template.modifiedOn"
             label="Editado"
           >
-            {{ new Date(template.modifiedOn) | moment('DD/MM/YY [ às ] HH:mm') }}
+            {{ template.modifiedOn | moment('DD/MM/YY [ às ] HH:mm') }}
           </el-descriptions-item>
 
           <el-descriptions-item label="Status">
@@ -84,7 +84,13 @@ export default {
     ...mapGetters({
       templates: 'getTemplates',
       wallet: 'getWallet'
-    })
+    }),
+
+    templatesFiltered() {
+      return this.templates?.templates.filter(({ status }) => !['REJECTED'].includes(status)).sort((a, b) => {
+        return b.createdOn - a.createdOn
+      })
+    }
   },
 
   beforeCreate() {
