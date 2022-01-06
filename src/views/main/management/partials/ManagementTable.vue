@@ -21,6 +21,7 @@
       @cell-mouse-leave="cellMouseLeave()"
       @row-click="handleRowClick"
       @selection-change="handleSelectionChange"
+      @header-click="handleHeaderClick"
     >
       <el-table-column
         type="selection"
@@ -142,6 +143,7 @@
           </div>
         </template>
       </el-table-column>
+
       <el-table-column
         v-if="tab1 || tab2"
         :sortable="false"
@@ -157,6 +159,7 @@
           <span v-else>-</span>
         </template>
       </el-table-column>
+
       <el-table-column
         v-if="tab1"
         :sortable="false"
@@ -169,12 +172,28 @@
           {{ scope.row.lastOfferValue | currency }}
         </template>
       </el-table-column>
+
+      <!-- label="Interações" -->
+
       <el-table-column
         v-if="tab2 || tab3 || tab4"
-        label="Interações"
         min-width="140px"
         align="center"
+        label="Interações"
       >
+        <template v-slot:header>
+          <div class="is-pointer">
+            Interações
+            <i
+              v-if="sortKeys.includes('lastInboundInteraction.createdAt')"
+              :class="{
+                'el-icon-caret-top': sortStripped['lastInboundInteraction.createdAt'] === 'asc',
+                'el-icon-caret-bottom': sortStripped['lastInboundInteraction.createdAt'] === 'desc'
+              }"
+            />
+          </div>
+        </template>
+
         <template v-slot="scope">
           <ManagementLastInteraction
             :data="scope.row"
@@ -182,6 +201,7 @@
           />
         </template>
       </el-table-column>
+
       <el-table-column
         v-if="(tab3 || tab4) && showDraft"
         label="Minuta"
@@ -205,6 +225,7 @@
           <span v-else>-</span>
         </template>
       </el-table-column>
+
       <el-table-column
         v-if="tab2"
         :sortable="false"
@@ -217,6 +238,7 @@
           {{ scope.row | counterProposal | currency }}
         </template>
       </el-table-column>
+
       <el-table-column
         v-if="tab0"
         :sortable="false"
@@ -241,6 +263,7 @@
           <span v-else>-</span>
         </template>
       </el-table-column>
+
       <el-table-column
         v-if="tab0 || tab1 || tab2 || tabAll"
         :sortable="false"
@@ -263,6 +286,7 @@
           <span v-if="scope.row.expirationDate">{{ scope.row.expirationDate.dateTime | moment('DD/MM/YY') }}</span>
         </template>
       </el-table-column>
+
       <el-table-column
         v-if="tab1 || tab4 || tabAll"
         :sortable="false"
@@ -276,6 +300,7 @@
           <span v-if="scope.row.paused">(pausada)</span>
         </template>
       </el-table-column>
+
       <el-table-column
         v-if="tab3 || tab4"
         :sortable="false"
@@ -291,6 +316,7 @@
           <span v-else>-</span>
         </template>
       </el-table-column>
+
       <el-table-column
         v-if="tab3 || tab4 || tabAll"
         :sortable="false"
@@ -306,6 +332,7 @@
           <span v-else>-</span>
         </template>
       </el-table-column>
+
       <el-table-column
         class-name="hidden-actions"
         width="1px"
@@ -319,6 +346,7 @@
           />
         </template>
       </el-table-column>
+
       <template slot="empty">
         <transition name="el-fade-in-linear">
           <span v-show="showEmpty">
@@ -333,6 +361,7 @@
           </span>
         </transition>
       </template>
+
       <infinite-loading
         v-if="disputes.length >= 20"
         slot="append"
@@ -349,11 +378,13 @@
         </div>
       </infinite-loading>
     </el-table>
+
     <jus-timeline
       v-if="currentDisputeCode"
       v-model="disputeTimelineModal"
       :code="currentDisputeCode"
     />
+
     <negotiator-activeReply
       v-if="Object.keys(activeDispute).length"
       :visible.sync="canShowDialogReplyEditor"
@@ -364,7 +395,7 @@
 
 <script>
 import { getDocumentStep } from '@/utils'
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapActions, mapMutations } from 'vuex'
 
 export default {
   name: 'ManagementTable',
@@ -436,7 +467,8 @@ export default {
       lastAccess: 'lastAccess',
       onlineDocuments: 'onlineDocuments',
       showDraft: 'getIsDraftManagementActive',
-      isRecoveryStrategy: 'isWorkspaceRecovery'
+      isRecoveryStrategy: 'isWorkspaceRecovery',
+      sortQuery: 'disputeQuery'
     }),
 
     selectedIdsComp: {
@@ -447,25 +479,46 @@ export default {
         this.$emit('update:selectedIds', ids)
       }
     },
+
     tab0() {
       return this.activeTab === '0'
     },
+
     tab1() {
       return this.activeTab === '1'
     },
+
     tab2() {
       return this.activeTab === '2'
     },
+
     tab3() {
       return this.activeTab === '3'
     },
+
     tab4() {
       return this.activeTab === '4'
     },
+
     tabAll() {
       return this.activeTab === '9'
+    },
+
+    sortStripped() {
+      return (this.sortQuery?.sort || []).reduce((acc, cur) => {
+        const [key, sort] = cur.split(',')
+        const temp = {}
+
+        temp[key] = sort
+        return { ...acc, ...temp }
+      }, {})
+    },
+
+    sortKeys() {
+      return Object.keys(this.sortStripped)
     }
   },
+
   watch: {
     disputes: {
       handler() {
@@ -487,19 +540,25 @@ export default {
       }
     }
   },
+
   beforeCreate() {
     this.$store.commit('resetDisputeQueryPage')
     this.$store.dispatch('cleanDisputeLastAccess')
   },
+
   beforeMount() {
     this.clearHighlight()
   },
+
   methods: {
     ...mapActions([
+      'getDisputes',
       'getDisputeTimeline',
       'getDisputeLastAccess',
       'cleanDisputeLastAccess'
     ]),
+
+    ...mapMutations(['updateDisputeQuery']),
 
     openActiveMessageModal(dispute) {
       this.activeDispute = dispute
@@ -517,11 +576,13 @@ export default {
     isWonDispute(disputeStatus) {
       return ['SETTLED', 'CHECKOUT', 'ACCEPTED'].includes(disputeStatus)
     },
+
     hoverDisputeCode(code) {
       if (!this.disputeTimeline[code]) {
         this.getDisputeTimeline(code)
       }
     },
+
     openTimelineModal(dispute) {
       const { code, id } = dispute
       if (!this.disputeTimeline[code] || this.disputeTimeline[code].lawsuits.length === 0) {
@@ -534,6 +595,7 @@ export default {
       })
       this.$jusSegment('Linha do tempo visualizada pelo gerenciamento', { disputeId: dispute.id })
     },
+
     cellMouseEnter(row, column, cell, event) {
       this.disputeActionsRow = row.id
       if (column.property !== 'code') {
@@ -544,11 +606,14 @@ export default {
         }, 600)
       }
     },
+
     cellMouseLeave() {
       clearTimeout(this.lastAccessTooltipTimeout)
       this.actieTooltipDisputeId = 0
     },
+
     getDocumentStep: (hasDocument, signStatus) => getDocumentStep(hasDocument, signStatus),
+
     tableRowClassName({ row, rowIndex }) {
       let className = ''
       if (!row.visualized && !this.tab1) {
@@ -559,6 +624,7 @@ export default {
       }
       return className
     },
+
     handleRowClick(row, column, event) {
       if (!event.ctrlKey && !event.metaKey && column.property === 'firstClaimant' && event.target.className.split(' ').includes('online-icon')) {
         this.openActiveMessageModal(row)
@@ -573,9 +639,11 @@ export default {
         }
       }
     },
+
     clearSelection() {
       this.$refs.disputeTable.clearSelection()
     },
+
     handleSelectionChange(selected) {
       const ids = []
       for (const dispute of selected) {
@@ -585,9 +653,11 @@ export default {
       }
       this.selectedIdsComp = ids
     },
+
     disputeNextToExpire(date) {
       return this.$moment(date).isBetween(this.$moment(), this.$moment().add(4, 'day'))
     },
+
     showProtocolModal(dispute) {
       this.protocolDialogVisible = true
       this.selectedDispute = dispute
@@ -611,6 +681,44 @@ export default {
           this.handleSelectionAllDisputes(response.content)
         }
       })
+    },
+
+    handleHeaderClick(column, _event) {
+      switch (column.label) {
+        case 'Interações':
+          this.handleInteractionsSort()
+          break
+        default:
+          break
+      }
+    },
+
+    async invertSort(key) {
+      const sort = { asc: 'desc', desc: 'asc' }[this.sortStripped[key]]
+
+      const newSort = await (this.sortQuery?.sort || []).reduce((acc, cur) => {
+        if (cur.includes(key)) return [...acc, `${key},${sort}`]
+        else return [...acc, cur]
+      }, [])
+
+      await this.updateDisputeQuery({ key: 'sort', value: newSort })
+
+      return Promise.resolve()
+    },
+
+    async handleInteractionsSort() {
+      if (this.sortKeys.includes('lastInboundInteraction.createdAt')) {
+        for (const item of ['lastInboundInteraction.createdAt']) { await this.invertSort(item) }
+        this.getDisputes()
+      } else {
+        this.updateDisputeQuery({
+          key: 'sort',
+          value: [
+            ...this.sortQuery?.sort,
+            'lastInboundInteraction.createdAt,asc'
+          ]
+        })
+      }
     }
   }
 }
