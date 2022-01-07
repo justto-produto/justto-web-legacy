@@ -10,17 +10,21 @@ const disputeMutations = {
       lawsuits: (timeline.lawsuits || [])
     })
   },
+
   cleanDisputeTimeline(state) {
     state.timeline = { }
   },
+
   fillerDisputeRole(_, { data, payload }) {
     Vue.set(payload, 'disputeRoles', data.content)
   },
+
   setDisputes(state, pageable) {
     state.disputes = pageable.content
     state.query.size = pageable.size
     state.query.total = pageable.totalElements
   },
+
   addDisputes(state, pageable) {
     if (pageable.content && pageable.content.length) {
       state.disputes.push(...pageable.content)
@@ -28,14 +32,17 @@ const disputeMutations = {
       state.query.total = pageable.totalElements
     }
   },
+
   setDispute(state, disputeVM) {
     state.dispute = disputeVM
   },
+
   setDisputeProperty(state, property) {
     const key = Object.keys(property)[0]
     Vue.set(state.dispute.properties, key, property[key])
     Vue.set(state.disputeProperties, key, property[key])
   },
+
   setDisputeProperties(state, disputeProperties) {
     // eslint-disable-next-line no-prototype-builtins
     if (disputeProperties.hasOwnProperty('ENRICHED')) {
@@ -46,49 +53,62 @@ const disputeMutations = {
     state.dispute.properties = disputeProperties
     // Vue.set(state.dispute, 'properties', disputeProperties)
   },
+
   setDisputeAttachments(state, disputeAttachments) {
     state.disputeAttachments = disputeAttachments || []
     state.loadingAttachments = false
   },
+
   hideLoadingAttachments(state) {
     state.loadingAttachments = false
   },
+
   showLoadingAttachments(state) {
     state.loadingAttachments = true
   },
+
   setDisputeRoles(state, disputeRoles) {
     state.dispute.disputeRoles = disputeRoles
   },
+
   clearDispute(state) {
     state.dispute = { id: 0 }
     state.disputeAttachments = []
     state.disputeProperties = {}
   },
+
   clearDisputeOccurrences(state) {
     state.occurrences.length = 0
   },
+
   clearDisputes(state) {
     state.disputes = []
     state.hasNew = false
   },
+
   incrementOccurrencesSize(state) {
     state.occurrencesSize = state.occurrencesSize + 10
   },
+
   clearOccurrencesSize(state) {
     state.occurrencesSize = state.occurrencesInitialSize
   },
+
   setDisputeQuery(state, query) {
     state.query = query
     state.query.page = 1
   },
+
   updateDisputeQuery(state, params) {
     state.query[params.key] = params.value
     state.query.page = 1
   },
+
   resetDisputeQueryPage(state) {
     state.query.page = 1
     state.query.size = 20
   },
+
   addDisputeQueryPage(state) {
     if (state.query.page === 1) {
       state.query.size = 5
@@ -97,12 +117,15 @@ const disputeMutations = {
       state.query.page += 1
     }
   },
+
   setSummaryNearExpirations(state, summarys) {
     state.summaryNearExpirations = summarys
   },
+
   setSummaryNotVisualizeds(state, summarys) {
     state.summaryNotVisualizeds = summarys
   },
+
   clearDisputeQuery(state) {
     state.query = {
       status: ['RUNNING'],
@@ -125,6 +148,7 @@ const disputeMutations = {
       total: 0
     }
   },
+
   clearDisputeQueryByTab(state) {
     state.query = {
       status: [],
@@ -142,21 +166,27 @@ const disputeMutations = {
       total: 0
     }
   },
+
   setDisputeHasFilters(state, bol) {
     state.hasFilters = bol
   },
+
   setDisputesTab(state, tab) {
     state.tab = tab
   },
+
   clearDisputeTab(state, tab) {
     state.tab = '2'
   },
+
   setDisputeOccurrences(state, occurrences) {
     if (occurrences && occurrences.length) state.occurrences = occurrences.reverse()
   },
+
   addLoadingOccurrence(state, occurrence) {
     state.occurrences.push(occurrence)
   },
+
   addDisputeOccurrence(state, newOccurrence) {
     Vue.nextTick(() => {
       if (!newOccurrence.id) {
@@ -177,6 +207,7 @@ const disputeMutations = {
       }
     })
   },
+
   SOCKET_ADD_DISPUTE_SUMARY(state, disputeWebsocketSummaryDto) {
     Vue.nextTick(() => {
       if (disputeWebsocketSummaryDto.type) {
@@ -189,12 +220,15 @@ const disputeMutations = {
       }
     })
   },
+
   setLastInteractions(state, lastInteractions) {
     state.disputeLastInteractions = lastInteractions
   },
+
   setDisputeStatuses(state, status) {
     state.statuses[status.label] = status.value
   },
+
   disputeSetHasNew(state, bol) {
     clearTimeout(newUpdateTimeout)
 
@@ -202,29 +236,40 @@ const disputeMutations = {
 
     newUpdateTimeout = setTimeout(() => Vue.set(state, 'hasNew', bol), time)
   },
+
   setRespondents(state, respondents) {
     state.respondents = respondents
   },
+
   addPrescription(state, prescription) {
     state.query.prescriptions.push(prescription)
     state.query.page = 1
   },
+
   removePrescription(state, prescription) {
     state.query.prescriptions.splice(state.query.prescriptions.indexOf(prescription), 1)
     state.query.page = 1
   },
+
   setRecentPrescription(state, prescription) {
     Vue.set(state.recentPrescriptions, prescription, new Date())
     localStorage.setItem('jusrecentprescriptions', JSON.stringify(state.recentPrescriptions))
   },
+
   addPartyAnalysis(state, analysis) {
     state.partyAnalysis[analysis.payload] = analysis.data
   },
+
   setExportHistory: (state, history) => (state.exportHistory = history),
+
   pushExportHistory: (state, history) => (state.exportHistory.content.push(...history.content)),
+
   addExportHistoryPage: (state) => (state.exportHistoryPage += 1),
+
   resetExportHistoryPage: (state) => (state.exportHistoryPage = 0),
+
   setPrescriptionsList: (state, prescriptions) => (state.prescriptionsList = prescriptions),
+
   setLastAccess: (state, { disputeId, lastAccessTime }) => {
     const time = moment(lastAccessTime)
     const message = lastAccessTime ? `Você acessou esta disputa ${time.fromNow()} - às ${time.format('HH:mm')}` : 'Ainda não sei quando você acessou esta disputa'
@@ -233,7 +278,9 @@ const disputeMutations = {
       log: new Date()
     })
   },
+
   cleanLastAccess: (state) => (state.lastAccess = {}),
+
   setDisputeRole: (state, disputeRole) => {
     (state.dispute?.disputeRoles || []).map((dr, index) => {
       if (dr.id === disputeRole.id) {
@@ -241,6 +288,7 @@ const disputeMutations = {
       }
     })
   },
+
   setDisputeMetadata: (state, metadata) => {
     Vue.set(state, 'metadata', metadata)
   },
