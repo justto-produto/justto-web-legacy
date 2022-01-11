@@ -117,6 +117,7 @@ export default {
       align-self: flex-end;
 
       .attachment__file-name {
+        word-break: break-word;
         font-weight: 500;
         font-size: 16px;
       }
