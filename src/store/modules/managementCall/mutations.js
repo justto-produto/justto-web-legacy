@@ -142,6 +142,11 @@ export default {
     Vue.set(state.currentCall, 'status', CALL_STATUS.WAITING_DIALER)
   },
 
+  setScheduledCallsRequester(state, requester) {
+    clearInterval(state.scheduledCallInterval)
+    Vue.set(state, 'scheduledCallInterval', requester)
+  },
+
   setBroadcastRequestCallStatus(state, callback) {
     Vue.set(state, 'broadcastRequestCallStatus', setTimeout(callback, 4 * 1000))
   },

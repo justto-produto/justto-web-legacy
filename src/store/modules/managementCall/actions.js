@@ -39,8 +39,13 @@ export default {
     }
   },
 
-  setAppInstance({ commit }, appInstance) {
+  setAppInstance({ commit, dispatch }, appInstance) {
     commit('setAppInstance', appInstance)
+    commit('setScheduledCallsRequester', setInterval(() => dispatch('getPhoneCalls'), 5 * 1000))
+  },
+
+  getPhoneCalls({ _ }) {
+    // TODO: SAAS-4755
   },
 
   startManagementCall({ commit, dispatch, getters: { getAppInstance } }) {
