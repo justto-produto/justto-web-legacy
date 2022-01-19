@@ -48,6 +48,11 @@ export default {
     // TODO: SAAS-4755
   },
 
+  updatePhoneCallStatus({ _ }, success) {
+    // TODO: SAAS-4756
+    // atualizar status da communication_message (informar sucesso ou falha)
+  },
+
   startManagementCall({ commit, dispatch, getters: { getAppInstance } }) {
     const { appInstance, currentCall } = JSON.parse(localStorage.getItem('JUSTTO_MANAGEMENT_CALL') || DEFAULT_JUSTTO_MANAGEMENT_CALL)
 

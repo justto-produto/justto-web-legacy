@@ -284,6 +284,7 @@ export default {
   methods: {
     ...mapActions([
       'setValidNumberInCall',
+      'updatePhoneCallStatus',
       'setInvalidNumberInCall',
       'setTicketOverviewPartyContact',
       'setInteractionMessageContent'
@@ -295,6 +296,9 @@ export default {
         this.contactValidityBrand = true
 
         // TODO: SAAS-4756 Se a chamada for agendada, Atualizar status da chamada.
+        const callIsScheduled = false
+
+        if (callIsScheduled) this.updatePhoneCallStatus(true)
       }
 
       this.$refs.carousel.next()
@@ -305,6 +309,9 @@ export default {
       this.contactValidityBrand = true
 
       // TODO: SAAS-4756 Se a chamada for agendada, Atualizar status da chamada.
+      const callIsScheduled = false
+
+      if (callIsScheduled) this.updatePhoneCallStatus(true)
     },
 
     handleCloseCall({ interactionId, disputeId }) {
