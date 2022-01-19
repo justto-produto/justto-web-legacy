@@ -293,6 +293,8 @@ export default {
       if (item === 'contact') {
         this.setValidNumberInCall(this.call)
         this.contactValidityBrand = true
+
+        // TODO: SAAS-4756 Se a chamada for agendada, Atualizar status da chamada.
       }
 
       this.$refs.carousel.next()
@@ -301,6 +303,8 @@ export default {
     handleIncorrectContact() {
       this.showIncorrectContactForm = !this.showIncorrectContactForm
       this.contactValidityBrand = true
+
+      // TODO: SAAS-4756 Se a chamada for agendada, Atualizar status da chamada.
     },
 
     handleCloseCall({ interactionId, disputeId }) {
