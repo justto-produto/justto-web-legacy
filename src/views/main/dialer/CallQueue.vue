@@ -1,5 +1,7 @@
 <template>
   <article class="call-queue__container">
+    <ScheduledCalls />
+
     <div
       v-if="isActiveToCall || hasCallInQueue"
       class="call-queue__container-feedback"
@@ -155,7 +157,8 @@ import { mapActions, mapGetters } from 'vuex'
 
 export default {
   components: {
-    CallHelp: () => import('@/components/dialogs/CallHelpWizard.vue')
+    CallHelp: () => import('@/components/dialogs/CallHelpWizard'),
+    ScheduledCalls: () => import('@/components/buttons/ScheduledCallSwitch')
   },
 
   computed: {
