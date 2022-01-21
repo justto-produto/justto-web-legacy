@@ -37,12 +37,25 @@
             />
             {{ summary.emails || 0 }}
           </div>
-          <span class="strategy-communication__sms">
+          <span
+            v-if="summary.sms || !summary.phoneCalls"
+            class="strategy-communication__sms"
+          >
             <jus-icon
               icon="sms"
               class="strategy-communication__icon"
             />
             {{ summary.sms || 0 }}
+          </span>
+          <span
+            v-else
+            class="strategy-communication__sms"
+          >
+            <jus-icon
+              icon="phone"
+              class="strategy-communication__icon"
+            />
+            {{ summary.phoneCalls || 0 }}
           </span>
         </li>
       </el-popover>
@@ -89,10 +102,11 @@ export default {
       'activeStrategy'
     ]),
     summary() {
-      if (this.triggers.ENGAGEMENT) {
+      if (this.triggers?.ENGAGEMENT) {
         return {
-          emails: this.triggers.ENGAGEMENT.communicationsTypeSummary ? this.triggers.ENGAGEMENT.communicationsTypeSummary.EMAIL : 0,
-          sms: this.triggers.ENGAGEMENT.communicationsTypeSummary ? this.triggers.ENGAGEMENT.communicationsTypeSummary.SMS : 0
+          emails: this.triggers?.ENGAGEMENT?.communicationsTypeSummary?.EMAIL || 0,
+          sms: this.triggers?.ENGAGEMENT?.communicationsTypeSummary?.SMS || 0,
+          phoneCalls: this.triggers?.ENGAGEMENT?.communicationsTypeSummary?.PHONE_CALL
         }
       } return { emails: 0, sms: 0 }
     },
