@@ -10,7 +10,7 @@
       <el-popover
         v-model="showPopover"
         trigger="manual"
-        placement="bottom-end"
+        placement="left"
         popper-class="dialer-popover"
       >
         <CallQueue />
@@ -135,6 +135,8 @@ export default {
 
   created() {
     this.setAppInstance(uuidv4())
+    window.removeEventListener('click', this.clickTracker)
+    window.addEventListener('click', this.clickTracker)
   },
 
   methods: {
@@ -157,6 +159,15 @@ export default {
       'availableServerStatus',
       'availableServerStatus'
     ]),
+
+    clickTracker(event) {
+      const dialerButton = document.querySelector('.dialer__button')
+      const clickIn = event.path.includes(dialerButton)
+
+      if (!clickIn && this.showPopover) {
+        this.showPopover = !this.showPopover
+      }
+    },
 
     open(number) {
       this.number = number
@@ -341,7 +352,7 @@ export default {
   .dialer__button {
     text-align: center;
     cursor: pointer;
-    margin: 0px 8px;
+    margin: 0px 16px 0 0;
 
     span {
       .el-popover__reference-wrapper {

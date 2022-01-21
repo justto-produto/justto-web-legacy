@@ -72,5 +72,9 @@ export default {
       font-weight: 700;
     }
   }
+
+  .el-divider.el-divider--horizontal {
+    margin: 8px 0;
+  }
 }
 </style>
