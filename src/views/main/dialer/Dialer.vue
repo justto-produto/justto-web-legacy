@@ -11,6 +11,7 @@
         v-model="showPopover"
         trigger="manual"
         placement="bottom-end"
+        popper-class="dialer-popover"
       >
         <CallQueue />
 
@@ -340,10 +341,18 @@ export default {
   .dialer__button {
     text-align: center;
     cursor: pointer;
+    margin: 0px 8px;
 
-    // margin: 0 auto 16px;
+    span {
+      .el-popover__reference-wrapper {
+        display: flex;
 
-    margin: 8px 16px 8px 8px;
+        img {
+          height: 20px;
+          width: 20px;
+        }
+      }
+    }
   }
 
   .dialer__container {
