@@ -5,10 +5,18 @@
       placement="bottom"
     >
       <jus-icon
+        v-if="mode === 'icon'"
         class="jus-academy-container__academy-icon"
         icon="academy"
         @click="showDialog"
       />
+
+      <span
+        v-else-if="mode === 'text'"
+        @click="showDialog"
+      >
+        Justto Academy
+      </span>
     </el-tooltip>
 
     <el-dialog
@@ -34,10 +42,18 @@
 
 <script>
 export default {
+  props: {
+    mode: {
+      type: String,
+      default: () => 'icon'
+    }
+  },
+
   data: () => ({
     src: 'https://www.youtube.com/embed/videoseries?list=PLT-H88DcnUI4ckL-LVBUvwtLsHwc7v3pC',
     isVisible: false
   }),
+
   methods: {
     showDialog(_) {
       this.isVisible = true

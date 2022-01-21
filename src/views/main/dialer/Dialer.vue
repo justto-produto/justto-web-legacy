@@ -10,7 +10,7 @@
       <el-popover
         v-model="showPopover"
         trigger="manual"
-        placement="right-start"
+        placement="bottom-end"
       >
         <CallQueue />
 
@@ -341,7 +341,9 @@ export default {
     text-align: center;
     cursor: pointer;
 
-    margin: 0 auto 16px;
+    // margin: 0 auto 16px;
+
+    margin: 8px 16px 8px 8px;
   }
 
   .dialer__container {
