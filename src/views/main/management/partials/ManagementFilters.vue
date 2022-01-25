@@ -273,6 +273,7 @@
             </el-form-item>
           </el-col>
 
+          <!-- STATUS -->
           <el-col
             v-if="isFinished || isEngagement || isAll"
             :span="24"
@@ -287,6 +288,24 @@
                   {{ $t('occurrence.type.' + status) | capitalize }}
                 </el-checkbox>
               </el-checkbox-group>
+            </el-form-item>
+          </el-col>
+
+          <!-- ID, Código do Processo ou Código Externo -->
+          <el-col
+            :span="24"
+          >
+            <el-form-item label="Busca multipla">
+              <MultipleFields />
+              <!-- <el-checkbox-group v-model="filters.status">
+                <el-checkbox
+                  v-for="status in statuses"
+                  :key="status"
+                  :label="status"
+                >
+                  {{ $t('occurrence.type.' + status) | capitalize }}
+                </el-checkbox>
+              </el-checkbox-group> -->
             </el-form-item>
           </el-col>
         </el-row>
@@ -314,6 +333,10 @@ import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'ManagementFilters',
+
+  components: {
+    MultipleFields: () => import('./partials/MultipleFieldsFilter')
+  },
 
   props: {
     tabIndex: {
