@@ -26,7 +26,6 @@
         v-model="model"
         type="textarea"
         :autosize="{ minRows: 4, maxRows: 8}"
-        @input="handleChangeModel"
       />
     </div>
   </article>
@@ -41,12 +40,38 @@ export default {
     model: ''
   }),
 
+  watch: {
+    field: {
+      handler: 'handleEmitInput'
+    },
+
+    model: {
+      handler: 'handleEmitInput',
+      immediate: false,
+      deep: true
+    }
+  },
+
   methods: {
     capitalize,
+
+    handleEmitInput() {
+      console.log('input', {
+        field: this.field,
+        value: this.model
+      })
+
+      // this.$emit('input', {
+      //   field: this.field,
+      //   value: this.model
+      // })
+    },
 
     handleChangeModel() {
       const endLine = this.model.endsWith('\n') ? '\n' : ''
       this.model = this.model.trim() + endLine
+
+      this.handleEmitInput()
     }
   }
 }

@@ -295,17 +295,9 @@
           <el-col
             :span="24"
           >
-            <el-form-item label="Busca multipla">
-              <MultipleFields />
-              <!-- <el-checkbox-group v-model="filters.status">
-                <el-checkbox
-                  v-for="status in statuses"
-                  :key="status"
-                  :label="status"
-                >
-                  {{ $t('occurrence.type.' + status) | capitalize }}
-                </el-checkbox>
-              </el-checkbox-group> -->
+            <el-form-item>
+              <!-- TODO: SAAS-4768 -->
+              <MultipleFields v-model="filters.aDefinir" />
             </el-form-item>
           </el-col>
         </el-row>
