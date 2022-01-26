@@ -3,6 +3,8 @@
     id="HeaderUserMenuComponet"
     class="usermenu-container"
   >
+    <Dialer />
+
     <el-tooltip
       v-if="isJusttoAdmin"
       content="Modo anônimo"
@@ -13,7 +15,6 @@
       />
     </el-tooltip>
 
-    <Dialer />
     <!-- <JusAcademy /> -->
 
     <Notification
