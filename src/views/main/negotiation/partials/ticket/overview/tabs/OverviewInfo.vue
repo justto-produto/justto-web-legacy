@@ -217,7 +217,20 @@ export default {
       ]
     },
     strategiesOptions() {
-      return { list: this.strategies, label: 'name', value: 'id' }
+      const hasStrategyInOptions = this.ticket?.strategy.id && this.strategies.map(({ id }) => id).includes(this.ticket?.strategy.id)
+
+      return {
+        list: [
+          ...this.strategies,
+          ...(hasStrategyInOptions ? [] : [{
+            id: this.ticket?.strategy.id,
+            name: 'Estratégia Indisponível',
+            disabled: true
+          }])
+        ],
+        label: 'name',
+        value: 'id'
+      }
     },
     ticketConfigurations() {
       const {
