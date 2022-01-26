@@ -165,7 +165,7 @@
           />
 
           <i
-            v-if="['blocked'].includes(scope.row.status)"
+            v-if="['blocked'].includes(scope.row.status) && isJustto"
             class="el-icon-unlock team-container__table-action"
             @click="handleUnlockUser(scope.row)"
           />
