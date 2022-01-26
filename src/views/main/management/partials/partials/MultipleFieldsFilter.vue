@@ -3,19 +3,19 @@
     <div class="multiple-fields__radio-box">
       <el-radio
         v-model="field"
-        label="id"
+        label="ID"
       >
         ID
       </el-radio>
       <el-radio
         v-model="field"
-        label="code"
+        label="CODE"
       >
         {{ capitalize($tc('dispute.code')) }}
       </el-radio>
       <el-radio
         v-model="field"
-        label="externalId"
+        label="EXTERNAL_ID"
       >
         {{ capitalize($tc('dispute.externalId')) }}
       </el-radio>
@@ -35,8 +35,15 @@
 import { capitalize } from '@/filters/capitalize'
 
 export default {
+  props: {
+    value: {
+      type: Object,
+      default: () => ({})
+    }
+  },
+
   data: () => ({
-    field: 'id',
+    field: 'CODE',
     model: ''
   }),
 
@@ -46,7 +53,7 @@ export default {
     },
 
     model: {
-      handler: 'handleEmitInput',
+      handler: 'handleChangeModel',
       immediate: false,
       deep: true
     }
@@ -56,15 +63,11 @@ export default {
     capitalize,
 
     handleEmitInput() {
-      console.log('input', {
-        field: this.field,
-        value: this.model
+      this.$emit('input', {
+        ...this.value,
+        textSearchType: this.field,
+        textSearch: this.model
       })
-
-      // this.$emit('input', {
-      //   field: this.field,
-      //   value: this.model
-      // })
     },
 
     handleChangeModel() {

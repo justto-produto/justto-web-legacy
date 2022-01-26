@@ -292,12 +292,9 @@
           </el-col>
 
           <!-- ID, Código do Processo ou Código Externo -->
-          <el-col
-            :span="24"
-          >
+          <el-col :span="24">
             <el-form-item>
-              <!-- TODO: SAAS-4768 -->
-              <MultipleFields v-model="filters.aDefinir" />
+              <MultipleFields v-model="filters" />
             </el-form-item>
           </el-col>
         </el-row>
