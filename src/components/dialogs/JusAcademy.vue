@@ -1,6 +1,7 @@
 <template>
   <article class="jus-academy-container">
     <el-tooltip
+      :disabled="!['icon'].includes(mode)"
       content="Justto Academy"
       placement="bottom"
     >
