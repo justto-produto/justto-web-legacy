@@ -292,7 +292,10 @@
           </el-col>
 
           <!-- ID, Código do Processo ou Código Externo -->
-          <el-col :span="24">
+          <el-col
+            v-if="isJusttoAdmin"
+            :span="24"
+          >
             <el-form-item>
               <MultipleFields v-model="filters" />
             </el-form-item>
@@ -350,7 +353,8 @@ export default {
       workspaceTags: 'workspaceTags',
       negotiatorsList: 'workspaceMembers',
       preNegotiationKeywords: 'getPreNegotiation',
-      isRecovery: 'isWorkspaceRecovery'
+      isRecovery: 'isWorkspaceRecovery',
+      isJusttoAdmin: 'isJusttoAdmin'
     }),
 
     isPreNegotiation() {
