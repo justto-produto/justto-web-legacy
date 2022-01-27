@@ -30,6 +30,10 @@ const tagActions = {
     delete query.size
     delete query.tags
     delete query.noTags
+    // SAAS-4768
+    delete query.textSearch
+    delete query.textSearchType
+
     return axiosDispatch({
       url: `/api/disputes/tags${buildQuery(query)}`,
       mutation: 'setFilteredTags'
@@ -42,6 +46,10 @@ const tagActions = {
     delete query.size
     delete query.tags
     delete query.noTags
+    // SAAS-4768
+    delete query.textSearch
+    delete query.textSearchType
+
     return axiosDispatch({
       url: `/api/disputes/tags${buildQuery(query)}`,
       mutation: 'setFilteredTags'

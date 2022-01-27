@@ -196,16 +196,20 @@ const disputeActions = {
       if (command !== 'nextPage') state.loading = true
       if (command === 'resetPages') commit('resetDisputeQueryPage')
 
-      const { textSearch } = state.query
+      const { textSearch, textSearchType } = state.query
 
-      delete state.query.textSearch
+      const tempQuery = {
+        ...state.query,
+        textSearch: undefined,
+        textSearchType: undefined
+      }
 
-      const query = buildQuery(state.query, command, state.disputes.length)
-      const url = `${disputesPath}/filter${query}`
+      const query = buildQuery(tempQuery, command, state.disputes.length)
 
       axiosDispatch({
-        url,
-        params: { textSearch }
+        url: `${disputesPath}/filter/apply${query}`,
+        method: 'POST',
+        data: { textSearch, textSearchType }
       }).then(data => {
         const dispute = {
           ...data,
@@ -405,10 +409,18 @@ const disputeActions = {
   },
 
   sendBatchAction({ commit, state }, params) {
+    const { textSearch, textSearchType } = state.query
+
+    const tempQuery = {
+      ...state.query,
+      textSearch: undefined,
+      textSearchType: undefined
+    }
+
     return axiosDispatch({
-      url: `${disputesPath}/actions/batch${buildQuery(state.query)}`,
+      url: `${disputesPath}/actions/batch${buildQuery(tempQuery)}`,
       method: 'PUT',
-      data: params
+      data: { ...params, textSearch, textSearchType }
     }).finally(() => {
       commit('setBatchActionsLastUse', { action: params.type })
     })
