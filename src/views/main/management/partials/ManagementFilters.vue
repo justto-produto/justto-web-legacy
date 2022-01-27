@@ -273,6 +273,7 @@
             </el-form-item>
           </el-col>
 
+          <!-- STATUS -->
           <el-col
             v-if="isFinished || isEngagement || isAll"
             :span="24"
@@ -287,6 +288,16 @@
                   {{ $t('occurrence.type.' + status) | capitalize }}
                 </el-checkbox>
               </el-checkbox-group>
+            </el-form-item>
+          </el-col>
+
+          <!-- ID, Código do Processo ou Código Externo -->
+          <el-col
+            v-if="isJusttoAdmin"
+            :span="24"
+          >
+            <el-form-item>
+              <MultipleFields v-model="filters" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -315,6 +326,10 @@ import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'ManagementFilters',
 
+  components: {
+    MultipleFields: () => import('./partials/MultipleFieldsFilter')
+  },
+
   props: {
     tabIndex: {
       type: String,
@@ -338,7 +353,8 @@ export default {
       workspaceTags: 'workspaceTags',
       negotiatorsList: 'workspaceMembers',
       preNegotiationKeywords: 'getPreNegotiation',
-      isRecovery: 'isWorkspaceRecovery'
+      isRecovery: 'isWorkspaceRecovery',
+      isJusttoAdmin: 'isJusttoAdmin'
     }),
 
     isPreNegotiation() {
@@ -490,7 +506,6 @@ export default {
     },
 
     applyFilters() {
-      // debugger
       if (!this.filters.onlyNotVisualized) delete this.filters.onlyNotVisualized
 
       this.$store.commit('setDisputeHasFilters', true)
@@ -508,19 +523,24 @@ export default {
           this.$jusSegment('Filtro por status acordo')
         }
       }
+
       if (this.filters.hasCounterproposal) {
         this.$jusSegment('Filtro por status com contraproposta')
       }
+
       if (this.filters.hasCounterproposal) {
         this.$jusSegment('Filtro por status com contraproposta')
       }
+
       if (this.filters.importingDate && this.filters.importingDate.length) {
         this.$jusSegment('Filtro por data importação')
       }
+
       if (this.filters.expirationDate && this.filters.expirationDate.length) {
         this.$jusSegment('Filtro por data fim negociação')
       }
     },
+
     clearFilters() {
       this.clearCampaign()
       this.clearStrategy()
