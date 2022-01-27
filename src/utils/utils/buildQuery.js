@@ -29,6 +29,8 @@ const buildQuery = (q, command, disputesLength, noSort) => {
       query = query + key + '=' + ((command === 'update' ? 1 : value) - 1) + '&'
     } else if (key === 'size') {
       query = query + key + '=' + (command === 'update' ? disputesLength : value) + '&'
+    } else if (key === 'textSearch') {
+      query = query + key + '=' + encodeURI(value) + '&'
     } else {
       query = query + key + '=' + value + '&'
     }

@@ -195,11 +195,21 @@ const disputeActions = {
     return new Promise((resolve, reject) => {
       if (command !== 'nextPage') state.loading = true
       if (command === 'resetPages') commit('resetDisputeQueryPage')
-      // eslint-disable-next-line
-      axios.get(`${disputesPath}/filter` + buildQuery(state.query, command, state.disputes.length)).then(response => {
+
+      const { textSearch } = state.query
+
+      delete state.query.textSearch
+
+      const query = buildQuery(state.query, command, state.disputes.length)
+      const url = `${disputesPath}/filter${query}`
+
+      axiosDispatch({
+        url,
+        params: { textSearch }
+      }).then(data => {
         const dispute = {
-          ...response.data,
-          content: response.data.content.filter(d => !!d)
+          ...data,
+          content: data.content.filter(d => !!d)
         }
         if (command === 'nextPage') {
           commit('addDisputes', dispute)
@@ -224,7 +234,7 @@ const disputeActions = {
           }
         })
         commit('setOnlineDocs', onlineDocs)
-        resolve(response.data)
+        resolve(data)
       }).catch(error => {
         commit('clearDisputes')
         reject(error)

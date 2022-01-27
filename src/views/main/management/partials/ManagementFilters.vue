@@ -506,7 +506,6 @@ export default {
     },
 
     applyFilters() {
-      // debugger
       if (!this.filters.onlyNotVisualized) delete this.filters.onlyNotVisualized
 
       this.$store.commit('setDisputeHasFilters', true)
@@ -524,19 +523,24 @@ export default {
           this.$jusSegment('Filtro por status acordo')
         }
       }
+
       if (this.filters.hasCounterproposal) {
         this.$jusSegment('Filtro por status com contraproposta')
       }
+
       if (this.filters.hasCounterproposal) {
         this.$jusSegment('Filtro por status com contraproposta')
       }
+
       if (this.filters.importingDate && this.filters.importingDate.length) {
         this.$jusSegment('Filtro por data importação')
       }
+
       if (this.filters.expirationDate && this.filters.expirationDate.length) {
         this.$jusSegment('Filtro por data fim negociação')
       }
     },
+
     clearFilters() {
       this.clearCampaign()
       this.clearStrategy()
