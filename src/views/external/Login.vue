@@ -252,7 +252,7 @@ export default {
             })
             .catch(error => {
               localStorage.removeItem('justoken')
-              if (error.response && (error.response.status === 401 || error.response.data.code === 'INVALID_CREDENTIALS')) {
+              if (error.response && (error.response?.status === 401 || error.response.data.code === 'INVALID_CREDENTIALS')) {
                 this.mountError('E-mail não cadastrado ou senha incorreta.')
               } else {
                 this.loadingText = this.getErrorMessage()

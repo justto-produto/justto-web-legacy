@@ -76,7 +76,7 @@ self.addEventListener('fetch', function(event) {
           console.log('  Response for %s from network is: %O',
           event.request.url, response);
 
-          if (response.status < 400 &&
+          if (response?.status < 400 &&
             response.headers.has('content-type') &&
             response.headers.get('content-type').match(/^font\//i)) {
               // This avoids caching responses that we know are errors (i.e. HTTP status code of 4xx or 5xx).

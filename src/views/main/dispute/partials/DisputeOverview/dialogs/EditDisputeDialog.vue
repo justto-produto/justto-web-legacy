@@ -490,7 +490,7 @@ export default {
     },
 
     handleSetDisputeError(error) {
-      if (error.response && error.response.data && error.response.status === 412 && error.response.data.code === 'DUPLICATED_VALIDATION') {
+      if (error.response && error.response.data && error.response?.status === 412 && error.response.data.code === 'DUPLICATED_VALIDATION') {
         const { CAN_ACCESS_OTHER, OTHER_DISPUTE_ID, OTHER_NEGOTIATORS } = error.response.data.fields
         const message = CAN_ACCESS_OTHER
           ? `Este número de processo ja está sendo usado na disputa <a target="_blank" href="https://justto.app/#/management/dispute/${OTHER_DISPUTE_ID}">#OTHER_DISPUTE_ID</a>.`

@@ -26,7 +26,7 @@ const documentActions = {
       // eslint-disable-next-line
       axios.get(`${documentsPath}/${disputeId}`)
         .then(response => {
-          if (response.status === 204) {
+          if (response?.status === 204) {
             resolve(null)
           } else resolve(response.data)
         })
