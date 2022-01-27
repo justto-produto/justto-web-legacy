@@ -369,7 +369,7 @@ export default {
   methods: {
     ...mapActions({
       setDispute: 'editDispute',
-      getDispute: 'getDisputeDTO',
+      getDispute: 'getDispute',
       getStrategies: 'getMyStrategiesLite'
     }),
 
