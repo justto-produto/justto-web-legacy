@@ -297,7 +297,10 @@
             :span="24"
           >
             <el-form-item>
-              <MultipleFields v-model="filters" />
+              <MultipleFields
+                ref="MultipleFields"
+                v-model="filters"
+              />
             </el-form-item>
           </el-col>
         </el-row>
@@ -448,6 +451,7 @@ export default {
       }
     }
   },
+
   watch: {
     visibleFilters(value) {
       if (value) {
@@ -455,6 +459,7 @@ export default {
       }
     }
   },
+
   methods: {
     ...mapActions([
       'getCampaigns',
@@ -542,6 +547,9 @@ export default {
     },
 
     clearFilters() {
+      if (this.$refs.MultipleFields) {
+        this.$refs.MultipleFields.clear()
+      }
       this.clearCampaign()
       this.clearStrategy()
       this.clearTags()

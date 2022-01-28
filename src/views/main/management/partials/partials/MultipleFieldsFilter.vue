@@ -75,7 +75,14 @@ export default {
       this.model = this.model.trim() + endLine
 
       this.handleEmitInput()
-    }
+    },
+
+    clear() {
+      this.field = 'CODE'
+      this.model = ''
+      this.handleEmitInput()
+    },
+
   }
 }
 </script>
