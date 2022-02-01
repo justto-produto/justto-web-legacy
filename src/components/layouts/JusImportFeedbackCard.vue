@@ -151,6 +151,7 @@
         :prefix-icon="errorFields.includes('deadline') ? 'el-icon-error' : deadline === null ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
         :picker-options="datePickerOptions"
         :class="{'has-error': errorFields.includes('deadline')}"
+        class="unhide"
         type="date"
         format="dd/MM/yyyy"
         placeholder="Defina a data limite para a negociação"
