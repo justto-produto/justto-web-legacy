@@ -193,7 +193,6 @@
       >
         <jus-import-feedback-card
           v-for="(mappedCampaign, index) in mappedCampaigns"
-          v-show="mappedCampaigns[0].replicate ? index === 0 : true"
           :key="mappedCampaign.cluster"
           :show="mappedCampaigns[0].replicate ? index === 0 : true"
           :mapped-campaign.sync="mappedCampaigns[index]"

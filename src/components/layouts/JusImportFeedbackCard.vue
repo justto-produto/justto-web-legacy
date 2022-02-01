@@ -1,6 +1,6 @@
 <template>
+  <!-- v-if="show" -->
   <div
-    v-if="show"
     class="jus-import-feedback-card"
   >
     <div class="jus-import-feedback-card-header">
@@ -26,9 +26,13 @@
       </el-tooltip>
     </div>
 
-    <el-card :style="'border-left: solid 4px ' + color">
+    <el-card
+      :class="{'hide': index > 1 && originalQuantity > 1 && !show}"
+      :style="'border-left: solid 4px ' + color"
+    >
       <el-input
         v-model="respondent"
+        class="unhide"
         :class="{'has-error': errorFields.includes('respondent')}"
         data-testid="feedback-respondent"
         :placeholder="`Dê um nome para ${isWorkspaceRecovery ? 'a sua' : 'o seu'} ${$tc('PARTY_RESPONDENT', isWorkspaceRecovery)}`"
@@ -46,9 +50,10 @@
           />
         </div>
       </el-input>
+
       <el-input
         v-model="campaignName"
-        class="select-strategy"
+        class="select-strategy unhide"
         :validate-event="true"
         :class="{'has-error': errorFields.includes('name')}"
         data-testid="feedback-campaignName"
@@ -67,6 +72,7 @@
           />
         </div>
       </el-input>
+
       <div class="select-strategy__messages">
         <div v-show="campaignNameDuplicated && campaignName !== ''">
           Já existe uma campanha com este nome.
@@ -75,6 +81,7 @@
           </a>
         </div>
       </div>
+
       <el-select
         ref="strategySelect"
         v-model="strategy"
@@ -106,6 +113,7 @@
           :value="optionStrategy"
         />
       </el-select>
+
       <div class="select-strategy__messages">
         <div v-show="!!strategy.id">
           <a @click.prevent="openDialogEngagement">
@@ -113,6 +121,7 @@
           </a>
         </div>
       </div>
+
       <div
         v-if="isPaymentStrategy"
         class="jus-import-feedback-card__number"
@@ -136,11 +145,13 @@
           </span>
         </div>
       </div>
+
       <el-date-picker
         v-model="deadline"
         :prefix-icon="errorFields.includes('deadline') ? 'el-icon-error' : deadline === null ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
         :picker-options="datePickerOptions"
         :class="{'has-error': errorFields.includes('deadline')}"
+        class="unhide"
         type="date"
         format="dd/MM/yyyy"
         placeholder="Defina a data limite para a negociação"
@@ -148,6 +159,7 @@
         value-format="yyyy-MM-dd"
         @input="clearErrorField('deadline')"
       />
+
       <el-select
         v-model="negotiatorIds"
         value-key="name"
@@ -185,6 +197,7 @@
           <span style="vertical-align: middle;margin-left: 10px;">{{ item.person.name }}</span>
         </el-option>
       </el-select>
+
       <div
         v-if="!isWorkspaceRecovery"
         class="jus-import-feedback-card__switch"
@@ -202,6 +215,7 @@
           />
         </div>
       </div>
+
       <div class="jus-import-feedback-card__switch">
         <i class="el-icon-circle-check el-input__icon--success" />
         <div class="content">
@@ -593,6 +607,14 @@ export default {
     border-right: 0;
   }
 
+  .el-card.hide {
+    .el-card__body {
+      div:not(.unhide) {
+        display: none !important;
+      }
+    }
+  }
+
   .select-strategy{
     .el-input__inner {
       border: 0 !important;
@@ -611,6 +633,7 @@ export default {
 
   .el-card__body {
     padding: 0;
+
     .el-select:last-of-type {
       .el-input__inner {
         border-bottom: 0;
