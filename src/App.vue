@@ -3,6 +3,12 @@
     <transition name="fade">
       <router-view />
     </transition>
+    <audio
+      id="globalAudio"
+      controls
+      autoplay="autoplay"
+      style="display: none;"
+    />
   </div>
 </template>
 
