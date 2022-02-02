@@ -68,11 +68,27 @@
           </el-button>
         </div>
 
-        <div v-else>
+        <div
+          v-else-if="true"
+          class="waiting-dialer"
+        >
           <p>
-            Aguardando disponibilidade de discador
-            <i class="el-icon-loading" />
+            <span>
+              Aguardando discador
+              <el-tooltip
+                content="Aguardando disponibilidade de um discador. Por favor aguarde!"
+                placement="top-end"
+              >
+                <i class="el-icon-info" />
+              </el-tooltip>
+            </span>
+            <el-skeleton
+              :rows="1"
+              animated
+              class="load-skeleton"
+            />
           </p>
+
           <el-button
             v-if="isActiveToCall && (isAdminProfile || isJusttoAdmin)"
             type="primary"
@@ -282,6 +298,8 @@ export default {
     }
 
     div {
+      width: 100%;
+
       .in-call-btn {
         cursor: text;
 
@@ -301,6 +319,22 @@ export default {
 
         span {
           font-size: 10px;
+        }
+      }
+
+      p {
+        font-size: 18px;
+        font-weight: bold;
+      }
+
+      .waiting-dialer {
+
+        .load-skeleton {
+          .el-skeleton {
+            .is-first {
+              width: 100%;
+            }
+          }
         }
       }
     }
