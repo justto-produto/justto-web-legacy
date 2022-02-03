@@ -119,7 +119,8 @@ const accountActions = {
     return axiosDispatch({
       url: `${accountsPath}/my/property`,
       method: 'GET',
-      mutation: 'setAccountProperty'
+      mutation: 'setAccountProperty',
+      action: 'setScheduledCallsRequester'
     })
   },
 
