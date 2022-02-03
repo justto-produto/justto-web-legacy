@@ -53,14 +53,14 @@ _axios.interceptors.request.use(
 // De quando chega a request
 _axios.interceptors.response.use(
   function(response) {
-    if (response.status !== 401 && response.headers && response.headers.authorization) {
+    if (response?.status !== 401 && response.headers && response.headers.authorization) {
       const token = response.headers.authorization
       localStorage.removeItem('justoken')
       localStorage.setItem('justoken', token)
       Vue.delete(axios.defaults.headers.common, 'Authorization')
       Vue.set(axios.defaults.headers.common, 'Authorization', token)
     }
-    if (response.status === 204 && response.config && response.config.__isRetryRequest) {
+    if (response?.status === 204 && response.config && response.config.__isRetryRequest) {
       response.config.__isRetryRequest = false
       setTimeout(function() {
         return axios(response.config)
@@ -70,10 +70,10 @@ _axios.interceptors.response.use(
   },
   function(error) {
     if (process.env.NODE_ENV === 'production') Sentry.captureException(error)
-    if (error.response.status === 503) {
+    if (error.response?.status === 503) {
       showUnavailableLoading()
     }
-    if (error.response.status === 401 && error.response.data.code !== 'INVALID_CREDENTIALS') {
+    if (error.response?.status === 401 && error.response.data.code !== 'INVALID_CREDENTIALS') {
       store.dispatch('logout')
     }
     return Promise.reject(error)

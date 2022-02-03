@@ -207,8 +207,8 @@ export default {
       commit('clearTimeoutDialerDetail')
       commit('clearActiveRequestInterval')
 
-      // Usando exemplo simples copiado daqui: https://jssip.net/documentation/3.8.x/getting_started/
-      const remoteAudio = document.getElementById('remoteAudio')
+      // document.getElementById('remoteAudio')
+      const remoteAudio = document.getElementById('globalAudio')
       const socket = new JsSIP.WebSocketInterface(dialer.sipServer.websocketHost)
 
       const configuration = {

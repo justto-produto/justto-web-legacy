@@ -370,6 +370,10 @@
       "icon": "nps-star-active",
       "message": "avaliação NPS recebida"
     },
+    "PHONE_CALL":{
+      "icon": "tts",
+      "message": "Ligação feita"
+    }, 
     "COMMUNICATION": {
       "message": ""
     },

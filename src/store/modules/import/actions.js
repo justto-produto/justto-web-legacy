@@ -11,7 +11,7 @@ const importActions = {
       // eslint-disable-next-line
       axios.get(`${importsPath}/${state.file.id}/columns`)
         .then(response => {
-          if (response.status === 204) {
+          if (response?.status === 204) {
             setTimeout(function() {
               resolve(dispatch('getImportsColumns'))
             }, 3000)
