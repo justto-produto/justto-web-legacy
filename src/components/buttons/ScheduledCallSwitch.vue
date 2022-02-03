@@ -42,11 +42,10 @@ export default {
       },
       set(value) {
         this.isLoading = true
+
         this.setAccountProperty({
           AVAILABLE_SCHEDULED_CALLS: { true: 'AVAILABLE', false: 'UNAVAILABLE' }[value]
-        }).finally(() => {
-          this.isLoading = false
-        })
+        }).finally(() => { this.isLoading = false })
       }
     }
   },

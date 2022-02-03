@@ -81,8 +81,7 @@ export default {
       this.field = 'CODE'
       this.model = ''
       this.handleEmitInput()
-    },
-
+    }
   }
 }
 </script>
