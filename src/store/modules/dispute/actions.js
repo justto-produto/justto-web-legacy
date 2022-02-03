@@ -764,8 +764,19 @@ const disputeActions = {
   },
 
   getFinishedDisputesCount({ state }, { id, allSelected }) {
+    // const { textSearch, textSearchType } = state.query
+    const query = {
+      ...state.query,
+      allSelected,
+      id,
+      textSearchType: undefined,
+      textSearch: undefined
+    }
+
+    // TODO: SAAS-4823 Mandar textSearch no data.
     return axiosDispatch({
-      url: `/api/disputes/count-finished/${buildQuery({ ...state.query, id, allSelected })}`,
+      url: `/api/disputes/count-finished/${buildQuery(query)}`,
+      // data: { textSearch, textSearchType },
       mutation: 'setDisputeMetadata'
     })
   },
