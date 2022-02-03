@@ -147,7 +147,7 @@ export default {
 
     if (requester) {
       requester()
-      Vue.set(state, 'scheduledCallInterval', setInterval(requester, 25 * 60 * 1000))
+      // Vue.set(state, 'scheduledCallInterval', setInterval(requester, 25 * 60 * 1000))
     }
   },
 
