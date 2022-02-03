@@ -142,6 +142,15 @@ export default {
     Vue.set(state.currentCall, 'status', CALL_STATUS.WAITING_DIALER)
   },
 
+  setScheduledCallsRequester(state, requester) {
+    clearInterval(state.scheduledCallInterval)
+
+    if (requester) {
+      requester()
+      Vue.set(state, 'scheduledCallInterval', setInterval(requester, 2.5 * 60 * 1000))
+    }
+  },
+
   setBroadcastRequestCallStatus(state, callback) {
     Vue.set(state, 'broadcastRequestCallStatus', setTimeout(callback, 4 * 1000))
   },
@@ -213,5 +222,10 @@ export default {
       this.commit('clearCallHeartbeatInterval')
       this.dispatch('endCall', { dialerId, callId })
     }
+  },
+
+  // TODO: SAAS-4755
+  setScheduledCallsState(state, pageableState) {
+    Vue.set(state, 'scheduledCalls', pageableState)
   }
 }

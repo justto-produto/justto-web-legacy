@@ -4,6 +4,7 @@ export default {
   requestProvideNewInterval: null, // setIntervalObject(),
   timeoutDialerDetail: null, // setTimeoutDialerDetail(),
   callHeartbeatInterval: null, // setIntervalObject(),
+  scheduledCallInterval: null, // SetInterval()
   broadcastRequestCallStatus: null, // setTimeoutCallStatus(),
   activeToCall: false,
   dialer: null,
@@ -21,5 +22,16 @@ export default {
     configuration: null,
     phone: null,
     speed: 0
+  },
+  // SAAS-4755
+  scheduledCalls: {
+    content: [],
+    pageable: {},
+    number: 0,
+    totalPages: 1,
+    totalElements: 1,
+    last: true,
+    first: true,
+    empty: true
   }
 }

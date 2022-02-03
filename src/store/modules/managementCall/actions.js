@@ -11,6 +11,7 @@ const vue = () => document.getElementById('app')?.__vue__
 const DEFAULT_JUSTTO_MANAGEMENT_CALL = "{'currentCall':null,'callQueue':[],'appInstance':null}"
 const dialerApi = 'api/dialer'
 const disputeApi = 'api/disputes/v2'
+const legacyDisputeApi = 'api/disputes'
 
 export default {
   activeAppToCall({ commit, getters: { hasOtherTabActive, isActiveToCall } }, active = false) {
@@ -39,8 +40,24 @@ export default {
     }
   },
 
-  setAppInstance({ commit }, appInstance) {
+  setAppInstance({ commit, dispatch }, appInstance) {
     commit('setAppInstance', appInstance)
+    dispatch('setScheduledCallsRequester')
+  },
+
+  setScheduledCallsRequester({ commit, dispatch, getters: { userPreferences } }) {
+    const available = userPreferences?.properties?.AVAILABLE_SCHEDULED_CALLS !== 'UNAVAILABLE'
+
+    commit('setScheduledCallsRequester', available ? () => dispatch('getPhoneCalls') : null)
+
+    return Promise.resolve()
+  },
+
+  getPhoneCalls({ _ }) {
+    return axiosDispatch({
+      url: `${legacyDisputeApi}/phone-calls`,
+      mutation: 'setScheduledCallsState'
+    })
   },
 
   startManagementCall({ commit, dispatch, getters: { getAppInstance } }) {
