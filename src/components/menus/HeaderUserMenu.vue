@@ -3,6 +3,8 @@
     id="HeaderUserMenuComponet"
     class="usermenu-container"
   >
+    <Dialer />
+
     <el-tooltip
       v-if="isJusttoAdmin"
       content="Modo anônimo"
@@ -13,7 +15,7 @@
       />
     </el-tooltip>
 
-    <JusAcademy />
+    <!-- <JusAcademy /> -->
 
     <Notification
       class="usermenu-container__jus-academy"
@@ -59,7 +61,7 @@
         <div class="usermenu-container__version">
           Versão {{ appVersion }}
         </div>
-        <a
+        <!-- <a
           v-if="canAccessDialer"
           href="#"
           @click.prevent="openDialer('')"
@@ -67,7 +69,8 @@
           <el-dropdown-item>
             Discador
           </el-dropdown-item>
-        </a>
+        </a> -->
+
         <router-link
           v-if="showConfigs"
           to="/configurations"
@@ -93,6 +96,16 @@
             Alterar equipe
           </el-dropdown-item>
         </a>
+
+        <a
+          href="#"
+          @click.prevent="() => {}"
+        >
+          <el-dropdown-item>
+            <JusAcademy mode="text" />
+          </el-dropdown-item>
+        </a>
+
         <a
           href="#"
           @click="logout()"
@@ -120,7 +133,8 @@ export default {
     JusAcademy: () => import('@/components/dialogs/JusAcademy'),
     JusChangeWorkspace: () => import('@/components/dialogs/JusChangeWorkspace'),
     JusEditUser: () => import('@/components/dialogs/JusEditUserDialog'),
-    Notification: () => import('@/components/drawer/NotificationIcon')
+    Notification: () => import('@/components/drawer/NotificationIcon'),
+    Dialer: () => import('@/views/main/dialer/Dialer')
   },
 
   data: () => ({
@@ -254,7 +268,7 @@ export default {
   align-items: center;
 
   .usermenu-container__ghost-mode {
-    margin-right: 20px;
+    margin-right: 8px;
   }
 
   .usermenu-container__jus-academy {

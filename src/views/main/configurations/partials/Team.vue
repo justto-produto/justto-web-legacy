@@ -163,6 +163,12 @@
             class="el-icon-delete team-container__table-action"
             @click="handleRemoveMember(scope.row.personId, scope.row.personName)"
           />
+
+          <i
+            v-if="['blocked'].includes(scope.row.status) && isJustto"
+            class="el-icon-unlock team-container__table-action"
+            @click="handleUnlockUser(scope.row)"
+          />
         </template>
       </el-table-column>
     </el-table>
@@ -274,8 +280,21 @@ export default {
       'removeWorkspaceMember',
       'changeMemberName',
       'editWorkspaceMember',
-      'updatePersonProfile'
+      'updatePersonProfile',
+      'unlockAccount'
     ]),
+
+    handleUnlockUser(user) {
+      this.$confirm(`Desbloquear conta de ${user.name}?`, 'Conta bloqueada', {
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Cancelar',
+        type: 'warning'
+      }).then(() => {
+        this.unlockAccount(user.id).then(this.getWorkspaceTeam).catch(error => {
+          this.$jusNotification({ error })
+        })
+      })
+    },
 
     handleInviteMember() {
       this.$refs.teamDialogs.openNewMemberDialog()
@@ -415,6 +434,7 @@ export default {
       .team-container__table-status {
         &--warning { color: $--color-warning; }
         &--danger { color: $--color-danger; }
+        .pointer { cursor: pointer; }
       }
 
       .team-container__table-action {
@@ -422,11 +442,19 @@ export default {
         transition: .2s ease-in-out;
         display: inline-block;
         font-size: 16px;
+        margin: 0 4px;
+
         &.el-icon-delete:hover {
           color: $--color-danger;
           cursor: pointer;
         }
+
+        &.el-icon-unlock {
+          color: $--color-primary;
+          cursor: pointer;
+        }
       }
+
       &:hover {
        .team-container__table-action {
           opacity: 1;

@@ -370,6 +370,10 @@
       "icon": "nps-star-active",
       "message": "avaliação NPS recebida"
     },
+    "PHONE_CALL":{
+      "icon": "tts",
+      "message": "Ligação feita"
+    }, 
     "COMMUNICATION": {
       "message": ""
     },
@@ -661,6 +665,8 @@
   "PARTY_RESPONDENT": "Empresa | Réu",
   "LAWYER_RESPONDENT": "Advogado da Empresa | Advogado do Réu",
   "ARTICLE": "o | a",
+  "AVAILABLE": "Disponível | Não disponível",
+  "I_AM_AVAILABLE": "Estou disponível | Não estou disponível",
   "workspace": {
     "READY": "ativo",
     "CREATING": "em criação",
@@ -775,6 +781,9 @@
         "DIFFERENT_OWNER": "Contato de outra pessoa",
         "NONEXISTENT": "Contato não existe"
       }
+    },
+    "scheduled": {
+      "label": "Ligações agendadas"
     }
   },
   "administrativeProceedingCode": {

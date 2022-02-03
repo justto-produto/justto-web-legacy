@@ -223,8 +223,8 @@ export default {
       } else if (lastInboundInteraction?.type && lastInboundInteraction?.type !== 'COMMUNICATION') {
         const { type, dateTime } = lastInboundInteraction
         return {
-          icon: type ? this.$t(`interaction-types.${type}.icon`) : null,
-          message: this.$options.filters.capitalize(this.$t(`interaction-types.${type}.message`)),
+          icon: type ? this.$tc(`interaction-types.${type}.icon`) : null,
+          message: this.$options.filters.capitalize(this.$tc(`interaction-types.${type}.message`)),
           dateTime: dateTime.dateTime
         }
       } else if (lastReceivedMessage?.message) {

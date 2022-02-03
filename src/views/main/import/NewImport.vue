@@ -176,6 +176,7 @@ export default {
             ...(replicateFirst ? this.mappedCampaigns[0] : campaign),
             name: campaign.name,
             respondent: campaign.respondent,
+            deadline: campaign.deadline,
             cluster: campaign.cluster,
             paymentDeadLine: 'P' + (replicateFirst ? this.mappedCampaigns[0] : campaign).paymentDeadLine + 'D',
             allowDuplicateDispute: this.duplicatedAction === 'DUPLICATE',

@@ -195,11 +195,25 @@ const disputeActions = {
     return new Promise((resolve, reject) => {
       if (command !== 'nextPage') state.loading = true
       if (command === 'resetPages') commit('resetDisputeQueryPage')
-      // eslint-disable-next-line
-      axios.get(`${disputesPath}/filter` + buildQuery(state.query, command, state.disputes.length)).then(response => {
+
+      const { textSearch, textSearchType } = state.query
+
+      const tempQuery = {
+        ...state.query,
+        textSearch: undefined,
+        textSearchType: undefined
+      }
+
+      const query = buildQuery(tempQuery, command, state.disputes.length)
+
+      axiosDispatch({
+        url: `${disputesPath}/filter/apply${query}`,
+        method: 'POST',
+        data: { textSearch, textSearchType }
+      }).then(data => {
         const dispute = {
-          ...response.data,
-          content: response.data.content.filter(d => !!d)
+          ...data,
+          content: data.content.filter(d => !!d)
         }
         if (command === 'nextPage') {
           commit('addDisputes', dispute)
@@ -224,7 +238,7 @@ const disputeActions = {
           }
         })
         commit('setOnlineDocs', onlineDocs)
-        resolve(response.data)
+        resolve(data)
       }).catch(error => {
         commit('clearDisputes')
         reject(error)
@@ -395,10 +409,18 @@ const disputeActions = {
   },
 
   sendBatchAction({ commit, state }, params) {
+    const { textSearch, textSearchType } = state.query
+
+    const tempQuery = {
+      ...state.query,
+      textSearch: undefined,
+      textSearchType: undefined
+    }
+
     return axiosDispatch({
-      url: `${disputesPath}/actions/batch${buildQuery(state.query)}`,
+      url: `${disputesPath}/actions/batch${buildQuery(tempQuery)}`,
       method: 'PUT',
-      data: params
+      data: { ...params, textSearch, textSearchType }
     }).finally(() => {
       commit('setBatchActionsLastUse', { action: params.type })
     })

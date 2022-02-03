@@ -1593,7 +1593,7 @@ export default {
                 })
               }
             }).catch(error => {
-              if (error.response && error.response.data && error.response.status === 412 && error.response.data.code === 'DUPLICATED_VALIDATION') {
+              if (error.response && error.response.data && error.response?.status === 412 && error.response.data.code === 'DUPLICATED_VALIDATION') {
                 let message
                 if (error.response.data.fields.CAN_ACCESS_OTHER) {
                   message = 'Este número de processo ja está sendo usado na disputa <a target="_blank" href="https://justto.app/#/management/dispute/' + error.response.data.fields.OTHER_DISPUTE_ID + '">#' + error.response.data.fields.OTHER_DISPUTE_ID + '</a>.'
