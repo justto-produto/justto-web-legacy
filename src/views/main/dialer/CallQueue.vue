@@ -1,7 +1,5 @@
 <template>
   <article class="call-queue__container">
-    <ScheduledCallSwitch />
-
     <div
       v-if="isActiveToCall || hasCallInQueue"
       class="call-queue__container-feedback"
@@ -161,6 +159,8 @@
         </el-button>
       </div>
     </div>
+
+    <ScheduledCallSwitch />
 
     <ScheduledCallsQueue />
 

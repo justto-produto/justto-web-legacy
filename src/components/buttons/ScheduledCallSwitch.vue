@@ -3,6 +3,8 @@
     v-loading="isLoading"
     class="scheduled-calls-switch"
   >
+    <el-divider />
+
     <div class="scheduled-calls-switch__container">
       <div class="scheduled-calls-switch__container-header">
         <label>
@@ -20,8 +22,6 @@
         <span> {{ $tc('I_AM_AVAILABLE', scheduledCallState) }} </span>
       </div>
     </div>
-
-    <el-divider />
   </article>
 </template>
 

@@ -48,6 +48,7 @@ export default {
   setScheduledCallsRequester({ commit, dispatch, getters: { userPreferences } }) {
     const available = userPreferences?.properties?.AVAILABLE_SCHEDULED_CALLS !== 'UNAVAILABLE'
 
+    commit('resetScheduledCallsState')
     commit('setScheduledCallsRequester', available ? () => dispatch('getPhoneCalls') : null)
 
     return Promise.resolve()
