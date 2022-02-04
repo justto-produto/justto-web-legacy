@@ -61,9 +61,23 @@ export default {
     })
   },
 
-  updatePhoneCallStatus({ _ }, success) {
+  updatePhoneCallStatus({ _ }, communicationMessageId) {
     // TODO: SAAS-4756
     // atualizar status da communication_message (informar sucesso ou falha)
+
+    return axiosDispatch({
+      url: `${legacyDisputeApi}/phone-calls/${communicationMessageId}/done`,
+      method: 'PATCH',
+      action: 'setScheduledCallsRequester'
+    })
+  },
+
+  unschedulePhoneCallStatus({ _ }, communicationMessageId) {
+    return axiosDispatch({
+      url: `${legacyDisputeApi}/phone-calls/${communicationMessageId}/canceled`,
+      method: 'PATCH',
+      action: 'setScheduledCallsRequester'
+    })
   },
 
   startManagementCall({ commit, dispatch, getters: { getAppInstance } }) {

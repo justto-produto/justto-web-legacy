@@ -23,7 +23,6 @@
           icon="el-icon-phone"
           size="mini"
           round
-          plain
         >
           Ligar
         </el-button>
@@ -33,7 +32,7 @@
           icon="el-icon-delete-solid"
           size="mini"
           round
-          plain
+          @click="unscheduleCall"
         >
           Remover
         </el-button>
@@ -43,6 +42,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 export default {
   props: {
     value: {
@@ -69,6 +69,24 @@ export default {
 
     scheduledTo() {
       return this.value?.scheduledTime.dateTime
+    }
+  },
+
+  methods: {
+    ...mapActions([
+      'updatePhoneCallStatus',
+      'unschedulePhoneCallStatus'
+    ]),
+
+    makeCall() {
+      // TODO: SAAS-4756
+      // TODO: Fazer todo o processo da chamada, ao desligar, marcar como DONE.
+      // this.updatePhoneCallStatus(this.value.id)
+    },
+
+    unscheduleCall() {
+      // TODO: SAAS-4757
+      this.unschedulePhoneCallStatus(this.value.id)
     }
   }
 }
