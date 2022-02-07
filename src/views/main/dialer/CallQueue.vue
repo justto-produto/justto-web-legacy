@@ -289,6 +289,7 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  min-width: 300px;
 
   .call-queue__container-feedback {
     display: flex;
@@ -391,8 +392,8 @@ export default {
     }
   }
 
-  div:not(.el-dialog__wrapper) {
-    z-index: 3000;
-  }
+  // div:not(.el-dialog__wrapper):not(.el-collapse):not(.el-collapse>*) {
+  //   z-index: 3000;
+  // }
 }
 </style>

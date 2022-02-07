@@ -5,6 +5,7 @@ export default {
   timeoutDialerDetail: null, // setTimeoutDialerDetail(),
   callHeartbeatInterval: null, // setIntervalObject(),
   scheduledCallInterval: null, // SetInterval()
+  scheduledCallTimeout: null, // setTimeout()
   broadcastRequestCallStatus: null, // setTimeoutCallStatus(),
   activeToCall: false,
   dialer: null,
