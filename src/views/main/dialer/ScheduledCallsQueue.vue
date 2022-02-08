@@ -47,7 +47,7 @@ export default {
 
   data: () => ({
     loading: false,
-    collapseState: ['show']
+    collapseModel: ['show']
   }),
 
   computed: {
@@ -61,6 +61,16 @@ export default {
       const countInfo = `(${this.queue.length} de ${this.queueInfo.totalElements} itens)`
 
       return `${isShowing ? 'Esconder' : 'Mostrar'} ${countInfo}`
+    },
+
+    collapseState: {
+      get() {
+        return this.queue.length ? this.collapseModel : []
+      },
+      set(model) {
+        console.log(model)
+        this.collapseModel = [...model]
+      }
     }
   },
 
