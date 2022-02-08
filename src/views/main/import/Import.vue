@@ -85,8 +85,11 @@
           force-use-infinite-wrapper=".el-table__body-wrapper"
           @infinite="infiniteHandler"
         >
-          <div slot="no-more" />
-          <div slot="no-results" />
+          <div slot="no-results">
+            <div style="padding-top: 24px;">
+              {{ importsHistoryPaged.length === 0 ? 'Histórico vazio.' : 'Fim da lista de importações.' }}
+            </div>
+          </div>
         </infinite-loading>
       </el-table>
       <jus-import-dialog :dialog-visible.sync="importDialogVisible" />
