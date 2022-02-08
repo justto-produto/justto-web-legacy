@@ -710,7 +710,7 @@ export default {
           disabled: this.isCanceled,
           condition: () => this.canResume,
           action: () => this.disputeAction('resume'),
-          tooltip: 'Retomar'
+          tooltip: 'Despausar'
         },
         {
           name: 'paused',
@@ -1001,8 +1001,8 @@ export default {
         case 'settled':
           if (this.dispute.paused) {
             message = {
-              content: 'A disputa está pausada, deseja retomar negociação para ganhar?',
-              title: 'Retomar negociação'
+              content: 'A disputa está pausada, deseja despausar negociação para ganhar?',
+              title: 'Despausar negociação'
             }
             this.doAction('resume', message).then(() => {
               if (this.dispute.status === 'CHECKOUT' || this.dispute.status === 'ACCEPTED') {
@@ -1104,8 +1104,8 @@ export default {
         case 'counterproposal':
           if (this.dispute.paused) {
             message = {
-              content: 'A disputa está pausada, deseja retomar negociação para enviar uma contraproposta?',
-              title: 'Retomar negociação'
+              content: 'A disputa está pausada, deseja despausar negociação para enviar uma contraproposta?',
+              title: 'Despausar negociação'
             }
             this.doAction('resume', message).then(() => {
               this.openCounterproposalDialog()

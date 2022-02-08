@@ -764,8 +764,19 @@ const disputeActions = {
   },
 
   getFinishedDisputesCount({ state }, { id, allSelected }) {
+    const { textSearch, textSearchType } = state.query
+    const query = {
+      ...state.query,
+      allSelected,
+      id,
+      textSearchType: undefined,
+      textSearch: undefined
+    }
+
     return axiosDispatch({
-      url: `/api/disputes/count-finished/${buildQuery({ ...state.query, id, allSelected })}`,
+      method: 'POST',
+      url: `/api/disputes/count-finished/${buildQuery(query)}`,
+      data: { textSearch, textSearchType },
       mutation: 'setDisputeMetadata'
     })
   },
