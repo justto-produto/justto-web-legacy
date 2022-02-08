@@ -130,7 +130,7 @@ export default {
     buyDialers() {
       const workspaceString = `${this.workspaceName} (id ${this.workspaceId})`
       const subject = 'Requisição de novos discadores'
-      const address = 'deivid@justto.com.br'
+      const address = 'parcerias@justto.com.br'
       const content = `
       <main>
         <p>
