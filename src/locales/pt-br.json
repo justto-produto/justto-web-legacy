@@ -254,7 +254,7 @@
     "SEND_COUNTERPROPOSAL": "perder",
     "DELETE": "excluir",
     "PAUSED": "pausar",
-    "RESUME": "retomar",
+    "RESUME": "despausar",
     "FAVORITE": "Aguardar análise da empresa",
     "DISFAVOR": "Desmarcar aguardar análise da empresa",
     "ENRICH": "enriquecer",
@@ -292,7 +292,7 @@
       "feedback-message": "disputa <b>marcada como não lida</b>"
     },
     "RESUME": {
-      "name": "retomar negociação",
+      "name": "despausar negociação",
       "feedback-message": "disputa <b>retomada</b>"
     },
     "PAUSED": {
