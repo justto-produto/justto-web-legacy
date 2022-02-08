@@ -410,7 +410,7 @@ export default {
       }
 
       if (paused) {
-        const message = 'A disputa está pausada, deseja retomar negociação para ganhar?'
+        const message = 'A disputa está pausada, deseja despausar negociação para ganhar?'
         this.handlePauseResume('RESUME', message)
           .then(() => settledTicket())
       } else {
@@ -424,7 +424,7 @@ export default {
 
     handleManualCounterproposal(action) {
       const { paused } = this.ticket
-      const customMessage = 'A disputa está pausada, deseja retomar negociação para enviar uma contraproposta?'
+      const customMessage = 'A disputa está pausada, deseja despausar negociação para enviar uma contraproposta?'
 
       if (paused) {
         this.handlePauseResume('RESUME', customMessage)
