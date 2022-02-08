@@ -45,6 +45,10 @@ export default {
     dispatch('setScheduledCallsRequester')
   },
 
+  SOCKET_SCHEDULED_NEW_CALL({ dispatch }) {
+    dispatch('updateScheduledCallsRequester', 5)
+  },
+
   updateScheduledCallsRequester({ commit, dispatch }, time) {
     commit('updateScheduledCallsRequester', {
       time,
