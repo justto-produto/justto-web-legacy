@@ -56,5 +56,13 @@ export default {
 
   getSipConnectionSpeed(state) {
     return state.sipConnection?.speed || 0
+  },
+
+  getScheduledCallsInfo(state) {
+    return state.scheduledCalls
+  },
+
+  getScheduledCallsQueue(state) {
+    return state?.scheduledCalls?.content || []
   }
 }

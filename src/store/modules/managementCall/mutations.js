@@ -142,6 +142,12 @@ export default {
     Vue.set(state.currentCall, 'status', CALL_STATUS.WAITING_DIALER)
   },
 
+  updateScheduledCallsRequester(state, { time, request }) {
+    clearTimeout(state.scheduledCallTimeout)
+
+    state.scheduledCallTimeout = setTimeout(request, time * 1000)
+  },
+
   setScheduledCallsRequester(state, requester) {
     clearInterval(state.scheduledCallInterval)
 
@@ -226,6 +232,12 @@ export default {
 
   // TODO: SAAS-4755
   setScheduledCallsState(state, pageableState) {
+    Vue.set(state, 'scheduledCalls', pageableState)
+  },
+
+  resetScheduledCallsState(state) {
+    const pageableState = { content: [], pageable: {}, number: 0, totalPages: 1, totalElements: 1, last: true, first: true, empty: true }
+
     Vue.set(state, 'scheduledCalls', pageableState)
   }
 }

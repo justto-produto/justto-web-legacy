@@ -45,6 +45,17 @@ export default {
     dispatch('setScheduledCallsRequester')
   },
 
+  SOCKET_SCHEDULED_NEW_CALL({ dispatch }) {
+    dispatch('updateScheduledCallsRequester', 5)
+  },
+
+  updateScheduledCallsRequester({ commit, dispatch }, time) {
+    commit('updateScheduledCallsRequester', {
+      time,
+      request: () => dispatch('getPhoneCalls')
+    })
+  },
+
   setScheduledCallsRequester({ commit, dispatch, getters: { userPreferences } }) {
     const available = userPreferences?.properties?.AVAILABLE_SCHEDULED_CALLS !== 'UNAVAILABLE'
 
@@ -57,6 +68,25 @@ export default {
     return axiosDispatch({
       url: `${legacyDisputeApi}/phone-calls`,
       mutation: 'setScheduledCallsState'
+    })
+  },
+
+  updatePhoneCallStatus({ _ }, communicationMessageId) {
+    // TODO: SAAS-4756
+    // atualizar status da communication_message (informar sucesso ou falha)
+
+    return axiosDispatch({
+      url: `${legacyDisputeApi}/phone-calls/${communicationMessageId}/done`,
+      method: 'PATCH',
+      action: 'setScheduledCallsRequester'
+    })
+  },
+
+  unschedulePhoneCallStatus({ _ }, communicationMessageId) {
+    return axiosDispatch({
+      url: `${legacyDisputeApi}/phone-calls/${communicationMessageId}/canceled`,
+      method: 'PATCH',
+      action: 'setScheduledCallsRequester'
     })
   },
 

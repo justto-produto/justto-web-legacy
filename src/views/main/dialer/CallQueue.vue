@@ -1,7 +1,5 @@
 <template>
   <article class="call-queue__container">
-    <ScheduledCalls />
-
     <div
       v-if="isActiveToCall || hasCallInQueue"
       class="call-queue__container-feedback"
@@ -162,6 +160,10 @@
       </div>
     </div>
 
+    <ScheduledCallSwitch />
+
+    <ScheduledCallsQueue />
+
     <CallHelp
       @call:end="hangUpCall()"
     />
@@ -174,7 +176,8 @@ import { mapActions, mapGetters } from 'vuex'
 export default {
   components: {
     CallHelp: () => import('@/components/dialogs/CallHelpWizard'),
-    ScheduledCalls: () => import('@/components/buttons/ScheduledCallSwitch')
+    ScheduledCallSwitch: () => import('@/components/buttons/ScheduledCallSwitch'),
+    ScheduledCallsQueue: () => import('./ScheduledCallsQueue')
   },
 
   computed: {
@@ -286,6 +289,7 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  min-width: 300px;
 
   .call-queue__container-feedback {
     display: flex;
@@ -388,8 +392,8 @@ export default {
     }
   }
 
-  div:not(.el-dialog__wrapper) {
-    z-index: 3000;
-  }
+  // div:not(.el-dialog__wrapper):not(.el-collapse):not(.el-collapse>*) {
+  //   z-index: 3000;
+  // }
 }
 </style>
