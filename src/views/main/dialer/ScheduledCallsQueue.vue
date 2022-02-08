@@ -16,10 +16,13 @@
       />
     </div>
 
-    <el-collapse v-model="collapseState">
+    <el-collapse
+      v-model="collapseState"
+    >
       <el-collapse-item
         :title="collapseTitle"
         name="show"
+        :disabled="!queue.length"
       >
         <ul class="scheduled-call_list">
           <call
@@ -55,8 +58,9 @@ export default {
 
     collapseTitle() {
       const isShowing = this.collapseState.includes('show')
+      const countInfo = `(${this.queue.length} de ${this.queueInfo.totalElements} itens)`
 
-      return `${isShowing ? 'Esconder' : 'Mostrar'} (${this.queue.length} de ${this.queueInfo.totalElements})`
+      return `${isShowing ? 'Esconder' : 'Mostrar'} ${countInfo}`
     }
   },
 
