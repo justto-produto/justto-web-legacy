@@ -349,9 +349,7 @@ export default {
     makeCall(number) {
       const contact = this.party.phonesDto.find(({ number: phone }) => phone.includes(number))
 
-      const canCall = (typeof false === 'boolean' && contact?.blocked === false) || (contact?.isMain && contact?.isValid)
-
-      if (canCall) {
+      if (!contact?.blocked) {
         this.addCall({
           disputeId: Number(this.$route.params.id),
           disputeStatus: this.ticketStatus,
