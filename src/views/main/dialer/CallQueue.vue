@@ -67,12 +67,13 @@
         </div>
 
         <div
-          v-else-if="true"
+          v-else
           class="waiting-dialer"
         >
           <p>
             <span>
-              Aguardando discador
+              <!-- Aguardando discador -->
+              Sua ligação está sendo realizada
               <el-tooltip
                 content="Aguardando disponibilidade de um discador. Por favor aguarde!"
                 placement="top-end"
@@ -80,6 +81,15 @@
                 <i class="el-icon-info" />
               </el-tooltip>
             </span>
+          </p>
+
+          <h4>
+            Existem outras pessoas na sua frente utilizando o telefone.
+            <br>
+            Por favor aguarde ou adquira um telefone dedicado pra você.
+          </h4>
+
+          <p>
             <el-skeleton
               :rows="1"
               animated
@@ -332,6 +342,8 @@ export default {
       }
 
       .waiting-dialer {
+        max-width: 25vw;
+        word-break: break-word;
 
         .load-skeleton {
           .el-skeleton {
