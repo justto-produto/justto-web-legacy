@@ -177,11 +177,9 @@ export default {
 
     handleQueueChange(current, old) {
       const isBigger = current.length > old.length
-      const isWaiting = current.length > 0 && ![CALL_STATUS.ENQUEUED, CALL_STATUS.COMPLETED_CALL].includes(current[0].status)
+      const isWaiting = current.length > 0 && ![CALL_STATUS.COMPLETED_CALL].includes(current[0]?.status)
 
-      if (isBigger || isWaiting) {
-        this.showPopover = true
-      }
+      if (isBigger || isWaiting) this.open(current[0]?.number)
     },
 
     doLogin() {

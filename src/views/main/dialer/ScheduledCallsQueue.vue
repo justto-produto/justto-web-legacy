@@ -27,7 +27,7 @@
         <ul class="scheduled-call_list">
           <call
             v-for="(call, callIndex) in queue"
-            :key="`scheduledCall#${call.id}`"
+            :key="`scheduledCall#${callIndex}`"
             v-model="queue[callIndex]"
             class="scheduled-call_list-item"
           />
@@ -52,13 +52,12 @@ export default {
 
   computed: {
     ...mapGetters({
-      queue: 'getScheduledCallsQueue',
-      queueInfo: 'getScheduledCallsInfo'
+      queue: 'getScheduledCallsQueue'
     }),
 
     collapseTitle() {
       const isShowing = this.collapseState.includes('show')
-      const countInfo = `(${this.queue.length} de ${this.queueInfo.totalElements} itens)`
+      const countInfo = `(${this.queue?.length || 0} itens)`
 
       return `${isShowing ? 'Esconder' : 'Mostrar'} ${countInfo}`
     },

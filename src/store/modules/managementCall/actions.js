@@ -33,10 +33,12 @@ export default {
 
       commit('addCallInQueue', { call, globalAuthenticationObject: getGlobalAuthenticationObject })
       dispatch('startDialerRequester')
+      return Promise.resolve()
     } else if (hasOtherTabActive && !callRequester.published) {
       const channel = `/topic/account/${getGlobalAuthenticationObject?.accountId}`
       callRequester.published = true
       publishWebsocket(channel, 'ADD_CALL', callRequester, getGlobalAuthenticationObject)
+      return Promise.reject(new Error('Discador ativo em outra aba.'))
     }
   },
 
@@ -45,7 +47,7 @@ export default {
     dispatch('setScheduledCallsRequester')
   },
 
-  SOCKET_SCHEDULED_NEW_CALL({ dispatch }) {
+  SOCKET_NEW_SCHEDULED_CALL({ dispatch }) {
     dispatch('updateScheduledCallsRequester', 5)
   },
 
@@ -71,6 +73,12 @@ export default {
     })
   },
 
+  getPhoneCallInfo({ _ }, disputeMessageId) {
+    return axiosDispatch({
+      url: `${legacyDisputeApi}/phone-calls/${disputeMessageId}`
+    })
+  },
+
   updatePhoneCallStatus({ _ }, communicationMessageId) {
     // TODO: SAAS-4756
     // atualizar status da communication_message (informar sucesso ou falha)
@@ -86,7 +94,7 @@ export default {
     return axiosDispatch({
       url: `${legacyDisputeApi}/phone-calls/${communicationMessageId}/canceled`,
       method: 'PATCH',
-      action: 'setScheduledCallsRequester'
+      action: 'getPhoneCalls'
     })
   },
 

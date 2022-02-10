@@ -1,5 +1,8 @@
 <template>
-  <li class="call">
+  <li
+    v-loading="loading"
+    class="call"
+  >
     <div class="call-container">
       <div class="call-container__info">
         <div class="call-container__info-top">
@@ -23,6 +26,7 @@
           icon="el-icon-phone"
           size="mini"
           round
+          @click="makeCall"
         >
           Ligar
         </el-button>
@@ -42,7 +46,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 export default {
   props: {
     value: {
@@ -51,7 +55,15 @@ export default {
     }
   },
 
+  data: () => ({
+    loading: false
+  }),
+
   computed: {
+    ...mapGetters({
+      appInstance: 'getAppInstance'
+    }),
+
     call: {
       get() { return this.value },
       set(call) {
@@ -60,33 +72,57 @@ export default {
     },
 
     receiverName() {
-      return this.value?.parameters?.RECEIVER_NAME || ''
+      return this.value?.receiverName || ''
     },
 
     receiverNumber() {
-      return this.value?.receiver
+      return this.value?.phoneNumber
     },
 
     scheduledTo() {
-      return this.value?.scheduledTime.dateTime
+      return this.value?.scheduledDate
     }
   },
 
   methods: {
     ...mapActions([
       'updatePhoneCallStatus',
-      'unschedulePhoneCallStatus'
+      'unschedulePhoneCallStatus',
+      'getPhoneCallInfo',
+      'addCall'
     ]),
 
     makeCall() {
-      // TODO: SAAS-4756
-      // TODO: Fazer todo o processo da chamada, ao desligar, marcar como DONE.
-      // this.updatePhoneCallStatus(this.value.id)
+      if (this.value?.disputeMessageId) {
+        if (!this.loading) this.toggleLoading()
+
+        this.getPhoneCallInfo(this.value?.disputeMessageId).then(call => {
+          const newCall = {
+            disputeId: call.dispute.id,
+            disputeStatus: call.dispute.status,
+            toRoleId: call.contact.roleId,
+            toRoleName: call.contact.name,
+            number: this.value?.phoneNumber,
+            appInstance: this.appInstance,
+            contacts: {
+              emails: call.contact.phones,
+              phones: call.contact.emails
+            }
+          }
+
+          this.addCall(newCall).then(() => this.updatePhoneCallStatus(this.value?.disputeMessageId))
+        }).finally(this.toggleLoading)
+      }
+    },
+
+    toggleLoading() {
+      this.loading = !this.loading
     },
 
     unscheduleCall() {
-      // TODO: SAAS-4757
-      this.unschedulePhoneCallStatus(this.value.id)
+      if (!this.loading) this.toggleLoading()
+
+      this.unschedulePhoneCallStatus(this.value.disputeMessageId).finally(this.toggleLoading)
     }
   }
 }

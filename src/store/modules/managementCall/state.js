@@ -25,14 +25,5 @@ export default {
     speed: 0
   },
   // SAAS-4755
-  scheduledCalls: {
-    content: [],
-    pageable: {},
-    number: 0,
-    totalPages: 1,
-    totalElements: 1,
-    last: true,
-    first: true,
-    empty: true
-  }
+  scheduledCalls: []
 }
