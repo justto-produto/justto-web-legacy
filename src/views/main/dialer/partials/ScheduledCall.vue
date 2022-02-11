@@ -47,6 +47,8 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import { ScheduledCallModel } from '@/models/managementCall/scheduledCallInfo'
+
 export default {
   props: {
     value: {
@@ -97,18 +99,11 @@ export default {
         if (!this.loading) this.toggleLoading()
 
         this.getPhoneCallInfo(this.value?.disputeMessageId).then(call => {
-          const newCall = {
-            disputeId: call.dispute.id,
-            disputeStatus: call.dispute.status,
-            toRoleId: call.contact.roleId,
-            toRoleName: call.contact.name,
-            number: this.value?.phoneNumber,
-            appInstance: this.appInstance,
-            contacts: {
-              emails: call.contact.phones,
-              phones: call.contact.emails
-            }
-          }
+          const newCall = new ScheduledCallModel({
+            ...call,
+            phoneNumber: this.value?.phoneNumber,
+            appInstance: this.appInstance
+          })
 
           this.addCall(newCall).then(() => this.updatePhoneCallStatus(this.value?.disputeMessageId))
         }).finally(this.toggleLoading)
@@ -130,11 +125,14 @@ export default {
 
 <style lang="scss" scoped>
 .call {
-  width: 100%;
+  width: 96%;
   border: none;
-  box-shadow: 0px 3px 6px #00000029;
+  box-shadow: 0px 0px 8px #00000029 !important;
+  // -webkit-box-shadow: 0px 0px 15px 5px rgba(0,0,0,0.3);
+  // box-shadow: 0px 0px 15px 5px rgba(0,0,0,0.3);
   border-radius: 6px;
-  padding: 8px;
+  padding: 4px;
+  margin: 8px auto;
 
   .call-container {
     display: flex;

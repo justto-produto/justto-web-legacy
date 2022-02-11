@@ -67,7 +67,6 @@ export default {
         return this.queue.length ? this.collapseModel : []
       },
       set(model) {
-        console.log(model)
         this.collapseModel = [...model]
       }
     }
@@ -118,6 +117,17 @@ export default {
           }
         }
       }
+
+      div[role="tabpanel"] {
+        .el-collapse-item__content {
+          padding: 0;
+
+          .scheduled-call_list {
+            padding: 0;
+            width: calc(100% + 20px);
+          }
+        }
+      }
     }
   }
 }
@@ -140,9 +150,10 @@ export default {
     padding: 0;
     max-height: 40vh;
     overflow-y: scroll;
+    overflow-x: visible;
 
     .scheduled-call_list-item + .scheduled-call_list-item {
-      margin-top: 8px;
+      margin-top: 16px;
     }
   }
 }

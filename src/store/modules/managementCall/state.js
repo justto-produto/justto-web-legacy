@@ -24,6 +24,6 @@ export default {
     phone: null,
     speed: 0
   },
-  // SAAS-4755
-  scheduledCalls: []
+  scheduledCalls: [], // SAAS-4755
+  automaticScheduledCallMaker: null // setInterval()
 }

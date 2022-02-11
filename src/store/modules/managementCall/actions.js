@@ -1,10 +1,12 @@
 // https://justto.atlassian.net/browse/SAAS-4522
 import { Call } from '@/models/managementCall/currentCall'
+import { ScheduledCallModel } from '@/models/managementCall/scheduledCallInfo'
 import { axiosDispatch } from '@/utils'
 import { CALL_STATUS } from '@/constants/callStatus'
 import { publishWebsocket } from '@/utils/utils/others'
 
 import JsSIP from 'jssip'
+import moment from 'moment'
 import getStats from 'getstats'
 
 const vue = () => document.getElementById('app')?.__vue__
@@ -45,10 +47,35 @@ export default {
   setAppInstance({ commit, dispatch }, appInstance) {
     commit('setAppInstance', appInstance)
     dispatch('setScheduledCallsRequester')
+    dispatch('setAutomaticScheduledCallMaker')
   },
 
   SOCKET_NEW_SCHEDULED_CALL({ dispatch }) {
     dispatch('updateScheduledCallsRequester', 5)
+  },
+
+  setAutomaticScheduledCallMaker({ commit, dispatch }) {
+    commit('setAutomaticScheduledCallMaker', () => dispatch('makeScheduledCall'))
+  },
+
+  makeScheduledCall({ dispatch, getters: { getScheduledCallsQueue, getAppInstance } }, callIndex = 0) {
+    if (getScheduledCallsQueue.length > callIndex) {
+      const scheduledCall = getScheduledCallsQueue[callIndex]
+
+      if (moment().isAfter(moment(scheduledCall.scheduledDate))) {
+        dispatch('getPhoneCallInfo', scheduledCall.disputeMessageId).then(call => {
+          const callModel = new ScheduledCallModel({
+            ...call,
+            phoneNumber: scheduledCall?.phoneNumber,
+            appInstance: getAppInstance
+          })
+
+          return dispatch('addCall', callModel).then(() => dispatch('updatePhoneCallStatus', scheduledCall?.disputeMessageId))
+        })
+      }
+    } else {
+      return Promise.reject(Error('Chamada agendada não encontrada.'))
+    }
   },
 
   updateScheduledCallsRequester({ commit, dispatch }, time) {
@@ -58,10 +85,9 @@ export default {
     })
   },
 
-  setScheduledCallsRequester({ commit, dispatch, getters: { userPreferences } }) {
-    const available = userPreferences?.properties?.AVAILABLE_SCHEDULED_CALLS !== 'UNAVAILABLE'
-
-    commit('setScheduledCallsRequester', available ? () => dispatch('getPhoneCalls') : null)
+  setScheduledCallsRequester({ commit, dispatch, getters: { canMakeScheduledCalls } }) {
+    commit('setScheduledCallsRequester', () => dispatch('getPhoneCalls'))
+    dispatch('setAutomaticScheduledCallMaker')
 
     return Promise.resolve()
   },

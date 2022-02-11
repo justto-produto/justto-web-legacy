@@ -667,6 +667,7 @@
   "ARTICLE": "o | a",
   "AVAILABLE": "Disponível | Não disponível",
   "I_AM_AVAILABLE": "Estou disponível | Não estou disponível",
+  "ENABLED": "Habilitado | Desabilitado",
   "workspace": {
     "READY": "ativo",
     "CREATING": "em criação",
@@ -783,7 +784,8 @@
       }
     },
     "scheduled": {
-      "label": "Ligações agendadas"
+      "label": "Ligações agendadas",
+      "available": "Ligar automaticamente | Não ligar automaticamente"
     }
   },
   "administrativeProceedingCode": {

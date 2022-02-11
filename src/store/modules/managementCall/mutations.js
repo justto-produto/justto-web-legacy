@@ -236,5 +236,15 @@ export default {
 
   resetScheduledCallsState(state) {
     Vue.set(state, 'scheduledCalls', [])
+  },
+
+  setAutomaticScheduledCallMaker(state, request) {
+    clearInterval(state.automaticScheduledCallMaker)
+
+    if (this.getters?.canMakeScheduledCalls) {
+      const time = 1 * 60 * 1000 // 5 minutos
+
+      Vue.set(state, 'automaticScheduledCallMaker', setInterval(request, time))
+    }
   }
 }
