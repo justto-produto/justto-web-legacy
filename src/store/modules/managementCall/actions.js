@@ -58,8 +58,10 @@ export default {
     commit('setAutomaticScheduledCallMaker', () => dispatch('makeScheduledCall'))
   },
 
-  makeScheduledCall({ dispatch, getters: { getScheduledCallsQueue, getAppInstance } }, callIndex = 0) {
-    if (getScheduledCallsQueue.length > callIndex) {
+  makeScheduledCall({ dispatch, getters: { getScheduledCallsQueue, getAppInstance, hasScheduledCallInQueuedtoCall } }, callIndex = 0) {
+    console.table({ getScheduledCallsQueue, getAppInstance, hasScheduledCallInQueuedtoCall })
+
+    if (getScheduledCallsQueue.length > callIndex && !hasScheduledCallInQueuedtoCall) {
       const scheduledCall = getScheduledCallsQueue[callIndex]
 
       if (moment().isAfter(moment(scheduledCall.scheduledDate))) {
@@ -67,14 +69,15 @@ export default {
           const callModel = new ScheduledCallModel({
             ...call,
             phoneNumber: scheduledCall?.phoneNumber,
-            appInstance: getAppInstance
+            appInstance: getAppInstance,
+            scheduling: scheduledCall
           })
 
-          return dispatch('addCall', callModel).then(() => dispatch('updatePhoneCallStatus', scheduledCall?.disputeMessageId))
+          return dispatch('addCall', callModel)
         })
       }
     } else {
-      return Promise.reject(Error('Chamada agendada não encontrada.'))
+      return Promise.resolve(false)
     }
   },
 
@@ -264,7 +267,9 @@ export default {
     })
   },
 
-  callTerminated({ commit, getters: { getCurrentCall: { id }, getGlobalAuthenticationObject: globalAuthenticationObject } }) {
+  callTerminated({ commit, dispatch, getters: { getCurrentCall: { id, scheduling }, getGlobalAuthenticationObject: globalAuthenticationObject } }) {
+    if (scheduling) dispatch('updatePhoneCallStatus', scheduling.disputeMessageId)
+
     commit('clearCallHeartbeatInterval')
     commit('clearSipStack')
     commit('endCall', {

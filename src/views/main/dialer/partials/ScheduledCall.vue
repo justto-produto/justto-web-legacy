@@ -102,10 +102,12 @@ export default {
           const newCall = new ScheduledCallModel({
             ...call,
             phoneNumber: this.value?.phoneNumber,
-            appInstance: this.appInstance
+            appInstance: this.appInstance,
+            scheduling: this.value
           })
 
-          this.addCall(newCall).then(() => this.updatePhoneCallStatus(this.value?.disputeMessageId))
+          this.addCall(newCall)
+          // .then(() => this.updatePhoneCallStatus(this.value?.disputeMessageId))
         }).finally(this.toggleLoading)
       }
     },

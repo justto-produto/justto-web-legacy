@@ -11,7 +11,8 @@ class Call {
     enqueuedDate,
     status,
     appInstance,
-    contacts
+    contacts,
+    scheduling
   }) {
     this.id = uuidv4()
     this.disputeId = disputeId
@@ -23,6 +24,7 @@ class Call {
     this.status = CALL_STATUS[status]
     this.appInstance = appInstance
     this.contacts = contacts || { emails: [], phones: [] }
+    this.scheduling = scheduling
   }
 }
 
