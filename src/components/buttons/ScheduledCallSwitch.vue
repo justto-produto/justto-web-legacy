@@ -19,7 +19,7 @@
           active-color="#14CC30"
         />
 
-        <span> {{ $tc('I_AM_AVAILABLE', scheduledCallState) }} </span>
+        <span> {{ $tc('call.scheduled.available', scheduledCallState) | capitalize }} </span>
       </div>
     </div>
   </article>
@@ -33,12 +33,13 @@ export default {
 
   computed: {
     ...mapGetters({
-      prefs: 'userPreferences'
+      prefs: 'userPreferences',
+      enabled: 'canMakeScheduledCalls'
     }),
 
     scheduledCallState: {
       get() {
-        return this.prefs?.properties?.AVAILABLE_SCHEDULED_CALLS !== 'UNAVAILABLE'
+        return this.enabled
       },
       set(value) {
         this.isLoading = true

@@ -81,8 +81,6 @@ const overviewActions = {
 
       document.querySelectorAll('.el-notification.info.right').forEach(tag => tag.__vue__.$parent.close())
 
-      console.log('updateActiveTab', state)
-
       vue.$jusNotification({
         title: 'há atualizações nesta disputa',
         message: 'Clique se quiser recarregar ou feche se quiser continuar nesta página.',

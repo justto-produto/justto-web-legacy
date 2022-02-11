@@ -402,7 +402,6 @@ export default {
       if (ref) {
         if (this.showDontRecCallForm) {
           const maxScroll = ref.scrollHeight + 50
-          console.log(maxScroll, ref)
           ref.scrollTop = maxScroll
 
           // setTimeout(() => { ref.scrollTo(0, maxScroll) }, 2 * 1000)

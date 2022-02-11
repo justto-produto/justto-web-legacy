@@ -22,13 +22,13 @@
       <el-collapse-item
         :title="collapseTitle"
         name="show"
-        :disabled="!queue.length"
+        :disabled="!scheduledCallQueue.length"
       >
         <ul class="scheduled-call_list">
           <call
-            v-for="(call, callIndex) in queue"
+            v-for="(call, callIndex) in scheduledCallQueue"
             :key="`scheduledCall#${callIndex}`"
-            v-model="queue[callIndex]"
+            v-model="scheduledCallQueue[callIndex]"
             class="scheduled-call_list-item"
           />
         </ul>
@@ -52,22 +52,28 @@ export default {
 
   computed: {
     ...mapGetters({
-      queue: 'getScheduledCallsQueue'
+      queue: 'getScheduledCallsQueue',
+      callQueue: 'getCallQueue'
     }),
+
+    scheduledCallQueue() {
+      const scheduledIds = this.callQueue.map(({ scheduling }) => scheduling.disputeMessageId)
+
+      return this.queue.filter(({ disputeMessageId: currentCallId }) => !scheduledIds.includes(currentCallId)) // Validar se o ID da chama atual está na lista
+    },
 
     collapseTitle() {
       const isShowing = this.collapseState.includes('show')
-      const countInfo = `(${this.queue?.length || 0} itens)`
+      const countInfo = `(${this.scheduledCallQueue?.length || 0} itens)`
 
       return `${isShowing ? 'Esconder' : 'Mostrar'} ${countInfo}`
     },
 
     collapseState: {
       get() {
-        return this.queue.length ? this.collapseModel : []
+        return this.scheduledCallQueue.length ? this.collapseModel : []
       },
       set(model) {
-        console.log(model)
         this.collapseModel = [...model]
       }
     }
@@ -118,6 +124,17 @@ export default {
           }
         }
       }
+
+      div[role="tabpanel"] {
+        .el-collapse-item__content {
+          padding: 0;
+
+          .scheduled-call_list {
+            padding: 0;
+            width: calc(100% + 20px);
+          }
+        }
+      }
     }
   }
 }
@@ -140,9 +157,10 @@ export default {
     padding: 0;
     max-height: 40vh;
     overflow-y: scroll;
+    overflow-x: visible;
 
     .scheduled-call_list-item + .scheduled-call_list-item {
-      margin-top: 8px;
+      margin-top: 16px;
     }
   }
 }
