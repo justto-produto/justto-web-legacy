@@ -16,6 +16,11 @@
         />
       </span>
 
+      <UnknownPartyButton
+        v-if="isUnknown"
+        v-model="value"
+      />
+
       <span class="log-container__occurrence-about negotiation-occurrence-about">
         <span class="log-container__occurrence-about-time">
           {{ time | moment('HH:mm') }}
@@ -47,7 +52,8 @@
 <script>
 export default {
   components: {
-    Summary: () => import('./Summary')
+    Summary: () => import('./Summary'),
+    UnknownPartyButton: () => import('@/components/buttons/UnknownPartyButton')
   },
 
   props: {
@@ -66,6 +72,10 @@ export default {
       return this.occurrence?.status === 'CANCELED'
     },
 
+    isUnknown() {
+      return this.value?.properties?.PARTY === 'UNKNOWN'
+    },
+
     text() {
       let text = this.isCanceledText(this.occurrence.description) ? this.handleCanceledText(this.occurrence.description) : this.occurrence.description
       if (this.occurrence?.type === 'INTERACTION' && this.occurrence?.interaction?.type === 'NEGOTIATOR_ACCESS') {
@@ -79,7 +89,7 @@ export default {
     },
 
     summaryDetail() {
-      return JSON.parse(this.occurrence?.properties?.SUMMARY_DETAIL)
+      return JSON.parse(this.occurrence?.properties?.SUMMARY_DETAIL || '{}')
     },
 
     time() {
