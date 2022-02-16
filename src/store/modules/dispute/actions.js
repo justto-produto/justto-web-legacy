@@ -709,8 +709,16 @@ const disputeActions = {
   },
 
   getNegotiators({ state, commit, dispatch }, params) {
+    const { textSearch, textSearchType } = state.query
+    const query = {
+      ...state.query,
+      textSearch: undefined,
+      textSearchType: undefined
+    }
     return axiosDispatch({
-      url: `${disputesPath}/negotiators/filter${buildQuery({ ...state.query, ...params })}`
+      url: `${disputesPath}/negotiators/filter${buildQuery({ ...query, ...params })}`,
+      method: 'PATCH',
+      data: { textSearch, textSearchType }
     })
   },
 
