@@ -172,7 +172,7 @@
                 content="Cadastre o CPF da parte para selecionar um e-mail"
               >
                 <span>
-                  <el-radio
+                  <el-checkbox 
                     :value="Object.keys(recipients).includes(role.name) && recipients[role.name].email === email.address"
                     :label="true"
                     :name="role.name"
@@ -180,7 +180,7 @@
                     @change="setRecipientEmail(generateSigner(role, email))"
                   >
                     {{ email.address }}
-                  </el-radio>
+                  </el-checkbox>
                 </span>
               </el-tooltip>
               <el-button
@@ -768,10 +768,20 @@ export default {
         this.$forceUpdate()
       }
     },
+
     setRecipientEmail(signer) {
-      this.recipients[signer.name] = signer
+      if (Object.keys(this.recipients).includes(signer.name)) {
+        if (this.recipients[signer.name].email === signer.email) {
+          this.$delete(this.recipients, signer.name)
+        } else {
+          this.recipients[signer.name] = signer
+        }
+      } else {
+        this.recipients[signer.name] = signer
+      }
       this.$forceUpdate()
     },
+
     generateSigner(role, email) {
       return {
         name: role.name,
