@@ -39,7 +39,8 @@ export default {
     ...mapGetters({
       isRecovery: 'isWorkspaceRecovery',
       ticketParties: 'getTicketOverviewParties',
-      dispute: 'dispute'
+      dispute: 'dispute',
+      disputeStatus: 'getDisputeStatus'
     }),
 
     unknownName() {
@@ -94,7 +95,10 @@ export default {
   },
 
   methods: {
-    ...mapActions(['setTicketOverviewParty']),
+    ...mapActions([
+      'setTicketOverviewParty',
+      'restartDisputeRoleEngagement'
+    ]),
 
     saveParty({ polarity }) {
       // TODO: SAAS-4312 Salvar parte.
@@ -110,7 +114,6 @@ export default {
         oabs: OAB_NUMBER ? [OAB_NUMBER] : []
       }
 
-      console.log(disputeId, data)
       const partiesName = this.compactedParties[{ CLAIMANT: 0, RESPONDENT: 1 }[polarity]].name
 
       const text = `Cadastrar ${this.unknownFullName} como ${this.$tc('roles.LAWYER.' + polarity)}(${partiesName}).`
@@ -120,14 +123,20 @@ export default {
         cancelButtonText: 'Não',
         center: true
       }).then(() => {
-        this.setTicketOverviewParty({ disputeId, data, isNew: true }).then(res => {
-          console.log(res)
+        this.setTicketOverviewParty({ disputeId, data, isNew: true }).then(role => {
           this.$jusNotification({
             title: 'Yay!',
             message: 'Polaridade identificada com sucesso!',
             type: 'success',
             dangerouslyUseHTMLString: true
           })
+
+          if (this.disputeStatus === 'PENDING') {
+            this.restartDisputeRoleEngagement({
+              disputeId,
+              disputeRoleId: role.id
+            })
+          }
         }).catch((error) => this.$jusNotification({ error }))
       })
     }

@@ -61,7 +61,10 @@ export default new Vuex.Store({
     windowHeight: state => state.windowHeight,
     getWindowHeight: state => state.window.height,
     getWindowWidth: state => state.window.width,
-    getWindowMode: state => (state.window.width <= 900 ? 'mobile' : state.window.width <= 1200 ? 'tablet' : 'desktop')
+    getWindowMode: state => (state.window.width <= 900 ? 'mobile' : state.window.width <= 1200 ? 'tablet' : 'desktop'),
+    getDisputeStatus: state => {
+      return state.disputeModule?.dispute?.status || state.negotiationOverviewModule?.ticketOverview?.status || ''
+    }
   },
   mutations: {
     toggleEditorSourcePreview: (state) => Vue.set(state, 'editorSourcePreview', !state.editorSourcePreview),
@@ -71,7 +74,6 @@ export default new Vuex.Store({
     setHeight: (state, value) => (state.windowHeight = value),
     setWindowHeight: (state, height) => Vue.set(state.window, 'height', height),
     setWindowWidth: (state, width) => Vue.set(state.window, 'width', width)
-
   },
   actions: {
     toggleEditorSourcePreview({ commit }) {
