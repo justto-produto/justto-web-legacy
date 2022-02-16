@@ -153,6 +153,10 @@ export default {
     justify-content: center;
     align-items: center;
 
+    .unknow-party-container__header {
+      text-align: center;
+    }
+
     .unknow-party-container__body {
       display: flex;
       gap: 8px;
