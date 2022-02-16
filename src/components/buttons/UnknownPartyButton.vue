@@ -1,36 +1,28 @@
 <template>
   <article class="unknow-party-container">
     <span class="unknow-party-container__header">
-      Cadastrar como:
+      Ajude-nos a identificar a polaridade correta. Quem {{ unknownName }} está representando?
     </span>
 
     <div class="unknow-party-container__body">
-      <el-select
-        v-model="partyRole"
-        placeholder="Escolher polaridade"
-        size="mini"
-      >
-        <el-option
-          v-for="(item, index) in options"
-          :key="`item#${index}`"
-          :label="item.label | capitalize"
-          :value="item.value"
-        />
-      </el-select>
-
       <el-button
-        :disabled="!partyRole"
-        type="primary"
-        size="mini"
-        icon="el-icon-edit"
+        v-for="(item, index) in compactedParties"
+        :key="`item#${index}`"
+        size="small"
         round
-      />
+        @click="saveParty(item)"
+      >
+        <JusIcon :icon="item.polarity === 'CLAIMANT' ? 'plaintff' : 'company'" />
+
+        <div> {{ item.name }} </div>
+      </el-button>
     </div>
   </article>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
+
 export default {
   props: {
     value: {
@@ -40,28 +32,104 @@ export default {
   },
 
   data: () => ({
-    partyRole: ''
+    partyRole: {}
   }),
 
   computed: {
-    ...mapGetters({ isRecovery: 'isWorkspaceRecovery' }),
+    ...mapGetters({
+      isRecovery: 'isWorkspaceRecovery',
+      ticketParties: 'getTicketOverviewParties',
+      dispute: 'dispute'
+    }),
 
-    options() {
-      return [
-        // {
-        //   value: 'RESPONDENT',
-        //   label: this.$tc('roles.LAWYER.RESPONDENT', this.isRecovery)
-        // },
-        {
-          value: 'CLAIMANT',
-          label: this.$tc('roles.LAWYER.CLAIMANT', this.isRecovery)
-        }
-      ]
+    unknownName() {
+      const { resumedName } = this.$options.filters
+
+      return resumedName(this.occurrence?.properties?.PERSON_NAME || '')
     },
 
-    log: {
+    unknownFullName() {
+      return this.occurrence?.properties?.PERSON_NAME || ''
+    },
+
+    parties() {
+      if (this.$route.name === 'ticket') {
+        return this.ticketParties.filter(({ roles }) => roles.includes('PARTY')).map(p => ({
+          name: p.name,
+          roles: p.roles,
+          polarity: p.polarity
+        }))
+      } else if (this.$route.name === 'dispute') {
+        return this.dispute.disputeRoles.filter(({ roles }) => roles.includes('PARTY')).map(p => ({
+          name: p.name,
+          roles: p.roles,
+          polarity: p.party
+        }))
+      } else {
+        return []
+      }
+    },
+
+    compactedParties() {
+      const { capitalize } = this.$options.filters
+
+      const claimantsNames = this.parties.filter(({ polarity }) => polarity === 'CLAIMANT').map(({ name }) => capitalize(name.split(' ')[0])).join(', ')
+      const respondentsNames = this.parties.filter(({ polarity }) => polarity === 'RESPONDENT').map(({ name }) => capitalize(name.split(' ')[0])).join(', ')
+
+      return [{
+        name: claimantsNames,
+        polarity: 'CLAIMANT',
+        roles: ['PARTY']
+      }, {
+        name: respondentsNames,
+        polarity: 'RESPONDENT',
+        roles: ['PARTY']
+      }]
+    },
+
+    occurrence: {
       get() { return this.value },
       set(value) { this.$emit('input', value) }
+    }
+  },
+
+  methods: {
+    ...mapActions(['setTicketOverviewParty']),
+
+    saveParty({ polarity }) {
+      // TODO: SAAS-4312 Salvar parte.
+      const disputeId = this.$route?.params?.id
+      const { PERSON_NAME, ROLE_NAME, OAB_NUMBER, DOCUMENT_NUMBER } = this.occurrence?.properties || {}
+
+      const data = {
+        party: polarity,
+        documentNumber: DOCUMENT_NUMBER,
+        name: PERSON_NAME,
+        main: true,
+        roles: [ROLE_NAME],
+        oabs: OAB_NUMBER ? [OAB_NUMBER] : []
+      }
+
+      console.log(disputeId, data)
+      const partiesName = this.compactedParties[{ CLAIMANT: 0, RESPONDENT: 1 }[polarity]].name
+
+      const text = `Cadastrar ${this.unknownFullName} como ${this.$tc('roles.LAWYER.' + polarity)}(${partiesName}).`
+
+      this.$confirm(text, 'Identificar polaridade', {
+        confirmButtonText: 'Sim',
+        cancelButtonText: 'Não',
+        center: true
+      }).then(() => {
+        this.setTicketOverviewParty({ disputeId, data, isNew: true }).then(res => {
+          console.log(res)
+          this.$jusNotification({
+            title: 'Yay!',
+            message: 'Polaridade identificada com sucesso!',
+            type: 'success',
+            dangerouslyUseHTMLString: true
+          })
+        }).catch((error) => this.$jusNotification({ error }))
+      })
     }
   }
 }
@@ -89,6 +157,22 @@ export default {
       .el-select {
         .el-input {
           overflow: hidden;
+        }
+      }
+
+      .el-button {
+        padding: 8px;
+
+        span {
+          display: flex;
+          gap: 8px;
+          align-items: center;
+          margin: 0 4px;
+
+          img {
+            width: 24px;
+            height: 24px;
+          }
         }
       }
     }

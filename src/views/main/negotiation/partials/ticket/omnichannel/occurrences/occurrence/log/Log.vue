@@ -73,7 +73,7 @@ export default {
     },
 
     isUnknown() {
-      return this.value?.properties?.PARTY === 'UNKNOWN'
+      return this.value?.properties?.PARTY === 'UNKNOWN' && this.value?.properties?.ROLE_NAME === 'LAWYER'
     },
 
     text() {
