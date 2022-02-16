@@ -36,6 +36,7 @@
     </label>
     <input
       :id="`input-file-drag-area-${_uid}`"
+      data-max-size="20971520"
       type="file"
       class="jus-drag-area__input-file"
       @change="handleDrop"
@@ -165,6 +166,18 @@ export default {
 
     uploadVerification(files) {
       const attatchmentIndexes = Object.keys(files)
+      const MbLimit = 20971520 // 20 Mb em bytes.
+
+      const haveVeryLargeFile = Array(...files).filter(file => file.size > MbLimit).length > 0
+
+      if (haveVeryLargeFile) {
+        this.$jusNotification({
+          title: 'Arquivo muito grande!',
+          message: 'Não suportamos arquivos com mais de 20 Mb.',
+          type: 'warning'
+        })
+        return
+      }
 
       if (attatchmentIndexes.length === 1) {
         this.attachmentDialog.message = `Tem certeza que deseja fazer o upload do arquivo "${files[0].name}"?`
