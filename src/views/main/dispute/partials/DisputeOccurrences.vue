@@ -74,6 +74,7 @@
               <i class="el-icon-loading" />
             </div>
           </div>
+
           <el-card
             v-else-if="occurrence.type === 'LOG' ||
               (occurrence.interaction && ['VISUALIZATION', 'CLICK', 'NEGOTIATOR_ACCESS'].includes(occurrence.interaction.type))"
@@ -94,10 +95,12 @@
                 />
               </span>
             </el-tooltip>
+
             <span
               class="occurrence-content"
               v-html="buildContent(occurrence)"
             />
+
             <div
               v-if="canHandleUnknowParty(occurrence)"
               class="fast-occurrence-actions"
@@ -209,6 +212,11 @@
                 </span>
               </el-tooltip>
             </span>
+
+            <UnknownPartyButton
+              v-if="isUnknown(occurrence)"
+              :value="occurrence"
+            />
           </el-card>
           <div
             v-else-if="occurrence.type !== 'NOTE'"
@@ -611,6 +619,7 @@
         </div>
       </li>
     </div>
+
     <el-dialog
       :close-on-click-modal="false"
       :visible.sync="messageDialogVisible"
@@ -673,6 +682,7 @@ export default {
   components: {
     InfiniteLoading,
     AttachmentOccurrence: () => import('./partials/AttachmentOccurrence'),
+    UnknownPartyButton: () => import('@/components/buttons/UnknownPartyButton'),
     NpsInteraction: () => import('@/views/main/negotiation/partials/ticket/omnichannel/occurrences/occurrence/interaction/partials/Nps'),
     PhoneCallOccurrence: () => import('@/views/main/negotiation/partials/ticket/omnichannel/occurrences/occurrence/interaction/partials/Phone'),
     WhatsAppAttachment: () => import('@/views/main/negotiation/partials/ticket/omnichannel/occurrences/occurrence/interaction/partials/Whatsapp.vue')
@@ -735,8 +745,9 @@ export default {
     },
 
     onlineEmails() {
-      let emails = []
-      this.dispute.disputeRoles.map(role => {
+      let emails = [];
+
+      (this.dispute?.disputeRoles || []).map(role => {
         if (Object.keys(this.onlineDocuments).includes(role.documentNumber)) {
           emails = [...emails, ...role.emails.filter(email => !!email.isMain).map(email => email.address)]
         }
@@ -1050,6 +1061,10 @@ export default {
 
     canHandleUnknowParty(occurrence) {
       return occurrence.properties && occurrence.properties.HANDLE_UNKNOW_PARTY && occurrence.properties.UNKNOW_ROLE_IDS
+    },
+
+    isUnknown(occurrence) {
+      return occurrence?.properties?.PARTY === 'UNKNOWN' && occurrence?.properties?.ROLE_NAME === 'LAWYER'
     },
 
     getUnknowPartys(occurrence) {
