@@ -29,6 +29,11 @@
           </el-link>
 
           <span class="overview-attachments__item-actions">
+            <SignAttachmentDialog
+              :attachment="attachment"
+              class="overview-attachments__item-icon"
+            />
+
             <el-tooltip
               :open-delay="600"
               content="Copiar URL"
@@ -114,7 +119,8 @@ export default {
   name: 'OverviewAttachments',
 
   components: {
-    JusDragArea
+    JusDragArea,
+    SignAttachmentDialog: () => import('@/components/dialogs/SignAttachmentDialog')
   },
 
   mixins: [preNegotiation],
