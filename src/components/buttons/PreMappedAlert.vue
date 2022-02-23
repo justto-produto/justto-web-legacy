@@ -1,14 +1,12 @@
 <template>
   <el-tooltip
     placement="top"
-    manual
     popper-class="pre-mapped-alert"
-    :value="true"
   >
     <p slot="content">
-      Para as disputas que tiverem esse campo mapeado na planilha de importação,
+      Caso essa informação esteja na planilha de importação,
       <br>
-      o valor presente na planilha terá prioridade sobre este!
+      prevalecerá a informação da planilha.
     </p>
 
     <i class="el-icon-warning el-input__icon" />

@@ -30,6 +30,7 @@
       :class="{'hide': index > 1 && originalQuantity > 1 && !show}"
       :style="'border-left: solid 4px ' + color"
     >
+      <!-- Respondent -->
       <el-input
         v-model="respondent"
         class="unhide"
@@ -39,7 +40,7 @@
         @input="clearErrorField('respondent')"
       >
         <div slot="prefix">
-          <pre-mapped-alert v-if="respondent === initialCampaign.respondent" />
+          <pre-mapped-alert v-if="respondent !== initialCampaign.respondent && initialCampaign.respondent" />
 
           <i
             v-else-if="errorFields.includes('respondent')"
@@ -53,6 +54,7 @@
         </div>
       </el-input>
 
+      <!-- Nome da campanha -->
       <el-input
         v-model="campaignName"
         class="select-strategy unhide"
@@ -84,6 +86,7 @@
         </div>
       </div>
 
+      <!-- Estratégia -->
       <el-select
         ref="strategySelect"
         v-model="strategy"
@@ -98,6 +101,8 @@
         @input="clearErrorField('strategy')"
       >
         <div slot="prefix">
+          <pre-mapped-alert v-if="strategy !== initialCampaign.strategy && initialCampaign.strategy" />
+
           <i
             v-if="errorFields.includes('strategy')"
             class="el-icon-error el-input__icon has-error-icon"
@@ -124,12 +129,16 @@
         </div>
       </div>
 
+      <!-- Data do pagamento -->
       <div
         v-if="isPaymentStrategy"
         class="jus-import-feedback-card__number"
       >
         <div>
+          <pre-mapped-alert v-if="paymentDeadLine !== initialCampaign.paymentDeadLine && initialCampaign.paymentDeadLine" />
+
           <i
+            v-else
             class="el-icon-circle-check el-input__icon--success"
           />
           Data do pagamento
