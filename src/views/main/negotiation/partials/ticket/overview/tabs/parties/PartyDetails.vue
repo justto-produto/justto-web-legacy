@@ -278,7 +278,7 @@
 
     <div class="party-details__edit">
       <el-button
-        v-if="!isNegotiator"
+        v-if="!(isNegotiator && !isJusttoAdmin)"
         class="party-details__edit-button--danger"
         type="text"
         icon="el-icon-delete"
