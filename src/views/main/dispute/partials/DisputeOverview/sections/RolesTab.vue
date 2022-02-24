@@ -419,7 +419,7 @@
           content="Disputas em pré negociação não podem ser editadas"
         >
           <div
-            v-if="!role.roles.includes('NEGOTIATOR')"
+            v-if="!(role.roles.includes('NEGOTIATOR') && !isJusttoAdmin)"
             class="dispute-overview-view__actions"
           >
             <el-button
@@ -570,6 +570,7 @@ export default {
 
   computed: {
     ...mapGetters({
+      isJusttoAdmin: 'isJusttoAdmin',
       disputeMetadata: 'disputeMetadata',
       onlineDocuments: 'onlineDocuments',
       isRecoveryStrategy: 'isWorkspaceRecovery'
