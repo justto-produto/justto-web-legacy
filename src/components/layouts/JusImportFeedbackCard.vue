@@ -30,6 +30,7 @@
       :class="{'hide': index > 1 && originalQuantity > 1 && !show}"
       :style="'border-left: solid 4px ' + color"
     >
+      <!-- Respondent -->
       <el-input
         v-model="respondent"
         class="unhide"
@@ -39,8 +40,10 @@
         @input="clearErrorField('respondent')"
       >
         <div slot="prefix">
+          <pre-mapped-alert v-if="respondent !== initialCampaign.respondent && initialCampaign.respondent" />
+
           <i
-            v-if="errorFields.includes('respondent')"
+            v-else-if="errorFields.includes('respondent')"
             class="el-icon-error el-input__icon has-error-icon"
           />
           <i
@@ -51,6 +54,7 @@
         </div>
       </el-input>
 
+      <!-- Nome da campanha -->
       <el-input
         v-model="campaignName"
         class="select-strategy unhide"
@@ -82,6 +86,7 @@
         </div>
       </div>
 
+      <!-- Estratégia -->
       <el-select
         ref="strategySelect"
         v-model="strategy"
@@ -96,6 +101,8 @@
         @input="clearErrorField('strategy')"
       >
         <div slot="prefix">
+          <pre-mapped-alert v-if="strategy !== initialCampaign.strategy && initialCampaign.strategy" />
+
           <i
             v-if="errorFields.includes('strategy')"
             class="el-icon-error el-input__icon has-error-icon"
@@ -122,12 +129,16 @@
         </div>
       </div>
 
+      <!-- Data do pagamento -->
       <div
         v-if="isPaymentStrategy"
         class="jus-import-feedback-card__number"
       >
         <div>
+          <pre-mapped-alert v-if="paymentDeadLine !== initialCampaign.paymentDeadLine && initialCampaign.paymentDeadLine" />
+
           <i
+            v-else
             class="el-icon-circle-check el-input__icon--success"
           />
           Data do pagamento
@@ -324,7 +335,8 @@ export default {
   name: 'JusImportFeedbackCard',
 
   components: {
-    JusEngagementsDialog: () => import('@/components/dialogs/JusEngagementsDialog')
+    JusEngagementsDialog: () => import('@/components/dialogs/JusEngagementsDialog'),
+    PreMappedAlert: () => import('@/components/buttons/PreMappedAlert')
   },
 
   props: {
@@ -389,7 +401,8 @@ export default {
         70: '70%',
         80: '80%',
         90: '90%'
-      }
+      },
+      initialCampaign: {}
     }
   },
 
@@ -496,6 +509,7 @@ export default {
       this.mappedCampaign.initialOfferPercentage = value
     }
   },
+
   beforeMount() {
     const preferences = JSON.parse(localStorage.getItem('jusfeedbackpreferences')) || {}
     this.businessHoursEngagement = preferences.businessHoursEngagement || true
@@ -517,6 +531,8 @@ export default {
     this.respondent = this.mappedCampaign.respondent || ''
     this.mapEmails(this.mappedCampaign.negotiatoremail)
     this.mapStrategy(this.mappedCampaign.strategy)
+
+    this.initialCampaign = { ...this.mappedCampaign }
 
     if (this.mappedCampaign.deadline && this.$moment(new Date(this.mappedCampaign.deadline)).isValid()) {
       this.deadline = this.mappedCampaign.deadline
@@ -715,6 +731,7 @@ export default {
     }
   }
 }
+
 .el-message-box__title {
   text-transform: none;
 }
