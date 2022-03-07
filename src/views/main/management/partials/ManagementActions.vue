@@ -10,6 +10,7 @@
       >
         <i class="el-icon-check" /> {{ selectedLenghtToShow }}
       </div>
+
       <div>
         <span
           v-for="action in actionsList"
@@ -38,11 +39,13 @@
           </el-button>
         </span>
       </div>
+
       <i
         class="el-icon-close"
         @click="clearSelection()"
       />
     </div>
+
     <el-dialog
       :close-on-click-modal="false"
       :visible.sync="chooseSettledDialogVisible"
@@ -74,6 +77,83 @@
         </el-button>
       </span>
     </el-dialog>
+
+    showUpdateEngagementOptions
+
+    <el-dialog
+      :close-on-click-modal="false"
+      :visible.sync="showUpdateEngagementOptions"
+      :title="$tc('action.UPDATE_ENGAGEMENT_OPTIONS')"
+      class="management-actions__dialog"
+    >
+      <div>
+        <div class="jus-import-feedback-card__switch">
+          <i class="el-icon-circle-check el-input__icon--success" />
+
+          <div class="content">
+            <div>Enviar mensagem para autor e advogado</div>
+
+            <p>
+              Deixando <b>selecionada</b> esta opção, também iremos enviar mensagens para o autor.
+            </p>
+          </div>
+
+          <el-switch
+            v-model="engagementOptions.alwaysContactParty"
+            @change="resetEngagementOptions"
+          />
+        </div>
+
+        <div
+          v-if="!engagementOptions.alwaysContactParty"
+          class="jus-import-feedback-card__switch"
+        >
+          <i class="el-icon-circle-check el-input__icon--success" />
+
+          <div class="content">
+            <div>Enviar mensagem para o autor somente se não tiver advogado</div>
+
+            <p>
+              Deixando <b>selecionada</b> esta opção, iremos enviar mensagens para o autor quando não houver advogado constituído.
+            </p>
+          </div>
+
+          <el-switch v-model="engagementOptions.onlyContactPartyWithoutLawyer"/>
+        </div>
+
+        <div
+          v-if="!engagementOptions.alwaysContactParty"
+          class="jus-import-feedback-card__switch"
+        >
+          <i class="el-icon-circle-check el-input__icon--success" />
+
+          <div class="content">
+            <div>Enviar mensagem para autor somente se advogado não possuir contatos válidos para ser engajado</div>
+
+            <p>
+              Deixando <b>selecionada</b> esta opção, iremos enviar mensagens para o autor se o <b>advogado não possuir dados válidos</b> para ser contatado.
+            </p>
+          </div>
+
+          <el-switch v-model="engagementOptions.onlyContactPartyWithInvalidLawyer" />
+        </div>
+      </div>
+
+      <span slot="footer">
+        <el-button
+          plain
+          @click="showUpdateEngagementOptions = false"
+        >Cancelar</el-button>
+        <el-button
+          type="primary"
+          class="confirm-action-unsettled"
+          @click.prevent="doAction('UPDATE_ENGAGEMENT_OPTIONS')"
+        >
+          Continuar
+        </el-button>
+      </span>
+    </el-dialog>
+
     <el-dialog
       :close-on-click-modal="false"
       :visible.sync="chooseUnsettledDialogVisible"
@@ -128,6 +208,7 @@
         </el-button>
       </span>
     </el-dialog>
+
     <el-dialog
       :close-on-click-modal="false"
       :visible.sync="changeStrategyDialogVisible"
@@ -163,6 +244,7 @@
         </el-button>
       </span>
     </el-dialog>
+
     <el-dialog
       :close-on-click-modal="false"
       :visible.sync="changeExpirationDialogVisible"
@@ -195,6 +277,7 @@
         </el-button>
       </span>
     </el-dialog>
+
     <el-dialog
       :close-on-click-modal="false"
       :visible.sync="changeNegotiatorDialogVisible"
@@ -244,6 +327,7 @@
         </el-button>
       </span>
     </el-dialog>
+
     <el-dialog
       :close-on-click-modal="false"
       :show-close="false"
@@ -289,6 +373,7 @@
         </el-button>
       </span>
     </el-dialog>
+
     <el-dialog
       width="60%"
       :visible.sync="showBulkMessageDialog"
@@ -417,6 +502,12 @@ export default {
       useImageAttachmentPlugin: true,
       showDropLawsuitDialog: false,
       showBulkMessageDialog: false,
+      showUpdateEngagementOptions: false,
+      engagementOptions: {
+        alwaysContactParty: true,
+        onlyContactPartyWithoutLawyer: false,
+        onlyContactPartyWithInvalidLawyer: false
+      },
       chooseSettledDialogVisible: false,
       chooseUnsettledDialogVisible: false,
       changeStrategyDialogVisible: false,
@@ -494,6 +585,7 @@ export default {
         { name: 'CHANGE_STRATEGY', tabs: ['1', '2', '3', '4', '9'] },
         { name: 'CHANGE_NEGOTIATOR', tabs: ['1', '2', '3', '4', '9'] },
         { name: 'ENRICH_DISPUTE', tabs: ['1', '2', '3', '4', '9'] },
+        { name: 'UPDATE_ENGAGEMENT_OPTIONS', tabs: ['1', '2', '3', '4', '9'] },
         { name: 'DELETE', tabs: ['1', '2', '3', '4', '9'] },
         { name: 'RESEND_MESSAGE', tabs: ['1', '2', '3', '4', '9'] },
         { name: 'DROP_LAWSUIT', tabs: ['0'] },
@@ -581,12 +673,22 @@ export default {
           break
         case 'SETTLED':
           Object.assign(params, { note: scapeHtml(this.note) })
+          break
+        case 'UPDATE_ENGAGEMENT_OPTIONS':
+          params.engagementOptions = this.engagementOptions
+          break
       }
       if (this.isSelectedAll) {
         params.allSelected = true
         params.disputeIds = []
       }
       this.dispatchAction(action, params)
+    },
+
+    resetEngagementOptions(value) {
+      this.engagementOptions.alwaysContactParty = value
+      this.engagementOptions.onlyContactPartyWithoutLawyer = false
+      this.engagementOptions.onlyContactPartyWithInvalidLawyer = false
     },
 
     dispatchAction(action, params) {
@@ -596,6 +698,7 @@ export default {
         this.chooseUnsettledDialogVisible = false
         this.changeStrategyDialogVisible = false
         this.changeExpirationDialogVisible = false
+        this.showUpdateEngagementOptions = false
         this.$jusNotification({
           title: 'Yay!',
           message: 'Ação <strong>' + this.$t('action.' + action.toUpperCase()) + '</strong> realizada com sucesso.',
@@ -668,6 +771,7 @@ export default {
         title: this.$options.filters.capitalize(this.$t('action.' + action.toUpperCase())),
         content: 'Tem certeza que deseja realizar esta ação em lote?'
       }
+
       const configs = {
         confirmButtonClass: 'confirm-action-btn',
         confirmButtonText: 'Continuar',
@@ -700,6 +804,9 @@ export default {
         this.openBulkMessageCompose()
       } else if (action === 'DROP_LAWSUIT') {
         this.openDropLawsuitDialog()
+      } else if (action === 'UPDATE_ENGAGEMENT_OPTIONS') {
+        this.resetEngagementOptions(false)
+        this.showUpdateEngagementOptions = true
       } else {
         this.$confirm(message.content, message.title, configs).then(() => {
           this.doAction(action)

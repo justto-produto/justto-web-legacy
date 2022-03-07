@@ -270,6 +270,7 @@
     "DROP_LAWSUIT": "cancelar negociação",
     "START_NEGOTIATON": "inicar negociação",
     "SEND_BILK_MESSAGE": "Enviar mensagens em massa",
+    "UPDATE_ENGAGEMENT_OPTIONS": "Alterar engajamento",
     "tooltip": {
       "BULK_COMPOSE_MESSAGE": "Compor mensagem em massa",
       "SETTLE_DISPUTE": "Aceitar e Ganhar disputa | Aceitar e Ganhar disputas"
