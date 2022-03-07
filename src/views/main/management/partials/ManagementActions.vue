@@ -78,8 +78,6 @@
       </span>
     </el-dialog>
 
-    showUpdateEngagementOptions
-
     <el-dialog
       :close-on-click-modal="false"
       :visible.sync="showUpdateEngagementOptions"
@@ -585,7 +583,10 @@ export default {
         { name: 'CHANGE_STRATEGY', tabs: ['1', '2', '3', '4', '9'] },
         { name: 'CHANGE_NEGOTIATOR', tabs: ['1', '2', '3', '4', '9'] },
         { name: 'ENRICH_DISPUTE', tabs: ['1', '2', '3', '4', '9'] },
-        { name: 'UPDATE_ENGAGEMENT_OPTIONS', tabs: ['1', '2', '3', '4', '9'] },
+        {
+          name: 'UPDATE_ENGAGEMENT_OPTIONS',
+          tabs: ['0', '1', '2', '9']
+        },
         { name: 'DELETE', tabs: ['1', '2', '3', '4', '9'] },
         { name: 'RESEND_MESSAGE', tabs: ['1', '2', '3', '4', '9'] },
         { name: 'DROP_LAWSUIT', tabs: ['0'] },
