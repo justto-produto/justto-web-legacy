@@ -6,6 +6,7 @@ import { Validate } from 'validate-cnj'
 // const FileSaver = require('file-saver')
 let removeDebounce = 0
 const disputesPath = 'api/disputes'
+const documentsPath = 'api/office/documents'
 
 const disputeActions = {
   SOCKET_ADD_DISPUTE({ commit, state }, disputeChanged) {
@@ -816,6 +817,12 @@ const disputeActions = {
     return axiosDispatch({
       url: `${disputesPath}/pre-negotiation/limit-value`,
       mutation: 'setPreNegotiationLimitValue'
+    })
+  },
+
+  getAttachmentSignInfo({ _ }, documentId) {
+    return axiosDispatch({
+      url: `${documentsPath}/draft/${documentId}`
     })
   }
 }

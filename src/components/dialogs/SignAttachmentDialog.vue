@@ -34,12 +34,47 @@
           v-if="screen === 1"
           class="sign-attachment__dialog--body__attachemnt-view"
         >
-          <pre>
-            <!-- {{ roles }} -->
-          </pre>
-          <pre>
-            {{ mappedSignes }}
-          </pre>
+          <div
+            v-for="(sign, signIndex) in mappedSignes"
+            :key="signIndex"
+            class="attachemnt-view__signer"
+          >
+            <div class="attachemnt-view__signer-header">
+              <h3>
+                {{ sign.name }}
+              </h3>
+
+              <el-checkbox
+                v-if="sign.defaultSigner"
+                v-model="sign.defaultSigner"
+                disabled
+              >
+                Assinante padrão
+              </el-checkbox>
+            </div>
+
+            <h4 v-if="sign.documentNumber">
+              {{ sign.documentNumber | cpfCnpj }}
+            </h4>
+
+            <div class="attachemnt-view__signer-emails">
+              <el-checkbox
+                v-for="email in (sign.emails || [])"
+                :key="`${signIndex}-${email.address}`"
+                :value="(signs[sign.name] || {}).email === email.address"
+                class="attachemnt-view__signer-email"
+                @change="checkSigner(sign, email.address)"
+              >
+                <i class="el-icon-message" />
+                <span>{{ email.address }}</span>
+              </el-checkbox>
+            </div>
+
+            <span v-if="!(sign.emails || []).length">
+              Sem emails disponíveis.
+            </span>
+            <el-divider />
+          </div>
         </div>
       </div>
 
@@ -89,6 +124,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+
 export default {
   props: {
     attachment: {
@@ -99,7 +135,9 @@ export default {
 
   data: () => ({
     visible: false,
-    screen: 0
+    screen: 0,
+    signsList: [],
+    signs: {}
   }),
 
   computed: {
@@ -121,12 +159,12 @@ export default {
         ...this.roles.map(p => ({
           defaultSigner: false,
           name: p.name || '',
-          emails: p.emails?.map(({ address }) => address) || p.emailsDto?.map(({ address }) => address) || [],
+          emails: p.emails?.map(({ address }) => address) || p.emailsDto?.map(({ address }) => ({ address })) || [],
           documentNumber: p.documentNumber
         })),
 
         ...this.defaultSigners.map(p => ({
-          defaultSigner: !!p.__defaultSigner,
+          defaultSigner: !!p._defaultSigner,
           name: p.name || '',
           emails: p.emails || [],
           documentNumber: p.documentNumber
@@ -138,6 +176,7 @@ export default {
   methods: {
     ...mapActions([
       'getDefaultAssigners',
+      'getAttachmentSignInfo',
       'getTicketOverviewParty'
     ]),
 
@@ -156,22 +195,88 @@ export default {
       })
 
       // TODO SAAS-2735 Adicionar validação de status pra saber qual tela iniciar
-      this.screen = 0
-      this.visible = true
-
-      // 
+      this.getAttachmentSignInfo(this.attachment.id).then(res => {
+        this.screen = !res.urlToSign ? 0 : 1
+      }).finally(() => {
+        this.visible = true
+      })
     },
 
-    closeDialog(event) {
+    checkSigner(sign, email) {
+      const signer = {
+        defaultSigner: sign.defaultSigner,
+        name: sign.name,
+        documentNumber: sign.documentNumber,
+        email
+      }
+
+      if (this.signs[sign.name]?.email === email) {
+        this.$delete(this.signs, sign.name)
+      } else {
+        this.$set(this.signs, sign.name, signer)
+      }
+    },
+
+    closeDialog() {
       this.visible = false
     },
 
-    nextScreen(event) {
+    nextScreen() {
       this.screen += this.screen >= 0 && this.screen < 2 ? 1 : 0
     }
   }
 }
 </script>
+
+<style lang="scss">
+@import '@/styles/colors.scss';
+
+.sign-attachment__dialog {
+  .el-dialog__body {
+    .sign-attachment__dialog--body {
+      .sign-attachment__dialog--body__attachemnt-view {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+
+        .attachemnt-view__signer {
+          .attachemnt-view__signer-header {
+            display: flex;
+            justify-content: space-between;
+
+            h3 {
+              padding: 0;
+              margin: 0;
+              font-weight: 700;
+              color: $--color-gray;
+            }
+          }
+
+          h4 {
+            margin: 16px 0;
+          }
+
+          .attachemnt-view__signer-emails {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+
+            .attachemnt-view__signer-email {
+              display: flex;
+              gap: 4px;
+
+              .el-checkbox__label {
+                display: flex;
+                gap: 8px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+</style>
 
 <style lang="scss" scoped>
 .sign-attachment {
