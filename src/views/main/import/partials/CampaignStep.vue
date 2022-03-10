@@ -316,12 +316,11 @@ export default {
     },
 
     handleValidateDisputes() {
+      this.showDetails = !this.showDetails
+
       if (this.showDetails) {
-        this.showDetails = !this.showDetails
-      } else {
         this.$store.dispatch('validateGeneseRunner').then(({ disputes }) => {
           this.duplicatedDisputes = disputes
-          this.showDetails = !this.showDetails
         }).catch(error => this.$jusNotification({ error }))
       }
     }
