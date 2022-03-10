@@ -76,6 +76,19 @@
             <el-divider />
           </div>
         </div>
+
+        <div
+          v-if="screen === 2"
+          class="sign-attachment__dialog--body__attachemnt-view"
+        >
+          <div
+            v-for="(sign, signIndex) in docSigners"
+            :key="signIndex"
+            class="attachemnt-view__signer"
+          >
+            {{ sign }}
+          </div>
+        </div>
       </div>
 
       <span slot="footer">
@@ -98,7 +111,7 @@
         <el-button
           v-else-if="screen === 1"
           type="primary"
-          @click="nextScreen"
+          @click="setSigners"
         >
           Assinar
         </el-button>
@@ -137,7 +150,8 @@ export default {
     visible: false,
     screen: 0,
     signsList: [],
-    signs: {}
+    signs: {},
+    docSigners: []
   }),
 
   computed: {
@@ -176,6 +190,7 @@ export default {
   methods: {
     ...mapActions([
       'getDefaultAssigners',
+      'setAttachmentSigners',
       'getAttachmentSignInfo',
       'getTicketOverviewParty'
     ]),
@@ -196,7 +211,12 @@ export default {
 
       // TODO SAAS-2735 Adicionar validação de status pra saber qual tela iniciar
       this.getAttachmentSignInfo(this.attachment.id).then(res => {
-        this.screen = !res.urlToSign ? 0 : 1
+        if (res.signedDocumentId) {
+          this.docSigners = res.signedDocument.signers
+          this.screen = 2
+        } else {
+          this.screen = 0
+        }
       }).finally(() => {
         this.visible = true
       })
@@ -214,6 +234,23 @@ export default {
         this.$delete(this.signs, sign.name)
       } else {
         this.$set(this.signs, sign.name, signer)
+      }
+    },
+
+    setSigners() {
+      if (Object.keys(this.signs).length === 0) {
+        this.$jusNotification({
+          type: 'warning',
+          title: 'Ops!',
+          message: 'Escolha negociadores'
+        })
+      } else {
+        this.setAttachmentSigners({
+          signers: Object.values(this.signs),
+          documentId: this.attachment.id
+        }).then(res => {
+          this.openDialog()
+        })
       }
     },
 

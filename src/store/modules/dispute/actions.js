@@ -824,6 +824,14 @@ const disputeActions = {
     return axiosDispatch({
       url: `${documentsPath}/draft/${documentId}`
     })
+  },
+
+  setAttachmentSigners({ _ }, { signers, documentId }) {
+    return axiosDispatch({
+      url: `${documentsPath}/${documentId}/sign`,
+      method: 'POST',
+      data: signers
+    })
   }
 }
 
