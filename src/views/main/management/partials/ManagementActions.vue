@@ -966,6 +966,37 @@ export default {
 <style lang="scss">
 @import '@/styles/colors.scss';
 
+.management-actions__dialog {
+  .el-dialog {
+    .el-dialog__body {
+      .jus-import-feedback-card__switch {
+        width: 100%;
+        display: flex;
+        padding: 12px 13px;
+        border-bottom: 1px solid #dcdfe6;
+
+        .content  {
+          width: 100%;
+          word-break: break-word;
+
+          strong { color: $--color-danger; }
+        }
+
+        p {
+          font-style: italic;
+          font-size: 12px;
+          margin: 6px 20px 0 0;
+        }
+
+        .el-icon-circle-check-outline, .el-icon-circle-check {
+          font-size: 1.3rem;
+          margin-right: 9px;
+        }
+      }
+    }
+  }
+}
+
 .icon-in-bulk {
   height: 24px;
 }
