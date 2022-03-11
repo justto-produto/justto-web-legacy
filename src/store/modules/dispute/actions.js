@@ -832,6 +832,13 @@ const disputeActions = {
       method: 'POST',
       data: signers
     })
+  },
+
+  deleteSignedAttachment({ _ }, documentId) {
+    return axiosDispatch({
+      url: `${documentsPath}/${documentId}/sign`,
+      method: 'DELETE'
+    })
   }
 }
 

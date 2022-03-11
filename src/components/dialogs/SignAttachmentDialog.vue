@@ -1,6 +1,7 @@
 <template>
   <article class="sign-attachment">
     <el-tooltip
+      v-if="canShow && showType === 'icon'"
       :open-delay="600"
       content="Assinar anexo"
     >
@@ -10,6 +11,29 @@
       />
     </el-tooltip>
 
+    <div
+      v-else-if="canShow && showType === 'timeline' && false"
+      class="sign-attachment__timeline"
+    >
+      <el-button
+        type="text"
+        size="mini"
+        class="sign-steps"
+        @click="openDialog"
+      >
+        Assinar
+
+        <el-steps
+          :active="0"
+          finish-status="success"
+        >
+          <el-step />
+          <el-step />
+          <el-step />
+        </el-steps>
+      </el-button>
+    </div>
+
     <el-dialog
       :title="dialogTitle"
       :visible.sync="visible"
@@ -17,17 +41,21 @@
       append-to-body
       center
     >
-      <div class="sign-attachment__dialog--body">
+      <div
+        v-loading="loading"
+        class="sign-attachment__dialog--body"
+      >
         <div
           v-if="screen === 0"
           class="sign-attachment__dialog--body__attachemnt-view"
         >
-          <h3>
-            {{ attachment.name }}
+          <h3 class="sign-attachment__dialog--body__attachemnt-view-info">
+            {{ attachmentName }}
+
+            <span>
+              Enviado por {{ attachment.updatedBy || attachment.createdBy }}
+            </span>
           </h3>
-          <h4>
-            de {{ attachment.updatedBy || attachment.createdBy }}
-          </h4>
         </div>
 
         <div
@@ -82,24 +110,35 @@
           class="sign-attachment__dialog--body__attachemnt-view"
         >
           <div
-            v-for="(sign, signIndex) in docSigners"
+            v-for="(signer, signIndex) in docSigners"
             :key="signIndex"
             class="attachemnt-view__signer"
           >
-            {{ sign }}
+            <div class="attachemnt-view__signer__status">
+              <div class="attachemnt-view__signer__status-role">
+                <div class="attachemnt-view__signer__status-role-name">
+                  {{ signer.name }}<br>
+                </div>
+                <div class="attachemnt-view__signer__status-role-email">
+                  {{ signer.email }}
+                </div>
+              </div>
+
+              <div class="attachemnt-view__signer__status-icon">
+                <span v-if="signer.signatureStatus">
+                  {{ $tc(`document.signature.status.${signer.signatureStatus}.text`) }}
+                  <jus-icon :icon="$tc(`document.signature.status.${signer.signatureStatus}.icon`)" />
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      <span slot="footer">
-        <el-button
-          type="danger"
-          plain
-          @click="closeDialog"
-        >
-          Cancelar
-        </el-button>
-
+      <span
+        v-if="!loading"
+        slot="footer"
+      >
         <el-button
           v-if="screen === 0"
           type="primary"
@@ -117,11 +156,37 @@
         </el-button>
 
         <el-button
-          v-else
+          v-else-if="screen < 2"
           type="primary"
           @click="nextScreen"
         >
           Avançar
+        </el-button>
+
+        <el-button
+          v-if="screen >= 2"
+          type="danger"
+          icon="el-icon-delete-solid"
+          @click="deleteSubscriptions"
+        >
+          Remover assinatura(s)
+        </el-button>
+
+        <el-button
+          icon="el-icon-refresh-right"
+          type="secondary"
+          @click="refreshAttachmentSign"
+        >
+          Atualizar
+        </el-button>
+
+        <el-button
+          type="danger"
+          icon="el-icon-error"
+          plain
+          @click="closeDialog"
+        >
+          Fechar
         </el-button>
 
         <!-- <el-button
@@ -140,18 +205,28 @@ import { mapActions, mapGetters } from 'vuex'
 
 export default {
   props: {
-    attachment: {
-      type: Object,
+    attachmentId: {
+      type: [Number, String],
       required: true
+    },
+    attachmentName: {
+      type: String,
+      required: true
+    },
+    showType: {
+      type: String,
+      default: 'icon'
     }
   },
 
   data: () => ({
     visible: false,
+    loading: false,
     screen: 0,
     signsList: [],
     signs: {},
-    docSigners: []
+    docSigners: [],
+    attachment: {}
   }),
 
   computed: {
@@ -161,11 +236,13 @@ export default {
     }),
 
     dialogTitle() {
-      if (this.screen === 0) {
+      if (this.loading) {
+        return 'Carregando anexo'
+      } else if (this.screen === 0) {
         return 'Anexo'
       } else if (this.screen === 1) {
         return 'Escolher Assinantes'
-      } else return 'Padrão'
+      } else return 'Assinantes'
     },
 
     mappedSignes() {
@@ -184,6 +261,10 @@ export default {
           documentNumber: p.documentNumber
         }))
       ]
+    },
+
+    canShow() {
+      return (this.attachmentName || '').toLowerCase() // .incudes('.pdf') || Boolean(this.attachment?.signedDocumentId)
     }
   },
 
@@ -192,8 +273,33 @@ export default {
       'getDefaultAssigners',
       'setAttachmentSigners',
       'getAttachmentSignInfo',
+      'deleteSignedAttachment',
       'getTicketOverviewParty'
     ]),
+
+    deleteSubscriptions() {
+      this.loading = true
+
+      this.deleteSignedAttachment(this.attachmentId).then(this.refreshAttachmentSign)
+    },
+
+    refreshAttachmentSign() {
+      this.visible = true
+      this.loading = true
+
+      return this.getAttachmentSignInfo(this.attachmentId).then(res => {
+        this.attachment = res
+
+        if (res.signedDocumentId) {
+          this.docSigners = res?.signedDocument?.signers || []
+          this.screen = 2
+        } else {
+          this.screen = 0
+        }
+
+        this.loading = false
+      })
+    },
 
     openDialog() {
       this.getDefaultAssigners()
@@ -210,16 +316,10 @@ export default {
       })
 
       // TODO SAAS-2735 Adicionar validação de status pra saber qual tela iniciar
-      this.getAttachmentSignInfo(this.attachment.id).then(res => {
-        if (res.signedDocumentId) {
-          this.docSigners = res.signedDocument.signers
-          this.screen = 2
-        } else {
-          this.screen = 0
-        }
-      }).finally(() => {
-        this.visible = true
-      })
+      this.visible = true
+      this.loading = true
+
+      this.refreshAttachmentSign()
     },
 
     checkSigner(sign, email) {
@@ -245,12 +345,11 @@ export default {
           message: 'Escolha negociadores'
         })
       } else {
+        this.loading = true
         this.setAttachmentSigners({
           signers: Object.values(this.signs),
-          documentId: this.attachment.id
-        }).then(res => {
-          this.openDialog()
-        })
+          documentId: this.attachmentId
+        }).then(this.refreshAttachmentSign)
       }
     },
 
@@ -268,7 +367,56 @@ export default {
 <style lang="scss">
 @import '@/styles/colors.scss';
 
+.sign-attachment {
+  .sign-attachment__timeline {
+    .sign-steps {
+      span {
+        .el-steps--horizontal {
+          .is-success {
+            border-color: $--color-primary !important;
+
+            .is-text {
+              background-color: $--color-primary !important;;
+            }
+          }
+
+          .is-wait {
+            border-color: $--color-primary !important;
+            color: white !important;
+          }
+
+          .is-process {
+            border-color: $--color-primary !important;
+            color: white !important;
+          }
+
+          .el-step__icon {
+            width: 16px;
+            height: 16px;
+            font-size: 8px;
+            color: $--color-primary;
+          }
+        }
+      }
+    }
+  }
+}
+
 .sign-attachment__dialog {
+  .el-dialog__header {
+    background: $--color-primary;
+
+    .el-dialog__title {
+      color: white;
+    }
+
+    .el-dialog__headerbtn {
+      .el-icon::before {
+        color: white;
+      }
+    }
+  }
+
   .el-dialog__body {
     .sign-attachment__dialog--body {
       .sign-attachment__dialog--body__attachemnt-view {
@@ -276,16 +424,33 @@ export default {
         flex-direction: column;
         gap: 0;
 
+        .sign-attachment__dialog--body__attachemnt-view-info {
+          margin: 0;
+          color: $--color-primary;
+          padding: 8px 4px;
+          font-weight: 600;
+
+          display: flex;
+          flex-direction: column;
+
+          span {
+            font-weight: normal;
+            font-size: 12px;
+            color: $--color-text-secondary;
+          }
+        }
+
         .attachemnt-view__signer {
           .attachemnt-view__signer-header {
             display: flex;
             justify-content: space-between;
+            color: $--color-primary;
 
             h3 {
               padding: 0;
               margin: 0;
               font-weight: 700;
-              color: $--color-gray;
+              // color: $--color-gray;
             }
           }
 
@@ -308,6 +473,43 @@ export default {
               }
             }
           }
+
+          .attachemnt-view__signer__status {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 24px 8px;
+            margin: 0;
+
+            &:hover {
+              background-color: #f6f6f6;
+            }
+
+            .attachemnt-view__signer__status-role {
+              display: flex;
+              flex-direction: column;
+              margin-left: 10px;
+              font-weight: 600;
+
+              &-name {
+                color: $--color-primary;
+              }
+            }
+
+            .attachemnt-view__signer__status-icon {
+              color: $--color-text-secondary;
+              display: flex;
+              align-items: center;
+              gap: 16px;
+
+              img {
+                width: 14px;
+                vertical-align: middle;
+                margin-bottom: 2px;
+              }
+            }
+          }
+
         }
       }
     }
@@ -318,5 +520,19 @@ export default {
 <style lang="scss" scoped>
 .sign-attachment {
   display: inline;
+
+  .sign-attachment__timeline {
+    display: flex;
+
+    .sign-steps {
+      width: 100%;
+
+      span {
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+      }
+    }
+  }
 }
 </style>

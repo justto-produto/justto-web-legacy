@@ -30,7 +30,8 @@
 
           <span class="overview-attachments__item-actions">
             <SignAttachmentDialog
-              :attachment="attachment"
+              :attachment-id="attachment.id"
+              :attachment-name="attachment.name"
               class="overview-attachments__item-icon"
             />
 
@@ -71,6 +72,12 @@
           <div class="overview-attachments__item-details">
             {{ attachmentOrigin(attachment) }} - {{ attachment.createAt.dateTime | moment('DD/MM/YY') }}
           </div>
+
+          <SignAttachmentDialog
+            :attachment-id="attachment.id"
+            :attachment-name="attachment.name"
+            show-type="timeline"
+          />
         </li>
       </ul>
       <div

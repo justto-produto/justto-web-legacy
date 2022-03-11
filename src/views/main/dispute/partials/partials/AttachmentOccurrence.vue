@@ -32,9 +32,16 @@
       </span>
       <span
         class="attachment__file-download"
-        @click="downloadAttachment(occurrence.properties.FILE_URL)"
       >
-        <i class="el-icon-download" />
+        <i
+          class="el-icon-download"
+          @click="downloadAttachment(occurrence.properties.FILE_URL)"
+        />
+
+        <SignAttachmentDialog
+          :attachment-id="interaction.properties.DOCUMENT_ID"
+          :attachment-name="occurrence.properties.FILE_NAME"
+        />
       </span>
     </div>
     <div
@@ -50,6 +57,10 @@
 <script>
 export default {
   name: 'AttachmentOccurrence',
+
+  components: {
+    SignAttachmentDialog: () => import('@/components/dialogs/SignAttachmentDialog')
+  },
 
   filters: {
     sizeFormat: (size) => {
@@ -131,6 +142,9 @@ export default {
     .attachment__file-download {
       cursor: pointer;
       align-self: center;
+      display: flex;
+      gap: 8px;
+      align-items: center;
     }
   }
   .attachment__deleted {
