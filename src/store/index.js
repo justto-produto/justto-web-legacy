@@ -64,6 +64,9 @@ export default new Vuex.Store({
     getWindowMode: state => (state.window.width <= 900 ? 'mobile' : state.window.width <= 1200 ? 'tablet' : 'desktop'),
     getDisputeStatus: state => {
       return state.disputeModule?.dispute?.status || state.negotiationOverviewModule?.ticketOverview?.status || ''
+    },
+    getCommonDisputeRoles: state => {
+      return state.disputeModule?.dispute?.disputeRoles || state.negotiationOverviewModule?.ticketOverviewParties || []
     }
   },
   mutations: {
