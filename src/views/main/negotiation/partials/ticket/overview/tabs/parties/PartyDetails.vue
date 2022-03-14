@@ -305,7 +305,10 @@
       @update="handleMergePartyInfos"
     />
 
-    <NamesakeDialog ref="namesakeDialog" />
+    <NamesakeDialog
+      ref="namesakeDialog"
+      @resolved="verifyRestartDispute"
+    />
   </article>
 </template>
 
@@ -904,6 +907,10 @@ export default {
           }
         })
       }
+    },
+
+    verifyRestartDispute() {
+      // TODO: SAAS-4884 Verificar para reiniciar a disputa.
     }
   }
 }

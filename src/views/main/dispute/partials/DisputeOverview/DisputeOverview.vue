@@ -1313,12 +1313,17 @@ export default {
       this.ufFilter = null
     },
 
+    verifyRestartDispute() {
+      // TODO: SAAS-4884 Verificar para reiniciar a disputa.
+    },
+
     selectNamesake() {
       if (this.selectedNamesake) {
         this.namesakeDialogLoading = true
         // eslint-disable-next-line
         axios.patch(`api/fusion-runner/set-document/person/${this.selectedNamesakePersonId}/${this.selectedNamesake.document}/${this.dispute.id}`)
           .then(() => {
+            this.verifyRestartDispute()
             this.namesakeDialogVisible = false
             this.namesakeDialogLoading = false
             this.namesakeProcessing = true

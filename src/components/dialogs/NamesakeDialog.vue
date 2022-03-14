@@ -198,12 +198,17 @@ export default {
     selectNamesake(_event) {
       if (this.selectedNamesake) {
         this.namesakeDialogLoading = true
-        this.setNamesakeTicketOptions({
+        const data = {
           personId: this.currentPersonId,
           document: this.selectedNamesake.document,
           disputeId: this.$route.params.id
-        }).then(() => {
+        }
+
+        this.setNamesakeTicketOptions(data).then(() => {
+          this.$emit('resolved', data)
+
           this.closeNamesakes(null)
+
           this.$jusNotification({
             title: 'Yay!',
             message: 'Homônimo enviado para tratamento com sucesso.',
