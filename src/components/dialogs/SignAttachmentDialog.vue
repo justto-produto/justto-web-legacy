@@ -64,7 +64,7 @@
         >
           <div
             v-for="(sign, signIndex) in mappedSignes"
-            :key="signIndex"
+            :key="`sign-${signIndex}`"
             class="attachemnt-view__signer"
           >
             <div class="attachemnt-view__signer-header">
@@ -85,10 +85,17 @@
               {{ sign.documentNumber | cpfCnpj }}
             </h4>
 
-            <div class="attachemnt-view__signer-emails">
+            <span v-else>
+              Cadastre um CPF/CNPJ nessa parte.
+            </span>
+
+            <div
+              v-if="sign.documentNumber"
+              class="attachemnt-view__signer-emails"
+            >
               <el-checkbox
                 v-for="email in (sign.emails || [])"
-                :key="`${signIndex}-${email.address}`"
+                :key="`email-${signIndex}-${email.address}`"
                 :value="(signs[sign.name] || {}).email === email.address"
                 class="attachemnt-view__signer-email"
                 @change="checkSigner(sign, email.address)"
@@ -96,11 +103,12 @@
                 <i class="el-icon-message" />
                 <span>{{ email.address }}</span>
               </el-checkbox>
+
+              <span v-if="!(sign.emails || []).length">
+                Sem emails disponíveis.
+              </span>
             </div>
 
-            <span v-if="!(sign.emails || []).length">
-              Sem emails disponíveis.
-            </span>
             <el-divider />
           </div>
         </div>
@@ -250,7 +258,7 @@ export default {
         ...this.roles.map(p => ({
           defaultSigner: false,
           name: p.name || '',
-          emails: p.emails?.map(({ address }) => address) || p.emailsDto?.map(({ address }) => ({ address })) || [],
+          emails: p.emails?.map(({ address }) => ({ address })) || p.emailsDto?.map(({ address }) => ({ address })) || [],
           documentNumber: p.documentNumber
         })),
 
@@ -304,11 +312,13 @@ export default {
     openDialog() {
       this.getDefaultAssigners()
 
-      this.roles.forEach(({ disputeRoleId }) => {
-        if (disputeRoleId) {
+      console.log('roles', this.roles)
+
+      this.roles.forEach(({ disputeRoleId, id }) => {
+        if (disputeRoleId || id) {
           this.getTicketOverviewParty({
             disputeId: this.$route.params.id,
-            disputeRoleId
+            disputeRoleId: disputeRoleId || id
           })
         } else {
           console.error('disputeRoleId não definido')
