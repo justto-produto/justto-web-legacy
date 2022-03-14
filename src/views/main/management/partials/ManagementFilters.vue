@@ -147,6 +147,24 @@
             </el-form-item>
           </el-col>
 
+          <!-- TODO: INTERAÇÃO -->
+          <el-col :span="24">
+            <el-form-item label="Data da última interação">
+              <el-date-picker
+                v-model="filters.lastInteractionDate"
+                type="daterange"
+                align="right"
+                format="dd/MM/yyyy"
+                unlink-panels
+                range-separator="-"
+                start-placeholder="Data inicial"
+                end-placeholder="Data final"
+                value-format="yyyy-MM-dd"
+                @change="changeLastInteractionDate"
+              />
+            </el-form-item>
+          </el-col>
+
           <el-col
             v-if="!loading && isFinished || isPreNegotiation"
             :span="12"
@@ -555,6 +573,7 @@ export default {
       this.changeDealDate()
       this.changeExpirationDate()
       this.changeimportingDate()
+      this.changeLastInteractionDate()
       this.clearInteraction()
       this.clearStatuses()
       this.clearPreNegotitationKeyWorks()
@@ -569,24 +588,31 @@ export default {
       delete this.filters.onlyNotVisualized
       delete this.filters.onlyPaused
     },
+
     restoreFilters() {
       this.filters = JSON.parse(JSON.stringify(this.$store.getters.disputeQuery))
     },
+
     clearInteraction(value) {
       delete this.filters.lastInteractionType
     },
+
     clearStrategy() {
       this.filters.strategy = []
     },
+
     clearTags() {
       this.filters.tags = []
     },
+
     clearRespondent() {
       this.filters.respondentNames = []
     },
+
     clearCampaign() {
       this.filters.campaigns = []
     },
+
     changeDealDate(value) {
       if (value) {
         this.filters.dealDate = value
@@ -594,6 +620,7 @@ export default {
         this.filters.dealDate = []
       }
     },
+
     clearStatuses() {
       if (this.isFinished || this.isEngagement || this.isAll) {
         switch (this.tabIndex) {
@@ -608,9 +635,11 @@ export default {
         }
       }
     },
+
     clearPreNegotitationKeyWorks() {
       this.filters.preNegotiationKeywords = []
     },
+
     changeExpirationDate(value) {
       if (value) {
         this.filters.expirationDate = value
@@ -618,6 +647,11 @@ export default {
         this.filters.expirationDate = []
       }
     },
+
+    changeLastInteractionDate(value) {
+      this.filters.lastInteractionDate = value || []
+    },
+
     changeimportingDate(value) {
       if (value) {
         this.filters.importingDate = value
