@@ -147,24 +147,6 @@
             </el-form-item>
           </el-col>
 
-          <!-- TODO: INTERAÇÃO -->
-          <el-col :span="24">
-            <el-form-item label="Data da última interação">
-              <el-date-picker
-                v-model="filters.lastInteractionDate"
-                type="daterange"
-                align="right"
-                format="dd/MM/yyyy"
-                unlink-panels
-                range-separator="-"
-                start-placeholder="Data inicial"
-                end-placeholder="Data final"
-                value-format="yyyy-MM-dd"
-                @change="changeLastInteractionDate"
-              />
-            </el-form-item>
-          </el-col>
-
           <el-col
             v-if="!loading && isFinished || isPreNegotiation"
             :span="12"
@@ -186,6 +168,27 @@
                   :label="respondent"
                 />
               </el-select>
+            </el-form-item>
+          </el-col>
+
+          <!-- TODO: INTERAÇÃO -->
+          <el-col
+            v-if="[2, 3, 4, 9].includes(Number(tabIndex))"
+            :span="[2, 4].includes(Number(tabIndex)) ? 24 : 12"
+          >
+            <el-form-item label="Data da última interação">
+              <el-date-picker
+                v-model="filters.lastInteractionDate"
+                type="daterange"
+                align="right"
+                format="dd/MM/yyyy"
+                unlink-panels
+                range-separator="-"
+                start-placeholder="Data inicial"
+                end-placeholder="Data final"
+                value-format="yyyy-MM-dd"
+                @change="changeLastInteractionDate"
+              />
             </el-form-item>
           </el-col>
 
