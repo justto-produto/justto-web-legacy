@@ -156,15 +156,15 @@ export default {
       let checked = false
       const promises = []
 
-      for (const mappedCampaign of this.mappedCampaigns) {
-        const campaign = JSON.parse(JSON.stringify(replicateFirst ? this.mappedCampaigns[0] : mappedCampaign))
+      this.mappedCampaigns.forEach((mappedCampaign, _index, mappedCampaigns) => {
+        const campaign = { ...(mappedCampaign.replicate ? mappedCampaigns[mappedCampaign.replicateIndex] : mappedCampaign) }
 
         this.setErrorFields(this.campaignErrorFields(campaign))
 
         if (!this.checkValidCampaign(campaign)) { allValid = false }
 
         checked = true
-      }
+      })
 
       if (checked && allValid) {
         for (const mappedCampaign of this.mappedCampaigns) {
@@ -173,7 +173,7 @@ export default {
           campaignsTrack.push({ name: campaign.name, strategy: campaign.strategy })
 
           const parsedCampaing = {
-            ...(replicateFirst ? this.mappedCampaigns[0] : campaign),
+            ...(campaign.replicate ? this.mappedCampaigns[campaign.replicateIndex] : campaign),
             name: campaign.name,
             respondent: campaign.respondent,
             deadline: campaign.deadline,
