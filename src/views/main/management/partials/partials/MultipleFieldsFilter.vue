@@ -74,6 +74,10 @@ export default {
       const endLine = this.model.endsWith('\n') ? '\n' : ''
       this.model = this.model.trim() + endLine
 
+      const tempModel = this.model.split('\n')
+      const re = /[A-Za-z0-9]+/g
+
+      this.model = tempModel.map(model => (model.match(re).join(''))).join('\n')
       this.handleEmitInput()
     },
 
