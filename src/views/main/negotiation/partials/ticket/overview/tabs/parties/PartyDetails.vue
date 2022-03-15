@@ -459,7 +459,8 @@ export default {
       'updateTicketOverviewPartyContact',
       'addPhoneToDisputeRole',
       'addOabToDisputeRole',
-      'hideSearchLawyerLoading'
+      'hideSearchLawyerLoading',
+      'restartDisputeValidatingStatus'
     ]),
 
     startEditing(key) {
@@ -910,7 +911,12 @@ export default {
     },
 
     verifyRestartDispute() {
-      // TODO: SAAS-4884 Verificar para reiniciar a disputa.
+      const info = {
+        disputeId: this.currentTicket?.disputeId,
+        status: this.currentTicket?.status
+      }
+
+      this.restartDisputeValidatingStatus(info)
     }
   }
 }

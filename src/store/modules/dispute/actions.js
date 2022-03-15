@@ -820,6 +820,15 @@ const disputeActions = {
     })
   },
 
+  restartDisputeValidatingStatus({ _ }, { disputeId, status }) {
+    if (['PENDING'].includes(status)) {
+      return axiosDispatch({
+        url: `${disputesPath}/${disputeId}/restart-engagement`,
+        method: 'PATCH'
+      })
+    }
+  },
+
   getAttachmentSignInfo({ _ }, documentId) {
     return axiosDispatch({
       url: `${documentsPath}/draft/${documentId}`
