@@ -116,7 +116,7 @@
             </p>
           </div>
 
-          <el-switch v-model="engagementOptions.onlyContactPartyWithoutLawyer"/>
+          <el-switch v-model="engagementOptions.onlyContactPartyWithoutLawyer" />
         </div>
 
         <div
