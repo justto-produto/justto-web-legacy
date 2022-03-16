@@ -194,7 +194,7 @@
         <jus-import-feedback-card
           v-for="(mappedCampaign, index) in mappedCampaigns"
           :key="mappedCampaign.cluster"
-          :show="mappedCampaigns[index].replicate ? index === 0 : true"
+          :show="mappedCampaigns.length === 1 || !mappedCampaigns[1].replicate"
           :mapped-campaign.sync="mappedCampaigns[index]"
           :index="index + 1"
           :original-quantity="mappedCampaigns.length"

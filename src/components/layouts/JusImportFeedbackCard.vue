@@ -12,7 +12,7 @@
       </el-tag>
 
       <el-tooltip
-        v-if="index > 1 && originalQuantity > 1"
+        v-if="index === 2 && originalQuantity > 1"
         content="Replica a configuração da campanha à cima para esta."
         placement="top"
         :open-delay="500"
@@ -24,7 +24,7 @@
           @change="handleReplicate($event, mappedCampaign, index)"
         >
           <i class="el-icon-top" />
-          Utilizar dados da campanha anterior
+          Utilizar dados da campanha acima
         </el-checkbox>
       </el-tooltip>
 

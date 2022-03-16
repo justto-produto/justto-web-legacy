@@ -151,13 +151,13 @@ export default {
 
     finalStep() {
       const campaignsTrack = []
-      const replicateFirst = this.mappedCampaigns[0].replicate
+      const replicateFirst = this.mappedCampaigns[1].replicate
       let allValid = true
       let checked = false
       const promises = []
 
       this.mappedCampaigns.forEach((mappedCampaign, _index, mappedCampaigns) => {
-        const campaign = { ...(mappedCampaign.replicate ? mappedCampaigns[mappedCampaign.replicateIndex] : mappedCampaign) }
+        const campaign = { ...(replicateFirst ? mappedCampaigns[0] : mappedCampaign) }
 
         this.setErrorFields(this.campaignErrorFields(campaign))
 
@@ -173,7 +173,7 @@ export default {
           campaignsTrack.push({ name: campaign.name, strategy: campaign.strategy })
 
           const parsedCampaing = {
-            ...(campaign.replicate ? this.mappedCampaigns[campaign.replicateIndex] : campaign),
+            ...(replicateFirst ? this.mappedCampaigns[0] : campaign),
             name: campaign.name,
             respondent: campaign.respondent,
             deadline: campaign.deadline,
