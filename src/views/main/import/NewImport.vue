@@ -151,7 +151,7 @@ export default {
 
     finalStep() {
       const campaignsTrack = []
-      const replicateFirst = this.mappedCampaigns[1].replicate
+      const replicateFirst = this.mappedCampaigns.length > 1 && this.mappedCampaigns[1].replicate
       let allValid = true
       let checked = false
       const promises = []
