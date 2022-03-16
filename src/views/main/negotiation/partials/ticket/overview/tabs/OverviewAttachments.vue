@@ -20,7 +20,7 @@
         >
           <el-link
             :underline="false"
-            :href="attachment.url"
+            :href="`https://api.justto.app/api/office/documents/${attachment.id}/sign`"
             target="_blank"
             class="overview-attachments__item-link"
           >
