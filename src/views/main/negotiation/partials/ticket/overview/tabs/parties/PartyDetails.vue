@@ -305,7 +305,10 @@
       @update="handleMergePartyInfos"
     />
 
-    <NamesakeDialog ref="namesakeDialog" />
+    <NamesakeDialog
+      ref="namesakeDialog"
+      @resolved="verifyRestartDispute"
+    />
   </article>
 </template>
 
@@ -456,7 +459,8 @@ export default {
       'updateTicketOverviewPartyContact',
       'addPhoneToDisputeRole',
       'addOabToDisputeRole',
-      'hideSearchLawyerLoading'
+      'hideSearchLawyerLoading',
+      'restartDisputeValidatingStatus'
     ]),
 
     startEditing(key) {
@@ -904,6 +908,15 @@ export default {
           }
         })
       }
+    },
+
+    verifyRestartDispute() {
+      const info = {
+        disputeId: this.currentTicket?.disputeId,
+        status: this.currentTicket?.status
+      }
+
+      this.restartDisputeValidatingStatus(info)
     }
   }
 }

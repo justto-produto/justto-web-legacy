@@ -1058,7 +1058,8 @@ export default {
       'addOabToDisputeRole',
       'getDisputeMetadata',
       'setDisputeProperty',
-      'deleteTicketOverviewParty'
+      'deleteTicketOverviewParty',
+      'restartDisputeValidatingStatus'
     ]),
 
     init() {
@@ -1313,12 +1314,22 @@ export default {
       this.ufFilter = null
     },
 
+    verifyRestartDispute() {
+      const info = {
+        disputeId: this.dispute?.id,
+        status: this.dispute?.status
+      }
+
+      this.restartDisputeValidatingStatus(info)
+    },
+
     selectNamesake() {
       if (this.selectedNamesake) {
         this.namesakeDialogLoading = true
         // eslint-disable-next-line
         axios.patch(`api/fusion-runner/set-document/person/${this.selectedNamesakePersonId}/${this.selectedNamesake.document}/${this.dispute.id}`)
           .then(() => {
+            this.verifyRestartDispute()
             this.namesakeDialogVisible = false
             this.namesakeDialogLoading = false
             this.namesakeProcessing = true
@@ -1782,6 +1793,7 @@ export default {
         this.editRoleDialogLoading = false
       })
     },
+
     verifyChangedRoleData(editedRole, originalRole) {
       const changed = {
         newPhones: [],
@@ -1801,6 +1813,7 @@ export default {
       }
       return [...changed.newPhones, ...changed.newEmails]
     },
+
     addOab() {
       let isValid = true
       this.$refs.editRoleForm.validateField(['oab', 'state'], errorMessage => {
@@ -1820,6 +1833,7 @@ export default {
         this.roleForm.state = ''
       }
     },
+
     removeRole(role) {
       if (this.isLawyer(role)) {
         this.deletingLawyer = role
@@ -1849,6 +1863,7 @@ export default {
         })
       }
     },
+
     addBankData() {
       this.$refs.addBankForm.validate(valid => {
         if (valid) {
@@ -1868,10 +1883,12 @@ export default {
         }
       })
     },
+
     removeBankData(index, id) {
       this.bankAccountIdstoUnlink.push(id)
       this.roleForm.bankAccounts.splice(index, 1)
     },
+
     enrichDispute() {
       const content = this.isAccepted ? 'Isso irá <b>ENRIQUECER</b> uma disputa que já foi finalizada. Este processo irá agendar novamente as mensagens para as partes quando finalizado. Você deseja enriquecer mesmo assim?' : 'Tem certeza que deseja realizar esta ação?'
       this.$confirm(content, 'ATUALIZAR ANEXOS', {
