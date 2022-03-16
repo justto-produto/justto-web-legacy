@@ -151,20 +151,20 @@ export default {
 
     finalStep() {
       const campaignsTrack = []
-      const replicateFirst = this.mappedCampaigns[0].replicate
+      const replicateFirst = this.mappedCampaigns[1].replicate
       let allValid = true
       let checked = false
       const promises = []
 
-      for (const mappedCampaign of this.mappedCampaigns) {
-        const campaign = JSON.parse(JSON.stringify(replicateFirst ? this.mappedCampaigns[0] : mappedCampaign))
+      this.mappedCampaigns.forEach((mappedCampaign, _index, mappedCampaigns) => {
+        const campaign = { ...(replicateFirst ? mappedCampaigns[0] : mappedCampaign) }
 
         this.setErrorFields(this.campaignErrorFields(campaign))
 
         if (!this.checkValidCampaign(campaign)) { allValid = false }
 
         checked = true
-      }
+      })
 
       if (checked && allValid) {
         for (const mappedCampaign of this.mappedCampaigns) {

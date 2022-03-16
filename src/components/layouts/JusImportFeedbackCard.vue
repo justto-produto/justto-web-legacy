@@ -12,18 +12,29 @@
       </el-tag>
 
       <el-tooltip
-        v-if="index === 1 && originalQuantity > 1"
-        content="Replica a configuração desta campanha para todas as outras."
+        v-if="index === 2 && originalQuantity > 1"
+        content="Replica a configuração da campanha à cima para esta."
         placement="top"
         :open-delay="500"
       >
         <el-checkbox
           v-model="mappedCampaign.replicate"
-          label="Replicar"
           size="mini"
           border
-        />
+          @change="handleReplicate($event, mappedCampaign, index)"
+        >
+          <i class="el-icon-top" />
+          Utilizar dados da campanha acima
+        </el-checkbox>
       </el-tooltip>
+
+      <el-tag
+        :color="color"
+        class="el-tag--mapped-campaign-tag"
+        style="visibility: hidden;"
+      >
+        {{ campaignTitle }}
+      </el-tag>
     </div>
 
     <el-card
@@ -587,6 +598,14 @@ export default {
             }
           }
         }
+      }
+    },
+
+    handleReplicate(replicate, mappedCampaign, index) {
+      if (replicate) {
+        this.$set(mappedCampaign, 'replicateIndex', index - 2)
+      } else {
+        this.$delete(mappedCampaign, 'replicateIndex')
       }
     }
   }
