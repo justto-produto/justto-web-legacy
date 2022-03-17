@@ -13,6 +13,7 @@
         class="attachment__icon"
         :icon="`attachment-${occurrence.properties.FILE_TYPE.toLowerCase()}`"
       />
+
       <span
         class="attachment__file"
         @click="downloadAttachment(interaction.properties.DOCUMENT_ID)"
@@ -30,6 +31,7 @@
           -
         </span>
       </span>
+
       <span
         class="attachment__file-download"
       >
@@ -44,6 +46,7 @@
         />
       </span>
     </div>
+
     <div
       v-else
       class="attachment__deleted"
@@ -51,6 +54,12 @@
       <i class="el-icon-warning" />
       Anexo removido.
     </div>
+
+    <SignAttachmentDialog
+      :attachment-id="interaction.properties.DOCUMENT_ID"
+      :attachment-name="occurrence.properties.FILE_NAME"
+      show-type="timeline"
+    />
   </el-card>
 </template>
 
@@ -110,7 +119,7 @@ export default {
 @import '@/styles/colors.scss';
 
 .attachment__card {
-  padding-bottom: 10px;
+  padding-bottom: 0px;
 
   .attachment__container {
     display: flex;
