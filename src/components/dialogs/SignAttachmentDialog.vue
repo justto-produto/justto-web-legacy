@@ -12,10 +12,32 @@
     </el-tooltip>
 
     <div
-      v-else-if="canShow && showType === 'timeline' && false"
+      v-else-if="canShow && showType === 'timeline' && signState"
       class="sign-attachment__timeline"
     >
-      <el-button
+      <span
+        :class="{ 'communication-ticket-item-container__minuta--active': false }"
+        class="communication-ticket-item-container__minuta"
+        @click="openDialog"
+      >
+        {{ signLabels[signState] }}
+      </span>
+
+      <!-- v-if="(isAcceptedTab || (isFinishedTab && isSettled)) && showDraft"
+      :active="documentStep" -->
+      <el-steps
+        :active="signState"
+        finish-status="success"
+        :class="{ 'communication-ticket-item-container__minuta-steps--active': false }"
+        class="communication-ticket-item-container__minuta-steps"
+        style="width: 100px"
+      >
+        <el-step />
+        <el-step />
+        <el-step />
+      </el-steps>
+
+      <!-- <el-button
         type="text"
         size="mini"
         class="sign-steps"
@@ -31,7 +53,7 @@
           <el-step />
           <el-step />
         </el-steps>
-      </el-button>
+      </el-button> -->
     </div>
 
     <el-dialog
@@ -251,7 +273,8 @@ export default {
     signsList: [],
     signs: {},
     docSigners: [],
-    attachment: {}
+    attachment: {},
+    signLabels: ['', 'Enviado', 'Assinando', 'Assinado']
   }),
 
   computed: {
@@ -290,7 +313,35 @@ export default {
 
     canShow() {
       return (this.attachmentName || '').toLowerCase() // .incudes('.pdf') || Boolean(this.attachment?.signedDocumentId)
+    },
+
+    signedSigners() {
+      return (this.attachment?.signedDocument?.signers || []).filter(({ signed }) => signed)
+    },
+
+    signState() {
+      /**
+       * 0 - Sem assinatura
+       * 1 - Todas as assinaturas pendentes
+       * 2 - Algumas assinaturas pendentes
+       * 3 - Nenhuma assinatura pendente
+       */
+      if (this.attachment.signedDocumentId) {
+        if (this.signedSigners.length === 0) {
+          return 1
+        } else if (this.signedSigners.length === (this.attachment?.signedDocument?.signers || []).length) {
+          return 3
+        } else {
+          return 2
+        }
+      } else {
+        return 0
+      }
     }
+  },
+
+  beforeMount() {
+    if (this.showType === 'timeline') this.getInfos()
   },
 
   methods: {
@@ -308,10 +359,7 @@ export default {
       this.deleteSignedAttachment(this.attachmentId).then(this.refreshAttachmentSign)
     },
 
-    refreshAttachmentSign() {
-      this.visible = true
-      this.loading = true
-
+    getInfos() {
       return this.getAttachmentSignInfo(this.attachmentId).then(res => {
         this.attachment = res
 
@@ -324,6 +372,13 @@ export default {
 
         this.loading = false
       })
+    },
+
+    refreshAttachmentSign() {
+      this.visible = true
+      this.loading = true
+
+      return this.getInfos()
     },
 
     openDialog() {
@@ -400,6 +455,9 @@ export default {
 
 .sign-attachment {
   .sign-attachment__timeline {
+    color: $--color-primary;
+    font-weight: 500;
+
     .sign-steps {
       span {
         .el-steps--horizontal {
@@ -546,6 +604,53 @@ export default {
     }
   }
 }
+
+.communication-ticket-item-container__minuta-steps {
+  position: absolute;
+  bottom: 7px;
+  left: 80px;
+
+  .el-step {
+    .is-success {
+      border-color: $--color-primary !important;
+
+      .is-text {
+        background-color: $--color-primary !important;;
+      }
+    }
+
+    .is-wait {
+      border-color: $--color-primary !important;
+      color: white !important;
+    }
+
+    .is-process {
+      border-color: $--color-primary !important;
+      color: white !important;
+    }
+
+    .el-step__icon {
+      width: 14px;
+      height: 14px;
+      font-size: 6px;
+      color: $--color-primary;
+    }
+  }
+
+  &--active .el-step{
+    .is-success {
+      border-color: $--color-primary !important;
+
+      .is-text {
+        background-color: $--color-primary !important;;
+      }
+    }
+
+    .el-step__icon {
+      color: $--color-primary;
+    }
+  }
+}
 </style>
 
 <style lang="scss" scoped>
@@ -553,17 +658,9 @@ export default {
   display: inline;
 
   .sign-attachment__timeline {
-    display: flex;
-
-    .sign-steps {
-      width: 100%;
-
-      span {
-        display: flex;
-        justify-content: space-evenly;
-        align-items: center;
-      }
-    }
+    cursor: pointer;
+    margin: 8px 0 0;
+    position: relative;
   }
 }
 </style>
