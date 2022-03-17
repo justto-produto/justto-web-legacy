@@ -274,7 +274,7 @@ export default {
     signs: {},
     docSigners: [],
     attachment: {},
-    signLabels: ['', 'Enviado', 'Assinando', 'Assinado']
+    signLabels: ['', 'Assinando', 'Assinando', 'Assinado']
   }),
 
   computed: {
@@ -384,8 +384,6 @@ export default {
     openDialog() {
       this.getDefaultAssigners()
 
-      console.log('roles', this.roles)
-
       this.roles.forEach(({ disputeRoleId, id }) => {
         if (disputeRoleId || id) {
           this.getTicketOverviewParty({
@@ -455,7 +453,7 @@ export default {
 
 .sign-attachment {
   .sign-attachment__timeline {
-    color: $--color-primary;
+    color: $--color-text-primary;
     font-weight: 500;
 
     .sign-steps {

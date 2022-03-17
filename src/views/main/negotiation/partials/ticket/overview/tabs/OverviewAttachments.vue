@@ -44,6 +44,7 @@
                 @click="copyUrl(attachment.url)"
               />
             </el-tooltip>
+
             <i
               v-if="!attachment.enriched && attachment.direction !== 'INBOUND'"
               class="overview-attachments__item-icon el-icon-delete"
