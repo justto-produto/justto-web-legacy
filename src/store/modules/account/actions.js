@@ -52,6 +52,7 @@ const accountActions = {
     commit('clearDisputes')
     commit('clearDisputeTab')
     commit('clearDashboard')
+    commit('callTerminated')
     localStorage.removeItem('justoken')
     // eslint-disable-next-line
     delete axios.defaults.headers.common['Authorization']

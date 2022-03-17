@@ -57,7 +57,7 @@ export default {
     }),
 
     scheduledCallQueue() {
-      const scheduledIds = this.callQueue.map(({ scheduling }) => scheduling.disputeMessageId)
+      const scheduledIds = this.callQueue.filter(({ scheduling }) => scheduling?.disputeMessageId).map(({ scheduling }) => scheduling?.disputeMessageId)
 
       return this.queue.filter(({ disputeMessageId: currentCallId }) => !scheduledIds.includes(currentCallId)) // Validar se o ID da chama atual está na lista
     },
