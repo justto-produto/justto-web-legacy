@@ -101,8 +101,19 @@ const overviewActions = {
 
     if (rootState.negotiationOverviewModule.ticketOverview.disputeId === dispute.id) {
       const isUpdate = ['ACCEPTED', 'CHECKOUT', 'SETTLED'].includes(dispute.status) && !['ACCEPTED', 'CHECKOUT', 'SETTLED'].includes(rootState.negotiationOverviewModule.ticketOverview.status)
+      const isInNegotiation = location.href.includes('negotiation')
+      const isCorrespondingTab = correspondingTab !== state.ticketsActiveTab
 
-      if (correspondingTab !== state.ticketsActiveTab && isUpdate) {
+      if (process.env.NODE_ENV === 'development') {
+        console.table({
+          isCorrespondingTab,
+          isUpdate,
+          isInNegotiation,
+          status: dispute.status
+        })
+      }
+
+      if (isCorrespondingTab && isUpdate && isInNegotiation) {
         const vue = document.querySelector('#app').__vue__
 
         document.querySelectorAll('.el-notification.info.right').forEach(tag => tag.__vue__.$parent.close())
