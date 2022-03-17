@@ -149,6 +149,7 @@
       >
         <el-button
           v-if="screen === 0"
+          size="mini"
           type="primary"
           @click="nextScreen"
         >
@@ -157,6 +158,7 @@
 
         <el-button
           v-else-if="screen === 1"
+          size="mini"
           type="primary"
           @click="setSigners"
         >
@@ -165,6 +167,7 @@
 
         <el-button
           v-else-if="screen < 2"
+          size="mini"
           type="primary"
           @click="nextScreen"
         >
@@ -173,6 +176,7 @@
 
         <el-button
           v-if="screen >= 2"
+          size="mini"
           type="danger"
           icon="el-icon-delete-solid"
           @click="deleteSubscriptions"
@@ -181,6 +185,8 @@
         </el-button>
 
         <el-button
+          v-if="screen >= 2"
+          size="mini"
           icon="el-icon-refresh-right"
           type="secondary"
           @click="refreshAttachmentSign"
@@ -189,12 +195,23 @@
         </el-button>
 
         <el-button
+          size="mini"
           type="danger"
           icon="el-icon-error"
           plain
           @click="closeDialog"
         >
           Fechar
+        </el-button>
+
+        <el-button
+          v-if="screen >= 2"
+          size="mini"
+          type="primary"
+          icon="el-icon-download"
+          @click="downloadAttachment(attachmentId)"
+        >
+          Baixar
         </el-button>
 
         <!-- <el-button
@@ -330,6 +347,10 @@ export default {
       this.loading = true
 
       this.refreshAttachmentSign()
+    },
+
+    downloadAttachment(id) {
+      window.open(`https://api.justto.app/api/office/documents/${id}/sign`, '_blank')
     },
 
     checkSigner(sign, email) {

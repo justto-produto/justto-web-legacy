@@ -15,7 +15,7 @@
       />
       <span
         class="attachment__file"
-        @click="downloadAttachment(occurrence.properties.FILE_URL)"
+        @click="downloadAttachment(interaction.properties.DOCUMENT_ID)"
       >
         <span class="attachment__file-name">
           {{ occurrence.properties.FILE_NAME }}
@@ -35,7 +35,7 @@
       >
         <i
           class="el-icon-download"
-          @click="downloadAttachment(occurrence.properties.FILE_URL)"
+          @click="downloadAttachment(interaction.properties.DOCUMENT_ID)"
         />
 
         <SignAttachmentDialog
@@ -99,8 +99,8 @@ export default {
   },
 
   methods: {
-    downloadAttachment(url) {
-      window.open(url, '_blank')
+    downloadAttachment(id) {
+      window.open(`https://api.justto.app/api/office/documents/${id}/sign`, '_blank')
     }
   }
 }
