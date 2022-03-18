@@ -32,16 +32,17 @@
       v-if="mediaLink && !badStatus"
       class="phone-container__audio"
     >
-      <audio
+      <AudioPlayer
+        ref="AudioPlayer"
         class="phone-container__audio-component"
-        controls
-      >
-        <source
-          :src="mediaLink"
-          type="audio/mpeg"
-        >
-        Your browser does not support the audio tag.
-      </audio>
+        :audio-list="[mediaLink]"
+        theme-color="#9461f7"
+        :show-volume-button="false"
+        :show-prev-button="false"
+        :show-next-button="false"
+        :show-playback-rate="false"
+        :is-loop="false"
+      />
 
       <el-button
         class="phone-container__audio-share"
@@ -135,7 +136,14 @@
 import ckeditor from '@/utils/mixins/ckeditor'
 import { mapActions } from 'vuex'
 
+import AudioPlayer from '@liripeng/vue-audio-player'
+import '@liripeng/vue-audio-player/lib/style.css'
+
 export default {
+  components: {
+    AudioPlayer
+  },
+
   mixins: [ckeditor],
 
   props: {
@@ -288,6 +296,11 @@ export default {
     display: flex;
     align-items: center;
     gap: 8px;
+
+    .audio-player {
+      width: 80%;
+      padding-left: 16px;
+    }
   }
 
   .phone-container__editor {
