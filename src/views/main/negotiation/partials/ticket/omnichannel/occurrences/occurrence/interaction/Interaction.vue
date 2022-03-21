@@ -267,7 +267,7 @@ export default {
   align-items: center;
 
   height: auto;
-  margin: 10px 0px 0px 24px;
+  margin: 10px 24px 0px 24px;
 
   &.INBOUND {
     flex-direction: row;
