@@ -269,7 +269,6 @@ export default {
 
   callTerminated({ commit, dispatch, getters: { getCurrentCall: { id, scheduling }, getGlobalAuthenticationObject: globalAuthenticationObject } }) {
     if (scheduling) dispatch('updatePhoneCallStatus', scheduling.disputeMessageId)
-
     commit('clearCallHeartbeatInterval')
     commit('clearSipStack')
     commit('endCall', {
@@ -386,6 +385,7 @@ export default {
 
             peerconnection.ontrack = function(event) {
               remoteAudio.srcObject = event.streams[0]
+              remoteAudio.muted = false
               remoteAudio.play()
             }
 

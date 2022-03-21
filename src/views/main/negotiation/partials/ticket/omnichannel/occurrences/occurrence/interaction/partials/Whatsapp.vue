@@ -151,11 +151,11 @@ export default {
     },
 
     url() {
-      return !this.fileName.length ? `${this.urlContent}.${this.parsedType}` : this.value?.message?.content
+      return !this.fileName?.length ? `${this.urlContent}.${this.parsedType}` : this.value?.message?.content
     },
 
     urlContent() {
-      return this.fileName.length ? this.value?.message?.content : (this.value?.message?.content || '').split('?fileName=')[0]
+      return this.fileName?.length ? this.value?.message?.content : (this.value?.message?.content || '').split('?fileName=')[0]
     },
 
     type() {
