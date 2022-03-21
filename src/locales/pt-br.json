@@ -553,6 +553,11 @@
       "label": "ODR",
       "icon": "customized-configurations",
       "help": ""
+    },
+    "CLOSING_REASONS": {
+      "label": "Motivos de encerramento",
+      "icon": "negative-hand",
+      "help": ""
     }
   },
   "fields": {
