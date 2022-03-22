@@ -361,6 +361,12 @@ export default {
             emails: this.party.emailsDto,
             phones: this.party.phonesDto
           }
+        }).then(_ => {
+          this.$jusNotification({
+            type: 'success',
+            title: 'Yay!',
+            message: 'Sua ligação entrou na fila, assim que tiver um telefone disponível para você usar, nós emitiremos um aviso sonoro'
+          })
         })
       }
     }
