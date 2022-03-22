@@ -5,8 +5,15 @@
       class="call-queue__container-feedback"
     >
       <audio
+        id="ringAudio"
         ref="ringAudio"
         src="https://s3.sa-east-1.amazonaws.com/novo.justto.app/notification-new-dialer.mp3"
+        loop
+      />
+
+      <audio
+        ref="endAudio"
+        src="https://storage.googleapis.com/justto_app/audio/CallEndTuTuTu.mp3"
         loop
       />
 
@@ -15,7 +22,7 @@
           class="in-call-btn"
           type="text"
         >
-          Em chamada
+          {{ endingCall ? 'Encerrando chamada' : 'Em chamada' }}
         </el-button>
 
         <el-tooltip
@@ -37,11 +44,12 @@
         <br>
 
         <el-button
+          :disabled="endingCall"
           type="danger"
-          size="mini"
+          :icon="endingCall ? 'el-icon-loading' : ''"
           @click="hangUpCall()"
         >
-          Desligar
+          {{ endingCall ? 'Desligando' : 'Desligar' }}
         </el-button>
       </div>
 
@@ -190,6 +198,10 @@ export default {
     ScheduledCallsQueue: () => import('./ScheduledCallsQueue')
   },
 
+  data: () => ({
+    endingCall: false
+  }),
+
   computed: {
     ...mapGetters({
       dialer: 'getDialer',
@@ -273,9 +285,18 @@ export default {
     },
 
     hangUpCall() {
+      this.endingCall = true
+
       this.endCall({
         dialerId: this.dialer.id,
         callId: this.currentCall.id
+      }).then(() => {
+        const audio = this.$refs.endAudio
+
+        audio.play()
+        this.endingCall = false
+
+        setTimeout(() => { audio.pause() }, 1500)
       })
     },
 
@@ -336,9 +357,14 @@ export default {
         }
       }
 
-      p {
+      p:not(.end-call__text) {
         font-size: 18px;
         font-weight: bold;
+      }
+
+      .end-call__text {
+        color: $--color-danger;
+        font-size: 12px;
       }
 
       .waiting-dialer {
