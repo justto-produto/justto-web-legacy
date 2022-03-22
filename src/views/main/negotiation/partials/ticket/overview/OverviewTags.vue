@@ -151,6 +151,15 @@
     >
       <i :class="`el-icon-${tag.icon}`" />
       <span class="overview-tags__label">{{ tag.name }}</span>
+
+      <el-button
+        type="text"
+        icon="el-icon-delete-solid"
+        size="small"
+        class="overview-tags__button"
+        @click.stop.prevent="handleDeleteTagWorkspaceDialog(tag)"
+      />
+
       <el-button
         type="text"
         icon="el-icon-close"
@@ -197,6 +206,36 @@
         <i class="el-icon-more" />
       </el-tag>
     </el-popover>
+
+    <!-- Remove tag from Workspace -->
+    <el-dialog
+      :visible.sync="deleteTagWorkspaceDialogVisible"
+      :show-close="false"
+      title="Remover etiqueta de todas as disputas?"
+      custom-class="remove-tag-dialog"
+      modal-append-to-body
+      center
+    >
+      <h3>
+        Deseja remover a etiqueta <b>&quot;{{ deleteTagWorkspaceForm.name || '' }}&quot;</b> de todas as disputas ou somente desta disputa?
+      </h3>
+
+      <span slot="footer">
+        <el-button @click="handleDeleteTagWorkspace('cancel')">Cancelar</el-button>
+        <el-button
+          type="secondary"
+          @click="handleDeleteTagWorkspace('all')"
+        >
+          De todas as disputas
+        </el-button>
+        <el-button
+          type="primary"
+          @click="handleDeleteTagWorkspace('current')"
+        >
+          Somente desta disputa
+        </el-button>
+      </span>
+    </el-dialog>
   </article>
 </template>
 
@@ -207,6 +246,7 @@ const _ = require('lodash')
 
 export default {
   name: 'OverviewTags',
+
   data: () => ({
     loading: false,
     visible: false,
@@ -217,8 +257,11 @@ export default {
       color: '',
       icon: ''
     },
-    showPopover: true
+    showPopover: true,
+    deleteTagWorkspaceDialogVisible: false,
+    deleteTagWorkspaceForm: {}
   }),
+
   computed: {
     ...mapGetters({
       ticketsQuery: 'getTicketsQuery',
@@ -282,19 +325,23 @@ export default {
       })
     }
   },
+
   mounted() {
     this.tagForm.color = this.colors[0]
     this.tagForm.icon = this.icons[0]
     window.addEventListener('click', this.closeOnCLick)
   },
+
   destroyed() {
     window.removeEventListener('click', this.closeOnCLick)
   },
+
   methods: {
     ...mapActions([
       'deleteTag',
       'setTicketsQuery',
-      'getTickets'
+      'getTickets',
+      'getWorkspaceTags'
     ]),
 
     isDarkColor(color) {
@@ -355,6 +402,7 @@ export default {
         this.visible = false
       }
     },
+
     saveTag() {
       if (this.tagForm.name) {
         // SEGMENT TRACK
@@ -369,6 +417,7 @@ export default {
         this.disputeTags = disputeTags
       }
     },
+
     addTag(tag) {
       // SEGMENT TRACK
       this.$jusSegment('Vinculação de TAG', {
@@ -381,27 +430,31 @@ export default {
       disputeTags.push(tag)
       this.disputeTags = disputeTags
     },
+
+    applyDeleteTag(tagId) {
+      return this.deleteTag(tagId).then(() => {
+        this.$jusNotification({
+          type: 'success',
+          title: 'Yay!',
+          message: 'Tag excluída com sucesso.'
+        })
+      }, () => {
+        this.$jusNotification({
+          type: 'warning',
+          title: 'Ops!',
+          message: 'Não foi possível excluir a tag'
+        })
+      })
+    },
+
     handleDeleteTag(tagId) {
       this.$confirm('Tem certeza que deseja exluir essa tag?', 'Excluír tag', {
         type: 'warning',
         confirmButtonText: 'Continuar',
         cancelButtonText: 'Cancelar'
-      }).then(() => {
-        this.deleteTag(tagId).then(() => {
-          this.$jusNotification({
-            type: 'success',
-            title: 'Yay!',
-            message: 'Tag excluída com sucesso.'
-          })
-        }, () => {
-          this.$jusNotification({
-            type: 'warning',
-            title: 'Ops!',
-            message: 'Não foi possível excluir a tag'
-          })
-        })
-      })
+      }).then(() => this.applyDeleteTag(tagId))
     },
+
     removeTag(tagId) {
       // SEGMENT TRACK
       const tagToRemove = this.disputeTags.find(t => t.id === tagId)
@@ -413,16 +466,20 @@ export default {
       })
       this.disputeTags = this.disputeTags.filter(t => t.id !== tagId)
     },
+
     changeIcon(icon) {
       this.tagForm.icon = icon
     },
+
     changeColor(color) {
       this.tagForm.color = color
     },
+
     showNewTagForm() {
       this.tagForm.name = this.$refs.selectTag.selectedLabel.slice(0, 24)
       this.$nextTick(() => { this.showForm = true })
     },
+
     getTags() {
       // SEGMENT TRACK
       this.$jusSegment('Visualização de TAG', { page: this.$route.name })
@@ -432,8 +489,30 @@ export default {
         this.$refs.selectTag.focus()
       })
     },
+
     resetFields() {
       this.$nextTick(() => { this.showForm = false })
+    },
+
+    resetDeleteTagWorkspaceFields() {
+      this.deleteTagWorkspaceDialogVisible = false
+      this.deleteTagWorkspaceForm = {}
+    },
+
+    handleDeleteTagWorkspaceDialog(tag) {
+      this.deleteTagWorkspaceDialogVisible = true
+      this.deleteTagWorkspaceForm = { ...tag }
+    },
+
+    handleDeleteTagWorkspace(action) {
+      if (action === 'all') {
+        this.applyDeleteTag(this.deleteTagWorkspaceForm.id)
+        this.removeTag(this.deleteTagWorkspaceForm.id)
+      } else if (action === 'current') {
+        this.removeTag(this.deleteTagWorkspaceForm.id)
+      }
+
+      this.resetDeleteTagWorkspaceFields()
     }
   }
 }
@@ -526,6 +605,15 @@ export default {
     right: -3px;
     width: 12px;
     height: 12px;
+  }
+}
+
+.remove-tag-dialog {
+  .el-dialog__body {
+    h3 {
+      text-align: center;
+      word-break: keep-all;
+    }
   }
 }
 
