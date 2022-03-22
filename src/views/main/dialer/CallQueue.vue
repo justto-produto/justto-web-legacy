@@ -166,16 +166,6 @@
       <div class="call-queue__container-empty-queue-label">
         Sem ligações pendentes
       </div>
-
-      <div v-if="!hasCallInQueue && (isAdminProfile || isJusttoAdmin)">
-        <el-button
-          type="primary"
-          size="mini"
-          @click="openBuyDialerDialog"
-        >
-          Adquira discadores dedicados
-        </el-button>
-      </div>
     </div>
 
     <ScheduledCallSwitch />
