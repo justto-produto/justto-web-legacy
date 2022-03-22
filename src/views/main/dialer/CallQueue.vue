@@ -168,9 +168,9 @@
       </div>
     </div>
 
-    <ScheduledCallSwitch />
+    <ScheduledCallSwitch v-if="isJusttoDev" />
 
-    <ScheduledCallsQueue />
+    <ScheduledCallsQueue v-if="isJusttoDev" />
 
     <CallHelp
       @call:end="hangUpCall()"
@@ -204,7 +204,8 @@ export default {
       isPendingToAnswerCurrentCall: 'isPendingToAnswerCurrentCall',
       isAdminProfile: 'isAdminProfile',
       isJusttoAdmin: 'isJusttoAdmin',
-      netSpeed: 'getSipConnectionSpeed'
+      netSpeed: 'getSipConnectionSpeed',
+      isJusttoDev: 'isJusttoDev'
     }),
 
     netSpeedMbps() {
