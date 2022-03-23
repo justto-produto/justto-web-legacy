@@ -461,6 +461,45 @@
       />
     </el-dialog>
 
+    <el-dialog
+      :visible.sync="showChangeTagDialog"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      append-to-body
+      destroy-on-close
+      title="Adicionar tags"
+      class="dialog-actions__change-tags"
+      :before-close="handleCloseChangeTagDialog"
+    >
+      <div class="change-tags">
+        <el-select
+          v-model="changeTags"
+          multiple
+          filterable
+          placeholder="Selecionar tags"
+        >
+          <el-option
+            v-for="tag in tags"
+            :key="tag.id"
+            :label="tag.name"
+            :value="tag.id"
+          >
+            <i :class="`el-icon-${tag.icon}`" /> {{ tag.name }}
+          </el-option>
+        </el-select>
+      </div>
+
+      <span slot="footer">
+        <el-button @click="showChangeTagDialog = false">Cancelar</el-button>
+        <el-button
+          type="primary"
+          @click="doAction('ADD_TAGS_INCLUSIVE')"
+        >
+          Confirmar
+        </el-button>
+      </span>
+    </el-dialog>
+
     <ImageUploadDialog @input="setImgTag" />
   </div>
 </template>
@@ -500,6 +539,10 @@ export default {
       useImageAttachmentPlugin: true,
       showDropLawsuitDialog: false,
       showBulkMessageDialog: false,
+      // TODO: SAAS-4903
+      showChangeTagDialog: false,
+      changeTags: [],
+      // TODO: SAAS-4903
       showUpdateEngagementOptions: false,
       engagementOptions: {
         alwaysContactParty: true,
@@ -532,7 +575,8 @@ export default {
   computed: {
     ...mapGetters({
       disputeStatuses: 'disputeStatuses',
-      strategies: 'getMyStrategiesLite'
+      strategies: 'getMyStrategiesLite',
+      tags: 'workspaceTags'
     }),
 
     canDoAction() {
@@ -591,6 +635,7 @@ export default {
         { name: 'RESEND_MESSAGE', tabs: ['1', '2', '3', '4', '9'] },
         { name: 'DROP_LAWSUIT', tabs: ['0'] },
         { name: 'START_NEGOTIATON', tabs: ['0'] },
+        { name: 'ADD_TAGS_INCLUSIVE', tabs: ['0', '1', '2', '3', '4', '9'] },
         {
           name: 'SEND_BILK_MESSAGE',
           tabs: ['1', '2', '3', '4', '9'],
@@ -641,6 +686,7 @@ export default {
 
   methods: {
     ...mapActions([
+      'getWorkspaceTags',
       'getDisputeStatuses',
       'getFinishedDisputesCount'
     ]),
@@ -663,6 +709,9 @@ export default {
           break
         case 'DELETE':
           if (this.deleteType) params.reasonKey = this.deleteType
+          break
+        case 'ADD_TAGS_INCLUSIVE':
+          params.tags = this.changeTags
           break
         case 'UNSETTLED':
           if (this.unsettledType) {
@@ -700,6 +749,7 @@ export default {
         this.changeStrategyDialogVisible = false
         this.changeExpirationDialogVisible = false
         this.showUpdateEngagementOptions = false
+        this.showChangeTagDialog = false
         this.$jusNotification({
           title: 'Yay!',
           message: 'Ação <strong>' + this.$t('action.' + action.toUpperCase()) + '</strong> realizada com sucesso.',
@@ -808,6 +858,9 @@ export default {
       } else if (action === 'UPDATE_ENGAGEMENT_OPTIONS') {
         this.resetEngagementOptions(false)
         this.showUpdateEngagementOptions = true
+      } else if (action === 'ADD_TAGS_INCLUSIVE') {
+        this.getWorkspaceTags()
+        this.showChangeTagDialog = true
       } else {
         this.$confirm(message.content, message.title, configs).then(() => {
           this.doAction(action)
@@ -958,6 +1011,11 @@ export default {
       }).finally(() => {
         this.changeNegotiatorDialogLoading = false
       })
+    },
+
+    handleCloseChangeTagDialog(done) {
+      this.changeTags = []
+      done()
     }
   }
 }
@@ -1159,6 +1217,18 @@ export default {
     }
     .el-select, .el-date-editor.el-input, .el-transfer {
       width: 100%;
+    }
+  }
+}
+
+.dialog-actions__change-tags {
+  .el-dialog__body {
+    .change-tags {
+      display: flex;
+
+      .el-select {
+        width: 100%;
+      }
     }
   }
 }
