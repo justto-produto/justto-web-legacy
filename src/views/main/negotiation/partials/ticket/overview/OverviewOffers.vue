@@ -338,8 +338,12 @@ export default {
     font-size: 16px;
     color: $--color-text-primary;
 
+    div span {
+      font-size: 14px !important;
+    }
+
     .overview-offers__proposal-value {
-      font-size: 20px;
+      font-size: 16px !important;
       font-weight: 400;
       max-width: calc(100% - 82px);
 
