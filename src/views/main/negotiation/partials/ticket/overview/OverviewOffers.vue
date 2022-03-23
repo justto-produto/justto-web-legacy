@@ -1,15 +1,19 @@
 <template>
   <section class="overview-offers">
     <article
+      class="overview-offers__status"
+    >
+      <el-tag :class="status">
+        {{ $tc(`ticket-status.${status}`) }}
+      </el-tag>
+    </article>
+
+    <article
       v-if="isAccepted"
       class="overview-offers__proposal overview-offers__proposal--accepted"
     >
       <!-- <JusIcon icon="ticket-accepted" /> -->
       <div overview-offers__proposal>
-        <div class="overview-offers__proposal-label">
-          ACORDO
-        </div>
-
         <div class="overview-offers__proposal-container">
           <div>&nbsp;</div>
 
@@ -395,6 +399,70 @@ export default {
       div {
         font-size: 16px;
         font-weight: 500;
+      }
+    }
+  }
+
+  .overview-offers__status {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 0 8px 0;
+
+    .el-tag {
+      text-transform: uppercase;
+      font-weight: 600;
+
+      &.RUNNING {
+        background-color: #feecfc;
+        color: #ce1ec0;
+        border-color: #ce1ec0;
+      }
+
+      &.CANCELED,
+      &.IMPORTED,
+      &.ENRICHED,
+      &.EXPIRED {
+        background-color: #f1f1f3;
+        color: #898686;
+        border-color: #898686;
+      }
+
+      &.PRE_NEGOTIATION {
+        background-color: #fefaec;
+        color: #cec71e;
+        border-color: #cec71e;
+      }
+
+      &.PENDING, &.ENGAGEMENT {
+        background-color: #fff1c8;
+        color: #ff9300;
+        border-color: #ff9300;
+      }
+
+      &.ACCEPTED {
+        background-color: #ecf8fe;
+        color: #1ecec0;
+        border-color: #1ecec0;
+      }
+
+      &.CHECKOUT {
+        background-color: #eceefe;
+        color: #1e54ce;
+        border-color: #1e54ce;
+      }
+
+      &.UNSETTLED {
+        background-color: #ffe4e5;
+        color: #ff4b54;
+        border-color: #ff4b54;
+      }
+
+      &.SETTLED {
+        background-color: #ecfeee;
+        color: #1ece39;
+        border-color: #1ece39;
       }
     }
   }
