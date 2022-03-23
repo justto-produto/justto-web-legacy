@@ -226,7 +226,7 @@
           type="secondary"
           @click="handleDeleteTagWorkspace('all')"
         >
-          De todas as disputas
+          Remover de todas
         </el-button>
         <el-button
           type="primary"
