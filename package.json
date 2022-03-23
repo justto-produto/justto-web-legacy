@@ -49,7 +49,7 @@
     "@ckeditor/ckeditor5-vue2": "^1.0.5",
     "@fnando/cnpj": "^1.0.2",
     "@fnando/cpf": "^1.0.2",
-    "@liripeng/vue-audio-player": "^1.4.0",
+    "@liripeng/vue-audio-player": "^1.5.0",
     "@sentry/browser": "^5.15.5",
     "@sentry/integrations": "^5.15.5",
     "@vue/ui": "^0.5.6",

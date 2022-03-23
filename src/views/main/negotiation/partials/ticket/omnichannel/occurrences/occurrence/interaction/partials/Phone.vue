@@ -137,7 +137,6 @@ import ckeditor from '@/utils/mixins/ckeditor'
 import { mapActions } from 'vuex'
 
 import AudioPlayer from '@liripeng/vue-audio-player'
-import '@liripeng/vue-audio-player/lib/style.css'
 
 export default {
   components: {
