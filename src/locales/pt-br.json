@@ -272,6 +272,7 @@
     "SEND_BILK_MESSAGE": "Enviar mensagens em massa",
     "UPDATE_ENGAGEMENT_OPTIONS": "Alterar engajamento",
     "ADD_TAGS_INCLUSIVE": "adicionar tags",
+    "REM_TAGS_INCLUSIVE": "remover tags",
     "tooltip": {
       "BULK_COMPOSE_MESSAGE": "Compor mensagem em massa",
       "SETTLE_DISPUTE": "Aceitar e Ganhar disputa | Aceitar e Ganhar disputas"

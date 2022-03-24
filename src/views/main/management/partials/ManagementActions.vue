@@ -476,13 +476,14 @@
           v-model="changeTags"
           multiple
           filterable
+          allow-create
           placeholder="Selecionar tags"
         >
           <el-option
-            v-for="tag in tags"
+            v-for="(tag, index) in tags"
             :key="tag.id"
             :label="tag.name"
-            :value="tag.id"
+            :value="index"
           >
             <i :class="`el-icon-${tag.icon}`" /> {{ tag.name }}
           </el-option>
@@ -494,6 +495,45 @@
         <el-button
           type="primary"
           @click="doAction('ADD_TAGS_INCLUSIVE')"
+        >
+          Confirmar
+        </el-button>
+      </span>
+    </el-dialog>
+
+    <el-dialog
+      :visible.sync="showRemoveTagDialog"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      append-to-body
+      destroy-on-close
+      title="Remover tags"
+      class="dialog-actions__change-tags"
+      :before-close="handleCloseChangeTagDialog"
+    >
+      <div class="change-tags">
+        <el-select
+          v-model="removeTags"
+          multiple
+          filterable
+          placeholder="Remover tags"
+        >
+          <el-option
+            v-for="(tag, index) in tags"
+            :key="tag.id"
+            :label="tag.name"
+            :value="index"
+          >
+            <i :class="`el-icon-${tag.icon}`" /> {{ tag.name }}
+          </el-option>
+        </el-select>
+      </div>
+
+      <span slot="footer">
+        <el-button @click="showRemoveTagDialog = false">Cancelar</el-button>
+        <el-button
+          type="primary"
+          @click="doAction('REM_TAGS_INCLUSIVE')"
         >
           Confirmar
         </el-button>
@@ -541,7 +581,9 @@ export default {
       showBulkMessageDialog: false,
       // TODO: SAAS-4903
       showChangeTagDialog: false,
+      showRemoveTagDialog: false,
       changeTags: [],
+      removeTags: [],
       // TODO: SAAS-4903
       showUpdateEngagementOptions: false,
       engagementOptions: {
@@ -636,6 +678,7 @@ export default {
         { name: 'DROP_LAWSUIT', tabs: ['0'] },
         { name: 'START_NEGOTIATION', tabs: ['0'] },
         { name: 'ADD_TAGS_INCLUSIVE', tabs: ['0', '1', '2', '3', '4', '9'] },
+        { name: 'REM_TAGS_INCLUSIVE', tabs: ['0', '1', '2', '3', '4', '9'] },
         {
           name: 'SEND_BILK_MESSAGE',
           tabs: ['1', '2', '3', '4', '9'],
@@ -711,7 +754,22 @@ export default {
           if (this.deleteType) params.reasonKey = this.deleteType
           break
         case 'ADD_TAGS_INCLUSIVE':
-          params.tags = this.changeTags
+          params.tags = this.changeTags.map(tag => {
+            if (Number.isInteger(tag)) {
+              const { id } = this.tags[tag]
+
+              return { id }
+            } else {
+              return { name: tag }
+            }
+          })
+          break
+        case 'REM_TAGS_INCLUSIVE':
+          params.tags = this.removeTags.map(tag => {
+            const { id } = this.tags[tag]
+
+            return { id }
+          })
           break
         case 'UNSETTLED':
           if (this.unsettledType) {
@@ -732,6 +790,7 @@ export default {
         params.allSelected = true
         params.disputeIds = []
       }
+
       this.dispatchAction(action, params)
     },
 
@@ -750,6 +809,7 @@ export default {
         this.changeExpirationDialogVisible = false
         this.showUpdateEngagementOptions = false
         this.showChangeTagDialog = false
+        this.showRemoveTagDialog = false
         this.$jusNotification({
           title: 'Yay!',
           message: 'Ação <strong>' + this.$t('action.' + action.toUpperCase()) + '</strong> realizada com sucesso.',
@@ -859,8 +919,15 @@ export default {
         this.resetEngagementOptions(false)
         this.showUpdateEngagementOptions = true
       } else if (action === 'ADD_TAGS_INCLUSIVE') {
-        this.getWorkspaceTags()
-        this.showChangeTagDialog = true
+        this.getWorkspaceTags().then(() => {
+          this.showChangeTagDialog = true
+          this.changeTags = []
+        })
+      } else if (action === 'REM_TAGS_INCLUSIVE') {
+        this.getWorkspaceTags().then(() => {
+          this.showRemoveTagDialog = true
+          this.removeTags = []
+        })
       } else {
         this.$confirm(message.content, message.title, configs).then(() => {
           this.doAction(action)
@@ -1015,6 +1082,7 @@ export default {
 
     handleCloseChangeTagDialog(done) {
       this.changeTags = []
+      this.removeTags = []
       done()
     }
   }
