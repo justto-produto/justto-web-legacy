@@ -34,7 +34,7 @@ export default class DisputeOverviewVm {
     this.description = description
     this.paused = paused
     this.favorite = favorite
-    this.upperRange = upperRange || disputeUpperRange
+    this.upperRange = upperRange || disputeUpperRange || 0
     this.hasDraft = hasDraft || hasDocument
     this.draftStatus = signStatus || draftStatus
     this.strategy = new StrategyVm(strategy || {
