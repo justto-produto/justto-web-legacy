@@ -13,11 +13,10 @@
 
       <div>
         <span
-          v-for="action in actionsList"
+          v-for="action in actionsList.filter(({ main, tabs }) => (main && tabs.includes(activeTab)))"
           :key="action.name"
         >
           <el-button
-            v-if="action.tabs.includes(activeTab)"
             :data-testid="`batch-${action.name.toLowerCase()}`"
             :disabled="!canDoAction(action.name)"
             plain
@@ -38,6 +37,44 @@
             </el-tooltip>
           </el-button>
         </span>
+
+        <el-dropdown
+          trigger="click"
+          placement="bottom"
+          class="management-action__dropdown"
+          @command="sendBatchAction"
+        >
+          <el-button
+            type="text"
+            icon="el-icon-menu"
+          />
+
+          <el-dropdown-menu
+            slot="dropdown"
+            class="management-action__dropdown-menu"
+          >
+            <el-dropdown-item
+              v-for="action in actionsList.filter(({ main, tabs }) => !main && tabs.includes(activeTab))"
+              :key="action.name"
+              :command="action.name"
+              :disabled="!canDoAction(action.name)"
+            >
+              <el-tooltip
+                :disabled="!action.tooltip"
+                :content="action.tooltip ? $tc(`action.tooltip.${action.tooltip}`, selectedLenghtToShow) : ''"
+              >
+                <jus-icon
+                  v-if="action.icon"
+                  :class="action.class"
+                  :icon="action.icon"
+                />
+                <span v-else>
+                  {{ $t(`action.${action.name}`) }}
+                </span>
+              </el-tooltip>
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
       </div>
 
       <i
@@ -659,11 +696,12 @@ export default {
         {
           name: 'SETTLED',
           tabs: ['1', '2', '3', '4', '9'],
-          tooltip: 'SETTLE_DISPUTE'
+          tooltip: 'SETTLE_DISPUTE',
+          main: true
         },
-        { name: 'UNSETTLED', tabs: ['1', '2', '3', '4', '9'] },
-        { name: 'PAUSED', tabs: ['1', '2', '3', '4', '9'] },
-        { name: 'RESUME', tabs: ['1', '2', '3', '4', '9'] },
+        { name: 'UNSETTLED', tabs: ['1', '2', '3', '4', '9'], main: true },
+        { name: 'PAUSED', tabs: ['1', '2', '3', '4', '9'], main: true },
+        { name: 'RESUME', tabs: ['1', '2', '3', '4', '9'], main: true },
         { name: 'RESTART_ENGAGEMENT', tabs: ['1', '2', '4', '9'] },
         { name: 'CHANGE_EXPIRATION_DATE', tabs: ['1', '2', '3', '4', '9'] },
         { name: 'CHANGE_STRATEGY', tabs: ['1', '2', '3', '4', '9'] },
@@ -675,8 +713,8 @@ export default {
         },
         { name: 'DELETE', tabs: ['1', '2', '3', '4', '9'] },
         { name: 'RESEND_MESSAGE', tabs: ['1', '2', '3', '4', '9'] },
-        { name: 'DROP_LAWSUIT', tabs: ['0'] },
-        { name: 'START_NEGOTIATION', tabs: ['0'] },
+        { name: 'DROP_LAWSUIT', tabs: ['0'], main: true },
+        { name: 'START_NEGOTIATION', tabs: ['0'], main: true },
         { name: 'ADD_TAGS_INCLUSIVE', tabs: ['0', '1', '2', '3', '4', '9'] },
         { name: 'REM_TAGS_INCLUSIVE', tabs: ['0', '1', '2', '3', '4', '9'] },
         {
@@ -733,6 +771,10 @@ export default {
       'getDisputeStatuses',
       'getFinishedDisputesCount'
     ]),
+
+    teste(event) {
+      console.log(event)
+    },
 
     doAction(action) {
       const params = {
@@ -1286,6 +1328,18 @@ export default {
     .el-select, .el-date-editor.el-input, .el-transfer {
       width: 100%;
     }
+  }
+}
+
+.management-action__dropdown-menu {
+  max-height: 75vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding-left: 18px;
+
+  .el-dropdown-menu__item {
+    text-align: center;
+    text-transform: uppercase;
   }
 }
 
