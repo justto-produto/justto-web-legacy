@@ -6,6 +6,12 @@
       <el-tag :class="status">
         {{ $tc(`ticket-status.${status}`) }}
       </el-tag>
+      <span
+        v-if="isPaused"
+        class="overview-offers__status-paused"
+      >
+        PAUSADO
+      </span>
     </article>
 
     <article
@@ -464,6 +470,12 @@ export default {
         color: #1ece39;
         border-color: #1ece39;
       }
+    }
+
+    .overview-offers__status-paused {
+      color: $--color-secondary;
+      font-weight: 600;
+      font-size: 12px;
     }
   }
 }
