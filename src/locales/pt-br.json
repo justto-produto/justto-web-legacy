@@ -491,7 +491,7 @@
     "RUNNING": "em negociação",
     "SETTLED": "ganha",
     "UNSETTLED": "perdida",
-    "PRE_NEGOTIATION": "pre-negociação",
+    "PRE_NEGOTIATION": "pré negociação",
     "PAUSED": "(pausada) | ",
     "CANCELED": "cancelada"
   },
