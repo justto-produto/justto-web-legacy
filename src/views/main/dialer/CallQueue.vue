@@ -55,23 +55,7 @@
 
       <div v-if="!isOpenCall && hasCallInQueue">
         <div v-if="isPendingToAnswerCurrentCall">
-          <p>Linha disponível</p>
-
-          <el-button
-            type="danger"
-            size="mini"
-            @click="answerCall(false)"
-          >
-            Não ligar
-          </el-button>
-
-          <el-button
-            type="primary"
-            size="mini"
-            @click="answerCall(true)"
-          >
-            Ligar agora
-          </el-button>
+          <p>Entrando na chamada</p>
         </div>
 
         <div
@@ -242,6 +226,8 @@ export default {
     }),
 
     answerCall(answer) {
+      console.log('answerCall', answer)
+
       this.answerCurrentCall(answer).then(hasConected => {
         if (answer) {
           if (hasConected) {
@@ -296,6 +282,7 @@ export default {
         this.$jusSegment('END_DIALER_CALL', { ...call })
       } else if (['RECEIVING_CALL'].includes(call?.status)) {
         this.$refs.ringAudio.play()
+        setTimeout(() => this.answerCall(true), 4000)
       } else if (!['RECEIVING_CALL'].includes(call?.status) && this.$refs.ringAudio) {
         this.$refs.ringAudio.pause()
       }
