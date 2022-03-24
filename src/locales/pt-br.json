@@ -268,7 +268,7 @@
     "RENEGOTIATE": "retornar para negociação",
     "EDIT-NEGOTIATORS": "editar negociadores",
     "DROP_LAWSUIT": "cancelar negociação",
-    "START_NEGOTIATON": "inicar negociação",
+    "START_NEGOTIATION": "inicar negociação",
     "SEND_BILK_MESSAGE": "Enviar mensagens em massa",
     "UPDATE_ENGAGEMENT_OPTIONS": "Alterar engajamento",
     "ADD_TAGS_INCLUSIVE": "adicionar tags",
@@ -495,7 +495,7 @@
     "RUNNING": "em negociação",
     "SETTLED": "ganha",
     "UNSETTLED": "perdida",
-    "PRE_NEGOTIATION": "pre-negociação",
+    "PRE_NEGOTIATION": "pré negociação",
     "PAUSED": "(pausada) | ",
     "CANCELED": "cancelada"
   },

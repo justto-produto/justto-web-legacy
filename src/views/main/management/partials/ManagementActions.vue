@@ -634,7 +634,7 @@ export default {
         { name: 'DELETE', tabs: ['1', '2', '3', '4', '9'] },
         { name: 'RESEND_MESSAGE', tabs: ['1', '2', '3', '4', '9'] },
         { name: 'DROP_LAWSUIT', tabs: ['0'] },
-        { name: 'START_NEGOTIATON', tabs: ['0'] },
+        { name: 'START_NEGOTIATION', tabs: ['0'] },
         { name: 'ADD_TAGS_INCLUSIVE', tabs: ['0', '1', '2', '3', '4', '9'] },
         {
           name: 'SEND_BILK_MESSAGE',
