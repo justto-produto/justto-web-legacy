@@ -94,7 +94,7 @@ const overviewActions = {
     }
   },
 
-  SOCKET_ADD_DISPUTE({ rootState, state, commit }, dispute) {
+  SOCKET_ADD_DISPUTE({ rootState, state, commit, dispatch }, dispute) {
     const correspondingTab = getCorrespondingTab(dispute.status)
 
     if (rootState.negotiationTicketsModule.ticketsPreventSocket) return
@@ -112,6 +112,8 @@ const overviewActions = {
           status: dispute.status
         })
       }
+
+      dispatch('getTicketOverview', dispute.id)
 
       if (isCorrespondingTab && isUpdate && isInNegotiation) {
         const vue = document.querySelector('#app').__vue__

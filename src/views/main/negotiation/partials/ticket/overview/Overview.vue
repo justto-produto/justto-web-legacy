@@ -284,6 +284,7 @@ export default {
 
   .overview-container__title {
     margin: 0;
+    font-size: 20px;
 
     .el-icon-delete {
       // font-size: 20px;
