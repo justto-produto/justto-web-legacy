@@ -136,10 +136,7 @@
           class-name="visible"
         >
           <template v-slot="scope">
-            <a
-              href="#"
-              @click.prevent="removeOab(scope.$index)"
-            >
+            <a @click.prevent="removeOab(scope.$index)">
               <jus-icon icon="trash" />
             </a>
           </template>
@@ -198,7 +195,6 @@
               </span>
             </el-tooltip>
             <a
-              href="#"
               @click.prevent="removePhone(scope.$index)"
             >
               <jus-icon icon="trash" />
@@ -260,7 +256,6 @@
               </span>
             </el-tooltip>
             <a
-              href="#"
               @click.prevent="removeEmail(scope.$index)"
             >
               <jus-icon icon="trash" />
@@ -271,7 +266,6 @@
       <h4>
         Contas bancárias
         <a
-          href="#"
           style="float: right;width: 16px;margin-top: 1px;margin-right: 23px;"
           @click.prevent="openAddBankDialog()"
         >
@@ -304,7 +298,6 @@
         >
           <template v-slot="scope">
             <a
-              href="#"
               @click.prevent="removeBankData(scope.$index, scope.row.id)"
             >
               <jus-icon icon="trash" />

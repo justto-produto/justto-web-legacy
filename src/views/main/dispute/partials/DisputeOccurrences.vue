@@ -118,7 +118,6 @@
                 <span />
                 <a
                   v-if="!handlePartyId['party_role' + role.id]"
-                  href="#"
                   @click="openOptionsParty(role)"
                 >
                   Definir polaridade de {{ role.name }}
@@ -290,7 +289,6 @@
                     style="text-align: right;"
                   >
                     <a
-                      href="#"
                       data-testid="hide-email"
                       @click.prevent="hideFullMessage(occurrence.id)"
                     > ver menos</a>
@@ -331,7 +329,6 @@
                     </span>
                     <span v-if="showResume(occurrence)">
                       <a
-                        href="#"
                         data-testid="show-email"
                         @click.prevent="showFullMessage(occurrence.id, occurrence.interaction.message.messageId || false)"
                       > ver mais</a>
@@ -432,10 +429,7 @@
               class="dispute-view-occurrences__side-icon"
             >
               <el-tooltip content="Responder">
-                <a
-                  href="#"
-                  @click.prevent="startReply(occurrence)"
-                >
+                <a @click.prevent="startReply(occurrence)">
                   <jus-icon
                     icon="reply"
                     style="position: styck;"
@@ -514,7 +508,6 @@
                       style="text-align: right;"
                     >
                       <a
-                        href="#"
                         data-testid="hide-email"
                         @click.prevent="hideFullMessage(mergedOccurency.id)"
                       > ver menos</a>
@@ -539,7 +532,6 @@
                     </span>
                     <span v-if="showResume(mergedOccurency)">
                       <a
-                        href="#"
                         data-testid="show-email"
                         @click.prevent="showFullMessage(mergedOccurency.id, mergedOccurency.interaction.message.messageId || false)"
                       > ver mais</a>

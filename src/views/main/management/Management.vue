@@ -208,7 +208,6 @@
           </h2>
           <div class="el-notification__content">
             <a
-              href="#"
               @click.prevent="getDisputes"
             >Clique aqui para recarregar</a>
           </div>
@@ -403,7 +402,6 @@
             </span>
           </el-tree>
           <a
-            href="#"
             class="view-management__export-dialog-link"
             @click="showAllNodesHandler"
           >

@@ -89,7 +89,6 @@
         </router-link>
         <a
           v-if="workspacesList.length"
-          href="#"
           @click.prevent="changeWorkspace"
         >
           <el-dropdown-item>
@@ -106,10 +105,7 @@
           </el-dropdown-item>
         </a>
 
-        <a
-          href="#"
-          @click="logout()"
-        >
+        <a @click="logout()">
           <el-dropdown-item divided>
             Sair
           </el-dropdown-item>

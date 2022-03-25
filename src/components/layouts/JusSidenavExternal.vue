@@ -1,9 +1,6 @@
 <template>
   <div class="jus-sidenav-external">
-    <a
-      href="#"
-      @click.prevent="$router.push('/login')"
-    >
+    <a @click.prevent="$router.push('/login')">
       <img
         class="jus-sidenav-external__logo"
         src="@/assets/logo.svg"
@@ -28,10 +25,7 @@
       v-if="showExit"
       class="jus-sidenav-external__exit"
     >
-      <a
-        href="#"
-        @click="$router.push('login')"
-      >Sair</a>
+      <a @click="$router.push('login')">Sair</a>
     </div>
     <!-- <el-dialog
       v-if="showPlans"

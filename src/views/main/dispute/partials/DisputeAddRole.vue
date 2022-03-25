@@ -148,10 +148,7 @@
             class-name="visible"
           >
             <template v-slot="scope">
-              <a
-                href="#"
-                @click.prevent="removePhone(scope.$index)"
-              >
+              <a @click.prevent="removePhone(scope.$index)">
                 <jus-icon icon="trash" />
               </a>
             </template>
@@ -196,10 +193,7 @@
             class-name="visible"
           >
             <template v-slot="scope">
-              <a
-                href="#"
-                @click.prevent="removeEmail(scope.$index)"
-              >
+              <a @click.prevent="removeEmail(scope.$index)">
                 <jus-icon icon="trash" />
               </a>
             </template>
@@ -267,10 +261,7 @@
             class-name="visible"
           >
             <div slot-scope="scope">
-              <a
-                href="#"
-                @click.prevent="removeOab(scope.$index)"
-              >
+              <a @click.prevent="removeOab(scope.$index)">
                 <jus-icon icon="trash" />
               </a>
             </div>
