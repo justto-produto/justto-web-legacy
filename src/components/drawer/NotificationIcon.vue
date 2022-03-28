@@ -111,12 +111,12 @@ export default {
       top: 0;
       right: 0;
       margin: -2px -2px 0 0;
-      font-size: 14px;
-      font-weight: bold;
+      font-size: 12px;
       background-color: red;
       border-radius: 50px;
       padding: 2px 6px;
       color: white;
+      font-family: "Montserrat", sans-serif !important;
     }
   }
 }
