@@ -110,6 +110,7 @@
         <div class="call-queue__container-call-queue-line-item">
           #{{ call.disputeId }} ({{ $tc(`ticket-status.${call.disputeStatus}`) }})
         </div>
+
         <el-tag
           class="call-queue__container-call-queue-line-item"
           size="mini"
@@ -128,8 +129,9 @@
         </div>
 
         <el-button
+          :disabled="endingCall"
           type="danger"
-          icon="el-icon-delete"
+          :icon="endingCall ? 'el-icon-loading' : 'el-icon-delete'"
           size="mini"
           circle
           plain
@@ -164,6 +166,8 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+
+import { CALL_STATUS } from '@/constants/callStatus'
 
 export default {
   components: {
@@ -254,7 +258,10 @@ export default {
     },
 
     remove(id) {
-      if (id === this.currentCall.id) {
+      const { ACTIVE_CALL, RECEIVING_CALL } = CALL_STATUS
+      const hasDialer = [ACTIVE_CALL, RECEIVING_CALL].includes(this.currentCall?.status)
+
+      if (id === this.currentCall?.id && hasDialer) {
         this.hangUpCall()
       } else {
         this.removeCall({ callId: id })
