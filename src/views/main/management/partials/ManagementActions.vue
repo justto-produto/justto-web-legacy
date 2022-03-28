@@ -717,13 +717,7 @@ export default {
         { name: 'START_NEGOTIATION', tabs: ['0'], main: true },
         { name: 'ADD_TAGS_INCLUSIVE', tabs: ['0', '1', '2', '3', '4', '9'] },
         { name: 'REM_TAGS_INCLUSIVE', tabs: ['0', '1', '2', '3', '4', '9'] },
-        {
-          name: 'SEND_BILK_MESSAGE',
-          tabs: ['1', '2', '3', '4', '9'],
-          tooltip: 'BULK_COMPOSE_MESSAGE',
-          class: 'icon-in-bulk',
-          icon: 'in-bulk'
-        }
+        { name: 'SEND_BILK_MESSAGE', tabs: ['1', '2', '3', '4', '9'] }
       ]
     },
 
