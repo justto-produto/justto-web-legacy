@@ -4,7 +4,7 @@
       class="overview-offers__status"
     >
       <el-tag :class="status">
-        {{ $tc(`ticket-status.${status}`) }}
+        {{ $tc(`occurrence.type.${status}`) }}
       </el-tag>
       <span
         v-if="isPaused"
