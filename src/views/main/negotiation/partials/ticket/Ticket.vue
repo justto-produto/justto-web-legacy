@@ -1,7 +1,11 @@
 <template>
   <section class="ticket-container">
     <section class="ticket-container__omnichannel">
-      <TicketHeader @toggle-show-overview="toggleShowOverview" />
+      <TicketHeader
+        :show-overview="showOverview"
+        @toggle-show-overview="toggleShowOverview"
+      />
+
       <Omnichannel :show-overview="showOverview" />
       <div
         v-if="width <= 1200 && showOverview"

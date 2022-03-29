@@ -12,7 +12,7 @@
     />
 
     <HeaderUserMenu
-      v-if="!disputeMode"
+      v-if="!disputeMode && isOverviewActive"
       class="overview-container__menu"
       :class="{'hidde-menu': (showOverview || disputeMode)}"
     />
