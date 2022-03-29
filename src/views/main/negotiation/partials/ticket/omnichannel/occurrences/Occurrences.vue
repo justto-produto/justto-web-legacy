@@ -80,7 +80,7 @@ export default {
       ticket: 'getTicketOverview',
       filter: 'getOccurrencesFilter',
       isLoading: 'isOccurrencesLoading',
-      occurrences: 'getOccurrencesList',
+      occurrencesList: 'getOccurrencesList',
       messageType: 'getEditorMessageType',
       isPrinting: 'getExportTicketModalVisible'
     }),
@@ -95,6 +95,10 @@ export default {
 
     id() {
       return Number(this.$route.params.id)
+    },
+
+    occurrences() {
+      return this.occurrencesList.filter(({ disputeId }) => [null, this.id].includes(disputeId))
     },
 
     dispute() {
