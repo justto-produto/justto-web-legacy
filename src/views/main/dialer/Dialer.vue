@@ -88,6 +88,7 @@ export default {
       canAccessDialer: 'canAccessDialer',
       currentActiveCall: 'getCurrentCall',
       workspaceTeamName: 'workspaceTeamName',
+      scheduledCallsQueue: 'getScheduledCallsQueue',
       isPendingToAnswerCurrentCall: 'isPendingToAnswerCurrentCall'
     }),
 
@@ -100,7 +101,16 @@ export default {
     },
 
     dialerIcon() {
-      return !this.isActiveToCall ? 'not-main-phone-active' : [CALL_STATUS.ACTIVE_CALL].includes(this.currentActiveCall?.status) ? 'phone-active' : 'tts'
+      const activeAutoCall = this.preferences?.properties?.AVAILABLE_SCHEDULED_CALLS === 'AVAILABLE'
+
+      if (!this.listCallQueue.length && !this.scheduledCallsQueue.length) {
+        return 'phone-off'
+      } else if (activeAutoCall && this.scheduledCallsQueue.length) {
+        return 'phone-auto'
+      } else {
+        return 'phone-active'
+      }
+      // return !this.isActiveToCall ? 'phone-off' : [CALL_STATUS.ACTIVE_CALL].includes(this.currentActiveCall?.status) ? 'phone-active' : 'tts'
     },
 
     hasAcceptTerms() {
@@ -350,7 +360,7 @@ export default {
   .dialer__button {
     text-align: center;
     cursor: pointer;
-    margin: 0px 16px 0 0;
+    margin: 0 8px 2px;
 
     span {
       .el-popover__reference-wrapper {
@@ -367,7 +377,7 @@ export default {
   .dialer__container {
 
     background-color: white;
-    border: solid $--color-primary 2px;
+    border: solid $--color-primary 1px;
     border-radius: 10px;
 
     display: flex;
