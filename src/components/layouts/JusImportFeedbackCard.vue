@@ -2,6 +2,7 @@
   <!-- v-if="show" -->
   <div
     class="jus-import-feedback-card"
+    :class="{'extra-margin-top': showReplicate}"
   >
     <div class="jus-import-feedback-card-header">
       <el-tag
@@ -13,19 +14,20 @@
 
       <el-tooltip
         v-if="index === 2 && originalQuantity > 1"
-        content="Replica a configuração da campanha à cima para esta."
+        content="Replica a configuração da campanha acima para as demais."
         placement="top"
         :open-delay="500"
       >
-        <el-checkbox
+        <el-checkbox-group
           v-model="mappedCampaign.replicate"
-          size="mini"
-          border
-          @change="handleReplicate($event, mappedCampaign, index)"
+          size="small"
         >
-          <i class="el-icon-top" />
-          Utilizar dados da campanha acima
-        </el-checkbox>
+          <el-checkbox-button
+            @change="handleReplicate($event, mappedCampaign, index)"
+          >
+            Utilizar dados da campanha acima
+          </el-checkbox-button>
+        </el-checkbox-group>
       </el-tooltip>
 
       <el-tag
@@ -433,12 +435,15 @@ export default {
         return activeSrategies.filter(s => !s.name.startsWith('[TST]'))
       }
     },
+
     negotiatorsList() {
       return this.$store.getters.workspaceMembersSorted
     },
+
     campaignTitle() {
       return this.campaignName ? this.campaignName : `Campanha ${this.index}`
     },
+
     isPaymentStrategy() {
       let isStrategy = false
       if (this.strategy && this.strategy.types) {
@@ -449,6 +454,10 @@ export default {
       } else {
         return false
       }
+    },
+
+    showReplicate() {
+      return this.index === 2 && this.originalQuantity > 1
     }
   },
 
@@ -618,6 +627,14 @@ export default {
 .jus-import-feedback-card {
   width: 100%;
   margin-top: 30px;
+
+  &.extra-margin-top {
+    margin-top: 56px;
+
+    .jus-import-feedback-card-header .el-checkbox-group {
+      margin-top: -36px;
+    }
+  }
 
   .jus-import-feedback-card-header {
     width: 100%;
