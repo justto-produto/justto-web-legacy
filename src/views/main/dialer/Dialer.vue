@@ -5,7 +5,7 @@
   >
     <div
       class="dialer__button"
-      @click="showPopover = !showPopover"
+      @click="toggleShowPopover"
     >
       <el-popover
         v-model="showPopover"
@@ -60,6 +60,7 @@ export default {
 
   data() {
     const user = new DialerUserModel()
+
     return {
       loading: false,
       visible: false,
@@ -145,8 +146,8 @@ export default {
 
   created() {
     this.setAppInstance(uuidv4())
-    window.removeEventListener('click', this.clickTracker)
-    window.addEventListener('click', this.clickTracker)
+    window.removeEventListener('click', this.clickTracker, false)
+    window.addEventListener('click', this.clickTracker, false)
   },
 
   methods: {
@@ -172,10 +173,10 @@ export default {
 
     clickTracker(event) {
       const dialerButton = document.querySelector('.dialer__button')
-      const clickIn = event.path.includes(dialerButton)
+      const clickIn = event.path.includes(dialerButton) || event.path.filter(item => Array(...(item?.classList || [])).includes('dialer__button')).length > 0
 
       if (!clickIn && this.showPopover) {
-        this.showPopover = !this.showPopover
+        this.toggleShowPopover()
       }
     },
 
@@ -192,162 +193,12 @@ export default {
       if (isBigger || isWaiting) this.open(current[0]?.number)
     },
 
-    doLogin() {
-      return this.dialerLogin(this.user)
-    },
-
-    drag(event) {
-      const { x, y } = event
-
-      this.top = (y - 15) > 0 ? (y - 15) : this.top
-      this.left = (x - 140) > 0 ? (x - 140) : this.left
-    },
-
     init() {
       this.activeAppToCall(true)
     },
 
-    login() {
-      this.registerSession = this.sipStack.newSession('register', {
-        events_listener: {
-          events: '*',
-          listener: this.eventHub
-        }
-      })
-
-      this.registerSession.register()
-    },
-
-    acceptCall(e) {
-      e.newSession.accept({
-        audio_remote: document.getElementById('remoteAudio'),
-        events_listener: {
-          events: '*',
-          listener: this.eventHub
-        }
-      })
-    },
-
-    acceptedCallConditions() {
-      this.loading = true
-
-      this.setAccountProperty({
-        ACCEPT_DIALER_TERMS: this.$moment().toISOString()
-      }).then(() => this.setAccountProperty({
-        REJECT_DIALER_TERMS: null
-      }))
-    },
-
-    rejectedCallConditions() {
-      this.loading = true
-
-      this.setAccountProperty({
-        ACCEPT_DIALER_TERMS: null
-      }).then(() => this.setAccountProperty({
-        REJECT_DIALER_TERMS: this.$moment().toISOString()
-      })).finally(() => {
-        this.close()
-      })
-    },
-
-    validateCallTerms() {
-      const text = 'Todas as ligações realizadas pela plataforma são gravadas e são disponibilizadas para os participantes da disputa e para os administradores dos times.<br><br>Você entende e concorda que a JUSTTO grave todas as suas ligações com as partes da disputa para auditorias futuras da negociação?'
-
-      return this.$confirm(text, 'Iniciando ligação', {
-        dangerouslyUseHTMLString: true,
-        closeOnClickModal: false,
-        confirmButtonText: 'Sim',
-        cancelButtonText: 'Não',
-        showClose: false,
-        center: true
-      }).then(() => {
-        this.acceptedCallConditions()
-        this.startCall()
-      }).catch(() => this.rejectedCallConditions())
-    },
-
-    revalidateCallTerms() {
-      const rejectDate = this.$moment(this.preferences.properties.REJECT_DIALER_TERMS).format('DD/MM/YYYY')
-      const text = `Não é possível realizar ligações porque em ${rejectDate} você não concordou em ter suas conversas gravadas e o sistema não oferece ligações sem monitoramento.`
-
-      return this.$confirm(text, 'Ops! Você não pode fazer ligações.', {
-        confirmButtonText: 'Ok, entendo',
-        cancelButtonText: 'Quero aceitar',
-        closeOnPressEscape: false,
-        closeOnClickModal: false,
-        showClose: false,
-        center: true
-      })
-    },
-
-    call() {
-      if (!this.hasAcceptTerms && !this.hasNotAcceptTerms) {
-        this.validateCallTerms()
-      } else if (this.hasNotAcceptTerms) {
-        this.revalidateCallTerms().then(this.close).catch(() => {
-          this.validateCallTerms()
-        })
-      } else if (this.hasAcceptTerms) {
-        this.startCall()
-      }
-    },
-
-    startCall() {
-      // this.loading = true
-
-      // this.addCall({
-      //   // disptueId,
-      //   // toRoleId,
-      //   // toRoleName,
-      //   number: `+55${this.number}`,
-      //   workspaceId: this.workspaceId,
-      //   teamName: this.workspaceTeamName,
-      //   appInstance: this.appInstance
-      // }).finally(() => {
-      //   this.loading = false
-      // })
-
-      // this.createNewCall(`+55${this.number}`).then(callInfo => {
-      //   this.$jusSegment('ligação', {
-      //     numebr: this.number,
-      //     ...callInfo
-      //   })
-      // }).catch(() => {
-      //   this.deleteCurrentCall()
-      // }).finally(() => {
-      //   this.loading = false
-      // })
-    },
-
-    shutdownCall() {
-      this.deleteCurrentCall()
-    },
-
-    eventHub(e) {
-      switch (e.type) {
-        case 'started':
-          this.login()
-          break
-        case 'i_new_call':
-          this.acceptCall(e)
-          break
-        case 'terminated':
-          this.clearCurrentCall()
-          break
-        default:
-          if (process.env.NODE_ENV === 'development') {
-            console.log(e)
-          }
-          break
-      }
-    },
-
-    close() {
-      return new Promise((resolve) => {
-        this.loading = false
-        this.visible = false
-        resolve()
-      })
+    toggleShowPopover() {
+      this.showPopover = !this.showPopover
     }
   }
 }

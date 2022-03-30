@@ -31,8 +31,9 @@
 
     <el-tooltip
       v-if="!isOverviewActive"
-      content="Discador JUSTTO"
-      placement="bottom"
+      :open-delay="800"
+      content="Discador"
+      placement="bottom-end"
     >
       <el-button class="ticket-header-container__dialer">
         <Dialer />
