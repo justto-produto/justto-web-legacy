@@ -458,6 +458,7 @@ export default {
               box-shadow: 0px 3px 6px #00000029;
               border-radius: 10px;
               padding: 8px;
+              word-break: break-word;
 
               .call-help__suggestion-balloon-label {
                 text-align: center;

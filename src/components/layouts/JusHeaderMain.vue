@@ -33,7 +33,7 @@ export default {
 
   computed: {
     isTicketMode() {
-      return this.$route?.name === 'ticket'
+      return ['ticket', 'negotiation'].includes(this.$route?.name)
     }
   },
 
