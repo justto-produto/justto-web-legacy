@@ -29,10 +29,15 @@
       class="ticket-header-container__actions"
     />
 
-    <Dialer
+    <el-tooltip
       v-if="!isOverviewActive"
-      class="ticket-header-container__dialer"
-    />
+      content="Discador JUSTTO"
+      placement="bottom"
+    >
+      <el-button class="ticket-header-container__dialer">
+        <Dialer />
+      </el-button>
+    </el-tooltip>
   </section>
 </template>
 
@@ -100,7 +105,9 @@ export default {
   }
 
   .ticket-header-container__dialer {
-    margin-left: 16px;
+    border-radius: 6px;
+    padding: 8px 2px;
+    margin-left: 8px;
   }
 }
 
