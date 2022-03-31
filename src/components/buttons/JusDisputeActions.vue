@@ -592,6 +592,10 @@
     <ConfirmActionDialog
       ref="confirmActionDialog"
     />
+
+    <SetSettledDialog
+      ref="setSettledDialog"
+    />
   </div>
 </template>
 
@@ -606,7 +610,8 @@ export default {
   components: {
     JusDragArea,
     ConfirmActionDialog: () => import('@/components/dialogs/ConfirmActionDialog'),
-    NotifyOnCompanyAnalysis: () => import('@/components/dialogs/NotifyOnCompanyAnalysis.vue')
+    NotifyOnCompanyAnalysis: () => import('@/components/dialogs/NotifyOnCompanyAnalysis'),
+    SetSettledDialog: () => import('@/components/dialogs/SetSettedDialog')
   },
 
   props: {
@@ -670,7 +675,8 @@ export default {
       ghostMode: 'ghostMode',
       dropLawsuitReasons: 'getDropLawsuitReasonsArray',
       userPreferences: 'userPreferences',
-      isRecovery: 'isWorkspaceRecovery'
+      isRecovery: 'isWorkspaceRecovery',
+      features: 'getMappedFeaturesAndModules'
     }),
 
     unsettledReasonsSorted() {
@@ -1012,7 +1018,9 @@ export default {
               }
             })
           } else {
-            if (this.dispute.status === 'CHECKOUT' || this.dispute.status === 'ACCEPTED') {
+            if (!this.features.DRAFT_MANAGEMENT && this.dispute.status === 'RUNNING') {
+              this.$refs.setSettledDialog.open()
+            } else if (this.dispute.status === 'CHECKOUT' || this.dispute.status === 'ACCEPTED') {
               this.ticketResumeDialogVisible = true
             } else {
               this.openSettledDialog(action)
