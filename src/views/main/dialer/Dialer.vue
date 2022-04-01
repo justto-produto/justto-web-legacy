@@ -3,24 +3,56 @@
     v-if="canAccessDialer"
     class="dialer"
   >
-    <div
-      class="dialer__button"
-      @click="toggleShowPopover"
+    <el-tooltip
+      content="Top Left prompts info"
+      placement="bottom-start"
+      :open-delay="250"
     >
-      <el-popover
-        v-model="showPopover"
-        trigger="manual"
-        placement="left"
-        popper-class="dialer-popover"
+      <p
+        v-if="enabledScheduledCalls"
+        slot="content"
       >
-        <CallQueue />
+        Estamos ligando automaticamente para você.
+        <br>
+        <br>
+        Clique aqui para pausar a discagem automática!
+      </p>
 
-        <JusIcon
-          slot="reference"
-          :icon="dialerIcon"
-        />
-      </el-popover>
-    </div>
+      <p
+        v-else
+        slot="content"
+      >
+        Não estamos ligando automaticamente pra você.
+        <br>
+        <br>
+        Clique aqui para iniciar a discagem automática para disputas!
+      </p>
+
+      <div
+        class="dialer__button"
+        @click="clickInIcon"
+      >
+        <el-popover
+          v-model="showPopover"
+          trigger="manual"
+          placement="left"
+          popper-class="dialer-popover"
+        >
+          <div>
+            <CallQueue
+              ref="callsQueue"
+              :loading="loading"
+            />
+          </div>
+
+          <JusIcon
+            slot="reference"
+            :icon="dialerIcon"
+            @hover="toggleShowPopover(true)"
+          />
+        </el-popover>
+      </div>
+    </el-tooltip>
 
     <div
       v-if="isActiveToCall"
@@ -85,6 +117,7 @@ export default {
       appInstance: 'getAppInstance',
       preferences: 'userPreferences',
       currentCall: 'getCurrentCallId',
+      enabledScheduledCalls: 'canMakeScheduledCalls',
       isActiveToCall: 'isActiveToCall',
       canAccessDialer: 'canAccessDialer',
       currentActiveCall: 'getCurrentCall',
@@ -104,10 +137,10 @@ export default {
     dialerIcon() {
       const activeAutoCall = this.preferences?.properties?.AVAILABLE_SCHEDULED_CALLS === 'AVAILABLE'
 
-      if (!this.listCallQueue.length && !this.scheduledCallsQueue.length) {
-        return 'phone-off'
-      } else if (activeAutoCall && this.scheduledCallsQueue.length) {
+      if (activeAutoCall) {
         return 'phone-auto'
+      } else if (!this.listCallQueue.length && !this.scheduledCallsQueue.length) {
+        return 'phone-off'
       } else {
         return 'phone-active'
       }
@@ -165,6 +198,7 @@ export default {
       'startServerStatus',
       'changeServerStatus',
       'setAccountProperty',
+      'loadAccountProperty',
       'refreshServiceStatus',
       'startDialerRequester',
       'availableServerStatus',
@@ -176,7 +210,7 @@ export default {
       const clickIn = event.path.includes(dialerButton) || event.path.filter(item => Array(...(item?.classList || [])).includes('dialer__button')).length > 0
 
       if (!clickIn && this.showPopover) {
-        this.toggleShowPopover()
+        this.toggleShowPopover(false)
       }
     },
 
@@ -197,8 +231,22 @@ export default {
       this.activeAppToCall(true)
     },
 
-    toggleShowPopover() {
-      this.showPopover = !this.showPopover
+    toggleShowPopover(value) {
+      if (this.showPopover !== value) this.showPopover = value
+
+      this.$emit('toggle', this.showPopover)
+    },
+
+    clickInIcon() {
+      this.loading = true
+
+      this.setAccountProperty({
+        AVAILABLE_SCHEDULED_CALLS: { true: 'AVAILABLE', false: 'UNAVAILABLE' }[!this.enabledScheduledCalls]
+      }).finally(() => {
+        this.loadAccountProperty().finally(() => {
+          this.loading = false
+        })
+      })
     }
   }
 }

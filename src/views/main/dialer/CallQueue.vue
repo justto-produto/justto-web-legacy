@@ -1,5 +1,8 @@
 <template>
-  <article class="call-queue__container">
+  <article
+    v-loading="loading"
+    class="call-queue__container"
+  >
     <div
       v-if="isActiveToCall || hasCallInQueue"
       class="call-queue__container-feedback"
@@ -144,12 +147,28 @@
       v-if="callQueue.length === 0"
       class="call-queue__container-empty-queue"
     >
-      <jus-icon
-        class="call-queue__container-empty-queue-icon"
-        icon="checked"
+      <i
+        v-if="enabledScheduledCalls && scheduledCallsQueue.length > 0"
+        class="el-icon-loading"
       />
 
-      <div class="call-queue__container-empty-queue-label">
+      <jus-icon
+        v-else
+        class="call-queue__container-empty-queue-icon"
+        :icon="enabledScheduledCalls ? 'clock' : 'checked'"
+      />
+
+      <div
+        v-if="enabledScheduledCalls"
+        class="call-queue__container-empty-queue-label"
+      >
+        {{ scheduledCallsQueue.length ? 'Localizando sua próxima chamada.' : 'Sem chamadas agendadas.' }}
+      </div>
+
+      <div
+        v-else
+        class="call-queue__container-empty-queue-label"
+      >
         Sem ligações pendentes
       </div>
     </div>
@@ -176,6 +195,13 @@ export default {
     ScheduledCallsQueue: () => import('./ScheduledCallsQueue')
   },
 
+  props: {
+    loading: {
+      type: Boolean,
+      default: false
+    }
+  },
+
   data: () => ({
     endingCall: false
   }),
@@ -183,17 +209,19 @@ export default {
   computed: {
     ...mapGetters({
       dialer: 'getDialer',
+      isOpenCall: 'isOpenCall',
       callQueue: 'getCallQueue',
-      currentAppInstance: 'getAppInstance',
+      isJusttoDev: 'isJusttoDev',
+      currentCall: 'getCurrentCall',
+      isJusttoAdmin: 'isJusttoAdmin',
+      isAdminProfile: 'isAdminProfile',
       isActiveToCall: 'isActiveToCall',
       hasCallInQueue: 'hasCallInQueue',
-      isOpenCall: 'isOpenCall',
-      currentCall: 'getCurrentCall',
-      isPendingToAnswerCurrentCall: 'isPendingToAnswerCurrentCall',
-      isAdminProfile: 'isAdminProfile',
-      isJusttoAdmin: 'isJusttoAdmin',
       netSpeed: 'getSipConnectionSpeed',
-      isJusttoDev: 'isJusttoDev'
+      currentAppInstance: 'getAppInstance',
+      scheduledCallsQueue: 'getScheduledCallsQueue',
+      enabledScheduledCalls: 'canMakeScheduledCalls',
+      isPendingToAnswerCurrentCall: 'isPendingToAnswerCurrentCall'
     }),
 
     netSpeedMbps() {
@@ -230,8 +258,6 @@ export default {
     }),
 
     answerCall(answer) {
-      console.log('answerCall', answer)
-
       this.answerCurrentCall(answer).then(hasConected => {
         if (answer) {
           if (hasConected) {
@@ -412,6 +438,10 @@ export default {
 
     .call-queue__container-empty-queue-label {
       font-weight: 600;
+    }
+
+    .el-icon-loading::before {
+      font-size: 24px;
     }
   }
 

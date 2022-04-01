@@ -4,6 +4,7 @@
     :src="iconPath"
     draggable="false"
     @click="$emit('click')"
+    @mouseover="$emit('hover')"
   >
 </template>
 
