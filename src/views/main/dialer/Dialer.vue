@@ -45,11 +45,21 @@
             />
           </div>
 
-          <JusIcon
+          <span
             slot="reference"
-            :icon="dialerIcon"
-            @hover="toggleShowPopover(true)"
-          />
+            class="reference"
+          >
+            <JusIcon
+              :icon="dialerIcon"
+              @hover="toggleShowPopover(true)"
+            />
+
+            <el-badge
+              :hidden="!isPhoneActive"
+              is-dot
+              :class="{'el-icon-pulse': isPhoneActive}"
+            />
+          </span>
         </el-popover>
       </div>
     </el-tooltip>
@@ -135,7 +145,7 @@ export default {
     },
 
     dialerIcon() {
-      const activeAutoCall = this.preferences?.properties?.AVAILABLE_SCHEDULED_CALLS === 'AVAILABLE'
+      const activeAutoCall = this.preferences?.properties?.AVAILABLE_SCHEDULED_CALLS === 'AVAILABLE' && !this.listCallQueue.length
 
       if (activeAutoCall) {
         return 'phone-auto'
@@ -145,6 +155,10 @@ export default {
         return 'phone-active'
       }
       // return !this.isActiveToCall ? 'phone-off' : [CALL_STATUS.ACTIVE_CALL].includes(this.currentActiveCall?.status) ? 'phone-active' : 'tts'
+    },
+
+    isPhoneActive() {
+      return this.dialerIcon === 'phone-active'
     },
 
     hasAcceptTerms() {
@@ -269,6 +283,10 @@ export default {
           height: 20px;
           width: 20px;
         }
+
+        .reference {
+          display: flex;
+        }
       }
     }
   }
@@ -276,7 +294,7 @@ export default {
   .dialer__container {
 
     background-color: white;
-    border: solid $--color-primary 1px;
+    // border: solid $--color-primary 1px;
     border-radius: 10px;
 
     display: flex;
@@ -286,7 +304,7 @@ export default {
       width: 100%;
       padding: 8px;
 
-      border-bottom: solid $--color-primary 2px;
+      // border-bottom: solid $--color-primary 2px;
 
       display: flex;
       justify-content: space-between;
