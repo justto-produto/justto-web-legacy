@@ -268,6 +268,16 @@ const router = new Router({
       }
     },
     {
+      name: 'recover-account',
+      path: '/recover-account',
+      component: () => import(/* webpackChunkName: "recoverAccount" */ '@/views/external/RecoverAccount'),
+      meta: {
+        requiresAuth: false,
+        trackPage: true,
+        title: 'Justto - Recuperar senha'
+      }
+    },
+    {
       name: 'error',
       path: '/error',
       component: () => import(/* webpackChunkName: "jusError" */ '@/components/layouts/JusError'),
