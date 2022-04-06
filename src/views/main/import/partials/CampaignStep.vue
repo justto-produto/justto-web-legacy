@@ -154,7 +154,7 @@
             </span>
 
             <span v-if="duplicatedActionToDo === 'UPDATE'">
-              já está cadastrada e <strong>será atuailzada</strong> com os novos dados
+              já está cadastrada e <strong>será atualizada</strong> com os novos dados
               (campanha {{ d.duplicatedBy.campaignName }}).
             </span>
 
