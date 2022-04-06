@@ -700,6 +700,7 @@ export default {
       'getDisputeNotes',
       'resetRecipients',
       'getDisputeStatuses',
+      'setAccountProperty',
       'getLastInteractions',
       'disputeSetVisualized',
       'getQuickReplyTemplates',
@@ -870,6 +871,7 @@ export default {
 
     fetchData() {
       this.loadingDispute = true
+      this.setAccountProperty({ PREFERRED_INTERFACE: 'DISPUTE' })
       this.socketAction('subscribe', this.id)
       this.$store.commit('clearDisputeOccurrences')
       this.$store.dispatch('getDispute', this.id).then(dispute => {
