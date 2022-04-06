@@ -89,9 +89,9 @@ export default {
       'getTicketOverviewInfo'
     ]),
 
-    fetchData(id) {
+    async fetchData(id) {
       this.socketAction('subscribe', id)
-      this.cleanRecentMessages()
+      await this.cleanRecentMessages()
       this.getTicketOverview(id).catch(error => this.$jusNotification({ error }))
       this.getTicketOverviewInfo(id)
       this.getTicketOverviewParties(id).then(() => {
