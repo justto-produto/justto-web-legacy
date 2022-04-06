@@ -56,13 +56,13 @@
         </el-button>
       </div>
 
-      <div v-if="!isOpenCall && hasCallInQueue">
+      <div v-if="(!isOpenCall && hasCallInQueue) || true">
         <div v-if="isPendingToAnswerCurrentCall">
           <p>Entrando na chamada</p>
         </div>
 
         <div
-          v-else
+          v-else-if="true"
           class="waiting-dialer"
         >
           <p>
@@ -101,6 +101,17 @@
             Adquira discadores dedicados
           </el-button>
         </div>
+      </div>
+
+      <div v-if="!isInDispute && hasCallInQueue">
+        <el-button
+          size="mini"
+          type="secondary"
+          icon="el-icon-phone-outline"
+          @click="redirectToDispute"
+        >
+          <span>Ir para a disputa.</span>
+        </el-button>
       </div>
     </div>
 
@@ -219,6 +230,7 @@ export default {
       hasCallInQueue: 'hasCallInQueue',
       netSpeed: 'getSipConnectionSpeed',
       currentAppInstance: 'getAppInstance',
+      disputeInterface: 'preferedInterface',
       scheduledCallsQueue: 'getScheduledCallsQueue',
       enabledScheduledCalls: 'canMakeScheduledCalls',
       isPendingToAnswerCurrentCall: 'isPendingToAnswerCurrentCall'
@@ -238,6 +250,14 @@ export default {
       const success = 'Conexão estável.'
 
       return this.netSpeed <= 1024 ? danger : this.netSpeed <= (1024 * 5) ? warning : success
+    },
+
+    currentDisputeId() {
+      return this.$route.params?.id
+    },
+
+    isInDispute() {
+      return ['dispute', 'ticket'].includes(this.$route?.name)
     }
   },
 
@@ -262,7 +282,7 @@ export default {
         if (answer) {
           if (hasConected) {
             this.$jusSegment('START_DIALER_CALL', { ...this.currentCall })
-            this.redirectToDispute()
+            // this.redirectToDispute()
           } else {
             this.$jusNotification({
               title: 'Ops!',
@@ -275,12 +295,10 @@ export default {
     },
 
     redirectToDispute() {
-      if (this.$route.name === 'ticket' && Number(this.$route.params.id) === this.currentCall.disputeId) {
-        // Está na rota certa
-      } else {
-        const path = `/negotiation/${this.currentCall.disputeId}`
-        this.$router.push({ path })
-      }
+      const { disputeId } = this.currentCall
+      const path = this.disputeInterface === 'NEGOTIATION' ? `/negotiation/${disputeId}` : `management/dispute/${disputeId}`
+
+      this.$router.push({ path })
     },
 
     remove(id) {
@@ -332,19 +350,22 @@ export default {
   flex-direction: column;
   gap: 16px;
   min-width: 300px;
+  width: 100%;
 
   .call-queue__container-feedback {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 8px;
+    width: 100%;
 
     * {
       text-align: center;
     }
 
     div {
-      width: 100%;
+      display: flex;
+      justify-content: center;
 
       .in-call-btn {
         cursor: text;
@@ -381,6 +402,9 @@ export default {
       .waiting-dialer {
         max-width: 25vw;
         word-break: break-word;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
 
         .load-skeleton {
           .el-skeleton {
@@ -429,6 +453,7 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     gap: 8px;
 
     .call-queue__container-empty-queue-icon {
