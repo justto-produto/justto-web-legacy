@@ -1368,13 +1368,14 @@ export default {
     },
 
     async openEditNegotiatorsDialog() {
-      const workspaceNegotiators = await this.$store.dispatch('getNegotiators') || []
-      const workspaceNegotiatorsIds = workspaceNegotiators.map(({ id }) => id) || []
+      const workspaceNegotiatorsIds = this.workspaceNegotiators.map(({ value }) => value) || []
 
       this.modalLoading = false
+
       this.disputeNegotiators = this.dispute.disputeRoles.filter(member => {
         return member.roles.includes('NEGOTIATOR') && !member.archived && workspaceNegotiatorsIds.includes(member.personId)
       }).map(member => member.personId)
+
       this.editNegotiatorDialogVisible = true
     },
 

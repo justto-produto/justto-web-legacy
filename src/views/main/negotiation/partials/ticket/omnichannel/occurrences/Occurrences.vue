@@ -80,7 +80,7 @@ export default {
       ticket: 'getTicketOverview',
       filter: 'getOccurrencesFilter',
       isLoading: 'isOccurrencesLoading',
-      occurrences: 'getOccurrencesList',
+      occurrencesList: 'getOccurrencesList',
       messageType: 'getEditorMessageType',
       isPrinting: 'getExportTicketModalVisible'
     }),
@@ -95,6 +95,10 @@ export default {
 
     id() {
       return Number(this.$route.params.id)
+    },
+
+    occurrences() {
+      return this.occurrencesList.filter(({ disputeId }) => [null, this.id].includes(disputeId))
     },
 
     dispute() {
@@ -127,12 +131,7 @@ export default {
 
     eventBus.$on(events.TICKET_CHANGE.callback, this.resetTicket)
 
-    if (Number(this.lastMessage.disputeId) !== Number(this.id)) {
-      const id = Number(location.href.split('/').slice(-1).pop())
-
-      this.resetTicket(id)
-    }
-
+    this.resetTicket(this.id)
     this.adjustScroll(true)
   },
 

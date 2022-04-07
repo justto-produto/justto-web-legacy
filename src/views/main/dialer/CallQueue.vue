@@ -1,5 +1,8 @@
 <template>
-  <article class="call-queue__container">
+  <article
+    v-loading="loading"
+    class="call-queue__container"
+  >
     <div
       v-if="isActiveToCall || hasCallInQueue"
       class="call-queue__container-feedback"
@@ -110,6 +113,7 @@
         <div class="call-queue__container-call-queue-line-item">
           #{{ call.disputeId }} ({{ $tc(`ticket-status.${call.disputeStatus}`) }})
         </div>
+
         <el-tag
           class="call-queue__container-call-queue-line-item"
           size="mini"
@@ -128,8 +132,9 @@
         </div>
 
         <el-button
+          :disabled="endingCall"
           type="danger"
-          icon="el-icon-delete"
+          :icon="endingCall ? 'el-icon-loading' : 'el-icon-delete'"
           size="mini"
           circle
           plain
@@ -142,12 +147,28 @@
       v-if="callQueue.length === 0"
       class="call-queue__container-empty-queue"
     >
-      <jus-icon
-        class="call-queue__container-empty-queue-icon"
-        icon="checked"
+      <i
+        v-if="enabledScheduledCalls && scheduledCallsQueue.length > 0"
+        class="el-icon-loading"
       />
 
-      <div class="call-queue__container-empty-queue-label">
+      <jus-icon
+        v-else
+        class="call-queue__container-empty-queue-icon"
+        :icon="enabledScheduledCalls ? 'clock' : 'checked'"
+      />
+
+      <div
+        v-if="enabledScheduledCalls"
+        class="call-queue__container-empty-queue-label"
+      >
+        {{ scheduledCallsQueue.length ? 'Localizando sua próxima chamada.' : 'Sem chamadas agendadas.' }}
+      </div>
+
+      <div
+        v-else
+        class="call-queue__container-empty-queue-label"
+      >
         Sem ligações pendentes
       </div>
     </div>
@@ -165,11 +186,20 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 
+import { CALL_STATUS } from '@/constants/callStatus'
+
 export default {
   components: {
     CallHelp: () => import('@/components/dialogs/CallHelpWizard'),
     ScheduledCallSwitch: () => import('@/components/buttons/ScheduledCallSwitch'),
     ScheduledCallsQueue: () => import('./ScheduledCallsQueue')
+  },
+
+  props: {
+    loading: {
+      type: Boolean,
+      default: false
+    }
   },
 
   data: () => ({
@@ -179,17 +209,19 @@ export default {
   computed: {
     ...mapGetters({
       dialer: 'getDialer',
+      isOpenCall: 'isOpenCall',
       callQueue: 'getCallQueue',
-      currentAppInstance: 'getAppInstance',
+      isJusttoDev: 'isJusttoDev',
+      currentCall: 'getCurrentCall',
+      isJusttoAdmin: 'isJusttoAdmin',
+      isAdminProfile: 'isAdminProfile',
       isActiveToCall: 'isActiveToCall',
       hasCallInQueue: 'hasCallInQueue',
-      isOpenCall: 'isOpenCall',
-      currentCall: 'getCurrentCall',
-      isPendingToAnswerCurrentCall: 'isPendingToAnswerCurrentCall',
-      isAdminProfile: 'isAdminProfile',
-      isJusttoAdmin: 'isJusttoAdmin',
       netSpeed: 'getSipConnectionSpeed',
-      isJusttoDev: 'isJusttoDev'
+      currentAppInstance: 'getAppInstance',
+      scheduledCallsQueue: 'getScheduledCallsQueue',
+      enabledScheduledCalls: 'canMakeScheduledCalls',
+      isPendingToAnswerCurrentCall: 'isPendingToAnswerCurrentCall'
     }),
 
     netSpeedMbps() {
@@ -226,8 +258,6 @@ export default {
     }),
 
     answerCall(answer) {
-      console.log('answerCall', answer)
-
       this.answerCurrentCall(answer).then(hasConected => {
         if (answer) {
           if (hasConected) {
@@ -254,7 +284,10 @@ export default {
     },
 
     remove(id) {
-      if (id === this.currentCall.id) {
+      const { ACTIVE_CALL, RECEIVING_CALL } = CALL_STATUS
+      const hasDialer = [ACTIVE_CALL, RECEIVING_CALL].includes(this.currentCall?.status)
+
+      if (id === this.currentCall?.id && hasDialer) {
         this.hangUpCall()
       } else {
         this.removeCall({ callId: id })
@@ -405,6 +438,10 @@ export default {
 
     .call-queue__container-empty-queue-label {
       font-weight: 600;
+    }
+
+    .el-icon-loading::before {
+      font-size: 24px;
     }
   }
 

@@ -253,10 +253,10 @@ export default {
   },
 
   setValidNumberInCall({ _ }, { interactionId, disputeId }) {
-    return axiosDispatch({
+    return interactionId ? axiosDispatch({
       url: `${disputeApi}/${disputeId}/interaction/${interactionId}/last-inbound`,
       method: 'PATCH'
-    })
+    }) : Promise.resolve()
   },
 
   SOCKET_KILL_ACTIVE_CALL({ dispatch, getters: { getDialer } }, callId) {

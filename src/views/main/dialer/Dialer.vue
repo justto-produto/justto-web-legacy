@@ -3,24 +3,66 @@
     v-if="canAccessDialer"
     class="dialer"
   >
-    <div
-      class="dialer__button"
-      @click="showPopover = !showPopover"
+    <el-tooltip
+      content="Top Left prompts info"
+      placement="bottom-start"
+      :open-delay="250"
     >
-      <el-popover
-        v-model="showPopover"
-        trigger="manual"
-        placement="left"
-        popper-class="dialer-popover"
+      <p
+        v-if="enabledScheduledCalls"
+        slot="content"
       >
-        <CallQueue />
+        Estamos ligando automaticamente para você.
+        <br>
+        <br>
+        Clique aqui para pausar a discagem automática!
+      </p>
 
-        <JusIcon
-          slot="reference"
-          :icon="dialerIcon"
-        />
-      </el-popover>
-    </div>
+      <p
+        v-else
+        slot="content"
+      >
+        Não estamos ligando automaticamente pra você.
+        <br>
+        <br>
+        Clique aqui para iniciar a discagem automática para disputas!
+      </p>
+
+      <div
+        class="dialer__button"
+        @click="clickInIcon"
+      >
+        <el-popover
+          v-model="showPopover"
+          trigger="manual"
+          placement="left"
+          popper-class="dialer-popover"
+        >
+          <div>
+            <CallQueue
+              ref="callsQueue"
+              :loading="loading"
+            />
+          </div>
+
+          <span
+            slot="reference"
+            class="reference"
+          >
+            <JusIcon
+              :icon="dialerIcon"
+              @hover="toggleShowPopover(true)"
+            />
+
+            <el-badge
+              :hidden="!isPhoneActive"
+              is-dot
+              :class="{'el-icon-pulse': isPhoneActive}"
+            />
+          </span>
+        </el-popover>
+      </div>
+    </el-tooltip>
 
     <div
       v-if="isActiveToCall"
@@ -60,6 +102,7 @@ export default {
 
   data() {
     const user = new DialerUserModel()
+
     return {
       loading: false,
       visible: false,
@@ -84,10 +127,12 @@ export default {
       appInstance: 'getAppInstance',
       preferences: 'userPreferences',
       currentCall: 'getCurrentCallId',
+      enabledScheduledCalls: 'canMakeScheduledCalls',
       isActiveToCall: 'isActiveToCall',
       canAccessDialer: 'canAccessDialer',
       currentActiveCall: 'getCurrentCall',
       workspaceTeamName: 'workspaceTeamName',
+      scheduledCallsQueue: 'getScheduledCallsQueue',
       isPendingToAnswerCurrentCall: 'isPendingToAnswerCurrentCall'
     }),
 
@@ -100,7 +145,20 @@ export default {
     },
 
     dialerIcon() {
-      return !this.isActiveToCall ? 'not-main-phone-active' : [CALL_STATUS.ACTIVE_CALL].includes(this.currentActiveCall?.status) ? 'phone-active' : 'tts'
+      const activeAutoCall = this.preferences?.properties?.AVAILABLE_SCHEDULED_CALLS === 'AVAILABLE' && !this.listCallQueue.length
+
+      if (activeAutoCall) {
+        return 'phone-auto'
+      } else if (!this.listCallQueue.length && !this.scheduledCallsQueue.length) {
+        return 'phone-off'
+      } else {
+        return 'phone-active'
+      }
+      // return !this.isActiveToCall ? 'phone-off' : [CALL_STATUS.ACTIVE_CALL].includes(this.currentActiveCall?.status) ? 'phone-active' : 'tts'
+    },
+
+    isPhoneActive() {
+      return this.dialerIcon === 'phone-active'
     },
 
     hasAcceptTerms() {
@@ -135,8 +193,8 @@ export default {
 
   created() {
     this.setAppInstance(uuidv4())
-    window.removeEventListener('click', this.clickTracker)
-    window.addEventListener('click', this.clickTracker)
+    window.removeEventListener('click', this.clickTracker, false)
+    window.addEventListener('click', this.clickTracker, false)
   },
 
   methods: {
@@ -154,6 +212,7 @@ export default {
       'startServerStatus',
       'changeServerStatus',
       'setAccountProperty',
+      'loadAccountProperty',
       'refreshServiceStatus',
       'startDialerRequester',
       'availableServerStatus',
@@ -162,10 +221,10 @@ export default {
 
     clickTracker(event) {
       const dialerButton = document.querySelector('.dialer__button')
-      const clickIn = event.path.includes(dialerButton)
+      const clickIn = event.path.includes(dialerButton) || event.path.filter(item => Array(...(item?.classList || [])).includes('dialer__button')).length > 0
 
       if (!clickIn && this.showPopover) {
-        this.showPopover = !this.showPopover
+        this.toggleShowPopover(false)
       }
     },
 
@@ -182,161 +241,25 @@ export default {
       if (isBigger || isWaiting) this.open(current[0]?.number)
     },
 
-    doLogin() {
-      return this.dialerLogin(this.user)
-    },
-
-    drag(event) {
-      const { x, y } = event
-
-      this.top = (y - 15) > 0 ? (y - 15) : this.top
-      this.left = (x - 140) > 0 ? (x - 140) : this.left
-    },
-
     init() {
       this.activeAppToCall(true)
     },
 
-    login() {
-      this.registerSession = this.sipStack.newSession('register', {
-        events_listener: {
-          events: '*',
-          listener: this.eventHub
-        }
-      })
+    toggleShowPopover(value) {
+      if (this.showPopover !== value) this.showPopover = value
 
-      this.registerSession.register()
+      this.$emit('toggle', this.showPopover)
     },
 
-    acceptCall(e) {
-      e.newSession.accept({
-        audio_remote: document.getElementById('remoteAudio'),
-        events_listener: {
-          events: '*',
-          listener: this.eventHub
-        }
-      })
-    },
-
-    acceptedCallConditions() {
+    clickInIcon() {
       this.loading = true
 
       this.setAccountProperty({
-        ACCEPT_DIALER_TERMS: this.$moment().toISOString()
-      }).then(() => this.setAccountProperty({
-        REJECT_DIALER_TERMS: null
-      }))
-    },
-
-    rejectedCallConditions() {
-      this.loading = true
-
-      this.setAccountProperty({
-        ACCEPT_DIALER_TERMS: null
-      }).then(() => this.setAccountProperty({
-        REJECT_DIALER_TERMS: this.$moment().toISOString()
-      })).finally(() => {
-        this.close()
-      })
-    },
-
-    validateCallTerms() {
-      const text = 'Todas as ligações realizadas pela plataforma são gravadas e são disponibilizadas para os participantes da disputa e para os administradores dos times.<br><br>Você entende e concorda que a JUSTTO grave todas as suas ligações com as partes da disputa para auditorias futuras da negociação?'
-
-      return this.$confirm(text, 'Iniciando ligação', {
-        dangerouslyUseHTMLString: true,
-        closeOnClickModal: false,
-        confirmButtonText: 'Sim',
-        cancelButtonText: 'Não',
-        showClose: false,
-        center: true
-      }).then(() => {
-        this.acceptedCallConditions()
-        this.startCall()
-      }).catch(() => this.rejectedCallConditions())
-    },
-
-    revalidateCallTerms() {
-      const rejectDate = this.$moment(this.preferences.properties.REJECT_DIALER_TERMS).format('DD/MM/YYYY')
-      const text = `Não é possível realizar ligações porque em ${rejectDate} você não concordou em ter suas conversas gravadas e o sistema não oferece ligações sem monitoramento.`
-
-      return this.$confirm(text, 'Ops! Você não pode fazer ligações.', {
-        confirmButtonText: 'Ok, entendo',
-        cancelButtonText: 'Quero aceitar',
-        closeOnPressEscape: false,
-        closeOnClickModal: false,
-        showClose: false,
-        center: true
-      })
-    },
-
-    call() {
-      if (!this.hasAcceptTerms && !this.hasNotAcceptTerms) {
-        this.validateCallTerms()
-      } else if (this.hasNotAcceptTerms) {
-        this.revalidateCallTerms().then(this.close).catch(() => {
-          this.validateCallTerms()
+        AVAILABLE_SCHEDULED_CALLS: { true: 'AVAILABLE', false: 'UNAVAILABLE' }[!this.enabledScheduledCalls]
+      }).finally(() => {
+        this.loadAccountProperty().finally(() => {
+          this.loading = false
         })
-      } else if (this.hasAcceptTerms) {
-        this.startCall()
-      }
-    },
-
-    startCall() {
-      // this.loading = true
-
-      // this.addCall({
-      //   // disptueId,
-      //   // toRoleId,
-      //   // toRoleName,
-      //   number: `+55${this.number}`,
-      //   workspaceId: this.workspaceId,
-      //   teamName: this.workspaceTeamName,
-      //   appInstance: this.appInstance
-      // }).finally(() => {
-      //   this.loading = false
-      // })
-
-      // this.createNewCall(`+55${this.number}`).then(callInfo => {
-      //   this.$jusSegment('ligação', {
-      //     numebr: this.number,
-      //     ...callInfo
-      //   })
-      // }).catch(() => {
-      //   this.deleteCurrentCall()
-      // }).finally(() => {
-      //   this.loading = false
-      // })
-    },
-
-    shutdownCall() {
-      this.deleteCurrentCall()
-    },
-
-    eventHub(e) {
-      switch (e.type) {
-        case 'started':
-          this.login()
-          break
-        case 'i_new_call':
-          this.acceptCall(e)
-          break
-        case 'terminated':
-          this.clearCurrentCall()
-          break
-        default:
-          if (process.env.NODE_ENV === 'development') {
-            console.log(e)
-          }
-          break
-      }
-    },
-
-    close() {
-      return new Promise((resolve) => {
-        this.loading = false
-        this.visible = false
-        resolve()
       })
     }
   }
@@ -350,7 +273,7 @@ export default {
   .dialer__button {
     text-align: center;
     cursor: pointer;
-    margin: 0px 16px 0 0;
+    margin: 0 8px 2px;
 
     span {
       .el-popover__reference-wrapper {
@@ -360,6 +283,10 @@ export default {
           height: 20px;
           width: 20px;
         }
+
+        .reference {
+          display: flex;
+        }
       }
     }
   }
@@ -367,7 +294,7 @@ export default {
   .dialer__container {
 
     background-color: white;
-    border: solid $--color-primary 2px;
+    // border: solid $--color-primary 1px;
     border-radius: 10px;
 
     display: flex;
@@ -377,7 +304,7 @@ export default {
       width: 100%;
       padding: 8px;
 
-      border-bottom: solid $--color-primary 2px;
+      // border-bottom: solid $--color-primary 2px;
 
       display: flex;
       justify-content: space-between;
