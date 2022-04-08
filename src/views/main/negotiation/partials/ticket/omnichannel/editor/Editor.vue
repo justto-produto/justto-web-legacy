@@ -122,8 +122,9 @@ export default {
   computed: {
     ...mapGetters({
       activeTab: 'getActiveTab',
-      recipients: 'getEditorRecipients',
-      isJusttoAdmin: 'isJusttoAdmin'
+      isJusttoAdmin: 'isJusttoAdmin',
+      backups: 'getMessagesBackupById',
+      recipients: 'getEditorRecipients'
     }),
 
     tabs() {
@@ -157,6 +158,13 @@ export default {
     }
   },
 
+  watch: {
+    $route: {
+      deep: true,
+      handler: 'handleBackup'
+    }
+  },
+
   mounted() {
     eventBus.$on(events.EDITOR_FOCUS.callback, this.validateTabOnBeforeFocus)
   },
@@ -167,8 +175,23 @@ export default {
 
   methods: {
     ...mapActions([
+      'addRecipient',
+      'setEditorText',
+      'setNoteEditorText',
       'setOmnichannelActiveTab'
     ]),
+
+    handleBackup({ params: { id } }) {
+      const { tab, message, note, contacts } = this.backups(id)
+
+      if (tab) this.setOmnichannelActiveTab(tab)
+
+      if (contacts) contacts.map(contact => this.addRecipient(contact))
+
+      if (message) this.setEditorText(message)
+
+      if (note) this.setNoteEditorText(note)
+    },
 
     setTab(tab, _event) {
       this.setOmnichannelActiveTab(tab.name)
