@@ -256,7 +256,6 @@ export default {
               })
             })
             .catch(error => {
-              console.log(error?.response?.data)
               localStorage.removeItem('justoken')
               if (error.response && (error.response?.status === 401 || error.response.data.code === 'INVALID_CREDENTIALS')) {
                 this.mountError('E-mail não cadastrado ou senha incorreta.')
@@ -270,7 +269,6 @@ export default {
                   path: 'recover-account',
                   query: { email: this.loginForm.email }
                 })
-                console.log(this.loginForm.email)
               } else {
                 this.loadingText = this.getErrorMessage()
                 // setTimeout(this.doLogin, 6000)
