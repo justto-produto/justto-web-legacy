@@ -222,6 +222,7 @@
                 </el-tooltip>
               </div>
             </div>
+
             <el-tabs
               ref="messageTab"
               v-model="typingTab"
@@ -275,6 +276,7 @@
                         <b class="dispute-view__attach-counter">{{ selectedAttachments.length }}x</b>
                       </span>
                     </el-popover>
+
                     <ckeditor
                       v-if="!hasWhatsAppContactSelect"
                       ref="messageEditor"
@@ -284,6 +286,7 @@
                       class="dispute-view__quill-note"
                       type="classic"
                     />
+
                     <el-input
                       v-else
                       v-model="messageText"
@@ -435,6 +438,7 @@
 </template>
 
 <script>
+import { EditorBackup } from '@/models/message/editorBackup'
 import { isSimilarStrings, eventBus } from '@/utils'
 import { mapGetters, mapActions } from 'vuex'
 import { JusDragArea } from '@/components/JusDragArea'
@@ -640,14 +644,27 @@ export default {
       this.fetchData()
       this.disputeOccurrencesKey += 1
     },
+
     typingTab() {
       const { id } = this.$route.params
       this.getLastInteractions(id)
+      this.handleMessageBackup()
     },
+
     y(y) {
       const height = this.$refs.sectionMessages.offsetHeight - this.y
       this.setHeight(window.document.getElementById('app').clientHeight)
       this.sendMessageHeight = height >= 0 ? height : this.sendMessageHeight
+    },
+
+    messageText: {
+      deep: true,
+      handler: 'handleMessageBackup'
+    },
+
+    noteText: {
+      deep: true,
+      handler: 'handleMessageBackup'
     }
   },
 
@@ -699,6 +716,7 @@ export default {
       'disfavorTicket',
       'getDisputeNotes',
       'resetRecipients',
+      'setMessageBackup',
       'getDisputeStatuses',
       'setAccountProperty',
       'getLastInteractions',
@@ -1124,6 +1142,17 @@ export default {
         this.isDeletingRole = false
         this.deletingRoleText = 'Por favor, aguarde enquanto carregamos a disputa...'
       }, 4500)
+    },
+
+    handleMessageBackup() {
+      this.setMessageBackup(new EditorBackup({
+        disputeId: this.dispute.id,
+        message: this.messageText,
+        tab: { 1: 'MESSAGES', 2: 'NOTES', 3: 'OCCURRENCES' }[this.typingTab],
+        note: this.noteText,
+        type: this.hasWhatsAppContactSelect ? 'whatsapp' : 'email',
+        contacts: this.getEditorRecipients || []
+      }))
     }
   }
 }
