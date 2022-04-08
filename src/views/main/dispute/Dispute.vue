@@ -66,7 +66,12 @@
             :dispute="dispute"
           />
 
+          <NegotiationEditor
+            v-if="useTicketComponents"
+          />
+
           <div
+            v-else
             :style="{ height: sendMessageHeightComputed }"
             class="dispute-view__send-message"
           >
@@ -379,6 +384,7 @@
                     >
                       NOTA
                     </el-button>
+
                     <ckeditor
                       ref="noteEditor"
                       v-model="noteText"
@@ -388,6 +394,7 @@
                       type="classic"
                     />
                   </div>
+
                   <div class="dispute-view__send-message-actions note">
                     <el-button
                       size="medium"
@@ -416,12 +423,13 @@
     <!-- DADOS DO CASO -->
     <template slot="right-card">
       <TicketOverview
-        v-if="dispute && overviewType === 'TICKET'"
+        v-if="useTicketComponents"
         ref="disputeOverview"
         :show-overview="false"
         dispute-mode
         @addRecipient="clearDirectContacts"
       />
+
       <dispute-overview
         v-else-if="dispute && overviewType === 'DISPUTE'"
         ref="disputeOverview"
@@ -460,6 +468,7 @@ export default {
     VueDraggableResizable: () => import('vue-draggable-resizable'),
     DisputeQuickReplyEditor: () => import('@/components/layouts/DisuteQuickReplyEditor'),
     ExpiredDisputeAlert: () => import('@/components/dialogs/ExpiredDisputeAlert'),
+    NegotiationEditor: () => import('@/views/main/negotiation/partials/ticket/omnichannel/editor/Editor.vue'),
     JusDragArea
   },
 
@@ -513,16 +522,18 @@ export default {
 
   computed: {
     ...mapGetters([
-      'disputeAttachments',
-      'disputeStatuses',
-      'isJusttoAdmin',
       'ghostMode',
-      'quickReplyTemplates',
+      'getActiveTab',
+      'isJusttoAdmin',
       'loggedPersonId',
+      'disputeStatuses',
+      'disputeAttachments',
       'workspaceSubdomain',
       'isWorkspaceRecovery',
       'workspaceProperties',
-      'getEditorRecipients'
+      'getEditorRecipients',
+      'quickReplyTemplates',
+      'getMessagesBackupById'
     ]),
 
     isSmall() {
@@ -630,6 +641,10 @@ export default {
       }
 
       return ''
+    },
+
+    useTicketComponents() {
+      return this.dispute && this.overviewType === 'TICKET'
     }
   },
 
@@ -643,6 +658,8 @@ export default {
       this.socketAction('unsubscribe', oldId)
       this.fetchData()
       this.disputeOccurrencesKey += 1
+
+      this.handleRestoreBackup()
     },
 
     typingTab() {
@@ -657,12 +674,21 @@ export default {
       this.sendMessageHeight = height >= 0 ? height : this.sendMessageHeight
     },
 
+    getActiveTab(tab) {
+      this.handleTabClick({ name: { MESSAGES: '1', NOTES: '2', OCCURRENCES: '3' }[tab] })
+    },
+
     messageText: {
       deep: true,
       handler: 'handleMessageBackup'
     },
 
     noteText: {
+      deep: true,
+      handler: 'handleMessageBackup'
+    },
+
+    selectedContacts: {
       deep: true,
       handler: 'handleMessageBackup'
     }
@@ -712,10 +738,12 @@ export default {
   methods: {
     ...mapActions([
       'setHeight',
+      'addRecipient',
       'sendNegotiator',
       'disfavorTicket',
       'getDisputeNotes',
       'resetRecipients',
+      'verifyRecipient',
       'setMessageBackup',
       'getDisputeStatuses',
       'setAccountProperty',
@@ -820,6 +848,26 @@ export default {
     },
 
     startReply(params) {
+      if (this.useTicketComponents) {
+        const reply = {
+          disputeId: this.dispute.id,
+          type: params.type.toLowerCase(),
+          value: params.senders[0],
+          key: 'address',
+          inReplyTo: params.inReplyTo
+        }
+
+        this.verifyRecipient(reply)
+          .then((data) => {
+            if (data.value === 'AUTHORIZED') {
+              delete reply.disputeId
+              this.addRecipient(reply)
+            }
+          })
+
+        return
+      }
+
       const { type, senders } = params
       const messageType = type.toLowerCase()
 
@@ -841,6 +889,7 @@ export default {
       this.messageType = ''
       this.messageType = type
       this.handleTabClick({ name: '1' })
+      this.handleMessageBackup()
       this.$nextTick(() => this.ckeditorFocus(this.$refs.messageEditor))
     },
 
@@ -889,6 +938,7 @@ export default {
 
     fetchData() {
       this.loadingDispute = true
+      this.handleRestoreBackup()
       this.setAccountProperty({ PREFERRED_INTERFACE: 'DISPUTE' })
       this.socketAction('subscribe', this.id)
       this.$store.commit('clearDisputeOccurrences')
@@ -1144,13 +1194,37 @@ export default {
       }, 4500)
     },
 
+    handleRestoreBackup() {
+      const { tab, message, note, type, contacts } = this.getMessagesBackupById(this.dispute.id)
+
+      if (tab) {
+        this.handleTabClick({ name: { MESSAGES: '1', NOTES: '2', OCCURRENCES: '3' }[tab] })
+      }
+
+      if (type) { this.messageType = type }
+
+      if (contacts) contacts.map(contact => this.addRecipient(contact))
+
+      if (message) {
+        if (this.hasWhatsAppContactSelect || this.loadingTextarea) {
+          this.messageText = message
+        }
+      }
+
+      if (note) {
+        if (this.loadingTextarea) {
+          this.noteText = note
+        }
+      }
+    },
+
     handleMessageBackup() {
       this.setMessageBackup(new EditorBackup({
         disputeId: this.dispute.id,
         message: this.messageText,
         tab: { 1: 'MESSAGES', 2: 'NOTES', 3: 'OCCURRENCES' }[this.typingTab],
         note: this.noteText,
-        type: this.hasWhatsAppContactSelect ? 'whatsapp' : 'email',
+        type: this.messageType,
         contacts: this.getEditorRecipients || []
       }))
     }

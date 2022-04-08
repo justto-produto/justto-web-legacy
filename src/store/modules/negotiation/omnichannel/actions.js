@@ -183,7 +183,8 @@ const omnichannelActions = {
         externalIdentification,
         inReplyTo
       }
-      return validateCurrentId(disputeId, () => dispatch('sendemail', data))
+
+      return validateCurrentId(disputeId, () => dispatch('sendemail', data).then(() => dispatch('getDisputeOccurrences', disputeId)))
     } else if (type === 'whatsapp') {
       const data = {
         to,
@@ -191,14 +192,14 @@ const omnichannelActions = {
         externalIdentification,
         message: messageText.trim()
       }
-      return validateCurrentId(disputeId, () => dispatch('validateWhatsappMessage', { data, contact: recipients[0].value }))
+      return validateCurrentId(disputeId, () => dispatch('validateWhatsappMessage', { data, contact: recipients[0].value }).then(() => dispatch('getDisputeOccurrences', disputeId)))
     } else {
       const data = {
         roleId,
         message: messageEmail,
         email: recipients[0].value
       }
-      return validateCurrentId(disputeId, () => dispatch('sendNegotiator', { disputeId, data }))
+      return validateCurrentId(disputeId, () => dispatch('sendNegotiator', { disputeId, data }).then(() => dispatch('getDisputeOccurrences', disputeId)))
     }
   },
 
