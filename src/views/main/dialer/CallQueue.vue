@@ -20,7 +20,10 @@
         loop
       />
 
-      <div v-if="isActiveToCall && isOpenCall">
+      <div
+        v-if="isActiveToCall && isOpenCall"
+        class="call-queue__container-feedback-hangup"
+      >
         <el-button
           class="in-call-btn"
           type="text"
@@ -56,13 +59,13 @@
         </el-button>
       </div>
 
-      <div v-if="(!isOpenCall && hasCallInQueue) || true">
+      <div v-if="!isOpenCall && hasCallInQueue">
         <div v-if="isPendingToAnswerCurrentCall">
           <p>Entrando na chamada</p>
         </div>
 
         <div
-          v-else-if="true"
+          v-else
           class="waiting-dialer"
         >
           <p>
@@ -103,7 +106,7 @@
         </div>
       </div>
 
-      <div v-if="!isInDispute && hasCallInQueue">
+      <div v-if="!isInCorrectDispute && hasCallInQueue">
         <el-button
           size="mini"
           type="secondary"
@@ -214,7 +217,8 @@ export default {
   },
 
   data: () => ({
-    endingCall: false
+    endingCall: false,
+    forwardedDisputeId: null
   }),
 
   computed: {
@@ -258,6 +262,10 @@ export default {
 
     isInDispute() {
       return ['dispute', 'ticket'].includes(this.$route?.name)
+    },
+
+    isInCorrectDispute() {
+      return this.isInDispute && Number(this.currentCall?.disputeId) === Number(this.currentDisputeId)
     }
   },
 
@@ -297,8 +305,14 @@ export default {
     redirectToDispute() {
       const { disputeId } = this.currentCall
       const path = this.disputeInterface === 'NEGOTIATION' ? `/negotiation/${disputeId}` : `management/dispute/${disputeId}`
+      this.forwardedDisputeId = disputeId
 
       this.$router.push({ path })
+    },
+
+    backToFowwarded() {
+      this.forwardedDisputeId = null
+      history.back()
     },
 
     remove(id) {
@@ -328,9 +342,22 @@ export default {
       })
     },
 
-    handleCallUpdate(call) {
-      if (['COMPLETED_CALL'].includes(call?.status)) {
-        this.$jusSegment('END_DIALER_CALL', { ...call })
+    handleCallUpdate(call, oldCall) {
+      if ([oldCall?.status, call?.status].includes('COMPLETED_CALL')) {
+        this.$jusSegment('END_DIALER_CALL', { ...(call || oldCall) })
+
+        if (this.backToFowwarded) {
+          this.$confirm(`Você estava trabalhando na disputa <b>#${this.forwardedDisputeId}</b> antes de fazer a ligação telefônica.<br><br><b>Deseja voltar para ela?<b>`, `Voltar pra disputa #${this.forwardedDisputeId}`, {
+            confirmButtonText: `Sim, voltar pra disputa #${this.forwardedDisputeId}.`,
+            cancelButtonText: 'Não, permanecer nesta disputa.',
+            customClass: 'back-forward-dispute-confirm',
+            dangerouslyUseHTMLString: true,
+            closeOnClickModal: false,
+            closeOnPressEscape: true,
+            showClose: false,
+            center: true
+          }).then(this.backToFowwarded)
+        }
       } else if (['RECEIVING_CALL'].includes(call?.status)) {
         this.$refs.ringAudio.play()
         setTimeout(() => this.answerCall(true), 4000)
@@ -366,6 +393,7 @@ export default {
     div {
       display: flex;
       justify-content: center;
+      flex-direction: column;
 
       .in-call-btn {
         cursor: text;
@@ -470,8 +498,17 @@ export default {
     }
   }
 
+  .call-queue__back-button {
+    display: flex;
+    justify-content: center;
+  }
+
   // div:not(.el-dialog__wrapper):not(.el-collapse):not(.el-collapse>*) {
   //   z-index: 3000;
   // }
+}
+
+.back-forward-dispute-confirm {
+  min-width: 50vw;
 }
 </style>
