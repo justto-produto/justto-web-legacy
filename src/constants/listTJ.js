@@ -51,5 +51,10 @@ export default [
   { code: 522, sigla: 'TRT_22', name: 'TRT da 22ª Região' },
   { code: 523, sigla: 'TRT_23', name: 'TRT da 23ª Região' },
   { code: 524, sigla: 'TRT_24', name: 'TRT da 24ª Região' },
+  { code: 401, sigla: 'TRF_1', name: 'Brasília (TRF da 1ª Região)' },
+  { code: 402, sigla: 'TRF_2', name: 'Rio de Janeiro (TRF da 2ª Região)' },
+  { code: 403, sigla: 'TRF_3', name: 'São Paulo (TRF da 3ª Região)' },
+  { code: 404, sigla: 'TRF_4', name: 'Porto Alegre (TRF da 4ª Região)' },
+  { code: 405, sigla: 'TRF_5', name: 'Recife (TRF da 5ª Região)' },
   { code: 590, sigla: 'CSJT', name: 'Conselho Superior da Justiça do Trabalho' }
 ]

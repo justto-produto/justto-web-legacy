@@ -93,6 +93,12 @@ export default {
             .then(() => {
               // SEGMENT TRACK
               this.$jusSegment('Reset de senha', { userId: this.forgotForm.email })
+              this.$jusNotification({
+                title: 'Yay!',
+                message: 'Requisição de recuperação enviada com sucesso! Acesse seu email.',
+                type: 'success'
+              })
+              this.$router.push({ path: 'login' })
               this.showSuccess = true
               this.forgotForm.email = ''
               this.showLoading = false
