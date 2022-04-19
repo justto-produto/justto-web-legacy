@@ -363,7 +363,7 @@ export default {
       this.$refs.workspaceForm.validate(valid => {
         if (valid) {
           const selectedWorkspace = this.workspaces[this.workspaceForm.selectedWorkspaceIndex]
-          if (selectedWorkspace.person) {
+          if (selectedWorkspace.person && selectedWorkspace.person.id) {
             this.getMembersAndRedirect(selectedWorkspace)
           } else {
             this.$store.dispatch('ensureWorkspaceAccesss', selectedWorkspace.workspace.id).then((res) => {
