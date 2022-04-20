@@ -967,7 +967,8 @@ export default {
       'startNegotiation',
       'getDropLawsuitReasons',
       'cancelTicket',
-      'setAccountProperty'
+      'setAccountProperty',
+      'getDisputeStatuses'
     ]),
 
     redirectNegotiation() {
@@ -1024,6 +1025,7 @@ export default {
           break
         case 'unsettled':
           this.unsettledType = null
+          this.getDisputeStatuses('UNSETTLED')
           this.openSettledDialog(action)
           break
         case 'send-unsettled':
