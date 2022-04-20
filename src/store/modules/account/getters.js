@@ -12,6 +12,7 @@ const accountGetters = {
     return state.preferences?.properties?.DIALER_ACCESS !== 'UNAUTHORIZED' && getters.workspaceProperties?.WORKSPACE_DIALER_ACCESS !== 'UNAUTHORIZED'
   },
   canMakeScheduledCalls: state => state?.preferences?.properties?.AVAILABLE_SCHEDULED_CALLS === 'AVAILABLE',
+  preferedInterface: state => state?.preferences?.properties?.PREFERRED_INTERFACE || 'NEGOTIATION',
   getGlobalAuthenticationObject(state, getters) {
     return {
       headers: {

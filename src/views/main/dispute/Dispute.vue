@@ -66,7 +66,12 @@
             :dispute="dispute"
           />
 
+          <NegotiationEditor
+            v-if="useTicketComponents"
+          />
+
           <div
+            v-else
             :style="{ height: sendMessageHeightComputed }"
             class="dispute-view__send-message"
           >
@@ -222,6 +227,7 @@
                 </el-tooltip>
               </div>
             </div>
+
             <el-tabs
               ref="messageTab"
               v-model="typingTab"
@@ -275,6 +281,7 @@
                         <b class="dispute-view__attach-counter">{{ selectedAttachments.length }}x</b>
                       </span>
                     </el-popover>
+
                     <ckeditor
                       v-if="!hasWhatsAppContactSelect"
                       ref="messageEditor"
@@ -284,6 +291,7 @@
                       class="dispute-view__quill-note"
                       type="classic"
                     />
+
                     <el-input
                       v-else
                       v-model="messageText"
@@ -376,6 +384,7 @@
                     >
                       NOTA
                     </el-button>
+
                     <ckeditor
                       ref="noteEditor"
                       v-model="noteText"
@@ -385,6 +394,7 @@
                       type="classic"
                     />
                   </div>
+
                   <div class="dispute-view__send-message-actions note">
                     <el-button
                       size="medium"
@@ -413,12 +423,13 @@
     <!-- DADOS DO CASO -->
     <template slot="right-card">
       <TicketOverview
-        v-if="dispute && overviewType === 'TICKET'"
+        v-if="useTicketComponents"
         ref="disputeOverview"
         :show-overview="false"
         dispute-mode
         @addRecipient="clearDirectContacts"
       />
+
       <dispute-overview
         v-else-if="dispute && overviewType === 'DISPUTE'"
         ref="disputeOverview"
@@ -435,6 +446,7 @@
 </template>
 
 <script>
+import { EditorBackup } from '@/models/message/editorBackup'
 import { isSimilarStrings, eventBus } from '@/utils'
 import { mapGetters, mapActions } from 'vuex'
 import { JusDragArea } from '@/components/JusDragArea'
@@ -456,6 +468,7 @@ export default {
     VueDraggableResizable: () => import('vue-draggable-resizable'),
     DisputeQuickReplyEditor: () => import('@/components/layouts/DisuteQuickReplyEditor'),
     ExpiredDisputeAlert: () => import('@/components/dialogs/ExpiredDisputeAlert'),
+    NegotiationEditor: () => import('@/views/main/negotiation/partials/ticket/omnichannel/editor/Editor.vue'),
     JusDragArea
   },
 
@@ -509,16 +522,18 @@ export default {
 
   computed: {
     ...mapGetters([
-      'disputeAttachments',
-      'disputeStatuses',
-      'isJusttoAdmin',
       'ghostMode',
-      'quickReplyTemplates',
+      'getActiveTab',
+      'isJusttoAdmin',
       'loggedPersonId',
+      'disputeStatuses',
+      'disputeAttachments',
       'workspaceSubdomain',
       'isWorkspaceRecovery',
       'workspaceProperties',
-      'getEditorRecipients'
+      'getEditorRecipients',
+      'quickReplyTemplates',
+      'getMessagesBackupById'
     ]),
 
     isSmall() {
@@ -626,6 +641,10 @@ export default {
       }
 
       return ''
+    },
+
+    useTicketComponents() {
+      return this.dispute && this.overviewType === 'TICKET'
     }
   },
 
@@ -639,15 +658,39 @@ export default {
       this.socketAction('unsubscribe', oldId)
       this.fetchData()
       this.disputeOccurrencesKey += 1
+
+      this.handleRestoreBackup()
     },
+
     typingTab() {
       const { id } = this.$route.params
       this.getLastInteractions(id)
+      this.handleMessageBackup()
     },
+
     y(y) {
       const height = this.$refs.sectionMessages.offsetHeight - this.y
       this.setHeight(window.document.getElementById('app').clientHeight)
       this.sendMessageHeight = height >= 0 ? height : this.sendMessageHeight
+    },
+
+    getActiveTab(tab) {
+      this.handleTabClick({ name: { MESSAGES: '1', NOTES: '2', OCCURRENCES: '3' }[tab] })
+    },
+
+    messageText: {
+      deep: true,
+      handler: 'handleMessageBackup'
+    },
+
+    noteText: {
+      deep: true,
+      handler: 'handleMessageBackup'
+    },
+
+    selectedContacts: {
+      deep: true,
+      handler: 'handleMessageBackup'
     }
   },
 
@@ -695,11 +738,15 @@ export default {
   methods: {
     ...mapActions([
       'setHeight',
+      'addRecipient',
       'sendNegotiator',
       'disfavorTicket',
       'getDisputeNotes',
       'resetRecipients',
+      'verifyRecipient',
+      'setMessageBackup',
       'getDisputeStatuses',
+      'setAccountProperty',
       'getLastInteractions',
       'disputeSetVisualized',
       'getQuickReplyTemplates',
@@ -801,6 +848,26 @@ export default {
     },
 
     startReply(params) {
+      if (this.useTicketComponents) {
+        const reply = {
+          disputeId: this.dispute.id,
+          type: params.type.toLowerCase(),
+          value: params.senders[0],
+          key: 'address',
+          inReplyTo: params.inReplyTo
+        }
+
+        this.verifyRecipient(reply)
+          .then((data) => {
+            if (data.value === 'AUTHORIZED') {
+              delete reply.disputeId
+              this.addRecipient(reply)
+            }
+          })
+
+        return
+      }
+
       const { type, senders } = params
       const messageType = type.toLowerCase()
 
@@ -822,6 +889,7 @@ export default {
       this.messageType = ''
       this.messageType = type
       this.handleTabClick({ name: '1' })
+      this.handleMessageBackup()
       this.$nextTick(() => this.ckeditorFocus(this.$refs.messageEditor))
     },
 
@@ -870,6 +938,8 @@ export default {
 
     fetchData() {
       this.loadingDispute = true
+      this.handleRestoreBackup()
+      this.setAccountProperty({ PREFERRED_INTERFACE: 'DISPUTE' })
       this.socketAction('subscribe', this.id)
       this.$store.commit('clearDisputeOccurrences')
       this.$store.dispatch('getDispute', this.id).then(dispute => {
@@ -1122,6 +1192,41 @@ export default {
         this.isDeletingRole = false
         this.deletingRoleText = 'Por favor, aguarde enquanto carregamos a disputa...'
       }, 4500)
+    },
+
+    handleRestoreBackup() {
+      const { tab, message, note, type, contacts } = this.getMessagesBackupById(this.dispute.id)
+
+      if (tab) {
+        this.handleTabClick({ name: { MESSAGES: '1', NOTES: '2', OCCURRENCES: '3' }[tab] })
+      }
+
+      if (type) { this.messageType = type }
+
+      if (contacts) contacts.map(contact => this.addRecipient(contact))
+
+      if (message) {
+        if (this.hasWhatsAppContactSelect || this.loadingTextarea) {
+          this.messageText = message
+        }
+      }
+
+      if (note) {
+        if (this.loadingTextarea) {
+          this.noteText = note
+        }
+      }
+    },
+
+    handleMessageBackup() {
+      this.setMessageBackup(new EditorBackup({
+        disputeId: this.dispute.id,
+        message: this.messageText,
+        tab: { 1: 'MESSAGES', 2: 'NOTES', 3: 'OCCURRENCES' }[this.typingTab],
+        note: this.noteText,
+        type: this.messageType,
+        contacts: this.getEditorRecipients || []
+      }))
     }
   }
 }

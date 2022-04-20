@@ -20,7 +20,10 @@
         loop
       />
 
-      <div v-if="isActiveToCall && isOpenCall">
+      <div
+        v-if="isActiveToCall && isOpenCall"
+        class="call-queue__container-feedback-hangup"
+      >
         <el-button
           class="in-call-btn"
           type="text"
@@ -101,6 +104,17 @@
             Adquira discadores dedicados
           </el-button>
         </div>
+      </div>
+
+      <div v-if="!isInCorrectDispute && hasCallInQueue">
+        <el-button
+          size="mini"
+          type="secondary"
+          icon="el-icon-phone-outline"
+          @click="redirectToDispute"
+        >
+          <span>Ir para a disputa.</span>
+        </el-button>
       </div>
     </div>
 
@@ -203,7 +217,8 @@ export default {
   },
 
   data: () => ({
-    endingCall: false
+    endingCall: false,
+    forwardedDisputeId: null
   }),
 
   computed: {
@@ -219,6 +234,7 @@ export default {
       hasCallInQueue: 'hasCallInQueue',
       netSpeed: 'getSipConnectionSpeed',
       currentAppInstance: 'getAppInstance',
+      disputeInterface: 'preferedInterface',
       scheduledCallsQueue: 'getScheduledCallsQueue',
       enabledScheduledCalls: 'canMakeScheduledCalls',
       isPendingToAnswerCurrentCall: 'isPendingToAnswerCurrentCall'
@@ -238,6 +254,18 @@ export default {
       const success = 'Conexão estável.'
 
       return this.netSpeed <= 1024 ? danger : this.netSpeed <= (1024 * 5) ? warning : success
+    },
+
+    currentDisputeId() {
+      return this.$route.params?.id
+    },
+
+    isInDispute() {
+      return ['dispute', 'ticket'].includes(this.$route?.name)
+    },
+
+    isInCorrectDispute() {
+      return this.isInDispute && Number(this.currentCall?.disputeId) === Number(this.currentDisputeId)
     }
   },
 
@@ -262,7 +290,7 @@ export default {
         if (answer) {
           if (hasConected) {
             this.$jusSegment('START_DIALER_CALL', { ...this.currentCall })
-            this.redirectToDispute()
+            // this.redirectToDispute()
           } else {
             this.$jusNotification({
               title: 'Ops!',
@@ -275,12 +303,16 @@ export default {
     },
 
     redirectToDispute() {
-      if (this.$route.name === 'ticket' && Number(this.$route.params.id) === this.currentCall.disputeId) {
-        // Está na rota certa
-      } else {
-        const path = `/negotiation/${this.currentCall.disputeId}`
-        this.$router.push({ path })
-      }
+      const { disputeId } = this.currentCall
+      const path = this.disputeInterface === 'NEGOTIATION' ? `/negotiation/${disputeId}` : `management/dispute/${disputeId}`
+      this.forwardedDisputeId = disputeId
+
+      this.$router.push({ path })
+    },
+
+    backToFowwarded() {
+      this.forwardedDisputeId = null
+      history.back()
     },
 
     remove(id) {
@@ -310,9 +342,22 @@ export default {
       })
     },
 
-    handleCallUpdate(call) {
-      if (['COMPLETED_CALL'].includes(call?.status)) {
-        this.$jusSegment('END_DIALER_CALL', { ...call })
+    handleCallUpdate(call, oldCall) {
+      if ([oldCall?.status, call?.status].includes('COMPLETED_CALL')) {
+        this.$jusSegment('END_DIALER_CALL', { ...(call || oldCall) })
+
+        if (this.backToFowwarded) {
+          this.$confirm(`Você estava trabalhando na disputa <b>#${this.forwardedDisputeId}</b> antes de fazer a ligação telefônica.<br><br><b>Deseja voltar para ela?<b>`, `Voltar pra disputa #${this.forwardedDisputeId}`, {
+            confirmButtonText: `Sim, voltar pra disputa #${this.forwardedDisputeId}.`,
+            cancelButtonText: 'Não, permanecer nesta disputa.',
+            customClass: 'back-forward-dispute-confirm',
+            dangerouslyUseHTMLString: true,
+            closeOnClickModal: false,
+            closeOnPressEscape: true,
+            showClose: false,
+            center: true
+          }).then(this.backToFowwarded)
+        }
       } else if (['RECEIVING_CALL'].includes(call?.status)) {
         this.$refs.ringAudio.play()
         setTimeout(() => this.answerCall(true), 4000)
@@ -332,19 +377,23 @@ export default {
   flex-direction: column;
   gap: 16px;
   min-width: 300px;
+  width: 100%;
 
   .call-queue__container-feedback {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 8px;
+    width: 100%;
 
     * {
       text-align: center;
     }
 
     div {
-      width: 100%;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
 
       .in-call-btn {
         cursor: text;
@@ -381,6 +430,9 @@ export default {
       .waiting-dialer {
         max-width: 25vw;
         word-break: break-word;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
 
         .load-skeleton {
           .el-skeleton {
@@ -429,6 +481,7 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     gap: 8px;
 
     .call-queue__container-empty-queue-icon {
@@ -445,8 +498,17 @@ export default {
     }
   }
 
+  .call-queue__back-button {
+    display: flex;
+    justify-content: center;
+  }
+
   // div:not(.el-dialog__wrapper):not(.el-collapse):not(.el-collapse>*) {
   //   z-index: 3000;
   // }
+}
+
+.back-forward-dispute-confirm {
+  min-width: 50vw;
 }
 </style>

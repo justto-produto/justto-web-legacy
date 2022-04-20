@@ -82,7 +82,8 @@ export default {
       isLoading: 'isOccurrencesLoading',
       occurrencesList: 'getOccurrencesList',
       messageType: 'getEditorMessageType',
-      isPrinting: 'getExportTicketModalVisible'
+      isPrinting: 'getExportTicketModalVisible',
+      backups: 'getMessagesBackupById'
     }),
 
     infiniteLoadingIdentifier() {

@@ -1,15 +1,17 @@
 import { axiosDispatch, isSimilarStrings, buildQuery, validateCurrentId } from '@/utils'
+import { EditorBackup } from '@/models/message/editorBackup'
 
 const disputeApi = 'api/disputes/v2'
 const messagesPath = 'api/messages'
 
 const omnichannelActions = {
-  setOmnichannelActiveTab({ commit, getters: { getActiveTab } }, tab) {
+  setOmnichannelActiveTab({ commit, getters: { getActiveTab }, dispatch }, tab) {
     return new Promise(resolve => {
       if (getActiveTab !== tab) {
         commit('setOmnichannelActiveTab', tab)
         commit('resetRecipients')
         commit('resetOccurrences')
+        dispatch('setEditorBackup')
         resolve(tab)
       } else {
         resolve(tab)
@@ -17,14 +19,21 @@ const omnichannelActions = {
     })
   },
 
-  setEditorText: ({ commit }, message) => commit('setEditorText', message),
+  setEditorText: ({ dispatch, commit }, message) => {
+    commit('setEditorText', message)
+    dispatch('setEditorBackup')
+  },
 
-  setNoteEditorText: ({ commit }, note) => commit('setNoteEditorText', note),
+  setNoteEditorText: ({ commit, dispatch }, note) => {
+    commit('setNoteEditorText', note)
+    dispatch('setEditorBackup')
+  },
 
-  setMessageType({ commit }, type) {
+  setMessageType({ commit, dispatch }, type) {
     commit('setMessageAttachments', [])
     commit('setMessageType', type)
     commit('resetRecipients')
+    dispatch('setEditorBackup')
   },
 
   getOccurrences({ getters }, disputeId) {
@@ -120,6 +129,8 @@ const omnichannelActions = {
       if (type === 'whatsapp') commit('resetRecipients')
       if (value) commit('setRecipients', recipient)
     }
+
+    dispatch('setEditorBackup')
   },
 
   verifyRecipient({ _ }, recipient) {
@@ -172,7 +183,8 @@ const omnichannelActions = {
         externalIdentification,
         inReplyTo
       }
-      return validateCurrentId(disputeId, () => dispatch('sendemail', data))
+
+      return validateCurrentId(disputeId, () => dispatch('sendemail', data).then(() => dispatch('getDisputeOccurrences', disputeId)))
     } else if (type === 'whatsapp') {
       const data = {
         to,
@@ -180,14 +192,14 @@ const omnichannelActions = {
         externalIdentification,
         message: messageText.trim()
       }
-      return validateCurrentId(disputeId, () => dispatch('validateWhatsappMessage', { data, contact: recipients[0].value }))
+      return validateCurrentId(disputeId, () => dispatch('validateWhatsappMessage', { data, contact: recipients[0].value }).then(() => dispatch('getDisputeOccurrences', disputeId)))
     } else {
       const data = {
         roleId,
         message: messageEmail,
         email: recipients[0].value
       }
-      return validateCurrentId(disputeId, () => dispatch('sendNegotiator', { disputeId, data }))
+      return validateCurrentId(disputeId, () => dispatch('sendNegotiator', { disputeId, data }).then(() => dispatch('getDisputeOccurrences', disputeId)))
     }
   },
 
@@ -260,6 +272,25 @@ const omnichannelActions = {
       method: 'PATCH',
       data: { content }
     })
+  },
+
+  setEditorBackup({ state, getters, dispatch }, id = null) {
+    const {
+      getEditorText,
+      getNoteEditorText,
+      getEditorRecipients,
+      getEditorMessageType,
+      getCurrentRoute: { params: { id: disputeId } }
+    } = getters
+
+    dispatch('setMessageBackup', new EditorBackup({
+      disputeId: id || disputeId,
+      message: getEditorText,
+      type: getEditorMessageType,
+      note: getNoteEditorText,
+      tab: state.activeTab,
+      contacts: getEditorRecipients
+    }))
   }
 }
 

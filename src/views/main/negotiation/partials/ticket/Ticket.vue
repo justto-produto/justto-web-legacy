@@ -52,7 +52,8 @@ export default {
       authorization: 'accountToken',
       isJusttoAdmin: 'isJusttoAdmin',
       workspace: 'workspaceSubdomain',
-      loggedPersonId: 'loggedPersonId'
+      loggedPersonId: 'loggedPersonId',
+      backups: 'getMessagesBackupById'
     }),
 
     socketHeaders() {
@@ -86,13 +87,20 @@ export default {
       'getTicketOverviewParties',
       'getTicketMetadata',
       'setDisputeProperty',
-      'getTicketOverviewInfo'
+      'getTicketOverviewInfo',
+      'setAccountProperty',
+      'setEditorBackup'
     ]),
 
     async fetchData(id) {
+      this.setAccountProperty({ PREFERRED_INTERFACE: 'NEGOTIATION' })
       this.socketAction('subscribe', id)
       await this.cleanRecentMessages()
-      this.getTicketOverview(id).catch(error => this.$jusNotification({ error }))
+      this.getTicketOverview(id).catch(error => this.$jusNotification({ error })).finally(() => {
+        if (!this.backups(id).tab) {
+          this.setEditorBackup()
+        }
+      })
       this.getTicketOverviewInfo(id)
       this.getTicketOverviewParties(id).then(() => {
         this.getTicketMetadata(id).then(() => {

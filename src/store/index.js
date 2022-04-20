@@ -50,6 +50,7 @@ export default new Vuex.Store({
       width: window.innerWidth,
       height: window.innerHeight
     },
+    route: {},
     editorSourcePreview: false
   },
   getters: {
@@ -67,7 +68,8 @@ export default new Vuex.Store({
     },
     getCommonDisputeRoles: state => {
       return state.disputeModule?.dispute?.disputeRoles || state.negotiationOverviewModule?.ticketOverviewParties || []
-    }
+    },
+    getCurrentRoute: state => state.route
   },
   mutations: {
     toggleEditorSourcePreview: (state) => Vue.set(state, 'editorSourcePreview', !state.editorSourcePreview),
@@ -76,7 +78,8 @@ export default new Vuex.Store({
     hideLoading: (state) => (state.loading = false),
     setHeight: (state, value) => (state.windowHeight = value),
     setWindowHeight: (state, height) => Vue.set(state.window, 'height', height),
-    setWindowWidth: (state, width) => Vue.set(state.window, 'width', width)
+    setWindowWidth: (state, width) => Vue.set(state.window, 'width', width),
+    setRoute: (state, route) => Vue.set(state, 'route', route)
   },
   actions: {
     toggleEditorSourcePreview({ commit }) {
