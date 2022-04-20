@@ -346,7 +346,7 @@ export default {
       if ([oldCall?.status, call?.status].includes('COMPLETED_CALL')) {
         this.$jusSegment('END_DIALER_CALL', { ...(call || oldCall) })
 
-        if (this.backToFowwarded) {
+        if (this.forwardedDisputeId) {
           this.$confirm(`Você estava trabalhando na disputa <b>#${this.forwardedDisputeId}</b> antes de fazer a ligação telefônica.<br><br><b>Deseja voltar para ela?<b>`, `Voltar pra disputa #${this.forwardedDisputeId}`, {
             confirmButtonText: `Sim, voltar pra disputa #${this.forwardedDisputeId}.`,
             cancelButtonText: 'Não, permanecer nesta disputa.',
