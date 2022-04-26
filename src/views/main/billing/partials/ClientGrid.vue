@@ -38,6 +38,26 @@
           value-key="name"
         />
 
+        <span class="client-grid__form-title">
+          Tipo de cliente:
+        </span>
+
+        <el-select
+          v-model="negotiationType"
+          placeholder="Tipo de cliente"
+          class="client-grid__autocomplete"
+        >
+          <el-option
+            label="Cobrança"
+            value="RECEIVABLE"
+          />
+
+          <el-option
+            label="Passivo"
+            value="PAYABLE"
+          />
+        </el-select>
+
         <el-button
           v-if="inputValue"
           type="primary"
@@ -70,7 +90,8 @@ export default {
     return {
       dialogFormVisible: false,
       formCardIsVisible: false,
-      inputValue: ''
+      inputValue: '',
+      negotiationType: null
     }
   },
   computed: {
@@ -196,11 +217,15 @@ export default {
     addClient() {
       const name = this.inputValue
       const similarClient = this.custumerSuggestions.filter(val => val.name === name)
+      const { negotiationType } = this
 
       if (similarClient.length) {
         this.associateCustomer(similarClient[0].id)
       } else {
-        this.addCustomer({ name })
+        this.addCustomer({
+          name,
+          negotiationType
+        })
       }
 
       this.hideFormCard()
