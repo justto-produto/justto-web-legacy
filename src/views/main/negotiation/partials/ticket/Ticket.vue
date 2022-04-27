@@ -30,6 +30,7 @@
 import events from '@/constants/negotiationEvents'
 import { eventBus } from '@/utils'
 import { mapActions, mapGetters } from 'vuex'
+import restartEngagementBeforeRouteLeave from '@/utils/mixins/restartEngagementBeforeRouteLeave'
 
 export default {
   name: 'Ticket',
@@ -40,6 +41,8 @@ export default {
     TicketHeader: () => import('./TicketHeader'),
     TicketResume: () => import('./TicketResumeDialog')
   },
+
+  mixins: [restartEngagementBeforeRouteLeave],
 
   data: () => ({
     showOverview: false

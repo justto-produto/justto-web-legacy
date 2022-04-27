@@ -306,7 +306,11 @@ const disputeMutations = {
       const vue = document.querySelector('.management-actions')?.parentElement?.__vue__
       if (vue) vue.$forceUpdate()
     }, seconds * 1000)
-  }
+  },
+
+  setRestartDisputeFlag: (state, disputeId) => Vue.set(state.disputesNeedsRestart, disputeId, true),
+
+  deleteRestartDisputeFlag: (state, disputeId) => Vue.delete(state.disputesNeedsRestart, disputeId)
 }
 
 export default disputeMutations

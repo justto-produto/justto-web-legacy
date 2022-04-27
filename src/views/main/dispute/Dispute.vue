@@ -451,6 +451,7 @@ import { isSimilarStrings, eventBus } from '@/utils'
 import { mapGetters, mapActions } from 'vuex'
 import { JusDragArea } from '@/components/JusDragArea'
 import ckeditor from '@/utils/mixins/ckeditor'
+import restartEngagementBeforeRouteLeave from '@/utils/mixins/restartEngagementBeforeRouteLeave'
 
 import events from '@/constants/negotiationEvents'
 
@@ -472,7 +473,7 @@ export default {
     JusDragArea
   },
 
-  mixins: [ckeditor],
+  mixins: [ckeditor, restartEngagementBeforeRouteLeave],
 
   data() {
     return {
