@@ -274,7 +274,6 @@ const disputeActions = {
 
   exportDisputes({ state, dispatch }, colums) {
     const stringColums = colums.toString()
-
     const { textSearch, textSearchType } = state.query
 
     const tempQuery = {
@@ -291,8 +290,13 @@ const disputeActions = {
 
     return axiosDispatch({
       method: 'POST',
-      url: `${disputesPath}/export${query}fileFormat=CSV&columnToExport=${stringColums}`,
-      data: { textSearch, textSearchType }
+      url: `${disputesPath}/export${query}`,
+      data: {
+        textSearch,
+        textSearchType,
+        fileFormat: 'CSV',
+        columnToExport: stringColums.split(',')
+      }
     }).then(() => { dispatch('getExportHistory') })
   },
 
