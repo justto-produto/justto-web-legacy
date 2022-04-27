@@ -274,15 +274,23 @@ const disputeActions = {
 
   exportDisputes({ state, dispatch }, colums) {
     const stringColums = colums.toString()
-    const { textSearch, textSearchType } = state.query
 
-    const tempQuery = {
-      ...state.query,
-      textSearch: undefined,
-      textSearchType: undefined
+    const ordenationQuery = {
+      sort: state?.query?.sort,
+      size: state?.query?.size,
+      page: state?.query?.page,
+      total: state?.query?.total
     }
 
-    const query = buildQuery(tempQuery)
+    const data = {
+      ...state.query,
+      fileFormat: 'CSV',
+      columnToExport: stringColums.split(',')
+    };
+
+    ['sort', 'size', 'page', 'total'].forEach(key => { delete data[key] })
+
+    const query = buildQuery(ordenationQuery)
 
     dispatch('setAccountProperty', {
       JUS_EXPORT_COLUMNS: stringColums
@@ -291,12 +299,7 @@ const disputeActions = {
     return axiosDispatch({
       method: 'POST',
       url: `${disputesPath}/export${query}`,
-      data: {
-        textSearch,
-        textSearchType,
-        fileFormat: 'CSV',
-        columnToExport: stringColums.split(',')
-      }
+      data
     }).then(() => { dispatch('getExportHistory') })
   },
 
