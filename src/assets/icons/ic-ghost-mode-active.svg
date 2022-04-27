@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="37.938" height="19.716" viewBox="0 0 37.938 19.716">
+  <g id="Grupo_39788" data-name="Grupo 39788" transform="translate(-1612.527 -62.812)">
+    <g id="Grupo_39651" data-name="Grupo 39651" transform="translate(1612.527 62.812)">
+      <rect id="Retângulo_2281" data-name="Retângulo 2281" width="37.938" height="19.716" rx="9.858" transform="translate(37.938 19.716) rotate(180)" fill="#9461f7"/>
+      <ellipse id="Elipse_614" data-name="Elipse 614" cx="8.5" cy="8.858" rx="8.5" ry="8.858" transform="translate(18 18.716) rotate(180)" fill="#fff"/>
+    </g>
+    <g id="Grupo_39645" data-name="Grupo 39645" transform="translate(1616.018 67.333)">
+      <path id="Shape" d="M133.576,306.9a2.057,2.057,0,0,0-1.781,1.034,1.14,1.14,0,0,0-1.138,0,2.077,2.077,0,1,0,.219.554.622.622,0,0,1,.7,0,2.056,2.056,0,1,0,2-1.587Z" transform="translate(-125.545 -301.044)" fill="#9461f7"/>
+      <path id="Shape-2" data-name="Shape" d="M100.114,140.586l-.808-2.627a1.178,1.178,0,0,0-1.586-.736l-.81.348a.567.567,0,0,1-.459,0l-.809-.349a1.178,1.178,0,0,0-1.586.736l-.808,2.628a5.082,5.082,0,0,0-2.174,1.322.294.294,0,0,0,.223.487h10.77a.294.294,0,0,0,.222-.487,5.082,5.082,0,0,0-2.173-1.323Z" transform="translate(-91 -137.128)" fill="#9461f7"/>
+    </g>
+  </g>
+</svg>
