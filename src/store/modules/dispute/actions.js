@@ -274,11 +274,25 @@ const disputeActions = {
 
   exportDisputes({ state, dispatch }, colums) {
     const stringColums = colums.toString()
+
+    const { textSearch, textSearchType } = state.query
+
+    const tempQuery = {
+      ...state.query,
+      textSearch: undefined,
+      textSearchType: undefined
+    }
+
+    const query = buildQuery(tempQuery)
+
     dispatch('setAccountProperty', {
       JUS_EXPORT_COLUMNS: stringColums
     })
+
     return axiosDispatch({
-      url: `${disputesPath}/export${buildQuery(state.query)}fileFormat=CSV&columnToExport=${stringColums}`
+      method: 'POST',
+      url: `${disputesPath}/export${query}fileFormat=CSV&columnToExport=${stringColums}`,
+      data: { textSearch, textSearchType }
     }).then(() => { dispatch('getExportHistory') })
   },
 
