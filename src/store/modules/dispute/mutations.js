@@ -226,7 +226,7 @@ const disputeMutations = {
   },
 
   setDisputeStatuses(state, status) {
-    state.statuses[status.label] = status.value
+    Vue.set(state.statuses, status.label, status.value)
   },
 
   disputeSetHasNew(state, bol) {
