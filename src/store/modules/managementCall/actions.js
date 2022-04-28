@@ -444,5 +444,18 @@ export default {
       const channel = `/topic/account/${getGlobalAuthenticationObject?.accountId}`
       publishWebsocket(channel, 'REMOVE_CALL', removeCommand, getGlobalAuthenticationObject)
     }
+  },
+
+  updateCallStatus({ _ }, disputeMessageId) {
+    return axiosDispatch({
+      method: 'PATCH',
+      url: `${legacyDisputeApi}/phone-calls/${disputeMessageId}`
+    })
+  },
+
+  getCallStatus({ _ }, callId) {
+    return axiosDispatch({
+      url: `${dialerApi}/call/${callId}`
+    })
   }
 }

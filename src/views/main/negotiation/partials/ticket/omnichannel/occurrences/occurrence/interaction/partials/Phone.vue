@@ -33,6 +33,7 @@
       class="phone-container__audio"
     >
       <AudioPlayer
+        v-if="hasValidAudio"
         ref="AudioPlayer"
         class="phone-container__audio-component"
         :audio-list="[mediaLink]"
@@ -44,13 +45,33 @@
         :is-loop="false"
       />
 
-      <el-button
-        class="phone-container__audio-share"
-        icon="el-icon-share"
-        size="mini"
-        circle
-        @click="shareAudio"
-      />
+      <div
+        v-else
+        class="phone-container__audio-component fallback"
+      >
+        <i class="el-icon-document-delete phone-container__audio-component-icon" />
+        <p class="phone-container__audio-component-label">
+          Gravação não disponível
+        </p>
+      </div>
+
+      <div class="phone-container__audio-buttons">
+        <!-- <el-button
+          class="phone-container__audio-buttons-share"
+          icon="el-icon-refresh"
+          size="mini"
+          circle
+          @click="handleUpdateCallStatus"
+        /> -->
+
+        <el-button
+          class="phone-container__audio-buttons-share"
+          icon="el-icon-share"
+          size="mini"
+          circle
+          @click="shareAudio"
+        />
+      </div>
     </div>
 
     <div
@@ -180,7 +201,8 @@ export default {
       editorText: '',
       dontUseTablePlugin: true,
       useMentionPlugin: true,
-      showEditor: false
+      showEditor: false,
+      hasValidAudio: false
     }
   },
 
@@ -245,10 +267,16 @@ export default {
     this.$set(this.occurrence, 'renderCompleted', true)
 
     this.showEditor = this.enabledEditor
+
+    this.handleInitCall()
   },
 
   methods: {
-    ...mapActions(['setInteractionMessageContent']),
+    ...mapActions([
+      'getCallStatus',
+      'updateCallStatus',
+      'setInteractionMessageContent'
+    ]),
 
     copyContact(_event) {
       if (this.value?.message?.receiver) {
@@ -290,6 +318,30 @@ export default {
         this.$set(this.value.message, 'content', this.editorText)
         this.showEditor = false
       })
+    },
+
+    handleInitCall() {
+      if (this.value?.properties?.VALUE) {
+        this.getCallStatus(this.value.properties.VALUE).then(call => {
+          this.hasValidAudio = ['16'].includes(call.voiceCodeResult)
+        })
+      }
+    },
+
+    handleUpdateCallStatus() {
+      // const interaction = this.value
+
+      /** ID da Ocorrência */
+      // this.updateCallStatus(this.occurrence.id)
+
+      /** ID da Interação */
+      // this.updateCallStatus(interaction.id)
+
+      /** ID da Chamada */
+      // this.updateCallStatus(interaction.properties.VALUE)
+
+      /** ID da mensagem */
+      // this.updateCallStatus(interaction.message?.messageId)
     }
   }
 }
@@ -333,6 +385,38 @@ export default {
     .audio-player {
       width: 80%;
       padding-left: 16px;
+    }
+
+    .phone-container__audio-buttons {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+
+      .phone-container__audio-buttons-share {
+        margin: 0;
+      }
+    }
+
+    .phone-container__audio-component {
+      &.fallback {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        align-items: center;
+
+        .phone-container__audio-component-icon::before {
+          font-size: 28px;
+          color: $--color-primary;
+        }
+
+        .phone-container__audio-component-label {
+          font-weight: 600;
+          font-size: 16px;
+          margin: 0;
+          color: $--color-primary;
+        }
+      }
     }
   }
 
