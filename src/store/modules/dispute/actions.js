@@ -274,13 +274,7 @@ const disputeActions = {
 
   exportDisputes({ state, dispatch }, colums) {
     const stringColums = colums.toString()
-
-    const ordenationQuery = {
-      sort: state?.query?.sort,
-      size: state?.query?.size,
-      page: state?.query?.page,
-      total: state?.query?.total
-    }
+    const ordenationQuery = {}
 
     const data = {
       ...state.query,
@@ -288,7 +282,28 @@ const disputeActions = {
       columnToExport: stringColums.split(',')
     };
 
-    ['sort', 'size', 'page', 'total'].forEach(key => { delete data[key] })
+    ['expirationDate', 'dealDate', 'importingDate', 'lastInteractionDate'].forEach(key => {
+      if (data[key]?.length) {
+        data[`${key}Start`] = moment(data[key][0]).startOf('day').utc().format('YYYY-MM-DD[T]HH:mm:ss[Z]')
+        data[`${key}End`] = moment(data[key][1]).endOf('day').utc().format('YYYY-MM-DD[T]HH:mm:ss[Z]')
+      }
+
+      delete data[key]
+    });
+
+    ['sort', 'size', 'page', 'total'].forEach(key => {
+      ordenationQuery[key] = state?.query[key]
+
+      delete data[key]
+    })
+
+    Object.keys(data).forEach(key => {
+      if (Array.isArray(data[key]) || typeof data[key] === 'string') {
+        if (!data[key]?.length) delete data[key]
+      } else if (typeof data[key] === 'boolean' && !['onlyNotVisualized', 'onlyNotPaused'].includes(key) && !data[key]) {
+        delete data[key]
+      }
+    })
 
     const query = buildQuery(ordenationQuery)
 
