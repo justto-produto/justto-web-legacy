@@ -68,7 +68,9 @@ const disputeGetters = {
     }
   },
 
-  getDisputesNeedsRestart: state => state.disputesNeedsRestart
+  getDisputesNeedsRestart: state => state.disputesNeedsRestart,
+
+  getNotesPagination: state => state.notesQuery
 }
 
 export default disputeGetters

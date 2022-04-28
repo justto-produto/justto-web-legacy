@@ -310,7 +310,19 @@ const disputeMutations = {
 
   setRestartDisputeFlag: (state, disputeId) => Vue.set(state.disputesNeedsRestart, disputeId, true),
 
-  deleteRestartDisputeFlag: (state, disputeId) => Vue.delete(state.disputesNeedsRestart, disputeId)
+  deleteRestartDisputeFlag: (state, disputeId) => Vue.delete(state.disputesNeedsRestart, disputeId),
+
+  setNoteQuery(state, data) {
+    Vue.set(state, 'notesQuery', {
+      ...data,
+      sort: state.notesQuery.sort,
+      page: data.number + 2,
+      content: undefined,
+      pageable: undefined
+    })
+
+    console.log(state.notesQuery)
+  }
 }
 
 export default disputeMutations

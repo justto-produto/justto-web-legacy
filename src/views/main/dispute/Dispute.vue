@@ -663,10 +663,15 @@ export default {
       this.handleRestoreBackup()
     },
 
-    typingTab() {
+    typingTab(tab) {
       const { id } = this.$route.params
       this.getLastInteractions(id)
       this.handleMessageBackup()
+      this.setOmnichannelActiveTab({
+        1: 'MESSAGES',
+        2: 'NOTES',
+        3: 'OCCURRENCES'
+      }[Number(tab)])
     },
 
     y(y) {
@@ -752,6 +757,7 @@ export default {
       'disputeSetVisualized',
       'getQuickReplyTemplates',
       'resetQuickReplyTemplate',
+      'setOmnichannelActiveTab',
       'archiveQuickReplyTemplate'
     ]),
 

@@ -643,10 +643,18 @@ const disputeActions = {
 
   getDisputeNotes({ commit, state }, disputeId) {
     return new Promise((resolve, reject) => {
+      const query = {
+        page: state.notesQuery.page,
+        size: state.notesQuery.size,
+        sort: state.notesQuery.sort
+      }
+
       // eslint-disable-next-line
-      axios.get(`${disputesPath}/${disputeId}/occurrences/type/NOTE`)
+      axios.get(`${disputesPath}/${disputeId}/occurrences/type/NOTE${buildQuery(query)}`)
         .then(response => {
+          console.log(response)
           commit('setDisputeOccurrences', response.data.content)
+          commit('setNoteQuery', response.data)
           resolve(response.data)
         }).catch(error => {
           reject(error)
