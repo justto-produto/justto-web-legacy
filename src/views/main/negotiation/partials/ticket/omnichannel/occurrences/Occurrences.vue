@@ -163,8 +163,6 @@ export default {
     },
 
     loadOccurrences($state) {
-      console.log('loadOccurrences')
-
       if (!this.isPrinting) {
         this.getOccurrences(this.id).then(response => {
           if (response.last) {
