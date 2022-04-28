@@ -1,5 +1,6 @@
 <template>
-  <ul
+  <!-- <ul
+    ref="viewContainer"
     v-loading="loading"
     v-chat-scroll="{always: false, smooth: true, scrollonremoved: true }"
     class="dispute-view-occurrences"
@@ -43,7 +44,6 @@
           </el-card>
           <div class="OUTBOUND dispute-view-occurrences__card-info">
             <span v-html="buildHour(occurrence)" />
-            <!-- <div>•</div> -->
           </div>
         </div>
       </div>
@@ -91,14 +91,24 @@
       <jus-icon icon="empty-screen-filter" />
       Não foram encontradas notas.
     </li>
-  </ul>
+  </ul> -->
+
+  <Occurrences class="omnichannel-container__occurrences" />
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
+// import InfiniteLoading from 'vue-infinite-loading'
+
+import Occurrences from '@/views/main/negotiation/partials/ticket/omnichannel/occurrences/Occurrences.vue'
 
 export default {
   name: 'DisputeNotes',
+
+  components: {
+    // InfiniteLoading
+    Occurrences
+  },
 
   props: {
     disputeId: {
@@ -112,14 +122,17 @@ export default {
       noteLoading: 0,
       editDialog: false,
       editDialogLoading: false,
-      newNoteContent: ''
+      newNoteContent: '',
+      infiniteId: +new Date(),
+      gettingData: false
     }
   },
 
   computed: {
     ...mapGetters([
       'loading',
-      'occurrences'
+      'occurrences',
+      'getNotesPagination'
     ])
   },
 
@@ -131,21 +144,8 @@ export default {
     }
   },
 
-  mounted() {
-    this.init()
-  },
-
   methods: {
-    ...mapActions(['getDisputeNotes']),
-
     ...mapMutations(['clearDisputeOccurrences']),
-
-    init() {
-      this.clearDisputeOccurrences()
-      setTimeout(() => {
-        this.getDisputeNotes(this.disputeId)
-      }, 200)
-    },
 
     splitModified(description) {
       return description.split(' modificou uma nota. ')
@@ -184,11 +184,13 @@ export default {
       }
       return this.$moment(occurrence.createAt.dateTime).format('DD/MM/YY [às] HH:mm')
     },
+
     openEditDialog(occurrence) {
       this.activeOccurrence = occurrence
       this.newNoteContent = this.buildContent(occurrence)
       this.editDialog = true
     },
+
     editNote(newNoteContent) {
       this.editDialogLoading = true
       this.$store.dispatch('editDisputeNote', {
@@ -208,6 +210,7 @@ export default {
           this.editDialogLoading = false
         })
     },
+
     removeNote(occurrence, index) {
       this.$confirm('Esta nota será deletada permanentemente. Deseja continuar?', 'Warning', {
         confirmButtonText: 'OK',
