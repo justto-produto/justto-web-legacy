@@ -1,5 +1,8 @@
 <template>
-  <article class="phone-container">
+  <article
+    v-loading="localLoading"
+    class="phone-container"
+  >
     <div
       v-if="!hideInfo"
       class="phone-container__contact"
@@ -55,7 +58,10 @@
         </p>
       </div>
 
-      <div class="phone-container__audio-buttons">
+      <div
+        v-if="hasValidAudio"
+        class="phone-container__audio-buttons"
+      >
         <!-- <el-button
           class="phone-container__audio-buttons-share"
           icon="el-icon-refresh"
@@ -91,8 +97,11 @@
       v-if="mediaLink && !badStatus"
       class="phone-container__editor jus-ckeditor__parent"
     >
-      <label class="phone-container__editor-label">
-        {{ hasActiveCall ? 'Transcreva e anote o que precisar desta ligação em andamento:' : 'Transcreva sua conversa abaixo:' }}
+      <label
+        class="phone-container__editor-label"
+        :class="{'invalid-audio': !hasValidAudio}"
+      >
+        {{ hasActiveCall ? 'Transcreva e anote o que precisar desta ligação em andamento:' : hasValidAudio ? 'Transcreva sua conversa abaixo:' : 'Esta chamada não foi atendida' }}
       </label>
 
       <ckeditor
@@ -106,11 +115,12 @@
       />
 
       <em
-        v-else
+        v-else-if="hasValidAudio"
         v-html="editorText"
       />
 
       <div
+        v-if="hasValidAudio"
         class="phone-container__editor-switch"
         :class="{'right': enabledEditor}"
       >
@@ -202,7 +212,8 @@ export default {
       dontUseTablePlugin: true,
       useMentionPlugin: true,
       showEditor: false,
-      hasValidAudio: false
+      audioCodeResult: '',
+      localLoading: false
     }
   },
 
@@ -252,6 +263,10 @@ export default {
       set(value) {
         this.showEditor = value
       }
+    },
+
+    hasValidAudio() {
+      return ['16'].includes(this.audioCodeResult) || this.hasActiveCall
     }
   },
 
@@ -301,11 +316,6 @@ export default {
           center: true,
           showClose: true
         })
-        // navigator.share({
-        //   title: 'Ligação',
-        //   text: `Ligação para ${this.contact}`,
-        //   url: this.mediaLink
-        // })
       }
     },
 
@@ -322,9 +332,11 @@ export default {
 
     handleInitCall() {
       if (this.value?.properties?.VALUE) {
+        this.localLoading = true
+
         this.getCallStatus(this.value.properties.VALUE).then(call => {
           this.hasValidAudio = ['16'].includes(call.voiceCodeResult)
-        })
+        }).finally(() => { this.localLoading = false })
       }
     },
 
@@ -446,6 +458,10 @@ export default {
 
     .phone-container__editor-label {
       font-weight: 600;
+
+      &.invalid-audio {
+        text-align: center;
+      }
     }
 
     .phone-container__editor-switch.right {
