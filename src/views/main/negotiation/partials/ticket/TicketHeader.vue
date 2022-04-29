@@ -6,17 +6,20 @@
     <article class="ticket-header-container__title">
       <div class="ticket-header-container__process-code">
         <span>Processo:&nbsp;</span>
+
         <TicketCode
           :code="ticket.code"
           get-befor-mount
           class="ticket-header-container__process-link"
         />
       </div>
+
       <div
         class="ticket-header-container__overview-link"
         @click="handleShowOverview"
       >
         <span class="ticket-header-container__additional-info">Informações adicionais</span>
+
         <i class="ticket-header-container__additional-info-icon el-icon-arrow-right" />
       </div>
     </article>
@@ -24,6 +27,11 @@
     <TicketActions
       :ticket="ticket"
       class="ticket-header-container__actions"
+    />
+
+    <Dialer
+      v-if="!isOverviewActive"
+      class="ticket-header-container__dialer"
     />
   </section>
 </template>
@@ -33,15 +41,31 @@ import { mapGetters } from 'vuex'
 
 export default {
   name: 'TicketHeader',
+
   components: {
     TicketCode: () => import('@/components/JusTimelineV2/TicketCode'),
-    TicketActions: () => import('./TicketActions')
+    TicketActions: () => import('./TicketActions'),
+    Dialer: () => import('@/views/main/dialer/Dialer')
   },
+
+  props: {
+    showOverview: {
+      type: Boolean,
+      default: false
+    }
+  },
+
   computed: {
     ...mapGetters({
-      ticket: 'getTicketOverview'
-    })
+      ticket: 'getTicketOverview',
+      innerWidth: 'getWindowWidth'
+    }),
+
+    isOverviewActive() {
+      return this.innerWidth > 1200 ? !this.showOverview : this.showOverview
+    }
   },
+
   methods: {
     handleShowOverview() {
       this.$emit('toggle-show-overview')
@@ -73,6 +97,14 @@ export default {
     .ticket-header-container__overview-link {
       display: none;
     }
+  }
+
+  .ticket-header-container__dialer {
+    border-radius: 6px;
+    padding: 8px 2px;
+    margin-left: 8px;
+    border: solid lightgray thin;
+    cursor: pointer;
   }
 }
 

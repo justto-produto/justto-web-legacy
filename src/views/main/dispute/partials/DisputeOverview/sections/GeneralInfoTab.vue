@@ -231,7 +231,6 @@
             {{ computedDescription }}
             <span v-if="dispute.description.length > 140">
               <a
-                href="#"
                 class="dispute-overview-view__see-more"
                 @click.prevent="descriptionCollapse = !descriptionCollapse"
               >

@@ -6,6 +6,7 @@ const messageActions = {
   canSendWhatsapp({ _ }, phone) {
     return axiosDispatch({ url: `api/messages/can-send/${phone}` })
   },
+
   sendwhatsapp({ _ }, data) {
     return axiosDispatch({
       url: `${messagesPath}/send/whatsapp`,
@@ -13,6 +14,7 @@ const messageActions = {
       data: data
     })
   },
+
   sendemail({ _ }, data) {
     return axiosDispatch({
       url: `${messagesPath}/send/email`,
@@ -20,6 +22,7 @@ const messageActions = {
       data: { ...data, mentionedPeople: extractMentions(data.message) }
     })
   },
+
   sendNegotiator({ _ }, params) {
     const { disputeId, data } = params
     return axiosDispatch({
@@ -29,17 +32,20 @@ const messageActions = {
       action: 'SOCKET_ADD_OCCURRENCE'
     })
   },
+
   getOccurrenceMessage({ _ }, messageId) {
     return axiosDispatch({
       url: `${messagesPath}/${messageId}`
     })
   },
+
   getQuickReplyTemplates({ _ }, disputeId) {
     return axiosDispatch({
       url: `${messagesPath}/quick-reply/${disputeId}`,
       mutation: 'setQuickReplyTemplates'
     })
   },
+
   editQuickReplyTemplate({ commit }, { template, disputeId }) {
     return axiosDispatch({
       url: `${messagesPath}/quick-reply/${disputeId}/template`,
@@ -48,18 +54,21 @@ const messageActions = {
     })
     // .then(() => commit('editQuickReplyTemplate', template))
   },
+
   resetQuickReplyTemplate({ dispatch }, { templateId, disputeId }) {
     return axiosDispatch({
       url: `${messagesPath}/quick-reply/template/${templateId}`,
       method: 'DELETE'
     }).then(() => dispatch('getQuickReplyTemplates', disputeId)).then(_ => {})
   },
+
   archiveQuickReplyTemplate({ commit }, templateId) {
     return axiosDispatch({
       url: `${messagesPath}/quick-reply/template/${templateId}/archive`,
       method: 'patch'
     }).then(() => commit('archiveQuickReplyTemplate', templateId))
   },
+
   editTemplate({ _ }, { template, disputeId }) {
     return axiosDispatch({
       url: `${messagesPath}/quick-reply/${disputeId}/template`,
@@ -67,6 +76,7 @@ const messageActions = {
       data: template
     })
   },
+
   getMessageToPreview({ _ }, { template, disputeId }) {
     return axiosDispatch({
       url: `${messagesPath}/quick-reply/preview/${disputeId}`,
@@ -77,6 +87,7 @@ const messageActions = {
       mutation: 'setMessageToPreview'
     })
   },
+
   setShowPreview({ commit }, visibility) {
     return new Promise(resolve => {
       commit('setShowPreview', visibility)
@@ -90,6 +101,10 @@ const messageActions = {
       method: 'POST',
       data
     })
+  },
+
+  setMessageBackup({ commit }, backup) {
+    commit('setMessageBackup', backup)
   }
 }
 

@@ -205,16 +205,19 @@ export default {
       }
     }
   },
+
   computed: {
     passwordType() {
       return this.showPassword ? 'text' : 'password'
     }
   },
+
   beforeMount() {
     if (this.$store.getters.isLoggedIn) {
       this.$store.dispatch('logout')
     }
   },
+
   created() {
     if (this.$route.query.token) {
       this.$store.dispatch('activate', this.$route.query.token)
@@ -226,6 +229,7 @@ export default {
         })
     }
   },
+
   methods: {
     getErrorMessage() {
       const messages = [
@@ -237,6 +241,7 @@ export default {
       this.loadingIndex += 1
       return msg
     },
+
     doLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
@@ -254,6 +259,16 @@ export default {
               localStorage.removeItem('justoken')
               if (error.response && (error.response?.status === 401 || error.response.data.code === 'INVALID_CREDENTIALS')) {
                 this.mountError('E-mail não cadastrado ou senha incorreta.')
+              } else if (error?.response?.data?.reason === 'User account is locked') {
+                this.$jusNotification({
+                  title: 'Ops!',
+                  message: 'Iniciamos a recuperação de conta.',
+                  type: 'error'
+                })
+                this.$router.push({
+                  path: 'recover-account',
+                  query: { email: this.loginForm.email }
+                })
               } else {
                 this.loadingText = this.getErrorMessage()
                 // setTimeout(this.doLogin, 6000)
@@ -348,7 +363,7 @@ export default {
       this.$refs.workspaceForm.validate(valid => {
         if (valid) {
           const selectedWorkspace = this.workspaces[this.workspaceForm.selectedWorkspaceIndex]
-          if (selectedWorkspace.person) {
+          if (selectedWorkspace.person && selectedWorkspace.person.id) {
             this.getMembersAndRedirect(selectedWorkspace)
           } else {
             this.$store.dispatch('ensureWorkspaceAccesss', selectedWorkspace.workspace.id).then((res) => {

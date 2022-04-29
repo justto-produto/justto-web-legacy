@@ -19,6 +19,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+
 export default {
   name: 'Configurations',
   components: {
@@ -64,11 +65,11 @@ export default {
 
 <style lang="scss" scoped>
 .configurations-container {
-  margin: 30px;
+  margin: 8px 4px 0 28px;
   width: 100%;
 
   .configurations-container__tabs {
-    z-index: 0;
+    z-index: -1;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -77,8 +78,8 @@ export default {
   .configurations-container__user-menu {
     z-index: 10;
     position: absolute;
-    top: 6px;
-    right: 30px;
+    top: 0;
+    right: 0;
   }
 }
 

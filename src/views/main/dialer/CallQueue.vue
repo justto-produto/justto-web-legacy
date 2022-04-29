@@ -1,5 +1,8 @@
 <template>
-  <article class="call-queue__container">
+  <article
+    v-loading="loading"
+    class="call-queue__container"
+  >
     <div
       v-if="isActiveToCall || hasCallInQueue"
       class="call-queue__container-feedback"
@@ -17,7 +20,10 @@
         loop
       />
 
-      <div v-if="isActiveToCall && isOpenCall">
+      <div
+        v-if="isActiveToCall && isOpenCall"
+        class="call-queue__container-feedback-hangup"
+      >
         <el-button
           class="in-call-btn"
           type="text"
@@ -55,23 +61,7 @@
 
       <div v-if="!isOpenCall && hasCallInQueue">
         <div v-if="isPendingToAnswerCurrentCall">
-          <p>Linha disponível</p>
-
-          <el-button
-            type="danger"
-            size="mini"
-            @click="answerCall(false)"
-          >
-            Não ligar
-          </el-button>
-
-          <el-button
-            type="primary"
-            size="mini"
-            @click="answerCall(true)"
-          >
-            Ligar agora
-          </el-button>
+          <p>Entrando na chamada</p>
         </div>
 
         <div
@@ -115,6 +105,17 @@
           </el-button>
         </div>
       </div>
+
+      <div v-if="!isInCorrectDispute && hasCallInQueue">
+        <el-button
+          size="mini"
+          type="secondary"
+          icon="el-icon-phone-outline"
+          @click="redirectToDispute"
+        >
+          <span>Ir para a disputa.</span>
+        </el-button>
+      </div>
     </div>
 
     <div
@@ -126,6 +127,7 @@
         <div class="call-queue__container-call-queue-line-item">
           #{{ call.disputeId }} ({{ $tc(`ticket-status.${call.disputeStatus}`) }})
         </div>
+
         <el-tag
           class="call-queue__container-call-queue-line-item"
           size="mini"
@@ -144,8 +146,9 @@
         </div>
 
         <el-button
+          :disabled="endingCall"
           type="danger"
-          icon="el-icon-delete"
+          :icon="endingCall ? 'el-icon-loading' : 'el-icon-delete'"
           size="mini"
           circle
           plain
@@ -158,12 +161,28 @@
       v-if="callQueue.length === 0"
       class="call-queue__container-empty-queue"
     >
-      <jus-icon
-        class="call-queue__container-empty-queue-icon"
-        icon="checked"
+      <i
+        v-if="enabledScheduledCalls && scheduledCallsQueue.length > 0"
+        class="el-icon-loading"
       />
 
-      <div class="call-queue__container-empty-queue-label">
+      <jus-icon
+        v-else
+        class="call-queue__container-empty-queue-icon"
+        :icon="enabledScheduledCalls ? 'clock' : 'checked'"
+      />
+
+      <div
+        v-if="enabledScheduledCalls"
+        class="call-queue__container-empty-queue-label"
+      >
+        {{ scheduledCallsQueue.length ? 'Localizando sua próxima chamada.' : 'Sem chamadas agendadas.' }}
+      </div>
+
+      <div
+        v-else
+        class="call-queue__container-empty-queue-label"
+      >
         Sem ligações pendentes
       </div>
     </div>
@@ -181,6 +200,8 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 
+import { CALL_STATUS } from '@/constants/callStatus'
+
 export default {
   components: {
     CallHelp: () => import('@/components/dialogs/CallHelpWizard'),
@@ -188,24 +209,36 @@ export default {
     ScheduledCallsQueue: () => import('./ScheduledCallsQueue')
   },
 
+  props: {
+    loading: {
+      type: Boolean,
+      default: false
+    }
+  },
+
   data: () => ({
-    endingCall: false
+    endingCall: false,
+    forwardedDisputeId: null
   }),
 
   computed: {
     ...mapGetters({
       dialer: 'getDialer',
+      isOpenCall: 'isOpenCall',
       callQueue: 'getCallQueue',
-      currentAppInstance: 'getAppInstance',
+      isJusttoDev: 'isJusttoDev',
+      currentCall: 'getCurrentCall',
+      isJusttoAdmin: 'isJusttoAdmin',
+      backups: 'getMessagesBackupById',
+      isAdminProfile: 'isAdminProfile',
       isActiveToCall: 'isActiveToCall',
       hasCallInQueue: 'hasCallInQueue',
-      isOpenCall: 'isOpenCall',
-      currentCall: 'getCurrentCall',
-      isPendingToAnswerCurrentCall: 'isPendingToAnswerCurrentCall',
-      isAdminProfile: 'isAdminProfile',
-      isJusttoAdmin: 'isJusttoAdmin',
       netSpeed: 'getSipConnectionSpeed',
-      isJusttoDev: 'isJusttoDev'
+      currentAppInstance: 'getAppInstance',
+      disputeInterface: 'preferedInterface',
+      scheduledCallsQueue: 'getScheduledCallsQueue',
+      enabledScheduledCalls: 'canMakeScheduledCalls',
+      isPendingToAnswerCurrentCall: 'isPendingToAnswerCurrentCall'
     }),
 
     netSpeedMbps() {
@@ -222,6 +255,18 @@ export default {
       const success = 'Conexão estável.'
 
       return this.netSpeed <= 1024 ? danger : this.netSpeed <= (1024 * 5) ? warning : success
+    },
+
+    currentDisputeId() {
+      return this.$route.params?.id
+    },
+
+    isInDispute() {
+      return ['dispute', 'ticket'].includes(this.$route?.name)
+    },
+
+    isInCorrectDispute() {
+      return this.isInDispute && Number(this.currentCall?.disputeId) === Number(this.currentDisputeId)
     }
   },
 
@@ -246,7 +291,7 @@ export default {
         if (answer) {
           if (hasConected) {
             this.$jusSegment('START_DIALER_CALL', { ...this.currentCall })
-            this.redirectToDispute()
+            // this.redirectToDispute()
           } else {
             this.$jusNotification({
               title: 'Ops!',
@@ -259,16 +304,23 @@ export default {
     },
 
     redirectToDispute() {
-      if (this.$route.name === 'ticket' && Number(this.$route.params.id) === this.currentCall.disputeId) {
-        // Está na rota certa
-      } else {
-        const path = `/negotiation/${this.currentCall.disputeId}`
-        this.$router.push({ path })
-      }
+      const { disputeId } = this.currentCall
+      const path = this.disputeInterface === 'NEGOTIATION' ? `/negotiation/${disputeId}` : `management/dispute/${disputeId}`
+      this.forwardedDisputeId = disputeId
+
+      this.$router.push({ path })
+    },
+
+    backToFowwarded() {
+      this.forwardedDisputeId = null
+      history.back()
     },
 
     remove(id) {
-      if (id === this.currentCall.id) {
+      const { ACTIVE_CALL, RECEIVING_CALL } = CALL_STATUS
+      const hasDialer = [ACTIVE_CALL, RECEIVING_CALL].includes(this.currentCall?.status)
+
+      if (id === this.currentCall?.id && hasDialer) {
         this.hangUpCall()
       } else {
         this.removeCall({ callId: id })
@@ -291,11 +343,27 @@ export default {
       })
     },
 
-    handleCallUpdate(call) {
-      if (['COMPLETED_CALL'].includes(call?.status)) {
-        this.$jusSegment('END_DIALER_CALL', { ...call })
+    handleCallUpdate(call, oldCall) {
+      if ([oldCall?.status, call?.status].includes('COMPLETED_CALL')) {
+        this.$jusSegment('END_DIALER_CALL', { ...(call || oldCall) })
+
+        const { message, note } = this.backups(this.forwardedDisputeId)
+
+        if (this.forwardedDisputeId && (message || note)) {
+          this.$confirm(`Você estava trabalhando na disputa <b>#${this.forwardedDisputeId}</b> antes de fazer a ligação telefônica.<br><br><b>Deseja voltar para ela?<b>`, `Voltar pra disputa #${this.forwardedDisputeId}`, {
+            confirmButtonText: `Sim, voltar pra disputa #${this.forwardedDisputeId}.`,
+            cancelButtonText: 'Não, permanecer nesta disputa.',
+            customClass: 'back-forward-dispute-confirm',
+            dangerouslyUseHTMLString: true,
+            closeOnClickModal: false,
+            closeOnPressEscape: true,
+            showClose: false,
+            center: true
+          }).then(this.backToFowwarded).finally(() => { this.forwardedDisputeId = null })
+        } else { this.forwardedDisputeId = null }
       } else if (['RECEIVING_CALL'].includes(call?.status)) {
         this.$refs.ringAudio.play()
+        setTimeout(() => this.answerCall(true), 4000)
       } else if (!['RECEIVING_CALL'].includes(call?.status) && this.$refs.ringAudio) {
         this.$refs.ringAudio.pause()
       }
@@ -312,19 +380,23 @@ export default {
   flex-direction: column;
   gap: 16px;
   min-width: 300px;
+  width: 100%;
 
   .call-queue__container-feedback {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 8px;
+    width: 100%;
 
     * {
       text-align: center;
     }
 
     div {
-      width: 100%;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
 
       .in-call-btn {
         cursor: text;
@@ -361,6 +433,9 @@ export default {
       .waiting-dialer {
         max-width: 25vw;
         word-break: break-word;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
 
         .load-skeleton {
           .el-skeleton {
@@ -409,6 +484,7 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     gap: 8px;
 
     .call-queue__container-empty-queue-icon {
@@ -419,10 +495,23 @@ export default {
     .call-queue__container-empty-queue-label {
       font-weight: 600;
     }
+
+    .el-icon-loading::before {
+      font-size: 24px;
+    }
+  }
+
+  .call-queue__back-button {
+    display: flex;
+    justify-content: center;
   }
 
   // div:not(.el-dialog__wrapper):not(.el-collapse):not(.el-collapse>*) {
   //   z-index: 3000;
   // }
+}
+
+.back-forward-dispute-confirm {
+  min-width: 50vw;
 }
 </style>

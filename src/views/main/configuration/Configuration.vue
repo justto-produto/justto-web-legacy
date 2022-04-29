@@ -234,14 +234,12 @@
                   <div class="configuration-view__actions">
                     <div v-if="canDoActions(member.accountEmail)">
                       <a
-                        href="#"
                         class="configuration-view__link"
                         @click.prevent="showEditMember(member)"
                       >
                         <i class="el-icon-edit configuration-view__icon" />
                       </a>
                       <a
-                        href="#"
                         class="configuration-view__link"
                         @click.prevent="removeMember(member.id, member.person.name)"
                       >

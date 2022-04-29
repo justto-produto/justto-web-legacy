@@ -29,7 +29,7 @@
     </div>
 
     <div
-      v-if="mediaLink && !badStatus"
+      v-if="mediaLink && !badStatus && !hasActiveCall"
       class="phone-container__audio"
     >
       <AudioPlayer
@@ -54,15 +54,28 @@
     </div>
 
     <div
+      v-if="hasActiveCall"
+      class="phone-container__audio_current_call"
+    >
+      <i class="el-icon-microphone el-icon-pulse" />
+
+      <div>
+        <span>Chamada em andamento…</span>
+
+        <i class="el-icon-loading" />
+      </div>
+    </div>
+
+    <div
       v-if="mediaLink && !badStatus"
       class="phone-container__editor jus-ckeditor__parent"
     >
       <label class="phone-container__editor-label">
-        Transcreva sua conversa abaixo:
+        {{ hasActiveCall ? 'Transcreva e anote o que precisar desta ligação em andamento:' : 'Transcreva sua conversa abaixo:' }}
       </label>
 
       <ckeditor
-        v-if="showEditor"
+        v-if="enabledEditor"
         ref="callTextEditor"
         v-model="editorText"
         :editor="editor"
@@ -78,27 +91,27 @@
 
       <div
         class="phone-container__editor-switch"
-        :class="{'right': showEditor}"
+        :class="{'right': enabledEditor}"
       >
         <el-button
-          v-if="!showEditor"
+          v-if="!enabledEditor"
           type="text"
           icon="el-icon-edit"
-          @click="showEditor = !showEditor"
+          @click="enabledEditor = !enabledEditor"
         >
           Editar transcrição da conversa
         </el-button>
 
         <el-button
-          v-if="showEditor"
+          v-if="enabledEditor"
           size="mini"
-          @click="showEditor = !showEditor"
+          @click="enabledEditor = !enabledEditor"
         >
           Cancelar
         </el-button>
 
         <el-button
-          v-if="showEditor"
+          v-if="enabledEditor"
           type="primary"
           size="mini"
           @click="saveMassageContent()"
@@ -134,7 +147,7 @@
 
 <script>
 import ckeditor from '@/utils/mixins/ckeditor'
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 import AudioPlayer from '@liripeng/vue-audio-player'
 
@@ -172,6 +185,10 @@ export default {
   },
 
   computed: {
+    ...mapGetters({
+      currentCall: 'getCurrentCall'
+    }),
+
     contact() {
       const personName = this.$options.filters.resumedName(this.value?.properties?.TO_PERSON_NAME || '')
       const number = this.value?.message?.receiver ? '<' + this.$options.filters.phoneNumber(this.value?.message?.receiver) + '>' : ''
@@ -199,6 +216,20 @@ export default {
 
     badNote() {
       return this.value?.properties?.NOTE
+    },
+
+    hasActiveCall() {
+      return this.value?.properties?.VALUE === String(this.currentCall?.id)
+    },
+
+    enabledEditor: {
+      get() {
+        return this.showEditor || (this.hasActiveCall && !this.editorText)
+      },
+
+      set(value) {
+        this.showEditor = value
+      }
     }
   },
 
@@ -208,10 +239,12 @@ export default {
   },
 
   mounted() {
-    this.editorText = this.value?.message?.resume || ''
+    this.editorText = this.value?.message?.resume || this.value?.message?.content || ''
 
     this.$set(this.value, 'renderCompleted', true)
     this.$set(this.occurrence, 'renderCompleted', true)
+
+    this.showEditor = this.enabledEditor
   },
 
   methods: {
@@ -294,11 +327,31 @@ export default {
     margin: 16px 0;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 8px;
 
     .audio-player {
       width: 80%;
       padding-left: 16px;
+    }
+  }
+
+  .phone-container__audio_current_call {
+    margin: 16px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+
+    .el-icon-microphone {
+      font-size: 24px;
+    }
+
+    div {
+      span {
+        font-size: 16px;
+        font-weight: 600;
+      }
     }
   }
 

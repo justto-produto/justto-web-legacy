@@ -11,7 +11,7 @@ const workspaceGetters = {
   workspaceTeamName: state => state.workspace.teamName,
   workspaceSubdomain: state => state.workspace.subDomain,
   workspaceMembers: state => {
-    if (!['be8ee2ed9e984880bcf4f62ed8d6f66a', 'lucasisrael', '6f9e316ca8f7452694110c3bd87b4145'].includes(state.workspace.subDomain)) {
+    if (!['be8ee2ed9e984880bcf4f62ed8d6f66a', 'lucasisrael', '6f9e316ca8f7452694110c3bd87b4145', 'b6929e670a1b42e3b8ea7c6deea79f2e'].includes(state.workspace.subDomain)) {
       return state.workspace.members.filter(member => {
         return !!member.accountEmail && !member.accountEmail.includes('@justto.com.br')
       })

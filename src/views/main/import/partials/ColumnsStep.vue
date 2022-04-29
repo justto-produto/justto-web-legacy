@@ -106,7 +106,6 @@
         <h3 v-show="!loadingTags">
           {{ $tc('fields.' + pluralizesTerm('claimantParty', claimantParties.length > 1), isRecovery) }}
           <a
-            href="#"
             @click="addTagList(claimantParties)"
           ><i class="el-icon-plus right" /></a>
         </h3>
@@ -134,7 +133,6 @@
           </el-collapse>
           <a
             v-if="claimantPartyIndex !== 1 && claimantParties.length === claimantPartyIndex"
-            href="#"
             @click="removeTagList(claimantParties, tags.claimantParty.tags)"
           >
             <i class="el-icon-delete" />
@@ -148,7 +146,6 @@
         <h3 v-show="!loadingTags">
           {{ $tc('fields.' + pluralizesTerm('claimantLawyer', claimantLawyers.length > 1), isRecovery) }}
           <a
-            href="#"
             @click="addTagList(claimantLawyers)"
           ><i class="el-icon-plus right" /></a>
         </h3>
@@ -176,7 +173,6 @@
           </el-collapse>
           <a
             v-if="claimantLawyerIndex !== 1 && claimantLawyers.length === claimantLawyerIndex"
-            href="#"
             @click="removeTagList(claimantLawyers)"
           >
             <i class="el-icon-delete" />
@@ -190,7 +186,6 @@
         <h3 v-show="!loadingTags">
           {{ $tc('fields.' + pluralizesTerm('respondentParty', respondentParties.length > 1), isRecovery) }}
           <a
-            href="#"
             @click="addTagList(respondentParties)"
           ><i class="el-icon-plus right" /></a>
         </h3>
@@ -217,7 +212,6 @@
           </el-collapse>
           <a
             v-if="respondentPartyIndex !== 1 && respondentParties.length === respondentPartyIndex"
-            href="#"
             @click="removeTagList(respondentParties)"
           >
             <i class="el-icon-delete" />

@@ -1,5 +1,6 @@
 <template>
   <article
+    v-if="type === 'switch'"
     v-loading="isLoading"
     class="scheduled-calls-switch"
   >
@@ -23,12 +24,42 @@
       </div>
     </div>
   </article>
+
+  <article
+    v-else-if="type === 'button'"
+    v-loading="isLoading"
+    class="scheduled-calls-button"
+  >
+    <!-- <el-checkbox-group v-model="checkboxGroup4" size="mini" disabled> -->
+    <el-checkbox
+      v-model="scheduledCallState"
+      size="small"
+      border
+    >
+      <!-- <span>
+        Ligação automática
+      </span> -->
+      <i
+        :class="scheduledCallState ? 'el-icon-video-play' : 'el-icon-video-pause'"
+      />
+    </el-checkbox>
+    <!-- </el-checkbox-group> -->
+  </article>
+
+  <article v-else />
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
 
 export default {
+  props: {
+    type: {
+      type: String,
+      default: 'switch'
+    }
+  },
+
   data: () => ({ isLoading: false }),
 
   computed: {
@@ -52,7 +83,11 @@ export default {
   },
 
   methods: {
-    ...mapActions(['setAccountProperty'])
+    ...mapActions(['setAccountProperty']),
+
+    toggleScheduledCallState(state) {
+      if (this.scheduledCallState !== state) this.scheduledCallState = state
+    }
   }
 }
 </script>
@@ -76,5 +111,10 @@ export default {
   .el-divider.el-divider--horizontal {
     margin: 8px 0;
   }
+}
+
+.scheduled-calls-button {
+  width: 100%;
+  text-align: right;
 }
 </style>

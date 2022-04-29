@@ -313,7 +313,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
 import { isSimilarStrings } from '@/utils'
 import { isValid, strip } from '@fnando/cpf'
 
@@ -462,6 +462,8 @@ export default {
       'hideSearchLawyerLoading',
       'restartDisputeValidatingStatus'
     ]),
+
+    ...mapMutations(['setRestartDisputeFlag']),
 
     startEditing(key) {
       this.activeAddingData = key
@@ -797,13 +799,16 @@ export default {
     },
 
     handleRestartEngagement() {
-      this.verifyRestartEngagement({
-        status: this.ticketStatus,
-        party: this.party.polarity,
-        name: this.party.name,
-        disputeId: Number(this.$route.params.id),
-        disputeRoleId: this.party.disputeRoleId
-      })
+      this.setRestartDisputeFlag(this.disputeId)
+      // TODO: Salva flag de reinício da disputa.
+
+      // this.verifyRestartEngagement({
+      //   status: this.ticketStatus,
+      //   party: this.party.polarity,
+      //   name: this.party.name,
+      //   disputeId: Number(this.$route.params.id),
+      //   disputeRoleId: this.party.disputeRoleId
+      // })
     },
 
     updateDisputeRoleField(disputeRole, { field, value }) {

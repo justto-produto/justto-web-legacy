@@ -34,12 +34,15 @@ const strategyMutations = {
   },
   deleteCommunication: (state, { communicationId, strategyId, trigger }) => {
     const strategyIndex = findStrategyIndex(state.strategies, strategyId)
-    const triggers = state.strategies.content[strategyIndex].triggers[trigger]
-    const communications = triggers.communications
+    const triggers = state.strategies?.content[strategyIndex]?.triggers[trigger]
+    const communications = triggers?.communications
     const communicationIndex = findCommunicationIndex(communications, communicationId)
-    const communicationType = communications[communicationIndex].type
-    Vue.delete(communications, communicationIndex)
-    triggers.communicationsTypeSummary[communicationType] -= 1
+    const communicationType = communications[communicationIndex]?.type
+
+    if (communicationType) {
+      Vue.delete(communications, communicationIndex)
+      triggers.communicationsTypeSummary[communicationType] -= 1
+    }
   },
   setActiveStrategy: (state, activeStrategy) => (state.activeStrategy = activeStrategy),
   setAvailableWorkspace: (state, availableWorkspaces) => (state.availableWorkspaces = availableWorkspaces),

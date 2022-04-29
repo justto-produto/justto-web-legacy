@@ -3,7 +3,6 @@
     v-if="isLengthValid"
     shadow="never"
     class="attachment__card red"
-    :class="`${occurrence.properties.FILE_TYPE || ''}`"
   >
     <div
       v-if="occurrence.properties && available"

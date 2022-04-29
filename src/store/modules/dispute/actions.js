@@ -274,11 +274,47 @@ const disputeActions = {
 
   exportDisputes({ state, dispatch }, colums) {
     const stringColums = colums.toString()
+    const ordenationQuery = {}
+
+    const data = {
+      ...state.query,
+      fileFormat: 'CSV',
+      columnToExport: stringColums.split(',')
+    };
+
+    ['expirationDate', 'dealDate', 'importingDate', 'lastInteractionDate'].forEach(key => {
+      if (data[key]?.length) {
+        data[`${key}Start`] = moment(data[key][0]).startOf('day').utc().format('YYYY-MM-DD[T]HH:mm:ss[Z]')
+        data[`${key}End`] = moment(data[key][1]).endOf('day').utc().format('YYYY-MM-DD[T]HH:mm:ss[Z]')
+      }
+
+      delete data[key]
+    });
+
+    ['sort', 'size', 'page', 'total'].forEach(key => {
+      ordenationQuery[key] = state?.query[key]
+
+      delete data[key]
+    })
+
+    Object.keys(data).forEach(key => {
+      if (Array.isArray(data[key]) || typeof data[key] === 'string') {
+        if (!data[key]?.length) delete data[key]
+      } else if (typeof data[key] === 'boolean' && !['onlyNotVisualized', 'onlyNotPaused'].includes(key) && !data[key]) {
+        delete data[key]
+      }
+    })
+
+    const query = buildQuery(ordenationQuery)
+
     dispatch('setAccountProperty', {
       JUS_EXPORT_COLUMNS: stringColums
     })
+
     return axiosDispatch({
-      url: `${disputesPath}/export${buildQuery(state.query)}fileFormat=CSV&columnToExport=${stringColums}`
+      method: 'POST',
+      url: `${disputesPath}/export${query}`,
+      data
     }).then(() => { dispatch('getExportHistory') })
   },
 
@@ -622,10 +658,18 @@ const disputeActions = {
 
   getDisputeNotes({ commit, state }, disputeId) {
     return new Promise((resolve, reject) => {
+      const query = {
+        page: state.notesQuery.page,
+        size: state.notesQuery.size,
+        sort: state.notesQuery.sort
+      }
+
       // eslint-disable-next-line
-      axios.get(`${disputesPath}/${disputeId}/occurrences/type/NOTE`)
+      axios.get(`${disputesPath}/${disputeId}/occurrences/type/NOTE${buildQuery(query)}`)
         .then(response => {
+          console.log(response)
           commit('setDisputeOccurrences', response.data.content)
+          commit('setNoteQuery', response.data)
           resolve(response.data)
         }).catch(error => {
           reject(error)

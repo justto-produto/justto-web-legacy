@@ -187,7 +187,7 @@
       "INTERACTIONS": "interações",
       "PENDING": "pendente",
       "IMPORTED": "importada",
-      "ACCEPTED": "acordo sem dados bancários",
+      "ACCEPTED": "acordo s/ dados bancários",
       "PAUSED": "pausada",
       "ENRICHED": "enriquecida",
       "CHECKOUT": "acordo",
@@ -268,9 +268,11 @@
     "RENEGOTIATE": "retornar para negociação",
     "EDIT-NEGOTIATORS": "editar negociadores",
     "DROP_LAWSUIT": "cancelar negociação",
-    "START_NEGOTIATON": "inicar negociação",
-    "SEND_BILK_MESSAGE": "Enviar mensagens em massa",
+    "START_NEGOTIATION": "inicar negociação",
+    "SEND_BILK_MESSAGE": "Compor mensagem em massa",
     "UPDATE_ENGAGEMENT_OPTIONS": "Alterar engajamento",
+    "ADD_TAGS_INCLUSIVE": "adicionar tags",
+    "REM_TAGS_INCLUSIVE": "remover tags",
     "tooltip": {
       "BULK_COMPOSE_MESSAGE": "Compor mensagem em massa",
       "SETTLE_DISPUTE": "Aceitar e Ganhar disputa | Aceitar e Ganhar disputas"
@@ -364,6 +366,9 @@
     "DISFAVOR": {
       "name": "Desmarcar aguardar análise da empresa",
       "feedback-message": "<b>Desmarcar aguardar análise da empresa</b>"
+    },
+    "ADD_TAGS_INCLUSIVE": {
+      "name": "Alterar tags"
     }
   },
   "interaction-types": {
@@ -491,7 +496,7 @@
     "RUNNING": "em negociação",
     "SETTLED": "ganha",
     "UNSETTLED": "perdida",
-    "PRE_NEGOTIATION": "pre-negociação",
+    "PRE_NEGOTIATION": "pré negociação",
     "PAUSED": "(pausada) | ",
     "CANCELED": "cancelada"
   },

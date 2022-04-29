@@ -12,7 +12,7 @@
     />
 
     <HeaderUserMenu
-      v-if="!disputeMode"
+      v-if="!disputeMode && isOverviewActive"
       class="overview-container__menu"
       :class="{'hidde-menu': (showOverview || disputeMode)}"
     />
@@ -284,6 +284,7 @@ export default {
 
   .overview-container__title {
     margin: 0;
+    font-size: 20px;
 
     .el-icon-delete {
       // font-size: 20px;
