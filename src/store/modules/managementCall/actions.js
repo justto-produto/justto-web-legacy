@@ -167,13 +167,6 @@ export default {
       const disputeMessageId = 0 // TODO: SAAS-5029 Como conseguir esse valor?
       dispatch('updateCallStatus', disputeMessageId)
       */
-
-      getters.getOccurrencesList.forEach(occurrence => {
-        console.log(Number(occurrence?.interaction?.properties?.VALUE), callId, Number(occurrence?.interaction?.properties?.VALUE) === callId)
-        if (Number(occurrence?.interaction?.properties?.VALUE) === callId) {
-          console.log(occurrence)
-        }
-      })
     })
   },
 
