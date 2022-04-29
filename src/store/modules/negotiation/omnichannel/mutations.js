@@ -86,6 +86,7 @@ const omnichannelMutations = {
     const validationInteractions = {
       MESSAGES: [
         'NPS',
+        'PHONE_CALL',
         'ATTACHMENT',
         'COMMUNICATION',
         'MANUAL_PROPOSAL',
@@ -100,6 +101,7 @@ const omnichannelMutations = {
       OCCURRENCES: [
         'CLICK',
         'ATTACHMENT',
+        'PHONE_CALL',
         'VISUALIZATION',
         'COMMUNICATION',
         'MANUAL_PROPOSAL',
@@ -121,7 +123,9 @@ const omnichannelMutations = {
     }
 
     if (canInclude) {
-      canInclude = state.occurrences.list.find(({ id }) => (id === occurrence.id)) === undefined
+      const tempOccurrence = state.occurrences.list.find(({ id }) => (id === occurrence.id))
+
+      canInclude = tempOccurrence === undefined
     }
 
     if (canInclude) {
@@ -135,6 +139,10 @@ const omnichannelMutations = {
 
       // TODO: Procurar uma solução melhor.
       eventBus.$emit('NEGOTIATION_WEBSOCKET_NEW_OCCURRENCE', {})
+    } else {
+      const occurrenceIndex = state.occurrences.list.findIndex(({ id }) => (id === occurrence?.id))
+
+      if (occurrenceIndex >= 0) Vue.set(state.occurrences.list, occurrenceIndex, occurrence)
     }
   },
 

@@ -150,7 +150,7 @@ export default {
     commit('setRequestProvideNewInterval')
   },
 
-  endCall({ commit, getters }, { dialerId, callId }) {
+  endCall({ commit, getters, dispatch }, { dialerId, callId }) {
     return axiosDispatch({
       url: `api/dialer/${dialerId}/call/${callId}`,
       method: 'DELETE',
@@ -162,6 +162,18 @@ export default {
     }).finally(() => {
       commit('clearCallHeartbeatInterval')
       commit('clearSipStack')
+
+      /*
+      const disputeMessageId = 0 // TODO: SAAS-5029 Como conseguir esse valor?
+      dispatch('updateCallStatus', disputeMessageId)
+      */
+
+      getters.getOccurrencesList.forEach(occurrence => {
+        console.log(Number(occurrence?.interaction?.properties?.VALUE), callId, Number(occurrence?.interaction?.properties?.VALUE) === callId)
+        if (Number(occurrence?.interaction?.properties?.VALUE) === callId) {
+          console.log(occurrence)
+        }
+      })
     })
   },
 

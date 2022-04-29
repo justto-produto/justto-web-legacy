@@ -331,29 +331,25 @@ export default {
     },
 
     handleInitCall() {
-      if (this.value?.properties?.VALUE) {
+      if (this.value?.message?.parameters?.PHONE_CALL_ID) {
         this.localLoading = true
 
-        this.getCallStatus(this.value.properties.VALUE).then(call => {
-          this.hasValidAudio = ['16'].includes(call.voiceCodeResult)
-        }).finally(() => { this.localLoading = false })
+        new Promise((resolve) => {
+          if (this.value?.message?.parameters?.VOICE_CODE_RESULT) {
+            resolve(this.value?.message?.parameters?.VOICE_CODE_RESULT)
+          } else if (this.value?.disputeMessageId) {
+            this.handleUpdateCallStatus().then(({ voiceCodeResult }) => resolve(voiceCodeResult))
+          } else { resolve('') }
+        }).then(voiceCodeResult => {
+          this.audioCodeResult = voiceCodeResult
+        }).finally(() => {
+          this.localLoading = false
+        })
       }
     },
 
     handleUpdateCallStatus() {
-      // const interaction = this.value
-
-      /** ID da Ocorrência */
-      // this.updateCallStatus(this.occurrence.id)
-
-      /** ID da Interação */
-      // this.updateCallStatus(interaction.id)
-
-      /** ID da Chamada */
-      // this.updateCallStatus(interaction.properties.VALUE)
-
-      /** ID da mensagem */
-      // this.updateCallStatus(interaction.message?.messageId)
+      return this.updateCallStatus(this.value.disputeMessageId)
     }
   }
 }
