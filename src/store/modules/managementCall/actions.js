@@ -162,16 +162,6 @@ export default {
     }).finally(() => {
       commit('clearCallHeartbeatInterval')
       commit('clearSipStack')
-
-      getters.getOccurrencesList.forEach(occurrence => {
-        if (Number(occurrence?.interaction?.properties?.VALUE) === callId) {
-          if (occurrence?.interaction?.disputeMessageId) {
-            dispatch('updateCallStatus', occurrence?.interaction?.disputeMessageId)
-
-            setTimeout(() => dispatch('updateCallStatus', occurrence?.interaction?.disputeMessageId), 5 * 1000)
-          }
-        }
-      })
     })
   },
 

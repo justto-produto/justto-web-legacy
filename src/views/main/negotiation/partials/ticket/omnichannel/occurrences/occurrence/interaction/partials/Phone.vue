@@ -271,8 +271,14 @@ export default {
   },
 
   watch: {
-    hasActiveCall(has) {
-      this.enabledEditor = has
+    hasActiveCall(have, had) {
+      this.enabledEditor = have
+
+      if (had && !have) {
+        this.localLoading = true
+
+        setTimeout(() => { this.handleInitCall() }, 5 * 1000)
+      }
     }
   },
 
