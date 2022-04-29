@@ -270,6 +270,12 @@ export default {
     }
   },
 
+  watch: {
+    hasActiveCall(has) {
+      this.enabledEditor = has
+    }
+  },
+
   updated() {
     this.$set(this.value, 'renderCompleted', true)
     this.$set(this.occurrence, 'renderCompleted', true)
