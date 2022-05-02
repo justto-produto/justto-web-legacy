@@ -502,7 +502,7 @@ const disputeActions = {
     })
   },
 
-  sendDisputeAction({ commit }, params) {
+  sendDisputeAction({ commit, mutation }, params) {
     return new Promise((resolve, reject) => {
       let request
       if (params.action === 'restart-engagement' || params.action === 'renegotiate') {
@@ -526,6 +526,7 @@ const disputeActions = {
       }
       request
         .then(response => {
+          commit('deleteRestartDisputeFlag', params.disputeId)
           resolve(response.data)
         })
         .catch(error => {

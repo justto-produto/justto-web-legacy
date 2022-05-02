@@ -30,6 +30,8 @@ export default {
         }).catch(error => this.$jusNotification({ error })).finally(() => {
           this.deleteRestartDisputeFlag(this.$route.params?.id)
         })
+      }).catch(() => {
+        this.deleteRestartDisputeFlag(this.$route.params?.id)
       }).finally(next)
     } else {
       next()
