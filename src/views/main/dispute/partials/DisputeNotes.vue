@@ -276,4 +276,7 @@ export default {
   }
 }
 
+.omnichannel-container__occurrences {
+  min-height: 50vh;
+}
 </style>

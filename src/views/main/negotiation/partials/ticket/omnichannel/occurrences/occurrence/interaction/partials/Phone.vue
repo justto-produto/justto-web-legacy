@@ -1,5 +1,8 @@
 <template>
-  <article class="phone-container">
+  <article
+    v-loading="localLoading"
+    class="phone-container"
+  >
     <div
       v-if="!hideInfo"
       class="phone-container__contact"
@@ -33,6 +36,7 @@
       class="phone-container__audio"
     >
       <AudioPlayer
+        v-if="hasValidAudio"
         ref="AudioPlayer"
         class="phone-container__audio-component"
         :audio-list="[mediaLink]"
@@ -44,13 +48,49 @@
         :is-loop="false"
       />
 
-      <el-button
-        class="phone-container__audio-share"
-        icon="el-icon-share"
-        size="mini"
-        circle
-        @click="shareAudio"
-      />
+      <div
+        v-else
+        class="phone-container__audio-component fallback"
+      >
+        <i class="el-icon-document-delete phone-container__audio-component-icon" />
+        <p class="phone-container__audio-component-label">
+          Gravação não disponível
+        </p>
+      </div>
+
+      <div
+        v-if="hasValidAudio"
+        class="phone-container__audio-buttons"
+      >
+        <!-- <el-button
+          class="phone-container__audio-buttons-share"
+          icon="el-icon-refresh"
+          size="mini"
+          circle
+          @click="handleUpdateCallStatus"
+        /> -->
+
+        <el-button
+          class="phone-container__audio-buttons-share"
+          icon="el-icon-share"
+          size="mini"
+          circle
+          @click="shareAudio"
+        />
+      </div>
+    </div>
+
+    <div
+      v-if="hasActiveCall"
+      class="phone-container__audio_current_call"
+    >
+      <i class="el-icon-microphone el-icon-pulse" />
+
+      <div>
+        <span>Chamada em andamento…</span>
+
+        <i class="el-icon-loading" />
+      </div>
     </div>
 
     <div
@@ -70,8 +110,11 @@
       v-if="mediaLink && !badStatus"
       class="phone-container__editor jus-ckeditor__parent"
     >
-      <label class="phone-container__editor-label">
-        {{ hasActiveCall ? 'Transcreva e anote o que precisar desta ligação em andamento:' : 'Transcreva sua conversa abaixo:' }}
+      <label
+        class="phone-container__editor-label"
+        :class="{'invalid-audio': !hasValidAudio}"
+      >
+        {{ hasActiveCall ? 'Transcreva e anote o que precisar desta ligação em andamento:' : hasValidAudio ? 'Transcreva sua conversa abaixo:' : 'Esta chamada não foi atendida' }}
       </label>
 
       <ckeditor
@@ -85,11 +128,12 @@
       />
 
       <em
-        v-else
+        v-else-if="hasValidAudio"
         v-html="editorText"
       />
 
       <div
+        v-if="hasValidAudio"
         class="phone-container__editor-switch"
         :class="{'right': enabledEditor}"
       >
@@ -180,7 +224,9 @@ export default {
       editorText: '',
       dontUseTablePlugin: true,
       useMentionPlugin: true,
-      showEditor: false
+      showEditor: false,
+      audioCodeResult: '',
+      localLoading: false
     }
   },
 
@@ -230,6 +276,22 @@ export default {
       set(value) {
         this.showEditor = value
       }
+    },
+
+    hasValidAudio() {
+      return ['16'].includes(String(this.audioCodeResult)) || this.hasActiveCall
+    }
+  },
+
+  watch: {
+    hasActiveCall(have, had) {
+      this.enabledEditor = have
+
+      if (had && !have) {
+        this.localLoading = true
+
+        setTimeout(() => { this.handleInitCall() }, 5 * 1000)
+      }
     }
   },
 
@@ -245,10 +307,16 @@ export default {
     this.$set(this.occurrence, 'renderCompleted', true)
 
     this.showEditor = this.enabledEditor
+
+    this.handleInitCall()
   },
 
   methods: {
-    ...mapActions(['setInteractionMessageContent']),
+    ...mapActions([
+      'getCallStatus',
+      'updateCallStatus',
+      'setInteractionMessageContent'
+    ]),
 
     copyContact(_event) {
       if (this.value?.message?.receiver) {
@@ -273,11 +341,6 @@ export default {
           center: true,
           showClose: true
         })
-        // navigator.share({
-        //   title: 'Ligação',
-        //   text: `Ligação para ${this.contact}`,
-        //   url: this.mediaLink
-        // })
       }
     },
 
@@ -290,6 +353,30 @@ export default {
         this.$set(this.value.message, 'content', this.editorText)
         this.showEditor = false
       })
+    },
+
+    handleInitCall() {
+      if (this.value?.message?.parameters?.PHONE_CALL_ID) {
+        this.localLoading = true
+
+        return new Promise((resolve) => {
+          if (this.value?.message?.parameters?.VOICE_CODE_RESULT) {
+            resolve(this.value?.message?.parameters?.VOICE_CODE_RESULT)
+          } else if (this.value?.disputeMessageId) {
+            this.handleUpdateCallStatus().then(({ voiceCodeResult }) => resolve(voiceCodeResult))
+          } else { resolve('') }
+        }).then(voiceCodeResult => {
+          this.audioCodeResult = voiceCodeResult
+        }).finally(() => {
+          this.localLoading = false
+        })
+      }
+
+      return Promise.resolve()
+    },
+
+    handleUpdateCallStatus() {
+      return this.updateCallStatus(this.value.disputeMessageId)
     }
   }
 }
@@ -334,6 +421,57 @@ export default {
       width: 80%;
       padding-left: 16px;
     }
+
+    .phone-container__audio-buttons {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+
+      .phone-container__audio-buttons-share {
+        margin: 0;
+      }
+    }
+
+    .phone-container__audio-component {
+      &.fallback {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        align-items: center;
+
+        .phone-container__audio-component-icon::before {
+          font-size: 28px;
+          color: $--color-primary;
+        }
+
+        .phone-container__audio-component-label {
+          font-weight: 600;
+          font-size: 16px;
+          margin: 0;
+          color: $--color-primary;
+        }
+      }
+    }
+  }
+
+  .phone-container__audio_current_call {
+    margin: 16px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+
+    .el-icon-microphone {
+      font-size: 24px;
+    }
+
+    div {
+      span {
+        font-size: 16px;
+        font-weight: 600;
+      }
+    }
   }
 
   .phone-container__audio_current_call {
@@ -362,6 +500,10 @@ export default {
 
     .phone-container__editor-label {
       font-weight: 600;
+
+      &.invalid-audio {
+        text-align: center;
+      }
     }
 
     .phone-container__editor-switch.right {
