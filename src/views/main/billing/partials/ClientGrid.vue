@@ -36,13 +36,18 @@
           placeholder="Ex.: José da Silva"
           class="client-grid__autocomplete"
           value-key="name"
+          @input="handleValueChange"
         />
 
-        <span class="client-grid__form-title">
+        <span
+          v-if="inputValue"
+          class="client-grid__form-title"
+        >
           Tipo de cliente:
         </span>
 
         <el-select
+          v-if="inputValue"
           v-model="negotiationType"
           placeholder="Tipo de cliente"
           class="client-grid__autocomplete"
@@ -81,11 +86,13 @@ import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'ClientGrid',
+
   components: {
     JusGrid: () => import('@/components/JusGrid/JusGrid'),
     JusUserCard: () => import('@/components/JusUserCard/JusUserCard'),
     ContractsModal: () => import('./ContractsModal')
   },
+
   data() {
     return {
       dialogFormVisible: false,
@@ -94,6 +101,7 @@ export default {
       negotiationType: null
     }
   },
+
   computed: {
     ...mapGetters({
       custumerList: 'getMyCusomers',
@@ -103,11 +111,17 @@ export default {
       custumerSuggestions: 'getAllCusomers',
       plans: 'getPlans',
       workspaceId: 'workspaceId'
-    })
+    }),
+
+    isSuggestion() {
+      return this.custumerSuggestions.filter(({ name }) => (name === this.inputValue)).length > 0
+    }
   },
+
   created() {
     this.init()
   },
+
   methods: {
     ...mapActions([
       'addCustomer',
@@ -120,6 +134,7 @@ export default {
       'unlinkCustomer',
       'updateCustomer'
     ]),
+
     init() {
       if (this.isJusttoAdmin || this.isAdminProfile) {
         this.getPlans().then(() => {
@@ -153,6 +168,7 @@ export default {
         })
       }
     },
+
     getCustomerToRedirect() {
       return new Promise((resolve, reject) => {
         if (this.custumerList.length === 1) {
@@ -177,28 +193,35 @@ export default {
         }
       })
     },
+
     handleEditTitle(userData) {
       this.updateCustomer(userData)
     },
+
     querySearch(queryString, cb) {
       const options = this.custumerSuggestions
       const results = queryString ? options.filter(this.createFilter(queryString)) : options
+
       cb(results)
     },
+
     createFilter(queryString) {
       return (option) => {
         return (option.name.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
       }
     },
+
     handleSeeMore(userData) {
       this.setCustomer(userData)
       this.$router.push(`/billing/${userData.id}`)
     },
+
     handleEdit(userData) {
       this.setCustomer(userData)
       this.form = this.currentCustomer
       this.dialogFormVisible = !this.dialogFormVisible
     },
+
     handleClose(userData) {
       this.$confirm('Tem certeza que deseja desvincular este cliente dassa workspace?', 'Atenção', {
         confirmButtonText: 'Continuar',
@@ -214,6 +237,7 @@ export default {
         })
       })
     },
+
     addClient() {
       const name = this.inputValue
       const similarClient = this.custumerSuggestions.filter(val => val.name === name)
@@ -230,12 +254,21 @@ export default {
 
       this.hideFormCard()
     },
+
     showFormCard() {
       this.formCardIsVisible = true
     },
+
     hideFormCard() {
       this.formCardIsVisible = false
       this.inputValue = ''
+      this.negotiationType = null
+    },
+
+    handleValueChange() {
+      (this.custumerSuggestions || []).forEach(({ name, negotiationType }) => {
+        if (name === this.inputValue) this.negotiationType = negotiationType
+      })
     }
   }
 }
