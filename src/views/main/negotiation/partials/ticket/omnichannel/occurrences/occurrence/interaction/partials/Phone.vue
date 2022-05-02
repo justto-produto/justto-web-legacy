@@ -94,6 +94,19 @@
     </div>
 
     <div
+      v-if="hasActiveCall"
+      class="phone-container__audio_current_call"
+    >
+      <i class="el-icon-microphone el-icon-pulse" />
+
+      <div>
+        <span>Chamada em andamento…</span>
+
+        <i class="el-icon-loading" />
+      </div>
+    </div>
+
+    <div
       v-if="mediaLink && !badStatus"
       class="phone-container__editor jus-ckeditor__parent"
     >
@@ -438,6 +451,25 @@ export default {
           margin: 0;
           color: $--color-primary;
         }
+      }
+    }
+  }
+
+  .phone-container__audio_current_call {
+    margin: 16px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+
+    .el-icon-microphone {
+      font-size: 24px;
+    }
+
+    div {
+      span {
+        font-size: 16px;
+        font-weight: 600;
       }
     }
   }
