@@ -451,6 +451,7 @@ import { isSimilarStrings, eventBus } from '@/utils'
 import { mapGetters, mapActions } from 'vuex'
 import { JusDragArea } from '@/components/JusDragArea'
 import ckeditor from '@/utils/mixins/ckeditor'
+import restartEngagementBeforeRouteLeave from '@/utils/mixins/restartEngagementBeforeRouteLeave'
 
 import events from '@/constants/negotiationEvents'
 
@@ -472,7 +473,7 @@ export default {
     JusDragArea
   },
 
-  mixins: [ckeditor],
+  mixins: [ckeditor, restartEngagementBeforeRouteLeave],
 
   data() {
     return {
@@ -662,10 +663,15 @@ export default {
       this.handleRestoreBackup()
     },
 
-    typingTab() {
+    typingTab(tab) {
       const { id } = this.$route.params
       this.getLastInteractions(id)
       this.handleMessageBackup()
+      this.setOmnichannelActiveTab({
+        1: 'MESSAGES',
+        2: 'NOTES',
+        3: 'OCCURRENCES'
+      }[Number(tab)])
     },
 
     y(y) {
@@ -751,6 +757,7 @@ export default {
       'disputeSetVisualized',
       'getQuickReplyTemplates',
       'resetQuickReplyTemplate',
+      'setOmnichannelActiveTab',
       'archiveQuickReplyTemplate'
     ]),
 

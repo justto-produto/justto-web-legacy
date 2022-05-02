@@ -23,6 +23,7 @@
         Início das ocorrências
       </div>
     </infinite-loading>
+
     <div
       v-for="(datedOccurrence, date, index) in datedOccurrences"
       :key="`${date}-${index}`"

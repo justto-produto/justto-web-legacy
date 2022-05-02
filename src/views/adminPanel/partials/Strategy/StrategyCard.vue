@@ -178,7 +178,7 @@ export default {
   data() {
     return {
       associatedWorkspaces: this.strategy.workspaces.map(w => w.id),
-      defaultStrategyTypes: ['PAYMENT', 'RECOVERY', 'OBLIGATION', 'DISCOUNT', 'MULTI_PARTY_NEGOTIATION', 'LEGAL_MKT'],
+      defaultStrategyTypes: ['COMMUNICATION', 'PAYMENT', 'RECOVERY', 'OBLIGATION', 'DISCOUNT', 'MULTI_PARTY_NEGOTIATION', 'LEGAL_MKT'],
       strategySelections: {}
     }
   },

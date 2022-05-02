@@ -241,6 +241,7 @@ const omnichannelActions = {
       }
       if (window.location.href.includes('dispute')) {
         commit('addDisputeOccurrence', occurrence)
+        commit('addNegotiationOccurrence', occurrence)
       }
     }
   },

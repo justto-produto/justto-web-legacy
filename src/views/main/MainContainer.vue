@@ -4,7 +4,22 @@
       class="container-aside"
       width="auto"
     >
-      <div class="container-aside__logo">
+      <div
+        class="container-aside__logo"
+        :class="{'has-ghost-mode': isJusttoAdmin}"
+      >
+        <el-tooltip
+          v-if="isJusttoAdmin"
+          content="Modo anônimo"
+        >
+          <JusIcon
+            icon="ghost-mode"
+            class="ghost-mode"
+            :is-active="ghostMode"
+            @click="setGhostMode(!ghostMode)"
+          />
+        </el-tooltip>
+
         <router-link to="/">
           <img
             v-if="isRecovery"
@@ -16,8 +31,6 @@
           >
         </router-link>
       </div>
-
-      <!-- <dialer /> -->
 
       <el-menu
         ref="sideMenu"
@@ -100,8 +113,6 @@
     />
 
     <BuyDialerDialog />
-
-    <!-- <NotificationDrawer /> -->
   </el-container>
 </template>
 
@@ -111,15 +122,14 @@ import { eventBus } from '@/utils'
 
 export default {
   name: 'MainContainer',
+
   components: {
     jusMessagePreview: () => import('@/components/dialogs/JusMessagePreviewDialog'),
     JusHeaderMain: () => import('@/components/layouts/JusHeaderMain'),
     JusTeamMenu: () => import('@/components/layouts/JusTeamMenu'),
     JusShortchts: () => import('@/components/others/JusShortcuts'),
     ThamirisAlerts: () => import('@/components/dialogs/ThamirisAlerts.vue'),
-    // Dialer: () => import('@/views/main/dialer/Dialer'),
     BuyDialerDialog: () => import('@/components/dialogs/BuyDialerDialog')
-    // NotificationDrawer: () => import('@/components/drawer/NotificationDrawer.vue')
   },
 
   data() {
@@ -133,19 +143,20 @@ export default {
 
   computed: {
     ...mapGetters({
-      workspaceId: 'workspaceId',
-      isAdminProfile: 'isAdminProfile',
-      isJusttoAdmin: 'isJusttoAdmin',
-      workspaceMembersSorted: 'workspaceMembersSorted',
-      personId: 'loggedPersonId',
-      workspace: 'workspaceSubdomain',
-      authorization: 'accountToken',
-      userPreferences: 'userPreferences',
-      notifications: 'notifications',
-      areThamirisAlertsVisible: 'areThamirisAlertsVisible',
-      areNotificationsVisible: 'areNotificationsVisible',
       accountId: 'accountId',
-      isRecovery: 'isWorkspaceRecovery'
+      ghostMode: 'ghostMode',
+      personId: 'loggedPersonId',
+      workspaceId: 'workspaceId',
+      authorization: 'accountToken',
+      isJusttoAdmin: 'isJusttoAdmin',
+      notifications: 'notifications',
+      workspace: 'workspaceSubdomain',
+      isAdminProfile: 'isAdminProfile',
+      isRecovery: 'isWorkspaceRecovery',
+      userPreferences: 'userPreferences',
+      workspaceMembersSorted: 'workspaceMembersSorted',
+      areNotificationsVisible: 'areNotificationsVisible',
+      areThamirisAlertsVisible: 'areThamirisAlertsVisible'
     }),
 
     canAccessNegotiationScreen() {
@@ -241,7 +252,8 @@ export default {
       setAccountProperty: 'setAccountProperty',
       setWindowGeometry: 'setWindowGeometry',
       getPreview: 'getMessageToPreview',
-      getThamirisAlerts: 'getThamirisAlerts'
+      getThamirisAlerts: 'getThamirisAlerts',
+      setGhostMode: 'setGhostMode'
     }),
 
     pollData() {
@@ -400,6 +412,18 @@ export default {
     height: 58px;
     padding: 18px;
     text-align: center;
+
+    &.has-ghost-mode {
+      padding-top: 8px;
+      height: 64px;
+    }
+
+    .ghost-mode {
+      height: 16px;
+      margin-bottom: 4px;
+      margin-left: -4px;
+      cursor: pointer;
+    }
   }
 
   .container-aside__team {

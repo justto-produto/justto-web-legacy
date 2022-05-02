@@ -229,6 +229,7 @@ export default {
       isJusttoDev: 'isJusttoDev',
       currentCall: 'getCurrentCall',
       isJusttoAdmin: 'isJusttoAdmin',
+      backups: 'getMessagesBackupById',
       isAdminProfile: 'isAdminProfile',
       isActiveToCall: 'isActiveToCall',
       hasCallInQueue: 'hasCallInQueue',
@@ -346,7 +347,9 @@ export default {
       if ([oldCall?.status, call?.status].includes('COMPLETED_CALL')) {
         this.$jusSegment('END_DIALER_CALL', { ...(call || oldCall) })
 
-        if (this.forwardedDisputeId) {
+        const { message, note } = this.backups(this.forwardedDisputeId)
+
+        if (this.forwardedDisputeId && (message || note)) {
           this.$confirm(`Você estava trabalhando na disputa <b>#${this.forwardedDisputeId}</b> antes de fazer a ligação telefônica.<br><br><b>Deseja voltar para ela?<b>`, `Voltar pra disputa #${this.forwardedDisputeId}`, {
             confirmButtonText: `Sim, voltar pra disputa #${this.forwardedDisputeId}.`,
             cancelButtonText: 'Não, permanecer nesta disputa.',
@@ -356,8 +359,8 @@ export default {
             closeOnPressEscape: true,
             showClose: false,
             center: true
-          }).then(this.backToFowwarded)
-        }
+          }).then(this.backToFowwarded).finally(() => { this.forwardedDisputeId = null })
+        } else { this.forwardedDisputeId = null }
       } else if (['RECEIVING_CALL'].includes(call?.status)) {
         this.$refs.ringAudio.play()
         setTimeout(() => this.answerCall(true), 4000)
