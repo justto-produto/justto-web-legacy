@@ -266,7 +266,7 @@ export default {
     },
 
     hasValidAudio() {
-      return ['16'].includes(this.audioCodeResult) || this.hasActiveCall
+      return ['16'].includes(String(this.audioCodeResult)) || this.hasActiveCall
     }
   },
 
@@ -346,7 +346,7 @@ export default {
       if (this.value?.message?.parameters?.PHONE_CALL_ID) {
         this.localLoading = true
 
-        new Promise((resolve) => {
+        return new Promise((resolve) => {
           if (this.value?.message?.parameters?.VOICE_CODE_RESULT) {
             resolve(this.value?.message?.parameters?.VOICE_CODE_RESULT)
           } else if (this.value?.disputeMessageId) {
@@ -358,6 +358,8 @@ export default {
           this.localLoading = false
         })
       }
+
+      return Promise.resolve()
     },
 
     handleUpdateCallStatus() {
