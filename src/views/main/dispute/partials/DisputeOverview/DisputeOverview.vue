@@ -278,7 +278,11 @@
       </el-dialog>
 
       <!-- Edição de disputa -->
-      <el-dialog
+      <EditDisputeDialog
+        ref="editDisputeDialog"
+        @hide="editDisputeDialogVisible = false"
+      />
+      <!-- <el-dialog
         :close-on-click-modal="false"
         :visible.sync="editDisputeDialogVisible"
         title="Editar disputa"
@@ -562,7 +566,7 @@
             @click="editDispute()"
           >Editar dados</el-button>
         </span>
-      </el-dialog>
+      </el-dialog> -->
 
       <!-- Edição de parte -->
       <edit-role-dialog
@@ -719,7 +723,8 @@ export default {
     AssociateContactsModal: () => import('@/components/dialogs/AssociateContactsModal'),
     GeneralInfoTab: () => import('./sections/GeneralInfoTab'),
     RolesTab: () => import('./sections/RolesTab'),
-    EditRoleDialog: () => import('./dialogs/EditRoleDialog')
+    EditRoleDialog: () => import('./dialogs/EditRoleDialog'),
+    EditDisputeDialog: () => import('@/views/main/dispute/partials/DisputeOverview/dialogs/EditDisputeDialog'),
   },
 
   mixins: [restartEngagement],
@@ -1029,6 +1034,14 @@ export default {
     dispute(newew, old) {
       if ((!old || !old.id) && newew.properties) {
         this.checkMetadata()
+      }
+    },
+
+    editDisputeDialogVisible(visible) {
+      if (visible) {
+        this.$refs.editDisputeDialog.show()
+      } else {
+        this.$refs.editDisputeDialog.hide()
       }
     }
   },
@@ -1500,7 +1513,9 @@ export default {
       this.disputeForm.denySavingDeposit = dispute?.denySavingDeposit
       this.disputeForm.zeroUpperRange = !parseFloat(dispute.disputeUpperRange)
       this.editDisputeDialogVisible = true
-      this.$nextTick(() => { this.$refs.disputeForm.clearValidate() })
+      this.$nextTick(() => {
+        if (this.$refs.disputeForm) this.$refs.disputeForm.clearValidate()
+      })
     },
 
     checkZeroUpperRange() {
