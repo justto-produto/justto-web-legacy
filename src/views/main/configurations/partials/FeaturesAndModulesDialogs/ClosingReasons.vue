@@ -10,7 +10,20 @@
     :before-close="handleClose"
   >
     <!-- TODO: SAAS-4882 -->
-    Feature em desenvolvimento.
+    <el-select
+      v-model="selectedReasons"
+      placeholder="Selecione os motivos de encerramento"
+      multiple
+      clearable
+      filterable
+    >
+      <el-option
+        v-for="option in reasons.UNSETTLED"
+        :key="option.value"
+        :label="option.label"
+        :value="option.value"
+      />
+    </el-select>
   </el-dialog>
 </template>
 
@@ -20,22 +33,32 @@ import { mapActions } from 'vuex'
 export default {
   data: () => ({
     visible: false,
-    reasons: {}
+    reasons: {
+      UNSETTLED: [],
+      ARCHIVED: [],
+      CANCELED: []
+    },
+    selectedReasons: []
   }),
 
   methods: {
     ...mapActions(['getOutcomeReasonsConfig']),
 
     openFeatureDialog() {
-      this.visible = true;
+      this.visible = true
 
-      ['UNSETTLED', 'ARCHIVED', 'CANCELED'].forEach(async type => {
+      Object.keys(this.reasons).forEach(async type => {
         await this.getOutcomeReasonsConfig(type).then(res => {
           this.reasons[type] = Object.keys(res).map(key => {
-            const temp = {}
-            temp[key] = res[key]
+            this.selectedReasons = [
+              ...this.selectedReasons,
+              key
+            ]
 
-            return temp
+            return {
+              value: key,
+              label: res[key]
+            }
           })
         })
       })
@@ -63,3 +86,13 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.closing-reason-dialog {
+  .el-dialog__body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+</style>

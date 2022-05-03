@@ -210,6 +210,8 @@ export default {
 @import '@/styles/colors.scss';
 
 .features-modules-container {
+  padding-bottom: 24px;
+
   .features-modules-container__list {
     margin-top: 18px;
     display: flex;

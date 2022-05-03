@@ -564,6 +564,10 @@
       "label": "Motivos de encerramento",
       "icon": "negative-hand",
       "help": ""
+    },
+    "DRAFT_NOTIFICATIONS": {
+      "label": "Notificar minutagem",
+      "icon": "accepted"
     }
   },
   "fields": {
