@@ -280,7 +280,11 @@ const disputeActions = {
       ...state.query,
       fileFormat: 'CSV',
       columnToExport: stringColums.split(',')
-    };
+    }
+
+    if (state.query.transactionType) {
+      data.transactionType = state.query.transactionType.split(',')
+    }
 
     ['expirationDate', 'dealDate', 'importingDate', 'lastInteractionDate'].forEach(key => {
       if (data[key]?.length) {
