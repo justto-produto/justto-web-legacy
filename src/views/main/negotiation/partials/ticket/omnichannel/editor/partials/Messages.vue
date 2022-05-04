@@ -12,6 +12,7 @@
       :config="editorConfig"
       type="classic"
     />
+
     <el-input
       v-else
       id="messageEditorTextOnly"
@@ -22,16 +23,19 @@
       resize="none"
       @input="setEditorText"
     />
+
     <Attachments
       v-if="messageType === 'email'"
       class="messages-container__attachments"
     />
+
     <span
       class="messages-container__full-screen"
       @click="openFullScreenEditor"
     >
       <i class="el-icon-full-screen" />
     </span>
+
     <span class="messages-container__button">
       <el-button
         type="primary"
@@ -42,12 +46,14 @@
         <span v-if="!localLoading">
           {{ sendMessagetext }}
         </span>
+
         <i
           v-else
           class="el-icon-loading"
         />
       </el-button>
     </span>
+
     <DialogEditor
       ref="fullScreenEditor"
       :text-only="!showCKEditor"
@@ -63,6 +69,7 @@
         class="title-slot"
       >
         <Recipients is-reversed />
+
         <QuickReply
           show-title
           @input="openFullScreenEditor"
@@ -72,6 +79,7 @@
 
     <ExpiredDisputeAlert ref="expiredDisputeAlert" />
   </section>
+
   <section
     v-else
     class="messages-container"
@@ -315,121 +323,118 @@ export default {
 </script>
 
 <style lang="scss">
+  @import '@/styles/colors.scss';
 
-.negotiator-fullscreen-editor {
-  .el-dialog__header {
-    margin: 10px 0px;
-    height: 40px;
+  .negotiator-fullscreen-editor {
+    .el-dialog__header {
+      margin: 10px 0px;
+      height: 40px;
 
-    .dialog-title > .title-slot {
-      display: flex;
-      justify-content: flex-start;
-      gap: 12px;
-      align-items: center;
+      .dialog-title > .title-slot {
+        display: flex;
+        justify-content: flex-start;
+        gap: 12px;
+        align-items: center;
+      }
+
+      .el-dialog__headerbtn {
+        top: 20px;
+      }
     }
 
-    .el-dialog__headerbtn {
-      top: 20px;
-    }
-  }
+    .el-dialog__body {
+      margin: 0px 0px 20px;
 
-  .el-dialog__body {
-    margin: 0px 0px 20px;
-
-    .el-textarea > .el-textarea__inner {
-      border-radius: 6px;
-    }
-  }
-}
-</style>
-
-<style lang="scss" scoped>
-@import '@/styles/colors';
-
-.messages-container {
-  padding: 6px;
-  display: flex;
-  flex-direction: column;
-
-  .messages-container__pre-negotiation-alert {
-    margin: 24px 0px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: $--color-text-secondary;
-    font-style: italic;
-  }
-
-  .messages-container__editor {
-    margin: 0px;
-  }
-
-  .messages-container__full-screen {
-    position: absolute;
-    top: 0;
-    right: 0;
-    margin: 16px;
-
-    cursor: pointer;
-  }
-
-  .messages-container__attachments {
-    position: absolute;
-    top: 0;
-    right: 0;
-    margin: 16px 40px 0px 0px;
-  }
-
-  .messages-container__paste {
-    position: absolute;
-    top: 20px;
-    left: 140px;
-    cursor: pointer;
-  }
-
-  .messages-container__button {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 6px;
-  }
-}
-
-@media (max-width: 900px) {
-  .messages-container {
-    padding: 0;
-
-    .messages-container__editor {
-      margin: 6px;
-    }
-
-    .messages-container__button {
-      .el-button {
-        width: 100%;
-        border-radius: 0;
+      .el-textarea > .el-textarea__inner {
+        border-radius: 6px;
       }
     }
   }
-}
-</style>
 
-<style lang="scss">
-@import '@/styles/colors.scss';
-
-.messages-container {
-  .cke_top { border: none; }
-
-  .cke.cke_chrome, .el-textarea__inner {
-    border: 2px solid $--color-light-gray;
-    border-radius: 6px;
-  }
-}
-
-@media (max-width: 900px) {
   .messages-container {
-    .el-textarea__inner {
-      margin: 6px;
-      width: calc(100% - 12px);
+    .cke_top { border: none; }
+
+    .cke.cke_chrome, .el-textarea__inner {
+      border: 2px solid $--color-light-gray;
+      border-radius: 6px;
     }
   }
-}
+
+  @media (max-width: 900px) {
+    .messages-container {
+      .el-textarea__inner {
+        margin: 6px;
+        width: calc(100% - 12px);
+      }
+    }
+  }
+</style>
+
+<style lang="scss" scoped>
+  @import '@/styles/colors';
+
+  .messages-container {
+    padding: 6px;
+    display: flex;
+    flex-direction: column;
+
+    .messages-container__pre-negotiation-alert {
+      margin: 24px 0px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: $--color-text-secondary;
+      font-style: italic;
+    }
+
+    .messages-container__editor {
+      margin: 0px;
+    }
+
+    .messages-container__full-screen {
+      position: absolute;
+      top: 0;
+      right: 0;
+      margin: 16px;
+
+      cursor: pointer;
+    }
+
+    .messages-container__attachments {
+      position: absolute;
+      top: 0;
+      right: 0;
+      margin: 16px 40px 0px 0px;
+    }
+
+    .messages-container__paste {
+      position: absolute;
+      top: 20px;
+      left: 140px;
+      cursor: pointer;
+    }
+
+    .messages-container__button {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 6px;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .messages-container {
+      padding: 0;
+
+      .messages-container__editor {
+        margin: 6px;
+      }
+
+      .messages-container__button {
+        .el-button {
+          width: 100%;
+          border-radius: 0;
+        }
+      }
+    }
+  }
 </style>

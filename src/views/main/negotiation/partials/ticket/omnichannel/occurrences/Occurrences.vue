@@ -82,7 +82,8 @@ export default {
       isLoading: 'isOccurrencesLoading',
       occurrencesList: 'getOccurrencesList',
       messageType: 'getEditorMessageType',
-      isPrinting: 'getExportTicketModalVisible'
+      isPrinting: 'getExportTicketModalVisible',
+      backups: 'getMessagesBackupById'
     }),
 
     infiniteLoadingIdentifier() {
@@ -131,12 +132,7 @@ export default {
 
     eventBus.$on(events.TICKET_CHANGE.callback, this.resetTicket)
 
-    if (Number(this.lastMessage.disputeId) !== Number(this.id)) {
-      const id = Number(location.href.split('/').slice(-1).pop())
-
-      this.resetTicket(id)
-    }
-
+    this.resetTicket(this.id)
     this.adjustScroll(true)
   },
 

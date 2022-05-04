@@ -25,6 +25,12 @@ const messageMutations = {
   },
   setShowPreview(state, visibility) {
     Vue.set(state, 'showPreview', visibility)
+  },
+
+  setMessageBackup(state, backup) {
+    clearInterval(state.messageBackupDebounce)
+
+    Vue.set(state, 'messageBackupDebounce', setInterval(() => Vue.set(state.messageBackup, backup.disputeId, backup), 500))
   }
 }
 

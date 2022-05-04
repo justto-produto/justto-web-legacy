@@ -29,16 +29,10 @@
       class="ticket-header-container__actions"
     />
 
-    <el-tooltip
+    <Dialer
       v-if="!isOverviewActive"
-      :open-delay="800"
-      content="Discador"
-      placement="bottom-end"
-    >
-      <el-button class="ticket-header-container__dialer">
-        <Dialer />
-      </el-button>
-    </el-tooltip>
+      class="ticket-header-container__dialer"
+    />
   </section>
 </template>
 
@@ -109,6 +103,8 @@ export default {
     border-radius: 6px;
     padding: 8px 2px;
     margin-left: 8px;
+    border: solid lightgray thin;
+    cursor: pointer;
   }
 }
 

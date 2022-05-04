@@ -47,9 +47,13 @@ const disputeGetters = {
     return Object.keys(recentPrescriptions).filter(p => moment(new Date()).diff(recentPrescriptions[p], 'days') < 1)
   },
   prescriptionsList: state => state.prescriptionsList.sort(),
+
   partyAnalysisByDocument: state => (documentNumber) => state.partyAnalysis[documentNumber],
+
   lastAccess: state => state.lastAccess,
+
   disputeLastInteractions: state => state.disputeLastInteractions,
+
   getCanUseBatchAction: state => (action) => {
     if (!state.batchActionsLastUse[action]) return true
 
@@ -62,7 +66,11 @@ const disputeGetters = {
       default:
         return diferece >= 30
     }
-  }
+  },
+
+  getDisputesNeedsRestart: state => state.disputesNeedsRestart,
+
+  getNotesPagination: state => state.notesQuery
 }
 
 export default disputeGetters

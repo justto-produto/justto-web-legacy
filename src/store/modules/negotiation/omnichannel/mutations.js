@@ -19,10 +19,11 @@ const omnichannelMutations = {
 
   setMessageType: (state, type) => Vue.set(state.editor, 'messageType', type),
 
-  setOccurrences: (state, { content, totalElements, first }) => {
+  setOccurrences: (state, { content, totalElements, first, number }) => {
     if (first) {
       Vue.set(state.occurrences, 'list', [])
     }
+
     const datas = state.occurrences.list.map((occurrence, index) => {
       if (occurrence.id === null) {
         return {
@@ -54,7 +55,7 @@ const omnichannelMutations = {
       state.occurrences.list.splice(index + 1, 0, occurrence)
     })
 
-    state.occurrences.filter.page += 1
+    Vue.set(state.occurrences.filter, 'page', number + ([0, 1].includes(number) ? 2 : 1))
     Vue.set(state.occurrences, 'totalElements', totalElements)
     Vue.set(state, 'totalOfOccurrences', totalElements)
   },
@@ -85,6 +86,7 @@ const omnichannelMutations = {
     const validationInteractions = {
       MESSAGES: [
         'NPS',
+        'PHONE_CALL',
         'ATTACHMENT',
         'COMMUNICATION',
         'MANUAL_PROPOSAL',
@@ -99,6 +101,7 @@ const omnichannelMutations = {
       OCCURRENCES: [
         'CLICK',
         'ATTACHMENT',
+        'PHONE_CALL',
         'VISUALIZATION',
         'COMMUNICATION',
         'MANUAL_PROPOSAL',
@@ -120,7 +123,9 @@ const omnichannelMutations = {
     }
 
     if (canInclude) {
-      canInclude = state.occurrences.list.find(({ id }) => (id === occurrence.id)) === undefined
+      const tempOccurrence = state.occurrences.list.find(({ id }) => (id === occurrence.id))
+
+      canInclude = tempOccurrence === undefined
     }
 
     if (canInclude) {
@@ -134,6 +139,10 @@ const omnichannelMutations = {
 
       // TODO: Procurar uma solução melhor.
       eventBus.$emit('NEGOTIATION_WEBSOCKET_NEW_OCCURRENCE', {})
+    } else {
+      const occurrenceIndex = state.occurrences.list.findIndex(({ id }) => (id === occurrence?.id))
+
+      if (occurrenceIndex >= 0) Vue.set(state.occurrences.list, occurrenceIndex, occurrence)
     }
   },
 

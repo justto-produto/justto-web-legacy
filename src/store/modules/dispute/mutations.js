@@ -226,7 +226,7 @@ const disputeMutations = {
   },
 
   setDisputeStatuses(state, status) {
-    state.statuses[status.label] = status.value
+    Vue.set(state.statuses, status.label, status.value)
   },
 
   disputeSetHasNew(state, bol) {
@@ -306,6 +306,22 @@ const disputeMutations = {
       const vue = document.querySelector('.management-actions')?.parentElement?.__vue__
       if (vue) vue.$forceUpdate()
     }, seconds * 1000)
+  },
+
+  setRestartDisputeFlag: (state, disputeId) => Vue.set(state.disputesNeedsRestart, disputeId, true),
+
+  deleteRestartDisputeFlag: (state, disputeId) => Vue.delete(state.disputesNeedsRestart, disputeId),
+
+  setNoteQuery(state, data) {
+    Vue.set(state, 'notesQuery', {
+      ...data,
+      sort: state.notesQuery.sort,
+      page: data.number + 2,
+      content: undefined,
+      pageable: undefined
+    })
+
+    console.log(state.notesQuery)
   }
 }
 

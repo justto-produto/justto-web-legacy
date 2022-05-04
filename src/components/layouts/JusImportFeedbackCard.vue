@@ -19,7 +19,7 @@
         :open-delay="500"
       >
         <el-checkbox-group
-          v-model="mappedCampaign.replicate"
+          v-model="replicates"
           size="small"
         >
           <el-checkbox-button
@@ -398,6 +398,7 @@ export default {
       skipEnrichment: true,
       enrichDisputes: true,
       denySavingDeposit: false,
+      replicates: [],
       datePickerOptions: {
         disabledDate(date) {
           return date < new Date()
@@ -613,8 +614,10 @@ export default {
     handleReplicate(replicate, mappedCampaign, index) {
       if (replicate) {
         this.$set(mappedCampaign, 'replicateIndex', index - 2)
+        this.$set(mappedCampaign, 'replicate', replicate)
       } else {
         this.$delete(mappedCampaign, 'replicateIndex')
+        this.$delete(mappedCampaign, 'replicate')
       }
     }
   }

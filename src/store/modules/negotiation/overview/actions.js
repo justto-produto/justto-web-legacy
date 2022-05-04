@@ -292,8 +292,13 @@ const overviewActions = {
   },
 
   updateTicketOverviewPartyContact({ dispatch }, params) {
-    dispatch('deleteTicketOverviewPartyContact', params)
-      .then(() => dispatch('setTicketOverviewPartyContact', params))
+    dispatch('deleteTicketOverviewPartyContact', params).then(() => {
+      dispatch('setTicketOverviewPartyContact', params).then(() => {
+        const { disputeId, roleId: disputeRoleId } = params
+
+        dispatch('getTicketOverviewParty', { disputeId, disputeRoleId })
+      })
+    })
   },
 
   favoriteTicket({ _ }, disputeId) {

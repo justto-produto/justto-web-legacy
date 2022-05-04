@@ -30,6 +30,7 @@
 import events from '@/constants/negotiationEvents'
 import { eventBus } from '@/utils'
 import { mapActions, mapGetters } from 'vuex'
+import restartEngagementBeforeRouteLeave from '@/utils/mixins/restartEngagementBeforeRouteLeave'
 
 export default {
   name: 'Ticket',
@@ -40,6 +41,8 @@ export default {
     TicketHeader: () => import('./TicketHeader'),
     TicketResume: () => import('./TicketResumeDialog')
   },
+
+  mixins: [restartEngagementBeforeRouteLeave],
 
   data: () => ({
     showOverview: false
@@ -52,7 +55,8 @@ export default {
       authorization: 'accountToken',
       isJusttoAdmin: 'isJusttoAdmin',
       workspace: 'workspaceSubdomain',
-      loggedPersonId: 'loggedPersonId'
+      loggedPersonId: 'loggedPersonId',
+      backups: 'getMessagesBackupById'
     }),
 
     socketHeaders() {
@@ -86,13 +90,20 @@ export default {
       'getTicketOverviewParties',
       'getTicketMetadata',
       'setDisputeProperty',
-      'getTicketOverviewInfo'
+      'getTicketOverviewInfo',
+      'setAccountProperty',
+      'setEditorBackup'
     ]),
 
-    fetchData(id) {
+    async fetchData(id) {
+      this.setAccountProperty({ PREFERRED_INTERFACE: 'NEGOTIATION' })
       this.socketAction('subscribe', id)
-      this.cleanRecentMessages()
-      this.getTicketOverview(id).catch(error => this.$jusNotification({ error }))
+      await this.cleanRecentMessages()
+      this.getTicketOverview(id).catch(error => this.$jusNotification({ error })).finally(() => {
+        if (!this.backups(id).tab) {
+          this.setEditorBackup()
+        }
+      })
       this.getTicketOverviewInfo(id)
       this.getTicketOverviewParties(id).then(() => {
         this.getTicketMetadata(id).then(() => {

@@ -5,16 +5,6 @@
   >
     <Dialer />
 
-    <el-tooltip
-      v-if="isJusttoAdmin"
-      content="Modo anônimo"
-    >
-      <el-switch
-        v-model="isGhostMode"
-        class="usermenu-container__ghost-mode"
-      />
-    </el-tooltip>
-
     <!-- <JusAcademy /> -->
 
     <Notification
@@ -141,7 +131,6 @@ export default {
   computed: {
     ...mapGetters({
       accountId: 'accountId',
-      ghostMode: 'ghostMode',
       width: 'getWindowWidth',
       name: 'loggedPersonName',
       loggedPerson: 'loggedPerson',
@@ -160,14 +149,6 @@ export default {
     },
     isLargeTeamName() {
       return this.teamName.length > 20
-    },
-    isGhostMode: {
-      get() {
-        return this.ghostMode
-      },
-      set(value) {
-        this.setGhostMode(value)
-      }
     },
     avatarSize() {
       return this.width <= 1600 ? 'mini' : 'sm'
@@ -192,7 +173,6 @@ export default {
     ...mapActions([
       'openDialer',
       'myWorkspace',
-      'setGhostMode',
       'changeMemberName',
       'getFeaturesAndModules'
     ]),
