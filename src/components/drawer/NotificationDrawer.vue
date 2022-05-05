@@ -63,7 +63,7 @@
               <div :class="{'justtine-notification': notification.fromAccountId === null}">
                 <span v-if="notification.fromAccountId === null">
                   <jus-avatar-user
-                    :name="Justtine"
+                    name="Justtine"
                     :src="justtineUrl"
                     :purple="false"
                     shape="circle"
