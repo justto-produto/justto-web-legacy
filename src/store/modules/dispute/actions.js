@@ -728,7 +728,8 @@ const disputeActions = {
         value: params.value,
         note: params.note,
         action: params.action,
-        updateUpperRange: params.updateUpperRange
+        updateUpperRange: params.updateUpperRange,
+        forceStatus: params.forceStatus
       }).then(response => {
         resolve(response.data)
       }).catch(error => {

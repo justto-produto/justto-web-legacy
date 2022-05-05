@@ -9,19 +9,25 @@
     center
   >
     <span slot="footer">
-      <el-button @click="close">
+      <el-button
+        @click="close"
+      >
         Cancelar
       </el-button>
 
-      <el-button type="info">
-        Aguardando dados bancários
-      </el-button>
-
-      <el-button type="secondary">
+      <el-button
+        v-if="['RUNNING', 'ACCEPTED'].includes(status)"
+        type="secondary"
+        @click="handleAction('CHECKOUT')"
+      >
         Acordo
       </el-button>
 
-      <el-button type="primary">
+      <el-button
+        v-if="['RUNNING', 'ACCEPTED', 'CHECKOUT'].includes(status)"
+        type="primary"
+        @click="handleAction('SETTLED')"
+      >
         Ganha
       </el-button>
     </span>
@@ -30,18 +36,31 @@
 
 <script>
 export default {
+  props: {
+    status: {
+      type: String,
+      required: true
+    }
+  },
+
   data: () => ({
-    visible: false
+    visible: false,
+    action: () => {}
   }),
 
   methods: {
-    open() {
+    open(action) {
       this.visible = true
-      console.log('setSettledDialog')
+      this.action = action
     },
 
     close() {
       this.visible = false
+    },
+
+    handleAction(status) {
+      this.action(status)
+      this.close()
     }
   }
 }

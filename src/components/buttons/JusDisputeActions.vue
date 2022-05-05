@@ -595,6 +595,7 @@
 
     <SetSettledDialog
       ref="setSettledDialog"
+      :status="dispute.status"
     />
   </div>
 </template>
@@ -1015,12 +1016,16 @@ export default {
               if (this.dispute.status === 'CHECKOUT' || this.dispute.status === 'ACCEPTED') {
                 this.ticketResumeDialogVisible = true
               } else {
-                this.openSettledDialog(action)
+                this.disputeAction(action, additionParams)
               }
             })
           } else {
-            if (!this.features.DRAFT_MANAGEMENT && this.dispute.status === 'RUNNING') {
-              this.$refs.setSettledDialog.open()
+            if (!this.features.DRAFT_MANAGEMENT && ['RUNNING', 'ACCEPTED', 'CHECKOUT', 'SETTLED'].includes(this.dispute.status) && !additionParams?.forceStatus) {
+              this.$refs.setSettledDialog.open((status) => {
+                this.counterOfferForm.forceStatus = status
+
+                this.disputeAction(action, { ...additionParams, forceStatus: status })
+              })
             } else if (this.dispute.status === 'CHECKOUT' || this.dispute.status === 'ACCEPTED') {
               this.ticketResumeDialogVisible = true
             } else {
@@ -1232,7 +1237,8 @@ export default {
         disputeId: this.dispute.id,
         body: {
           note: this.counterOfferForm.note,
-          conclusionNote: this.counterOfferForm.note
+          conclusionNote: this.counterOfferForm.note,
+          forceStatus: this.counterOfferForm.forceStatus
         }
       }
 
@@ -1263,6 +1269,7 @@ export default {
             })
 
             this.counterOfferForm.note = ''
+            this.$delete(this.counterOfferForm, 'forceStatus')
 
             if (action === 'settled') {
               this.ticketResumeDialogVisible = false
@@ -1486,7 +1493,8 @@ export default {
                 roleId: this.counterOfferForm.selectedRoleId,
                 note: this.scapeHtml(this.counterOfferForm.note),
                 updateUpperRange: updateUpperRange || false,
-                action: this.offerFormType
+                action: this.offerFormType,
+                forceStatus: this.counterOfferForm.forceStatus
               }).then(() => {
                 resolve()
                 this.counterproposalDialogVisible = false
