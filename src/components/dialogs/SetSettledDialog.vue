@@ -16,7 +16,6 @@
       </el-button>
 
       <el-button
-        v-if="['RUNNING', 'ACCEPTED'].includes(status)"
         type="secondary"
         @click="handleAction('CHECKOUT')"
       >
@@ -24,7 +23,6 @@
       </el-button>
 
       <el-button
-        v-if="['RUNNING', 'ACCEPTED', 'CHECKOUT'].includes(status)"
         type="primary"
         @click="handleAction('SETTLED')"
       >
@@ -36,13 +34,6 @@
 
 <script>
 export default {
-  props: {
-    status: {
-      type: String,
-      required: true
-    }
-  },
-
   data: () => ({
     visible: false,
     action: () => {}

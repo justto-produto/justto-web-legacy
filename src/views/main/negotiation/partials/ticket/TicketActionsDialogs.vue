@@ -349,6 +349,11 @@ export default {
     ticket: {
       type: Object,
       required: true
+    },
+
+    forceStatus: {
+      type: String,
+      default: ''
     }
   },
 
@@ -649,14 +654,15 @@ export default {
           conclusionNote: note,
           roleId,
           updateUpperRange,
-          action: offerFormType
+          action: offerFormType,
+          forceStatus: this.forceStatus
         }
         const polarityObjectKey = 'plaintiffOffer'
         this.sendOffer({ disputeId, data, polarityObjectKey, change: updateUpperRange })
           .then(success => resolve(success))
           .catch(error => {
             return reject(error)
-          })
+          }).finally(() => this.$emit('conclude'))
       })
     },
 
@@ -676,7 +682,11 @@ export default {
       const { disputeId } = this.ticket
       const action = 'SETTLED'
       const { note } = this.offerForm
-      const data = { note, conclusionNote: note }
+      const data = {
+        note,
+        conclusionNote: note,
+        forceStatus: this.forceStatus
+      }
 
       this.confirmAction(action)
         .then(() => {
@@ -684,7 +694,10 @@ export default {
           this.sendTicketAction({ disputeId, action, data })
             .then(_success => this.concludeAction(action, disputeId))
             .catch(error => this.$jusNotification({ error }))
-            .finally(() => (this.modalLoading = false))
+            .finally(() => {
+              this.modalLoading = false
+              this.$emit('conclude')
+            })
         })
     },
 

@@ -595,7 +595,6 @@
 
     <SetSettledDialog
       ref="setSettledDialog"
-      :status="dispute.status"
     />
   </div>
 </template>
@@ -612,7 +611,7 @@ export default {
     JusDragArea,
     ConfirmActionDialog: () => import('@/components/dialogs/ConfirmActionDialog'),
     NotifyOnCompanyAnalysis: () => import('@/components/dialogs/NotifyOnCompanyAnalysis'),
-    SetSettledDialog: () => import('@/components/dialogs/SetSettedDialog')
+    SetSettledDialog: () => import('@/components/dialogs/SetSettledDialog')
   },
 
   props: {
@@ -1020,7 +1019,7 @@ export default {
               }
             })
           } else {
-            if (!this.features.DRAFT_MANAGEMENT && ['RUNNING', 'ACCEPTED', 'CHECKOUT', 'SETTLED'].includes(this.dispute.status) && !additionParams?.forceStatus) {
+            if (!this.features.DRAFT_MANAGEMENT && ['RUNNING', 'ACCEPTED'].includes(this.dispute.status) && !additionParams?.forceStatus) {
               this.$refs.setSettledDialog.open((status) => {
                 this.counterOfferForm.forceStatus = status
 
