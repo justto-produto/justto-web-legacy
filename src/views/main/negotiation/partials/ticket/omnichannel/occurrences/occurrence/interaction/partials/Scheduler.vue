@@ -65,7 +65,7 @@
     >
       <br>
       <span class="scheduler-container__status-about">
-        {{ sendDate | moment('HH:mm') }}
+        {{ sendDate | moment('HH:mm') }} aqui
         <span v-if="sendStatus !== 'default' && !directionIn">
           •
         </span>

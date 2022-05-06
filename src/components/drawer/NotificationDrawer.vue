@@ -60,7 +60,16 @@
               class="notification__drawer__list-item-name"
               @click="openMention(notification)"
             >
-              <div>
+              <div :class="{'justtine-notification': notification.fromAccountId === null}">
+                <span v-if="notification.fromAccountId === null">
+                  <jus-avatar-user
+                    name="Justtine"
+                    :src="justtineUrl"
+                    :purple="false"
+                    shape="circle"
+                    size="sm"
+                  />
+                </span>
                 {{ getMemberName(notification.fromAccountId) | resumedName }}
                 mencionou você.
               </div>
@@ -143,10 +152,15 @@ export default {
 
     getMemberName() {
       return (fromAccountId) => {
+        if (fromAccountId === null) return 'JUSTTINE'
         const member = this.members.find(({ accountId }) => Number(accountId) === Number(fromAccountId))
 
         return member?.person?.name || member?.accountEmail || ''
       }
+    },
+
+    justtineUrl() {
+      return require('@/assets/justtine/profile.png')
     },
 
     isVisible: {
@@ -291,6 +305,18 @@ export default {
 .notification-popover .popper__arrow::after {
   border-bottom-color: $--color-primary !important;
 }
+
+.justtine-notification {
+  .jus-avatar-user {
+    width: 24px;
+    height: 24px;
+
+    img {
+      width: 24px;
+      height: 24px;
+    }
+  }
+}
 </style>
 
 <style lang="scss" scoped>
@@ -390,6 +416,21 @@ export default {
 
             * {
               flex-wrap: nowrap;
+            }
+
+            .justtine-notification {
+              display: flex;
+              align-items: center;
+              gap: 8px;
+
+              span {
+                .jus-avatar-user {
+                  img {
+                    width: 24px;
+                  }
+                }
+              }
+
             }
           }
 
