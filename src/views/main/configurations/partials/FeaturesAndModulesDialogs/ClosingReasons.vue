@@ -17,6 +17,7 @@
       multiple
       clearable
       filterable
+      allow-create
     >
       <el-option
         v-for="option in allReasons.UNSETTLED"
@@ -45,6 +46,7 @@
 
 <script>
 import { mapActions } from 'vuex'
+import { uuidv4 } from '@/utils'
 
 export default {
   data: () => ({
@@ -64,6 +66,7 @@ export default {
     ...mapActions([
       'getOutcomeReasonsConfig',
       'getAllOutcomeReasons',
+      'getDisputeStatuses',
       'setOutcomeReasons'
     ]),
 
@@ -120,21 +123,26 @@ export default {
     },
 
     handleSaveReasons() {
-      const reasons = this.selectedReasons.reduce((acc, key) => {
-        const temp = {}
-        temp[key] = this.allReasonsMapped.UNSETTLED[key]
+      this.loading = true
 
-        return [...acc, temp]
-      }, [])
+      const reasons = this.selectedReasons.reduce((acc, key) => {
+        if (Object.keys(this.allReasonsMapped?.UNSETTLED).includes(key)) {
+          acc[key] = this.allReasonsMapped.UNSETTLED[key]
+        } else { acc[uuidv4()] = key }
+
+        return acc
+      }, {})
 
       this.setOutcomeReasons({ type: 'UNSETTLED', reasons }).then(() => {
-        this.deleteDocument(this.dispute.id).then(() => {
-          this.$jusNotification({
-            type: 'success',
-            title: 'Yay!',
-            message: `${this.$tc('configurations.CLOSING_REASONS.label')} salvos com sucesso`
-          })
+        this.$jusNotification({
+          type: 'success',
+          title: 'Yay!',
+          message: `${this.$tc('configurations.CLOSING_REASONS.label')} salvos com sucesso`
         })
+        this.getDisputeStatuses('UNSETTLED')
+      }).catch(error => this.$jusNotification({ error })).finally(() => {
+        this.loading = false
+        this.visible = false
       })
     }
   }
