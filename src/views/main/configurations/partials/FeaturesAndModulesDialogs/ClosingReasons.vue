@@ -10,22 +10,38 @@
     center
     :before-close="handleClose"
   >
-    <el-select
+    <el-checkbox-group
       v-model="selectedReasons"
       v-loading="loading"
-      placeholder="Selecione os motivos de encerramento"
-      multiple
-      clearable
-      filterable
-      allow-create
+      class="outcome-reasons-container"
     >
-      <el-option
+      <el-checkbox
         v-for="option in allReasons.UNSETTLED"
         :key="option.value"
-        :label="option.label"
-        :value="option.value"
-      />
-    </el-select>
+        :label="option.value"
+        size="mini"
+        border
+      >
+        {{ option.label }}
+      </el-checkbox>
+
+      <el-input
+        v-model="newClosingReason"
+        placeholder="Adicione um novo motivo"
+        size="mini"
+        @keypress.enter.native="handleAddReason"
+      >
+        <template
+          v-if="newClosingReason"
+          slot="suffix"
+        >
+          <i
+            class="el-icon-check"
+            @click="handleAddReason"
+          />
+        </template>
+      </el-input>
+    </el-checkbox-group>
 
     <span slot="footer">
       <el-button
@@ -52,20 +68,35 @@ export default {
   data: () => ({
     visible: false,
     loading: false,
-    reasons: {
-      UNSETTLED: []
-      // ARCHIVED: [],
-      // CANCELED: []
-    },
-    allReasons: { UNSETTLED: [] },
-    allReasonsMapped: { UNSETTLED: {} },
-    selectedReasons: []
+    reasons: { UNSETTLED: [] },
+    reasonsMapped: { UNSETTLED: [] },
+    defaultReasons: { UNSETTLED: [] },
+    defaultReasonsMapped: { UNSETTLED: [] },
+    selectedReasons: [],
+    newClosingReason: ''
   }),
+
+  computed: {
+    allReasons() {
+      return {
+        UNSETTLED: [
+          ...this.reasons.UNSETTLED,
+          ...this.defaultReasons.UNSETTLED.filter(({ value }) => !Object.keys(this.reasonsMapped.UNSETTLED).includes(value))
+        ]
+      }
+    },
+
+    allReasonsMapped() {
+      return {
+        UNSETTLED: this.allReasons.UNSETTLED.map(({ value }) => value)
+      }
+    }
+  },
 
   methods: {
     ...mapActions([
       'getOutcomeReasonsConfig',
-      'getAllOutcomeReasons',
+      'getDefaultOutcomeReasons',
       'getDisputeStatuses',
       'setOutcomeReasons'
     ]),
@@ -77,7 +108,7 @@ export default {
 
       Promise.allSettled([
         this.initReasons(),
-        this.initAllReasons()
+        this.initDefaultReasons()
       ]).finally(() => {
         this.loading = false
       })
@@ -87,30 +118,26 @@ export default {
       return await Object.keys(this.reasons).forEach(async type => {
         this.reasons[type] = []
 
-        this.getOutcomeReasonsConfig(type).then(res => {
+        this.getDisputeStatuses(type).then(res => {
+          this.reasonsMapped[type] = res
+
           this.reasons[type] = Object.keys(res).map(key => {
             this.selectedReasons = [...this.selectedReasons, key]
 
-            return {
-              value: key,
-              label: res[key]
-            }
+            return { value: key, label: res[key] }
           })
         })
       })
     },
 
-    async initAllReasons() {
+    async initDefaultReasons() {
       return await Object.keys(this.reasons).forEach(async type => {
-        this.allReasons[type] = []
+        this.defaultReasons[type] = []
 
-        this.getAllOutcomeReasons(type).then(res => {
-          this.allReasonsMapped[type] = res
+        this.getDefaultOutcomeReasons(type).then(res => {
+          this.defaultReasonsMapped = res
 
-          this.allReasons[type] = Object.keys(res).map(key => ({
-            value: key,
-            label: res[key]
-          }))
+          this.defaultReasons[type] = Object.keys(res).map(key => ({ value: key, label: res[key] }))
         })
       })
     },
@@ -123,12 +150,8 @@ export default {
     },
 
     handleSaveReasons() {
-      this.loading = true
-
       const reasons = this.selectedReasons.reduce((acc, key) => {
-        if (Object.keys(this.allReasonsMapped?.UNSETTLED).includes(key)) {
-          acc[key] = this.allReasonsMapped.UNSETTLED[key]
-        } else { acc[uuidv4()] = key }
+        acc[key] = this.allReasons.UNSETTLED.find(({ label, value }) => (value === key)).label
 
         return acc
       }, {})
@@ -144,17 +167,63 @@ export default {
         this.loading = false
         this.visible = false
       })
+    },
+
+    handleAddReason(_event) {
+      const reason = {
+        label: this.newClosingReason,
+        value: uuidv4()
+      }
+
+      this.allReasons.UNSETTLED = [...this.allReasons.UNSETTLED, reason]
+      this.selectedReasons = [...this.selectedReasons, reason.value]
+      this.newClosingReason = ''
     }
   }
 }
 </script>
 
 <style lang="scss">
+@import '@/styles/colors.scss';
+
 .closing-reason-dialog {
   .el-dialog__body {
     display: flex;
     flex-direction: column;
     gap: 8px;
+
+    .outcome-reasons-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: flex-start;
+
+      .el-checkbox {
+        margin: 0;
+        flex: 1;
+      }
+
+      .el-input {
+        width: 30%;
+
+        .el-input__suffix {
+          display: flex;
+          align-items: center;
+
+          span {
+            cursor: pointer;
+
+            i {
+              color: $--color-primary;
+
+              &::before {
+                font-weight: bold;
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
 </style>

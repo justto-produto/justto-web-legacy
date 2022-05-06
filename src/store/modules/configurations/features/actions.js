@@ -10,7 +10,7 @@ export default {
     })
   },
 
-  getAllOutcomeReasons({ _ }, type) {
+  getDefaultOutcomeReasons({ _ }, type) {
     return axiosDispatch({
       url: `${disputesV2Api}/outcome-reasons/default/${type}`
     })
