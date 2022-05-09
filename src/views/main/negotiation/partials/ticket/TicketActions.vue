@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'TicketActions',
@@ -314,6 +314,8 @@ export default {
       'loadAccountProperty'
     ]),
 
+    ...mapMutations(['deleteRestartDisputeFlag']),
+
     confirmAction(action, message = 'Tem certeza que deseja realizar está ação?') {
       const title = this.$options.filters.capitalize(this.$t(`actions.${action}.name`))
       const options = {
@@ -475,7 +477,10 @@ export default {
       this.handleManualStrategy(action)
         .then(() => this.confirmAction(action)
           .then(() => this.revertStatus({ disputeId, action, status })
-            .then(() => this.concludeAction(action, disputeId))
+            .then(() => {
+              this.deleteRestartDisputeFlag(disputeId)
+              this.concludeAction(action, disputeId)
+            })
             .catch(error => this.$jusNotification({ error }))
           )
         )
