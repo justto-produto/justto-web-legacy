@@ -1019,7 +1019,7 @@ export default {
               }
             })
           } else {
-            if (!this.features.DRAFT_MANAGEMENT && ['RUNNING', 'ACCEPTED'].includes(this.dispute.status) && !additionParams?.forceStatus) {
+            if (!this.features.DRAFT_MANAGEMENT && !['PRE_NEGOTIATION', 'CHECKOUT', 'SETTLED'].includes(this.dispute.status) && !additionParams?.forceStatus) {
               this.$refs.setSettledDialog.open((status) => {
                 this.counterOfferForm.forceStatus = status
 

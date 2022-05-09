@@ -431,7 +431,7 @@ export default {
 
       const settledTicket = () => {
         // TODO: Validar todos os estatus de onde se pode "ganhar a disputa".
-        if (!this.features.DRAFT_MANAGEMENT && ['RUNNING', 'ACCEPTED'].includes(this.ticket.status) && !this.forceStatus) {
+        if (!this.features.DRAFT_MANAGEMENT && !['PRE_NEGOTIATION', 'CHECKOUT', 'SETTLED'].includes(this.ticket.status) && !this.forceStatus) {
           this.$refs.setSettledDialog.open((status) => {
             this.forceStatus = status
 
