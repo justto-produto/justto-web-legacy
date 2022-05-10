@@ -2,6 +2,7 @@ import { axiosDispatch } from '@/utils'
 
 const disputesApi = 'api/disputes'
 const disputesV2Api = 'api/disputes/v2'
+const sendgridWhitelabelDomainsApi = 'api/email/domain/authentication'
 
 export default {
   getOutcomeReasonsConfig({ _ }, type) {
@@ -21,6 +22,12 @@ export default {
       method: 'PATCH',
       url: `${disputesV2Api}/outcome-reasons/${type}`,
       data: reasons
+    })
+  },
+
+  getSendgridDomains({ _ }) {
+    return axiosDispatch({
+      url: `${sendgridWhitelabelDomainsApi}`
     })
   }
 }

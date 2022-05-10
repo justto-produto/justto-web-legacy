@@ -1,127 +1,214 @@
 <template>
-  <el-dialog
-    :close-on-click-modal="false"
-    :visible.sync="configureCustomizationsDialogVisible"
-    title="Customizar sua empresa ou escritório como ODR"
-    append-to-body
-    width="80%"
-    custom-class="configure-customizations"
-  >
-    <el-form
-      ref="form"
-      :model="form"
-      :rules="rulesCustomizations"
-      :disabled="modalLoading"
-      label-position="top"
-      class="configure-customizations__form"
+  <div>
+    <el-dialog
+      :close-on-click-modal="false"
+      :visible.sync="configureCustomizationsDialogVisible"
+      title="Customizar sua empresa ou escritório como ODR"
+      append-to-body
+      width="80%"
+      custom-class="configure-customizations"
     >
-      <div class="configure-customizations__form-header">
-        <div class="configure-customizations__form-header-item">
-          <el-form-item
-            class="configure-customizations__form-header-item-input"
-            prop="email"
-          >
-            <label
-              class="configure-customizations__form-header-item-input-label"
+      <el-form
+        ref="form"
+        :model="form"
+        :rules="rulesCustomizations"
+        :disabled="modalLoading"
+        label-position="top"
+        class="configure-customizations__form"
+      >
+        <div class="configure-customizations__form-header">
+          <div class="configure-customizations__form-header-item">
+            <el-form-item
+              class="configure-customizations__form-header-item-input"
+              prop="email"
             >
-              Email para envio das mensagens
-            </label>
-            <el-tooltip
-              placement="right"
-              effect="dark"
-              :open-delay="500"
+              <label class="configure-customizations__form-header-item-input-label">
+                Email para envio das mensagens
+              </label>
+
+              <el-tooltip
+                placement="right"
+                effect="dark"
+                :open-delay="500"
+              >
+                <div slot="content">
+                  Esta é uma configuração que exige intervenção dos times <br> de tecnologia da JUSTTO e do escritório/empresa.
+                </div>
+                <i class="el-icon-info" />
+              </el-tooltip>
+
+              <el-input
+                v-model="form.email"
+                :disabled="!isJusttoAdmin"
+                size="small"
+              >
+                <template slot="append">
+                  <el-button
+                    v-if="isValidDomain"
+                    type="success"
+                    icon="el-icon-check"
+                    size="small"
+                    plain
+                  />
+                </template>
+              </el-input>
+            </el-form-item>
+          </div>
+
+          <div class="configure-customizations__form-header-item">
+            <el-form-item
+              class="configure-customizations__form-header-item-input"
+              prop="link"
             >
-              <div slot="content">
-                Esta é uma configuração que exige intervenção dos times <br> de tecnologia da JUSTTO e do escritório/empresa.
-              </div>
-              <i class="el-icon-info" />
-            </el-tooltip>
-            <el-input
-              v-model="form.email"
-              :disabled="!isJusttoAdmin"
-              size="small"
-            />
-          </el-form-item>
+              <label
+                class="configure-customizations__form-header-item-input-label"
+              >
+                Link para portal de negociações
+              </label>
+              <el-tooltip
+                placement="right"
+                effect="dark"
+                :open-delay="500"
+              >
+                <div slot="content">
+                  Exige intervenção da equipe de tecnologia para <br> criar um novo endereço na internet com o certificado.
+                </div>
+                <i class="el-icon-info" />
+              </el-tooltip>
+              <el-input
+                v-model="form.link"
+                disabled
+                size="small"
+              />
+            </el-form-item>
+          </div>
         </div>
 
-        <div class="configure-customizations__form-header-item">
-          <el-form-item
-            class="configure-customizations__form-header-item-input"
-            prop="link"
+        <el-form-item class="configure-customizations__form-ckeditor jus-ckeditor__parent">
+          <ckeditor
+            ref="footerEditor"
+            v-model="form.emailFooter"
+            :editor="editor"
+            :disabled="!isJusttoAdmin"
+            :config="editorConfig"
+            type="classic"
+          />
+        </el-form-item>
+      </el-form>
+
+      <div class="configure-customizations__footer">
+        <div class="configure-customizations__footer-actions">
+          <el-button
+            class="configure-customizations__footer-cancel"
+            size="small"
+            plain
+            @click="closeFeatureDialog()"
           >
-            <label
-              class="configure-customizations__form-header-item-input-label"
+            Cancelar
+          </el-button>
+
+          <el-button
+            v-loading="modalLoading"
+            :disabled="modalLoading || !isJusttoAdmin"
+            class="configure-customizations__footer-confirm"
+            type="success"
+            size="small"
+            @click.prevent="saveCustomizedConfigurations"
+          >
+            Salvar configuração
+          </el-button>
+        </div>
+
+        <div class="configure-customizations__footer-info">
+          <span class="configure-customizations__footer-info-span">
+            Ao utilizar nossa plataforma você está ciente e concorda com nossa
+            <a
+              href="https://justto.com.br/poilitica-privacidade"
+              target="_blank"
             >
-              Link para portal de negociações
-            </label>
-            <el-tooltip
-              placement="right"
-              effect="dark"
-              :open-delay="500"
-            >
-              <div slot="content">
-                Exige intervenção da equipe de tecnologia para <br> criar um novo endereço na internet com o certificado.
-              </div>
-              <i class="el-icon-info" />
-            </el-tooltip>
-            <el-input
-              v-model="form.link"
-              :disabled="!isJusttoAdmin"
-              size="small"
-            />
-          </el-form-item>
+              politica de privacidade
+            </a>
+            , nossos termos e condições de uso e está de acordo com nosso código de proteção de dados pessoais.
+            Caso não queira mais receber mensagens da nossa plataforma descadastre seu email aqui.
+          </span>
         </div>
       </div>
+    </el-dialog>
 
-      <el-form-item class="configure-customizations__form-ckeditor jus-ckeditor__parent">
-        <ckeditor
-          ref="footerEditor"
-          v-model="form.emailFooter"
-          :editor="editor"
-          :disabled="!isJusttoAdmin"
-          :config="editorConfig"
-          type="classic"
-        />
-      </el-form-item>
-    </el-form>
+    <el-dialog
+      :visible.sync="configureNewDomainDialogVisible"
+      title="Configurar domíno do cliente"
+      append-to-body
+      :close-on-click-modal="false"
+      width="80%"
+      custom-class="configure-customizations"
+    >
+      <el-form
+        ref="newDomainForm"
+        :model="newDomainForm"
+        :rules="rulesNewDomainForm"
+        :disabled="modalLoading"
+        label-position="top"
+        class="new-domain__form"
+      >
+        <el-row>
+          <el-col :span="24">
+            <el-form-item
+              class="new-domain__form-domain"
+              prop="domain"
+            >
+              <label for="newDomainFormDomain">Domínio:</label>
+              <el-input
+                id="newDomainFormDomain"
+                v-model="newDomainForm.domain"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
 
-    <div class="configure-customizations__footer">
-      <div class="configure-customizations__footer-actions">
-        <el-button
-          class="configure-customizations__footer-cancel"
-          size="small"
-          plain
-          @click="closeFeatureDialog()"
-        >
-          Cancelar
-        </el-button>
-        <el-button
-          v-loading="modalLoading"
-          :disabled="modalLoading || !isJusttoAdmin"
-          class="configure-customizations__footer-confirm"
-          type="success"
-          size="small"
-          @click.prevent="saveCustomizedConfigurations"
-        >
-          Salvar configuração
-        </el-button>
-      </div>
+        <el-row :gutter="16">
+          <el-col :span="8">
+            <el-form-item
+              class="new-domain__form-domain"
+              prop="mail_cname"
+            >
+              <label for="newDomainFormDomain">DNS 1(mail_cname):</label>
+              <el-input
+                id="newDomainFormDomain"
+                v-model="newDomainForm.dns.mail_cname.host"
+              />
+            </el-form-item>
+          </el-col>
 
-      <div class="configure-customizations__footer-info">
-        <span class="configure-customizations__footer-info-span">
-          Ao utilizar nossa plataforma você está ciente e concorda com nossa
-          <a
-            href="https://justto.com.br/poilitica-privacidade"
-            target="_blank"
-          >
-            politica de privacidade
-          </a>
-          , nossos termos e condições de uso e está de acordo com nosso código de proteção de dados pessoais.
-          Caso não queira mais receber mensagens da nossa plataforma descadastre seu email aqui.
-        </span>
-      </div>
-    </div>
-  </el-dialog>
+          <el-col :span="8">
+            <el-form-item
+              class="new-domain__form-domain"
+              prop="dkim1"
+            >
+              <label for="newDomainFormDomain">DNS 2(dkim1):</label>
+              <el-input
+                id="newDomainFormDomain"
+                v-model="newDomainForm.dns.dkim1.host"
+              />
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="8">
+            <el-form-item
+              class="new-domain__form-domain"
+              prop="dkim2"
+            >
+              <label for="newDomainFormDomain">DNS 3(dkim2):</label>
+              <el-input
+                id="newDomainFormDomain"
+                v-model="newDomainForm.dns.dkim2.host"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+    </el-dialog>
+  </div>
 </template>
 
 <script>
@@ -136,6 +223,7 @@ export default {
 
   data: () => ({
     configureCustomizationsDialogVisible: false,
+    configureNewDomainDialogVisible: false,
     modalLoading: false,
     form: {
       email: '',
@@ -143,11 +231,40 @@ export default {
       emailFooter: '',
       emailFooterId: null
     },
+
+    newDomainForm: {
+      domain: '',
+      dns: {
+        mail_cname: {
+          type: 'cname',
+          host: ''
+        },
+
+        dkim1: {
+          type: 'cname',
+          host: ''
+        },
+
+        dkim2: {
+          type: 'cname',
+          host: ''
+        }
+      }
+    },
+
     rulesCustomizations: {
       email: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
       link: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
       emailFooter: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
-    }
+    },
+
+    rulesNewDomainForm: {
+      domain: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+      mail_cname: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+      dkim1: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+      dkim2: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
+    },
+    currentDomain: null
   }),
 
   computed: {
@@ -155,7 +272,11 @@ export default {
       properties: 'workspaceProperties',
       isJusttoAdmin: 'isJusttoAdmin',
       workspaceId: 'workspaceId'
-    })
+    }),
+
+    isValidDomain() {
+      return this.currentDomain?.domain && (this.form?.email || '').endsWith(`@${this.currentDomain?.domain}`)
+    }
   },
 
   methods: {
@@ -163,7 +284,9 @@ export default {
       getTemplate: 'getStrategyTemplate',
       editTemplate: 'editStrategyTemplate',
       editProperties: 'editWorkpaceProperties',
-      createTemplate: 'createStrategyTemplate'
+      createTemplate: 'createStrategyTemplate',
+      getDomains: 'getSendgridDomains',
+      getWorkspace: 'getWorkspace'
     }),
 
     saveCustomizedConfigurations() {
@@ -185,12 +308,61 @@ export default {
       })
     },
 
+    handleValidateDomain(subdomain) {
+      return new Promise((resolve, reject) => {
+        this.getDomains().then(domains => {
+          const domain = domains.find(({ domain }) => (domain === subdomain))
+
+          resolve(domain)
+        }).catch(error => {
+          this.$jusNotification({ error })
+          reject(error)
+        })
+      })
+    },
+
+    async handleInitDialog() {
+      // Ver se o email existe
+      if (this.properties?.CUSTOM_EMAIL_SENDERs) {
+        // Se não existir
+        const domain = this.properties?.CUSTOM_EMAIL_SENDER.split('@')[1]
+
+        this.currentDomain = await this.handleValidateDomain(domain)
+      } else { // Se não existir
+        await this.$prompt('Informe o endereço de email utilizado no seu escritório:', 'Email do seu escritório', {
+          confirmButtonText: 'Salvar',
+          cancelButtonText: 'Cancelar',
+          inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
+          inputErrorMessage: 'Email inválido',
+          center: true
+        }).then(({ value }) => {
+          this.form.email = value
+
+          this.handleValidateDomain(value.split('@')[1]).then(domain => {
+            this.currentDomain = domain
+          }).catch(() => {
+            return Promise.reject(new Error('Email não informado 1'))
+          })
+        }).catch(() => {
+          return Promise.reject(new Error('Email não informado 2'))
+        })
+      }
+
+      return new Promise((resolve, reject) => {
+        this.getWorkspace().then(() => resolve(Boolean(this.currentDomain))).catch(reject)
+      })
+    },
+
     openFeatureDialog() {
-      this.configureCustomizationsDialogVisible = true
-
-      this.form = new OdrCustomizationModel(this.properties)
-
-      this.searchTemplete()
+      this.handleInitDialog().then((openCustomizationDialog) => {
+        if (openCustomizationDialog) {
+          this.configureCustomizationsDialogVisible = true
+          this.form = new OdrCustomizationModel(this.properties)
+          this.searchTemplete()
+        } else {
+          this.configureNewDomainDialogVisible = true
+        }
+      })
     },
 
     closeFeatureDialog() {
@@ -270,6 +442,20 @@ export default {
 
                 line-height: 24px;
                 font-size: 13px !important;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .configure-customizations__form-header {
+      .configure-customizations__form-header-item {
+        .configure-customizations__form-header-item-input {
+          .el-form-item__content {
+            .el-input-group--append {
+              .el-input-group__append {
+                background: transparent;
               }
             }
           }
