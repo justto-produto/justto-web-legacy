@@ -29,5 +29,13 @@ export default {
     return axiosDispatch({
       url: `${sendgridWhitelabelDomainsApi}`
     })
+  },
+
+  setSendgridDomains({ _ }, data) {
+    return axiosDispatch({
+      method: 'POST',
+      data,
+      url: `${sendgridWhitelabelDomainsApi}`
+    })
   }
 }

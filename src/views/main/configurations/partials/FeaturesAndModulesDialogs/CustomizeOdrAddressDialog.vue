@@ -1,7 +1,9 @@
 <template>
   <div>
     <el-dialog
+      v-loading="modalLoading"
       :close-on-click-modal="false"
+      :show-close="false"
       :visible.sync="configureCustomizationsDialogVisible"
       title="Customizar sua empresa ou escritório como ODR"
       append-to-body
@@ -10,6 +12,7 @@
     >
       <el-form
         ref="form"
+        :v-if="configureCustomizationsDialogVisible"
         :model="form"
         :rules="rulesCustomizations"
         :disabled="modalLoading"
@@ -43,13 +46,23 @@
                 size="small"
               >
                 <template slot="append">
-                  <el-button
-                    v-if="isValidDomain"
-                    type="success"
-                    icon="el-icon-check"
-                    size="small"
-                    plain
-                  />
+                  <el-popover
+                    placement="right"
+                    trigger="hover"
+                    :open-delay="500"
+                    :content="validTooltipText"
+                    popper-class="valid-domain-popover"
+                  >
+                    <div slot="reference">
+                      <el-button
+                        v-if="haveDomain"
+                        slot="reference"
+                        type="success"
+                        :icon="isValidDomain ? 'el-icon-check' : 'el-icon-close'"
+                        size="small"
+                      />
+                    </div>
+                  </el-popover>
                 </template>
               </el-input>
             </el-form-item>
@@ -117,6 +130,22 @@
           >
             Salvar configuração
           </el-button>
+
+          <el-button
+            type="primary"
+            size="small"
+            @click="handleUpdateDomains"
+          >
+            Verificar se os registros foram inseridos
+          </el-button>
+
+          <el-button
+            type="secondary"
+            size="small"
+            @click="handleResetEmail"
+          >
+            Mudar o email da empresa
+          </el-button>
         </div>
 
         <div class="configure-customizations__footer-info">
@@ -136,12 +165,14 @@
     </el-dialog>
 
     <el-dialog
+      v-loading="modalLoading"
       :visible.sync="configureNewDomainDialogVisible"
       title="Configurar domíno do cliente"
       append-to-body
       :close-on-click-modal="false"
-      width="80%"
-      custom-class="configure-customizations"
+      width="75%"
+      custom-class="new-domain"
+      center
     >
       <el-form
         ref="newDomainForm"
@@ -151,6 +182,15 @@
         label-position="top"
         class="new-domain__form"
       >
+        <div class="new-domain__form-about">
+          <h4 class="new-domain__form-about-text">
+            Para autorizar a JUSTTO a enviar emails usando sua conta, o administrador do domínio (o nome da internet que seu email utiliza) precisa autorizar explicitamente.
+            <br>
+            <br>
+            Precisamos que seu administrador de domínio web cadastre as seguintes entradas no seu provedor:
+          </h4>
+        </div>
+
         <el-row>
           <el-col :span="24">
             <el-form-item
@@ -175,7 +215,7 @@
               <label for="newDomainFormDomain">DNS 1(mail_cname):</label>
               <el-input
                 id="newDomainFormDomain"
-                v-model="newDomainForm.dns.mail_cname.host"
+                v-model="newDomainForm.mail_cname"
               />
             </el-form-item>
           </el-col>
@@ -188,7 +228,7 @@
               <label for="newDomainFormDomain">DNS 2(dkim1):</label>
               <el-input
                 id="newDomainFormDomain"
-                v-model="newDomainForm.dns.dkim1.host"
+                v-model="newDomainForm.dkim1"
               />
             </el-form-item>
           </el-col>
@@ -201,12 +241,28 @@
               <label for="newDomainFormDomain">DNS 3(dkim2):</label>
               <el-input
                 id="newDomainFormDomain"
-                v-model="newDomainForm.dns.dkim2.host"
+                v-model="newDomainForm.dkim2"
               />
             </el-form-item>
           </el-col>
         </el-row>
       </el-form>
+
+      <span
+        slot="footer"
+        class="new-domain__footer"
+      >
+        <el-button @click="handleClearNewDomainDialog">
+          Cancelar
+        </el-button>
+
+        <el-button
+          type="primary"
+          @click="handleSaveNewDomain"
+        >
+          Confirmar
+        </el-button>
+      </span>
     </el-dialog>
   </div>
 </template>
@@ -234,22 +290,9 @@ export default {
 
     newDomainForm: {
       domain: '',
-      dns: {
-        mail_cname: {
-          type: 'cname',
-          host: ''
-        },
-
-        dkim1: {
-          type: 'cname',
-          host: ''
-        },
-
-        dkim2: {
-          type: 'cname',
-          host: ''
-        }
-      }
+      mail_cname: '',
+      dkim1: '',
+      dkim2: ''
     },
 
     rulesCustomizations: {
@@ -274,8 +317,16 @@ export default {
       workspaceId: 'workspaceId'
     }),
 
+    haveDomain() {
+      return this.form.email.endsWith(this.currentDomain?.domain)
+    },
+
     isValidDomain() {
-      return this.currentDomain?.domain && (this.form?.email || '').endsWith(`@${this.currentDomain?.domain}`)
+      return this.currentDomain?.valid
+    },
+
+    validTooltipText() {
+      return `Este email está com o domínio ${this.isValidDomain ? 'válido' : 'inválido'}.` // e autorizado
     }
   },
 
@@ -286,7 +337,8 @@ export default {
       editProperties: 'editWorkpaceProperties',
       createTemplate: 'createStrategyTemplate',
       getDomains: 'getSendgridDomains',
-      getWorkspace: 'getWorkspace'
+      getWorkspace: 'getWorkspace',
+      ceateDomain: 'setSendgridDomains'
     }),
 
     saveCustomizedConfigurations() {
@@ -321,11 +373,11 @@ export default {
       })
     },
 
-    async handleInitDialog() {
+    async handleInitDialog(previousDomain = null) {
       // Ver se o email existe
-      if (this.properties?.CUSTOM_EMAIL_SENDERs) {
+      if (this.properties?.CUSTOM_EMAIL_SENDER || previousDomain) {
         // Se não existir
-        const domain = this.properties?.CUSTOM_EMAIL_SENDER.split('@')[1]
+        const domain = (this.properties?.CUSTOM_EMAIL_SENDER || previousDomain).split('@')[1]
 
         this.currentDomain = await this.handleValidateDomain(domain)
       } else { // Se não existir
@@ -341,10 +393,10 @@ export default {
           this.handleValidateDomain(value.split('@')[1]).then(domain => {
             this.currentDomain = domain
           }).catch(() => {
-            return Promise.reject(new Error('Email não informado 1'))
+            return Promise.reject(new Error('Email não informado'))
           })
         }).catch(() => {
-          return Promise.reject(new Error('Email não informado 2'))
+          return Promise.reject(new Error('Email não informado'))
         })
       }
 
@@ -354,20 +406,45 @@ export default {
     },
 
     openFeatureDialog() {
-      this.handleInitDialog().then((openCustomizationDialog) => {
+      this.handleInitDialog(this.form.email).then((openCustomizationDialog) => {
         if (openCustomizationDialog) {
           this.configureCustomizationsDialogVisible = true
-          this.form = new OdrCustomizationModel(this.properties)
+          this.form = new OdrCustomizationModel({
+            ...this.properties,
+            CUSTOM_EMAIL_SENDER: (this.form.email || this.properties.CUSTOM_EMAIL_SENDER)
+          })
           this.searchTemplete()
         } else {
+          this.newDomainForm.domain = this.form.email.split('@')[1]
           this.configureNewDomainDialogVisible = true
         }
       })
     },
 
+    handleUpdateDomains() {
+      this.modalLoading = true
+
+      this.handleValidateDomain((this.form.email).split('@')[1]).then(domain => {
+        this.currentDomain = domain
+      }).finally(() => {
+        setTimeout(() => { this.modalLoading = false }, 1000)
+      })
+    },
+
+    handleResetEmail() {
+      this.form.email = 'acordo@justto.app'
+      this.modalLoading = true
+
+      this.editProperties({ CUSTOM_EMAIL_SENDER: this.form.email }).then(() => {
+        this.closeFeatureDialog()
+        this.openFeatureDialog()
+      })
+    },
+
     closeFeatureDialog() {
+      this.modalLoading = false
       this.configureCustomizationsDialogVisible = false
-      this.form.emailFooter = ''
+      this.form = { email: '', link: '', emailFooter: '', emailFooterId: null }
     },
 
     searchTemplete() {
@@ -416,12 +493,47 @@ export default {
           this.closeFeatureDialog()
         }).catch(error => this.$jusNotification({ error }))
       }).catch(error => this.$jusNotification({ error }))
+    },
+
+    handleClearNewDomainDialog() {
+      this.form = { email: '', link: '', emailFooter: '', emailFooterId: null }
+      this.handleCloseNewDomainDialog()
+    },
+
+    handleCloseNewDomainDialog() {
+      return new Promise(resolve => {
+        this.configureNewDomainDialogVisible = false
+        this.newDomainForm = { domain: '', mail_cname: '', dkim1: '', dkim2: '' }
+        resolve()
+      })
+    },
+
+    handleSaveNewDomain() {
+      const domain = {
+        domain: this.newDomainForm.domain,
+        dns: {
+          mail_cname: { type: 'cname', host: this.newDomainForm.mail_cname },
+          dkim1: { type: 'cname', host: this.newDomainForm.dkim1 },
+          dkim2: { type: 'cname', host: this.newDomainForm.dkim2 }
+        },
+        default: false
+      }
+
+      this.validateForm('newDomainForm').then(() => {
+        this.modalLoading = true
+
+        this.ceateDomain(domain).then(() => {
+          this.handleCloseNewDomainDialog().then(this.openFeatureDialog)
+        }).finally(() => { this.modalLoading = false })
+      })
     }
   }
 }
 </script>
 
 <style lang="scss">
+@import '@/styles/colors.scss';
+
 /* Configura tamanho do CKEditor */
 .configure-customizations {
   .configure-customizations__form {
@@ -460,8 +572,57 @@ export default {
             }
           }
         }
+
+        &.flex-row {
+          flex: 1;
+          display: flex;
+          gap: 8px;
+          align-items: flex-end;
+          justify-content: center;
+
+          .configure-customizations__form-header-item-input {
+            text-align: right;
+          }
+        }
       }
     }
+  }
+}
+
+.new-domain {
+  .el-dialog__body {
+    .new-domain__form {
+      .new-domain__form-about {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border: solid $--color-secondary thin;
+        border-radius: 8px;
+        padding: 0 8px;
+
+        .new-domain__form-about-title {
+          background: white;
+          margin-top: -9px;
+          padding: 0 8px;
+          font-weight: 400;
+        }
+
+        .new-domain__form-about-text {
+          text-align: justify;
+          word-break: break-word;
+        }
+      }
+    }
+  }
+}
+
+.valid-domain-popover {
+  background-color: $--color-black;
+  color: $--color-white;
+  font-size: 12px;
+
+  .popper__arrow::after {
+    border-right-color: $--color-black !important;
   }
 }
 </style>
