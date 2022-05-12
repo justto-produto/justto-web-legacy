@@ -670,7 +670,7 @@ export default {
           roleId,
           updateUpperRange,
           action: offerFormType,
-          forceStatus: this.forcedStatusValue
+          forceStatus: this.forcedStatusValue || undefined
         }
 
         const polarityObjectKey = 'plaintiffOffer'

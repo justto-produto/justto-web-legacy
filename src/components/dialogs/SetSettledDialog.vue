@@ -63,6 +63,13 @@
 import { mapGetters } from 'vuex'
 
 export default {
+  props: {
+    status: {
+      type: String,
+      required: true
+    }
+  },
+
   data: () => ({
     visible: false,
     action: () => {}
@@ -70,8 +77,7 @@ export default {
 
   computed: {
     ...mapGetters({
-      windowMode: 'getWindowMode',
-      status: 'getDisputeStatus'
+      windowMode: 'getWindowMode'
     }),
 
     isMobile() {
