@@ -595,6 +595,7 @@
 
     <SetSettledDialog
       ref="setSettledDialog"
+      :status="dispute.status"
     />
   </div>
 </template>

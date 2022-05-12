@@ -69,6 +69,7 @@
 
     <SetSettledDialog
       ref="setSettledDialog"
+      :status="ticket.status"
     />
   </article>
 </template>
