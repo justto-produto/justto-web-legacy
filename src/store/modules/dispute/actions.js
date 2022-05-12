@@ -674,7 +674,6 @@ const disputeActions = {
       // eslint-disable-next-line
       axios.get(`${disputesPath}/${disputeId}/occurrences/type/NOTE${buildQuery(query)}`)
         .then(response => {
-          console.log(response)
           commit('setDisputeOccurrences', response.data.content)
           commit('setNoteQuery', response.data)
           resolve(response.data)
