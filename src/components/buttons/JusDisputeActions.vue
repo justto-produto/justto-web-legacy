@@ -1020,11 +1020,13 @@ export default {
             })
           } else {
             if (!this.features.DRAFT_MANAGEMENT && !['PRE_NEGOTIATION', 'CHECKOUT', 'SETTLED'].includes(this.dispute.status) && !additionParams?.forceStatus) {
-              this.$refs.setSettledDialog.open((status) => {
-                this.counterOfferForm.forceStatus = status
+              this.counterOfferForm.forceStatus = 'SETTLED'
+              this.disputeAction(action, { ...additionParams, forceStatus: 'SETTLED' })
 
-                this.disputeAction(action, { ...additionParams, forceStatus: status })
-              })
+              // this.$refs.setSettledDialog.open((status) => {
+              //   this.counterOfferForm.forceStatus = status
+              //   this.disputeAction(action, { ...additionParams, forceStatus: status })
+              // })
             } else if (this.dispute.status === 'CHECKOUT' || this.dispute.status === 'ACCEPTED') {
               this.ticketResumeDialogVisible = true
             } else {
