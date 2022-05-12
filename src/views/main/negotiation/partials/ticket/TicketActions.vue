@@ -55,6 +55,8 @@
     <TicketActionsDialogs
       ref="dialogActions"
       :ticket="ticket"
+      :force-status="forceStatus"
+      @conclude="forceStatus = ''"
     />
 
     <NotifyOnCompanyAnalysis
@@ -63,6 +65,10 @@
 
     <ConfirmActionDialog
       ref="confirmActionDialog"
+    />
+
+    <SetSettledDialog
+      ref="setSettledDialog"
     />
   </article>
 </template>
@@ -76,7 +82,8 @@ export default {
   components: {
     TicketActionsDialogs: () => import('./TicketActionsDialogs'),
     NotifyOnCompanyAnalysis: () => import('@/components/dialogs/NotifyOnCompanyAnalysis'),
-    ConfirmActionDialog: () => import('@/components/dialogs/ConfirmActionDialog')
+    ConfirmActionDialog: () => import('@/components/dialogs/ConfirmActionDialog'),
+    SetSettledDialog: () => import('@/components/dialogs/SetSettledDialog')
   },
 
   props: {
@@ -86,12 +93,15 @@ export default {
     }
   },
 
+  data: () => ({ forceStatus: '' }),
+
   computed: {
     ...mapGetters({
       isGhost: 'ghostMode',
       activeTab: 'getActiveTab',
       isJusttoAdmin: 'isJusttoAdmin',
-      userPreferences: 'userPreferences'
+      userPreferences: 'userPreferences',
+      features: 'getMappedFeaturesAndModules'
     }),
 
     actionsList() {
@@ -226,70 +236,88 @@ export default {
         } else return action.isVisible
       })
     },
+
     pausedDisputeActionList() {
       return ['RESUME', 'REDIRECTMANAGEMENT', 'UPLOAD_ATTACHMENT', 'EDIT_NEGOTIATORS', `PRINT_TICKET_${this.activeTab}`]
     },
+
     canceledDisputeActionList() {
       return ['RENEGOTIATE', 'REDIRECTMANAGEMENT', 'UPLOAD_ATTACHMENT', `PRINT_TICKET_${this.activeTab}`]
     },
+
     isFavorite() {
       return this.ticket?.favorite
     },
+
     isPaused() {
       return this.ticket.paused
     },
+
     isPreNegotiation() {
       const { status } = this.ticket
       return status === 'PRE_NEGOTIATION'
     },
+
     isCanceled() {
       const { status } = this.ticket
       return status === 'CANCELED'
     },
+
     isSettled() {
       const { status } = this.ticket
       return status === 'SETTLED'
     },
+
     isUnsettled() {
       const { status } = this.ticket
       return status === 'UNSETTLED'
     },
+
     isExpired() {
       const { status } = this.ticket
       return status === 'EXPIRED'
     },
+
     canSettled() {
       const { isPreNegotiation, ticket } = this
       return ticket.status && ticket.status !== 'SETTLED' && !isPreNegotiation
     },
+
     canUnsettled() {
       const { isPreNegotiation, ticket } = this
       return ticket.status && ticket.status !== 'UNSETTLED' && !isPreNegotiation
     },
+
     canManualCounterproposal() {
       const { isPreNegotiation, ticket } = this
       return ticket.status && !['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(ticket.status) && !isPreNegotiation
     },
+
     canSetUnread() {
       const { isPreNegotiation, ticket } = this
       return ticket.status && !['IMPORTED', 'ENRICHED', 'ENGAGEMENT'].includes(ticket.status) && !isPreNegotiation
     },
+
     canResume() {
       const { isPreNegotiation, ticket } = this
       return ticket.paused && !isPreNegotiation
     },
+
     canPause() {
       const { isPreNegotiation, ticket } = this
       return !ticket.paused && !isPreNegotiation
     },
+
     canRestartEngagement() {
       const { isPreNegotiation, ticket, isFavorite } = this
       return ticket.status && !['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(ticket.status) && !isPreNegotiation && !isFavorite
     },
+
     canResendMessages() {
       const { isPreNegotiation, ticket } = this
       return ticket.status && ticket.status === 'RUNNING' && !isPreNegotiation
     },
+
     canRenegotiate() {
       const { isPreNegotiation, ticket } = this
       return ticket.status && ['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED', 'CANCELED'].includes(ticket.status) && !isPreNegotiation
@@ -404,7 +432,16 @@ export default {
       const { paused, status } = this.ticket
 
       const settledTicket = () => {
-        if (status === 'CHECKOUT' || status === 'ACCEPTED') {
+        // TODO: Validar todos os estatus de onde se pode "ganhar a disputa".
+        if (!this.features.DRAFT_MANAGEMENT && !['PRE_NEGOTIATION', 'CHECKOUT', 'SETTLED'].includes(this.ticket.status) && !this.forceStatus) {
+          this.forceStatus = 'SETTLED'
+          this.handleSettled(action)
+        } else if (this.features.DRAFT_MANAGEMENT && !['PRE_NEGOTIATION', 'CHECKOUT', 'SETTLED'].includes(this.ticket.status) && !this.forceStatus) {
+          this.$refs.setSettledDialog.open((status) => {
+            this.forceStatus = status
+            this.handleSettled(action)
+          })
+        } else if (status === 'CHECKOUT' || status === 'ACCEPTED') {
           this.$refs.dialogActions.openTicketResumeDialog(action, 'WIN')
         } else {
           this.$refs.dialogActions.openOfferDialog(action)
