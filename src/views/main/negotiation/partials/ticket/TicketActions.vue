@@ -435,6 +435,7 @@ export default {
         // TODO: Validar todos os estatus de onde se pode "ganhar a disputa".
         if (!this.features.DRAFT_MANAGEMENT && !['PRE_NEGOTIATION', 'CHECKOUT', 'SETTLED'].includes(this.ticket.status) && !this.forceStatus) {
           this.forceStatus = 'SETTLED'
+          this.handleSettled(action)
           // this.$refs.setSettledDialog.open((status) => {
           //   this.forceStatus = status
           //   this.handleSettled(action)
