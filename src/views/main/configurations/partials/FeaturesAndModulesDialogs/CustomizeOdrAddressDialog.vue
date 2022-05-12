@@ -1,127 +1,270 @@
 <template>
-  <el-dialog
-    :close-on-click-modal="false"
-    :visible.sync="configureCustomizationsDialogVisible"
-    title="Customizar sua empresa ou escritório como ODR"
-    append-to-body
-    width="80%"
-    custom-class="configure-customizations"
-  >
-    <el-form
-      ref="form"
-      :model="form"
-      :rules="rulesCustomizations"
-      :disabled="modalLoading"
-      label-position="top"
-      class="configure-customizations__form"
+  <div>
+    <el-dialog
+      v-loading="modalLoading"
+      :close-on-click-modal="false"
+      :show-close="false"
+      :visible.sync="configureCustomizationsDialogVisible"
+      title="Customizar sua empresa ou escritório como ODR"
+      append-to-body
+      width="80%"
+      custom-class="configure-customizations"
     >
-      <div class="configure-customizations__form-header">
-        <div class="configure-customizations__form-header-item">
-          <el-form-item
-            class="configure-customizations__form-header-item-input"
-            prop="email"
-          >
-            <label
-              class="configure-customizations__form-header-item-input-label"
+      <el-form
+        ref="form"
+        :v-if="configureCustomizationsDialogVisible"
+        :model="form"
+        :rules="rulesCustomizations"
+        :disabled="modalLoading"
+        label-position="top"
+        class="configure-customizations__form"
+      >
+        <div class="configure-customizations__form-header">
+          <div class="configure-customizations__form-header-item">
+            <el-form-item
+              class="configure-customizations__form-header-item-input"
+              prop="email"
             >
-              Email para envio das mensagens
-            </label>
-            <el-tooltip
-              placement="right"
-              effect="dark"
-              :open-delay="500"
+              <label class="configure-customizations__form-header-item-input-label">
+                Email para envio das mensagens
+              </label>
+
+              <el-tooltip
+                placement="right"
+                effect="dark"
+                :open-delay="500"
+              >
+                <div slot="content">
+                  Esta é uma configuração que exige intervenção dos times <br> de tecnologia da JUSTTO e do escritório/empresa.
+                </div>
+                <i class="el-icon-info" />
+              </el-tooltip>
+
+              <el-input
+                v-model="form.email"
+                :disabled="!isJusttoAdmin"
+                size="small"
+              >
+                <template slot="append">
+                  <el-popover
+                    placement="right"
+                    trigger="hover"
+                    :open-delay="500"
+                    :content="validTooltipText"
+                    popper-class="valid-domain-popover"
+                  >
+                    <div slot="reference">
+                      <el-button
+                        v-if="haveDomain"
+                        slot="reference"
+                        type="success"
+                        :icon="isValidDomain ? 'el-icon-check' : 'el-icon-close'"
+                        size="small"
+                      />
+                    </div>
+                  </el-popover>
+                </template>
+              </el-input>
+            </el-form-item>
+          </div>
+
+          <div class="configure-customizations__form-header-item">
+            <el-form-item
+              class="configure-customizations__form-header-item-input"
+              prop="link"
             >
-              <div slot="content">
-                Esta é uma configuração que exige intervenção dos times <br> de tecnologia da JUSTTO e do escritório/empresa.
-              </div>
-              <i class="el-icon-info" />
-            </el-tooltip>
-            <el-input
-              v-model="form.email"
-              :disabled="!isJusttoAdmin"
-              size="small"
-            />
-          </el-form-item>
+              <label
+                class="configure-customizations__form-header-item-input-label"
+              >
+                Link para portal de negociações
+              </label>
+              <el-tooltip
+                placement="right"
+                effect="dark"
+                :open-delay="500"
+              >
+                <div slot="content">
+                  Exige intervenção da equipe de tecnologia para <br> criar um novo endereço na internet com o certificado.
+                </div>
+                <i class="el-icon-info" />
+              </el-tooltip>
+              <el-input
+                v-model="form.link"
+                disabled
+                size="small"
+              />
+            </el-form-item>
+          </div>
         </div>
 
-        <div class="configure-customizations__form-header-item">
-          <el-form-item
-            class="configure-customizations__form-header-item-input"
-            prop="link"
+        <el-form-item class="configure-customizations__form-ckeditor jus-ckeditor__parent">
+          <ckeditor
+            ref="footerEditor"
+            v-model="form.emailFooter"
+            :editor="editor"
+            :disabled="!isJusttoAdmin"
+            :config="editorConfig"
+            type="classic"
+          />
+        </el-form-item>
+      </el-form>
+
+      <div class="configure-customizations__footer">
+        <div class="configure-customizations__footer-actions">
+          <el-button
+            class="configure-customizations__footer-cancel"
+            size="small"
+            plain
+            @click="closeFeatureDialog()"
           >
-            <label
-              class="configure-customizations__form-header-item-input-label"
+            Cancelar
+          </el-button>
+
+          <el-button
+            v-loading="modalLoading"
+            :disabled="modalLoading || !isJusttoAdmin"
+            class="configure-customizations__footer-confirm"
+            type="success"
+            size="small"
+            @click.prevent="saveCustomizedConfigurations"
+          >
+            Salvar configuração
+          </el-button>
+
+          <el-button
+            type="primary"
+            size="small"
+            @click="handleUpdateDomains"
+          >
+            Verificar se os registros foram inseridos
+          </el-button>
+
+          <el-button
+            type="secondary"
+            size="small"
+            @click="handleResetEmail"
+          >
+            Mudar o email da empresa
+          </el-button>
+        </div>
+
+        <div class="configure-customizations__footer-info">
+          <span class="configure-customizations__footer-info-span">
+            Ao utilizar nossa plataforma você está ciente e concorda com nossa
+            <a
+              href="https://justto.com.br/poilitica-privacidade"
+              target="_blank"
             >
-              Link para portal de negociações
-            </label>
-            <el-tooltip
-              placement="right"
-              effect="dark"
-              :open-delay="500"
-            >
-              <div slot="content">
-                Exige intervenção da equipe de tecnologia para <br> criar um novo endereço na internet com o certificado.
-              </div>
-              <i class="el-icon-info" />
-            </el-tooltip>
-            <el-input
-              v-model="form.link"
-              :disabled="!isJusttoAdmin"
-              size="small"
-            />
-          </el-form-item>
+              politica de privacidade
+            </a>
+            , nossos termos e condições de uso e está de acordo com nosso código de proteção de dados pessoais.
+            Caso não queira mais receber mensagens da nossa plataforma descadastre seu email aqui.
+          </span>
         </div>
       </div>
+    </el-dialog>
 
-      <el-form-item class="configure-customizations__form-ckeditor jus-ckeditor__parent">
-        <ckeditor
-          ref="footerEditor"
-          v-model="form.emailFooter"
-          :editor="editor"
-          :disabled="!isJusttoAdmin"
-          :config="editorConfig"
-          type="classic"
-        />
-      </el-form-item>
-    </el-form>
+    <el-dialog
+      v-loading="modalLoading"
+      :visible.sync="configureNewDomainDialogVisible"
+      title="Configurar domíno do cliente"
+      append-to-body
+      :close-on-click-modal="false"
+      width="75%"
+      custom-class="new-domain"
+      center
+    >
+      <el-form
+        ref="newDomainForm"
+        :model="newDomainForm"
+        :rules="rulesNewDomainForm"
+        :disabled="modalLoading"
+        label-position="top"
+        class="new-domain__form"
+      >
+        <div class="new-domain__form-about">
+          <h4 class="new-domain__form-about-text">
+            Para autorizar a JUSTTO a enviar emails usando sua conta, o administrador do domínio (o nome da internet que seu email utiliza) precisa autorizar explicitamente.
+            <br>
+            <br>
+            Precisamos que seu administrador de domínio web cadastre as seguintes entradas no seu provedor:
+          </h4>
+        </div>
 
-    <div class="configure-customizations__footer">
-      <div class="configure-customizations__footer-actions">
-        <el-button
-          class="configure-customizations__footer-cancel"
-          size="small"
-          plain
-          @click="closeFeatureDialog()"
-        >
+        <el-row>
+          <el-col :span="24">
+            <el-form-item
+              class="new-domain__form-domain"
+              prop="domain"
+            >
+              <label for="newDomainFormDomain">Domínio:</label>
+              <el-input
+                id="newDomainFormDomain"
+                v-model="newDomainForm.domain"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row :gutter="16">
+          <el-col :span="8">
+            <el-form-item
+              class="new-domain__form-domain"
+              prop="mail_cname"
+            >
+              <label for="newDomainFormDomain">DNS 1(mail_cname):</label>
+              <el-input
+                id="newDomainFormDomain"
+                v-model="newDomainForm.mail_cname"
+              />
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="8">
+            <el-form-item
+              class="new-domain__form-domain"
+              prop="dkim1"
+            >
+              <label for="newDomainFormDomain">DNS 2(dkim1):</label>
+              <el-input
+                id="newDomainFormDomain"
+                v-model="newDomainForm.dkim1"
+              />
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="8">
+            <el-form-item
+              class="new-domain__form-domain"
+              prop="dkim2"
+            >
+              <label for="newDomainFormDomain">DNS 3(dkim2):</label>
+              <el-input
+                id="newDomainFormDomain"
+                v-model="newDomainForm.dkim2"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+
+      <span
+        slot="footer"
+        class="new-domain__footer"
+      >
+        <el-button @click="handleClearNewDomainDialog">
           Cancelar
         </el-button>
-        <el-button
-          v-loading="modalLoading"
-          :disabled="modalLoading || !isJusttoAdmin"
-          class="configure-customizations__footer-confirm"
-          type="success"
-          size="small"
-          @click.prevent="saveCustomizedConfigurations"
-        >
-          Salvar configuração
-        </el-button>
-      </div>
 
-      <div class="configure-customizations__footer-info">
-        <span class="configure-customizations__footer-info-span">
-          Ao utilizar nossa plataforma você está ciente e concorda com nossa
-          <a
-            href="https://justto.com.br/poilitica-privacidade"
-            target="_blank"
-          >
-            politica de privacidade
-          </a>
-          , nossos termos e condições de uso e está de acordo com nosso código de proteção de dados pessoais.
-          Caso não queira mais receber mensagens da nossa plataforma descadastre seu email aqui.
-        </span>
-      </div>
-    </div>
-  </el-dialog>
+        <el-button
+          type="primary"
+          @click="handleSaveNewDomain"
+        >
+          Confirmar
+        </el-button>
+      </span>
+    </el-dialog>
+  </div>
 </template>
 
 <script>
@@ -136,6 +279,7 @@ export default {
 
   data: () => ({
     configureCustomizationsDialogVisible: false,
+    configureNewDomainDialogVisible: false,
     modalLoading: false,
     form: {
       email: '',
@@ -143,11 +287,27 @@ export default {
       emailFooter: '',
       emailFooterId: null
     },
+
+    newDomainForm: {
+      domain: '',
+      mail_cname: '',
+      dkim1: '',
+      dkim2: ''
+    },
+
     rulesCustomizations: {
       email: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
       link: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
       emailFooter: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
-    }
+    },
+
+    rulesNewDomainForm: {
+      domain: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+      mail_cname: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+      dkim1: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+      dkim2: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
+    },
+    currentDomain: null
   }),
 
   computed: {
@@ -155,7 +315,19 @@ export default {
       properties: 'workspaceProperties',
       isJusttoAdmin: 'isJusttoAdmin',
       workspaceId: 'workspaceId'
-    })
+    }),
+
+    haveDomain() {
+      return this.form.email.endsWith(this.currentDomain?.domain)
+    },
+
+    isValidDomain() {
+      return this.currentDomain?.valid
+    },
+
+    validTooltipText() {
+      return `Este email está com o domínio ${this.isValidDomain ? 'válido' : 'inválido'}.` // e autorizado
+    }
   },
 
   methods: {
@@ -163,7 +335,10 @@ export default {
       getTemplate: 'getStrategyTemplate',
       editTemplate: 'editStrategyTemplate',
       editProperties: 'editWorkpaceProperties',
-      createTemplate: 'createStrategyTemplate'
+      createTemplate: 'createStrategyTemplate',
+      getDomains: 'getSendgridDomains',
+      getWorkspace: 'getWorkspace',
+      ceateDomain: 'setSendgridDomains'
     }),
 
     saveCustomizedConfigurations() {
@@ -185,17 +360,91 @@ export default {
       })
     },
 
+    handleValidateDomain(subdomain) {
+      return new Promise((resolve, reject) => {
+        this.getDomains().then(domains => {
+          const domain = domains.find(({ domain }) => (domain === subdomain))
+
+          resolve(domain)
+        }).catch(error => {
+          this.$jusNotification({ error })
+          reject(error)
+        })
+      })
+    },
+
+    async handleInitDialog(previousDomain = null) {
+      // Ver se o email existe
+      if (this.properties?.CUSTOM_EMAIL_SENDER || previousDomain) {
+        // Se não existir
+        const domain = (this.properties?.CUSTOM_EMAIL_SENDER || previousDomain).split('@')[1]
+
+        this.currentDomain = await this.handleValidateDomain(domain)
+      } else { // Se não existir
+        await this.$prompt('Informe o endereço de email utilizado no seu escritório:', 'Email do seu escritório', {
+          confirmButtonText: 'Salvar',
+          cancelButtonText: 'Cancelar',
+          inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
+          inputErrorMessage: 'Email inválido',
+          center: true
+        }).then(({ value }) => {
+          this.form.email = value
+
+          this.handleValidateDomain(value.split('@')[1]).then(domain => {
+            this.currentDomain = domain
+          }).catch(() => {
+            return Promise.reject(new Error('Email não informado'))
+          })
+        }).catch(() => {
+          return Promise.reject(new Error('Email não informado'))
+        })
+      }
+
+      return new Promise((resolve, reject) => {
+        this.getWorkspace().then(() => resolve(Boolean(this.currentDomain))).catch(reject)
+      })
+    },
+
     openFeatureDialog() {
-      this.configureCustomizationsDialogVisible = true
+      this.handleInitDialog(this.form.email).then((openCustomizationDialog) => {
+        if (openCustomizationDialog) {
+          this.configureCustomizationsDialogVisible = true
+          this.form = new OdrCustomizationModel({
+            ...this.properties,
+            CUSTOM_EMAIL_SENDER: (this.form.email || this.properties.CUSTOM_EMAIL_SENDER)
+          })
+          this.searchTemplete()
+        } else {
+          this.newDomainForm.domain = this.form.email.split('@')[1]
+          this.configureNewDomainDialogVisible = true
+        }
+      })
+    },
 
-      this.form = new OdrCustomizationModel(this.properties)
+    handleUpdateDomains() {
+      this.modalLoading = true
 
-      this.searchTemplete()
+      this.handleValidateDomain((this.form.email).split('@')[1]).then(domain => {
+        this.currentDomain = domain
+      }).finally(() => {
+        setTimeout(() => { this.modalLoading = false }, 1000)
+      })
+    },
+
+    handleResetEmail() {
+      this.form.email = 'acordo@justto.app'
+      this.modalLoading = true
+
+      this.editProperties({ CUSTOM_EMAIL_SENDER: this.form.email }).then(() => {
+        this.closeFeatureDialog()
+        this.openFeatureDialog()
+      })
     },
 
     closeFeatureDialog() {
+      this.modalLoading = false
       this.configureCustomizationsDialogVisible = false
-      this.form.emailFooter = ''
+      this.form = { email: '', link: '', emailFooter: '', emailFooterId: null }
     },
 
     searchTemplete() {
@@ -244,12 +493,47 @@ export default {
           this.closeFeatureDialog()
         }).catch(error => this.$jusNotification({ error }))
       }).catch(error => this.$jusNotification({ error }))
+    },
+
+    handleClearNewDomainDialog() {
+      this.form = { email: '', link: '', emailFooter: '', emailFooterId: null }
+      this.handleCloseNewDomainDialog()
+    },
+
+    handleCloseNewDomainDialog() {
+      return new Promise(resolve => {
+        this.configureNewDomainDialogVisible = false
+        this.newDomainForm = { domain: '', mail_cname: '', dkim1: '', dkim2: '' }
+        resolve()
+      })
+    },
+
+    handleSaveNewDomain() {
+      const domain = {
+        domain: this.newDomainForm.domain,
+        dns: {
+          mail_cname: { type: 'cname', host: this.newDomainForm.mail_cname },
+          dkim1: { type: 'cname', host: this.newDomainForm.dkim1 },
+          dkim2: { type: 'cname', host: this.newDomainForm.dkim2 }
+        },
+        default: false
+      }
+
+      this.validateForm('newDomainForm').then(() => {
+        this.modalLoading = true
+
+        this.ceateDomain(domain).then(() => {
+          this.handleCloseNewDomainDialog().then(this.openFeatureDialog)
+        }).finally(() => { this.modalLoading = false })
+      })
     }
   }
 }
 </script>
 
 <style lang="scss">
+@import '@/styles/colors.scss';
+
 /* Configura tamanho do CKEditor */
 .configure-customizations {
   .configure-customizations__form {
@@ -276,6 +560,69 @@ export default {
         }
       }
     }
+
+    .configure-customizations__form-header {
+      .configure-customizations__form-header-item {
+        .configure-customizations__form-header-item-input {
+          .el-form-item__content {
+            .el-input-group--append {
+              .el-input-group__append {
+                background: transparent;
+              }
+            }
+          }
+        }
+
+        &.flex-row {
+          flex: 1;
+          display: flex;
+          gap: 8px;
+          align-items: flex-end;
+          justify-content: center;
+
+          .configure-customizations__form-header-item-input {
+            text-align: right;
+          }
+        }
+      }
+    }
+  }
+}
+
+.new-domain {
+  .el-dialog__body {
+    .new-domain__form {
+      .new-domain__form-about {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border: solid $--color-secondary thin;
+        border-radius: 8px;
+        padding: 0 8px;
+
+        .new-domain__form-about-title {
+          background: white;
+          margin-top: -9px;
+          padding: 0 8px;
+          font-weight: 400;
+        }
+
+        .new-domain__form-about-text {
+          text-align: justify;
+          word-break: break-word;
+        }
+      }
+    }
+  }
+}
+
+.valid-domain-popover {
+  background-color: $--color-black;
+  color: $--color-white;
+  font-size: 12px;
+
+  .popper__arrow::after {
+    border-right-color: $--color-black !important;
   }
 }
 </style>

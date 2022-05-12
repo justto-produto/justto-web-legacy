@@ -33,7 +33,7 @@
             <i class="el-icon-edit" />
             <span class="summary-container__item-occurrence-item-status-message-body">
               <span class="summary-container__item-occurrence-item-status-message-body-normal">
-                Mensagem criada em
+                Mensagem criada em aqui
               </span>
               <span class="summary-container__item-occurrence-item-status-message-body-date">
                 {{ occurrenceItem.summaryOccurrence.createAt.dateTime | moment('DD/MM [às] HH:mm') }}
@@ -154,6 +154,8 @@ export default {
       const formatDate = (date) => this.$moment(date).format('DD/MM [às] HH:mm')
       const element = document.getElementById(`summary-item-${index}`) || { offsetWidth: 0 }
       const breakTag = element.offsetWidth < 500 ? '<br/>' : ''
+
+      console.log(date)
 
       let message = ''
 
