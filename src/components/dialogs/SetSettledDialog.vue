@@ -28,7 +28,7 @@
         :class="{'el-button--small' : !isMobile}"
         @click="handleAction('ACCEPTED')"
       >
-        {{ $tc('occurrence.type.ACCEPTED') | capitalize }} ({{ $t('tickets-tabs.accepted') | capitalize }})
+        Aguardando dados bancários
       </el-button>
 
       <el-button
@@ -36,7 +36,7 @@
         :class="{'el-button--small' : !isMobile}"
         @click="handleAction('CHECKOUT')"
       >
-        {{ $tc('occurrence.type.CHECKOUT') | capitalize }} ({{ $t('tickets-tabs.accepted') | capitalize }})
+        Acordo (Aguardando minuta)
       </el-button>
 
       <el-button
@@ -44,7 +44,7 @@
         :class="{'el-button--small' : !isMobile}"
         @click="handleAction('SETTLED')"
       >
-        {{ $tc('occurrence.type.SETTLED') | capitalize }} ({{ $t('tickets-tabs.finished') | capitalize }})
+        Ganha (Finalizada)
       </el-button>
 
       <el-button

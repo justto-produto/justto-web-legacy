@@ -382,7 +382,12 @@ export default {
     attachmentDialogVisible: false,
     dropLawsuitDialogVisible: false,
     nextStatusMap: {
+      IMPORTED: 'ACCEPTED',
+      ENRICHED: 'ACCEPTED',
+      ENGAGEMENT: 'ACCEPTED',
+      PENDING: 'ACCEPTED',
       RUNNING: 'ACCEPTED',
+      UNSETTLED: 'ACCEPTED',
       ACCEPTED: 'CHECKOUT',
       CHECKOUT: 'SETTLED'
     }

@@ -666,7 +666,12 @@ export default {
         selectedRoleId: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
       },
       nextStatusMap: {
+        IMPORTED: 'ACCEPTED',
+        ENRICHED: 'ACCEPTED',
+        ENGAGEMENT: 'ACCEPTED',
+        PENDING: 'ACCEPTED',
         RUNNING: 'ACCEPTED',
+        UNSETTLED: 'ACCEPTED',
         ACCEPTED: 'CHECKOUT',
         CHECKOUT: 'SETTLED'
       }
