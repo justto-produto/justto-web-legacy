@@ -664,6 +664,11 @@ export default {
       counterOfferFormRules: {
         lastCounterOfferValue: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
         selectedRoleId: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
+      },
+      nextStatusMap: {
+        RUNNING: 'ACCEPTED',
+        ACCEPTED: 'CHECKOUT',
+        CHECKOUT: 'SETTLED'
       }
     }
   },
@@ -954,6 +959,10 @@ export default {
         }).join(', ')
       }
       return []
+    },
+
+    forcedStatusValue() {
+      return this.nextStatusMap[this.dispute?.status] === this.counterOfferForm.forceStatus ? undefined : this.counterOfferForm.forceStatus
     }
   },
 
@@ -1022,11 +1031,11 @@ export default {
             if (!this.features.DRAFT_MANAGEMENT && !['PRE_NEGOTIATION', 'CHECKOUT', 'SETTLED'].includes(this.dispute.status) && !additionParams?.forceStatus) {
               this.counterOfferForm.forceStatus = 'SETTLED'
               this.disputeAction(action, { ...additionParams, forceStatus: 'SETTLED' })
-
-              // this.$refs.setSettledDialog.open((status) => {
-              //   this.counterOfferForm.forceStatus = status
-              //   this.disputeAction(action, { ...additionParams, forceStatus: status })
-              // })
+            } else if (this.features.DRAFT_MANAGEMENT && !['PRE_NEGOTIATION', 'CHECKOUT', 'SETTLED'].includes(this.dispute.status) && !additionParams?.forceStatus) {
+              this.$refs.setSettledDialog.open((status) => {
+                this.counterOfferForm.forceStatus = status
+                this.disputeAction(action, { ...additionParams, forceStatus: status })
+              })
             } else if (this.dispute.status === 'CHECKOUT' || this.dispute.status === 'ACCEPTED') {
               this.ticketResumeDialogVisible = true
             } else {
@@ -1239,7 +1248,7 @@ export default {
         body: {
           note: this.counterOfferForm.note,
           conclusionNote: this.counterOfferForm.note,
-          forceStatus: this.counterOfferForm.forceStatus
+          forceStatus: this.forcedStatusValue
         }
       }
 
@@ -1495,7 +1504,7 @@ export default {
                 note: this.scapeHtml(this.counterOfferForm.note),
                 updateUpperRange: updateUpperRange || false,
                 action: this.offerFormType,
-                forceStatus: this.counterOfferForm.forceStatus
+                forceStatus: this.forcedStatusValue
               }).then(() => {
                 resolve()
                 this.counterproposalDialogVisible = false

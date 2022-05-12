@@ -6,7 +6,7 @@
     center
     :show-close="false"
     :close-on-click-modal="false"
-    :width="isMobile ? '100%' : '50%'"
+    width="auto"
     destroy-on-close
     append-to-body
   >
@@ -15,6 +15,15 @@
       :class="{ mobile: isMobile, desktop: !isMobile }"
     >
       <el-button
+        v-if="!isMobile"
+        size="small"
+        @click="close"
+      >
+        Cancelar
+      </el-button>
+
+      <el-button
+        v-if="!['ACCEPTED', 'CHECKOUT', 'SETTLED'].includes(status)"
         type="primary"
         :class="{'el-button--small' : !isMobile}"
         @click="handleAction('ACCEPTED')"
@@ -39,6 +48,7 @@
       </el-button>
 
       <el-button
+        v-if="isMobile"
         :class="{'el-button--small' : !isMobile}"
         @click="close"
       >
@@ -59,7 +69,10 @@ export default {
   }),
 
   computed: {
-    ...mapGetters({ windowMode: 'getWindowMode' }),
+    ...mapGetters({
+      windowMode: 'getWindowMode',
+      status: 'getDisputeStatus'
+    }),
 
     isMobile() {
       return this.windowMode !== 'desktop'
@@ -114,8 +127,10 @@ export default {
 
     .desktop {
       display: flex;
-      flex-direction: column;
-      gap: 8px;
+      flex-direction: row;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 16px;
 
       .el-button {
         margin: 0;

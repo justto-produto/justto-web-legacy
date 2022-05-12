@@ -380,7 +380,12 @@ export default {
     editNegotiatorsForm: [],
     confirmIncreaseUpperrangeDialogVisible: false,
     attachmentDialogVisible: false,
-    dropLawsuitDialogVisible: false
+    dropLawsuitDialogVisible: false,
+    nextStatusMap: {
+      RUNNING: 'ACCEPTED',
+      ACCEPTED: 'CHECKOUT',
+      CHECKOUT: 'SETTLED'
+    }
   }),
 
   computed: {
@@ -480,6 +485,10 @@ export default {
           value: id
         }
       })
+    },
+
+    forcedStatusValue() {
+      return this.nextStatusMap[this.ticket?.status] === this.forceStatus ? undefined : this.forceStatus
     }
   },
 
@@ -648,6 +657,7 @@ export default {
         const { disputeId } = this.ticket
 
         const { value, roleId, note } = this.offerForm
+
         const data = {
           value,
           note,
@@ -655,8 +665,9 @@ export default {
           roleId,
           updateUpperRange,
           action: offerFormType,
-          forceStatus: this.forceStatus
+          forceStatus: this.forcedStatusValue
         }
+
         const polarityObjectKey = 'plaintiffOffer'
         this.sendOffer({ disputeId, data, polarityObjectKey, change: updateUpperRange })
           .then(success => resolve(success))
@@ -685,7 +696,7 @@ export default {
       const data = {
         note,
         conclusionNote: note,
-        forceStatus: this.forceStatus
+        forceStatus: this.forcedStatusValue
       }
 
       this.confirmAction(action)

@@ -436,11 +436,12 @@ export default {
         if (!this.features.DRAFT_MANAGEMENT && !['PRE_NEGOTIATION', 'CHECKOUT', 'SETTLED'].includes(this.ticket.status) && !this.forceStatus) {
           this.forceStatus = 'SETTLED'
           this.handleSettled(action)
-          // this.$refs.setSettledDialog.open((status) => {
-          //   this.forceStatus = status
-          //   this.handleSettled(action)
-          // })
-        } if (status === 'CHECKOUT' || status === 'ACCEPTED') {
+        } else if (this.features.DRAFT_MANAGEMENT && !['PRE_NEGOTIATION', 'CHECKOUT', 'SETTLED'].includes(this.ticket.status) && !this.forceStatus) {
+          this.$refs.setSettledDialog.open((status) => {
+            this.forceStatus = status
+            this.handleSettled(action)
+          })
+        } else if (status === 'CHECKOUT' || status === 'ACCEPTED') {
           this.$refs.dialogActions.openTicketResumeDialog(action, 'WIN')
         } else {
           this.$refs.dialogActions.openOfferDialog(action)
