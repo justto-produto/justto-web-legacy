@@ -542,7 +542,7 @@ export default {
     },
 
     overviewType() {
-      return this.workspaceProperties.DISPUTE_OVERVIEW || 'TICKET'
+      return 'DISPUTE' || this.workspaceProperties.DISPUTE_OVERVIEW || 'TICKET'
     },
 
     sendMessageHeightComputed() {

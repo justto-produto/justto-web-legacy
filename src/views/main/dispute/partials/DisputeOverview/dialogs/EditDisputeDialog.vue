@@ -407,7 +407,8 @@ export default {
     ...mapActions({
       setDispute: 'editDispute',
       getDispute: 'getDispute',
-      getStrategies: 'getMyStrategiesLite'
+      getStrategies: 'getMyStrategiesLite',
+      setSubclassifications: 'setDisputeClassificationsDetails'
     }),
 
     show() {
@@ -538,12 +539,27 @@ export default {
       this.setDispute(disputeToEdit).then(() => {
         this.$jusSegment('Editar disputa', { disputeId: disputeToEdit.id }) // SEGMENT TRACK
         this.$jusNotification({ title: 'Yay!', message: 'Os dados foram alterados com sucesso.', type: 'success' })
-        this.$nextTick().then(() => this.$emit('fetch-data'))
-        this.hide()
+        this.handleSaveClassificationDetails().then(() => {
+          this.$nextTick().then(() => this.$emit('fetch-data'))
+          this.hide()
+        })
 
         this.handleResendMessagesOnEdit({ ...this.dispute, currentDate, newDate })
       }).catch(this.handleSetDisputeError).finally(() => {
         this.editDisputeDialogLoading = false
+      })
+    },
+
+    handleSaveClassificationDetails() {
+      return new Promise((resolve, reject) => {
+        if (!this.disputeForm?.classificationDetails?.length) { resolve() }
+
+        this.getDispute(Number(this.$route.params.id)).then(dispute => {
+          this.setSubclassifications({
+            parentId: dispute?.classification?.id,
+            data: this.disputeForm?.classificationDetails
+          }).then(resolve)
+        }).catch(reject)
       })
     },
 
@@ -616,7 +632,7 @@ export default {
       if (this.disputeForm.zeroUpperRange) {
         this.$nextTick(() => { this.$refs.disputeForm.validate() })
       }
-    },
+    }
   }
 }
 </script>
