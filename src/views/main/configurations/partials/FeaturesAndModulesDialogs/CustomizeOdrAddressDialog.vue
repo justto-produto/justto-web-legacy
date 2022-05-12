@@ -97,6 +97,87 @@
           </div>
         </div>
 
+        <div class="configure-customizations__form-body">
+          <div class="configure-customizations__form-body-actions">
+            <el-button
+              type="primary"
+              size="mini"
+              @click="handleUpdateDomains"
+            >
+              Verificar se os registros foram inseridos
+            </el-button>
+          </div>
+
+          <el-table
+            :data="dnsList"
+            style="width: 100%; text-align: center;"
+            size="mini"
+            class="configure-customizations__form-body-table"
+            border
+          >
+            <el-table-column
+              fixed="left"
+              center
+              width="37px"
+            >
+              <template v-slot="props">
+                <el-button
+                  type="text"
+                  :class="{danger: !props.row.valid, success: props.row.valid}"
+                  :icon="props.row.valid ? 'el-icon-check' : 'el-icon-close'"
+                />
+              </template>
+            </el-table-column>
+
+            <el-table-column
+              prop="type"
+              label="Type"
+              width="100px"
+            >
+              <template v-slot="props">
+                {{ props.row.type | uppercase }}
+              </template>
+            </el-table-column>
+
+            <el-table-column
+              prop="host"
+              label="Host"
+            >
+              <template v-slot="props">
+                {{ props.row.host }}
+              </template>
+            </el-table-column>
+
+            <el-table-column
+              prop="data"
+              label="Value"
+            >
+              <template v-slot="props">
+                {{ props.row.data }}
+              </template>
+            </el-table-column>
+
+            <el-table-column
+              fixed="right"
+              center
+              width="37px"
+            >
+              <template v-slot="props">
+                <el-tooltip
+                  content="Copiar"
+                  :open-delay="500"
+                >
+                  <el-button
+                    type="text"
+                    icon="el-icon-copy-document"
+                    @click="copyDns(props.row)"
+                  />
+                </el-tooltip>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+
         <el-form-item class="configure-customizations__form-ckeditor jus-ckeditor__parent">
           <ckeditor
             ref="footerEditor"
@@ -129,14 +210,6 @@
             @click.prevent="saveCustomizedConfigurations"
           >
             Salvar configuração
-          </el-button>
-
-          <el-button
-            type="primary"
-            size="small"
-            @click="handleUpdateDomains"
-          >
-            Verificar se os registros foram inseridos
           </el-button>
 
           <el-button
@@ -205,47 +278,6 @@
             </el-form-item>
           </el-col>
         </el-row>
-
-        <el-row :gutter="16">
-          <el-col :span="8">
-            <el-form-item
-              class="new-domain__form-domain"
-              prop="mail_cname"
-            >
-              <label for="newDomainFormDomain">DNS 1(mail_cname):</label>
-              <el-input
-                id="newDomainFormDomain"
-                v-model="newDomainForm.mail_cname"
-              />
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="8">
-            <el-form-item
-              class="new-domain__form-domain"
-              prop="dkim1"
-            >
-              <label for="newDomainFormDomain">DNS 2(dkim1):</label>
-              <el-input
-                id="newDomainFormDomain"
-                v-model="newDomainForm.dkim1"
-              />
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="8">
-            <el-form-item
-              class="new-domain__form-domain"
-              prop="dkim2"
-            >
-              <label for="newDomainFormDomain">DNS 3(dkim2):</label>
-              <el-input
-                id="newDomainFormDomain"
-                v-model="newDomainForm.dkim2"
-              />
-            </el-form-item>
-          </el-col>
-        </el-row>
       </el-form>
 
       <span
@@ -302,10 +334,7 @@ export default {
     },
 
     rulesNewDomainForm: {
-      domain: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
-      mail_cname: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
-      dkim1: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
-      dkim2: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
+      domain: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
     },
     currentDomain: null
   }),
@@ -327,6 +356,14 @@ export default {
 
     validTooltipText() {
       return `Este email está com o domínio ${this.isValidDomain ? 'válido' : 'inválido'}.` // e autorizado
+    },
+
+    dnsList() {
+      return this.currentDomain?.dns ? [
+        this.currentDomain?.dns?.mail_cname,
+        this.currentDomain?.dns?.dkim1,
+        this.currentDomain?.dns?.dkim2
+      ] : []
     }
   },
 
@@ -432,13 +469,12 @@ export default {
     },
 
     handleResetEmail() {
-      this.form.email = 'acordo@justto.app'
       this.modalLoading = true
 
-      this.editProperties({ CUSTOM_EMAIL_SENDER: this.form.email }).then(() => {
-        this.closeFeatureDialog()
+      this.editProperties({ CUSTOM_EMAIL_SENDER: 'acordo@justto.app' }).then(() => {
+        this.form.email = 'acordo@justto.app'
         this.openFeatureDialog()
-      })
+      }).finally(() => { this.modalLoading = false })
     },
 
     closeFeatureDialog() {
@@ -511,11 +547,6 @@ export default {
     handleSaveNewDomain() {
       const domain = {
         domain: this.newDomainForm.domain,
-        dns: {
-          mail_cname: { type: 'cname', host: this.newDomainForm.mail_cname },
-          dkim1: { type: 'cname', host: this.newDomainForm.dkim1 },
-          dkim2: { type: 'cname', host: this.newDomainForm.dkim2 }
-        },
         default: false
       }
 
@@ -525,6 +556,17 @@ export default {
         this.ceateDomain(domain).then(() => {
           this.handleCloseNewDomainDialog().then(this.openFeatureDialog)
         }).finally(() => { this.modalLoading = false })
+      })
+    },
+
+    copyDns(dns) {
+      navigator.clipboard.writeText(`${dns.host}\n${dns.data}`)
+
+      this.$message({
+        message: 'Copiado para a área de transferência.',
+        type: 'info',
+        center: true,
+        showClose: true
       })
     }
   }
@@ -538,15 +580,17 @@ export default {
 .configure-customizations {
   .configure-customizations__form {
     .configure-customizations__form-ckeditor {
+      margin-top: 24px;
+
       .el-form-item__content {
         .ck-editor {
-          height: 50vh;
+          height: 25vh;
 
           .ck-editor__main {
-            height: 95%;
+            height: 90%;
 
             .ck-content {
-              height: 90%;
+              height: 85%;
 
               p {
                 margin: 0;
@@ -582,6 +626,43 @@ export default {
 
           .configure-customizations__form-header-item-input {
             text-align: right;
+          }
+        }
+      }
+    }
+
+    .configure-customizations__form-body {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+
+      .configure-customizations__form-body-actions {
+        display: flex;
+        justify-content: flex-end;
+      }
+
+      .configure-customizations__form-body-table {
+        .el-table__fixed {
+          .el-table__fixed-body-wrapper {
+            .el-table__body {
+              tbody {
+                .el-table__row {
+                  .el-table__cell {
+                    .cell {
+                      .el-button {
+                        &.success {
+                          color: $--color-success;
+                        }
+
+                        &.danger {
+                          color: $--color-danger;
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }

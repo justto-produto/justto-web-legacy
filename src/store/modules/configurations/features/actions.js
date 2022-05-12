@@ -2,7 +2,7 @@ import { axiosDispatch } from '@/utils'
 
 const disputesApi = 'api/disputes'
 const disputesV2Api = 'api/disputes/v2'
-const sendgridWhitelabelDomainsApi = 'api/email/domain/authentication'
+const sendgridWhitelabelDomainsApi = 'api/email/domain'
 
 export default {
   getOutcomeReasonsConfig({ _ }, type) {
@@ -25,9 +25,15 @@ export default {
     })
   },
 
+  getAutenticatedDomains({ _ }) {
+    return axiosDispatch({
+      url: `${sendgridWhitelabelDomainsApi}/authentication`
+    })
+  },
+
   getSendgridDomains({ _ }) {
     return axiosDispatch({
-      url: `${sendgridWhitelabelDomainsApi}`
+      url: `${sendgridWhitelabelDomainsApi}/sendgrid/whitelabel/domains`
     })
   },
 
@@ -35,7 +41,7 @@ export default {
     return axiosDispatch({
       method: 'POST',
       data,
-      url: `${sendgridWhitelabelDomainsApi}`
+      url: `${sendgridWhitelabelDomainsApi}/authentication`
     })
   }
 }
