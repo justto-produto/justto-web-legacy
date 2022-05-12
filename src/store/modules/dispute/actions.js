@@ -329,9 +329,11 @@ const disputeActions = {
     try {
       Validate.load(disputeCode)
     } catch (error) {
-      commit('setDisputeTimeline', { timeline: { lastUpdated: '', lawsuits: [], isValid: false }, code: disputeCode })
-      commit('hideLoading')
-      return
+      if (!Vue.options.filters.validateTJbyCode(disputeCode)) {
+        commit('setDisputeTimeline', { timeline: { lastUpdated: '', lawsuits: [], isValid: false }, code: disputeCode })
+        commit('hideLoading')
+        return
+      }
     }
 
     return axiosDispatch({
