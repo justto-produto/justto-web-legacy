@@ -1,6 +1,7 @@
 <template>
   <article
     v-loading="localLoading"
+    element-loading-text="Aguarde… Estamos salvando a gravação de sua ligação."
     class="phone-container"
   >
     <div
@@ -77,19 +78,6 @@
           circle
           @click="shareAudio"
         />
-      </div>
-    </div>
-
-    <div
-      v-if="hasActiveCall"
-      class="phone-container__audio_current_call"
-    >
-      <i class="el-icon-microphone el-icon-pulse" />
-
-      <div>
-        <span>Chamada em andamento…</span>
-
-        <i class="el-icon-loading" />
       </div>
     </div>
 
@@ -290,7 +278,7 @@ export default {
       if (had && !have) {
         this.localLoading = true
 
-        setTimeout(() => { this.handleInitCall() }, 5 * 1000)
+        setTimeout(this.handleInitCall, (60 * 1000))
       }
     }
   },
@@ -369,6 +357,11 @@ export default {
           this.audioCodeResult = voiceCodeResult
         }).finally(() => {
           this.localLoading = false
+          this.$nextTick().then(() => {
+            if (this.$refs.AudioPlayer) {
+              this.$refs.AudioPlayer.$forceUpdate()
+            }
+          })
         })
       }
 
