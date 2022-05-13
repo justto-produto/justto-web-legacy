@@ -320,8 +320,6 @@ const disputeMutations = {
       content: undefined,
       pageable: undefined
     })
-
-    console.log(state.notesQuery)
   }
 }
 

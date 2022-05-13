@@ -674,7 +674,6 @@ const disputeActions = {
       // eslint-disable-next-line
       axios.get(`${disputesPath}/${disputeId}/occurrences/type/NOTE${buildQuery(query)}`)
         .then(response => {
-          console.log(response)
           commit('setDisputeOccurrences', response.data.content)
           commit('setNoteQuery', response.data)
           resolve(response.data)
@@ -730,7 +729,8 @@ const disputeActions = {
         value: params.value,
         note: params.note,
         action: params.action,
-        updateUpperRange: params.updateUpperRange
+        updateUpperRange: params.updateUpperRange,
+        forceStatus: params.forceStatus
       }).then(response => {
         resolve(response.data)
       }).catch(error => {

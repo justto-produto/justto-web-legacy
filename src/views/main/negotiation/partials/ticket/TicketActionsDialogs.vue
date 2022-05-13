@@ -349,6 +349,11 @@ export default {
     ticket: {
       type: Object,
       required: true
+    },
+
+    forceStatus: {
+      type: String,
+      default: ''
     }
   },
 
@@ -375,7 +380,17 @@ export default {
     editNegotiatorsForm: [],
     confirmIncreaseUpperrangeDialogVisible: false,
     attachmentDialogVisible: false,
-    dropLawsuitDialogVisible: false
+    dropLawsuitDialogVisible: false,
+    nextStatusMap: {
+      IMPORTED: 'ACCEPTED',
+      ENRICHED: 'ACCEPTED',
+      ENGAGEMENT: 'ACCEPTED',
+      PENDING: 'ACCEPTED',
+      RUNNING: 'ACCEPTED',
+      UNSETTLED: 'ACCEPTED',
+      ACCEPTED: 'CHECKOUT',
+      CHECKOUT: 'SETTLED'
+    }
   }),
 
   computed: {
@@ -475,6 +490,10 @@ export default {
           value: id
         }
       })
+    },
+
+    forcedStatusValue() {
+      return this.nextStatusMap[this.ticket?.status] === this.forceStatus ? undefined : this.forceStatus
     }
   },
 
@@ -643,20 +662,23 @@ export default {
         const { disputeId } = this.ticket
 
         const { value, roleId, note } = this.offerForm
+
         const data = {
           value,
           note,
           conclusionNote: note,
           roleId,
           updateUpperRange,
-          action: offerFormType
+          action: offerFormType,
+          forceStatus: this.forcedStatusValue || undefined
         }
+
         const polarityObjectKey = 'plaintiffOffer'
         this.sendOffer({ disputeId, data, polarityObjectKey, change: updateUpperRange })
           .then(success => resolve(success))
           .catch(error => {
             return reject(error)
-          })
+          }).finally(() => this.$emit('conclude'))
       })
     },
 
@@ -676,7 +698,11 @@ export default {
       const { disputeId } = this.ticket
       const action = 'SETTLED'
       const { note } = this.offerForm
-      const data = { note, conclusionNote: note }
+      const data = {
+        note,
+        conclusionNote: note,
+        forceStatus: this.forcedStatusValue || undefined
+      }
 
       this.confirmAction(action)
         .then(() => {
@@ -684,7 +710,10 @@ export default {
           this.sendTicketAction({ disputeId, action, data })
             .then(_success => this.concludeAction(action, disputeId))
             .catch(error => this.$jusNotification({ error }))
-            .finally(() => (this.modalLoading = false))
+            .finally(() => {
+              this.modalLoading = false
+              this.$emit('conclude')
+            })
         })
     },
 

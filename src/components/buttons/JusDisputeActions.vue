@@ -592,6 +592,11 @@
     <ConfirmActionDialog
       ref="confirmActionDialog"
     />
+
+    <SetSettledDialog
+      ref="setSettledDialog"
+      :status="dispute.status"
+    />
   </div>
 </template>
 
@@ -606,7 +611,8 @@ export default {
   components: {
     JusDragArea,
     ConfirmActionDialog: () => import('@/components/dialogs/ConfirmActionDialog'),
-    NotifyOnCompanyAnalysis: () => import('@/components/dialogs/NotifyOnCompanyAnalysis.vue')
+    NotifyOnCompanyAnalysis: () => import('@/components/dialogs/NotifyOnCompanyAnalysis'),
+    SetSettledDialog: () => import('@/components/dialogs/SetSettledDialog')
   },
 
   props: {
@@ -659,6 +665,16 @@ export default {
       counterOfferFormRules: {
         lastCounterOfferValue: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
         selectedRoleId: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
+      },
+      nextStatusMap: {
+        IMPORTED: 'ACCEPTED',
+        ENRICHED: 'ACCEPTED',
+        ENGAGEMENT: 'ACCEPTED',
+        PENDING: 'ACCEPTED',
+        RUNNING: 'ACCEPTED',
+        UNSETTLED: 'ACCEPTED',
+        ACCEPTED: 'CHECKOUT',
+        CHECKOUT: 'SETTLED'
       }
     }
   },
@@ -670,7 +686,8 @@ export default {
       ghostMode: 'ghostMode',
       dropLawsuitReasons: 'getDropLawsuitReasonsArray',
       userPreferences: 'userPreferences',
-      isRecovery: 'isWorkspaceRecovery'
+      isRecovery: 'isWorkspaceRecovery',
+      features: 'getMappedFeaturesAndModules'
     }),
 
     unsettledReasonsSorted() {
@@ -948,6 +965,10 @@ export default {
         }).join(', ')
       }
       return []
+    },
+
+    forcedStatusValue() {
+      return this.nextStatusMap[this.dispute?.status] === this.counterOfferForm.forceStatus ? undefined : this.counterOfferForm.forceStatus
     }
   },
 
@@ -1009,11 +1030,19 @@ export default {
               if (this.dispute.status === 'CHECKOUT' || this.dispute.status === 'ACCEPTED') {
                 this.ticketResumeDialogVisible = true
               } else {
-                this.openSettledDialog(action)
+                this.disputeAction(action, additionParams)
               }
             })
           } else {
-            if (this.dispute.status === 'CHECKOUT' || this.dispute.status === 'ACCEPTED') {
+            if (!this.features.DRAFT_MANAGEMENT && !['PRE_NEGOTIATION', 'CHECKOUT', 'SETTLED'].includes(this.dispute.status) && !additionParams?.forceStatus) {
+              this.counterOfferForm.forceStatus = 'SETTLED'
+              this.disputeAction(action, { ...additionParams, forceStatus: 'SETTLED' })
+            } else if (this.features.DRAFT_MANAGEMENT && !['PRE_NEGOTIATION', 'CHECKOUT', 'SETTLED'].includes(this.dispute.status) && !additionParams?.forceStatus) {
+              this.$refs.setSettledDialog.open((status) => {
+                this.counterOfferForm.forceStatus = status
+                this.disputeAction(action, { ...additionParams, forceStatus: status })
+              })
+            } else if (this.dispute.status === 'CHECKOUT' || this.dispute.status === 'ACCEPTED') {
               this.ticketResumeDialogVisible = true
             } else {
               this.openSettledDialog(action)
@@ -1224,7 +1253,8 @@ export default {
         disputeId: this.dispute.id,
         body: {
           note: this.counterOfferForm.note,
-          conclusionNote: this.counterOfferForm.note
+          conclusionNote: this.counterOfferForm.note,
+          forceStatus: this.forcedStatusValue
         }
       }
 
@@ -1255,6 +1285,7 @@ export default {
             })
 
             this.counterOfferForm.note = ''
+            this.$delete(this.counterOfferForm, 'forceStatus')
 
             if (action === 'settled') {
               this.ticketResumeDialogVisible = false
@@ -1478,7 +1509,8 @@ export default {
                 roleId: this.counterOfferForm.selectedRoleId,
                 note: this.scapeHtml(this.counterOfferForm.note),
                 updateUpperRange: updateUpperRange || false,
-                action: this.offerFormType
+                action: this.offerFormType,
+                forceStatus: this.forcedStatusValue
               }).then(() => {
                 resolve()
                 this.counterproposalDialogVisible = false

@@ -155,8 +155,6 @@ export default {
       const element = document.getElementById(`summary-item-${index}`) || { offsetWidth: 0 }
       const breakTag = element.offsetWidth < 500 ? '<br/>' : ''
 
-      console.log(date)
-
       let message = ''
 
       switch (status) {
