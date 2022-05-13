@@ -3,58 +3,55 @@
     title="Você deseja mover a disputa para qual status?"
     :visible.sync="visible"
     custom-class="set-settled-dialog"
-    center
     :show-close="false"
     :close-on-click-modal="false"
     width="auto"
     destroy-on-close
     append-to-body
   >
-    <span
-      slot="footer"
-      :class="{ mobile: isMobile, desktop: !isMobile }"
+    <el-radio-group
+      v-model="forceStatus"
+      :class="{'mobile' : isMobile}"
     >
-      <el-button
-        v-if="!isMobile"
-        size="small"
-        @click="close"
-      >
-        Cancelar
-      </el-button>
-
-      <el-button
+      <el-radio
         v-if="!['ACCEPTED', 'CHECKOUT', 'SETTLED'].includes(status)"
-        type="primary"
-        :class="{'el-button--small' : !isMobile}"
-        @click="handleAction('ACCEPTED')"
+        label="ACCEPTED"
+        :border="isMobile"
       >
         Aguardando dados bancários
-      </el-button>
+      </el-radio>
 
-      <el-button
-        type="secondary"
-        :class="{'el-button--small' : !isMobile}"
-        @click="handleAction('CHECKOUT')"
+      <el-radio
+        label="CHECKOUT"
+        :border="isMobile"
       >
         Acordo (Aguardando minuta)
-      </el-button>
+      </el-radio>
 
-      <el-button
-        type="info"
-        :class="{'el-button--small' : !isMobile}"
-        @click="handleAction('SETTLED')"
+      <el-radio
+        label="SETTLED"
+        :border="isMobile"
       >
         Ganha (Finalizada)
-      </el-button>
+      </el-radio>
+    </el-radio-group>
 
+    <span slot="footer">
       <el-button
-        v-if="isMobile"
         :class="{'el-button--small' : !isMobile}"
         @click="close"
       >
         Cancelar
       </el-button>
 
+      <el-button
+        type="primary"
+        :class="{'el-button--small' : !isMobile}"
+        :disabled="!forceStatus"
+        @click="handleAction(forceStatus)"
+      >
+        Confirmar
+      </el-button>
     </span>
   </el-dialog>
 </template>
@@ -72,6 +69,7 @@ export default {
 
   data: () => ({
     visible: false,
+    forceStatus: '',
     action: () => {}
   }),
 
@@ -89,10 +87,12 @@ export default {
     open(action) {
       this.visible = true
       this.action = action
+      this.forceStatus = ''
     },
 
     close() {
       this.visible = false
+      this.forceStatus = ''
     },
 
     handleAction(status) {
@@ -105,42 +105,27 @@ export default {
 
 <style lang="scss">
 .set-settled-dialog {
-  .settled-mobile-layout {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-
-    .el-button {
-      margin: 0;
-    }
-  }
-
-  .el-dialog__footer {
-    .mobile {
+  .el-dialog__body {
+    .el-radio-group {
       display: flex;
       flex-direction: column;
       gap: 16px;
 
-      .el-button {
-        margin: 0;
-
-        span {
-          font-size: 16px;
-          font-weight: 600;
+      .el-radio {
+        &.is-bordered {
+          margin: 0;
         }
       }
-    }
 
-    .desktop {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 16px;
+      &.mobile {
+        gap: 16px;
 
-      .el-button {
-        margin: 0;
-
+        .el-radio {
+          .el-radio__label {
+            font-size: 16px;
+            font-weight: 600;
+          }
+        }
       }
     }
   }

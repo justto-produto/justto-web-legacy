@@ -701,7 +701,7 @@ export default {
       const data = {
         note,
         conclusionNote: note,
-        forceStatus: this.forcedStatusValue
+        forceStatus: this.forcedStatusValue || undefined
       }
 
       this.confirmAction(action)
