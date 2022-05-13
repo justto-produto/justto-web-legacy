@@ -7,7 +7,8 @@ const sendgridWhitelabelDomainsApi = 'api/email/domain'
 export default {
   getOutcomeReasonsConfig({ _ }, type) {
     return axiosDispatch({
-      url: `${disputesApi}/outcome-reasons/${type}`
+      url: `${disputesApi}/outcome-reasons/${type}`,
+      mutation: 'setOutcomeReasons'
     })
   },
 

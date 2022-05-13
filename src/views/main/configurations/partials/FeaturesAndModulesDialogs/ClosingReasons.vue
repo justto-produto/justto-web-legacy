@@ -162,6 +162,7 @@ export default {
           title: 'Yay!',
           message: `${this.$tc('configurations.CLOSING_REASONS.label')} salvos com sucesso`
         })
+        this.getOutcomeReasonsConfig('UNSETTLED')
         this.getDisputeStatuses('UNSETTLED')
       }).catch(error => this.$jusNotification({ error })).finally(() => {
         this.loading = false
