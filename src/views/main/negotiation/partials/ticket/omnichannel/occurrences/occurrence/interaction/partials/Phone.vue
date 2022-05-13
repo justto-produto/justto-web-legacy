@@ -1,6 +1,7 @@
 <template>
   <article
     v-loading="localLoading"
+    element-loading-text="Aguarde… Estamos salvando a gravação de sua ligação."
     class="phone-container"
   >
     <div
@@ -277,7 +278,7 @@ export default {
       if (had && !have) {
         this.localLoading = true
 
-        setTimeout(() => { this.handleInitCall() }, 60 * 1000)
+        setTimeout(this.handleInitCall, (60 * 1000))
       }
     }
   },
