@@ -50,8 +50,9 @@
             {{ date | capitalize }}
           </div>
 
+          <!-- Menções não agrupadas (Menções que não são da Justtine) -->
           <div
-            v-for="(notification, notificationIndex) in notifications"
+            v-for="(notification, notificationIndex) in notifications.filter(({ fromAccountId }) => Boolean(fromAccountId))"
             :key="`${notificationIndex}-${notification.type}`"
             class="notification__drawer__list-item"
             :class="{'notification__drawer__list-item-pendent': !notification.readDate}"
@@ -91,6 +92,88 @@
               />
             </el-tooltip>
           </div>
+
+          <!-- Menções agrupadas (Menções que são da Justtine) -->
+          <el-collapse
+            v-if="countJusttineMentionByDay[date] > 0"
+            class="justtine-mentions-collapse"
+          >
+            <el-collapse-item>
+              <template slot="title">
+                <jus-avatar-user
+                  name="Justtine"
+                  :src="justtineUrl"
+                  :purple="false"
+                  shape="circle"
+                  size="sm"
+                />
+                <span>Justtine mencionou você.</span>
+                <el-badge
+                  :value="countJusttineMentionByDay[date]"
+                  type="primary"
+                />
+              </template>
+
+              <div
+                v-for="(notification, notificationIndex) in notifications.filter(({ fromAccountId }) => !fromAccountId)"
+                :key="`${notificationIndex}-${notification.type}`"
+                class="notification__drawer__list-item"
+                :class="{'notification__drawer__list-item-pendent': !notification.readDate}"
+              >
+                <span
+                  class="notification__drawer__list-item-name"
+                  @click="openMention(notification)"
+                >
+                  <div :class="{'justtine-notification': notification.fromAccountId === null}">
+                    <span v-if="notification.fromAccountId === null">
+                      <jus-avatar-user
+                        name="Justtine"
+                        :src="justtineUrl"
+                        :purple="false"
+                        shape="circle"
+                        size="sm"
+                      />
+                    </span>
+                    {{ getMemberName(notification.fromAccountId) | resumedName }}
+                    mencionou você.
+                  </div>
+                </span>
+
+                <!-- TODO: Ícone com informações da notificação. -->
+                <!-- <el-popover
+                  placement="top-end"
+                  trigger="hover"
+                >
+                  <div>
+                    Disputa: #{{ notification.disputeId }}
+                    <br>
+                    Workspace: {{ notification.workspaceId }}
+                  </div>
+                  <el-button
+                    slot="reference"
+                    type="text"
+                    icon="el-icon-question"
+                  />
+                </el-popover> -->
+
+                <span class="notification__drawer__list-item-date">
+                  {{ parseDate(notification.createdAt) }}
+                </span>
+
+                <el-tooltip
+                  :open-delay="500"
+                  content="Marcar como lida"
+                  placement="bottom-start"
+                >
+                  <div
+                    v-if="!notification.readDate"
+                    class="notification__drawer__list-item-status el-icon-pulse"
+                    @click="setReaded(notification.id)"
+                  />
+                </el-tooltip>
+              </div>
+            </el-collapse-item>
+          </el-collapse>
         </div>
       </div>
 
@@ -190,6 +273,15 @@ export default {
 
     parseDate() {
       return (date) => approximateTime(date)
+    },
+
+    countJusttineMentionByDay() {
+      return Object.keys(this.mentions).reduce((acc, key) => {
+        const accTemp = {}
+        accTemp[key] = this.mentions[key].filter(({ fromAccountId }) => fromAccountId === null).length
+
+        return { ...acc, ...accTemp }
+      }, {})
     }
   },
 
@@ -314,6 +406,60 @@ export default {
     img {
       width: 24px;
       height: 24px;
+    }
+  }
+}
+
+.justtine-mentions-collapse {
+  .el-collapse-item {
+    div[role="tab"] {
+      .el-collapse-item__header {
+        color: $--color-text-primary;
+        font-weight: bold;
+        border: none;
+        border-radius: 4px;
+        line-height: 24px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        margin: 0;
+        padding: 4px 8px;
+
+        .jus-avatar-user {
+          width: 24px;
+          height: 24px;
+
+          img {
+            width: 24px;
+            height: 24px;
+          }
+        }
+
+        span {
+          line-height: 24px;
+        }
+
+        &:hover {
+          background-color: $--color-light-gray;
+        }
+      }
+    }
+
+    div[role="tabpanel"] {
+      border: none;
+      margin-left: 16px;
+
+      .el-collapse-item__content {
+        .notification__drawer__list-item {
+          .notification__drawer__list-item-name {
+            .justtine-notification {
+              span {
+                height: 24px;
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
