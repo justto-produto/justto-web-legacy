@@ -27,6 +27,7 @@ const workspaceActions = {
   },
   editWorkpaceProperties({ state }, properties) {
     const workspaceId = state.workspace.id
+
     return axiosDispatch({
       url: `${workspacesPath}/${workspaceId}/properties`,
       method: 'PUT',
