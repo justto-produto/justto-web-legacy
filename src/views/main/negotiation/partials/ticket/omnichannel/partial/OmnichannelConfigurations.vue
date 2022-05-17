@@ -3,7 +3,7 @@
     v-loading="loading"
     class="omnichannel-configurations__container"
   >
-    <div class="omnichannel-configurations__container-groupping">
+    <!-- <div class="omnichannel-configurations__container-groupping">
       <label>
         Agrupamento de mensagens:
       </label>
@@ -26,7 +26,7 @@
           /> Agrupado
         </el-radio>
       </el-radio-group>
-    </div>
+    </div> -->
 
     <div class="omnichannel-configurations__container-coloring">
       <label>
@@ -61,7 +61,7 @@ export default {
   data: () => ({ loading: false }),
 
   computed: {
-    ...mapGetters({ properties: 'workspaceProperties' }),
+    ...mapGetters({ properties: 'userProperties' }),
 
     groupingType: {
       get() {
@@ -90,7 +90,7 @@ export default {
 
   methods: {
     ...mapActions({
-      editProperties: 'editWorkpaceProperties'
+      editProperties: 'setAccountProperty'
     })
   }
 }
