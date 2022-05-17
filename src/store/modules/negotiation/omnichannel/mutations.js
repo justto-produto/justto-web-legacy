@@ -207,6 +207,16 @@ const omnichannelMutations = {
 
   setDisputeProtocol: (state, data) => {
     Vue.set(state, 'disputeProtocol', data)
+  },
+
+  setGroupedOccurrencesById: (state, { data: occurrences, payload: id }) => {
+    Vue.set(state.groupedOccurrences, id, occurrences)
+    console.log(state.groupedOccurrences)
+  },
+
+  deleteGroupedOccurrencesById: (state, id) => {
+    Vue.delete(state.groupedOccurrences, id)
+    console.log(state.groupedOccurrences)
   }
 }
 

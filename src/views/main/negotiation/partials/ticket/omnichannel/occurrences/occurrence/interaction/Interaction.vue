@@ -18,14 +18,13 @@
       />
     </el-tooltip>
 
-    <div
-      :class="`${interaction.direction} ${!flat ? 'interaction-container__balloon' : ''}`"
-    >
+    <div :class="`${interaction.direction} ${!flat ? 'interaction-container__balloon' : ''}`">
       <div class="interaction-container__balloon-content">
         <component
           :is="type"
           :value="interaction"
           :occurrence="value"
+          :hide-grouping="hideGrouping"
         />
       </div>
     </div>
@@ -47,6 +46,25 @@
         @click="reply"
       />
     </span>
+
+    <div
+      v-if="showGrouped && groupedOccurrences.length"
+      class="break-point"
+    />
+
+    <div
+      v-if="showGrouped && groupedOccurrences.length"
+      class="interaction-container__grouped"
+    >
+      <Interaction
+        v-for="occurrence in groupedOccurrences"
+        :key="occurrence.id"
+        :value="occurrence"
+        :show-grouped="false"
+        :hide-grouping="true"
+      />
+    </div>
+
     <!-- Dialog de warning para LGPD -->
     <WarningLGPD
       :lgpd-dialog-visible="LGPDWarningDialogVisible"
@@ -59,6 +77,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+
 const negotiatorTypes = [
   'NEGOTIATOR_ACCESS',
   'NEGOTIATOR_PROPOSAL',
@@ -69,6 +88,8 @@ const negotiatorTypes = [
 ]
 
 export default {
+  name: 'Interaction',
+
   components: {
     COMMUNICATION: () => import('./partials/Communication'),
     ATTACHMENT: () => import('@/views/main/dispute/partials/partials/AttachmentOccurrence'),
@@ -85,6 +106,16 @@ export default {
     value: {
       type: Object,
       required: true
+    },
+
+    showGrouped: {
+      type: Boolean,
+      default: true
+    },
+
+    hideGrouping: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -103,7 +134,8 @@ export default {
       with: 'getWindowWidth',
       isJusttoAdmin: 'isJusttoAdmin',
       isAdminProfile: 'isAdminProfile',
-      negotiators: 'getTicketOverviewNegotiators'
+      negotiators: 'getTicketOverviewNegotiators',
+      getGroupedOccurrencesById: 'getGroupedOccurrencesById'
     }),
 
     type() {
@@ -219,6 +251,10 @@ export default {
         return this.interaction.message.parameters.SENDER
       }
       return null
+    },
+
+    groupedOccurrences() {
+      return this.getGroupedOccurrencesById(this.value?.id)
     }
   },
 
@@ -265,9 +301,15 @@ export default {
   display: flex;
   gap: 6px;
   align-items: center;
+  flex-wrap: wrap;
 
   height: auto;
   margin: 10px 24px 0px 24px;
+
+  .break-point {
+    flex-basis: 100%;
+    width: 0;
+  }
 
   &.INBOUND {
     flex-direction: row;

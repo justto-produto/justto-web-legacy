@@ -29,6 +29,7 @@ const omnichannelMutations = {
   countOmnichannelGetters: 0,
   totalOfOccurrences: 20,
   occurrences: new StateOccurrences(),
+  groupedOccurrences: {},
   editor: {
     messageText: '',
     recentMessages: [],

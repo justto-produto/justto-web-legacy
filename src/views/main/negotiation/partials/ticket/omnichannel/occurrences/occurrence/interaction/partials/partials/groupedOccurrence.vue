@@ -3,12 +3,14 @@
     <span v-if="have">
       •
     </span>
+
     <el-popover
       placement="top-start"
       trigger="hover"
       :open-delay="250"
       :disabled="!have"
       popper-class="grouped-occurrences"
+      class="grouped-occurrences__poppover"
     >
       <div class="grouped-occurrences__container">
         <strong
@@ -24,23 +26,45 @@
           {{ date | moment('DD [de] MMMM [de] YYYY [às] HH:MM') }}
         </div>
       </div>
-      <JusIcon
+
+      <span
         v-if="have"
         slot="reference"
-        icon="running"
-        :style="{ width: '16px' }"
-      />
+        @click="openGrouped"
+      >
+        <JusIcon
+          v-if="!showGroupingExtension"
+          icon="running"
+          :style="{ width: '16px' }"
+        />
+
+        <span v-if="showGroupingExtension">
+          (+{{ occurrences.length }})
+        </span>
+
+        <i
+          v-if="showGroupingExtension"
+          :class="{'el-icon-caret-bottom': !isOpenGroupedOccurrences, 'el-icon-caret-top': isOpenGroupedOccurrences}"
+        />
+      </span>
     </el-popover>
   </article>
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
 export default {
   props: {
     occurrences: {
       type: Array,
       default: () => []
     },
+
+    parentId: {
+      type: Number,
+      required: true
+    },
+
     have: {
       type: Boolean,
       default: false
@@ -48,8 +72,37 @@ export default {
   },
 
   computed: {
+    ...mapGetters([
+      'getGroupedOccurrencesById',
+      'userPreferences'
+    ]),
+
     plural() {
       return (msg, sufix) => this.occurrences.length > 1 ? `${msg}${sufix}` : msg
+    },
+
+    isOpenGroupedOccurrences() {
+      return this.getGroupedOccurrencesById(this.parentId).length > 0
+    },
+
+    showGroupingExtension() {
+      return this.userPreferences?.properties?.OMNICHANNEL_GROUPING_TYPE === 'GROUPED'
+    }
+  },
+
+  methods: {
+    ...mapActions([
+      'getGroupedOccurrencesByOccurrenceId',
+      'resetGroupedOccurrencesByOccurrenceId'
+    ]),
+
+    openGrouped() {
+      console.log('occurrences', this.parentId)
+      if (this.isOpenGroupedOccurrences) {
+        this.resetGroupedOccurrencesByOccurrenceId(this.parentId)
+      } else {
+        this.getGroupedOccurrencesByOccurrenceId(this.parentId)
+      }
     }
   }
 }
@@ -60,6 +113,17 @@ export default {
   display: flex;
   align-items: center;
   gap: 6px;
+
+  .grouped-occurrences__poppover {
+    .el-popover__reference-wrapper {
+      .el-popover__reference {
+        display: flex;
+        gap: 2px;
+        align-items: center;
+        cursor: pointer;
+      }
+    }
+  }
 }
 </style>
 

@@ -292,6 +292,22 @@ const omnichannelActions = {
       tab: state.activeTab,
       contacts: getEditorRecipients
     }))
+  },
+
+  getGroupedOccurrencesByOccurrenceId({ state, commit }, id) {
+    // TODO: SAAS-5036 Implementar GET das Ocorrências agrupadas aqui.
+    commit('setGroupedOccurrencesById', {
+      data: state.occurrences.list.filter(({ id: occId }) => occId === id),
+      payload: id
+    })
+
+    return Promise.resolve()
+  },
+
+  resetGroupedOccurrencesByOccurrenceId({ commit }, id) {
+    commit('deleteGroupedOccurrencesById', id)
+
+    return Promise.resolve()
   }
 }
 
