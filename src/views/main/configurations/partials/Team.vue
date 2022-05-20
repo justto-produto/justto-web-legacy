@@ -350,6 +350,12 @@ export default {
               address: 'financeiro@justto.com.br',
               content: `Cliente da workspace ${this.workspace?.teamName} teve seu limite de workspaces excedido,  favor entrar em contato com o ${(this.workspace?.associatedKeyAccount?.name || 'KA não definido')}, para verificar se teve alteração de valor de mensalidade.`
             })
+
+            this.sendCustomEmail({
+              subject: 'Limite de Workspace excedido',
+              address: 'deivid@justto.com.br',
+              content: `Cliente da workspace ${this.workspace?.teamName} teve seu limite de workspaces excedido,  favor entrar em contato com o ${(this.workspace?.associatedKeyAccount?.name || 'KA não definido')}, para verificar se teve alteração de valor de mensalidade.`
+            })
           }
         }).finally(resolve)
       })
