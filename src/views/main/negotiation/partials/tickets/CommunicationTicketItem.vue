@@ -207,6 +207,7 @@ export default {
 
     lastInboundInteraction() {
       const { lastInboundInteraction, lastReceivedMessage, disputeStatus, expirationDate, conclusionDate } = this.ticket
+
       if (this.isAcceptedTab || this.isFinishedTab) {
         if (conclusionDate?.dateTime) {
           return {
@@ -220,8 +221,9 @@ export default {
             dateTime: expirationDate.dateTime || '--/--/--'
           }
         }
-      } else if (lastInboundInteraction?.type && lastInboundInteraction?.type !== 'COMMUNICATION') {
+      } else if (lastInboundInteraction?.type !== 'COMMUNICATION') {
         const { type, dateTime } = lastInboundInteraction
+
         return {
           icon: type ? this.$tc(`interaction-types.${type}.icon`) : null,
           message: this.$options.filters.capitalize(this.$tc(`interaction-types.${type}.message`)),
@@ -229,6 +231,13 @@ export default {
         }
       } else if (lastReceivedMessage?.message) {
         const { message, dateTime } = lastReceivedMessage
+        return {
+          message,
+          dateTime: dateTime.dateTime
+        }
+      } else if (lastInboundInteraction?.dateTime?.dateTime) {
+        const { message, dateTime } = lastInboundInteraction
+
         return {
           message,
           dateTime: dateTime.dateTime
