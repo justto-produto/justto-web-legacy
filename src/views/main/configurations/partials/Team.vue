@@ -12,6 +12,7 @@
           class="el-input__icon el-icon-search"
         />
       </el-input>
+
       <el-button
         type="primary"
         icon="el-icon-plus"
@@ -218,7 +219,8 @@ export default {
   computed: {
     ...mapGetters({
       team: 'workspaceTeam',
-      isJustto: 'isJusttoAdmin'
+      isJustto: 'isJusttoAdmin',
+      workspace: 'workspace'
     }),
 
     reportsOptions() {
@@ -281,7 +283,9 @@ export default {
       'changeMemberName',
       'editWorkspaceMember',
       'updatePersonProfile',
-      'unlockAccount'
+      'unlockAccount',
+      'sendCustomEmail',
+      'getCustomerWorkspaceCount'
     ]),
 
     handleUnlockUser(user) {
@@ -329,16 +333,40 @@ export default {
       this.$refs.removeTeamMemberDialog.show({ id, name })
     },
 
-    createNewTeam() {
-      this.$confirm('Você será redirecionado para a criação de nova Equipe, deseja continuar?', 'Redirecionamento', {
-        confirmButtonText: 'Criar nova Equipe',
-        cancelButtonText: 'Cancelar',
-        cancelButtonClass: 'is-plain',
-        type: 'warning'
-      }).then(() => {
-        this.$store.commit('redirectNewWorkspaceTrue')
-        this.$router.push('onboarding')
+    validateWorkspacesQuantity() {
+      return new Promise((resolve) => {
+        this.getCustomerWorkspaceCount(this.workspace?.id).then(count => {
+          if (count > 0 && count % 3 === 0) {
+            this.$alert('<b>Limite de workspace por cliente foi excedido</b><br><br>Por favor, analisar o contrato firmado com o cliente, para avaliar um possível ajuste no valor da mensalidade.', {
+              customClass: 'workspace-limit-alert',
+              dangerouslyUseHTMLString: true,
+              confirmButtonText: 'OK',
+              showClose: false,
+              center: true
+            })
+
+            this.sendCustomEmail({
+              subject: 'Limite de Workspace excedido',
+              address: 'financeiro@justto.com.br',
+              content: `Cliente da workspace ${this.workspace?.teamName} teve seu limite de workspaces excedido,  favor entrar em contato com o ${(this.workspace?.associatedKeyAccount?.name || 'KA não definido')}, para verificar se teve alteração de valor de mensalidade.`
+            })
+          }
+        }).finally(resolve)
       })
+    },
+
+    createNewTeam() {
+      this.validateWorkspacesQuantity().then(() =>
+        this.$confirm('Você será redirecionado para a criação de nova Equipe, deseja continuar?', 'Redirecionamento', {
+          confirmButtonText: 'Criar nova Equipe',
+          cancelButtonText: 'Cancelar',
+          cancelButtonClass: 'is-plain',
+          type: 'warning'
+        }).then(() => {
+          this.$store.commit('redirectNewWorkspaceTrue')
+          this.$router.push('onboarding')
+        })
+      )
     },
 
     startEditing(key, id) {
@@ -479,6 +507,12 @@ export default {
       height: 16px;
       margin-right: 12px;
     }
+  }
+}
+
+.workspace-limit-alert {
+  .el-message-box__header {
+    display: none;
   }
 }
 
