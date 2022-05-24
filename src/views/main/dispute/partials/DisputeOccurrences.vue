@@ -1053,7 +1053,7 @@ export default {
     },
 
     canHandleUnknowParty(occurrence) {
-      return occurrence.properties && occurrence.properties.HANDLE_UNKNOW_PARTY && occurrence.properties.UNKNOW_ROLE_IDS
+      return occurrence.properties?.HANDLE_UNKNOW_PARTY && occurrence.properties?.UNKNOW_ROLE_IDS
     },
 
     isUnknown(occurrence) {

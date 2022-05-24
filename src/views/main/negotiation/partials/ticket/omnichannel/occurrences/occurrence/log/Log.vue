@@ -17,9 +17,16 @@
       </span>
 
       <UnknownPartyButton
-        v-if="isUnknown"
+        v-if="havePartsUnknow && isUnknown"
         v-model="value"
       />
+
+      <span
+        v-if="havePartsUnknow"
+        class="unkbown-party-resolved"
+      >
+        Esta pendência já foi resolvida!
+      </span>
 
       <span class="log-container__occurrence-about negotiation-occurrence-about">
         <span class="log-container__occurrence-about-time">
@@ -74,6 +81,21 @@ export default {
 
     isUnknown() {
       return this.value?.properties?.PARTY === 'UNKNOWN' && this.value?.properties?.ROLE_NAME === 'LAWYER'
+    },
+
+    havePartsUnknow() {
+      return this.value?.properties?.HANDLE_UNKNOW_PARTY === 'TRUE' && JSON.parse(this.value?.properties?.UNKNOW_ROLE_IDS || '[]').length > 0
+    },
+
+    unknownParts() {
+      if (this.havePartsUnknow) {
+        const dispute = this.$store.getters.dispute
+        const roleIds = JSON.parse(this.value.properties.UNKNOW_ROLE_IDS)
+        const filteredRole = dispute.disputeRoles.filter(r => roleIds.includes(r.id) && r.party === 'UNKNOWN')
+        return filteredRole
+      }
+
+      return this.havePartsUnknow
     },
 
     text() {
@@ -283,6 +305,11 @@ export default {
       border-radius: 0px;
       max-width: 100%;
       width: 100%;
+    }
+
+    .unkbown-party-resolved {
+      text-align: center;
+      text-decoration: underline;
     }
   }
 }
