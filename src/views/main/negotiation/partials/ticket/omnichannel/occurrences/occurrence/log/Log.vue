@@ -17,16 +17,23 @@
       </span>
 
       <UnknownPartyButton
-        v-if="havePartsUnknow && isUnknown"
+        v-if="isUnknown"
         v-model="value"
       />
 
-      <span
+      <!-- Validação -->
+      <div
         v-if="havePartsUnknow"
-        class="unkbown-party-resolved"
+        class="log-container__occurrence-unknowns"
       >
-        Esta pendência já foi resolvida!
-      </span>
+        <UnknownPolarityButton
+          v-for="party in unknownParts"
+          :key="party.disputeRoleId"
+          :occurrence="value"
+          :party="party"
+          class="unknown-item"
+        />
+      </div>
 
       <span class="log-container__occurrence-about negotiation-occurrence-about">
         <span class="log-container__occurrence-about-time">
@@ -57,10 +64,12 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   components: {
     Summary: () => import('./Summary'),
-    UnknownPartyButton: () => import('@/components/buttons/UnknownPartyButton')
+    UnknownPartyButton: () => import('@/components/buttons/UnknownPartyButton'),
+    UnknownPolarityButton: () => import('@/components/buttons/UnknownPolarityButton')
   },
 
   props: {
@@ -71,6 +80,10 @@ export default {
   },
 
   computed: {
+    ...mapGetters({
+      parties: 'getTicketOverviewParties'
+    }),
+
     occurrence() {
       return this.value
     },
@@ -87,15 +100,12 @@ export default {
       return this.value?.properties?.HANDLE_UNKNOW_PARTY === 'TRUE' && JSON.parse(this.value?.properties?.UNKNOW_ROLE_IDS || '[]').length > 0
     },
 
-    unknownParts() {
-      if (this.havePartsUnknow) {
-        const dispute = this.$store.getters.dispute
-        const roleIds = JSON.parse(this.value.properties.UNKNOW_ROLE_IDS)
-        const filteredRole = dispute.disputeRoles.filter(r => roleIds.includes(r.id) && r.party === 'UNKNOWN')
-        return filteredRole
-      }
+    unknownRoleIds() {
+      return JSON.parse(this.value?.properties?.UNKNOW_ROLE_IDS || '[]')
+    },
 
-      return this.havePartsUnknow
+    unknownParts() {
+      return (this.parties || []).filter(r => this.unknownRoleIds.includes(r.disputeRoleId) && r.polarity === 'UNKNOWN')
     },
 
     text() {
@@ -262,6 +272,11 @@ export default {
 
     &.normal {
       padding: 12px;
+    }
+
+    .log-container__occurrence-unknowns {
+      display: flex;
+      flex-direction: column;
     }
 
     .log-container__occurrence-text {

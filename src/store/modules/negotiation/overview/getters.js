@@ -1,8 +1,8 @@
 const overviewGetters = {
   getTicketOverview: ({ ticketOverview }) => ticketOverview,
   getTicketOverviewInfo: ({ ticketOverviewInfo }) => ticketOverviewInfo,
-  getTicketOverviewParties: ({ ticketOverviewParties }) => {
-    return ticketOverviewParties.sort((a, b) => {
+  getTicketOverviewParties: state => {
+    return state.ticketOverviewParties.sort((a, b) => {
       let positionOfRoleA = ''
       if (a.roles.includes('LAWYER') && a.roles.includes('PARTY')) positionOfRoleA = 1
       else if (a.roles.includes('PARTY') && !a.roles.includes('LAWYER')) positionOfRoleA = 2
