@@ -1528,6 +1528,7 @@ export default {
 
   .jus-main-view__main-card {
     height: 100%;
+    overflow-y: hidden;
     min-width: 532px;
     z-index: 0;
 

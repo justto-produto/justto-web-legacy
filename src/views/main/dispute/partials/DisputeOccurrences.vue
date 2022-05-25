@@ -76,6 +76,11 @@
             </div>
           </div>
 
+          <Log
+            v-else-if="occurrence.type === 'LOG' && occurrence.properties.HANDLE_UNKNOW_PARTY && occurrence.properties.HANDLE_UNKNOW_PARTY === 'TRUE'"
+            :value="occurrence"
+          />
+
           <el-card
             v-else-if="occurrence.type === 'LOG' ||
               (occurrence.interaction && ['VISUALIZATION', 'CLICK', 'NEGOTIATOR_ACCESS'].includes(occurrence.interaction.type))"
@@ -674,6 +679,7 @@ export default {
 
   components: {
     InfiniteLoading,
+    Log: () => import('@/views/main/negotiation/partials/ticket/omnichannel/occurrences/occurrence/log/Log'),
     AttachmentOccurrence: () => import('./partials/AttachmentOccurrence'),
     UnknownPartyButton: () => import('@/components/buttons/UnknownPartyButton'),
     NpsInteraction: () => import('@/views/main/negotiation/partials/ticket/omnichannel/occurrences/occurrence/interaction/partials/Nps'),

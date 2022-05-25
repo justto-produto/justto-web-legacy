@@ -1,7 +1,10 @@
 <template>
-  <article class="unknow-party-container">
+  <article
+    v-if="isUnknown"
+    class="unknow-party-container"
+  >
     <span class="unknow-party-container__header">
-      Ajude-nos a identificar a polaridade correta. Quem {{ unknownName }} está representando?
+      Quem <strong>{{ unknownName }}</strong> está representando?
     </span>
 
     <div class="unknow-party-container__body">
@@ -17,6 +20,15 @@
         <div> {{ item.name }} </div>
       </el-button>
     </div>
+  </article>
+
+  <article
+    v-else
+    class="unknow-party-container"
+  >
+    <span class="unknow-party-container__header">
+      <strong>{{ unknownName }}</strong> teve a polaridade definida.
+    </span>
   </article>
 </template>
 
@@ -91,27 +103,24 @@ export default {
         polarity: 'RESPONDENT',
         roles: ['PARTY']
       }]
+    },
+
+    isUnknown() {
+      return this.party.polarity === 'UNKNOWN'
     }
   },
 
   methods: {
     ...mapActions([
-      'setTicketOverviewParty',
+      'setTicketOverviewPartyPolarity',
       'restartDisputeRoleEngagement'
     ]),
 
     saveParty({ polarity }) {
       // TODO: SAAS-4312 Salvar parte.
       const disputeId = this.$route?.params?.id
-
-      const data = {
-        party: polarity,
-        documentNumber: this.party.documentNumber,
-        name: this.party.name,
-        main: true,
-        roles: this.party.roles || [],
-        oabs: this.party.oabs || []
-      }
+      const roleId = this.party.disputeRoleId
+      const rolePolarity = polarity
 
       const partiesName = this.compactedParties[{ CLAIMANT: 0, RESPONDENT: 1 }[polarity]].name
 
@@ -122,7 +131,7 @@ export default {
         cancelButtonText: 'Não',
         center: true
       }).then(() => {
-        this.setTicketOverviewParty({ disputeId, data, isNew: true }).then(role => {
+        this.setTicketOverviewPartyPolarity({ disputeId, roleId, rolePolarity }).then(_ => {
           this.$jusNotification({
             title: 'Yay!',
             message: 'Polaridade identificada com sucesso!',
@@ -133,7 +142,7 @@ export default {
           if (this.disputeStatus === 'PENDING') {
             this.restartDisputeRoleEngagement({
               disputeId,
-              disputeRoleId: role.id
+              disputeRoleId: roleId
             })
           }
         }).catch((error) => this.$jusNotification({ error }))

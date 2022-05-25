@@ -105,7 +105,7 @@ export default {
     },
 
     unknownParts() {
-      return (this.parties || []).filter(r => this.unknownRoleIds.includes(r.disputeRoleId) && r.polarity === 'UNKNOWN')
+      return (this.parties || []).filter(r => this.unknownRoleIds.includes(r.disputeRoleId))
     },
 
     text() {
