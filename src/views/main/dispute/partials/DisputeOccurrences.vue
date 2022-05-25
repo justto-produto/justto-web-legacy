@@ -76,6 +76,11 @@
             </div>
           </div>
 
+          <Log
+            v-else-if="occurrence.type === 'LOG' && occurrence.properties.HANDLE_UNKNOW_PARTY && occurrence.properties.HANDLE_UNKNOW_PARTY === 'TRUE'"
+            :value="occurrence"
+          />
+
           <el-card
             v-else-if="occurrence.type === 'LOG' ||
               (occurrence.interaction && ['VISUALIZATION', 'CLICK', 'NEGOTIATOR_ACCESS'].includes(occurrence.interaction.type))"
@@ -674,6 +679,7 @@ export default {
 
   components: {
     InfiniteLoading,
+    Log: () => import('@/views/main/negotiation/partials/ticket/omnichannel/occurrences/occurrence/log/Log'),
     AttachmentOccurrence: () => import('./partials/AttachmentOccurrence'),
     UnknownPartyButton: () => import('@/components/buttons/UnknownPartyButton'),
     NpsInteraction: () => import('@/views/main/negotiation/partials/ticket/omnichannel/occurrences/occurrence/interaction/partials/Nps'),
@@ -1052,22 +1058,19 @@ export default {
       return occurrence.description
     },
 
-    canHandleUnknownParty(occurrence) {
-      var properties = occurrence?.properties
-      return (properties?.HANDLE_UNKNOW_PARTY && properties?.UNKNOW_ROLE_IDS) || (properties?.HANDLE_UNKNOWN_PARTY && properties?.UNKNOWN_ROLE_IDS)
+    canHandleUnknowParty(occurrence) {
+      return occurrence.properties?.HANDLE_UNKNOW_PARTY && occurrence.properties?.UNKNOW_ROLE_IDS
     },
 
     isUnknown(occurrence) {
-      var properties = occurrence?.properties
-      return properties?.PARTY === 'UNKNOWN' && properties?.ROLE_NAME === 'LAWYER'
+      return occurrence?.properties?.PARTY === 'UNKNOWN' && occurrence?.properties?.ROLE_NAME === 'LAWYER'
     },
 
     getUnknownPartys(occurrence) {
       const canHandleParty = this.canHandleUnknownParty(occurrence)
       if (canHandleParty) {
         const dispute = this.$store.getters.dispute
-        var properties = occurrence.properties
-        const roleIds = JSON.parse(properties.UNKNOWN_ROLE_IDS ? properties.UNKNOWN_ROLE_IDS : properties.UNKNOW_ROLE_IDS)
+        const roleIds = JSON.parse(occurrence?.properties.UNKNOWN_ROLE_IDS ? occurrence?.properties.UNKNOWN_ROLE_IDS : occurrence?.properties.UNKNOW_ROLE_IDS)
         const filteredRole = dispute.disputeRoles.filter(r => roleIds.includes(r.id) && r.party === 'UNKNOWN')
         return filteredRole
       }
