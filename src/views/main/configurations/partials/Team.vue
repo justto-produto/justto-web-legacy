@@ -335,7 +335,7 @@ export default {
 
     validateWorkspacesQuantity() {
       return new Promise((resolve) => {
-        this.getCustomerWorkspaceCount(this.workspace?.id).then(count => {
+        this.getCustomerWorkspaceCount(this.workspace?.id).then(({ count }) => {
           if (count > 0 && count % 3 === 0) {
             this.$alert('<b>Limite de workspace por cliente foi excedido</b><br><br>Por favor, analisar o contrato firmado com o cliente, para avaliar um possível ajuste no valor da mensalidade.', {
               customClass: 'workspace-limit-alert',
