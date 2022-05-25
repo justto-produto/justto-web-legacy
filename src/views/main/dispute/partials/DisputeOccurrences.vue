@@ -108,16 +108,16 @@
             />
 
             <div
-              v-if="canHandleUnknowParty(occurrence)"
+              v-if="canHandleUnknownParty(occurrence)"
               class="fast-occurrence-actions"
             >
               <br>
               <span
-                v-if="getUnknowPartys(occurrence).length === 0"
+                v-if="getUnknownPartys(occurrence).length === 0"
                 class="ok"
               >Esta pendência já foi resolvida!</span>
               <div
-                v-for="role in getUnknowPartys(occurrence)"
+                v-for="role in getUnknownPartys(occurrence)"
                 :key="`role-party-${role.id}`"
                 class="fast-occurrence-actions__items"
               >
@@ -1066,11 +1066,11 @@ export default {
       return occurrence?.properties?.PARTY === 'UNKNOWN' && occurrence?.properties?.ROLE_NAME === 'LAWYER'
     },
 
-    getUnknowPartys(occurrence) {
-      const canHandleParty = this.canHandleUnknowParty(occurrence)
+    getUnknownPartys(occurrence) {
+      const canHandleParty = this.canHandleUnknownParty(occurrence)
       if (canHandleParty) {
         const dispute = this.$store.getters.dispute
-        const roleIds = JSON.parse(occurrence.properties.UNKNOW_ROLE_IDS)
+        const roleIds = JSON.parse(occurrence?.properties.UNKNOWN_ROLE_IDS ? occurrence?.properties.UNKNOWN_ROLE_IDS : occurrence?.properties.UNKNOW_ROLE_IDS)
         const filteredRole = dispute.disputeRoles.filter(r => roleIds.includes(r.id) && r.party === 'UNKNOWN')
         return filteredRole
       }
