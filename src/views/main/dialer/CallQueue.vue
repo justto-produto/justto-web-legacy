@@ -113,7 +113,7 @@
           icon="el-icon-phone-outline"
           @click="redirectToDispute"
         >
-          <span>Ir para a disputa.</span>
+          <span>Ir para a disputa</span>
         </el-button>
       </div>
     </div>
@@ -187,9 +187,9 @@
       </div>
     </div>
 
-    <ScheduledCallSwitch v-if="isJusttoDev" />
+    <ScheduledCallSwitch v-if="isJusttoDev && false" />
 
-    <ScheduledCallsQueue v-if="isJusttoDev" />
+    <ScheduledCallsQueue v-if="isJusttoDev && false" />
 
     <CallHelp
       :ending="endingCall"
@@ -269,6 +269,10 @@ export default {
 
     isInCorrectDispute() {
       return this.isInDispute && Number(this.currentCall?.disputeId) === Number(this.currentDisputeId)
+    },
+
+    isInCall() {
+      return this.currentCall?.status === 'ACTIVE_CALL'
     }
   },
 

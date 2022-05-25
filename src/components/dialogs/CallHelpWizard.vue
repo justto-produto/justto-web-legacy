@@ -20,7 +20,7 @@
       class="call-help__container"
     >
       <div class="call-help__call">
-        <i class="el-icon-turn-off-microphone el-icon-pulse" />
+        <i class="el-icon-microphone el-icon-pulse" />
 
         <el-button
           :disabled="ending"
@@ -59,7 +59,6 @@
 
               <li>Estou falando com {{ claimantName }}?</li>
 
-              <!-- TODO: Validar tipo(ativo/passivo) da estratégia e variar o texto -->
               <li>É sobre um caso envolvendo {{ respondentName }}!</li>
             </ul>
           </div>
