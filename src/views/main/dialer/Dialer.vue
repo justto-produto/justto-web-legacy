@@ -42,6 +42,7 @@
             <CallQueue
               ref="callsQueue"
               :loading="loading"
+              @hide="toggleShowPopover(false)"
             />
           </div>
 

@@ -192,6 +192,8 @@
     <ScheduledCallsQueue v-if="isJusttoDev" />
 
     <CallHelp
+      :ending="endingCall"
+      @queue:hide="$emit('hide')"
       @call:end="hangUpCall()"
     />
   </article>
