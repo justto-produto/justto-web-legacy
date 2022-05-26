@@ -17,7 +17,9 @@
             size="sm"
           />
         </span>
+
         {{ getMemberName(notification.fromAccountId) | resumedName }}
+
         mencionou você.
       </div>
     </span>
@@ -114,6 +116,17 @@ export default {
         }
       }
 
+    }
+
+    .jus-avatar-user {
+      width: 24px;
+      height: 24px;
+      font-size: 10px;
+
+      img {
+        width: 24px;
+        height: 24px;
+      }
     }
   }
 

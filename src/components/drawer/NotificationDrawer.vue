@@ -54,6 +54,8 @@
             v-for="(fromAccountId) in filterAccountIds(notifications)"
             :key="`notification-from-${fromAccountId}`"
             :notifications="notificationsGroupedByDate(date, fromAccountId)"
+            @openMention="openMention"
+            @setReaded="setReaded"
           />
         </div>
       </div>
@@ -325,6 +327,7 @@ export default {
         .jus-avatar-user {
           width: 24px;
           height: 24px;
+          font-size: 10px;
 
           img {
             width: 24px;

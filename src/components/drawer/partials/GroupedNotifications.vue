@@ -6,13 +6,22 @@
     <el-collapse-item>
       <template slot="title">
         <jus-avatar-user
+          v-if="!notifications[0].fromAccountId"
           name="Justtine"
           :src="justtineUrl"
           :purple="false"
           shape="circle"
           size="sm"
         />
-        <span>Justtine mencionou você.</span>
+
+        <jus-avatar-user
+          v-else
+          :name="getMemberName(notifications[0].fromAccountId)"
+          :purple="false"
+          shape="circle"
+          size="sm"
+        />
+        <span>{{ getMemberName(notifications[0].fromAccountId) | resumedName }} mencionou você.</span>
         <el-badge
           :value="notifications.length"
           type="primary"
@@ -20,10 +29,14 @@
       </template>
 
       <div
-        v-for="(notification, notificationIndex) in notifications.filter(({ fromAccountId }) => !fromAccountId)"
+        v-for="(notification, notificationIndex) in notifications"
         :key="`${notificationIndex}-${notification.type}`"
       >
-        <SimpleNotification :notification="notification" />
+        <SimpleNotification
+          :notification="notification"
+          @openMention="$emit('openMention', $event)"
+          @setReaded="$emit('setReaded', $event)"
+        />
       </div>
     </el-collapse-item>
   </el-collapse>
@@ -31,10 +44,13 @@
   <SimpleNotification
     v-else
     :notification="notifications[0]"
+    @openMention="$emit('openMention', $event)"
+    @setReaded="$emit('setReaded', $event)"
   />
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   components: {
     SimpleNotification: () => import('./SimpleNotification')
@@ -48,8 +64,21 @@ export default {
   },
 
   computed: {
+    ...mapGetters({
+      members: 'workspaceMembers'
+    }),
+
     justtineUrl() {
       return require('@/assets/justtine/profile.png')
+    },
+
+    getMemberName() {
+      return (fromAccountId) => {
+        if (fromAccountId === null) return 'JUSTTINE'
+        const member = this.members.find(({ accountId }) => Number(accountId) === Number(fromAccountId))
+
+        return member?.person?.name || member?.accountEmail || ''
+      }
     }
   }
 }
