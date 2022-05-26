@@ -12,7 +12,7 @@
         v-if="enabledScheduledCalls"
         slot="content"
       >
-        Estamos ligando automaticamente para você.
+        Estamos ligando automaticamente por você.
         <br>
         <br>
         Clique aqui para pausar a discagem automática!
@@ -22,7 +22,7 @@
         v-else
         slot="content"
       >
-        Não estamos ligando automaticamente pra você.
+        Não estamos ligando automaticamente por você.
         <br>
         <br>
         Clique aqui para iniciar a discagem automática para disputas!
@@ -42,6 +42,7 @@
             <CallQueue
               ref="callsQueue"
               :loading="loading"
+              @hide="toggleShowPopover(false)"
             />
           </div>
 
