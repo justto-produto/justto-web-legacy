@@ -1058,7 +1058,7 @@ export default {
       return occurrence.description
     },
 
-    canHandleUnknowParty(occurrence) {
+    canHandleUnknownParty(occurrence) {
       return occurrence.properties?.HANDLE_UNKNOW_PARTY && occurrence.properties?.UNKNOW_ROLE_IDS
     },
 

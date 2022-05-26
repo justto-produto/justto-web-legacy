@@ -7,6 +7,7 @@ import { Validate } from 'validate-cnj'
 let removeDebounce = 0
 const disputesPath = 'api/disputes'
 const documentsPath = 'api/office/documents'
+const exportPath = '/api/v2/dispute/export/request'
 
 const disputeActions = {
   SOCKET_ADD_DISPUTE({ commit, state }, disputeChanged) {
@@ -317,7 +318,7 @@ const disputeActions = {
 
     return axiosDispatch({
       method: 'POST',
-      url: `${disputesPath}/export${query}`,
+      url: `${exportPath}${query}`,
       data
     }).then(() => { dispatch('getExportHistory') })
   },
