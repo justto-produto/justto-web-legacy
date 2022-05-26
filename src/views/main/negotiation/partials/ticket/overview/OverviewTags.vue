@@ -124,6 +124,7 @@
           </div>
         </div>
       </div>
+
       <el-tag
         id="popoverTagReference"
         slot="reference"
@@ -357,7 +358,20 @@ export default {
       return ((red * 0.299 + green * 0.587 + blue * 0.114) / 255).toFixed(4) - 0.5
     },
 
+    filterByTag(tagId) {
+      this.$store.commit('clearDisputeQuery')
+      this.$store.commit('updateDisputeQuery', { key: 'status', value: [] })
+      this.$store.commit('updateDisputeQuery', { key: 'tags', value: [tagId] })
+      this.$store.commit('setDisputesTab', '9')
+      this.$router.push('/management/all')
+    },
+
     nextTagState(tagId) {
+      if (this.$route.name === 'dispute') {
+        this.filterByTag(tagId)
+        return
+      }
+
       const currentTags = _.cloneDeep(this.ticketsQuery.tags || [])
       const currentNoTags = _.cloneDeep(this.ticketsQuery.noTags || [])
 
