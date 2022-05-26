@@ -13,17 +13,17 @@
     <div class="draft-notifications__container">
       <el-switch
         v-model="draftNotCreatedNotification"
-        active-text="Após 24 horas de ter aceito a disputa, se ainda não tiver gerado minuta, então deve alertar a Thamires."
+        active-text="Após 24 horas de ter aceito a disputa, se ainda não tiver gerado minuta, então deve alertar o(a) negociador(a)."
       />
 
       <el-switch
         v-model="draftNotSentNotification"
-        active-text="24 horas após a geração da minuta, se a Thamiris não enviar para assinatura, então deve alertar-la."
+        active-text="24 horas após a geração da minuta, se o(a) negociador(a) não enviar para assinatura, então deve alertar."
       />
 
       <el-switch
         v-model="draftNotSignedNotification"
-        active-text="Após 48 horas de enviar para assinatura, se não tiver concluído (todas as assinaturas), então deve alertar a Thamires."
+        active-text="Após 48 horas de enviar para assinatura, se não tiver concluído (todas as assinaturas), então deve alertar o(a) negociador(a)."
       />
     </div>
 
