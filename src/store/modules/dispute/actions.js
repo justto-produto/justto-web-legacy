@@ -900,6 +900,14 @@ const disputeActions = {
       url: `${documentsPath}/${documentId}/sign`,
       method: 'DELETE'
     })
+  },
+
+  setDisputeClassificationsDetails({ _ }, { parentId, data }) {
+    return axiosDispatch({
+      method: 'POST',
+      url: `/api/dispute-classifications/${parentId}/dispute-classifications-detail`,
+      data
+    })
   }
 }
 

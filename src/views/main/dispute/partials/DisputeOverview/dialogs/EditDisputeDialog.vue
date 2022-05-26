@@ -185,7 +185,7 @@
       <h3>Outras configurações</h3>
 
       <el-row :gutter="20">
-        <el-col :span="6">
+        <el-col :span="12">
           <el-form-item
             :rules="validateDisputeUpperRange()"
             :label="$tc('UPPER_RANGE', isRecoveryStrategy)"
@@ -200,7 +200,8 @@
             />
           </el-form-item>
         </el-col>
-        <el-col :span="6">
+
+        <el-col :span="12">
           <el-form-item
             label="Fim da negociação"
             prop="expirationDate"
@@ -215,14 +216,9 @@
             />
           </el-form-item>
         </el-col>
-        <el-col :span="12">
-          <el-form-item
-            label="Classificação"
-            prop="classification"
-          >
-            <el-input v-model="disputeForm.classification" />
-          </el-form-item>
-        </el-col>
+      </el-row>
+
+      <el-row :gutter="20">
         <el-col :span="6">
           <el-form-item
             label="Dano material"
@@ -234,6 +230,7 @@
             />
           </el-form-item>
         </el-col>
+
         <el-col :span="6">
           <el-form-item
             label="Dano moral"
@@ -245,6 +242,7 @@
             />
           </el-form-item>
         </el-col>
+
         <el-col :span="6">
           <el-form-item
             label="Valor do processo"
@@ -256,6 +254,7 @@
             />
           </el-form-item>
         </el-col>
+
         <el-col :span="6">
           <el-form-item
             label="Valor provisionado"
@@ -267,6 +266,42 @@
             />
           </el-form-item>
         </el-col>
+      </el-row>
+
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item
+            label="Classificação"
+            prop="classification"
+          >
+            <el-input v-model="disputeForm.classification" />
+          </el-form-item>
+        </el-col>
+
+        <el-col :span="12">
+          <el-form-item
+            label="Subclassificação"
+            prop="classificationDetails"
+          >
+            <el-select
+              v-model="disputeForm.classificationDetails"
+              class="el-input"
+              multiple
+              filterable
+              allow-create
+            >
+              <el-option
+                v-for="(sub, subIndex) in subClassifications"
+                :key="`sub-classification-${subIndex}`"
+                :label="sub.name"
+                :value="subIndex"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+      <el-row :gutter="20">
         <el-col :span="24">
           <el-form-item
             label="Descrição"
@@ -286,7 +321,7 @@
     <span slot="footer">
       <el-button
         plain
-        @click="editDisputeDialogVisible = false"
+        @click="hide()"
       >
         Cancelar
       </el-button>
@@ -340,12 +375,14 @@ export default {
         moralDamage: '',
         requestedValue: '',
         externalId: '',
-        provisionedValue: ''
+        provisionedValue: '',
+        classificationDetails: []
       },
       disputeFormRules: {
         disputeUpperRange: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
         lastOfferValue: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
       },
+      subClassifications: [],
       dispute: {},
       strategies: []
     }
@@ -370,7 +407,9 @@ export default {
     ...mapActions({
       setDispute: 'editDispute',
       getDispute: 'getDispute',
-      getStrategies: 'getMyStrategiesLite'
+      getStrategies: 'getMyStrategiesLite',
+      getTicketOverviewInfo: 'getTicketOverviewInfo',
+      setSubclassifications: 'setDisputeClassificationsDetails'
     }),
 
     show() {
@@ -379,6 +418,7 @@ export default {
         this.getDispute(Number(this.$route.params.id)).then(dispute => {
           this.dispute = dispute
           this.selectedStrategyId = dispute.strategyId || ''
+          this.subClassifications = dispute?.classification?.classificationDetails || [] // Monta lista de Subclassificações
 
           this.getStrategies().then(strategies => {
             this.strategies = strategies
@@ -392,6 +432,13 @@ export default {
           this.handleOpenDialog()
         })
       }
+    },
+
+    hide() {
+      this.editDisputeDialogVisible = false
+      this.editDisputeDialogLoading = false
+      this.$refs.disputeForm.clearValidate()
+      this.$emit('hide')
     },
 
     handleOpenDialog() {
@@ -412,7 +459,8 @@ export default {
         contactPartyWhenInvalidLowyer: Boolean(this.dispute?.contactPartyWhenInvalidLowyer),
         alwaysContactParty: Boolean(this.dispute?.alwaysContactParty),
         denySavingDeposit: Boolean(this.dispute?.denySavingDeposit),
-        zeroUpperRange: !parseFloat(this.dispute?.disputeUpperRange)
+        zeroUpperRange: !parseFloat(this.dispute?.disputeUpperRange),
+        classificationDetails: (this.dispute?.classification?.classificationDetails || []).map(({ _ }, index) => index) // Atribui os indices das subclassificações ao model do select.
       }
 
       this.selectedNegotiatorId = this.disputeNegotiations?.length ? this.disputeNegotiations[0].id : ''
@@ -468,11 +516,23 @@ export default {
         materialDamage: this.disputeForm?.materialDamage || null,
         requestedValue: this.disputeForm?.requestedValue || null,
         alwaysContactParty: this.disputeForm?.alwaysContactParty,
-        classification: { name: this.disputeForm?.classification },
+        classification: {
+          name: this.disputeForm?.classification || '',
+          classificationDetails: [
+            ...(this.disputeForm?.classificationDetails.map(item => {
+              return Number.isInteger(item) ? this.subClassifications[item] : { name: item }
+            })) /* Cria a lista e classificationDetails para enviar ao back.
+              Se o item for inteiro: O objeto já existe na lista subClassifications.
+              Se o item for string: Cria o objeto novo.
+            */
+          ]
+        },
         contactPartyWhenNoLowyer: this.disputeForm?.contactPartyWhenNoLowyer,
         contactPartyWhenInvalidLowyer: this.disputeForm?.contactPartyWhenInvalidLowyer,
         expirationDate: { dateTime: this.$moment(this.disputeForm?.expirationDate).endOf('day').format('YYYY-MM-DD[T]HH:mm:ss[Z]') }
       }
+
+      this.editDisputeDialogLoading = false
 
       const currentDate = this.dispute.expirationDate.dateTime
       const newDate = disputeToEdit.expirationDate.dateTime
@@ -481,8 +541,11 @@ export default {
         this.$jusSegment('Editar disputa', { disputeId: disputeToEdit.id }) // SEGMENT TRACK
         this.$jusNotification({ title: 'Yay!', message: 'Os dados foram alterados com sucesso.', type: 'success' })
         this.$nextTick().then(() => this.$emit('fetch-data'))
-        this.editDisputeDialogVisible = false
 
+        this.getTicketOverviewInfo(disputeToEdit.id)
+        this.getDispute(disputeToEdit.id)
+
+        this.hide()
         this.handleResendMessagesOnEdit({ ...this.dispute, currentDate, newDate })
       }).catch(this.handleSetDisputeError).finally(() => {
         this.editDisputeDialogLoading = false
@@ -552,6 +615,12 @@ export default {
         return [{ validator: validateZero, message: 'Valor precisa ser acima de 0', trigger: 'submit' }]
       }
       return []
+    },
+
+    checkZeroUpperRange() {
+      if (this.disputeForm.zeroUpperRange) {
+        this.$nextTick(() => { this.$refs.disputeForm.validate() })
+      }
     }
   }
 }
