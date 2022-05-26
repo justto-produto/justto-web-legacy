@@ -408,6 +408,7 @@ export default {
       setDispute: 'editDispute',
       getDispute: 'getDispute',
       getStrategies: 'getMyStrategiesLite',
+      getTicketOverviewInfo: 'getTicketOverviewInfo',
       setSubclassifications: 'setDisputeClassificationsDetails'
     }),
 
@@ -539,27 +540,15 @@ export default {
       this.setDispute(disputeToEdit).then(() => {
         this.$jusSegment('Editar disputa', { disputeId: disputeToEdit.id }) // SEGMENT TRACK
         this.$jusNotification({ title: 'Yay!', message: 'Os dados foram alterados com sucesso.', type: 'success' })
-        this.handleSaveClassificationDetails().then(() => {
-          this.$nextTick().then(() => this.$emit('fetch-data'))
-          this.hide()
-        })
+        this.$nextTick().then(() => this.$emit('fetch-data'))
 
+        this.getTicketOverviewInfo(disputeToEdit.id)
+        this.getDispute(disputeToEdit.id)
+
+        this.hide()
         this.handleResendMessagesOnEdit({ ...this.dispute, currentDate, newDate })
       }).catch(this.handleSetDisputeError).finally(() => {
         this.editDisputeDialogLoading = false
-      })
-    },
-
-    handleSaveClassificationDetails() {
-      return new Promise((resolve, reject) => {
-        if (!this.disputeForm?.classificationDetails?.length) { resolve() }
-
-        this.getDispute(Number(this.$route.params.id)).then(dispute => {
-          this.setSubclassifications({
-            parentId: dispute?.classification?.id,
-            data: this.disputeForm?.classificationDetails
-          }).then(resolve)
-        }).catch(reject)
       })
     },
 
