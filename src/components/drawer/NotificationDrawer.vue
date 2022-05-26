@@ -50,130 +50,13 @@
             {{ date | capitalize }}
           </div>
 
-          <!-- Menções não agrupadas (Menções que não são da Justtine) -->
-          <div
-            v-for="(notification, notificationIndex) in notifications.filter(({ fromAccountId }) => Boolean(fromAccountId))"
-            :key="`${notificationIndex}-${notification.type}`"
-            class="notification__drawer__list-item"
-            :class="{'notification__drawer__list-item-pendent': !notification.readDate}"
-          >
-            <span
-              class="notification__drawer__list-item-name"
-              @click="openMention(notification)"
-            >
-              <div :class="{'justtine-notification': notification.fromAccountId === null}">
-                <span v-if="notification.fromAccountId === null">
-                  <jus-avatar-user
-                    name="Justtine"
-                    :src="justtineUrl"
-                    :purple="false"
-                    shape="circle"
-                    size="sm"
-                  />
-                </span>
-                {{ getMemberName(notification.fromAccountId) | resumedName }}
-                mencionou você.
-              </div>
-            </span>
-
-            <span class="notification__drawer__list-item-date">
-              {{ parseDate(notification.createdAt) }}
-            </span>
-
-            <el-tooltip
-              :open-delay="500"
-              content="Marcar como lida"
-              placement="bottom-start"
-            >
-              <div
-                v-if="!notification.readDate"
-                class="notification__drawer__list-item-status el-icon-pulse"
-                @click="setReaded(notification.id)"
-              />
-            </el-tooltip>
-          </div>
-
-          <!-- Menções agrupadas (Menções que são da Justtine) -->
-          <el-collapse
-            v-if="countJusttineMentionByDay[date] > 0"
-            class="justtine-mentions-collapse"
-          >
-            <el-collapse-item>
-              <template slot="title">
-                <jus-avatar-user
-                  name="Justtine"
-                  :src="justtineUrl"
-                  :purple="false"
-                  shape="circle"
-                  size="sm"
-                />
-                <span>Justtine mencionou você.</span>
-                <el-badge
-                  :value="countJusttineMentionByDay[date]"
-                  type="primary"
-                />
-              </template>
-
-              <div
-                v-for="(notification, notificationIndex) in notifications.filter(({ fromAccountId }) => !fromAccountId)"
-                :key="`${notificationIndex}-${notification.type}`"
-                class="notification__drawer__list-item"
-                :class="{'notification__drawer__list-item-pendent': !notification.readDate}"
-              >
-                <span
-                  class="notification__drawer__list-item-name"
-                  @click="openMention(notification)"
-                >
-                  <div :class="{'justtine-notification': notification.fromAccountId === null}">
-                    <span v-if="notification.fromAccountId === null">
-                      <jus-avatar-user
-                        name="Justtine"
-                        :src="justtineUrl"
-                        :purple="false"
-                        shape="circle"
-                        size="sm"
-                      />
-                    </span>
-                    {{ getMemberName(notification.fromAccountId) | resumedName }}
-                    mencionou você.
-                  </div>
-                </span>
-
-                <!-- TODO: Ícone com informações da notificação. -->
-                <!-- <el-popover
-                  placement="top-end"
-                  trigger="hover"
-                >
-                  <div>
-                    Disputa: #{{ notification.disputeId }}
-                    <br>
-                    Workspace: {{ notification.workspaceId }}
-                  </div>
-                  <el-button
-                    slot="reference"
-                    type="text"
-                    icon="el-icon-question"
-                  />
-                </el-popover> -->
-
-                <span class="notification__drawer__list-item-date">
-                  {{ parseDate(notification.createdAt) }}
-                </span>
-
-                <el-tooltip
-                  :open-delay="500"
-                  content="Marcar como lida"
-                  placement="bottom-start"
-                >
-                  <div
-                    v-if="!notification.readDate"
-                    class="notification__drawer__list-item-status el-icon-pulse"
-                    @click="setReaded(notification.id)"
-                  />
-                </el-tooltip>
-              </div>
-            </el-collapse-item>
-          </el-collapse>
+          <GroupedNotifications
+            v-for="(fromAccountId) in filterAccountIds(notifications)"
+            :key="`notification-from-${fromAccountId}`"
+            :notifications="notificationsGroupedByDate(date, fromAccountId)"
+            @openMention="openMention"
+            @setReaded="setReaded"
+          />
         </div>
       </div>
 
@@ -216,6 +99,10 @@ import events from '@/constants/negotiationEvents'
 const { SOCKET_NOTIFY_MENTION } = events
 
 export default {
+  components: {
+    GroupedNotifications: () => import('./partials/GroupedNotifications')
+  },
+
   data: () => ({
     loading: false
   }),
@@ -282,6 +169,18 @@ export default {
 
         return { ...acc, ...accTemp }
       }, {})
+    },
+
+    notificationsGroupedByDate() {
+      return (date, accountId) => {
+        return this.notificationsGrouped[date].filter(({ fromAccountId }) => fromAccountId === accountId)
+      }
+    },
+
+    filterAccountIds() {
+      return notifications => notifications.reduce((acc, { fromAccountId }) => {
+        return acc.includes(fromAccountId) ? acc : [...acc, fromAccountId]
+      }, [])
     }
   },
 
@@ -428,6 +327,7 @@ export default {
         .jus-avatar-user {
           width: 24px;
           height: 24px;
+          font-size: 10px;
 
           img {
             width: 24px;
@@ -452,9 +352,11 @@ export default {
       .el-collapse-item__content {
         .notification__drawer__list-item {
           .notification__drawer__list-item-name {
-            .justtine-notification {
-              span {
-                height: 24px;
+            div {
+              .justtine-notification {
+                span {
+                  height: 24px;
+                }
               }
             }
           }
@@ -465,7 +367,7 @@ export default {
 }
 </style>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import '@/styles/colors.scss';
 
 .notification__drawer {
@@ -553,79 +455,9 @@ export default {
           flex-wrap: nowrap;
           gap: 4px;
 
-          .notification__drawer__list-item-name {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            flex-wrap: nowrap;
-            color: $--color-text-secondary;
-
-            * {
-              flex-wrap: nowrap;
-            }
-
-            .justtine-notification {
-              display: flex;
-              align-items: center;
-              gap: 8px;
-
-              span {
-                .jus-avatar-user {
-                  img {
-                    width: 24px;
-                  }
-                }
-              }
-
-            }
-          }
-
-          &.notification__drawer__list-item-pendent {
-            .notification__drawer__list-item-name {
-              color: $--color-black;
-
-              div {
-                font-weight: bold;
-              }
-            }
-          }
-
           .notification__drawer__list-item-date {
             font-size: 12px;
             color: $--color-text-secondary;
-          }
-
-          .notification__drawer__list-item-status {
-            background-color: $--color-primary;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-          }
-
-          &:hover {
-            background-color: $--color-light-gray;
-          }
-
-          .notification__drawer__list-item-icon {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 12px;
-
-            .el-icon-success {
-              color: $--color-success;
-            }
-          }
-
-          .notification__drawer__list-item-label-gray {
-            font-size: 14px;
-            color: $--color-gray;
-          }
-
-          .notification__drawer__list-item-label-black {
-            color: $--color-black;
-            font-size: 14px;
-            font-weight: 500;
           }
         }
       }
@@ -664,4 +496,13 @@ export default {
   background-color: #F1F1F3;
 }
 
+.notification__drawer__list-item-pendent {
+  .notification__drawer__list-item-name {
+    color: $--color-black;
+
+    div {
+      font-weight: bold;
+    }
+  }
+}
 </style>
