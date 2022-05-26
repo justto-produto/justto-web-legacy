@@ -439,7 +439,7 @@ export default {
     GeneralInfoTab: () => import('./sections/GeneralInfoTab'),
     RolesTab: () => import('./sections/RolesTab'),
     EditRoleDialog: () => import('./dialogs/EditRoleDialog'),
-    EditDisputeDialog: () => import('@/views/main/dispute/partials/DisputeOverview/dialogs/EditDisputeDialog'),
+    EditDisputeDialog: () => import('@/views/main/dispute/partials/DisputeOverview/dialogs/EditDisputeDialog')
   },
 
   mixins: [restartEngagement],
