@@ -6,8 +6,8 @@
     :modal="false"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
-    :modal-append-to-body="false"
-    :append-to-body="false"
+    :modal-append-to-body="true"
+    :append-to-body="true"
     :lock-scroll="false"
     width="40%"
     destroy-on-close
@@ -15,10 +15,23 @@
     center
   >
     <section
-      v-if="call"
+      v-if="call || true"
       v-loading="isLoading"
       class="call-help__container"
     >
+      <div class="call-help__call">
+        <i class="el-icon-microphone el-icon-pulse" />
+
+        <el-button
+          :disabled="ending"
+          type="danger"
+          :icon="ending ? 'el-icon-loading' : ''"
+          @click="$emit('call:end')"
+        >
+          {{ ending ? 'Desligando' : 'Desligar' }}
+        </el-button>
+      </div>
+
       <el-carousel
         ref="carousel"
         class="call-help__carousel"
@@ -46,7 +59,6 @@
 
               <li>Estou falando com {{ claimantName }}?</li>
 
-              <!-- TODO: Validar tipo(ativo/passivo) da estratégia e variar o texto -->
               <li>É sobre um caso envolvendo {{ respondentName }}!</li>
             </ul>
           </div>
@@ -221,6 +233,13 @@ import { mapActions, mapGetters } from 'vuex'
 import { CALL_STATUS } from '@/constants/callStatus'
 
 export default {
+  props: {
+    ending: {
+      type: Boolean,
+      default: false
+    }
+  },
+
   data: () => ({
     invalidNumberReason: '',
     isLoading: false,
@@ -270,8 +289,10 @@ export default {
       deep: true,
       handler(call, oldCall) {
         this.visible = call?.status === CALL_STATUS.ACTIVE_CALL
+
         if (this.visible) {
           this.contactValidityBrand = false
+          this.$emit('queue:hide')
         }
 
         if (oldCall?.status === CALL_STATUS.COMPLETED_CALL && call === null) {
@@ -432,6 +453,15 @@ export default {
     padding: 0 !important;
 
     .call-help__container {
+      .call-help__call {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin: 16px 0 8px;
+        gap: 8px;
+      }
+
       .call-help__carousel {
         padding: 0;
 

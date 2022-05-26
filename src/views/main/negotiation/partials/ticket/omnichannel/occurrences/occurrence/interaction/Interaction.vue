@@ -18,9 +18,7 @@
       />
     </el-tooltip>
 
-    <div
-      :class="`${interaction.direction} ${!flat ? 'interaction-container__balloon' : ''}`"
-    >
+    <div :class="`${interaction.direction} ${coloringType}-${messageType} ${!flat ? 'interaction-container__balloon' : ''}`">
       <div class="interaction-container__balloon-content">
         <component
           :is="type"
@@ -59,6 +57,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+
 const negotiatorTypes = [
   'NEGOTIATOR_ACCESS',
   'NEGOTIATOR_PROPOSAL',
@@ -103,7 +102,8 @@ export default {
       with: 'getWindowWidth',
       isJusttoAdmin: 'isJusttoAdmin',
       isAdminProfile: 'isAdminProfile',
-      negotiators: 'getTicketOverviewNegotiators'
+      negotiators: 'getTicketOverviewNegotiators',
+      properties: 'userProperties'
     }),
 
     type() {
@@ -219,6 +219,10 @@ export default {
         return this.interaction.message.parameters.SENDER
       }
       return null
+    },
+
+    coloringType() {
+      return this.properties?.OMNICHANNEL_COLORING_TYPE || 'MONOCHROME'
     }
   },
 
@@ -311,12 +315,28 @@ export default {
       width: 100%;
     }
 
+    &.COLORFUL-whatsapp {
+      background-color: $--color-success-light-5;
+    }
+    &.COLORFUL-email {
+      background-color: $--color-info-light;
+    }
+    &.COLORFUL-negotiation {
+      background-color: $--color-light-gray;
+    }
+    // &.COLORFUL-EMAIL_CNA {
+    //   background-color: #B6FFFB;
+    // }
+    &.COLORFUL-sms {
+      background-color: #ececec;
+    }
+
     &.INBOUND {
       flex-direction: row;
-      background: mix($--color-light-gray, $--color-white, 50%);
+      // background: mix($--color-light-gray, $--color-white, 50%);
 
       &.NEGOTIATOR {
-        background: mix($--color-light-gray, $--color-white, 50%);
+        // background: mix($--color-light-gray, $--color-white, 50%);
       }
     }
 
@@ -328,21 +348,21 @@ export default {
       flex-direction: row-reverse;
     }
 
-    &.ballon-email {
-      border-color: #DFF4FE;
-    }
+    // &.ballon-email {
+    //   border-color: #DFF4FE;
+    // }
 
-    &.ballon-sms {
-      border-color: #ECECEC;
-    }
+    // &.ballon-sms {
+    //   border-color: #ECECEC;
+    // }
 
-    &.ballon-negotiator-message-2 {
-      border-color: #FFC5A5;
-    }
+    // &.ballon-negotiator-message-2 {
+    //   border-color: #FFC5A5;
+    // }
 
-    &.ballon-whatsapp {
-      border-color: #a3f4c3;
-    }
+    // &.ballon-whatsapp {
+    //   border-color: #a3f4c3;
+    // }
   }
 
   .interaction-container__reply {

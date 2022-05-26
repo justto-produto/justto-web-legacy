@@ -37,8 +37,9 @@ export default {
   z-index: 10;
   position: -webkit-sticky;
   position: sticky;
+  width: 80%;
 
-  margin: 18px 0px 10px;
+  margin: 18px 10% 10px;
 
   span {
     background-color: #e3f5ff;

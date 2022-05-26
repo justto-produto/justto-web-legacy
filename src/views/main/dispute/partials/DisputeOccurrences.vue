@@ -76,6 +76,11 @@
             </div>
           </div>
 
+          <Log
+            v-else-if="occurrence.type === 'LOG' && occurrence.properties.HANDLE_UNKNOW_PARTY && occurrence.properties.HANDLE_UNKNOW_PARTY === 'TRUE'"
+            :value="occurrence"
+          />
+
           <el-card
             v-else-if="occurrence.type === 'LOG' ||
               (occurrence.interaction && ['VISUALIZATION', 'CLICK', 'NEGOTIATOR_ACCESS'].includes(occurrence.interaction.type))"
@@ -103,16 +108,16 @@
             />
 
             <div
-              v-if="canHandleUnknowParty(occurrence)"
+              v-if="canHandleUnknownParty(occurrence)"
               class="fast-occurrence-actions"
             >
               <br>
               <span
-                v-if="getUnknowPartys(occurrence).length === 0"
+                v-if="getUnknownPartys(occurrence).length === 0"
                 class="ok"
               >Esta pendência já foi resolvida!</span>
               <div
-                v-for="role in getUnknowPartys(occurrence)"
+                v-for="role in getUnknownPartys(occurrence)"
                 :key="`role-party-${role.id}`"
                 class="fast-occurrence-actions__items"
               >
@@ -674,6 +679,7 @@ export default {
 
   components: {
     InfiniteLoading,
+    Log: () => import('@/views/main/negotiation/partials/ticket/omnichannel/occurrences/occurrence/log/Log'),
     AttachmentOccurrence: () => import('./partials/AttachmentOccurrence'),
     UnknownPartyButton: () => import('@/components/buttons/UnknownPartyButton'),
     NpsInteraction: () => import('@/views/main/negotiation/partials/ticket/omnichannel/occurrences/occurrence/interaction/partials/Nps'),
@@ -1052,19 +1058,19 @@ export default {
       return occurrence.description
     },
 
-    canHandleUnknowParty(occurrence) {
-      return occurrence.properties && occurrence.properties.HANDLE_UNKNOW_PARTY && occurrence.properties.UNKNOW_ROLE_IDS
+    canHandleUnknownParty(occurrence) {
+      return occurrence.properties?.HANDLE_UNKNOW_PARTY && occurrence.properties?.UNKNOW_ROLE_IDS
     },
 
     isUnknown(occurrence) {
       return occurrence?.properties?.PARTY === 'UNKNOWN' && occurrence?.properties?.ROLE_NAME === 'LAWYER'
     },
 
-    getUnknowPartys(occurrence) {
-      const canHandleParty = this.canHandleUnknowParty(occurrence)
+    getUnknownPartys(occurrence) {
+      const canHandleParty = this.canHandleUnknownParty(occurrence)
       if (canHandleParty) {
         const dispute = this.$store.getters.dispute
-        const roleIds = JSON.parse(occurrence.properties.UNKNOW_ROLE_IDS)
+        const roleIds = JSON.parse(occurrence?.properties.UNKNOWN_ROLE_IDS ? occurrence?.properties.UNKNOWN_ROLE_IDS : occurrence?.properties.UNKNOW_ROLE_IDS)
         const filteredRole = dispute.disputeRoles.filter(r => roleIds.includes(r.id) && r.party === 'UNKNOWN')
         return filteredRole
       }

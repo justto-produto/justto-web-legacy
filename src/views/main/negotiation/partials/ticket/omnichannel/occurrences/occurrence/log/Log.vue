@@ -21,6 +21,20 @@
         v-model="value"
       />
 
+      <!-- Validação -->
+      <div
+        v-if="havePartsUnknow"
+        class="log-container__occurrence-unknowns"
+      >
+        <UnknownPolarityButton
+          v-for="party in unknownParts"
+          :key="party.disputeRoleId"
+          :occurrence="value"
+          :party="party"
+          class="unknown-item"
+        />
+      </div>
+
       <span class="log-container__occurrence-about negotiation-occurrence-about">
         <span class="log-container__occurrence-about-time">
           {{ time | moment('HH:mm') }}
@@ -50,10 +64,12 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   components: {
     Summary: () => import('./Summary'),
-    UnknownPartyButton: () => import('@/components/buttons/UnknownPartyButton')
+    UnknownPartyButton: () => import('@/components/buttons/UnknownPartyButton'),
+    UnknownPolarityButton: () => import('@/components/buttons/UnknownPolarityButton')
   },
 
   props: {
@@ -64,6 +80,10 @@ export default {
   },
 
   computed: {
+    ...mapGetters({
+      parties: 'getTicketOverviewParties'
+    }),
+
     occurrence() {
       return this.value
     },
@@ -74,6 +94,18 @@ export default {
 
     isUnknown() {
       return this.value?.properties?.PARTY === 'UNKNOWN' && this.value?.properties?.ROLE_NAME === 'LAWYER'
+    },
+
+    havePartsUnknow() {
+      return this.value?.properties?.HANDLE_UNKNOW_PARTY === 'TRUE' && JSON.parse(this.value?.properties?.UNKNOW_ROLE_IDS || '[]').length > 0
+    },
+
+    unknownRoleIds() {
+      return JSON.parse(this.value?.properties?.UNKNOW_ROLE_IDS || '[]')
+    },
+
+    unknownParts() {
+      return (this.parties || []).filter(r => this.unknownRoleIds.includes(r.disputeRoleId))
     },
 
     text() {
@@ -242,6 +274,11 @@ export default {
       padding: 12px;
     }
 
+    .log-container__occurrence-unknowns {
+      display: flex;
+      flex-direction: column;
+    }
+
     .log-container__occurrence-text {
       display: flex;
       align-self: center;
@@ -283,6 +320,11 @@ export default {
       border-radius: 0px;
       max-width: 100%;
       width: 100%;
+    }
+
+    .unkbown-party-resolved {
+      text-align: center;
+      text-decoration: underline;
     }
   }
 }

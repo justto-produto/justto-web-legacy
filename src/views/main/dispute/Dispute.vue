@@ -1243,6 +1243,8 @@ export default {
 @import '@/styles/colors.scss';
 
 .dispute-view {
+  padding-bottom: 8px;
+
   &__section-messages {
     display: flex;
     flex-direction: column;
@@ -1526,6 +1528,7 @@ export default {
 
   .jus-main-view__main-card {
     height: 100%;
+    overflow-y: hidden;
     min-width: 532px;
     z-index: 0;
 
