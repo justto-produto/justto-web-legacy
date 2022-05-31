@@ -514,6 +514,7 @@
           multiple
           filterable
           allow-create
+          default-first-option
           placeholder="Selecionar tags"
         >
           <el-option
@@ -766,10 +767,6 @@ export default {
       'getFinishedDisputesCount'
     ]),
 
-    teste(event) {
-      console.log(event)
-    },
-
     doAction(action) {
       const params = {
         type: action.toUpperCase(),
@@ -837,6 +834,15 @@ export default {
     },
 
     dispatchAction(action, params) {
+      if (['ADD_TAGS_INCLUSIVE'].includes(params.type) && !params.tags.length) {
+        this.$jusNotification({
+          title: 'Ops!',
+          message: 'Nenhuma tag selecionada.',
+          type: 'error'
+        })
+        return
+      }
+
       this.$store.dispatch('sendBatchAction', params).then(_response => {
         this.chooseDeleteDialogVisible = false
         this.chooseSettledDialogVisible = false
