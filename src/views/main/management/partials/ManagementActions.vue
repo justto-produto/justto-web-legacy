@@ -964,6 +964,7 @@ export default {
         this.getWorkspaceTags().then(() => {
           this.showChangeTagDialog = true
           this.changeTags = []
+          this.$nextTick(this.handleInitTagDialog)
         })
       } else if (action === 'REM_TAGS_INCLUSIVE') {
         this.getWorkspaceTags().then(() => {
@@ -1126,6 +1127,12 @@ export default {
       this.changeTags = []
       this.removeTags = []
       done()
+    },
+
+    handleInitTagDialog() {
+      const input = document.querySelector('.dialog-actions__change-tags input')
+
+      if (input) input.maxLength = 32
     }
   }
 }
