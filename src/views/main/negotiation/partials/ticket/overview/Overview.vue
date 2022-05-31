@@ -65,7 +65,7 @@
     />
 
     <OverviewObf
-      v-if="ticket.strategy && ticket.strategy.isObrigacaoFazer"
+      v-if="ticket.strategy && !ticket.strategy.isObrigacaoFazer"
       v-model="ticket.description"
     />
 
