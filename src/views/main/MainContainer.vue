@@ -309,7 +309,7 @@ export default {
 
     checkAcceptterms(response) {
       const key = 'LAST_ACCEPTED_DATE'
-      const lastTermDate = this.$moment('20/04/2021', 'DD/MM/YYYY')
+      const lastTermDate = this.$moment('31/05/2022', 'DD/MM/YYYY')
       let lastAcceptedDate = response[key] ? this.$moment(response[key], 'DD/MM/YYYY') : Boolean(response[key])
 
       if (!lastAcceptedDate || lastTermDate.isAfter(lastAcceptedDate, 'day')) {
