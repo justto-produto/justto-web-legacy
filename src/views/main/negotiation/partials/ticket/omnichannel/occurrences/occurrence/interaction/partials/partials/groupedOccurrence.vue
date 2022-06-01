@@ -8,7 +8,7 @@
       placement="top-start"
       trigger="hover"
       :open-delay="250"
-      :disabled="!have"
+      :disabled="!have || showGroupingExtension"
       popper-class="grouped-occurrences"
       class="grouped-occurrences__poppover"
     >
@@ -92,16 +92,20 @@ export default {
 
   methods: {
     ...mapActions([
+      'getGroupedOccurrences',
       'getGroupedOccurrencesByOccurrenceId',
       'resetGroupedOccurrencesByOccurrenceId'
     ]),
 
     openGrouped() {
-      console.log('occurrences', this.parentId)
       if (this.isOpenGroupedOccurrences) {
         this.resetGroupedOccurrencesByOccurrenceId(this.parentId)
       } else {
-        this.getGroupedOccurrencesByOccurrenceId(this.parentId)
+        this.getGroupedOccurrences({
+          parentId: this.parentId,
+          disputeId: this.$route?.params?.id,
+          occurrences: this.occurrences.map(({ id }) => id)
+        })
       }
     }
   }
