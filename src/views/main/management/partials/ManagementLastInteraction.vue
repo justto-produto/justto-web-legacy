@@ -163,6 +163,22 @@
       {{ getLastInteraction(data.lastInteraction.createAt.dateTime) }}
     </div>
 
+    <el-tooltip
+      v-if="needFolllowUp"
+      :content="followUpText"
+      placement="left"
+      class="follow-up-tooltip"
+    >
+      <el-button
+        size="mini"
+        type="text"
+        class="follow-up-button"
+        @click="$router.push(`management/dispute/${data.id}`)"
+      >
+        Mensagem à {{ followUpDays }} dias
+      </el-button>
+    </el-tooltip>
+
     <el-dialog
       :visible.sync="responseDialogVisible"
       :close-on-click-modal="false"
@@ -300,6 +316,20 @@ export default {
           ]
         }
       }
+    },
+
+    needFolllowUp() {
+      if (!this.data?.lastOutboundInteraction?.createAt?.dateTime) return false
+
+      return this.$moment().diff(this.$moment(this.data?.lastOutboundInteraction?.createAt?.dateTime), 'hours') > 24
+    },
+
+    followUpDays() {
+      return this.$moment().diff(this.$moment(this.data?.lastOutboundInteraction?.createAt?.dateTime), 'days')
+    },
+
+    followUpText() {
+      return `Última mensagem enviada a ${this.followUpDays} dias, gostaria de enviar uma nova?`
     }
   },
   methods: {
@@ -418,5 +448,10 @@ export default {
   display: flex;
   word-break: break-word;
   max-width: 400px;
+}
+
+.follow-up-button.follow-up-tooltip {
+  color: $--color-secondary;
+  font-weight: bold;
 }
 </style>
