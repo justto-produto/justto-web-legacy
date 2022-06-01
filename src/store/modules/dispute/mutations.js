@@ -100,6 +100,9 @@ const disputeMutations = {
   },
 
   updateDisputeQuery(state, params) {
+    if (params.key === 'status' && !Array.isArray(params.value)) {
+      params.value = params.value.split(',')
+    }
     state.query[params.key] = params.value
     state.query.page = 1
   },

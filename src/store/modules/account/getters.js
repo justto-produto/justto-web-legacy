@@ -2,6 +2,7 @@ import { isJusttoUser } from '@/utils/validations'
 
 const accountGetters = {
   userPreferences: state => state.preferences,
+  userProperties: state => state.preferences?.properties || {},
   accountToken: state => state.token,
   isLoggedIn: state => !!state.token,
   accountId: state => state.id,

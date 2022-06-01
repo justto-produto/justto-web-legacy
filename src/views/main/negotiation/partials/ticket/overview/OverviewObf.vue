@@ -1,6 +1,34 @@
 <template>
   <section class="overview-obf">
-    <label
+    <el-collapse>
+      <el-collapse-item title="OBF">
+        <el-input
+          v-if="isEditing || value"
+          ref="obfTextarea"
+          v-model="description"
+          :autosize="{ minRows: 1, maxRows: 3 }"
+          type="textarea"
+          class="overview-obf__textarea"
+          @focus="showTextarea"
+          @blur="hideTextarea"
+          @input="updateDescription"
+        />
+        <span
+          v-if="isEditing || value"
+          :class="{ 'overview-obf__textarea--shadow-hidden': isEditing }"
+          class="overview-obf__textarea--shadow"
+        />
+
+        <a
+          v-if="!isEditing && !value"
+          class="overview-obf__link"
+          @click="showTextarea"
+        >
+          Clique para adicionar
+        </a>
+      </el-collapse-item>
+    </el-collapse>
+    <!-- <label
       for="obf"
       class="overview-obf__label"
     >
@@ -11,7 +39,7 @@
       v-if="isEditing || value"
       ref="obfTextarea"
       v-model="description"
-      :autosize="{ minRows: 1, maxRows: 5}"
+      :autosize="{ minRows: 1, maxRows: 3}"
       type="textarea"
       class="overview-obf__textarea"
       @focus="showTextarea"
@@ -30,7 +58,7 @@
       @click="showTextarea"
     >
       Clique para adicionar
-    </a>
+    </a> -->
   </section>
 </template>
 
@@ -93,9 +121,10 @@ export default {
   position: relative;
   border: 1px solid $--color-secondary;
   border-radius: 6px;
-  padding: 6px;
+  padding: 0 4px;
   height: auto;
   margin-top: 6px;
+  margin: 0;
 
   .overview-obf__label {
     top: -10px;
@@ -105,6 +134,7 @@ export default {
     background-color: $--color-white;
     padding: 0 3px;
     font-size: 13px;
+    padding: 0;
   }
 
   .overview-obf__textarea {
@@ -115,6 +145,7 @@ export default {
     color: $--color-text-primary;
     resize: none;
     padding: 3px;
+    padding: 0;
   }
 
   .overview-obf__link {
@@ -162,6 +193,8 @@ export default {
 </style>
 
 <style lang="scss">
+@import '@/styles/colors.scss';
+
 .overview-obf {
   .overview-obf__textarea {
     .el-textarea__inner {
@@ -170,6 +203,26 @@ export default {
       font-size: inherit;
       line-height: inherit;
       resize: none;
+    }
+  }
+
+  .el-collapse {
+    .el-collapse-item {
+      div[role="tab"] {
+        div[role="button"] {
+          border: none;
+          color: $--color-secondary;
+          background-color: transparent;
+          height: 32px;
+          line-height: 24px;
+          margin: 0;
+        }
+      }
+
+      div[role="tabpanel"] {
+        border: none;
+        background-color: transparent;
+      }
     }
   }
 }

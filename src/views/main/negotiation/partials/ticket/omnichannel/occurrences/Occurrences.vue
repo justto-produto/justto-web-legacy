@@ -4,10 +4,15 @@
     ref="occurrence-root"
     class="occurrences-container"
   >
-    <div class="occurrences-container__occurrences">
+    <div
+      ref="scroolContainer"
+      class="occurrences-container__occurrences"
+    >
+      <!-- :identifier="infiniteLoadingIdentifier"
+      :distance="1" -->
       <infinite-loading
+        ref="infiniteLoading"
         :identifier="infiniteLoadingIdentifier"
-        :distance="680"
         spinner="spiral"
         direction="top"
         @infinite="loadOccurrences"
@@ -134,6 +139,10 @@ export default {
 
     this.resetTicket(this.id)
     this.adjustScroll(true)
+
+    if (this.$refs.infiniteLoading && this.$refs.scroolContainer) {
+      this.$refs.infiniteLoading.scrollParent = document.getElementsByClassName('occurrences-container omnichannel-container__occurrences')[0]
+    }
   },
 
   updated() {
@@ -144,6 +153,7 @@ export default {
     eventBus.$off('NEGOTIATION_WEBSOCKET_NEW_OCCURRENCE')
     eventBus.$off(events.TICKET_CHANGE.callback, this.resetTicket)
   },
+
   methods: {
     ...mapActions([
       'resetNoteText',
@@ -165,6 +175,10 @@ export default {
     loadOccurrences($state) {
       if (!this.isPrinting) {
         this.getOccurrences(this.id).then(response => {
+          if (response.first) {
+            this.adjustScroll(true)
+          }
+
           if (response.last) {
             if ($state) { $state.complete() }
           } else {
@@ -211,8 +225,9 @@ export default {
       z-index: 10;
       position: -webkit-sticky;
       position: sticky;
+      width: 80%;
 
-      margin: 18px 0px 10px;
+      margin: 18px 10% 10px;
 
       span {
         background-color: #e3f5ff;

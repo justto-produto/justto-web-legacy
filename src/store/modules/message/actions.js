@@ -103,6 +103,14 @@ const messageActions = {
     })
   },
 
+  sendCustomEmail({ _ }, data) {
+    return axiosDispatch({
+      url: `${messagesPath}/email/send`,
+      method: 'POST',
+      data
+    })
+  },
+
   setMessageBackup({ commit }, backup) {
     commit('setMessageBackup', backup)
   }

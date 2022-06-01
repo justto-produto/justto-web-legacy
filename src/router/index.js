@@ -324,7 +324,7 @@ router.beforeEach((to, from, next) => {
       } else {
         if (to.name === 'onboarding') {
           next()
-        } else next('onboarding')
+        } else next('login')
       }
     } else {
       next('login')

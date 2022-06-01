@@ -88,6 +88,7 @@
     <DraftManagementDialog ref="draftManagementDialog" />
     <PreNegotiationDialog ref="preNegotiationDialog" />
     <ClosingReasons ref="closingReasonsDialog" />
+    <DraftNotifications ref="draftNotificationsDialog" />
   </section>
 </template>
 
@@ -106,7 +107,8 @@ export default {
     CommunicationBlockListDialog: () => import('./FeaturesAndModulesDialogs/CommunicationBlockListDialog'),
     DraftManagementDialog: () => import('./FeaturesAndModulesDialogs/DraftManagementDialog'),
     PreNegotiationDialog: () => import('./FeaturesAndModulesDialogs/PreNegotiationDialog'),
-    ClosingReasons: () => import('./FeaturesAndModulesDialogs/ClosingReasons')
+    ClosingReasons: () => import('./FeaturesAndModulesDialogs/ClosingReasons'),
+    DraftNotifications: () => import('./FeaturesAndModulesDialogs/DraftNotificationsDialog')
   },
 
   data: () => ({
@@ -133,7 +135,8 @@ export default {
           'DRAFT_MANAGEMENT',
           'PRE_NEGOTIATION',
           'AUTOMATIC_MESSAGES',
-          'CLOSING_REASONS'
+          'CLOSING_REASONS',
+          'DRAFT_NOTIFICATIONS'
         ],
         ...(this.isJusttoAdmin ? ['API_INTEGRATION'] : [])
       ]
