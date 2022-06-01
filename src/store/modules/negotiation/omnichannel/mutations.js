@@ -6,7 +6,7 @@ import { eventBus, getFormatedDate } from '@/utils'
 import EDITOR_TABS from '@/constants/editor'
 import { StateOccurrences } from '@/store/modules/negotiation/omnichannel/state'
 
-const omnichannelMutations = {
+export default {
   setOmnichannelActiveTab: (state, tab) => {
     if (Object.values(EDITOR_TABS).includes(tab)) {
       Vue.set(state, 'activeTab', tab)
@@ -55,7 +55,7 @@ const omnichannelMutations = {
       state.occurrences.list.splice(index + 1, 0, occurrence)
     })
 
-    Vue.set(state.occurrences.filter, 'page', number + ([0, 1].includes(number) ? 2 : 1))
+    Vue.set(state.occurrences.filter, 'page', number + 2)
     Vue.set(state.occurrences, 'totalElements', totalElements)
     Vue.set(state, 'totalOfOccurrences', totalElements)
   },
@@ -209,5 +209,3 @@ const omnichannelMutations = {
     Vue.set(state, 'disputeProtocol', data)
   }
 }
-
-export default omnichannelMutations
