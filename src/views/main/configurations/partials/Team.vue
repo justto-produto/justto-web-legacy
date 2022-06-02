@@ -200,6 +200,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 import { filterByTerm } from '@/utils'
+import emailTemplate from './moreWorkspacesEmailTemplate'
 
 export default {
   name: 'Team',
@@ -345,16 +346,19 @@ export default {
               center: true
             })
 
+            const workspaceName = this.workspace?.teamName
+            const keyAccountName = this.workspace?.associatedKeyAccount?.name || 'Não definido'
+
             this.sendCustomEmail({
               subject: 'Limite de Workspace excedido',
               address: 'financeiro@justto.com.br',
-              content: `Cliente da workspace ${this.workspace?.teamName} teve seu limite de workspaces excedido,  favor entrar em contato com o ${(this.workspace?.associatedKeyAccount?.name || 'KA não definido')}, para verificar se teve alteração de valor de mensalidade.`
+              content: emailTemplate({ workspaceName, keyAccountName })
             })
 
             this.sendCustomEmail({
               subject: 'Limite de Workspace excedido',
               address: 'deivid@justto.com.br',
-              content: `Cliente da workspace ${this.workspace?.teamName} teve seu limite de workspaces excedido,  favor entrar em contato com o ${(this.workspace?.associatedKeyAccount?.name || 'KA não definido')}, para verificar se teve alteração de valor de mensalidade.`
+              content: emailTemplate({ workspaceName, keyAccountName })
             })
           }
         }).finally(resolve)
