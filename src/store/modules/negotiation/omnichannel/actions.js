@@ -292,6 +292,34 @@ const omnichannelActions = {
       tab: state.activeTab,
       contacts: getEditorRecipients
     }))
+  },
+
+  getGroupedOccurrences({ _ }, { disputeId, occurrences, parentId }) {
+    const url = `${disputeApi}/${disputeId}/occurrences${buildQuery({ id: occurrences })}`
+
+    return axiosDispatch({
+      url,
+      mutation: 'setGroupedOccurrencesById',
+      payload: { parentId }
+    })
+  },
+
+  getGroupedOccurrencesByOccurrenceId({ state, commit }, id) {
+    // TODO: SAAS-5036 Implementar GET das Ocorrências agrupadas aqui.
+    commit('setGroupedOccurrencesById', {
+      data: {
+        content: state.occurrences.list.filter(({ id: occId }) => occId === id)
+      },
+      payload: id
+    })
+
+    return Promise.resolve()
+  },
+
+  resetGroupedOccurrencesByOccurrenceId({ commit }, id) {
+    commit('deleteGroupedOccurrencesById', id)
+
+    return Promise.resolve()
   }
 }
 
