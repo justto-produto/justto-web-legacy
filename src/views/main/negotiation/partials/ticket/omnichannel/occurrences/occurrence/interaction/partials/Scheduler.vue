@@ -86,8 +86,9 @@
         </el-tooltip>
 
         <GroupedOccurrences
-          :have="haveGroupedOccurrences"
+          :have="!hideGrouping && haveGroupedOccurrences"
           :occurrences="groupedOccurrences"
+          :parent-id="occurrence.id"
         />
       </span>
     </div>
@@ -108,19 +109,28 @@ export default {
       type: Object,
       required: true
     },
+
     hideContent: {
       type: Boolean,
       default: false
     },
+
     occurrence: {
       type: Object,
       required: true
     },
+
     hiddenContactInfo: {
       type: Boolean,
       default: false
     },
+
     hiddenSendStatus: {
+      type: Boolean,
+      default: false
+    },
+
+    hideGrouping: {
       type: Boolean,
       default: false
     }

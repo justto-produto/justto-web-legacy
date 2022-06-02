@@ -80,9 +80,11 @@
         />
       </el-tooltip>
       <GroupedOccurrences
-        :have="haveGroupedOccurrences"
+        :have="!hideGrouping && haveGroupedOccurrences"
         :occurrences="groupedOccurrences"
+        :parent-id="occurrence.id"
       />
+
       <el-tooltip
         :open-delay="600"
       >
@@ -92,6 +94,7 @@
         >
           <span v-html="hasError" />
         </div>
+
         <JusIcon
           v-if="hasError"
           class="communication-container__about-icon"
@@ -110,15 +113,23 @@ export default {
   components: {
     GroupedOccurrences: () => import('./partials/groupedOccurrence')
   },
+
   mixins: [communicationSendStatus],
+
   props: {
     value: {
       type: Object,
       required: true
     },
+
     occurrence: {
       type: Object,
       required: true
+    },
+
+    hideGrouping: {
+      type: Boolean,
+      default: false
     }
   },
 

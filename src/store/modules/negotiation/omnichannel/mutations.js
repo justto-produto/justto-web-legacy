@@ -207,5 +207,13 @@ export default {
 
   setDisputeProtocol: (state, data) => {
     Vue.set(state, 'disputeProtocol', data)
+  },
+
+  setGroupedOccurrencesById: (state, { data: { content: occurrences }, payload: { parentId } }) => {
+    Vue.set(state.groupedOccurrences, parentId, occurrences)
+  },
+
+  deleteGroupedOccurrencesById: (state, id) => {
+    Vue.delete(state.groupedOccurrences, id)
   }
 }
