@@ -13,7 +13,7 @@
         size="mini"
         type="text"
         class="follow-up-button"
-        @click="$router.push(`management/dispute/${dispute.id}`)"
+        @click="handleClick"
       >
         {{ followUpDays }} dias sem retorno da parte
       </el-button>
@@ -32,7 +32,7 @@ export default {
 
   computed: {
     needFolllowUp() {
-      if (this.dispute?.lastInteraction?.direction === 'OUTBOUND') {
+      if (this.dispute?.lastInteraction?.direction === 'OUTBOUND' && ['RUNNING'].includes(this.dispute?.status)) {
         return this.$moment().diff(this.$moment(this.dispute?.lastInteraction?.createAt?.dateTime), 'hours') > 24
       }
 
@@ -45,6 +45,12 @@ export default {
 
     followUpText() {
       return `Última mensagem enviada a ${this.followUpDays} dias, gostaria de enviar uma nova?`
+    }
+  },
+
+  methods: {
+    handleClick() {
+      this.$router.push({ name: 'dispute', params: { id: this.dispute.id } })
     }
   }
 }
