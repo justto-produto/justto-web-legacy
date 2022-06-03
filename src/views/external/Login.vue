@@ -167,12 +167,15 @@
 
 <script>
 import { isJusttoUser } from '@/utils/validations'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'Login',
+
   components: {
     JusSidenavExternal: () => import('@/components/layouts/JusSidenavExternal')
   },
+
   data() {
     return {
       loadingText: 'Autenticando...',
@@ -231,6 +234,10 @@ export default {
   },
 
   methods: {
+    ...mapActions({
+      sendEmail: 'sendCustomEmail'
+    }),
+
     getErrorMessage() {
       const messages = [
         'Aguarde um momento que já iremos lhe autenticar',
@@ -281,6 +288,7 @@ export default {
         }
       })
     },
+
     getMyWorkspaces() {
       return new Promise((resolve, reject) => {
         this.$store.dispatch('myWorkspace').then(response => {
@@ -314,7 +322,23 @@ export default {
             this.showLoading = false
             this.workspaces = response
           } else if (response.length === 0) {
-            this.$router.push('/onboarding')
+            this.$confirm('Não encontramos nenhuma Workspace ativa ativa para o seu usuário.<br>Favor entrar em contato com o seu Gerente de Contas.', {
+              dangerouslyUseHTMLString: true,
+              closeOnPressEscape: false,
+              closeOnClickModal: false,
+              confirmButtonText: 'OK',
+              showCancelButton: false,
+              showClose: false,
+              center: true
+            }).then(() => {
+              this.sendEmail({
+                subject: 'Usuário sem Workspace',
+                address: 'deivid@justto.com.br',
+                content: `Usuário com o email <b>${this.loginForm.email}</b> tentou fazer login na plataforma, mas não pertence a nenhuma Workspace ativa.`
+              })
+
+              location.reload()
+            })
           } else {
             this.getMembersAndRedirect(response[0])
           }
