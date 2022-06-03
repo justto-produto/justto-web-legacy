@@ -72,6 +72,11 @@ export default {
         this.loading = true
 
         this.editProperties({ OMNICHANNEL_GROUPING_TYPE: value }).finally(() => { this.loading = false })
+
+        // TODO [SAAS-5036] Limpar agrupamentos.
+        if (value === 'SUMMARIZED') {
+          this.clearGroupings()
+        }
       }
     },
 
@@ -90,7 +95,8 @@ export default {
 
   methods: {
     ...mapActions({
-      editProperties: 'setAccountProperty'
+      editProperties: 'setAccountProperty',
+      clearGroupings: 'clearAllGroupedOccurreces'
     })
   }
 }

@@ -320,6 +320,10 @@ const omnichannelActions = {
     commit('deleteGroupedOccurrencesById', id)
 
     return Promise.resolve()
+  },
+
+  clearAllGroupedOccurreces({ getters: { getGroupedOccurrences }, commit }) {
+    Object.keys(getGroupedOccurrences).forEach(id => commit('deleteGroupedOccurrencesById', id))
   }
 }
 
