@@ -419,4 +419,9 @@ export default {
   word-break: break-word;
   max-width: 400px;
 }
+
+.follow-up-button.follow-up-tooltip {
+  color: $--color-secondary;
+  font-weight: bold;
+}
 </style>

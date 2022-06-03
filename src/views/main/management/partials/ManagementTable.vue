@@ -83,6 +83,7 @@
               :name="scope.row.firstClaimant"
               style="display: flex; align-items: center;"
             />
+
             <el-tooltip
               v-if="scope.row.firstClaimant"
               class="online-icon"
@@ -94,8 +95,10 @@
                 style="height: 8px; width: 8px;"
               />
             </el-tooltip>
+
             {{ scope.row.firstClaimant || '-' | capitalize }}
           </div>
+          <FollowUp :dispute="scope.row" />
         </template>
       </el-table-column>
 
@@ -420,7 +423,8 @@ export default {
     JusDisputeActions: () => import('@/components/buttons/JusDisputeActions'),
     JusProtocolDialog: () => import('@/components/dialogs/JusProtocolDialog'),
     InfiniteLoading: () => import('vue-infinite-loading'),
-    JusVexatiousAlert: () => import('@/components/dialogs/JusVexatiousAlert')
+    JusVexatiousAlert: () => import('@/components/dialogs/JusVexatiousAlert'),
+    FollowUp: () => import('./partials/ManagementFollowUp')
   },
 
   props: {
@@ -729,6 +733,9 @@ export default {
 
 .first-claimant-container {
   .cell {
+    display: flex;
+    flex-direction: column;
+
     .first-claimant-container__cell {
       width: 100%;
       display: flex;
