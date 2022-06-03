@@ -281,11 +281,13 @@ const disputeActions = {
       ...state.query,
       fileFormat: 'CSV',
       columnToExport: stringColums.split(',')
-    }
+    };
 
-    if (state.query.transactionType) {
-      data.transactionType = state.query.transactionType.split(',')
-    }
+    ['prescriptions', 'transactionType'].forEach(key => {
+      if (state.query[key] && !Array.isArray(state.query[key])) {
+        data[key] = state.query[key].split(',')
+      }
+    });
 
     ['expirationDate', 'dealDate', 'importingDate', 'lastInteractionDate'].forEach(key => {
       if (data[key]?.length) {
