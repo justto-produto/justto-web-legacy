@@ -18,7 +18,7 @@
       />
     </el-tooltip>
 
-    <div :class="`${interaction.direction} ${coloringType}-${messageType} ${!flat ? 'interaction-container__balloon' : ''}`">
+    <div :class="`${interaction.direction} ${coloringType}-${messageType} ${!flat ? 'interaction-container__balloon' : ''} ${scheduled ? 'SCHEDULED' : ''}`">
       <div class="interaction-container__balloon-content">
         <component
           :is="type"
@@ -114,6 +114,11 @@ export default {
     },
 
     hideGrouping: {
+      type: Boolean,
+      default: false
+    },
+
+    scheduled: {
       type: Boolean,
       default: false
     }
@@ -392,6 +397,10 @@ export default {
       flex-direction: row-reverse;
     }
 
+    &.SCHEDULED {
+      border: 2px dashed $--color-black;
+    }
+
     // &.ballon-email {
     //   border-color: #DFF4FE;
     // }
@@ -424,6 +433,7 @@ export default {
       display: none;
     }
   }
+
   .active-icon:hover {
     .interaction-container__reply-icon {
       display: none;
