@@ -1,7 +1,10 @@
 <template>
-  <article class="ticket-actions">
+  <article
+    class="ticket-actions"
+    :class="{'dispute-mode': isInDispute}"
+  >
     <span
-      v-for="action in actionsList.filter(a => a.isDynamic && a.isVisible)"
+      v-for="action in actionListFiltered"
       :key="action.name"
     >
       <el-tooltip
@@ -14,8 +17,9 @@
         >
           <i
             v-if="action.isElementIcon"
-            class="el-icon-video-play ticket-actions__icons_element"
+            :class="`${action.icon} ticket-actions__icons_element`"
           />
+
           <JusIcon
             v-else
             :icon="action.icon"
@@ -26,6 +30,7 @@
     </span>
 
     <el-popover
+      v-if="!isInDispute"
       :class="{ 'ticket-actions__more-actions--hidden': isPreNegotiation }"
       class="ticket-actions__more-actions"
       popper-class="ticket-actions__popover"
@@ -91,6 +96,11 @@ export default {
     ticket: {
       type: Object,
       required: true
+    },
+
+    isInDispute: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -108,19 +118,6 @@ export default {
     actionsList() {
       return [
         {
-          name: 'FAVORITE',
-          icon: 'offices-tower',
-          isVisible: !this.isFavorite,
-          method: () => this.handleFavorite()
-        },
-        {
-          name: 'DISFAVOR',
-          icon: 'offices-tower-active',
-          isVisible: this.isFavorite,
-          isDynamic: true,
-          method: () => this.handleDisfavor()
-        },
-        {
           name: 'SETTLED',
           icon: 'positive-hand',
           label: ['CHECKOUT', 'ACCEPTED'].includes(this.ticket.status),
@@ -136,20 +133,6 @@ export default {
           isDynamic: !this.ticket?.favorite
         },
         {
-          name: 'MANUAL_COUNTERPROPOSAL',
-          icon: 'exchange',
-          method: (action) => this.handleManualCounterproposal(action),
-          isVisible: this.canManualCounterproposal,
-          isDynamic: true
-        },
-        {
-          name: 'SET_UNREAD',
-          icon: 'open-close-envelopes',
-          method: (action) => this.handleSetUnread(action),
-          isVisible: this.canSetUnread,
-          isDynamic: true
-        },
-        {
           name: 'RESUME',
           icon: 'el-icon-video-play',
           method: (action) => this.handlePauseResume(action),
@@ -159,33 +142,46 @@ export default {
         },
         {
           name: 'PAUSED',
+          icon: 'pause',
           method: (action) => this.handlePauseResume(action),
           isVisible: this.canPause
         },
         {
           name: 'RESTART_ENGAGEMENT',
+          icon: 'refresh',
           method: (action) => this.handleRestartEngagement(action),
           isVisible: this.canRestartEngagement
         },
         {
           name: 'RESEND_MESSAGES',
+          icon: 'resend-messages',
           method: (action) => this.handleResendMessages(action),
           isVisible: this.canResendMessages
         },
         {
           name: 'CANCEL_MESSAGES',
+          icon: 'cancel-messages',
           method: (action) => this.handleCancelMessages(action),
           isVisible: !this.isPreNegotiation
         },
         {
           name: 'EDIT_NEGOTIATORS',
+          icon: 'delegate',
           method: (action) => this.handleEditNegotiators(action),
           isVisible: !this.isPreNegotiation
         },
         {
           name: 'ENRICH',
+          icon: 'enrich',
           method: (action) => this.handleEnrich(action),
           isVisible: !this.isPreNegotiation && !this.isFavorite
+        },
+        {
+          name: 'MANUAL_COUNTERPROPOSAL',
+          icon: 'exchange',
+          method: (action) => this.handleManualCounterproposal(action),
+          isVisible: this.canManualCounterproposal,
+          isDynamic: true
         },
         {
           name: 'RENEGOTIATE',
@@ -195,9 +191,11 @@ export default {
           isDynamic: this.isCanceled || this.isSettled || this.isUnsettled
         },
         {
-          name: 'UPLOAD_ATTACHMENT',
-          method: (action) => this.handleUploadAttachment(action),
-          isVisible: !this.isPreNegotiation
+          name: 'SET_UNREAD',
+          icon: 'open-close-envelopes',
+          method: (action) => this.handleSetUnread(action),
+          isVisible: this.canSetUnread,
+          isDynamic: true
         },
         {
           name: 'DROP_LAWSUIT',
@@ -214,8 +212,29 @@ export default {
           isDynamic: true
         },
         {
+          name: 'UPLOAD_ATTACHMENT',
+          icon: 'upload-file',
+          method: (action) => this.handleUploadAttachment(action),
+          isVisible: !this.isPreNegotiation
+        },
+        {
+          name: 'FAVORITE',
+          icon: 'offices-tower',
+          isVisible: !this.isFavorite,
+          method: () => this.handleFavorite()
+        },
+        {
+          name: 'DISFAVOR',
+          icon: 'offices-tower-active',
+          isVisible: this.isFavorite,
+          isDynamic: true,
+          method: () => this.handleDisfavor()
+        },
+        {
           name: `PRINT_TICKET_${this.activeTab}`,
+          icon: 'el-icon-printer',
           method: (_action) => (window.open(`/#/print/negotiation/${this.$route.params.id}?tab=${this.activeTab}`, '_blank')),
+          isElementIcon: true,
           isVisible: true
         },
         {
@@ -236,6 +255,10 @@ export default {
           return !['SETTLED', 'UNSETTLED', 'MANUAL_COUNTERPROPOSAL', 'RESTART_ENGAGEMENT', 'CANCEL_MESSAGES'].includes(action.name) && action.isVisible
         } else return action.isVisible
       })
+    },
+
+    actionListFiltered() {
+      return this.isInDispute ? this.actionsList.filter(({ isVisible }) => isVisible) : this.actionsList.filter(({ isDynamic, isVisible }) => isDynamic && isVisible)
     },
 
     pausedDisputeActionList() {
@@ -624,9 +647,9 @@ export default {
     },
 
     redirectToManagement() {
-      const managementRoute = `/management/dispute/${this.$route.params.id}`
-      this.$jusSegment('Chaveia de negociação para gerenciamento', {})
-      this.$router.push({ path: managementRoute })
+      const path = this.isInDispute ? `/negotiation/${this.$route.params.id}` : `/management/dispute/${this.$route.params.id}`
+      this.$jusSegment('SWITCH_DISPUTE_INTERFACE', {})
+      this.$router.push({ path })
     }
   }
 }
@@ -659,6 +682,10 @@ export default {
   .ticket-actions__more-actions {
     margin-left: 8px;
     &--hidden { display: none }
+  }
+
+  &.dispute-mode {
+    max-width: 100%;
   }
 }
 
