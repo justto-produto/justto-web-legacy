@@ -117,19 +117,6 @@ export default {
 
     actionsList() {
       return [
-        ...(this.isInDispute ? [] : [{
-          name: 'FAVORITE',
-          icon: 'offices-tower',
-          isVisible: !this.isFavorite,
-          method: () => this.handleFavorite()
-        }]),
-        {
-          name: 'DISFAVOR',
-          icon: 'offices-tower-active',
-          isVisible: this.isFavorite,
-          isDynamic: true,
-          method: () => this.handleDisfavor()
-        },
         {
           name: 'SETTLED',
           icon: 'positive-hand',
@@ -144,20 +131,6 @@ export default {
           method: (action) => this.handleUnsettled(action),
           isVisible: this.canUnsettled,
           isDynamic: !this.ticket?.favorite
-        },
-        {
-          name: 'MANUAL_COUNTERPROPOSAL',
-          icon: 'exchange',
-          method: (action) => this.handleManualCounterproposal(action),
-          isVisible: this.canManualCounterproposal,
-          isDynamic: true
-        },
-        {
-          name: 'SET_UNREAD',
-          icon: 'open-close-envelopes',
-          method: (action) => this.handleSetUnread(action),
-          isVisible: this.canSetUnread,
-          isDynamic: true
         },
         {
           name: 'RESUME',
@@ -204,6 +177,13 @@ export default {
           isVisible: !this.isPreNegotiation && !this.isFavorite
         },
         {
+          name: 'MANUAL_COUNTERPROPOSAL',
+          icon: 'exchange',
+          method: (action) => this.handleManualCounterproposal(action),
+          isVisible: this.canManualCounterproposal,
+          isDynamic: true
+        },
+        {
           name: 'RENEGOTIATE',
           icon: 'move-to-running',
           method: (action) => this.handleRenegotiate(action),
@@ -211,10 +191,11 @@ export default {
           isDynamic: this.isCanceled || this.isSettled || this.isUnsettled
         },
         {
-          name: 'UPLOAD_ATTACHMENT',
-          icon: 'upload-file',
-          method: (action) => this.handleUploadAttachment(action),
-          isVisible: !this.isPreNegotiation
+          name: 'SET_UNREAD',
+          icon: 'open-close-envelopes',
+          method: (action) => this.handleSetUnread(action),
+          isVisible: this.canSetUnread,
+          isDynamic: true
         },
         {
           name: 'DROP_LAWSUIT',
@@ -230,12 +211,25 @@ export default {
           isVisible: this.isPreNegotiation,
           isDynamic: true
         },
-        ...(this.isInDispute ? [{
+        {
+          name: 'UPLOAD_ATTACHMENT',
+          icon: 'upload-file',
+          method: (action) => this.handleUploadAttachment(action),
+          isVisible: !this.isPreNegotiation
+        },
+        {
           name: 'FAVORITE',
           icon: 'offices-tower',
           isVisible: !this.isFavorite,
           method: () => this.handleFavorite()
-        }] : []),
+        },
+        {
+          name: 'DISFAVOR',
+          icon: 'offices-tower-active',
+          isVisible: this.isFavorite,
+          isDynamic: true,
+          method: () => this.handleDisfavor()
+        },
         {
           name: `PRINT_TICKET_${this.activeTab}`,
           icon: 'el-icon-printer',
