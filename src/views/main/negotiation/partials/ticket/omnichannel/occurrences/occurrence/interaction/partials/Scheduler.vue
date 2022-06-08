@@ -188,16 +188,12 @@ export default {
     },
 
     text() {
-      if (this.interaction?.message?.resume) {
-        return this.interaction.message.resume
-      } else if (this.interaction?.message?.parameters?.SUBJECT) {
-        return this.interaction?.message?.parameters?.SUBJECT
-      }
-      return ''
+      return this.interaction?.message?.resume || this.interaction?.message?.parameters?.SUBJECT || this.occurrence?.description || ''
     },
 
     message() {
       const { messageId } = this.interaction.message
+
       return this.fullMessages[messageId] || this.text
     },
 
