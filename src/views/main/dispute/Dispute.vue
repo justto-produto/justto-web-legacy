@@ -37,7 +37,14 @@
             @dragging="onDrag"
           />
           <!-- ACTIONS -->
+          <TicketActions
+            v-if="actionsType === 'TICKET'"
+            is-in-dispute
+            :is-collapsed.sync="isCollapsed"
+          />
+
           <jus-dispute-actions
+            v-else
             :dispute="dispute"
             :is-collapsed.sync="isCollapsed"
             :tab="typingTab"
@@ -464,6 +471,7 @@ export default {
     DisputeOverview: () => import('./partials/DisputeOverview/DisputeOverview'),
     TicketOverview: () => import('@/views/main/negotiation/partials/ticket/overview/Overview.vue'),
     JusDisputeActions: () => import('@/components/buttons/JusDisputeActions'),
+    TicketActions: () => import('@/views/main/negotiation/partials/ticket/TicketHeader'),
     DisputeTips: () => import('./partials/DisputeTips'),
     DisputeNegotiation: () => import('./partials/DisputeNegotiation'),
     VueDraggableResizable: () => import('vue-draggable-resizable'),
@@ -543,6 +551,10 @@ export default {
 
     overviewType() {
       return this.workspaceProperties.DISPUTE_OVERVIEW || 'TICKET'
+    },
+
+    actionsType() {
+      return this.workspaceProperties.DISPUTE_ACTIONS || 'DISPUTE'
     },
 
     sendMessageHeightComputed() {

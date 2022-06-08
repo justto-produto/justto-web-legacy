@@ -43,7 +43,7 @@
                 />
               </el-tag>
             </el-option>
-            <div slot="empty">
+            <div>
               <el-button
                 type="text"
                 class="overview-tags__add-button"
@@ -660,15 +660,18 @@ export default {
   &__select-popper {
     width: 310px;
     margin-left: -10px;
+
     .el-select-dropdown__list {
       padding-top: 10px;
       padding-right: 10px;
     }
+
     .el-select-dropdown__item {
       padding: 0 10px;
       height: 32px;
       line-height: 32px;
     }
+
     .el-scrollbar__bar.is-vertical {
       opacity: 1;
       width: 8px;
@@ -676,10 +679,30 @@ export default {
         background-color: #c8c8c8;
       }
     }
+
+    .el-scrollbar {
+      .el-select-dropdown__wrap {
+        .el-scrollbar__view {
+          div {
+            .overview-tags__add-button {
+              padding: 10px;
+              font-size: 13px;
+              margin: 0 10px;
+
+              .el-icon-plus {
+                margin-right: 2px;
+              }
+            }
+          }
+        }
+      }
+    }
   }
   &__add-button {
     padding: 10px;
     font-size: 13px;
+    margin: 0 10px;
+
     .el-icon-plus {
       margin-right: 2px;
     }
