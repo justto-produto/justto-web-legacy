@@ -24,7 +24,8 @@ const accountGetters = {
       accountId: getters.accountId,
       personId: getters.loggedPersonId
     }
-  }
+  },
+  isOmnichannelGrouping: state => state.preferences?.properties?.OMNICHANNEL_GROUPING_TYPE === 'GROUPED'
 }
 
 export default accountGetters

@@ -223,6 +223,7 @@
               :value="occurrence"
             />
           </el-card>
+
           <div
             v-else-if="occurrence.type !== 'NOTE'"
             :class="getDirection(occurrence.interaction)"
@@ -251,6 +252,7 @@
                 <i class="el-icon-question" />
               </el-tooltip>
             </div>
+
             <div class="dispute-view-occurrences__card-box">
               <attachment-occurrence
                 v-if="occurrence.interaction.type === 'ATTACHMENT'"
@@ -260,12 +262,14 @@
                 shadow="never"
                 class="dispute-view-occurrences__card"
               />
+
               <NpsInteraction
                 v-else-if="occurrence.interaction.type === 'NPS'"
                 :occurrence="occurrence"
                 :value="occurrence.interaction"
                 class="dispute-view-occurrences__card-box-nps"
               />
+
               <PhoneCallOccurrence
                 v-else-if="occurrence.interaction.type === 'PHONE_CALL'"
                 :occurrence="occurrence"
@@ -299,11 +303,13 @@
                       @click.prevent="hideFullMessage(occurrence.id)"
                     > ver menos</a>
                   </div>
+
                   <span>
                     <span
                       :ref="getMessageRef(occurrence)"
                       v-html="buildContent(occurrence)"
                     />
+
                     <span
                       v-if="buildCommunicationType(occurrence).startsWith('WHATSAPP') && buildWhatsappStatus(occurrence.interaction.message, occurrence.executionDateTime || occurrence.createAt) && occurrence.interaction.direction !== 'INBOUND'"
                       class="dispute-view-occurrences__whats-status"
@@ -319,6 +325,7 @@
                         <jus-icon :icon="buildWhatsappStatus(occurrence.interaction.message, occurrence.executionDateTime || occurrence.createAt).icon" />
                       </el-tooltip>
                     </span>
+
                     <span
                       v-if="buildCommunicationType(occurrence).startsWith('SMS') && buildEmailStatus(occurrence)"
                       class="dispute-view-occurrences__whats-status"

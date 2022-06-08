@@ -81,16 +81,11 @@
     </p>
 
     <div
-      v-if="!toPrint && !hiddenSendStatus"
+      v-if="!toPrint && !hiddenSendStatus && !['CANCELED'].includes(status)"
       class="scheduler-container__status"
     >
       <br>
       <span class="scheduler-container__status-about">
-        {{ sendDate | moment('HH:mm') }}
-        <span v-if="sendStatus !== 'default' && !directionIn">
-          •
-        </span>
-
         <el-tooltip
           :disabled="!sendStatusDate"
         >
@@ -105,12 +100,6 @@
             :icon="`status-${sendStatus}`"
           />
         </el-tooltip>
-
-        <GroupedOccurrences
-          :have="!hideGrouping && haveGroupedOccurrences"
-          :occurrences="groupedOccurrences"
-          :parent-id="occurrence.id"
-        />
       </span>
     </div>
   </section>
@@ -121,10 +110,6 @@ import { mapActions, mapGetters } from 'vuex'
 import communicationSendStatus from '@/utils/mixins/communicationSendStatus'
 
 export default {
-  components: {
-    GroupedOccurrences: () => import('./partials/groupedOccurrence')
-  },
-
   mixins: [communicationSendStatus],
 
   props: {

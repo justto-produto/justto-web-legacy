@@ -165,15 +165,6 @@
         {{ badNote }}
       </em>
     </div>
-
-    <span
-      v-if="!hideInfo"
-      class="phone-container__about negotiation-occurrence-about"
-    >
-      <span class="phone-container__about__time">
-        {{ sendDate | moment('HH:mm') }}
-      </span>
-    </span>
   </article>
 </template>
 
