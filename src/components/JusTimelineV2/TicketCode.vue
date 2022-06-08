@@ -106,7 +106,7 @@ export default {
           case 21:
             return {
               available: false,
-              icon: 'el-icon-question',
+              icon: 'el-icon-lock',
               text: 'Processo em segredo de Justiça.'
             }
           default:
@@ -198,7 +198,8 @@ export default {
         margin-left: 4px;
         &:first-child { margin-left: 0; }
         &.el-icon-info { color: $--color-primary; }
-        &.el-icon-error { color: $--color-danger; }
+        &.el-icon-error,
+        &.el-icon-lock { color: $--color-danger; }
         &.el-icon-loading { color: $--color-text-secondary; }
       }
     }
