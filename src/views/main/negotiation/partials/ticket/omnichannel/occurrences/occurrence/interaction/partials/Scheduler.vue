@@ -6,6 +6,7 @@
     >
       {{ sendDate | moment('[Em] DD/MM [-] HH:mm') }}
     </div>
+
     <span
       v-if="!hiddenContactInfo"
       class="scheduler-container__contact"
@@ -59,6 +60,26 @@
       </span>
     </div>
 
+    <!-- SAAS-5036 -->
+    <p
+      v-if="isCanceled"
+      class="scheduler-container__alert"
+    >
+      <i class="el-icon-close" />
+
+      Mensagem automática agendada foi <strong>CANCELADA</strong>.
+    </p>
+
+    <!-- isWaiting -->
+    <p
+      v-else-if="isWaiting"
+      class="scheduler-container__alert"
+    >
+      <jus-icon icon="clock" />
+
+      Mensagem agendada para {{ scheduledTime | moment('DD/MM[ às ]HH:mm') }} que ainda não foi entregue.
+    </p>
+
     <div
       v-if="!toPrint && !hiddenSendStatus"
       class="scheduler-container__status"
@@ -103,7 +124,9 @@ export default {
   components: {
     GroupedOccurrences: () => import('./partials/groupedOccurrence')
   },
+
   mixins: [communicationSendStatus],
+
   props: {
     value: {
       type: Object,
@@ -194,6 +217,18 @@ export default {
 
     hasError() {
       return this.interaction?.message?.parameters?.FAILED_SEND
+    },
+
+    isCanceled() {
+      return this.occurrence?.interaction?.message?.status === 'CANCELED'
+    },
+
+    isWaiting() {
+      return this.occurrence?.interaction?.message?.status === 'WAITING' && this.occurrence?.interaction?.type === 'SCHEDULER'
+    },
+
+    scheduledTime() {
+      return this.occurrence?.interaction?.message?.scheduledTime?.dateTime
     }
   },
 
@@ -286,6 +321,15 @@ export default {
     .scheduler-container__contact-address {
       cursor: copy;
       display: flex;
+    }
+  }
+
+  .scheduler-container__alert {
+    font-style: italic;
+
+    i, img {
+      width: 14px;
+      margin-bottom: -1.2px;
     }
   }
 }
