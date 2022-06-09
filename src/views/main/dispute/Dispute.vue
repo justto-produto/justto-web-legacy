@@ -37,7 +37,7 @@
             @dragging="onDrag"
           />
           <!-- ACTIONS -->
-          <TicketActions
+          <TicketHeader
             v-if="actionsType === 'TICKET'"
             is-in-dispute
             :is-collapsed.sync="isCollapsed"
@@ -471,7 +471,7 @@ export default {
     DisputeOverview: () => import('./partials/DisputeOverview/DisputeOverview'),
     TicketOverview: () => import('@/views/main/negotiation/partials/ticket/overview/Overview.vue'),
     JusDisputeActions: () => import('@/components/buttons/JusDisputeActions'),
-    TicketActions: () => import('@/views/main/negotiation/partials/ticket/TicketHeader'),
+    TicketHeader: () => import('@/views/main/negotiation/partials/ticket/TicketHeader'),
     DisputeTips: () => import('./partials/DisputeTips'),
     DisputeNegotiation: () => import('./partials/DisputeNegotiation'),
     VueDraggableResizable: () => import('vue-draggable-resizable'),
@@ -763,6 +763,7 @@ export default {
       'resetRecipients',
       'verifyRecipient',
       'setMessageBackup',
+      'getTicketOverview',
       'getDisputeStatuses',
       'setAccountProperty',
       'getLastInteractions',
@@ -961,6 +962,7 @@ export default {
       this.setAccountProperty({ PREFERRED_INTERFACE: 'DISPUTE' })
       this.socketAction('subscribe', this.id)
       this.$store.commit('clearDisputeOccurrences')
+      this.getTicketOverview(this.id)
       this.$store.dispatch('getDispute', this.id).then(dispute => {
         if (!dispute || dispute.archived) this.backToManagement()
         else this.$store.dispatch('getDisputeTags', this.id)
