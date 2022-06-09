@@ -554,7 +554,7 @@ export default {
     },
 
     actionsType() {
-      return this.workspaceProperties.DISPUTE_ACTIONS || 'DISPUTE'
+      return this.workspaceProperties.DISPUTE_ACTIONS || 'TICKET'
     },
 
     sendMessageHeightComputed() {
