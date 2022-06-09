@@ -8,7 +8,7 @@
     </div>
 
     <span
-      v-if="!hiddenContactInfo"
+      v-if="!hideInfo"
       class="scheduler-container__contact"
     >
       <JusIcon
@@ -128,7 +128,7 @@ export default {
       required: true
     },
 
-    hiddenContactInfo: {
+    hideInfo: {
       type: Boolean,
       default: false
     },
