@@ -374,7 +374,6 @@ export default {
     .interaction-container__balloon-content {
       width: 100%;
       min-width: 10vw;
-      padding-left: 8px;
     }
 
     &.COLORFUL-whatsapp {
