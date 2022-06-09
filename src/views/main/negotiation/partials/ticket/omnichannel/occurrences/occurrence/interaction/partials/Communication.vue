@@ -8,6 +8,7 @@
       {{ sendDate | moment('[Em] DD/MM [-] HH:mm') }}
     </div>
     <div
+      v-if="!hideInfo"
       class="communication-container__email"
       :class="directionIn || toPrint ? 'INBOUND' : 'OUTBOUND'"
     >
@@ -60,11 +61,6 @@
       v-if="!toPrint"
       class="communication-container__about"
     >
-      {{ sendDate | moment('HH:mm') }}
-      <span v-if="sendStatus !== 'default' && !directionIn">
-        •
-      </span>
-      <!-- :content="sendStatusDate" -->
       <el-tooltip
         :disabled="!sendStatusDate"
       >
@@ -79,11 +75,6 @@
           :icon="`status-${sendStatus}`"
         />
       </el-tooltip>
-      <GroupedOccurrences
-        :have="!hideGrouping && haveGroupedOccurrences"
-        :occurrences="groupedOccurrences"
-        :parent-id="occurrence.id"
-      />
 
       <el-tooltip
         :open-delay="600"
@@ -110,10 +101,6 @@ import { mapActions, mapGetters } from 'vuex'
 import communicationSendStatus from '@/utils/mixins/communicationSendStatus'
 
 export default {
-  components: {
-    GroupedOccurrences: () => import('./partials/groupedOccurrence')
-  },
-
   mixins: [communicationSendStatus],
 
   props: {
@@ -127,7 +114,7 @@ export default {
       required: true
     },
 
-    hideGrouping: {
+    hideInfo: {
       type: Boolean,
       default: false
     }

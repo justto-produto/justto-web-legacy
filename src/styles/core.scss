@@ -316,3 +316,8 @@ i.el-icon-delete {
     color: $--color-primary;
   }
 }
+
+.display-break {
+  flex-basis: 100%;
+  height: 0;
+}

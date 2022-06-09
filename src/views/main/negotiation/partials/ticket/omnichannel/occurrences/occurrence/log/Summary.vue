@@ -63,7 +63,7 @@
   </section>
 
   <article v-else>
-    <Summary :occurrence="occurrence" />
+    <Summary :value="occurrence" />
   </article>
 </template>
 
@@ -147,11 +147,12 @@ export default {
     },
 
     isGrouping() {
-      return this.userConfigs?.OMNICHANNEL_GROUPING_TYPE === 'GROUPED' && 0
+      return this.userConfigs?.OMNICHANNEL_GROUPING_TYPE === 'GROUPED'
     }
   },
 
   mounted() {
+    console.log(this.communicationTypes)
     this.communicationTypes.forEach(communicationType => {
       this.getOccurrences(communicationType)
     })

@@ -8,7 +8,7 @@
       placement="top-start"
       trigger="hover"
       :open-delay="250"
-      :disabled="!have || showGroupingExtension"
+      :disabled="!have || isOmnichannelGrouping"
       popper-class="grouped-occurrences"
       class="grouped-occurrences__poppover"
     >
@@ -32,18 +32,18 @@
         slot="reference"
         @click="openGrouped"
       >
-        <JusIcon
-          v-if="!showGroupingExtension"
+        <!-- <JusIcon
+          v-if="!isOmnichannelGrouping"
           icon="running"
           :style="{ width: '16px' }"
-        />
+        /> -->
 
-        <span v-if="showGroupingExtension">
+        <span>
           (+{{ occurrences.length }})
         </span>
 
         <i
-          v-if="showGroupingExtension"
+          v-if="isOmnichannelGrouping"
           :class="{'el-icon-caret-bottom': !isOpenGroupedOccurrences, 'el-icon-caret-top': isOpenGroupedOccurrences}"
         />
       </span>
@@ -74,6 +74,7 @@ export default {
   computed: {
     ...mapGetters([
       'getGroupedOccurrencesById',
+      'isOmnichannelGrouping',
       'userPreferences'
     ]),
 
@@ -83,10 +84,6 @@ export default {
 
     isOpenGroupedOccurrences() {
       return this.getGroupedOccurrencesById(this.parentId).length > 0
-    },
-
-    showGroupingExtension() {
-      return this.userPreferences?.properties?.OMNICHANNEL_GROUPING_TYPE === 'GROUPED'
     }
   },
 

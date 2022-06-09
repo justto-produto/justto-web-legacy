@@ -6,8 +6,9 @@
     >
       {{ sendDate | moment('[Em] DD/MM [-] HH:mm') }}
     </div>
+
     <span
-      v-if="!hiddenContactInfo"
+      v-if="!hideInfo"
       class="scheduler-container__contact"
     >
       <JusIcon
@@ -59,17 +60,32 @@
       </span>
     </div>
 
+    <!-- SAAS-5036 -->
+    <p
+      v-if="isCanceled"
+      class="scheduler-container__alert"
+    >
+      <i class="el-icon-close" />
+
+      Mensagem automática agendada foi <strong>CANCELADA</strong>.
+    </p>
+
+    <!-- isWaiting -->
+    <p
+      v-else-if="isWaiting"
+      class="scheduler-container__alert"
+    >
+      <jus-icon icon="clock" />
+
+      Mensagem agendada para {{ scheduledTime | moment('DD/MM[ às ]HH:mm') }} que ainda não foi entregue.
+    </p>
+
     <div
-      v-if="!toPrint && !hiddenSendStatus"
+      v-if="!toPrint && !hiddenSendStatus && !['CANCELED'].includes(status)"
       class="scheduler-container__status"
     >
       <br>
       <span class="scheduler-container__status-about">
-        {{ sendDate | moment('HH:mm') }} aqui
-        <span v-if="sendStatus !== 'default' && !directionIn">
-          •
-        </span>
-
         <el-tooltip
           :disabled="!sendStatusDate"
         >
@@ -84,12 +100,6 @@
             :icon="`status-${sendStatus}`"
           />
         </el-tooltip>
-
-        <GroupedOccurrences
-          :have="!hideGrouping && haveGroupedOccurrences"
-          :occurrences="groupedOccurrences"
-          :parent-id="occurrence.id"
-        />
       </span>
     </div>
   </section>
@@ -100,10 +110,8 @@ import { mapActions, mapGetters } from 'vuex'
 import communicationSendStatus from '@/utils/mixins/communicationSendStatus'
 
 export default {
-  components: {
-    GroupedOccurrences: () => import('./partials/groupedOccurrence')
-  },
   mixins: [communicationSendStatus],
+
   props: {
     value: {
       type: Object,
@@ -120,7 +128,7 @@ export default {
       required: true
     },
 
-    hiddenContactInfo: {
+    hideInfo: {
       type: Boolean,
       default: false
     },
@@ -165,16 +173,12 @@ export default {
     },
 
     text() {
-      if (this.interaction?.message?.resume) {
-        return this.interaction.message.resume
-      } else if (this.interaction?.message?.parameters?.SUBJECT) {
-        return this.interaction?.message?.parameters?.SUBJECT
-      }
-      return ''
+      return this.interaction?.message?.resume || this.interaction?.message?.parameters?.SUBJECT || this.occurrence?.description || ''
     },
 
     message() {
       const { messageId } = this.interaction.message
+
       return this.fullMessages[messageId] || this.text
     },
 
@@ -194,6 +198,18 @@ export default {
 
     hasError() {
       return this.interaction?.message?.parameters?.FAILED_SEND
+    },
+
+    isCanceled() {
+      return this.occurrence?.interaction?.message?.status === 'CANCELED'
+    },
+
+    isWaiting() {
+      return this.occurrence?.interaction?.message?.status === 'WAITING' && this.occurrence?.interaction?.type === 'SCHEDULER'
+    },
+
+    scheduledTime() {
+      return this.occurrence?.interaction?.message?.scheduledTime?.dateTime
     }
   },
 
@@ -286,6 +302,15 @@ export default {
     .scheduler-container__contact-address {
       cursor: copy;
       display: flex;
+    }
+  }
+
+  .scheduler-container__alert {
+    font-style: italic;
+
+    i, img {
+      width: 14px;
+      margin-bottom: -1.2px;
     }
   }
 }

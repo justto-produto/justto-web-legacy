@@ -12,19 +12,21 @@
         style="text-align: center;"
         v-html="avatarProps.name"
       />
+
       <JusAvatarUser
         v-if="showAvatar"
         v-bind="avatarProps"
       />
     </el-tooltip>
 
-    <div :class="`${interaction.direction} ${coloringType}-${messageType} ${!flat ? 'interaction-container__balloon' : ''}`">
+    <div :class="`${interaction.direction} ${coloringType}-${messageType} ${!flat ? 'interaction-container__balloon' : ''} ${scheduled ? 'SCHEDULED' : ''}`">
       <div class="interaction-container__balloon-content">
         <component
           :is="type"
           :value="interaction"
           :occurrence="value"
           :hide-grouping="hideGrouping"
+          :hide-info="isGrouping"
         />
       </div>
     </div>
@@ -46,6 +48,14 @@
         @click="reply"
       />
     </span>
+
+    <div class="display-break" />
+
+    <InteractionStatus
+      :value="interaction"
+      :occurrence="value"
+      :hide-grouping="hideGrouping"
+    />
 
     <div
       v-if="showGrouped && groupedOccurrences.length"
@@ -99,7 +109,8 @@ export default {
     MANUAL: () => import('./partials/Manual'),
     NPS: () => import('./partials/Nps'),
     WHATSAPP: () => import('./partials/Whatsapp.vue'),
-    WarningLGPD: () => import('@/components/dialogs/WarningLGPD')
+    WarningLGPD: () => import('@/components/dialogs/WarningLGPD'),
+    InteractionStatus: () => import('./partials/InteractionStatus')
   },
 
   props: {
@@ -114,6 +125,11 @@ export default {
     },
 
     hideGrouping: {
+      type: Boolean,
+      default: false
+    },
+
+    scheduled: {
       type: Boolean,
       default: false
     }
@@ -136,7 +152,8 @@ export default {
       isAdminProfile: 'isAdminProfile',
       negotiators: 'getTicketOverviewNegotiators',
       getGroupedOccurrencesById: 'getGroupedOccurrencesById',
-      properties: 'userProperties'
+      properties: 'userProperties',
+      isGrouping: 'isOmnichannelGrouping'
     }),
 
     type() {
@@ -356,7 +373,7 @@ export default {
 
     .interaction-container__balloon-content {
       width: 100%;
-      min-width: 64px;
+      min-width: 10vw;
     }
 
     &.COLORFUL-whatsapp {
@@ -392,6 +409,10 @@ export default {
       flex-direction: row-reverse;
     }
 
+    &.SCHEDULED {
+      border: 2px dashed $--color-black;
+    }
+
     // &.ballon-email {
     //   border-color: #DFF4FE;
     // }
@@ -424,6 +445,7 @@ export default {
       display: none;
     }
   }
+
   .active-icon:hover {
     .interaction-container__reply-icon {
       display: none;
