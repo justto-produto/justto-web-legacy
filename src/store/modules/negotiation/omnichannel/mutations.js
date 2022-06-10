@@ -86,6 +86,7 @@ export default {
     const validationInteractions = {
       MESSAGES: [
         'NPS',
+        'ACTION',
         'PHONE_CALL',
         'ATTACHMENT',
         'COMMUNICATION',
@@ -100,6 +101,7 @@ export default {
       NOTES: null,
       OCCURRENCES: [
         'CLICK',
+        'ACTION',
         'ATTACHMENT',
         'PHONE_CALL',
         'VISUALIZATION',

@@ -36,7 +36,7 @@ const omnichannelActions = {
     dispatch('setEditorBackup')
   },
 
-  getOccurrences({ getters, commit }, disputeId) {
+  getOccurrences({ getters }, disputeId) {
     const params = {
       ...getters.getOccurrencesFilter,
       type: getters.getOccurrencesFilter.type === 'LOG' ? null : getters.getOccurrencesFilter.type

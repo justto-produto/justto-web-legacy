@@ -34,6 +34,7 @@
       >
         {{ date }}
       </el-card>
+
       <li
         v-for="(occurrence, occurrenceIndex) in datedOccurrence"
         :key="`occurrency-${occurrenceIndex}`"
@@ -77,7 +78,7 @@
           </div>
 
           <Log
-            v-else-if="occurrence.type === 'LOG' && occurrence.properties.HANDLE_UNKNOW_PARTY && occurrence.properties.HANDLE_UNKNOW_PARTY === 'TRUE'"
+            v-else-if="['LOG', 'ACTION'].includes(occurrence.type) && occurrence.properties.HANDLE_UNKNOW_PARTY && occurrence.properties.HANDLE_UNKNOW_PARTY === 'TRUE'"
             :value="occurrence"
           />
 
