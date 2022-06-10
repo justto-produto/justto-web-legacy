@@ -95,6 +95,8 @@ export default {
     ]),
 
     openGrouped() {
+      if (!this.isOmnichannelGrouping) return
+
       if (this.isOpenGroupedOccurrences) {
         this.resetGroupedOccurrencesByOccurrenceId(this.parentId)
       } else {
