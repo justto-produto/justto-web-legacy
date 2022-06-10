@@ -48,8 +48,8 @@ export default {
         NOTE: ['NOTE'],
         LOG: [
           'LOG',
-          'VISUALIZATION',
           'CLICK',
+          'ACTION',
           'VISUALIZATION',
           'NEGOTIATOR_ACCESS'
         ],
