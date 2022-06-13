@@ -79,29 +79,6 @@
 
       Mensagem agendada para {{ scheduledTime | moment('DD/MM[ às ]HH:mm') }} que ainda não foi entregue.
     </p>
-
-    <div
-      v-if="!toPrint && !hiddenSendStatus && !['CANCELED'].includes(status)"
-      class="scheduler-container__status"
-    >
-      <br>
-      <span class="scheduler-container__status-about">
-        <el-tooltip
-          :disabled="!sendStatusDate"
-        >
-          <span slot="content">
-            {{ {'readed': 'Lida', 'recived': 'Recebida', 'sent': 'Enviada'}[sendStatus] }}
-            {{ sendStatusDate | moment() }}
-          </span>
-
-          <JusIcon
-            v-if="sendStatus !== 'default' && !directionIn"
-            class="scheduler-container__status-about-icon"
-            :icon="`status-${sendStatus}`"
-          />
-        </el-tooltip>
-      </span>
-    </div>
   </section>
 </template>
 
