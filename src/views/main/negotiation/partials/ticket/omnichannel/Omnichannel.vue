@@ -35,7 +35,7 @@ export default {
     }),
 
     isInNegotiation() {
-      return this.$route.name === 'ticket'
+      return ['ticket', 'dispute'].includes(this.$route.name)
     }
   }
 }

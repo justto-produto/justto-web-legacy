@@ -36,6 +36,7 @@
             :y="y"
             @dragging="onDrag"
           />
+
           <!-- ACTIONS -->
           <TicketHeader
             v-if="actionsType === 'TICKET'"
@@ -50,9 +51,12 @@
             :tab="typingTab"
             @fetch-data="fetchData"
           />
+
           <!-- MESSAGES -->
+          <TicketOmnichannel v-if="omnichannelIsTicket" />
+
           <dispute-occurrences
-            v-if="['1', '3'].includes(typingTab)"
+            v-else-if="['1', '3'].includes(typingTab)"
             ref="disputeOccurrences"
             :key="disputeOccurrencesKey"
             :dispute-id="id"
@@ -74,11 +78,11 @@
           />
 
           <NegotiationEditor
-            v-if="useTicketComponents"
+            v-if="useTicketComponents && !omnichannelIsTicket"
           />
 
           <div
-            v-else
+            v-else-if="!omnichannelIsTicket"
             :style="{ height: sendMessageHeightComputed }"
             class="dispute-view__send-message"
           >
@@ -469,7 +473,7 @@ export default {
     DisputeOccurrences: () => import('./partials/DisputeOccurrences'),
     DisputeNotes: () => import('./partials/DisputeNotes'),
     DisputeOverview: () => import('./partials/DisputeOverview/DisputeOverview'),
-    TicketOverview: () => import('@/views/main/negotiation/partials/ticket/overview/Overview.vue'),
+    TicketOverview: () => import('@/views/main/negotiation/partials/ticket/overview/Overview'),
     JusDisputeActions: () => import('@/components/buttons/JusDisputeActions'),
     TicketHeader: () => import('@/views/main/negotiation/partials/ticket/TicketHeader'),
     DisputeTips: () => import('./partials/DisputeTips'),
@@ -477,7 +481,8 @@ export default {
     VueDraggableResizable: () => import('vue-draggable-resizable'),
     DisputeQuickReplyEditor: () => import('@/components/layouts/DisuteQuickReplyEditor'),
     ExpiredDisputeAlert: () => import('@/components/dialogs/ExpiredDisputeAlert'),
-    NegotiationEditor: () => import('@/views/main/negotiation/partials/ticket/omnichannel/editor/Editor.vue'),
+    TicketOmnichannel: () => import('@/views/main/negotiation/partials/ticket/omnichannel/Omnichannel'),
+    NegotiationEditor: () => import('@/views/main/negotiation/partials/ticket/omnichannel/editor/Editor'),
     JusDragArea
   },
 
@@ -553,8 +558,20 @@ export default {
       return this.workspaceProperties.DISPUTE_OVERVIEW || 'TICKET'
     },
 
+    overviewIsTicket() {
+      return this.overviewType === 'TICKET'
+    },
+
     actionsType() {
       return this.workspaceProperties.DISPUTE_ACTIONS || 'TICKET'
+    },
+
+    omnichannelType() {
+      return this.workspaceProperties.DISPUTE_OMNICHANNEL || 'DISPUTE'
+    },
+
+    omnichannelIsTicket() {
+      return this.omnichannelType === 'TICKET'
     },
 
     sendMessageHeightComputed() {
@@ -657,7 +674,7 @@ export default {
     },
 
     useTicketComponents() {
-      return this.dispute && this.overviewType === 'TICKET'
+      return this.dispute && this.overviewIsTicket
     }
   },
 

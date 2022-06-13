@@ -172,7 +172,7 @@
                 content="Cadastre o CPF da parte para selecionar um e-mail"
               >
                 <span>
-                  <el-checkbox 
+                  <el-checkbox
                     :value="Object.keys(recipients).includes(role.name) && recipients[role.name].email === email.address"
                     :label="true"
                     :name="role.name"
