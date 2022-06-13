@@ -173,6 +173,8 @@ article {
   margin: 10px 24px 0px;
 
   .note-container {
+    word-break: break-word;
+
     .note-container__header {
       display: flex;
       align-items: center;
