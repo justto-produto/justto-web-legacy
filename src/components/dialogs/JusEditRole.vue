@@ -25,6 +25,7 @@
           autofocus=""
         />
       </el-form-item>
+
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item
@@ -59,6 +60,7 @@
           </el-form-item>
         </el-col>
       </el-row>
+
       <div
         v-if="party.roles && party.roles.includes('LAWYER')"
         class="flex-row"
@@ -259,6 +261,7 @@
           </template>
         </el-table-column>
       </el-table>
+
       <h4>
         Contas bancárias
         <a
@@ -405,6 +408,7 @@ export default {
       'addPhoneToDisputeRole',
       'addOabToDisputeRole',
       'createTicketRoleBankAccount',
+      'setTicketRoleBankAccount',
       'getTicketOverviewParty'
     ]),
 
@@ -502,7 +506,7 @@ export default {
               baccount.type === account.type
           })
 
-          this.linkAccount({ bankAccountId: baccount.id, personId, disputeId })
+          this.setTicketRoleBankAccount({ bankAccountId: baccount.id, personId, disputeId })
         }
 
         this.$jusNotification({
@@ -511,8 +515,8 @@ export default {
           message: 'Conta bancária <strong>criada</strong> com sucesso.',
           type: 'success'
         })
-      }).catch(err => {
-        this.$jusNotification(err)
+      }).catch(error => {
+        this.$jusNotification({ error })
       }).finally(_ => {
         this.closeBankAccountDialog()
       })
