@@ -20,9 +20,11 @@
 
         {{ getMemberName(notification.fromAccountId) | resumedName }}
 
-        mencionou você.
+        citou você na disputa {{ `#${notification.disputeId}` }}.
       </div>
     </span>
+
+    <!-- <div class="display-break" /> -->
 
     <span class="notification__drawer__list-item-date">
       {{ parseDate(notification.createdAt) }}
@@ -86,11 +88,10 @@ export default {
   padding: 8px 2%;
   border-radius: 4px;
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  justify-content: space-between !important;
   align-items: center;
-  flex-wrap: nowrap;
-  gap: 4px;
+  flex-flow: row wrap !important;
+  gap: 0 8px !important;
 
   .notification__drawer__list-item-name {
     display: flex;
@@ -98,6 +99,8 @@ export default {
     gap: 4px;
     flex-wrap: nowrap;
     color: $--color-text-secondary;
+    width: 100%;
+    word-break: break-word;
 
     * {
       flex-wrap: nowrap;

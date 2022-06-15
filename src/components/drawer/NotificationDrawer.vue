@@ -442,7 +442,7 @@ export default {
 
       .notification__drawer__list-notifications-item {
         width: 100%;
-        padding: 14px 0;
+        padding: 8px 0;
         cursor: pointer;
 
         .notification__drawer__list-item {

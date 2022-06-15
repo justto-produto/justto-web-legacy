@@ -21,7 +21,7 @@
           shape="circle"
           size="sm"
         />
-        <span>{{ getMemberName(notifications[0].fromAccountId) | resumedName }} mencionou você.</span>
+        <span>{{ getMemberName(notifications[0].fromAccountId) | resumedName }} citou você.</span>
         <el-badge
           :value="notifications.length"
           type="primary"
