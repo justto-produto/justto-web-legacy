@@ -54,7 +54,10 @@
         prop="portifolios"
         class-name="portifolios-column"
       >
-        <template slot="header">
+        <template
+          v-if="!hideSearch"
+          slot="header"
+        >
           <div class="el-input el-input--mini">
             <input
               v-model="search"
@@ -121,9 +124,21 @@ import { mapActions, mapGetters, mapMutations } from 'vuex'
 import _ from 'lodash'
 
 export default {
+  props: {
+    filterTerm: {
+      type: String,
+      default: () => ''
+    },
+
+    hideSearch: {
+      type: Boolean,
+      default: false
+    }
+  },
+
   data: () => ({
     isLoading: false,
-    search: '',
+    modelSearch: '',
     dialog: {
       visible: false,
       workspace: null,
@@ -139,6 +154,16 @@ export default {
       portifolios: 'getPortifolios',
       portifoliosByWorkspace: 'getPortifoliosByWorkspace'
     }),
+
+    search: {
+      get() {
+        return this.modelSearch || this.filterTerm
+      },
+
+      set(value) {
+        this.modelSearch = value
+      }
+    },
 
     portifolioById() {
       return (id) => this.portifolios.find(portifolio => Number(portifolio.id) === Number(id))
