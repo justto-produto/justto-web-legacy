@@ -77,6 +77,16 @@
             Financeiro
           </el-dropdown-item>
         </router-link>
+
+        <router-link
+          v-if="isJusttoAdmin"
+          to="/admin-panel"
+        >
+          <el-dropdown-item>
+            Painel Admin
+          </el-dropdown-item>
+        </router-link>
+
         <a
           v-if="workspacesList.length"
           @click.prevent="changeWorkspace"
