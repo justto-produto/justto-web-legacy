@@ -812,7 +812,19 @@
       "UNKNOW": "Este contato foi bloqueado pelo usuário.",
       "COMMUNICATION_OPT_OUT": "Usuário optou por não receber mensagens nesse e-mail.",
       "LAW_FIRM_DOMAIN": "Contato com domínio de e-mail bloqueado para recebimento de mensagem.",
-      "WORKSPACE_BLOCK_LIST": "Contato bloqueado pela configuração na workspace."
+      "WORKSPACE_BLOCK_LIST": "Contato bloqueado pela configuração na workspace.",
+      "PERSON_DOCUMENT": "Usuário optou por não receber mensagens da plataforma.",
+      "LAWSUIT": "Usuário optou por não receber mensagens nesse processo.",
+      "DEFENDANT_NAME": "Usuário optou por não receber mensagens deste réu."
+    },
+    "phone": {
+      "UNKNOW": "Este contato foi bloqueado pelo usuário.",
+      "COMMUNICATION_OPT_OUT": "Usuário optou por não receber mensagens nesse telefone.",
+      "LAW_FIRM_DOMAIN": "Contato com telefone bloqueado para recebimento de mensagem.",
+      "WORKSPACE_BLOCK_LIST": "Contato bloqueado pela configuração na workspace.",
+      "PERSON_DOCUMENT": "Usuário optou por não receber mensagens da plataforma.",
+      "LAWSUIT": "Usuário optou por não receber mensagens nesse processo.",
+      "DEFENDANT_NAME": "Usuário optou por não receber mensagens deste réu."
     }
   },
   "document": {

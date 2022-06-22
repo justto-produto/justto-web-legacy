@@ -58,13 +58,14 @@
 
         <!-- :content="blocks[contact.id]" -->
         <el-popover
-          v-if="contact.blocked"
+          v-if="contact.blocked || party.optOutType"
           :open-delay="500"
           placement="top-end"
           trigger="hover"
         >
           <div>
-            {{ blocks[contact.id] || $tc(`blocked.email.${contact.blockedType || 'UNKNOW'}`) }}
+            <!-- {{ blocks[contact.id] || $tc(`blocked.phone.${contact.blockedType || party.optOutType || 'UNKNOW'}`) }} -->
+            {{ getBlockText(contact) }}
           </div>
 
           <div slot="reference">
@@ -72,18 +73,18 @@
               v-model="contact[model]"
               :mask="mask"
               :filter="filter"
-              :is-editable="!disabled && !contact.blocked"
+              :is-editable="!disabled && !(contact.blocked || party.optOutType)"
               :is-deletable="!disabled"
               :class="{
                 'party-contacts__infoline-data--selected': mappedRecipients.includes(contact[model]),
-                'party-contacts__infoline-data--disabled': !contact.isValid || contact.blocked,
-                'party-contacts__infoline-data--secondary': !contact.isMain || contact.blocked
+                'party-contacts__infoline-data--disabled': !contact.isValid || contact.blocked || party.optOutType,
+                'party-contacts__infoline-data--secondary': !contact.isMain || contact.blocked || party.optOutType
               }"
               class="party-contacts__infoline-data"
               @call="makeCall"
               @change="updateContact(contact.id, $event)"
               @delete="removeContact(contact.id)"
-              @click="selectContact(contact[model], contact.isValid, (contact.isMain && !contact.blocked), contact)"
+              @click="selectContact(contact[model], contact.isValid, (contact.isMain && !(contact.blocked || party.optOutType)), contact)"
             />
           </div>
         </el-popover>
@@ -93,18 +94,18 @@
           v-model="contact[model]"
           :mask="mask"
           :filter="filter"
-          :is-editable="!disabled && !contact.blocked"
+          :is-editable="!disabled && !(contact.blocked || party.optOutType)"
           :is-deletable="!disabled"
           :class="{
             'party-contacts__infoline-data--selected': mappedRecipients.includes(contact[model]),
-            'party-contacts__infoline-data--disabled': !contact.isValid || contact.blocked,
-            'party-contacts__infoline-data--secondary': !contact.isMain || contact.blocked
+            'party-contacts__infoline-data--disabled': !contact.isValid || contact.blocked || party.optOutType,
+            'party-contacts__infoline-data--secondary': !contact.isMain || contact.blocked || party.optOutType
           }"
           class="party-contacts__infoline-data"
           @call="makeCall"
           @change="updateContact(contact.id, $event)"
           @delete="removeContact(contact.id)"
-          @click="selectContact(contact[model], contact.isValid, (contact.isMain && !contact.blocked), contact)"
+          @click="selectContact(contact[model], contact.isValid, (contact.isMain && !(contact.blocked || party.optOutType)), contact)"
         />
       </div>
     </span>
@@ -236,6 +237,7 @@ export default {
     processedContacts() {
       const { contactsFiltered, isAllContactsVisible, contactsLength } = this
       const arrayCut = isAllContactsVisible ? contactsLength : 3
+
       return contactsFiltered?.slice(0, arrayCut)
     },
 
@@ -245,7 +247,9 @@ export default {
 
     getBlockText() {
       return (contact) => {
-        return Object.keys(this.blocks).includes(String(contact.id)) ? this.blocks[contact.id] : this.$tc(`blocked.email.${contact.blockedType || 'UNKNOW'}`)
+        const isEmail = (contact.address || '').length > 0
+
+        return Object.keys(this.blocks).includes(String(contact.id)) ? this.blocks[contact.id] : this.$tc(`blocked.${isEmail ? 'email' : 'phone'}.${contact.blockedType || this.party.optOutType || 'UNKNOW'}`)
       }
     }
   },
