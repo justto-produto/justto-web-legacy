@@ -187,9 +187,9 @@
       </div>
     </div>
 
-    <ScheduledCallSwitch v-if="isJusttoDev && false" />
+    <ScheduledCallSwitch v-if="isJusttoDev" />
 
-    <ScheduledCallsQueue v-if="isJusttoDev && false" />
+    <ScheduledCallsQueue v-if="isJusttoDev" />
 
     <CallHelp
       :ending="endingCall"
