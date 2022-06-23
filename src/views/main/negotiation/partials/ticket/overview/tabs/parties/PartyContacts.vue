@@ -289,7 +289,9 @@ export default {
           }
 
           this.getContactBlockReason(params).then(({ reason }) => {
-            this.$set(this.blocks, Number(id), reason)
+            const message = reason || this.$tc(`blocked.${addressType}.${contact.blockedType || 'UNKNOW'}`)
+
+            this.$set(this.blocks, Number(id), message)
           })
         }
       })
