@@ -42,6 +42,7 @@
       </el-alert>
 
       <span class="party-details__infoline-label">Nome completo:</span>
+
       <div class="party-details__icon-info-lawyer">
         <el-tooltip
           :open-delay="600"
