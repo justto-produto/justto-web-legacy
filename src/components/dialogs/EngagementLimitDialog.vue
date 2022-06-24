@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     v-loading="isLoading"
-    title="Tips"
+    title="Entre em contato por telefone"
     :visible.sync="dialogVisible"
     :show-close="false"
     :close-on-click-modal="false"
@@ -12,27 +12,52 @@
     append-to-body
     destroy-on-close
   >
-    <div class="engagement-limit-content">
+    <div class="engagement-limit__content">
+      <el-alert
+        title="Recomendação"
+        class="engagement-limit__alert"
+        type="info"
+        :closable="false"
+        center
+      >
+        <p>
+          Já executamos várias tentativas automáticas de contato,
+          <br>
+          continuaremos tentando via e-mail.
+          <br>
+          <br>
+          Porém, recomendamos que tente realizar ligações telefonicas!
+        </p>
+      </el-alert>
+
+      <h3 class="engagement-limit__label">
+        Contatos disponíveis:
+      </h3>
+
       <div
         v-for="contact of summarizedPartyContacts"
+        v-show="(contact.phones || []).length > 0"
         :key="`party#${contact.id}`"
+        class="engagement-limit__content-item"
       >
         <el-checkbox
-          v-model="checkAll"
-          :indeterminate="isIndeterminate(contact.id)"
-          @change="handleCheckAllChange"
+          :value="isAllCheck(contact.id)"
+          :indeterminate="isIndeterminate(contact.id) && !isAllCheck(contact.id)"
+          @change="handleCheckAllChange(contact.id)"
         >
           <i class="el-icon-user-solid" />
           <span>{{ contact.name }}</span>
         </el-checkbox>
-        <ul>
-          <li
+
+        <el-checkbox-group v-model="toCall">
+          <el-checkbox
             v-for="phone of (contact.phones || [])"
             :key="`phone#${phone.id}`"
+            :label="phone.id"
           >
             {{ phone.number | phoneNumber }}
-          </li>
-        </ul>
+          </el-checkbox>
+        </el-checkbox-group>
       </div>
     </div>
 
@@ -40,12 +65,19 @@
       slot="footer"
       class="dialog-footer"
     >
-      <!-- <el-button @click="dialogVisible = false">Cancel</el-button> -->
       <el-button
-        type="primary"
+        size="mini"
         @click="dialogVisible = false"
       >
-        Ligar
+        Ignorar
+      </el-button>
+      <el-button
+        type="primary"
+        size="mini"
+        :disabled="!toCall.length"
+        @click="handlemMakeCall"
+      >
+        Ligar {{ toCall.length ? `para ${toCall.length} contato(s)` : '' }}
       </el-button>
     </span>
   </el-dialog>
@@ -70,6 +102,7 @@ export default {
   computed: {
     ...mapGetters({
       engagementLimit: 'getEngagementLimit',
+      appInstance: 'getAppInstance',
       dispute: 'dispute'
     }),
 
@@ -85,15 +118,35 @@ export default {
 
     summarizedPartyContacts() {
       return (this.dispute.disputeRoles || []).filter(({ party }) => party === 'CLAIMANT').map(({ id, name, phones }) => {
-        return { id, name, phones }
+        return {
+          id,
+          name,
+          phones: phones.filter(({ archived, blocked, isMain, isValid }) => (!archived && !blocked && isMain && isValid))
+        }
       })
     },
 
-    isIndeterminate() {
+    countContactsSelected() {
       return (contactId) => {
-        return this.summarizedPartyContacts.filter(({ id, phones }) => {
-          return contactId === id && phones.filter(({ number }) => this.toCall.includes(number)).length > 0
-        }).length > 0
+        return (this.summarizedPartyContacts.find(({ id }) => {
+          return id === contactId
+        })?.phones || []).filter(({ id }) => {
+          return this.toCall.includes(id)
+        }).length
+      }
+    },
+
+    isIndeterminate() {
+      return (contactId) => this.countContactsSelected(contactId) > 0
+    },
+
+    isAllCheck: {
+      get() {
+        return (contactId) => {
+          const length = (this.summarizedPartyContacts.find(({ id }) => id === contactId)?.phones || []).length
+
+          return length > 0 && length === this.countContactsSelected(contactId)
+        }
       }
     }
   },
@@ -106,7 +159,10 @@ export default {
   },
 
   methods: {
-    ...mapActions({ getDispute: 'getDispute' }),
+    ...mapActions({
+      getDispute: 'getDispute',
+      addCall: 'addCall'
+    }),
 
     ...mapMutations({ setEngageLimit: 'handleEngageLimit' }),
 
@@ -118,7 +174,87 @@ export default {
           this.isLoading = false
         })
       }
+    },
+
+    handleCheckAllChange(contactId) {
+      const contactPhones = (this.summarizedPartyContacts.find(({ id }) => id === contactId)?.phones || []).map(({ id }) => id)
+
+      const haveInclude = contactPhones.filter(id => this.toCall.includes(id)).length > 0
+      const haveAllInclude = contactPhones.filter(id => this.toCall.includes(id)).length === contactPhones.length
+
+      if (!haveAllInclude && !haveInclude) {
+        this.toCall = [
+          ...this.toCall,
+          ...contactPhones
+        ]
+      } else if (!haveAllInclude && haveInclude) {
+        this.toCall = [
+          ...this.toCall,
+          ...(contactPhones.filter(id => !this.toCall.includes(id)))
+        ]
+      } else {
+        this.toCall = [...this.toCall.filter(id => !contactPhones.includes(id))]
+      }
+    },
+
+    handlemMakeCall() {
+      this.toCall.forEach(phoneId => {
+        const role = (this.dispute?.disputeRoles || []).find(role => {
+          const phoneIds = (role?.phones || []).map(({ id }) => id)
+          return phoneIds.includes(phoneId)
+        })
+
+        const toRoleId = role.id
+        const toRoleName = role.name
+        const number = role?.phones.find(({ id }) => id === phoneId)?.number
+
+        const callVM = {
+          disputeId: Number(this.disputeId),
+          disputeStatus: this.dispute.status,
+          toRoleId,
+          toRoleName,
+          number,
+          appInstance: this.appInstance,
+          contacts: {
+            emails: role?.emails,
+            phones: role?.phones
+          }
+        }
+
+        this.addCall(callVM)
+      })
+
+      this.dialogVisible = false
     }
   }
 }
 </script>
+
+<style lang="scss">
+.engagement-limit-dialog {
+  .el-dialog__body {
+    .engagement-limit__content {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+
+      .engagement-limit__label {
+        margin: 0;
+        font-weight: 600;
+      }
+
+      .engagement-limit__content-item {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        .el-checkbox-group {
+          display: flex;
+          flex-direction: column;
+          padding-left: 16px;
+        }
+      }
+    }
+  }
+}
+</style>
