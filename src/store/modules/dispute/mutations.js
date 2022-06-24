@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import moment from 'moment'
 
+const vue = () => document.getElementById('app')?.__vue__
+
 let newUpdateTimeout = null
 
 const disputeMutations = {
@@ -323,6 +325,21 @@ const disputeMutations = {
       content: undefined,
       pageable: undefined
     })
+  },
+
+  handleEngageLimit(state, { value }) {
+    if (this.getters.canAccessDialer) {
+      Vue.set(state, 'engagementLimitExceeded', value === 'true')
+    } else {
+      vue().$jusNotification({
+        title: 'Atenção',
+        dangerouslyUseHTMLString: true,
+        message: `Já executamos várias tentativas automáticas de contato.
+        <br><br>
+        <strong>Continuaremos tentando via email.</strong>`,
+        type: 'success'
+      })
+    }
   }
 }
 
