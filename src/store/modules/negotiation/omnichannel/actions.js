@@ -50,7 +50,7 @@ const omnichannelActions = {
   getAllOccurrences({ getters }, disputeId) {
     const params = {
       ...getters.getOccurrencesFilter,
-      size: getters.getTotalOccurrences,
+      size: 999999,
       page: 1,
       type: { MESSAGES: 'INTERACTION', NOTES: 'NOTE', OCCURRENCES: null }[getters.getActiveTab]
     }
