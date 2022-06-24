@@ -43,10 +43,12 @@
         <el-checkbox
           :value="isAllCheck(contact.id)"
           :indeterminate="isIndeterminate(contact.id) && !isAllCheck(contact.id)"
+          class="engagement-limit__content-item__checkbox"
           @change="handleCheckAllChange(contact.id)"
         >
-          <i class="el-icon-user-solid" />
-          <span>{{ contact.name }}</span>
+          <div>
+            {{ contact.name }} ({{ translatedPartyType(contact) | capitalize }})
+          </div>
         </el-checkbox>
 
         <el-checkbox-group v-model="toCall">
@@ -71,6 +73,7 @@
       >
         Ignorar
       </el-button>
+
       <el-button
         type="primary"
         size="mini"
@@ -79,6 +82,16 @@
       >
         Ligar {{ toCall.length ? `para ${toCall.length} contato(s)` : '' }}
       </el-button>
+
+      <br><br>
+
+      <sub v-if="toCall.length > 1">
+        *Os contatos seráo adicionados à fila de ligações,
+        <br>
+        que ira executar chamadas para todos
+        <br>
+        os contatos selecionados em sequência.
+      </sub>
     </span>
   </el-dialog>
 </template>
@@ -102,6 +115,7 @@ export default {
   computed: {
     ...mapGetters({
       engagementLimit: 'getEngagementLimit',
+      isRecovery: 'isWorkspaceRecovery',
       appInstance: 'getAppInstance',
       dispute: 'dispute'
     }),
@@ -117,10 +131,12 @@ export default {
     },
 
     summarizedPartyContacts() {
-      return (this.dispute.disputeRoles || []).filter(({ party }) => party === 'CLAIMANT').map(({ id, name, phones }) => {
+      return (this.dispute.disputeRoles || []).filter(({ party }) => party === 'CLAIMANT').map(({ id, name, phones, party, roles }) => {
         return {
           id,
           name,
+          party,
+          roles,
           phones: phones.filter(({ archived, blocked, isMain, isValid }) => (!archived && !blocked && isMain && isValid))
         }
       })
@@ -147,6 +163,24 @@ export default {
 
           return length > 0 && length === this.countContactsSelected(contactId)
         }
+      }
+    },
+
+    translatedPartyType() {
+      return (contact) => {
+        let role = 'UNKNOWN'
+
+        if (contact.roles.includes('PARTY')) {
+          if (contact.roles.includes('LAWYER')) {
+            role = 'OWN_CAUSE'
+          } else {
+            role = 'PARTY'
+          }
+        } else if (contact.roles.includes('LAWYER')) {
+          role = 'LAWYER'
+        }
+
+        return this.$tc(`roles.${role}.CLAIMANT`, this.isRecovery)
       }
     }
   },
