@@ -511,10 +511,11 @@ const disputeActions = {
     })
   },
 
-  sendDisputeAction({ commit, mutation }, params) {
+  sendDisputeAction({ commit, dispatch }, params) {
     return new Promise((resolve, reject) => {
       let request
       if (params.action === 'restart-engagement' || params.action === 'renegotiate') {
+        dispatch('validateEngageLimit', params.disputeId)
         // eslint-disable-next-line
         request = axios.patch(`${disputesPath}/${params.disputeId}/${params.action}`)
       } else if (params.action === 'resend-messages') {
@@ -544,15 +545,18 @@ const disputeActions = {
     })
   },
 
-  restartDisputeRoleEngagement({ _ }, { disputeId, disputeRoleId }) {
+  restartDisputeRoleEngagement({ dispatch }, { disputeId, disputeRoleId }) {
+    dispatch('validateEngageLimit', disputeId)
+
     return axiosDispatch({
       url: `${disputesPath}/${disputeId}/restart-engagement/${disputeRoleId}`,
       method: 'patch'
     })
   },
 
-  restartEngagementByContact({ commit }, params) {
+  restartEngagementByContact({ commit, dispatch }, params) {
     return new Promise((resolve, reject) => {
+      dispatch('validateEngageLimit', params.disputeId)
       // eslint-disable-next-line
       axios.patch(`/api/messages/engagement/${params.disputeId}/address/${params.contact}`)
         .then(response => {
@@ -560,6 +564,13 @@ const disputeActions = {
         }).catch(error => {
           reject(error)
         })
+    })
+  },
+
+  validateEngageLimit({ _ }, disputeId) {
+    return axiosDispatch({
+      url: `${disputesPath}/${disputeId}/communications/engage-limit-reached`,
+      mutation: 'handleEngageLimit'
     })
   },
 
@@ -874,8 +885,10 @@ const disputeActions = {
     })
   },
 
-  restartDisputeValidatingStatus({ _ }, { disputeId, status }) {
+  restartDisputeValidatingStatus({ dispatch }, { disputeId, status }) {
     if (['PENDING'].includes(status)) {
+      dispatch('validateEngageLimit', disputeId)
+
       return axiosDispatch({
         url: `${disputesPath}/${disputeId}/restart-engagement`,
         method: 'PATCH'

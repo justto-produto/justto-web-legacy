@@ -60,7 +60,8 @@ const dispute = {
     prescriptionsList: [],
     timeline: {},
     batchActionsLastUse: {},
-    disputesNeedsRestart: {}
+    disputesNeedsRestart: {},
+    engagementLimitExceeded: false
   },
   mutations: mutations,
   actions: actions,

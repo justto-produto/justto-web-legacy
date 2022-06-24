@@ -70,7 +70,9 @@ const disputeGetters = {
 
   getDisputesNeedsRestart: state => state.disputesNeedsRestart,
 
-  getNotesPagination: state => state.notesQuery
+  getNotesPagination: state => state.notesQuery,
+
+  getEngagementLimit: state => state.engagementLimitExceeded
 }
 
 export default disputeGetters

@@ -38,10 +38,14 @@ const actionsActions = {
     })
   },
 
-  revertStatus({ commit }, params) {
+  revertStatus({ commit, dispatch }, params) {
     let { disputeId, action, status } = params
+
     action = action.toLowerCase().replace('_', '-')
+
     return new Promise((resolve, reject) => {
+      dispatch('validateEngageLimit', disputeId)
+
       axiosDispatch({
         url: `${disputesPath}/${disputeId}/${action}`,
         method: 'PATCH'

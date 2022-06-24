@@ -96,6 +96,8 @@
       @update:contact="restartEngagementFromTimeline"
     />
 
+    <EngagementLimitDialog :dispute-id="routeId" />
+
     <!-- Edição de disputa -->
     <EditDisputeDialog ref="editDisputeDialog" />
   </section>
@@ -120,6 +122,7 @@ export default {
     JusTimeline: () => import('@/components/JusTimeline/JusTimeline'),
     DisputeCodeLink: () => import('@/components/buttons/DisputeCodeLink'),
     TextInlineEditor: () => import('@/components/inputs/TextInlineEditor'),
+    EngagementLimitDialog: () => import('@/components/dialogs/EngagementLimitDialog'),
     AssociateContactsModal: () => import('@/components/dialogs/AssociateContactsModal'),
     EditDisputeDialog: () => import('@/views/main/dispute/partials/DisputeOverview/dialogs/EditDisputeDialog')
   },

@@ -323,6 +323,10 @@ const disputeMutations = {
       content: undefined,
       pageable: undefined
     })
+  },
+
+  handleEngageLimit(state, { value }) {
+    Vue.set(state, 'engagementLimitExceeded', value === 'true')
   }
 }
 
