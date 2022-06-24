@@ -328,7 +328,7 @@ const disputeMutations = {
   },
 
   handleEngageLimit(state, { value }) {
-    if (this.getters.canAccessDialer) {
+    if (this.getters.canAccessDialer && this.getters.isJusttoAdmin) {
       Vue.set(state, 'engagementLimitExceeded', value === 'true')
     } else {
       vue().$jusNotification({
