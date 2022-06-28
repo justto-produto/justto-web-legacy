@@ -52,7 +52,7 @@ export default {
     },
 
     followUpText() {
-      return 'Tente realizar ligações para os contatos!'
+      return 'Ligue para a parte e faça o acordo!'
       // return this.wasViewed ? `Visualizado à ${this.followUpDays} dia${this.followUpDays > 1 ? 's' : ''}` : `Última mensagem enviada a ${this.followUpDays} dia${this.followUpDays > 1 ? 's' : ''}, gostaria de enviar uma nova?`
     },
 
