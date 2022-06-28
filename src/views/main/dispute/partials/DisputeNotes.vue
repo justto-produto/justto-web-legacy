@@ -7,7 +7,14 @@ export default {
   name: 'DisputeNotes',
 
   components: {
-    Occurrences: () => import('@/views/main/negotiation/partials/ticket/omnichannel/occurrences/Occurrences.vue')
+    Occurrences: () => import('@/views/main/negotiation/partials/ticket/omnichannel/occurrences/Occurrences')
+  },
+
+  props: {
+    disputeId: {
+      type: String,
+      default: ''
+    }
   }
 }
 </script>
