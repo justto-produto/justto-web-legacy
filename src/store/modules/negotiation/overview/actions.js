@@ -59,6 +59,12 @@ const overviewActions = {
     }).finally(() => commit('decrementTicketOverviewCountGetters')))
   },
 
+  getTicketOverviewPartyUpdated({ _ }, { disputeId, disputeRoleId }) {
+    return axiosDispatch({
+      url: `${disputeApi}/${disputeId}/parties/${disputeRoleId}`
+    })
+  },
+
   getTicketOverviewProperties({ _ }, disputeId) {
     return validateCurrentId(disputeId, () => axiosDispatch({
       url: `${disputeApi}/${disputeId}/properties`,
