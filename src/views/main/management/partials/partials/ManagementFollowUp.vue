@@ -15,7 +15,7 @@
         class="follow-up-button"
         @click="handleClick"
       >
-        {{ followUpDays }} dias sem retorno da parte
+        {{ followUpBtnText }}
       </el-button>
     </el-tooltip>
   </article>
@@ -31,12 +31,20 @@ export default {
   },
 
   computed: {
-    needFolllowUp() {
-      if (this.dispute?.lastInteraction?.direction === 'OUTBOUND' && ['RUNNING'].includes(this.dispute?.status)) {
-        return this.$moment().diff(this.$moment(this.dispute?.lastInteraction?.createAt?.dateTime), 'hours') > 24
+    wasViewed() {
+      if (this.dispute?.lastInteraction?.direction === 'INBOUND' && ['RUNNING'].includes(this.dispute?.status) && ['VISUALIZATION', 'NEGOTIATOR_ACCESS'].includes(this.dispute?.lastInteraction?.type)) {
+        return this.$moment().diff(this.$moment(this.dispute?.lastInteraction?.createAt?.dateTime), 'hours') >= 24
       }
 
       return false
+    },
+
+    needFolllowUp() {
+      if (this.dispute?.lastInteraction?.direction === 'OUTBOUND' && ['RUNNING'].includes(this.dispute?.status)) {
+        return this.$moment().diff(this.$moment(this.dispute?.lastInteraction?.createAt?.dateTime), 'hours') >= 24
+      }
+
+      return this.wasViewed
     },
 
     followUpDays() {
@@ -44,7 +52,12 @@ export default {
     },
 
     followUpText() {
-      return `Última mensagem enviada a ${this.followUpDays} dias, gostaria de enviar uma nova?`
+      return 'Tente realizar ligações para os contatos!'
+      // return this.wasViewed ? `Visualizado à ${this.followUpDays} dia${this.followUpDays > 1 ? 's' : ''}` : `Última mensagem enviada a ${this.followUpDays} dia${this.followUpDays > 1 ? 's' : ''}, gostaria de enviar uma nova?`
+    },
+
+    followUpBtnText() {
+      return this.wasViewed ? `Visualizado à ${this.followUpDays} dia${this.followUpDays > 1 ? 's' : ''}` : `${this.followUpDays} dia${this.followUpDays > 1 ? 's' : ''} sem retorno da parte`
     }
   },
 
@@ -60,7 +73,9 @@ export default {
 @import '@/styles/colors.scss';
 
 .follow-up-container {
-  .el-button {
+  .follow-up-button {
+    padding: 0;
+
     span {
       color: $--color-secondary;
       font-weight: bold;
