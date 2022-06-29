@@ -296,6 +296,8 @@
         </el-button>
       </span>
     </el-dialog>
+
+    <initOdrDomainDialog ref="initOdrDomainDialog" />
   </div>
 </template>
 
@@ -306,6 +308,10 @@ import ckeditor from '@/utils/mixins/ckeditor'
 
 export default {
   name: 'ConfigureCustomizationsDialog',
+
+  components: {
+    initOdrDomainDialog: () => import('./partials/initOdrDomainDialog')
+  },
 
   mixins: [ckeditor],
 
@@ -411,6 +417,8 @@ export default {
     },
 
     async handleInitDialog(previousDomain = null) {
+      const fallback = () => this.handleInitializedDialog(false)
+
       // Ver se o email existe
       if (this.properties?.CUSTOM_EMAIL_SENDER || previousDomain) {
         // Se não existir
@@ -418,44 +426,36 @@ export default {
 
         this.currentDomain = await this.handleValidateDomain(domain)
       } else { // Se não existir
-        await this.$prompt('Informe o endereço de email utilizado no seu escritório:', 'Email do seu escritório', {
-          confirmButtonText: 'Salvar',
-          cancelButtonText: 'Cancelar',
-          inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
-          inputErrorMessage: 'Email inválido',
-          center: true
-        }).then(({ value }) => {
-          this.form.email = value
+        this.$refs.initOdrDomainDialog.open(({ email }) => {
+          this.form.email = email
 
-          this.handleValidateDomain(value.split('@')[1]).then(domain => {
+          this.handleValidateDomain(email.split('@')[1]).then(domain => {
             this.currentDomain = domain
-          }).catch(() => {
-            return Promise.reject(new Error('Email não informado'))
-          })
-        }).catch(() => {
-          return Promise.reject(new Error('Email não informado'))
-        })
-      }
 
-      return new Promise((resolve, reject) => {
-        this.getWorkspace().then(() => resolve(Boolean(this.currentDomain))).catch(reject)
-      })
+            this.getWorkspace().then(() => {
+              this.handleInitializedDialog(Boolean(this.currentDomain))
+            }).catch(fallback)
+          }).catch(fallback)
+        }, fallback)
+      }
     },
 
     openFeatureDialog() {
-      this.handleInitDialog(this.form.email).then((openCustomizationDialog) => {
-        if (openCustomizationDialog) {
-          this.configureCustomizationsDialogVisible = true
-          this.form = new OdrCustomizationModel({
-            ...this.properties,
-            CUSTOM_EMAIL_SENDER: (this.form.email || this.properties.CUSTOM_EMAIL_SENDER)
-          })
-          this.searchTemplete()
-        } else {
-          this.newDomainForm.domain = this.form.email.split('@')[1]
-          this.configureNewDomainDialogVisible = true
-        }
-      })
+      this.handleInitDialog(this.form.email)
+    },
+
+    handleInitializedDialog(openCustomizationDialog) {
+      if (openCustomizationDialog) {
+        this.configureCustomizationsDialogVisible = true
+        this.form = new OdrCustomizationModel({
+          ...this.properties,
+          CUSTOM_EMAIL_SENDER: (this.form.email || this.properties.CUSTOM_EMAIL_SENDER)
+        })
+        this.searchTemplete()
+      } else {
+        this.newDomainForm.domain = this.form.email.split('@')[1]
+        this.configureNewDomainDialogVisible = true
+      }
     },
 
     handleUpdateDomains() {
