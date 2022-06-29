@@ -43,6 +43,18 @@
                 />
               </el-tag>
             </el-option>
+
+            <div slot="empty">
+              <el-button
+                type="text"
+                class="overview-tags__add-button"
+                size="small"
+                @click="showNewTagForm"
+              >
+                <i class="el-icon-plus" /> Adicionar nova etiqueta
+              </el-button>
+            </div>
+
             <div>
               <el-button
                 type="text"
