@@ -184,14 +184,24 @@ export default {
 
   span {
     font-weight: 300;
+    word-break: break-word;
+    white-space: normal;
   }
 
   &.OUTBOUND {
     flex-direction: row-reverse;
+
+    span {
+      text-align: right;
+    }
   }
 
   &.INBOUND {
     margin-left: 4px;
+
+    span {
+      text-align: left;
+    }
   }
 }
 
