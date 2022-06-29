@@ -6,8 +6,9 @@
     >
       {{ sendDate | moment('[Em] DD/MM [-] HH:mm') }}
     </div>
+
     <span
-      v-if="!hiddenContactInfo"
+      v-if="!hideInfo"
       class="scheduler-container__contact"
     >
       <JusIcon
@@ -59,27 +60,25 @@
       </span>
     </div>
 
-    <div
-      v-if="!toPrint && !hiddenSendStatus"
-      class="scheduler-container__status"
+    <!-- SAAS-5036 -->
+    <p
+      v-if="isCanceled"
+      class="scheduler-container__alert"
     >
-      <br>
-      <span class="scheduler-container__status-about">
-        {{ sendDate | moment('HH:mm') }}
-        <span v-if="sendStatus !== 'default' && !directionIn">
-          •
-        </span>
-        <JusIcon
-          v-if="sendStatus !== 'default' && !directionIn"
-          class="scheduler-container__status-about-icon"
-          :icon="`status-${sendStatus}`"
-        />
-        <GroupedOccurrences
-          :have="haveGroupedOccurrences"
-          :occurrences="groupedOccurrences"
-        />
-      </span>
-    </div>
+      <i class="el-icon-close" />
+
+      Mensagem automática agendada foi <strong>CANCELADA</strong>.
+    </p>
+
+    <!-- isWaiting -->
+    <p
+      v-else-if="isWaiting"
+      class="scheduler-container__alert"
+    >
+      <jus-icon icon="clock" />
+
+      Mensagem agendada para {{ scheduledTime | moment('DD/MM[ às ]HH:mm') }} que ainda não foi entregue.
+    </p>
   </section>
 </template>
 
@@ -88,28 +87,35 @@ import { mapActions, mapGetters } from 'vuex'
 import communicationSendStatus from '@/utils/mixins/communicationSendStatus'
 
 export default {
-  components: {
-    GroupedOccurrences: () => import('./partials/groupedOccurrence')
-  },
   mixins: [communicationSendStatus],
+
   props: {
     value: {
       type: Object,
       required: true
     },
+
     hideContent: {
       type: Boolean,
       default: false
     },
+
     occurrence: {
       type: Object,
       required: true
     },
-    hiddenContactInfo: {
+
+    hideInfo: {
       type: Boolean,
       default: false
     },
+
     hiddenSendStatus: {
+      type: Boolean,
+      default: false
+    },
+
+    hideGrouping: {
       type: Boolean,
       default: false
     }
@@ -132,7 +138,8 @@ export default {
       const mapCommunicationTypes = {
         EMAIL: 'email',
         WHATSAPP: 'whatsapp',
-        NEGOTIATOR_MESSAGE: 'negotiator-message-2'
+        NEGOTIATOR_MESSAGE: 'negotiator-message-2',
+        PHONE_CALL: 'tts'
       }
       if (this.value?.message?.communicationType) {
         const { communicationType } = this.value.message
@@ -144,16 +151,12 @@ export default {
     },
 
     text() {
-      if (this.interaction?.message?.resume) {
-        return this.interaction.message.resume
-      } else if (this.interaction?.message?.parameters?.SUBJECT) {
-        return this.interaction?.message?.parameters?.SUBJECT
-      }
-      return ''
+      return this.interaction?.message?.resume || this.interaction?.message?.parameters?.SUBJECT || this.occurrence?.description || ''
     },
 
     message() {
       const { messageId } = this.interaction.message
+
       return this.fullMessages[messageId] || this.text
     },
 
@@ -173,6 +176,18 @@ export default {
 
     hasError() {
       return this.interaction?.message?.parameters?.FAILED_SEND
+    },
+
+    isCanceled() {
+      return this.occurrence?.interaction?.message?.status === 'CANCELED'
+    },
+
+    isWaiting() {
+      return this.occurrence?.interaction?.message?.status === 'WAITING' && this.occurrence?.interaction?.type === 'SCHEDULER'
+    },
+
+    scheduledTime() {
+      return this.occurrence?.interaction?.message?.scheduledTime?.dateTime
     }
   },
 
@@ -265,6 +280,15 @@ export default {
     .scheduler-container__contact-address {
       cursor: copy;
       display: flex;
+    }
+  }
+
+  .scheduler-container__alert {
+    font-style: italic;
+
+    i, img {
+      width: 14px;
+      margin-bottom: -1.2px;
     }
   }
 }

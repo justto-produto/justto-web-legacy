@@ -18,6 +18,7 @@
           :key="party.disputeRoleId"
           :active-collapse-item="activeCollapseItem"
           :party="party"
+          @addRecipient="$emit('addRecipient', $event)"
         />
       </el-collapse>
       <div class="overview-parties__link">
@@ -33,7 +34,7 @@
     <el-button
       v-if="!isPreNegotiation"
       type="primary"
-      size="medium"
+      size="small"
       icon="el-icon-plus"
       @click="addParty"
     >
@@ -157,7 +158,7 @@ export default {
 .overview-parties {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   height: 100%;
   gap: 10px;
 
@@ -169,6 +170,7 @@ export default {
   .overview-parties__list {
     overflow-y: auto;
     overflow-x: hidden;
+    height: 100%;
 
     .overview-parties__link {
       margin: 6px 0;

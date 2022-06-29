@@ -16,9 +16,10 @@
           @click="openRemoveDisputeDialog()"
         />
       </el-tooltip>
+
       <span class="dispute-overview-view__subtitle">
         <dispute-code-link
-          v-if="dispute.code"
+          v-if="dispute && !!dispute.code"
           :code="dispute.code"
           :custom-style="{ fontSize: '14x', fontWeight: 'normal', color: '#979797d'}"
           :custom-icon-style="{ paddingRight: '8px' }"
@@ -26,6 +27,7 @@
         />
       </span>
     </h2>
+
     <el-dialog
       :close-on-click-modal="false"
       :show-close="false"
@@ -72,6 +74,7 @@
         </el-button>
       </span>
     </el-dialog>
+
     <div
       v-loading="loading || linkBankAccountLoading"
       class="dispute-overview-view__loading"
@@ -91,316 +94,14 @@
               <i class="el-icon-info" />
             </el-tooltip>
           </span>
-          <div>
-            <div
-              class="dispute-overview-view__info-line"
-              data-testid="dispute-infoline"
-            >
-              <span class="title">Etiquetas:</span>
-              <jus-tags />
-            </div>
-            <div
-              v-if="dispute.createAt"
-              class="dispute-overview-view__info-line"
-              data-testid="dispute-infoline"
-            >
-              <span class="title">Data de importação:</span>
-              <span>{{ dispute.createAt.dateTime | moment('DD/MM/YY') }}</span>
-            </div>
-            <div
-              class="dispute-overview-view__info-line"
-              data-testid="dispute-infoline"
-            >
-              <span class="title">Processo:</span>
-              <dispute-code-link
-                :code="dispute.code"
-                :custom-style="{ fontSize: '14px', marginLeft: '12px'}"
-                @openTimeline="openTimelineModal"
-              />
-            </div>
-            <div
-              v-if="campaign"
-              class="dispute-overview-view__info-line"
-              data-testid="dispute-infoline"
-            >
-              <span class="title">Campanha:</span>
-              <span>{{ campaign.name }}</span>
-            </div>
-            <div
-              v-if="dispute.strategyName"
-              class="dispute-overview-view__info-line"
-              data-testid="dispute-infoline"
-            >
-              <span class="title">Estratégia:</span>
-              <span data-testid="overview-strategy">{{ dispute.strategyName }}</span>
-            </div>
-            <div
-              class="dispute-overview-view__info-line"
-              data-testid="dispute-infoline"
-            >
-              <span class="title">Status:</span>
-              <el-tooltip
-                :disabled="!statusTooltip()"
-                popper-class="info-line__status-tooltip"
-              >
-                <span
-                  slot="content"
-                  v-html="statusTooltip()"
-                />
-                <span data-testid="overview-status">
-                  <span>{{ $t('occurrence.type.' + dispute.status) | capitalize }}</span>
-                  <span v-if="dispute.paused">(pausada)</span>
-                  <span
-                    v-if="statusTooltip()"
-                    class="el-icon-question"
-                  />
-                </span>
-              </el-tooltip>
-            </div>
-            <div
-              class="dispute-overview-view__info-line"
-              data-testid="dispute-infoline"
-            >
-              <span class="title">Alçada máxima:</span>
-              <span data-testid="overview-upperrange">{{ dispute.disputeUpperRange | currency }}</span>
-            </div>
-            <div
-              class="dispute-overview-view__info-line"
-              data-testid="dispute-infoline"
-            >
-              <span class="title">Valor proposto<span v-if="dispute.lastOfferName"> por {{ dispute.lastOfferName | firstName }}</span>:</span>
-              <span data-testid="overview-proposal">
-                <el-tooltip
-                  v-if="dispute.lastOfferName"
-                  :content="'Proposto por: ' + dispute.lastOfferName"
-                >
-                  <jus-avatar-user
-                    :name="dispute.lastOfferName"
-                    size="mini"
-                  />
-                </el-tooltip>
-                {{ dispute.lastOfferValue | currency }}
-              </span>
-            </div>
-            <div
-              v-if="dispute.lastCounterOfferValue > 0 && dispute.disputeUpperRange"
-              class="dispute-overview-view__info-line"
-              data-testid="dispute-infoline"
-            >
-              <span class="title">Contraproposta<span v-if="dispute.lastCounterOfferName"> por {{ dispute.lastCounterOfferName | firstName }}</span>:</span>
-              <span data-testid="overview-counterproposal">
-                <el-tooltip
-                  v-if="dispute.lastCounterOfferName"
-                  :content="'Proposto por: ' + dispute.lastCounterOfferName"
-                >
-                  <jus-avatar-user
-                    :name="dispute.lastCounterOfferName"
-                    size="mini"
-                  />
-                </el-tooltip>
-                {{ dispute.lastCounterOfferValue | currency }}
-              </span>
-            </div>
-            <div
-              v-if="(dispute.status === 'ACCEPTED' || dispute.status === 'CHECKOUT' || dispute.status === 'SETTLED') && dispute.disputeDealValue"
-              class="dispute-overview-view__info-line"
-            >
-              <span class="title">Valor do acordo:</span>
-              <span>{{ dispute.disputeDealValue | currency }}</span>
-            </div>
-            <div
-              class="dispute-overview-view__info-line"
-              data-testid="dispute-infoline"
-            >
-              <span class="title">Fim da negociação:</span>
-              <span
-                v-if="dispute.expirationDate"
-                data-testid="overview-expirationdate"
-              >{{ dispute.expirationDate.dateTime | moment('DD/MM/YY') }}</span>
-            </div>
-            <div
-              v-if="dispute.materialDamage"
-              class="dispute-overview-view__info-line"
-              data-testid="dispute-infoline"
-            >
-              <span class="title">Dano material:</span>
-              <span
-                v-if="dispute.materialDamage"
-                data-testid="overview-materialdamage"
-              >{{ dispute.materialDamage | currency }}</span>
-            </div>
-            <div
-              v-if="dispute.moralDamage"
-              class="dispute-overview-view__info-line"
-              data-testid="dispute-infoline"
-            >
-              <span class="title">Dano moral:</span>
-              <span
-                v-if="dispute.moralDamage"
-                data-testid="overview-moralDamage"
-              >{{ dispute.moralDamage | currency }}</span>
-            </div>
-            <div
-              v-if="dispute.provisionedValue > 0"
-              class="dispute-overview-view__info-line"
-              data-testid="dispute-infoline"
-            >
-              <span class="title">Valor provisionado:</span>
-              <span data-testid="overview-provisioned-value">{{ dispute.provisionedValue | currency }}</span>
-            </div>
-            <div
-              v-if="dispute.requestedValue"
-              class="dispute-overview-view__info-line"
-              data-testid="dispute-infoline"
-            >
-              <span class="title">Valor do processo:</span>
-              <span
-                v-if="dispute.requestedValue"
-                data-testid="overview-requestedvalue"
-              >{{ dispute.requestedValue | currency }}</span>
-            </div>
-            <div
-              v-if="dispute.externalId"
-              class="dispute-overview-view__info-line"
-              data-testid="dispute-infoline"
-            >
-              <span class="title">Código interno:</span>
-              <span
-                v-if="dispute.externalId"
-                data-testid="overview-externalid"
-              >{{ dispute.externalId }}</span>
-            </div>
-            <div
-              class="dispute-overview-view__info-line"
-              data-testid="dispute-infoline"
-            >
-              <span class="title">Configurações:</span>
-              <span
-                v-if="dispute"
-                class="configurations"
-              >
-                Enriquecer automaticamente na importação?
-                <div><i :class="skipEnrichment ? 'el-icon-close' : 'el-icon-check'" /> {{ skipEnrichment ? 'Não' : 'Sim' }}</div>
-                Somente depósito em conta-corrente?
-                <div><i :class="dispute.campaign && dispute.campaign.denySavingDeposit ? 'el-icon-check' : 'el-icon-close'" /> {{ dispute.campaign.denySavingDeposit ? 'Sim' : 'Não ' }}</div>
-                Mensagens somente em horário comercial?
-                <div><i :class="dispute.campaign && dispute.campaign.businessHoursEngagement ? 'el-icon-check' : 'el-icon-close'" /> {{ dispute.campaign.businessHoursEngagement ? 'Sim' : 'Não' }}</div>
-                Contatar autor?
-                <div>
-                  <i :class="(dispute.contactPartyWhenNoLowyer || dispute.contactPartyWhenInvalidLowyer) ? 'el-icon-check' : 'el-icon-close'" />
-                  <span v-if="dispute.alwaysContactParty">
-                    Sempre
-                  </span>
-                  <span v-else-if="dispute.contactPartyWhenNoLowyer && dispute.contactPartyWhenInvalidLowyer">
-                    Quando não houver advogado ou não for possível contatar o advogado existente
-                  </span>
-                  <span v-else-if="dispute.contactPartyWhenNoLowyer && !dispute.contactPartyWhenInvalidLowyer">
-                    Somente quando não houver advogado constituído
-                  </span>
-                  <span v-else-if="!dispute.contactPartyWhenNoLowyer && dispute.contactPartyWhenInvalidLowyer">
-                    Somente quando não for possível contatar o advogado existente
-                  </span>
-                  <span v-else>
-                    Nunca
-                  </span>
-                </div>
-              </span>
-            </div>
-            <div
-              v-if="computedDescription"
-              class="dispute-overview-view__info-line"
-            >
-              <span class="title">Descrição:</span>
-              <span>
-                <span
-                  :class="{ 'right': computedDescription.length < 25 }"
-                  data-testid="overview-description"
-                >
-                  {{ computedDescription }}
-                  <span v-if="dispute.description.length > 140">
-                    <a
-                      href="#"
-                      class="dispute-overview-view__see-more"
-                      @click.prevent="descriptionCollapse = !descriptionCollapse"
-                    >
-                      {{ descriptionCollapse ? 'ver mais': 'ver menos' }}
-                      <i :class="descriptionCollapse ? 'el-icon-arrow-down': 'el-icon-arrow-up'" />
-                    </a>
-                  </span>
-                </span>
-              </span>
-            </div>
-            <div
-              v-if="dispute.classification"
-              class="dispute-overview-view__info-line"
-            >
-              <span class="title">Classificação:</span>
-              <span class="classification">
-                {{ dispute.classification.name }}
-                <div
-                  v-for="subClassification in dispute.classification.classificationDetails"
-                  :key="subClassification.id"
-                >
-                  <i class="el-icon-right" />
-                  {{ subClassification.name }}
-                </div>
-              </span>
-            </div>
-            <div
-              v-if="dispute.bankAccounts && dispute.bankAccounts.length"
-              class="dispute-overview-view__info-line"
-            >
-              <span class="title">Conta(s) bancária(s):</span>
-              <el-collapse value="0">
-                <el-collapse-item
-                  v-for="(bankAccount, index) in dispute.bankAccounts"
-                  :key="`${index}-${bankAccount.id}`"
-                  :name="index"
-                  class="dispute-overview-view__bank-collapse"
-                >
-                  <template slot="title">
-                    <div>
-                      {{ bankAccount.name || bankAccount.document | cpfCnpj }}
-                      <span>
-                        {{ bankAccount.bank }} <span v-if="bankAccount.agency">|</span>
-                        {{ bankAccount.agency }} <span v-if="bankAccount.number">|</span>
-                        {{ bankAccount.number }}
-                      </span>
-                    </div>
-                  </template>
-                  <span class="bank-info">
-                    <span v-show="bankAccount.name">
-                      <strong>Nome:</strong> {{ bankAccount.name }} <br>
-                    </span>
-                    <span v-show="bankAccount.email">
-                      <strong>E-mail:</strong> {{ bankAccount.email }} <br>
-                    </span>
-                    <strong>Documento:</strong> {{ bankAccount.document | cpfCnpj }} <br>
-                    <strong>Banco:</strong> {{ bankAccount.bank }} <br>
-                    <strong>Agência:</strong> {{ bankAccount.agency }} <br>
-                    <strong>Conta:</strong> {{ bankAccount.number }} <br>
-                    <strong>Tipo:</strong> {{ bankAccount.type === 'SAVING' ? 'Poupança' : 'Corrente' }} <br>
-                  </span>
-                </el-collapse-item>
-              </el-collapse>
-            </div>
-          </div>
-          <el-tooltip
-            :disabled="dispute.status !== 'PRE_NEGOTIATION'"
-            content="Disputas em pré negociação não podem ser editadas"
-          >
-            <div class="dispute-overview-view__actions">
-              <el-button
-                :disabled="dispute.status === 'PRE_NEGOTIATION'"
-                type="primary"
-                data-testid="edit-dispute"
-                @click="openDisputeDialog()"
-              >
-                Editar
-              </el-button>
-            </div>
-          </el-tooltip>
+
+          <general-info-tab
+            :dispute="dispute"
+            @openDispute="openDisputeDialog"
+            @openTimeline="openTimelineModal"
+          />
         </el-tab-pane>
+
         <!-- PARTES DA DISPUTA -->
         <el-tab-pane
           name="roles"
@@ -411,502 +112,30 @@
               <i class="el-icon-user-solid" />
             </el-tooltip>
           </span>
-          <a
-            v-if="contactsMetadataCount"
-            @click="openAssociationModal()"
-          >
-            {{ $tc('dispute.overview.label.contact-found', contactsMetadataCount, { count: contactsMetadataCount }) }} {{ $t('dispute.overview.label.in-the-attachments') }}
-          </a>
-          <el-collapse
-            ref="roleCollapse"
-            v-model="selectedRole"
-            accordion
-            class="el-collapse--bordered"
-            style="margin: 20px 0 0"
-            @change="handleChange"
-          >
-            <el-collapse-item
-              v-for="(role, index) in disputeRolesSort"
-              :key="`${index}-${role.personId}`"
-              :name="role.id"
-              class="dispute-overview-view__role-collapse"
-              data-testid="expand-party"
-            >
-              <div
-                slot="title"
-                class="dispute-overview-view__person-title"
-              >
-                <i
-                  v-if="showNamesake(role) && !role.roles.includes('NEGOTIATOR')"
-                  class="el-icon-warning el-icon-pulse"
-                  style="{ color: '#FF9300'; position: absolute; top: 0px; left: 0px;}"
-                />
-                <JusIcon
-                  v-else-if="showVexatious(role.personProperties) && !role.roles.includes('NEGOTIATOR') "
-                  style="{ color: '#FF9300'; position: absolute; top: 0px; left: 0px;}"
-                  class="el-icon-pulse"
-                  icon="flat-alert-yellow"
-                />
-                <JusIcon
-                  v-else-if="showIsDead(role)"
-                  style="{ color: '#FF9300'; position: absolute; top: 0px; left: 0px;}"
-                  class="el-icon-pulse"
-                  icon="flat-alert"
-                />
-                <div class="dispute-overview-view__name">
-                  <span
-                    v-for="r in role.roles"
-                    :key="r.id"
-                    class="dispute-overview-view__role-icon"
-                  >
-                    <el-tooltip :content="buildRoleTitle(role.party, r)">
-                      <i :class="getRoleIcon(role.party, r)" />
-                    </el-tooltip>
-                  </span>
-                  <span
-                    v-if="role.name"
-                    @click="sendMessageToNegotiator(role)"
-                  >
-                    <el-tooltip
-                      v-if="onlineList.includes(role.documentNumber)"
-                      :content="`${$options.filters.capitalize(role.name.toLowerCase().split(' ')[0])} está online`"
-                    >
-                      <jus-icon
-                        icon="online"
-                        style="width: 10px; margin: 19px 0px; margin-left: 8px;"
-                      />
-                    </el-tooltip>
-                    <el-tooltip
-                      v-else-if="role.oabs.filter(oab => onlineList.includes(`${oab.number}-${oab.state}`)).length"
-                      :content="`${$options.filters.capitalize(role.name.toLowerCase().split(' ')[0])} está online`"
-                    >
-                      <jus-icon
-                        icon="online"
-                        style="width: 10px; margin: 19px 0px; margin-left: 8px;"
-                      />
-                    </el-tooltip>
-                  </span>
-                  {{ role.name }}
-                </div>
-              </div>
-              <p
-                v-if="showNamesake(role)"
-                style="margin-top: 0"
-              >
-                <span v-if="namesakeProcessing">
-                  <i class="el-icon-warning" />
-                  Documento correto enviado para tratamento no sistema. Isso pode levar algum tempo.
-                </span>
-                <span v-else>
-                  Esta parte não foi enriquecida corretamente devido à existência de homônimos.
-                </span>
-              </p>
-              <el-button
-                v-if="showNamesake(role)"
-                :loading="namesakeButtonLoading || namesakeProcessing"
-                :type="namesakeProcessing ? 'success' : 'warning'"
-                style="width: 100%; margin-bottom: 14px;"
-                @click="namesakeDialog(role.name, role.personId)"
-              >
-                <span v-if="namesakeProcessing">Enriquecendo...</span>
-                <span v-else>Tratar homônimos</span>
-              </el-button>
-              <el-alert
-                v-if="showIsDead(role)"
-                class="mb10"
-                title="Possível óbito"
-                type="error"
-              >
-                Algumas de nossas bases de informações constam que a parte possivelmente encontra-se em óbito.
-              </el-alert>
-              <div class="dispute-overview-view__info-line">
-                <span class="title">Nome completo:</span>
-                <div>
-                  <!-- TODO: Componente de busca no CNA. -->
-                  <el-popover
-                    v-if="role.roles.includes('LAWYER')"
-                    :ref="`popover-${role.name}`"
-                    popper-class="dispute-overview-view__info-popover-lawyer"
-                    :placement="'top-end'"
-                    trigger="click"
-                    @hide="deactivePopover(`popover-${role.name}`)"
-                  >
-                    <lawyer-detail
-                      @update="updateDisputeRoleField(role, $event)"
-                    />
-                    <i
-                      slot="reference"
-                      class="el-icon-info"
-                      @click="searchThisLawyer({ name: role.name, oabs: [] }, `popover-${role.name}`)"
-                    />
-                  </el-popover>
-                  {{ role.name }}
-                </div>
-              </div>
-              <div class="dispute-overview-view__info-line">
-                <span class="title">
-                  Função:
-                  <span
-                    v-if="!isToShowChangeParty(role) && !isNegotiator(role)"
-                    class="dispute-overview-view__edit-tooltip"
-                    @click="handleEditRule()"
-                  >
-                    <el-tooltip
-                      placement="top"
-                      content="Editar polaridade"
-                    >
-                      <jus-icon icon="edit" />
-                    </el-tooltip>
-                  </span>
-                </span>
-                <div
-                  v-if="isToShowChangeParty(role) && !isNegotiator(role)"
-                  class="dispute-overview-view__select-role"
-                >
-                  <el-select
-                    v-model="role.party"
-                    size="mini"
-                    placeholder="Defina o polo desta parte"
-                    @change="setDisputeParty(role)"
-                  >
-                    <el-option
-                      v-for="party in getDisputePartys(role.roles)"
-                      :key="party.value"
-                      :label="party.label"
-                      :value="party.value"
-                    />
-                  </el-select>
-                  <span
-                    class="dispute-overview-view__tooltip-cancel-edit-role"
-                    @click="handleEditRule()"
-                  >
-                    <el-tooltip content="Cancelar edição da polaridade">
-                      <i class="el-icon-error" />
-                    </el-tooltip>
-                  </span>
-                </div>
-                <span
-                  v-for="(title, titleIndex) in roleTitleSort(role.roles)"
-                  v-show="!isEditingRule"
-                  :key="`${titleIndex}-${title.index}`"
-                  class="dispute-overview-view__info-line-description"
-                >
-                  {{ buildRoleTitle(role.party, title) }}
-                  <jus-vexatious-alert
-                    v-if="showVexatious(role.personProperties) && !role.roles.includes('NEGOTIATOR')"
-                    :document-number="role.documentNumber"
-                    :name="role.name"
-                  />
-                </span>
 
-                <div
-                  v-if="role.party === 'UNKNOWN'"
-                  class="dispute-overview-view__select-role"
-                >
-                  <el-select
-                    v-model="tempRole"
-                    size="mini"
-                    placeholder="Defina o polo desta parte"
-                    @change="handleUnknowParty(role)"
-                  >
-                    <el-option
-                      v-for="(party, partyKey) in dispuesToUnknownParties"
-                      :key="`UNKNOWN-${partyKey}`"
-                      :label="party.label"
-                      :value="partyKey"
-                    />
-                  </el-select>
-                </div>
-              </div>
-              <div
-                v-show="role.documentNumber"
-                class="dispute-overview-view__info-line"
-              >
-                <span class="title">CPF/CNPJ:</span>
-                <span>{{ role.documentNumber | cpfCnpj }}</span>
-              </div>
-              <div
-                v-show="role.birthday"
-                class="dispute-overview-view__info-line"
-              >
-                <span class="title">Data de nascimento:</span>
-                <span v-if="role.birthday">{{ new Date(role.birthday) | moment('DD/MM/YYYY') }}</span>
-              </div>
-              <div
-                v-show="role.party === 'CLAIMANT'"
-                class="dispute-overview-view__info-line"
-              >
-                <span class="title">Portal de comunicação Justto:</span>
-                <span
-                  v-if="role.party === 'CLAIMANT'"
-                  class="dispute-overview-view__negotiator-icon"
-                  @click="sendMessageToNegotiator(role)"
-                >
-                  <jus-icon
-                    class="icon"
-                    icon="negotiation"
-                  />
-                  <span class="text">
-                    {{ role.name.toLowerCase() }}
-                  </span>
-                </span>
-              </div>
-              <div
-                v-show="role.phones.length"
-                class="dispute-overview-view__info-line"
-              >
-                <span class="title">Telefone(s):</span>
-                <span
-                  v-for="(phone, phone_index) in role.phones.filter(p => !p.archived)"
-                  :key="`${phone_index}-${phone.id}`"
-                  :class="{'is-main': phone.isMain}"
-                >
-                  <el-radio
-                    v-model="selectedPhone"
-                    :label="phone.id"
-                    :disabled="!phone.isMobile"
-                    data-testid="radio-whatsapp"
-                    @change="updateDisputeRole(role, 'whatsapp')"
-                  >
-                    <el-tooltip
-                      :content="buildContactStatus(phone)"
-                      :open-delay="500"
-                    >
-                      <span :class="phone.source === 'ENRICHMENT' ? 'dispute-overview-view__is-enriched' : ''">
-                        {{ phone.number | phoneNumber }}<span v-if="phone.source === 'ENRICHMENT'">*</span>
-                      </span>
-                    </el-tooltip>
-                  </el-radio>
-                  <!-- <div class="alerts"> -->
-                  <el-tooltip content="Este telefone está desabilitado para receber mensagens automáticas, ao editar e habilitar o endereço, você está em desrespeito com a LGPD. ">
-                    <jus-icon
-                      v-show="!phone.isMain"
-                      icon="not-main-phone-active"
-                    />
-                  </el-tooltip>
-                  <el-tooltip content="Telefone inválido">
-                    <jus-icon
-                      v-show="!phone.isValid"
-                      icon="warn-dark"
-                    />
-                  </el-tooltip>
-                  <!-- </div> -->
-                </span>
-              </div>
-              <div
-                v-show="role.emails.length"
-                class="dispute-overview-view__info-line"
-              >
-                <span class="title">E-mail(s):</span>
-                <span
-                  v-for="(email, email_index) in role.emails.filter(e => !e.archived)"
-                  :key="`${email_index}-${email.id}`"
-                  :class="{'is-main': email.isMain}"
-                >
-                  <el-checkbox
-                    v-model="email.selected"
-                    data-testid="checkbox-email"
-                    @change="updateDisputeRole(role, 'email')"
-                  />
-                  <el-tooltip
-                    :content="buildContactStatus(email)"
-                    :open-delay="500"
-                  >
-                    <span :class="email.source === 'ENRICHMENT' ? 'dispute-overview-view__is-enriched' : ''">
-                      {{ email.address }}<span v-if="email.source === 'ENRICHMENT'">*</span>
-                    </span>
-                  </el-tooltip>
-                  <div class="alerts">
-                    <el-tooltip content="Este email está desabilitado para receber mensagens automáticas, ao editar e habilitar o endereço, você está em desrespeito com a LGPD. ">
-                      <jus-icon
-                        v-show="!email.isMain"
-                        icon="not-main-email-active"
-                      />
-                    </el-tooltip>
-                    <el-tooltip content="E-mail inválido">
-                      <jus-icon
-                        v-show="!email.isValid"
-                        icon="warn-dark"
-                      />
-                    </el-tooltip>
-                  </div>
-                </span>
-              </div>
-              <div
-                v-show="role.oabs.length"
-                class="dispute-overview-view__info-line"
-              >
-                <span class="title">OAB(s):</span>
-                <span
-                  v-for="(oab, oab_index) in role.oabs.filter(o => !o.archived)"
-                  :key="`${oab_index}-${oab.id}`"
-                  :class="{'is-main': oab.isMain}"
-                >
-                  <span>
-                    <!-- TODO: Componente de busca no CNA. -->
-                    <el-popover
-                      :ref="`popover-${oab.number}-${oab.state}`"
-                      popper-class="dispute-overview-view__info-popover-lawyer"
-                      placement="top"
-                      trigger="click"
-                      @hide="deactivePopover(`popover-${oab.number}-${oab.state}`)"
-                    >
-                      <lawyer-detail
-                        @update="updateDisputeRoleField(role, $event)"
-                      />
-                      <i
-                        slot="reference"
-                        class="el-icon-info"
-                        @click="searchThisLawyer({...role, oabs: [oab]}, `popover-${oab.number}-${oab.state}`)"
-                      />
-                    </el-popover>
-                    {{ oab.number + '-' + oab.state || '' }}
-                  </span>
-                  <div class="alerts">
-                    <el-tooltip content="OAB inválido">
-                      <jus-icon
-                        v-show="!oab.isValid"
-                        icon="warn-dark"
-                      />
-                    </el-tooltip>
-                  </div>
-                </span>
-              </div>
-              <div
-                v-if="role.bankAccounts && role.bankAccounts.length"
-                class="dispute-overview-view__info-line"
-              >
-                <span class="title">Conta(s) bancária(s):</span>
-                <el-tooltip content="Selecione as contas bancárias que serão vinculadas à Disputa">
-                  <i
-                    class="el-icon-question right"
-                    style="margin-top: 5px;"
-                  />
-                </el-tooltip>
-                <el-tooltip
-                  :disabled="dispute.status !== 'PRE_NEGOTIATION'"
-                  placement="left"
-                  content="Disputas em pré negociação não podem ser editadas"
-                >
-                  <el-checkbox-group
-                    v-model="disputeBankAccountsIds"
-                    :disabled="dispute.status === 'PRE_NEGOTIATION'"
-                    class="dispute-overview-view__bank-checkbox"
-                  >
-                    <el-checkbox
-                      v-for="(bankAccount, bank_account_index) in role.bankAccounts.filter(b => !b.archived)"
-                      :key="`${bank_account_index}-${bankAccount.id}`"
-                      :label="bankAccount.id"
-                      border
-                      class="bordered"
-                    >
-                      <div v-show="bankAccount.name">
-                        <strong>Nome:</strong> {{ bankAccount.name }}
-                      </div>
-                      <div v-show="bankAccount.email">
-                        <strong>E-mail:</strong> {{ bankAccount.email }}
-                      </div>
-                      <div><strong>Documento:</strong> {{ bankAccount.document | cpfCnpj }}</div>
-                      <div><strong>Banco:</strong> {{ bankAccount.bank }}</div>
-                      <div><strong>Agência:</strong> {{ bankAccount.agency }}</div>
-                      <div><strong>Conta:</strong> {{ bankAccount.number }}</div>
-                      <div><strong>Tipo:</strong> {{ bankAccount.type === 'SAVING' ? 'Poupança' : 'Corrente' }}</div>
-                    </el-checkbox>
-                  </el-checkbox-group>
-                </el-tooltip>
-              </div>
-              <el-tooltip
-                :disabled="dispute.status !== 'PRE_NEGOTIATION'"
-                content="Disputas em pré negociação não podem ser editadas"
-              >
-                <div
-                  v-if="!role.roles.includes('NEGOTIATOR')"
-                  class="dispute-overview-view__actions"
-                >
-                  <el-button
-                    :disabled="dispute.status === 'PRE_NEGOTIATION'"
-                    plain
-                    @click="removeRole(role)"
-                  >
-                    Excluir
-                  </el-button>
-                  <el-button
-                    :disabled="dispute.status === 'PRE_NEGOTIATION'"
-                    type="primary"
-                    data-testid="edit-part"
-                    @click="openRoleDialog(role)"
-                  >
-                    Editar
-                  </el-button>
-                </div>
-              </el-tooltip>
-              <!-- Dialog para exclusão de parte cascateda ou não -->
-              <el-dialog
-                append-to-body
-                :close-on-click-modal="false"
-                :show-close="false"
-                :close-on-press-escape="false"
-                :visible.sync="chooseRemoveLawyerDialogVisible"
-                title="Excluir parte"
-                width="520px"
-              >
-                <div class="el-message-box__content">
-                  <div class="el-message-box__container">
-                    <div class="el-message-box__status el-icon-warning" />
-                    <div class="el-message-box__message">
-                      <p>Tem certeza que deseja excluir esta parte?</p>
-                      <p>Esta ação é irreversível.</p>
-                    </div>
-                  </div>
-                </div>
-                <span slot="footer">
-                  <el-tooltip
-                    :content="`Remover ${deletingLawyer.name} de todas as disputas com mesmo réu.`"
-                    placement="top"
-                  >
-                    <el-button
-                      @click="removeLawyer(true)"
-                    >
-                      De todas as disputas
-                    </el-button>
-                  </el-tooltip>
-                  <el-tooltip
-                    :content="`Remover ${deletingLawyer.name} somente desta disputa.`"
-                    placement="top"
-                  >
-                    <el-button
-                      @click="removeLawyer(false)"
-                    >
-                      Desta disputa
-                    </el-button>
-                  </el-tooltip>
-                  <el-button
-                    type="primary"
-                    @click="chooseRemoveLawyerDialogVisible = false"
-                  >
-                    Cancelar
-                  </el-button>
-                </span>
-              </el-dialog>
-            </el-collapse-item>
-            <el-tooltip
-              :disabled="dispute.status !== 'PRE_NEGOTIATION'"
-              content="Disputas em pré negociação não podem ser editadas"
-            >
-              <span>
-                <el-button
-                  :disabled="dispute.status === 'PRE_NEGOTIATION'"
-                  class="dispute-overview-view__add-role mb20"
-                  plain
-                  icon="el-icon-plus"
-                  @click.prevent="newRoleDialogVisible = true"
-                >
-                  Cadastrar parte
-                </el-button>
-              </span>
-            </el-tooltip>
-          </el-collapse>
+          <roles-tab
+            :dispute="dispute"
+            :role.sync="selectedRole"
+            :phone-selected.sync="selectedPhone"
+            :show-remove-lawyer.sync="chooseRemoveLawyerDialogVisible"
+            :editing-role.sync="isEditingRole"
+            :deleting-lawyer="deletingLawyer"
+            :dispute-roles-sort="disputeRolesSort"
+            :namesake-processing="namesakeProcessing"
+            :namesake-button-loading="namesakeButtonLoading"
+            @newRole="newRoleDialogVisible = $event"
+            @removeRole="removeRole"
+            @removeLawyer="removeLawyer"
+            @handleChange="handleChange"
+            @openRoleDialog="openRoleDialog"
+            @handleEditRule="handleEditRule"
+            @messageToNegotiator="sendMessageToNegotiator"
+            @updateDisputeRole="updateDisputeRole($event.activeRole, $event.messageType)"
+            @handleNamesake="namesakeDialog"
+            @update:bankAccounts="updateDisputeBankAccounts"
+          />
         </el-tab-pane>
+
         <el-tab-pane
           name="properties"
           class="dispute-overview-view__tabs-content"
@@ -916,8 +145,10 @@
               <i class="el-icon-s-tools" />
             </el-tooltip>
           </span>
+
           <DisputeProperties />
         </el-tab-pane>
+
         <el-tab-pane
           name="attachments"
           class="dispute-overview-view__attachment-tab"
@@ -927,12 +158,14 @@
               <i class="el-icon-paperclip" />
             </el-tooltip>
           </span>
+
           <DisputeAttachments
             :is-accepted="isAccepted"
             :dispute-id="dispute.id"
           />
         </el-tab-pane>
       </el-tabs>
+
       <el-dialog
         :close-on-click-modal="false"
         :visible.sync="namesakeDialogVisible"
@@ -1043,620 +276,30 @@
           >Tratar</el-button>
         </span>
       </el-dialog>
-      <el-dialog
-        :close-on-click-modal="false"
-        :visible.sync="editDisputeDialogVisible"
-        title="Editar disputa"
-        width="70%"
-      >
-        <el-form
-          ref="disputeForm"
-          v-loading="editDisputeDialogLoading"
-          :model="disputeForm"
-          :rules="disputeFormRules"
-          label-position="top"
-          @submit.native.prevent="editDispute"
-        >
-          <h3>Detalhes da Disputa</h3>
-          <el-row :gutter="20">
-            <el-col :span="12">
-              <el-form-item
-                label="Número do Processo"
-                prop="disputeCode"
-              >
-                <el-input
-                  v-model="disputeForm.disputeCode"
-                  v-mask="'XXXXXXX-XX.XXXX.X.XX.XXXX'"
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item
-                label="Código interno"
-                prop="externalId"
-              >
-                <el-input v-model="disputeForm.externalId" />
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <h3>Engajamento</h3>
-          <el-row :gutter="20">
-            <el-col :span="24">
-              <el-form-item
-                label="Estratégia"
-                prop="disputeStrategy"
-              >
-                <el-select
-                  v-model="selectedStrategyId"
-                  placeholder="Escolha a nova estratégia"
-                  filterable
-                  data-testid="strategy-input"
-                >
-                  <el-option
-                    v-for="(strategy, index) in strategies"
-                    :key="`${strategy.id}-${index}`"
-                    :label="strategy.name"
-                    :value="strategy.id"
-                    :disabled="strategy.disabled || false"
-                  />
-                  <el-option
-                    v-if="!isValidStrategie"
-                    :value="dispute.strategyId"
-                    label="A estratégia utilizada não está mais disponível para uso"
-                    selected
-                    disabled
-                  />
-                </el-select>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="20">
-            <el-col
-              :span="24"
-              class="dispute-overview-view__select-switch"
-            >
-              <div class="content">
-                <div>Sempre engajar o autor</div>
-                <p>Deixando <b>selecionada</b> esta opção, <b>sempre</b> iremos enviar mensagens automáticas para o autor.</p>
-              </div>
-              <el-switch
-                v-model="disputeForm.alwaysContactParty"
-                @input="$forceUpdate()"
-              />
-            </el-col>
-            <el-tooltip
-              content="Sempre engaja autor está habilitado"
-              :disabled="!disputeForm.alwaysContactParty"
-            >
-              <el-col
-                :span="24"
-                :style="disputeForm.alwaysContactParty ? 'cursor: not-allowed' : ''"
-                class="dispute-overview-view__select-switch"
-              >
-                <div class="content">
-                  <div>Engajar autor se não tiver advogado</div>
-                  <p>
-                    Deixando <b>selecionada</b> esta opção, iremos enviar mensagens para o autor quando não houver advogado constituído.
-                  </p>
-                </div>
-                <el-switch
-                  v-model="disputeForm.contactPartyWhenNoLowyer"
-                  :disabled="disputeForm.alwaysContactParty"
-                />
-              </el-col>
-            </el-tooltip>
-            <el-tooltip
-              content="Sempre engaja autor está habilitado"
-              :disabled="!disputeForm.alwaysContactParty"
-            >
-              <el-col
-                :span="24"
-                :style="disputeForm.alwaysContactParty ? 'cursor: not-allowed' : ''"
-                class="dispute-overview-view__select-switch"
-              >
-                <div class="content">
-                  <div>Engajar autor se advogado não possuir contatos válidos para ser engajado</div>
-                  <p>
-                    Deixando <b>selecionada</b> esta opção, iremos enviar mensagens para o autor se o <b>advogado não possuir dados válidos</b> para ser contatado.
-                  </p>
-                </div>
-                <el-switch
-                  v-model="disputeForm.contactPartyWhenInvalidLowyer"
-                  :disabled="disputeForm.alwaysContactParty"
-                />
-              </el-col>
-            </el-tooltip>
-          </el-row>
-          <h3>Valor proposto</h3>
-          <el-row :gutter="20">
-            <el-col :span="8">
-              <el-form-item
-                :rules="validateLastOfferValue"
-                label="Valor"
-                prop="lastOfferValue"
-              >
-                <el-tooltip
-                  content="Alçada máxima zerada. Coloque uma alçada máxima para poder alterar o valor proposto."
-                  :disabled="!!disputeForm.disputeUpperRange"
-                >
-                  <div
-                    class="el-input"
-                    :class="{ 'is-disabled': !disputeForm.disputeUpperRange }"
-                  >
-                    <money
-                      v-model="disputeForm.lastOfferValue"
-                      :disabled="!disputeForm.disputeUpperRange"
-                      class="el-input__inner"
-                      data-testid="proposal-value-input"
-                      @change.native="lastOfferValueHasChanged = true"
-                    />
-                  </div>
-                </el-tooltip>
-              </el-form-item>
-            </el-col>
-            <el-col :span="16">
-              <el-form-item
-                label="Proposto por"
-                prop="lastOfferValueName"
-              >
-                <el-select
-                  v-model="selectedNegotiatorId"
-                  :disabled="!disputeForm.disputeUpperRange"
-                  filterable
-                  placeholder="Autor da contraproposta"
-                  data-testid="proposal-negotiator-input"
-                >
-                  <el-option
-                    v-for="(negotiator, index) in disputeNegotiations"
-                    :key="`${index}-${negotiator.id}`"
-                    :label="negotiator.name"
-                    :value="negotiator.id"
-                  />
-                </el-select>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <h3>Outras configurações</h3>
-          <el-row :gutter="20">
-            <el-col :span="6">
-              <el-form-item
-                :rules="validateDisputeUpperRange"
-                label="Alçada máxima"
-                prop="disputeUpperRange"
-              >
-                <money
-                  v-model="disputeForm.disputeUpperRange"
-                  class="el-input__inner"
-                  data-testid="bondary-input"
-                  @blur.native="checkZeroUpperRange"
-                  @change.native="disputeUpperRangeChangedHandler"
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item
-                label="Fim da negociação"
-                prop="expirationDate"
-              >
-                <el-date-picker
-                  v-model="disputeForm.expirationDate"
-                  :clearable="false"
-                  data-testid="expiration-date-input"
-                  format="dd/MM/yyyy"
-                  type="date"
-                  value-format="yyyy-MM-dd"
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item
-                label="Classificação"
-                prop="classification"
-              >
-                <el-input v-model="disputeForm.classification" />
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item
-                label="Dano material"
-                prop="materialDamage"
-              >
-                <money
-                  v-model="disputeForm.materialDamage"
-                  class="el-input__inner"
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item
-                label="Dano moral"
-                prop="moralDamage"
-              >
-                <money
-                  v-model="disputeForm.moralDamage"
-                  class="el-input__inner"
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item
-                label="Valor do processo"
-                prop="requestedValue"
-              >
-                <money
-                  v-model="disputeForm.requestedValue"
-                  class="el-input__inner"
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item
-                label="Valor provisionado"
-                prop="provisionedValue"
-              >
-                <money
-                  v-model="disputeForm.provisionedValue"
-                  class="el-input__inner"
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :span="24">
-              <el-form-item
-                label="Descrição"
-                prop="description"
-              >
-                <el-input
-                  v-model="disputeForm.description"
-                  type="textarea"
-                  rows="3"
-                  data-testid="description-input"
-                />
-              </el-form-item>
-            </el-col>
-          </el-row>
-        </el-form>
-        <span slot="footer">
-          <el-button
-            plain
-            @click="editDisputeDialogVisible = false"
-          >Cancelar</el-button>
-          <el-button
-            :loading="editDisputeDialogLoading"
-            type="primary"
-            data-testid="confirm-edit-data"
-            @click="editDispute()"
-          >Editar dados</el-button>
-        </span>
-      </el-dialog>
-      <el-dialog
-        :close-on-click-modal="false"
+
+      <!-- Edição de disputa -->
+      <EditDisputeDialog
+        ref="editDisputeDialog"
+        @hide="editDisputeDialogVisible = false"
+      />
+
+      <!-- Edição de parte -->
+      <edit-role-dialog
+        ref="editRoleForm"
+        :form.sync="roleForm"
         :visible.sync="editRoleDialogVisible"
-        width="40%"
-      >
-        <span
-          slot="title"
-          class="el-dialog__title"
-        >
-          Alterar dados de {{ roleForm.title }}
-        </span>
-        <el-alert
-          v-show="editRoleDialogError"
-          type="error"
-          @close="editRoleDialogError = false"
-        >
-          <ul>
-            <li
-              v-for="(error, index) in editRoleDialogErrorList"
-              :key="`${index}-${error}`"
-            >
-              {{ error }}
-            </li>
-          </ul>
-        </el-alert>
-        <el-form
-          ref="roleForm"
-          v-loading="editRoleDialogLoading"
-          :model="roleForm"
-          :rules="roleRules"
-          label-position="top"
-          @submit.native.prevent
-        >
-          <el-form-item
-            label="Nome"
-            prop="name"
-          >
-            <el-input
-              v-model="roleForm.name"
-              autofocus=""
-            />
-          </el-form-item>
-          <el-row :gutter="20">
-            <el-col :span="12">
-              <el-form-item
-                :rules="validateDocumentNumber"
-                label="CPF/CNPJ"
-                prop="documentNumber"
-              >
-                <el-input
-                  v-model="roleForm.documentNumber"
-                  v-mask="['###.###.###-##', '##.###.###/####-##']"
-                  @change="documentNumberHasChanged = true"
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item
-                label="Data de nascimento"
-                prop="birthday"
-              >
-                <el-date-picker
-                  v-model="roleForm.birthday"
-                  :disabled="!canEditBirthday"
-                  :clearable="false"
-                  format="dd/MM/yyyy"
-                  type="date"
-                  value-format="yyyy-MM-dd"
-                />
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <div
-            v-if="roleForm.roles && roleForm.roles.includes('LAWYER')"
-            class="dispute-overview-view__oab-form"
-          >
-            <el-form-item
-              class="oab"
-              label="OAB"
-              prop="oab"
-            >
-              <el-input
-                v-model="roleForm.oab"
-                @keydown.enter.native="addOab(roleForm.personId, roleForm.oabs)"
-                @blur="addOab(roleForm.personId, roleForm.oabs)"
-              />
-            </el-form-item>
-            <el-form-item
-              class="state"
-              label="Estado"
-              prop="state"
-            >
-              <el-select
-                v-model="roleForm.state"
-                :default-first-option="true"
-                autocomplete="off"
-                placeholder=""
-                filterable
-                @keydown.enter.native="addOab(roleForm.personId, roleForm.oabs)"
-                @change="addOab(roleForm.personId, roleForm.oabs)"
-                @blur="addOab(roleForm.personId, roleForm.oabs)"
-              >
-                <el-option
-                  v-for="state in $store.state.brazilianStates"
-                  :key="state.value"
-                  :label="state.value"
-                  :value="state.value"
-                />
-              </el-select>
-            </el-form-item>
-            <el-button
-              class="button"
-              type="primary"
-              @click="addOab(roleForm.personId, roleForm.oabs)"
-            >
-              <i class="el-icon-plus icon--white" />
-            </el-button>
-          </div>
-          <el-table
-            v-if="roleForm.roles && roleForm.roles.includes('LAWYER')"
-            :data="roleForm.oabs"
-            :show-header="false"
-            fit
-            class="el-table--list"
-          >
-            <el-table-column>
-              <div slot-scope="scope">
-                {{ scope.row.number + '-' + scope.row.state || '' }}
-              </div>
-            </el-table-column>
-            <el-table-column
-              fixed="right"
-              align="right"
-              width="48px"
-              class-name="visible"
-            >
-              <template v-slot="scope">
-                <a
-                  href="#"
-                  @click.prevent="removeOab(scope.$index)"
-                >
-                  <jus-icon icon="trash" />
-                </a>
-              </template>
-            </el-table-column>
-          </el-table>
-          <el-form-item
-            label="Telefone"
-            prop="phone"
-          >
-            <el-input
-              v-model="roleForm.phone"
-              v-mask="['(##) ####-####', '(##) #####-####']"
-              @keydown.enter.native="addPhone()"
-              @blur="addPhone()"
-            >
-              <el-button
-                slot="append"
-                @click="addPhone()"
-              >
-                <i class="el-icon-plus icon--white" />
-              </el-button>
-            </el-input>
-          </el-form-item>
-          <el-table
-            :data="roleForm.phones"
-            :show-header="false"
-            fit
-            class="el-table--list"
-          >
-            <el-table-column>
-              <div slot-scope="scope">
-                {{ scope.row.number | phoneNumber }}
-              </div>
-            </el-table-column>
-            <el-table-column
-              fixed="right"
-              align="right"
-              width="114px"
-              class-name="visible slot-scope"
-            >
-              <template v-slot="scope">
-                <el-tooltip
-                  :open-delay="500"
-                  :content="scope.row.isMain ? 'Este número receberá mensagens automáticas' : 'Este número não recberá mensagens automáticas'"
-                >
-                  <span class="dispute-overview-view__switch-main">
-                    <jus-icon
-                      v-if="scope.row.isMain"
-                      icon="phone-active"
-                    />
-                    <jus-icon
-                      v-else
-                      icon="not-main-phone-active"
-                    />
-                    <el-switch v-model="scope.row.isMain" />
-                  </span>
-                </el-tooltip>
-                <a
-                  href="#"
-                  @click.prevent="removePhone(scope.$index)"
-                >
-                  <jus-icon icon="trash" />
-                </a>
-              </template>
-            </el-table-column>
-          </el-table>
-          <el-form-item
-            label="E-mail"
-            prop="email"
-          >
-            <el-input
-              v-model="roleForm.email"
-              data-testid="input-email"
-              @keydown.enter.native="addEmail()"
-              @blur="addEmail()"
-            >
-              <el-button
-                slot="append"
-                data-testid="add-email"
-                @click="addEmail()"
-              >
-                <i class="el-icon-plus icon--white" />
-              </el-button>
-            </el-input>
-          </el-form-item>
-          <el-table
-            :data="roleForm.emails"
-            :show-header="false"
-            fit
-            class="el-table--list"
-          >
-            <el-table-column>
-              <span slot-scope="scope">
-                {{ scope.row.address }}
-              </span>
-            </el-table-column>
-            <el-table-column
-              fixed="right"
-              align="right"
-              width="114px"
-              class-name="visible slot-scope"
-            >
-              <template v-slot="scope">
-                <el-tooltip
-                  :open-delay="500"
-                  :content="scope.row.isMain ? 'Este e-mail receberá mensagens automáticas' : 'Este e-mail não recberá mensagens automáticas'"
-                >
-                  <span class="dispute-overview-view__switch-main">
-                    <jus-icon
-                      v-if="scope.row.isMain"
-                      icon="email-active"
-                    />
-                    <jus-icon
-                      v-else
-                      icon="not-main-email-active"
-                    />
-                    <el-switch v-model="scope.row.isMain" />
-                  </span>
-                </el-tooltip>
-                <a
-                  href="#"
-                  @click.prevent="removeEmail(scope.$index)"
-                >
-                  <jus-icon icon="trash" />
-                </a>
-              </template>
-            </el-table-column>
-          </el-table>
-          <h4>
-            Contas bancárias
-            <a
-              href="#"
-              style="float: right;width: 16px;margin-top: 1px;margin-right: 23px;"
-              @click.prevent="openAddBankDialog()"
-            >
-              <el-tooltip content="Adicionar conta bancária">
-                <i class="el-icon-plus icon-white" />
-              </el-tooltip>
-            </a>
-          </h4>
-          <el-table
-            :data="roleForm.bankAccounts"
-            :show-header="false"
-            fit
-            class="el-table--list"
-          >
-            <el-table-column>
-              <section slot-scope="scope">
-                <span>
-                  {{ scope.row.name }}
-                </span>
-                <div style="font-size: 12px;">
-                  {{ scope.row.bank }} | {{ scope.row.agency }} | {{ scope.row.number }}
-                </div>
-              </section>
-            </el-table-column>
-            <el-table-column
-              fixed="right"
-              align="right"
-              width="48px"
-              class-name="visible"
-            >
-              <template v-slot="scope">
-                <a
-                  href="#"
-                  @click.prevent="removeBankData(scope.$index, scope.row.id)"
-                >
-                  <jus-icon icon="trash" />
-                </a>
-              </template>
-            </el-table-column>
-          </el-table>
-        </el-form>
-        <span slot="footer">
-          <el-button
-            plain
-            @click="editRoleDialogVisible = false"
-          >Cancelar</el-button>
-          <el-button
-            :loading="editRoleDialogLoading"
-            type="primary"
-            data-testid="edit-data-part"
-            @click="editRole"
-          >
-            Editar dados
-          </el-button>
-        </span>
-      </el-dialog>
+        :has-error.sync="editRoleDialogError"
+        :erros.sync="editRoleDialogErrorList"
+        :loading.sync="editRoleDialogLoading"
+        :rules.sync="roleRules"
+        :has-changed.sync="documentNumberHasChanged"
+        @edit="editRole"
+        @addBankAccount="openAddBankDialog"
+        @addOab="addOab"
+        @removeBankData="removeBankData(...$event)"
+      />
+
+      <!-- Adição de conta bancária -->
       <el-dialog
         :close-on-click-modal="false"
         :visible.sync="addBankDialogVisible"
@@ -1749,45 +392,57 @@
           >Adicionar</el-button>
         </span>
       </el-dialog>
+
       <dispute-add-role
         :visible.sync="newRoleDialogVisible"
         :dispute-id="dispute.id"
         :document-numbers="documentNumbers"
         :oabs="oabs"
       />
+
       <jus-timeline
         v-if="disputeTimelineModal"
         v-model="disputeTimelineModal"
         :code="dispute.code"
+        @update:contact="restartEngagementFromTimeline"
       />
+
       <associate-contacts-modal
         v-model="showAssociateContacts"
-        :current="dispute.properties['CONTATOS ASSOCIADOS']"
+        :current="dispute && dispute.properties && dispute.properties['CONTATOS ASSOCIADOS'] ? dispute.properties['CONTATOS ASSOCIADOS'] : false"
         :parties="dispute.disputeRoles"
         :metadata="disputeMetadata"
+        @update:contacts="tryRestartEngagementAssociateContact"
       />
     </div>
   </div>
 </template>
 
 <script>
-import { getRoles, buildRoleTitle, getRoleIcon } from '@/utils'
+import { getRoles, buildRoleTitle } from '@/utils'
 import { validateName, validateDocument, validatePhone, validateZero } from '@/utils/validations'
 import { mapGetters, mapActions } from 'vuex'
 
+import restartEngagement from '@/utils/mixins/restartEngagement'
+import _ from 'lodash'
+
 export default {
   name: 'DisputeOverview',
+
   components: {
     DisputeAttachments: () => import('./sections/DisputeAttachments'),
     DisputeAddRole: () => import('../DisputeAddRole'),
     DisputeCodeLink: () => import('@/components/buttons/DisputeCodeLink'),
     DisputeProperties: () => import('../DisputeProperties'),
-    JusTags: () => import('@/components/others/JusTags'),
     JusTimeline: () => import('@/components/JusTimeline/JusTimeline'),
-    JusVexatiousAlert: () => import('@/components/dialogs/JusVexatiousAlert'),
-    LawyerDetail: () => import('@/components/others/LawyerDetail'),
-    AssociateContactsModal: () => import('@/components/dialogs/AssociateContactsModal')
+    AssociateContactsModal: () => import('@/components/dialogs/AssociateContactsModal'),
+    GeneralInfoTab: () => import('./sections/GeneralInfoTab'),
+    RolesTab: () => import('./sections/RolesTab'),
+    EditRoleDialog: () => import('./dialogs/EditRoleDialog'),
+    EditDisputeDialog: () => import('@/views/main/dispute/partials/DisputeOverview/dialogs/EditDisputeDialog')
   },
+
+  mixins: [restartEngagement],
 
   props: {
     loading: {
@@ -1802,7 +457,7 @@ export default {
 
   data() {
     return {
-      isEditingRule: false,
+      isEditingRole: false,
       disputeTimelineModal: false,
       overviewTab: 'general',
       namesakeList: [],
@@ -1810,7 +465,7 @@ export default {
       namesakeDialogLoading: false,
       namesakeButtonLoading: false,
       namesakeProcessing: false,
-      deletingLawyer: '',
+      deletingLawyer: { name: '' },
       deleteType: '',
       deleteTypes: [],
       modalLoading: false,
@@ -1905,16 +560,6 @@ export default {
       lastOfferValueHasChanged: false,
       cityFilter: null,
       ufFilter: null,
-      dispuesToUnknownParties: [
-        {
-          value: { party: 'RESPONDENT' },
-          label: 'Réu'
-        },
-        {
-          value: { party: 'CLAIMANT' },
-          label: 'Parte contrária'
-        }
-      ],
       tempRole: {}
     }
   },
@@ -1926,33 +571,33 @@ export default {
       searchLawyersLoading: 'searchLawyersLoading',
       disputeMetadata: 'disputeMetadata',
       dispute: 'dispute',
-      onlineDocuments: 'onlineDocuments',
-      strategies: 'getMyStrategiesLite'
+      strategies: 'getMyStrategiesLite',
+      isRecoveryStrategy: 'isWorkspaceRecovery'
     }),
-    campaign() {
-      return this.dispute?.campaign
+
+    dispuesToUnknownParties() {
+      return [
+        {
+          value: { party: 'RESPONDENT' },
+          label: this.$tc('PARTY_RESPONDENT', this.isRecoveryStrategy)
+        },
+        {
+          value: { party: 'CLAIMANT' },
+          label: this.$tc('fields.claimantParty', this.isRecoveryStrategy)
+        }
+      ]
     },
-    skipEnrichment() {
-      return this.dispute?.campaign?.skipEnrichment
-    },
-    onlineList() {
-      return Object.keys(this.onlineDocuments) || []
-    },
-    contactsMetadataCount() {
-      const { phones, emails } = this.disputeMetadata
-      return phones.length + emails.length
-    },
-    canEditBirthday() {
-      return this.roleForm.party === 'CLAIMANT' && this.roleForm.personType === 'NATURAL' && this.roleForm.roles && (this.roleForm.roles.includes('LAWYER') || this.roleForm.roles.includes('PARTY'))
-    },
+
     ufList() {
       const ufList = this.namesakeList.map(namesake => namesake.uf)
       return ufList.filter((uf, i) => uf !== null && ufList.indexOf(uf) === i)
     },
+
     cityList() {
       const cityList = this.namesakeList.map(namesake => namesake.city)
       return cityList.filter((city, i) => city !== null && cityList.indexOf(city) === i)
     },
+
     filteredNamesakeList() {
       if (this.ufFilter && this.cityFilter) {
         return this.namesakeList.filter(namesake => namesake.uf === this.ufFilter && namesake.city === this.cityFilter)
@@ -1964,24 +609,21 @@ export default {
         return this.namesakeList
       }
     },
-    validateDocumentNumber() {
-      if (this.documentNumberHasChanged) {
-        return [{ validator: validateDocument, message: 'CPF/CNPJ inválido.', trigger: 'submit' }]
-      }
-      return []
-    },
+
     validateDisputeUpperRange() {
       if (this.disputeUpperRangeHasChanged) {
         return [{ validator: validateZero, message: 'Valor precisa ser acima de 0', trigger: 'submit' }]
       }
       return []
     },
+
     validateLastOfferValue() {
       if (this.lastOfferValueHasChanged && this.disputeForm.disputeUpperRange) {
         return [{ validator: validateZero, message: 'Valor precisa ser acima de 0', trigger: 'submit' }]
       }
       return []
     },
+
     disputeBankAccountsIds: {
       get() {
         if (this.dispute.bankAccounts || Array.isArray(this.dispute.bankAccounts)) {
@@ -1993,21 +635,16 @@ export default {
         this.updateDisputeBankAccounts(bankAccountIds)
       }
     },
+
     selectedRole: {
       get() { return this.activeRoleId },
       set(newSelectedRole) { this.$emit('update:activeRoleId', newSelectedRole || 0) }
     },
+
     isValidStrategie() {
       return (this.strategies || []).map(s => s.id).includes(this.dispute.strategyId)
     },
-    computedDescription() {
-      if (this.dispute.description && this.dispute.description.length > 140) {
-        if (this.descriptionCollapse) {
-          return this.dispute.description.substring(0, 140) + '...'
-        }
-      }
-      return this.dispute.description
-    },
+
     disputeRolesSort() {
       if (this.dispute.disputeRoles) {
         let sortedArray = this.dispute.disputeRoles.slice(0) || []
@@ -2017,8 +654,6 @@ export default {
           if (dr.archived) return false
           return true
         })
-        // Ocultar o advogado do reu
-        // sortedArray = sortedArray.filter(({ party, roles }) => !(party === 'RESPONDENT' && roles.includes('LAWYER')))
         return sortedArray.sort((a, b) => {
           if (a.party === b.party) {
             return (a.roles[0] > b.roles[0]) ? -1 : (a.roles[0] < b.roles[0]) ? 1 : 0
@@ -2028,6 +663,7 @@ export default {
         })
       } return []
     },
+
     documentNumbers() {
       if (this.disputeRolesSort && this.disputeRolesSort.length) {
         return this.disputeRolesSort.map(role => {
@@ -2036,6 +672,7 @@ export default {
       }
       return []
     },
+
     oabs() {
       if (this.disputeRolesSort && this.disputeRolesSort.length) {
         const oabs = []
@@ -2048,21 +685,25 @@ export default {
       }
       return []
     },
+
     disputeClaimants() {
       if (this.dispute && this.dispute.disputeRoles) {
         return getRoles(this.dispute.disputeRoles, 'CLAIMANT')
       }
       return []
     },
+
     disputeNegotiations() {
       if (this.dispute && this.dispute.disputeRoles) {
         return getRoles(this.dispute.disputeRoles, 'RESPONDENT', 'NEGOTIATOR')
       }
       return []
     },
+
     banks() {
       return this.$store.getters.banksList
     },
+
     isAccepted() {
       return this.dispute ? ['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(this.dispute.status) : false
     },
@@ -2071,6 +712,7 @@ export default {
       get() {
         const condition = (
           this.dispute &&
+          ['IMPORTED', 'ENGAGEMENT', 'PENDING'].includes(this.dispute.status) &&
           this.dispute.properties &&
           (
             !Object.keys(this.dispute.properties).includes('CONTATOS ASSOCIADOS') ||
@@ -2108,8 +750,17 @@ export default {
       if ((!old || !old.id) && newew.properties) {
         this.checkMetadata()
       }
+    },
+
+    editDisputeDialogVisible(visible) {
+      if (visible) {
+        this.$refs.editDisputeDialog.show()
+      } else {
+        this.$refs.editDisputeDialog.hide()
+      }
     }
   },
+
   created() {
     if (this.disputeStatuses.ARCHIVED) {
       this.deleteTypes = this.disputeStatuses.ARCHIVED
@@ -2119,24 +770,24 @@ export default {
       })
     }
   },
+
   mounted() {
     this.init()
   },
+
   methods: {
     ...mapActions([
       'getDispute',
       'getDisputeProperties',
       'getDisputeStatuses',
       'getDisputeTimeline',
-      'hideSearchLawyerLoading',
       'removeDispute',
-      'searchLawyers',
-      'setDisputeparty',
       'addPhoneToDisputeRole',
       'addOabToDisputeRole',
       'getDisputeMetadata',
       'setDisputeProperty',
-      'deleteTicketOverviewParty'
+      'deleteTicketOverviewParty',
+      'restartDisputeValidatingStatus'
     ]),
 
     init() {
@@ -2154,16 +805,9 @@ export default {
       })
     },
 
-    openAssociationModal() {
-      this.setDisputeProperty({
-        disputeId: this.dispute.id,
-        key: 'CONTATOS ASSOCIADOS',
-        value: 'NAO'
-      })
-    },
-
     updateDisputeRoleField(disputeRole, { field, value }) {
       let message = ''
+
       if (field === 'oab') {
         const { number, state } = value
 
@@ -2217,6 +861,12 @@ export default {
           message = 'Este telefone já esta em uso.'
         }
       }
+
+      const { name, id: roleId } = disputeRole
+      const { status, id } = this.dispute
+
+      this.verifyRestartEngagement({ name, status, disputeId: id, disputeRoleId: roleId })
+
       if (message) {
         this.$jusNotification({
           title: 'Yay!',
@@ -2284,44 +934,10 @@ export default {
       }
     },
 
-    deactivePopover(ref) {
-      this.$refs[ref][0].$el.classList.remove('active-popover')
-    },
-
-    searchThisLawyer(lawyer, ref) {
-      if (!this.$refs[ref][0].showPopper) {
-        this.$refs[ref][0].$el.classList.add('active-popover')
-        this.searchLawyers(lawyer).finally(this.hideSearchLawyerLoading)
-      }
-    },
-
     disputeUpperRangeChangedHandler() {
       this.disputeUpperRangeHasChanged = true
       if (this.disputeForm.disputeUpperRange > 0) {
         this.disputeForm.lastOfferValue = this.disputeForm.disputeUpperRange
-      }
-    },
-    isToShowChangeParty({ party, roles }) {
-      return this.isEditingRule && party !== 'UNKNOWN'
-    },
-
-    isNegotiator({ roles }) {
-      return roles.includes('NEGOTIATOR')
-    },
-
-    getDisputePartys(roles) {
-      if (roles.includes('PARTY')) {
-        return [
-          { value: 'RESPONDENT', label: 'Réu' },
-          { value: 'CLAIMANT', label: 'Parte contrária' }
-        ]
-      } else if (roles.includes('LAWYER')) {
-        return [
-          { value: 'RESPONDENT', label: 'Advogado do réu' },
-          { value: 'CLAIMANT', label: 'Advogado da parte contrária' }
-        ]
-      } else {
-        return []
       }
     },
 
@@ -2348,7 +964,7 @@ export default {
     },
 
     handleEditRule() {
-      this.isEditingRule = !this.isEditingRule
+      this.isEditingRole = !this.isEditingRole
       this.$forceUpdate()
     },
 
@@ -2372,7 +988,7 @@ export default {
     },
 
     buildRoleTitle: (...i) => buildRoleTitle(...i),
-    getRoleIcon: (...i) => getRoleIcon(...i),
+
     openRemoveDisputeDialog() {
       if (this.dispute.status === 'PRE_NEGOTIATION') {
         this.deleteType = 'DISPUTE_DROPPED'
@@ -2388,6 +1004,7 @@ export default {
         this.chooseDeleteDialogVisible = true
       }
     },
+
     deleteDispute() {
       this.modalLoading = true
       this.removeDispute({
@@ -2403,25 +1020,7 @@ export default {
         this.modalLoading = false
       })
     },
-    showNamesake(role) {
-      return role.namesake && !role.documentNumber
-    },
-    showVexatious(personProperties) {
-      if (personProperties.IS_VEXATIOUS_AUTHOR === 'true' || personProperties.IS_VEXATIOUS_LAWYER === 'true' || personProperties.IS_VEXATIOUS_PARTY === 'true') return true
-      return false
-    },
-    showIsDead(role) {
-      return role.dead
-    },
-    buildContactStatus(contact) {
-      if (!contact.address && !contact.isMobile) {
-        return 'Não é possível enviar WhatsApp para números de telefones fixo'
-      } else if (contact.source === 'ENRICHMENT') {
-        return 'Contato enriquecido pelo sistema Justto'
-      } else {
-        return 'Contato adicionado manualmente'
-      }
-    },
+
     openAddBankDialog() {
       this.addBankForm.name = this.roleForm.name
       this.addBankForm.document = this.roleForm.documentNumber
@@ -2434,6 +1033,7 @@ export default {
       }
       this.addBankDialogVisible = true
     },
+
     closeNamesakes() {
       this.namesakeDialogVisible = false
       this.selectedNamesake = ''
@@ -2441,12 +1041,23 @@ export default {
       this.cityFilter = null
       this.ufFilter = null
     },
+
+    verifyRestartDispute() {
+      const info = {
+        disputeId: this.dispute?.id,
+        status: this.dispute?.status
+      }
+
+      this.restartDisputeValidatingStatus(info)
+    },
+
     selectNamesake() {
       if (this.selectedNamesake) {
         this.namesakeDialogLoading = true
         // eslint-disable-next-line
         axios.patch(`api/fusion-runner/set-document/person/${this.selectedNamesakePersonId}/${this.selectedNamesake.document}/${this.dispute.id}`)
           .then(() => {
+            this.verifyRestartDispute()
             this.namesakeDialogVisible = false
             this.namesakeDialogLoading = false
             this.namesakeProcessing = true
@@ -2461,12 +1072,14 @@ export default {
           })
       }
     },
+
     handleCurrentChange(val) {
       if (val) {
         this.selectedNamesake = val
       }
     },
-    namesakeDialog(name, personId) {
+
+    namesakeDialog({ name, personId }) {
       if (['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(this.dispute.status)) {
         this.$confirm(`Você está solicitando o tratamento de homônimo de uma disputa que já
         foi finalizada. Este processo irá agendar novamente as mensagens
@@ -2482,6 +1095,7 @@ export default {
         this.opeNnamesakeDialog(name, personId)
       }
     },
+
     opeNnamesakeDialog(name, personId) {
       this.selectedNamesakePersonId = personId
       this.namesakeButtonLoading = true
@@ -2498,6 +1112,7 @@ export default {
           this.namesakeButtonLoading = false
         })
     },
+
     updateDisputeRole(activeRole, messageType) {
       const disputeRoles = this.dispute.disputeRoles.map(dr => {
         if (dr.id === activeRole.id) {
@@ -2531,11 +1146,12 @@ export default {
       this.$store.commit('setDisputeRoles', disputeRoles)
       this.$emit('updateActiveRole', { activeRole, messageType })
     },
+
     updateDisputeBankAccounts(roleBankAccountIds) {
       let action, bankAccountId
       for (const roleAccount of roleBankAccountIds) {
         if (!this.disputeBankAccountsIds.includes(roleAccount)) {
-          if (this.dispute.denySavingDeposit) {
+          if (this.dispute?.denySavingDeposit) {
             const ba = this.dispute.disputeRoles.find(dr => dr.id === this.activeRoleId).bankAccounts.find(ba => ba.id === roleAccount)
             if (ba && ba.type === 'SAVING') {
               this.$jusNotification({
@@ -2577,14 +1193,7 @@ export default {
         this.linkBankAccountLoading = false
       })
     },
-    roleTitleSort(title) {
-      if (title) {
-        const sortedArray = title.slice(0) || []
-        return sortedArray.sort((a, b) => {
-          return (a[0] > b[0]) ? -1 : (a[0] < b[0]) ? 1 : 0
-        })
-      } return []
-    },
+
     openDisputeDialog() {
       this.disputeUpperRangeHasChanged = false
       this.lastOfferValueHasChanged = false
@@ -2605,7 +1214,7 @@ export default {
       this.disputeForm.disputeCode = dispute.code
       this.disputeForm.disputeUpperRange = parseFloat(dispute.disputeUpperRange)
       this.disputeForm.lastOfferValue = parseFloat(dispute.lastOfferValue)
-      this.disputeForm.expirationDate = dispute.expirationDate.dateTime
+      this.disputeForm.expirationDate = dispute.expirationDate?.dateTime
       this.disputeForm.description = dispute.description
       this.disputeForm.materialDamage = dispute.materialDamage || ''
       this.disputeForm.moralDamage = dispute.moralDamage || ''
@@ -2616,27 +1225,36 @@ export default {
       this.disputeForm.contactPartyWhenNoLowyer = dispute.contactPartyWhenNoLowyer
       this.disputeForm.contactPartyWhenInvalidLowyer = dispute.contactPartyWhenInvalidLowyer
       this.disputeForm.alwaysContactParty = dispute.alwaysContactParty
-      this.disputeForm.denySavingDeposit = dispute.denySavingDeposit
+      this.disputeForm.denySavingDeposit = dispute?.denySavingDeposit
       this.disputeForm.zeroUpperRange = !parseFloat(dispute.disputeUpperRange)
       this.editDisputeDialogVisible = true
-      this.$nextTick(() => { this.$refs.disputeForm.clearValidate() })
+      this.$nextTick(() => {
+        if (this.$refs.disputeForm) this.$refs.disputeForm.clearValidate()
+      })
     },
+
     checkZeroUpperRange() {
       if (this.disputeForm.zeroUpperRange) {
         this.$nextTick(() => { this.$refs.disputeForm.validate() })
       }
     },
+
     editDispute() {
       this.$refs.disputeForm.validate(valid => {
         if (valid) {
           this.editDisputeDialogLoading = true
           const h = this.$createElement
+
+          const hasUpperRangeProblem = this.isRecoveryStrategy ? this.disputeForm.lastOfferValue < this.disputeForm.disputeUpperRange : this.disputeForm.lastOfferValue > this.disputeForm.disputeUpperRange
+
+          const hasUpperRangeProblemText = `- ${this.$tc('UPPER_RANGE', this.isRecoveryStrategy)} está ${this.isRecoveryStrategy ? 'acima' : 'abaixo'} do valor proposto.`
+
           this.$msgbox({
             title: 'Atenção!',
             message: h('p', null, [
               h('div', null, '- As novas informações vão sobrescrever as antigas.'),
-              this.disputeForm.lastOfferValue > this.disputeForm.disputeUpperRange
-                ? h('div', null, '- Alçada máxima está abaixo do valor proposto.') : null,
+              hasUpperRangeProblem
+                ? h('div', null, hasUpperRangeProblemText) : null,
               h('br', null, null),
               h('div', null, 'Deseja continuar?')
             ]),
@@ -2658,7 +1276,7 @@ export default {
             disputeToEdit.contactPartyWhenNoLowyer = this.disputeForm.contactPartyWhenNoLowyer
             disputeToEdit.contactPartyWhenInvalidLowyer = this.disputeForm.contactPartyWhenInvalidLowyer
             disputeToEdit.alwaysContactParty = this.disputeForm.alwaysContactParty
-            disputeToEdit.denySavingDeposit = this.disputeForm.denySavingDeposit
+            disputeToEdit.denySavingDeposit = this.disputeForm?.denySavingDeposit
             disputeToEdit.lastOfferRoleId = this.selectedNegotiatorId
             disputeToEdit.lastOfferValue = this.disputeForm.lastOfferValue
             if (this.disputeForm.materialDamage) disputeToEdit.materialDamage = this.disputeForm.materialDamage
@@ -2674,6 +1292,7 @@ export default {
             const contactPartyWhenNoLowyer = this.dispute.contactPartyWhenNoLowyer
             const contactPartyWhenInvalidLowyer = this.dispute.contactPartyWhenInvalidLowyer
             const alwaysContactParty = this.dispute.alwaysContactParty
+
             this.$store.dispatch('editDispute', disputeToEdit).then(() => {
               // SEGMENT TRACK
               this.$jusSegment('Editar disputa', { disputeId: disputeToEdit.id })
@@ -2715,7 +1334,7 @@ export default {
                 })
               }
             }).catch(error => {
-              if (error.response && error.response.data && error.response.status === 412 && error.response.data.code === 'DUPLICATED_VALIDATION') {
+              if (error.response && error.response.data && error.response?.status === 412 && error.response.data.code === 'DUPLICATED_VALIDATION') {
                 let message
                 if (error.response.data.fields.CAN_ACCESS_OTHER) {
                   message = 'Este número de processo ja está sendo usado na disputa <a target="_blank" href="https://justto.app/#/management/dispute/' + error.response.data.fields.OTHER_DISPUTE_ID + '">#' + error.response.data.fields.OTHER_DISPUTE_ID + '</a>.'
@@ -2740,6 +1359,7 @@ export default {
         }
       })
     },
+
     handleChange(val) {
       if (!val) {
         this.selectedPhone = 0
@@ -2750,8 +1370,9 @@ export default {
           return dr
         })
       }
-      this.isEditingRule = false
+      this.isEditingRole = false
     },
+
     openRoleDialog(role) {
       this.bankAccountIdstoUnlink = []
       this.editRoleDialogError = false
@@ -2766,13 +1387,16 @@ export default {
       this.roleForm.phones = this.roleForm.phones.filter(f => !f.archived)
       if (this.roleForm.emails.length) this.roleForm.emails = this.roleForm.emails.sort(e => e.isMain ? -1 : 1)
       if (this.roleForm.phones.length) this.roleForm.phones = this.roleForm.phones.sort(p => p.isMain ? -1 : 1)
-      if (this.$refs.roleForm) this.$refs.roleForm.clearValidate()
+      if (this.$refs.editRoleForm) this.$refs.editRoleForm.clearValidate()
     },
-    editRole() {
+
+    editRole(roleFormRef) {
       let isValid = true
-      this.$refs.roleForm.validateField(['name', 'documentNumber'], errorMessage => {
+
+      roleFormRef.validateField(['name', 'documentNumber'], errorMessage => {
         if (errorMessage) isValid = false
       })
+
       if (isValid) {
         if (this.bankAccountIdstoUnlink.length) {
           this.linkBankAccountLoading = true
@@ -2797,12 +1421,15 @@ export default {
         }
       }
     },
+
     editRoleAction() {
       const hasNewBankAccount = this.roleForm.bankAccounts.filter(account => !account.id).length
       delete this.roleForm.personProperties.BIRTHDAY
       const roleToEdit = JSON.parse(JSON.stringify(this.roleForm))
       delete roleToEdit.title
+
       this.editRoleDialogLoading = true
+
       this.$store.dispatch('editRole', {
         disputeId: this.dispute.id,
         disputeRole: roleToEdit
@@ -2814,7 +1441,9 @@ export default {
           message: 'Os dados foram alterados com sucesso.',
           type: 'success'
         })
+
         const roleDataDifference = this.verifyChangedRoleData(this.roleForm, this.originalRole)
+
         if (roleDataDifference.length) {
           this.$confirm(this.$t('dispute.overview.confirm.restart.engagement.question'), 'Atenção!', {
             confirmButtonText: this.$t('dispute.overview.confirm.restart.engagement.confirm'),
@@ -2845,6 +1474,7 @@ export default {
             })
           })
         }
+
         if (hasNewBankAccount) {
           this.$confirm('Você adicionou contas bancárias a esta parte. Deseja vincular estas contas a disputa?', 'Atenção', {
             confirmButtonText: 'Vincular',
@@ -2863,25 +1493,37 @@ export default {
               }
             }).slice(-hasNewBankAccount).map(ba => ba.id)
             this.disputeBankAccountsIds = ([...this.disputeBankAccountsIds, ...newBankAccounts])
-            // this.updateDisputeBankAccounts(newBankAccount.id)
           }).finally(() => {
             this.linkBankAccountLoading = false
           })
         }
+
         this.editRoleDialogVisible = false
+
         setTimeout(function() {
           this.$emit('fetch-data')
         }.bind(this), 200)
       }).catch(error => {
         console.error(error)
+
         if (error.status === 400) {
           this.editRoleDialogError = true
           this.editRoleDialogErrorList.push(error.data.message)
         } else this.$jusNotification({ error })
       }).finally(() => {
+        const { name, party, id: roleId } = roleToEdit
+        const { status, id } = this.dispute
+
+        const needRestartEngagement = _.difference(this.roleForm.phones, this.originalRole.phones).length || _.difference(this.roleForm.emails, this.originalRole.emails).length
+
+        if (needRestartEngagement) {
+          this.verifyRestartEngagement({ name, party, status, disputeId: id, disputeRoleId: roleId })
+        }
+
         this.editRoleDialogLoading = false
       })
     },
+
     verifyChangedRoleData(editedRole, originalRole) {
       const changed = {
         newPhones: [],
@@ -2901,45 +1543,10 @@ export default {
       }
       return [...changed.newPhones, ...changed.newEmails]
     },
-    addPhone() {
-      let isValid = true
-      this.roleForm.phone = this.roleForm.phone.trim()
-      this.$refs.roleForm.validateField('phone', errorMessage => {
-        if (errorMessage || !this.roleForm.phone) isValid = false
-      })
-      if (isValid) {
-        const self = this
-        this.roleForm.phone = this.roleForm.phone.replace(/ /g, '').replace(/\D/g, '')
-        const isDuplicated = this.roleForm.phones.findIndex(p => {
-          const number = p.number.startsWith('55') ? p.number.replace('55', '') : p.number
-          return number === self.roleForm.phone
-        })
-        if (isDuplicated < 0) this.roleForm.phones.push({ number: this.roleForm.phone, isMain: true })
-        this.roleForm.phone = ''
-      }
-    },
-    removePhone(index) {
-      this.roleForm.phones.splice(index, 1)
-    },
-    addEmail() {
-      let isValid = true
-      this.roleForm.email = this.roleForm.email.trim()
-      this.$refs.roleForm.validateField('email', errorMessage => {
-        if (errorMessage || !this.roleForm.email) isValid = false
-      })
-      if (isValid) {
-        const self = this
-        const isDuplicated = this.roleForm.emails.findIndex(e => e.address === self.roleForm.email)
-        if (isDuplicated < 0) this.roleForm.emails.push({ address: this.roleForm.email, isMain: true })
-        this.roleForm.email = ''
-      }
-    },
-    removeEmail(index) {
-      this.roleForm.emails.splice(index, 1)
-    },
+
     addOab() {
       let isValid = true
-      this.$refs.roleForm.validateField(['oab', 'state'], errorMessage => {
+      this.$refs.editRoleForm.validateField(['oab', 'state'], errorMessage => {
         if (errorMessage || !this.roleForm.oab || !this.roleForm.state) isValid = false
       })
       if (isValid) {
@@ -2956,9 +1563,7 @@ export default {
         this.roleForm.state = ''
       }
     },
-    removeOab(index) {
-      this.roleForm.oabs.splice(index, 1)
-    },
+
     removeRole(role) {
       if (this.isLawyer(role)) {
         this.deletingLawyer = role
@@ -2988,6 +1593,7 @@ export default {
         })
       }
     },
+
     addBankData() {
       this.$refs.addBankForm.validate(valid => {
         if (valid) {
@@ -3007,10 +1613,12 @@ export default {
         }
       })
     },
+
     removeBankData(index, id) {
       this.bankAccountIdstoUnlink.push(id)
       this.roleForm.bankAccounts.splice(index, 1)
     },
+
     enrichDispute() {
       const content = this.isAccepted ? 'Isso irá <b>ENRIQUECER</b> uma disputa que já foi finalizada. Este processo irá agendar novamente as mensagens para as partes quando finalizado. Você deseja enriquecer mesmo assim?' : 'Tem certeza que deseja realizar esta ação?'
       this.$confirm(content, 'ATUALIZAR ANEXOS', {
@@ -3031,27 +1639,6 @@ export default {
           })
         })
       })
-    },
-    setDisputeParty(role) {
-      this.$jusSegment('Definindo função em participante da disputa', {
-        page: this.$route.name
-      })
-      this.setDisputeparty({
-        disputeId: this.dispute.id,
-        disputeRoleId: role.id,
-        disputeParty: role.party
-      })
-        .then(() => {
-          this.$jusNotification({
-            title: 'Yay!',
-            message: 'Função definida com sucesso!',
-            type: 'success',
-            dangerouslyUseHTMLString: true
-          })
-        }).finally(() => {
-          this.isEditingRule = false
-          this.getDisputeProperties(this.dispute.id)
-        })
     },
 
     isLawyer(role) {
@@ -3076,6 +1663,17 @@ export default {
         this.$jusNotification({ error })
       })
       this.chooseRemoveLawyerDialogVisible = false
+    },
+
+    tryRestartEngagementAssociateContact(disputeRole) {
+      // TODO
+    },
+
+    restartEngagementFromTimeline(disputeRole) {
+      const { name, party, id: roleId } = disputeRole
+      const { status, id } = this.dispute
+
+      this.verifyRestartEngagement({ name, party, status, disputeId: id, disputeRoleId: roleId })
     }
   }
 }

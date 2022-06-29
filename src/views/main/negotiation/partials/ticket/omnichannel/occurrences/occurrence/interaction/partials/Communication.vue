@@ -1,5 +1,6 @@
 <template>
   <section class="communication-container">
+    <el-skeleton v-if="!occurrence.renderCompleted" />
     <div
       v-if="toPrint"
       class="date-to-print"
@@ -7,6 +8,7 @@
       {{ sendDate | moment('[Em] DD/MM [-] HH:mm') }}
     </div>
     <div
+      v-if="!hideInfo"
       class="communication-container__email"
       :class="directionIn || toPrint ? 'INBOUND' : 'OUTBOUND'"
     >
@@ -59,19 +61,21 @@
       v-if="!toPrint"
       class="communication-container__about"
     >
-      {{ sendDate | moment('HH:mm') }}
-      <span v-if="sendStatus !== 'default' && !directionIn">
-        •
-      </span>
-      <JusIcon
-        v-if="sendStatus !== 'default' && !directionIn"
-        class="communication-container__about-icon"
-        :icon="`status-${sendStatus}`"
-      />
-      <GroupedOccurrences
-        :have="haveGroupedOccurrences"
-        :occurrences="groupedOccurrences"
-      />
+      <el-tooltip
+        :disabled="!sendStatusDate"
+      >
+        <span slot="content">
+          {{ {'readed': 'Lida', 'recived': 'Recebida', 'sent': 'Enviada'}[sendStatus] }}
+          {{ sendStatusDate | moment('[ em ] DD/MM/YYYY [ às ] HH:mm') }}
+        </span>
+
+        <JusIcon
+          v-if="sendStatus !== 'default' && !directionIn"
+          class="communication-container__about-icon"
+          :icon="`status-${sendStatus}`"
+        />
+      </el-tooltip>
+
       <el-tooltip
         :open-delay="600"
       >
@@ -81,6 +85,7 @@
         >
           <span v-html="hasError" />
         </div>
+
         <JusIcon
           v-if="hasError"
           class="communication-container__about-icon"
@@ -96,18 +101,22 @@ import { mapActions, mapGetters } from 'vuex'
 import communicationSendStatus from '@/utils/mixins/communicationSendStatus'
 
 export default {
-  components: {
-    GroupedOccurrences: () => import('./partials/groupedOccurrence')
-  },
   mixins: [communicationSendStatus],
+
   props: {
     value: {
       type: Object,
       required: true
     },
+
     occurrence: {
       type: Object,
       required: true
+    },
+
+    hideInfo: {
+      type: Boolean,
+      default: false
     }
   },
 

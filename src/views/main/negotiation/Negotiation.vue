@@ -21,6 +21,10 @@ export default {
   components: {
     Tickets: () => import('./partials/tickets/Tickets'),
     EmptyTicket: () => import('./partials/ticket/TicketEmpty')
+  },
+
+  mounted() {
+    this.$jusSegment('ACCESS_NEGOTIATION', {})
   }
 }
 </script>

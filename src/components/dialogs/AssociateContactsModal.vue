@@ -189,6 +189,7 @@
 import { mapActions } from 'vuex'
 export default {
   name: 'AssociateContactsModal',
+
   props: {
     value: {
       required: true,
@@ -212,6 +213,7 @@ export default {
       default: () => []
     }
   },
+
   data() {
     return {
       loading: false,
@@ -219,6 +221,7 @@ export default {
       phones: []
     }
   },
+
   computed: {
     disputeRoles() {
       return (this.parties).filter(({ party, polarity, roles }) => {
@@ -229,7 +232,7 @@ export default {
       get() {
         return Boolean(this.value) && (this.emails?.length > 0 || this.phones?.length > 0)
       },
-      set(_value) {}
+      set(value) {}
     },
     hasAssociations() {
       const phones = this.phones.filter(phone => {
@@ -241,22 +244,31 @@ export default {
       return (phones + email) > 0
     }
   },
+
   watch: {
     metadata() {
       this.update()
+    },
+
+    toShow(value) {
+      if (!value) this.loading = false
     }
   },
+
   mounted() {
     this.update()
   },
+
   beforeDestroy() {
     this.loading = false
   },
+
   methods: {
     ...mapActions([
+      'setDisputeProperty',
       'addPhoneToDisputeRole',
       'addEmailToDisputeRole',
-      'setDisputeProperty'
+      'restartDisputeRoleEngagement'
     ]),
 
     handleBeforeClose(done) {
@@ -292,8 +304,8 @@ export default {
       this.loading = true
     },
 
-    submit() {
-      const { id } = this.$route.params
+    handleAssociateContacts() {
+      const { id: disputeId } = this.$route.params
 
       const promisses = []
 
@@ -302,36 +314,74 @@ export default {
       this.phones.filter(phone => {
         return !!phone.associateWith
       }).map(({ address, associateWith }) => {
-        promisses.push(
-          new Promise((resolve, reject) => {
-            this.addPhoneToDisputeRole({
-              disputeId: id,
-              disputeRoleId: associateWith,
-              value: address
-            }).then(resolve).catch(reject)
-          })
-        )
+        promisses.push(this.addPhoneToDisputeRole({
+          disputeId,
+          disputeRoleId: associateWith,
+          value: address
+        }))
       })
 
       this.emails.filter(email => {
         return !!email.associateWith
       }).map(({ address, associateWith }) => {
-        promisses.push(
-          new Promise((resolve, reject) => {
-            this.addEmailToDisputeRole({
-              disputeId: id,
-              disputeRoleId: associateWith,
-              value: address
-            }).then(resolve).catch(reject)
-          })
-        )
+        promisses.push(this.addEmailToDisputeRole({
+          disputeId,
+          disputeRoleId: associateWith,
+          value: address
+        }))
       })
 
-      Promise.all(promisses).then(() => {
-        this.loading = false
-      }).finally(() => {
-        this.$emit('input', 'SIM')
+      return new Promise((resolve, reject) => {
+        Promise.all(promisses).then(() => {
+          this.loading = false
+          this.$emit('input', 'SIM')
+          resolve()
+        }).catch(reject)
       })
+    },
+
+    submit() {
+      const { id: disputeId } = this.$route.params
+
+      const ids = [
+        ...this.phones.filter(({
+          associateWith: id
+        }, i, phones) => !!id && phones.findIndex(({
+          associateWith
+        }) => associateWith === id) === i).map(({
+          associateWith
+        }) => associateWith),
+
+        ...this.emails.filter(({
+          associateWith: id
+        }, i, emails) => !!id && emails.findIndex(({
+          associateWith
+        }) => associateWith === id) === i).map(({
+          associateWith
+        }) => associateWith)
+      ]
+
+      if (ids.length) {
+        const msg = 'Detectamos alterações nos dados de contato. Quer reagendar as mensagens da(s) parte(s) para incluir o(s) novo(s) contato(s)?'
+
+        this.$confirm(msg, 'Reengajar', {
+          confirmButtonText: 'Sim',
+          cancelButtonText: 'Não',
+          closeOnPressEscape: false,
+          closeOnClickModal: false,
+          showClose: false,
+          center: true
+        }).then(() => {
+          this.handleAssociateContacts().then(() => {
+            Promise.all(ids.map(disputeRoleId => this.restartDisputeRoleEngagement({
+              disputeRoleId,
+              disputeId
+            })))
+          })
+        })
+      } else {
+        this.handleAssociateContacts()
+      }
     }
   }
 }

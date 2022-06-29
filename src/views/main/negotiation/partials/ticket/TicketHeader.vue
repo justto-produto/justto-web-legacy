@@ -2,29 +2,62 @@
   <section
     id="headerTicketNegotiation"
     class="ticket-header-container"
+    :class="{'dispute-mode': isInDispute}"
   >
-    <article class="ticket-header-container__title">
-      <div class="ticket-header-container__process-code">
+    <article
+      v-if="!isInDispute"
+      class="ticket-header-container__title"
+    >
+      <div
+        class="ticket-header-container__process-code"
+      >
         <span>Processo:&nbsp;</span>
+
         <TicketCode
           :code="ticket.code"
           get-befor-mount
           class="ticket-header-container__process-link"
         />
       </div>
+
       <div
         class="ticket-header-container__overview-link"
         @click="handleShowOverview"
       >
         <span class="ticket-header-container__additional-info">Informações adicionais</span>
+
         <i class="ticket-header-container__additional-info-icon el-icon-arrow-right" />
       </div>
     </article>
 
+    <router-link
+      v-else
+      to="/management"
+      class="ticket-header-container__back"
+    >
+      <i class="el-icon-back" />
+    </router-link>
+
     <TicketActions
       :ticket="ticket"
       class="ticket-header-container__actions"
+      :is-in-dispute="isInDispute"
     />
+
+    <Dialer
+      v-if="!isOverviewActive"
+      class="ticket-header-container__dialer"
+    />
+
+    <div
+      v-if="isInDispute"
+      class="ticket-header-container__hide-overview"
+    >
+      <i
+        :class="{'el-icon-arrow-right': !isCollapsed, 'el-icon-arrow-left': isCollapsed}"
+        @click="handleShowOverview"
+      />
+    </div>
   </section>
 </template>
 
@@ -33,18 +66,45 @@ import { mapGetters } from 'vuex'
 
 export default {
   name: 'TicketHeader',
+
   components: {
     TicketCode: () => import('@/components/JusTimelineV2/TicketCode'),
-    TicketActions: () => import('./TicketActions')
+    TicketActions: () => import('./TicketActions'),
+    Dialer: () => import('@/views/main/dialer/Dialer')
   },
+
+  props: {
+    showOverview: {
+      type: Boolean,
+      default: false
+    },
+
+    isInDispute: {
+      type: Boolean,
+      default: false
+    },
+
+    isCollapsed: {
+      type: Boolean,
+      default: false
+    }
+  },
+
   computed: {
     ...mapGetters({
-      ticket: 'getTicketOverview'
-    })
+      ticket: 'getTicketOverview',
+      innerWidth: 'getWindowWidth'
+    }),
+
+    isOverviewActive() {
+      return this.innerWidth > 1200 ? !this.showOverview : this.showOverview
+    }
   },
+
   methods: {
     handleShowOverview() {
       this.$emit('toggle-show-overview')
+      this.$emit('update:is-collapsed', !this.isCollapsed)
     }
   }
 }
@@ -72,6 +132,34 @@ export default {
 
     .ticket-header-container__overview-link {
       display: none;
+    }
+  }
+
+  .ticket-header-container__dialer {
+    border-radius: 6px;
+    padding: 8px 2px;
+    margin-left: 8px;
+    border: solid lightgray thin;
+    cursor: pointer;
+  }
+
+  .ticket-header-container__hide-overview,
+  .ticket-header-container__back {
+    cursor: pointer;
+
+    i {
+      font-size: 24px;
+      margin-left: 8px;
+      color: $--color-black;
+    }
+  }
+
+  &.dispute-mode {
+    justify-content: flex-start;
+    gap: 8px;
+
+    .ticket-header-container__hide-overview {
+      margin-left: auto;
     }
   }
 }

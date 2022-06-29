@@ -21,11 +21,13 @@
       @cell-mouse-leave="cellMouseLeave()"
       @row-click="handleRowClick"
       @selection-change="handleSelectionChange"
+      @header-click="handleHeaderClick"
     >
       <el-table-column
         type="selection"
         width="44px"
       />
+
       <el-table-column
         :sortable="false"
         label="Processo"
@@ -43,6 +45,7 @@
           />
         </template>
       </el-table-column>
+
       <el-table-column
         :sortable="false"
         prop="campaignName"
@@ -64,12 +67,13 @@
           </el-tooltip>
         </template>
       </el-table-column>
+
       <el-table-column
         :sortable="false"
         prop="firstClaimant"
         min-width="140px"
         class-name="text-ellipsis first-claimant-container"
-        label="Parte(s) contrária(s)"
+        :label="$tc('fields.claimantParty', isRecoveryStrategy)"
       >
         <template v-slot="scope">
           <div class="first-claimant-container__cell">
@@ -79,6 +83,7 @@
               :name="scope.row.firstClaimant"
               style="display: flex; align-items: center;"
             />
+
             <el-tooltip
               v-if="scope.row.firstClaimant"
               class="online-icon"
@@ -90,15 +95,18 @@
                 style="height: 8px; width: 8px;"
               />
             </el-tooltip>
-            {{ scope.row.firstClaimant || '-' }}
+
+            {{ scope.row.firstClaimant || '-' | capitalize }}
           </div>
+          <FollowUp :dispute="scope.row" />
         </template>
       </el-table-column>
+
       <el-table-column
         :sortable="false"
         prop="firstClaimantLawyer"
         class-name="text-ellipsis first-claimant-container"
-        label="Advogado(s) da parte"
+        :label="$tc('fields.claimantLawyer', isRecoveryStrategy)"
         min-width="154px"
       >
         <template v-slot="scope">
@@ -109,6 +117,7 @@
               :alerts="scope.row.firstClaimantLawyerAlerts"
               style="display: flex;"
             />
+
             <el-tooltip
               v-if="scope.row.firstClaimantLawyer"
               :content="`${$options.filters.capitalize(scope.row.firstClaimantLawyer.toLowerCase().split(' ')[0])} está online`"
@@ -124,15 +133,24 @@
                 style="height: 8px; width: 8px;"
               />
             </el-tooltip>
-            {{ scope.row.firstClaimantLawyer || '-' }}
+
+            <el-tooltip
+              content="Buscar disputas com este advogado"
+              :disabled="(scope.row.firstClaimantLawyer || '-') === '-'"
+              :open-delay="500"
+            >
+              <div>
+                {{ scope.row.firstClaimantLawyer || '-' | capitalize }}
+              </div>
+            </el-tooltip>
           </div>
-          <!-- {{ firstClaimantLawyerStatus ? 'ONLINE' : 'OFFLINE' }} -->
         </template>
       </el-table-column>
+
       <el-table-column
         v-if="tab1 || tab2"
         :sortable="false"
-        label="Alçada máxima"
+        :label="$tc('UPPER_RANGE', isRecoveryStrategy)"
         align="center"
         prop="disputeUpperRange"
         min-width="118px"
@@ -144,6 +162,7 @@
           <span v-else>-</span>
         </template>
       </el-table-column>
+
       <el-table-column
         v-if="tab1"
         :sortable="false"
@@ -156,12 +175,28 @@
           {{ scope.row.lastOfferValue | currency }}
         </template>
       </el-table-column>
+
+      <!-- label="Interações" -->
+
       <el-table-column
         v-if="tab2 || tab3 || tab4"
-        label="Interações"
         min-width="140px"
         align="center"
+        label="Interações"
       >
+        <template v-slot:header>
+          <div class="is-pointer">
+            Interações
+            <i
+              v-if="sortKeys.includes('lastInboundInteraction.createdAt')"
+              :class="{
+                'el-icon-caret-top': sortStripped['lastInboundInteraction.createdAt'] === 'asc',
+                'el-icon-caret-bottom': sortStripped['lastInboundInteraction.createdAt'] === 'desc'
+              }"
+            />
+          </div>
+        </template>
+
         <template v-slot="scope">
           <ManagementLastInteraction
             :data="scope.row"
@@ -169,6 +204,7 @@
           />
         </template>
       </el-table-column>
+
       <el-table-column
         v-if="(tab3 || tab4) && showDraft"
         label="Minuta"
@@ -192,10 +228,11 @@
           <span v-else>-</span>
         </template>
       </el-table-column>
+
       <el-table-column
         v-if="tab2"
         :sortable="false"
-        label="Proposta da parte"
+        :label="isRecoveryStrategy ? 'Proposta do réu' : 'Proposta da parte'"
         align="center"
         prop="lastCounterOfferValue"
         min-width="120px"
@@ -204,6 +241,7 @@
           {{ scope.row | counterProposal | currency }}
         </template>
       </el-table-column>
+
       <el-table-column
         v-if="tab0"
         :sortable="false"
@@ -228,6 +266,7 @@
           <span v-else>-</span>
         </template>
       </el-table-column>
+
       <el-table-column
         v-if="tab0 || tab1 || tab2 || tabAll"
         :sortable="false"
@@ -246,11 +285,11 @@
               <jus-icon icon="clock" />
               <i class="management-table__interaction-pulse el-icon-warning el-icon-pulse el-icon-primary" />
             </span>
-            <!-- <span v-else>-</span> -->
           </el-tooltip>
           <span v-if="scope.row.expirationDate">{{ scope.row.expirationDate.dateTime | moment('DD/MM/YY') }}</span>
         </template>
       </el-table-column>
+
       <el-table-column
         v-if="tab1 || tab4 || tabAll"
         :sortable="false"
@@ -264,6 +303,7 @@
           <span v-if="scope.row.paused">(pausada)</span>
         </template>
       </el-table-column>
+
       <el-table-column
         v-if="tab3 || tab4"
         :sortable="false"
@@ -279,6 +319,7 @@
           <span v-else>-</span>
         </template>
       </el-table-column>
+
       <el-table-column
         v-if="tab3 || tab4 || tabAll"
         :sortable="false"
@@ -294,6 +335,7 @@
           <span v-else>-</span>
         </template>
       </el-table-column>
+
       <el-table-column
         class-name="hidden-actions"
         width="1px"
@@ -307,6 +349,7 @@
           />
         </template>
       </el-table-column>
+
       <template slot="empty">
         <transition name="el-fade-in-linear">
           <span v-show="showEmpty">
@@ -321,6 +364,7 @@
           </span>
         </transition>
       </template>
+
       <infinite-loading
         v-if="disputes.length >= 20"
         slot="append"
@@ -337,11 +381,13 @@
         </div>
       </infinite-loading>
     </el-table>
+
     <jus-timeline
       v-if="currentDisputeCode"
       v-model="disputeTimelineModal"
       :code="currentDisputeCode"
     />
+
     <negotiator-activeReply
       v-if="Object.keys(activeDispute).length"
       :visible.sync="canShowDialogReplyEditor"
@@ -352,10 +398,11 @@
 
 <script>
 import { getDocumentStep } from '@/utils'
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapActions, mapMutations } from 'vuex'
 
 export default {
   name: 'ManagementTable',
+
   filters: {
     counterProposal: function({ lastCounterOfferValue, disputeUpperRange, lastOfferValue }) {
       if (lastCounterOfferValue) {
@@ -367,6 +414,7 @@ export default {
       }
     }
   },
+
   components: {
     NegotiatorActiveReply: () => import('./partials/NegotiatorActiveReply'),
     DisputeCodeLink: () => import('@/components/buttons/DisputeCodeLink'),
@@ -375,8 +423,10 @@ export default {
     JusDisputeActions: () => import('@/components/buttons/JusDisputeActions'),
     JusProtocolDialog: () => import('@/components/dialogs/JusProtocolDialog'),
     InfiniteLoading: () => import('vue-infinite-loading'),
-    JusVexatiousAlert: () => import('@/components/dialogs/JusVexatiousAlert')
+    JusVexatiousAlert: () => import('@/components/dialogs/JusVexatiousAlert'),
+    FollowUp: () => import('./partials/ManagementFollowUp')
   },
+
   props: {
     activeTab: {
       type: String,
@@ -391,6 +441,7 @@ export default {
       default: false
     }
   },
+
   data() {
     return {
       currentDisputeCode: null,
@@ -411,6 +462,7 @@ export default {
       lastAccessTooltipTimeout: () => {}
     }
   },
+
   computed: {
     ...mapGetters({
       disputeTimeline: 'getDisputesTimeline',
@@ -418,7 +470,9 @@ export default {
       disputes: 'disputes',
       lastAccess: 'lastAccess',
       onlineDocuments: 'onlineDocuments',
-      showDraft: 'getIsDraftManagementActive'
+      showDraft: 'getIsDraftManagementActive',
+      isRecoveryStrategy: 'isWorkspaceRecovery',
+      sortQuery: 'disputeQuery'
     }),
 
     selectedIdsComp: {
@@ -429,25 +483,46 @@ export default {
         this.$emit('update:selectedIds', ids)
       }
     },
+
     tab0() {
       return this.activeTab === '0'
     },
+
     tab1() {
       return this.activeTab === '1'
     },
+
     tab2() {
       return this.activeTab === '2'
     },
+
     tab3() {
       return this.activeTab === '3'
     },
+
     tab4() {
       return this.activeTab === '4'
     },
+
     tabAll() {
       return this.activeTab === '9'
+    },
+
+    sortStripped() {
+      return (this.sortQuery?.sort || []).reduce((acc, cur) => {
+        const [key, sort] = cur.split(',')
+        const temp = {}
+
+        temp[key] = sort
+        return { ...acc, ...temp }
+      }, {})
+    },
+
+    sortKeys() {
+      return Object.keys(this.sortStripped)
     }
   },
+
   watch: {
     disputes: {
       handler() {
@@ -469,19 +544,25 @@ export default {
       }
     }
   },
+
   beforeCreate() {
     this.$store.commit('resetDisputeQueryPage')
     this.$store.dispatch('cleanDisputeLastAccess')
   },
+
   beforeMount() {
     this.clearHighlight()
   },
+
   methods: {
     ...mapActions([
+      'getDisputes',
       'getDisputeTimeline',
       'getDisputeLastAccess',
       'cleanDisputeLastAccess'
     ]),
+
+    ...mapMutations(['updateDisputeQuery']),
 
     openActiveMessageModal(dispute) {
       this.activeDispute = dispute
@@ -499,11 +580,13 @@ export default {
     isWonDispute(disputeStatus) {
       return ['SETTLED', 'CHECKOUT', 'ACCEPTED'].includes(disputeStatus)
     },
+
     hoverDisputeCode(code) {
       if (!this.disputeTimeline[code]) {
         this.getDisputeTimeline(code)
       }
     },
+
     openTimelineModal(dispute) {
       const { code, id } = dispute
       if (!this.disputeTimeline[code] || this.disputeTimeline[code].lawsuits.length === 0) {
@@ -516,6 +599,7 @@ export default {
       })
       this.$jusSegment('Linha do tempo visualizada pelo gerenciamento', { disputeId: dispute.id })
     },
+
     cellMouseEnter(row, column, cell, event) {
       this.disputeActionsRow = row.id
       if (column.property !== 'code') {
@@ -526,11 +610,14 @@ export default {
         }, 600)
       }
     },
+
     cellMouseLeave() {
       clearTimeout(this.lastAccessTooltipTimeout)
       this.actieTooltipDisputeId = 0
     },
+
     getDocumentStep: (hasDocument, signStatus) => getDocumentStep(hasDocument, signStatus),
+
     tableRowClassName({ row, rowIndex }) {
       let className = ''
       if (!row.visualized && !this.tab1) {
@@ -541,9 +628,12 @@ export default {
       }
       return className
     },
+
     handleRowClick(row, column, event) {
       if (!event.ctrlKey && !event.metaKey && column.property === 'firstClaimant' && event.target.className.split(' ').includes('online-icon')) {
         this.openActiveMessageModal(row)
+      } else if (!event.ctrlKey && !event.metaKey && column.property === 'firstClaimantLawyer' && row.firstClaimantLawyer) {
+        this.$emit('search:lawyer', { lawyer: row.firstClaimantLawyer })
       } else if (row.id && !['IMG', 'SPAN', 'BUTTON', 'I'].includes(event.target.tagName)) {
         if (event.ctrlKey || event.metaKey) {
           window.open(`/#/management/dispute/${row.id}`, '_blank')
@@ -553,9 +643,11 @@ export default {
         }
       }
     },
+
     clearSelection() {
       this.$refs.disputeTable.clearSelection()
     },
+
     handleSelectionChange(selected) {
       const ids = []
       for (const dispute of selected) {
@@ -565,9 +657,11 @@ export default {
       }
       this.selectedIdsComp = ids
     },
+
     disputeNextToExpire(date) {
       return this.$moment(date).isBetween(this.$moment(), this.$moment().add(4, 'day'))
     },
+
     showProtocolModal(dispute) {
       this.protocolDialogVisible = true
       this.selectedDispute = dispute
@@ -591,6 +685,44 @@ export default {
           this.handleSelectionAllDisputes(response.content)
         }
       })
+    },
+
+    handleHeaderClick(column, _event) {
+      switch (column.label) {
+        case 'Interações':
+          this.handleInteractionsSort()
+          break
+        default:
+          break
+      }
+    },
+
+    async invertSort(key) {
+      const sort = { asc: 'desc', desc: 'asc' }[this.sortStripped[key]]
+
+      const newSort = await (this.sortQuery?.sort || []).reduce((acc, cur) => {
+        if (cur.includes(key)) return [...acc, `${key},${sort}`]
+        else return [...acc, cur]
+      }, [])
+
+      await this.updateDisputeQuery({ key: 'sort', value: newSort })
+
+      return Promise.resolve()
+    },
+
+    async handleInteractionsSort() {
+      if (this.sortKeys.includes('lastInboundInteraction.createdAt')) {
+        for (const item of ['lastInboundInteraction.createdAt']) { await this.invertSort(item) }
+        this.getDisputes()
+      } else {
+        this.updateDisputeQuery({
+          key: 'sort',
+          value: [
+            ...this.sortQuery?.sort,
+            'lastInboundInteraction.createdAt,asc'
+          ]
+        })
+      }
     }
   }
 }
@@ -601,6 +733,9 @@ export default {
 
 .first-claimant-container {
   .cell {
+    display: flex;
+    flex-direction: column;
+
     .first-claimant-container__cell {
       width: 100%;
       display: flex;

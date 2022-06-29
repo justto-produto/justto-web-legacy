@@ -30,19 +30,24 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-
 export default {
   components: {
     PartyResumed: () => import('./tabs/parties/PartyResumed')
   },
 
-  computed: {
-    ...mapGetters({
-      ticket: 'getTicketOverview',
-      ticketParties: 'getTicketOverviewParties'
-    }),
+  props: {
+    ticket: {
+      type: Object,
+      required: true
+    },
 
+    ticketParties: {
+      type: Array,
+      required: true
+    }
+  },
+
+  computed: {
     disputeId() {
       return '#' + this.$route.params.id
     },

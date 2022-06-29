@@ -3,6 +3,15 @@
     id="notesTabEditorOmnichannelNegotiation"
     class="notes-container jus-ckeditor__parent"
   >
+    <el-button
+      class="notes-container__marker-btn"
+      type="primary"
+      icon="el-icon-document-add"
+      size="mini"
+    >
+      NOTA
+    </el-button>
+
     <ckeditor
       ref="noteEditor"
       v-model="body"
@@ -40,7 +49,7 @@ export default {
 
   data: () => ({
     localLoading: false,
-    useMenstionPlugin: false,
+    useMentionPlugin: true,
     usePreviewPlugin: false
   }),
 
@@ -141,11 +150,28 @@ export default {
 @import '@/styles/colors.scss';
 
 .notes-container {
+  .notes-container__marker-btn {
+    padding: 4px 8px;
+    position: absolute;
+    top: 54px;
+    left: 16px;
+    cursor: default;
+    z-index: 1;
+  }
+
   .cke_top { border: none; }
 
   .cke.cke_chrome {
-    border: 2px solid $--color-light-gray;
+    border: 2px solid #F4EFFE;
     border-radius: 6px;
+  }
+}
+
+.notes-container {
+  .ck.ck-content.ck-editor__editable {
+    background-color: #F4EFFE !important;
+    color: #9461F7;
+    text-indent: 80px;
   }
 }
 </style>

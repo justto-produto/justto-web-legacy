@@ -131,6 +131,7 @@ export default
   { code: '372', name: 'BANCO ITAMARATI S.A' },
   { code: '375', name: 'BANCO FENICIA S.A' },
   { code: '376', name: 'CHASE MANHATTAN BANK S.A' },
+  { code: '380', name: 'PICPAY SERVIÇOS S.A' },
   { code: '388', name: 'BANCO MERCANTIL DE DESCONTOS S.A' },
   { code: '389', name: 'BANCO MERCANTIL DO BRASIL S.A' },
   { code: '392', name: 'BANCO MERCANTIL DE SAO PAULO S.A' },
@@ -256,5 +257,7 @@ export default
   { code: '085', name: 'COOP CENTRAL AILOS' },
   { code: '290', name: 'PAGSEGURO INTERNET S. A (PAGBANK)' },
   { code: '136', name: 'UNICRED COOPERATIVA LTDA' },
-  { code: '99', name: 'UNIPRIME CENTRAL - CENTRAL INT DE COOP DE CRED LTD' }
+  { code: '99', name: 'UNIPRIME CENTRAL - CENTRAL INT DE COOP DE CRED LTD' },
+  { code: '323', name: 'MERCADO PAGO - CONTA DO MERCADO LIVRE' },
+  { code: '197', name: 'STONE PAGAMENTOS S. A.' }
 ]

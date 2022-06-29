@@ -24,6 +24,7 @@
             @click.stop="copyProccessCode"
           />
           <JusTjIdentifier
+            v-if="isValidCNJ"
             :code="code"
             :disabled="!isJusttoAdmin"
             class="jus-dispute-code__icon hidden-icon"
@@ -32,7 +33,7 @@
       </div>
     </el-tooltip>
 
-    <TicketTimeline
+    <JusTimeline
       v-if="code && disputesTimeline[code]"
       v-model="showTimelineDialog"
       :code="code"
@@ -50,7 +51,7 @@ export default {
   name: 'JusDisputeCode',
   components: {
     JusTjIdentifier,
-    TicketTimeline: () => import('@/components/JusTimeline/JusTimeline')
+    JusTimeline: () => import('@/components/JusTimeline/JusTimeline')
   },
   props: {
     code: {
@@ -86,6 +87,10 @@ export default {
       return ''
     },
 
+    isValidCNJ() {
+      return this.currentDiputeTimeline?.isValid
+    },
+
     timelineStatus() {
       const textDefault = 'Até este momento, não conseguimos capturar este processo'
 
@@ -96,16 +101,26 @@ export default {
           text: 'Abrir Timeline da disputa.'
         }
       } else if (this.currentDiputeTimeline?.error) {
-        return {
-          available: false,
-          icon: 'el-icon-question',
-          text: this.currentDiputeTimeline?.error?.description || textDefault
+        switch (this.currentDiputeTimeline?.error?.code) {
+          case 20:
+          case 21:
+            return {
+              available: false,
+              icon: 'el-icon-lock',
+              text: 'Processo em segredo de Justiça.'
+            }
+          default:
+            return {
+              available: false,
+              icon: 'el-icon-question',
+              text: this.currentDiputeTimeline?.error?.description || textDefault
+            }
         }
       } else if (!this.currentDiputeTimeline.lawsuits.length) {
         return {
           available: false,
           icon: 'el-icon-error',
-          text: textDefault
+          text: this.currentDiputeTimeline?.isValid ? textDefault : 'Número CNJ inválido'
         }
       } else {
         return {
@@ -183,7 +198,8 @@ export default {
         margin-left: 4px;
         &:first-child { margin-left: 0; }
         &.el-icon-info { color: $--color-primary; }
-        &.el-icon-error { color: $--color-danger; }
+        &.el-icon-error,
+        &.el-icon-lock { color: $--color-danger; }
         &.el-icon-loading { color: $--color-text-secondary; }
       }
     }

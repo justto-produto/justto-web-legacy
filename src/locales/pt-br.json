@@ -119,6 +119,9 @@
   "expirationDate": {
     "dateTime": "fim da negociação"
   },
+  "disputeTag": {
+    "code": "Etiqueta da disputa"
+  },
   "courtHearingDate": {
     "dateTime": "data da audiência"
   },
@@ -160,7 +163,7 @@
     "documentNumber": "CPF"
   },
   "attributeBoundary": {
-    "boundary": "alçada máxima"
+    "boundary": "valor limite| alçada máxima"
   },
   "recipients": {
     "LAWYER": "advogado",
@@ -171,7 +174,9 @@
     "RECOVERY": "cobrança",
     "OBLIGATION": "obrigação de fazer",
     "DISCOUNT": "desconto",
-		"MULTI_PARTY_NEGOTIATION": "Negociação com multiplas partes"
+		"MULTI_PARTY_NEGOTIATION": "Negociação com multiplas partes",
+		"LEGAL_MKT": "Marketing jurídico",
+    "COMMUNICATION": "Comunicação"
   },
   "occurrence": {
     "type": {
@@ -183,7 +188,7 @@
       "INTERACTIONS": "interações",
       "PENDING": "pendente",
       "IMPORTED": "importada",
-      "ACCEPTED": "acordo sem dados bancários",
+      "ACCEPTED": "acordo s/ dados bancários",
       "PAUSED": "pausada",
       "ENRICHED": "enriquecida",
       "CHECKOUT": "acordo",
@@ -247,9 +252,10 @@
     "UNSETTLED": "perder",
     "SEND-UNSETTLED": "perder",
     "SEND-COUNTERPROPOSAL": "perder",
+    "SEND_COUNTERPROPOSAL": "perder",
     "DELETE": "excluir",
     "PAUSED": "pausar",
-    "RESUME": "retomar",
+    "RESUME": "despausar",
     "FAVORITE": "Aguardar análise da empresa",
     "DISFAVOR": "Desmarcar aguardar análise da empresa",
     "ENRICH": "enriquecer",
@@ -263,10 +269,14 @@
     "RENEGOTIATE": "retornar para negociação",
     "EDIT-NEGOTIATORS": "editar negociadores",
     "DROP_LAWSUIT": "cancelar negociação",
-    "START_NEGOTIATON": "inicar negociação",
-    "SEND_BILK_MESSAGE": "Enviar mensagens em massa",
+    "START_NEGOTIATION": "inicar negociação",
+    "SEND_BILK_MESSAGE": "Compor mensagem em massa",
+    "UPDATE_ENGAGEMENT_OPTIONS": "Alterar engajamento",
+    "ADD_TAGS_INCLUSIVE": "adicionar tags",
+    "REM_TAGS_INCLUSIVE": "remover tags",
     "tooltip": {
-      "BULK_COMPOSE_MESSAGE": "Compor mensagem em massa"
+      "BULK_COMPOSE_MESSAGE": "Compor mensagem em massa",
+      "SETTLE_DISPUTE": "Aceitar e Ganhar disputa | Aceitar e Ganhar disputas"
     }
   },
   "actions": {
@@ -286,7 +296,7 @@
       "feedback-message": "disputa <b>marcada como não lida</b>"
     },
     "RESUME": {
-      "name": "retomar negociação",
+      "name": "despausar negociação",
       "feedback-message": "disputa <b>retomada</b>"
     },
     "PAUSED": {
@@ -357,6 +367,9 @@
     "DISFAVOR": {
       "name": "Desmarcar aguardar análise da empresa",
       "feedback-message": "<b>Desmarcar aguardar análise da empresa</b>"
+    },
+    "ADD_TAGS_INCLUSIVE": {
+      "name": "Alterar tags"
     }
   },
   "interaction-types": {
@@ -364,6 +377,10 @@
       "icon": "nps-star-active",
       "message": "avaliação NPS recebida"
     },
+    "PHONE_CALL":{
+      "icon": "tts",
+      "message": "Ligação feita"
+    }, 
     "COMMUNICATION": {
       "message": ""
     },
@@ -414,13 +431,13 @@
   },
   "roles": {
     "PARTY": {
-      "RESPONDENT": "réu",
-      "CLAIMANT": "autor",
+      "RESPONDENT": "empresa | réu",
+      "CLAIMANT": "réu | autor",
       "UNKNOWN": "parte desconhecida"
     },
     "LAWYER": {
-      "RESPONDENT": "advogado do réu",
-      "CLAIMANT": "advogado do autor",
+      "RESPONDENT": "advogado da empresa | advogado do réu",
+      "CLAIMANT": "advogado do réu | advogado do autor",
       "UNKNOWN": "advogado desconhecido"
     },
     "NEGOTIATOR": {
@@ -440,6 +457,7 @@
     }
   },
   "ticket-labels": {
+    "upperRange": "alçada máxima",
     "courtHearingDate": "data de audiência",
     "importedDate": "data de importação",
     "campaignName": "campanha",
@@ -468,8 +486,8 @@
   },
   "boolean": "sim | não",
   "ticket-status": {
-    "ACCEPTED": "aceita",
-    "CHECKOUT": "sem dados bancarios",
+    "CHECKOUT": "aceita",
+    "ACCEPTED": "sem dados bancarios",
     "ENGAGEMENT": "sem resposta da parte",
     "ENRICHED": "enriquecida",
     "EXPIRED": "expirada",
@@ -479,7 +497,7 @@
     "RUNNING": "em negociação",
     "SETTLED": "ganha",
     "UNSETTLED": "perdida",
-    "PRE_NEGOTIATION": "pre-negociação",
+    "PRE_NEGOTIATION": "pré negociação",
     "PAUSED": "(pausada) | ",
     "CANCELED": "cancelada"
   },
@@ -541,14 +559,27 @@
       "label": "ODR",
       "icon": "customized-configurations",
       "help": ""
+    },
+    "CLOSING_REASONS": {
+      "label": "Motivos de encerramento",
+      "icon": "negative-hand",
+      "help": ""
+    },
+    "DRAFT_NOTIFICATIONS": {
+      "label": "Notificar minutagem",
+      "icon": "accepted"
     }
   },
   "fields": {
-    "claimantParty": "Parte contrária",
-    "claimantLawyer": "Advogado(a) da parte",
+    "claimantParty": "Réu | Parte contrária",
+    "claimantParties": "Réus | Partes contrárias",
+    "claimantLawyer": "Advogado do Réu | Advogado da parte",
+    "claimantLawyers": "Advogados do Réu | Advogados da parte",
     "dispute": "disputa",
-    "respondentParty": "Réu",
-    "respondentLawyer": "Advogado(a) do Réu",
+    "respondentParty": "Empresa | Réu",
+    "respondentParties": "Empresas | Réus",
+    "respondentLawyer": "Advogado da Empresa | Advogado do Réu",
+    "respondentLawyers": "Advogados da Empresa | Advogados do Réu",
     "respondentNegotiator": "Negociador",
     "impartialParty": "Arbitro"
   },
@@ -622,7 +653,8 @@
   "STATUS": "Status",
   "FIRST_INTERACTION_DATE": "Data primeira interação",
   "LAST_INTERACTION_DATE": "Data última interação",
-  "UPPER_RANGE": "Alçada máxima",
+  "UPPER_RANGE": "Valor limite | Alçada máxima",
+  "UPPER_RANGE_WITH_ARTICLE": "o valor limite | a alçada máxima",
   "REQUESTED_VALUE": "Valor do processo",
   "PROPOSAL_VALUE": "Valor proposto",
   "COUNTER_PROPOSAL_VALUE": "Contraproposta",
@@ -646,6 +678,12 @@
   "LAST_RECEIVED_MESSAGE": "Última mensagem recebida",
   "LAST_NOTE": "Última nota",
   "CONCLUSION_DATE": "Data de conclusão",
+  "PARTY_RESPONDENT": "Empresa | Réu",
+  "LAWYER_RESPONDENT": "Advogado da Empresa | Advogado do Réu",
+  "ARTICLE": "o | a",
+  "AVAILABLE": "Disponível | Não disponível",
+  "I_AM_AVAILABLE": "Estou disponível | Não estou disponível",
+  "ENABLED": "Habilitado | Desabilitado",
   "workspace": {
     "READY": "ativo",
     "CREATING": "em criação",
@@ -706,6 +744,14 @@
             "count-email": "e-mail foi agendado para | e-mails foram agendados para",
             "count-whatsapp": "mensagem de whatsapp foi agendada para | mensagens de whatsspp foram agendadas para",
             "count-sms": "mensagem de texto foi agendada para | mensagens de texto foram agendadas para"
+          },
+          "COMMUNICATION": {
+            "WHATSAPP": {
+              "AUDIO": "Áudio recebido pelo WhatsApp",
+              "IMAGE": "Imagem recebida pelo WhatsApp",
+              "VIDEO": "Vídeo recebido pelo WhatsApp",
+              "FILE": "Arquivo recebido pelo WhatsApp"
+            }
           }
         }
       }
@@ -768,6 +814,72 @@
       "buttons": {
         "primary": "ENVIAR",
         "secondary": "EDITAR RESPOSTA"
+      }
+    }
+  },
+  "call": {
+    "status": {
+      "ENQUEUED": "Na fila",
+      "WAITING_DIALER": "Buscando discador",
+      "WAITING_DIALER_DETAIL": "Reservando discador",
+      "WAITING_NEW_CALL": "Processando chamada",
+      "RECEIVING_CALL": "Entrando na chamada",
+      "ACTIVE_CALL": "Em chamada",
+      "COMPLETED_CALL": "Chamada encerrada"
+    },
+    "interaction": {
+      "status": {
+        "DIFFERENT_OWNER": "Contato de outra pessoa",
+        "NONEXISTENT": "Contato não existe"
+      }
+    },
+    "scheduled": {
+      "label": "Ligações agendadas",
+      "available": "Ligar automaticamente | Não ligar automaticamente"
+    }
+  },
+  "administrativeProceedingCode": {
+    "code": "nº do processo administrativo"
+  },
+  "blocked": {
+    "email": {
+      "UNKNOW": "Este contato foi bloqueado pelo usuário.",
+      "COMMUNICATION_OPT_OUT": "Usuário optou por não receber mensagens nesse e-mail.",
+      "LAW_FIRM_DOMAIN": "Contato com domínio de e-mail bloqueado para recebimento de mensagem.",
+      "WORKSPACE_BLOCK_LIST": "Contato bloqueado pela configuração na workspace.",
+      "PERSON_DOCUMENT": "Usuário optou por não receber mensagens da plataforma.",
+      "LAWSUIT": "Usuário optou por não receber mensagens nesse processo.",
+      "DEFENDANT_NAME": "Usuário optou por não receber mensagens deste réu."
+    },
+    "phone": {
+      "UNKNOW": "Este contato foi bloqueado pelo usuário.",
+      "COMMUNICATION_OPT_OUT": "Usuário optou por não receber mensagens nesse telefone.",
+      "LAW_FIRM_DOMAIN": "Contato com telefone bloqueado para recebimento de mensagem.",
+      "WORKSPACE_BLOCK_LIST": "Contato bloqueado pela configuração na workspace.",
+      "PERSON_DOCUMENT": "Usuário optou por não receber mensagens da plataforma.",
+      "LAWSUIT": "Usuário optou por não receber mensagens nesse processo.",
+      "DEFENDANT_NAME": "Usuário optou por não receber mensagens deste réu."
+    }
+  },
+  "document": {
+    "signature": {
+      "status": {
+        "CREATED": {
+          "text": "Minuta criada",
+          "icon": "clock"
+        },
+        "PENDING": {
+          "text": "Assinatura pendente",
+          "icon": "clock-alert"
+        },
+        "COMPLETED": {
+          "text": "Assinado",
+          "icon": "success"
+        },
+        "REFUSED": {
+          "text": "Recusado",
+          "icon": "rejected"
+        }
       }
     }
   }

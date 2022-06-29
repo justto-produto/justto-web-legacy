@@ -89,6 +89,16 @@ const router = new Router({
           }
         },
         {
+          name: 'Whatsapp',
+          path: '/whatsapp',
+          component: () => import(/* webpackChunkName: "whatsappViews" */ '@/views/main/watsapp/Views'),
+          meta: {
+            requiresAuth: true,
+            trackPage: true,
+            title: 'Templates do WhatsApp'
+          }
+        },
+        {
           name: 'allDisputes',
           path: '/management/all',
           component: () => import(/* webpackChunkName: "managementAll" */ '@/views/main/management/Management'),
@@ -140,6 +150,23 @@ const router = new Router({
           ]
         },
         {
+          name: 'print',
+          path: 'print',
+          component: () => import(/* webpackChunkName: "print" */ '@/views/main/print/index'),
+          children: [
+            {
+              name: 'printTicket',
+              path: 'negotiation/:id',
+              component: () => import(/* webpackChunkName: "printTicket" */ '@/views/main/print/Ticket'),
+              meta: {
+                requiresAuth: true,
+                trackPage: true,
+                title: 'Imprimir Negociação'
+              }
+            }
+          ]
+        },
+        {
           name: 'configuration',
           path: 'configuration',
           component: () => import(/* webpackChunkName: "configurationIndex" */ '@/views/main/configuration/Configuration'),
@@ -180,6 +207,14 @@ const router = new Router({
         requiresAuth: false,
         trackPage: true,
         title: 'Justto - Login'
+      }
+    },
+    {
+      name: 'redirect',
+      path: '/redirect',
+      component: () => import(/* webpackChunkName: "redirect" */ '@/views/main/Redirect'),
+      meta: {
+        title: 'Redirecionando'
       }
     },
     {
@@ -225,11 +260,21 @@ const router = new Router({
     {
       name: 'admin-panel',
       path: '/admin-panel',
-      component: () => import(/* webpackChunkName: "adminPanel" */ '@/views/adminPanel/AdminPanel'),
+      component: () => import(/* webpackChunkName: "adminPanelUpdated" */ '@/views/adminPanel/AdminPanel'),
       meta: {
         requiresAuth: false,
         trackPage: true,
         title: 'Painel administrativo'
+      }
+    },
+    {
+      name: 'recover-account',
+      path: '/recover-account',
+      component: () => import(/* webpackChunkName: "recoverAccount" */ '@/views/external/RecoverAccount'),
+      meta: {
+        requiresAuth: false,
+        trackPage: true,
+        title: 'Justto - Recuperar senha'
       }
     },
     {
@@ -269,7 +314,6 @@ router.beforeEach((to, from, next) => {
             }
           }
         }
-
         if (from.name === 'ticket' && from.params?.id) {
           eventBus.$emit(events.TICKET_WEB_SOCKET_DISCONNECT.callback, 'unsubscribe', from?.params?.id)
         }
@@ -280,9 +324,11 @@ router.beforeEach((to, from, next) => {
       } else {
         if (to.name === 'onboarding') {
           next()
-        } else next('onboarding')
+        } else next('login')
       }
-    } else next('login')
+    } else {
+      next('login')
+    }
   } else if (from.query.token) next(false)
   else next()
 

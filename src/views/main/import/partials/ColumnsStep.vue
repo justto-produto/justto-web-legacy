@@ -3,10 +3,15 @@
     <h2 class="new-import-view__title">
       Mapeamento de colunas
     </h2>
-    <el-row :gutter="60">
+
+    <el-row
+      :gutter="60"
+      class="columns-step__container"
+    >
       <el-col
         :span="12"
         data-testid="import-columns"
+        class="columns-step__container-column"
       >
         <h3>Colunas do arquivo</h3>
         <p>
@@ -33,9 +38,9 @@
           >
             <span v-if="column.tag">
               <span v-if="column.index !== undefined && column.index !== null">
-                {{ $t('fields.' + getColumnTitle(column.tag.id)) }} {{ column.index + 1 }} -
+                {{ $tc(`fields.${getColumnTitle(column.tag.id)}`, isRecovery) | capitalize }} {{ column.tag.index + 1 }} -
               </span>
-              {{ $t(column.tag.key) | capitalize }}
+              {{ $tc(column.tag.key, isRecovery) | capitalize }}
             </span>
             <span v-else>Arraste a coluna aqui</span>
           </el-tag>
@@ -62,9 +67,11 @@
           </div>
         </div>
       </el-col>
+
       <el-col
         :span="12"
         data-testid="import-tags"
+        class="columns-step__container-column"
       >
         <h3>Campos do Sistema</h3>
         <p>
@@ -90,42 +97,42 @@
               @dragstart.self="dragTag($event, JSON.stringify({ tag, index }))"
             >
               <el-tag class="el-tag--drag">
-                {{ $t(tag.key) | capitalize }}
+                {{ $tc(tag.key, isRecovery) | capitalize }}
               </el-tag>
             </span>
           </el-collapse-item>
         </el-collapse>
+
         <h3 v-show="!loadingTags">
-          Partes contrárias
+          {{ $tc('fields.' + pluralizesTerm('claimantParty', claimantParties.length > 1), isRecovery) }}
           <a
-            href="#"
             @click="addTagList(claimantParties)"
           ><i class="el-icon-plus right" /></a>
         </h3>
+
         <div
-          v-for="(claimantPartyIndex, index) in claimantParties"
+          v-for="claimantPartyIndex in claimantParties"
           :key="'claimantParty' + claimantPartyIndex"
           class="drag-group"
         >
           <el-collapse class="el-collapse--drag">
-            <el-collapse-item :title="'Parte Contrária ' + claimantPartyIndex">
+            <el-collapse-item :title="`${$tc('fields.claimantParty', isRecovery)} ${claimantPartyIndex}`">
               <span
                 v-for="tag in tags.claimantParty.tags"
                 :key="`${tag.id}-${tag.name}`"
-                :class="{'el-tag--drag-active': !isMultipleAvailable(tag, index)}"
+                :class="{'el-tag--drag-active': !isMultipleAvailable(tag, claimantPartyIndex)}"
                 class="el-tag--drag-container"
                 draggable="true"
-                @dragstart.self="dragTag($event, JSON.stringify({tag, index}))"
+                @dragstart.self="dragTag($event, JSON.stringify({tag, index: claimantPartyIndex}))"
               >
                 <el-tag class="el-tag--drag">
-                  Parte contrária {{ claimantPartyIndex + ' - ' }}{{ $t(tag.key) | capitalize }}
+                  {{ $tc('fields.claimantParty', isRecovery) }} {{ claimantPartyIndex }} - {{ $t(tag.key) | capitalize }}
                 </el-tag>
               </span>
             </el-collapse-item>
           </el-collapse>
           <a
             v-if="claimantPartyIndex !== 1 && claimantParties.length === claimantPartyIndex"
-            href="#"
             @click="removeTagList(claimantParties, tags.claimantParty.tags)"
           >
             <i class="el-icon-delete" />
@@ -135,37 +142,37 @@
             style="margin-left: 24px;"
           />
         </div>
+
         <h3 v-show="!loadingTags">
-          Advogados
+          {{ $tc('fields.' + pluralizesTerm('claimantLawyer', claimantLawyers.length > 1), isRecovery) }}
           <a
-            href="#"
             @click="addTagList(claimantLawyers)"
           ><i class="el-icon-plus right" /></a>
         </h3>
+
         <div
-          v-for="(claimantLawyerIndex, index) in claimantLawyers"
+          v-for="claimantLawyerIndex in claimantLawyers"
           :key="'claimantLawyer' + claimantLawyerIndex"
           class="drag-group"
         >
           <el-collapse class="el-collapse--drag">
-            <el-collapse-item :title="'Advogado ' + claimantLawyerIndex">
+            <el-collapse-item :title="`${$tc('fields.claimantLawyer', isRecovery)} ${claimantLawyerIndex}`">
               <span
                 v-for="tag in tags.claimantLawyer.tags"
                 :key="`${tag.id}-${tag.name}`"
-                :class="{'el-tag--drag-active': !isMultipleAvailable(tag, index)}"
+                :class="{'el-tag--drag-active': !isMultipleAvailable(tag, claimantLawyerIndex)}"
                 class="el-tag--drag-container"
                 draggable="true"
-                @dragstart.self="dragTag($event, JSON.stringify({tag, index}))"
+                @dragstart.self="dragTag($event, JSON.stringify({tag, index: claimantLawyerIndex}))"
               >
                 <el-tag class="el-tag--drag">
-                  Advogado {{ claimantLawyerIndex + ' - ' }}{{ $t(tag.key) | capitalize }}
+                  {{ $tc('fields.claimantLawyer', isRecovery) }} {{ claimantLawyerIndex + ' - ' }}{{ $t(tag.key) | capitalize }}
                 </el-tag>
               </span>
             </el-collapse-item>
           </el-collapse>
           <a
             v-if="claimantLawyerIndex !== 1 && claimantLawyers.length === claimantLawyerIndex"
-            href="#"
             @click="removeTagList(claimantLawyers)"
           >
             <i class="el-icon-delete" />
@@ -175,37 +182,36 @@
             style="margin-left: 24px;"
           />
         </div>
+
         <h3 v-show="!loadingTags">
-          Réus
+          {{ $tc('fields.' + pluralizesTerm('respondentParty', respondentParties.length > 1), isRecovery) }}
           <a
-            href="#"
             @click="addTagList(respondentParties)"
           ><i class="el-icon-plus right" /></a>
         </h3>
         <div
-          v-for="(respondentPartyIndex, index) in respondentParties"
+          v-for="respondentPartyIndex in respondentParties"
           :key="respondentPartyIndex"
           class="drag-group"
         >
           <el-collapse class="el-collapse--drag">
-            <el-collapse-item :title="'Réu ' + respondentPartyIndex">
+            <el-collapse-item :title="`${$tc('fields.respondentParty', isRecovery)} ${respondentPartyIndex}`">
               <span
                 v-for="tag in tags.respondentParty.tags"
                 :key="`${tag.id}-${tag.name}`"
-                :class="{'el-tag--drag-active': !isMultipleAvailable(tag, index)}"
+                :class="{'el-tag--drag-active': !isMultipleAvailable(tag, respondentPartyIndex)}"
                 class="el-tag--drag-container"
                 draggable="true"
-                @dragstart.self="dragTag($event, JSON.stringify({tag, index}))"
+                @dragstart.self="dragTag($event, JSON.stringify({tag, index: respondentPartyIndex }))"
               >
                 <el-tag class="el-tag--drag">
-                  Réu {{ respondentPartyIndex + ' - ' }}{{ $t(tag.key) | capitalize }}
+                  {{ $tc('fields.respondentParty', isRecovery) }} {{ respondentPartyIndex + ' - ' }}{{ $t(tag.key) | capitalize }}
                 </el-tag>
               </span>
             </el-collapse-item>
           </el-collapse>
           <a
             v-if="respondentPartyIndex !== 1 && respondentParties.length === respondentPartyIndex"
-            href="#"
             @click="removeTagList(respondentParties)"
           >
             <i class="el-icon-delete" />
@@ -221,8 +227,10 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: 'ColumnsStep',
+
   data() {
     return {
       tags: {},
@@ -236,7 +244,12 @@ export default {
       loading: false
     }
   },
+
   computed: {
+    ...mapGetters({
+      isRecovery: 'isWorkspaceRecovery'
+    }),
+
     columns: {
       get() {
         return this.$store.state.importModule.map
@@ -244,8 +257,30 @@ export default {
       set(value) {
         this.$store.commit('setImportsMap', value)
       }
+    },
+
+    pluralizesTerm: () => (therm, isPlural) => {
+      return {
+        claimantParty: {
+          0: 'claimantParty',
+          1: 'claimantParties'
+        },
+        claimantLawyer: {
+          0: 'claimantLawyer',
+          1: 'claimantLawyers'
+        },
+        respondentParty: {
+          0: 'respondentParty',
+          1: 'respondentParties'
+        },
+        respondentLawyer: {
+          0: 'respondentLawyer',
+          1: 'respondentLawyers'
+        }
+      }[therm][Number(isPlural)]
     }
   },
+
   watch: {
     loading(loading) {
       if (!loading && !this.loadingTags) this.$store.dispatch('hideLoading')
@@ -254,6 +289,7 @@ export default {
       if (!loadingTags && !this.loading) this.$store.dispatch('hideLoading')
     }
   },
+
   beforeMount() {
     this.$store.dispatch('showLoading')
     if (!this.$store.state.importModule.map.length) {
@@ -276,18 +312,31 @@ export default {
       this.$jusNotification({ error })
     })
   },
+
   mounted() {
     document.querySelector('.jus-main-view__container').setAttribute('class', 'jus-main-view__container jus-main-view--full-height')
   },
+
   destroyed() {
     document.querySelector('.jus-main-view__container').setAttribute('class', 'jus-main-view__container')
   },
+
   methods: {
-    dragTag(event, data) {
-      event.dataTransfer.setData('data', data)
+    dragTag(event, strData) {
+      const data = JSON.parse(strData)
+
+      event.dataTransfer.setData('data', JSON.stringify({
+        ...data,
+        tag: {
+          ...(data?.tag || {}),
+          index: data?.index - 1
+        }
+      }))
     },
+
     dropTag(event, column, index) {
       const data = JSON.parse(event.dataTransfer.getData('data'))
+
       this.columns.find(element => {
         if (column.id === element.id) {
           element.tag = data.tag
@@ -305,6 +354,7 @@ export default {
         }
       })
     },
+
     isAvailable(tag) {
       let isAvailable = true
       this.columns.find(element => {
@@ -318,6 +368,7 @@ export default {
       })
       return isAvailable
     },
+
     isMultipleAvailable(tag, index) {
       let isAvailable = true
       this.columns.find(column => {
@@ -332,14 +383,17 @@ export default {
       })
       return isAvailable
     },
+
     addTagList(list) {
       const lastIndex = list.slice(-1)[0]
       list.push(lastIndex + 1)
     },
+
     removeTagList(list, tags) {
       this.removeLink(list, tags)
       list.splice(-1, 1)
     },
+
     removeLink(array, tags) {
       const indexToRemove = array.length - 1
       this.columns.find(column => {
@@ -352,6 +406,7 @@ export default {
       // eslint-disable-next-line no-self-assign
       this.columns = this.columns
     },
+
     matchTagId(id, tags) {
       let match = false
       tags.find(tag => {
@@ -361,6 +416,7 @@ export default {
       })
       return match
     },
+
     getColumnTitle(id) {
       let title = ''
       for (const tagList in this.tags) {
@@ -386,9 +442,22 @@ export default {
 
 .columns-step {
   margin: 0 40px;
+
+  .new-import-view__title {
+    margin: 0 0 16px;
+  }
+
+  .columns-step__container {
+    .columns-step__container-column {
+      max-height: 60vh;
+      overflow-y: scroll;
+    }
+  }
+
   p {
     height: 80px;
   }
+
   .file-column {
     margin-bottom: 20px;
     .el-tag {

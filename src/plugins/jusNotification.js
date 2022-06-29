@@ -15,7 +15,7 @@ const NotificationMessage = {
       if (config.error instanceof Error) {
         if (config.error.response) {
           const message = I18n.te('error.' + config.error.response.data.code) ? I18n.t('error.' + config.error.response.data.code) : (config.error.response.data.message ? config.error.response.data.message + '.' : '')
-          switch (config.error.response.status) {
+          switch (config.error.response?.status) {
             case 504:
               config.message = message || (TIMEOUT + TRY)
               break
@@ -52,10 +52,10 @@ const NotificationMessage = {
       if (!config.type) config.type = 'error'
       if (!config.message) config.message = ERROR + TRY
       if (!config.title) config.title = 'Ops!'
+      if (!config.position) config.position = 'bottom-right'
       config.customClass = config.type
-      config.position = 'bottom-right'
       config.offset = 84
-      Notification.closeAll()
+      // Notification.closeAll()
       Notification(config)
     }
   }

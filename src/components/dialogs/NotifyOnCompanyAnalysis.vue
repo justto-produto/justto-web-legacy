@@ -1,72 +1,112 @@
 <template>
   <el-dialog
+    v-if="visible"
     :visible.sync="visible"
     :show-close="false"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
-    :title="`Quer notificar ${$options.filters.resumedName(name)} desta ação?`"
+    :title="`Quer notificar ${name ? $options.filters.resumedName(name) : emailmonimo} desta ação?`"
     append-to-body
     destroy-on-close
     width="604px"
     custom-class="dialog-actions__increase-alert"
   >
-    <article class="dialog-actions__increase-alert-body">
+    <article class="dialog-actions__increase-alert-body jus-ckeditor__parent">
       <label class="dialog-actions__increase-alert-body-label">
-        Mensagem que será enviada:
+        <div class="dialog-actions__increase-alert-body-label-text">
+          Mensagem que será enviada:
+        </div>
       </label>
-      <div
-        class="dialog-actions__increase-alert-body-text"
-        v-html="message"
+      <ckeditor
+        v-if="visible"
+        ref="messageEditor"
+        v-model="message"
+        :editor="editor"
+        :config="editorConfig"
+        type="classic"
       />
+      <!-- <div class="dialog-actions__increase-alert-body-text">
+        <div v-html="message" />
+      </div> -->
     </article>
 
     <div
       slot="footer"
       class="dialog-actions__increase-alert-footer"
     >
-      <el-button
-        size="small"
-        type="default"
-        @click="handleCompanyAnalysisAction('NEVER')"
+      <el-tooltip
+        content="Não notificará desta vez, porém perguntará se deve notificar na próxima."
+        placement="top"
       >
-        Não notificar
-      </el-button>
+        <el-button
+          size="small"
+          type="default"
+          @click="handleCompanyAnalysisAction('NEVER')"
+        >
+          Não notificar
+        </el-button>
+      </el-tooltip>
 
-      <el-button
-        size="small"
-        type="secondary"
-        @click="handleCompanyAnalysisAction('ALWAYS')"
+      <el-tooltip
+        content="Notificará desta vez, e todas as próximas."
+        placement="top"
       >
-        Sempre notificar
-      </el-button>
+        <el-button
+          size="small"
+          type="secondary"
+          @click="handleCompanyAnalysisAction('ALWAYS')"
+        >
+          Sempre notificar
+        </el-button>
+      </el-tooltip>
 
-      <el-button
-        size="small"
-        type="primary"
-        @click="handleCompanyAnalysisAction('ASK')"
+      <el-tooltip
+        content="Notificará desta vez e perguntará se deve notificar na próxima."
+        placement="top"
       >
-        Notificar somente dessa vez
-      </el-button>
+        <el-button
+          size="small"
+          type="primary"
+          @click="handleCompanyAnalysisAction('ASK')"
+        >
+          Notificar somente dessa vez
+        </el-button>
+      </el-tooltip>
     </div>
   </el-dialog>
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
+import ckeditor from '@/utils/mixins/ckeditor'
 
 const actionToTemplateId = {
   DISFAVOR: 4500,
   FAVORITE: 4494
 }
 
+const actionToPropertieKey = {
+  DISFAVOR: 'FAVORITE_NOTIFICATION',
+  FAVORITE: 'FAVORITE_NOTIFICATION'
+}
+
 export default {
+  mixins: [ckeditor],
+
   data: () => ({
     disputeId: null,
     visible: false,
     message: '',
+    action: '',
     email: '',
     name: ''
   }),
+
+  computed: {
+    ...mapGetters({
+      userPreferences: 'userPreferences'
+    })
+  },
 
   methods: {
     ...mapActions([
@@ -81,29 +121,18 @@ export default {
         const { PERSON_EMAIL, PERSON_NAME } = ticket.lastReceivedMessage?.properties
 
         if (!ticket.lastReceivedMessage?.properties?.PERSON_EMAIL) {
-          this.$jusNotification({
-            type: 'error',
-            title: 'Ops!',
-            message: 'E-mail do destinatário não foi encontrado'
-          })
-          close()
-          return
-        } else if (!ticket.lastReceivedMessage?.properties?.PERSON_NAME) {
-          this.$jusNotification({
-            type: 'error',
-            title: 'Ops!',
-            message: 'Nome do destinatário não foi encontrado'
-          })
           close()
           return
         } else {
           this.email = PERSON_EMAIL
-          this.name = PERSON_NAME
+          this.name = PERSON_NAME || ''
         }
       } else {
         close()
         return
       }
+
+      this.disputeId = Number(this.$route.params.id)
 
       await this.getQuickReplyTemplates(this.$route.params.id).then(res => {
         res.forEach(({ parsed: { body, referenceTemplateId } }) => {
@@ -118,8 +147,10 @@ export default {
         return
       }
 
-      this.getAccountProperty('FAVORITE_NOTIFICATION').then(({ FAVORITE_NOTIFICATION = '' }) => {
-        if (['ALWAYS'].includes(FAVORITE_NOTIFICATION)) {
+      this.action = action
+
+      this.getAccountProperty(actionToPropertieKey[this.action]).then((res = {}) => {
+        if (res[actionToPropertieKey[this.action]] === 'ALWAYS') {
           this.sendMessage()
         } else {
           this.visible = true
@@ -131,24 +162,32 @@ export default {
       this.disputeId = null
       this.visible = false
       this.message = ''
+      this.action = ''
       this.email = ''
       this.name = ''
     },
 
-    handleCompanyAnalysisAction(action) {
-      switch (action) {
+    handleCompanyAnalysisAction(key) {
+      const { action } = this
+
+      const res = {}
+
+      switch (key) {
         case 'ALWAYS':
           this.sendMessage()
-          this.setAccountProperty({ FAVORITE_NOTIFICATION: 'ALWAYS' })
+
+          res[actionToPropertieKey[action]] = 'ALWAYS'
+
           break
         default:
-          if (action === 'ASK') {
-            this.sendMessage()
-          }
-          this.setAccountProperty({ FAVORITE_NOTIFICATION: '' })
+          res[actionToPropertieKey[action]] = ''
+
+          if (key === 'ASK') this.sendMessage()
+
           break
       }
 
+      this.setAccountProperty(res)
       this.close()
     },
 
@@ -171,19 +210,25 @@ export default {
       }).catch(error => {
         this.$jusNotification({ error })
       }).finally(this.close)
-    }
+    },
+
+    editMessage() {}
   }
 }
 </script>
 
 <style lang="scss">
+@import '@/styles/colors.scss';
+
 .dialog-actions__increase-alert {
   .el-dialog__body {
     margin-top: 0 !important;
 
     .dialog-actions__increase-alert-body {
       .dialog-actions__increase-alert-body-label {
+        display: block;
         font-weight: 600;
+        margin-bottom: 16px;
       }
 
       .dialog-actions__increase-alert-body-text {

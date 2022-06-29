@@ -6,13 +6,15 @@
     <h2 class="new-import-view__title">
       Configuração de campanhas
     </h2>
+
     <p>
       O sistema trabalha com o conceito de campanhas. Campanha é um agrupamento de
-      disputas dentro da mesma importação com um réu em comum. Por isso, ao importar,
+      disputas dentro da mesma importação com {{ $tc('PARTY_RESPONDENT', isRecoveryStrategy)+'s' }} em comum. Por isso, ao importar,
       o sistema automaticamente divide suas disputas em campanhas para que você possa
       configurá-las separadamente.
       <br><br><br>
     </p>
+
     <el-alert
       v-if="validationInProgress"
       :closable="false"
@@ -41,6 +43,7 @@
         Aguarde um momento enquanto o sistema valida disputas duplicadas e expiradas.
       </div>
     </el-alert>
+
     <el-alert
       v-if="!strategyList.length && !loadingStrategies"
       :closable="false"
@@ -60,6 +63,7 @@
         </p>
       </div>
     </el-alert>
+
     <el-alert
       v-if="!strategyList.length && loadingStrategies"
       :closable="false"
@@ -88,8 +92,9 @@
         <span>Aguarde um momento enquanto o sistema carrega as estratégias disponíveis para esta campanha.</span>
       </div>
     </el-alert>
+
     <el-alert
-      v-if="!validationInProgress && duplicatedDisputes.length"
+      v-if="!validationInProgress && ((duplicatedDisputes.length + summaryWarnings.duplicated + summaryWarnings.expired) > 0)"
       type="error"
     >
       <h2>Atenção!</h2>
@@ -124,10 +129,15 @@
           </el-radio-group>
         </div>
 
-        <a @click="showDetails = !showDetails">
+        <a @click="handleValidateDisputes">
           {{ showDetails ? 'ocultar detalhes' : 'ver detalhes' }}
         </a>
       </div>
+
+      <span v-if="showDetails && !duplicatedDisputes.length">
+        Carregando disputas duplicadas
+        <i class="el-icon-loading" />
+      </span>
 
       <ul
         v-for="(d, index) in duplicatedDisputes"
@@ -144,7 +154,7 @@
             </span>
 
             <span v-if="duplicatedActionToDo === 'UPDATE'">
-              já está cadastrada e <strong>será atuailzada</strong> com os novos dados
+              já está cadastrada e <strong>será atualizada</strong> com os novos dados
               (campanha {{ d.duplicatedBy.campaignName }}).
             </span>
 
@@ -184,8 +194,10 @@
         <jus-import-feedback-card
           v-for="(mappedCampaign, index) in mappedCampaigns"
           :key="mappedCampaign.cluster"
+          :show="mappedCampaigns.length === 1 || !mappedCampaigns[1].replicate"
           :mapped-campaign.sync="mappedCampaigns[index]"
           :index="index + 1"
+          :original-quantity="mappedCampaigns.length"
           data-testid="import-feedback"
         />
       </div>
@@ -219,6 +231,10 @@ export default {
   data() {
     return {
       duplicatedDisputes: [],
+      summaryWarnings: {
+        duplicated: 0,
+        expired: 0
+      },
       loadingStrategies: false,
       showDetails: false
     }
@@ -230,15 +246,9 @@ export default {
       isJusttoAdmin: 'isJusttoAdmin',
       strategyList: 'getMyStrategiesLite',
       importedFileName: 'importedFileName',
-      validationInProgress: 'validationInProgress'
+      validationInProgress: 'validationInProgress',
+      isRecoveryStrategy: 'isWorkspaceRecovery'
     }),
-
-    summaryWarnings() {
-      return {
-        duplicated: this.duplicatedDisputes.filter(w => w.status === 'DUPLICATED_DISPUTE' || w.status === 'DUPLICATED' || w.status === 'DUPLICATED_ROW').length,
-        expired: this.duplicatedDisputes.filter(w => w.status === 'EXPIRED' || w.status === 'DUPLICATE_AND_EXPIRED').length
-      }
-    },
 
     duplicatedActionToDo: {
       get() {
@@ -254,9 +264,7 @@ export default {
   watch: {
     campaignIsMapped(current) {
       if (current) {
-        this.$store.dispatch('validateGeneseRunner').then(response => {
-          this.duplicatedDisputes = response.disputes
-        }).finally(() => (this.finishDuplicateValidations()))
+        this.handleValidateSummary()
       }
     }
   },
@@ -267,9 +275,7 @@ export default {
       this.getStrategies()
     }
 
-    this.$store.dispatch('validateGeneseRunner').then(response => {
-      this.duplicatedDisputes = response.disputes
-    }).finally(() => (this.finishDuplicateValidations()))
+    this.handleValidateSummary()
   },
 
   methods: {
@@ -277,8 +283,10 @@ export default {
       'showLoading',
       'hideLoading',
       'getMyStrategiesLite',
+      'validateGeneseRunner',
       'startDuplicateValidations',
-      'finishDuplicateValidations'
+      'finishDuplicateValidations',
+      'validateGeneseRunnerSummary'
     ]),
 
     async getStrategies() {
@@ -296,6 +304,25 @@ export default {
         }
       }
       this.loadingStrategies = false
+    },
+
+    handleValidateSummary() {
+      this.validateGeneseRunnerSummary().then(({ summary }) => {
+        this.summaryWarnings = summary
+      }).catch(error => {
+        this.$jusNotification({ error })
+        this.finishDuplicateValidations()
+      }).finally(this.finishDuplicateValidations)
+    },
+
+    handleValidateDisputes() {
+      this.showDetails = !this.showDetails
+
+      if (this.showDetails) {
+        this.$store.dispatch('validateGeneseRunner').then(({ disputes }) => {
+          this.duplicatedDisputes = disputes
+        }).catch(error => this.$jusNotification({ error }))
+      }
     }
   }
 }

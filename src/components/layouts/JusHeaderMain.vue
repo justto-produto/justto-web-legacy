@@ -12,7 +12,10 @@
       class="jus-header-main__logo"
       src="@/assets/logo-small.svg"
     >
-    <HeaderUserMenu class="jus-header-main__menu" />
+    <HeaderUserMenu
+      v-if="!isTicketMode"
+      class="jus-header-main__menu"
+    />
   </el-header>
 </template>
 
@@ -23,9 +26,17 @@ export default {
     HeaderUserMenu: () => import('@/components/menus/HeaderUserMenu'),
     TicketsHeader: () => import('@/views/main/negotiation/partials/tickets/TicketsHeader')
   },
+
   data: () => ({
     dispute: ''
   }),
+
+  computed: {
+    isTicketMode() {
+      return ['ticket', 'negotiation'].includes(this.$route?.name)
+    }
+  },
+
   methods: {
     search(term, cb) {
       clearTimeout(this.termDebounce)

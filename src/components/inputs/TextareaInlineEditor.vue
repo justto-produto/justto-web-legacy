@@ -4,7 +4,10 @@
       v-if="!isEditing"
       class="textarea-inline-editor__value"
     >
-      <span class="textarea-inline-editor__inner">
+      <span
+        class="textarea-inline-editor__inner"
+        @click="enableEdit"
+      >
         {{ vModel }}
       </span>
       <span class="textarea-inline-editor__icons">

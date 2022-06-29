@@ -1,5 +1,8 @@
 <template>
-  <section class="summary-container">
+  <section
+    v-if="!isGrouping"
+    class="summary-container"
+  >
     <div
       v-for="(summaryItem, summaryItemIndex) in renderItems"
       :id="`summary-item-${summaryItemIndex}`"
@@ -33,7 +36,7 @@
             <i class="el-icon-edit" />
             <span class="summary-container__item-occurrence-item-status-message-body">
               <span class="summary-container__item-occurrence-item-status-message-body-normal">
-                Mensagem criada em
+                Mensagem criada em aqui
               </span>
               <span class="summary-container__item-occurrence-item-status-message-body-date">
                 {{ occurrenceItem.summaryOccurrence.createAt.dateTime | moment('DD/MM [às] HH:mm') }}
@@ -58,6 +61,10 @@
       </span>
     </div>
   </section>
+
+  <article v-else>
+    <Summary :value="occurrence" />
+  </article>
 </template>
 
 <script>
@@ -69,7 +76,8 @@ import {
 
 export default {
   components: {
-    Scheduler: () => import('@/views/main/negotiation/partials/ticket/omnichannel/occurrences/occurrence/interaction/partials/Scheduler')
+    Scheduler: () => import('@/views/main/negotiation/partials/ticket/omnichannel/occurrences/occurrence/interaction/partials/Scheduler'),
+    Summary: () => import('@/views/main/negotiation/partials/ticket/omnichannel/occurrences/occurrence/summary/Summary')
   },
 
   filters: {
@@ -107,7 +115,8 @@ export default {
     ...mapGetters({
       fullMessages: 'getFullMessages',
       summaryKeys: 'getOccurrencesSummaryKeys',
-      summaryOccurrences: 'getOccurrencesSummary'
+      summaryOccurrences: 'getOccurrencesSummary',
+      userConfigs: 'userProperties'
     }),
 
     renderItems() {
@@ -135,10 +144,15 @@ export default {
           summaryOccurrence: new SummaryOccurrence(item)
         }))
       }
+    },
+
+    isGrouping() {
+      return this.userConfigs?.OMNICHANNEL_GROUPING_TYPE === 'GROUPED'
     }
   },
 
   mounted() {
+    console.log(this.communicationTypes)
     this.communicationTypes.forEach(communicationType => {
       this.getOccurrences(communicationType)
     })

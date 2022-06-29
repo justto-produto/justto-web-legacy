@@ -3,17 +3,9 @@
     id="HeaderUserMenuComponet"
     class="usermenu-container"
   >
-    <el-tooltip
-      v-if="isJusttoAdmin"
-      content="Modo anônimo"
-    >
-      <el-switch
-        v-model="isGhostMode"
-        class="usermenu-container__ghost-mode"
-      />
-    </el-tooltip>
+    <Dialer />
 
-    <JusAcademy />
+    <!-- <JusAcademy /> -->
 
     <Notification
       class="usermenu-container__jus-academy"
@@ -59,6 +51,16 @@
         <div class="usermenu-container__version">
           Versão {{ appVersion }}
         </div>
+        <!-- <a
+          v-if="canAccessDialer"
+          href="#"
+          @click.prevent="openDialer('')"
+        >
+          <el-dropdown-item>
+            Discador
+          </el-dropdown-item>
+        </a> -->
+
         <router-link
           v-if="showConfigs"
           to="/configurations"
@@ -77,17 +79,23 @@
         </router-link>
         <a
           v-if="workspacesList.length"
-          href="#"
           @click.prevent="changeWorkspace"
         >
           <el-dropdown-item>
             Alterar equipe
           </el-dropdown-item>
         </a>
+
         <a
           href="#"
-          @click="logout()"
+          @click.prevent="() => {}"
         >
+          <el-dropdown-item>
+            <JusAcademy mode="text" />
+          </el-dropdown-item>
+        </a>
+
+        <a @click="logout()">
           <el-dropdown-item divided>
             Sair
           </el-dropdown-item>
@@ -104,7 +112,6 @@
 </template>
 
 <script>
-import { IS_SMALL_WINDOW } from '@/constants/variables'
 import { mapActions, mapGetters } from 'vuex'
 
 export default {
@@ -112,8 +119,10 @@ export default {
     JusAcademy: () => import('@/components/dialogs/JusAcademy'),
     JusChangeWorkspace: () => import('@/components/dialogs/JusChangeWorkspace'),
     JusEditUser: () => import('@/components/dialogs/JusEditUserDialog'),
-    Notification: () => import('@/components/drawer/NotificationIcon')
+    Notification: () => import('@/components/drawer/NotificationIcon'),
+    Dialer: () => import('@/views/main/dialer/Dialer')
   },
+
   data: () => ({
     selectedWorkspace: '',
     changeWorkspaceDialogVisible: false
@@ -122,12 +131,13 @@ export default {
   computed: {
     ...mapGetters({
       accountId: 'accountId',
-      ghostMode: 'ghostMode',
+      width: 'getWindowWidth',
       name: 'loggedPersonName',
       loggedPerson: 'loggedPerson',
       teamName: 'workspaceTeamName',
       isJusttoAdmin: 'isJusttoAdmin',
       isAdminProfile: 'isAdminProfile',
+      canAccessDialer: 'canAccessDialer',
       workspacesList: 'getUserWorkspaces',
       loggedPersonHasName: 'loggedPersonHasName'
     }),
@@ -140,16 +150,8 @@ export default {
     isLargeTeamName() {
       return this.teamName.length > 20
     },
-    isGhostMode: {
-      get() {
-        return this.ghostMode
-      },
-      set(value) {
-        this.setGhostMode(value)
-      }
-    },
     avatarSize() {
-      return IS_SMALL_WINDOW ? 'mini' : 'sm'
+      return this.width <= 1600 ? 'mini' : 'sm'
     }
   },
 
@@ -169,8 +171,8 @@ export default {
 
   methods: {
     ...mapActions([
+      'openDialer',
       'myWorkspace',
-      'setGhostMode',
       'changeMemberName',
       'getFeaturesAndModules'
     ]),
@@ -242,7 +244,7 @@ export default {
   align-items: center;
 
   .usermenu-container__ghost-mode {
-    margin-right: 20px;
+    margin-right: 8px;
   }
 
   .usermenu-container__jus-academy {
@@ -302,22 +304,6 @@ export default {
     .small-team-name-container {
       max-width: 130px;
     }
-
-    .use-marquee-animation:hover {
-      display: inline-block;
-      overflow-x: visible;
-      animation: marquee 5s linear infinite;
-    }
-  }
-}
-
-/* Make it move */
-@keyframes marquee {
-  10% {
-    transform: translateX(0);
-  }
-  90% {
-    transform: translateX(-100%);
   }
 }
 

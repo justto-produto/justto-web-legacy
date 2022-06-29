@@ -1,23 +1,39 @@
 import { axiosDispatch, isSimilarStrings, buildQuery, validateCurrentId } from '@/utils'
+import { EditorBackup } from '@/models/message/editorBackup'
 
 const disputeApi = 'api/disputes/v2'
 const messagesPath = 'api/messages'
 
 const omnichannelActions = {
-  setOmnichannelActiveTab({ commit }, tab) {
-    commit('setOmnichannelActiveTab', tab)
-    commit('resetRecipients')
-    commit('resetOccurrences')
+  setOmnichannelActiveTab({ commit, getters: { getActiveTab }, dispatch }, tab) {
+    return new Promise(resolve => {
+      if (getActiveTab !== tab) {
+        commit('setOmnichannelActiveTab', tab)
+        commit('resetRecipients')
+        commit('resetOccurrences')
+        dispatch('setEditorBackup')
+        resolve(tab)
+      } else {
+        resolve(tab)
+      }
+    })
   },
 
-  setEditorText: ({ commit }, message) => commit('setEditorText', message),
+  setEditorText: ({ dispatch, commit }, message) => {
+    commit('setEditorText', message)
+    dispatch('setEditorBackup')
+  },
 
-  setNoteEditorText: ({ commit }, note) => commit('setNoteEditorText', note),
+  setNoteEditorText: ({ commit, dispatch }, note) => {
+    commit('setNoteEditorText', note)
+    dispatch('setEditorBackup')
+  },
 
-  setMessageType({ commit }, type) {
+  setMessageType({ commit, dispatch }, type) {
     commit('setMessageAttachments', [])
     commit('setMessageType', type)
     commit('resetRecipients')
+    dispatch('setEditorBackup')
   },
 
   getOccurrences({ getters }, disputeId) {
@@ -34,12 +50,12 @@ const omnichannelActions = {
   getAllOccurrences({ getters }, disputeId) {
     const params = {
       ...getters.getOccurrencesFilter,
-      size: getters.getTotalOccurrences,
+      size: 999999,
       page: 1,
-      type: getters.getOccurrencesFilter.type === 'LOG' ? null : getters.getOccurrencesFilter.type
+      type: { MESSAGES: 'INTERACTION', NOTES: 'NOTE', OCCURRENCES: null }[getters.getActiveTab]
     }
 
-    const url = `${disputeApi}/${disputeId}/occurrences${buildQuery(params)}`
+    const url = `${disputeApi}/${disputeId}/occurrences${buildQuery(params)}`.slice(0, -1)
 
     return validateCurrentId(disputeId, () => axiosDispatch({
       url, params: { resumed: false }, mutation: 'setOccurrences'
@@ -113,6 +129,8 @@ const omnichannelActions = {
       if (type === 'whatsapp') commit('resetRecipients')
       if (value) commit('setRecipients', recipient)
     }
+
+    dispatch('setEditorBackup')
   },
 
   verifyRecipient({ _ }, recipient) {
@@ -126,7 +144,7 @@ const omnichannelActions = {
     })
   },
 
-  resetRecipients: ({ commit }) => commit('resetRecipients'),
+  resetRecipients: ({ commit }) => Promise.resolve(commit('resetRecipients')),
 
   resetOccurrences: ({ commit }) => {
     commit('resetOccurrences')
@@ -165,7 +183,8 @@ const omnichannelActions = {
         externalIdentification,
         inReplyTo
       }
-      return validateCurrentId(disputeId, () => dispatch('sendemail', data))
+
+      return validateCurrentId(disputeId, () => dispatch('sendemail', data).then(() => dispatch('getDisputeOccurrences', disputeId)))
     } else if (type === 'whatsapp') {
       const data = {
         to,
@@ -173,14 +192,14 @@ const omnichannelActions = {
         externalIdentification,
         message: messageText.trim()
       }
-      return validateCurrentId(disputeId, () => dispatch('validateWhatsappMessage', { data, contact: recipients[0].value }))
+      return validateCurrentId(disputeId, () => dispatch('validateWhatsappMessage', { data, contact: recipients[0].value }).then(() => dispatch('getDisputeOccurrences', disputeId)))
     } else {
       const data = {
         roleId,
         message: messageEmail,
         email: recipients[0].value
       }
-      return validateCurrentId(disputeId, () => dispatch('sendNegotiator', { disputeId, data }))
+      return validateCurrentId(disputeId, () => dispatch('sendNegotiator', { disputeId, data }).then(() => dispatch('getDisputeOccurrences', disputeId)))
     }
   },
 
@@ -222,6 +241,7 @@ const omnichannelActions = {
       }
       if (window.location.href.includes('dispute')) {
         commit('addDisputeOccurrence', occurrence)
+        commit('addNegotiationOccurrence', occurrence)
       }
     }
   },
@@ -259,6 +279,65 @@ const omnichannelActions = {
       method: 'POST',
       data: recommendation
     })
+  },
+
+  setInteractionMessageContent({ _ }, { disputeId, content, communicationMessageId }) {
+    return axiosDispatch({
+      url: `api/disputes/${disputeId}/communications/${communicationMessageId}`,
+      method: 'PATCH',
+      data: { content }
+    })
+  },
+
+  setEditorBackup({ state, getters, dispatch }, id = null) {
+    const {
+      getEditorText,
+      getNoteEditorText,
+      getEditorRecipients,
+      getEditorMessageType,
+      getCurrentRoute: { params: { id: disputeId } }
+    } = getters
+
+    dispatch('setMessageBackup', new EditorBackup({
+      disputeId: id || disputeId,
+      message: getEditorText,
+      type: getEditorMessageType,
+      note: getNoteEditorText,
+      tab: state.activeTab,
+      contacts: getEditorRecipients
+    }))
+  },
+
+  getGroupedOccurrences({ _ }, { disputeId, occurrences, parentId }) {
+    const url = `${disputeApi}/${disputeId}/occurrences${buildQuery({ id: occurrences })}`
+
+    return axiosDispatch({
+      url,
+      mutation: 'setGroupedOccurrencesById',
+      payload: { parentId }
+    })
+  },
+
+  getGroupedOccurrencesByOccurrenceId({ state, commit }, id) {
+    // TODO: SAAS-5036 Implementar GET das Ocorrências agrupadas aqui.
+    commit('setGroupedOccurrencesById', {
+      data: {
+        content: state.occurrences.list.filter(({ id: occId }) => occId === id)
+      },
+      payload: id
+    })
+
+    return Promise.resolve()
+  },
+
+  resetGroupedOccurrencesByOccurrenceId({ commit }, id) {
+    commit('deleteGroupedOccurrencesById', id)
+
+    return Promise.resolve()
+  },
+
+  clearAllGroupedOccurreces({ getters: { getGroupedOccurrences }, commit }) {
+    Object.keys(getGroupedOccurrences).forEach(id => commit('deleteGroupedOccurrencesById', id))
   }
 }
 

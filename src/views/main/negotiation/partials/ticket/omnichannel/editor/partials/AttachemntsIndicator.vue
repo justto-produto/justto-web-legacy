@@ -95,7 +95,12 @@ export default {
     margin: 0 0 10px 0 !important;
     padding: 8px 12px 8px 10px;
     max-width: 100%;
-    height: auto;
+    height: auto !important;
+    min-height: 40px;
+
+    display: flex;
+    align-items: center;
+
     &:last-child { margin-bottom: 0 !important }
 
     .el-checkbox__label {

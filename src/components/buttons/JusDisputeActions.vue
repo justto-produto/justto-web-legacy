@@ -32,8 +32,15 @@
             @click="action.action()"
           >
             <jus-icon
+              v-if="!action.isElementIcon"
               :icon="action.icon"
               class="jus-dispute-actions__actions-icons"
+            />
+
+            <i
+              v-else
+              :class="action.icon"
+              class="jus-dispute-actions__actions-icons el-icon"
             />
           </el-button>
         </span>
@@ -144,7 +151,7 @@
         <el-button
           :loading="modalLoading"
           type="primary"
-          @click.prevent="disputeAction('send-counterproposal', updateUpperRange = true)"
+          @click.prevent="disputeAction('send_settled', updateUpperRange = true)"
         >
           Continuar
         </el-button>
@@ -174,14 +181,15 @@
 
       <el-select
         v-model="unsettledType"
+        filterable
         data-testid="select-unsettled"
         placeholder="Escolha o motivo da perda"
       >
         <el-option
-          v-for="(type, index) in disputeStatuses.UNSETTLED"
+          v-for="(type, index) in unsettledReasonsSorted"
           :key="index"
-          :label="type"
-          :value="index"
+          :label="type[1]"
+          :value="type[0]"
         />
       </el-select>
 
@@ -400,7 +408,7 @@
         <el-button
           :loading="modalLoading"
           type="primary"
-          @click.prevent="disputeAction('send-counterproposal')"
+          @click.prevent="disputeAction('send_counterproposal')"
         >
           Atualizar contraproposta
         </el-button>
@@ -452,10 +460,10 @@
                 style="width: 100%;"
               >
                 <el-option
-                  v-for="(key, value) in dropLawsuitReasons"
-                  :key="key"
-                  :value="value"
-                  :label="key"
+                  v-for="(reason, reasonIndex) in dropLawsuitReasons"
+                  :key="reasonIndex"
+                  :value="Object.entries(reason)[0][0]"
+                  :label="Object.entries(reason)[0][1]"
                 />
               </el-select>
             </el-form-item>
@@ -528,20 +536,20 @@
       <p
         class="dialog-actions__ticket-resume-infoline"
       >
-        <b>Réu(s): </b>
-        <span>{{ respondentsResume.toUpperCase() || ' - ' }}</span>
+        <b>{{ $tc('PARTY_RESPONDENT', isRecovery) }}: </b>
+        <span>{{ (respondentsResume || ' - ') | uppercase }}</span>
       </p>
       <p
         class="dialog-actions__ticket-resume-infoline"
       >
         <b>Autor(es): </b>
-        <span>{{ authorsResume.toUpperCase() || ' - ' }}</span>
+        <span>{{ authorsResume | uppercase }}</span>
       </p>
       <p
         class="dialog-actions__ticket-resume-infoline"
       >
         <b>Advogado(s) do autor(es): </b>
-        <span>{{ lawyersResume.toUpperCase() || ' - ' }}</span>
+        <span>{{ lawyersResume | uppercase }}</span>
       </p>
       <p
         class="dialog-actions__ticket-resume-infoline"
@@ -580,6 +588,15 @@
     <NotifyOnCompanyAnalysis
       ref="notifyOnCompanyAnalysis"
     />
+
+    <ConfirmActionDialog
+      ref="confirmActionDialog"
+    />
+
+    <SetSettledDialog
+      ref="setSettledDialog"
+      :status="dispute.status"
+    />
   </div>
 </template>
 
@@ -590,10 +607,14 @@ import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'JusDisputeActions',
+
   components: {
     JusDragArea,
-    NotifyOnCompanyAnalysis: () => import('@/components/dialogs/NotifyOnCompanyAnalysis.vue')
+    ConfirmActionDialog: () => import('@/components/dialogs/ConfirmActionDialog'),
+    NotifyOnCompanyAnalysis: () => import('@/components/dialogs/NotifyOnCompanyAnalysis'),
+    SetSettledDialog: () => import('@/components/dialogs/SetSettledDialog')
   },
+
   props: {
     dispute: {
       type: Object,
@@ -606,8 +627,13 @@ export default {
     isCollapsed: {
       type: Boolean,
       default: false
+    },
+    tab: {
+      type: String,
+      default: '1'
     }
   },
+
   data() {
     return {
       settledValue: 0,
@@ -639,16 +665,34 @@ export default {
       counterOfferFormRules: {
         lastCounterOfferValue: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
         selectedRoleId: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
+      },
+      nextStatusMap: {
+        IMPORTED: 'ACCEPTED',
+        ENRICHED: 'ACCEPTED',
+        ENGAGEMENT: 'ACCEPTED',
+        PENDING: 'ACCEPTED',
+        RUNNING: 'ACCEPTED',
+        UNSETTLED: 'ACCEPTED',
+        ACCEPTED: 'CHECKOUT',
+        CHECKOUT: 'SETTLED'
       }
     }
   },
+
   computed: {
     ...mapGetters({
       disputeStatuses: 'disputeStatuses',
       isJusttoAdmin: 'isJusttoAdmin',
       ghostMode: 'ghostMode',
-      dropLawsuitReasons: 'getDropLawsuitReasons'
+      dropLawsuitReasons: 'getDropLawsuitReasonsArray',
+      userPreferences: 'userPreferences',
+      isRecovery: 'isWorkspaceRecovery',
+      features: 'getMappedFeaturesAndModules'
     }),
+
+    unsettledReasonsSorted() {
+      return Object.entries(this.disputeStatuses.UNSETTLED || {}).sort((a, b) => (a[1] > b[1] ? 1 : -1))
+    },
 
     collapsed: {
       get() {
@@ -658,6 +702,7 @@ export default {
         this.$emit('update:isCollapsed', value)
       }
     },
+
     actionsList() {
       return [
         {
@@ -682,7 +727,7 @@ export default {
           disabled: this.isCanceled,
           condition: () => this.canResume,
           action: () => this.disputeAction('resume'),
-          tooltip: 'Retomar'
+          tooltip: 'Despausar'
         },
         {
           name: 'paused',
@@ -695,10 +740,10 @@ export default {
         {
           name: 'restart-engagement',
           icon: 'refresh',
-          disabled: this.isPaused || this.isCanceled,
+          disabled: this.isPaused || this.isCanceled || this.dispute?.favorite,
           condition: () => this.canRestartEngagement,
           action: () => this.disputeAction('restart-engagement'),
-          tooltip: 'Reiniciar disputa'
+          tooltip: this.dispute?.favorite ? 'Disputa aguardando análise da empresa não permite reiniciar' : 'Reiniciar disputa'
         },
         {
           name: 'resend-messages',
@@ -727,10 +772,10 @@ export default {
         {
           name: 'enrich',
           icon: 'enrich',
-          disabled: this.isPaused || this.isCanceled,
+          disabled: this.isPaused || this.isCanceled || this.dispute?.favorite,
           condition: () => !this.tableActions && !this.isPreNegotiation,
           action: () => this.disputeAction('enrich'),
-          tooltip: 'Enriquecer disputa'
+          tooltip: this.dispute?.favorite ? 'Disputa aguardando análise da empresa não permite enriquecer' : 'Enriquecer disputa'
         },
         {
           name: 'counterproposal',
@@ -790,7 +835,15 @@ export default {
           icon: this.dispute.favorite ? 'offices-tower-active' : 'offices-tower',
           condition: () => !this.isPreNegotiation,
           action: () => this.disputeAction(this.dispute.favorite ? 'disfavor' : 'favorite'),
-          tooltip: `${this.$t('action.FAVORITE')} (${this.$t('fields.respondentParty')})`
+          tooltip: `${this.$t('action.FAVORITE')}`
+        },
+        {
+          name: 'export',
+          icon: 'el-icon-printer',
+          isElementIcon: true,
+          condition: () => true,
+          action: () => window.open(`/#/print/negotiation/${this.$route?.params?.id || this.dispute?.id}?tab=${this.disputeTabToTicketTab}`, '_blank'),
+          tooltip: 'Imprimir disputa'
         },
         {
           name: 'redirect',
@@ -801,54 +854,75 @@ export default {
         }
       ]
     },
+
+    disputeTabToTicketTab() {
+      return { 1: 'MESSAGES', 2: 'NOTES', 3: 'OCCURRENCES' }[Number(this.tab)]
+    },
+
     isPaused() {
       return this.dispute?.paused
     },
+
     isCanceled() {
       return this.dispute?.status === 'CANCELED'
     },
+
     canSettled() {
       return this.dispute?.status !== 'SETTLED' && !this.isPreNegotiation
     },
+
     canUnsettled() {
       return this.dispute?.status !== 'UNSETTLED' && !this.isPreNegotiation
     },
+
     canResume() {
       return this.dispute && this.dispute.paused && !this.isPreNegotiation
     },
+
     canPause() {
       return this.dispute && !this.dispute.paused && !this.isPreNegotiation && !['EXPIRED'].includes(this.dispute?.status)
     },
+
     canMarkAsNotRead() {
       return this.dispute?.status && !['IMPORTED', 'ENRICHED', 'ENGAGEMENT'].includes(this.dispute.status) && !this.isPreNegotiation
     },
+
     canSendCounterproposal() {
       return this.dispute?.status && !['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(this.dispute.status) && !this.isPreNegotiation
     },
+
     canMoveToRunning() {
       return this.dispute?.status && ['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED', 'CANCELED'].includes(this.dispute.status) && !this.isPreNegotiation
     },
+
     canRestartEngagement() {
       return this.dispute?.status && !['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED', 'EXPIRED'].includes(this.dispute.status) && !this.isPreNegotiation
     },
+
     isPreNegotiation() {
       return this.dispute.status === 'PRE_NEGOTIATION'
     },
+
     isInNegotiation() {
       return this.dispute.status === 'RUNNING'
     },
+
     canResendMessages() {
       return !this.tableActions && !this.isPreNegotiation
     },
+
     isAccepted() {
       return this.dispute ? ['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(this.dispute.status) : null
     },
+
     checkUpperRangeCounterOffer() {
-      return this.counterOfferForm.lastCounterOfferValue > this.dispute.disputeUpperRange
+      return this.isRecovery ? this.counterOfferForm.lastCounterOfferValue < this.dispute.disputeUpperRange : this.counterOfferForm.lastCounterOfferValue > this.dispute.disputeUpperRange
     },
+
     isInsufficientUpperRange() {
       return this.unsettledType === 'INSUFFICIENT_UPPER_RANGE'
     },
+
     workspaceNegotiators() {
       return this.$store.getters.workspaceMembers.map(member => {
         const newMember = {}
@@ -858,12 +932,14 @@ export default {
         return newMember
       })
     },
+
     disputeClaimants() {
       if (this.dispute && this.dispute.disputeRoles) {
         return getRoles(this.dispute.disputeRoles, 'CLAIMANT')
       }
       return []
     },
+
     authorsResume() {
       if (this.dispute && this.dispute.disputeRoles) {
         return getRoles(this.dispute.disputeRoles, 'CLAIMANT', 'PARTY').map(role => {
@@ -872,6 +948,7 @@ export default {
       }
       return []
     },
+
     lawyersResume() {
       if (this.dispute && this.dispute.disputeRoles) {
         return getRoles(this.dispute.disputeRoles, 'CLAIMANT', 'LAWYER').map(role => {
@@ -880,6 +957,7 @@ export default {
       }
       return []
     },
+
     respondentsResume() {
       if (this.dispute && this.dispute.disputeRoles) {
         return getRoles(this.dispute.disputeRoles, 'RESPONDENT', 'PARTY').map(role => {
@@ -887,13 +965,19 @@ export default {
         }).join(', ')
       }
       return []
+    },
+
+    forcedStatusValue() {
+      return this.nextStatusMap[this.dispute?.status] === this.counterOfferForm.forceStatus ? undefined : this.counterOfferForm.forceStatus
     }
   },
+
   beforeMount() {
     if (!Object.keys(this.dropLawsuitReasons).length) {
       this.getDropLawsuitReasons()
     }
   },
+
   methods: {
     ...mapActions([
       'deleteDocument',
@@ -903,7 +987,9 @@ export default {
       'sendDisputeNote',
       'startNegotiation',
       'getDropLawsuitReasons',
-      'cancelTicket'
+      'cancelTicket',
+      'setAccountProperty',
+      'getDisputeStatuses'
     ]),
 
     redirectNegotiation() {
@@ -917,41 +1003,63 @@ export default {
       return text.replace(/(<([^>]+)>)/gi, '')
     },
 
+    handleActionNotify(key, value) {
+      const propertie = {}
+
+      propertie[key] = value
+
+      this.setAccountProperty(propertie)
+    },
+
     disputeAction(action, additionParams) {
       let message = {
         content: 'Tem certeza que deseja realizar esta ação?',
         title: this.$options.filters.capitalize(this.$t('action.' + action.toUpperCase()))
       }
 
+      this.offerFormType = action.toUpperCase()
+
       switch (action) {
         case 'settled':
           if (this.dispute.paused) {
             message = {
-              content: 'A disputa está pausada, deseja retomar negociação para ganhar?',
-              title: 'Retomar negociação'
+              content: 'A disputa está pausada, deseja despausar negociação para ganhar?',
+              title: 'Despausar negociação'
             }
             this.doAction('resume', message).then(() => {
               if (this.dispute.status === 'CHECKOUT' || this.dispute.status === 'ACCEPTED') {
                 this.ticketResumeDialogVisible = true
               } else {
-                this.openSettledDialog(action)
+                this.disputeAction(action, additionParams)
               }
             })
           } else {
-            if (this.dispute.status === 'CHECKOUT' || this.dispute.status === 'ACCEPTED') {
+            if (!this.features.DRAFT_MANAGEMENT && !['PRE_NEGOTIATION', 'CHECKOUT', 'SETTLED'].includes(this.dispute.status) && !additionParams?.forceStatus) {
+              this.counterOfferForm.forceStatus = 'SETTLED'
+              this.disputeAction(action, { ...additionParams, forceStatus: 'SETTLED' })
+            } else if (this.features.DRAFT_MANAGEMENT && !['PRE_NEGOTIATION', 'CHECKOUT', 'SETTLED'].includes(this.dispute.status) && !additionParams?.forceStatus) {
+              this.$refs.setSettledDialog.open((status) => {
+                this.counterOfferForm.forceStatus = status
+                this.disputeAction(action, { ...additionParams, forceStatus: status })
+              })
+            } else if (this.dispute.status === 'CHECKOUT' || this.dispute.status === 'ACCEPTED') {
               this.ticketResumeDialogVisible = true
             } else {
               this.openSettledDialog(action)
             }
           }
           break
+        case 'send_settled':
+          this.sendCounterproposal(true)
+          break
         case 'unsettled':
           this.unsettledType = null
+          this.getDisputeStatuses('UNSETTLED')
           this.openSettledDialog(action)
           break
         case 'send-unsettled':
           if (this.isInsufficientUpperRange) {
-            this.disputeAction('send-counterproposal')
+            this.disputeAction('send_counterproposal')
           } else {
             additionParams = {
               body: {
@@ -1027,8 +1135,8 @@ export default {
         case 'counterproposal':
           if (this.dispute.paused) {
             message = {
-              content: 'A disputa está pausada, deseja retomar negociação para enviar uma contraproposta?',
-              title: 'Retomar negociação'
+              content: 'A disputa está pausada, deseja despausar negociação para enviar uma contraproposta?',
+              title: 'Despausar negociação'
             }
             this.doAction('resume', message).then(() => {
               this.openCounterproposalDialog()
@@ -1037,12 +1145,13 @@ export default {
             this.openCounterproposalDialog()
           }
           break
-        case 'send-counterproposal':
+        case 'send_counterproposal':
           if (this.unsettledType === 'INSUFFICIENT_UPPER_RANGE') {
             this.sendCounterproposal().then(() => {
               additionParams = {
                 body: {
                   reason: this.disputeStatuses.UNSETTLED[this.unsettledType],
+                  conclusionNote: this.scapeHtml(this.counterOfferForm.note),
                   note: this.scapeHtml(this.counterOfferForm.note)
                 }
               }
@@ -1067,12 +1176,61 @@ export default {
           }
           break
         case 'favorite':
-          this.doAction(action, message)
+          this.handleFavorite()
           break
         case 'disfavor':
-          this.doAction(action, message)
+          this.handleDisfavor()
           break
       }
+    },
+
+    handleFavorite() {
+      const showNotify = this.userPreferences.properties?.FAVORITE_NOTIFICATION === 'ALWAYS'
+
+      this.$refs.confirmActionDialog.handleNotify = (value) => this.handleActionNotify('FAVORITE_NOTIFICATION', value ? 'ALWAYS' : '')
+      this.$refs.confirmActionDialog.handleConfirm = () => this.handleAction('favorite', {}).then(() => {
+        this.$jusSegment('ACTIVE_fAVORITE', { ...this.dispute })
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Ação <b>' + this.$options.filters.capitalize(this.$t('actions.FAVORITE.name')) + '</b> realizada com sucesso.',
+          type: 'success',
+          dangerouslyUseHTMLString: true
+        })
+
+        this.$refs.notifyOnCompanyAnalysis.open('FAVORITE', this.dispute)
+      })
+
+      this.$refs.confirmActionDialog.open({
+        visible: true,
+        showNotifyInput: showNotify,
+        title: this.$options.filters.capitalize(this.$t('actions.FAVORITE.name')),
+        notify: showNotify,
+        action: 'FAVORITE'
+      })
+    },
+
+    handleDisfavor() {
+      const showNotify = this.userPreferences.properties?.FAVORITE_NOTIFICATION === 'ALWAYS'
+
+      this.$refs.confirmActionDialog.handleNotify = (value) => this.handleActionNotify('FAVORITE_NOTIFICATION', value ? 'ALWAYS' : '')
+      this.$refs.confirmActionDialog.handleConfirm = () => this.handleAction('disfavor', {}).then(() => {
+        this.$jusSegment('DEACTIVE_fAVORITE', { ...this.dispute })
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Ação <b>' + this.$options.filters.capitalize(this.$t('actions.DISFAVOR.name')) + '</b> realizada com sucesso.',
+          type: 'success',
+          dangerouslyUseHTMLString: true
+        })
+
+        this.$refs.notifyOnCompanyAnalysis.open('DISFAVOR', this.dispute)
+      })
+
+      this.$refs.confirmActionDialog.open({
+        visible: true,
+        showNotifyInput: showNotify,
+        title: this.$options.filters.capitalize(this.$t('actions.DISFAVOR.name')),
+        notify: showNotify
+      })
     },
 
     handleSettled() {
@@ -1089,6 +1247,22 @@ export default {
       this.settledDialogVisible = false
     },
 
+    handleAction(action, additionParams) {
+      let params = {
+        action,
+        disputeId: this.dispute.id,
+        body: {
+          note: this.counterOfferForm.note,
+          conclusionNote: this.counterOfferForm.note,
+          forceStatus: this.forcedStatusValue
+        }
+      }
+
+      if (additionParams) params = { ...params, ...additionParams }
+
+      return this.sendDisputeAction(params)
+    },
+
     doAction(action, message, additionParams) {
       return new Promise((resolve, reject) => {
         this.$confirm(message.content, message.title, {
@@ -1100,18 +1274,7 @@ export default {
         }).then(() => {
           this.modalLoading = true
 
-          let params = {
-            action,
-            disputeId: this.dispute.id,
-            body: {
-              note: this.counterOfferForm.note,
-              conclusionNote: this.counterOfferForm.note
-            }
-          }
-
-          if (additionParams) params = { ...params, ...additionParams }
-
-          this.sendDisputeAction(params).then(() => {
+          this.handleAction(action, additionParams).then(() => {
             resolve()
 
             this.$jusNotification({
@@ -1122,6 +1285,7 @@ export default {
             })
 
             this.counterOfferForm.note = ''
+            this.$delete(this.counterOfferForm, 'forceStatus')
 
             if (action === 'settled') {
               this.ticketResumeDialogVisible = false
@@ -1139,6 +1303,7 @@ export default {
         })
       })
     },
+
     checkIsntManualStrategy(action) {
       return new Promise((resolve, reject) => {
         if ((['restart-engagement', 'resend-messages', 'cancel-messages'].includes(action)) && (this.dispute.strategyId === 25 || this.dispute.strategyId === 26)) {
@@ -1154,6 +1319,7 @@ export default {
         }
       })
     },
+
     setAsUnread() {
       this.disputeSetVisualized({
         visualized: false,
@@ -1166,6 +1332,7 @@ export default {
         this.$jusNotification({ error })
       })
     },
+
     validateForm(ref) {
       return new Promise((resolve, reject) => {
         this.$refs[ref].validate(valid => {
@@ -1174,9 +1341,10 @@ export default {
         })
       })
     },
+
     handleDropLawsuit() {
       this.modalLoading = true
-      const disputeId = this.$route.params.id
+      const disputeId = this.$route?.params?.id || this?.dispute?.id
       const { reason, conclusionNote } = this.dropLawsuitForm
       this.validateForm('dropLawsuitForm')
         .then(() => {
@@ -1194,18 +1362,22 @@ export default {
         })
         .finally(() => { this.modalLoading = false })
     },
+
     goToNegotiation() {
       this.startNegotiation(this.dispute.id)
       this.$jusSegment('Negociação iniciada na disputa', { disputeId: this.dispute.id })
     },
+
     openNewTab() {
       const routeData = this.$router.resolve({ name: 'dispute', params: { id: this.dispute.id } })
       window.open(routeData.href, '_blank')
       this.$emit('open:newtab')
     },
+
     togleCollapsed() {
       this.collapsed = !this.collapsed
     },
+
     openSettledDialog(action) {
       this.modalLoading = false
       this.counterOfferForm.lastCounterOfferValue = this.dispute.lastCounterOfferValue || this.dispute.lastOfferValue
@@ -1227,13 +1399,19 @@ export default {
         this.$refs.counterOfferForm.clearValidate()
       }
     },
-    openEditNegotiatorsDialog() {
+
+    async openEditNegotiatorsDialog() {
+      const workspaceNegotiatorsIds = this.workspaceNegotiators.map(({ value }) => value) || []
+
       this.modalLoading = false
+
       this.disputeNegotiators = this.dispute.disputeRoles.filter(member => {
-        return member.roles.includes('NEGOTIATOR') && !member.archived
+        return member.roles.includes('NEGOTIATOR') && !member.archived && workspaceNegotiatorsIds.includes(member.personId)
       }).map(member => member.personId)
+
       this.editNegotiatorDialogVisible = true
     },
+
     openCounterproposalDialog() {
       this.modalLoading = false
       this.counterOfferForm.lastCounterOfferValue = ''
@@ -1243,15 +1421,17 @@ export default {
         this.$refs.counterOfferForm.clearValidate()
       }
     },
+
     handleAttachmentDialogVisable() {
       this.uploadAttacmentDialogVisable = !this.uploadAttacmentDialogVisable
     },
+
     checkCounterproposal(actionType) {
       return new Promise((resolve, reject) => {
         this.$refs.counterOfferForm.validate(valid => {
           if (valid) {
             if (this.checkUpperRangeCounterOffer) {
-              const winTxt = 'O valor inserido <b>irá mojorar</b> alçada máxima. Deseja continuar?'
+              const winTxt = `O valor inserido <b>irá ${this.isRecovery ? 'adequar' : 'majorar'}</b> ${this.$tc('UPPER_RANGE', this.isRecovery)}. Deseja continuar?`
               if (actionType === 'WIN') {
                 this.$confirm(winTxt, 'Atenção!', {
                   confirmButtonText: 'Continuar',
@@ -1265,18 +1445,18 @@ export default {
               } else {
                 const tag = this.$createElement
                 this.$confirm(tag('div', null, [
-                  tag('p', null, 'Valor da contraproposta é maior que o da alçada máxima!'),
+                  tag('p', null, `Valor da contraproposta é ${this.isRecovery ? 'menor' : 'maior'} que o d${this.$tc('UPPER_RANGE_WITH_ARTICLE', this.isRecovery)}!`),
                   tag('br', null, ''),
                   tag('p', null, [
                     tag('span', { style: { color: '#FF4B54' } }, '*'),
                     tag('small', null, [
                       'Ao clicar em ',
-                      tag('strong', null, 'Majorar'),
+                      tag('strong', null, this.isRecovery ? 'Adequar' : 'Majorar'),
                       ', será feita a ',
                       tag('strong', null, 'contraproposta'),
-                      ', a ',
-                      tag('strong', null, 'alçada máxima'),
-                      ' será majorada para o ',
+                      (this.isRecovery ? ', o ' : ', a '),
+                      tag('strong', null, this.$tc('UPPER_RANGE', this.isRecovery)),
+                      ' será ' + (this.isRecovery ? 'adequado' : 'majorada') + ' para o ',
                       tag('strong', null, 'valor'),
                       ' da contraproposta e a disputa será alterada para ',
                       tag('strong', null, 'Proposta Aceita'),
@@ -1288,18 +1468,18 @@ export default {
                     tag('span', { style: { color: '#FF4B54' } }, '*'),
                     tag('small', null, [
                       'Ao clicar em ',
-                      tag('strong', null, 'Não majorar'),
+                      tag('strong', null, `Não ${this.isRecovery ? 'adequar' : 'majorar'}`),
                       ', somente será feita a contraproposta, sem alterações no status da disputa.'
                     ])
                   ])
-                ]), 'Majorar a alçada máxima?', {
+                ]), `${this.isRecovery ? 'Adequar' : 'Majorar'} ${this.$tc('UPPER_RANGE_WITH_ARTICLE', this.isRecovery)}?`, {
                   distinguishCancelAndClose: true,
                   dangerouslyUseHTMLString: true,
                   closeOnClickModal: false,
                   closeOnPressEscape: false,
                   showClose: false,
-                  confirmButtonText: 'Não majorar',
-                  cancelButtonText: 'Majorar'
+                  confirmButtonText: 'Não ' + (this.isRecovery ? 'Adequar' : 'Majorar'),
+                  cancelButtonText: this.isRecovery ? 'Adequar' : 'Majorar'
                 }).then(() => {
                   resolve(false)
                 }).catch(() => {
@@ -1315,6 +1495,7 @@ export default {
         })
       })
     },
+
     sendCounterproposal(updateUpperRange) {
       return new Promise((resolve, reject) => {
         this.$refs.counterOfferForm.validate(valid => {
@@ -1327,7 +1508,9 @@ export default {
                 value: this.counterOfferForm.lastCounterOfferValue.toString(),
                 roleId: this.counterOfferForm.selectedRoleId,
                 note: this.scapeHtml(this.counterOfferForm.note),
-                updateUpperRange: updateUpperRange || false
+                updateUpperRange: updateUpperRange || false,
+                action: this.offerFormType,
+                forceStatus: this.forcedStatusValue
               }).then(() => {
                 resolve()
                 this.counterproposalDialogVisible = false
@@ -1387,6 +1570,12 @@ export default {
     .jus-dispute-actions__actions-icons {
       width: 16px;
       height: 16px;
+
+      &.el-icon {
+        font-size: 19px;
+        width: 19px;
+        height: 19px;
+      }
     }
   }
 

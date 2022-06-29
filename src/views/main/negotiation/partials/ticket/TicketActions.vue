@@ -1,7 +1,10 @@
 <template>
-  <article class="ticket-actions">
+  <article
+    class="ticket-actions"
+    :class="{'dispute-mode': isInDispute}"
+  >
     <span
-      v-for="action in actionsList.filter(a => a.isDynamic && a.isVisible)"
+      v-for="action in actionListFiltered"
       :key="action.name"
     >
       <el-tooltip
@@ -14,8 +17,9 @@
         >
           <i
             v-if="action.isElementIcon"
-            class="el-icon-video-play ticket-actions__icons_element"
+            :class="`${action.icon} ticket-actions__icons_element`"
           />
+
           <JusIcon
             v-else
             :icon="action.icon"
@@ -26,6 +30,7 @@
     </span>
 
     <el-popover
+      v-if="!isInDispute"
       :class="{ 'ticket-actions__more-actions--hidden': isPreNegotiation }"
       class="ticket-actions__more-actions"
       popper-class="ticket-actions__popover"
@@ -55,51 +60,63 @@
     <TicketActionsDialogs
       ref="dialogActions"
       :ticket="ticket"
+      :force-status="forceStatus"
+      @conclude="forceStatus = ''"
     />
 
     <NotifyOnCompanyAnalysis
       ref="notifyOnCompanyAnalysis"
     />
+
+    <ConfirmActionDialog
+      ref="confirmActionDialog"
+    />
+
+    <SetSettledDialog
+      ref="setSettledDialog"
+      :status="ticket.status"
+    />
   </article>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'TicketActions',
+
   components: {
     TicketActionsDialogs: () => import('./TicketActionsDialogs'),
-    NotifyOnCompanyAnalysis: () => import('@/components/dialogs/NotifyOnCompanyAnalysis.vue')
+    NotifyOnCompanyAnalysis: () => import('@/components/dialogs/NotifyOnCompanyAnalysis'),
+    ConfirmActionDialog: () => import('@/components/dialogs/ConfirmActionDialog'),
+    SetSettledDialog: () => import('@/components/dialogs/SetSettledDialog')
   },
+
   props: {
     ticket: {
       type: Object,
       required: true
+    },
+
+    isInDispute: {
+      type: Boolean,
+      default: false
     }
   },
+
+  data: () => ({ forceStatus: '' }),
+
   computed: {
     ...mapGetters({
       isGhost: 'ghostMode',
       activeTab: 'getActiveTab',
-      isJusttoAdmin: 'isJusttoAdmin'
+      isJusttoAdmin: 'isJusttoAdmin',
+      userPreferences: 'userPreferences',
+      features: 'getMappedFeaturesAndModules'
     }),
 
     actionsList() {
       return [
-        {
-          name: 'FAVORITE',
-          icon: 'offices-tower',
-          isVisible: !this.isFavorite,
-          method: () => this.handleFavorite()
-        },
-        {
-          name: 'DISFAVOR',
-          icon: 'offices-tower-active',
-          isVisible: this.isFavorite,
-          isDynamic: true,
-          method: () => this.handleDisfavor()
-        },
         {
           name: 'SETTLED',
           icon: 'positive-hand',
@@ -116,20 +133,6 @@ export default {
           isDynamic: !this.ticket?.favorite
         },
         {
-          name: 'MANUAL_COUNTERPROPOSAL',
-          icon: 'exchange',
-          method: (action) => this.handleManualCounterproposal(action),
-          isVisible: this.canManualCounterproposal,
-          isDynamic: true
-        },
-        {
-          name: 'SET_UNREAD',
-          icon: 'open-close-envelopes',
-          method: (action) => this.handleSetUnread(action),
-          isVisible: this.canSetUnread,
-          isDynamic: true
-        },
-        {
           name: 'RESUME',
           icon: 'el-icon-video-play',
           method: (action) => this.handlePauseResume(action),
@@ -139,33 +142,46 @@ export default {
         },
         {
           name: 'PAUSED',
+          icon: 'pause',
           method: (action) => this.handlePauseResume(action),
           isVisible: this.canPause
         },
         {
           name: 'RESTART_ENGAGEMENT',
+          icon: 'refresh',
           method: (action) => this.handleRestartEngagement(action),
-          isVisible: !this.isPreNegotiation
+          isVisible: this.canRestartEngagement
         },
         {
           name: 'RESEND_MESSAGES',
+          icon: 'resend-messages',
           method: (action) => this.handleResendMessages(action),
           isVisible: this.canResendMessages
         },
         {
           name: 'CANCEL_MESSAGES',
+          icon: 'cancel-messages',
           method: (action) => this.handleCancelMessages(action),
           isVisible: !this.isPreNegotiation
         },
         {
           name: 'EDIT_NEGOTIATORS',
+          icon: 'delegate',
           method: (action) => this.handleEditNegotiators(action),
           isVisible: !this.isPreNegotiation
         },
         {
           name: 'ENRICH',
+          icon: 'enrich',
           method: (action) => this.handleEnrich(action),
-          isVisible: !this.isPreNegotiation
+          isVisible: !this.isPreNegotiation && !this.isFavorite
+        },
+        {
+          name: 'MANUAL_COUNTERPROPOSAL',
+          icon: 'exchange',
+          method: (action) => this.handleManualCounterproposal(action),
+          isVisible: this.canManualCounterproposal,
+          isDynamic: true
         },
         {
           name: 'RENEGOTIATE',
@@ -175,9 +191,11 @@ export default {
           isDynamic: this.isCanceled || this.isSettled || this.isUnsettled
         },
         {
-          name: 'UPLOAD_ATTACHMENT',
-          method: (action) => this.handleUploadAttachment(action),
-          isVisible: !this.isPreNegotiation
+          name: 'SET_UNREAD',
+          icon: 'open-close-envelopes',
+          method: (action) => this.handleSetUnread(action),
+          isVisible: this.canSetUnread,
+          isDynamic: true
         },
         {
           name: 'DROP_LAWSUIT',
@@ -194,8 +212,29 @@ export default {
           isDynamic: true
         },
         {
+          name: 'UPLOAD_ATTACHMENT',
+          icon: 'upload-file',
+          method: (action) => this.handleUploadAttachment(action),
+          isVisible: !this.isPreNegotiation
+        },
+        {
+          name: 'FAVORITE',
+          icon: 'offices-tower',
+          isVisible: !this.isFavorite,
+          method: () => this.handleFavorite()
+        },
+        {
+          name: 'DISFAVOR',
+          icon: 'offices-tower-active',
+          isVisible: this.isFavorite,
+          isDynamic: true,
+          method: () => this.handleDisfavor()
+        },
+        {
           name: `PRINT_TICKET_${this.activeTab}`,
-          method: (_action) => this.toggleExportTicketModalVisible(true),
+          icon: 'el-icon-printer',
+          method: (_action) => (window.open(`/#/print/negotiation/${this.$route.params.id}?tab=${this.activeTab}`, '_blank')),
+          isElementIcon: true,
           isVisible: true
         },
         {
@@ -217,75 +256,98 @@ export default {
         } else return action.isVisible
       })
     },
+
+    actionListFiltered() {
+      return this.isInDispute ? this.actionsList.filter(({ isVisible }) => isVisible) : this.actionsList.filter(({ isDynamic, isVisible }) => isDynamic && isVisible)
+    },
+
     pausedDisputeActionList() {
       return ['RESUME', 'REDIRECTMANAGEMENT', 'UPLOAD_ATTACHMENT', 'EDIT_NEGOTIATORS', `PRINT_TICKET_${this.activeTab}`]
     },
+
     canceledDisputeActionList() {
       return ['RENEGOTIATE', 'REDIRECTMANAGEMENT', 'UPLOAD_ATTACHMENT', `PRINT_TICKET_${this.activeTab}`]
     },
+
     isFavorite() {
       return this.ticket?.favorite
     },
+
     isPaused() {
       return this.ticket.paused
     },
+
     isPreNegotiation() {
       const { status } = this.ticket
       return status === 'PRE_NEGOTIATION'
     },
+
     isCanceled() {
       const { status } = this.ticket
       return status === 'CANCELED'
     },
+
     isSettled() {
       const { status } = this.ticket
       return status === 'SETTLED'
     },
+
     isUnsettled() {
       const { status } = this.ticket
       return status === 'UNSETTLED'
     },
+
     isExpired() {
       const { status } = this.ticket
       return status === 'EXPIRED'
     },
+
     canSettled() {
       const { isPreNegotiation, ticket } = this
       return ticket.status && ticket.status !== 'SETTLED' && !isPreNegotiation
     },
+
     canUnsettled() {
       const { isPreNegotiation, ticket } = this
       return ticket.status && ticket.status !== 'UNSETTLED' && !isPreNegotiation
     },
+
     canManualCounterproposal() {
       const { isPreNegotiation, ticket } = this
       return ticket.status && !['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(ticket.status) && !isPreNegotiation
     },
+
     canSetUnread() {
       const { isPreNegotiation, ticket } = this
       return ticket.status && !['IMPORTED', 'ENRICHED', 'ENGAGEMENT'].includes(ticket.status) && !isPreNegotiation
     },
+
     canResume() {
       const { isPreNegotiation, ticket } = this
       return ticket.paused && !isPreNegotiation
     },
+
     canPause() {
       const { isPreNegotiation, ticket } = this
       return !ticket.paused && !isPreNegotiation
     },
+
     canRestartEngagement() {
-      const { isPreNegotiation, ticket } = this
-      return ticket.status && !['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(ticket.status) && !isPreNegotiation
+      const { isPreNegotiation, ticket, isFavorite } = this
+      return ticket.status && !['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(ticket.status) && !isPreNegotiation && !isFavorite
     },
+
     canResendMessages() {
       const { isPreNegotiation, ticket } = this
       return ticket.status && ticket.status === 'RUNNING' && !isPreNegotiation
     },
+
     canRenegotiate() {
       const { isPreNegotiation, ticket } = this
       return ticket.status && ['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED', 'CANCELED'].includes(ticket.status) && !isPreNegotiation
     }
   },
+
   methods: {
     ...mapActions([
       'toggleExportTicketModalVisible',
@@ -299,8 +361,12 @@ export default {
       'sendTicketAction',
       'deleteDocument',
       'favoriteTicket',
-      'disfavorTicket'
+      'disfavorTicket',
+      'setAccountProperty',
+      'loadAccountProperty'
     ]),
+
+    ...mapMutations(['deleteRestartDisputeFlag']),
 
     confirmAction(action, message = 'Tem certeza que deseja realizar está ação?') {
       const title = this.$options.filters.capitalize(this.$t(`actions.${action}.name`))
@@ -324,30 +390,65 @@ export default {
         type: 'success',
         dangerouslyUseHTMLString: true
       })
-      this.$jusSegment(message, { disputeId })
+      this.$jusSegment(`SUCCESSFUL_ACTION_${action}`, { ...this.ticket })
 
       if (['DISFAVOR', 'FAVORITE'].includes(action) && this.isJusttoAdmin) {
         this.$refs.notifyOnCompanyAnalysis.open(action, this.ticket)
       }
     },
 
-    handleFavorite() {
-      const { id: disputeId } = this.$route.params
+    handleActionNotify(key, value) {
+      const propertie = {}
 
-      this.confirmAction('FAVORITE').then(() => {
-        this.favoriteTicket(disputeId).then(() => {
-          this.concludeAction('FAVORITE', disputeId)
-        }).catch(error => this.$jusNotification({ error }))
+      propertie[key] = value
+
+      this.setAccountProperty(propertie)
+    },
+
+    handleFavorite() {
+      const showNotify = this.userPreferences.properties?.FAVORITE_NOTIFICATION === 'ALWAYS'
+
+      this.$refs.confirmActionDialog.handleNotify = (value) => this.handleActionNotify('FAVORITE_NOTIFICATION', value ? 'ALWAYS' : '')
+      this.$refs.confirmActionDialog.handleConfirm = this.handleConfirmFavoriteTicket
+
+      this.$refs.confirmActionDialog.open({
+        visible: true,
+        showNotifyInput: showNotify,
+        title: this.$options.filters.capitalize(this.$t('actions.FAVORITE.name')),
+        notify: showNotify,
+        action: 'FAVORITE'
       })
     },
 
-    handleDisfavor() {
+    handleConfirmFavoriteTicket() {
       const { id: disputeId } = this.$route.params
 
-      this.confirmAction('DISFAVOR').then(() => {
-        this.disfavorTicket(disputeId).then(() => {
-          this.concludeAction('DISFAVOR', disputeId)
-        }).catch(error => this.$jusNotification({ error }))
+      this.favoriteTicket(disputeId).then(() => {
+        this.$jusSegment('ACTIVE_fAVORITE', { ...this.ticket })
+        this.concludeAction('FAVORITE', disputeId)
+      }).catch(error => this.$jusNotification({ error }))
+    },
+
+    handleConfirmDisfavorTicket() {
+      const { id: disputeId } = this.$route.params
+
+      this.disfavorTicket(disputeId).then(() => {
+        this.$jusSegment('DEACTIVE_fAVORITE', { ...this.ticket })
+        this.concludeAction('DISFAVOR', disputeId)
+      }).catch(error => this.$jusNotification({ error }))
+    },
+
+    handleDisfavor() {
+      const showNotify = this.userPreferences.properties?.FAVORITE_NOTIFICATION === 'ALWAYS'
+
+      this.$refs.confirmActionDialog.handleNotify = (value) => this.handleActionNotify('FAVORITE_NOTIFICATION', value ? 'ALWAYS' : '')
+      this.$refs.confirmActionDialog.handleConfirm = this.handleConfirmDisfavorTicket
+
+      this.$refs.confirmActionDialog.open({
+        visible: true,
+        showNotifyInput: showNotify,
+        title: this.$options.filters.capitalize(this.$t('actions.DISFAVOR.name')),
+        notify: showNotify
       })
     },
 
@@ -355,7 +456,16 @@ export default {
       const { paused, status } = this.ticket
 
       const settledTicket = () => {
-        if (status === 'CHECKOUT' || status === 'ACCEPTED') {
+        // TODO: Validar todos os estatus de onde se pode "ganhar a disputa".
+        if (!this.features.DRAFT_MANAGEMENT && !['PRE_NEGOTIATION', 'CHECKOUT', 'SETTLED'].includes(this.ticket.status) && !this.forceStatus) {
+          this.forceStatus = 'SETTLED'
+          this.handleSettled(action)
+        } else if (this.features.DRAFT_MANAGEMENT && !['PRE_NEGOTIATION', 'CHECKOUT', 'SETTLED'].includes(this.ticket.status) && !this.forceStatus) {
+          this.$refs.setSettledDialog.open((status) => {
+            this.forceStatus = status
+            this.handleSettled(action)
+          })
+        } else if (status === 'CHECKOUT' || status === 'ACCEPTED') {
           this.$refs.dialogActions.openTicketResumeDialog(action, 'WIN')
         } else {
           this.$refs.dialogActions.openOfferDialog(action)
@@ -363,7 +473,7 @@ export default {
       }
 
       if (paused) {
-        const message = 'A disputa está pausada, deseja retomar negociação para ganhar?'
+        const message = 'A disputa está pausada, deseja despausar negociação para ganhar?'
         this.handlePauseResume('RESUME', message)
           .then(() => settledTicket())
       } else {
@@ -377,7 +487,7 @@ export default {
 
     handleManualCounterproposal(action) {
       const { paused } = this.ticket
-      const customMessage = 'A disputa está pausada, deseja retomar negociação para enviar uma contraproposta?'
+      const customMessage = 'A disputa está pausada, deseja despausar negociação para enviar uma contraproposta?'
 
       if (paused) {
         this.handlePauseResume('RESUME', customMessage)
@@ -428,7 +538,10 @@ export default {
       this.handleManualStrategy(action)
         .then(() => this.confirmAction(action)
           .then(() => this.revertStatus({ disputeId, action, status })
-            .then(() => this.concludeAction(action, disputeId))
+            .then(() => {
+              this.deleteRestartDisputeFlag(disputeId)
+              this.concludeAction(action, disputeId)
+            })
             .catch(error => this.$jusNotification({ error }))
           )
         )
@@ -534,9 +647,9 @@ export default {
     },
 
     redirectToManagement() {
-      const managementRoute = `/management/dispute/${this.$route.params.id}`
-      this.$jusSegment('Chaveia de negociação para gerenciamento', {})
-      this.$router.push({ path: managementRoute })
+      const path = this.isInDispute ? `/negotiation/${this.$route.params.id}` : `/management/dispute/${this.$route.params.id}`
+      this.$jusSegment('SWITCH_DISPUTE_INTERFACE', {})
+      this.$router.push({ path })
     }
   }
 }
@@ -570,6 +683,10 @@ export default {
     margin-left: 8px;
     &--hidden { display: none }
   }
+
+  &.dispute-mode {
+    max-width: 100%;
+  }
 }
 
 @media (max-width: 900px) {
@@ -584,6 +701,7 @@ export default {
     }
   }
 }
+
 @media (max-height: 900px) {
   .ticket-actions {
     .ticket-actions__buttons {

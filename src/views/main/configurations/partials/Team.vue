@@ -12,6 +12,7 @@
           class="el-input__icon el-icon-search"
         />
       </el-input>
+
       <el-button
         type="primary"
         icon="el-icon-plus"
@@ -22,6 +23,7 @@
         Cadastrar novo membro
       </el-button>
     </div>
+
     <el-table
       :data="filteredTeam"
       class="team-container__table"
@@ -65,7 +67,6 @@
       <el-table-column
         prop="profile"
         label="Perfil"
-        width="300px"
       >
         <template v-slot="scope">
           <PopoverInlineEditor
@@ -80,7 +81,6 @@
       <el-table-column
         prop="status"
         label="Status"
-        width="180px"
       >
         <template v-slot="scope">
           <span
@@ -103,7 +103,7 @@
       >
         <el-table-column
           prop="personProperties.MANAGEMENT"
-          label="Gestão"
+          label="Gerencial"
         >
           <template v-slot="scope">
             <PopoverInlineEditor
@@ -142,6 +142,20 @@
             />
           </template>
         </el-table-column>
+
+        <el-table-column
+          prop="personProperties.MANAGER"
+          label="Gestão"
+        >
+          <template v-slot="scope">
+            <PopoverInlineEditor
+              v-model="scope.row.personProperties.MANAGER"
+              :width="180"
+              :options="reportsOptions"
+              @change="handleEditReport('MANAGER', $event, scope.row)"
+            />
+          </template>
+        </el-table-column>
       </el-table-column>
 
       <el-table-column width="80px">
@@ -150,11 +164,18 @@
             class="el-icon-delete team-container__table-action"
             @click="handleRemoveMember(scope.row.personId, scope.row.personName)"
           />
+
+          <i
+            v-if="['blocked'].includes(scope.row.status) && isJustto"
+            class="el-icon-unlock team-container__table-action"
+            @click="handleUnlockUser(scope.row)"
+          />
         </template>
       </el-table-column>
     </el-table>
 
     <el-button
+      v-if="isJustto"
       type="secondary"
       class="team-container__button"
       @click="createNewTeam"
@@ -179,6 +200,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 import { filterByTerm } from '@/utils'
+import emailTemplate from './moreWorkspacesEmailTemplate'
 
 export default {
   name: 'Team',
@@ -198,7 +220,8 @@ export default {
   computed: {
     ...mapGetters({
       team: 'workspaceTeam',
-      isJustto: 'isJusttoAdmin'
+      isJustto: 'isJusttoAdmin',
+      workspace: 'workspace'
     }),
 
     reportsOptions() {
@@ -260,8 +283,23 @@ export default {
       'removeWorkspaceMember',
       'changeMemberName',
       'editWorkspaceMember',
-      'updatePersonProfile'
+      'updatePersonProfile',
+      'unlockAccount',
+      'sendCustomEmail',
+      'getCustomerWorkspaceCount'
     ]),
+
+    handleUnlockUser(user) {
+      this.$confirm(`Desbloquear conta de ${user.name}?`, 'Conta bloqueada', {
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Cancelar',
+        type: 'warning'
+      }).then(() => {
+        this.unlockAccount(user.id).then(this.getWorkspaceTeam).catch(error => {
+          this.$jusNotification({ error })
+        })
+      })
+    },
 
     handleInviteMember() {
       this.$refs.teamDialogs.openNewMemberDialog()
@@ -296,16 +334,49 @@ export default {
       this.$refs.removeTeamMemberDialog.show({ id, name })
     },
 
-    createNewTeam() {
-      this.$confirm('Você será redirecionado para a criação de nova Equipe, deseja continuar?', 'Redirecionamento', {
-        confirmButtonText: 'Criar nova Equipe',
-        cancelButtonText: 'Cancelar',
-        cancelButtonClass: 'is-plain',
-        type: 'warning'
-      }).then(() => {
-        this.$store.commit('redirectNewWorkspaceTrue')
-        this.$router.push('onboarding')
+    validateWorkspacesQuantity() {
+      return new Promise((resolve) => {
+        this.getCustomerWorkspaceCount(this.workspace?.id).then(({ count }) => {
+          if (count > 0 && count % 3 === 0) {
+            this.$alert('<b>Limite de workspace por cliente foi excedido</b><br><br>Por favor, analisar o contrato firmado com o cliente, para avaliar um possível ajuste no valor da mensalidade.', {
+              customClass: 'workspace-limit-alert',
+              dangerouslyUseHTMLString: true,
+              confirmButtonText: 'OK',
+              showClose: false,
+              center: true
+            })
+
+            const workspaceName = this.workspace?.teamName
+            const keyAccountName = this.workspace?.associatedKeyAccount?.name || 'Não definido'
+
+            this.sendCustomEmail({
+              subject: 'Limite de Workspace excedido',
+              address: 'financeiro@justto.com.br',
+              content: emailTemplate({ workspaceName, keyAccountName })
+            })
+
+            this.sendCustomEmail({
+              subject: 'Limite de Workspace excedido',
+              address: 'deivid@justto.com.br',
+              content: emailTemplate({ workspaceName, keyAccountName })
+            })
+          }
+        }).finally(resolve)
       })
+    },
+
+    createNewTeam() {
+      this.validateWorkspacesQuantity().then(() =>
+        this.$confirm('Você será redirecionado para a criação de nova Equipe, deseja continuar?', 'Redirecionamento', {
+          confirmButtonText: 'Criar nova Equipe',
+          cancelButtonText: 'Cancelar',
+          cancelButtonClass: 'is-plain',
+          type: 'warning'
+        }).then(() => {
+          this.$store.commit('redirectNewWorkspaceTrue')
+          this.$router.push('onboarding')
+        })
+      )
     },
 
     startEditing(key, id) {
@@ -401,6 +472,7 @@ export default {
       .team-container__table-status {
         &--warning { color: $--color-warning; }
         &--danger { color: $--color-danger; }
+        .pointer { cursor: pointer; }
       }
 
       .team-container__table-action {
@@ -408,11 +480,19 @@ export default {
         transition: .2s ease-in-out;
         display: inline-block;
         font-size: 16px;
+        margin: 0 4px;
+
         &.el-icon-delete:hover {
           color: $--color-danger;
           cursor: pointer;
         }
+
+        &.el-icon-unlock {
+          color: $--color-primary;
+          cursor: pointer;
+        }
       }
+
       &:hover {
        .team-container__table-action {
           opacity: 1;
@@ -437,6 +517,12 @@ export default {
       height: 16px;
       margin-right: 12px;
     }
+  }
+}
+
+.workspace-limit-alert {
+  .el-message-box__header {
+    display: none;
   }
 }
 

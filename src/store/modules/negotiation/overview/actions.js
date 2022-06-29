@@ -10,10 +10,25 @@ const overviewActions = {
   getTicketOverview({ commit, dispatch }, disputeId) {
     commit('incrementTicketOverviewCountGetters')
 
-    return validateCurrentId(disputeId, () => axiosDispatch({
-      url: `${disputeApi}/${disputeId}`,
-      mutation: 'setTicketOverview'
-    }).then(({ status }) => dispatch('updateActiveTab', status)).finally(() => commit('decrementTicketOverviewCountGetters')))
+    return validateCurrentId(disputeId, () => {
+      return new Promise((resolve, reject) => {
+        axiosDispatch({
+          url: `${disputeApi}/${disputeId}`,
+          mutation: 'setTicketOverview'
+        }).then((res) => {
+          resolve(res)
+          dispatch('updateActiveTab', res.status)
+        }).catch(error => reject(error)).finally(() => commit('decrementTicketOverviewCountGetters'))
+      })
+    })
+  },
+
+  getContactBlockReason({ _ }, { disputeId, blockedType, addressType, contactId }) {
+    return validateCurrentId(disputeId, () => {
+      return axiosDispatch({
+        url: `${disputeApiLegacy}/${disputeId}/contact/${blockedType}/${addressType}/${contactId}`
+      })
+    })
   },
 
   getTicketOverviewInfo({ commit }, disputeId) {
@@ -42,6 +57,12 @@ const overviewActions = {
       mutation: 'setTicketOverviewParty',
       payload: disputeRoleId
     }).finally(() => commit('decrementTicketOverviewCountGetters')))
+  },
+
+  getTicketOverviewPartyUpdated({ _ }, { disputeId, disputeRoleId }) {
+    return axiosDispatch({
+      url: `${disputeApi}/${disputeId}/parties/${disputeRoleId}`
+    })
   },
 
   getTicketOverviewProperties({ _ }, disputeId) {
@@ -277,8 +298,13 @@ const overviewActions = {
   },
 
   updateTicketOverviewPartyContact({ dispatch }, params) {
-    dispatch('deleteTicketOverviewPartyContact', params)
-      .then(() => dispatch('setTicketOverviewPartyContact', params))
+    dispatch('deleteTicketOverviewPartyContact', params).then(() => {
+      dispatch('setTicketOverviewPartyContact', params).then(() => {
+        const { disputeId, roleId: disputeRoleId } = params
+
+        dispatch('getTicketOverviewParty', { disputeId, disputeRoleId })
+      })
+    })
   },
 
   favoriteTicket({ _ }, disputeId) {

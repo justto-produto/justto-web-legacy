@@ -85,8 +85,11 @@
           force-use-infinite-wrapper=".el-table__body-wrapper"
           @infinite="infiniteHandler"
         >
-          <div slot="no-more" />
-          <div slot="no-results" />
+          <div slot="no-results">
+            <div style="padding-top: 24px;">
+              {{ importsHistoryPaged.length === 0 ? 'Histórico vazio.' : 'Fim da lista de importações.' }}
+            </div>
+          </div>
         </infinite-loading>
       </el-table>
       <jus-import-dialog :dialog-visible.sync="importDialogVisible" />
@@ -96,6 +99,7 @@
 
 <script>
 import InfiniteLoading from 'vue-infinite-loading'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'Import',
@@ -111,6 +115,10 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      isRecovery: 'isWorkspaceRecovery'
+    }),
+
     importsHistoryPaged() {
       return this.importsHistory.slice(0, this.page * 20)
     }
@@ -155,7 +163,8 @@ export default {
     downloadModel() {
       // SEGMENT TRACK
       this.$jusSegment('Baixar planilha modelo')
-      window.open('Planilha-Modelo-Justto.xlsx', '_blank')
+      const link = this.isRecovery ? 'Planilha-Modelo-Justto-cobranca.xlsx' : 'Planilha-Modelo-Justto.xlsx'
+      window.open(link, '_blank')
     }
   }
 }

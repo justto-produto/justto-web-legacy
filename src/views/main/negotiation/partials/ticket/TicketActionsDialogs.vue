@@ -33,10 +33,10 @@
                 @change="handleUnsettledTypeChange"
               >
                 <el-option
-                  v-for="(label, key) in unsettledOutcomeReasons"
+                  v-for="(item, key) in unsettledOutcomeReasonsSorted"
                   :key="key"
-                  :value="key"
-                  :label="label"
+                  :value="item[0]"
+                  :label="item[1]"
                 />
               </el-select>
             </el-form-item>
@@ -202,11 +202,11 @@
       :close-on-press-escape="false"
       append-to-body
       width="400px"
-      title="Majorar a alçada máxima?"
+      :title="`${isRecoveryStrategy ? 'Ajustar' : 'Majorar'} ${$tc('UPPER_RANGE_WITH_ARTICLE', isRecoveryStrategy)}?`"
       class="dialog-actions__increase-alert"
     >
       <strong class="dialog-actions__increase-alert-subtitle">
-        Valor da contraproposta é maior que o da alçada máxima!
+        Valor da contraproposta é {{ isRecoveryStrategy ? 'menor' : 'maior' }} que o {{ 'd'+$tc('UPPER_RANGE_WITH_ARTICLE', isRecoveryStrategy) }}!
       </strong>
 
       <div class="dialog-actions__increase-alert-infobox">
@@ -214,7 +214,7 @@
           <span>*</span>
 
           <small>
-            Ao clicar em <strong>majorar</strong>, será feita a <strong>contraproposta</strong>. A <strong>alçada máxima</strong> será majorada para o <strong>valor</strong> da contraproposta e a disputa será alterada para <strong>proposta aceita</strong>.
+            Ao clicar em <strong>{{ isRecoveryStrategy ? 'ajustar' : 'majorar' }}</strong>, será feita a <strong>contraproposta</strong>. {{ isRecoveryStrategy ? 'O' : 'A' }} <strong>{{ $tc('UPPER_RANGE', isRecoveryStrategy) }}</strong> será {{ isRecoveryStrategy ? 'ajustada' : 'majorada' }} para o <strong>valor</strong> da contraproposta e a disputa será alterada para <strong>proposta aceita</strong>.
           </small>
         </p>
 
@@ -222,7 +222,7 @@
           <span>*</span>
 
           <small>
-            Ao clicar em <strong>não majorar</strong>, somente será feita a <strong>contraproposta</strong>, sem alterações no status da disputa.
+            Ao clicar em <strong>não {{ isRecoveryStrategy ? 'ajustar' : 'majorar' }}</strong>, somente será feita a <strong>contraproposta</strong>, sem alterações no status da disputa.
           </small>
         </p>
       </div>
@@ -243,7 +243,7 @@
           plain
           @click.prevent="handleIncreaseManualOffer(true)"
         >
-          Majorar
+          {{ isRecoveryStrategy ? 'Ajustar' : 'Majorar' }}
         </el-button>
 
         <el-button
@@ -252,7 +252,7 @@
           type="primary"
           @click.prevent="handleIncreaseManualOffer(isSettledIncreaseAlertType)"
         >
-          {{ isSettledIncreaseAlertType ? 'Majorar' : 'Não majorar' }}
+          {{ isSettledIncreaseAlertType ? (isRecoveryStrategy ? 'ajustar' : 'majorar') : (isRecoveryStrategy ? 'Não ajustar' : 'Não majorar') }}
         </el-button>
       </div>
     </el-dialog>
@@ -349,6 +349,11 @@ export default {
     ticket: {
       type: Object,
       required: true
+    },
+
+    forceStatus: {
+      type: String,
+      default: ''
     }
   },
 
@@ -375,7 +380,17 @@ export default {
     editNegotiatorsForm: [],
     confirmIncreaseUpperrangeDialogVisible: false,
     attachmentDialogVisible: false,
-    dropLawsuitDialogVisible: false
+    dropLawsuitDialogVisible: false,
+    nextStatusMap: {
+      IMPORTED: 'ACCEPTED',
+      ENRICHED: 'ACCEPTED',
+      ENGAGEMENT: 'ACCEPTED',
+      PENDING: 'ACCEPTED',
+      RUNNING: 'ACCEPTED',
+      UNSETTLED: 'ACCEPTED',
+      ACCEPTED: 'CHECKOUT',
+      CHECKOUT: 'SETTLED'
+    }
   }),
 
   computed: {
@@ -384,7 +399,8 @@ export default {
       workspaceMembers: 'workspaceMembers',
       outcomeReasons: 'getOutcomeReasons',
       lastTicketOffers: 'getLastTicketOffers',
-      activeTab: 'getActiveTab'
+      activeTab: 'getActiveTab',
+      isRecoveryStrategy: 'isWorkspaceRecovery'
     }),
 
     isInsufficientUpperRange() {
@@ -393,7 +409,7 @@ export default {
 
     ticketResume() {
       const { disputeId, code } = this.ticket
-      const { plaintiffOffer } = this.lastTicketOffers
+      const { plaintiffOffer, acceptedValue } = this.lastTicketOffers
       return [
         {
           key: 'id',
@@ -425,13 +441,13 @@ export default {
           return (polarity === 'RESPONDENT' && roles.includes('PARTY'))
         }).map(({ name }, i) => ({
           key: `defendant-${i + 1}`,
-          label: 'Réu',
+          label: this.$tc('PARTY_RESPONDENT', this.isRecoveryStrategy),
           value: this.$options.filters.capitalize(name)
         })),
         {
           key: 'value',
           label: 'Valor do acordo',
-          value: this.$options.filters.currency(plaintiffOffer?.value)
+          value: this.$options.filters.currency(acceptedValue || plaintiffOffer?.value)
         }
       ]
     },
@@ -452,6 +468,10 @@ export default {
       return this.outcomeReasons.UNSETTLED
     },
 
+    unsettledOutcomeReasonsSorted() {
+      return Object.entries(this.outcomeReasons.UNSETTLED || {}).sort((a, b) => (a[1] > b[1] ? 1 : -1))
+    },
+
     ticketPlaintiffs() {
       return this.ticketParties?.filter(part => part.polarity === 'CLAIMANT')
     },
@@ -470,6 +490,10 @@ export default {
           value: id
         }
       })
+    },
+
+    forcedStatusValue() {
+      return this.nextStatusMap[this.ticket?.status] === this.forceStatus ? undefined : this.forceStatus
     }
   },
 
@@ -601,9 +625,10 @@ export default {
 
     handleManualOffer(action) {
       const { disputeId } = this.ticket
+
       this.validateOfferForm()
         .then(() => {
-          if (this.offerForm.value > this.ticket.upperRange) {
+          if (this.isRecoveryStrategy ? this.offerForm.value < this.ticket.upperRange : this.offerForm.value > this.ticket.upperRange) {
             this.isSettledIncreaseAlertType = action === 'SETTLED'
             this.confirmIncreaseUpperrangeDialogVisible = true
           } else {
@@ -631,17 +656,29 @@ export default {
     },
 
     sendManualOffer(updateUpperRange = false) {
+      const { offerFormType } = this
+
       return new Promise((resolve, reject) => {
         const { disputeId } = this.ticket
 
         const { value, roleId, note } = this.offerForm
-        const data = { value, note, conclusionNote: note, roleId, updateUpperRange }
+
+        const data = {
+          value,
+          note,
+          conclusionNote: note,
+          roleId,
+          updateUpperRange,
+          action: offerFormType,
+          forceStatus: this.forcedStatusValue || undefined
+        }
+
         const polarityObjectKey = 'plaintiffOffer'
         this.sendOffer({ disputeId, data, polarityObjectKey, change: updateUpperRange })
           .then(success => resolve(success))
           .catch(error => {
             return reject(error)
-          })
+          }).finally(() => this.$emit('conclude'))
       })
     },
 
@@ -661,7 +698,11 @@ export default {
       const { disputeId } = this.ticket
       const action = 'SETTLED'
       const { note } = this.offerForm
-      const data = { note, conclusionNote: note }
+      const data = {
+        note,
+        conclusionNote: note,
+        forceStatus: this.forcedStatusValue || undefined
+      }
 
       this.confirmAction(action)
         .then(() => {
@@ -669,7 +710,10 @@ export default {
           this.sendTicketAction({ disputeId, action, data })
             .then(_success => this.concludeAction(action, disputeId))
             .catch(error => this.$jusNotification({ error }))
-            .finally(() => (this.modalLoading = false))
+            .finally(() => {
+              this.modalLoading = false
+              this.$emit('conclude')
+            })
         })
     },
 
@@ -798,7 +842,8 @@ export default {
     margin: 12px 0 24px;
 
     .dialog-actions__increase-alert-infoline {
-      & > span { color: $--color-danger }
+      word-break: break-word;
+      span { color: $--color-danger }
     }
   }
 }

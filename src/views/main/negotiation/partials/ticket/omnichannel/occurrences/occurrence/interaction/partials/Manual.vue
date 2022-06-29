@@ -10,6 +10,7 @@
       class="manual-container__text"
       v-html="text"
     />
+
     <span
       v-if="!toPrint"
       class="communication-container__about negotiation-occurrence-about"
@@ -25,26 +26,34 @@ import communicationSendStatus from '@/utils/mixins/communicationSendStatus'
 
 export default {
   mixins: [communicationSendStatus],
+
   props: {
     value: {
       type: Object,
       required: true
     },
+
     occurrence: {
       type: Object,
       required: true
     }
   },
+
   computed: {
     interaction() {
       return this.value
     },
+
+    hasNote() {
+      return !!this.interaction?.properties?.NOTE
+    },
+
     text() {
-      const { USER, VALUE, PERSON_NAME } = this.interaction.properties
-
+      const { USER, VALUE, PERSON_NAME, NOTE } = this.interaction.properties
       const text = `Negociador(a) <strong>${USER}</strong> informou uma proposta realizada por <strong>${PERSON_NAME}</strong> no valor de <strong>${VALUE}</strong>`
+      const note = NOTE ? ` com a observação: ${NOTE}.` : '.'
 
-      return addInvisibleStatus(text)
+      return addInvisibleStatus(text + note)
     }
   },
   updated() {
@@ -63,6 +72,7 @@ export default {
   background-color: transparent;
   display: flex;
   flex-direction: column;
+  gap: 8px;
 
   overflow: hidden;
   margin: 12px 6px;

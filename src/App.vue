@@ -3,15 +3,32 @@
     <transition name="fade">
       <router-view />
     </transition>
+    <audio
+      id="globalAudio"
+      controls
+      autoplay="autoplay"
+      style="display: none;"
+    />
   </div>
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
 export default {
   name: 'App',
   watch: {
-    '$route'(to, from) {
+    $route: {
+      deep: true,
+      handler: 'handleRoute'
+    }
+  },
+
+  methods: {
+    ...mapMutations(['setRoute']),
+
+    handleRoute(to, _from) {
       document.title = to.meta.title + (['dispute', 'ticket'].includes(to.name) ? ` #${to.params.id}` : '') || 'Justto'
+      this.setRoute(to)
     }
   }
 }

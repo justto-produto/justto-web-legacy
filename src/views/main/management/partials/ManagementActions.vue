@@ -10,20 +10,21 @@
       >
         <i class="el-icon-check" /> {{ selectedLenghtToShow }}
       </div>
+
       <div>
         <span
-          v-for="action in actionsList"
+          v-for="action in actionsList.filter(({ main, tabs }) => (main && tabs.includes(activeTab)))"
           :key="action.name"
         >
           <el-button
-            v-if="action.tabs.includes(activeTab)"
             :data-testid="`batch-${action.name.toLowerCase()}`"
+            :disabled="!canDoAction(action.name)"
             plain
             @click="sendBatchAction(action.name)"
           >
             <el-tooltip
               :disabled="!action.tooltip"
-              :content="action.tooltip ? $t(`action.tooltip.${action.tooltip}`) : ''"
+              :content="action.tooltip ? $tc(`action.tooltip.${action.tooltip}`, selectedLenghtToShow) : ''"
             >
               <jus-icon
                 v-if="action.icon"
@@ -36,12 +37,52 @@
             </el-tooltip>
           </el-button>
         </span>
+
+        <el-dropdown
+          trigger="click"
+          placement="bottom"
+          class="management-action__dropdown"
+          @command="sendBatchAction"
+        >
+          <el-button
+            type="text"
+            icon="el-icon-menu"
+          />
+
+          <el-dropdown-menu
+            slot="dropdown"
+            class="management-action__dropdown-menu"
+          >
+            <el-dropdown-item
+              v-for="action in actionsList.filter(({ main, tabs }) => !main && tabs.includes(activeTab))"
+              :key="action.name"
+              :command="action.name"
+              :disabled="!canDoAction(action.name)"
+            >
+              <el-tooltip
+                :disabled="!action.tooltip"
+                :content="action.tooltip ? $tc(`action.tooltip.${action.tooltip}`, selectedLenghtToShow) : ''"
+              >
+                <jus-icon
+                  v-if="action.icon"
+                  :class="action.class"
+                  :icon="action.icon"
+                />
+                <span v-else>
+                  {{ $t(`action.${action.name}`) }}
+                </span>
+              </el-tooltip>
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
       </div>
+
       <i
         class="el-icon-close"
         @click="clearSelection()"
       />
     </div>
+
     <el-dialog
       :close-on-click-modal="false"
       :visible.sync="chooseSettledDialogVisible"
@@ -73,6 +114,81 @@
         </el-button>
       </span>
     </el-dialog>
+
+    <el-dialog
+      :close-on-click-modal="false"
+      :visible.sync="showUpdateEngagementOptions"
+      :title="$tc('action.UPDATE_ENGAGEMENT_OPTIONS')"
+      class="management-actions__dialog"
+    >
+      <div>
+        <div class="jus-import-feedback-card__switch">
+          <i class="el-icon-circle-check el-input__icon--success" />
+
+          <div class="content">
+            <div>Enviar mensagem para autor e advogado</div>
+
+            <p>
+              Deixando <b>selecionada</b> esta opção, também iremos enviar mensagens para o autor.
+            </p>
+          </div>
+
+          <el-switch
+            v-model="engagementOptions.alwaysContactParty"
+            @change="resetEngagementOptions"
+          />
+        </div>
+
+        <div
+          v-if="!engagementOptions.alwaysContactParty"
+          class="jus-import-feedback-card__switch"
+        >
+          <i class="el-icon-circle-check el-input__icon--success" />
+
+          <div class="content">
+            <div>Enviar mensagem para o autor somente se não tiver advogado</div>
+
+            <p>
+              Deixando <b>selecionada</b> esta opção, iremos enviar mensagens para o autor quando não houver advogado constituído.
+            </p>
+          </div>
+
+          <el-switch v-model="engagementOptions.onlyContactPartyWithoutLawyer" />
+        </div>
+
+        <div
+          v-if="!engagementOptions.alwaysContactParty"
+          class="jus-import-feedback-card__switch"
+        >
+          <i class="el-icon-circle-check el-input__icon--success" />
+
+          <div class="content">
+            <div>Enviar mensagem para autor somente se advogado não possuir contatos válidos para ser engajado</div>
+
+            <p>
+              Deixando <b>selecionada</b> esta opção, iremos enviar mensagens para o autor se o <b>advogado não possuir dados válidos</b> para ser contatado.
+            </p>
+          </div>
+
+          <el-switch v-model="engagementOptions.onlyContactPartyWithInvalidLawyer" />
+        </div>
+      </div>
+
+      <span slot="footer">
+        <el-button
+          plain
+          @click="showUpdateEngagementOptions = false"
+        >Cancelar</el-button>
+        <el-button
+          type="primary"
+          class="confirm-action-unsettled"
+          @click.prevent="doAction('UPDATE_ENGAGEMENT_OPTIONS')"
+        >
+          Continuar
+        </el-button>
+      </span>
+    </el-dialog>
+
     <el-dialog
       :close-on-click-modal="false"
       :visible.sync="chooseUnsettledDialogVisible"
@@ -92,6 +208,7 @@
       <el-select
         v-model="unsettledType"
         v-loading="$store.state.loading"
+        filterable
         data-testid="select-unsettled"
         placeholder="Escolha o motivo da perda"
       >
@@ -126,6 +243,7 @@
         </el-button>
       </span>
     </el-dialog>
+
     <el-dialog
       :close-on-click-modal="false"
       :visible.sync="changeStrategyDialogVisible"
@@ -161,6 +279,7 @@
         </el-button>
       </span>
     </el-dialog>
+
     <el-dialog
       :close-on-click-modal="false"
       :visible.sync="changeExpirationDialogVisible"
@@ -193,6 +312,7 @@
         </el-button>
       </span>
     </el-dialog>
+
     <el-dialog
       :close-on-click-modal="false"
       :visible.sync="changeNegotiatorDialogVisible"
@@ -242,6 +362,7 @@
         </el-button>
       </span>
     </el-dialog>
+
     <el-dialog
       :close-on-click-modal="false"
       :show-close="false"
@@ -287,6 +408,7 @@
         </el-button>
       </span>
     </el-dialog>
+
     <el-dialog
       width="60%"
       :visible.sync="showBulkMessageDialog"
@@ -376,6 +498,86 @@
       />
     </el-dialog>
 
+    <el-dialog
+      :visible.sync="showChangeTagDialog"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      append-to-body
+      destroy-on-close
+      title="Adicionar tags"
+      class="dialog-actions__change-tags"
+      :before-close="handleCloseChangeTagDialog"
+    >
+      <div class="change-tags">
+        <el-select
+          v-model="changeTags"
+          multiple
+          filterable
+          allow-create
+          default-first-option
+          placeholder="Selecionar tags"
+        >
+          <el-option
+            v-for="(tag, index) in tags"
+            :key="tag.id"
+            :label="tag.name"
+            :value="index"
+          >
+            <i :class="`el-icon-${tag.icon}`" /> {{ tag.name }}
+          </el-option>
+        </el-select>
+      </div>
+
+      <span slot="footer">
+        <el-button @click="showChangeTagDialog = false">Cancelar</el-button>
+        <el-button
+          type="primary"
+          @click="doAction('ADD_TAGS_INCLUSIVE')"
+        >
+          Confirmar
+        </el-button>
+      </span>
+    </el-dialog>
+
+    <el-dialog
+      :visible.sync="showRemoveTagDialog"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      append-to-body
+      destroy-on-close
+      title="Remover tags"
+      class="dialog-actions__change-tags"
+      :before-close="handleCloseChangeTagDialog"
+    >
+      <div class="change-tags">
+        <el-select
+          v-model="removeTags"
+          multiple
+          filterable
+          placeholder="Remover tags"
+        >
+          <el-option
+            v-for="(tag, index) in tags"
+            :key="tag.id"
+            :label="tag.name"
+            :value="index"
+          >
+            <i :class="`el-icon-${tag.icon}`" /> {{ tag.name }}
+          </el-option>
+        </el-select>
+      </div>
+
+      <span slot="footer">
+        <el-button @click="showRemoveTagDialog = false">Cancelar</el-button>
+        <el-button
+          type="primary"
+          @click="doAction('REM_TAGS_INCLUSIVE')"
+        >
+          Confirmar
+        </el-button>
+      </span>
+    </el-dialog>
+
     <ImageUploadDialog @input="setImgTag" />
   </div>
 </template>
@@ -415,6 +617,18 @@ export default {
       useImageAttachmentPlugin: true,
       showDropLawsuitDialog: false,
       showBulkMessageDialog: false,
+      // TODO: SAAS-4903
+      showChangeTagDialog: false,
+      showRemoveTagDialog: false,
+      changeTags: [],
+      removeTags: [],
+      // TODO: SAAS-4903
+      showUpdateEngagementOptions: false,
+      engagementOptions: {
+        alwaysContactParty: true,
+        onlyContactPartyWithoutLawyer: false,
+        onlyContactPartyWithInvalidLawyer: false
+      },
       chooseSettledDialogVisible: false,
       chooseUnsettledDialogVisible: false,
       changeStrategyDialogVisible: false,
@@ -441,8 +655,25 @@ export default {
   computed: {
     ...mapGetters({
       disputeStatuses: 'disputeStatuses',
-      strategies: 'getMyStrategiesLite'
+      strategies: 'getMyStrategiesLite',
+      tags: 'workspaceTags'
     }),
+
+    canDoAction() {
+      return (action) => {
+        const batchActionsLastUse = JSON.parse(localStorage.getItem('BATCH_ACTIONS_LAST_USE') || '{}')
+
+        const actionLastTime = this.$moment(batchActionsLastUse[action])
+        const diferece = this.$moment().diff(actionLastTime, 'seconds')
+
+        switch (action) {
+          case 'CHANGE_NEGOTIATOR':
+            return diferece >= 60 || diferece === 0
+          default:
+            return diferece >= 30 || diferece === 0
+        }
+      }
+    },
 
     selectedIdsComp: {
       get() {
@@ -463,26 +694,31 @@ export default {
 
     actionsList() {
       return [
-        { name: 'SETTLED', tabs: ['1', '2', '3', '4', '9'] },
-        { name: 'UNSETTLED', tabs: ['1', '2', '3', '4', '9'] },
-        { name: 'PAUSED', tabs: ['1', '2', '3', '4', '9'] },
-        { name: 'RESUME', tabs: ['1', '2', '3', '4', '9'] },
+        {
+          name: 'SETTLED',
+          tabs: ['1', '2', '3', '4', '9'],
+          tooltip: 'SETTLE_DISPUTE',
+          main: true
+        },
+        { name: 'UNSETTLED', tabs: ['1', '2', '3', '4', '9'], main: true },
+        { name: 'PAUSED', tabs: ['1', '2', '3', '4', '9'], main: true },
+        { name: 'RESUME', tabs: ['1', '2', '3', '4', '9'], main: true },
         { name: 'RESTART_ENGAGEMENT', tabs: ['1', '2', '4', '9'] },
         { name: 'CHANGE_EXPIRATION_DATE', tabs: ['1', '2', '3', '4', '9'] },
         { name: 'CHANGE_STRATEGY', tabs: ['1', '2', '3', '4', '9'] },
         { name: 'CHANGE_NEGOTIATOR', tabs: ['1', '2', '3', '4', '9'] },
         { name: 'ENRICH_DISPUTE', tabs: ['1', '2', '3', '4', '9'] },
+        {
+          name: 'UPDATE_ENGAGEMENT_OPTIONS',
+          tabs: ['0', '1', '2', '9']
+        },
         { name: 'DELETE', tabs: ['1', '2', '3', '4', '9'] },
         { name: 'RESEND_MESSAGE', tabs: ['1', '2', '3', '4', '9'] },
-        { name: 'DROP_LAWSUIT', tabs: ['0'] },
-        { name: 'START_NEGOTIATON', tabs: ['0'] },
-        {
-          name: 'SEND_BILK_MESSAGE',
-          tabs: ['1', '2', '3', '4', '9'],
-          tooltip: 'BULK_COMPOSE_MESSAGE',
-          class: 'icon-in-bulk',
-          icon: 'in-bulk'
-        }
+        { name: 'DROP_LAWSUIT', tabs: ['0'], main: true },
+        { name: 'START_NEGOTIATION', tabs: ['0'], main: true },
+        { name: 'ADD_TAGS_INCLUSIVE', tabs: ['0', '1', '2', '3', '4', '9'] },
+        { name: 'REM_TAGS_INCLUSIVE', tabs: ['0', '1', '2', '3', '4', '9'] },
+        { name: 'SEND_BILK_MESSAGE', tabs: ['1', '2', '3', '4', '9'] }
       ]
     },
 
@@ -526,6 +762,7 @@ export default {
 
   methods: {
     ...mapActions([
+      'getWorkspaceTags',
       'getDisputeStatuses',
       'getFinishedDisputesCount'
     ]),
@@ -549,6 +786,24 @@ export default {
         case 'DELETE':
           if (this.deleteType) params.reasonKey = this.deleteType
           break
+        case 'ADD_TAGS_INCLUSIVE':
+          params.tags = this.changeTags.map(tag => {
+            if (Number.isInteger(tag)) {
+              const { id } = this.tags[tag]
+
+              return { id }
+            } else {
+              return { name: tag }
+            }
+          })
+          break
+        case 'REM_TAGS_INCLUSIVE':
+          params.tags = this.removeTags.map(tag => {
+            const { id } = this.tags[tag]
+
+            return { id }
+          })
+          break
         case 'UNSETTLED':
           if (this.unsettledType) {
             Object.assign(params, {
@@ -559,21 +814,44 @@ export default {
           break
         case 'SETTLED':
           Object.assign(params, { note: scapeHtml(this.note) })
+          break
+        case 'UPDATE_ENGAGEMENT_OPTIONS':
+          params.engagementOptions = this.engagementOptions
+          break
       }
       if (this.isSelectedAll) {
         params.allSelected = true
         params.disputeIds = []
       }
+
       this.dispatchAction(action, params)
     },
 
+    resetEngagementOptions(value) {
+      this.engagementOptions.alwaysContactParty = value
+      this.engagementOptions.onlyContactPartyWithoutLawyer = false
+      this.engagementOptions.onlyContactPartyWithInvalidLawyer = false
+    },
+
     dispatchAction(action, params) {
+      if (['ADD_TAGS_INCLUSIVE'].includes(params.type) && !params.tags.length) {
+        this.$jusNotification({
+          title: 'Ops!',
+          message: 'Nenhuma tag selecionada.',
+          type: 'error'
+        })
+        return
+      }
+
       this.$store.dispatch('sendBatchAction', params).then(_response => {
         this.chooseDeleteDialogVisible = false
         this.chooseSettledDialogVisible = false
         this.chooseUnsettledDialogVisible = false
         this.changeStrategyDialogVisible = false
         this.changeExpirationDialogVisible = false
+        this.showUpdateEngagementOptions = false
+        this.showChangeTagDialog = false
+        this.showRemoveTagDialog = false
         this.$jusNotification({
           title: 'Yay!',
           message: 'Ação <strong>' + this.$t('action.' + action.toUpperCase()) + '</strong> realizada com sucesso.',
@@ -646,6 +924,7 @@ export default {
         title: this.$options.filters.capitalize(this.$t('action.' + action.toUpperCase())),
         content: 'Tem certeza que deseja realizar esta ação em lote?'
       }
+
       const configs = {
         confirmButtonClass: 'confirm-action-btn',
         confirmButtonText: 'Continuar',
@@ -678,6 +957,20 @@ export default {
         this.openBulkMessageCompose()
       } else if (action === 'DROP_LAWSUIT') {
         this.openDropLawsuitDialog()
+      } else if (action === 'UPDATE_ENGAGEMENT_OPTIONS') {
+        this.resetEngagementOptions(false)
+        this.showUpdateEngagementOptions = true
+      } else if (action === 'ADD_TAGS_INCLUSIVE') {
+        this.getWorkspaceTags().then(() => {
+          this.showChangeTagDialog = true
+          this.changeTags = []
+          this.$nextTick(this.handleInitTagDialog)
+        })
+      } else if (action === 'REM_TAGS_INCLUSIVE') {
+        this.getWorkspaceTags().then(() => {
+          this.showRemoveTagDialog = true
+          this.removeTags = []
+        })
       } else {
         this.$confirm(message.content, message.title, configs).then(() => {
           this.doAction(action)
@@ -828,6 +1121,18 @@ export default {
       }).finally(() => {
         this.changeNegotiatorDialogLoading = false
       })
+    },
+
+    handleCloseChangeTagDialog(done) {
+      this.changeTags = []
+      this.removeTags = []
+      done()
+    },
+
+    handleInitTagDialog() {
+      const input = document.querySelector('.dialog-actions__change-tags input')
+
+      if (input) input.maxLength = 32
     }
   }
 }
@@ -835,6 +1140,37 @@ export default {
 
 <style lang="scss">
 @import '@/styles/colors.scss';
+
+.management-actions__dialog {
+  .el-dialog {
+    .el-dialog__body {
+      .jus-import-feedback-card__switch {
+        width: 100%;
+        display: flex;
+        padding: 12px 13px;
+        border-bottom: 1px solid #dcdfe6;
+
+        .content  {
+          width: 100%;
+          word-break: break-word;
+
+          strong { color: $--color-danger; }
+        }
+
+        p {
+          font-style: italic;
+          font-size: 12px;
+          margin: 6px 20px 0 0;
+        }
+
+        .el-icon-circle-check-outline, .el-icon-circle-check {
+          font-size: 1.3rem;
+          margin-right: 9px;
+        }
+      }
+    }
+  }
+}
 
 .icon-in-bulk {
   height: 24px;
@@ -998,6 +1334,30 @@ export default {
     }
     .el-select, .el-date-editor.el-input, .el-transfer {
       width: 100%;
+    }
+  }
+}
+
+.management-action__dropdown-menu {
+  max-height: 75vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding-left: 18px;
+
+  .el-dropdown-menu__item {
+    text-align: center;
+    text-transform: uppercase;
+  }
+}
+
+.dialog-actions__change-tags {
+  .el-dialog__body {
+    .change-tags {
+      display: flex;
+
+      .el-select {
+        width: 100%;
+      }
     }
   }
 }

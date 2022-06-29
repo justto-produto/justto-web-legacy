@@ -12,6 +12,7 @@ import documentModule from './modules/document'
 import enrichmentModule from './modules/enrichment'
 import importModule from './modules/import'
 import managementModule from './modules/management'
+import managementCallModule from './modules/managementCall'
 import messageModule from './modules/message'
 import negotiationOmnichannelModule from './modules/negotiation/omnichannel'
 import negotiationOverviewModule from './modules/negotiation/overview'
@@ -26,6 +27,8 @@ import workspaceModule from './modules/workspace'
 import configurationsModule from './modules/configurations'
 import pluginsModule from './modules/plugins'
 import notifications from './modules/notifications'
+import dialerModule from './modules/dialer'
+import gupShupModule from './modules/gupshup'
 
 // CONSTANTS
 import banksList from '@/constants/banksList'
@@ -47,6 +50,7 @@ export default new Vuex.Store({
       width: window.innerWidth,
       height: window.innerHeight
     },
+    route: {},
     editorSourcePreview: false
   },
   getters: {
@@ -58,7 +62,14 @@ export default new Vuex.Store({
     windowHeight: state => state.windowHeight,
     getWindowHeight: state => state.window.height,
     getWindowWidth: state => state.window.width,
-    getWindowMode: state => (state.window.width <= 900 ? 'mobile' : state.window.width <= 1200 ? 'tablet' : 'desktop')
+    getWindowMode: state => (state.window.width <= 900 ? 'mobile' : state.window.width <= 1200 ? 'tablet' : 'desktop'),
+    getDisputeStatus: state => {
+      return state.disputeModule?.dispute?.status || state.negotiationOverviewModule?.ticketOverview?.status || ''
+    },
+    getCommonDisputeRoles: state => {
+      return state.disputeModule?.dispute?.disputeRoles || state.negotiationOverviewModule?.ticketOverviewParties || []
+    },
+    getCurrentRoute: state => state.route
   },
   mutations: {
     toggleEditorSourcePreview: (state) => Vue.set(state, 'editorSourcePreview', !state.editorSourcePreview),
@@ -67,8 +78,8 @@ export default new Vuex.Store({
     hideLoading: (state) => (state.loading = false),
     setHeight: (state, value) => (state.windowHeight = value),
     setWindowHeight: (state, height) => Vue.set(state.window, 'height', height),
-    setWindowWidth: (state, width) => Vue.set(state.window, 'width', width)
-
+    setWindowWidth: (state, width) => Vue.set(state.window, 'width', width),
+    setRoute: (state, route) => Vue.set(state, 'route', route)
   },
   actions: {
     toggleEditorSourcePreview({ commit }) {
@@ -103,6 +114,7 @@ export default new Vuex.Store({
     enrichmentModule,
     importModule,
     managementModule,
+    managementCallModule,
     messageModule,
     negotiationOmnichannelModule,
     negotiationOverviewModule,
@@ -116,6 +128,8 @@ export default new Vuex.Store({
     userModule,
     workspaceModule,
     configurationsModule,
-    notifications
+    notifications,
+    dialerModule,
+    gupShupModule
   }
 })

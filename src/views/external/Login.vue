@@ -167,12 +167,15 @@
 
 <script>
 import { isJusttoUser } from '@/utils/validations'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'Login',
+
   components: {
     JusSidenavExternal: () => import('@/components/layouts/JusSidenavExternal')
   },
+
   data() {
     return {
       loadingText: 'Autenticando...',
@@ -205,16 +208,19 @@ export default {
       }
     }
   },
+
   computed: {
     passwordType() {
       return this.showPassword ? 'text' : 'password'
     }
   },
+
   beforeMount() {
     if (this.$store.getters.isLoggedIn) {
       this.$store.dispatch('logout')
     }
   },
+
   created() {
     if (this.$route.query.token) {
       this.$store.dispatch('activate', this.$route.query.token)
@@ -226,7 +232,12 @@ export default {
         })
     }
   },
+
   methods: {
+    ...mapActions({
+      sendEmail: 'sendCustomEmail'
+    }),
+
     getErrorMessage() {
       const messages = [
         'Aguarde um momento que já iremos lhe autenticar',
@@ -237,6 +248,7 @@ export default {
       this.loadingIndex += 1
       return msg
     },
+
     doLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
@@ -252,8 +264,18 @@ export default {
             })
             .catch(error => {
               localStorage.removeItem('justoken')
-              if (error.response && (error.response.status === 401 || error.response.data.code === 'INVALID_CREDENTIALS')) {
+              if (error.response && (error.response?.status === 401 || error.response.data.code === 'INVALID_CREDENTIALS')) {
                 this.mountError('E-mail não cadastrado ou senha incorreta.')
+              } else if (error?.response?.data?.reason === 'User account is locked') {
+                this.$jusNotification({
+                  title: 'Ops!',
+                  message: 'Iniciamos a recuperação de conta.',
+                  type: 'error'
+                })
+                this.$router.push({
+                  path: 'recover-account',
+                  query: { email: this.loginForm.email }
+                })
               } else {
                 this.loadingText = this.getErrorMessage()
                 // setTimeout(this.doLogin, 6000)
@@ -266,15 +288,57 @@ export default {
         }
       })
     },
+
     getMyWorkspaces() {
       return new Promise((resolve, reject) => {
         this.$store.dispatch('myWorkspace').then(response => {
           this.$jusSegment('Usuário logado')
+          // Encontra Workspace que vai logar.
+          if (Object.keys(localStorage).includes('jusredirect')) {
+            const { wid, did } = JSON.parse(localStorage.getItem('jusredirect'))
+
+            const workspaceIndex = response.findIndex(({ workspace: { id } }) => Number(id) === Number(wid))
+
+            if (workspaceIndex >= 0 && did) {
+              this.$nextTick().then(() => {
+                this.workspaceForm.selectedWorkspaceIndex = workspaceIndex
+                this.selectWorkspace()
+              })
+            } else {
+              localStorage.removeItem('jusredirect')
+              this.$confirm('Você não possui privilégios para visualizar esta página', 'Warning', {
+                closeOnPressEscape: false,
+                closeOnClickModal: false,
+                confirmButtonText: 'OK',
+                showCancelButton: false,
+                showClose: false,
+                type: 'warning',
+                center: true
+              })
+            }
+          }
+          // Encontra Workspace que vai logar.
           if (response.length > 1) {
             this.showLoading = false
             this.workspaces = response
           } else if (response.length === 0) {
-            this.$router.push('/onboarding')
+            this.$confirm('Não encontramos nenhuma Workspace ativa ativa para o seu usuário.<br>Favor entrar em contato com o seu Gerente de Contas.', {
+              dangerouslyUseHTMLString: true,
+              closeOnPressEscape: false,
+              closeOnClickModal: false,
+              confirmButtonText: 'OK',
+              showCancelButton: false,
+              showClose: false,
+              center: true
+            }).then(() => {
+              this.sendEmail({
+                subject: 'Usuário sem Workspace',
+                address: 'deivid@justto.com.br',
+                content: `Usuário com o email <b>${this.loginForm.email}</b> tentou fazer login na plataforma, mas não pertence a nenhuma Workspace ativa.`
+              })
+
+              location.reload()
+            })
           } else {
             this.getMembersAndRedirect(response[0])
           }
@@ -301,10 +365,14 @@ export default {
 
         this.$store.dispatch('getWorkspaceMembers')
           .then(() => {
-            if (response.profile === 'ADMINISTRATOR' && !isJustto) {
+            if (Object.keys(localStorage).includes('jusredirect')) {
+              this.showLoading = false
+              const redirect = JSON.parse(localStorage.getItem('jusredirect'))
+              const params = new URLSearchParams(redirect).toString()
+              this.$router.push(`/redirect?${params}`)
+            } else if (response.profile === 'ADMINISTRATOR' && !isJustto) {
               this.$router.push('/')
             } else {
-              // this.$router.push('/')
               this.$router.push('/negotiation')
             }
           }).catch(error => {
@@ -319,7 +387,7 @@ export default {
       this.$refs.workspaceForm.validate(valid => {
         if (valid) {
           const selectedWorkspace = this.workspaces[this.workspaceForm.selectedWorkspaceIndex]
-          if (selectedWorkspace.person) {
+          if (selectedWorkspace.person && selectedWorkspace.person.id) {
             this.getMembersAndRedirect(selectedWorkspace)
           } else {
             this.$store.dispatch('ensureWorkspaceAccesss', selectedWorkspace.workspace.id).then((res) => {

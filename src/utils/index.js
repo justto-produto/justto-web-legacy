@@ -11,13 +11,18 @@ import showUnavailableLoading from './utils/showUnavailableLoading'
 import uuidv4 from './utils/uuidv4'
 import calcBrightness from './utils/calcBrightness'
 import validateCurrentId from './utils/validateCurrentId'
+import extractMentions from './utils/extractMentions'
 import { eventBus } from './utils/eventBus'
+import normalizeDateToISO from './utils/normalizeDateToISO'
+import isAutor from './utils/isAuthor'
 import {
   getRoles,
   formatHtml,
   getRoleIcon,
   getFirstRole,
   buildRoleTitle,
+  approximateDate,
+  approximateTime,
   getDocumentStep,
   getFormatedDate,
   addInvisibleStatus,
@@ -29,6 +34,7 @@ import {
 
 export {
   uuidv4,
+  isAutor,
   eventBus,
   getRoles,
   scapeHtml,
@@ -41,6 +47,9 @@ export {
   axiosDispatch,
   calcBrightness,
   buildRoleTitle,
+  approximateDate,
+  approximateTime,
+  extractMentions,
   getDocumentStep,
   getFormatedDate,
   normalizeString,
@@ -50,6 +59,7 @@ export {
   addInvisibleStatus,
   getLastInteraction,
   getInteractionIcon,
+  normalizeDateToISO,
   getTracktitleByAction,
   registerServiceWorker,
   showUnavailableLoading,

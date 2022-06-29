@@ -9,9 +9,8 @@
         v-if="mappedRecipients.includes(contact[model])"
         class="party-contacts__infoline-icon el-icon-s-promotion"
       />
-      <div
-        v-else-if="!contact.isMain"
-      >
+
+      <div v-else-if="!contact.isMain">
         <el-tooltip
           :open-delay="600"
           effect="dark"
@@ -30,6 +29,7 @@
           />
         </el-tooltip>
       </div>
+
       <div class="party-contacts__popover">
         <el-tooltip
           :open-delay="600"
@@ -55,30 +55,68 @@
             />
           </el-popover>
         </el-tooltip>
+
+        <!-- :content="blocks[contact.id]" -->
+        <el-popover
+          v-if="contact.blocked || party.optOutType"
+          :open-delay="500"
+          placement="top-end"
+          trigger="hover"
+        >
+          <div>
+            <!-- {{ blocks[contact.id] || $tc(`blocked.phone.${contact.blockedType || party.optOutType || 'UNKNOW'}`) }} -->
+            {{ getBlockText(contact) }}
+          </div>
+
+          <div slot="reference">
+            <TextInlineEditor
+              v-model="contact[model]"
+              :mask="mask"
+              :filter="filter"
+              :is-editable="!disabled && !(contact.blocked || party.optOutType)"
+              :is-deletable="!disabled"
+              :class="{
+                'party-contacts__infoline-data--selected': mappedRecipients.includes(contact[model]),
+                'party-contacts__infoline-data--disabled': !contact.isValid || contact.blocked || party.optOutType,
+                'party-contacts__infoline-data--secondary': !contact.isMain || contact.blocked || party.optOutType
+              }"
+              class="party-contacts__infoline-data"
+              @call="makeCall"
+              @change="updateContact(contact.id, $event)"
+              @delete="removeContact(contact.id)"
+              @click="selectContact(contact[model], contact.isValid, (contact.isMain && !(contact.blocked || party.optOutType)), contact)"
+            />
+          </div>
+        </el-popover>
+
         <TextInlineEditor
+          v-else
           v-model="contact[model]"
           :mask="mask"
           :filter="filter"
-          :is-editable="!disabled"
+          :is-editable="!disabled && !(contact.blocked || party.optOutType)"
           :is-deletable="!disabled"
           :class="{
             'party-contacts__infoline-data--selected': mappedRecipients.includes(contact[model]),
-            'party-contacts__infoline-data--disabled': !contact.isValid,
-            'party-contacts__infoline-data--secondary': !contact.isMain
+            'party-contacts__infoline-data--disabled': !contact.isValid || contact.blocked || party.optOutType,
+            'party-contacts__infoline-data--secondary': !contact.isMain || contact.blocked || party.optOutType
           }"
           class="party-contacts__infoline-data"
+          @call="makeCall"
           @change="updateContact(contact.id, $event)"
           @delete="removeContact(contact.id)"
-          @click="selectContact(contact[model], contact.isValid, contact.isMain)"
+          @click="selectContact(contact[model], contact.isValid, (contact.isMain && !(contact.blocked || party.optOutType)), contact)"
         />
       </div>
     </span>
+
     <div
       v-if="(isAllContactsVisible || contactsLength <= 3) && !isAddingNewContact && !disabled"
       class="party-contacts__infoline-link"
     >
       <a @click="startAddNewContact">Adicionar</a>
     </div>
+
     <TextInlineEditor
       v-if="isAddingNewContact"
       ref="newContactInput"
@@ -90,6 +128,7 @@
       @blur="stopAddNewContact"
       @enableEdit="enableEdit"
     />
+
     <div
       v-if="contactsLength > 3"
       class="party-contacts__infoline-link"
@@ -106,10 +145,12 @@ import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'PartyContacts',
+
   components: {
     TextInlineEditor: () => import('@/components/inputs/TextInlineEditor'),
     LawyerDetail: () => import('@/components/others/LawyerDetail')
   },
+
   props: {
     party: {
       type: Object,
@@ -148,77 +189,145 @@ export default {
       default: () => ''
     }
   },
+
   data: () => ({
     isAllContactsVisible: false,
     isAddingNewContact: false,
     newContactModel: '',
-    modalLoading: false
+    modalLoading: false,
+    blocks: {}
     // LGPDDialogVisible: false,
     // currentContactValue: '',
     // currentValid: false
   }),
+
   computed: {
     ...mapGetters({
-      recipients: 'getEditorRecipients'
+      appInstance: 'getAppInstance',
+      recipients: 'getEditorRecipients',
+      ticketStatus: 'getTicketOverviewStatus'
     }),
+
     isPhoneNumber() {
       return this.model === 'number'
     },
+
     LGPDMessage() {
       const type = this.isPhoneNumber ? 'telefone' : 'e-mail'
       return `Este ${type} está desabilitado para receber mensagens automáticas`
     },
+
     contactsFiltered() {
       return this.contacts.filter(({ archived }) => !archived)
     },
+
     mappedRecipients() {
       return this.recipients.map(({ value }) => (value))
     },
+
     contactsLength() {
       return this.contactsFiltered.length
     },
+
     expandLinkText() {
       const { isAllContactsVisible, contactsLength } = this
       return !isAllContactsVisible ? `Ver mais (+${contactsLength - 3})` : `Ver menos (-${contactsLength - 3})`
     },
+
     processedContacts() {
       const { contactsFiltered, isAllContactsVisible, contactsLength } = this
       const arrayCut = isAllContactsVisible ? contactsLength : 3
+
       return contactsFiltered?.slice(0, arrayCut)
     },
+
     isOabContacts() {
-      return Object.values(this.party).length > 0
+      return Object.values(this.party).length > 0 && this.filter === 'oab'
+    },
+
+    getBlockText() {
+      return (contact) => {
+        const isEmail = (contact.address || '').length > 0
+
+        return Object.keys(this.blocks).includes(String(contact.id)) ? this.blocks[contact.id] : this.$tc(`blocked.${isEmail ? 'email' : 'phone'}.${contact.blockedType || this.party.optOutType || 'UNKNOW'}`)
+      }
     }
   },
+
+  watch: {
+    contacts: {
+      deep: true,
+      handler: 'handleValidateContacts'
+    }
+  },
+
   methods: {
     ...mapActions([
+      'addCall',
       'searchLawyers',
+      'getContactBlockReason',
       'hideSearchLawyerLoading'
     ]),
+
+    handleValidateContacts() {
+      this.contacts.forEach(contact => {
+        if (contact.blocked) {
+          const disputeId = Number(this.$route?.params?.id)
+          const { blockedType, id } = contact
+
+          const addressType = {
+            number: 'phone',
+            address: 'email',
+            fullOab: 'oab'
+          }[this.model]
+
+          const params = {
+            disputeId,
+            blockedType,
+            addressType,
+            contactId: id
+          }
+
+          this.getContactBlockReason(params).then(({ reason }) => {
+            const message = reason || this.$tc(`blocked.${addressType}.${contact.blockedType || 'UNKNOW'}`)
+
+            this.$set(this.blocks, Number(id), message)
+          })
+        }
+      })
+    },
+
     toggleContactsVisible() {
       this.isAllContactsVisible = !this.isAllContactsVisible
     },
+
     startAddNewContact() {
       this.isAddingNewContact = true
     },
+
     enableEdit() {
       if (this.isAddingNewContact) this.$refs.newContactInput.enableEdit()
     },
+
     stopAddNewContact() {
       this.isAddingNewContact = false
       this.newContactModel = ''
     },
+
     updateContact(contactId, contactValue) {
       this.$emit('change', contactId, contactValue)
     },
+
     removeContact(contactId) {
       this.$emit('delete', contactId)
     },
+
     addContact(contactValue) {
       this.$emit('post', contactValue)
     },
-    selectContact(contactValue, isValid, isMain) {
-      this.emitClick(contactValue, isValid, isMain)
+
+    selectContact(contactValue, isValid, isMain, contact) {
+      if (!['COMMUNICATION_OPT_OUT'].includes(contact?.blockedType)) this.emitClick(contactValue, isValid, isMain)
     },
 
     emitClick(contactValue, isValid, isMain) {
@@ -241,6 +350,31 @@ export default {
 
     emitUpdate(payload) {
       this.$emit('update', payload)
+    },
+
+    makeCall(number) {
+      const contact = this.party.phonesDto.find(({ number: phone }) => phone.includes(number))
+
+      if (!contact?.blocked) {
+        this.addCall({
+          disputeId: Number(this.$route.params.id),
+          disputeStatus: this.ticketStatus,
+          toRoleId: this.party.disputeRoleId,
+          toRoleName: this.party.name,
+          number: `+55${number}`,
+          appInstance: this.appInstance,
+          contacts: {
+            emails: this.party.emailsDto,
+            phones: this.party.phonesDto
+          }
+        }).then(_ => {
+          this.$jusNotification({
+            type: 'success',
+            title: 'Yay!',
+            message: 'Sua ligação entrou na fila, assim que tiver um telefone disponível para você usar, nós emitiremos um aviso sonoro'
+          })
+        })
+      }
     }
   }
 }

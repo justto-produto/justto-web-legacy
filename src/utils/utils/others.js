@@ -1,6 +1,10 @@
 import moment from 'moment'
 
+const vue = () => document.getElementById('app')?.__vue__
+
 const buildRoleTitle = function(party, title) {
+  const isRecovery = vue()?.$store?.getters?.isWorkspaceRecovery
+
   if (party === 'UNKNOWN') {
     switch (title) {
       case 'PARTY':
@@ -13,15 +17,15 @@ const buildRoleTitle = function(party, title) {
       case 'NEGOTIATOR':
         return 'Negociador'
       case 'PARTY':
-        return 'Réu'
+        return vue().$tc('PARTY_RESPONDENT', isRecovery)
       case 'LAWYER':
-        return 'Advogado do réu'
+        return vue().$tc('LAWYER_RESPONDENT', isRecovery)
     }
   } else {
     if (title === 'PARTY') {
-      return 'Parte contrária'
+      return vue().$tc('fields.claimantParty', isRecovery)
     } else if (title === 'LAWYER') {
-      return 'Advogado da parte'
+      return vue().$tc('fields.claimantLawyer', isRecovery)
     } else {
       return ''
     }
@@ -86,6 +90,41 @@ const getLastInteraction = function(lastinteractiondate) {
     return 'há 1 dia'
   } else {
     return date.format('DD/MM/YYYY')
+  }
+}
+
+const approximateDate = function(datetime) {
+  if (!datetime) return ''
+  const now = moment()
+  const date = moment(datetime)
+
+  if (now.diff(date, 'hours') < 24) {
+    return 'hoje'
+  } else if (now.diff(date, 'days') <= 2) {
+    return 'ontem'
+  } else {
+    return date.format('dddd, DD [de] MMMM')
+  }
+}
+
+const approximateTime = function(lastinteractiondate) {
+  if (!lastinteractiondate) return ''
+  const now = moment()
+  const date = moment(lastinteractiondate)
+  if (now.diff(date, 'seconds') < 0) {
+    if (date.diff(now, 'days') > 0) {
+      return date.format('DD/MM/YYYY')
+    } else {
+      return ''
+    }
+  } else if (now.diff(date, 'seconds') <= 59) {
+    return 'há ' + now.diff(date, 'seconds') + ' segundos'
+  } else if (now.diff(date, 'minutes') <= 59) {
+    return 'há ' + now.diff(date, 'minutes') + ' minuto(s)'
+  } else if (now.diff(date, 'hours') < 24) {
+    return 'há ' + now.diff(date, 'hours') + ' hora(s)'
+  } else {
+    return date.format('HH:mm')
   }
 }
 
@@ -216,17 +255,31 @@ const formatHtml = (html) => {
   return result.substring(1, result.length - 3)
 }
 
+const publishWebsocket = (channel, event, object, globalAuthenticationObject) => {
+  const socketData = {
+    headers: globalAuthenticationObject.headers,
+    event,
+    channel,
+    data: object
+  }
+  vue().$socket.emit('send', socketData)
+  return 'PUBLISHED'
+}
+
 export {
   getRoles,
   formatHtml,
   getRoleIcon,
   getFirstRole,
   buildRoleTitle,
+  approximateDate,
+  approximateTime,
   getFormatedDate,
   getDocumentStep,
   addInvisibleStatus,
   getLastInteraction,
   getInteractionIcon,
   getTracktitleByAction,
-  getLastInteractionTooltip
+  getLastInteractionTooltip,
+  publishWebsocket
 }

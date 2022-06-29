@@ -178,7 +178,7 @@
           Negociável até <b>{{ responseRow.expirationDate.dateTime | moment('DD/MM/YY') }}</b>.
         </div>
         <div>
-          Alçada máxima é de <b>{{ responseRow.disputeUpperRange | currency }}</b>
+          {{ $tc('UPPER_RANGE', isRecoveryStrategy) }} é de <b>{{ responseRow.disputeUpperRange | currency }}</b>
         </div>
         <div>
           Última proposta foi de <b>{{ responseRow.lastOfferValue | currency }}</b>
@@ -237,7 +237,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import {
   getLastInteraction,
   getInteractionIcon,
@@ -283,6 +283,10 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      isRecoveryStrategy: 'isWorkspaceRecovery'
+    }),
+
     editorOptions() {
       return {
         placeholder: 'Escreva alguma coisa',
@@ -414,5 +418,10 @@ export default {
   display: flex;
   word-break: break-word;
   max-width: 400px;
+}
+
+.follow-up-button.follow-up-tooltip {
+  color: $--color-secondary;
+  font-weight: bold;
 }
 </style>

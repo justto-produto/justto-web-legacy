@@ -4,7 +4,7 @@
     :close-on-click-modal="false"
     :show-close="false"
     :visible.sync="visible"
-    width="40%"
+    width="45%"
     class="party__form"
   >
     <el-form
@@ -25,6 +25,7 @@
           autofocus=""
         />
       </el-form-item>
+
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item
@@ -39,22 +40,27 @@
             />
           </el-form-item>
         </el-col>
-        <el-col :span="12">
+        <el-col
+          v-if="party.birthday"
+          :span="12"
+        >
           <el-form-item
             label="Data de nascimento"
             prop="birthday"
           >
-            <el-date-picker
-              v-model="party.birthday"
-              :disabled="!canEditBirthday"
-              :clearable="false"
-              format="dd/MM/yyyy"
-              type="date"
-              value-format="yyyy-MM-dd"
+            <DateInlieEditor
+              :value="party.birthday"
+              :is-editable="canEditBirthday"
+              :processed-date="$moment(new Date(party.birthday)).fromNow(true)"
+              :is-date-time-format="false"
+              edit-on-click
+              class="birthday-editor"
+              @change="setBirthday"
             />
           </el-form-item>
         </el-col>
       </el-row>
+
       <div
         v-if="party.roles && party.roles.includes('LAWYER')"
         class="flex-row"
@@ -122,7 +128,6 @@
         >
           <template v-slot="scope">
             <a
-              href="#"
               @click.prevent="removeOab(scope.$index)"
             >
               <jus-icon icon="trash" />
@@ -185,7 +190,6 @@
               </span>
             </el-tooltip>
             <a
-              href="#"
               style="margin-left: 5px;"
               @click.prevent="removePhone(scope.$index)"
             >
@@ -249,7 +253,6 @@
               </span>
             </el-tooltip>
             <a
-              href="#"
               style="margin-left: 5px;"
               @click.prevent="removeEmail(scope.$index)"
             >
@@ -258,10 +261,10 @@
           </template>
         </el-table-column>
       </el-table>
+
       <h4>
         Contas bancárias
         <a
-          href="#"
           style="float: right;width: 16px;margin-top: 1px;margin-right: 23px;"
           @click.prevent="openTabEditBank()"
         >
@@ -300,10 +303,7 @@
           class-name="visible"
         >
           <template v-slot="scope">
-            <a
-              href="#"
-              @click.prevent="removeBankData(scope.$index, scope.row.id)"
-            >
+            <a @click.prevent="removeBankData(scope.$index, scope.row.id)">
               <jus-icon icon="trash" />
             </a>
           </template>
@@ -321,7 +321,7 @@
         :loading="loading"
         type="primary"
         data-testid="edit-data-part"
-        @click="editRole"
+        @click="handleEditRole"
       >
         Editar dados
       </el-button>
@@ -332,19 +332,31 @@
 <script>
 import { mapActions } from 'vuex'
 import { validateName, validateDocument, validatePhone } from '@/utils/validations'
+
+import restartEngagement from '@/utils/mixins/restartEngagement'
+
 export default {
   components: {
+    DateInlieEditor: () => import('@/components/inputs/DateInlieEditor'),
     PartyBankAccountDialog: () => import('@/views/main/negotiation/partials/ticket/overview/tabs/parties/PartyBankAccountDialog.vue')
   },
+
+  mixins: [restartEngagement],
 
   props: {
     party: {
       type: Object,
       required: true
     },
+
     visible: {
       type: Boolean,
       required: true
+    },
+
+    ticketStatus: {
+      type: String,
+      default: () => ''
     }
   },
 
@@ -387,7 +399,7 @@ export default {
   },
 
   mounted() {
-    this.originalRole = this.party
+    this.originalRole = { ...this.party }
   },
 
   methods: {
@@ -396,8 +408,13 @@ export default {
       'addPhoneToDisputeRole',
       'addOabToDisputeRole',
       'createTicketRoleBankAccount',
+      'setTicketRoleBankAccount',
       'getTicketOverviewParty'
     ]),
+
+    setBirthday(newDate) {
+      if (['string'].includes(typeof newDate)) this.$set(this.party, 'birthday', newDate.split('-').map(Number))
+    },
 
     openTabEditBank() {
       this.$refs.partyBankAccountDialog.openBankAccountDialog({})
@@ -489,7 +506,7 @@ export default {
               baccount.type === account.type
           })
 
-          this.linkAccount({ bankAccountId: baccount.id, personId, disputeId })
+          this.setTicketRoleBankAccount({ bankAccountId: baccount.id, personId, disputeId })
         }
 
         this.$jusNotification({
@@ -498,8 +515,8 @@ export default {
           message: 'Conta bancária <strong>criada</strong> com sucesso.',
           type: 'success'
         })
-      }).catch(err => {
-        this.$jusNotification(err)
+      }).catch(error => {
+        this.$jusNotification({ error })
       }).finally(_ => {
         this.closeBankAccountDialog()
       })
@@ -514,7 +531,7 @@ export default {
       this.$refs.partyBankAccountDialog.closeDialog()
     },
 
-    editRole() {
+    handleEditRole() {
       let isValid = true
       this.$refs.party.validateField(['name', 'documentNumber'], errorMessage => {
         if (errorMessage) isValid = false
@@ -566,6 +583,13 @@ export default {
           type: 'success'
         })
         const roleDataDifference = this.verifyChangedRoleData(this.party, this.originalRole)
+        this.verifyRestartEngagement({
+          name: this.party.name,
+          status: this.ticketStatus,
+          party: this.party.party,
+          disputeId: Number(this.$route.params.id),
+          disputeRoleId: this.party.id
+        })
         if (roleDataDifference.length) {
           this.$confirm(this.$t('dispute.overview.confirm.restart.engagement.question'), 'Atenção!', {
             confirmButtonText: this.$t('dispute.overview.confirm.restart.engagement.confirm'),
@@ -667,6 +691,15 @@ export default {
   .flex-row {
     display: flex;
     gap: 1vw;
+  }
+}
+
+.birthday-editor {
+  .date-inline-editor__value {
+    height: 40px !important;
+    border: solid #dcdfe6 thin !important;
+    border-radius: 2px;
+    padding: 0 15px;
   }
 }
 

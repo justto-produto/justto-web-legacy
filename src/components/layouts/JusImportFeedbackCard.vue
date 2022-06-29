@@ -1,22 +1,62 @@
 <template>
-  <div class="jus-import-feedback-card">
-    <el-tag
-      :color="color"
-      class="el-tag--mapped-campaign-tag"
+  <!-- v-if="show" -->
+  <div
+    class="jus-import-feedback-card"
+    :class="{'extra-margin-top': showReplicate}"
+  >
+    <div class="jus-import-feedback-card-header">
+      <el-tag
+        :color="color"
+        class="el-tag--mapped-campaign-tag"
+      >
+        {{ campaignTitle }}
+      </el-tag>
+
+      <el-tooltip
+        v-if="index === 2 && originalQuantity > 1"
+        content="Replica a configuração da campanha acima para as demais."
+        placement="top"
+        :open-delay="500"
+      >
+        <el-checkbox-group
+          v-model="replicates"
+          size="small"
+        >
+          <el-checkbox-button
+            @change="handleReplicate($event, mappedCampaign, index)"
+          >
+            Utilizar dados da campanha acima
+          </el-checkbox-button>
+        </el-checkbox-group>
+      </el-tooltip>
+
+      <el-tag
+        :color="color"
+        class="el-tag--mapped-campaign-tag"
+        style="visibility: hidden;"
+      >
+        {{ campaignTitle }}
+      </el-tag>
+    </div>
+
+    <el-card
+      :class="{'hide': index > 1 && originalQuantity > 1 && !show}"
+      :style="'border-left: solid 4px ' + color"
     >
-      {{ campaignTitle }}
-    </el-tag>
-    <el-card :style="'border-left: solid 4px ' + color">
+      <!-- Respondent -->
       <el-input
         v-model="respondent"
+        class="unhide"
         :class="{'has-error': errorFields.includes('respondent')}"
         data-testid="feedback-respondent"
-        placeholder="Dê um nome para o seu Réu"
+        :placeholder="`Dê um nome para ${isWorkspaceRecovery ? 'a sua' : 'o seu'} ${$tc('PARTY_RESPONDENT', isWorkspaceRecovery)}`"
         @input="clearErrorField('respondent')"
       >
         <div slot="prefix">
+          <pre-mapped-alert v-if="respondent !== initialCampaign.respondent && initialCampaign.respondent" />
+
           <i
-            v-if="errorFields.includes('respondent')"
+            v-else-if="errorFields.includes('respondent')"
             class="el-icon-error el-input__icon has-error-icon"
           />
           <i
@@ -26,9 +66,11 @@
           />
         </div>
       </el-input>
+
+      <!-- Nome da campanha -->
       <el-input
         v-model="campaignName"
-        class="select-strategy"
+        class="select-strategy unhide"
         :validate-event="true"
         :class="{'has-error': errorFields.includes('name')}"
         data-testid="feedback-campaignName"
@@ -47,6 +89,7 @@
           />
         </div>
       </el-input>
+
       <div class="select-strategy__messages">
         <div v-show="campaignNameDuplicated && campaignName !== ''">
           Já existe uma campanha com este nome.
@@ -55,6 +98,8 @@
           </a>
         </div>
       </div>
+
+      <!-- Estratégia -->
       <el-select
         ref="strategySelect"
         v-model="strategy"
@@ -69,6 +114,8 @@
         @input="clearErrorField('strategy')"
       >
         <div slot="prefix">
+          <pre-mapped-alert v-if="strategy !== initialCampaign.strategy && initialCampaign.strategy" />
+
           <i
             v-if="errorFields.includes('strategy')"
             class="el-icon-error el-input__icon has-error-icon"
@@ -86,6 +133,7 @@
           :value="optionStrategy"
         />
       </el-select>
+
       <div class="select-strategy__messages">
         <div v-show="!!strategy.id">
           <a @click.prevent="openDialogEngagement">
@@ -93,12 +141,17 @@
           </a>
         </div>
       </div>
+
+      <!-- Data do pagamento -->
       <div
         v-if="isPaymentStrategy"
         class="jus-import-feedback-card__number"
       >
         <div>
+          <pre-mapped-alert v-if="paymentDeadLine !== initialCampaign.paymentDeadLine && initialCampaign.paymentDeadLine" />
+
           <i
+            v-else
             class="el-icon-circle-check el-input__icon--success"
           />
           Data do pagamento
@@ -116,11 +169,13 @@
           </span>
         </div>
       </div>
+
       <el-date-picker
         v-model="deadline"
         :prefix-icon="errorFields.includes('deadline') ? 'el-icon-error' : deadline === null ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
         :picker-options="datePickerOptions"
         :class="{'has-error': errorFields.includes('deadline')}"
+        class="unhide"
         type="date"
         format="dd/MM/yyyy"
         placeholder="Defina a data limite para a negociação"
@@ -128,6 +183,7 @@
         value-format="yyyy-MM-dd"
         @input="clearErrorField('deadline')"
       />
+
       <el-select
         v-model="negotiatorIds"
         value-key="name"
@@ -165,20 +221,25 @@
           <span style="vertical-align: middle;margin-left: 10px;">{{ item.person.name }}</span>
         </el-option>
       </el-select>
-      <div class="jus-import-feedback-card__switch">
+
+      <div
+        v-if="!isWorkspaceRecovery"
+        class="jus-import-feedback-card__switch"
+      >
         <i class="el-icon-circle-check el-input__icon--success" />
         <div class="content">
-          <div>Percentual da primeira proposta sobre a alçada máxima</div>
+          <div>Percentual da primeira proposta sobre {{ $tc('UPPER_RANGE_WITH_ARTICLE', isWorkspaceRecovery) }}</div>
           <el-slider
             v-model="initialOfferPercentage"
             :min="0"
             :max="100"
             :show-stops="true"
             :marks="marks"
-            label="Percentual da primeira proposta sobre a alçada máxima"
+            :label="`Percentual da primeira proposta sobre ${$tc('UPPER_RANGE_WITH_ARTICLE', isWorkspaceRecovery)}`"
           />
         </div>
       </div>
+
       <div class="jus-import-feedback-card__switch">
         <i class="el-icon-circle-check el-input__icon--success" />
         <div class="content">
@@ -241,22 +302,33 @@
       <div class="jus-import-feedback-card__switch">
         <i class="el-icon-circle-check el-input__icon--success" />
         <div class="content">
-          <div>Não enriquecer disputas automaticamente</div>
-          <p>
-            Deixando <b>selecionada</b> esta opção, as os dados das partes como e-mail, telefone e OAB, <b>não serão enriquecidos automaticamente</b>.
-          </p>
-        </div>
-        <el-switch v-model="skipEnrichment" />
-      </div>
-      <div class="jus-import-feedback-card__switch">
-        <i class="el-icon-circle-check el-input__icon--success" />
-        <div class="content">
           <div>Permitir somente depósito em conta-corrente</div>
           <p>
             Deixando <b>selecionada</b> esta opção, em caso de acordo fechado será bloqueado o depósito em conta poupança, sendo permitido somente <b>depósito em conta corrente</b>.
           </p>
         </div>
         <el-switch v-model="denySavingDeposit" />
+      </div>
+
+      <div class="jus-import-feedback-card__switch">
+        <i class="el-icon-circle-check el-input__icon--success" />
+        <div class="content">
+          <div>Enriquecer disputas automaticamente <strong>(Atenção: informação importante)</strong></div>
+          <p>
+            Deixando <b>selecionada</b> esta opção, os dados das partes como email, telefone e OAB, <b>serão enriquecidos automaticamente</b>.
+            <br>
+            Esta opção é efetivada <b>somente mediante solicitação do usuário</b>, sendo a ação de sua total responsabilidade.
+            <br>
+            Coletamos os dados a fim exclusivamente de enriquecer a disputa e não somos detentores de tais informações.
+            <br>
+            Ao ativar você está de acordo com os nossos
+            <a
+              href="http://https://justto.com.br/termos-de-uso"
+              target="_blank"
+            >termos de uso</a>.
+          </p>
+        </div>
+        <el-switch v-model="enrichDisputes" />
       </div>
     </el-card>
 
@@ -274,21 +346,37 @@ import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'JusImportFeedbackCard',
+
   components: {
-    JusEngagementsDialog: () => import('@/components/dialogs/JusEngagementsDialog')
+    JusEngagementsDialog: () => import('@/components/dialogs/JusEngagementsDialog'),
+    PreMappedAlert: () => import('@/components/buttons/PreMappedAlert')
   },
+
   props: {
     mappedCampaign: {
       type: Object,
       default: () => {}
     },
+
     index: {
       type: Number,
       default: 1
+    },
+
+    show: {
+      type: Boolean,
+      default: true
+    },
+
+    originalQuantity: {
+      type: Number,
+      default: () => 1
     }
   },
+
   data() {
     return {
+      replicateForAll: false,
       color: '#ff9300',
       initialCampaignName: '',
       mappedName: '',
@@ -307,8 +395,10 @@ export default {
       contactPartyWhenNoLowyer: false,
       alwaysContactParty: false,
       contactPartyWhenInvalidLowyer: false,
-      skipEnrichment: false,
+      skipEnrichment: true,
+      enrichDisputes: true,
       denySavingDeposit: false,
+      replicates: [],
       datePickerOptions: {
         disabledDate(date) {
           return date < new Date()
@@ -325,13 +415,16 @@ export default {
         70: '70%',
         80: '80%',
         90: '90%'
-      }
+      },
+      initialCampaign: {}
     }
   },
+
   computed: {
     ...mapGetters([
       'isJusttoDev',
       'errorFields',
+      'isWorkspaceRecovery',
       'getMyStrategiesLite'
     ]),
 
@@ -343,12 +436,15 @@ export default {
         return activeSrategies.filter(s => !s.name.startsWith('[TST]'))
       }
     },
+
     negotiatorsList() {
       return this.$store.getters.workspaceMembersSorted
     },
+
     campaignTitle() {
       return this.campaignName ? this.campaignName : `Campanha ${this.index}`
     },
+
     isPaymentStrategy() {
       let isStrategy = false
       if (this.strategy && this.strategy.types) {
@@ -359,8 +455,13 @@ export default {
       } else {
         return false
       }
+    },
+
+    showReplicate() {
+      return this.index === 2 && this.originalQuantity > 1
     }
   },
+
   watch: {
     businessHoursEngagement(value) {
       this.mappedCampaign.businessHoursEngagement = value
@@ -374,6 +475,11 @@ export default {
     contactPartyWhenInvalidLowyer(value) {
       this.mappedCampaign.contactPartyWhenInvalidLowyer = value
     },
+
+    enrichDisputes(enrich) {
+      this.mappedCampaign.skipEnrichment = !enrich
+    },
+
     skipEnrichment(value) {
       this.mappedCampaign.skipEnrichment = value
     },
@@ -385,6 +491,7 @@ export default {
     },
     campaignName(value) {
       this.mappedCampaign.name = value
+
       if (value) {
         clearTimeout(this.campaignNameDebounce)
         this.campaignNameDebounce = setTimeout(() => {
@@ -423,12 +530,13 @@ export default {
       this.mappedCampaign.initialOfferPercentage = value
     }
   },
+
   beforeMount() {
     const preferences = JSON.parse(localStorage.getItem('jusfeedbackpreferences')) || {}
     this.businessHoursEngagement = preferences.businessHoursEngagement || true
     this.contactPartyWhenNoLowyer = preferences.contactPartyWhenNoLowyer || false
     this.contactPartyWhenInvalidLowyer = preferences.contactPartyWhenInvalidLowyer || false
-    this.skipEnrichment = preferences.skipEnrichment || false
+    this.skipEnrichment = false
     this.denySavingDeposit = preferences.denySavingDeposit || false
 
     this.mappedCampaign.businessHoursEngagement = this.businessHoursEngagement
@@ -438,17 +546,20 @@ export default {
     this.mappedCampaign.skipEnrichment = this.skipEnrichment
     this.mappedCampaign.denySavingDeposit = this.denySavingDeposit
     this.mappedCampaign.paymentDeadLine = this.paymentDeadLine
-    this.mappedCampaign.initialOfferPercentage = this.initialOfferPercentage
+    this.mappedCampaign.initialOfferPercentage = this.isWorkspaceRecovery ? 100 : this.initialOfferPercentage
 
     this.campaignName = this.mappedCampaign.campaign || ''
     this.respondent = this.mappedCampaign.respondent || ''
     this.mapEmails(this.mappedCampaign.negotiatoremail)
     this.mapStrategy(this.mappedCampaign.strategy)
 
+    this.initialCampaign = { ...this.mappedCampaign }
+
     if (this.mappedCampaign.deadline && this.$moment(new Date(this.mappedCampaign.deadline)).isValid()) {
       this.deadline = this.mappedCampaign.deadline
     }
   },
+
   methods: {
     ...mapActions(['clearErrorField']),
 
@@ -498,6 +609,16 @@ export default {
           }
         }
       }
+    },
+
+    handleReplicate(replicate, mappedCampaign, index) {
+      if (replicate) {
+        this.$set(mappedCampaign, 'replicateIndex', index - 2)
+        this.$set(mappedCampaign, 'replicate', replicate)
+      } else {
+        this.$delete(mappedCampaign, 'replicateIndex')
+        this.$delete(mappedCampaign, 'replicate')
+      }
     }
   }
 }
@@ -509,35 +630,65 @@ export default {
 .jus-import-feedback-card {
   width: 100%;
   margin-top: 30px;
-  .el-tag--mapped-campaign-tag {
-    margin-bottom: 10px;
-    text-align: center;
-    color: #ffffff;
+
+  &.extra-margin-top {
+    margin-top: 56px;
+
+    .jus-import-feedback-card-header .el-checkbox-group {
+      margin-top: -36px;
+    }
   }
+
+  .jus-import-feedback-card-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+
+    .el-tag--mapped-campaign-tag {
+      margin-bottom: 10px;
+      text-align: center;
+      color: #ffffff;
+    }
+  }
+
   .el-autocomplete, .el-select, .el-input, .select-strategy__messages {
     width: 100%;
   }
+
   .el-card .el-input__inner {
     border-bottom: 1px solid #dcdfe6 !important;
     border-top: 0;
     border-left: 0;
     border-right: 0;
   }
+
+  .el-card.hide {
+    .el-card__body {
+      div:not(.unhide) {
+        display: none !important;
+      }
+    }
+  }
+
   .select-strategy{
     .el-input__inner {
       border: 0 !important;
     }
   }
+
   .el-input-number {
     margin: 0 8px;
     width: 100px;
+
     .el-input__inner {
       border-top: 0;
       border-bottom: 0;
     }
   }
+
   .el-card__body {
     padding: 0;
+
     .el-select:last-of-type {
       .el-input__inner {
         border-bottom: 0;
@@ -592,8 +743,13 @@ export default {
     display: flex;
     padding: 12px 13px;
     border-bottom: 1px solid #dcdfe6;
+
     .content  {
       width: 100%;
+
+      strong {
+        color: $--color-danger;
+      }
     }
     p {
       font-style: italic;
@@ -614,6 +770,7 @@ export default {
     }
   }
 }
+
 .el-message-box__title {
   text-transform: none;
 }

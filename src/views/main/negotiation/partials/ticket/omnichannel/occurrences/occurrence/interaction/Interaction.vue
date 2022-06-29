@@ -3,15 +3,30 @@
     class="interaction-container"
     :class="`${interaction.direction} ${type}`"
   >
-    <!-- class="interaction-container__balloon" -->
-    <div
-      :class="`${interaction.direction} ${!flat ? 'interaction-container__balloon' : ''}`"
+    <el-tooltip
+      placement="top-end"
+      :open-delay="500"
     >
+      <div
+        slot="content"
+        style="text-align: center;"
+        v-html="avatarProps.name"
+      />
+
+      <JusAvatarUser
+        v-if="showAvatar"
+        v-bind="avatarProps"
+      />
+    </el-tooltip>
+
+    <div :class="`${interaction.direction} ${coloringType}-${messageType} ${!flat ? 'interaction-container__balloon' : ''} ${scheduled ? 'SCHEDULED' : ''}`">
       <div class="interaction-container__balloon-content">
         <component
           :is="type"
           :value="interaction"
           :occurrence="value"
+          :hide-grouping="hideGrouping"
+          :hide-info="isGrouping"
         />
 
         <Recomendation
@@ -39,6 +54,32 @@
       />
     </span>
 
+    <div class="display-break" />
+
+    <InteractionStatus
+      :value="interaction"
+      :occurrence="value"
+      :hide-grouping="hideGrouping"
+    />
+
+    <div
+      v-if="showGrouped && groupedOccurrences.length"
+      class="break-point"
+    />
+
+    <div
+      v-if="showGrouped && groupedOccurrences.length"
+      class="interaction-container__grouped"
+    >
+      <Interaction
+        v-for="occurrence in groupedOccurrences"
+        :key="occurrence.id"
+        :value="occurrence"
+        :show-grouped="false"
+        :hide-grouping="true"
+      />
+    </div>
+
     <!-- Dialog de warning para LGPD -->
     <WarningLGPD
       :lgpd-dialog-visible="LGPDWarningDialogVisible"
@@ -62,21 +103,41 @@ const negotiatorTypes = [
 ]
 
 export default {
+  name: 'Interaction',
+
   components: {
     COMMUNICATION: () => import('./partials/Communication'),
     ATTACHMENT: () => import('@/views/main/dispute/partials/partials/AttachmentOccurrence'),
     NEGOTIATOR: () => import('./partials/Negotiator'),
-    MANUAL: () => import('./partials/Manual'),
     SCHEDULER: () => import('./partials/Scheduler'),
+    PHONE: () => import('./partials/Phone.vue'),
+    MANUAL: () => import('./partials/Manual'),
     NPS: () => import('./partials/Nps'),
     WarningLGPD: () => import('@/components/dialogs/WarningLGPD'),
-    Recomendation: () => import('@/components/buttons/Recomendation.vue')
+    Recomendation: () => import('@/components/buttons/Recomendation.vue'),
+    WHATSAPP: () => import('./partials/Whatsapp.vue'),
+    InteractionStatus: () => import('./partials/InteractionStatus')
   },
 
   props: {
     value: {
       type: Object,
       required: true
+    },
+
+    showGrouped: {
+      type: Boolean,
+      default: true
+    },
+
+    hideGrouping: {
+      type: Boolean,
+      default: false
+    },
+
+    scheduled: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -93,10 +154,19 @@ export default {
       recipients: 'getEditorRecipients',
       flat: 'getExportTicketModalVisible',
       lastInteraction: 'disputeLastInteractions',
-      unanswered: 'getUnansweredOccurrences'
+      unanswered: 'getUnansweredOccurrences',
+      with: 'getWindowWidth',
+      isAdminProfile: 'isAdminProfile',
+      negotiators: 'getTicketOverviewNegotiators',
+      getGroupedOccurrencesById: 'getGroupedOccurrencesById',
+      properties: 'userProperties',
+      isGrouping: 'isOmnichannelGrouping'
     }),
 
     type() {
+      if (this.interaction?.direction === 'INBOUND' && this.interaction?.message?.communicationType === 'WHATSAPP' && ['FILE', 'VIDEO', 'IMAGE', 'AUDIO'].includes(this.interaction?.message?.contentType)) {
+        return 'WHATSAPP'
+      }
       return this.value.interaction.type.split('_')[0]
     },
 
@@ -132,11 +202,14 @@ export default {
         return this.interaction?.properties?.USER
       }
 
-      if (this.interaction?.properties?.PERSON_NAME) {
+      if (this.interaction?.message?.parameters?.SENDER_NAME) {
+        return this.interaction?.message?.parameters?.SENDER_NAME
+      } else if (this.interaction?.message?.parameters?.SENDER_EMAIL) {
+        return this.interaction?.message?.parameters?.SENDER_EMAIL
+      } else if (this.interaction?.properties?.PERSON_NAME) {
         return this.interaction.properties.PERSON_NAME
-      } else if (this.interaction?.message?.parameters?.SENDER_NAME) {
-        return this.interaction.message.parameters.SENDER_NAME
       }
+
       return ''
     },
 
@@ -144,12 +217,41 @@ export default {
       return this.interaction.direction === 'INBOUND'
     },
 
+    showAvatar() {
+      // TODO: Critérios de aceite: https://justto.atlassian.net/browse/SAAS-4454
+
+      return this.isJusttineMessage || (
+        !this.isInboundInteraction &&
+        (this.isJusttoAdmin || this.isAdminProfile || this.negotiators.length > 1)
+      )
+    },
+
     avatarProps() {
-      return {
-        name: this.personName,
-        size: 'md',
-        purple: this.isInboundInteraction && this.type !== 'MANUAL'
+      if (this.isJusttineMessage) {
+        const justtineMessage = `
+        Sou JUSTTINE, sua assistente virtual<br>
+        Enviei esta mensagem para você, ok?<br>
+        Criei ela a partir da estratégia que você definiu na disputa.`
+
+        return {
+          name: justtineMessage,
+          src: require('@/assets/justtine/profile.png'),
+          size: 'sm'
+        }
+      } else {
+        return {
+          name: this.personName || this.interaction.createdBy,
+          size: 'sm',
+          purple: this.isInboundInteraction && this.type !== 'MANUAL'
+        }
       }
+    },
+
+    isJusttineMessage() {
+      return ['EMAIL', 'WHATSAPP', 'SMS'].includes(this.interaction?.message?.communicationType) &&
+      this.interaction?.message?.status !== 'PROCESSED_BY_USER' &&
+      this.interaction?.message?.createdBy === 'system' &&
+      this.interaction?.direction === 'OUTBOUND'
     },
 
     showReply() {
@@ -182,6 +284,14 @@ export default {
 
     needRecomendationList() {
       return this.unanswered.map(({ interaction: { id } }) => (id))
+    },
+
+    groupedOccurrences() {
+      return this.getGroupedOccurrencesById(this.value?.id)
+    },
+
+    coloringType() {
+      return this.properties?.OMNICHANNEL_COLORING_TYPE || 'MONOCHROME'
     }
   },
 
@@ -228,8 +338,14 @@ export default {
   display: flex;
   gap: 6px;
   align-items: center;
+  flex-wrap: wrap;
   height: auto;
   margin: 10px 24px 0px 24px;
+
+  .break-point {
+    flex-basis: 100%;
+    width: 0;
+  }
 
   &.INBOUND {
     flex-direction: row;
@@ -247,6 +363,10 @@ export default {
 
   &.MANUAL {
     flex-direction: row-reverse;
+  }
+
+  .jus-avatar-user {
+    align-self: baseline;
   }
 
   .interaction-container__balloon {
@@ -270,14 +390,31 @@ export default {
       position: relative;
 
       display: flex;
+      min-width: 10vw;
+    }
+
+    &.COLORFUL-whatsapp {
+      background-color: $--color-success-light-5;
+    }
+    &.COLORFUL-email {
+      background-color: $--color-info-light;
+    }
+    &.COLORFUL-negotiation {
+      background-color: $--color-light-gray;
+    }
+    // &.COLORFUL-EMAIL_CNA {
+    //   background-color: #B6FFFB;
+    // }
+    &.COLORFUL-sms {
+      background-color: #ececec;
     }
 
     &.INBOUND {
       flex-direction: row;
-      background: mix($--color-light-gray, $--color-white, 50%);
+      // background: mix($--color-light-gray, $--color-white, 50%);
 
       &.NEGOTIATOR {
-        background: mix($--color-light-gray, $--color-white, 50%);
+        // background: mix($--color-light-gray, $--color-white, 50%);
       }
     }
 
@@ -289,21 +426,25 @@ export default {
       flex-direction: row-reverse;
     }
 
-    &.ballon-email {
-      border-color: #DFF4FE;
+    &.SCHEDULED {
+      border: 2px dashed $--color-black;
     }
 
-    &.ballon-sms {
-      border-color: #ECECEC;
-    }
+    // &.ballon-email {
+    //   border-color: #DFF4FE;
+    // }
 
-    &.ballon-negotiator-message-2 {
-      border-color: #FFC5A5;
-    }
+    // &.ballon-sms {
+    //   border-color: #ECECEC;
+    // }
 
-    &.ballon-whatsapp {
-      border-color: #a3f4c3;
-    }
+    // &.ballon-negotiator-message-2 {
+    //   border-color: #FFC5A5;
+    // }
+
+    // &.ballon-whatsapp {
+    //   border-color: #a3f4c3;
+    // }
   }
 
   .interaction-container__reply {
@@ -321,6 +462,7 @@ export default {
       display: none;
     }
   }
+
   .active-icon:hover {
     .interaction-container__reply-icon {
       display: none;

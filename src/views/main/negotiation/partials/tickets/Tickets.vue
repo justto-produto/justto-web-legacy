@@ -46,7 +46,7 @@
         </span>
 
         <div class="tickets-container__counter">
-          {{ tickets.totalElements || '-' }} {{ $tc('labels.dispute', tickets.totalElements || 0) }}
+          {{ tickets.totalElements || 0 }} {{ $tc('labels.dispute', tickets.totalElements || 0) }}
         </div>
 
         <ul
@@ -244,6 +244,8 @@ export default {
     },
 
     handleChangeTab(tab) {
+      this.$jusSegment(`Navegação na aba ${this.$t('tickets-tabs.' + tab.name).toUpperCase()} da Negociação`)
+
       if (!this.preventFilters) {
         this.setPreventSocket(false)
         this.setTicketsQuery({ key: 'status', value: [] })

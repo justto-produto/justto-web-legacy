@@ -34,7 +34,8 @@ export default {
 
   computed: {
     ...mapGetters({
-      variables: 'getAvaliableVariablesToTemplate'
+      variables: 'getAvaliableVariablesToTemplate',
+      members: 'workspaceMembers'
     }),
 
     editorConfig() {
@@ -56,11 +57,10 @@ export default {
             Link,
             Paragraph,
             RemoveFormat,
-            Table,
-            TableToolbar,
             TextTransformation,
             Underline
           ],
+          ...(this.dontUseTablePlugin ? [] : [Table, TableToolbar]),
           ...(this.useImageAttachmentPlugin ? [this.ImageAttachmentPlugin] : []),
           ...(this.useSourceCodePlugin ? [this.SourceCodeViewPlugin] : []),
           ...(this.useMentionPlugin ? [Mention, this.MentionCustomization] : []),
@@ -73,6 +73,12 @@ export default {
               feed: this.getFeedItems,
               minimumCharacters: 1,
               itemRenderer: this.customItemRenderer
+            },
+            {
+              marker: '@',
+              feed: this.getFeedPersonItems,
+              minimumCharacters: 0,
+              itemRenderer: this.customMemberItemRenderer
             }
           ]
         } : {},
@@ -149,13 +155,9 @@ export default {
         model: {
           key: 'mention',
           value: viewItem => {
-            // The mention feature expects that the mention attribute value
-            // in the model is a plain object with a set of additional attributes.
-            // In order to create a proper object use the toMentionAttribute() helper method:
             const mentionAttribute = editor.plugins
               .get('Mention')
               .toMentionAttribute(viewItem, {
-                // Add any other properties that you need.
                 link: viewItem.getAttribute('href'),
                 userId: viewItem.getAttribute('data-user-id')
               })
@@ -175,13 +177,19 @@ export default {
             return
           }
           const isImage = modelAttributeValue.type === 'image'
+          const isMemberMention = modelAttributeValue.type === 'memberMention'
 
           return writer.createAttributeElement(
-            isImage ? 'img' : 'span',
+            isImage ? 'img' : (isMemberMention ? 'em' : 'span'),
             {
               class: 'justto-variable',
               'data-mention': modelAttributeValue.id,
-              src: modelAttributeValue.id
+              src: modelAttributeValue.id,
+              ...(isMemberMention ? {
+                // style: 'color: #9461f7;',
+                class: 'justto-mention',
+                'account-id': modelAttributeValue.accountId
+              } : {})
             },
             {
               // Make mention attribute to be wrapped by other attribute elements.
@@ -274,6 +282,10 @@ export default {
       return item.name
     },
 
+    customMemberItemRenderer(item) {
+      return item.person?.name || item.accountEmail
+    },
+
     getFeedItems(queryText) {
       function isItemMatching({ name, id }) {
         const searchString = normalizeString(queryText).replace(/{/g, '')
@@ -284,10 +296,31 @@ export default {
       return this.variablesList.filter(isItemMatching)
     },
 
-    ckeditorFocus() {
-      if (this.editorInstance) {
-        this.editorInstance.$_instance.editing.view.focus()
+    getFeedPersonItems(queryText) {
+      function isItemMatching({ name, person }) {
+        const searchString = normalizeString(queryText).replace(/{/g, '')
+
+        if (person) {
+          return normalizeString(person.name).includes(searchString)
+        } else {
+          return normalizeString(name).includes(searchString)
+        }
       }
+
+      return this.members.filter(isItemMatching).map(member => ({
+        ...member,
+        type: 'memberMention',
+        id: `@${this.customMemberItemRenderer(member)}`
+      }))
+    },
+
+    ckeditorFocus(editorInstance) {
+      // TODO: Rever foco do CKEditor.
+      // if (editorInstance) {
+      //   editorInstance.$_instance.editing.view.focus()
+      // } else if (this.editorInstance) {
+      //   this.editorInstance.$_instance.editing.view.focus()
+      // }
     }
   }
 }

@@ -56,14 +56,14 @@
           :key="dispute.id + claiment.name + index + 'claimant'"
           class="jus-dispute-resume__body-item jus-dispute-resume__body-item--list"
         >
-          Parte contrária: <b>{{ claiment.name | resumedName }}</b>
+          {{ $tc('fields.claimantParty', isRecovery) }}: <b>{{ claiment.name | resumedName }}</b>
         </div>
         <div
           v-for="(lawyer, index) in getClaimants(dispute.disputeRoles, 'CLAIMANT', 'LAWYER')"
           :key="dispute.id + lawyer.name + index + 'lawyer'"
           class="jus-dispute-resume__body-item jus-dispute-resume__body-item--list"
         >
-          Advogado: <b>{{ lawyer.name }}</b>
+          {{ $tc('fields.claimantLawyer', isRecovery) }}: <b>{{ lawyer.name }}</b>
         </div>
       </div>
 
@@ -89,6 +89,13 @@
           Última interação:
           <b>{{ getLastInteraction(dispute.lastInteraction.createAt.dateTime) }}</b>
         </div>
+        <div
+          v-if="firstNegotiator"
+          class="jus-dispute-resume__body-item"
+        >
+          Negociador:
+          <b>{{ firstNegotiator }}</b>
+        </div>
       </div>
 
       <div class="jus-dispute-resume__values">
@@ -96,7 +103,7 @@
           v-if="dispute.disputeUpperRange"
           class="jus-dispute-resume__body-item"
         >
-          Alçada máxima: <b>{{ dispute.disputeUpperRange | currency }}</b>
+          {{ $tc('UPPER_RANGE', isRecovery) }}: <b>{{ dispute.disputeUpperRange | currency }}</b>
         </div>
         <div
           v-if="dispute.lastOfferValue"
@@ -135,6 +142,7 @@
 
 <script>
 import { getRoles, getLastInteraction } from '@/utils'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'JusDisputeResume',
@@ -145,11 +153,19 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      isRecovery: 'isWorkspaceRecovery'
+    }),
+
     disabled() {
       return this.dispute.isMy === false || this.dispute.archived === true
     },
     archived() {
       return this.dispute.archived
+    },
+
+    firstNegotiator() {
+      return this.dispute?.disputeRoles?.find(({ roles = [], party }) => party === 'RESPONDENT' && roles.includes('NEGOTIATOR'))?.name || false
     }
   },
   methods: {

@@ -1,10 +1,13 @@
 import Vue from 'vue'
 import moment from 'moment'
-import { axiosDispatch, buildQuery } from '@/utils'
+import { axiosDispatch, buildQuery, extractMentions } from '@/utils'
+import { Validate } from 'validate-cnj'
 
 // const FileSaver = require('file-saver')
 let removeDebounce = 0
 const disputesPath = 'api/disputes'
+const documentsPath = 'api/office/documents'
+const exportPath = '/api/v2/dispute/export/request'
 
 const disputeActions = {
   SOCKET_ADD_DISPUTE({ commit, state }, disputeChanged) {
@@ -30,23 +33,27 @@ const disputeActions = {
     }
     commit('deleteMessageResumeByDisputeId', disputeChanged.id)
   },
+
   SOCKET_REMOVE_DISPUTE({ dispatch }) {
     clearTimeout(removeDebounce)
     removeDebounce = setTimeout(() => {
       dispatch('getDisputes', 'update')
     }, 1000)
   },
+
   getLastInteractions({ _ }, disputeId) {
     return axiosDispatch({
       url: `${disputesPath}/${disputeId}/interaction`,
       mutation: 'setLastInteractions'
     })
   },
+
   updateDisputeData({ dispatch }, id) {
     dispatch('getLastInteractions', id)
     dispatch('getDisputeProperties', id)
     dispatch('getDisputeAttachments', id)
   },
+
   fillerDisputeRole({ _ }, dispute) {
     return axiosDispatch({
       url: `${disputesPath}/${dispute.id}/dispute-roles`,
@@ -54,6 +61,7 @@ const disputeActions = {
       payload: dispute
     })
   },
+
   getDispute({ commit, dispatch }, id) {
     return new Promise((resolve, reject) => {
       commit('clearDispute')
@@ -87,6 +95,7 @@ const disputeActions = {
         })
     })
   },
+
   getDisputeLastAccess({ commit, state }, disputeId) {
     if (state.lastAccess[disputeId]) {
       const time1 = moment(state.lastAccess[disputeId].log)
@@ -105,9 +114,11 @@ const disputeActions = {
       })
     })
   },
+
   cleanDisputeLastAccess({ commit }) {
     commit('cleanLastAccess')
   },
+
   // TODO: Duplicar pro Store do Negotiation
   linkDisputeBankAccounts({ _ }, { bankAccountId, disputeId }) {
     return axiosDispatch({
@@ -115,6 +126,7 @@ const disputeActions = {
       method: 'POST'
     })
   },
+
   // TODO: Duplicar pro Store do Negotiation
   unlinkDisputeBankAccounts({ _ }, { bankAccountId, disputeId }) {
     return axiosDispatch({
@@ -122,7 +134,8 @@ const disputeActions = {
       method: 'DELETE'
     })
   },
-  getDisputeDTO({ commit }, id) {
+
+  getDisputeDTO({ _ }, id) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
       axios.get(`${disputesPath}/${id}`)
@@ -134,12 +147,14 @@ const disputeActions = {
         })
     })
   },
+
   getDisputeProperties({ commit }, disputeId) {
     return axiosDispatch({
       url: `${disputesPath}/${disputeId}/properties`,
       mutation: 'setDisputeProperties'
     })
   },
+
   putDisputeProperties({ _ }, { disputeId, data }) {
     return axiosDispatch({
       url: `${disputesPath}/${disputeId}/properties`,
@@ -148,6 +163,7 @@ const disputeActions = {
       mutation: 'setDisputeProperties'
     })
   },
+
   getDisputeAttachments({ commit }, disputeId) {
     commit('showLoadingAttachments')
     return axiosDispatch({
@@ -155,9 +171,11 @@ const disputeActions = {
       mutation: 'setDisputeAttachments'
     })
   },
+
   hideLoadingAttachments({ commit }) {
     commit('hideLoadingAttachments')
   },
+
   uploadAttachment({ commit }, { disputeId, formData, confidential }) {
     return axiosDispatch({
       url: `api/office/disputes/${disputeId}/attachment`,
@@ -166,6 +184,7 @@ const disputeActions = {
       params: { confidential }
     })
   },
+
   deleteAttachment({ commit, dispatch }, { disputeId, documentId }) {
     commit('showLoadingAttachments')
     return axiosDispatch({
@@ -173,15 +192,30 @@ const disputeActions = {
       method: 'delete'
     })
   },
+
   getDisputes({ commit, state }, command) {
     return new Promise((resolve, reject) => {
       if (command !== 'nextPage') state.loading = true
       if (command === 'resetPages') commit('resetDisputeQueryPage')
-      // eslint-disable-next-line
-      axios.get(`${disputesPath}/filter` + buildQuery(state.query, command, state.disputes.length)).then(response => {
+
+      const { textSearch, textSearchType } = state.query
+
+      const tempQuery = {
+        ...state.query,
+        textSearch: undefined,
+        textSearchType: undefined
+      }
+
+      const query = buildQuery(tempQuery, command, state.disputes.length)
+
+      axiosDispatch({
+        url: `${disputesPath}/filter/apply${query}`,
+        method: 'POST',
+        data: { textSearch, textSearchType }
+      }).then(data => {
         const dispute = {
-          ...response.data,
-          content: response.data.content.filter(d => !!d)
+          ...data,
+          content: data.content.filter(d => !!d)
         }
         if (command === 'nextPage') {
           commit('addDisputes', dispute)
@@ -206,7 +240,7 @@ const disputeActions = {
           }
         })
         commit('setOnlineDocs', onlineDocs)
-        resolve(response.data)
+        resolve(data)
       }).catch(error => {
         commit('clearDisputes')
         reject(error)
@@ -215,6 +249,7 @@ const disputeActions = {
       })
     })
   },
+
   searchDisputes({ _ }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
@@ -225,6 +260,7 @@ const disputeActions = {
       })
     })
   },
+
   getExportColumns({ _ }) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
@@ -236,31 +272,88 @@ const disputeActions = {
         })
     })
   },
+
   exportDisputes({ state, dispatch }, colums) {
     const stringColums = colums.toString()
+    const ordenationQuery = {}
+
+    const data = {
+      ...state.query,
+      fileFormat: 'CSV',
+      columnToExport: stringColums.split(',')
+    };
+
+    ['prescriptions', 'transactionType'].forEach(key => {
+      if (state.query[key] && !Array.isArray(state.query[key])) {
+        data[key] = state.query[key].split(',')
+      }
+    });
+
+    ['expirationDate', 'dealDate', 'importingDate', 'lastInteractionDate'].forEach(key => {
+      if (data[key]?.length) {
+        data[`${key}Start`] = moment(data[key][0]).startOf('day').utc().format('YYYY-MM-DD[T]HH:mm:ss[Z]')
+        data[`${key}End`] = moment(data[key][1]).endOf('day').utc().format('YYYY-MM-DD[T]HH:mm:ss[Z]')
+      }
+
+      delete data[key]
+    });
+
+    ['sort', 'size', 'page', 'total'].forEach(key => {
+      ordenationQuery[key] = state?.query[key]
+
+      delete data[key]
+    })
+
+    Object.keys(data).forEach(key => {
+      if (Array.isArray(data[key]) || typeof data[key] === 'string') {
+        if (!data[key]?.length) delete data[key]
+      } else if (typeof data[key] === 'boolean' && !['onlyNotVisualized', 'onlyNotPaused'].includes(key) && !data[key]) {
+        delete data[key]
+      }
+    })
+
+    const query = buildQuery(ordenationQuery)
+
     dispatch('setAccountProperty', {
       JUS_EXPORT_COLUMNS: stringColums
     })
+
     return axiosDispatch({
-      url: `${disputesPath}/export${buildQuery(state.query)}fileFormat=CSV&columnToExport=${stringColums}`
+      method: 'POST',
+      url: `${exportPath}${query}`,
+      data
     }).then(() => { dispatch('getExportHistory') })
   },
+
   getDisputeTimeline({ commit }, disputeCode) {
     if (!disputeCode) return
+
     commit('showLoading')
+    try {
+      Validate.load(disputeCode)
+    } catch (error) {
+      if (!Vue.options.filters.validateTJbyCode(disputeCode)) {
+        commit('setDisputeTimeline', { timeline: { lastUpdated: '', lawsuits: [], isValid: false }, code: disputeCode })
+        commit('hideLoading')
+        return
+      }
+    }
+
     return axiosDispatch({
       url: `/api/fusion/lawsuit/timeline/${disputeCode}`
     }).then(res => {
-      commit('setDisputeTimeline', { timeline: res, code: disputeCode })
+      commit('setDisputeTimeline', { timeline: { ...res, isValid: true }, code: disputeCode })
     }).catch(() => {
-      commit('setDisputeTimeline', { timeline: { lastUpdated: '', lawsuits: [] }, code: disputeCode })
+      commit('setDisputeTimeline', { timeline: { lastUpdated: '', lawsuits: [], isValid: true }, code: disputeCode })
     }).finally(() => commit('hideLoading'))
   },
+
   exportProtocols({ state }) {
     return axiosDispatch({
       url: `api/office/documents/export${buildQuery(state.query)}`
     })
   },
+
   getExportHistory({ commit, state }, command) {
     if (command) commit('addExportHistoryPage')
     else commit('resetExportHistoryPage')
@@ -269,6 +362,7 @@ const disputeActions = {
       mutation: command ? 'pushExportHistory' : 'setExportHistory'
     })
   },
+
   editRole({ _ }, { disputeId, disputeRole }) {
     return axiosDispatch({
       url: `${disputesPath}/${disputeId}/dispute-roles`,
@@ -276,6 +370,7 @@ const disputeActions = {
       data: disputeRole
     })
   },
+
   removeRole({ commit }, role) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
@@ -288,6 +383,7 @@ const disputeActions = {
         })
     })
   },
+
   setDisputeparty({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
@@ -300,6 +396,7 @@ const disputeActions = {
         })
     })
   },
+
   getNotVisualizeds({ commit }) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
@@ -313,6 +410,7 @@ const disputeActions = {
         })
     })
   },
+
   getNearExpirations({ commit }) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
@@ -326,6 +424,7 @@ const disputeActions = {
         })
     })
   },
+
   editCaseReason({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
@@ -340,6 +439,7 @@ const disputeActions = {
         })
     })
   },
+
   getDisputeStatuses({ commit }, status) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
@@ -353,20 +453,35 @@ const disputeActions = {
         })
     })
   },
+
   sendBatchAction({ commit, state }, params) {
+    const { textSearch, textSearchType } = state.query
+
+    const tempQuery = {
+      ...state.query,
+      textSearch: undefined,
+      textSearchType: undefined
+    }
+
     return axiosDispatch({
-      url: `${disputesPath}/actions/batch${buildQuery(state.query)}`,
+      url: `${disputesPath}/actions/batch${buildQuery(tempQuery)}`,
       method: 'PUT',
-      data: params
+      data: { ...params, textSearch, textSearchType }
+    }).finally(() => {
+      commit('setBatchActionsLastUse', { action: params.type })
     })
   },
+
   sendDisputeNote({ _ }, data) {
+    const { note } = data
+
     return axiosDispatch({
       url: `${disputesPath}/${data.disputeId}/note`,
       method: 'post',
-      data
+      data: { ...data, mentionedPeople: extractMentions(note) }
     })
   },
+
   deleteDisputeNote({ commit }, noteId) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
@@ -379,6 +494,7 @@ const disputeActions = {
         })
     })
   },
+
   editDisputeNote({ commit }, note) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
@@ -394,10 +510,12 @@ const disputeActions = {
         })
     })
   },
-  sendDisputeAction({ commit }, params) {
+
+  sendDisputeAction({ commit, dispatch }, params) {
     return new Promise((resolve, reject) => {
       let request
       if (params.action === 'restart-engagement' || params.action === 'renegotiate') {
+        dispatch('validateEngageLimit', params.disputeId)
         // eslint-disable-next-line
         request = axios.patch(`${disputesPath}/${params.disputeId}/${params.action}`)
       } else if (params.action === 'resend-messages') {
@@ -418,6 +536,7 @@ const disputeActions = {
       }
       request
         .then(response => {
+          commit('deleteRestartDisputeFlag', params.disputeId)
           resolve(response.data)
         })
         .catch(error => {
@@ -425,19 +544,19 @@ const disputeActions = {
         })
     })
   },
-  restartDisputeRoleEngagement({ commit }, params) {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.patch(`${disputesPath}/${params.disputeId}/restart-engagement/${params.disputeRoleId}`)
-        .then(response => {
-          resolve(response.data)
-        }).catch(error => {
-          reject(error)
-        })
+
+  restartDisputeRoleEngagement({ dispatch }, { disputeId, disputeRoleId }) {
+    dispatch('validateEngageLimit', disputeId)
+
+    return axiosDispatch({
+      url: `${disputesPath}/${disputeId}/restart-engagement/${disputeRoleId}`,
+      method: 'patch'
     })
   },
-  restartEngagementByContact({ commit }, params) {
+
+  restartEngagementByContact({ commit, dispatch }, params) {
     return new Promise((resolve, reject) => {
+      dispatch('validateEngageLimit', params.disputeId)
       // eslint-disable-next-line
       axios.patch(`/api/messages/engagement/${params.disputeId}/address/${params.contact}`)
         .then(response => {
@@ -447,6 +566,14 @@ const disputeActions = {
         })
     })
   },
+
+  validateEngageLimit({ _ }, disputeId) {
+    return axiosDispatch({
+      url: `${disputesPath}/${disputeId}/communications/engage-limit-reached`,
+      mutation: 'handleEngageLimit'
+    })
+  },
+
   editDispute({ commit }, dispute) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
@@ -458,6 +585,7 @@ const disputeActions = {
         })
     })
   },
+
   editDisputeOffer({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
@@ -473,6 +601,7 @@ const disputeActions = {
         })
     })
   },
+
   editNegotiators({ commit }, negotiators) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
@@ -485,6 +614,7 @@ const disputeActions = {
         })
     })
   },
+
   editDisputeReason({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
@@ -496,6 +626,7 @@ const disputeActions = {
         })
     })
   },
+
   removeDispute({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
@@ -507,13 +638,19 @@ const disputeActions = {
         })
     })
   },
+
   disputeSetVisualized({ _ }, params) {
+    const { disputeId } = params
+
+    delete params.disputeId
+
     return axiosDispatch({
-      url: `${disputesPath}/${params.disputeId}/visualized`,
+      url: `${disputesPath}/${disputeId}/visualized`,
       params,
       method: 'PATCH'
     })
   },
+
   getDisputeOccurrences({ commit, state }, disputeId) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
@@ -526,6 +663,7 @@ const disputeActions = {
         })
     })
   },
+
   getDisputeCommunications({ commit, state }, disputeId) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
@@ -538,18 +676,27 @@ const disputeActions = {
         })
     })
   },
+
   getDisputeNotes({ commit, state }, disputeId) {
     return new Promise((resolve, reject) => {
+      const query = {
+        page: state.notesQuery.page,
+        size: state.notesQuery.size,
+        sort: state.notesQuery.sort
+      }
+
       // eslint-disable-next-line
-      axios.get(`${disputesPath}/${disputeId}/occurrences/type/NOTE`)
+      axios.get(`${disputesPath}/${disputeId}/occurrences/type/NOTE${buildQuery(query)}`)
         .then(response => {
           commit('setDisputeOccurrences', response.data.content)
+          commit('setNoteQuery', response.data)
           resolve(response.data)
         }).catch(error => {
           reject(error)
         })
     })
   },
+
   loadDisputeOccurrences({ commit }, disputeId) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
@@ -561,6 +708,7 @@ const disputeActions = {
         })
     })
   },
+
   getRespondents({ commit, state }) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
@@ -573,6 +721,7 @@ const disputeActions = {
         })
     })
   },
+
   newDisputeRole({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
@@ -584,6 +733,7 @@ const disputeActions = {
         })
     })
   },
+
   sendDisputeCounterProposal({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
@@ -592,7 +742,9 @@ const disputeActions = {
         role: { id: params.roleId },
         value: params.value,
         note: params.note,
-        updateUpperRange: params.updateUpperRange
+        action: params.action,
+        updateUpperRange: params.updateUpperRange,
+        forceStatus: params.forceStatus
       }).then(response => {
         resolve(response.data)
       }).catch(error => {
@@ -600,6 +752,7 @@ const disputeActions = {
       })
     })
   },
+
   getMessageSummary({ commit }, messageId) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
@@ -612,6 +765,7 @@ const disputeActions = {
         })
     })
   },
+
   getDisputePartyAnalysis({ commit }, documentNumber) {
     return axiosDispatch({
       url: `${disputesPath}/party/analisis/${documentNumber}`,
@@ -619,16 +773,27 @@ const disputeActions = {
       payload: documentNumber
     })
   },
+
   getNegotiators({ state, commit, dispatch }, params) {
+    const { textSearch, textSearchType } = state.query
+    const query = {
+      ...state.query,
+      textSearch: undefined,
+      textSearchType: undefined
+    }
     return axiosDispatch({
-      url: `${disputesPath}/negotiators/filter${buildQuery({ ...state.query, ...params })}`
+      url: `${disputesPath}/negotiators/filter${buildQuery({ ...query, ...params })}`,
+      method: 'PATCH',
+      data: { textSearch, textSearchType }
     })
   },
+
   getPrescriptions: () => axiosDispatch({
     // url: 'api/disputes/prescriptions',
     url: `${disputesPath}/prescriptions-fix-index/1`,
     mutation: 'setPrescriptionsList'
   }),
+
   addPhoneToDisputeRole({ _ }, { disputeId, disputeRoleId, value }) {
     return axiosDispatch({
       url: `${disputesPath}/${disputeId}/dispute-roles/${disputeRoleId}/add-phone`,
@@ -637,6 +802,7 @@ const disputeActions = {
       mutation: 'setDisputeRole'
     })
   },
+
   addEmailToDisputeRole({ _ }, { disputeId, disputeRoleId, value }) {
     return axiosDispatch({
       url: `${disputesPath}/${disputeId}/dispute-roles/${disputeRoleId}/add-email`,
@@ -645,6 +811,7 @@ const disputeActions = {
       mutation: 'setDisputeRole'
     })
   },
+
   addOabToDisputeRole({ _ }, { disputeId, disputeRoleId, number, state }) {
     return axiosDispatch({
       url: `${disputesPath}/${disputeId}/dispute-roles/${disputeRoleId}/add-oab`,
@@ -653,6 +820,7 @@ const disputeActions = {
       mutation: 'setDisputeRole'
     })
   },
+
   setDisputeProperty({ _ }, { disputeId, key, value }) {
     return axiosDispatch({
       url: `${disputesPath}/${disputeId}/properties/${key}`,
@@ -661,18 +829,32 @@ const disputeActions = {
       mutation: 'setDisputeProperty'
     })
   },
+
   getDisputeMetadata({ _ }, disputeId) {
     return axiosDispatch({
       url: `api/office/documents/dispute/${disputeId}/metadata`,
       mutation: 'setDisputeMetadata'
     })
   },
+
   getFinishedDisputesCount({ state }, { id, allSelected }) {
+    const { textSearch, textSearchType } = state.query
+    const query = {
+      ...state.query,
+      allSelected,
+      id,
+      textSearchType: undefined,
+      textSearch: undefined
+    }
+
     return axiosDispatch({
-      url: `/api/disputes/count-finished/${buildQuery({ ...state.query, id, allSelected })}`,
+      method: 'POST',
+      url: `/api/disputes/count-finished/${buildQuery(query)}`,
+      data: { textSearch, textSearchType },
       mutation: 'setDisputeMetadata'
     })
   },
+
   putWorkspacePreNegotiationKeywords({ _ }, keywords) {
     return axiosDispatch({
       url: `${disputesPath}/pre-negotiation/keywords`,
@@ -680,12 +862,14 @@ const disputeActions = {
       data: keywords
     })
   },
+
   getWorkspacePreNegotiationKeywords({ _ }) {
     return axiosDispatch({
       url: `${disputesPath}/pre-negotiation/keywords`,
       mutation: 'setPreNegotiationKeywords'
     })
   },
+
   putPreNegotiationLimitValue({ _ }, value) {
     return axiosDispatch({
       url: `${disputesPath}/pre-negotiation/limit-value`,
@@ -693,10 +877,51 @@ const disputeActions = {
       data: { value }
     })
   },
+
   getPreNegotiationLimitValue({ _ }) {
     return axiosDispatch({
       url: `${disputesPath}/pre-negotiation/limit-value`,
       mutation: 'setPreNegotiationLimitValue'
+    })
+  },
+
+  restartDisputeValidatingStatus({ dispatch }, { disputeId, status }) {
+    if (['PENDING'].includes(status)) {
+      dispatch('validateEngageLimit', disputeId)
+
+      return axiosDispatch({
+        url: `${disputesPath}/${disputeId}/restart-engagement`,
+        method: 'PATCH'
+      })
+    }
+  },
+
+  getAttachmentSignInfo({ _ }, documentId) {
+    return axiosDispatch({
+      url: `${documentsPath}/draft/${documentId}`
+    })
+  },
+
+  setAttachmentSigners({ _ }, { signers, documentId }) {
+    return axiosDispatch({
+      url: `${documentsPath}/${documentId}/sign`,
+      method: 'POST',
+      data: signers
+    })
+  },
+
+  deleteSignedAttachment({ _ }, documentId) {
+    return axiosDispatch({
+      url: `${documentsPath}/${documentId}/sign`,
+      method: 'DELETE'
+    })
+  },
+
+  setDisputeClassificationsDetails({ _ }, { parentId, data }) {
+    return axiosDispatch({
+      method: 'POST',
+      url: `/api/dispute-classifications/${parentId}/dispute-classifications-detail`,
+      data
     })
   }
 }

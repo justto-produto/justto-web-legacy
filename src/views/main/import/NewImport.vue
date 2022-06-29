@@ -66,14 +66,18 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import { normalizeString } from '@/utils'
+
 /* eslint-disable no-prototype-builtins */
 export default {
   name: 'NewImport',
+
   components: {
     CheckLinesStep: () => import('./partials/CheckLinesStep'),
     ColumnsStep: () => import('./partials/ColumnsStep'),
     CampaignStep: () => import('./partials/CampaignStep')
   },
+
   data() {
     return {
       uploadId: undefined,
@@ -83,36 +87,59 @@ export default {
       duplicatedAction: 'IGNORE'
     }
   },
+
   computed: {
-    ...mapGetters(['errorFields', 'validationInProgress']),
+    ...mapGetters(['errorFields', 'validationInProgress', 'isWorkspaceRecovery']),
 
     isMapped() {
       return this.campaignIsMapped
     }
   },
+
   beforeCreate() {
     this.$store.commit('removeImportsMap')
     if (!this.$store.getters.hasImportsFile) {
       this.$router.push('/import')
     }
   },
+
   methods: {
     ...mapActions(['setErrorFields']),
 
+    setMapImportColumns() {
+      this.$store.dispatch('mapImportColumns', this.$store.state.importModule.map).then(response => {
+        // SEGMENT TRACK
+        this.$jusSegment('Importação 3/4 Mapeamento concluido', {
+          fileName: this.$store.getters.importedFileName
+        })
+        this.mappedCampaigns = response
+
+        this.campaignIsMapped = true
+
+        this.activeStep += 1
+      })
+    },
+
     nextStep() {
       if (this.activeStep === 1) {
-        this.$store.dispatch('mapImportColumns', this.$store.state.importModule.map).then(response => {
-          // SEGMENT TRACK
-          this.$jusSegment('Importação 3/4 Mapeamento concluido', {
-            fileName: this.$store.getters.importedFileName
-          })
-          this.mappedCampaigns = response
+        const hasUnlinkedDefendant = this.$store.state.importModule.map.filter(({ name, tag }) => normalizeString(name) === 'reu' && tag === null).length > 0
 
-          this.campaignIsMapped = true
-        })
+        if (hasUnlinkedDefendant) {
+          this.$confirm(`Detectamos que não mapeou a coluna <b>${this.$tc('PARTY_RESPONDENT', this.isWorkspaceRecovery)}</b>.<br/>É um dos campos que mais evitam erros na importação. Tem certeza que deseja continuar sem mapear esta coluna?`, `${this.$tc('PARTY_RESPONDENT', this.isWorkspaceRecovery)} não ${this.isWorkspaceRecovery ? 'mapeada' : 'mapeado'}`, {
+            confirmButtonText: 'OK',
+            cancelButtonText: 'Cancelar',
+            dangerouslyUseHTMLString: true,
+            showClose: false,
+            center: true
+          }).then(() => this.setMapImportColumns())
+        } else {
+          this.setMapImportColumns()
+        }
+      } else {
+        this.activeStep += 1
       }
-      this.activeStep += 1
     },
+
     previousStep() {
       this.$store.dispatch('hideLoading')
       if (this.activeStep) {
@@ -121,57 +148,63 @@ export default {
         this.$router.push('/import')
       }
     },
+
     finalStep() {
       const campaignsTrack = []
+      const replicateFirst = this.mappedCampaigns.length > 1 && this.mappedCampaigns[1].replicate
       let allValid = true
       let checked = false
       const promises = []
-      for (const mappedCampaign of this.mappedCampaigns) {
-        const campaign = JSON.parse(JSON.stringify(mappedCampaign))
+
+      this.mappedCampaigns.forEach((mappedCampaign, _index, mappedCampaigns) => {
+        const campaign = { ...(replicateFirst ? mappedCampaigns[0] : mappedCampaign) }
+
         this.setErrorFields(this.campaignErrorFields(campaign))
-        if (!this.checkValidCampaign(campaign)) {
-          allValid = false
-        }
+
+        if (!this.checkValidCampaign(campaign)) { allValid = false }
+
         checked = true
-      }
+      })
+
       if (checked && allValid) {
         for (const mappedCampaign of this.mappedCampaigns) {
           const campaign = JSON.parse(JSON.stringify(mappedCampaign))
-          campaignsTrack.push({
+
+          campaignsTrack.push({ name: campaign.name, strategy: campaign.strategy })
+
+          const parsedCampaing = {
+            ...(replicateFirst ? this.mappedCampaigns[0] : campaign),
             name: campaign.name,
-            strategy: campaign.strategy
-          })
-          campaign.paymentDeadLine = 'P' + campaign.paymentDeadLine + 'D'
-          delete campaign.campaign
-          delete campaign.rows
-          delete campaign.createdAt
-          delete campaign.createdBy
-          delete campaign.id
-          delete campaign.updatedAt
-          delete campaign.updatedBy
-          if (this.duplicatedAction === 'IGNORE') {
-            campaign.allowDuplicateDispute = false
-            campaign.allowUpdateDispute = false
-          }
-          if (this.duplicatedAction === 'UPDATE') {
-            campaign.allowDuplicateDispute = false
-            campaign.allowUpdateDispute = true
-          }
-          if (this.duplicatedAction === 'DUPLICATE') {
-            campaign.allowDuplicateDispute = true
-            campaign.allowUpdateDispute = false
+            respondent: campaign.respondent,
+            deadline: campaign.deadline,
+            cluster: campaign.cluster,
+            paymentDeadLine: 'P' + (replicateFirst ? this.mappedCampaigns[0] : campaign).paymentDeadLine + 'D',
+            allowDuplicateDispute: this.duplicatedAction === 'DUPLICATE',
+            allowUpdateDispute: this.duplicatedAction === 'UPDATE'
           }
 
-          promises.push(this.$store.dispatch('createCampaign', campaign))
+          delete parsedCampaing.campaign
+          delete parsedCampaing.rows
+          delete parsedCampaing.createdAt
+          delete parsedCampaing.createdBy
+          delete parsedCampaing.id
+          delete parsedCampaing.updatedAt
+          delete parsedCampaing.updatedBy
+          delete parsedCampaing.replicate
+
+          promises.push(this.$store.dispatch('createCampaign', parsedCampaing))
         }
+
         Promise.all(promises).then(() => {
           // SEGMENT TRACK
           this.$jusSegment('Importação 4/4 Importação Concluída', {
             fileName: this.$store.getters.importedFileName
           })
+
           this.$store.dispatch('startGeneseRunner').finally(() => {
             this.$store.commit('removeImportsFile')
           })
+
           this.$router.push('/import/loading')
         }).catch(error => {
           this.$jusNotification({ error })
@@ -183,7 +216,9 @@ export default {
           type: 'warning'
         })
       }
+
       const range = this.mappedCampaigns.length - 1
+
       localStorage.setItem('jusfeedbackpreferences', JSON.stringify({
         businessHoursEngagement: this.mappedCampaigns[range].businessHoursEngagement,
         contactPartyWhenNoLowyer: this.mappedCampaigns[range].contactPartyWhenNoLowyer,
@@ -192,6 +227,7 @@ export default {
         denySavingDeposit: this.mappedCampaigns[range].denySavingDeposit
       }))
     },
+
     campaignErrorFields(campaign) {
       const validations = [
         { value: 'respondent', validation: field => !!field.respondent },
@@ -206,6 +242,7 @@ export default {
         return !(campaign.hasOwnProperty(value) && validation(campaign))
       }).map(err => err.value)
     },
+
     checkValidCampaign(campaign) {
       if (
         campaign.hasOwnProperty('respondent') &&
@@ -226,6 +263,7 @@ export default {
       } else return false
     }
   },
+
   beforeRouteLeave(to, from, next) {
     if (to.path === '/import/loading') {
       next()
@@ -258,8 +296,9 @@ export default {
 .new-import-view__steps, .new-import-view__actions {
   width: 500px;
 }
+
 .new-import-view__steps {
-  margin-top: 20px;
+  margin: 0;
 }
 .new-import-view__content {
   margin-top: 32px;

@@ -11,7 +11,7 @@ const workspaceGetters = {
   workspaceTeamName: state => state.workspace.teamName,
   workspaceSubdomain: state => state.workspace.subDomain,
   workspaceMembers: state => {
-    if (!['be8ee2ed9e984880bcf4f62ed8d6f66a', 'lucasisrael'].includes(state.workspace.subDomain)) {
+    if (!['be8ee2ed9e984880bcf4f62ed8d6f66a', 'lucasisrael', '6f9e316ca8f7452694110c3bd87b4145', 'b6929e670a1b42e3b8ea7c6deea79f2e'].includes(state.workspace.subDomain)) {
       return state.workspace.members.filter(member => {
         return !!member.accountEmail && !member.accountEmail.includes('@justto.com.br')
       })
@@ -38,6 +38,10 @@ const workspaceGetters = {
   getWorkspaceDefaultSigners: state => state.workspace.defaultSigners,
   getPreNegotiation: state => state.workspace.preNegotiation,
   getFeaturesAndModules: state => state.featuresAndModules,
+  getMappedFeaturesAndModules: state => state.featuresAndModules.reduce((acc, cur, i) => {
+    acc[cur.code] = cur.active
+    return acc
+  }, {/* Valor inicial do acumulador. */}),
   getWorkspaceKeyAccounts: (state) => state.workspace.keyAccounts,
   getPortifolios: (state) => state.portifolios,
   getAssociatedKeyAccount: (state) => state.workspace.associatedKeyAccount,
@@ -52,7 +56,8 @@ const workspaceGetters = {
   getPortifoliosByWorkspace: (state) => {
     return state.portifoliosByWorkspace
   },
-  getApiIntegrationConfiguration: (state) => state.workspace.apiIntegrationConfiguration
+  getApiIntegrationConfiguration: (state) => state.workspace.apiIntegrationConfiguration,
+  isWorkspaceRecovery: state => state?.workspace?.properties?.NEGOTIATION_TYPE === 'RECOVERY'
 }
 
 export default workspaceGetters

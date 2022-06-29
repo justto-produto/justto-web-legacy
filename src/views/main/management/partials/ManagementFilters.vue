@@ -151,7 +151,7 @@
             v-if="!loading && isFinished || isPreNegotiation"
             :span="12"
           >
-            <el-form-item label="Réu">
+            <el-form-item :label="$tc('PARTY_RESPONDENT', isRecovery)">
               <el-select
                 v-model="filters.respondentNames"
                 multiple
@@ -168,6 +168,27 @@
                   :label="respondent"
                 />
               </el-select>
+            </el-form-item>
+          </el-col>
+
+          <!-- TODO: INTERAÇÃO -->
+          <el-col
+            v-if="[2, 3, 4, 9].includes(Number(tabIndex))"
+            :span="[2, 4].includes(Number(tabIndex)) ? 24 : 12"
+          >
+            <el-form-item label="Data da última interação">
+              <el-date-picker
+                v-model="filters.lastInteractionDate"
+                type="daterange"
+                align="right"
+                format="dd/MM/yyyy"
+                unlink-panels
+                range-separator="-"
+                start-placeholder="Data inicial"
+                end-placeholder="Data final"
+                value-format="yyyy-MM-dd"
+                @change="changeLastInteractionDate"
+              />
             </el-form-item>
           </el-col>
 
@@ -193,8 +214,21 @@
                 <el-switch
                   v-model="filters.onlyPaused"
                   data-testid="filters-only-paused"
+                  @change="toggleOnlyPaused"
                 />
               </div>
+
+              <div v-if="!isPreNegotiation">
+                <div>
+                  <jus-icon icon="pause" /> Somente não pausadas
+                </div>
+                <el-switch
+                  v-model="filters.onlyNotPaused"
+                  data-testid="filters-only-not-paused"
+                  @change="toggleOnlyNotPaused"
+                />
+              </div>
+
               <div v-if="isEngagement || isInteration || isAll">
                 <div>
                   <i class="el-icon-warning-outline" /> Advogados ofensores
@@ -260,6 +294,7 @@
             </el-form-item>
           </el-col>
 
+          <!-- STATUS -->
           <el-col
             v-if="isFinished || isEngagement || isAll"
             :span="24"
@@ -274,6 +309,18 @@
                   {{ $t('occurrence.type.' + status) | capitalize }}
                 </el-checkbox>
               </el-checkbox-group>
+            </el-form-item>
+          </el-col>
+
+          <!-- ID, Código do Processo ou Código Externo -->
+          <el-col
+            :span="24"
+          >
+            <el-form-item>
+              <MultipleFields
+                ref="MultipleFields"
+                v-model="filters"
+              />
             </el-form-item>
           </el-col>
         </el-row>
@@ -301,12 +348,18 @@ import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'ManagementFilters',
+
+  components: {
+    MultipleFields: () => import('./partials/MultipleFieldsFilter')
+  },
+
   props: {
     tabIndex: {
       type: String,
       required: true
     }
   },
+
   data() {
     return {
       visibleFilters: false,
@@ -314,6 +367,7 @@ export default {
       filters: {}
     }
   },
+
   computed: {
     ...mapGetters({
       strategies: 'getMyStrategiesLite',
@@ -321,7 +375,8 @@ export default {
       respondents: 'respondents',
       workspaceTags: 'workspaceTags',
       negotiatorsList: 'workspaceMembers',
-      preNegotiationKeywords: 'getPreNegotiation'
+      preNegotiationKeywords: 'getPreNegotiation',
+      isRecovery: 'isWorkspaceRecovery'
     }),
 
     isPreNegotiation() {
@@ -415,6 +470,7 @@ export default {
       }
     }
   },
+
   watch: {
     visibleFilters(value) {
       if (value) {
@@ -422,6 +478,7 @@ export default {
       }
     }
   },
+
   methods: {
     ...mapActions([
       'getCampaigns',
@@ -430,6 +487,7 @@ export default {
       'getWorkspaceTags',
       'getWorkspacePreNegotiationKeywords'
     ]),
+
     fetchData() {
       this.loading = true
       Promise.all([
@@ -442,15 +500,42 @@ export default {
         this.loading = false
       })
     },
+
     openDialog() {
       this.visibleFilters = true
     },
+
+    toggleOnlyPaused(active) {
+      this.filters.onlyPaused = active
+
+      if (active) {
+        this.filters.onlyNotPaused = !active
+      } else {
+        delete this.filters.onlyPaused
+      }
+      this.$forceUpdate()
+    },
+
+    toggleOnlyNotPaused(active) {
+      this.filters.onlyNotPaused = active
+
+      if (active) {
+        this.filters.onlyPaused = !active
+      } else {
+        delete this.filters.onlyNotPaused
+
+        if (this.filters.onlyPaused === false) delete this.filters.onlyPaused
+      }
+      this.$forceUpdate()
+    },
+
     applyFilters() {
       if (!this.filters.onlyNotVisualized) delete this.filters.onlyNotVisualized
+
       this.$store.commit('setDisputeHasFilters', true)
       this.$store.commit('setDisputeQuery', this.filters)
       this.visibleFilters = false
-      // SEGMENT TRACK
+
       if (this.filters.status) {
         if (this.filters.status.includes('EXPIRED')) {
           this.$jusSegment('Filtro por status expirado')
@@ -462,20 +547,28 @@ export default {
           this.$jusSegment('Filtro por status acordo')
         }
       }
+
       if (this.filters.hasCounterproposal) {
         this.$jusSegment('Filtro por status com contraproposta')
       }
+
       if (this.filters.hasCounterproposal) {
         this.$jusSegment('Filtro por status com contraproposta')
       }
+
       if (this.filters.importingDate && this.filters.importingDate.length) {
         this.$jusSegment('Filtro por data importação')
       }
+
       if (this.filters.expirationDate && this.filters.expirationDate.length) {
         this.$jusSegment('Filtro por data fim negociação')
       }
     },
+
     clearFilters() {
+      if (this.$refs.MultipleFields) {
+        this.$refs.MultipleFields.clear()
+      }
       this.clearCampaign()
       this.clearStrategy()
       this.clearTags()
@@ -483,11 +576,13 @@ export default {
       this.changeDealDate()
       this.changeExpirationDate()
       this.changeimportingDate()
+      this.changeLastInteractionDate()
       this.clearInteraction()
       this.clearStatuses()
       this.clearPreNegotitationKeyWorks()
       this.filters.onlyFavorite = false
       this.filters.onlyPaused = false
+      this.filters.onlyNotPaused = false
       this.filters.hasCounterproposal = false
       this.filters.vexatiousLawyer = false
       this.$store.commit('setDisputeHasFilters', false)
@@ -496,24 +591,31 @@ export default {
       delete this.filters.onlyNotVisualized
       delete this.filters.onlyPaused
     },
+
     restoreFilters() {
       this.filters = JSON.parse(JSON.stringify(this.$store.getters.disputeQuery))
     },
+
     clearInteraction(value) {
       delete this.filters.lastInteractionType
     },
+
     clearStrategy() {
       this.filters.strategy = []
     },
+
     clearTags() {
       this.filters.tags = []
     },
+
     clearRespondent() {
       this.filters.respondentNames = []
     },
+
     clearCampaign() {
       this.filters.campaigns = []
     },
+
     changeDealDate(value) {
       if (value) {
         this.filters.dealDate = value
@@ -521,6 +623,7 @@ export default {
         this.filters.dealDate = []
       }
     },
+
     clearStatuses() {
       if (this.isFinished || this.isEngagement || this.isAll) {
         switch (this.tabIndex) {
@@ -535,9 +638,11 @@ export default {
         }
       }
     },
+
     clearPreNegotitationKeyWorks() {
       this.filters.preNegotiationKeywords = []
     },
+
     changeExpirationDate(value) {
       if (value) {
         this.filters.expirationDate = value
@@ -545,6 +650,11 @@ export default {
         this.filters.expirationDate = []
       }
     },
+
+    changeLastInteractionDate(value) {
+      this.filters.lastInteractionDate = value || []
+    },
+
     changeimportingDate(value) {
       if (value) {
         this.filters.importingDate = value
@@ -558,11 +668,14 @@ export default {
 
 <style lang="scss">
 .management-filters {
+  overflow-x: hidden;
+
   .el-select, .el-date-editor, .el-radio-group {
     width: 100%;
   }
   .el-form-item__content {
     line-height: 36px;
+    width: 100%;
   }
   &__switch {
     margin-bottom: 18px;
@@ -594,6 +707,16 @@ export default {
   }
   .el-tag {
     overflow: hidden;
+  }
+
+  .el-form {
+    .el-row {
+      .el-col {
+        .el-form-item {
+          max-width: 100%;
+        }
+      }
+    }
   }
 }
 </style>

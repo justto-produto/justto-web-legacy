@@ -1,33 +1,44 @@
 <template>
   <section class="overview-info">
-    <div
-      v-for="data in dataList"
-      v-show="data.visible !== false"
-      :key="data.key"
-      class="overview-info__infoline"
-    >
-      <span class="overview-info__infoline-label">
-        {{ $t(`ticket-labels.${data.key}`) | capitalize }}:
-      </span>
-      <component
-        :is="data.component"
-        v-if="data.value || activeAddingData === data.key"
-        :ref="data.key"
-        v-model="data.value"
-        :is-editable="data.isEditable"
-        :options="data.options"
-        class="overview-info__infoline-data"
-        @change="setData(data.key, data.classToEdit, $event)"
-        @blur="stopEditing"
-        @enableEdit="enableEdit"
-      />
+    <div class="overview-info-fields">
       <div
-        v-else-if="data.isEditable !== false"
-        class="overview-info__infoline-link"
+        v-for="data in dataList"
+        v-show="data.visible !== false"
+        :key="data.key"
+        class="overview-info__infoline"
       >
-        <a @click="startEditing(data.key)">Adicionar</a>
+        <span class="overview-info__infoline-label">
+          {{ $t(`ticket-labels.${data.key}`) | capitalize }}:
+        </span>
+        <component
+          :is="data.component"
+          v-if="data.value || activeAddingData === data.key"
+          :ref="data.key"
+          v-model="data.value"
+          :is-editable="data.isEditable"
+          :options="data.options"
+          class="overview-info__infoline-data"
+          @change="setData(data.key, data.classToEdit, $event)"
+          @blur="stopEditing"
+          @enableEdit="enableEdit"
+        />
+        <div
+          v-else-if="data.isEditable !== false"
+          class="overview-info__infoline-link"
+        >
+          <a @click="startEditing(data.key)">Adicionar</a>
+        </div>
       </div>
     </div>
+
+    <el-button
+      type="primary"
+      size="small"
+      icon="el-icon-edit"
+      @click="editDispute"
+    >
+      Editar disputa
+    </el-button>
   </section>
 </template>
 
@@ -49,6 +60,13 @@ export default {
   },
 
   mixins: [preNegotiation],
+
+  props: {
+    disputeMode: {
+      type: Boolean,
+      default: false
+    }
+  },
 
   data: () => ({
     activeAddingData: ''
@@ -80,6 +98,7 @@ export default {
         classification,
         courtHearingDate
       } = this.ticketInfo
+
       return [
         {
           key: 'importedDate',
@@ -121,6 +140,13 @@ export default {
           component: 'TextInlineEditor',
           isEditable: false
         },
+        {
+          key: 'upperRange',
+          value: this.ticket.upperRange,
+          component: 'CurrencyInlieEditor',
+          isEditable: false
+        },
+        // TODO: SAAS-4353 Implementar listagem de Propostas/Contrapropostas aqui.
         {
           key: 'expireDate',
           value: expireDate?.dateTime,
@@ -191,7 +217,20 @@ export default {
       ]
     },
     strategiesOptions() {
-      return { list: this.strategies, label: 'name', value: 'id' }
+      const hasStrategyInOptions = this.ticket?.strategy.id && this.strategies.map(({ id }) => id).includes(this.ticket?.strategy.id)
+
+      return {
+        list: [
+          ...this.strategies,
+          ...(hasStrategyInOptions ? [] : [{
+            id: this.ticket?.strategy.id,
+            name: 'Estratégia Indisponível',
+            disabled: true
+          }])
+        ],
+        label: 'name',
+        value: 'id'
+      }
     },
     ticketConfigurations() {
       const {
@@ -216,11 +255,16 @@ export default {
       return Number(this.$route.params.id)
     }
   },
+
   methods: {
     ...mapActions([
       'setTicketOverview',
       'setTicketOverviewInfo'
     ]),
+
+    editDispute() {
+      this.$emit('dispute')
+    },
 
     setData(key, classToEdit, value) {
       const { disputeId } = this
@@ -253,29 +297,43 @@ export default {
 @import '@/styles/colors.scss';
 
 .overview-info {
-  overflow-y: auto;
-  overflow-x: hidden;
-  height: 100%;
   padding-top: 2px;
+  height: 100%;
+  display: flex;
+  gap: 8px;
+  flex-direction: column;
+  justify-content: space-between;
 
-  .overview-info__infoline {
-    margin-top: 6px;
+  .overview-info-fields {
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
 
-    .overview-info__infoline-label {
-      font-size: 13px;
-      line-height: normal;
-      color: $--color-text-secondary;
+    .overview-info__infoline {
+      margin-top: 6px;
+
+      .overview-info__infoline-label {
+        font-size: 13px;
+        line-height: normal;
+        color: $--color-text-secondary;
+      }
+
+      .overview-info__infoline-data,
+      .overview-info__infoline-link {
+        margin: 3px 0 3px 18px;
+        line-height: normal;
+      }
+
+      .overview-info__infoline-link {
+        border-bottom: 2px solid transparent;
+      }
     }
+  }
 
-    .overview-info__infoline-data,
-    .overview-info__infoline-link {
-      margin: 3px 0 3px 18px;
-      line-height: normal;
-    }
-
-    .overview-info__infoline-link {
-      border-bottom: 2px solid transparent;
-    }
+  .el-button {
+    display: flex;
+    width: 100%;
+    justify-content: center;
   }
 }
 </style>

@@ -74,19 +74,63 @@ const overviewActions = {
 
   updateActiveTab({ state, commit }, disputeStatus) {
     const correspondingTab = getCorrespondingTab(disputeStatus)
-    if (correspondingTab !== state.ticketsActiveTab) {
-      commit('setTicketsActiveTab', correspondingTab)
+    const isUpdate = ['ACCEPTED', 'CHECKOUT', 'SETTLED'].includes(disputeStatus) && state.tickets.content.length
+
+    if (correspondingTab !== state.ticketsActiveTab && isUpdate) {
+      const vue = document.querySelector('#app').__vue__
+
+      document.querySelectorAll('.el-notification.info.right').forEach(tag => tag.__vue__.$parent.close())
+
+      vue.$jusNotification({
+        title: 'há atualizações nesta disputa',
+        message: 'Clique se quiser recarregar ou feche se quiser continuar nesta página.',
+        type: 'info',
+        iconClass: 'el-icon-info',
+        onClick: () => {
+          document.querySelector('.el-notification.info.right').__vue__.$parent.close()
+          commit('setTicketsActiveTab', correspondingTab)
+        }
+      })
     }
   },
 
-  SOCKET_ADD_DISPUTE({ rootState, state, commit }, dispute) {
+  SOCKET_ADD_DISPUTE({ rootState, state, commit, dispatch }, dispute) {
     const correspondingTab = getCorrespondingTab(dispute.status)
 
     if (rootState.negotiationTicketsModule.ticketsPreventSocket) return
 
     if (rootState.negotiationOverviewModule.ticketOverview.disputeId === dispute.id) {
-      if (correspondingTab !== state.ticketsActiveTab) {
-        commit('setTicketsActiveTab', correspondingTab)
+      const isUpdate = ['ACCEPTED', 'CHECKOUT', 'SETTLED'].includes(dispute.status) && !['ACCEPTED', 'CHECKOUT', 'SETTLED'].includes(rootState.negotiationOverviewModule.ticketOverview.status)
+      const isInNegotiation = location.href.includes('negotiation')
+      const isCorrespondingTab = correspondingTab !== state.ticketsActiveTab
+
+      if (process.env.NODE_ENV === 'development') {
+        console.table({
+          isCorrespondingTab,
+          isUpdate,
+          isInNegotiation,
+          status: dispute.status
+        })
+      }
+
+      dispatch('getTicketOverview', dispute.id)
+
+      if (isCorrespondingTab && isUpdate && isInNegotiation) {
+        const vue = document.querySelector('#app').__vue__
+
+        document.querySelectorAll('.el-notification.info.right').forEach(tag => tag.__vue__.$parent.close())
+
+        vue.$jusNotification({
+          title: 'há atualizações nesta disputa',
+          message: 'Clique se quiser recarregar ou feche se quiser continuar nesta página.',
+          type: 'info',
+          iconClass: 'el-icon-info',
+          duration: 50000,
+          onClick: () => {
+            document.querySelector('.el-notification.info.right').__vue__.$parent.close()
+            commit('setTicketsActiveTab', correspondingTab)
+          }
+        })
       } else {
         commit('updateTicketItem', dispute)
       }

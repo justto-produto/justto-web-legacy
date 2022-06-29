@@ -123,7 +123,7 @@
               v-if="role.party && role.roles.length"
               class="subtitle"
             >
-              {{ $t('fields.' + role.party.toLocaleLowerCase() + role.roles[0].charAt(0).toUpperCase() + role.roles[0].slice(1).toLocaleLowerCase()) }}
+              {{ $tc('fields.' + role.party.toLocaleLowerCase() + role.roles[0].charAt(0).toUpperCase() + role.roles[0].slice(1).toLocaleLowerCase(), isRecovery) }}
             </div>
             <div
               v-if="role.documentNumber && isValidCpfOrCnpj(role.documentNumber)"
@@ -172,7 +172,7 @@
                 content="Cadastre o CPF da parte para selecionar um e-mail"
               >
                 <span>
-                  <el-radio
+                  <el-checkbox
                     :value="Object.keys(recipients).includes(role.name) && recipients[role.name].email === email.address"
                     :label="true"
                     :name="role.name"
@@ -180,7 +180,7 @@
                     @change="setRecipientEmail(generateSigner(role, email))"
                   >
                     {{ email.address }}
-                  </el-radio>
+                  </el-checkbox>
                 </span>
               </el-tooltip>
               <el-button
@@ -290,9 +290,8 @@
               </div>
             </div>
             <div class="jus-protocol-dialog__status-icon">
-              <span v-if="signer.signed">Assinado <jus-icon icon="success" /></span>
               <el-button
-                v-else-if="isThamirisSigner(signer)"
+                v-if="isThamirisSigner(signer) && !signer.signed"
                 :size="buttonSize"
                 icon="el-icon-thumb"
                 type="success"
@@ -301,7 +300,11 @@
               >
                 ASSINAR MINUTA AQUI
               </el-button>
-              <span v-else>Aguardando assinatura</span>
+
+              <span v-if="signer.signatureStatus">
+                {{ $tc(`document.signature.status.${signer.signatureStatus}.text`) }}
+                <jus-icon :icon="$tc(`document.signature.status.${signer.signatureStatus}.icon`)" />
+              </span>
             </div>
           </div>
         </div>
@@ -324,7 +327,7 @@
         class="dialog-footer"
       >
         <el-tooltip
-          v-if="document.canEdit && [2, 3, 4].includes(step)"
+          v-if="document.canEdit && [3, 4].includes(step)"
           content="Volta documento para edição."
         >
           <el-button
@@ -516,6 +519,7 @@ export default {
       })
     }
   },
+
   data() {
     return {
       step: 0,
@@ -565,11 +569,13 @@ export default {
       innerWidth: window.innerWidth
     }
   },
+
   computed: {
     ...mapGetters({
       defaultSigners: 'availableSigners',
       accountEmail: 'accountEmail',
-      disputeProtocol: 'getDisputeProtocol'
+      disputeProtocol: 'getDisputeProtocol',
+      isRecovery: 'isWorkspaceRecovery'
     }),
     disputeRoles() {
       return this.dispute.disputeRoles
@@ -656,7 +662,7 @@ export default {
     },
     pdfUrl() {
       if (this.disputeId) {
-        return 'https://justto.app/api/office/documents/download-signed/' + this.disputeId
+        return 'https://api.justto.app/api/office/documents/download-signed/' + this.disputeId
       }
 
       return ''
@@ -762,10 +768,20 @@ export default {
         this.$forceUpdate()
       }
     },
+
     setRecipientEmail(signer) {
-      this.recipients[signer.name] = signer
+      if (Object.keys(this.recipients).includes(signer.name)) {
+        if (this.recipients[signer.name].email === signer.email) {
+          this.$delete(this.recipients, signer.name)
+        } else {
+          this.recipients[signer.name] = signer
+        }
+      } else {
+        this.recipients[signer.name] = signer
+      }
       this.$forceUpdate()
     },
+
     generateSigner(role, email) {
       return {
         name: role.name,
@@ -911,10 +927,10 @@ export default {
     getModels() {
       this.loading = true
       this.getDocumentModels().then(models => {
-        this.models = models
-        const isUnique = models.length && models.length === 1
+        this.models = models.filter(({ archived }) => !archived)
+        const isUnique = this.models.length && this.models.length === 1
         if (isUnique) {
-          this.selectModel(models[0].id, isUnique)
+          this.selectModel(this.models[0].id, isUnique)
         }
       }).catch(error => {
         this.visible = false
@@ -1272,6 +1288,9 @@ export default {
   }
   .jus-protocol-dialog__status-icon {
     color: $--color-text-secondary;
+    display: flex;
+    align-items: center;
+    gap: 16px;
     // margin-left: auto;
     img {
       width: 14px;

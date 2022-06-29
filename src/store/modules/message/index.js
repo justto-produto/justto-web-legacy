@@ -8,7 +8,9 @@ const message = {
     messageResumes: [],
     quickReplyTemplates: [],
     previewMessage: '',
-    showPreview: false
+    showPreview: false,
+    messageBackup: {},
+    messageBackupDebounce: null
   },
   mutations,
   actions,

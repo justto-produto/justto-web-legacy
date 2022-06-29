@@ -38,10 +38,14 @@ const actionsActions = {
     })
   },
 
-  revertStatus({ commit }, params) {
+  revertStatus({ commit, dispatch }, params) {
     let { disputeId, action, status } = params
+
     action = action.toLowerCase().replace('_', '-')
+
     return new Promise((resolve, reject) => {
+      dispatch('validateEngageLimit', disputeId)
+
       axiosDispatch({
         url: `${disputesPath}/${disputeId}/${action}`,
         method: 'PATCH'
@@ -114,7 +118,7 @@ const actionsActions = {
       axiosDispatch({
         url: `${disputesPath}/${disputeId}/${action}`,
         method: 'PUT',
-        data
+        data: { ...data, conclusionNote: data?.note }
       }).then((res) => {
         if (mutations[action]) {
           const currentAction = mutations[action]
@@ -187,6 +191,7 @@ const actionsActions = {
       }).then((res) => {
         commit('updateLastTicketOffers', { payload: { value: data.value, polarityObjectKey } })
         if (change) {
+          // TODO: SAAS-4634 checkpoint
           commit('updateTicketOverview', { payload: { status: 'ACCEPTED' } })
           commit('deleteTicket', { payload: disputeId })
         }

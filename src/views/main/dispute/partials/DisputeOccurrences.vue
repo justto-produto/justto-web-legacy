@@ -23,6 +23,7 @@
         Início das ocorrências
       </div>
     </infinite-loading>
+
     <div
       v-for="(datedOccurrence, date, index) in datedOccurrences"
       :key="`${date}-${index}`"
@@ -33,6 +34,7 @@
       >
         {{ date }}
       </el-card>
+
       <li
         v-for="(occurrence, occurrenceIndex) in datedOccurrence"
         :key="`occurrency-${occurrenceIndex}`"
@@ -47,7 +49,7 @@
                 <jus-avatar-user
                   :name="occurrence.sender"
                   :src="buildAvatar(occurrence)"
-                  :purple="occurrence(occurrence)"
+                  :purple="buildColor(occurrence)"
                   shape="circle"
                   size="sm"
                 />
@@ -74,6 +76,12 @@
               <i class="el-icon-loading" />
             </div>
           </div>
+
+          <Log
+            v-else-if="['ACTION'].includes(occurrence.type) || (['LOG'].includes(occurrence.type) && occurrence.properties.HANDLE_UNKNOW_PARTY && occurrence.properties.HANDLE_UNKNOW_PARTY === 'TRUE')"
+            :value="occurrence"
+          />
+
           <el-card
             v-else-if="occurrence.type === 'LOG' ||
               (occurrence.interaction && ['VISUALIZATION', 'CLICK', 'NEGOTIATOR_ACCESS'].includes(occurrence.interaction.type))"
@@ -94,28 +102,29 @@
                 />
               </span>
             </el-tooltip>
+
             <span
               class="occurrence-content"
               v-html="buildContent(occurrence)"
             />
+
             <div
-              v-if="canHandleUnknowParty(occurrence)"
+              v-if="canHandleUnknownParty(occurrence)"
               class="fast-occurrence-actions"
             >
               <br>
               <span
-                v-if="getUnknowPartys(occurrence).length === 0"
+                v-if="getUnknownPartys(occurrence).length === 0"
                 class="ok"
               >Esta pendência já foi resolvida!</span>
               <div
-                v-for="role in getUnknowPartys(occurrence)"
+                v-for="role in getUnknownPartys(occurrence)"
                 :key="`role-party-${role.id}`"
                 class="fast-occurrence-actions__items"
               >
                 <span />
                 <a
                   v-if="!handlePartyId['party_role' + role.id]"
-                  href="#"
                   @click="openOptionsParty(role)"
                 >
                   Definir polaridade de {{ role.name }}
@@ -209,7 +218,13 @@
                 </span>
               </el-tooltip>
             </span>
+
+            <UnknownPartyButton
+              v-if="isUnknown(occurrence)"
+              :value="occurrence"
+            />
           </el-card>
+
           <div
             v-else-if="occurrence.type !== 'NOTE'"
             :class="getDirection(occurrence.interaction)"
@@ -238,21 +253,40 @@
                 <i class="el-icon-question" />
               </el-tooltip>
             </div>
+
             <div class="dispute-view-occurrences__card-box">
               <attachment-occurrence
-                v-if="occurrence.interaction.type === 'ATTACHMENT'"
+                v-if="occurrence.interaction && occurrence.interaction.type === 'ATTACHMENT'"
                 :value="occurrence.interaction"
                 :occurrence="occurrence"
                 :class="(occurrence.interaction ? occurrence.interaction.type : '') + ' ' + buildCommunicationType(occurrence) + ' ' + (occurrence.interaction && occurrence.interaction.message ? occurrence.interaction.message.status : '')"
                 shadow="never"
                 class="dispute-view-occurrences__card"
               />
+
               <NpsInteraction
-                v-else-if="occurrence.interaction.type === 'NPS'"
+                v-else-if="occurrence.interaction && occurrence.interaction.type === 'NPS'"
                 :occurrence="occurrence"
                 :value="occurrence.interaction"
                 class="dispute-view-occurrences__card-box-nps"
               />
+
+              <PhoneCallOccurrence
+                v-else-if="occurrence.interaction && occurrence.interaction.type === 'PHONE_CALL'"
+                :occurrence="occurrence"
+                :value="occurrence.interaction"
+                class="dispute-view-occurrences__card-box-nps"
+                hide-info
+              />
+
+              <WhatsAppAttachment
+                v-else-if="isWhatsAppAttachment(occurrence)"
+                :occurrence="occurrence"
+                :value="occurrence.interaction"
+                class="dispute-view-occurrences__card-box-nps dispute-whatsapp"
+                hide-info
+              />
+
               <el-card
                 v-else
                 :class="(occurrence.interaction ? occurrence.interaction.type : '') + ' ' + buildCommunicationType(occurrence) + ' ' + (occurrence.interaction && occurrence.interaction.message ? occurrence.interaction.message.status : '')"
@@ -266,18 +300,19 @@
                     style="text-align: right;"
                   >
                     <a
-                      href="#"
                       data-testid="hide-email"
                       @click.prevent="hideFullMessage(occurrence.id)"
                     > ver menos</a>
                   </div>
+
                   <span>
                     <span
                       :ref="getMessageRef(occurrence)"
                       v-html="buildContent(occurrence)"
                     />
+
                     <span
-                      v-if="buildCommunicationType(occurrence).startsWith('WHATSAPP') && buildWhatsappStatus(occurrence.interaction.message, occurrence.executionDateTime || occurrence.createAt)"
+                      v-if="buildCommunicationType(occurrence).startsWith('WHATSAPP') && buildWhatsappStatus(occurrence.interaction.message, occurrence.executionDateTime || occurrence.createAt) && occurrence.interaction.direction !== 'INBOUND'"
                       class="dispute-view-occurrences__whats-status"
                     >
                       <el-tooltip popper-class="mw400">
@@ -287,9 +322,11 @@
                         >
                           <span v-html="buildWhatsappStatus(occurrence.interaction.message, occurrence.executionDateTime || occurrence.createAt).message" />
                         </div>
+
                         <jus-icon :icon="buildWhatsappStatus(occurrence.interaction.message, occurrence.executionDateTime || occurrence.createAt).icon" />
                       </el-tooltip>
                     </span>
+
                     <span
                       v-if="buildCommunicationType(occurrence).startsWith('SMS') && buildEmailStatus(occurrence)"
                       class="dispute-view-occurrences__whats-status"
@@ -306,7 +343,6 @@
                     </span>
                     <span v-if="showResume(occurrence)">
                       <a
-                        href="#"
                         data-testid="show-email"
                         @click.prevent="showFullMessage(occurrence.id, occurrence.interaction.message.messageId || false)"
                       > ver mais</a>
@@ -347,6 +383,7 @@
                   </i>
                 </div>
               </el-card>
+
               <div
                 :class="getDirection(occurrence.interaction)"
                 class="dispute-view-occurrences__card-info"
@@ -400,15 +437,13 @@
                 </span>
               </div>
             </div>
+
             <div
               v-if="showReply(occurrence)"
               class="dispute-view-occurrences__side-icon"
             >
               <el-tooltip content="Responder">
-                <a
-                  href="#"
-                  @click.prevent="startReply(occurrence)"
-                >
+                <a @click.prevent="startReply(occurrence)">
                   <jus-icon
                     icon="reply"
                     style="position: styck;"
@@ -418,6 +453,7 @@
             </div>
           </div>
         </div>
+
         <div
           v-if="activeOccurrency.id === occurrence.id"
           class="dispute-view-occurrences__occurrence-merged"
@@ -456,6 +492,22 @@
                 :value="mergedOccurency.interaction"
                 class="dispute-view-occurrences__card-box-nps"
               />
+              <PhoneCallOccurrence
+                v-else-if="mergedOccurency.interaction.type === 'PHONE_CALL'"
+                :occurrence="mergedOccurency"
+                :value="mergedOccurency.interaction"
+                class="dispute-view-occurrences__card-box-nps"
+                hide-info
+              />
+
+              <WhatsAppAttachment
+                v-else-if="isWhatsAppAttachment(mergedOccurency)"
+                :occurrence="mergedOccurency"
+                :value="mergedOccurency.interaction"
+                class="dispute-view-occurrences__card-box-nps dispute-whatsapp"
+                hide-info
+              />
+
               <el-card
                 v-else
                 :class="(mergedOccurency.interaction ? mergedOccurency.interaction.type : '') + ' ' + buildCommunicationType(mergedOccurency) + ' ' + (mergedOccurency.interaction && mergedOccurency.interaction.message ? mergedOccurency.interaction.message.status : '')"
@@ -470,7 +522,6 @@
                       style="text-align: right;"
                     >
                       <a
-                        href="#"
                         data-testid="hide-email"
                         @click.prevent="hideFullMessage(mergedOccurency.id)"
                       > ver menos</a>
@@ -495,7 +546,6 @@
                     </span>
                     <span v-if="showResume(mergedOccurency)">
                       <a
-                        href="#"
                         data-testid="show-email"
                         @click.prevent="showFullMessage(mergedOccurency.id, mergedOccurency.interaction.message.messageId || false)"
                       > ver mais</a>
@@ -575,6 +625,7 @@
         </div>
       </li>
     </div>
+
     <el-dialog
       :close-on-click-modal="false"
       :visible.sync="messageDialogVisible"
@@ -618,6 +669,7 @@
         >Fechar</el-button>
       </span>
     </el-dialog>
+
     <div style="margin-top: 20px">
       <slot />
     </div>
@@ -626,17 +678,23 @@
 
 <script>
 import InfiniteLoading from 'vue-infinite-loading'
-import { isSimilarStrings, normalizeString } from '@/utils'
+import { isSimilarStrings, normalizeString, normalizeDateToISO } from '@/utils'
 import { mapGetters, mapActions } from 'vuex'
 import { uniq } from 'lodash'
 
 export default {
   name: 'DisputeOccurrences',
+
   components: {
     InfiniteLoading,
+    Log: () => import('@/views/main/negotiation/partials/ticket/omnichannel/occurrences/occurrence/log/Log'),
+    AttachmentOccurrence: () => import('./partials/AttachmentOccurrence'),
+    UnknownPartyButton: () => import('@/components/buttons/UnknownPartyButton'),
     NpsInteraction: () => import('@/views/main/negotiation/partials/ticket/omnichannel/occurrences/occurrence/interaction/partials/Nps'),
-    AttachmentOccurrence: () => import('./partials/AttachmentOccurrence')
+    PhoneCallOccurrence: () => import('@/views/main/negotiation/partials/ticket/omnichannel/occurrences/occurrence/interaction/partials/Phone'),
+    WhatsAppAttachment: () => import('@/views/main/negotiation/partials/ticket/omnichannel/occurrences/occurrence/interaction/partials/Whatsapp.vue')
   },
+
   props: {
     disputeId: {
       type: String,
@@ -647,6 +705,7 @@ export default {
       default: '1'
     }
   },
+
   data() {
     return {
       loadingMessage: 'false',
@@ -657,20 +716,6 @@ export default {
       fullMessageBank: {},
       infiniteId: +new Date(),
       handlePartyId: {},
-      disputePartys: [
-        {
-          value: 'RESPONDENT',
-          label: 'Advogado do réu'
-        },
-        {
-          value: 'CLAIMANT',
-          label: 'Advogado da parte contrária'
-        },
-        {
-          value: 'UNKNOWN',
-          label: 'Desconhecido'
-        }
-      ],
       negotiatorTypes: [
         'NEGOTIATOR_ACCESS',
         'NEGOTIATOR_PROPOSAL',
@@ -681,15 +726,35 @@ export default {
       ]
     }
   },
+
   computed: {
     ...mapGetters([
       'activeOccurrency',
-      'disputeLastInteractions'
+      'disputeLastInteractions',
+      'isWorkspaceRecovery'
     ]),
 
+    disputePartys() {
+      return [
+        {
+          value: 'RESPONDENT',
+          label: this.$tc('LAWYER_RESPONDENT', this.isWorkspaceRecovery)
+        },
+        {
+          value: 'CLAIMANT',
+          label: this.$tc('fields.claimantLawyer', this.isWorkspaceRecovery)
+        },
+        {
+          value: 'UNKNOWN',
+          label: 'Desconhecido'
+        }
+      ]
+    },
+
     onlineEmails() {
-      let emails = []
-      this.dispute.disputeRoles.map(role => {
+      let emails = [];
+
+      (this.dispute?.disputeRoles || []).map(role => {
         if (Object.keys(this.onlineDocuments).includes(role.documentNumber)) {
           emails = [...emails, ...role.emails.filter(email => !!email.isMain).map(email => email.address)]
         }
@@ -721,30 +786,41 @@ export default {
       Object.keys(datedOccurrences).forEach((item) => {
         const datedOccurrence = datedOccurrences[item]
         let previousOccurrenceIndex
+
         datedOccurrence.forEach((fo, index) => {
           if (fo.interaction && fo.interaction.message && fo.interaction.message.communicationType === 'WHATSAPP') return
+          if (fo.interaction?.type === 'PHONE_CALL') return
+
           let similarity
+
           if (fo.interaction && fo.interaction.type) {
             similarity = ['ATTACHMENT', 'MANUAL_COUNTERPROPOSAL', 'NEGOTIATOR_PROPOSAL', 'NEGOTIATOR_COUNTERPROSAL', 'MANUAL_PROPOSAL'].includes(fo.interaction.type) ? 100 : 75
           } else {
             similarity = 75
           }
+
           const previous = datedOccurrence[previousOccurrenceIndex]
+
           if (previous && isSimilarStrings(this.buildContent(fo), this.buildContent(previous), similarity) && (fo.interaction && previous.interaction && fo.interaction.direction === previous.interaction.direction)) {
             fo.toDelete = true
+
             if (!previous.merged) {
               previous.merged = []
               previous.toDelete = false
             }
+
             if (!previous.merged.map(i => i.id).includes(fo.id)) {
               previous.merged.push(fo)
             }
           } else previousOccurrenceIndex = index
         })
+
         datedOccurrences[item] = datedOccurrence.filter(fo => !fo.toDelete)
       })
+
       return datedOccurrences
     },
+
     fetchAction() {
       if (this.typingTab === '1') {
         return 'getDisputeCommunications'
@@ -753,17 +829,21 @@ export default {
       }
     }
   },
+
   watch: {
     typingTab() {
       this.clearOccurrences()
       this.infiniteId += 1
     }
   },
+
   mounted() {
     this.clearOccurrences()
+    this.resetOccurrences()
   },
+
   methods: {
-    ...mapActions(['setActiveactiveOccurrency']),
+    ...mapActions(['setActiveactiveOccurrency', 'resetOccurrences']),
 
     isCanceled(occurrence) {
       return occurrence?.status === 'CANCELED'
@@ -783,15 +863,19 @@ export default {
         occurrence.interaction.direction === 'INBOUND' &&
         !['MANUAL_COUNTERPROPOSAL'].includes(occurrence.interaction.type)
     },
+
     getIconIsMerged(occurrency) {
       return this.activeOccurrency.id === occurrency.id ? 'el-icon-arrow-up' : 'el-icon-arrow-down'
     },
+
     openOptionsParty(role) {
       this.$set(this.handlePartyId, 'party_role' + role.id, true)
     },
+
     closeOptionsParty(role) {
       this.$set(this.handlePartyId, 'party_role' + role.id, false)
     },
+
     setDisputeParty(role) {
       this.handlePartyId['party_role' + role.id] = false
       const params = {
@@ -811,6 +895,7 @@ export default {
         })
       })
     },
+
     clearOccurrences() {
       this.$store.commit('clearOccurrencesSize')
       this.$store.commit('clearDisputeOccurrences')
@@ -913,11 +998,17 @@ export default {
         if (this.isJusttineMessage(occurrence)) {
           return ''
         }
+
         if (occurrence.interaction.type &&
         ['ATTACHMENT'].includes(occurrence.interaction.type)
         ) {
           return occurrence.properties.SENDER_NAME
         }
+
+        if (['PHONE_CALL'].includes(occurrence?.interaction?.type)) {
+          return occurrence?.interaction?.properties?.FROM_PERSON_NAME || occurrence?.interaction?.createdBy
+        }
+
         if (occurrence.interaction.type &&
           ['MANUAL_COUNTERPROPOSAL', 'MANUAL_PROPOSAL', 'CLICK'].includes(occurrence.interaction.type) &&
           occurrence.interaction.properties.USER) {
@@ -946,7 +1037,7 @@ export default {
     isJusttineMessage(occurrence) {
       return occurrence.interaction &&
       occurrence.interaction.message &&
-      ['EMAIL', 'WHATSAPP'].includes(occurrence.interaction.message.communicationType) &&
+      ['EMAIL', 'WHATSAPP', 'SMS'].includes(occurrence.interaction.message.communicationType) &&
       occurrence.interaction.message.status !== 'PROCESSED_BY_USER' &&
       occurrence.interaction.message.createdBy === 'system' &&
       occurrence.interaction.direction === 'OUTBOUND'
@@ -974,20 +1065,30 @@ export default {
       }
       return occurrence.description
     },
-    canHandleUnknowParty(occurrence) {
-      return occurrence.properties && occurrence.properties.HANDLE_UNKNOW_PARTY && occurrence.properties.UNKNOW_ROLE_IDS
+
+    canHandleUnknownParty(occurrence) {
+      return occurrence.properties?.HANDLE_UNKNOW_PARTY && occurrence.properties?.UNKNOW_ROLE_IDS
     },
-    getUnknowPartys(occurrence) {
-      const canHandleParty = this.canHandleUnknowParty(occurrence)
+
+    isUnknown(occurrence) {
+      return occurrence?.properties?.PARTY === 'UNKNOWN' && occurrence?.properties?.ROLE_NAME === 'LAWYER'
+    },
+
+    getUnknownPartys(occurrence) {
+      const canHandleParty = this.canHandleUnknownParty(occurrence)
       if (canHandleParty) {
         const dispute = this.$store.getters.dispute
-        const roleIds = JSON.parse(occurrence.properties.UNKNOW_ROLE_IDS)
+        const roleIds = JSON.parse(occurrence?.properties.UNKNOWN_ROLE_IDS ? occurrence?.properties.UNKNOWN_ROLE_IDS : occurrence?.properties.UNKNOW_ROLE_IDS)
         const filteredRole = dispute.disputeRoles.filter(r => roleIds.includes(r.id) && r.party === 'UNKNOWN')
         return filteredRole
       }
       return canHandleParty
     },
+
     buildContent(occurrence) {
+      // const templateNote = (note) => (`<div style="display: flex; margin-top: 8px; flex-direction:column; background-color: #f6f1ff"><div style="background-color: #efe7ff; padding: 8px;">Observações:</div><div style="padding: 8px 16px;">${note}</div></div>`)
+      const templateNote = (note) => (` com a observação: ${note}.`)
+
       if (!occurrence) return ''
       if (occurrence.type === 'LOG' || (occurrence.interaction && ['VISUALIZATION', 'CLICK', 'NEGOTIATOR_ACCESS'].includes(occurrence.interaction.type))) {
         if (occurrence.interaction && occurrence.interaction.type === 'NEGOTIATOR_ACCESS') {
@@ -1005,11 +1106,11 @@ export default {
           return `
             Negociador <b>${occurrence.interaction.properties.USER ? occurrence.interaction.properties.USER : ''}</b>
             informou uma proposta realizada por <b>${occurrence.interaction.properties.PERSON_NAME}</b>
-            no valor de <b>${occurrence.interaction.properties.VALUE}</b>${occurrence.interaction.properties.NOTE ? ' com a observação: ' + occurrence.interaction.properties.NOTE : ''}.`
+            no valor de <b>${occurrence.interaction.properties.VALUE}</b>${occurrence.interaction.properties.NOTE ? templateNote(occurrence.interaction.properties.NOTE) : '.'}`
         } else if (['NEGOTIATOR_COUNTERPROSAL', 'NEGOTIATOR_PROPOSAL'].includes(occurrence.interaction.type)) {
           return `
             Proposta realizada por <b>${occurrence.interaction.properties.PERSON_NAME}</b>
-            no valor de <b>${occurrence.interaction.properties.VALUE}</b>${occurrence.interaction.properties.NOTE ? ' com a observação: ' + occurrence.interaction.properties.NOTE : ''}.`
+            no valor de <b>${occurrence.interaction.properties.VALUE}</b>${occurrence.interaction.properties.NOTE ? templateNote(occurrence.interaction.properties.NOTE) : '.'}`
         } else if (['COMMUNICATION'].includes(occurrence.interaction.type) && occurrence.interaction.message && ['NEGOTIATOR_MESSAGE', 'WHATSAPP', 'EMAIL'].includes(occurrence.interaction.message.communicationType)) {
           if (this.showResume(occurrence)) {
             return occurrence.interaction.message.resume + '...'
@@ -1078,6 +1179,7 @@ export default {
       }
       return typeClass
     },
+
     showReply(occurrence) {
       if (occurrence.interaction &&
         (['EMAIL', 'WHATSAPP', 'NEGOTIATOR_MESSAGE'].includes(occurrence.interaction?.message?.communicationType) ||
@@ -1092,6 +1194,10 @@ export default {
     isNegotiatorMessage(occurrence) {
       return this.negotiatorTypes.includes(occurrence.interaction.type) ||
         ['NEGOTIATOR_MESSAGE'].includes(occurrence.interaction.message.communicationType)
+    },
+
+    isWhatsAppAttachment(occurrence) {
+      return occurrence?.interaction?.direction === 'INBOUND' && occurrence?.interaction?.message?.communicationType === 'WHATSAPP' && ['FILE', 'VIDEO', 'IMAGE', 'AUDIO'].includes(occurrence?.interaction?.message?.contentType)
     },
 
     startReply(occurrence) {
@@ -1133,9 +1239,18 @@ export default {
     buildWhatsappStatus(message, executionDateTime) {
       if (!message) return null
       if (message.status.startsWith('PROCESSED')) {
-        const sendDate = message.parameters && message.parameters.SEND_DATE ? message.parameters.SEND_DATE : this.$moment(executionDateTime.dateTime).format('DD/MM/YYYY HH:mm')
-        const receiverDate = message.parameters ? message.parameters.RECEIVER_DATE : ''
-        const readDate = (message.parameters && message.parameters.READ_DATE) ? this.$moment(message.parameters.READ_DATE).format('DD/MM/YYYY HH:mm') : ''
+        const sendDate = message?.parameters?.SEND_DATE
+          ? this.$moment(normalizeDateToISO(message.parameters.SEND_DATE)).format('DD/MM/YYYY [ às ] HH:mm')
+          : this.$moment(executionDateTime.dateTime).format('DD/MM/YYYY [ às ] HH:mm')
+
+        const receiverDate = message?.parameters?.RECEIVER_DATE
+          ? this.$moment(normalizeDateToISO(message.parameters.RECEIVER_DATE)).format('DD/MM/YYYY [ às ] HH:mm')
+          : ''
+
+        const readDate = message?.parameters?.READ_DATE
+          ? this.$moment(normalizeDateToISO(message.parameters.READ_DATE)).format('DD/MM/YYYY [ às ] HH:mm')
+          : ''
+
         let icon = 'status-sent'
         let msg = `Enviado em ${sendDate}.`
         if (receiverDate) {

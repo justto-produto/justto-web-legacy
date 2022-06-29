@@ -6,19 +6,19 @@
   >
     <template slot="title">
       <JusIcon
-        v-if="state.hasAlert && state.isDead"
+        v-if="state.hasAlert && !hideArrows && state.isDead"
         class="el-icon-pulse vexatious-alert"
         icon="flat-alert"
       />
 
       <i
-        v-else-if="state.hasAlert && state.isNamesake"
+        v-else-if="state.hasAlert && !hideArrows && state.isNamesake"
         class="el-icon-warning el-icon-pulse vexatious-alert"
         :style="{ color: state.alertColor }"
       />
 
       <JusIcon
-        v-else-if="state.hasAlert && state.isVexatious"
+        v-else-if="state.hasAlert && !hideArrows && state.isVexatious"
         class="el-icon-pulse vexatious-alert"
         icon="flat-alert-yellow"
       />
@@ -29,6 +29,11 @@
       />
 
       <article>
+        <JusIcon
+          v-if="isOnline"
+          class="party-resumed__header-online"
+          icon="online"
+        />
         <span class="party-resumed__header-name">
           {{ party.name | resumedName }}
         </span>
@@ -47,7 +52,7 @@
           <b>OAB: </b>{{ party.oabs[0] }}
         </div>
         <div
-          :class="{ 'party-resumed__header-document--hidden': !isActiveCollapseItem }"
+          :class="{ 'party-resumed__header-document--hidden': !isActiveCollapseItem && !hideArrows }"
           class="party-resumed__header-document"
         >
           {{ translatedPartyType | capitalize }}
@@ -55,12 +60,16 @@
       </article>
     </template>
 
-    <PartyDetails :party="party" />
+    <PartyDetails
+      :party="party"
+      @addRecipient="$emit('addRecipient', $event)"
+    />
   </el-collapse-item>
 </template>
 
 <script>
 import TicketTicketOverviewPartyResumed from '@/models/negotiations/overview/TicketOverviewPartyResumed'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'PartyResumed',
@@ -85,8 +94,18 @@ export default {
   },
 
   computed: {
+    ...mapGetters({
+      online: 'onlineDocuments',
+      isRecovery: 'isWorkspaceRecovery'
+    }),
+
     isActiveCollapseItem() {
       return this.party.disputeRoleId === this.activeCollapseItem
+    },
+
+    isOnline() {
+      const docs = Object.keys(this.online)
+      return this.party.status === 'ONLINE' || docs.includes(this.party.documentNumber) || (this.party.oabs || []).filter(oab => docs.includes(oab)).length
     },
 
     documentType() {
@@ -131,7 +150,7 @@ export default {
           break
       }
 
-      return this.$t(`roles.${role}.${this.party.polarity}`)
+      return this.$tc(`roles.${role}.${this.party.polarity}`, this.isRecovery)
     },
 
     state() {
@@ -145,6 +164,11 @@ export default {
 @import '@/styles/colors.scss';
 
 .party-resumed {
+  .party-resumed__header-online {
+    width: 10px;
+    height: 10px;
+  }
+
   .party-resumed__header-avatar {
     margin-right: 10px;
   }

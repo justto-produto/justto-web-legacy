@@ -1,7 +1,7 @@
 import { stripHtml } from '@/utils'
 
 const mapTabOccurrenceType = {
-  MESSAGES: 'INTERACTION',
+  MESSAGES: ['INTERACTION', 'NOTE', 'ACTION'],
   NOTES: 'NOTE',
   OCCURRENCES: 'LOG'
 }
@@ -28,7 +28,7 @@ const omnichannelGetters = {
   getOccurrencesList: state => (state.occurrences.list),
   getFullMessages: state => (state.occurrences.fullMessages),
   getOccurrencesSummary: state => (state.occurrences.summary),
-  getTotalOccurrences: state => (state.occurrences.totalElements),
+  getTotalOccurrences: state => (state.totalOfOccurrences),
   getOccurrencesSummaryKeys: state => ({
     SMS: Object.keys(state.occurrences.summary.SMS).map(Number),
     EMAIL: Object.keys(state.occurrences.summary.EMAIL).map(Number),
@@ -46,6 +46,12 @@ const omnichannelGetters = {
     return reverseOccurrences.filter(occ => {
       return new Date(occ[dateKey(occ)].dateTime) > new Date(firstOutboundDate[dateKey(firstOutboundDate)].dateTime)
     })
+  },
+
+  getGroupedOccurrences: state => state.groupedOccurrences,
+
+  getGroupedOccurrencesById: state => (id) => {
+    return state.groupedOccurrences[id] || []
   }
 }
 

@@ -1,8 +1,8 @@
 <template>
   <el-card
+    v-if="isLengthValid"
     shadow="never"
     class="attachment__card red"
-    :class="`${occurrence.properties.FILE_TYPE || ''}`"
   >
     <div
       v-if="occurrence.properties && available"
@@ -12,9 +12,10 @@
         class="attachment__icon"
         :icon="`attachment-${occurrence.properties.FILE_TYPE.toLowerCase()}`"
       />
+
       <span
         class="attachment__file"
-        @click="downloadAttachment(occurrence.properties.FILE_URL)"
+        @click="downloadAttachment(interaction.properties.DOCUMENT_ID)"
       >
         <span class="attachment__file-name">
           {{ occurrence.properties.FILE_NAME }}
@@ -29,13 +30,22 @@
           -
         </span>
       </span>
+
       <span
         class="attachment__file-download"
-        @click="downloadAttachment(occurrence.properties.FILE_URL)"
       >
-        <i class="el-icon-download" />
+        <i
+          class="el-icon-download"
+          @click="downloadAttachment(interaction.properties.DOCUMENT_ID)"
+        />
+
+        <SignAttachmentDialog
+          :attachment-id="interaction.properties.DOCUMENT_ID"
+          :attachment-name="occurrence.properties.FILE_NAME"
+        />
       </span>
     </div>
+
     <div
       v-else
       class="attachment__deleted"
@@ -43,12 +53,23 @@
       <i class="el-icon-warning" />
       Anexo removido.
     </div>
+
+    <SignAttachmentDialog
+      :attachment-id="interaction.properties.DOCUMENT_ID"
+      :attachment-name="occurrence.properties.FILE_NAME"
+      show-type="timeline"
+    />
   </el-card>
 </template>
 
 <script>
 export default {
   name: 'AttachmentOccurrence',
+
+  components: {
+    SignAttachmentDialog: () => import('@/components/dialogs/SignAttachmentDialog')
+  },
+
   filters: {
     sizeFormat: (size) => {
       const kb = size / 1024
@@ -59,6 +80,7 @@ export default {
       else return `${size} bytes`
     }
   },
+
   props: {
     value: {
       type: Object,
@@ -69,6 +91,7 @@ export default {
       required: true
     }
   },
+
   computed: {
     interaction() {
       return this.value
@@ -76,11 +99,16 @@ export default {
 
     available() {
       return !this.interaction.archived
+    },
+
+    isLengthValid() {
+      return !this.occurrence?.properties?.FILE_SIZE || Number(this.occurrence?.properties?.FILE_SIZE) >= 1024
     }
   },
+
   methods: {
-    downloadAttachment(url) {
-      window.open(url, '_blank')
+    downloadAttachment(id) {
+      window.open(`https://api.justto.app/api/office/documents/${id}/sign`, '_blank')
     }
   }
 }
@@ -90,7 +118,7 @@ export default {
 @import '@/styles/colors.scss';
 
 .attachment__card {
-  padding-bottom: 10px;
+  padding-bottom: 0px;
 
   .attachment__container {
     display: flex;
@@ -108,6 +136,7 @@ export default {
       align-self: flex-end;
 
       .attachment__file-name {
+        word-break: break-word;
         font-weight: 500;
         font-size: 16px;
       }
@@ -121,6 +150,9 @@ export default {
     .attachment__file-download {
       cursor: pointer;
       align-self: center;
+      display: flex;
+      gap: 8px;
+      align-items: center;
     }
   }
   .attachment__deleted {

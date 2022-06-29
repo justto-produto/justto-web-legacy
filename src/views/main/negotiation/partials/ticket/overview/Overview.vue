@@ -2,16 +2,19 @@
   <section
     v-loading="isLoading"
     class="overview-container"
+    :class="{'dispute': disputeMode}"
   >
     <i
+      v-if="!disputeMode"
       :class="{ 'overview-container__button--active': isOverviewActive }"
       class="overview-container__button el-icon-arrow-left"
       @click="$emit('toggle-show-overview')"
     />
 
     <HeaderUserMenu
+      v-if="!disputeMode && isOverviewActive"
       class="overview-container__menu"
-      :class="{'hidde-menu': showOverview}"
+      :class="{'hidde-menu': (showOverview || disputeMode)}"
     />
 
     <div>
@@ -27,6 +30,15 @@
           @click="deleteTicket(ticket.disputeId)"
         />
       </h1>
+
+      <dispute-code-link
+        v-if="ticket && !!ticket.code && disputeMode"
+        :code="ticket.code"
+        :custom-style="{ fontSize: '14x', fontWeight: 'normal', color: '#979797d'}"
+        :custom-icon-style="{ paddingRight: '8px' }"
+        @openTimeline="openTimelineModal"
+      />
+
       <h3
         v-if="ticket.internalId"
         class="overview-container__subtitle show-right-icon"
@@ -44,8 +56,10 @@
     <OverviewTags />
 
     <OverviewOffers
+      v-if="isOverviewActive"
       :defendant-offer="lastOffers.defendantOffer"
       :plaintiff-offer="lastOffers.plaintiffOffer"
+      :accepted-value="lastOffers.acceptedValue"
       :upper-range="ticket.upperRange"
       :status="ticket.status"
     />
@@ -55,13 +69,18 @@
       v-model="ticket.description"
     />
 
-    <OverviewTabs />
+    <OverviewTabs
+      :dispute-mode="disputeMode"
+      @addRecipient="addRecipient"
+      @edit:dispute="editDispute"
+    />
 
     <DeleteTicketDialog
       ref="deleteTicketDialog"
       :status="ticket.status"
       :dispute-id="ticket.disputeId || routeId"
     />
+
     <AssociateContactsModal
       :value="showAssociatedContacts"
       :current="associateContactsPropertie"
@@ -69,6 +88,18 @@
       :metadata="metadata"
       @input="handleChangeAssociatedContracts"
     />
+
+    <JusTimeline
+      v-if="showTimelineModal"
+      v-model="showTimelineModal"
+      :code="ticket.code"
+      @update:contact="restartEngagementFromTimeline"
+    />
+
+    <EngagementLimitDialog :dispute-id="routeId" />
+
+    <!-- Edição de disputa -->
+    <EditDisputeDialog ref="editDisputeDialog" />
   </section>
 </template>
 
@@ -76,6 +107,7 @@
 import { mapActions, mapGetters } from 'vuex'
 
 import preNegotiation from '@/utils/mixins/ticketPreNegotiation'
+import restartEngagement from '@/utils/mixins/restartEngagement'
 
 export default {
   name: 'Overview',
@@ -87,21 +119,31 @@ export default {
     OverviewOffers: () => import('./OverviewOffers'),
     DeleteTicketDialog: () => import('./DeleteTicketDialog'),
     HeaderUserMenu: () => import('@/components/menus/HeaderUserMenu'),
+    JusTimeline: () => import('@/components/JusTimeline/JusTimeline'),
+    DisputeCodeLink: () => import('@/components/buttons/DisputeCodeLink'),
     TextInlineEditor: () => import('@/components/inputs/TextInlineEditor'),
-    AssociateContactsModal: () => import('@/components/dialogs/AssociateContactsModal')
+    EngagementLimitDialog: () => import('@/components/dialogs/EngagementLimitDialog'),
+    AssociateContactsModal: () => import('@/components/dialogs/AssociateContactsModal'),
+    EditDisputeDialog: () => import('@/views/main/dispute/partials/DisputeOverview/dialogs/EditDisputeDialog')
   },
 
-  mixins: [preNegotiation],
+  mixins: [preNegotiation, restartEngagement],
 
   props: {
     showOverview: {
       type: Boolean,
       required: true
+    },
+
+    disputeMode: {
+      type: Boolean,
+      default: false
     }
   },
 
   data: () => ({
-    innerWidth: window.innerWidth
+    innerWidth: window.innerWidth,
+    showTimelineModal: false
   }),
 
   computed: {
@@ -125,9 +167,31 @@ export default {
   },
 
   beforeMount() {
+    const id = this.$route.params.id
+
     window.addEventListener('resize', event => {
       this.innerWidth = event.target.innerWidth
     })
+
+    if (this.disputeMode) {
+      const { getTicketMetadata, getAssociatedContacts, setDisputeProperty } = this
+      this.getTicketOverview(id).catch(error => this.$jusNotification({ error }))
+      this.getTicketOverviewInfo(id)
+      this.getTicketOverviewParties(id).then(() => {
+        getTicketMetadata(id).then(() => {
+          getAssociatedContacts(id).then(res => {
+            if (res['CONTATOS ASSOCIADOS'] === 'MAIS TARDE') {
+              setDisputeProperty({ key: 'CONTATOS ASSOCIADOS', disputeId: id, value: 'NAO' }).then(() => {
+                getAssociatedContacts(id)
+              })
+            }
+          })
+        })
+      })
+      this.getDisputeTags(id)
+      this.getLastTicketOffers(id)
+      this.populateTimeline()
+    }
   },
 
   beforeDestroy() {
@@ -138,8 +202,47 @@ export default {
     ...mapActions([
       'setTicketOverview',
       'setDisputeProperty',
-      'getAssociatedContacts'
+      'getAssociatedContacts',
+      'getDisputeTags',
+      'getTicketOverview',
+      'getTicketMetadata',
+      'getLastTicketOffers',
+      'getTicketOverviewInfo',
+      'getTicketOverviewParties',
+      'getDisputeTimeline'
     ]),
+
+    openTimelineModal() {
+      this.showTimelineModal = true
+      this.$jusSegment('Linha do tempo visualizada por dentro da disputa', { disputeId: this.routeId })
+    },
+
+    addRecipient({ _ }) {
+      if (this.disputeMode) {
+        this.$emit('addRecipient')
+      }
+    },
+
+    restartEngagementFromTimeline(disputeRole) {
+      const { name, party, id: roleId } = disputeRole
+      const { status, id } = this.dispute
+
+      this.verifyRestartEngagement({ name, party, status, disputeId: id, disputeRoleId: roleId })
+    },
+
+    async populateTimeline() {
+      let getting = true
+      for (const round in [0, 1, 2, 3, 4]) {
+        if (getting) {
+          await new Promise(resolve => { setTimeout(resolve, round * 2000) })
+          this.getDisputeTimeline(this.ticket.code).then(() => {
+            getting = false
+          })
+        } else {
+          break
+        }
+      }
+    },
 
     copy(value) {
       navigator.clipboard.writeText(value)
@@ -162,6 +265,10 @@ export default {
       this.setDisputeProperty({ key: 'CONTATOS ASSOCIADOS', disputeId, value }).then(() => {
         this.getAssociatedContacts(disputeId)
       })
+    },
+
+    editDispute() {
+      this.$refs.editDisputeDialog.show()
     }
   }
 }
@@ -180,6 +287,7 @@ export default {
 
   .overview-container__title {
     margin: 0;
+    font-size: 20px;
 
     .el-icon-delete {
       // font-size: 20px;
@@ -220,6 +328,10 @@ export default {
     &--active:before {
       transform: rotate(180deg) translateY(50%) !important;
     }
+  }
+
+  &.dispute {
+    padding: 0;
   }
 }
 
@@ -301,7 +413,13 @@ export default {
     }
   }
 
+  div {
+    .dispute-code {
+      margin: 8px 0;
+    }
+  }
 }
+
 @media (max-height: 600px) {
   .overview-container {
     gap: 0px !important;

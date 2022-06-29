@@ -5,7 +5,8 @@
       {
         'jus-avatar-user--shadow': shadow,
         'jus-avatar-user--active': active,
-        'jus-avatar-user--purple': purple,
+        'jus-avatar-user--purple': isRecovery ? !purple : purple,
+        'jus-avatar-user--recovery': isRecovery,
         'jus-avatar-user--status': status,
         'jus-avatar-user--online': status === 'ONLINE',
       }
@@ -27,6 +28,7 @@
 
 <script>
 import { getStringInitials } from '@/utils'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'JusAvatarUser',
@@ -61,6 +63,10 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      isRecovery: 'isWorkspaceRecovery'
+    }),
+
     showAvatar() {
       if (this.src) return true
       else if (this.name && this.name.trim()) return false
@@ -115,6 +121,18 @@ export default {
     }
   }
 
+  &.jus-avatar-user--purple.jus-avatar-user--recovery {
+    span {
+      background-color: $--color-danger;
+    }
+  }
+
+  &.jus-avatar-user--recovery {
+    span {
+      background-color: $--color-success;
+    }
+  }
+
   &.jus-avatar-user--shadow {
     img, span {
       box-shadow: 0 0 8px 2px rgba(175, 175, 175, 0.4);
@@ -160,6 +178,12 @@ export default {
   &.jus-avatar-user--md {
     width: 3.5rem;
     height: 3.5rem;
+  }
+  &.jus-avatar-user--small {
+    vertical-align: top;
+    font-size: 9px;
+    width: 1.7rem;
+    height: 1.7rem;
   }
   &.jus-avatar-user--mini {
     vertical-align: top;

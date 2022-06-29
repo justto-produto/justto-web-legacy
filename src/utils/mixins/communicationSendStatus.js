@@ -1,4 +1,4 @@
-import { isSimilarStrings } from '@/utils'
+import { isSimilarStrings, normalizeDateToISO } from '@/utils'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -26,7 +26,7 @@ export default {
     },
 
     directionIn() {
-      return this.interaction.direction === 'INBOUND'
+      return this.interaction?.direction === 'INBOUND'
     },
 
     sendDate() {
@@ -48,6 +48,33 @@ export default {
       }
     },
 
+    sendStatusDate() {
+      const parameters = this.interaction?.message?.parameters || {}
+      const keys = Object.keys(parameters)
+
+      if (keys.includes('READ_DATE')) {
+        if (parameters?.READ_DATE?.includes('[UTC]')) {
+          return this.$moment(parameters?.READ_DATE.slice(parameters?.READ_DATE.indexOf('[UTC]')))
+        } else {
+          return normalizeDateToISO(parameters.READ_DATE)
+        }
+      } else if (keys.includes('RECEIVER_DATE')) {
+        if (parameters?.RECEIVER_DATE?.includes('[UTC]')) {
+          return this.$moment(parameters?.RECEIVER_DATE.slice(parameters?.RECEIVER_DATE.indexOf('[UTC]')))
+        } else {
+          return normalizeDateToISO(parameters.RECEIVER_DATE)
+        }
+      } else if (keys.includes('SEND_DATE')) {
+        if (parameters?.SEND_DATE?.includes('[UTC]')) {
+          return this.$moment(parameters?.SEND_DATE.slice(parameters?.SEND_DATE.indexOf('[UTC]')))
+        } else {
+          return normalizeDateToISO(parameters.SEND_DATE)
+        }
+      } else {
+        return this.interaction?.createAt?.dateTime
+      }
+    },
+
     properties() {
       return this.occurrence?.properties
     },
@@ -55,7 +82,7 @@ export default {
     groupedOccurrences() {
       try {
         if (this.occurrence?.properties?.GROUPED_OCCURRENCES?.length > 2) {
-          return JSON.parse(this.occurrence?.properties?.GROUPED_OCCURRENCES.replace(/'/g, '"').map(({ date }) => date))
+          return JSON.parse(this.occurrence?.properties?.GROUPED_OCCURRENCES.replace(/'/g, '"'))
         }
         return []
       } catch (_) {

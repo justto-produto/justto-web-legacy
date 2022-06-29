@@ -4,9 +4,31 @@
       class="container-aside"
       width="auto"
     >
-      <div class="container-aside__logo">
+      <div
+        class="container-aside__logo"
+        :class="{'has-ghost-mode': isJusttoAdmin}"
+      >
+        <el-tooltip
+          v-if="isJusttoAdmin"
+          content="Modo anônimo"
+        >
+          <JusIcon
+            icon="ghost-mode"
+            class="ghost-mode"
+            :is-active="ghostMode"
+            @click="setGhostMode(!ghostMode)"
+          />
+        </el-tooltip>
+
         <router-link to="/">
-          <img src="@/assets/logo-small.svg">
+          <img
+            v-if="isRecovery"
+            src="@/assets/logo-small-purple.svg"
+          >
+          <img
+            v-else
+            src="@/assets/logo-small.svg"
+          >
         </router-link>
       </div>
 
@@ -89,6 +111,8 @@
     <ThamirisAlerts
       :is-visible="areThamirisAlertsVisible"
     />
+
+    <BuyDialerDialog />
   </el-container>
 </template>
 
@@ -98,12 +122,14 @@ import { eventBus } from '@/utils'
 
 export default {
   name: 'MainContainer',
+
   components: {
     jusMessagePreview: () => import('@/components/dialogs/JusMessagePreviewDialog'),
     JusHeaderMain: () => import('@/components/layouts/JusHeaderMain'),
     JusTeamMenu: () => import('@/components/layouts/JusTeamMenu'),
     JusShortchts: () => import('@/components/others/JusShortcuts'),
-    ThamirisAlerts: () => import('@/components/dialogs/ThamirisAlerts.vue')
+    ThamirisAlerts: () => import('@/components/dialogs/ThamirisAlerts.vue'),
+    BuyDialerDialog: () => import('@/components/dialogs/BuyDialerDialog')
   },
 
   data() {
@@ -117,17 +143,20 @@ export default {
 
   computed: {
     ...mapGetters({
-      workspaceId: 'workspaceId',
-      isAdminProfile: 'isAdminProfile',
-      isJusttoAdmin: 'isJusttoAdmin',
-      workspaceMembersSorted: 'workspaceMembersSorted',
+      accountId: 'accountId',
+      ghostMode: 'ghostMode',
       personId: 'loggedPersonId',
-      workspace: 'workspaceSubdomain',
+      workspaceId: 'workspaceId',
       authorization: 'accountToken',
-      userPreferences: 'userPreferences',
+      isJusttoAdmin: 'isJusttoAdmin',
       notifications: 'notifications',
-      areThamirisAlertsVisible: 'areThamirisAlertsVisible',
-      areNotificationsVisible: 'areNotificationsVisible'
+      workspace: 'workspaceSubdomain',
+      isAdminProfile: 'isAdminProfile',
+      isRecovery: 'isWorkspaceRecovery',
+      userPreferences: 'userPreferences',
+      workspaceMembersSorted: 'workspaceMembersSorted',
+      areNotificationsVisible: 'areNotificationsVisible',
+      areThamirisAlertsVisible: 'areThamirisAlertsVisible'
     }),
 
     canAccessNegotiationScreen() {
@@ -223,13 +252,19 @@ export default {
       setAccountProperty: 'setAccountProperty',
       setWindowGeometry: 'setWindowGeometry',
       getPreview: 'getMessageToPreview',
-      getThamirisAlerts: 'getThamirisAlerts'
+      getThamirisAlerts: 'getThamirisAlerts',
+      setGhostMode: 'setGhostMode'
     }),
 
     pollData() {
-      if (this.workspaceId.length !== 0) this.getThamirisAlerts()
+      if (this.workspaceId.length !== 0 && !['admin-panel'].includes(this.$route.name)) {
+        this.getThamirisAlerts()
+      }
+
       this.timer = setInterval(() => {
-        if (this.workspaceId.length !== 0) this.getThamirisAlerts()
+        if (this.workspaceId.length !== 0 && !['admin-panel'].includes(this.$route.name)) {
+          this.getThamirisAlerts()
+        }
       }, 120000)
     },
 
@@ -262,6 +297,10 @@ export default {
           headers,
           channel: `${baseUrl}/${this.personId}/dispute/summary`
         })
+        this.subscriptions.push({
+          headers,
+          channel: `/topic/account/${this.accountId}`
+        })
 
         this.subscriptions.forEach(subscription => this.$socket.emit('subscribe', subscription))
         this.loadAccountProperty().then(this.checkAcceptterms)
@@ -270,8 +309,9 @@ export default {
 
     checkAcceptterms(response) {
       const key = 'LAST_ACCEPTED_DATE'
-      const lastTermDate = this.$moment('20/04/2021', 'DD/MM/YYYY')
+      const lastTermDate = this.$moment('31/05/2022', 'DD/MM/YYYY')
       let lastAcceptedDate = response[key] ? this.$moment(response[key], 'DD/MM/YYYY') : Boolean(response[key])
+
       if (!lastAcceptedDate || lastTermDate.isAfter(lastAcceptedDate, 'day')) {
         const docs = [
           {
@@ -372,6 +412,18 @@ export default {
     height: 58px;
     padding: 18px;
     text-align: center;
+
+    &.has-ghost-mode {
+      padding-top: 8px;
+      height: 64px;
+    }
+
+    .ghost-mode {
+      height: 16px;
+      margin-bottom: 4px;
+      margin-left: -4px;
+      cursor: pointer;
+    }
   }
 
   .container-aside__team {

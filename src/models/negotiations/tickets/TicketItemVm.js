@@ -10,11 +10,14 @@ class Plaintiff {
 }
 export default class TicketItemVm {
   constructor({
-    disputeId, id,
-    disputeStatus, status,
+    id,
+    disputeId,
+    disputeStatus,
+    status,
     negotiatorName,
     expirationDate,
-    conclusionDate, conclusion,
+    conclusionDate,
+    conclusion,
     visualized,
     favorite,
     plaintiff,
@@ -29,16 +32,28 @@ export default class TicketItemVm {
     hasDocument,
     signStatus,
     hasDraft,
-    draftStatus
+    lawyer,
+    draftStatus,
+    alwaysContactParty,
+    contactPartyWhenInvalidLowyer,
+    contactPartyWhenInvalidLawyer,
+    contactPartyWhenNoLowyer,
+    contactPartyWhenNoLawyer
   }) {
     const oab = firstClaimantLawyerOab ? firstClaimantLawyerOab.split('/') : []
     this.disputeId = disputeId || id
+    this.alwaysContactParty = Boolean(alwaysContactParty)
+    this.contactPartyWhenInvalidLawyer = Boolean(contactPartyWhenInvalidLawyer || contactPartyWhenInvalidLowyer)
+    this.contactPartyWhenInvalidLowyer = Boolean(contactPartyWhenInvalidLawyer || contactPartyWhenInvalidLowyer)
+    this.contactPartyWhenNoLawyer = Boolean(contactPartyWhenNoLawyer || contactPartyWhenNoLowyer)
+    this.contactPartyWhenNoLowyer = Boolean(contactPartyWhenNoLawyer || contactPartyWhenNoLowyer)
     this.disputeStatus = disputeStatus || status
     this.negotiatorName = negotiatorName || disputeRoles?.find(role => role.roleNameNegotiator).name
     this.expirationDate = expirationDate
     this.conclusionDate = (conclusionDate || conclusion)
     this.visualized = visualized
     this.favorite = favorite
+    this.lawyer = lawyer
     this.hasDraft = hasDraft || hasDocument
     this.signStatus = signStatus || draftStatus
     this.plaintiff = new Plaintiff(plaintiff || {

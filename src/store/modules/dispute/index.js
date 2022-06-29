@@ -44,6 +44,11 @@ const dispute = {
       term: '',
       total: 0
     },
+    notesQuery: {
+      page: 1,
+      size: 20,
+      sort: ['createdAt,desc', 'id,desc']
+    },
     recentPrescriptions: JSON.parse(localStorage.getItem('jusrecentprescriptions')) || {},
     lastAccess: {},
     hasFilters: false,
@@ -53,7 +58,10 @@ const dispute = {
     exportHistory: {},
     exportHistoryPage: 0,
     prescriptionsList: [],
-    timeline: {}
+    timeline: {},
+    batchActionsLastUse: {},
+    disputesNeedsRestart: {},
+    engagementLimitExceeded: false
   },
   mutations: mutations,
   actions: actions,

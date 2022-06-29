@@ -42,7 +42,7 @@ export default {
     },
     willBreak({ id }) {
       // Calcula o tamanho da página.
-      const maxHeight = document.querySelector('.content-wrapper').offsetHeight
+      const maxHeight = document.querySelector('.content-wrapper')?.offsetHeight
       // Tamanho em pixels da quebra de página.
       const breakPx = 1000
 
@@ -79,7 +79,7 @@ export default {
     }),
 
     occurrences() {
-      return this.allOccurrences.filter(({ id, archived, interaction }) => (Boolean(id) && !archived && interaction.archived !== true))
+      return this.allOccurrences.filter(({ id, archived, interaction }) => (Boolean(id) && !archived && interaction?.archived !== true))
     }
   }
 }

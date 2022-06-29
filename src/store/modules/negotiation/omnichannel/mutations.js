@@ -6,7 +6,7 @@ import { eventBus, getFormatedDate } from '@/utils'
 import EDITOR_TABS from '@/constants/editor'
 import { StateOccurrences } from '@/store/modules/negotiation/omnichannel/state'
 
-const omnichannelMutations = {
+export default {
   setOmnichannelActiveTab: (state, tab) => {
     if (Object.values(EDITOR_TABS).includes(tab)) {
       Vue.set(state, 'activeTab', tab)
@@ -19,10 +19,11 @@ const omnichannelMutations = {
 
   setMessageType: (state, type) => Vue.set(state.editor, 'messageType', type),
 
-  setOccurrences: (state, { content, totalElements, first }) => {
+  setOccurrences: (state, { content, totalElements, first, number }) => {
     if (first) {
       Vue.set(state.occurrences, 'list', [])
     }
+
     const datas = state.occurrences.list.map((occurrence, index) => {
       if (occurrence.id === null) {
         return {
@@ -54,8 +55,9 @@ const omnichannelMutations = {
       state.occurrences.list.splice(index + 1, 0, occurrence)
     })
 
-    state.occurrences.filter.page += 1
+    Vue.set(state.occurrences.filter, 'page', number + 2)
     Vue.set(state.occurrences, 'totalElements', totalElements)
+    Vue.set(state, 'totalOfOccurrences', totalElements)
   },
 
   incrementOccurrencesCountGetters: (state) => (state.countOmnichannelGetters += 1),
@@ -84,6 +86,8 @@ const omnichannelMutations = {
     const validationInteractions = {
       MESSAGES: [
         'NPS',
+        'ACTION',
+        'PHONE_CALL',
         'ATTACHMENT',
         'COMMUNICATION',
         'MANUAL_PROPOSAL',
@@ -97,7 +101,9 @@ const omnichannelMutations = {
       NOTES: null,
       OCCURRENCES: [
         'CLICK',
+        'ACTION',
         'ATTACHMENT',
+        'PHONE_CALL',
         'VISUALIZATION',
         'COMMUNICATION',
         'MANUAL_PROPOSAL',
@@ -119,7 +125,9 @@ const omnichannelMutations = {
     }
 
     if (canInclude) {
-      canInclude = state.occurrences.list.find(({ id }) => (id === occurrence.id)) === undefined
+      const tempOccurrence = state.occurrences.list.find(({ id }) => (id === occurrence.id))
+
+      canInclude = tempOccurrence === undefined
     }
 
     if (canInclude) {
@@ -133,6 +141,10 @@ const omnichannelMutations = {
 
       // TODO: Procurar uma solução melhor.
       eventBus.$emit('NEGOTIATION_WEBSOCKET_NEW_OCCURRENCE', {})
+    } else {
+      const occurrenceIndex = state.occurrences.list.findIndex(({ id }) => (id === occurrence?.id))
+
+      if (occurrenceIndex >= 0) Vue.set(state.occurrences.list, occurrenceIndex, occurrence)
     }
   },
 
@@ -197,7 +209,13 @@ const omnichannelMutations = {
 
   setDisputeProtocol: (state, data) => {
     Vue.set(state, 'disputeProtocol', data)
+  },
+
+  setGroupedOccurrencesById: (state, { data: { content: occurrences }, payload: { parentId } }) => {
+    Vue.set(state.groupedOccurrences, parentId, occurrences)
+  },
+
+  deleteGroupedOccurrencesById: (state, id) => {
+    Vue.delete(state.groupedOccurrences, id)
   }
 }
-
-export default omnichannelMutations

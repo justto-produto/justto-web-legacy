@@ -2,7 +2,7 @@
   <el-dialog
     :close-on-click-modal="false"
     :visible.sync="advancedFiltersDialogVisible"
-    width="650px"
+    width="60%"
     destroy-on-close
     append-to-body
     @open="restoreFilters()"
@@ -156,7 +156,7 @@
             v-if="!loading && isFinished || isPreNegotiation"
             :span="12"
           >
-            <el-form-item label="Réu">
+            <el-form-item :label="$tc('PARTY_RESPONDENT', isRecovery)">
               <el-select
                 v-model="filters.respondentNames"
                 multiple
@@ -312,12 +312,14 @@ import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'TicketsAdvancedFilters',
+
   props: {
     activeTab: {
       type: String,
       required: true
     }
   },
+
   data() {
     return {
       advancedFiltersDialogVisible: false,
@@ -326,6 +328,7 @@ export default {
       filters: {}
     }
   },
+
   computed: {
     ...mapGetters({
       strategies: 'getMyStrategiesLite',
@@ -334,7 +337,8 @@ export default {
       workspaceTags: 'workspaceTags',
       negotiatorsList: 'workspaceMembers',
       ticketsQuery: 'getTicketsQuery',
-      preNegotiationKeywords: 'getPreNegotiation'
+      preNegotiationKeywords: 'getPreNegotiation',
+      isRecovery: 'isWorkspaceRecovery'
     }),
 
     isPreNegotiation() {
@@ -592,9 +596,15 @@ export default {
   .el-select, .el-date-editor, .el-radio-group {
     width: 100%;
   }
+
   .el-form-item__content {
     line-height: 36px;
+
+    .el-input__inner {
+      width: 100%;
+    }
   }
+
   &__switch {
     margin-bottom: 18px;
     .el-form-item__content {

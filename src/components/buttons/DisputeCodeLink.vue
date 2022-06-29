@@ -23,6 +23,7 @@
             />
           </div>
           <JusTjIdentifier
+            v-if="isValidCNJ"
             :code="code"
             :disabled="!isJusttoAdmin"
             :placement="tjPlacement"
@@ -71,8 +72,13 @@ export default {
       disputeTimeline: 'getDisputesTimeline'
     }),
 
+    isValidCNJ() {
+      return Object.keys(this.disputeTimeline).includes(this.code) && this.disputeTimeline[this.code].isValid
+    },
+
     status() {
       const defaultMessage = 'Até este momento, não conseguimos capturar este processo.'
+
       if (this.disputeTimeline && this.disputeTimeline[this.code]) {
         if (this.disputeTimeline[this.code].lawsuits.length) {
           return {
@@ -81,16 +87,26 @@ export default {
             text: 'Abrir Timeline da disputa.'
           }
         } else if (this.disputeTimeline[this.code].error) {
-          return {
-            available: false,
-            icon: 'el-icon-question',
-            text: this.disputeTimeline[this.code].error?.description || defaultMessage
+          switch (this.disputeTimeline[this.code].error?.code) {
+            case 20:
+            case 21:
+              return {
+                available: false,
+                icon: 'el-icon-lock',
+                text: 'Processo em segredo de Justiça.'
+              }
+            default:
+              return {
+                available: false,
+                icon: 'el-icon-question',
+                text: this.disputeTimeline[this.code].error?.description || defaultMessage
+              }
           }
         } else {
           return {
             available: false,
             icon: 'el-icon-error',
-            text: defaultMessage
+            text: this.disputeTimeline[this.code].isValid ? defaultMessage : 'Número CNJ inválido'
           }
         }
       } else {
@@ -147,7 +163,7 @@ export default {
       align-items: center;
       justify-content: space-between;
       .el-icon-loading { color: $--color-text-secondary; }
-      .el-icon-error { color: $--color-danger; }
+      .el-icon-error, .el-icon-lock { color: $--color-danger; }
     }
 
     .dispute-code__icon { visibility: hidden; }

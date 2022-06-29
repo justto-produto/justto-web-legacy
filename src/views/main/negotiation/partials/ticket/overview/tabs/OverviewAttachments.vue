@@ -20,7 +20,7 @@
         >
           <el-link
             :underline="false"
-            :href="attachment.url"
+            :href="`https://api.justto.app/api/office/documents/${attachment.id}/sign`"
             target="_blank"
             class="overview-attachments__item-link"
           >
@@ -29,6 +29,12 @@
           </el-link>
 
           <span class="overview-attachments__item-actions">
+            <SignAttachmentDialog
+              :attachment-id="attachment.id"
+              :attachment-name="attachment.name"
+              class="overview-attachments__item-icon"
+            />
+
             <el-tooltip
               :open-delay="600"
               content="Copiar URL"
@@ -38,6 +44,7 @@
                 @click="copyUrl(attachment.url)"
               />
             </el-tooltip>
+
             <i
               v-if="!attachment.enriched && attachment.direction !== 'INBOUND'"
               class="overview-attachments__item-icon el-icon-delete"
@@ -66,6 +73,12 @@
           <div class="overview-attachments__item-details">
             {{ attachmentOrigin(attachment) }} - {{ attachment.createAt.dateTime | moment('DD/MM/YY') }}
           </div>
+
+          <SignAttachmentDialog
+            :attachment-id="attachment.id"
+            :attachment-name="attachment.name"
+            show-type="timeline"
+          />
         </li>
       </ul>
       <div
@@ -114,7 +127,8 @@ export default {
   name: 'OverviewAttachments',
 
   components: {
-    JusDragArea
+    JusDragArea,
+    SignAttachmentDialog: () => import('@/components/dialogs/SignAttachmentDialog')
   },
 
   mixins: [preNegotiation],

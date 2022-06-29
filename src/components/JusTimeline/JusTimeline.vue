@@ -11,7 +11,7 @@
       class="dialog-timeline__title"
     >
       <span v-if="dispute.lastUpdated">
-        Pesquisado em {{ $moment(dispute.lastUpdated).format('DD/MM/YYYY [às] hh:mm') }}
+        Atualizado em {{ $moment(dispute.lastUpdated).format('DD/MM/YYYY [às] hh:mm') }}
       </span>
     </div>
     <el-container
@@ -74,6 +74,7 @@
             <description
               class="jus-timeline__header-subtitle"
               :lawsuit-dispute="process"
+              @add:part="$emit('update:contact', $event)"
             />
             <div class="jus-timeline__header-tags">
               <el-tag
@@ -307,6 +308,10 @@ export default {
           .jus-timeline__header-tags {
             margin: 8px 0px auto auto;
             display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            max-height: 192px;
+            overflow-x: scroll;
 
             .jus-timeline__tag {
               max-width: 100%;

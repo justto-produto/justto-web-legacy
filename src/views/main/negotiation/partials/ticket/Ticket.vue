@@ -1,7 +1,11 @@
 <template>
   <section class="ticket-container">
     <section class="ticket-container__omnichannel">
-      <TicketHeader @toggle-show-overview="toggleShowOverview" />
+      <TicketHeader
+        :show-overview="showOverview"
+        @toggle-show-overview="toggleShowOverview"
+      />
+
       <Omnichannel :show-overview="showOverview" />
       <div
         v-if="width <= 1200 && showOverview"
@@ -26,6 +30,7 @@
 import events from '@/constants/negotiationEvents'
 import { eventBus } from '@/utils'
 import { mapActions, mapGetters } from 'vuex'
+import restartEngagementBeforeRouteLeave from '@/utils/mixins/restartEngagementBeforeRouteLeave'
 
 export default {
   name: 'Ticket',
@@ -36,6 +41,8 @@ export default {
     TicketHeader: () => import('./TicketHeader'),
     TicketResume: () => import('./TicketResumeDialog')
   },
+
+  mixins: [restartEngagementBeforeRouteLeave],
 
   data: () => ({
     showOverview: false
@@ -48,7 +55,8 @@ export default {
       authorization: 'accountToken',
       isJusttoAdmin: 'isJusttoAdmin',
       workspace: 'workspaceSubdomain',
-      loggedPersonId: 'loggedPersonId'
+      loggedPersonId: 'loggedPersonId',
+      backups: 'getMessagesBackupById'
     }),
 
     socketHeaders() {
@@ -66,9 +74,6 @@ export default {
   },
 
   beforeDestroy() {
-    const { id } = this.$route.params
-
-    this.socketAction('unsubscribe', id)
     eventBus.$off(events.TICKET_CHANGE.callback, this.fetchData)
     eventBus.$off(events.TICKET_WEB_SOCKET_DISCONNECT.callback, this.socketAction)
   },
@@ -85,13 +90,20 @@ export default {
       'getTicketOverviewParties',
       'getTicketMetadata',
       'setDisputeProperty',
-      'getTicketOverviewInfo'
+      'getTicketOverviewInfo',
+      'setAccountProperty',
+      'setEditorBackup'
     ]),
 
-    fetchData(id) {
+    async fetchData(id) {
+      this.setAccountProperty({ PREFERRED_INTERFACE: 'NEGOTIATION' })
       this.socketAction('subscribe', id)
-      this.cleanRecentMessages()
-      this.getTicketOverview(id).catch(error => this.$jusNotification({ error }))
+      await this.cleanRecentMessages()
+      this.getTicketOverview(id).catch(error => this.$jusNotification({ error })).finally(() => {
+        if (!this.backups(id).tab) {
+          this.setEditorBackup()
+        }
+      })
       this.getTicketOverviewInfo(id)
       this.getTicketOverviewParties(id).then(() => {
         this.getTicketMetadata(id).then(() => {
@@ -116,9 +128,11 @@ export default {
 
     socketAction(action, id) {
       if (this.workspace && this.loggedPersonId) {
+        const channel = '/topic/' + this.workspace + '/' + this.loggedPersonId + '/dispute/' + id + '/occurrence'
+
         this.$socket.emit(action, {
           headers: this.socketHeaders,
-          channel: '/topic/' + this.workspace + '/' + this.loggedPersonId + '/dispute/' + id + '/occurrence'
+          channel
         })
       }
     },
@@ -157,6 +171,7 @@ export default {
 
   .ticket-container__overview {
     width: 310px;
+    max-width: 310px;
     height: 100%;
     background-color: #fff;
     border-left: 1px solid $--color-light-gray;
@@ -175,6 +190,8 @@ export default {
       right: 0;
       transform: translateX(100%);
       width: 300px;
+      max-width: 300px;
+
       &--active {
         transform: translateX(0);
       }

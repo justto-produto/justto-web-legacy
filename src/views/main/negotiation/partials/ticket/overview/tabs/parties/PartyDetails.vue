@@ -9,9 +9,10 @@
     />
 
     <JusEditRole
-      v-if="Boolean(party.legacyDto) && !isNegotiator && isJusttoAdmin"
+      v-if="Boolean(party.legacyDto) && !isNegotiator"
       :visible="editRoleDialogVisible"
       :party="party.legacyDto"
+      :ticket-status="ticketStatus"
       @closeEdit="editRoleDialogVisible = false"
     />
 
@@ -27,13 +28,6 @@
         label="Trocar polaridade"
         @change="updatePolarity"
       />
-      <a
-        v-if="!isNegotiator"
-        class="party-details__infoline-link party-details__infoline-link--danger"
-        @click="removeParty"
-      >
-        <i class="el-icon-delete" />
-      </a>
     </div>
 
     <div class="party-details__infoline">
@@ -48,6 +42,7 @@
       </el-alert>
 
       <span class="party-details__infoline-label">Nome completo:</span>
+
       <div class="party-details__icon-info-lawyer">
         <el-tooltip
           :open-delay="600"
@@ -168,6 +163,7 @@
         :contacts="phonesList"
         :disabled="isNegotiator || isPreNegotiation"
         :party-name="party.name"
+        :party="party"
         filter="phoneNumber"
         model="number"
         :mask="phoneMask"
@@ -185,6 +181,7 @@
       <span class="party-details__infoline-label">Emails:</span>
       <PartyContacts
         :party-name="party.name"
+        :party="party"
         :contacts="emailsList"
         :disabled="isNegotiator || isPreNegotiation"
         model="address"
@@ -251,7 +248,7 @@
       <span slot="footer">
         <el-tooltip
           :open-delay="600"
-          :content="`Remover ${partName} de todas as disputas com mesmo réu.`"
+          :content="`Remover ${partName} de todas as disputas com ${isRecovery ? 'a mesma' : 'o mesmo'} ${$tc('PARTY_RESPONDENT', isRecovery)}.`"
           placement="top"
         >
           <el-button
@@ -280,15 +277,27 @@
       </span>
     </el-dialog>
 
-    <el-button
-      v-if="!isNegotiator && isJusttoAdmin"
-      class="party-details__edit"
-      type="text"
-      icon="el-icon-edit"
-      @click="editRoleDialogVisible = true"
-    >
-      Editar
-    </el-button>
+    <div class="party-details__edit">
+      <el-button
+        v-if="!(isNegotiator && !isJusttoAdmin)"
+        class="party-details__edit-button--danger"
+        type="text"
+        icon="el-icon-delete"
+        @click="removeParty"
+      >
+        Excluir
+      </el-button>
+
+      <el-button
+        v-if="!isNegotiator"
+        class="party-details__edit-button"
+        type="text"
+        icon="el-icon-edit"
+        @click="editRoleDialogVisible = true"
+      >
+        Editar
+      </el-button>
+    </div>
 
     <InfoMergeDialog
       ref="mergeInfoDialog"
@@ -297,17 +306,21 @@
       @update="handleMergePartyInfos"
     />
 
-    <NamesakeDialog ref="namesakeDialog" />
+    <NamesakeDialog
+      ref="namesakeDialog"
+      @resolved="verifyRestartDispute"
+    />
   </article>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
 import { isSimilarStrings } from '@/utils'
 import { isValid, strip } from '@fnando/cpf'
 
 import brazilianStates from '@/constants/brazilianStates'
 
+import restartEngagement from '@/utils/mixins/restartEngagement'
 import preNegotiation from '@/utils/mixins/ticketPreNegotiation'
 import TicketTicketOverviewPartyResumed from '@/models/negotiations/overview/TicketOverviewPartyResumed'
 
@@ -328,7 +341,7 @@ export default {
     JusEditRole: () => import('@/components/dialogs/JusEditRole')
   },
 
-  mixins: [preNegotiation],
+  mixins: [preNegotiation, restartEngagement],
 
   props: {
     party: {
@@ -348,8 +361,9 @@ export default {
 
   computed: {
     ...mapGetters({
-      ticketStatus: 'getticketOverviewStatus',
-      isJusttoAdmin: 'isJusttoAdmin'
+      ticketStatus: 'getTicketOverviewStatus',
+      isJusttoAdmin: 'isJusttoAdmin',
+      isRecovery: 'isWorkspaceRecovery'
     }),
 
     disputeId() {
@@ -375,12 +389,12 @@ export default {
     roleOptions() {
       const { roles } = this.party
       const partyOptions = [
-        { value: 'RESPONDENT', label: this.$t('roles.PARTY.RESPONDENT') },
-        { value: 'CLAIMANT', label: this.$t('roles.PARTY.CLAIMANT') }
+        { value: 'RESPONDENT', label: this.$tc('fields.respondentParty', this.isRecovery) },
+        { value: 'CLAIMANT', label: this.$tc('fields.claimantParty', this.isRecovery) }
       ]
       const lawyerOptions = [
-        { value: 'RESPONDENT', label: this.$t('roles.LAWYER.RESPONDENT') },
-        { value: 'CLAIMANT', label: this.$t('roles.LAWYER.CLAIMANT') }
+        { value: 'RESPONDENT', label: this.$tc('fields.respondentLawyer', this.isRecovery) },
+        { value: 'CLAIMANT', label: this.$tc('fields.claimantLawyer', this.isRecovery) }
       ]
 
       if (roles.includes('PARTY')) {
@@ -436,6 +450,7 @@ export default {
       'searchLawyers',
       'addRecipient',
       'verifyRecipient',
+      'resetRecipients',
       'searchPersonByOab',
       'setTicketOverviewParty',
       'deleteTicketOverviewParty',
@@ -445,8 +460,11 @@ export default {
       'updateTicketOverviewPartyContact',
       'addPhoneToDisputeRole',
       'addOabToDisputeRole',
-      'hideSearchLawyerLoading'
+      'hideSearchLawyerLoading',
+      'restartDisputeValidatingStatus'
     ]),
+
+    ...mapMutations(['setRestartDisputeFlag']),
 
     startEditing(key) {
       this.activeAddingData = key
@@ -630,14 +648,14 @@ export default {
           }).catch(error => this.$jusNotification({ error }))
         })
       } else {
+        this.handleRestartEngagement()
         this.setTicketOverviewPartyContact(params)
       }
     },
 
     updateContacts(contactId, contactValue, contactType) {
-      if (!contactValue) {
-        return
-      }
+      if (!contactValue) { return }
+
       const { disputeId, party } = this
       const params = {
         roleId: party.disputeRoleId,
@@ -661,6 +679,8 @@ export default {
         const oabSplited = contactValue.split('/')
         params.contactData.number = oabSplited[0]
         params.contactData.state = oabSplited[1]
+      } else {
+        this.handleRestartEngagement()
       }
 
       this.updateTicketOverviewPartyContact(params)
@@ -700,6 +720,10 @@ export default {
           .then((data) => {
             if (data.value === 'AUTHORIZED') {
               delete reply.disputeId
+              if (['dispute'].includes(this.$route.name)) {
+                if (!['email'].includes(type)) this.resetRecipients()
+                this.$emit('addRecipient', { value, key, type })
+              }
               this.addRecipient({ value, key, type })
             } else {
               this.LGPDWarningDialogVisible = true
@@ -775,6 +799,19 @@ export default {
       this.$refs[ref].$el.classList.remove('active-popover')
     },
 
+    handleRestartEngagement() {
+      this.setRestartDisputeFlag(this.disputeId)
+      // TODO: Salva flag de reinício da disputa.
+
+      // this.verifyRestartEngagement({
+      //   status: this.ticketStatus,
+      //   party: this.party.polarity,
+      //   name: this.party.name,
+      //   disputeId: Number(this.$route.params.id),
+      //   disputeRoleId: this.party.disputeRoleId
+      // })
+    },
+
     updateDisputeRoleField(disputeRole, { field, value }) {
       let message = ''
       const id = this.$route.params.id
@@ -820,6 +857,7 @@ export default {
             disputeRoleId: disputeRole.id || disputeRole.disputeRoleId,
             value
           }).then(() => {
+            this.handleRestartEngagement()
             this.$jusNotification({
               title: 'Yay!',
               message: 'Nº de Telefone adicionada.',
@@ -876,6 +914,15 @@ export default {
           }
         })
       }
+    },
+
+    verifyRestartDispute() {
+      const info = {
+        disputeId: this.currentTicket?.disputeId,
+        status: this.currentTicket?.status
+      }
+
+      this.restartDisputeValidatingStatus(info)
     }
   }
 }
@@ -896,8 +943,13 @@ export default {
 
 .party-details {
   .party-details__edit {
-    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
     margin: 16px 0 0;
+
+    .party-details__edit-button--danger {
+      color: $--color-danger;
+    }
   }
 
   .party-details__infoline {

@@ -81,7 +81,6 @@
     >
       <b>*</b>Disputas importadas recentemente
       <a
-        href="#"
         @click="handlePrescriptionClick('NEWLY_IMPORTED')"
       >
         (clique aqui para remover filtro)

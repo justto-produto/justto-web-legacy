@@ -11,7 +11,7 @@ const importActions = {
       // eslint-disable-next-line
       axios.get(`${importsPath}/${state.file.id}/columns`)
         .then(response => {
-          if (response.status === 204) {
+          if (response?.status === 204) {
             setTimeout(function() {
               resolve(dispatch('getImportsColumns'))
             }, 3000)
@@ -48,9 +48,15 @@ const importActions = {
       method: 'POST'
     })
   },
+
   validateGeneseRunner({ state }) {
     return axiosDispatch({ url: `api/geneserunner/${state.file.id}/validate` })
   },
+
+  validateGeneseRunnerSummary({ state }) {
+    return axiosDispatch({ url: `api/imports/${state.file.id}/resume?loadSummary=true&loadDisputes=false` })
+  },
+
   setErrorFields({ commit }, fields) {
     commit('setErrorFields', fields)
   },
