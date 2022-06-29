@@ -171,6 +171,8 @@ export default {
   gap: 0;
   margin: -12px 50px 8px;
   white-space: nowrap;
+  word-break: break-word;
+  flex-wrap: wrap;
 
   div {
     margin: 0 4px;
