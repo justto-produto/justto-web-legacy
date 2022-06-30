@@ -243,7 +243,7 @@ const disputeMutations = {
   },
 
   setRespondents(state, respondents) {
-    state.respondents = respondents
+    Vue.set(state, 'respondents', [...respondents])
   },
 
   addPrescription(state, prescription) {
