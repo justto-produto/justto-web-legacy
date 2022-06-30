@@ -100,6 +100,15 @@
         <div class="configure-customizations__form-body">
           <div class="configure-customizations__form-body-actions">
             <el-button
+              type="secondary"
+              icon="el-icon-s-promotion"
+              size="mini"
+              @click="handleSendByEmail"
+            >
+              Enviar por e-mail
+            </el-button>
+
+            <el-button
               type="primary"
               size="mini"
               @click="handleUpdateDomains"
@@ -178,7 +187,8 @@
           </el-table>
         </div>
 
-        <el-form-item class="configure-customizations__form-ckeditor jus-ckeditor__parent">
+        <!-- SAAS-4932 Hide footer editor. -->
+        <!-- <el-form-item class="configure-customizations__form-ckeditor jus-ckeditor__parent">
           <ckeditor
             ref="footerEditor"
             v-model="form.emailFooter"
@@ -187,7 +197,7 @@
             :config="editorConfig"
             type="classic"
           />
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
 
       <div class="configure-customizations__footer">
@@ -381,7 +391,8 @@ export default {
       createTemplate: 'createStrategyTemplate',
       getDomains: 'getSendgridDomains',
       getWorkspace: 'getWorkspace',
-      ceateDomain: 'setSendgridDomains'
+      ceateDomain: 'setSendgridDomains',
+      sendEmail: 'sendCustomEmail'
     }),
 
     saveCustomizedConfigurations() {
@@ -425,6 +436,10 @@ export default {
         const domain = (this.properties?.CUSTOM_EMAIL_SENDER || previousDomain).split('@')[1]
 
         this.currentDomain = await this.handleValidateDomain(domain)
+
+        this.getWorkspace().then(() => {
+          this.handleInitializedDialog(Boolean(this.currentDomain))
+        }).catch(fallback)
       } else { // Se não existir
         this.$refs.initOdrDomainDialog.open(({ email }) => {
           this.form.email = email
@@ -567,6 +582,47 @@ export default {
         type: 'info',
         center: true,
         showClose: true
+      })
+    },
+
+    handleSendByEmail() {
+      this.$prompt('Destinatário:', 'Enviar para', {
+        confirmButtonText: 'Enviar',
+        cancelButtonText: 'Cancelar',
+        inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
+        inputErrorMessage: 'Email inválido'
+      }).then(({ value }) => {
+        const templateDns = this.dnsList.map(dns => (`<tr><td style="padding: 4px 8px;">${dns.type}</td><td style="padding: 4px 8px;">${dns.host}</td><td style="padding: 4px 8px;">${dns.data}</td></tr>`)).join('')
+
+        this.sendEmail({
+          subject: 'Liberação de registro',
+          address: value,
+          content: `<table border="1" width="100%" align="left" cellspacing="0" cellpadding="0" style="border-color: #979797">
+          <caption>Liberação de registro</caption>
+          <thead>
+            <tr>
+              <th style="padding: 4px 8px;">Type</th>
+              <th style="padding: 4px 8px;">Host</th>
+              <th style="padding: 4px 8px;">Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${templateDns}
+          </tbody>
+          </table>`
+        }).then(() => {
+          this.$jusNotification({
+            title: 'Yay!',
+            message: 'Email enviado com sucesso.',
+            type: 'success'
+          })
+        }).catch(error => this.$jusNotification({ error }))
+      }).catch(() => {
+        this.$jusNotification({
+          title: 'Ops!',
+          message: 'Envio cancelado.',
+          type: 'warning'
+        })
       })
     }
   }
@@ -743,6 +799,7 @@ export default {
     }
   }
   .configure-customizations__footer {
+    margin-top: 24px;
     display: flex;
     flex-direction: column;
     align-items: center;
