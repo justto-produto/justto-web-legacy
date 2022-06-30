@@ -307,11 +307,17 @@
       :visible.sync="attachmentDialogVisible"
       :close-on-click-modal="false"
       :close-on-press-escape="false"
+      center
       append-to-body
       width="600px"
       title="Enviar anexo"
-      class="dialog-actions__increase-alert"
+      custom-class="dialog-actions__add-attachment"
     >
+      <JusDragArea
+        :visible="true"
+        @closeDialog="attachmentDialogVisible = false"
+      />
+
       <span />
     </el-dialog>
 
@@ -337,11 +343,13 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import { JusDragArea } from '@/components/JusDragArea'
 
 export default {
   name: 'DialogActions',
 
   components: {
+    JusDragArea,
     DropLawsuitForm: () => import('@/components/layouts/DropLawsuitForm')
   },
 
@@ -844,6 +852,14 @@ export default {
     .dialog-actions__increase-alert-infoline {
       word-break: break-word;
       span { color: $--color-danger }
+    }
+  }
+}
+
+.dialog-actions__add-attachment {
+  .el-dialog__body {
+    .jus-drag-area {
+      min-height: 25vh;
     }
   }
 }
