@@ -32,7 +32,7 @@ export default {
 
   computed: {
     wasViewed() {
-      if (this.dispute?.lastInteraction?.direction === 'INBOUND' && ['RUNNING'].includes(this.dispute?.status) && ['VISUALIZATION', 'NEGOTIATOR_ACCESS', 'CLICK'].includes(this.dispute?.lastInteraction?.type)) {
+      if (this.dispute?.lastInteraction?.direction === 'INBOUND' && ['RUNNING'].includes(this.dispute?.status || this.dispute?.disputeStatus) && ['VISUALIZATION', 'NEGOTIATOR_ACCESS', 'CLICK'].includes(this.dispute?.lastInteraction?.type)) {
         return this.$moment().diff(this.$moment(this.dispute?.lastInteraction?.createAt?.dateTime), 'hours') >= 24
       }
 
@@ -40,7 +40,7 @@ export default {
     },
 
     needFolllowUp() {
-      if (this.dispute?.lastInteraction?.direction === 'OUTBOUND' && ['RUNNING'].includes(this.dispute?.status)) {
+      if (this.dispute?.lastInteraction?.direction === 'OUTBOUND' && ['RUNNING'].includes(this.dispute?.status || this.dispute?.disputeStatus)) {
         return this.$moment().diff(this.$moment(this.dispute?.lastInteraction?.createAt?.dateTime), 'hours') >= 24
       }
 

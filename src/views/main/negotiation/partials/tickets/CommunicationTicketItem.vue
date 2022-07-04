@@ -139,6 +139,12 @@
       <el-step />
     </el-steps>
 
+    <FollowUp
+      v-if="ticket.disputeStatus === 'RUNNING'"
+      :dispute="ticket"
+      class="communication-ticket-item-container__follow-up"
+    />
+
     <!-- <JusIcon
       v-if="isOnline"
       class="communication-ticket-item-container__online"
@@ -168,6 +174,10 @@ import sharedMethods from './patials/sharedTicketdMethods'
 
 export default {
   name: 'CommunicationTicketItem',
+
+  components: {
+    FollowUp: () => import('@/views/main/management/partials/partials/ManagementFollowUp')
+  },
 
   mixins: [sharedMethods],
 
@@ -391,6 +401,13 @@ export default {
       color: $--color-primary !important;
       font-weight: 600;
     }
+  }
+
+  .communication-ticket-item-container__follow-up {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    margin: 4px 0px 4px 12px;
   }
 
   /*.communication-ticket-item-container__online {
