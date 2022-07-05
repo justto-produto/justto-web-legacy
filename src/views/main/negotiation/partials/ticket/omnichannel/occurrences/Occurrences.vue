@@ -181,8 +181,6 @@ export default {
           onlyComunnications.reverse()
 
           for (const item of onlyComunnications) {
-            console.log(item)
-
             const { interaction: { message: { communicationType, sender, messageId } } } = item
 
             this.addRecipient({
