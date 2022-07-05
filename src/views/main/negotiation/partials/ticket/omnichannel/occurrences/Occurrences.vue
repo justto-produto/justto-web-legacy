@@ -161,7 +161,8 @@ export default {
       'getOccurrences',
       'resetRecipients',
       'resetOccurrences',
-      'resetMessageText'
+      'resetMessageText',
+      'addRecipient'
     ]),
 
     adjustScroll(force = false) {
@@ -175,6 +176,24 @@ export default {
     loadOccurrences($state) {
       if (!this.isPrinting) {
         this.getOccurrences(this.id).then(response => {
+          const onlyComunnications = (response?.content || []).filter(({ interaction }) => (response.first && interaction?.type === 'COMMUNICATION' && interaction?.direction === 'INBOUND'))
+
+          onlyComunnications.reverse()
+
+          for (const item of onlyComunnications) {
+            console.log(item)
+
+            const { interaction: { message: { communicationType, sender, messageId } } } = item
+
+            this.addRecipient({
+              value: sender,
+              type: communicationType.toLowerCase(),
+              inReplyTo: messageId,
+              key: 'address'
+            })
+            break
+          }
+
           if (response.first) {
             this.adjustScroll(true)
           }

@@ -122,6 +122,7 @@ const omnichannelActions = {
   addRecipient({ commit, dispatch, getters }, recipient) {
     const { type, value } = recipient
     const { getEditorMessageType, getEditorRecipients } = getters
+
     if (getEditorRecipients.find(el => el.value === value)) {
       commit('removeRecipient', value)
     } else {
