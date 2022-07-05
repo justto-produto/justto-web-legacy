@@ -1,6 +1,8 @@
 import router from '@/router'
 import { axiosDispatch } from '@/utils'
 
+const vue = () => document.getElementById('app')?.__vue__
+
 const accountsPath = 'api/accounts'
 
 const accountActions = {
@@ -122,6 +124,38 @@ const accountActions = {
       method: 'GET',
       mutation: 'setAccountProperty',
       action: 'setScheduledCallsRequester'
+    })
+  },
+
+  confirmActiveScheduledCalls({ getters: { loggedPersonName }, commit, dispatch }) {
+    const template = `
+      Deseja iniciar as chamadas telefônicas automaticamente para as ligações agendada para hoje?
+      <br />
+      <br />
+      <small>
+        Obs: Se você optar por fazer as ligações automaticamente, não se esqueça que iremos entregar ligações diretamente para você, então se sair da sua estação de trabalho, faça logout na Justto ou desligue as chamadas automáticas para não receber ligações enquanto você estiver fora.
+      </small>
+    `
+
+    dispatch('getPhoneCalls').then(calls => {
+      if (calls.length > 0) {
+        vue().$confirm(template, `Oi, bem vindo(a) ${loggedPersonName}.`, {
+          confirmButtonText: 'Sim',
+          cancelButtonText: 'Não',
+          dangerouslyUseHTMLString: true,
+          customClass: 'confirm-init-call-scheduler',
+          closeOnClickModal: false,
+          closeOnPressEscape: false,
+          showClose: false,
+          center: true
+        }).then(_ => {
+          commit('setAvailableSchedulerdCalls', 'AVAILABLE')
+        }).catch(_ => {
+          commit('setAvailableSchedulerdCalls', 'UNAVAILABLE')
+        })
+      } else {
+        commit('setAvailableSchedulerdCalls', 'AVAILABLE')
+      }
     })
   },
 

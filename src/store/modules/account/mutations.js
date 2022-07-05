@@ -14,6 +14,7 @@ const accountMutations = {
     localStorage.removeItem('justoken')
     localStorage.setItem('justoken', token)
   },
+
   logout(state) {
     state.id = ''
     state.name = ''
@@ -36,15 +37,18 @@ const accountMutations = {
     const oldAvailableScheduledCalls = state?.preferences?.properties?.AVAILABLE_SCHEDULED_CALLS
 
     Vue.set(state.preferences, 'properties', {})
-    Object.keys(response).forEach(key => Vue.set(state.preferences.properties, key, response[key]))
 
-    const currentAvailableScheduledCalls = state?.preferences?.properties?.AVAILABLE_SCHEDULED_CALLS
+    Object.keys(response).forEach(key => {
+      if (key === 'AVAILABLE_SCHEDULED_CALLS' && oldAvailableScheduledCalls !== response[key] && response[key] === 'AVAILABLE') {
+        this.dispatch('confirmActiveScheduledCalls', {})
+      } else {
+        Vue.set(state.preferences.properties, key, response[key])
+      }
+    })
+  },
 
-    if (oldAvailableScheduledCalls !== currentAvailableScheduledCalls && currentAvailableScheduledCalls === 'AVAILABLE') {
-      console.log('scheduledCallState', 'TRIGGER')
-      // TODO: SAAS-5161 Trigger da alteração de estaado das chamadas agendadas.
-      // TODO: Implementar Confirm aqui.
-    }
+  setAvailableSchedulerdCalls(state, value) {
+    Vue.set(state.preferences.properties, 'AVAILABLE_SCHEDULED_CALLS', value)
   },
 
   setAccountName(state, name) {

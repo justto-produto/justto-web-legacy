@@ -24,4 +24,14 @@
   &--lg {
     width: 600px;
   }
+
+  &.confirm-init-call-scheduler {
+    .el-message-box__content {
+      .el-message-box__container {
+        .el-message-box__message {
+          text-align: justify;
+        }
+      }
+    }
+  }
 }
