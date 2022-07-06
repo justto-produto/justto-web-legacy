@@ -6,6 +6,10 @@ const messagesPath = 'api/messages'
 
 const omnichannelActions = {
   setOmnichannelActiveTab({ commit, getters: { getActiveTab }, dispatch }, tab) {
+    if (tab === 'MESSAGES') {
+      dispatch('setSignature')
+    }
+
     return new Promise(resolve => {
       if (getActiveTab !== tab) {
         commit('setOmnichannelActiveTab', tab)
@@ -17,6 +21,12 @@ const omnichannelActions = {
         resolve(tab)
       }
     })
+  },
+
+  setSignature({ dispatch, getters: { workspaceName, loggedPersonName, getEditorMessageType } }) {
+    const signature = !['sms', 'whatsapp'].includes(getEditorMessageType) ? `<br /><br />Att,<br />${loggedPersonName}<br />${workspaceName}` : `\n\nAtt,\n${loggedPersonName}\n${workspaceName}`
+
+    dispatch('setEditorText', signature)
   },
 
   setEditorText: ({ dispatch, commit }, message) => {

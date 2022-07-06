@@ -167,6 +167,9 @@ export default {
 
   mounted() {
     eventBus.$on(events.EDITOR_FOCUS.callback, this.validateTabOnBeforeFocus)
+    if (this.activeTab === 'MESSAGES') {
+      this.setSignature()
+    }
   },
 
   beforeDestroy() {
@@ -176,6 +179,7 @@ export default {
   methods: {
     ...mapActions([
       'addRecipient',
+      'setSignature',
       'setEditorText',
       'setNoteEditorText',
       'setOmnichannelActiveTab'
