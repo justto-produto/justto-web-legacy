@@ -25,7 +25,8 @@ const accountGetters = {
       personId: getters.loggedPersonId
     }
   },
-  isOmnichannelGrouping: state => state.preferences?.properties?.OMNICHANNEL_GROUPING_TYPE === 'GROUPED'
+  isOmnichannelGrouping: state => state.preferences?.properties?.OMNICHANNEL_GROUPING_TYPE === 'GROUPED',
+  useSignature: state => state.preferences?.properties?.USE_SIGNATURE !== 'DISABLED'
 }
 
 export default accountGetters
