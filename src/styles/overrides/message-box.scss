@@ -26,12 +26,25 @@
   }
 
   &.confirm-init-call-scheduler {
+    position: relative;
+
     .el-message-box__content {
       .el-message-box__container {
         .el-message-box__message {
           text-align: justify;
+
+          small {
+            font-size: 12px;
+          }
         }
       }
+    }
+
+    .el-message-box__btns {
+      position: absolute;
+      top: 128px;
+      left: 0;
+      right: 0;
     }
   }
 }

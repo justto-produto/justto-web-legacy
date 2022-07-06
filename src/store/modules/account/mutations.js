@@ -40,7 +40,9 @@ const accountMutations = {
 
     Object.keys(response).forEach(key => {
       if (key === 'AVAILABLE_SCHEDULED_CALLS' && oldAvailableScheduledCalls !== response[key] && response[key] === 'AVAILABLE') {
-        this.dispatch('confirmActiveScheduledCalls', {})
+        if (!state.preventScheduleCallsConfirmation) {
+          this.dispatch('confirmActiveScheduledCalls', {})
+        }
       } else {
         Vue.set(state.preferences.properties, key, response[key])
       }
@@ -53,7 +55,9 @@ const accountMutations = {
 
   setAccountName(state, name) {
     Vue.set(state, 'name', name)
-  }
+  },
+
+  setPreventScheduleCallsConfirmation: (state, prevent) => Vue.set(state, 'preventScheduleCallsConfirmation', prevent)
 }
 
 export default accountMutations

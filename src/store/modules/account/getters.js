@@ -25,6 +25,7 @@ const accountGetters = {
       personId: getters.loggedPersonId
     }
   },
+  preventScheduleCallsConfirmation: state => state.preventScheduleCallsConfirmation,
   isOmnichannelGrouping: state => state.preferences?.properties?.OMNICHANNEL_GROUPING_TYPE === 'GROUPED'
 }
 

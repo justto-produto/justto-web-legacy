@@ -128,18 +128,22 @@ const accountActions = {
   },
 
   confirmActiveScheduledCalls({ getters: { loggedPersonName }, commit, dispatch }) {
-    const template = `
-      Deseja iniciar as chamadas telefônicas automaticamente para as ligações agendada para hoje?
-      <br />
-      <br />
-      <small>
-        Obs: Se você optar por fazer as ligações automaticamente, não se esqueça que iremos entregar ligações diretamente para você, então se sair da sua estação de trabalho, faça logout na Justto ou desligue as chamadas automáticas para não receber ligações enquanto você estiver fora.
-      </small>
-    `
+    commit('setPreventScheduleCallsConfirmation', true)
 
     dispatch('getPhoneCalls').then(calls => {
       if (calls.length > 0) {
-        vue().$confirm(template, `Oi, bem vindo(a) ${loggedPersonName}.`, {
+        const template = `
+          Temos ${calls.length} ligações agendas para hoje. Deseja que o sistema faça essas ligações para você? 
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <small>
+            Obs: Para garantir que o maior número de ligações sejam efetivas, lembre-se de se manter logada e ficar em sua estação de trabalho. <b>Se precisar sair, mesmo que por alguns minutos, faça logout da plataforma</b> para não perder as chamadas, assim quando retornar o sistema irá retornar as ligações automáticas agendadas.
+          </small>
+        `
+        vue().$confirm(template, `Oi, ${loggedPersonName}, tudo bem?`, {
           confirmButtonText: 'Sim',
           cancelButtonText: 'Não',
           dangerouslyUseHTMLString: true,
@@ -156,7 +160,7 @@ const accountActions = {
       } else {
         commit('setAvailableSchedulerdCalls', 'AVAILABLE')
       }
-    })
+    }).finnaly(() => commit('setPreventScheduleCallsConfirmation', false))
   },
 
   changeAccountName({ commit }, { name }) {
