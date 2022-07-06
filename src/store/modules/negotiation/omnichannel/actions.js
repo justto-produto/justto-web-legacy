@@ -44,6 +44,7 @@ const omnichannelActions = {
     commit('setMessageType', type)
     commit('resetRecipients')
     dispatch('setEditorBackup')
+    dispatch('setSignature')
   },
 
   getOccurrences({ getters }, disputeId) {

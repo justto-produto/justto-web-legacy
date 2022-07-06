@@ -188,6 +188,8 @@ export default {
     handleBackup({ params: { id } }) {
       const { tab, message, note, contacts } = this.backups(id)
 
+      this.setSignature()
+
       if (tab) this.setOmnichannelActiveTab(tab)
 
       if (contacts) contacts.map(contact => this.addRecipient(contact))
