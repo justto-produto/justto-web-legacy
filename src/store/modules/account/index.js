@@ -22,7 +22,8 @@ const account = {
       properties: {
         NEGOTIATION_SCREEN: false
       }
-    }
+    },
+    preventScheduleCallsConfirmation: false
   },
   mutations,
   actions,
