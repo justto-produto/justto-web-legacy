@@ -549,7 +549,8 @@ export default {
       'quickReplyTemplates',
       'getMessagesBackupById',
       'loggedPersonName',
-      'workspaceName'
+      'workspaceName',
+      'useSignature'
     ]),
 
     isSmall() {
@@ -1007,7 +1008,7 @@ export default {
     },
 
     handleSetSignaature() {
-      if (this.typingTab === '1') {
+      if (this.typingTab === '1' && this.useSignature) {
         this.messageText = !this.hasWhatsAppContactSelect ? `<br /><br />Att,<br />${this.loggedPersonName}<br />${this.workspaceName}` : `\n\nAtt,\n${this.loggedPersonName}\n${this.workspaceName}`
       }
     },

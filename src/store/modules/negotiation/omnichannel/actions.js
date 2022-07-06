@@ -23,10 +23,12 @@ const omnichannelActions = {
     })
   },
 
-  setSignature({ dispatch, getters: { workspaceName, loggedPersonName, getEditorMessageType } }) {
-    const signature = !['sms', 'whatsapp'].includes(getEditorMessageType) ? `<br /><br />Att,<br />${loggedPersonName}<br />${workspaceName}` : `\n\nAtt,\n${loggedPersonName}\n${workspaceName}`
+  setSignature({ dispatch, getters: { workspaceName, loggedPersonName, getEditorMessageType, useSignature } }) {
+    if (useSignature) {
+      const signature = !['sms', 'whatsapp'].includes(getEditorMessageType) ? `<br /><br />Att,<br />${loggedPersonName}<br />${workspaceName}` : `\n\nAtt,\n${loggedPersonName}\n${workspaceName}`
 
-    dispatch('setEditorText', signature)
+      dispatch('setEditorText', signature)
+    }
   },
 
   setEditorText: ({ dispatch, commit }, message) => {
