@@ -392,7 +392,6 @@ export default {
       getDomains: 'getSendgridDomains',
       getWorkspace: 'getWorkspace',
       ceateDomain: 'setSendgridDomains',
-      sendEmail: 'sendCustomEmail',
       sendDnsEmail: 'sendDnsEmail'
     }),
 
@@ -611,8 +610,8 @@ export default {
       }).then(({ value }) => {
         this.sendDnsEmail({
           email: value,
-          domainId: this.currentDomain.id,
-          message: 'Você pode me configrar esse DNS?'
+          domain_id: this.currentDomain.id,
+          message: 'Olá, estou tentando autenticar nosso domínio com o SendGrid, mas não consigo modificar nossos registros DNS. Você pode me ajudar a adicionar esses registros, para que eu possa concluir o processo?'
         }).then(() => {
           this.$jusNotification({
             title: 'Yay!',
