@@ -611,6 +611,7 @@ export default {
       }).then(({ value }) => {
         this.sendDnsEmail({
           email: value,
+          domainId: this.currentDomain.id,
           message: 'Você pode me configrar esse DNS?'
         }).then(() => {
           this.$jusNotification({
