@@ -998,7 +998,7 @@ export default {
         }, 500)
       })
 
-      this.handleSetSignaature()
+      this.handleSetSignature()
       this.setSignature()
     },
 
@@ -1007,9 +1007,9 @@ export default {
       else this.$router.push('/management')
     },
 
-    handleSetSignaature() {
+    handleSetSignature() {
       if (this.typingTab === '1' && this.useSignature) {
-        this.messageText = !this.hasWhatsAppContactSelect ? `<br /><br />Att,<br />${this.loggedPersonName}<br />${this.workspaceName}` : `\n\nAtt,\n${this.loggedPersonName}\n${this.workspaceName}`
+        // this.messageText = !this.hasWhatsAppContactSelect ? `<br /><br />Att,<br />${this.loggedPersonName}<br />${this.workspaceName}` : `\n\nAtt,\n${this.loggedPersonName}\n${this.workspaceName}`
       }
     },
 
@@ -1017,7 +1017,7 @@ export default {
       if (!['1', '3'].includes(name)) this.activeRoleId = 0
       this.typingTab = name
       localStorage.setItem('jusoccurrencestab', name)
-      this.handleSetSignaature()
+      this.handleSetSignature()
     },
 
     handleBeforeLeaveTabs() {
