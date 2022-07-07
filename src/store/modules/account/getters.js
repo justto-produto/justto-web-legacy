@@ -27,7 +27,7 @@ const accountGetters = {
   },
   preventScheduleCallsConfirmation: state => state.preventScheduleCallsConfirmation,
   isOmnichannelGrouping: state => state.preferences?.properties?.OMNICHANNEL_GROUPING_TYPE === 'GROUPED',
-  useSignature: state => state.preferences?.properties?.USE_SIGNATURE !== 'DISABLED'
+  useSignature: state => state.preferences?.properties?.USE_SIGNATURE === 'ENABLED'
 }
 
 export default accountGetters
