@@ -392,7 +392,8 @@ export default {
       getDomains: 'getSendgridDomains',
       getWorkspace: 'getWorkspace',
       ceateDomain: 'setSendgridDomains',
-      sendEmail: 'sendCustomEmail'
+      sendEmail: 'sendCustomEmail',
+      sendDnsEmail: 'sendDnsEmail'
     }),
 
     saveCustomizedConfigurations() {
@@ -441,8 +442,22 @@ export default {
           this.handleInitializedDialog(Boolean(this.currentDomain))
         }).catch(fallback)
       } else { // Se não existir
-        this.$refs.initOdrDomainDialog.open(({ email }) => {
+        this.$refs.initOdrDomainDialog.open(({
+          email,
+          customPath,
+          enableCustomPath,
+          customDkim,
+          enableCustomDkim
+        }) => {
           this.form.email = email
+
+          if (enableCustomPath) {
+            this.newDomainForm.subdomain = customPath
+          }
+
+          if (enableCustomDkim) {
+            this.newDomainForm.custom_dkim_selector = customDkim
+          }
 
           this.handleValidateDomain(email.split('@')[1]).then(domain => {
             this.currentDomain = domain
@@ -562,6 +577,8 @@ export default {
     handleSaveNewDomain() {
       const domain = {
         domain: this.newDomainForm.domain,
+        custom_dkim_selector: this.newDomainForm?.custom_dkim_selector,
+        subdomain: this.newDomainForm?.subdomain,
         default: false
       }
 
@@ -592,24 +609,11 @@ export default {
         inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
         inputErrorMessage: 'Email inválido'
       }).then(({ value }) => {
-        const templateDns = this.dnsList.map(dns => (`<tr><td style="padding: 4px 8px;">${dns.type}</td><td style="padding: 4px 8px;">${dns.host}</td><td style="padding: 4px 8px;">${dns.data}</td></tr>`)).join('')
+        // const templateDns = this.dnsList.map(dns => (`<tr><td style="padding: 4px 8px;">${dns.type}</td><td style="padding: 4px 8px;">${dns.host}</td><td style="padding: 4px 8px;">${dns.data}</td></tr>`)).join('')
 
-        this.sendEmail({
-          subject: 'Liberação de registro',
-          address: value,
-          content: `<table border="1" width="100%" align="left" cellspacing="0" cellpadding="0" style="border-color: #979797">
-          <caption>Liberação de registro</caption>
-          <thead>
-            <tr>
-              <th style="padding: 4px 8px;">Type</th>
-              <th style="padding: 4px 8px;">Host</th>
-              <th style="padding: 4px 8px;">Value</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${templateDns}
-          </tbody>
-          </table>`
+        this.sendDnsEmail({
+          email: value,
+          message: 'Você pode me configrar esse DNS?'
         }).then(() => {
           this.$jusNotification({
             title: 'Yay!',
@@ -617,6 +621,30 @@ export default {
             type: 'success'
           })
         }).catch(error => this.$jusNotification({ error }))
+
+        // this.sendEmail({
+        //   subject: 'Liberação de registro',
+        //   address: value,
+        //   content: `<table border="1" width="100%" align="left" cellspacing="0" cellpadding="0" style="border-color: #979797">
+        //   <caption>Liberação de registro</caption>
+        //   <thead>
+        //     <tr>
+        //       <th style="padding: 4px 8px;">Type</th>
+        //       <th style="padding: 4px 8px;">Host</th>
+        //       <th style="padding: 4px 8px;">Value</th>
+        //     </tr>
+        //   </thead>
+        //   <tbody>
+        //     ${templateDns}
+        //   </tbody>
+        //   </table>`
+        // }).then(() => {
+        //   this.$jusNotification({
+        //     title: 'Yay!',
+        //     message: 'Email enviado com sucesso.',
+        //     type: 'success'
+        //   })
+        // }).catch(error => this.$jusNotification({ error }))
       }).catch(() => {
         this.$jusNotification({
           title: 'Ops!',
