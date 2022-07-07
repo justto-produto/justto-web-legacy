@@ -266,6 +266,7 @@ export default {
       return plaintiff ? plaintiff.name : 'Sem parte'
     }
   },
+
   methods: {
     getDocumentStep: (hasDocument, signStatus) => getDocumentStep(hasDocument, signStatus)
   }
