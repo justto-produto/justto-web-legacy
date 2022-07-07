@@ -609,8 +609,6 @@ export default {
         inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
         inputErrorMessage: 'Email inválido'
       }).then(({ value }) => {
-        // const templateDns = this.dnsList.map(dns => (`<tr><td style="padding: 4px 8px;">${dns.type}</td><td style="padding: 4px 8px;">${dns.host}</td><td style="padding: 4px 8px;">${dns.data}</td></tr>`)).join('')
-
         this.sendDnsEmail({
           email: value,
           message: 'Você pode me configrar esse DNS?'
@@ -621,30 +619,6 @@ export default {
             type: 'success'
           })
         }).catch(error => this.$jusNotification({ error }))
-
-        // this.sendEmail({
-        //   subject: 'Liberação de registro',
-        //   address: value,
-        //   content: `<table border="1" width="100%" align="left" cellspacing="0" cellpadding="0" style="border-color: #979797">
-        //   <caption>Liberação de registro</caption>
-        //   <thead>
-        //     <tr>
-        //       <th style="padding: 4px 8px;">Type</th>
-        //       <th style="padding: 4px 8px;">Host</th>
-        //       <th style="padding: 4px 8px;">Value</th>
-        //     </tr>
-        //   </thead>
-        //   <tbody>
-        //     ${templateDns}
-        //   </tbody>
-        //   </table>`
-        // }).then(() => {
-        //   this.$jusNotification({
-        //     title: 'Yay!',
-        //     message: 'Email enviado com sucesso.',
-        //     type: 'success'
-        //   })
-        // }).catch(error => this.$jusNotification({ error }))
       }).catch(() => {
         this.$jusNotification({
           title: 'Ops!',
