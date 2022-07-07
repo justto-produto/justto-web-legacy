@@ -41,10 +41,16 @@ const omnichannelActions = {
     dispatch('setEditorBackup')
   },
 
-  setMessageType({ commit, dispatch }, type) {
+  setMessageType({ commit, dispatch, getters: { getEditorMessageType } }, type) {
     commit('setMessageAttachments', [])
     commit('setMessageType', type)
-    commit('resetRecipients')
+
+    const alreadySimpleText = ['whatsapp', 'sms'].includes((getEditorMessageType || '').toLowerCase())
+    const willBeSimpleText = ['whatsapp', 'sms'].includes((type || '').toLowerCase())
+
+    if (alreadySimpleText !== willBeSimpleText) {
+      commit('resetRecipients')
+    }
     dispatch('setEditorBackup')
     dispatch('setSignature')
   },
