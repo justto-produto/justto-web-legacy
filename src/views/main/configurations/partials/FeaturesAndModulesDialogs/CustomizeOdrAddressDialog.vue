@@ -100,6 +100,15 @@
         <div class="configure-customizations__form-body">
           <div class="configure-customizations__form-body-actions">
             <el-button
+              type="secondary"
+              icon="el-icon-s-promotion"
+              size="mini"
+              @click="handleSendByEmail"
+            >
+              Enviar por e-mail
+            </el-button>
+
+            <el-button
               type="primary"
               size="mini"
               @click="handleUpdateDomains"
@@ -178,7 +187,8 @@
           </el-table>
         </div>
 
-        <el-form-item class="configure-customizations__form-ckeditor jus-ckeditor__parent">
+        <!-- SAAS-4932 Hide footer editor. -->
+        <!-- <el-form-item class="configure-customizations__form-ckeditor jus-ckeditor__parent">
           <ckeditor
             ref="footerEditor"
             v-model="form.emailFooter"
@@ -187,7 +197,7 @@
             :config="editorConfig"
             type="classic"
           />
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
 
       <div class="configure-customizations__footer">
@@ -296,6 +306,8 @@
         </el-button>
       </span>
     </el-dialog>
+
+    <initOdrDomainDialog ref="initOdrDomainDialog" />
   </div>
 </template>
 
@@ -306,6 +318,10 @@ import ckeditor from '@/utils/mixins/ckeditor'
 
 export default {
   name: 'ConfigureCustomizationsDialog',
+
+  components: {
+    initOdrDomainDialog: () => import('./partials/initOdrDomainDialog')
+  },
 
   mixins: [ckeditor],
 
@@ -375,7 +391,8 @@ export default {
       createTemplate: 'createStrategyTemplate',
       getDomains: 'getSendgridDomains',
       getWorkspace: 'getWorkspace',
-      ceateDomain: 'setSendgridDomains'
+      ceateDomain: 'setSendgridDomains',
+      sendDnsEmail: 'sendDnsEmail'
     }),
 
     saveCustomizedConfigurations() {
@@ -411,51 +428,63 @@ export default {
     },
 
     async handleInitDialog(previousDomain = null) {
+      const fallback = () => this.handleInitializedDialog(false)
+
       // Ver se o email existe
       if (this.properties?.CUSTOM_EMAIL_SENDER || previousDomain) {
         // Se não existir
         const domain = (this.properties?.CUSTOM_EMAIL_SENDER || previousDomain).split('@')[1]
 
         this.currentDomain = await this.handleValidateDomain(domain)
+
+        this.getWorkspace().then(() => {
+          this.handleInitializedDialog(Boolean(this.currentDomain))
+        }).catch(fallback)
       } else { // Se não existir
-        await this.$prompt('Informe o endereço de email utilizado no seu escritório:', 'Email do seu escritório', {
-          confirmButtonText: 'Salvar',
-          cancelButtonText: 'Cancelar',
-          inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
-          inputErrorMessage: 'Email inválido',
-          center: true
-        }).then(({ value }) => {
-          this.form.email = value
+        this.$refs.initOdrDomainDialog.open(({
+          email,
+          customPath,
+          enableCustomPath,
+          customDkim,
+          enableCustomDkim
+        }) => {
+          this.form.email = email
 
-          this.handleValidateDomain(value.split('@')[1]).then(domain => {
+          if (enableCustomPath) {
+            this.newDomainForm.subdomain = customPath
+          }
+
+          if (enableCustomDkim) {
+            this.newDomainForm.custom_dkim_selector = customDkim
+          }
+
+          this.handleValidateDomain(email.split('@')[1]).then(domain => {
             this.currentDomain = domain
-          }).catch(() => {
-            return Promise.reject(new Error('Email não informado'))
-          })
-        }).catch(() => {
-          return Promise.reject(new Error('Email não informado'))
-        })
-      }
 
-      return new Promise((resolve, reject) => {
-        this.getWorkspace().then(() => resolve(Boolean(this.currentDomain))).catch(reject)
-      })
+            this.getWorkspace().then(() => {
+              this.handleInitializedDialog(Boolean(this.currentDomain))
+            }).catch(fallback)
+          }).catch(fallback)
+        }, fallback)
+      }
     },
 
     openFeatureDialog() {
-      this.handleInitDialog(this.form.email).then((openCustomizationDialog) => {
-        if (openCustomizationDialog) {
-          this.configureCustomizationsDialogVisible = true
-          this.form = new OdrCustomizationModel({
-            ...this.properties,
-            CUSTOM_EMAIL_SENDER: (this.form.email || this.properties.CUSTOM_EMAIL_SENDER)
-          })
-          this.searchTemplete()
-        } else {
-          this.newDomainForm.domain = this.form.email.split('@')[1]
-          this.configureNewDomainDialogVisible = true
-        }
-      })
+      this.handleInitDialog(this.form.email)
+    },
+
+    handleInitializedDialog(openCustomizationDialog) {
+      if (openCustomizationDialog) {
+        this.configureCustomizationsDialogVisible = true
+        this.form = new OdrCustomizationModel({
+          ...this.properties,
+          CUSTOM_EMAIL_SENDER: (this.form.email || this.properties.CUSTOM_EMAIL_SENDER)
+        })
+        this.searchTemplete()
+      } else {
+        this.newDomainForm.domain = this.form.email.split('@')[1]
+        this.configureNewDomainDialogVisible = true
+      }
     },
 
     handleUpdateDomains() {
@@ -547,6 +576,8 @@ export default {
     handleSaveNewDomain() {
       const domain = {
         domain: this.newDomainForm.domain,
+        custom_dkim_selector: this.newDomainForm?.custom_dkim_selector,
+        subdomain: this.newDomainForm?.subdomain,
         default: false
       }
 
@@ -567,6 +598,33 @@ export default {
         type: 'info',
         center: true,
         showClose: true
+      })
+    },
+
+    handleSendByEmail() {
+      this.$prompt('Destinatário:', 'Enviar para', {
+        confirmButtonText: 'Enviar',
+        cancelButtonText: 'Cancelar',
+        inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
+        inputErrorMessage: 'Email inválido'
+      }).then(({ value }) => {
+        this.sendDnsEmail({
+          email: value,
+          domain_id: this.currentDomain.id,
+          message: 'Olá, estou tentando autenticar nosso domínio com o SendGrid, mas não consigo modificar nossos registros DNS. Você pode me ajudar a adicionar esses registros, para que eu possa concluir o processo?'
+        }).then(() => {
+          this.$jusNotification({
+            title: 'Yay!',
+            message: 'Email enviado com sucesso.',
+            type: 'success'
+          })
+        }).catch(error => this.$jusNotification({ error }))
+      }).catch(() => {
+        this.$jusNotification({
+          title: 'Ops!',
+          message: 'Envio cancelado.',
+          type: 'warning'
+        })
       })
     }
   }
@@ -743,6 +801,7 @@ export default {
     }
   }
   .configure-customizations__footer {
+    margin-top: 24px;
     display: flex;
     flex-direction: column;
     align-items: center;

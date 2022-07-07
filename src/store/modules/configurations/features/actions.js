@@ -38,6 +38,14 @@ export default {
     })
   },
 
+  sendDnsEmail({ _ }, data) {
+    return axiosDispatch({
+      url: `${sendgridWhitelabelDomainsApi}/authentication/dns-email`,
+      data,
+      method: 'POST'
+    })
+  },
+
   setSendgridDomains({ _ }, data) {
     return axiosDispatch({
       method: 'POST',
