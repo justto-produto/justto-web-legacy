@@ -547,7 +547,10 @@ export default {
       'workspaceProperties',
       'getEditorRecipients',
       'quickReplyTemplates',
-      'getMessagesBackupById'
+      'getMessagesBackupById',
+      'loggedPersonName',
+      'workspaceName',
+      'useSignature'
     ]),
 
     isSmall() {
@@ -774,6 +777,7 @@ export default {
     ...mapActions([
       'setHeight',
       'addRecipient',
+      'setSignature',
       'sendNegotiator',
       'disfavorTicket',
       'getDisputeNotes',
@@ -993,6 +997,9 @@ export default {
           this.loadingDispute = false
         }, 500)
       })
+
+      this.handleSetSignature()
+      this.setSignature()
     },
 
     backToManagement() {
@@ -1000,10 +1007,17 @@ export default {
       else this.$router.push('/management')
     },
 
+    handleSetSignature() {
+      if (this.typingTab === '1' && this.useSignature) {
+        // this.messageText = !this.hasWhatsAppContactSelect ? `<br /><br />Att,<br />${this.loggedPersonName}<br />${this.workspaceName}` : `\n\nAtt,\n${this.loggedPersonName}\n${this.workspaceName}`
+      }
+    },
+
     handleTabClick({ name }) {
       if (!['1', '3'].includes(name)) this.activeRoleId = 0
       this.typingTab = name
       localStorage.setItem('jusoccurrencestab', name)
+      this.handleSetSignature()
     },
 
     handleBeforeLeaveTabs() {

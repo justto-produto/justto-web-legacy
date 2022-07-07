@@ -6,6 +6,10 @@ const messagesPath = 'api/messages'
 
 const omnichannelActions = {
   setOmnichannelActiveTab({ commit, getters: { getActiveTab }, dispatch }, tab) {
+    if (tab === 'MESSAGES') {
+      dispatch('setSignature')
+    }
+
     return new Promise(resolve => {
       if (getActiveTab !== tab) {
         commit('setOmnichannelActiveTab', tab)
@@ -19,6 +23,14 @@ const omnichannelActions = {
     })
   },
 
+  setSignature({ dispatch, getters: { workspaceName, loggedPersonName, getEditorMessageType, useSignature } }) {
+    if (useSignature) {
+      // const signature = !['sms', 'whatsapp'].includes(getEditorMessageType) ? `<br /><br />Att,<br />${loggedPersonName}<br />${workspaceName}` : `\n\nAtt,\n${loggedPersonName}\n${workspaceName}`
+
+      // dispatch('setEditorText', signature)
+    }
+  },
+
   setEditorText: ({ dispatch, commit }, message) => {
     commit('setEditorText', message)
     dispatch('setEditorBackup')
@@ -29,11 +41,18 @@ const omnichannelActions = {
     dispatch('setEditorBackup')
   },
 
-  setMessageType({ commit, dispatch }, type) {
+  setMessageType({ commit, dispatch, getters: { getEditorMessageType } }, type) {
     commit('setMessageAttachments', [])
     commit('setMessageType', type)
-    commit('resetRecipients')
+
+    const alreadySimpleText = ['whatsapp', 'sms'].includes((getEditorMessageType || '').toLowerCase())
+    const willBeSimpleText = ['whatsapp', 'sms'].includes((type || '').toLowerCase())
+
+    if (alreadySimpleText !== willBeSimpleText) {
+      commit('resetRecipients')
+    }
     dispatch('setEditorBackup')
+    dispatch('setSignature')
   },
 
   getOccurrences({ getters }, disputeId) {
@@ -122,6 +141,7 @@ const omnichannelActions = {
   addRecipient({ commit, dispatch, getters }, recipient) {
     const { type, value } = recipient
     const { getEditorMessageType, getEditorRecipients } = getters
+
     if (getEditorRecipients.find(el => el.value === value)) {
       commit('removeRecipient', value)
     } else {

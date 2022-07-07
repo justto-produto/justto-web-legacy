@@ -903,6 +903,17 @@ export default {
 
     loadOccurrences($state) {
       this.$store.dispatch(this.fetchAction, this.disputeId).then(response => {
+        if (response.first) {
+          // const onlyComunnications = (response?.content || []).filter(({ interaction }) => (response.first && interaction?.type === 'COMMUNICATION' && interaction?.direction === 'INBOUND'))
+
+          // onlyComunnications.reverse()
+
+          // for (const item of onlyComunnications) {
+          //   this.startReply(item)
+          //   break
+          // }
+        }
+
         if (response.last) {
           $state.complete()
         } else {

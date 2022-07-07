@@ -199,7 +199,8 @@ export default {
           showCancelButton: false,
           closeOnClickModal: false,
           closeOnPressEscape: false,
-          showClose: false
+          customClass: 'prompt-insert-name'
+          // showClose: true
         }).then(({ value }) => {
           this.$jusSegment('Nome do usuário alterado no primeiro')
           this.changeMemberName({
