@@ -25,9 +25,9 @@ const omnichannelActions = {
 
   setSignature({ dispatch, getters: { workspaceName, loggedPersonName, getEditorMessageType, useSignature } }) {
     if (useSignature) {
-      const signature = !['sms', 'whatsapp'].includes(getEditorMessageType) ? `<br /><br />Att,<br />${loggedPersonName}<br />${workspaceName}` : `\n\nAtt,\n${loggedPersonName}\n${workspaceName}`
+      // const signature = !['sms', 'whatsapp'].includes(getEditorMessageType) ? `<br /><br />Att,<br />${loggedPersonName}<br />${workspaceName}` : `\n\nAtt,\n${loggedPersonName}\n${workspaceName}`
 
-      dispatch('setEditorText', signature)
+      // dispatch('setEditorText', signature)
     }
   },
 
@@ -41,10 +41,16 @@ const omnichannelActions = {
     dispatch('setEditorBackup')
   },
 
-  setMessageType({ commit, dispatch }, type) {
+  setMessageType({ commit, dispatch, getters: { getEditorMessageType } }, type) {
     commit('setMessageAttachments', [])
     commit('setMessageType', type)
-    commit('resetRecipients')
+
+    const alreadySimpleText = ['whatsapp', 'sms'].includes((getEditorMessageType || '').toLowerCase())
+    const willBeSimpleText = ['whatsapp', 'sms'].includes((type || '').toLowerCase())
+
+    if (alreadySimpleText !== willBeSimpleText) {
+      commit('resetRecipients')
+    }
     dispatch('setEditorBackup')
     dispatch('setSignature')
   },
