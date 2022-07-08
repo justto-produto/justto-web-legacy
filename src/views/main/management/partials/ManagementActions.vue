@@ -769,6 +769,7 @@ export default {
 
   methods: {
     ...mapActions([
+      'getPhoneCalls',
       'getWorkspaceTags',
       'getDisputeStatuses',
       'getFinishedDisputesCount'
@@ -882,6 +883,10 @@ export default {
               duration: 0
             })
           }, 2000)
+        }
+
+        if (['SCHEDULE_CALL', 'UNSCHEDULE_CALL'].includes(action)) {
+          this.getPhoneCalls()
         }
       }).catch(error => {
         this.$jusNotification({ error })
