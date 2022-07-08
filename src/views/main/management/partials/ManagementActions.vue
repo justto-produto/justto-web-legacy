@@ -704,7 +704,7 @@ export default {
         },
         { name: 'UNSETTLED', tabs: ['1', '2', '3', '4', '9'], main: true },
         { name: 'SCHEDULE_CALL', tabs: ['1', '2', '3', '9'], main: true },
-        // { name: 'UNSCHEDULE_CALL', tabs: ['1', '2', '3', '9'], main: true },
+        { name: 'UNSCHEDULE_CALL', tabs: ['1', '2', '3', '9'], main: true },
         { name: 'PAUSED', tabs: ['1', '2', '3', '4', '9'], main: true },
         { name: 'RESUME', tabs: ['1', '2', '3', '4', '9'], main: true },
         { name: 'RESTART_ENGAGEMENT', tabs: ['1', '2', '4', '9'] },
@@ -824,6 +824,11 @@ export default {
           break
         case 'SCHEDULE_CALL':
           params.type = 'SCHEDULE_DISPUTE_PHONE_CALLS'
+          break
+        case 'UNSCHEDULE_CALL':
+          // TODO: SAAS-5168 Adicionar tipo de ação correto.
+          params.type = 'UNSCHEDULE_DISPUTE_PHONE_CALLS'
+          break
       }
       if (this.isSelectedAll) {
         params.allSelected = true
