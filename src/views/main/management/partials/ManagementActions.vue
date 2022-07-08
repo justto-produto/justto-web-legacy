@@ -656,6 +656,7 @@ export default {
     ...mapGetters({
       disputeStatuses: 'disputeStatuses',
       strategies: 'getMyStrategiesLite',
+      isJusttoAdmin: 'isJusttoAdmin',
       tags: 'workspaceTags'
     }),
 
@@ -703,8 +704,10 @@ export default {
           main: true
         },
         { name: 'UNSETTLED', tabs: ['1', '2', '3', '4', '9'], main: true },
-        { name: 'SCHEDULE_CALL', tabs: ['1', '2', '3', '9'], main: true },
-        { name: 'UNSCHEDULE_CALL', tabs: ['1', '2', '3', '9'], main: true },
+        ...(this.isJusttoAdmin ? [
+          { name: 'SCHEDULE_CALL', tabs: ['1', '2', '3', '9'], main: true },
+          { name: 'UNSCHEDULE_CALL', tabs: ['1', '2', '3', '9'], main: true }
+        ] : []),
         { name: 'PAUSED', tabs: ['1', '2', '3', '4', '9'], main: true },
         { name: 'RESUME', tabs: ['1', '2', '3', '4', '9'], main: true },
         { name: 'RESTART_ENGAGEMENT', tabs: ['1', '2', '4', '9'] },
@@ -826,7 +829,6 @@ export default {
           params.type = 'SCHEDULE_DISPUTE_PHONE_CALLS'
           break
         case 'UNSCHEDULE_CALL':
-          // TODO: SAAS-5168 Adicionar tipo de ação correto.
           params.type = 'UNSCHEDULE_DISPUTE_PHONE_CALLS'
           break
       }
