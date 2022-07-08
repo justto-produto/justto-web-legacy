@@ -60,6 +60,7 @@
                   </el-select>
                 </el-form-item>
               </el-col>
+
               <el-col :span="12">
                 <el-form-item
                   label="Dias para vencimento da fatura"
@@ -78,6 +79,7 @@
                 </el-form-item>
               </el-col>
             </el-row>
+
             <!-- Linha 2 -->
             <el-row :gutter="24">
               <el-col :span="12">
@@ -95,6 +97,7 @@
                   <el-form-item />
                 </el-form-item>
               </el-col>
+
               <el-col :span="12">
                 <el-form-item
                   label="Data do churn"
@@ -111,6 +114,7 @@
                 </el-form-item>
               </el-col>
             </el-row>
+
             <!-- Linha 3 -->
             <el-row :gutter="24">
               <el-col :span="12">
@@ -126,6 +130,7 @@
                   />
                 </el-form-item>
               </el-col>
+
               <el-col :span="12">
                 <el-form-item
                   label="Plano"
@@ -146,6 +151,7 @@
                 </el-form-item>
               </el-col>
             </el-row>
+
             <!-- Linha 4 -->
             <el-row :gutter="24">
               <el-col :span="24">
@@ -162,6 +168,7 @@
                 </el-form-item>
               </el-col>
             </el-row>
+
             <div
               v-for="discount in contractDiscountList[contract.id]"
               :key="`${discount.id}--${discount.minVolume}`"
@@ -204,9 +211,8 @@
                 </el-button>
               </el-form-item>
             </div>
-            <div
-              class="flex-row"
-            >
+
+            <div class="flex-row">
               <el-form-item
                 label="Volume de importações"
               >
@@ -236,6 +242,7 @@
                 </el-button>
               </el-form-item>
             </div>
+
             <el-row :gutter="24">
               <el-col
                 v-if="contract.planId === 6"
@@ -300,9 +307,22 @@
                 </el-form-item>
               </el-col>
             </el-row>
-            <el-row
-              :gutter="24"
-            >
+
+            <el-row :gutter="24">
+              <el-col>
+                <el-form-item>
+                  <!-- v-model="contract.workspaceId" -->
+                  <el-switch
+                    :value="contract.workspaceId === workspaceId"
+                    active-text="Exclusivo desta workspace"
+                    :disabled="haveExclusiveContract"
+                    @change="(value) => contract.workspaceId = value ? workspaceId : null"
+                  />
+                </el-form-item>
+              </el-col>
+            </el-row>
+
+            <el-row :gutter="24">
               <el-col class="text-right">
                 <el-button
                   type="primary"
@@ -485,9 +505,8 @@
                 </el-button>
               </el-form-item>
             </div>
-            <div
-              class="flex-row"
-            >
+
+            <div class="flex-row">
               <el-form-item
                 label="Volume de importações"
               >
@@ -587,6 +606,7 @@
                 </el-form-item>
               </el-col>
             </el-row>
+
             <el-row>
               <el-col class="text-right">
                 <el-button
@@ -666,11 +686,13 @@ export default {
     },
     haveExclusiveContract() {
       const { newContract } = this
+
       const conditional = this.filteredContracts.some(c => c.workspaceId !== null)
+
       this.changeHasWorkspaceValue(conditional)
-      conditional
-        ? newContract.workspaceId = this.workspaceId
-        : newContract.workspaceId = null
+
+      newContract.workspaceId = conditional ? this.workspaceId : null
+
       return conditional
     },
     haveContracts() {
