@@ -19,7 +19,7 @@
       />
     </el-tooltip>
 
-    <div :class="`${interaction.direction} ${coloringType}-${messageType} ${!flat ? 'interaction-container__balloon' : ''} ${scheduled ? 'SCHEDULED' : ''}`">
+    <div :class="`${interaction.direction} ${coloringType}-${messageType} ${!flat ? 'interaction-container__balloon' : ''} ${(scheduled || type === 'SCHEDULER') ? 'SCHEDULED' : ''}`">
       <div class="interaction-container__balloon-content">
         <component
           :is="type"
