@@ -43,6 +43,18 @@
                 />
               </el-tag>
             </el-option>
+
+            <div slot="empty">
+              <el-button
+                type="text"
+                class="overview-tags__add-button"
+                size="small"
+                @click="showNewTagForm"
+              >
+                <i class="el-icon-plus" /> Adicionar nova etiqueta
+              </el-button>
+            </div>
+
             <div>
               <el-button
                 type="text"
@@ -303,6 +315,7 @@ export default {
           }
         })
       },
+
       set(tags) {
         this.loading = true
         this.$store.dispatch('editDisputeTags', {
@@ -320,6 +333,7 @@ export default {
         })
       }
     },
+
     workspaceTags() {
       return this.$store.getters.workspaceTags.filter(t => {
         return !this.disputeTags.map(t => t.id).includes(t.id)
@@ -426,9 +440,8 @@ export default {
           tagColor: this.tagForm.color,
           page: this.$route.name
         })
-        const disputeTags = JSON.parse(JSON.stringify(this.disputeTags))
-        disputeTags.push(this.tagForm)
-        this.disputeTags = disputeTags
+
+        this.disputeTags = [...this.disputeTags, this.tagForm]
       }
     },
 
@@ -440,9 +453,8 @@ export default {
         tagColor: this.tagForm.color,
         page: this.$route.name
       })
-      const disputeTags = JSON.parse(JSON.stringify(this.disputeTags))
-      disputeTags.push(tag)
-      this.disputeTags = disputeTags
+
+      this.disputeTags = [...this.disputeTags, tag]
     },
 
     applyDeleteTag(tagId) {

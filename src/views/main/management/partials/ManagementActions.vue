@@ -656,6 +656,7 @@ export default {
     ...mapGetters({
       disputeStatuses: 'disputeStatuses',
       strategies: 'getMyStrategiesLite',
+      isJusttoAdmin: 'isJusttoAdmin',
       tags: 'workspaceTags'
     }),
 
@@ -692,6 +693,8 @@ export default {
       return this.selectedIdsComp.length >= 1
     },
 
+    // 0 - Pré negociação | 1 - Sem resposta | 2 - Em negociação | 3 - Proposta aceita | 4 - Finalizados | 9 - Todas as disputas
+
     actionsList() {
       return [
         {
@@ -701,6 +704,10 @@ export default {
           main: true
         },
         { name: 'UNSETTLED', tabs: ['1', '2', '3', '4', '9'], main: true },
+        ...(this.isJusttoAdmin ? [
+          { name: 'SCHEDULE_CALL', tabs: ['1', '2', '3', '9'], main: true },
+          { name: 'UNSCHEDULE_CALL', tabs: ['1', '2', '3', '9'], main: true }
+        ] : []),
         { name: 'PAUSED', tabs: ['1', '2', '3', '4', '9'], main: true },
         { name: 'RESUME', tabs: ['1', '2', '3', '4', '9'], main: true },
         { name: 'RESTART_ENGAGEMENT', tabs: ['1', '2', '4', '9'] },
@@ -762,6 +769,7 @@ export default {
 
   methods: {
     ...mapActions([
+      'getPhoneCalls',
       'getWorkspaceTags',
       'getDisputeStatuses',
       'getFinishedDisputesCount'
@@ -818,6 +826,12 @@ export default {
         case 'UPDATE_ENGAGEMENT_OPTIONS':
           params.engagementOptions = this.engagementOptions
           break
+        case 'SCHEDULE_CALL':
+          params.type = 'SCHEDULE_DISPUTE_PHONE_CALLS'
+          break
+        case 'UNSCHEDULE_CALL':
+          params.type = 'UNSCHEDULE_DISPUTE_PHONE_CALLS'
+          break
       }
       if (this.isSelectedAll) {
         params.allSelected = true
@@ -869,6 +883,10 @@ export default {
               duration: 0
             })
           }, 2000)
+        }
+
+        if (['SCHEDULE_CALL', 'UNSCHEDULE_CALL'].includes(action)) {
+          this.getPhoneCalls()
         }
       }).catch(error => {
         this.$jusNotification({ error })

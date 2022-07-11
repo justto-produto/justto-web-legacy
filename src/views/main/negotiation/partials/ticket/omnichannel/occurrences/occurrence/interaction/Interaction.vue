@@ -19,7 +19,7 @@
       />
     </el-tooltip>
 
-    <div :class="`${interaction.direction} ${coloringType}-${messageType} ${!flat ? 'interaction-container__balloon' : ''} ${scheduled ? 'SCHEDULED' : ''}`">
+    <div :class="`${interaction.direction} ${coloringType}-${messageType} ${!flat ? 'interaction-container__balloon' : ''} ${(scheduled || type === 'SCHEDULER') ? 'SCHEDULED' : ''}`">
       <div class="interaction-container__balloon-content">
         <component
           :is="type"
@@ -167,6 +167,11 @@ export default {
       if (this.interaction?.direction === 'INBOUND' && this.interaction?.message?.communicationType === 'WHATSAPP' && ['FILE', 'VIDEO', 'IMAGE', 'AUDIO'].includes(this.interaction?.message?.contentType)) {
         return 'WHATSAPP'
       }
+
+      if (this.interaction?.direction === 'OUTBOUND' && ['WAITING', 'PROCESSED', 'CANCELED'].includes(this.interaction?.message?.status)) {
+        return 'SCHEDULER'
+      }
+
       return this.value.interaction.type.split('_')[0]
     },
 

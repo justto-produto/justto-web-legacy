@@ -183,7 +183,7 @@ export default {
     },
 
     isWaiting() {
-      return this.occurrence?.interaction?.message?.status === 'WAITING' && this.occurrence?.interaction?.type === 'SCHEDULER'
+      return this.occurrence?.interaction?.message?.status === 'WAITING'// && this.occurrence?.interaction?.type === 'SCHEDULER'
     },
 
     scheduledTime() {
