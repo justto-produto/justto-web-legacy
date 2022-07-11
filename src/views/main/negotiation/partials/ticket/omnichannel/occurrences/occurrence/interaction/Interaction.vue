@@ -1,7 +1,7 @@
 <template>
   <section
     class="interaction-container"
-    :class="`${interaction.direction} ${type}`"
+    :class="`${interaction.direction || ''} ${type}`"
   >
     <el-tooltip
       placement="top-end"
@@ -19,7 +19,7 @@
       />
     </el-tooltip>
 
-    <div :class="`${interaction.direction} ${coloringType}-${messageType} ${!flat ? 'interaction-container__balloon' : ''} ${(scheduled || type === 'SCHEDULER') ? 'SCHEDULED' : ''}`">
+    <div :class="`${interaction.direction || ''} ${coloringType}-${messageType} ${!flat ? 'interaction-container__balloon' : ''} ${(scheduled || type === 'SCHEDULER') ? 'SCHEDULED' : ''}`">
       <div class="interaction-container__balloon-content">
         <component
           :is="type"
@@ -219,7 +219,7 @@ export default {
     },
 
     isInboundInteraction() {
-      return this.interaction.direction === 'INBOUND'
+      return this.interaction?.direction === 'INBOUND'
     },
 
     showAvatar() {

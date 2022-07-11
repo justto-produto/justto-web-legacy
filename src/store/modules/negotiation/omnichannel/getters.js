@@ -41,7 +41,7 @@ const omnichannelGetters = {
   getDisputeProtocol: state => (state.disputeProtocol),
   getUnansweredOccurrences: state => {
     const reverseOccurrences = [...state.occurrences.list].reverse()
-    const firstOutboundDate = reverseOccurrences.find(occ => occ.interaction.direction !== 'INBOUND') || { createAt: { dateTime: new Date().toISOString() } }
+    const firstOutboundDate = reverseOccurrences.find(occ => occ.interaction?.direction !== 'INBOUND') || { createAt: { dateTime: new Date().toISOString() } }
 
     return reverseOccurrences.filter(occ => {
       return new Date(occ[dateKey(occ)].dateTime) > new Date(firstOutboundDate[dateKey(firstOutboundDate)].dateTime)
