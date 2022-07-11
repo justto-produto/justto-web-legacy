@@ -1,4 +1,4 @@
-import { axiosDispatch, isSimilarStrings, buildQuery, validateCurrentId } from '@/utils'
+import { axiosDispatch, isSimilarStrings, buildQuery, validateCurrentId, stripHtml } from '@/utils'
 import { EditorBackup } from '@/models/message/editorBackup'
 
 const disputeApi = 'api/disputes/v2'
@@ -23,11 +23,15 @@ const omnichannelActions = {
     })
   },
 
-  setSignature({ dispatch, getters: { workspaceName, loggedPersonName, getEditorMessageType, useSignature } }) {
+  setSignature({ dispatch, getters: { getEditorText, workspaceName, loggedPersonName, getEditorMessageType, useSignature } }) {
     if (useSignature) {
-      const signature = !['sms', 'whatsapp'].includes(getEditorMessageType) ? `<br /><br />Att,<br />${loggedPersonName}<br />${workspaceName}` : `\n\nAtt,\n${loggedPersonName}\n${workspaceName}`
+      const signature = !['sms', 'whatsapp'].includes(getEditorMessageType) ? `<br><br>Att,<br>${loggedPersonName}<br>${workspaceName}` : `\n\nAtt,\n${loggedPersonName}\n${workspaceName}`
 
-      dispatch('setEditorText', signature)
+      const clearText = str => stripHtml(str).replaceAll(/[^a-zA-Z]+/g, '')
+
+      if (!clearText(getEditorText).includes(clearText(signature))) {
+        dispatch('setEditorText', `${getEditorText}${signature}`)
+      }
     }
   },
 
@@ -50,6 +54,8 @@ const omnichannelActions = {
 
     if (alreadySimpleText !== willBeSimpleText) {
       commit('resetRecipients')
+
+      commit('convertText')
     }
     dispatch('setEditorBackup')
     dispatch('setSignature')
