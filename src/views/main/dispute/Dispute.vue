@@ -558,7 +558,7 @@ export default {
     },
 
     overviewType() {
-      return this.workspaceProperties.DISPUTE_OVERVIEW || 'TICKET'
+      return 'TICKET' // this.workspaceProperties.DISPUTE_OVERVIEW || 'TICKET'
     },
 
     overviewIsTicket() {
@@ -570,7 +570,7 @@ export default {
     },
 
     omnichannelType() {
-      return this.workspaceProperties.DISPUTE_OMNICHANNEL || 'DISPUTE'
+      return 'DISPUTE' || this.workspaceProperties.DISPUTE_OMNICHANNEL || 'DISPUTE'
     },
 
     omnichannelIsTicket() {

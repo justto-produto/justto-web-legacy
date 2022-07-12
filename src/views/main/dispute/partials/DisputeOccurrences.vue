@@ -1427,10 +1427,10 @@ export default {
         padding: 10px 20px 0;
       }
       &.WHATSAPP {
-        background-color: $--color-success-light-5;
+        background-color: $--color-whatsapp-bg
       }
       &.EMAIL {
-        background-color: $--color-info-light;
+        background-color: $--color-email-bg;
       }
       &.UNKNOWN {
         background-color: $--color-light-gray;
@@ -1440,6 +1440,9 @@ export default {
       }
       &.SMS {
         background-color: #ececec;
+      }
+      &.NEGOTIATOR_MESSAGE {
+        background-color: $--color-negotiator-bg;
       }
     }
     &.NEGOTIATOR_REJECTED,
