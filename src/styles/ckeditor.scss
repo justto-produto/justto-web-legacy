@@ -40,11 +40,11 @@
 
   &.email {
     .ck-editor {
-      background-color: #d5f1fb;
+      border-color: $--color-email-bg !important;
 
       .ck-editor__main {
         .ck-editor__editable {
-          background-color: #d5f1fb;
+          background-color: $--color-email-bg;
         }
       }
     }
@@ -52,7 +52,7 @@
 
   &.negotiator {
     .ck-editor {
-      background-color: $--color-negotiator-bg !important;
+      border-color: $--color-negotiator-bg !important;
 
       .ck-editor__main {
         .ck-editor__editable {

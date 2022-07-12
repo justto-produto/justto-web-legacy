@@ -50,12 +50,12 @@
         </el-popover>
       </span>
 
-      <jus-icon
+      <!-- <jus-icon
         :icon="type"
         :is-active="!!type && type !== 'negotiation'"
         class="recipients-container__icon"
         :class="type"
-      />
+      /> -->
     </span>
   </section>
 </template>

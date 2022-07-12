@@ -558,7 +558,7 @@ export default {
     },
 
     overviewType() {
-      return this.workspaceProperties.DISPUTE_OVERVIEW || 'TICKET'
+      return 'TICKET' // this.workspaceProperties.DISPUTE_OVERVIEW || 'TICKET'
     },
 
     overviewIsTicket() {
