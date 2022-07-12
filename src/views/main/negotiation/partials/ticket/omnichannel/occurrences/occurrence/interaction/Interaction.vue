@@ -161,7 +161,7 @@ export default {
         return 'WHATSAPP'
       }
 
-      if (this.interaction?.direction === 'OUTBOUND' && ['WAITING', 'PROCESSED', 'CANCELED'].includes(this.interaction?.message?.status)) {
+      if (this.interaction?.direction === 'OUTBOUND' && ['WAITING', 'PROCESSED', 'CANCELED', 'FAILED'].includes(this.interaction?.message?.status) && this.interaction?.message?.createdBy === 'system') {
         return 'SCHEDULER'
       }
 
