@@ -178,29 +178,6 @@ export default {
     loadOccurrences($state) {
       if (!this.isPrinting) {
         this.getOccurrences(this.id).then(response => {
-          // console.log('onlyComunnications', response)
-          // console.log('onlyComunnications', !this.recipients.length && this.autodetectRecipient)
-          // if (!this.recipients.length && this.autodetectRecipient) {
-          //   const onlyComunnications = (response?.content || []).filter(({ interaction }) => (interaction?.type === 'COMMUNICATION' && interaction?.direction === 'INBOUND'))
-
-          //   console.log('onlyComunnications', onlyComunnications)
-
-          //   onlyComunnications.reverse()
-
-          //   for (const item of onlyComunnications) {
-          //     const { interaction: { message: { communicationType, sender, messageId } } } = item
-
-          //     console.log(item)
-          //     this.addRecipient({
-          //       value: sender,
-          //       type: communicationType.toLowerCase(),
-          //       inReplyTo: messageId,
-          //       key: 'address'
-          //     })
-          //     break
-          //   }
-          // }
-
           if (response.first) {
             this.adjustScroll(true)
           }
