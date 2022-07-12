@@ -19,7 +19,9 @@ export default {
 
   setMessageType: (state, type) => Vue.set(state.editor, 'messageType', type),
 
-  setOccurrences: (state, { content, totalElements, first, number }) => {
+  setOccurrences(state, { content, totalElements, first, number }) {
+    this.dispatch('autodetectTicketRecipients', {})
+
     if (first) {
       Vue.set(state.occurrences, 'list', [])
     }

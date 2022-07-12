@@ -732,6 +732,7 @@ export default {
       'activeOccurrency',
       'disputeLastInteractions',
       'isWorkspaceRecovery',
+      'getEditorRecipients',
       'workspaceAutodetectRecipient'
     ]),
 
@@ -904,8 +905,8 @@ export default {
 
     loadOccurrences($state) {
       this.$store.dispatch(this.fetchAction, this.disputeId).then(response => {
-        if (response.first && this.workspaceAutodetectRecipient) {
-          const onlyComunnications = (response?.content || []).filter(({ interaction }) => (response.first && interaction?.type === 'COMMUNICATION' && interaction?.direction === 'INBOUND'))
+        if (!this.getEditorRecipients.length && this.workspaceAutodetectRecipient) {
+          const onlyComunnications = (response?.content || []).filter(({ interaction }) => (interaction?.type === 'COMMUNICATION' && interaction?.direction === 'INBOUND'))
 
           onlyComunnications.reverse()
 

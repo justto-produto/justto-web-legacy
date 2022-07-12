@@ -350,6 +350,26 @@ const omnichannelActions = {
 
   clearAllGroupedOccurreces({ getters: { getGroupedOccurrences }, commit }) {
     Object.keys(getGroupedOccurrences).forEach(id => commit('deleteGroupedOccurrencesById', id))
+  },
+
+  autodetectTicketRecipients({ getters: { workspaceAutodetectRecipient, getEditorRecipients, getOccurrencesList }, dispatch }) {
+    if (workspaceAutodetectRecipient && !getEditorRecipients.length) {
+      const onlyComunnications = (getOccurrencesList || []).filter(({ interaction }) => (interaction?.type === 'COMMUNICATION' && interaction?.direction === 'INBOUND'))
+
+      onlyComunnications.reverse()
+
+      for (const item of onlyComunnications) {
+        const { interaction: { message: { communicationType, sender, messageId } } } = item
+
+        dispatch('addRecipient', {
+          value: sender,
+          type: communicationType.toLowerCase(),
+          inReplyTo: messageId,
+          key: 'address'
+        })
+        break
+      }
+    }
   }
 }
 
