@@ -382,13 +382,13 @@ export default {
     }
 
     &.COLORFUL-whatsapp {
-      background-color: $--color-success-light-5;
+      background-color: $--color-whatsapp-bg;
     }
     &.COLORFUL-email {
-      background-color: $--color-info-light;
+      background-color: $--color-email-bg;
     }
     &.COLORFUL-negotiation {
-      background-color: $--color-light-gray;
+      background-color: $--color-negotiator-bg;// $--color-light-gray;
     }
     // &.COLORFUL-EMAIL_CNA {
     //   background-color: #B6FFFB;

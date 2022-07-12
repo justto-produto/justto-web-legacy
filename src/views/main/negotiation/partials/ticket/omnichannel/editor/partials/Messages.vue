@@ -3,6 +3,11 @@
     v-if="!isInPreNegotiation && !isPaused && !isCanceled"
     id="messagesTabEditorOmnichannelNegotiation"
     class="messages-container jus-ckeditor__parent"
+    :class="{
+      'email': messageType === 'email' && canColorEditor,
+      'whatsapp': messageType === 'whatsapp' && canColorEditor,
+      'negotiator': ['negotiator_message', 'negotiation'].includes(messageType) && canColorEditor
+    }"
   >
     <ckeditor
       v-if="showCKEditor"
@@ -136,7 +141,8 @@ export default {
       editorText: 'getEditorText',
       ticket: 'getTicketOverview',
       isJusttoAdmin: 'isJusttoAdmin',
-      isRecovery: 'isWorkspaceRecovery'
+      isRecovery: 'isWorkspaceRecovery',
+      userProperties: 'userProperties'
     }),
 
     sendMessagetext() {
@@ -182,6 +188,10 @@ export default {
 
     editorInstance() {
       return this.$refs.messageEditor
+    },
+
+    canColorEditor() {
+      return this.userProperties?.OMNICHANNEL_COLORING_TYPE === 'COLORFUL' && this.editorRecipients.length > 0
     }
   },
 
