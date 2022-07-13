@@ -772,6 +772,7 @@ export default {
       'getPhoneCalls',
       'getWorkspaceTags',
       'getDisputeStatuses',
+      'setAccountProperty',
       'getFinishedDisputesCount'
     ]),
 
@@ -885,8 +886,14 @@ export default {
           }, 2000)
         }
 
-        if (['SCHEDULE_CALL', 'UNSCHEDULE_CALL'].includes(action)) {
+        if (action === 'UNSCHEDULE_CALL') {
           this.getPhoneCalls()
+        }
+
+        if (action === 'SCHEDULE_CALL') {
+          this.getPhoneCalls().then(() => {
+            this.setAccountProperty({ AVAILABLE_SCHEDULED_CALLS: 'AVAILABLE' })
+          })
         }
       }).catch(error => {
         this.$jusNotification({ error })
