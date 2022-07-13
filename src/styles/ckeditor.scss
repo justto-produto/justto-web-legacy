@@ -29,6 +29,8 @@
       .ck-editor__editable {
         height: 12vh;
         border: none;
+        color: black;
+        font-weight: 400;
 
         &.ck-focused {
           border: none;
