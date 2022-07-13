@@ -1,6 +1,8 @@
 import { axiosDispatch, isSimilarStrings, buildQuery, validateCurrentId, stripHtml } from '@/utils'
 import { EditorBackup } from '@/models/message/editorBackup'
 
+const vue = () => document.getElementById('app')?.__vue__
+
 const disputeApi = 'api/disputes/v2'
 const messagesPath = 'api/messages'
 
@@ -151,9 +153,34 @@ const omnichannelActions = {
     if (getEditorRecipients.find(el => el.value === value)) {
       commit('removeRecipient', value)
     } else {
-      if (getEditorMessageType !== type && value) dispatch('setMessageType', type)
-      if (type === 'whatsapp') commit('resetRecipients')
-      if (value) commit('setRecipients', recipient)
+      const callback = () => {
+        if (getEditorMessageType !== type && value) dispatch('setMessageType', type)
+        if (type === 'whatsapp') commit('resetRecipients')
+        if (value) commit('setRecipients', recipient)
+        dispatch('setEditorBackup')
+      }
+      if (getEditorMessageType !== type && getEditorRecipients.length) {
+        const oldType = vue().$tc('negotiation.ticket.recipient.message-type.' + getEditorMessageType)
+        const newType = vue().$tc('negotiation.ticket.recipient.message-type.' + type)
+        const message = `<p>Detectamos uma mudança no tipo de contato do destinatário: <b>${oldType}</b> para <b>${newType}</b>!</p>
+        <br>
+        <p>Desera realmente continuar?</p>`
+
+        vue().$confirm(message, 'Atenção!', {
+          customClass: 'confirm-change-recipent-type',
+          dangerouslyUseHTMLString: true,
+          confirmButtonText: 'Confirmar',
+          cancelButtonText: 'Cancelar',
+          closeOnPressEscape: false,
+          closeOnClickModal: false,
+          showClose: false,
+          center: true
+        }).then(callback).catch(() => {
+          // TODO: SAAS-5197 Ação adicional ao não mudar de destinatário.
+        })
+      } else {
+        callback()
+      }
     }
 
     dispatch('setEditorBackup')
