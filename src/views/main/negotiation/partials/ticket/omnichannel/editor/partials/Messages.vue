@@ -209,7 +209,8 @@ export default {
       'sendDisputeNote',
       'disfavorTicket',
       'setEditorText',
-      'sendMessage'
+      'sendMessage',
+      'setSignature'
     ]),
 
     openFullScreenEditor(_) {
@@ -282,7 +283,6 @@ export default {
 
       this.validateSendMessage().then(() => {
         this.sendMessage(Number(id)).then(res => {
-          this.resetRecipients()
           this.setEditorText('')
           this.$jusNotification({
             title: 'Yay!',
@@ -295,6 +295,7 @@ export default {
             this.$jusNotification(parsedError)
           } catch (e) {}
         }).finally(() => {
+          this.setSignature()
           this.localLoading = false
         })
       }).finally(() => {

@@ -164,7 +164,8 @@ export default {
       'resetRecipients',
       'resetOccurrences',
       'resetMessageText',
-      'addRecipient'
+      'addRecipient',
+      'autodetectTicketRecipients'
     ]),
 
     adjustScroll(force = false) {
@@ -187,7 +188,7 @@ export default {
           } else {
             if ($state) { $state.loaded() }
           }
-        })
+        }).finally(this.autodetectTicketRecipients)
       } else {
         $state.complete()
       }

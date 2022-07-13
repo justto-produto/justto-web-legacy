@@ -1,5 +1,6 @@
 import { axiosDispatch, isSimilarStrings, buildQuery, validateCurrentId, stripHtml } from '@/utils'
 import { EditorBackup } from '@/models/message/editorBackup'
+import moment from 'moment'
 
 const vue = () => document.getElementById('app')?.__vue__
 
@@ -399,13 +400,17 @@ const omnichannelActions = {
     if (workspaceAutodetectRecipient && !getEditorRecipients.length) {
       const onlyComunnications = (getOccurrencesList || []).filter(({ interaction }) => (interaction?.type === 'COMMUNICATION' && interaction?.direction === 'INBOUND'))
 
-      onlyComunnications.reverse()
+      const sortByCreateAt = (occA, occB) => {
+        return moment(occA?.createAt?.dateTime).isAfter(occB?.createAt?.dateTime) ? -1 : 1
+      }
+
+      onlyComunnications.sort(sortByCreateAt)
 
       for (const item of onlyComunnications) {
-        const { interaction: { message: { communicationType, sender, messageId } } } = item
+        const { interaction: { direction, message: { communicationType, sender, receiver, messageId } } } = item
 
         dispatch('addRecipient', {
-          value: sender,
+          value: direction === 'INBOUND' ? sender : receiver,
           type: communicationType.toLowerCase(),
           inReplyTo: messageId,
           key: 'address'
