@@ -189,7 +189,7 @@ const disputeMutations = {
       state.occurrences = occurrences.reverse()
     }
 
-    this.diapatch('autodetectDisputeRecipients', {})
+    this.dispatch('autodetectDisputeRecipients', {})
   },
 
   addLoadingOccurrence(state, occurrence) {
