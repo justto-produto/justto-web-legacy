@@ -363,7 +363,8 @@ export default {
       'favoriteTicket',
       'disfavorTicket',
       'setAccountProperty',
-      'loadAccountProperty'
+      'loadAccountProperty',
+      'resetRecipients'
     ]),
 
     ...mapMutations(['deleteRestartDisputeFlag']),
@@ -648,6 +649,8 @@ export default {
 
     redirectToManagement() {
       const path = this.isInDispute ? `/negotiation/${this.$route.params.id}` : `/management/dispute/${this.$route.params.id}`
+
+      this.resetRecipients()
       this.$jusSegment('SWITCH_DISPUTE_INTERFACE', {})
       this.$router.push({ path })
     }

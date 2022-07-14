@@ -568,6 +568,7 @@ export default {
   },
 
   beforeCreate() {
+    this.$store.dispatch('resetRecipients')
     this.$store.dispatch('getNotVisualizeds')
     this.$store.dispatch('getNearExpirations')
   },
