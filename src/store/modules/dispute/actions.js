@@ -925,11 +925,15 @@ const disputeActions = {
     })
   },
 
-  autodetectDisputeRecipients({ getters: { workspaceAutodetectRecipient, getEditorRecipients, occurrences }, dispatch }) {
+  autodetectDisputeRecipients({ getters: { workspaceAutodetectRecipient, getEditorRecipients, occurrences, getCurrentRoute: { params: { id } } }, dispatch }) {
     if (workspaceAutodetectRecipient && !getEditorRecipients.length) {
-      const onlyComunnications = (occurrences || []).filter(({ interaction }) => (interaction?.type === 'COMMUNICATION' && interaction?.direction === 'INBOUND'))
+      const onlyComunnications = (occurrences || []).filter(({ interaction, disputeId }) => (interaction?.type === 'COMMUNICATION' && interaction?.direction === 'INBOUND' && Number(disputeId) === Number(id)))
 
-      onlyComunnications.reverse()
+      const sortByCreateAt = (occA, occB) => {
+        return moment(occA?.createAt?.dateTime).isAfter(occB?.createAt?.dateTime) ? -1 : 1
+      }
+
+      onlyComunnications.sort(sortByCreateAt)
 
       for (const item of onlyComunnications) {
         const { interaction: { message: { communicationType, sender, messageId } } } = item
