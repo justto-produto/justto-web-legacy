@@ -3,65 +3,67 @@
     v-if="canAccessDialer"
     class="dialer"
   >
+    <el-popover
+      v-model="showPopover"
+      trigger="manual"
+      placement="left"
+      popper-class="dialer-popover"
+    >
+      <div>
+        <CallQueue
+          ref="callsQueue"
+          :loading="loading"
+          @hide="toggleShowPopover(false)"
+        />
+      </div>
+
+      <span
+        slot="reference"
+        class="reference dialer__button-call"
+      >
+        <JusIcon
+          :icon="dialerIcon"
+          @click="toggleShowPopover(!showPopover)"
+        />
+
+        <el-badge
+          :hidden="!isPhoneActive"
+          is-dot
+          :class="{'el-icon-pulse': isPhoneActive}"
+        />
+      </span>
+    </el-popover>
+
     <el-tooltip
       content="Top Left prompts info"
       placement="bottom-start"
       :open-delay="250"
     >
-      <p
+      <span
         v-if="enabledScheduledCalls"
         slot="content"
       >
         Estamos ligando automaticamente por você.
-        <br>
-        <br>
-        Clique aqui para pausar a discagem automática!
-      </p>
+      </span>
 
-      <p
+      <span
         v-else
         slot="content"
       >
         Não estamos ligando automaticamente por você.
-        <br>
-        <br>
-        Clique aqui para iniciar a discagem automática para disputas!
-      </p>
+      </span>
 
       <div
         class="dialer__button"
         @click="clickInIcon"
       >
-        <el-popover
-          v-model="showPopover"
-          trigger="manual"
-          placement="left"
-          popper-class="dialer-popover"
-        >
-          <div>
-            <CallQueue
-              ref="callsQueue"
-              :loading="loading"
-              @hide="toggleShowPopover(false)"
-            />
-          </div>
-
-          <span
-            slot="reference"
-            class="reference"
-          >
-            <JusIcon
-              :icon="dialerIcon"
-              @hover="toggleShowPopover(true)"
-            />
-
-            <el-badge
-              :hidden="!isPhoneActive"
-              is-dot
-              :class="{'el-icon-pulse': isPhoneActive}"
-            />
-          </span>
-        </el-popover>
+        <el-switch
+          :value="hasAutoCallActive"
+          :width="30"
+          active-color="#14CC30"
+          inactive-color="#FF4B54"
+        />
+        <!-- active-icon-class="el-icon-service" -->
       </div>
     </el-tooltip>
 
@@ -158,6 +160,10 @@ export default {
       // return !this.isActiveToCall ? 'phone-off' : [CALL_STATUS.ACTIVE_CALL].includes(this.currentActiveCall?.status) ? 'phone-active' : 'tts'
     },
 
+    hasAutoCallActive() {
+      return this.preferences?.properties?.AVAILABLE_SCHEDULED_CALLS === 'AVAILABLE'
+    },
+
     isPhoneActive() {
       return this.dialerIcon === 'phone-active'
     },
@@ -221,7 +227,7 @@ export default {
     ]),
 
     clickTracker(event) {
-      const dialerButton = document.querySelector('.dialer__button')
+      const dialerButton = document.querySelector('.dialer__button-call')
       const clickIn = event.path.includes(dialerButton) || event.path.filter(item => Array(...(item?.classList || [])).includes('dialer__button')).length > 0
 
       if (!clickIn && this.showPopover) {
@@ -271,6 +277,17 @@ export default {
 @import '@/styles/colors.scss';
 
 .dialer {
+  display: flex;
+
+  .dialer__button-call {
+    cursor: pointer;
+
+    img {
+      height: 20px;
+      width: 20px;
+    }
+  }
+
   .dialer__button {
     text-align: center;
     cursor: pointer;
