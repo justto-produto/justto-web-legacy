@@ -62,6 +62,7 @@
           :width="30"
           active-color="#14CC30"
           inactive-color="#FF4B54"
+          active-icon-class="el-icon-service"
         />
         <!-- active-icon-class="el-icon-service" -->
       </div>
@@ -304,6 +305,22 @@ export default {
 
         .reference {
           display: flex;
+        }
+      }
+    }
+
+    .el-switch {
+      position: relative;
+
+      .el-switch__label {
+        margin: 0;
+        position: absolute;
+        left: 3px;
+        right: auto;
+
+        &.is-active {
+          right: 3px;
+          left: auto;
         }
       }
     }
