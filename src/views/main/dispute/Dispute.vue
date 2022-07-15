@@ -570,7 +570,7 @@ export default {
     },
 
     omnichannelType() {
-      return this.workspaceProperties.DISPUTE_OMNICHANNEL || 'DISPUTE'
+      return this.workspaceProperties.DISPUTE_OMNICHANNEL || 'TICKET'
     },
 
     omnichannelIsTicket() {
