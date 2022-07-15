@@ -756,6 +756,14 @@
             }
           }
         }
+      },
+      "recipient": {
+        "message-type": {
+          "whatsapp": "whatsapp",
+          "negotiator_message": "portal de negociação",
+          "negotiation": "portal de negociação",
+          "email": "e-mail"
+        }
       }
     }
   },

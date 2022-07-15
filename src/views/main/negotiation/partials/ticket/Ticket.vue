@@ -67,6 +67,11 @@ export default {
     }
   },
 
+  $route: {
+    deep: true,
+    handler: 'resetRecipients'
+  },
+
   mounted() {
     this.fetchData(Number(this.$route.params.id))
     eventBus.$on(events.TICKET_CHANGE.callback, this.fetchData)
@@ -92,7 +97,8 @@ export default {
       'setDisputeProperty',
       'getTicketOverviewInfo',
       'setAccountProperty',
-      'setEditorBackup'
+      'setEditorBackup',
+      'resetRecipients'
     ]),
 
     async fetchData(id) {

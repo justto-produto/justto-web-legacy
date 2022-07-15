@@ -89,6 +89,7 @@ export default {
       messageType: 'getEditorMessageType',
       isPrinting: 'getExportTicketModalVisible',
       backups: 'getMessagesBackupById',
+      recipients: 'getEditorRecipients',
       autodetectRecipient: 'workspaceAutodetectRecipient'
     }),
 
@@ -163,7 +164,8 @@ export default {
       'resetRecipients',
       'resetOccurrences',
       'resetMessageText',
-      'addRecipient'
+      'addRecipient',
+      'autodetectTicketRecipients'
     ]),
 
     adjustScroll(force = false) {
@@ -178,23 +180,6 @@ export default {
       if (!this.isPrinting) {
         this.getOccurrences(this.id).then(response => {
           if (response.first) {
-            if (this.autodetectRecipient) {
-              const onlyComunnications = (response?.content || []).filter(({ interaction }) => (response.first && interaction?.type === 'COMMUNICATION' && interaction?.direction === 'INBOUND'))
-
-              onlyComunnications.reverse()
-
-              for (const item of onlyComunnications) {
-                const { interaction: { message: { communicationType, sender, messageId } } } = item
-
-                this.addRecipient({
-                  value: sender,
-                  type: communicationType.toLowerCase(),
-                  inReplyTo: messageId,
-                  key: 'address'
-                })
-                break
-              }
-            }
             this.adjustScroll(true)
           }
 
@@ -203,7 +188,7 @@ export default {
           } else {
             if ($state) { $state.loaded() }
           }
-        })
+        }).finally(this.autodetectTicketRecipients)
       } else {
         $state.complete()
       }

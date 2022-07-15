@@ -1,5 +1,8 @@
-import { axiosDispatch, isSimilarStrings, buildQuery, validateCurrentId } from '@/utils'
+import { axiosDispatch, isSimilarStrings, buildQuery, validateCurrentId, stripHtml } from '@/utils'
 import { EditorBackup } from '@/models/message/editorBackup'
+import moment from 'moment'
+
+const vue = () => document.getElementById('app')?.__vue__
 
 const disputeApi = 'api/disputes/v2'
 const messagesPath = 'api/messages'
@@ -23,11 +26,15 @@ const omnichannelActions = {
     })
   },
 
-  setSignature({ dispatch, getters: { workspaceName, loggedPersonName, getEditorMessageType, useSignature } }) {
+  setSignature({ dispatch, getters: { getEditorText, workspaceName, loggedPersonName, getEditorMessageType, useSignature } }) {
     if (useSignature) {
-      const signature = !['sms', 'whatsapp'].includes(getEditorMessageType) ? `<br /><br />Att,<br />${loggedPersonName}<br />${workspaceName}` : `\n\nAtt,\n${loggedPersonName}\n${workspaceName}`
+      const signature = !['sms', 'whatsapp'].includes(getEditorMessageType) ? `<br><br>Att,<br>${loggedPersonName}<br>${workspaceName}` : `\n\nAtt,\n${loggedPersonName}\n${workspaceName}`
 
-      dispatch('setEditorText', signature)
+      const clearText = str => stripHtml(str).replaceAll(/[^a-zA-Z]+/g, '')
+
+      if (!clearText(getEditorText).includes(clearText(signature))) {
+        dispatch('setEditorText', `${getEditorText}${signature}`)
+      }
     }
   },
 
@@ -50,6 +57,8 @@ const omnichannelActions = {
 
     if (alreadySimpleText !== willBeSimpleText) {
       commit('resetRecipients')
+
+      commit('convertText')
     }
     dispatch('setEditorBackup')
     dispatch('setSignature')
@@ -145,9 +154,34 @@ const omnichannelActions = {
     if (getEditorRecipients.find(el => el.value === value)) {
       commit('removeRecipient', value)
     } else {
-      if (getEditorMessageType !== type && value) dispatch('setMessageType', type)
-      if (type === 'whatsapp') commit('resetRecipients')
-      if (value) commit('setRecipients', recipient)
+      const callback = () => {
+        if (getEditorMessageType !== type && value) dispatch('setMessageType', type)
+        if (type === 'whatsapp') commit('resetRecipients')
+        if (value) commit('setRecipients', recipient)
+        dispatch('setEditorBackup')
+      }
+      if (getEditorMessageType !== type && getEditorRecipients.length) {
+        const oldType = vue().$tc('negotiation.ticket.recipient.message-type.' + getEditorMessageType)
+        const newType = vue().$tc('negotiation.ticket.recipient.message-type.' + type)
+        const message = `<p>Detectamos uma mudança no tipo de contato do destinatário: <b>${oldType}</b> para <b>${newType}</b>!</p>
+        <br>
+        <p>Desera realmente continuar?</p>`
+
+        vue().$confirm(message, 'Atenção!', {
+          customClass: 'confirm-change-recipent-type',
+          dangerouslyUseHTMLString: true,
+          confirmButtonText: 'Confirmar',
+          cancelButtonText: 'Cancelar',
+          closeOnPressEscape: false,
+          closeOnClickModal: false,
+          showClose: false,
+          center: true
+        }).then(callback).catch(() => {
+          // TODO: SAAS-5197 Ação adicional ao não mudar de destinatário.
+        })
+      } else {
+        callback()
+      }
     }
 
     dispatch('setEditorBackup')
@@ -204,7 +238,12 @@ const omnichannelActions = {
         inReplyTo
       }
 
-      return validateCurrentId(disputeId, () => dispatch('sendemail', data).then(() => dispatch('getDisputeOccurrences', disputeId)))
+      return new Promise((resolve, reject) => {
+        dispatch('sendemail', data).then(res => {
+          dispatch('getDisputeOccurrences', disputeId)
+          resolve(res)
+        }).catch(reject)
+      })
     } else if (type === 'whatsapp') {
       const data = {
         to,
@@ -212,14 +251,25 @@ const omnichannelActions = {
         externalIdentification,
         message: messageText.trim()
       }
-      return validateCurrentId(disputeId, () => dispatch('validateWhatsappMessage', { data, contact: recipients[0].value }).then(() => dispatch('getDisputeOccurrences', disputeId)))
+
+      return new Promise((resolve, reject) => {
+        dispatch('validateWhatsappMessage', { data, contact: recipients[0].value }).then(res => {
+          dispatch('getDisputeOccurrences', disputeId)
+          resolve(res)
+        }).catch(reject)
+      })
     } else {
       const data = {
         roleId,
         message: messageEmail,
         email: recipients[0].value
       }
-      return validateCurrentId(disputeId, () => dispatch('sendNegotiator', { disputeId, data }).then(() => dispatch('getDisputeOccurrences', disputeId)))
+      return new Promise((resolve, reject) => {
+        dispatch('sendNegotiator', { disputeId, data }).then(res => {
+          dispatch('getDisputeOccurrences', disputeId)
+          resolve(res)
+        }).catch(reject)
+      })
     }
   },
 
@@ -358,6 +408,30 @@ const omnichannelActions = {
 
   clearAllGroupedOccurreces({ getters: { getGroupedOccurrences }, commit }) {
     Object.keys(getGroupedOccurrences).forEach(id => commit('deleteGroupedOccurrencesById', id))
+  },
+
+  autodetectTicketRecipients({ getters: { workspaceAutodetectRecipient, getEditorRecipients, getOccurrencesList, getCurrentRoute: { params: { id } } }, dispatch }) {
+    if (workspaceAutodetectRecipient && !getEditorRecipients.length) {
+      const onlyComunnications = (getOccurrencesList || []).filter(({ interaction, disputeId }) => (interaction?.type === 'COMMUNICATION' && interaction?.direction === 'INBOUND' && Number(disputeId) === Number(id)))
+
+      const sortByCreateAt = (occA, occB) => {
+        return moment(occA?.createAt?.dateTime).isAfter(occB?.createAt?.dateTime) ? -1 : 1
+      }
+
+      onlyComunnications.sort(sortByCreateAt)
+
+      for (const item of onlyComunnications) {
+        const { interaction: { direction, message: { communicationType, sender, receiver, messageId } } } = item
+
+        dispatch('addRecipient', {
+          value: direction === 'INBOUND' ? sender : receiver,
+          type: communicationType.toLowerCase(),
+          inReplyTo: messageId,
+          key: 'address'
+        })
+        break
+      }
+    }
   }
 }
 

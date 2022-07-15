@@ -47,4 +47,14 @@
       right: 0;
     }
   }
+
+  &.confirm-change-recipent-type {
+    .el-message-box__btns {
+      display: flex;
+
+      .el-button {
+        flex: 1;
+      }
+    }
+  }
 }

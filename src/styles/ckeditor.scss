@@ -1,3 +1,5 @@
+@import '@/styles/colors.scss';
+
 .jus-ckeditor__parent {
   .ck-editor {
     border: 2px solid #f4f4f4 !important;
@@ -27,11 +29,45 @@
       .ck-editor__editable {
         height: 12vh;
         border: none;
+        color: black;
+        font-weight: 400;
 
         &.ck-focused {
           border: none;
           box-shadow: none;
         }
+      }
+    }
+  }
+
+  &.email {
+    .ck-editor {
+      border-color: $--color-email-bg !important;
+
+      .ck-editor__main {
+        .ck-editor__editable {
+          background-color: $--color-email-bg;
+        }
+      }
+    }
+  }
+
+  &.negotiator {
+    .ck-editor {
+      border-color: $--color-negotiator-bg !important;
+
+      .ck-editor__main {
+        .ck-editor__editable {
+          background-color: $--color-negotiator-bg !important;
+        }
+      }
+    }
+  }
+
+  &.whatsapp {
+    .el-textarea {
+      .el-textarea__inner {
+        background-color: $--color-whatsapp-bg !important;
       }
     }
   }

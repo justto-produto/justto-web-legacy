@@ -152,7 +152,6 @@ export default {
   },
 
   mounted() {
-    console.log(this.communicationTypes)
     this.communicationTypes.forEach(communicationType => {
       this.getOccurrences(communicationType)
     })

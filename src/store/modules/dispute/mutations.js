@@ -185,7 +185,11 @@ const disputeMutations = {
   },
 
   setDisputeOccurrences(state, occurrences) {
-    if (occurrences && occurrences.length) state.occurrences = occurrences.reverse()
+    if (occurrences?.length) {
+      state.occurrences = occurrences.reverse()
+    }
+
+    this.dispatch('autodetectDisputeRecipients', {})
   },
 
   addLoadingOccurrence(state, occurrence) {

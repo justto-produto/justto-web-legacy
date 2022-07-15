@@ -923,6 +923,30 @@ const disputeActions = {
       url: `/api/dispute-classifications/${parentId}/dispute-classifications-detail`,
       data
     })
+  },
+
+  autodetectDisputeRecipients({ getters: { workspaceAutodetectRecipient, getEditorRecipients, occurrences, getCurrentRoute: { params: { id } } }, dispatch }) {
+    if (workspaceAutodetectRecipient && !getEditorRecipients.length) {
+      const onlyComunnications = (occurrences || []).filter(({ interaction, disputeId }) => (interaction?.type === 'COMMUNICATION' && interaction?.direction === 'INBOUND' && Number(disputeId) === Number(id)))
+
+      const sortByCreateAt = (occA, occB) => {
+        return moment(occA?.createAt?.dateTime).isAfter(occB?.createAt?.dateTime) ? -1 : 1
+      }
+
+      onlyComunnications.sort(sortByCreateAt)
+
+      for (const item of onlyComunnications) {
+        const { interaction: { message: { communicationType, sender, messageId } } } = item
+
+        dispatch('addRecipient', {
+          value: sender,
+          type: communicationType.toLowerCase(),
+          inReplyTo: messageId,
+          key: 'address'
+        })
+        break
+      }
+    }
   }
 }
 

@@ -732,6 +732,7 @@ export default {
       'activeOccurrency',
       'disputeLastInteractions',
       'isWorkspaceRecovery',
+      'getEditorRecipients',
       'workspaceAutodetectRecipient'
     ]),
 
@@ -904,17 +905,6 @@ export default {
 
     loadOccurrences($state) {
       this.$store.dispatch(this.fetchAction, this.disputeId).then(response => {
-        if (response.first && this.workspaceAutodetectRecipient) {
-          const onlyComunnications = (response?.content || []).filter(({ interaction }) => (response.first && interaction?.type === 'COMMUNICATION' && interaction?.direction === 'INBOUND'))
-
-          onlyComunnications.reverse()
-
-          for (const item of onlyComunnications) {
-            this.startReply(item)
-            break
-          }
-        }
-
         if (response.last) {
           $state.complete()
         } else {
@@ -1427,10 +1417,10 @@ export default {
         padding: 10px 20px 0;
       }
       &.WHATSAPP {
-        background-color: $--color-success-light-5;
+        background-color: $--color-whatsapp-bg
       }
       &.EMAIL {
-        background-color: $--color-info-light;
+        background-color: $--color-email-bg;
       }
       &.UNKNOWN {
         background-color: $--color-light-gray;
@@ -1440,6 +1430,9 @@ export default {
       }
       &.SMS {
         background-color: #ececec;
+      }
+      &.NEGOTIATOR_MESSAGE {
+        background-color: $--color-negotiator-bg;
       }
     }
     &.NEGOTIATOR_REJECTED,

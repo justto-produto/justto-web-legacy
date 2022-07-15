@@ -6,7 +6,12 @@
     <span
       v-if="recipients.length > 0"
       class="recipients-container__content"
-      :class="{ 'recipients-container__content-reverse': isReversed }"
+      :class="{
+        'recipients-container__content-reverse': isReversed,
+        'recipients-container__whatsapp': type === 'whatsapp' && usingColors,
+        'recipients-container__email': type === 'email' && usingColors,
+        'recipients-container__negotiator': ['negotiator_message', 'negotiation'].includes(type) && usingColors
+      }"
     >
       <span class="recipients-container__label">
         <el-popover
@@ -25,6 +30,7 @@
               {{ recipient.value }}
             </li>
           </ul>
+
           <el-badge
             slot="reference"
             class="item"
@@ -43,12 +49,13 @@
           </el-badge>
         </el-popover>
       </span>
-      <jus-icon
+
+      <!-- <jus-icon
         :icon="type"
         :is-active="!!type && type !== 'negotiation'"
         class="recipients-container__icon"
         :class="type"
-      />
+      /> -->
     </span>
   </section>
 </template>
@@ -66,13 +73,20 @@ export default {
   computed: {
     ...mapGetters({
       recipients: 'getEditorRecipients',
-      type: 'getEditorMessageType'
-    })
+      type: 'getEditorMessageType',
+      userProperties: 'userProperties'
+    }),
+
+    usingColors() {
+      return this.userProperties?.OMNICHANNEL_COLORING_TYPE === 'COLORFUL'
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+@import '@/styles/colors';
+
 .recipients-container {
   display: flex;
   align-items: center;
@@ -82,6 +96,9 @@ export default {
     align-items: center;
     justify-content: flex-end;
     gap: 12px;
+
+    padding: 2px 6px 4px;
+    border-radius: 8px;
 
     .recipients-container__label {
       cursor: pointer;
@@ -98,6 +115,18 @@ export default {
 
   .recipients-container__content-reverse {
     flex-direction: row-reverse;
+  }
+
+  .recipients-container__whatsapp {
+    background-color: #8ae698;
+  }
+
+  .recipients-container__email {
+    background-color: #d5f1fb;
+  }
+
+  .recipients-container__negotiator {
+    background-color: $--color-negotiator-bg;
   }
 }
 </style>
