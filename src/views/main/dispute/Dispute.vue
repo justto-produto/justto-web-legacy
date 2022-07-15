@@ -958,7 +958,6 @@ export default {
     removeReply() {
       this.inReplyTo = null
       this.directContactAddress = []
-      this.resetRecipients()
     },
 
     socketAction(action, id) {
