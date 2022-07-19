@@ -709,16 +709,11 @@ const disputeActions = {
     })
   },
 
-  getRespondents({ commit, state }) {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.get(`${disputesPath}/respondent-names`)
-        .then(response => {
-          commit('setRespondents', response.data)
-          resolve(response.data)
-        }).catch(error => {
-          reject(error)
-        })
+  getRespondents({ _ }, name = '') {
+    return axiosDispatch({
+      url: `${disputesPath}/respondent-names`,
+      params: { name },
+      mutation: 'setRespondents'
     })
   },
 
@@ -925,11 +920,15 @@ const disputeActions = {
     })
   },
 
-  autodetectDisputeRecipients({ getters: { workspaceAutodetectRecipient, getEditorRecipients, occurrences }, dispatch }) {
+  autodetectDisputeRecipients({ getters: { workspaceAutodetectRecipient, getEditorRecipients, occurrences, getCurrentRoute: { params: { id } } }, dispatch }) {
     if (workspaceAutodetectRecipient && !getEditorRecipients.length) {
-      const onlyComunnications = (occurrences || []).filter(({ interaction }) => (interaction?.type === 'COMMUNICATION' && interaction?.direction === 'INBOUND'))
+      const onlyComunnications = (occurrences || []).filter(({ interaction, disputeId }) => (interaction?.type === 'COMMUNICATION' && interaction?.direction === 'INBOUND' && Number(disputeId) === Number(id)))
 
-      onlyComunnications.reverse()
+      const sortByCreateAt = (occA, occB) => {
+        return moment(occA?.createAt?.dateTime).isAfter(occB?.createAt?.dateTime) ? -1 : 1
+      }
+
+      onlyComunnications.sort(sortByCreateAt)
 
       for (const item of onlyComunnications) {
         const { interaction: { message: { communicationType, sender, messageId } } } = item

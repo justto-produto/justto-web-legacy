@@ -27,6 +27,8 @@ const accountGetters = {
   },
   preventScheduleCallsConfirmation: state => state.preventScheduleCallsConfirmation,
   isOmnichannelGrouping: state => state.preferences?.properties?.OMNICHANNEL_GROUPING_TYPE === 'GROUPED',
+  isOmnichannelUsingColors: state => state.preferences?.properties?.OMNICHANNEL_COLORING_TYPE !== 'MONOCHROME',
+  omnichannelColoringType: state => state?.properties?.OMNICHANNEL_COLORING_TYPE || 'COLORFUL',
   useSignature: state => state.preferences?.properties?.USE_SIGNATURE === 'ENABLED'
 }
 

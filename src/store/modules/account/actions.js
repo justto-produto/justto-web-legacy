@@ -160,7 +160,8 @@ const accountActions = {
       } else {
         commit('setAvailableSchedulerdCalls', 'AVAILABLE')
       }
-    }).finally(() => commit('setPreventScheduleCallsConfirmation', false))
+    })
+    // .finally(() => commit('setPreventScheduleCallsConfirmation', false))
   },
 
   changeAccountName({ commit }, { name }) {

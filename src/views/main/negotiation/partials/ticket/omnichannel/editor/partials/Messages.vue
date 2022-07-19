@@ -142,7 +142,8 @@ export default {
       ticket: 'getTicketOverview',
       isJusttoAdmin: 'isJusttoAdmin',
       isRecovery: 'isWorkspaceRecovery',
-      userProperties: 'userProperties'
+      userProperties: 'userProperties',
+      usingColors: 'isOmnichannelUsingColors'
     }),
 
     sendMessagetext() {
@@ -191,7 +192,7 @@ export default {
     },
 
     canColorEditor() {
-      return this.userProperties?.OMNICHANNEL_COLORING_TYPE === 'COLORFUL' && this.editorRecipients.length > 0
+      return this.usingColors && this.editorRecipients.length > 0
     }
   },
 

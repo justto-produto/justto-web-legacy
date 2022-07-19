@@ -160,9 +160,14 @@
                 multiple
                 filterable
                 clearable
+                remote
+                reserve-keyword
+                :remote-method="getRespondentNames"
+                :loading="loadingRespondentNames"
                 popper-class="filter__respondent-options"
                 placeholder="Selecione uma opção"
                 @clear="clearRespondent"
+                @blur="getRespondents('')"
               >
                 <el-option
                   v-for="(respondent, index) in respondents"
@@ -367,7 +372,9 @@ export default {
     return {
       visibleFilters: false,
       loading: false,
-      filters: {}
+      filters: {},
+      loadingRespondentNames: false,
+      awaitGetRespondents: null
     }
   },
 
@@ -612,6 +619,7 @@ export default {
     },
 
     clearRespondent() {
+      this.getRespondents('')
       this.filters.respondentNames = []
     },
 
@@ -664,6 +672,18 @@ export default {
       } else {
         this.filters.importingDate = []
       }
+    },
+
+    getRespondentNames(name) {
+      clearTimeout(this.awaitGetRespondents)
+      const time = 1/* s */ * 1000/* ms */
+
+      this.loadingRespondentNames = true
+      this.awaitGetRespondents = setTimeout(() => {
+        this.getRespondents(name).finally(() => {
+          this.loadingRespondentNames = false
+        })
+      }, time)
     }
   }
 }

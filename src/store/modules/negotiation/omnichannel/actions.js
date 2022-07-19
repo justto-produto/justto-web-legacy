@@ -396,9 +396,9 @@ const omnichannelActions = {
     Object.keys(getGroupedOccurrences).forEach(id => commit('deleteGroupedOccurrencesById', id))
   },
 
-  autodetectTicketRecipients({ getters: { workspaceAutodetectRecipient, getEditorRecipients, getOccurrencesList }, dispatch }) {
+  autodetectTicketRecipients({ getters: { workspaceAutodetectRecipient, getEditorRecipients, getOccurrencesList, getCurrentRoute: { params: { id } } }, dispatch }) {
     if (workspaceAutodetectRecipient && !getEditorRecipients.length) {
-      const onlyComunnications = (getOccurrencesList || []).filter(({ interaction }) => (interaction?.type === 'COMMUNICATION' && interaction?.direction === 'INBOUND'))
+      const onlyComunnications = (getOccurrencesList || []).filter(({ interaction, disputeId }) => (interaction?.type === 'COMMUNICATION' && interaction?.direction === 'INBOUND' && Number(disputeId) === Number(id)))
 
       const sortByCreateAt = (occA, occB) => {
         return moment(occA?.createAt?.dateTime).isAfter(occB?.createAt?.dateTime) ? -1 : 1

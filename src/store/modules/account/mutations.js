@@ -42,6 +42,8 @@ const accountMutations = {
       if (key === 'AVAILABLE_SCHEDULED_CALLS' && oldAvailableScheduledCalls !== response[key] && response[key] === 'AVAILABLE') {
         if (!state.preventScheduleCallsConfirmation) {
           this.dispatch('confirmActiveScheduledCalls', {})
+        } else {
+          this.commit('setPreventScheduleCallsConfirmation', false)
         }
       } else {
         Vue.set(state.preferences.properties, key, response[key])

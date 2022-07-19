@@ -127,6 +127,10 @@ export default {
   },
 
   watch: {
+    '$route.params.id'() {
+      this.routeUpdate()
+    },
+
     'countRendereds'() {
       this.adjustScroll()
     }
@@ -192,6 +196,10 @@ export default {
       } else {
         $state.complete()
       }
+    },
+
+    routeUpdate() {
+      this.resetTicket(this.id)
     },
 
     resetTicket(id) {
