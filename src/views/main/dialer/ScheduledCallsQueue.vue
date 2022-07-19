@@ -64,7 +64,8 @@ export default {
 
     collapseTitle() {
       const isShowing = this.collapseState.includes('show')
-      const countInfo = `(${this.scheduledCallQueue?.length || 0} itens)`
+      const isPlural = !this.scheduledCallQueue?.length === 1
+      const countInfo = `(${this.scheduledCallQueue?.length || 0} ${isPlural ? 'ligações agendadas' : 'ligação agendada'})`
 
       return `${isShowing ? 'Esconder' : 'Mostrar'} ${countInfo}`
     },

@@ -28,4 +28,13 @@
       }
     }
   }
+
+  &.dialer-popover {
+    border-width: 1px;
+    border-color: $--color-primary-light-5;
+
+    .popper__arrow {
+      border-left-color: $--color-primary-light-5 !important;
+    }
+  }
 }
