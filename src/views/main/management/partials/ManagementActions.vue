@@ -654,6 +654,7 @@ export default {
 
   computed: {
     ...mapGetters({
+      useScheduleCall: 'useScheduleCallBatchAction',
       disputeStatuses: 'disputeStatuses',
       strategies: 'getMyStrategiesLite',
       isJusttoAdmin: 'isJusttoAdmin',
@@ -704,7 +705,7 @@ export default {
           main: true
         },
         { name: 'UNSETTLED', tabs: ['1', '2', '3', '4', '9'], main: true },
-        ...(this.isJusttoAdmin ? [
+        ...((this.isJusttoAdmin || this.useScheduleCall) ? [
           { name: 'SCHEDULE_CALL', tabs: ['1', '2', '3', '9'], main: true },
           { name: 'UNSCHEDULE_CALL', tabs: ['1', '2', '3', '9'], main: true }
         ] : []),
