@@ -21,19 +21,21 @@
         slot="reference"
         class="reference dialer__button-call"
       >
-        <JusIcon
-          :icon="dialerIcon"
-          @click="toggleShowPopover(!showPopover)"
+        <InCall
+          v-if="isInCall"
+          :infos-is-visible="showPopover"
+          @toggle="toggleShowPopover(!showPopover)"
         />
 
-        <el-badge
-          :hidden="!isPhoneActive"
-          is-dot
-          :class="{'el-icon-pulse': isPhoneActive}"
+        <JusIcon
+          v-else
+          :icon="dialerIcon"
+          @click="toggleShowPopover(!showPopover)"
         />
       </span>
     </el-popover>
 
+    <!-- Discagem automática -->
     <el-tooltip
       content="Top Left prompts info"
       placement="bottom-start"
@@ -101,7 +103,8 @@ import DialerUserModel from '@/store/modules/dialer/model/DialerUserModel'
 
 export default {
   components: {
-    CallQueue: () => import('./CallQueue.vue')
+    CallQueue: () => import('./CallQueue'),
+    InCall: () => import('./partials/InCall')
   },
 
   data() {
@@ -153,7 +156,7 @@ export default {
 
       if (activeAutoCall) {
         return 'phone-auto'
-      } else if (!this.listCallQueue.length && !this.scheduledCallsQueue.length) {
+      } else if (!this.listCallQueue.length) { // && !this.scheduledCallsQueue.length
         return 'phone-off'
       } else {
         return 'phone-active'
@@ -167,6 +170,10 @@ export default {
 
     isPhoneActive() {
       return this.dialerIcon === 'phone-active'
+    },
+
+    isInCall() {
+      return Boolean(this.currentActiveCall?.id)
     },
 
     hasAcceptTerms() {
@@ -279,6 +286,7 @@ export default {
 
 .dialer {
   display: flex;
+  align-items: center;
 
   .dialer__button-call {
     cursor: pointer;
