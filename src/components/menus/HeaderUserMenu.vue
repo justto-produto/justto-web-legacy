@@ -5,6 +5,13 @@
   >
     <Dialer />
 
+    <div
+      v-if="isInCall"
+      class="display-break"
+    />
+
+    <AutoCallSwitch />
+
     <!-- <JusAcademy /> -->
 
     <Notification
@@ -40,6 +47,7 @@
           <jus-icon icon="menu-hamburger" />
         </span>
       </span>
+
       <el-dropdown-menu slot="dropdown">
         <div
           class="usermenu-container__perfil"
@@ -51,15 +59,6 @@
         <div class="usermenu-container__version">
           Versão {{ appVersion }}
         </div>
-        <!-- <a
-          v-if="canAccessDialer"
-          href="#"
-          @click.prevent="openDialer('')"
-        >
-          <el-dropdown-item>
-            Discador
-          </el-dropdown-item>
-        </a> -->
 
         <router-link
           v-if="showConfigs"
@@ -107,6 +106,7 @@
       ref="changeWorkspace"
       :visible.sync="changeWorkspaceDialogVisible"
     />
+
     <JusEditUser ref="editUser" />
   </section>
 </template>
@@ -120,6 +120,7 @@ export default {
     JusChangeWorkspace: () => import('@/components/dialogs/JusChangeWorkspace'),
     JusEditUser: () => import('@/components/dialogs/JusEditUserDialog'),
     Notification: () => import('@/components/drawer/NotificationIcon'),
+    AutoCallSwitch: () => import('@/components/buttons/AutoCallSwitch'),
     Dialer: () => import('@/views/main/dialer/Dialer')
   },
 
@@ -130,6 +131,7 @@ export default {
 
   computed: {
     ...mapGetters({
+      isInCall: 'isInCall',
       accountId: 'accountId',
       width: 'getWindowWidth',
       name: 'loggedPersonName',
@@ -243,13 +245,10 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 0 8px;
 
   .usermenu-container__ghost-mode {
     margin-right: 8px;
-  }
-
-  .usermenu-container__jus-academy {
-    margin-right: 10px;
   }
 
   .el-dropdown-link {

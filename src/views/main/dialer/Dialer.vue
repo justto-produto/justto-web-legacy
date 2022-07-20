@@ -35,41 +35,6 @@
       </span>
     </el-popover>
 
-    <!-- Discagem automática -->
-    <el-tooltip
-      content="Top Left prompts info"
-      placement="bottom-start"
-      :open-delay="250"
-    >
-      <span
-        v-if="enabledScheduledCalls"
-        slot="content"
-      >
-        Estamos ligando automaticamente por você.
-      </span>
-
-      <span
-        v-else
-        slot="content"
-      >
-        Não estamos ligando automaticamente por você.
-      </span>
-
-      <div
-        class="dialer__button"
-        @click="clickInIcon"
-      >
-        <el-switch
-          :value="hasAutoCallActive"
-          :width="30"
-          active-color="#14CC30"
-          inactive-color="#FF4B54"
-          active-icon-class="el-icon-service"
-        />
-        <!-- active-icon-class="el-icon-service" -->
-      </div>
-    </el-tooltip>
-
     <div
       v-if="isActiveToCall"
       class="dialer__container"
@@ -129,14 +94,13 @@ export default {
 
   computed: {
     ...mapGetters({
+      isInCall: 'isInCall',
       listCallQueue: 'getCallQueue',
       workspaceId: 'workspaceId',
-      appInstance: 'getAppInstance',
       preferences: 'userPreferences',
-      currentCall: 'getCurrentCallId',
-      enabledScheduledCalls: 'canMakeScheduledCalls',
       isActiveToCall: 'isActiveToCall',
       canAccessDialer: 'canAccessDialer',
+      isAutoCall: 'canMakeScheduledCalls',
       currentActiveCall: 'getCurrentCall',
       workspaceTeamName: 'workspaceTeamName',
       scheduledCallsQueue: 'getScheduledCallsQueue',
@@ -152,28 +116,15 @@ export default {
     },
 
     dialerIcon() {
-      const activeAutoCall = this.preferences?.properties?.AVAILABLE_SCHEDULED_CALLS === 'AVAILABLE' && !this.listCallQueue.length
+      const activeAutoCall = this.isAutoCall && !this.listCallQueue.length
 
       if (activeAutoCall) {
         return 'phone-auto'
-      } else if (!this.listCallQueue.length) { // && !this.scheduledCallsQueue.length
+      } else if (!this.listCallQueue.length) {
         return 'phone-off'
       } else {
         return 'phone-active'
       }
-      // return !this.isActiveToCall ? 'phone-off' : [CALL_STATUS.ACTIVE_CALL].includes(this.currentActiveCall?.status) ? 'phone-active' : 'tts'
-    },
-
-    hasAutoCallActive() {
-      return this.preferences?.properties?.AVAILABLE_SCHEDULED_CALLS === 'AVAILABLE'
-    },
-
-    isPhoneActive() {
-      return this.dialerIcon === 'phone-active'
-    },
-
-    isInCall() {
-      return Boolean(this.currentActiveCall?.id)
     },
 
     hasAcceptTerms() {
@@ -264,18 +215,6 @@ export default {
       if (this.showPopover !== value) this.showPopover = value
 
       this.$emit('toggle', this.showPopover)
-    },
-
-    clickInIcon() {
-      this.loading = true
-
-      this.setAccountProperty({
-        AVAILABLE_SCHEDULED_CALLS: { true: 'AVAILABLE', false: 'UNAVAILABLE' }[!this.enabledScheduledCalls]
-      }).finally(() => {
-        this.loadAccountProperty().finally(() => {
-          this.loading = false
-        })
-      })
     }
   }
 }
@@ -294,43 +233,6 @@ export default {
     img {
       height: 20px;
       width: 20px;
-    }
-  }
-
-  .dialer__button {
-    text-align: center;
-    cursor: pointer;
-    margin: 0 8px 2px;
-
-    span {
-      .el-popover__reference-wrapper {
-        display: flex;
-
-        img {
-          height: 20px;
-          width: 20px;
-        }
-
-        .reference {
-          display: flex;
-        }
-      }
-    }
-
-    .el-switch {
-      position: relative;
-
-      .el-switch__label {
-        margin: 0;
-        position: absolute;
-        left: 3px;
-        right: auto;
-
-        &.is-active {
-          right: 3px;
-          left: auto;
-        }
-      }
     }
   }
 

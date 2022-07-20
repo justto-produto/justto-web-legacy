@@ -330,6 +330,11 @@ export default {
     }
   }
 
+  .overview-container__menu {
+    justify-content: space-between;
+    flex-wrap: wrap-reverse;
+  }
+
   &.dispute {
     padding: 0;
   }

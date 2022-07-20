@@ -1,6 +1,6 @@
 <template>
   <article
-    v-if="call.id"
+    v-if="isInCall"
     class="dialer__in-call"
   >
     <el-tooltip
@@ -52,6 +52,7 @@ export default {
 
   computed: {
     ...mapGetters({
+      isInCall: 'isInCall',
       call: 'getCurrentCall',
       dialer: 'getDialer'
     })
