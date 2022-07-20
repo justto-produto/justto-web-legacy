@@ -9,15 +9,13 @@
       placement="left"
       popper-class="dialer-popover"
     >
-      <div>
-        <CallQueue
-          ref="callsQueue"
-          :loading="loading"
-          @hide="toggleShowPopover(false)"
-        />
-      </div>
+      <CallQueue
+        ref="callsQueue"
+        :loading="loading"
+        @hide="toggleShowPopover(false)"
+      />
 
-      <span
+      <div
         slot="reference"
         class="reference dialer__button-call"
       >
@@ -32,7 +30,7 @@
           :icon="dialerIcon"
           @click="toggleShowPopover(!showPopover)"
         />
-      </span>
+      </div>
     </el-popover>
 
     <div
@@ -229,6 +227,8 @@ export default {
 
   .dialer__button-call {
     cursor: pointer;
+    display: flex;
+    align-items: center;
 
     img {
       height: 20px;

@@ -73,6 +73,7 @@ export default {
 
 <style lang="scss">
   .dialer__button {
+    display: flex;
     text-align: center;
     cursor: pointer;
     margin: 0 0 2px;
