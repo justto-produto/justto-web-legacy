@@ -891,15 +891,23 @@ export default {
         }
 
         if (action === 'SCHEDULE_CALL') {
-          this.getPhoneCalls().then(() => {
-            this.setAccountProperty({ AVAILABLE_SCHEDULED_CALLS: 'AVAILABLE' })
-          })
+          setTimeout(() => {
+            this.getPhoneCalls().then(({ length }) => {
+              if (length > 0) {
+                this.setAccountProperty({ AVAILABLE_SCHEDULED_CALLS: 'AVAILABLE' })
+              }
+            })
+          }, 1000)
         }
       }).catch(error => {
         this.$jusNotification({ error })
       }).finally(() => {
         this.clearSelection()
       })
+    },
+
+    tryEnableAutoCall() {
+
     },
 
     openBulkMessageCompose() {

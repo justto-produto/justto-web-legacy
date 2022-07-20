@@ -131,35 +131,46 @@ const accountActions = {
     commit('setPreventScheduleCallsConfirmation', true)
 
     dispatch('getPhoneCalls').then(calls => {
-      if (calls.length > 0) {
-        const template = `
-          Temos ${calls.length} ligações agendas para hoje. Deseja que o sistema faça essas ligações para você? 
-          <br />
-          <br />
-          <br />
-          <br />
-          <br />
-          <small>
-            Obs: Para garantir que o maior número de ligações sejam efetivas, lembre-se de se manter logada e ficar em sua estação de trabalho. <b>Se precisar sair, mesmo que por alguns minutos, faça logout da plataforma</b> para não perder as chamadas, assim quando retornar o sistema irá retornar as ligações automáticas agendadas.
-          </small>
-        `
-        vue().$confirm(template, `Oi, ${loggedPersonName}, tudo bem?`, {
-          confirmButtonText: 'Sim',
-          cancelButtonText: 'Não',
-          dangerouslyUseHTMLString: true,
-          customClass: 'confirm-init-call-scheduler',
-          closeOnClickModal: false,
-          closeOnPressEscape: false,
-          showClose: false,
-          center: true
-        }).then(_ => {
-          commit('setAvailableSchedulerdCalls', 'AVAILABLE')
-        }).catch(_ => {
-          commit('setAvailableSchedulerdCalls', 'UNAVAILABLE')
-        })
-      } else {
+      const template = calls.length > 0 ? `
+        Temos ${calls.length} ligações agendas para hoje. Deseja que o sistema faça essas ligações para você? 
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <small>
+          Obs: Para garantir que o maior número de ligações sejam efetivas, lembre-se de se manter logada e ficar em sua estação de trabalho. <b>Se precisar sair, mesmo que por alguns minutos, faça logout da plataforma</b> para não perder as chamadas, assim quando retornar o sistema irá retornar as ligações automáticas agendadas.
+        </small>
+      ` : `
+        Não temos ligações agendas para hoje. Deseja realmente habilitar a discagem automática?
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <small>
+          Obs: Para garantir que o maior número de ligações sejam efetivas, lembre-se de se manter logada e ficar em sua estação de trabalho. <b>Se precisar sair, mesmo que por alguns minutos, faça logout da plataforma</b> para não perder as chamadas, assim quando retornar o sistema irá retornar as ligações automáticas agendadas.
+        </small>
+      `
+
+      vue().$confirm(template, `Oi, ${loggedPersonName}, tudo bem?`, {
+        confirmButtonText: 'Sim',
+        cancelButtonText: 'Não',
+        dangerouslyUseHTMLString: true,
+        customClass: 'confirm-init-call-scheduler',
+        closeOnClickModal: false,
+        closeOnPressEscape: false,
+        showClose: false,
+        center: true
+      }).then(_ => {
         commit('setAvailableSchedulerdCalls', 'AVAILABLE')
-      }
+      }).catch(_ => {
+        commit('setPreventScheduleCallsConfirmation', false)
+        commit('setAvailableSchedulerdCalls', 'UNAVAILABLE')
+      })
+    }).catch(error => {
+      this.$jusNotification({ error })
+      commit('setAvailableSchedulerdCalls', 'UNAVAILABLE')
     })
     // .finally(() => commit('setPreventScheduleCallsConfirmation', false))
   },
