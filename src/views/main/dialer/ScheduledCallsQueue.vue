@@ -63,11 +63,8 @@ export default {
     },
 
     collapseTitle() {
-      const isShowing = this.collapseState.includes('show')
-      const isPlural = !this.scheduledCallQueue?.length === 1
-      const countInfo = `(${this.scheduledCallQueue?.length || 0} ${isPlural ? 'ligações agendadas' : 'ligação agendada'})`
-
-      return `${isShowing ? 'Esconder' : 'Mostrar'} ${countInfo}`
+      const isPlural = !(this.scheduledCallQueue?.length === 1)
+      return `${this.scheduledCallQueue?.length || 0} ${isPlural ? 'ligações agendadas' : 'ligação agendada'}`
     },
 
     collapseState: {
@@ -119,9 +116,13 @@ export default {
         .el-collapse-item__header {
           height: 30px;
           border: none;
+          display: flex;
+          gap: 4px;
+          flex-direction: row-reverse;
+          justify-content: flex-end;
 
           i {
-            display: none;
+            margin: 0;
           }
         }
       }

@@ -166,12 +166,6 @@
         class="el-icon-loading"
       />
 
-      <jus-icon
-        v-else
-        class="call-queue__container-empty-queue-icon"
-        :icon="enabledScheduledCalls ? 'clock' : 'checked'"
-      />
-
       <div
         v-if="enabledScheduledCalls"
         class="call-queue__container-empty-queue-label"
@@ -183,7 +177,7 @@
         v-else
         class="call-queue__container-empty-queue-label"
       >
-        Sem ligações pendentes
+        Sem chamadas pendentes.
       </div>
     </div>
 
