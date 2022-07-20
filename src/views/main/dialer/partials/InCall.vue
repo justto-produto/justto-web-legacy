@@ -18,7 +18,7 @@
       />
     </el-tooltip>
 
-    <i class="el-icon-phone-outline el-icon-pulse" />
+    <i class="el-icon-mic el-icon-pulse" />
 
     <el-tag size="small">
       {{ $tc(`call.status.${call.status}`) }}
