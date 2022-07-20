@@ -3,67 +3,35 @@
     v-if="canAccessDialer"
     class="dialer"
   >
-    <el-tooltip
-      content="Top Left prompts info"
-      placement="bottom-start"
-      :open-delay="250"
+    <el-popover
+      v-model="showPopover"
+      trigger="manual"
+      placement="left"
+      popper-class="dialer-popover"
     >
-      <p
-        v-if="enabledScheduledCalls"
-        slot="content"
-      >
-        Estamos ligando automaticamente por você.
-        <br>
-        <br>
-        Clique aqui para pausar a discagem automática!
-      </p>
-
-      <p
-        v-else
-        slot="content"
-      >
-        Não estamos ligando automaticamente por você.
-        <br>
-        <br>
-        Clique aqui para iniciar a discagem automática para disputas!
-      </p>
+      <CallQueue
+        ref="callsQueue"
+        :loading="loading"
+        @hide="toggleShowPopover(false)"
+      />
 
       <div
-        class="dialer__button"
-        @click="clickInIcon"
+        slot="reference"
+        class="reference dialer__button-call"
       >
-        <el-popover
-          v-model="showPopover"
-          trigger="manual"
-          placement="left"
-          popper-class="dialer-popover"
-        >
-          <div>
-            <CallQueue
-              ref="callsQueue"
-              :loading="loading"
-              @hide="toggleShowPopover(false)"
-            />
-          </div>
+        <InCall
+          v-if="isInCall"
+          :infos-is-visible="showPopover"
+          @toggle="toggleShowPopover(!showPopover)"
+        />
 
-          <span
-            slot="reference"
-            class="reference"
-          >
-            <JusIcon
-              :icon="dialerIcon"
-              @hover="toggleShowPopover(true)"
-            />
-
-            <el-badge
-              :hidden="!isPhoneActive"
-              is-dot
-              :class="{'el-icon-pulse': isPhoneActive}"
-            />
-          </span>
-        </el-popover>
+        <JusIcon
+          v-else
+          :icon="dialerIcon"
+          @click="toggleShowPopover(!showPopover)"
+        />
       </div>
-    </el-tooltip>
+    </el-popover>
 
     <div
       v-if="isActiveToCall"
@@ -98,7 +66,8 @@ import DialerUserModel from '@/store/modules/dialer/model/DialerUserModel'
 
 export default {
   components: {
-    CallQueue: () => import('./CallQueue.vue')
+    CallQueue: () => import('./CallQueue'),
+    InCall: () => import('./partials/InCall')
   },
 
   data() {
@@ -123,14 +92,13 @@ export default {
 
   computed: {
     ...mapGetters({
+      isInCall: 'isInCall',
       listCallQueue: 'getCallQueue',
       workspaceId: 'workspaceId',
-      appInstance: 'getAppInstance',
       preferences: 'userPreferences',
-      currentCall: 'getCurrentCallId',
-      enabledScheduledCalls: 'canMakeScheduledCalls',
       isActiveToCall: 'isActiveToCall',
       canAccessDialer: 'canAccessDialer',
+      isAutoCall: 'canMakeScheduledCalls',
       currentActiveCall: 'getCurrentCall',
       workspaceTeamName: 'workspaceTeamName',
       scheduledCallsQueue: 'getScheduledCallsQueue',
@@ -146,20 +114,15 @@ export default {
     },
 
     dialerIcon() {
-      const activeAutoCall = this.preferences?.properties?.AVAILABLE_SCHEDULED_CALLS === 'AVAILABLE' && !this.listCallQueue.length
+      const activeAutoCall = this.isAutoCall && !this.listCallQueue.length
 
       if (activeAutoCall) {
         return 'phone-auto'
-      } else if (!this.listCallQueue.length && !this.scheduledCallsQueue.length) {
+      } else if (!this.listCallQueue.length) {
         return 'phone-off'
       } else {
         return 'phone-active'
       }
-      // return !this.isActiveToCall ? 'phone-off' : [CALL_STATUS.ACTIVE_CALL].includes(this.currentActiveCall?.status) ? 'phone-active' : 'tts'
-    },
-
-    isPhoneActive() {
-      return this.dialerIcon === 'phone-active'
     },
 
     hasAcceptTerms() {
@@ -221,7 +184,7 @@ export default {
     ]),
 
     clickTracker(event) {
-      const dialerButton = document.querySelector('.dialer__button')
+      const dialerButton = document.querySelector('.dialer__button-call')
       const clickIn = event.path.includes(dialerButton) || event.path.filter(item => Array(...(item?.classList || [])).includes('dialer__button')).length > 0
 
       if (!clickIn && this.showPopover) {
@@ -250,18 +213,6 @@ export default {
       if (this.showPopover !== value) this.showPopover = value
 
       this.$emit('toggle', this.showPopover)
-    },
-
-    clickInIcon() {
-      this.loading = true
-
-      this.setAccountProperty({
-        AVAILABLE_SCHEDULED_CALLS: { true: 'AVAILABLE', false: 'UNAVAILABLE' }[!this.enabledScheduledCalls]
-      }).finally(() => {
-        this.loadAccountProperty().finally(() => {
-          this.loading = false
-        })
-      })
     }
   }
 }
@@ -271,24 +222,17 @@ export default {
 @import '@/styles/colors.scss';
 
 .dialer {
-  .dialer__button {
-    text-align: center;
+  display: flex;
+  align-items: center;
+
+  .dialer__button-call {
     cursor: pointer;
-    margin: 0 8px 2px;
+    display: flex;
+    align-items: center;
 
-    span {
-      .el-popover__reference-wrapper {
-        display: flex;
-
-        img {
-          height: 20px;
-          width: 20px;
-        }
-
-        .reference {
-          display: flex;
-        }
-      }
+    img {
+      height: 20px;
+      width: 20px;
     }
   }
 

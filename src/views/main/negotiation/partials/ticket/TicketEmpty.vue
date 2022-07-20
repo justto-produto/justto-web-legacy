@@ -3,7 +3,10 @@
     id="negotiation-empty-ticket"
     class="empty-ticket-container"
   >
-    <HeaderUserMenu class="empty-ticket-container__menu" />
+    <div class="empty-ticket-container__menu">
+      <HeaderUserMenu />
+    </div>
+
     <jus-icon
       icon="empty-ticket-state"
       class="empty-ticket-container__icon"
@@ -45,6 +48,8 @@ export default {
     position: absolute;
     top: 0;
     right: 0;
+
+    display: flex;
   }
 }
 </style>

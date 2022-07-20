@@ -709,16 +709,11 @@ const disputeActions = {
     })
   },
 
-  getRespondents({ commit, state }) {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.get(`${disputesPath}/respondent-names`)
-        .then(response => {
-          commit('setRespondents', response.data)
-          resolve(response.data)
-        }).catch(error => {
-          reject(error)
-        })
+  getRespondents({ _ }, name = '') {
+    return axiosDispatch({
+      url: `${disputesPath}/respondent-names`,
+      params: { name },
+      mutation: 'setRespondents'
     })
   },
 

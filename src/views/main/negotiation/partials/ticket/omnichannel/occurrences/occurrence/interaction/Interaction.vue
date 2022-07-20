@@ -160,7 +160,8 @@ export default {
       negotiators: 'getTicketOverviewNegotiators',
       getGroupedOccurrencesById: 'getGroupedOccurrencesById',
       properties: 'userProperties',
-      isGrouping: 'isOmnichannelGrouping'
+      isGrouping: 'isOmnichannelGrouping',
+      coloringType: 'omnichannelColoringType'
     }),
 
     type() {
@@ -293,10 +294,6 @@ export default {
 
     groupedOccurrences() {
       return this.getGroupedOccurrencesById(this.value?.id)
-    },
-
-    coloringType() {
-      return this.properties?.OMNICHANNEL_COLORING_TYPE || 'MONOCHROME'
     }
   },
 

@@ -137,7 +137,7 @@ export default {
 
   .ticket-header-container__dialer {
     border-radius: 6px;
-    padding: 8px 2px;
+    padding: 8px;
     margin-left: 8px;
     border: solid lightgray thin;
     cursor: pointer;

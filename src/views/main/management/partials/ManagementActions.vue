@@ -654,9 +654,9 @@ export default {
 
   computed: {
     ...mapGetters({
+      useScheduleCall: 'useScheduleCallBatchAction',
       disputeStatuses: 'disputeStatuses',
       strategies: 'getMyStrategiesLite',
-      isJusttoAdmin: 'isJusttoAdmin',
       tags: 'workspaceTags'
     }),
 
@@ -704,7 +704,7 @@ export default {
           main: true
         },
         { name: 'UNSETTLED', tabs: ['1', '2', '3', '4', '9'], main: true },
-        ...(this.isJusttoAdmin ? [
+        ...(this.useScheduleCall ? [
           { name: 'SCHEDULE_CALL', tabs: ['1', '2', '3', '9'], main: true },
           { name: 'UNSCHEDULE_CALL', tabs: ['1', '2', '3', '9'], main: true }
         ] : []),
@@ -772,6 +772,7 @@ export default {
       'getPhoneCalls',
       'getWorkspaceTags',
       'getDisputeStatuses',
+      'setAccountProperty',
       'getFinishedDisputesCount'
     ]),
 
@@ -885,8 +886,14 @@ export default {
           }, 2000)
         }
 
-        if (['SCHEDULE_CALL', 'UNSCHEDULE_CALL'].includes(action)) {
+        if (action === 'UNSCHEDULE_CALL') {
           this.getPhoneCalls()
+        }
+
+        if (action === 'SCHEDULE_CALL') {
+          this.getPhoneCalls().then(() => {
+            this.setAccountProperty({ AVAILABLE_SCHEDULED_CALLS: 'AVAILABLE' })
+          })
         }
       }).catch(error => {
         this.$jusNotification({ error })

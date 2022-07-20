@@ -124,9 +124,9 @@
       class="call-queue__container-call-queue"
     >
       <div class="call-queue__container-call-queue-line">
-        <div class="call-queue__container-call-queue-line-item">
+        <router-link :to="`/management/dispute/${call.disputeId}`">
           #{{ call.disputeId }} ({{ $tc(`ticket-status.${call.disputeStatus}`) }})
-        </div>
+        </router-link>
 
         <el-tag
           class="call-queue__container-call-queue-line-item"
@@ -141,14 +141,14 @@
           {{ call.toRoleName | resumedName }}
         </div>
 
-        <div class="call-queue__container-call-queue-line-item">
+        <el-tag size="mini">
           {{ call.number | phoneNumber }}
-        </div>
+        </el-tag>
 
         <el-button
           :disabled="endingCall"
           type="danger"
-          :icon="endingCall ? 'el-icon-loading' : 'el-icon-delete'"
+          :icon="endingCall ? 'el-icon-loading' : 'el-icon-delete-solid'"
           size="mini"
           circle
           plain
@@ -166,12 +166,6 @@
         class="el-icon-loading"
       />
 
-      <jus-icon
-        v-else
-        class="call-queue__container-empty-queue-icon"
-        :icon="enabledScheduledCalls ? 'clock' : 'checked'"
-      />
-
       <div
         v-if="enabledScheduledCalls"
         class="call-queue__container-empty-queue-label"
@@ -183,13 +177,13 @@
         v-else
         class="call-queue__container-empty-queue-label"
       >
-        Sem ligações pendentes
+        Sem chamadas pendentes.
       </div>
     </div>
 
-    <ScheduledCallSwitch v-if="isJusttoDev" />
+    <ScheduledCallSwitch v-if="!isJusttoDev" />
 
-    <ScheduledCallsQueue v-if="isJusttoDev" />
+    <ScheduledCallsQueue />
 
     <CallHelp
       :ending="endingCall"

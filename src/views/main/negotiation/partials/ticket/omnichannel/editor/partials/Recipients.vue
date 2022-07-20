@@ -74,12 +74,9 @@ export default {
     ...mapGetters({
       recipients: 'getEditorRecipients',
       type: 'getEditorMessageType',
-      userProperties: 'userProperties'
-    }),
-
-    usingColors() {
-      return this.userProperties?.OMNICHANNEL_COLORING_TYPE === 'COLORFUL'
-    }
+      userProperties: 'userProperties',
+      usingColors: 'isOmnichannelUsingColors'
+    })
   }
 }
 </script>
