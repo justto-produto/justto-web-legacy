@@ -10,104 +10,104 @@
       class="display-break"
     />
 
-    <AutoCallSwitch />
+    <span class="usermenu-container__keep-itens">
+      <AutoCallSwitch />
 
-    <!-- <JusAcademy /> -->
+      <Notification
+        class="usermenu-container__jus-academy"
+      />
 
-    <Notification
-      class="usermenu-container__jus-academy"
-    />
-
-    <el-dropdown
-      trigger="click"
-      placement="bottom-start"
-    >
-      <span class="el-dropdown-link">
-        <jus-avatar-user
-          class="md"
-          :name="name"
-          :size="avatarSize"
-        />
-        <div class="usermenu-container__name md">
-          <div style="text-transform: capitalize;">
-            {{ name | resumedName }}
+      <el-dropdown
+        trigger="click"
+        placement="bottom-start"
+      >
+        <span class="el-dropdown-link">
+          <jus-avatar-user
+            class="md"
+            :name="name"
+            :size="avatarSize"
+          />
+          <div class="usermenu-container__name md">
+            <div style="text-transform: capitalize;">
+              {{ name | resumedName }}
+            </div>
+            <span
+              class="usermenu-container__name__team-name"
+              :class="{
+                'use-marquee-animation': isLargeTeamName,
+                'large-team-name-container': !isJusttoAdmin,
+                'small-team-name-container': isJusttoAdmin
+              }"
+            >
+              {{ teamName }}
+            </span>
           </div>
-          <span
-            class="usermenu-container__name__team-name"
-            :class="{
-              'use-marquee-animation': isLargeTeamName,
-              'large-team-name-container': !isJusttoAdmin,
-              'small-team-name-container': isJusttoAdmin
-            }"
-          >
-            {{ teamName }}
+          <span class="sm">
+            <jus-icon icon="menu-hamburger" />
           </span>
-        </div>
-        <span class="sm">
-          <jus-icon icon="menu-hamburger" />
         </span>
-      </span>
+  
+        <el-dropdown-menu slot="dropdown">
+          <div
+            class="usermenu-container__perfil"
+            @click="editUser()"
+          >
+            Meu perfil
+          </div>
+  
+          <div class="usermenu-container__version">
+            Versão {{ appVersion }}
+          </div>
+  
+          <router-link
+            v-if="showConfigs"
+            to="/configurations"
+          >
+            <el-dropdown-item>
+              Configurações
+            </el-dropdown-item>
+          </router-link>
+          <router-link
+            v-if="isJusttoAdmin || isAdminProfile"
+            to="/billing"
+          >
+            <el-dropdown-item>
+              Financeiro
+            </el-dropdown-item>
+          </router-link>
+          <a
+            v-if="workspacesList.length"
+            @click.prevent="changeWorkspace"
+          >
+            <el-dropdown-item>
+              Alterar equipe
+            </el-dropdown-item>
+          </a>
+  
+          <a
+            href="#"
+            @click.prevent="() => {}"
+          >
+            <el-dropdown-item>
+              <JusAcademy mode="text" />
+            </el-dropdown-item>
+          </a>
+  
+          <a @click="logout()">
+            <el-dropdown-item divided>
+              Sair
+            </el-dropdown-item>
+          </a>
+        </el-dropdown-menu>
+      </el-dropdown>
 
-      <el-dropdown-menu slot="dropdown">
-        <div
-          class="usermenu-container__perfil"
-          @click="editUser()"
-        >
-          Meu perfil
-        </div>
+      <JusChangeWorkspace
+        ref="changeWorkspace"
+        :visible.sync="changeWorkspaceDialogVisible"
+      />
 
-        <div class="usermenu-container__version">
-          Versão {{ appVersion }}
-        </div>
-
-        <router-link
-          v-if="showConfigs"
-          to="/configurations"
-        >
-          <el-dropdown-item>
-            Configurações
-          </el-dropdown-item>
-        </router-link>
-        <router-link
-          v-if="isJusttoAdmin || isAdminProfile"
-          to="/billing"
-        >
-          <el-dropdown-item>
-            Financeiro
-          </el-dropdown-item>
-        </router-link>
-        <a
-          v-if="workspacesList.length"
-          @click.prevent="changeWorkspace"
-        >
-          <el-dropdown-item>
-            Alterar equipe
-          </el-dropdown-item>
-        </a>
-
-        <a
-          href="#"
-          @click.prevent="() => {}"
-        >
-          <el-dropdown-item>
-            <JusAcademy mode="text" />
-          </el-dropdown-item>
-        </a>
-
-        <a @click="logout()">
-          <el-dropdown-item divided>
-            Sair
-          </el-dropdown-item>
-        </a>
-      </el-dropdown-menu>
-    </el-dropdown>
-
-    <JusChangeWorkspace
-      ref="changeWorkspace"
-      :visible.sync="changeWorkspaceDialogVisible"
-    />
-
-    <JusEditUser ref="editUser" />
+      <JusEditUser ref="editUser" />
+    </span>
   </section>
 </template>
 
@@ -304,6 +304,13 @@ export default {
     .small-team-name-container {
       max-width: 130px;
     }
+  }
+
+  .usermenu-container__keep-itens {
+    gap: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
 }
 

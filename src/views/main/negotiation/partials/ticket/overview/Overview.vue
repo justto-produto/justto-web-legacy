@@ -14,7 +14,10 @@
     <HeaderUserMenu
       v-if="!disputeMode && isOverviewActive"
       class="overview-container__menu"
-      :class="{'hidde-menu': (showOverview || disputeMode)}"
+      :class="{
+        'hidde-menu': (showOverview || disputeMode),
+        'in-call': isInCall
+      }"
     />
 
     <div>
@@ -148,6 +151,7 @@ export default {
 
   computed: {
     ...mapGetters({
+      isInCall: 'isInCall',
       ticket: 'getTicketOverview',
       lastOffers: 'getLastTicketOffers',
       isLoading: 'isTicketOverviewloading',
@@ -332,7 +336,10 @@ export default {
 
   .overview-container__menu {
     justify-content: space-between;
-    flex-wrap: wrap-reverse;
+
+    &.in-call {
+      flex-wrap: wrap-reverse;
+    }
   }
 
   &.dispute {
