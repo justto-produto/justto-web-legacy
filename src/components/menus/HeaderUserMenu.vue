@@ -46,7 +46,7 @@
             <jus-icon icon="menu-hamburger" />
           </span>
         </span>
-  
+
         <el-dropdown-menu slot="dropdown">
           <div
             class="usermenu-container__perfil"
@@ -54,11 +54,11 @@
           >
             Meu perfil
           </div>
-  
+
           <div class="usermenu-container__version">
             Versão {{ appVersion }}
           </div>
-  
+
           <router-link
             v-if="showConfigs"
             to="/configurations"
@@ -83,7 +83,7 @@
               Alterar equipe
             </el-dropdown-item>
           </a>
-  
+
           <a
             href="#"
             @click.prevent="() => {}"
@@ -92,7 +92,7 @@
               <JusAcademy mode="text" />
             </el-dropdown-item>
           </a>
-  
+
           <a @click="logout()">
             <el-dropdown-item divided>
               Sair
@@ -307,10 +307,10 @@ export default {
   }
 
   .usermenu-container__keep-itens {
-    gap: 8px;
     display: flex;
+    gap: 8px;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end;
   }
 }
 

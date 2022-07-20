@@ -657,7 +657,6 @@ export default {
       useScheduleCall: 'useScheduleCallBatchAction',
       disputeStatuses: 'disputeStatuses',
       strategies: 'getMyStrategiesLite',
-      isJusttoAdmin: 'isJusttoAdmin',
       tags: 'workspaceTags'
     }),
 
@@ -705,7 +704,7 @@ export default {
           main: true
         },
         { name: 'UNSETTLED', tabs: ['1', '2', '3', '4', '9'], main: true },
-        ...((this.isJusttoAdmin || this.useScheduleCall) ? [
+        ...(this.useScheduleCall ? [
           { name: 'SCHEDULE_CALL', tabs: ['1', '2', '3', '9'], main: true },
           { name: 'UNSCHEDULE_CALL', tabs: ['1', '2', '3', '9'], main: true }
         ] : []),

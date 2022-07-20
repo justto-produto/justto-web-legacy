@@ -1,6 +1,7 @@
 <template>
   <!-- Discagem automática -->
   <el-tooltip
+    v-if="useScheduleCall"
     content="Top Left prompts info"
     placement="bottom-start"
     :open-delay="250"
@@ -46,6 +47,7 @@ export default {
 
   computed: {
     ...mapGetters({
+      useScheduleCall: 'useScheduleCallBatchAction',
       enabledScheduledCalls: 'canMakeScheduledCalls'
     })
   },

@@ -334,14 +334,6 @@ export default {
     }
   }
 
-  .overview-container__menu {
-    justify-content: space-between;
-
-    &.in-call {
-      flex-wrap: wrap-reverse;
-    }
-  }
-
   &.dispute {
     padding: 0;
   }
@@ -428,6 +420,19 @@ export default {
   div {
     .dispute-code {
       margin: 8px 0;
+    }
+  }
+
+  .overview-container__menu {
+    justify-content: flex-end;
+
+    &.in-call {
+      flex-wrap: wrap-reverse;
+
+      .dialer, .usermenu-container__keep-itens {
+        flex: 1;
+        justify-content: space-between;
+      }
     }
   }
 }
