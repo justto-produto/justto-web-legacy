@@ -5,109 +5,109 @@
   >
     <Dialer />
 
-    <!-- <JusAcademy /> -->
-
-    <Notification
-      class="usermenu-container__jus-academy"
+    <div
+      v-if="isInCall"
+      class="display-break"
     />
 
-    <el-dropdown
-      trigger="click"
-      placement="bottom-start"
-    >
-      <span class="el-dropdown-link">
-        <jus-avatar-user
-          class="md"
-          :name="name"
-          :size="avatarSize"
-        />
-        <div class="usermenu-container__name md">
-          <div style="text-transform: capitalize;">
-            {{ name | resumedName }}
+    <span class="usermenu-container__keep-itens">
+      <AutoCallSwitch />
+
+      <Notification
+        class="usermenu-container__jus-academy"
+      />
+
+      <el-dropdown
+        trigger="click"
+        placement="bottom-start"
+      >
+        <span class="el-dropdown-link">
+          <jus-avatar-user
+            class="md"
+            :name="name"
+            :size="avatarSize"
+          />
+          <div class="usermenu-container__name md">
+            <div style="text-transform: capitalize;">
+              {{ name | resumedName }}
+            </div>
+            <span
+              class="usermenu-container__name__team-name"
+              :class="{
+                'use-marquee-animation': isLargeTeamName,
+                'large-team-name-container': !isJusttoAdmin,
+                'small-team-name-container': isJusttoAdmin
+              }"
+            >
+              {{ teamName }}
+            </span>
           </div>
-          <span
-            class="usermenu-container__name__team-name"
-            :class="{
-              'use-marquee-animation': isLargeTeamName,
-              'large-team-name-container': !isJusttoAdmin,
-              'small-team-name-container': isJusttoAdmin
-            }"
-          >
-            {{ teamName }}
+          <span class="sm">
+            <jus-icon icon="menu-hamburger" />
           </span>
-        </div>
-        <span class="sm">
-          <jus-icon icon="menu-hamburger" />
         </span>
-      </span>
-      <el-dropdown-menu slot="dropdown">
-        <div
-          class="usermenu-container__perfil"
-          @click="editUser()"
-        >
-          Meu perfil
-        </div>
 
-        <div class="usermenu-container__version">
-          Versão {{ appVersion }}
-        </div>
-        <!-- <a
-          v-if="canAccessDialer"
-          href="#"
-          @click.prevent="openDialer('')"
-        >
-          <el-dropdown-item>
-            Discador
-          </el-dropdown-item>
-        </a> -->
+        <el-dropdown-menu slot="dropdown">
+          <div
+            class="usermenu-container__perfil"
+            @click="editUser()"
+          >
+            Meu perfil
+          </div>
 
-        <router-link
-          v-if="showConfigs"
-          to="/configurations"
-        >
-          <el-dropdown-item>
-            Configurações
-          </el-dropdown-item>
-        </router-link>
-        <router-link
-          v-if="isJusttoAdmin || isAdminProfile"
-          to="/billing"
-        >
-          <el-dropdown-item>
-            Financeiro
-          </el-dropdown-item>
-        </router-link>
-        <a
-          v-if="workspacesList.length"
-          @click.prevent="changeWorkspace"
-        >
-          <el-dropdown-item>
-            Alterar equipe
-          </el-dropdown-item>
-        </a>
+          <div class="usermenu-container__version">
+            Versão {{ appVersion }}
+          </div>
 
-        <a
-          href="#"
-          @click.prevent="() => {}"
-        >
-          <el-dropdown-item>
-            <JusAcademy mode="text" />
-          </el-dropdown-item>
-        </a>
+          <router-link
+            v-if="showConfigs"
+            to="/configurations"
+          >
+            <el-dropdown-item>
+              Configurações
+            </el-dropdown-item>
+          </router-link>
+          <router-link
+            v-if="isJusttoAdmin || isAdminProfile"
+            to="/billing"
+          >
+            <el-dropdown-item>
+              Financeiro
+            </el-dropdown-item>
+          </router-link>
+          <a
+            v-if="workspacesList.length"
+            @click.prevent="changeWorkspace"
+          >
+            <el-dropdown-item>
+              Alterar equipe
+            </el-dropdown-item>
+          </a>
 
-        <a @click="logout()">
-          <el-dropdown-item divided>
-            Sair
-          </el-dropdown-item>
-        </a>
-      </el-dropdown-menu>
-    </el-dropdown>
+          <a
+            href="#"
+            @click.prevent="() => {}"
+          >
+            <el-dropdown-item>
+              <JusAcademy mode="text" />
+            </el-dropdown-item>
+          </a>
 
-    <JusChangeWorkspace
-      ref="changeWorkspace"
-      :visible.sync="changeWorkspaceDialogVisible"
-    />
-    <JusEditUser ref="editUser" />
+          <a @click="logout()">
+            <el-dropdown-item divided>
+              Sair
+            </el-dropdown-item>
+          </a>
+        </el-dropdown-menu>
+      </el-dropdown>
+
+      <JusChangeWorkspace
+        ref="changeWorkspace"
+        :visible.sync="changeWorkspaceDialogVisible"
+      />
+
+      <JusEditUser ref="editUser" />
+    </span>
   </section>
 </template>
 
@@ -120,6 +120,7 @@ export default {
     JusChangeWorkspace: () => import('@/components/dialogs/JusChangeWorkspace'),
     JusEditUser: () => import('@/components/dialogs/JusEditUserDialog'),
     Notification: () => import('@/components/drawer/NotificationIcon'),
+    AutoCallSwitch: () => import('@/components/buttons/AutoCallSwitch'),
     Dialer: () => import('@/views/main/dialer/Dialer')
   },
 
@@ -130,6 +131,7 @@ export default {
 
   computed: {
     ...mapGetters({
+      isInCall: 'isInCall',
       accountId: 'accountId',
       width: 'getWindowWidth',
       name: 'loggedPersonName',
@@ -243,13 +245,10 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 0 8px;
 
   .usermenu-container__ghost-mode {
     margin-right: 8px;
-  }
-
-  .usermenu-container__jus-academy {
-    margin-right: 10px;
   }
 
   .el-dropdown-link {
@@ -305,6 +304,13 @@ export default {
     .small-team-name-container {
       max-width: 130px;
     }
+  }
+
+  .usermenu-container__keep-itens {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: flex-end;
   }
 }
 

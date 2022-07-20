@@ -18,6 +18,8 @@ export default {
       : state.sharedManagementCall?.currentCall
   },
 
+  isInCall: state => Boolean(state?.currentCall?.id && state?.dialer?.id),
+
   getAppInstance(state) {
     return state.appInstance
   },

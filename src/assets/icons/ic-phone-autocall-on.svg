@@ -5,9 +5,8 @@
 	height="16px">
 	<style type="text/css">
 		.st9 {
-			fill: none;
-			stroke: #9461f7;
-			stroke-width: 2px;
+			fill: #14CC30;
+			stroke: none;
 		}
 	</style>
 	<path class="st9" d="M21.6,18c-0.2-0.2-0.6-0.3-0.9,0c0,0-1.8,1.8-2,1.9c0,0-0.1,0.1-0.1,0.1c-1.9,1-8.8-6.3-7.5-7.7l2-1.9
