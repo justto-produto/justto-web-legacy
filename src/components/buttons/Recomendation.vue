@@ -8,7 +8,7 @@
       <span class="el-dropdown-link">
         <el-popover
           v-model="showRecomendationPopover"
-          :title="currentRecomendation ? $t(`recomendations.${currentRecomendation.type}.title`) : ''"
+          :title="currentRecomendation && !loading ? $t(`recomendations.${currentRecomendation.type}.title`) : ''"
           popper-class="popover-recomendation"
           trigger="manual"
         >
@@ -18,6 +18,7 @@
 
           <div
             v-if="currentRecomendation !== null"
+            v-loading="loading"
             class="popover-recomendation-container"
           >
             <div class="popover-recomendation-container__body">
@@ -150,6 +151,7 @@ export default {
   },
 
   data: () => ({
+    loading: false,
     recomendations: [],
     showRecomendationPopover: false,
     currentRecomendation: null
@@ -178,6 +180,8 @@ export default {
       this.getRecommendations(this.interactionId).then(res => {
         // SAAS-4074 Mostra somente recomendações de enviar mensagem.
         this.recomendations = res.filter(({ type }) => type === 'DISPUTE_MESSAGE')
+      }).finally(() => {
+        this.loading = false
       })
     },
 
@@ -198,6 +202,8 @@ export default {
     },
 
     handlePrimaryAction() {
+      this.loading = true
+
       this.executeRecommendation(this.currentRecomendation).then(() => {
         this.$jusSegment('EXECUTE_RECOMENDATION', { ...this.currentRecomendation })
 
