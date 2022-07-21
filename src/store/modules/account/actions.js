@@ -153,21 +153,26 @@ const accountActions = {
         </small>
       `
 
-      vue().$confirm(template, `Oi, ${loggedPersonName}, tudo bem?`, {
-        confirmButtonText: 'Sim',
-        cancelButtonText: 'Não',
-        dangerouslyUseHTMLString: true,
-        customClass: 'confirm-init-call-scheduler',
-        closeOnClickModal: false,
-        closeOnPressEscape: false,
-        showClose: false,
-        center: true
-      }).then(_ => {
+      if (calls.length > 0) {
+        vue().$confirm(template, `Oi, ${loggedPersonName}, tudo bem?`, {
+          confirmButtonText: 'Sim',
+          cancelButtonText: 'Não',
+          dangerouslyUseHTMLString: true,
+          customClass: 'confirm-init-call-scheduler',
+          closeOnClickModal: false,
+          closeOnPressEscape: false,
+          showClose: false,
+          center: true
+        }).then(_ => {
+          commit('setAvailableSchedulerdCalls', 'AVAILABLE')
+        }).catch(_ => {
+          commit('setPreventScheduleCallsConfirmation', false)
+          commit('setAvailableSchedulerdCalls', 'UNAVAILABLE')
+        })
+      } else {
         commit('setAvailableSchedulerdCalls', 'AVAILABLE')
-      }).catch(_ => {
         commit('setPreventScheduleCallsConfirmation', false)
-        commit('setAvailableSchedulerdCalls', 'UNAVAILABLE')
-      })
+      }
     }).catch(error => {
       this.$jusNotification({ error })
       commit('setAvailableSchedulerdCalls', 'UNAVAILABLE')
