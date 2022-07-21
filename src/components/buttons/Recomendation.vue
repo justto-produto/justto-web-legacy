@@ -199,6 +199,8 @@ export default {
 
     handlePrimaryAction() {
       this.executeRecommendation(this.currentRecomendation).then(() => {
+        this.$jusSegment('EXECUTE_RECOMENDATION', { ...this.currentRecomendation })
+
         this.$jusNotification({
           type: 'success',
           title: 'Yay!',
