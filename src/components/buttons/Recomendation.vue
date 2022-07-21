@@ -139,7 +139,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   props: {
@@ -155,17 +155,30 @@ export default {
     currentRecomendation: null
   }),
 
-  mounted() {
-    this.getRecommendations(this.interactionId).then(res => {
-      this.recomendations = res
+  computed: {
+    ...mapGetters({
+      recipients: 'getEditorRecipients'
     })
+  },
+
+  mounted() {
+    this.init()
   },
 
   methods: {
     ...mapActions([
+      'addRecipient',
+      'setSignature',
+      'setEditorText',
       'getRecommendations',
       'executeRecommendation'
     ]),
+
+    init() {
+      this.getRecommendations(this.interactionId).then(res => {
+        this.recomendations = res
+      })
+    },
 
     clickOutOfPopover(_event) {
       this.closePopover()
@@ -192,11 +205,35 @@ export default {
         })
 
         this.closePopover()
-      }).catch(error => this.$jusNotification({ error }))
+      }).catch(error => this.$jusNotification({ error })).finally(() => {
+        this.init()
+      })
+    },
+
+    handleEditDisputeMassage({ EMAIL_ADDRESS, MESSAGE_CONTENT, PHONE_NUMBER }) {
+      if (this.recipients?.map(({ value }) => value).includes(EMAIL_ADDRESS)) {
+        this.setEditorText(MESSAGE_CONTENT)
+        this.setSignature()
+      } else {
+        const isEmail = Object.keys(this.currentRecomendation?.properties).includes('EMAIL_ADDRESS')
+
+        this.addRecipient({
+          value: isEmail ? EMAIL_ADDRESS : PHONE_NUMBER,
+          type: isEmail ? 'email' : 'whatsapp',
+          key: 'address'
+        })
+      }
     },
 
     handleSecondaryAction() {
-      // TODO: SAAS-4074 Implementar edição de mensagem e de contra proposta.
+      // TODO: SAAS-4074 de contra proposta.
+      const { type, properties } = this.currentRecomendation
+
+      if (type === 'DISPUTE_MESSAGE') {
+        this.handleEditDisputeMassage({ ...properties })
+      }
+
+      this.clickOutOfPopover()
     }
   }
 }
