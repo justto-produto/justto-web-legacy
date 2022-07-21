@@ -176,7 +176,8 @@ export default {
 
     init() {
       this.getRecommendations(this.interactionId).then(res => {
-        this.recomendations = res
+        // SAAS-4074 Mostra somente recomendações de enviar mensagem.
+        this.recomendations = res.filter(({ type }) => type === 'DISPUTE_MESSAGE')
       })
     },
 
