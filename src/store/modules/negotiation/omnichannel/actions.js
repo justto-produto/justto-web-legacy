@@ -337,6 +337,20 @@ const omnichannelActions = {
     })
   },
 
+  getRecommendations({ _ }, interactionId) {
+    return axiosDispatch({
+      url: `api/rpa/recommendation/interaction/${interactionId}`
+    })
+  },
+
+  executeRecommendation({ _ }, recommendation) {
+    return axiosDispatch({
+      url: 'api/rpa/recommendation/action/execute',
+      method: 'POST',
+      data: recommendation
+    })
+  },
+
   setInteractionMessageContent({ _ }, { disputeId, content, communicationMessageId }) {
     return axiosDispatch({
       url: `api/disputes/${disputeId}/communications/${communicationMessageId}`,
