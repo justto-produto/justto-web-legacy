@@ -173,6 +173,7 @@ export default {
       'setSignature',
       'setEditorText',
       'getRecommendations',
+      'getDisputeOccurrences',
       'executeRecommendation'
     ]),
 
@@ -213,6 +214,8 @@ export default {
           message: 'Recomendação executada com sucesso!'
         })
 
+        this.getDisputeOccurrences(this.$route?.params?.id)
+
         this.closePopover()
       }).catch(error => this.$jusNotification({ error })).finally(() => {
         this.init()
@@ -226,10 +229,15 @@ export default {
       } else {
         const isEmail = Object.keys(this.currentRecomendation?.properties).includes('EMAIL_ADDRESS')
 
+        this.setEditorText('')
+
         this.addRecipient({
           value: isEmail ? EMAIL_ADDRESS : PHONE_NUMBER,
           type: isEmail ? 'email' : 'whatsapp',
           key: 'address'
+        }).then(() => {
+          this.setEditorText(MESSAGE_CONTENT)
+          this.setSignature()
         })
       }
     },

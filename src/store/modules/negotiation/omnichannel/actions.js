@@ -153,12 +153,17 @@ const omnichannelActions = {
 
     if (getEditorRecipients.find(el => el.value === value)) {
       commit('removeRecipient', value)
+
+      return Promise.resolve()
     } else {
       const callback = () => {
         if (getEditorMessageType !== type && value) dispatch('setMessageType', type)
         if (type === 'whatsapp') commit('resetRecipients')
         if (value) commit('setRecipients', recipient)
+
         dispatch('setEditorBackup')
+
+        return Promise.resolve()
       }
       if (getEditorMessageType !== type && getEditorRecipients.length) {
         const oldType = vue().$tc('negotiation.ticket.recipient.message-type.' + getEditorMessageType)
@@ -178,6 +183,7 @@ const omnichannelActions = {
           center: true
         }).then(callback).catch(() => {
           // TODO: SAAS-5197 Ação adicional ao não mudar de destinatário.
+          return Promise.resolve()
         })
       } else {
         callback()
