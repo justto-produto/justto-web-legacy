@@ -6,14 +6,34 @@
     <div
       class="scheduled-call__update"
     >
-      <el-button
-        type="secondary"
-        size="mini"
-        :icon="loading ? 'el-icon-loading' : 'el-icon-refresh'"
-        round
-        class="scheduled-call__update-btn"
-        @click="updatePhoneCalls"
-      />
+      <el-tooltip
+        content="Atualizar chamadas agendadas."
+        :open-delay="500"
+      >
+        <el-button
+          type="secondary"
+          size="mini"
+          :icon="loading ? 'el-icon-loading' : 'el-icon-refresh'"
+          round
+          class="scheduled-call__update-btn"
+          @click="updatePhoneCalls"
+        />
+      </el-tooltip>
+
+      <el-tooltip
+        v-if="scheduledCallQueue.length > 0"
+        content="Remover todas as chamadas agendadas."
+        :open-delay="500"
+      >
+        <el-button
+          type="danger"
+          size="mini"
+          icon="el-icon-delete-solid"
+          round
+          class="scheduled-call__update-btn"
+          @click="removeAllCalls"
+        />
+      </el-tooltip>
     </div>
 
     <el-collapse
@@ -79,7 +99,8 @@ export default {
 
   methods: {
     ...mapActions({
-      getPhoneCalls: 'getPhoneCalls'
+      getPhoneCalls: 'getPhoneCalls',
+      removeCall: 'unschedulePhoneCallStatus'
     }),
 
     updatePhoneCalls() {
@@ -88,6 +109,26 @@ export default {
       this.getPhoneCalls().finally(() => {
         setTimeout(() => { this.loading = false }, 1000)
       })
+    },
+
+    removeAllCalls() {
+      const calls = this.scheduledCallQueue.map(({ disputeMessageId }) => disputeMessageId)
+
+      if (calls.length) {
+        this.$confirm(`Deseja remover todas as ${calls.length} chamadas agendadas?`, `${calls.length} chamadas agendadas`, {
+          closeOnPressEscape: false,
+          closeOnClickModal: false,
+          confirmButtonText: 'Sim',
+          cancelButtonText: 'Não',
+          center: true
+        }).then(() => {
+          this.loading = true
+
+          Promise.all(calls.map(id => this.removeCall(id))).finally(() => {
+            this.loading = false
+          })
+        })
+      }
     }
   }
 }
@@ -107,6 +148,10 @@ export default {
       &:hover span {
         display: inline;
       }
+    }
+
+    .el-button + .el-button {
+      margin-left: 4px;
     }
   }
 
