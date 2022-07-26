@@ -9,7 +9,7 @@
       Próximo passo: Geração e envio de minuta
 
       <el-tooltip
-        content="Minimizar"
+        :content="showTips ? 'Minimizar' : 'Maximizar'"
         :open-delay="500"
       >
         <el-button
