@@ -417,7 +417,7 @@ export default {
     handleValidateDomain(subdomain) {
       return new Promise((resolve, reject) => {
         this.getDomains().then(domains => {
-          const domain = domains.find(({ domain }) => (domain === subdomain))
+          const domain = domains.find(({ domain }) => (domain.includes(subdomain)))
 
           resolve(domain)
         }).catch(error => {
