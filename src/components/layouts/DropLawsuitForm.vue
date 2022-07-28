@@ -19,9 +19,9 @@
         style="width: 100%;"
       >
         <el-option
-          v-for="(key, value) in dropLawsuitReasons"
+          v-for="(key) in dropLawsuitReasons"
           :key="key"
-          :value="value"
+          :value="key"
           :label="key"
         />
       </el-select>
