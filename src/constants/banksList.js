@@ -36,7 +36,7 @@ export default
   { code: '037', name: 'BANCO DO ESTADO DO PARA S.A' },
   { code: '038', name: 'BANCO DO ESTADO DO PARANA S.A' },
   { code: '039', name: 'BANCO DO ESTADO DO PIAUI S.A' },
-  { code: '041', name: 'BANCO DO ESTADO DO RIO GRANDE DO SUL S.A' },
+  { code: '041', name: 'BANRISUL - BANCO DO ESTADO DO RIO GRANDE DO SUL S.A' },
   { code: '047', name: 'BANCO DO ESTADO DE SERGIPE S.A' },
   { code: '048', name: 'BANCO DO ESTADO DE MINAS GERAIS S.A' },
   { code: '059', name: 'BANCO DO ESTADO DE RONDONIA S.A' },

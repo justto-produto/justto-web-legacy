@@ -12,9 +12,17 @@
           popper-class="popover-recomendation"
           trigger="manual"
         >
-          <span slot="reference">
-            <JusIcon icon="recomendation-lamp" />
-          </span>
+          <img
+            slot="reference"
+            src="https://blog.maxieduca.com.br/wp-content/uploads/2020/02/Repert%C3%B3rio.gif"
+            class="recomendation-icon el-icon-swing"
+          >
+          <!-- <span slot="reference">
+            <JusIcon
+              icon="recomendation-lamp"
+              class="el-icon-pulse"
+            />
+          </span> -->
 
           <div
             v-if="currentRecomendation !== null"
@@ -259,7 +267,12 @@ export default {
 <style lang="scss" scoped>
 .recomendations-container {
   cursor: pointer;
-  margin: 8px 8px 0 -4px;
+  margin: 0 4px 0 -4px;
+
+  .recomendation-icon {
+    height: 20px;
+    background-color: transparent;
+  }
 }
 </style>
 

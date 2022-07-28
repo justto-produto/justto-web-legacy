@@ -393,6 +393,7 @@ export default {
 
       display: flex;
       min-width: 10vw;
+      align-items: center;
     }
 
     &.COLORFUL-whatsapp {
