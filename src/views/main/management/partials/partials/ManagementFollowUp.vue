@@ -40,7 +40,7 @@ export default {
         !archived && !dead && ['CLAIMANT'].includes(party) && (phones || []).filter(({ archived, blocked, isValid }) => (
           !archived && !blocked && isValid
         )).length > 0
-      )).length || (this.dispute?.plaintiff?.phones || []).length) > 0
+      )).length > 0 || (this.dispute?.lawyer?.hasPhones || this.dispute?.plaintiff?.hasPhones))
 
       return ['PENDING'].includes(this.status) && validContacts
     },
