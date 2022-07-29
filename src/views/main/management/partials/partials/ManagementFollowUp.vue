@@ -31,8 +31,22 @@ export default {
   },
 
   computed: {
+    status() {
+      return this.dispute?.status || this.dispute?.disputeStatus
+    },
+
+    havePhone() {
+      const validContacts = ((this.dispute?.disputeRoles || []).filter(({ phones, archived, dead, party }) => (
+        !archived && !dead && ['CLAIMANT'].includes(party) && (phones || []).filter(({ archived, blocked, isValid }) => (
+          !archived && !blocked && isValid
+        )).length > 0
+      )).length > 0 || (this.dispute?.lawyer?.hasPhones || this.dispute?.plaintiff?.hasPhones))
+
+      return ['PENDING'].includes(this.status) && validContacts
+    },
+
     wasViewed() {
-      if (this.dispute?.lastInteraction?.direction === 'INBOUND' && ['RUNNING'].includes(this.dispute?.status || this.dispute?.disputeStatus) && ['VISUALIZATION', 'NEGOTIATOR_ACCESS', 'CLICK'].includes(this.dispute?.lastInteraction?.type)) {
+      if (this.dispute?.lastInteraction?.direction === 'INBOUND' && ['RUNNING'].includes(this.status) && ['VISUALIZATION', 'NEGOTIATOR_ACCESS', 'CLICK'].includes(this.dispute?.lastInteraction?.type)) {
         return this.$moment().diff(this.$moment(this.dispute?.lastInteraction?.createAt?.dateTime || this.dispute?.lastInteraction?.createdAt), 'hours') >= 24
       }
 
@@ -40,11 +54,11 @@ export default {
     },
 
     needFolllowUp() {
-      if (this.dispute?.lastInteraction?.direction === 'OUTBOUND' && ['RUNNING'].includes(this.dispute?.status || this.dispute?.disputeStatus)) {
+      if (this.dispute?.lastInteraction?.direction === 'OUTBOUND' && ['RUNNING'].includes(this.status)) {
         return this.$moment().diff(this.$moment(this.dispute?.lastInteraction?.createAt?.dateTime || this.dispute?.lastInteraction?.createdAt), 'hours') >= 24
       }
 
-      return this.wasViewed
+      return this.wasViewed || this.havePhone
     },
 
     followUpDays() {
@@ -53,11 +67,12 @@ export default {
 
     followUpText() {
       return 'Ligue para a parte e faça o acordo!'
-      // return this.wasViewed ? `Visualizado à ${this.followUpDays} dia${this.followUpDays > 1 ? 's' : ''}` : `Última mensagem enviada a ${this.followUpDays} dia${this.followUpDays > 1 ? 's' : ''}, gostaria de enviar uma nova?`
     },
 
     followUpBtnText() {
-      return this.wasViewed ? `Visualizado à ${this.followUpDays} dia${this.followUpDays > 1 ? 's' : ''}` : `${this.followUpDays} dia${this.followUpDays > 1 ? 's' : ''} sem retorno da parte`
+      const plural = this.followUpDays > 1 ? 's' : ''
+
+      return this.havePhone ? 'Ligue para a parte!' : this.wasViewed ? `Visualizado à ${this.followUpDays} dia${plural}` : `${this.followUpDays} dia${plural} sem retorno da parte`
     }
   },
 
