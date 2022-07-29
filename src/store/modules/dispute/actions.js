@@ -6,6 +6,7 @@ import { Validate } from 'validate-cnj'
 // const FileSaver = require('file-saver')
 let removeDebounce = 0
 const disputesPath = 'api/disputes'
+const disputesV2Patch = 'api/disputes/v2'
 const documentsPath = 'api/office/documents'
 const exportPath = '/api/v2/dispute/export/request'
 
@@ -922,25 +923,20 @@ const disputeActions = {
 
   autodetectDisputeRecipients({ getters: { workspaceAutodetectRecipient, getEditorRecipients, occurrences, getCurrentRoute: { params: { id } } }, dispatch }) {
     if (workspaceAutodetectRecipient && !getEditorRecipients.length) {
-      const onlyComunnications = (occurrences || []).filter(({ interaction, disputeId }) => (interaction?.type === 'COMMUNICATION' && interaction?.direction === 'INBOUND' && Number(disputeId) === Number(id)))
+      axiosDispatch({
+        url: `${disputesV2Patch}/${id}/messages/last-inbound`
+      }).then(respondent => {
+        if (respondent.sender) {
+          const { sender, communicationType, communicationMessageId } = respondent
 
-      const sortByCreateAt = (occA, occB) => {
-        return moment(occA?.createAt?.dateTime).isAfter(occB?.createAt?.dateTime) ? -1 : 1
-      }
-
-      onlyComunnications.sort(sortByCreateAt)
-
-      for (const item of onlyComunnications) {
-        const { interaction: { message: { communicationType, sender, messageId } } } = item
-
-        dispatch('addRecipient', {
-          value: sender,
-          type: communicationType.toLowerCase(),
-          inReplyTo: messageId,
-          key: 'address'
-        })
-        break
-      }
+          dispatch('addRecipient', {
+            value: sender,
+            type: communicationType.toLowerCase(),
+            inReplyTo: communicationMessageId,
+            key: 'address'
+          })
+        }
+      })
     }
   }
 }

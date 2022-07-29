@@ -1,6 +1,5 @@
 import { axiosDispatch, isSimilarStrings, buildQuery, validateCurrentId, stripHtml } from '@/utils'
 import { EditorBackup } from '@/models/message/editorBackup'
-import moment from 'moment'
 
 const vue = () => document.getElementById('app')?.__vue__
 
@@ -416,27 +415,22 @@ const omnichannelActions = {
     Object.keys(getGroupedOccurrences).forEach(id => commit('deleteGroupedOccurrencesById', id))
   },
 
-  autodetectTicketRecipients({ getters: { workspaceAutodetectRecipient, getEditorRecipients, getOccurrencesList, getCurrentRoute: { params: { id } } }, dispatch }) {
+  autodetectTicketRecipients({ getters: { workspaceAutodetectRecipient, getEditorRecipients, getCurrentRoute: { params: { id } } }, dispatch }) {
     if (workspaceAutodetectRecipient && !getEditorRecipients.length) {
-      const onlyComunnications = (getOccurrencesList || []).filter(({ interaction, disputeId }) => (interaction?.type === 'COMMUNICATION' && interaction?.direction === 'INBOUND' && Number(disputeId) === Number(id)))
+      axiosDispatch({
+        url: `${disputeApi}/${id}/messages/last-inbound`
+      }).then(respondent => {
+        if (respondent?.sender) {
+          const { sender, communicationType, communicationMessageId } = respondent
 
-      const sortByCreateAt = (occA, occB) => {
-        return moment(occA?.createAt?.dateTime).isAfter(occB?.createAt?.dateTime) ? -1 : 1
-      }
-
-      onlyComunnications.sort(sortByCreateAt)
-
-      for (const item of onlyComunnications) {
-        const { interaction: { direction, message: { communicationType, sender, receiver, messageId } } } = item
-
-        dispatch('addRecipient', {
-          value: direction === 'INBOUND' ? sender : receiver,
-          type: communicationType.toLowerCase(),
-          inReplyTo: messageId,
-          key: 'address'
-        })
-        break
-      }
+          dispatch('addRecipient', {
+            value: sender,
+            type: communicationType.toLowerCase(),
+            inReplyTo: communicationMessageId,
+            key: 'address'
+          })
+        }
+      })
     }
   }
 }
