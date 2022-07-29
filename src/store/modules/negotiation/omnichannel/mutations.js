@@ -20,9 +20,8 @@ export default {
   setMessageType: (state, type) => Vue.set(state.editor, 'messageType', type),
 
   setOccurrences(state, { content, totalElements, first, number }) {
-    this.dispatch('autodetectTicketRecipients', {})
-
     if (first) {
+      this.dispatch('autodetectTicketRecipients', {})
       Vue.set(state.occurrences, 'list', [])
     }
 
@@ -173,9 +172,15 @@ export default {
 
   setRecipients: (state, recipient) => {
     const { recipients } = state.editor
-    const has = recipients.filter(({ value }) => value === recipient.value).length > 0
+    const has = recipients.filter(el => el.value === recipient.value).length > 0
 
-    if (has) {
+    if (recipient?.autodetected && has) {
+      /*
+        TODO: Bug: A API está sendo chamanda mulltipllas vezes e isso adiciona e remove o contato logo em seguida.
+
+        Esse IF deve não fazer nada quando o contato vier da autodetecção e já existir.
+      */
+    } else if (has) {
       Vue.set(state.editor, 'recipients', recipients.filter(el => el.value !== recipient.value))
     } else {
       Vue.set(state.editor, 'recipients', [...recipients, recipient])
@@ -184,6 +189,7 @@ export default {
 
   removeRecipient: (state, value) => {
     const items = state.editor.recipients.filter(el => !(el.value === value))
+
     Vue.set(state.editor, 'recipients', items)
   },
 

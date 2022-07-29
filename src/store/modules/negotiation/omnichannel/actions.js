@@ -147,11 +147,13 @@ const omnichannelActions = {
   },
 
   addRecipient({ commit, dispatch, getters }, recipient) {
-    const { type, value } = recipient
+    const { type, value, autodetected } = recipient
     const { getEditorMessageType, getEditorRecipients } = getters
 
     if (getEditorRecipients.find(el => el.value === value)) {
-      commit('removeRecipient', value)
+      if (!autodetected) {
+        commit('removeRecipient', value)
+      }
 
       return Promise.resolve()
     } else {
@@ -164,7 +166,7 @@ const omnichannelActions = {
 
         return Promise.resolve()
       }
-      if (getEditorMessageType !== type && getEditorRecipients.length) {
+      if (getEditorMessageType !== type && getEditorRecipients.length && !autodetected) {
         const oldType = vue().$tc('negotiation.ticket.recipient.message-type.' + getEditorMessageType)
         const newType = vue().$tc('negotiation.ticket.recipient.message-type.' + type)
         const message = `<p>Detectamos uma mudança no tipo de contato do destinatário: <b>${oldType}</b> para <b>${newType}</b>!</p>
@@ -415,19 +417,20 @@ const omnichannelActions = {
     Object.keys(getGroupedOccurrences).forEach(id => commit('deleteGroupedOccurrencesById', id))
   },
 
-  autodetectTicketRecipients({ getters: { workspaceAutodetectRecipient, getEditorRecipients, getCurrentRoute: { params: { id } } }, dispatch }) {
+  autodetectTicketRecipients({ state: { editor: { recipients } }, getters: { workspaceAutodetectRecipient, getEditorRecipients, getCurrentRoute: { params: { id } } }, dispatch }) {
     if (workspaceAutodetectRecipient && !getEditorRecipients.length) {
       axiosDispatch({
         url: `${disputeApi}/${id}/messages/last-inbound`
       }).then(respondent => {
-        if (respondent?.sender) {
+        if (respondent?.sender && !getEditorRecipients.length) {
           const { sender, communicationType, communicationMessageId } = respondent
 
           dispatch('addRecipient', {
             value: sender,
             type: communicationType.toLowerCase(),
             inReplyTo: communicationMessageId,
-            key: 'address'
+            key: 'address',
+            autodetected: true
           })
         }
       })

@@ -926,14 +926,15 @@ const disputeActions = {
       axiosDispatch({
         url: `${disputesV2Patch}/${id}/messages/last-inbound`
       }).then(respondent => {
-        if (respondent.sender) {
+        if (respondent?.sender) {
           const { sender, communicationType, communicationMessageId } = respondent
 
           dispatch('addRecipient', {
             value: sender,
             type: communicationType.toLowerCase(),
             inReplyTo: communicationMessageId,
-            key: 'address'
+            key: 'address',
+            autodetected: true
           })
         }
       })
