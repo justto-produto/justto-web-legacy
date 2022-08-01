@@ -43,6 +43,7 @@
         <div
           v-for="menuItem in menuItems"
           :key="menuItem.index"
+          class="container-aside__menu-item"
         >
           <el-submenu
             v-if="menuItem.isGroup"
@@ -52,7 +53,14 @@
               <jus-icon
                 icon="management"
               />
+
+              <el-tooltip placement="top-start">
+                <div slot="content">
+                  Definir como página inicial.
+                </div>
+              </el-tooltip>
             </template>
+
             <el-menu-item
               v-for="subMenu in menuItem.childs"
               v-show="subMenu.isVisible"
@@ -69,20 +77,52 @@
               </span>
             </el-menu-item>
           </el-submenu>
+
+          <!-- :index="menuItem.index" -->
           <el-menu-item
             v-else
             v-show="menuItem.isVisible"
-            :index="menuItem.index"
-            @click="menuItem.action"
+            @click="clickRedirectItem($event, menuItem)"
           >
             <JusIcon
               :icon="menuItem.icon"
               class=""
             />
+
             <span slot="title">
               {{ menuItem.title }}
             </span>
           </el-menu-item>
+
+          <el-tooltip
+            placement="top-start"
+          >
+            <div slot="content">
+              Definir como página inicial.
+            </div>
+
+            <!-- TODO: SAAS-2238 Implementar trocas de cores e salvar/remover. -->
+            <div
+              class="menu-item-pin"
+            >
+              <div
+                class="menu-item-pin__left-border"
+                @click="setCustomHome(menuItem)"
+              />
+
+              <button
+                class="menu-item-pin__button"
+                @click="setCustomHome(menuItem)"
+              >
+                <jus-icon icon="pin" />
+              </button>
+
+              <div
+                class="menu-item-pin__bottom-border"
+                @click="setCustomHome(menuItem)"
+              />
+            </div>
+          </el-tooltip>
         </div>
       </el-menu>
 
@@ -165,6 +205,7 @@ export default {
 
     menuItems() {
       const itemsMenu = []
+
       itemsMenu.push({
         index: '/negotiation',
         title: 'Negociação',
@@ -172,14 +213,15 @@ export default {
         isVisible: true,
         action: () => {}
       })
+
       itemsMenu.push({
         index: '/',
         title: 'Dashboard',
         icon: 'dashboard',
         isVisible: true,
-        action: () => {
-        }
+        action: () => {}
       })
+
       itemsMenu.push({
         isGroup: true,
         index: 'disputes',
@@ -201,14 +243,15 @@ export default {
           }
         ]
       })
+
       itemsMenu.push({
         index: '/import',
         title: 'Importação',
         icon: 'import',
         isVisible: true,
-        action: () => {
-        }
+        action: () => {}
       })
+
       return itemsMenu
     }
   },
@@ -376,6 +419,14 @@ export default {
 
     toggleExpandTeamSection() {
       this.isTeamSectionExpanded = !this.isTeamSectionExpanded
+    },
+
+    clickRedirectItem(event, item) {
+      console.log('clickRedirectItem', event, item)
+    },
+
+    setCustomHome(event) {
+      console.log('setCustomHome', event)
     }
   }
 }
@@ -432,6 +483,65 @@ export default {
   }
 
   .container-aside__menu {
+    .container-aside__menu-item {
+      position: relative;
+
+      .menu-item-pin {
+        display: flex;
+        position: absolute;
+        top: 0;
+        right: 0;
+        height: 12px;
+        width: 12px;
+        box-sizing: content-box;
+
+        .menu-item-pin__left-border,
+        .menu-item-pin__bottom-border {
+          position: absolute;
+          width: 0;
+          height: 0;
+          border-style: solid;
+          border-width: 0 12px 12px 0;
+          border-color: transparent #ff9300 transparent transparent;
+        }
+
+        .menu-item-pin__left-border {
+          top: 12px;
+          right: 0;
+        }
+
+        .menu-item-pin__bottom-border {
+          top: 0;
+          right: 12px;
+        }
+
+        .menu-item-pin__button {
+          padding: 0;
+          cursor: pointer;
+          height: 12px;
+          width: 12px;
+          border: none;
+          background-color: #ff9300;
+
+          img {
+            height: 12px;
+            width: 12px;
+          }
+        }
+      }
+
+      .menu-item-pin-left {
+        position: absolute;
+        top: 0;
+        right: 12px;
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 0 12px 12px 0;
+        border-color: transparent #9361f7 transparent transparent;
+      }
+    }
+
     .el-menu-item {
       transition: all 0.3s;
     }
