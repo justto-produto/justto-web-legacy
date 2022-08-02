@@ -49,15 +49,17 @@
           <h1>{{ $t(`panel.${menuIndex}`) }}</h1>
           <div class="admin-panel-view__header-options">
             <el-input
-              v-if="!['7'].includes(menuIndex)"
+              v-if="!['6', '7'].includes(menuIndex)"
               v-model="filterTerm"
               prefix-icon="el-icon-search"
               placeholder="Buscar"
+              size="small"
               clearable
             />
             <el-button
               v-if="['1', '2', '3', '4', '5'].includes(menuIndex)"
               type="primary"
+              size="small"
               icon="el-icon-plus"
               class="admin-panel-view__header-button"
               @click="mainButtonHandler"
@@ -106,11 +108,10 @@
           :filter-term="filterTerm"
         />
 
-        <workspace
+        <WorkspaceList
           v-if="menuIndex === '6'"
           ref="panel6"
           class="workspace-panel"
-          hide-search
         />
 
         <PanelWhatsApp
@@ -129,7 +130,7 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'AdminPanel',
   components: {
-    Workspace: () => import('@/views/main/configurations/partials/WorkspaceList'),
+    // Workspace: () => import('@/views/main/configurations/partials/WorkspaceList'),
     JusSidenavExternal: () => import('@/components/layouts/JusSidenavExternal'),
     PanelStrategy: () => import('./partials/Strategy/PanelStrategy'),
     PanelDashboard: () => import('./partials/PanelDashboard'),
@@ -211,7 +212,7 @@ export default {
     h1 {
       margin-left: 40px;
     }
-    padding: 40px 0 30px;
+    padding: 0 0 30px;
     display: flex;
     flex-direction: column;
   }
@@ -231,6 +232,9 @@ export default {
   }
 
   .workspace-panel {
+    height: 100%;
+    width: 100%;
+
     .workspace-container__table {
       height: calc(100vh - 120px) !important;
     }
