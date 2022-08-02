@@ -178,7 +178,12 @@ export default {
 
           .scheduled-call_list {
             padding: 0;
-            width: calc(100% + 20px);
+            width: 100%;
+            overflow-y: scroll;
+
+            &::-webkit-scrollbar {
+              width: 16px;
+            }
           }
         }
       }
