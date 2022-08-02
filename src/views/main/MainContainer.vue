@@ -43,6 +43,7 @@
         <div
           v-for="menuItem in menuItems"
           :key="menuItem.index"
+          class="container-aside__menu-item"
         >
           <el-submenu
             v-if="menuItem.isGroup"
@@ -52,7 +53,14 @@
               <jus-icon
                 icon="management"
               />
+
+              <el-tooltip placement="top-start">
+                <div slot="content">
+                  Definir como página inicial.
+                </div>
+              </el-tooltip>
             </template>
+
             <el-menu-item
               v-for="subMenu in menuItem.childs"
               v-show="subMenu.isVisible"
@@ -69,20 +77,24 @@
               </span>
             </el-menu-item>
           </el-submenu>
+
+          <!--  -->
           <el-menu-item
             v-else
             v-show="menuItem.isVisible"
             :index="menuItem.index"
-            @click="menuItem.action"
           >
             <JusIcon
               :icon="menuItem.icon"
               class=""
             />
+
             <span slot="title">
               {{ menuItem.title }}
             </span>
           </el-menu-item>
+
+          <CustomHome :value="menuItem" />
         </div>
       </el-menu>
 
@@ -129,7 +141,8 @@ export default {
     JusTeamMenu: () => import('@/components/layouts/JusTeamMenu'),
     JusShortchts: () => import('@/components/others/JusShortcuts'),
     ThamirisAlerts: () => import('@/components/dialogs/ThamirisAlerts.vue'),
-    BuyDialerDialog: () => import('@/components/dialogs/BuyDialerDialog')
+    BuyDialerDialog: () => import('@/components/dialogs/BuyDialerDialog'),
+    CustomHome: () => import('@/components/buttons/CustomHome')
   },
 
   data() {
@@ -165,6 +178,7 @@ export default {
 
     menuItems() {
       const itemsMenu = []
+
       itemsMenu.push({
         index: '/negotiation',
         title: 'Negociação',
@@ -172,14 +186,15 @@ export default {
         isVisible: true,
         action: () => {}
       })
+
       itemsMenu.push({
         index: '/',
         title: 'Dashboard',
         icon: 'dashboard',
         isVisible: true,
-        action: () => {
-        }
+        action: () => {}
       })
+
       itemsMenu.push({
         isGroup: true,
         index: 'disputes',
@@ -201,14 +216,15 @@ export default {
           }
         ]
       })
+
       itemsMenu.push({
         index: '/import',
         title: 'Importação',
         icon: 'import',
         isVisible: true,
-        action: () => {
-        }
+        action: () => {}
       })
+
       return itemsMenu
     }
   },
@@ -432,6 +448,43 @@ export default {
   }
 
   .container-aside__menu {
+    .container-aside__menu-item {
+      position: relative;
+
+      .menu-item-pin {
+        display: flex;
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        height: 12px;
+        width: 12px;
+        box-sizing: content-box;
+
+        .menu-item-pin__button {
+          padding: 0;
+          cursor: pointer;
+          height: 12px;
+          width: 12px;
+          border: none;
+          background-color: #ff9300;
+          background-color: transparent;
+
+          img {
+            height: 12px;
+            width: 12px;
+          }
+        }
+      }
+
+      &:hover {
+        .menu-item-pin {
+          .menu-item-pin__button {
+            display: block;
+          }
+        }
+      }
+    }
+
     .el-menu-item {
       transition: all 0.3s;
     }

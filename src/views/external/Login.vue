@@ -237,7 +237,8 @@ export default {
 
   methods: {
     ...mapActions({
-      sendEmail: 'sendCustomEmail'
+      sendEmail: 'sendCustomEmail',
+      getAccountProperty: 'getAccountProperty'
     }),
 
     getErrorMessage() {
@@ -352,6 +353,7 @@ export default {
         })
       })
     },
+
     getMembersAndRedirect(response) {
       // SEGMENT TRACK
       this.$jusSegment('Seleção de Workspace', {
@@ -367,16 +369,20 @@ export default {
 
         this.$store.dispatch('getWorkspaceMembers')
           .then(() => {
-            if (Object.keys(localStorage).includes('jusredirect')) {
-              this.showLoading = false
-              const redirect = JSON.parse(localStorage.getItem('jusredirect'))
-              const params = new URLSearchParams(redirect).toString()
-              this.$router.push(`/redirect?${params}`)
-            } else if (response.profile === 'ADMINISTRATOR' && !isJustto) {
-              this.$router.push('/')
-            } else {
-              this.$router.push('/negotiation')
-            }
+            this.getAccountProperty('CUSTOM_HOME').then(({ CUSTOM_HOME }) => {
+              if (Object.keys(localStorage).includes('jusredirect')) {
+                this.showLoading = false
+                const redirect = JSON.parse(localStorage.getItem('jusredirect'))
+                const params = new URLSearchParams(redirect).toString()
+                this.$router.push(`/redirect?${params}`)
+              } else if (CUSTOM_HOME) {
+                this.$router.push(CUSTOM_HOME)
+              } else if (response.profile === 'ADMINISTRATOR' && !isJustto) {
+                this.$router.push('/')
+              } else {
+                this.$router.push('/negotiation')
+              }
+            })
           }).catch(error => {
             console.error(error)
             this.mountError()
