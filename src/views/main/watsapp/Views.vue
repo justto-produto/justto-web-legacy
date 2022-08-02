@@ -7,7 +7,7 @@
       >
         <template slot="icon">
           <h2>
-            {{ wallet.balance | currency }}
+            {{ balance }}
           </h2>
         </template>
       </el-result>
@@ -90,6 +90,10 @@ export default {
       return this.templates?.templates.filter(({ status }) => !['REJECTED'].includes(status)).sort((a, b) => {
         return b.createdOn - a.createdOn
       })
+    },
+
+    balance() {
+      return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'USD' }).format(this.wallet?.balance || 0)
     }
   },
 

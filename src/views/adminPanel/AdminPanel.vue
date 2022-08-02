@@ -32,6 +32,13 @@
           <el-menu-item index="5">
             <i class="el-icon-s-finance" /> Cobrança
           </el-menu-item> -->
+
+          <el-menu-item
+            v-if="havepermission.includes(accountEmail)"
+            index="7"
+          >
+            <i class="el-icon-chat-line-round" /> WhatsApp
+          </el-menu-item>
         </el-menu>
       </jus-sidenav-external>
     </el-col>
@@ -45,6 +52,7 @@
           <h1>{{ $t(`panel.${menuIndex}`) }}</h1>
           <div class="admin-panel-view__header-options">
             <el-input
+              v-if="!['7'].includes(menuIndex)"
               v-model="filterTerm"
               prefix-icon="el-icon-search"
               placeholder="Buscar"
@@ -93,6 +101,12 @@
           ref="panel5"
           :filter-term="filterTerm"
         />
+
+        <PanelWhatsApp
+          v-if="menuIndex === '7'"
+          ref="panel7"
+          :filter-term="filterTerm"
+        />
       </el-col>
     </transition>
   </el-row>
@@ -109,7 +123,8 @@ export default {
     PanelUser: () => import('./partials/PanelUser'),
     PanelMinute: () => import('./partials/PanelMinute'),
     PanelBilling: () => import('./partials/PanelBilling'),
-    PanelStrategy: () => import('./partials/Strategy/PanelStrategy')
+    PanelStrategy: () => import('./partials/Strategy/PanelStrategy'),
+    PanelWhatsApp: () => import('@/views/main/watsapp/Views')
   },
   data() {
     return {
@@ -162,11 +177,12 @@ export default {
   >.el-col {
     height: 100%
   }
+
   &__panel-header {
     display: flex;
     justify-content: space-between;
-
   }
+
   &__header-options {
     display: flex;
     margin: 20px 0;
@@ -176,6 +192,7 @@ export default {
       margin-left: 16px;
     }
   }
+
   .el-col.content {
     h1 {
       margin-left: 40px;
@@ -184,16 +201,23 @@ export default {
     display: flex;
     flex-direction: column;
   }
+
   .el-backtop {
     right: 100px !important;
     bottom: 30px !important;
   }
+
   .el-pagination {
     text-align: center;
     margin-top: 38px;
   }
+
   .el-select {
     width: 100%;
+  }
+
+  .whatsapp-views {
+    overflow-y: scroll;
   }
 }
 </style>
