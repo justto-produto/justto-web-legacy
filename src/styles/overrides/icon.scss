@@ -15,6 +15,17 @@
     animation-name: throbber-pulse,throbber-fade;
     animation-timing-function: ease-in-out;
   }
+  &.el-icon-swing {
+    background-color: #fff;
+    font-size: 18px;
+    animation-delay: 0;
+    animation-duration: 1.25s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+    animation-name: vertical-swing;
+    animation-timing-function: ease-in-out;
+    transform-origin: bottom center;
+  }
   &.el-icon-danger {
     color: $--color-danger;
   }

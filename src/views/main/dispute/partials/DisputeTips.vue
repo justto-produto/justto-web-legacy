@@ -1,18 +1,29 @@
 <template>
   <el-card
-    v-if="showTips && showProtocol && hasDraftFeatureActive"
+    v-if="showProtocol && hasDraftFeatureActive"
     class="dispute-tips el-card--bordered el-card--info"
+    :class="{'minimized': !showTips}"
   >
     <div slot="header">
       <i class="el-icon-info" />
       Próximo passo: Geração e envio de minuta
-      <el-button
-        type="text"
-        icon="el-icon-close"
-        @click="showTips = false"
-      />
+
+      <el-tooltip
+        :content="showTips ? 'Minimizar' : 'Maximizar'"
+        :open-delay="500"
+      >
+        <el-button
+          type="text"
+          :icon="showTips ? 'el-icon-minus' : 'el-icon-plus'"
+          @click="showTips = !showTips"
+        />
+      </el-tooltip>
     </div>
-    <div class="content">
+
+    <div
+      v-if="showTips"
+      class="content"
+    >
       <el-steps
         :active="documentStep"
         align-center
@@ -23,11 +34,13 @@
           description="Criação e edição da minuta"
           icon="el-icon-document"
         />
+
         <el-step
           title="Envio"
           description="Envio para assinatura das partes"
           icon="el-icon-s-promotion"
         />
+
         <el-step
           title="Assinaturas"
           description="Todas as assinaturas coletadas"
@@ -35,7 +48,11 @@
         />
       </el-steps>
     </div>
-    <div class="action">
+
+    <div
+      v-if="showTips"
+      class="action"
+    >
       <el-tooltip
         v-if="hasDocumentSignURL"
         effect="dark"
@@ -55,6 +72,7 @@
         Gerenciar minuta
       </el-button>
     </div>
+
     <jus-protocol-dialog
       :protocol-dialog-visible.sync="protocolDialogVisible"
       :dispute-id="dispute.id || dispute.disputeId"
@@ -146,30 +164,37 @@ export default {
   max-width: 800px;
   width: 80%;
   margin: 10px auto;
+
   .el-card__header {
     color: #424242;
     padding: 12px;
     font-size: 18px;
     font-weight: 500;
+
     button {
       padding: 0;
       float: right;
     }
+
     .el-icon-info {
       color: $--color-info;
       font-size: 15px;
     }
-    .el-icon-close {
+
+    .el-icon-minus {
       color: $--color-text-primary;
     }
   }
+
   .content {
     margin-top: 30px;
   }
+
   .action {
     margin: 30px 0 10px;
     text-align: center;
   }
+
   .el-steps {
     .is-process, .is-wait {
       color: $--color-text-secondary;
@@ -179,6 +204,12 @@ export default {
     }
     .el-step__description {
       color: $--color-text-primary;
+    }
+  }
+
+  &.minimized {
+    .el-card__body {
+      display: none;
     }
   }
 }

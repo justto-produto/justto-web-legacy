@@ -54,14 +54,22 @@ const overviewMutations = {
 
   setTicketOverviewParties: (state, params) => Vue.set(state, 'ticketOverviewParties', params),
 
-  setTicketOverviewParty: ({ ticketOverviewParties }, { data, payload }) => {
+  setTicketOverviewParty({ ticketOverviewParties }, { data, payload }) {
     const partyToSet = findPartyById(ticketOverviewParties, payload)
-    Vue.set(partyToSet, 'emailsDto', data.emails)
-    Vue.set(partyToSet, 'phonesDto', data.phones)
-    Vue.set(partyToSet, 'oabsDto', data.oabs)
-    Vue.set(partyToSet, 'birthday', data.birthday)
-    Vue.set(partyToSet, 'bankAccountsDto', data.bankAccounts)
-    Vue.set(partyToSet, 'legacyDto', data) // TODO: Remover
+
+    if (this.getters.getCurrentRoute?.params?.id) {
+      this.dispatch('getTicketOverviewPartyUpdated', {
+        disputeId: this.getters.getCurrentRoute?.params?.id,
+        disputeRoleId: data.id
+      }).then(res => {
+        Vue.set(partyToSet, 'emailsDto', res.emails)
+        Vue.set(partyToSet, 'phonesDto', res.phones)
+        Vue.set(partyToSet, 'oabsDto', res.oabs)
+        Vue.set(partyToSet, 'birthday', res.birthday)
+        Vue.set(partyToSet, 'bankAccountsDto', res.bankAccounts)
+        Vue.set(partyToSet, 'legacyDto', res) // TODO: Remover
+      })
+    }
   },
 
   setNewTicketOverviewParty: (state, response) => {

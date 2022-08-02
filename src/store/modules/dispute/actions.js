@@ -6,6 +6,7 @@ import { Validate } from 'validate-cnj'
 // const FileSaver = require('file-saver')
 let removeDebounce = 0
 const disputesPath = 'api/disputes'
+const disputesV2Patch = 'api/disputes/v2'
 const documentsPath = 'api/office/documents'
 const exportPath = '/api/v2/dispute/export/request'
 
@@ -511,10 +512,11 @@ const disputeActions = {
     })
   },
 
-  sendDisputeAction({ commit, mutation }, params) {
+  sendDisputeAction({ commit, dispatch }, params) {
     return new Promise((resolve, reject) => {
       let request
       if (params.action === 'restart-engagement' || params.action === 'renegotiate') {
+        dispatch('validateEngageLimit', params.disputeId)
         // eslint-disable-next-line
         request = axios.patch(`${disputesPath}/${params.disputeId}/${params.action}`)
       } else if (params.action === 'resend-messages') {
@@ -544,15 +546,18 @@ const disputeActions = {
     })
   },
 
-  restartDisputeRoleEngagement({ _ }, { disputeId, disputeRoleId }) {
+  restartDisputeRoleEngagement({ dispatch }, { disputeId, disputeRoleId }) {
+    dispatch('validateEngageLimit', disputeId)
+
     return axiosDispatch({
       url: `${disputesPath}/${disputeId}/restart-engagement/${disputeRoleId}`,
       method: 'patch'
     })
   },
 
-  restartEngagementByContact({ commit }, params) {
+  restartEngagementByContact({ commit, dispatch }, params) {
     return new Promise((resolve, reject) => {
+      dispatch('validateEngageLimit', params.disputeId)
       // eslint-disable-next-line
       axios.patch(`/api/messages/engagement/${params.disputeId}/address/${params.contact}`)
         .then(response => {
@@ -560,6 +565,13 @@ const disputeActions = {
         }).catch(error => {
           reject(error)
         })
+    })
+  },
+
+  validateEngageLimit({ _ }, disputeId) {
+    return axiosDispatch({
+      url: `${disputesPath}/${disputeId}/communications/engage-limit-reached`,
+      mutation: 'handleEngageLimit'
     })
   },
 
@@ -698,16 +710,11 @@ const disputeActions = {
     })
   },
 
-  getRespondents({ commit, state }) {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.get(`${disputesPath}/respondent-names`)
-        .then(response => {
-          commit('setRespondents', response.data)
-          resolve(response.data)
-        }).catch(error => {
-          reject(error)
-        })
+  getRespondents({ _ }, name = '') {
+    return axiosDispatch({
+      url: `${disputesPath}/respondent-names`,
+      params: { name },
+      mutation: 'setRespondents'
     })
   },
 
@@ -874,8 +881,10 @@ const disputeActions = {
     })
   },
 
-  restartDisputeValidatingStatus({ _ }, { disputeId, status }) {
+  restartDisputeValidatingStatus({ dispatch }, { disputeId, status }) {
     if (['PENDING'].includes(status)) {
+      dispatch('validateEngageLimit', disputeId)
+
       return axiosDispatch({
         url: `${disputesPath}/${disputeId}/restart-engagement`,
         method: 'PATCH'
@@ -910,6 +919,26 @@ const disputeActions = {
       url: `/api/dispute-classifications/${parentId}/dispute-classifications-detail`,
       data
     })
+  },
+
+  autodetectDisputeRecipients({ getters: { workspaceAutodetectRecipient, getEditorRecipients, occurrences, getCurrentRoute: { params: { id } } }, dispatch }) {
+    if (workspaceAutodetectRecipient && !getEditorRecipients.length) {
+      axiosDispatch({
+        url: `${disputesV2Patch}/${id}/messages/last-inbound`
+      }).then(respondent => {
+        if (respondent?.sender) {
+          const { sender, communicationType, communicationMessageId } = respondent
+
+          dispatch('addRecipient', {
+            value: sender,
+            type: communicationType.toLowerCase(),
+            inReplyTo: communicationMessageId,
+            key: 'address',
+            autodetected: true
+          })
+        }
+      })
+    }
   }
 }
 

@@ -274,6 +274,8 @@
     "UPDATE_ENGAGEMENT_OPTIONS": "Alterar engajamento",
     "ADD_TAGS_INCLUSIVE": "adicionar tags",
     "REM_TAGS_INCLUSIVE": "remover tags",
+    "SCHEDULE_CALL": "Realizar ligações",
+    "UNSCHEDULE_CALL": "Cancelar ligações",
     "tooltip": {
       "BULK_COMPOSE_MESSAGE": "Compor mensagem em massa",
       "SETTLE_DISPUTE": "Aceitar e Ganhar disputa | Aceitar e Ganhar disputas"
@@ -638,7 +640,8 @@
     "3": "Estratégias",
     "4": "Minutas",
     "5": "Cobrança",
-    "6": "Workapces"
+    "6": "Workapces",
+    "7": "WhatsApp"
   },
   "DISPUTE_CODE": "Nº Processo",
   "CAMPAIGN": "Campanha",
@@ -755,6 +758,14 @@
             }
           }
         }
+      },
+      "recipient": {
+        "message-type": {
+          "whatsapp": "whatsapp",
+          "negotiator_message": "portal de negociação",
+          "negotiation": "portal de negociação",
+          "email": "e-mail"
+        }
       }
     }
   },
@@ -783,6 +794,40 @@
   },
   "labels": {
     "dispute": "disputa | disputas"
+  },
+  "recomendations": {
+    "COUNTEROFFER": {
+      "option": "Enviar contraproposta",
+      "title": "Gostaria de enviar uma contraproposta?",
+      "buttons": {
+        "primary": "ENVIAR",
+        "secondary": "EDITAR RESPOSTA"
+      }
+    },
+    "NEW_PARTY": {
+      "option": "Cadastrar nova parte",
+      "title": "Gostaria de cadastrar uma nova parte?",
+      "buttons": {
+        "primary": "ENVIAR",
+        "secondary": ""
+      }
+    },
+    "NEW_CONTACT": {
+      "option": "Adicionar novo contato",
+      "title": "Gostaria de adicionar um novo contato?",
+      "buttons": {
+        "primary": "ADICIONAR",
+        "secondary": ""
+      }
+    },
+    "DISPUTE_MESSAGE": {
+      "option": "Responder mensagem",
+      "title": "Gostaria de responder de forma rápida?",
+      "buttons": {
+        "primary": "ENVIAR",
+        "secondary": "EDITAR RESPOSTA"
+      }
+    }
   },
   "call": {
     "status": {
@@ -813,7 +858,19 @@
       "UNKNOW": "Este contato foi bloqueado pelo usuário.",
       "COMMUNICATION_OPT_OUT": "Usuário optou por não receber mensagens nesse e-mail.",
       "LAW_FIRM_DOMAIN": "Contato com domínio de e-mail bloqueado para recebimento de mensagem.",
-      "WORKSPACE_BLOCK_LIST": "Contato bloqueado pela configuração na workspace."
+      "WORKSPACE_BLOCK_LIST": "Contato bloqueado pela configuração na workspace.",
+      "PERSON_DOCUMENT": "Usuário optou por não receber mensagens da plataforma.",
+      "LAWSUIT": "Usuário optou por não receber mensagens nesse processo.",
+      "DEFENDANT_NAME": "Usuário optou por não receber mensagens deste réu."
+    },
+    "phone": {
+      "UNKNOW": "Este contato foi bloqueado pelo usuário.",
+      "COMMUNICATION_OPT_OUT": "Usuário optou por não receber mensagens nesse telefone.",
+      "LAW_FIRM_DOMAIN": "Contato com telefone bloqueado para recebimento de mensagem.",
+      "WORKSPACE_BLOCK_LIST": "Contato bloqueado pela configuração na workspace.",
+      "PERSON_DOCUMENT": "Usuário optou por não receber mensagens da plataforma.",
+      "LAWSUIT": "Usuário optou por não receber mensagens nesse processo.",
+      "DEFENDANT_NAME": "Usuário optou por não receber mensagens deste réu."
     }
   },
   "document": {

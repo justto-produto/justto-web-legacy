@@ -6,40 +6,52 @@
     <div class="call-container">
       <div class="call-container__info">
         <div class="call-container__info-top">
-          <div>
-            Para {{ receiverName | resumedName }}
-          </div>
+          <router-link :to="`/management/dispute/${receiverDisputeId}`">
+            {{ `#${receiverDisputeId}` }} ({{ $tc(`ticket-status.${receiverDisputeStatus}`) }})
+          </router-link>
+
           <el-tag size="mini">
             {{ scheduledTo | moment('[hoje às ] HH:mm') }}
           </el-tag>
         </div>
         <div class="call-container__info-bottom">
+          <div>
+            {{ (receiverName) | resumedName }}
+          </div>
+
           <el-tag size="mini">
             {{ receiverNumber | phoneNumber }}
           </el-tag>
+
+          <div class="call-container__actions">
+            <el-tooltip
+              content="Ligar agora"
+            >
+              <el-button
+                type="success"
+                icon="el-icon-phone"
+                size="mini"
+                plain
+                round
+                @click="makeCall"
+              />
+            </el-tooltip>
+
+            <el-tooltip
+              :open-delay="500"
+              content="Remover ligação"
+            >
+              <el-button
+                type="danger"
+                icon="el-icon-delete-solid"
+                size="mini"
+                plain
+                round
+                @click="unscheduleCall"
+              />
+            </el-tooltip>
+          </div>
         </div>
-      </div>
-
-      <div class="call-container__actions">
-        <el-button
-          type="primary"
-          icon="el-icon-phone"
-          size="mini"
-          round
-          @click="makeCall"
-        >
-          Ligar
-        </el-button>
-
-        <el-button
-          type="danger"
-          icon="el-icon-delete-solid"
-          size="mini"
-          round
-          @click="unscheduleCall"
-        >
-          Remover
-        </el-button>
       </div>
     </div>
   </li>
@@ -74,7 +86,15 @@ export default {
     },
 
     receiverName() {
-      return this.value?.receiverName || ''
+      return this.value?.receiverName || 'Deivid Celso Barbosa'
+    },
+
+    receiverDisputeId() {
+      return this.value?.disputeId || 390300
+    },
+
+    receiverDisputeStatus() {
+      return this.value?.disputeStatus || 'PENDING'
     },
 
     receiverNumber() {
@@ -161,20 +181,21 @@ export default {
       }
 
       .call-container__info-bottom {
-        justify-content: center;
+        justify-content: space-between;
+        gap: 8px;
+        .call-container__actions {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          gap: 8px;
+
+          .el-button {
+            margin: 0;
+          }
+        }
       }
     }
 
-    .call-container__actions {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      gap: 8px;
-
-      .el-button {
-        margin: 0;
-      }
-    }
   }
 }
 </style>
@@ -183,14 +204,6 @@ export default {
 .call-container__actions {
   .el-button {
     padding: 8px !important;
-
-    span {
-      display: none;
-    }
-
-    &:hover span {
-      display: inline;
-    }
   }
 }
 </style>

@@ -88,7 +88,9 @@ export default {
       occurrencesList: 'getOccurrencesList',
       messageType: 'getEditorMessageType',
       isPrinting: 'getExportTicketModalVisible',
-      backups: 'getMessagesBackupById'
+      backups: 'getMessagesBackupById',
+      recipients: 'getEditorRecipients',
+      autodetectRecipient: 'workspaceAutodetectRecipient'
     }),
 
     infiniteLoadingIdentifier() {
@@ -125,6 +127,10 @@ export default {
   },
 
   watch: {
+    '$route.params.id'() {
+      this.routeUpdate()
+    },
+
     'countRendereds'() {
       this.adjustScroll()
     }
@@ -161,7 +167,9 @@ export default {
       'getOccurrences',
       'resetRecipients',
       'resetOccurrences',
-      'resetMessageText'
+      'resetMessageText',
+      'addRecipient',
+      'autodetectTicketRecipients'
     ]),
 
     adjustScroll(force = false) {
@@ -184,10 +192,14 @@ export default {
           } else {
             if ($state) { $state.loaded() }
           }
-        })
+        }).finally(this.autodetectTicketRecipients)
       } else {
         $state.complete()
       }
+    },
+
+    routeUpdate() {
+      this.resetTicket(this.id)
     },
 
     resetTicket(id) {

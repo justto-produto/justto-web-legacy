@@ -51,6 +51,7 @@
               </el-select>
             </el-form-item>
           </el-col>
+
           <!-- MOTIVO DE PRE-NEGOCIACAO -->
           <el-col
             v-if="!loading && isPreNegotiation"
@@ -73,6 +74,7 @@
               </el-select>
             </el-form-item>
           </el-col>
+
           <!-- ESTRATÉGIA -->
           <el-col
             v-if="!loading"
@@ -96,6 +98,7 @@
               </el-select>
             </el-form-item>
           </el-col>
+
           <!-- DATA DO ACORDO -->
           <el-col
             v-if="isNewAgreements"
@@ -134,6 +137,7 @@
               />
             </el-form-item>
           </el-col>
+
           <!-- IMPORTAÇÃO -->
           <el-col :span="12">
             <el-form-item label="Data da Importação">
@@ -152,6 +156,8 @@
               />
             </el-form-item>
           </el-col>
+
+          <!-- REÚS -->
           <el-col
             v-if="!loading && isFinished || isPreNegotiation"
             :span="12"
@@ -164,7 +170,12 @@
                 data-testid="filter-respondent"
                 placeholder="Selecione uma opção"
                 clearable
+                remote
+                reserve-keyword
+                :remote-method="getRespondentNames"
+                :loading="loadingRespondentNames"
                 @clear="clearRespondent"
+                @blur="getRespondents('')"
               >
                 <el-option
                   v-for="respondent in respondents"
@@ -175,6 +186,7 @@
               </el-select>
             </el-form-item>
           </el-col>
+
           <!-- FAVORITOS -->
           <el-col :span="12">
             <el-form-item
@@ -221,6 +233,7 @@
               </div>
             </el-form-item>
           </el-col>
+
           <!-- FAVORITOS -->
           <el-col
             v-if="isRunning"
@@ -250,6 +263,7 @@
               </div>
             </el-form-item>
           </el-col>
+
           <!-- MEIO DE INTERAÇÃO -->
           <el-col
             v-if="isRunning"
@@ -291,6 +305,7 @@
         </el-row>
       </el-form>
     </div>
+
     <span slot="footer">
       <el-button
         plain
@@ -325,7 +340,9 @@ export default {
       advancedFiltersDialogVisible: false,
       warningSixtyLastDaysRange: false,
       loading: false,
-      filters: {}
+      filters: {},
+      loadingRespondentNames: false,
+      awaitGetRespondents: null
     }
   },
 
@@ -344,18 +361,23 @@ export default {
     isPreNegotiation() {
       return this.activeTab === 'pre-negotiation'
     },
+
     isEngagement() {
       return this.activeTab === 'engagement'
     },
+
     isRunning() {
       return this.activeTab === 'running'
     },
+
     isFinished() {
       return this.activeTab === 'finished'
     },
+
     isNewAgreements() {
       return ['finished', 'accepted'].includes(this.activeTab)
     },
+
     newAgreementsLabel() {
       switch (this.activeTab) {
         case 'accepted':
@@ -366,6 +388,7 @@ export default {
           return ''
       }
     },
+
     interactions() {
       return [{
         key: 'WHATSAPP',
@@ -378,6 +401,7 @@ export default {
         value: 'Sistema Justto'
       }]
     },
+
     statuses() {
       switch (this.activeTab) {
         case 'finished':
@@ -412,6 +436,7 @@ export default {
       }
     }
   },
+
   watch: {
     advancedFiltersDialogVisible(value) {
       if (value) {
@@ -419,6 +444,7 @@ export default {
       }
     }
   },
+
   methods: {
     ...mapActions([
       'getCampaigns',
@@ -430,18 +456,21 @@ export default {
       'getTickets',
       'getWorkspacePreNegotiationKeywords'
     ]),
+
     canSelectPaused(_value) {
       const { onlyPaused, onlyNotPaused } = this.filters
       if (onlyPaused && onlyNotPaused) {
         this.filters.onlyNotPaused = false
       }
     },
+
     canSelectNotPaused(_value) {
       const { onlyPaused, onlyNotPaused } = this.filters
       if (onlyPaused && onlyNotPaused) {
         this.filters.onlyPaused = false
       }
     },
+
     fetchData() {
       this.loading = true
       Promise.all([
@@ -454,9 +483,11 @@ export default {
         this.loading = false
       })
     },
+
     openDialog() {
       this.advancedFiltersDialogVisible = true
     },
+
     applyFilters() {
       const { filters } = this
       if (!filters.onlyNotVisualized) delete filters.onlyNotVisualized
@@ -496,6 +527,7 @@ export default {
       }
       // add last filters]
     },
+
     clearFilters() {
       const { filters } = this
       if (this.activeTab === 'finished') {
@@ -521,27 +553,36 @@ export default {
       delete this.filters.onlyNotVisualized
       this.getTickets()
     },
+
     restoreFilters() {
       this.filters = JSON.parse(JSON.stringify(this.ticketsQuery))
     },
+
     clearInteraction(_value) {
       delete this.filters.lastInteractionType
     },
+
     clearStrategy() {
       this.filters.strategy = []
     },
+
     clearTags() {
       this.filters.tags = []
     },
+
     clearRespondent() {
       this.filters.respondentNames = []
+      this.getRespondents('')
     },
+
     clearCampaign() {
       this.filters.campaigns = []
     },
+
     clearPreNegotitationKeyWorks() {
       this.filters.preNegotiationKeywords = []
     },
+
     changeDealDate(value) {
       if (value) {
         if (this.isFinished) {
@@ -567,6 +608,7 @@ export default {
         this.filters.dealDate = []
       }
     },
+
     changeExpirationDate(value) {
       if (value) {
         this.filters.expirationDate = value
@@ -574,6 +616,7 @@ export default {
         this.filters.expirationDate = []
       }
     },
+
     changeimportingDate(value) {
       if (value) {
         this.filters.importingDate = value
@@ -581,9 +624,22 @@ export default {
         this.filters.importingDate = []
       }
     },
+
     redirectToAllDisputes() {
       this.advancedFiltersDialogVisible = this.warningSixtyLastDaysRange = false
       this.$router.push({ path: '/management/all' })
+    },
+
+    getRespondentNames(name) {
+      clearTimeout(this.awaitGetRespondents)
+      const time = 1/* s */ * 1000/* ms */
+
+      this.loadingRespondentNames = true
+      this.awaitGetRespondents = setTimeout(() => {
+        this.getRespondents(name).finally(() => {
+          this.loadingRespondentNames = false
+        })
+      }, time)
     }
   }
 }

@@ -1,6 +1,8 @@
 import router from '@/router'
 import { axiosDispatch } from '@/utils'
 
+const vue = () => document.getElementById('app')?.__vue__
+
 const accountsPath = 'api/accounts'
 
 const accountActions = {
@@ -123,6 +125,59 @@ const accountActions = {
       mutation: 'setAccountProperty',
       action: 'setScheduledCallsRequester'
     })
+  },
+
+  confirmActiveScheduledCalls({ getters: { loggedPersonName }, commit, dispatch }) {
+    commit('setPreventScheduleCallsConfirmation', true)
+
+    dispatch('getPhoneCalls').then(calls => {
+      const template = calls.length > 0 ? `
+        Temos ${calls.length} ligações agendas para hoje. Deseja que o sistema faça essas ligações para você? 
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <small>
+          Obs: Para garantir que o maior número de ligações sejam efetivas, lembre-se de se manter logada e ficar em sua estação de trabalho. <b>Se precisar sair, mesmo que por alguns minutos, faça logout da plataforma</b> para não perder as chamadas, assim quando retornar o sistema irá retornar as ligações automáticas agendadas.
+        </small>
+      ` : `
+        Não temos ligações agendas para hoje. Deseja realmente habilitar a discagem automática?
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <small>
+          Obs: Para garantir que o maior número de ligações sejam efetivas, lembre-se de se manter logada e ficar em sua estação de trabalho. <b>Se precisar sair, mesmo que por alguns minutos, faça logout da plataforma</b> para não perder as chamadas, assim quando retornar o sistema irá retornar as ligações automáticas agendadas.
+        </small>
+      `
+
+      if (calls.length > 0) {
+        vue().$confirm(template, `Oi, ${loggedPersonName}, tudo bem?`, {
+          confirmButtonText: 'Sim',
+          cancelButtonText: 'Não',
+          dangerouslyUseHTMLString: true,
+          customClass: 'confirm-init-call-scheduler',
+          closeOnClickModal: false,
+          closeOnPressEscape: false,
+          showClose: false,
+          center: true
+        }).then(_ => {
+          commit('setAvailableSchedulerdCalls', 'AVAILABLE')
+        }).catch(_ => {
+          commit('setPreventScheduleCallsConfirmation', false)
+          commit('setAvailableSchedulerdCalls', 'UNAVAILABLE')
+        })
+      } else {
+        commit('setAvailableSchedulerdCalls', 'AVAILABLE')
+        commit('setPreventScheduleCallsConfirmation', false)
+      }
+    }).catch(error => {
+      this.$jusNotification({ error })
+      commit('setAvailableSchedulerdCalls', 'UNAVAILABLE')
+    })
+    // .finally(() => commit('setPreventScheduleCallsConfirmation', false))
   },
 
   changeAccountName({ commit }, { name }) {

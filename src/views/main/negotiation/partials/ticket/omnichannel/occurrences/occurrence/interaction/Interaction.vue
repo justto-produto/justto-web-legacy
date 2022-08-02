@@ -1,7 +1,7 @@
 <template>
   <section
     class="interaction-container"
-    :class="`${interaction.direction} ${type}`"
+    :class="`${interaction.direction || ''} ${type}`"
   >
     <el-tooltip
       placement="top-end"
@@ -19,7 +19,7 @@
       />
     </el-tooltip>
 
-    <div :class="`${interaction.direction} ${coloringType}-${messageType} ${!flat ? 'interaction-container__balloon' : ''} ${scheduled ? 'SCHEDULED' : ''}`">
+    <div :class="`${interaction.direction || ''} ${coloringType}-${messageType} ${!flat ? 'interaction-container__balloon' : ''} ${(scheduled || type === 'SCHEDULER') ? 'SCHEDULED' : ''}`">
       <div class="interaction-container__balloon-content">
         <component
           :is="type"
@@ -27,6 +27,11 @@
           :occurrence="value"
           :hide-grouping="hideGrouping"
           :hide-info="isGrouping"
+        />
+
+        <Recomendation
+          v-if="showRecomendation && needRecomendationList.includes(interaction.id)"
+          :interaction-id="interaction.id"
         />
       </div>
     </div>
@@ -108,8 +113,9 @@ export default {
     PHONE: () => import('./partials/Phone.vue'),
     MANUAL: () => import('./partials/Manual'),
     NPS: () => import('./partials/Nps'),
-    WHATSAPP: () => import('./partials/Whatsapp.vue'),
     WarningLGPD: () => import('@/components/dialogs/WarningLGPD'),
+    Recomendation: () => import('@/components/buttons/Recomendation.vue'),
+    WHATSAPP: () => import('./partials/Whatsapp.vue'),
     InteractionStatus: () => import('./partials/InteractionStatus')
   },
 
@@ -144,22 +150,29 @@ export default {
 
   computed: {
     ...mapGetters({
+      isJusttoAdmin: 'isJusttoAdmin',
       recipients: 'getEditorRecipients',
       flat: 'getExportTicketModalVisible',
       lastInteraction: 'disputeLastInteractions',
+      unanswered: 'getUnansweredOccurrences',
       with: 'getWindowWidth',
-      isJusttoAdmin: 'isJusttoAdmin',
       isAdminProfile: 'isAdminProfile',
       negotiators: 'getTicketOverviewNegotiators',
       getGroupedOccurrencesById: 'getGroupedOccurrencesById',
       properties: 'userProperties',
-      isGrouping: 'isOmnichannelGrouping'
+      isGrouping: 'isOmnichannelGrouping',
+      coloringType: 'omnichannelColoringType'
     }),
 
     type() {
       if (this.interaction?.direction === 'INBOUND' && this.interaction?.message?.communicationType === 'WHATSAPP' && ['FILE', 'VIDEO', 'IMAGE', 'AUDIO'].includes(this.interaction?.message?.contentType)) {
         return 'WHATSAPP'
       }
+
+      if (this.interaction?.direction === 'OUTBOUND' && ['WAITING', 'PROCESSED', 'CANCELED', 'FAILED'].includes(this.interaction?.message?.status) && this.interaction?.message?.createdBy === 'system') {
+        return 'SCHEDULER'
+      }
+
       return this.value.interaction.type.split('_')[0]
     },
 
@@ -207,7 +220,7 @@ export default {
     },
 
     isInboundInteraction() {
-      return this.interaction.direction === 'INBOUND'
+      return this.interaction?.direction === 'INBOUND'
     },
 
     showAvatar() {
@@ -271,12 +284,16 @@ export default {
       return null
     },
 
-    groupedOccurrences() {
-      return this.getGroupedOccurrencesById(this.value?.id)
+    showRecomendation() {
+      return this.isJusttoAdmin && this.isInboundInteraction && ['COMMUNICATION'].includes(this.interaction.type) && !!this.interaction.message
     },
 
-    coloringType() {
-      return this.properties?.OMNICHANNEL_COLORING_TYPE || 'MONOCHROME'
+    needRecomendationList() {
+      return this.unanswered.map(({ interaction: { id } }) => (id))
+    },
+
+    groupedOccurrences() {
+      return this.getGroupedOccurrencesById(this.value?.id)
     }
   },
 
@@ -324,7 +341,6 @@ export default {
   gap: 6px;
   align-items: center;
   flex-wrap: wrap;
-
   height: auto;
   margin: 10px 24px 0px 24px;
 
@@ -373,17 +389,21 @@ export default {
 
     .interaction-container__balloon-content {
       width: 100%;
+      position: relative;
+
+      display: flex;
       min-width: 10vw;
+      align-items: center;
     }
 
     &.COLORFUL-whatsapp {
-      background-color: $--color-success-light-5;
+      background-color: $--color-whatsapp-bg;
     }
     &.COLORFUL-email {
-      background-color: $--color-info-light;
+      background-color: $--color-email-bg;
     }
     &.COLORFUL-negotiation {
-      background-color: $--color-light-gray;
+      background-color: $--color-negotiator-bg;// $--color-light-gray;
     }
     // &.COLORFUL-EMAIL_CNA {
     //   background-color: #B6FFFB;

@@ -138,7 +138,8 @@ export default {
       const mapCommunicationTypes = {
         EMAIL: 'email',
         WHATSAPP: 'whatsapp',
-        NEGOTIATOR_MESSAGE: 'negotiator-message-2'
+        NEGOTIATOR_MESSAGE: 'negotiator-message-2',
+        PHONE_CALL: 'tts'
       }
       if (this.value?.message?.communicationType) {
         const { communicationType } = this.value.message
@@ -182,7 +183,7 @@ export default {
     },
 
     isWaiting() {
-      return this.occurrence?.interaction?.message?.status === 'WAITING' && this.occurrence?.interaction?.type === 'SCHEDULER'
+      return this.occurrence?.interaction?.message?.status === 'WAITING'// && this.occurrence?.interaction?.type === 'SCHEDULER'
     },
 
     scheduledTime() {

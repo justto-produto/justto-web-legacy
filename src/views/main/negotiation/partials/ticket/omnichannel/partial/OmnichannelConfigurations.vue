@@ -61,7 +61,10 @@ export default {
   data: () => ({ loading: false }),
 
   computed: {
-    ...mapGetters({ properties: 'userProperties' }),
+    ...mapGetters({
+      properties: 'userProperties',
+      omnichannelColoringType: 'omnichannelColoringType'
+    }),
 
     groupingType: {
       get() {
@@ -82,7 +85,7 @@ export default {
 
     coloringType: {
       get() {
-        return this.properties?.OMNICHANNEL_COLORING_TYPE || 'MONOCHROME'
+        return this.omnichannelColoringType
       },
 
       set(value) {

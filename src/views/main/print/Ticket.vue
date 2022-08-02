@@ -112,6 +112,35 @@ export default {
   .print-button {
     visibility: hidden;
   }
+
+  .communication-container__message {
+    max-height: 200vh;
+  }
+
+  .inbound {
+    display: flex;
+    overflow-y: hidden;
+
+    .interaction-container {
+      padding: 0;
+
+      .interaction-container__balloon {
+        .interaction-container__balloon-content {
+          .communication-container {
+            .communication-container__message {
+              .communication-container__message-link {
+                display: none;
+              }
+            }
+
+            .communication-container__about {
+              display: none;
+            }
+          }
+        }
+      }
+    }
+  }
 }
 
 .export-ticket {

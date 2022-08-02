@@ -112,6 +112,11 @@
       </div>
     </div>
 
+    <FollowUp
+      :dispute="ticket"
+      class="communication-ticket-item-container__follow-up"
+    />
+
     <div
       v-if="activeTab === 'engagement'"
       class="communication-ticket-item-container__status"
@@ -129,6 +134,10 @@ import sharedMethods from './patials/sharedTicketdMethods'
 
 export default {
   name: 'TicketItem',
+
+  components: {
+    FollowUp: () => import('@/views/main/management/partials/partials/ManagementFollowUp')
+  },
 
   mixins: [preNegotiation, sharedMethods],
 
@@ -298,6 +307,12 @@ export default {
     border-radius: 8px;
   }
 
+  .communication-ticket-item-container__follow-up {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    margin: 4px 0px 4px 12px;
+  }
 }
 
 @media (max-height: 900px) {

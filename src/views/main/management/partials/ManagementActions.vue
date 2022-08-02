@@ -654,6 +654,7 @@ export default {
 
   computed: {
     ...mapGetters({
+      useScheduleCall: 'useScheduleCallBatchAction',
       disputeStatuses: 'disputeStatuses',
       strategies: 'getMyStrategiesLite',
       tags: 'workspaceTags'
@@ -692,6 +693,8 @@ export default {
       return this.selectedIdsComp.length >= 1
     },
 
+    // 0 - Pré negociação | 1 - Sem resposta | 2 - Em negociação | 3 - Proposta aceita | 4 - Finalizados | 9 - Todas as disputas
+
     actionsList() {
       return [
         {
@@ -701,6 +704,10 @@ export default {
           main: true
         },
         { name: 'UNSETTLED', tabs: ['1', '2', '3', '4', '9'], main: true },
+        ...(this.useScheduleCall ? [
+          { name: 'SCHEDULE_CALL', tabs: ['1', '2', '3', '9'], main: true },
+          { name: 'UNSCHEDULE_CALL', tabs: ['1', '2', '3', '9'], main: true }
+        ] : []),
         { name: 'PAUSED', tabs: ['1', '2', '3', '4', '9'], main: true },
         { name: 'RESUME', tabs: ['1', '2', '3', '4', '9'], main: true },
         { name: 'RESTART_ENGAGEMENT', tabs: ['1', '2', '4', '9'] },
@@ -762,8 +769,10 @@ export default {
 
   methods: {
     ...mapActions([
+      'getPhoneCalls',
       'getWorkspaceTags',
       'getDisputeStatuses',
+      'setAccountProperty',
       'getFinishedDisputesCount'
     ]),
 
@@ -818,6 +827,12 @@ export default {
         case 'UPDATE_ENGAGEMENT_OPTIONS':
           params.engagementOptions = this.engagementOptions
           break
+        case 'SCHEDULE_CALL':
+          params.type = 'SCHEDULE_DISPUTE_PHONE_CALLS'
+          break
+        case 'UNSCHEDULE_CALL':
+          params.type = 'UNSCHEDULE_DISPUTE_PHONE_CALLS'
+          break
       }
       if (this.isSelectedAll) {
         params.allSelected = true
@@ -870,11 +885,29 @@ export default {
             })
           }, 2000)
         }
+
+        if (action === 'UNSCHEDULE_CALL') {
+          this.getPhoneCalls()
+        }
+
+        if (action === 'SCHEDULE_CALL') {
+          setTimeout(() => {
+            this.getPhoneCalls().then(({ length }) => {
+              if (length > 0) {
+                this.setAccountProperty({ AVAILABLE_SCHEDULED_CALLS: 'AVAILABLE' })
+              }
+            })
+          }, 1000)
+        }
       }).catch(error => {
         this.$jusNotification({ error })
       }).finally(() => {
         this.clearSelection()
       })
+    },
+
+    tryEnableAutoCall() {
+
     },
 
     openBulkMessageCompose() {

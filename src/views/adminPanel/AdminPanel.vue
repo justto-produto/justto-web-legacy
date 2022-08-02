@@ -23,9 +23,17 @@
           </el-menu-item>
 
           <el-menu-item
+            v-if="havepermission.includes(accountEmail)"
             index="6"
           >
             <i class="el-icon-s-order" /> Workspaces
+          </el-menu-item>
+
+          <el-menu-item
+            v-if="havepermission.includes(accountEmail)"
+            index="7"
+          >
+            <i class="el-icon-chat-line-round" /> WhatsApp
           </el-menu-item>
         </el-menu>
       </jus-sidenav-external>
@@ -41,6 +49,7 @@
           <h1>{{ $t(`panel.${menuIndex}`) }}</h1>
           <div class="admin-panel-view__header-options">
             <el-input
+              v-if="!['7'].includes(menuIndex)"
               v-model="filterTerm"
               prefix-icon="el-icon-search"
               placeholder="Buscar"
@@ -102,6 +111,11 @@
           ref="panel6"
           class="workspace-panel"
           hide-search
+        />
+
+        <PanelWhatsApp
+          v-if="menuIndex === '7'"
+          ref="panel7"
           :filter-term="filterTerm"
         />
       </el-col>
@@ -120,6 +134,8 @@ export default {
     PanelStrategy: () => import('./partials/Strategy/PanelStrategy'),
     PanelDashboard: () => import('./partials/PanelDashboard'),
     PanelWorkspace: () => import('./partials/PanelWorkspace'),
+    PanelWhatsApp: () => import('@/views/main/watsapp/Views'),
+    WorkspaceList: () => import('./partials/WorkspaceList'),
     PanelBilling: () => import('./partials/PanelBilling'),
     PanelMinute: () => import('./partials/PanelMinute'),
     PanelUser: () => import('./partials/PanelUser')
@@ -179,7 +195,6 @@ export default {
   &__panel-header {
     display: flex;
     justify-content: space-between;
-
   }
 
   &__header-options {
@@ -219,6 +234,10 @@ export default {
     .workspace-container__table {
       height: calc(100vh - 120px) !important;
     }
+  }
+
+  .whatsapp-views {
+    overflow-y: scroll;
   }
 }
 </style>

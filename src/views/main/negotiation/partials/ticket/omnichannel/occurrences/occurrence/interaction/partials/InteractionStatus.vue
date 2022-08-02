@@ -171,6 +171,8 @@ export default {
   gap: 0;
   margin: -12px 50px 8px;
   white-space: nowrap;
+  word-break: break-word;
+  flex-wrap: wrap;
 
   div {
     margin: 0 4px;
@@ -182,14 +184,24 @@ export default {
 
   span {
     font-weight: 300;
+    word-break: break-word;
+    white-space: normal;
   }
 
   &.OUTBOUND {
     flex-direction: row-reverse;
+
+    span {
+      text-align: right;
+    }
   }
 
   &.INBOUND {
     margin-left: 4px;
+
+    span {
+      text-align: left;
+    }
   }
 }
 

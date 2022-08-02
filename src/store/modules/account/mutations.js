@@ -14,12 +14,15 @@ const accountMutations = {
     localStorage.removeItem('justoken')
     localStorage.setItem('justoken', token)
   },
+
   logout(state) {
     state.id = ''
     state.name = ''
     state.email = ''
     state.token = ''
+    state.preferences = {}
   },
+
   setUser(state, response) {
     const { id, name, email } = response
     if (id) Vue.set(state, 'id', id)
@@ -31,13 +34,32 @@ const accountMutations = {
   },
 
   setAccountProperty(state, response) {
+    const oldAvailableScheduledCalls = state?.preferences?.properties?.AVAILABLE_SCHEDULED_CALLS
+
     Vue.set(state.preferences, 'properties', {})
-    Object.keys(response).forEach(key => Vue.set(state.preferences.properties, key, response[key]))
+
+    Object.keys(response).forEach(key => {
+      if (key === 'AVAILABLE_SCHEDULED_CALLS' && oldAvailableScheduledCalls !== response[key] && response[key] === 'AVAILABLE') {
+        if (!state.preventScheduleCallsConfirmation) {
+          this.dispatch('confirmActiveScheduledCalls', {})
+        } else {
+          this.commit('setPreventScheduleCallsConfirmation', false)
+        }
+      } else {
+        Vue.set(state.preferences.properties, key, response[key])
+      }
+    })
+  },
+
+  setAvailableSchedulerdCalls(state, value) {
+    Vue.set(state.preferences.properties, 'AVAILABLE_SCHEDULED_CALLS', value)
   },
 
   setAccountName(state, name) {
     Vue.set(state, 'name', name)
-  }
+  },
+
+  setPreventScheduleCallsConfirmation: (state, prevent) => Vue.set(state, 'preventScheduleCallsConfirmation', prevent)
 }
 
 export default accountMutations

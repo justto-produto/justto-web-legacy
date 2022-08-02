@@ -219,6 +219,8 @@ export default {
     if (this.$store.getters.isLoggedIn) {
       this.$store.dispatch('logout')
     }
+
+    document.querySelectorAll('.prompt-insert-name .el-message-box__headerbtn').forEach(btn => btn.click())
   },
 
   created() {

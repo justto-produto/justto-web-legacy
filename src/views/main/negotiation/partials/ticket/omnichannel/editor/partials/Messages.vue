@@ -3,6 +3,11 @@
     v-if="!isInPreNegotiation && !isPaused && !isCanceled"
     id="messagesTabEditorOmnichannelNegotiation"
     class="messages-container jus-ckeditor__parent"
+    :class="{
+      'email': messageType === 'email' && canColorEditor,
+      'whatsapp': messageType === 'whatsapp' && canColorEditor,
+      'negotiator': ['negotiator_message', 'negotiation'].includes(messageType) && canColorEditor
+    }"
   >
     <ckeditor
       v-if="showCKEditor"
@@ -136,7 +141,9 @@ export default {
       editorText: 'getEditorText',
       ticket: 'getTicketOverview',
       isJusttoAdmin: 'isJusttoAdmin',
-      isRecovery: 'isWorkspaceRecovery'
+      isRecovery: 'isWorkspaceRecovery',
+      userProperties: 'userProperties',
+      usingColors: 'isOmnichannelUsingColors'
     }),
 
     sendMessagetext() {
@@ -182,6 +189,10 @@ export default {
 
     editorInstance() {
       return this.$refs.messageEditor
+    },
+
+    canColorEditor() {
+      return this.usingColors && this.editorRecipients.length > 0
     }
   },
 
@@ -199,7 +210,8 @@ export default {
       'sendDisputeNote',
       'disfavorTicket',
       'setEditorText',
-      'sendMessage'
+      'sendMessage',
+      'setSignature'
     ]),
 
     openFullScreenEditor(_) {
@@ -272,7 +284,6 @@ export default {
 
       this.validateSendMessage().then(() => {
         this.sendMessage(Number(id)).then(res => {
-          this.resetRecipients()
           this.setEditorText('')
           this.$jusNotification({
             title: 'Yay!',
@@ -285,6 +296,7 @@ export default {
             this.$jusNotification(parsedError)
           } catch (e) {}
         }).finally(() => {
+          this.setSignature()
           this.localLoading = false
         })
       }).finally(() => {

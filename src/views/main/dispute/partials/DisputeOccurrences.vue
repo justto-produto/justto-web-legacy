@@ -78,7 +78,7 @@
           </div>
 
           <Log
-            v-else-if="['LOG', 'ACTION'].includes(occurrence.type) && occurrence.properties.HANDLE_UNKNOW_PARTY && occurrence.properties.HANDLE_UNKNOW_PARTY === 'TRUE'"
+            v-else-if="['ACTION'].includes(occurrence.type) || (['LOG'].includes(occurrence.type) && occurrence.properties.HANDLE_UNKNOW_PARTY && occurrence.properties.HANDLE_UNKNOW_PARTY === 'TRUE')"
             :value="occurrence"
           />
 
@@ -256,7 +256,7 @@
 
             <div class="dispute-view-occurrences__card-box">
               <attachment-occurrence
-                v-if="occurrence.interaction.type === 'ATTACHMENT'"
+                v-if="occurrence.interaction && occurrence.interaction.type === 'ATTACHMENT'"
                 :value="occurrence.interaction"
                 :occurrence="occurrence"
                 :class="(occurrence.interaction ? occurrence.interaction.type : '') + ' ' + buildCommunicationType(occurrence) + ' ' + (occurrence.interaction && occurrence.interaction.message ? occurrence.interaction.message.status : '')"
@@ -265,14 +265,14 @@
               />
 
               <NpsInteraction
-                v-else-if="occurrence.interaction.type === 'NPS'"
+                v-else-if="occurrence.interaction && occurrence.interaction.type === 'NPS'"
                 :occurrence="occurrence"
                 :value="occurrence.interaction"
                 class="dispute-view-occurrences__card-box-nps"
               />
 
               <PhoneCallOccurrence
-                v-else-if="occurrence.interaction.type === 'PHONE_CALL'"
+                v-else-if="occurrence.interaction && occurrence.interaction.type === 'PHONE_CALL'"
                 :occurrence="occurrence"
                 :value="occurrence.interaction"
                 class="dispute-view-occurrences__card-box-nps"
@@ -731,7 +731,9 @@ export default {
     ...mapGetters([
       'activeOccurrency',
       'disputeLastInteractions',
-      'isWorkspaceRecovery'
+      'isWorkspaceRecovery',
+      'getEditorRecipients',
+      'workspaceAutodetectRecipient'
     ]),
 
     disputePartys() {
@@ -1415,10 +1417,10 @@ export default {
         padding: 10px 20px 0;
       }
       &.WHATSAPP {
-        background-color: $--color-success-light-5;
+        background-color: $--color-whatsapp-bg
       }
       &.EMAIL {
-        background-color: $--color-info-light;
+        background-color: $--color-email-bg;
       }
       &.UNKNOWN {
         background-color: $--color-light-gray;
@@ -1428,6 +1430,9 @@ export default {
       }
       &.SMS {
         background-color: #ececec;
+      }
+      &.NEGOTIATOR_MESSAGE {
+        background-color: $--color-negotiator-bg;
       }
     }
     &.NEGOTIATOR_REJECTED,

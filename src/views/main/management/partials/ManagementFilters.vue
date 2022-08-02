@@ -151,19 +151,27 @@
             v-if="!loading && isFinished || isPreNegotiation"
             :span="12"
           >
-            <el-form-item :label="$tc('PARTY_RESPONDENT', isRecovery)">
+            <el-form-item
+              :label="$tc('PARTY_RESPONDENT', isRecovery)"
+              prop="respondentNames"
+            >
               <el-select
                 v-model="filters.respondentNames"
                 multiple
                 filterable
-                data-testid="filter-respondent"
-                placeholder="Selecione uma opção"
                 clearable
+                remote
+                reserve-keyword
+                :remote-method="getRespondentNames"
+                :loading="loadingRespondentNames"
+                popper-class="filter__respondent-options"
+                placeholder="Selecione uma opção"
                 @clear="clearRespondent"
+                @blur="getRespondents('')"
               >
                 <el-option
-                  v-for="respondent in respondents"
-                  :key="respondent"
+                  v-for="(respondent, index) in respondents"
+                  :key="`${index}#${respondent}`"
                   :value="respondent"
                   :label="respondent"
                 />
@@ -364,7 +372,9 @@ export default {
     return {
       visibleFilters: false,
       loading: false,
-      filters: {}
+      filters: {},
+      loadingRespondentNames: false,
+      awaitGetRespondents: null
     }
   },
 
@@ -609,6 +619,7 @@ export default {
     },
 
     clearRespondent() {
+      this.getRespondents('')
       this.filters.respondentNames = []
     },
 
@@ -661,6 +672,18 @@ export default {
       } else {
         this.filters.importingDate = []
       }
+    },
+
+    getRespondentNames(name) {
+      clearTimeout(this.awaitGetRespondents)
+      const time = 1/* s */ * 1000/* ms */
+
+      this.loadingRespondentNames = true
+      this.awaitGetRespondents = setTimeout(() => {
+        this.getRespondents(name).finally(() => {
+          this.loadingRespondentNames = false
+        })
+      }, time)
     }
   }
 }
@@ -718,5 +741,9 @@ export default {
       }
     }
   }
+}
+
+.filter__respondent-options {
+  width: 300px;
 }
 </style>

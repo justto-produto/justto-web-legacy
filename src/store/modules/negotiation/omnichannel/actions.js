@@ -1,11 +1,17 @@
-import { axiosDispatch, isSimilarStrings, buildQuery, validateCurrentId } from '@/utils'
+import { axiosDispatch, isSimilarStrings, buildQuery, validateCurrentId, stripHtml } from '@/utils'
 import { EditorBackup } from '@/models/message/editorBackup'
+
+const vue = () => document.getElementById('app')?.__vue__
 
 const disputeApi = 'api/disputes/v2'
 const messagesPath = 'api/messages'
 
 const omnichannelActions = {
   setOmnichannelActiveTab({ commit, getters: { getActiveTab }, dispatch }, tab) {
+    if (tab === 'MESSAGES') {
+      dispatch('setSignature')
+    }
+
     return new Promise(resolve => {
       if (getActiveTab !== tab) {
         commit('setOmnichannelActiveTab', tab)
@@ -19,6 +25,18 @@ const omnichannelActions = {
     })
   },
 
+  setSignature({ dispatch, getters: { getEditorText, workspaceName, loggedPersonName, getEditorMessageType, useSignature } }) {
+    if (useSignature) {
+      const signature = !['sms', 'whatsapp'].includes(getEditorMessageType) ? `<br><br>Att,<br>${loggedPersonName}<br>${workspaceName}` : `\n\nAtt,\n${loggedPersonName}\n${workspaceName}`
+
+      const clearText = str => stripHtml(str).replaceAll(/[^a-zA-Z]+/g, '')
+
+      if (!clearText(getEditorText).includes(clearText(signature))) {
+        dispatch('setEditorText', `${getEditorText}${signature}`)
+      }
+    }
+  },
+
   setEditorText: ({ dispatch, commit }, message) => {
     commit('setEditorText', message)
     dispatch('setEditorBackup')
@@ -29,11 +47,20 @@ const omnichannelActions = {
     dispatch('setEditorBackup')
   },
 
-  setMessageType({ commit, dispatch }, type) {
+  setMessageType({ commit, dispatch, getters: { getEditorMessageType } }, type) {
     commit('setMessageAttachments', [])
     commit('setMessageType', type)
-    commit('resetRecipients')
+
+    const alreadySimpleText = ['whatsapp', 'sms'].includes((getEditorMessageType || '').toLowerCase())
+    const willBeSimpleText = ['whatsapp', 'sms'].includes((type || '').toLowerCase())
+
+    if (alreadySimpleText !== willBeSimpleText) {
+      commit('resetRecipients')
+
+      commit('convertText')
+    }
     dispatch('setEditorBackup')
+    dispatch('setSignature')
   },
 
   getOccurrences({ getters }, disputeId) {
@@ -50,7 +77,7 @@ const omnichannelActions = {
   getAllOccurrences({ getters }, disputeId) {
     const params = {
       ...getters.getOccurrencesFilter,
-      size: getters.getTotalOccurrences,
+      size: 999999,
       page: 1,
       type: { MESSAGES: 'INTERACTION', NOTES: 'NOTE', OCCURRENCES: null }[getters.getActiveTab]
     }
@@ -120,14 +147,48 @@ const omnichannelActions = {
   },
 
   addRecipient({ commit, dispatch, getters }, recipient) {
-    const { type, value } = recipient
+    const { type, value, autodetected } = recipient
     const { getEditorMessageType, getEditorRecipients } = getters
+
     if (getEditorRecipients.find(el => el.value === value)) {
-      commit('removeRecipient', value)
+      if (!autodetected) {
+        commit('removeRecipient', value)
+      }
+
+      return Promise.resolve()
     } else {
-      if (getEditorMessageType !== type && value) dispatch('setMessageType', type)
-      if (type === 'whatsapp') commit('resetRecipients')
-      if (value) commit('setRecipients', recipient)
+      const callback = () => {
+        if (getEditorMessageType !== type && value) dispatch('setMessageType', type)
+        if (type === 'whatsapp') commit('resetRecipients')
+        if (value) commit('setRecipients', recipient)
+
+        dispatch('setEditorBackup')
+
+        return Promise.resolve()
+      }
+      if (getEditorMessageType !== type && getEditorRecipients.length && !autodetected) {
+        const oldType = vue().$tc('negotiation.ticket.recipient.message-type.' + getEditorMessageType)
+        const newType = vue().$tc('negotiation.ticket.recipient.message-type.' + type)
+        const message = `<p>Detectamos uma mudança no tipo de contato do destinatário: <b>${oldType}</b> para <b>${newType}</b>!</p>
+        <br>
+        <p>Desera realmente continuar?</p>`
+
+        vue().$confirm(message, 'Atenção!', {
+          customClass: 'confirm-change-recipent-type',
+          dangerouslyUseHTMLString: true,
+          confirmButtonText: 'Confirmar',
+          cancelButtonText: 'Cancelar',
+          closeOnPressEscape: false,
+          closeOnClickModal: false,
+          showClose: false,
+          center: true
+        }).then(callback).catch(() => {
+          // TODO: SAAS-5197 Ação adicional ao não mudar de destinatário.
+          return Promise.resolve()
+        })
+      } else {
+        callback()
+      }
     }
 
     dispatch('setEditorBackup')
@@ -184,7 +245,12 @@ const omnichannelActions = {
         inReplyTo
       }
 
-      return validateCurrentId(disputeId, () => dispatch('sendemail', data).then(() => dispatch('getDisputeOccurrences', disputeId)))
+      return new Promise((resolve, reject) => {
+        dispatch('sendemail', data).then(res => {
+          dispatch('getDisputeOccurrences', disputeId)
+          resolve(res)
+        }).catch(reject)
+      })
     } else if (type === 'whatsapp') {
       const data = {
         to,
@@ -192,14 +258,25 @@ const omnichannelActions = {
         externalIdentification,
         message: messageText.trim()
       }
-      return validateCurrentId(disputeId, () => dispatch('validateWhatsappMessage', { data, contact: recipients[0].value }).then(() => dispatch('getDisputeOccurrences', disputeId)))
+
+      return new Promise((resolve, reject) => {
+        dispatch('validateWhatsappMessage', { data, contact: recipients[0].value }).then(res => {
+          dispatch('getDisputeOccurrences', disputeId)
+          resolve(res)
+        }).catch(reject)
+      })
     } else {
       const data = {
         roleId,
         message: messageEmail,
         email: recipients[0].value
       }
-      return validateCurrentId(disputeId, () => dispatch('sendNegotiator', { disputeId, data }).then(() => dispatch('getDisputeOccurrences', disputeId)))
+      return new Promise((resolve, reject) => {
+        dispatch('sendNegotiator', { disputeId, data }).then(res => {
+          dispatch('getDisputeOccurrences', disputeId)
+          resolve(res)
+        }).catch(reject)
+      })
     }
   },
 
@@ -267,6 +344,20 @@ const omnichannelActions = {
     })
   },
 
+  getRecommendations({ _ }, interactionId) {
+    return axiosDispatch({
+      url: `api/rpa/recommendation/interaction/${interactionId}`
+    })
+  },
+
+  executeRecommendation({ _ }, recommendation) {
+    return axiosDispatch({
+      url: 'api/rpa/recommendation/action/execute',
+      method: 'POST',
+      data: recommendation
+    })
+  },
+
   setInteractionMessageContent({ _ }, { disputeId, content, communicationMessageId }) {
     return axiosDispatch({
       url: `api/disputes/${disputeId}/communications/${communicationMessageId}`,
@@ -324,6 +415,26 @@ const omnichannelActions = {
 
   clearAllGroupedOccurreces({ getters: { getGroupedOccurrences }, commit }) {
     Object.keys(getGroupedOccurrences).forEach(id => commit('deleteGroupedOccurrencesById', id))
+  },
+
+  autodetectTicketRecipients({ state: { editor: { recipients } }, getters: { workspaceAutodetectRecipient, getEditorRecipients, getCurrentRoute: { params: { id } } }, dispatch }) {
+    if (workspaceAutodetectRecipient && !getEditorRecipients.length) {
+      axiosDispatch({
+        url: `${disputeApi}/${id}/messages/last-inbound`
+      }).then(respondent => {
+        if (respondent?.sender && !getEditorRecipients.length) {
+          const { sender, communicationType, communicationMessageId } = respondent
+
+          dispatch('addRecipient', {
+            value: sender,
+            type: communicationType.toLowerCase(),
+            inReplyTo: communicationMessageId,
+            key: 'address',
+            autodetected: true
+          })
+        }
+      })
+    }
   }
 }
 

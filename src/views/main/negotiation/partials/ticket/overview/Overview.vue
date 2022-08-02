@@ -14,7 +14,10 @@
     <HeaderUserMenu
       v-if="!disputeMode && isOverviewActive"
       class="overview-container__menu"
-      :class="{'hidde-menu': (showOverview || disputeMode)}"
+      :class="{
+        'hidde-menu': (showOverview || disputeMode),
+        'in-call': isInCall
+      }"
     />
 
     <div>
@@ -96,6 +99,8 @@
       @update:contact="restartEngagementFromTimeline"
     />
 
+    <EngagementLimitDialog :dispute-id="routeId" />
+
     <!-- Edição de disputa -->
     <EditDisputeDialog ref="editDisputeDialog" />
   </section>
@@ -120,6 +125,7 @@ export default {
     JusTimeline: () => import('@/components/JusTimeline/JusTimeline'),
     DisputeCodeLink: () => import('@/components/buttons/DisputeCodeLink'),
     TextInlineEditor: () => import('@/components/inputs/TextInlineEditor'),
+    EngagementLimitDialog: () => import('@/components/dialogs/EngagementLimitDialog'),
     AssociateContactsModal: () => import('@/components/dialogs/AssociateContactsModal'),
     EditDisputeDialog: () => import('@/views/main/dispute/partials/DisputeOverview/dialogs/EditDisputeDialog')
   },
@@ -145,6 +151,7 @@ export default {
 
   computed: {
     ...mapGetters({
+      isInCall: 'isInCall',
       ticket: 'getTicketOverview',
       lastOffers: 'getLastTicketOffers',
       isLoading: 'isTicketOverviewloading',
@@ -413,6 +420,19 @@ export default {
   div {
     .dispute-code {
       margin: 8px 0;
+    }
+  }
+
+  .overview-container__menu {
+    justify-content: flex-end;
+
+    &.in-call {
+      flex-wrap: wrap-reverse;
+
+      .dialer, .usermenu-container__keep-itens {
+        flex: 1;
+        justify-content: space-between;
+      }
     }
   }
 }

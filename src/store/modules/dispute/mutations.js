@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import moment from 'moment'
 
+const vue = () => document.getElementById('app')?.__vue__
+
 let newUpdateTimeout = null
 
 const disputeMutations = {
@@ -183,7 +185,11 @@ const disputeMutations = {
   },
 
   setDisputeOccurrences(state, occurrences) {
-    if (occurrences && occurrences.length) state.occurrences = occurrences.reverse()
+    if (occurrences?.length) {
+      state.occurrences = occurrences.reverse()
+    }
+
+    this.dispatch('autodetectDisputeRecipients', {})
   },
 
   addLoadingOccurrence(state, occurrence) {
@@ -241,7 +247,7 @@ const disputeMutations = {
   },
 
   setRespondents(state, respondents) {
-    state.respondents = respondents
+    Vue.set(state, 'respondents', [...respondents])
   },
 
   addPrescription(state, prescription) {
@@ -323,6 +329,21 @@ const disputeMutations = {
       content: undefined,
       pageable: undefined
     })
+  },
+
+  handleEngageLimit(state, { value }) {
+    if (this.getters.canAccessDialer && this.getters.isJusttoAdmin) {
+      Vue.set(state, 'engagementLimitExceeded', value === 'true')
+    } else {
+      vue().$jusNotification({
+        title: 'Atenção',
+        dangerouslyUseHTMLString: true,
+        message: `Já executamos várias tentativas automáticas de contato.
+        <br><br>
+        <strong>Continuaremos tentando via email.</strong>`,
+        type: 'success'
+      })
+    }
   }
 }
 

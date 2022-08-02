@@ -151,7 +151,12 @@ export default {
 
     setTemplate(template) {
       const { contentType, body } = template.parsed
-      this.setMessageType(contentType)
+      const type = {
+        HTML: 'email',
+        TEXT: 'whatsapp'
+      }[contentType]
+
+      this.setMessageType(type)
       this.setEditorText(body)
       this.$emit('input', body)
       this.hideMainPopover()

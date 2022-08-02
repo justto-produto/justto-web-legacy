@@ -19,8 +19,9 @@ export default {
 
   setMessageType: (state, type) => Vue.set(state.editor, 'messageType', type),
 
-  setOccurrences: (state, { content, totalElements, first, number }) => {
+  setOccurrences(state, { content, totalElements, first, number }) {
     if (first) {
+      this.dispatch('autodetectTicketRecipients', {})
       Vue.set(state.occurrences, 'list', [])
     }
 
@@ -171,9 +172,15 @@ export default {
 
   setRecipients: (state, recipient) => {
     const { recipients } = state.editor
-    const has = recipients.filter(({ value }) => value === recipient.value).length > 0
+    const has = recipients.filter(el => el.value === recipient.value).length > 0
 
-    if (has) {
+    if (recipient?.autodetected && has) {
+      /*
+        TODO: Bug: A API está sendo chamanda mulltipllas vezes e isso adiciona e remove o contato logo em seguida.
+
+        Esse IF deve não fazer nada quando o contato vier da autodetecção e já existir.
+      */
+    } else if (has) {
       Vue.set(state.editor, 'recipients', recipients.filter(el => el.value !== recipient.value))
     } else {
       Vue.set(state.editor, 'recipients', [...recipients, recipient])
@@ -182,6 +189,7 @@ export default {
 
   removeRecipient: (state, value) => {
     const items = state.editor.recipients.filter(el => !(el.value === value))
+
     Vue.set(state.editor, 'recipients', items)
   },
 
@@ -217,5 +225,20 @@ export default {
 
   deleteGroupedOccurrencesById: (state, id) => {
     Vue.delete(state.groupedOccurrences, id)
+  },
+
+  convertText(state) {
+    let message = state.editor.messageText
+
+    if (!['sms', 'whatsapp'].includes(state.editor.messageType)) {
+      message = message.replaceAll('\n', '<br>')
+    } else {
+      message = message.replaceAll('<p>', '')
+      message = message.replaceAll('</p>', '<br>')
+      message = message.replaceAll('<br>', '\n')
+      message = message.replaceAll('<br />', '\n')
+    }
+
+    this.commit('setEditorText', message)
   }
 }
