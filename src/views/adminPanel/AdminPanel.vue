@@ -212,7 +212,7 @@ export default {
     h1 {
       margin-left: 40px;
     }
-    padding: 0 0 30px;
+    padding: 0;
     display: flex;
     flex-direction: column;
   }
@@ -234,9 +234,10 @@ export default {
   .workspace-panel {
     height: 100%;
     width: 100%;
+    overflow-y: scroll;
 
     .workspace-container__table {
-      height: calc(100vh - 120px) !important;
+      height: calc(100vh - 70px) !important;
     }
   }
 

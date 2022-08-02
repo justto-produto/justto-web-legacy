@@ -13,11 +13,28 @@
       <el-table-column
         prop="name"
         label="Workspace"
-      />
+      >
+        <template v-slot="scope">
+          {{ scope.row.name }}
+          <i
+            class="el-icon-edit"
+            @click="editWorkspaceName(scope.row)"
+          />
+        </template>
+      </el-table-column>
+
       <el-table-column
         prop="teamName"
         label="Equipe"
-      />
+      >
+        <template v-slot="scope">
+          {{ scope.row.teamName }}
+          <i
+            class="el-icon-edit"
+            @click="editWorkspaceTeamName(scope.row)"
+          />
+        </template>
+      </el-table-column>
 
       <el-table-column
         prop="keyAccountId"
@@ -347,6 +364,14 @@ export default {
       this.updateWorkspaceKeyAccount({ keyAccountId, workspaceId: id }).then(() => {
         this.setActiveRow(null)
       })
+    },
+
+    editWorkspaceName(workspace) {
+      console.log(workspace)
+    },
+
+    editWorkspaceTeamName(workspace) {
+      console.log(workspace)
     }
   }
 }
@@ -367,6 +392,51 @@ export default {
   .cell {
     .el-tag {
       margin: 4px;
+    }
+  }
+}
+
+.el-table__row {
+  .el-table__cell {
+    .cell {
+      .el-select {
+        background-color: transparent;
+
+        .el-input {
+          overflow: hidden;
+          background-color: transparent;
+
+          .el-input__inner {
+            border: none;
+            text-align: left;
+            padding-left: 0;
+            background-color: transparent;
+          }
+
+          .el-input__suffix {
+            visibility: hidden;
+          }
+        }
+      }
+
+      .el-icon-edit {
+        display: none;
+        cursor: pointer;
+      }
+
+      &:hover {
+        .el-icon-edit {
+          display: inline;
+        }
+
+        .el-select {
+          .el-input {
+            .el-input__suffix {
+              visibility: visible;
+            }
+          }
+        }
+      }
     }
   }
 }
