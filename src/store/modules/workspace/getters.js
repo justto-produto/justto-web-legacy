@@ -59,7 +59,7 @@ const workspaceGetters = {
   getApiIntegrationConfiguration: (state) => state.workspace.apiIntegrationConfiguration,
   isWorkspaceRecovery: state => state?.workspace?.properties?.NEGOTIATION_TYPE === 'RECOVERY',
   workspaceAutodetectRecipient: state => state?.workspace?.properties?.AUTODETECT_RECIPIENT !== 'DISABLED',
-  useScheduleCallBatchAction: (state, { isJusttoAdmin }) => (state?.workspace?.properties?.CAN_USE_SCHEDULE_CALL_BATCH_ACTION === 'ENABLED' || isJusttoAdmin)
+  useScheduleCallBatchAction: (state) => (state?.workspace?.properties?.CAN_USE_SCHEDULE_CALL_BATCH_ACTION !== 'DISABLED')
 }
 
 export default workspaceGetters
