@@ -29,7 +29,8 @@ const accountGetters = {
   isOmnichannelGrouping: state => state.preferences?.properties?.OMNICHANNEL_GROUPING_TYPE === 'GROUPED',
   isOmnichannelUsingColors: state => state.preferences?.properties?.OMNICHANNEL_COLORING_TYPE !== 'MONOCHROME',
   omnichannelColoringType: state => state?.properties?.OMNICHANNEL_COLORING_TYPE || 'COLORFUL',
-  useSignature: state => state.preferences?.properties?.USE_SIGNATURE === 'ENABLED'
+  useSignature: state => state.preferences?.properties?.USE_SIGNATURE === 'ENABLED',
+  getCustomHome: state => state.preferences?.properties?.CUSTOM_HOME
 }
 
 export default accountGetters

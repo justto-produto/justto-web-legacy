@@ -6,7 +6,7 @@
 	.st0 {
     fill:none;
     /* stroke: #020203; */
-		stroke: white;
+		stroke: #424242;
 		stroke-width: 2px;
   }
 </style>

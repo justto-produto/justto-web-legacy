@@ -78,11 +78,11 @@
             </el-menu-item>
           </el-submenu>
 
-          <!-- :index="menuItem.index" -->
+          <!--  -->
           <el-menu-item
             v-else
             v-show="menuItem.isVisible"
-            @click="clickRedirectItem($event, menuItem)"
+            :index="menuItem.index"
           >
             <JusIcon
               :icon="menuItem.icon"
@@ -94,35 +94,7 @@
             </span>
           </el-menu-item>
 
-          <el-tooltip
-            placement="top-start"
-          >
-            <div slot="content">
-              Definir como página inicial.
-            </div>
-
-            <!-- TODO: SAAS-2238 Implementar trocas de cores e salvar/remover. -->
-            <div
-              class="menu-item-pin"
-            >
-              <div
-                class="menu-item-pin__left-border"
-                @click="setCustomHome(menuItem)"
-              />
-
-              <button
-                class="menu-item-pin__button"
-                @click="setCustomHome(menuItem)"
-              >
-                <jus-icon icon="pin" />
-              </button>
-
-              <div
-                class="menu-item-pin__bottom-border"
-                @click="setCustomHome(menuItem)"
-              />
-            </div>
-          </el-tooltip>
+          <CustomHome :value="menuItem" />
         </div>
       </el-menu>
 
@@ -169,7 +141,8 @@ export default {
     JusTeamMenu: () => import('@/components/layouts/JusTeamMenu'),
     JusShortchts: () => import('@/components/others/JusShortcuts'),
     ThamirisAlerts: () => import('@/components/dialogs/ThamirisAlerts.vue'),
-    BuyDialerDialog: () => import('@/components/dialogs/BuyDialerDialog')
+    BuyDialerDialog: () => import('@/components/dialogs/BuyDialerDialog'),
+    CustomHome: () => import('@/components/buttons/CustomHome')
   },
 
   data() {
@@ -419,14 +392,6 @@ export default {
 
     toggleExpandTeamSection() {
       this.isTeamSectionExpanded = !this.isTeamSectionExpanded
-    },
-
-    clickRedirectItem(event, item) {
-      console.log('clickRedirectItem', event, item)
-    },
-
-    setCustomHome(event) {
-      console.log('setCustomHome', event)
     }
   }
 }
@@ -489,31 +454,11 @@ export default {
       .menu-item-pin {
         display: flex;
         position: absolute;
-        top: 0;
-        right: 0;
+        top: 2px;
+        right: 2px;
         height: 12px;
         width: 12px;
         box-sizing: content-box;
-
-        .menu-item-pin__left-border,
-        .menu-item-pin__bottom-border {
-          position: absolute;
-          width: 0;
-          height: 0;
-          border-style: solid;
-          border-width: 0 12px 12px 0;
-          border-color: transparent #ff9300 transparent transparent;
-        }
-
-        .menu-item-pin__left-border {
-          top: 12px;
-          right: 0;
-        }
-
-        .menu-item-pin__bottom-border {
-          top: 0;
-          right: 12px;
-        }
 
         .menu-item-pin__button {
           padding: 0;
@@ -522,6 +467,7 @@ export default {
           width: 12px;
           border: none;
           background-color: #ff9300;
+          background-color: transparent;
 
           img {
             height: 12px;
@@ -530,15 +476,12 @@ export default {
         }
       }
 
-      .menu-item-pin-left {
-        position: absolute;
-        top: 0;
-        right: 12px;
-        width: 0;
-        height: 0;
-        border-style: solid;
-        border-width: 0 12px 12px 0;
-        border-color: transparent #9361f7 transparent transparent;
+      &:hover {
+        .menu-item-pin {
+          .menu-item-pin__button {
+            display: block;
+          }
+        }
       }
     }
 
