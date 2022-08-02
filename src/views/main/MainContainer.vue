@@ -197,7 +197,7 @@ export default {
 
       itemsMenu.push({
         isGroup: true,
-        index: 'disputes',
+        index: '/management',
         name: 'Todas as disputas',
         childs: [
           {
