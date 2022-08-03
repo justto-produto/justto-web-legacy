@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from '@/App.vue'
 import router from './router'
 import store from './store'
+import VueShepherd from 'vue-shepherd'
 import { registerServiceWorker } from '@/utils'
 import { validateWorkspace } from '@/utils/validations'
 
@@ -80,6 +81,7 @@ import JusAvatarUser from '@/components/images/JusAvatarUser'
 import JusViewMain from '@/components/layouts/JusViewMain'
 import JusButtonBack from '@/components/buttons/JusButtonBack'
 Vue.use(CKEditor)
+Vue.use(VueShepherd)
 
 Vue.component('JusIcon', JusIcon)
 Vue.component('JusAvatarUser', JusAvatarUser)
