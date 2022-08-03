@@ -10,7 +10,9 @@
       >
         <el-tooltip
           v-if="isJusttoAdmin"
+          :open-delay="500"
           content="Modo anônimo"
+          placement="right"
         >
           <JusIcon
             icon="ghost-mode"
@@ -20,7 +22,7 @@
           />
         </el-tooltip>
 
-        <router-link to="/">
+        <!-- <router-link to="/">
           <img
             v-if="isRecovery"
             src="@/assets/logo-small-purple.svg"
@@ -29,7 +31,7 @@
             v-else
             src="@/assets/logo-small.svg"
           >
-        </router-link>
+        </router-link> -->
       </div>
 
       <el-menu
@@ -44,8 +46,10 @@
           v-for="menuItem in menuItems"
           :key="menuItem.index"
           class="container-aside__menu-item"
+          @click="menuItem.action"
         >
-          <el-submenu
+          <!-- Sub Menu Collapse -->
+          <!-- <el-submenu
             v-if="menuItem.isGroup"
             index="menuItem.index"
           >
@@ -76,18 +80,13 @@
                 {{ subMenu.title }}
               </span>
             </el-menu-item>
-          </el-submenu>
+          </el-submenu> -->
 
-          <!--  -->
           <el-menu-item
-            v-else
             v-show="menuItem.isVisible"
             :index="menuItem.index"
           >
-            <JusIcon
-              :icon="menuItem.icon"
-              class=""
-            />
+            <JusIcon :icon="menuItem.icon" />
 
             <span slot="title">
               {{ menuItem.title }}
@@ -180,6 +179,14 @@ export default {
       const itemsMenu = []
 
       itemsMenu.push({
+        index: '/',
+        title: 'Dashboard',
+        icon: 'logo-justto',
+        isVisible: true,
+        action: () => {}
+      })
+
+      itemsMenu.push({
         index: '/negotiation',
         title: 'Negociação',
         icon: 'negotiation-window',
@@ -188,33 +195,19 @@ export default {
       })
 
       itemsMenu.push({
-        index: '/',
-        title: 'Dashboard',
-        icon: 'dashboard',
+        index: '/management',
+        title: 'Gerenciamento',
+        icon: 'list-app',
         isVisible: true,
-        action: () => {}
+        action: () => this.setTabQuery('management')
       })
 
       itemsMenu.push({
-        isGroup: true,
-        index: '/management',
-        name: 'Todas as disputas',
-        childs: [
-          {
-            index: '/management',
-            title: 'Gerenciamento',
-            icon: 'list-app',
-            isVisible: true,
-            action: () => this.setTabQuery('management')
-          },
-          {
-            index: '/management/all',
-            title: 'Todas as disputas',
-            icon: 'full-folder',
-            isVisible: true,
-            action: () => this.setTabQuery('allDisputes')
-          }
-        ]
+        index: '/management/all',
+        title: 'Todas as disputas',
+        icon: 'full-folder',
+        isVisible: true,
+        action: () => this.setTabQuery('allDisputes')
       })
 
       itemsMenu.push({
@@ -254,6 +247,21 @@ export default {
     window.removeEventListener('resize', this.handleResize)
     this.subscriptions.forEach(s => this.$socket.emit('unsubscribe', s))
     this.subscriptions.length = 0
+  },
+
+  mounted() {
+    setTimeout(() => {
+      const tour = this.$shepherd({
+        useModalOverlay: true
+      })
+
+      tour.addStep({
+        attachTo: { element: document.querySelector('.container-aside__menu-item'), on: 'right' },
+        text: 'Test'
+      })
+
+      tour.start()
+    }, 1000)
   },
 
   sockets: {
@@ -400,6 +408,7 @@ export default {
 
 <style lang="scss">
 @import '@/styles/colors.scss';
+@import '~shepherd.js/dist/css/shepherd.css';
 
 .terms-confirm {
   width: 50vw;
@@ -425,18 +434,16 @@ export default {
 
   .container-aside__logo {
     width: 58px;
-    height: 58px;
-    padding: 18px;
+    height: auto;
+    padding: 9px 18px;
     text-align: center;
 
     &.has-ghost-mode {
       padding-top: 8px;
-      height: 64px;
     }
 
     .ghost-mode {
       height: 16px;
-      margin-bottom: 4px;
       margin-left: -4px;
       cursor: pointer;
     }
