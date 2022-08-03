@@ -250,18 +250,11 @@ export default {
   },
 
   mounted() {
-    setTimeout(() => {
-      const tour = this.$shepherd({
-        useModalOverlay: true
-      })
-
-      tour.addStep({
-        attachTo: { element: document.querySelector('.container-aside__menu-item'), on: 'right' },
-        text: 'Test'
-      })
-
-      tour.start()
-    }, 1000)
+    this.getAccountProperty('TOUR_STEPS_COMPLETED').then(({ TOUR_STEPS_COMPLETED = '' }) => {
+      if (!(TOUR_STEPS_COMPLETED.includes('JUSTTO_DASHBOARD_ICON'))) {
+        setTimeout(this.setTour, 1000)
+      }
+    })
   },
 
   sockets: {
@@ -273,6 +266,7 @@ export default {
   methods: {
     ...mapActions({
       loadAccountProperty: 'loadAccountProperty',
+      getAccountProperty: 'getAccountProperty',
       setAccountProperty: 'setAccountProperty',
       setWindowGeometry: 'setWindowGeometry',
       getPreview: 'getMessageToPreview',
@@ -400,6 +394,37 @@ export default {
 
     toggleExpandTeamSection() {
       this.isTeamSectionExpanded = !this.isTeamSectionExpanded
+    },
+
+    setTour() {
+      const tour = this.$shepherd({
+        useModalOverlay: false
+      })
+
+      const { setAccountProperty, userPreferences } = this
+
+      tour.addStep({
+        text: 'Ao clicar aqui você acessará o Dashboard operacional.',
+        id: 'JUSTTO_DASHBOARD_ICON',
+        attachTo: { element: document.querySelector('.container-aside__menu-item'), on: 'right' },
+        buttons: [
+          {
+            action() {
+              const TOUR_STEPS_COMPLETED = userPreferences?.properties?.TOUR_STEPS_COMPLETED || ''
+
+              setAccountProperty({
+                TOUR_STEPS_COMPLETED: [...(TOUR_STEPS_COMPLETED.split(',')), 'JUSTTO_DASHBOARD_ICON'].join(',')
+              })
+
+              return this.complete()
+            },
+            classes: 'el-button el-button--secondary el-button--mini',
+            text: 'Entendi'
+          }
+        ]
+      })
+
+      tour.start()
     }
   }
 }
