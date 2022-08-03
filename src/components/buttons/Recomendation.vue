@@ -49,6 +49,49 @@
                 </span>
 
                 <span
+                  v-if="key === 'EMAIL_ADDRESS'"
+                  class="popover-recomendation-container__body-item-container"
+                >
+                  <label class="popover-recomendation-container__body-item-container-label">
+                    E-mail:
+                  </label>
+
+                  <span class="popover-recomendation-container__body-item-container-value">
+                    {{ value }}
+                  </span>
+                </span>
+
+                <span
+                  v-if="key === 'PERSON_NAME'"
+                  class="popover-recomendation-container__body-item-container"
+                >
+                  <label class="popover-recomendation-container__body-item-container-label">
+                    Nome:
+                  </label>
+
+                  <span
+                    class="popover-recomendation-container__body-item-container-value"
+                  >
+                    {{ value | capitalize }}
+                  </span>
+                </span>
+
+                <span
+                  v-if="key === 'ROLE_NAME'"
+                  class="popover-recomendation-container__body-item-container"
+                >
+                  <label class="popover-recomendation-container__body-item-container-label">
+                    Função:
+                  </label>
+
+                  <span
+                    class="popover-recomendation-container__body-item-container-value"
+                  >
+                    {{ $tc(`roles.${value}.CLAIMANT`, isRecovery) | capitalize }}
+                  </span>
+                </span>
+
+                <span
                   v-if="key === 'MESSAGE_SUBJECT'"
                   class="popover-recomendation-container__body-item-container"
                 >
@@ -73,36 +116,6 @@
                     class="popover-recomendation-container__body-item-container-value"
                     v-html="value"
                   />
-                </span>
-
-                <span
-                  v-if="key === 'PERSON_NAME'"
-                  class="popover-recomendation-container__body-item-container"
-                >
-                  <label class="popover-recomendation-container__body-item-container-label">
-                    Nome:
-                  </label>
-
-                  <span
-                    class="popover-recomendation-container__body-item-container-value"
-                  >
-                    {{ value || capitalize }}
-                  </span>
-                </span>
-
-                <span
-                  v-if="key === 'ROLE_NAME'"
-                  class="popover-recomendation-container__body-item-container"
-                >
-                  <label class="popover-recomendation-container__body-item-container-label">
-                    Função:
-                  </label>
-
-                  <span
-                    class="popover-recomendation-container__body-item-container-value"
-                  >
-                    {{ $tc(`roles.${value}.CLAIMANT`) || capitalize }}
-                  </span>
                 </span>
               </div>
             </div>
@@ -167,7 +180,8 @@ export default {
 
   computed: {
     ...mapGetters({
-      recipients: 'getEditorRecipients'
+      recipients: 'getEditorRecipients',
+      isRecovery: 'isWorkspaceRecovery'
     })
   },
 
@@ -182,13 +196,14 @@ export default {
       'setEditorText',
       'getRecommendations',
       'getDisputeOccurrences',
-      'executeRecommendation'
+      'executeRecommendation',
+      'getTicketOverviewParties'
     ]),
 
     init() {
       this.getRecommendations(this.interactionId).then(res => {
         // SAAS-4074 Mostra somente recomendações de enviar mensagem.
-        this.recomendations = res.filter(({ type }) => type === 'DISPUTE_MESSAGE')
+        this.recomendations = res.filter(({ type }) => ['DISPUTE_MESSAGE', 'NEW_PARTY'].includes(type))
       }).finally(() => {
         this.loading = false
       })
@@ -222,7 +237,10 @@ export default {
           message: 'Recomendação executada com sucesso!'
         })
 
-        this.getDisputeOccurrences(this.$route?.params?.id)
+        const id = this.$route?.params?.id
+
+        this.getDisputeOccurrences(id)
+        this.getTicketOverviewParties(id)
 
         this.closePopover()
       }).catch(error => this.$jusNotification({ error })).finally(() => {
