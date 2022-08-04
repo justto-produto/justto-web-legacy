@@ -10,7 +10,9 @@
       >
         <el-tooltip
           v-if="isJusttoAdmin"
+          :open-delay="500"
           content="Modo anônimo"
+          placement="right"
         >
           <JusIcon
             icon="ghost-mode"
@@ -20,7 +22,7 @@
           />
         </el-tooltip>
 
-        <router-link to="/">
+        <!-- <router-link to="/">
           <img
             v-if="isRecovery"
             src="@/assets/logo-small-purple.svg"
@@ -29,7 +31,7 @@
             v-else
             src="@/assets/logo-small.svg"
           >
-        </router-link>
+        </router-link> -->
       </div>
 
       <el-menu
@@ -43,8 +45,11 @@
         <div
           v-for="menuItem in menuItems"
           :key="menuItem.index"
+          class="container-aside__menu-item"
+          @click="menuItem.action"
         >
-          <el-submenu
+          <!-- Sub Menu Collapse -->
+          <!-- <el-submenu
             v-if="menuItem.isGroup"
             index="menuItem.index"
           >
@@ -52,7 +57,14 @@
               <jus-icon
                 icon="management"
               />
+
+              <el-tooltip placement="top-start">
+                <div slot="content">
+                  Definir como página inicial.
+                </div>
+              </el-tooltip>
             </template>
+
             <el-menu-item
               v-for="subMenu in menuItem.childs"
               v-show="subMenu.isVisible"
@@ -68,21 +80,20 @@
                 {{ subMenu.title }}
               </span>
             </el-menu-item>
-          </el-submenu>
+          </el-submenu> -->
+
           <el-menu-item
-            v-else
             v-show="menuItem.isVisible"
             :index="menuItem.index"
-            @click="menuItem.action"
           >
-            <JusIcon
-              :icon="menuItem.icon"
-              class=""
-            />
+            <JusIcon :icon="menuItem.icon" />
+
             <span slot="title">
               {{ menuItem.title }}
             </span>
           </el-menu-item>
+
+          <CustomHome :value="menuItem" />
         </div>
       </el-menu>
 
@@ -129,7 +140,8 @@ export default {
     JusTeamMenu: () => import('@/components/layouts/JusTeamMenu'),
     JusShortchts: () => import('@/components/others/JusShortcuts'),
     ThamirisAlerts: () => import('@/components/dialogs/ThamirisAlerts.vue'),
-    BuyDialerDialog: () => import('@/components/dialogs/BuyDialerDialog')
+    BuyDialerDialog: () => import('@/components/dialogs/BuyDialerDialog'),
+    CustomHome: () => import('@/components/buttons/CustomHome')
   },
 
   data() {
@@ -165,6 +177,15 @@ export default {
 
     menuItems() {
       const itemsMenu = []
+
+      itemsMenu.push({
+        index: '/',
+        title: 'Dashboard',
+        icon: 'logo-justto',
+        isVisible: true,
+        action: () => {}
+      })
+
       itemsMenu.push({
         index: '/negotiation',
         title: 'Negociação',
@@ -172,43 +193,31 @@ export default {
         isVisible: true,
         action: () => {}
       })
+
       itemsMenu.push({
-        index: '/',
-        title: 'Dashboard',
-        icon: 'dashboard',
+        index: '/management',
+        title: 'Gerenciamento',
+        icon: 'list-app',
         isVisible: true,
-        action: () => {
-        }
+        action: () => this.setTabQuery('management')
       })
+
       itemsMenu.push({
-        isGroup: true,
-        index: 'disputes',
-        name: 'Todas as disputas',
-        childs: [
-          {
-            index: '/management',
-            title: 'Gerenciamento',
-            icon: 'list-app',
-            isVisible: true,
-            action: () => this.setTabQuery('management')
-          },
-          {
-            index: '/management/all',
-            title: 'Todas as disputas',
-            icon: 'full-folder',
-            isVisible: true,
-            action: () => this.setTabQuery('allDisputes')
-          }
-        ]
+        index: '/management/all',
+        title: 'Todas as disputas',
+        icon: 'full-folder',
+        isVisible: true,
+        action: () => this.setTabQuery('allDisputes')
       })
+
       itemsMenu.push({
         index: '/import',
         title: 'Importação',
         icon: 'import',
         isVisible: true,
-        action: () => {
-        }
+        action: () => {}
       })
+
       return itemsMenu
     }
   },
@@ -240,6 +249,14 @@ export default {
     this.subscriptions.length = 0
   },
 
+  mounted() {
+    this.getAccountProperty('TOUR_STEPS_COMPLETED').then(({ TOUR_STEPS_COMPLETED = '' }) => {
+      if (!(TOUR_STEPS_COMPLETED.includes('JUSTTO_DASHBOARD_ICON'))) {
+        setTimeout(this.setTour, 1000)
+      }
+    })
+  },
+
   sockets: {
     reconnect() {
       this.subscribe()
@@ -249,6 +266,7 @@ export default {
   methods: {
     ...mapActions({
       loadAccountProperty: 'loadAccountProperty',
+      getAccountProperty: 'getAccountProperty',
       setAccountProperty: 'setAccountProperty',
       setWindowGeometry: 'setWindowGeometry',
       getPreview: 'getMessageToPreview',
@@ -376,6 +394,37 @@ export default {
 
     toggleExpandTeamSection() {
       this.isTeamSectionExpanded = !this.isTeamSectionExpanded
+    },
+
+    setTour() {
+      const tour = this.$shepherd({
+        useModalOverlay: false
+      })
+
+      const { setAccountProperty, userPreferences } = this
+
+      tour.addStep({
+        text: 'Ao clicar aqui você acessará o Dashboard operacional.',
+        id: 'JUSTTO_DASHBOARD_ICON',
+        attachTo: { element: document.querySelector('.container-aside__menu-item'), on: 'right' },
+        buttons: [
+          {
+            action() {
+              const TOUR_STEPS_COMPLETED = userPreferences?.properties?.TOUR_STEPS_COMPLETED || ''
+
+              setAccountProperty({
+                TOUR_STEPS_COMPLETED: [...(TOUR_STEPS_COMPLETED.split(',')), 'JUSTTO_DASHBOARD_ICON'].join(',')
+              })
+
+              return this.complete()
+            },
+            classes: 'el-button el-button--secondary el-button--mini',
+            text: 'Entendi'
+          }
+        ]
+      })
+
+      tour.start()
     }
   }
 }
@@ -384,6 +433,7 @@ export default {
 
 <style lang="scss">
 @import '@/styles/colors.scss';
+@import '~shepherd.js/dist/css/shepherd.css';
 
 .terms-confirm {
   width: 50vw;
@@ -409,18 +459,16 @@ export default {
 
   .container-aside__logo {
     width: 58px;
-    height: 58px;
-    padding: 18px;
+    height: auto;
+    padding: 9px 18px;
     text-align: center;
 
     &.has-ghost-mode {
       padding-top: 8px;
-      height: 64px;
     }
 
     .ghost-mode {
       height: 16px;
-      margin-bottom: 4px;
       margin-left: -4px;
       cursor: pointer;
     }
@@ -432,6 +480,43 @@ export default {
   }
 
   .container-aside__menu {
+    .container-aside__menu-item {
+      position: relative;
+
+      .menu-item-pin {
+        display: flex;
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        height: 12px;
+        width: 12px;
+        box-sizing: content-box;
+
+        .menu-item-pin__button {
+          padding: 0;
+          cursor: pointer;
+          height: 12px;
+          width: 12px;
+          border: none;
+          background-color: #ff9300;
+          background-color: transparent;
+
+          img {
+            height: 12px;
+            width: 12px;
+          }
+        }
+      }
+
+      &:hover {
+        .menu-item-pin {
+          .menu-item-pin__button {
+            display: block;
+          }
+        }
+      }
+    }
+
     .el-menu-item {
       transition: all 0.3s;
     }
