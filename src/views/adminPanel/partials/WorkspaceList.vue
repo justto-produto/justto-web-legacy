@@ -16,10 +16,35 @@
       >
         <template v-slot="scope">
           {{ scope.row.name }}
-          <i
-            class="el-icon-edit"
-            @click="editWorkspaceName(scope.row)"
-          />
+
+          <el-popover
+            ref="worspaceNameEditPopover"
+            title="Editar"
+            width="auto"
+            trigger="click"
+            popper-class="worspace-name__edit"
+          >
+            <i
+              slot="reference"
+              class="el-icon-edit"
+            />
+
+            <article>
+              <el-input
+                v-model="scope.row.name"
+                size="mini"
+                @keyup.enter.native="handleEditWorkspace(scope.row)"
+              />
+
+              <el-button
+                type="success"
+                size="mini"
+                @click="handleEditWorkspace(scope.row)"
+              >
+                Salvar
+              </el-button>
+            </article>
+          </el-popover>
         </template>
       </el-table-column>
 
@@ -29,10 +54,35 @@
       >
         <template v-slot="scope">
           {{ scope.row.teamName }}
-          <i
-            class="el-icon-edit"
-            @click="editWorkspaceTeamName(scope.row)"
-          />
+
+          <el-popover
+            ref="worspaceTeamNameEditPopover"
+            title="Editar"
+            width="auto"
+            trigger="click"
+            popper-class="worspace-name__edit"
+          >
+            <i
+              slot="reference"
+              class="el-icon-edit"
+            />
+
+            <article>
+              <el-input
+                v-model="scope.row.teamName"
+                size="mini"
+                @keyup.enter.native="handleEditWorkspace(scope.row)"
+              />
+
+              <el-button
+                type="success"
+                size="mini"
+                @click="handleEditWorkspace(scope.row)"
+              >
+                Salvar
+              </el-button>
+            </article>
+          </el-popover>
         </template>
       </el-table-column>
 
@@ -166,7 +216,7 @@ export default {
 
   computed: {
     ...mapGetters({
-      workspaces: 'getMyWorkspaces',
+      allWorkspaces: 'getUserWorkspaces',
       keyAccounts: 'getWorkspaceKeyAccounts',
       portifolios: 'getPortifolios',
       portifoliosByWorkspace: 'getPortifoliosByWorkspace'
@@ -180,6 +230,10 @@ export default {
       set(value) {
         this.modelSearch = value
       }
+    },
+
+    workspaces() {
+      return (this.allWorkspaces || []).map(({ workspace, archived }) => ({ ...workspace, archived }))
     },
 
     portifolioById() {
@@ -246,6 +300,7 @@ export default {
   methods: {
     ...mapActions([
       'myWorkspace',
+      'editWorkpace',
       'getPortifolios',
       'getPortifolioAssociated',
       'getWorkspaceKeyAccounts',
@@ -273,7 +328,7 @@ export default {
     },
 
     findKeyAccount(keyAccountId) {
-      return this.keyAccounts.find(({ id }) => Number(id) === Number(keyAccountId))
+      return (this.keyAccounts || []).find(({ id }) => Number(id) === Number(keyAccountId))
     },
 
     keyAccountTemplate(ka) {
@@ -366,12 +421,18 @@ export default {
       })
     },
 
-    editWorkspaceName(workspace) {
-      console.log(workspace)
-    },
+    handleEditWorkspace(workspace) {
+      this.isLoading = true
 
-    editWorkspaceTeamName(workspace) {
-      console.log(workspace)
+      this.editWorkpace(workspace).then(res => {
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Alteração salva com sucesso!',
+          type: 'success'
+        })
+      }).catch(error => {
+        this.$jusNotification({ error })
+      }).finally(this.init)
     }
   }
 }
@@ -436,6 +497,29 @@ export default {
             }
           }
         }
+      }
+    }
+  }
+}
+
+.worspace-name__edit {
+  .el-popover__title {
+    text-align: center;
+  }
+
+  article {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 20vw;
+
+    .actions {
+      display: flex;
+      gap: 8px;
+
+      .el-button {
+        flex: 1;
+        margin: 0;
       }
     }
   }
