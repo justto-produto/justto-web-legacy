@@ -534,6 +534,14 @@ export default {
 
       this.editDisputeDialogLoading = false
 
+      if (!(this.dispute?.expirationDate?.dateTime)) {
+        this.$jusNotification({
+          title: 'Ops!',
+          message: `Disputa sem ${this.$tc('dispute.expirationDate')}.`,
+          type: 'warning'
+        })
+      }
+
       const currentDate = this.dispute.expirationDate.dateTime
       const newDate = disputeToEdit.expirationDate.dateTime
 
