@@ -86,7 +86,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column
+      <!-- <el-table-column
         prop="keyAccountId"
         label="Key Account"
       >
@@ -114,9 +114,94 @@
             {{ keyAccountTemplate(findKeyAccount(scope.row.keyAccountId)) }}
           </span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
 
       <el-table-column
+        align="right"
+        prop="archived"
+        class-name="portifolios-column"
+      >
+        <template
+          v-if="!hideSearch"
+          slot="header"
+        >
+          <div class="el-input el-input--mini">
+            <input
+              v-model="search"
+              placeholder="Pesquise aqui"
+              class="el-input__inner"
+              @input="$forceUpdate()"
+            >
+          </div>
+        </template>
+
+        <div
+          slot-scope="scope"
+          class="portifolios-column__container"
+        >
+          <el-popover
+            ref="worspaceTeamNameEditPopover"
+            title="Convidar"
+            width="auto"
+            trigger="click"
+            popper-class="worspace-name__edit"
+          >
+            <el-button
+              slot="reference"
+              :disabled="scope.row.archived"
+              icon="el-icon-plus"
+              size="mini"
+              circle
+            />
+
+            <article>
+              <label for="inviteForm__email">E-mail</label>
+
+              <div class="el-input--mini">
+                <input
+                  id="inviteForm__email"
+                  v-model="inviteForm.email"
+                  type="email"
+                  name="inviteForm__email"
+                  class="el-input__inner"
+                  @input="$forceUpdate()"
+                >
+              </div>
+
+              <label>Perfil</label>
+
+              <el-select
+                v-model="inviteForm.profile"
+                size="mini"
+              >
+                <el-option
+                  v-for="item in ['NEGOTIATOR', 'ADMINISTRATOR']"
+                  :key="item"
+                  :label="$t('profile.' + item).toUpperCase()"
+                  :value="item"
+                />
+              </el-select>
+
+              <el-button
+                type="success"
+                size="mini"
+                @click="handleInviteEmail(scope.row)"
+              >
+                Convidar
+              </el-button>
+            </article>
+          </el-popover>
+
+          <el-switch
+            :value="!(scope.row.archived)"
+            active-color="#13ce66"
+            inactive-color="#ff4949"
+            @change="handleArchiveWorkspace(!$event, scope.row)"
+          />
+        </div>
+      </el-table-column>
+
+      <!-- <el-table-column
         align="right"
         prop="portifolios"
         class-name="portifolios-column"
@@ -146,7 +231,7 @@
 
           <a v-if="scope.row.portifolios.length === 0">Ver tipos de carteira</a>
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </el-table>
 
     <el-dialog
@@ -211,12 +296,17 @@ export default {
       workspace: null,
       portifolios: []
     },
-    activeRow: null
+    workspaces: [],
+    activeRow: null,
+    debounce: null,
+    inviteForm: {
+      email: '',
+      profile: ''
+    }
   }),
 
   computed: {
     ...mapGetters({
-      allWorkspaces: 'getUserWorkspaces',
       keyAccounts: 'getWorkspaceKeyAccounts',
       portifolios: 'getPortifolios',
       portifoliosByWorkspace: 'getPortifoliosByWorkspace'
@@ -228,12 +318,12 @@ export default {
       },
 
       set(value) {
-        this.modelSearch = value
-      }
-    },
+        clearTimeout(this.debounce)
 
-    workspaces() {
-      return (this.allWorkspaces || []).map(({ workspace, archived }) => ({ ...workspace, archived }))
+        this.debounce = setTimeout(() => {
+          this.modelSearch = value
+        }, 250)
+      }
     },
 
     portifolioById() {
@@ -302,6 +392,8 @@ export default {
       'myWorkspace',
       'editWorkpace',
       'getPortifolios',
+      'adminWorkspaces',
+      'adminWorkspaceUsers',
       'getPortifolioAssociated',
       'getWorkspaceKeyAccounts',
       'setPortifolioToWorkspace',
@@ -318,11 +410,19 @@ export default {
     init() {
       this.isLoading = true
 
-      Promise.all([
-        this.myWorkspace(),
-        this.getPortifolios(),
-        this.getWorkspaceKeyAccounts()
-      ]).then(() => {}).finally(() => {
+      // Promise.all([
+      //   this.myWorkspace(),
+      //   this.getPortifolios(),
+      //   this.getWorkspaceKeyAccounts()
+      // ]).then(() => {}).finally(() => {
+      //   this.isLoading = false
+      // })
+
+      this.adminWorkspaces({ method: 'get', params: { size: 99999 } }).then(({ content: workspaces }) => {
+        this.$set(this, 'workspaces', [])
+        this.workspaces = workspaces
+        this.isLoading = false
+      }).finally(() => {
         this.isLoading = false
       })
     },
@@ -421,10 +521,12 @@ export default {
       })
     },
 
-    handleEditWorkspace(workspace) {
+    handleEditWorkspace(data) {
+      document.querySelector('.admin-panel-view__panel-header').click()
+
       this.isLoading = true
 
-      this.editWorkpace(workspace).then(res => {
+      this.adminWorkspaces({ method: 'put', data }).then(() => {
         this.$jusNotification({
           title: 'Yay!',
           message: 'Alteração salva com sucesso!',
@@ -433,6 +535,48 @@ export default {
       }).catch(error => {
         this.$jusNotification({ error })
       }).finally(this.init)
+    },
+
+    handleArchiveWorkspace(archived, workspace) {
+      this.$confirm(`Deseja realmente <strong>${archived ? 'desativar' : 'reativar'}</strong> a workspace <strong>${workspace.name}</strong>?`, 'Atenção', {
+        dangerouslyUseHTMLString: true,
+        confirmButtonText: 'Confirmar',
+        cancelButtonText: 'Cancelar',
+        closeOnPressEscape: false,
+        closeOnClickModal: false,
+        center: true
+      }).then(() => {
+        this.adminWorkspaces({
+          method: 'put',
+          data: {
+            ...workspace,
+            archived
+          }
+        }).then(() => this.$jusNotification({
+          title: 'Yay!',
+          message: 'Ação executada com sucesso.',
+          type: 'success'
+        })).catch(error => this.$jusNotification({
+          error
+        })).finally(this.init)
+      })
+    },
+
+    handleInviteEmail({ subDomain }) {
+      this.adminWorkspaceUsers({
+        method: 'post',
+        url: `api/accounts/workspaces/invite-teammates/${subDomain}`,
+        data: [{ ...this.inviteForm }],
+        headers: { Workspace: subDomain }
+      }).then(() => this.$jusNotification({
+        title: 'Yay!',
+        message: 'Convite enviado.',
+        type: 'success'
+      })).catch(error => this.$jusNotification({
+        error
+      })).finally(() => {
+        document.querySelector('.admin-panel-view__panel-header').click()
+      })
     }
   }
 }
@@ -453,6 +597,13 @@ export default {
   .cell {
     .el-tag {
       margin: 4px;
+    }
+
+    .portifolios-column__container {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 16px;
     }
   }
 }

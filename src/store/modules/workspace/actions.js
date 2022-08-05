@@ -1,5 +1,4 @@
 import { axiosDispatch } from '@/utils'
-import axios from 'axios'
 
 const workspacesPath = 'api/workspaces'
 const workspaceUsageApi = 'api/usage/workspace'
@@ -177,22 +176,27 @@ const workspaceActions = {
   },
 
   adminWorkspaces({ _ }, params) {
-    return new Promise((resolve, reject) => {
-      axiosDispatch({
-        ...params,
-        url: params.url || `https://api.justto.app/${workspacesPath}/${params.workspaceId || ''}`
-      }).then(response => {
-        resolve(response)
-      }).catch(error => {
-        reject(error)
-      })
+    return axiosDispatch({
+      ...params,
+      url: params.url || `https://api.justto.app/${workspacesPath}/${params.workspaceId || ''}`
     })
+
+    // new Promise((resolve, reject) => {
+    //   .then(response => {
+    //     resolve(response)
+    //   }).catch(error => {
+    //     reject(error)
+    //   })
+    // })
   },
 
   adminWorkspaceUsers({ _ }, params) {
     return new Promise((resolve, reject) => {
       const headers = {}
-      if (params.headers && Object.keys(params.headers).length) headers.headers = params.headers
+      if (params.headers && Object.keys(params.headers).length) {
+        headers.headers = params.headers
+      }
+
       const config = {
         ...headers,
         ...{
@@ -202,8 +206,8 @@ const workspaceActions = {
           data: params.data
         }
       }
-      // eslint-disable-next-line
-      axios(config).then(response => {
+
+      axiosDispatch(config).then(response => {
         resolve(response.data)
       }).catch(error => {
         reject(error)
