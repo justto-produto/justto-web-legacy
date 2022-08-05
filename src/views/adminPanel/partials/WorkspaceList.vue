@@ -608,43 +608,45 @@ export default {
   }
 }
 
-.el-table__row {
-  .el-table__cell {
-    .cell {
-      .el-select {
-        background-color: transparent;
-
-        .el-input {
-          overflow: hidden;
-          background-color: transparent;
-
-          .el-input__inner {
-            border: none;
-            text-align: left;
-            padding-left: 0;
-            background-color: transparent;
-          }
-
-          .el-input__suffix {
-            visibility: hidden;
-          }
-        }
-      }
-
-      .el-icon-edit {
-        display: none;
-        cursor: pointer;
-      }
-
-      &:hover {
-        .el-icon-edit {
-          display: inline;
-        }
-
+.workspace-container {
+  .el-table__row {
+    .el-table__cell {
+      .cell {
         .el-select {
+          background-color: transparent;
+  
           .el-input {
+            overflow: hidden;
+            background-color: transparent;
+  
+            .el-input__inner {
+              border: none;
+              text-align: left;
+              padding-left: 0;
+              background-color: transparent;
+            }
+  
             .el-input__suffix {
-              visibility: visible;
+              visibility: hidden;
+            }
+          }
+        }
+  
+        .el-icon-edit {
+          display: none;
+          cursor: pointer;
+        }
+  
+        &:hover {
+          .el-icon-edit {
+            display: inline;
+          }
+  
+          .el-select {
+            .el-input {
+              .el-input__suffix {
+                visibility: visible;
+              }
             }
           }
         }

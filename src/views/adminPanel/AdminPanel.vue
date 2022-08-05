@@ -23,16 +23,13 @@
           </el-menu-item>
 
           <el-menu-item
-            v-if="havepermission.includes(accountEmail)"
+            v-if="testers.includes(accountEmail)"
             index="6"
           >
             <i class="el-icon-s-order" /> Workspaces
           </el-menu-item>
 
-          <el-menu-item
-            v-if="havepermission.includes(accountEmail)"
-            index="7"
-          >
+          <el-menu-item index="7">
             <i class="el-icon-chat-line-round" /> WhatsApp
           </el-menu-item>
         </el-menu>
@@ -151,12 +148,15 @@ export default {
         'lucas@justto.com.br',
         'michelle@justto.com.br',
         'kelvin@justto.com.br',
-        'guilherme@justto.com.br',
         'josewilliam@justto.com.br',
         'daniel@justto.com.br',
-        'deivid@justto.com.br',
-        'micaias@justto.com.br',
-        'danilo.rosa@justto.com.br'
+        'deivid@justto.com.br'
+      ],
+      testers: [
+        'lucas@justto.com.br',
+        'josewilliam@justto.com.br',
+        'daniel@justto.com.br',
+        'deivid@justto.com.br'
       ]
     }
   },
