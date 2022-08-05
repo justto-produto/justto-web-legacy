@@ -55,10 +55,6 @@
             Meu perfil
           </div>
 
-          <div class="usermenu-container__version">
-            Versão {{ appVersion }}
-          </div>
-
           <router-link
             v-if="showConfigs"
             to="/configurations"

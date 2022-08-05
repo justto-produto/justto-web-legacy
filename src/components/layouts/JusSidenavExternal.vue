@@ -6,6 +6,7 @@
         src="@/assets/logo.svg"
       >
     </a>
+
     <div
       v-if="showPlans"
       class="jus-sidenav-external__title"
@@ -18,6 +19,7 @@
         Máximo de <br>100 disputas
       </div>
     </div>
+
     <div class="jus-sidenav-external__content">
       <slot />
     </div>
@@ -27,41 +29,6 @@
     >
       <a @click="$router.push('login')">Sair</a>
     </div>
-    <!-- <el-dialog
-      v-if="showPlans"
-      :close-on-click-modal="false"
-      :title="modalType ? 'Indenizatório' : 'Cobrança'"
-      :visible.sync="modal"
-      width="600px">
-      <span>
-        Nós da JUSTTO queremos fazer a diferença na sua frente de acordos. Portanto,
-        você pode inserir quantas disputas quiser na plataforma e só cobraremos por aquelas
-        disputas em que houver interação.
-      </span>
-      <el-collapse class="el-collapse--bordered">
-        <el-collapse-item title="O que consideramos como interação?">
-          <b>WhatsApp:</b> Qualquer resposta ou clique em Link <br>
-          <b>E-mail e CNA:</b> Qualquer resposta ou clique em Link <br>
-          <b>Aplicativos Mobile JUSTTO:</b> Download ou Acesso à Disputas <br>
-          <b>Aplicativo Web JUSTTO:</b> Acesso à disputa <br>
-          <b>Ações do Cliente / Negociador:</b> Mudança de Status do Ticket para "Em
-          Engajamento", "Novos Acordos" ou "Ganho"
-        </el-collapse-item>
-        <el-collapse-item title="Como posso estimar quanto vou pagar?">
-          Quanto exatamente você vai pagar depende do perfil da sua carteira, mas
-          temos uma média de mercado para te dar uma ideia: <br><br>
-          <span v-if="modalType">
-            100 disputas importadas &rarr; 60 disputas com interação &rarr; 40 acordos fechados
-          </span>
-          <span v-else>
-            100 disputas importadas &rarr; 15 disputas com interação &rarr; 10 acordos fechados
-          </span>
-        </el-collapse-item>
-      </el-collapse>
-      <span slot="footer">
-        <el-button type="primary" @click="modal = false">OK</el-button>
-      </span>
-    </el-dialog> -->
   </div>
 </template>
 

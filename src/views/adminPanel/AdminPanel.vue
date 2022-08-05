@@ -14,34 +14,28 @@
           <el-menu-item index="0">
             <i class="el-icon-s-cooperation" /> Equipes
           </el-menu-item>
-          <!-- <el-menu-item index="1">
-            <i class="el-icon-s-data" /> Dashboard
-          </el-menu-item> -->
-          <!-- <el-menu-item index="2">
-            <i class="el-icon-user-solid" /> Usuários
-          </el-menu-item> -->
+
           <el-menu-item
             v-if="havepermission.includes(accountEmail)"
             index="3"
           >
             <i class="el-icon-s-operation" /> Estratégias
           </el-menu-item>
-          <!-- <el-menu-item index="4">
-            <i class="el-icon-document" /> Minutas
-          </el-menu-item>
-          <el-menu-item index="5">
-            <i class="el-icon-s-finance" /> Cobrança
-          </el-menu-item> -->
 
           <el-menu-item
-            v-if="havepermission.includes(accountEmail)"
-            index="7"
+            v-if="testers.includes(accountEmail)"
+            index="6"
           >
+            <i class="el-icon-s-order" /> Workspaces
+          </el-menu-item>
+
+          <el-menu-item index="7">
             <i class="el-icon-chat-line-round" /> WhatsApp
           </el-menu-item>
         </el-menu>
       </jus-sidenav-external>
     </el-col>
+
     <transition name="swiper-fade">
       <el-col
         v-if="right > 0"
@@ -52,15 +46,17 @@
           <h1>{{ $t(`panel.${menuIndex}`) }}</h1>
           <div class="admin-panel-view__header-options">
             <el-input
-              v-if="!['7'].includes(menuIndex)"
+              v-if="!['6', '7'].includes(menuIndex)"
               v-model="filterTerm"
               prefix-icon="el-icon-search"
               placeholder="Buscar"
+              size="small"
               clearable
             />
             <el-button
               v-if="['1', '2', '3', '4', '5'].includes(menuIndex)"
               type="primary"
+              size="small"
               icon="el-icon-plus"
               class="admin-panel-view__header-button"
               @click="mainButtonHandler"
@@ -69,37 +65,50 @@
             </el-button>
           </div>
         </div>
+
         <div v-if="!menuIndex" />
+
         <panel-workspace
           v-if="menuIndex === '0'"
           ref="panel1"
           :filter-term="filterTerm"
         />
+
         <panel-dashboard
           v-if="menuIndex === '1'"
           ref="panel0"
           :filter-term="filterTerm"
         />
+
         <panel-user
           v-if="menuIndex === '2'"
           ref="panel2"
           :filter-term="filterTerm"
         />
+
         <panel-strategy
           v-if="menuIndex === '3'"
           ref="panel3"
           :filter-term="filterTerm"
           @set-filter="setFilter"
         />
+
         <panel-minute
           v-if="menuIndex === '4'"
           ref="panel4"
           :filter-term="filterTerm"
         />
+
         <panel-billing
           v-if="menuIndex === '5'"
           ref="panel5"
           :filter-term="filterTerm"
+        />
+
+        <WorkspaceList
+          v-if="menuIndex === '6'"
+          ref="panel6"
+          class="workspace-panel"
         />
 
         <PanelWhatsApp
@@ -114,17 +123,20 @@
 
 <script>
 import { mapGetters } from 'vuex'
+
 export default {
   name: 'AdminPanel',
   components: {
+    // Workspace: () => import('@/views/main/configurations/partials/WorkspaceList'),
     JusSidenavExternal: () => import('@/components/layouts/JusSidenavExternal'),
+    PanelStrategy: () => import('./partials/Strategy/PanelStrategy'),
     PanelDashboard: () => import('./partials/PanelDashboard'),
     PanelWorkspace: () => import('./partials/PanelWorkspace'),
-    PanelUser: () => import('./partials/PanelUser'),
-    PanelMinute: () => import('./partials/PanelMinute'),
+    PanelWhatsApp: () => import('@/views/main/watsapp/Views'),
+    WorkspaceList: () => import('./partials/WorkspaceList'),
     PanelBilling: () => import('./partials/PanelBilling'),
-    PanelStrategy: () => import('./partials/Strategy/PanelStrategy'),
-    PanelWhatsApp: () => import('@/views/main/watsapp/Views')
+    PanelMinute: () => import('./partials/PanelMinute'),
+    PanelUser: () => import('./partials/PanelUser')
   },
   data() {
     return {
@@ -136,12 +148,15 @@ export default {
         'lucas@justto.com.br',
         'michelle@justto.com.br',
         'kelvin@justto.com.br',
-        'guilherme@justto.com.br',
         'josewilliam@justto.com.br',
         'daniel@justto.com.br',
-        'deivid@justto.com.br',
-        'micaias@justto.com.br',
-        'danilo.rosa@justto.com.br'
+        'deivid@justto.com.br'
+      ],
+      testers: [
+        'lucas@justto.com.br',
+        'josewilliam@justto.com.br',
+        'daniel@justto.com.br',
+        'deivid@justto.com.br'
       ]
     }
   },
@@ -197,7 +212,7 @@ export default {
     h1 {
       margin-left: 40px;
     }
-    padding: 40px 0 30px;
+    padding: 0;
     display: flex;
     flex-direction: column;
   }
@@ -214,6 +229,16 @@ export default {
 
   .el-select {
     width: 100%;
+  }
+
+  .workspace-panel {
+    height: 100%;
+    width: 100%;
+    overflow-y: scroll;
+
+    .workspace-container__table {
+      height: calc(100vh - 70px) !important;
+    }
   }
 
   .whatsapp-views {
