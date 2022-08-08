@@ -148,7 +148,7 @@
           >
             <el-button
               slot="reference"
-              :disabled="scope.row.archived"
+              :disabled="scope.row.status !== 'READY'"
               icon="el-icon-plus"
               size="mini"
               circle
@@ -193,10 +193,10 @@
           </el-popover>
 
           <el-switch
-            :value="!(scope.row.archived)"
+            :value="scope.row.status === 'READY'"
             active-color="#13ce66"
             inactive-color="#ff4949"
-            @change="handleArchiveWorkspace(!$event, scope.row)"
+            @change="handleArchiveWorkspace($event, scope.row)"
           />
         </div>
       </el-table-column>
@@ -550,7 +550,7 @@ export default {
           method: 'put',
           data: {
             ...workspace,
-            archived
+            status: { true: 'READY', false: 'DISABLED' }[archived]
           }
         }).then(() => this.$jusNotification({
           title: 'Yay!',
@@ -614,34 +614,34 @@ export default {
       .cell {
         .el-select {
           background-color: transparent;
-  
+
           .el-input {
             overflow: hidden;
             background-color: transparent;
-  
+
             .el-input__inner {
               border: none;
               text-align: left;
               padding-left: 0;
               background-color: transparent;
             }
-  
+
             .el-input__suffix {
               visibility: hidden;
             }
           }
         }
-  
+
         .el-icon-edit {
           display: none;
           cursor: pointer;
         }
-  
+
         &:hover {
           .el-icon-edit {
             display: inline;
           }
-  
+
           .el-select {
             .el-input {
               .el-input__suffix {
