@@ -10,11 +10,20 @@ const EngagementTicketStatus = [
 
 const ticketsMutations = {
   setCommunicationTickets: (state, { data, payload }) => {
-    if (payload === 'nextPage') data.content = state.tickets.content.concat(data.content)
+    console.log('setCommunicationTickets', state.ticketsQuery.prescriptions)
+    if (payload === 'nextPage') {
+      data.content = state.tickets.content.concat(data.content)
+    }
     Vue.set(state, 'tickets', {
       ...data,
       content: data.content.map(ticket => EngagementTicketStatus.includes(ticket.disputeStatus) ? new TicketEngagementItem(ticket) : ticket)
     })
+
+    if ((state.ticketsQuery.prescriptions || []).includes('NEED_FOLLOW_UP')) {
+      Vue.set(state.tickets, 'content', (state.tickets.content || []).sort((a, b) => {
+        return a?.lastInteraction?.type === 'PHONE_CALL' && b?.lastInteraction?.type !== 'PHONE_CALL' ? 1 : 0
+      }))
+    }
   },
 
   deleteTicket: ({ tickets }, { payload }) => {
