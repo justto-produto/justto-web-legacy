@@ -41,6 +41,7 @@
               />
             </span>
           </el-tab-pane>
+
           <el-tab-pane name="1">
             <span slot="label">
               Sem resposta
@@ -54,6 +55,7 @@
               />
             </span>
           </el-tab-pane>
+
           <el-tab-pane name="2">
             <span slot="label">
               Em negociação
@@ -67,6 +69,7 @@
               />
             </span>
           </el-tab-pane>
+
           <el-tab-pane name="3">
             <span slot="label">
               Proposta aceita
@@ -80,6 +83,7 @@
               />
             </span>
           </el-tab-pane>
+
           <el-tab-pane name="4">
             <span
               slot="label"
@@ -172,15 +176,18 @@
           <jus-import-dialog :dialog-visible.sync="importDialogVisible" />
         </div>
       </div>
+
       <ManagementFilters
         ref="managementFilters"
         :tab-index="activeTab"
       />
+
       <div style="min-height: 44px;position: relative;">
         <management-prescriptions
           :active-tab="activeTab"
           @management:getDisputes="getDisputes"
         />
+
         <div
           v-show="disputesTotalLength"
           style="right: 0px;position: absolute;top: 13px;"
@@ -188,6 +195,7 @@
           Exibindo {{ disputes.length }} de {{ disputesTotalLength }} disputa<span v-show="disputesTotalLength > 1">s</span>
         </div>
       </div>
+
       <management-table
         ref="managementTable"
         :active-tab.sync="activeTab"
@@ -196,6 +204,7 @@
         @getDisputes="getDisputes"
         @search:lawyer="filterLawyer"
       />
+
       <div
         v-show="hasNew"
         class="el-notification info right"

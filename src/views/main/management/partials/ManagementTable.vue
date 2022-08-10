@@ -5,6 +5,7 @@
       :dispute-id.sync="selectedDispute.id"
       :dispute.sync="selectedDispute"
     />
+
     <el-table
       ref="disputeTable"
       :key="disputeKey"

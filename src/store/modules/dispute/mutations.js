@@ -22,7 +22,14 @@ const disputeMutations = {
   },
 
   setDisputes(state, pageable) {
-    state.disputes = pageable.content
+    if (state.query.prescriptions.includes('NEED_FOLLOW_UP')) {
+      state.disputes = (pageable.content).sort((a, b) => {
+        return a?.lastInteraction?.type === 'PHONE_CALL' && b?.lastInteraction?.type !== 'PHONE_CALL' ? 1 : 0
+      })
+    } else {
+      state.disputes = pageable.content
+    }
+
     state.query.size = pageable.size
     state.query.total = pageable.totalElements
   },
