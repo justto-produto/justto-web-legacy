@@ -1,20 +1,27 @@
 <template>
   <section class="jus-team-menu">
-    <span
-      class="jus-team-menu__title"
-      @click="$emit('toggle-expand-team-section')"
-    >
-      TIME
+    <span class="jus-team-menu__title">
+      <!-- <span>TIME</span> -->
+      <input
+        v-model="search"
+        type="text"
+        placeholder="TIME"
+        class="jus-team-menu__title-input"
+      >
+
       <JusIcon
         class="jus-team-menu__title-icon"
         :icon="isTeamSectionExpanded ? 'arrow-down' : 'arrow-up'"
+        @click="$emit('toggle-expand-team-section')"
       />
+
+      <!-- <i class="el-icon-search" /> -->
     </span>
 
     <vue-perfect-scrollbar>
       <div class="jus-team-menu__members">
         <a
-          v-for="member in workspaceMembersSorted"
+          v-for="member in workspaceMembers"
           :key="member.id"
           class="jus-team-menu__member"
           @click.prevent="setFilterPersonId(member.person.id, member.person.name)"
@@ -37,18 +44,26 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import { normalizeString } from '@/utils'
 
 export default {
   name: 'JusTeamMenu',
+
   components: {
     VuePerfectScrollbar: () => import('vue-perfect-scrollbar')
   },
+
   props: {
     isTeamSectionExpanded: {
       type: Boolean,
       default: false
     }
   },
+
+  data: () => ({
+    search: ''
+  }),
+
   computed: {
     ...mapGetters({
       disputeQuery: 'disputeQuery',
@@ -59,8 +74,19 @@ export default {
     activePersonsDisputes() {
       return this.disputeQuery.persons || []
     },
+
     activePersonsTickets() {
       return this.ticketsQuery.persons || []
+    },
+
+    workspaceMembers() {
+      if (this.search.length > 0) {
+        return this.workspaceMembersSorted.filter(({ accountEmail, person: { name } }) => {
+          return normalizeString(accountEmail).includes(normalizeString(this.search)) || normalizeString(name).includes(normalizeString(this.search))
+        })
+      }
+
+      return this.workspaceMembersSorted
     }
   },
   methods: {
@@ -91,6 +117,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '@/styles/colors.scss';
+
 .jus-team-menu {
   background-color: transparent;
   display: flex;
@@ -109,6 +137,13 @@ export default {
     .jus-team-menu__title-icon {
       margin-top: 2px;
       margin-left: 2px;
+    }
+
+    .jus-team-menu__title-input {
+      min-width: 1px;
+      border: none;
+      width: 40px;
+      text-align: center;
     }
   }
 
