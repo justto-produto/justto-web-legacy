@@ -42,13 +42,24 @@
             </sup>
           </el-link>
         </span>
+
         <span
           v-else
           class="jus-protocol-dialog__title"
         >
           {{ title }}
         </span>
+
+        <span
+          class="jus-protocol-dialog__header-minimize"
+          @click="handleMinimizeDraft"
+        >
+          <el-tooltip content="Minimizar minuta">
+            <i class="el-icon-minus" />
+          </el-tooltip>
+        </span>
       </div>
+
       <div v-loading="loading">
         <!-- ESCOLHA DE TEMPLATE -->
         <div
@@ -321,6 +332,7 @@
           />
         </div>
       </div>
+
       <!-- BOTÕES DO RODAPE -->
       <div
         slot="footer"
@@ -340,6 +352,7 @@
             Voltar para edição
           </el-button>
         </el-tooltip>
+
         <el-tooltip
           v-if="step === 3"
           content="Baixar minuta."
@@ -354,6 +367,7 @@
             Baixar
           </el-button>
         </el-tooltip>
+
         <el-button
           v-if="[2, 4].includes(step)"
           :disabled="loading"
@@ -363,6 +377,7 @@
         >
           Voltar
         </el-button>
+
         <el-button
           v-if="step === 1"
           :size="buttonSize"
@@ -372,6 +387,7 @@
         >
           Definir assinantes da minuta
         </el-button>
+
         <el-button
           v-if="step === 2"
           :size="buttonSize"
@@ -381,6 +397,7 @@
         >
           Enviar para Assinatura
         </el-button>
+
         <el-tooltip
           v-if="canResendNotification && step === 3"
           content="Reenvia notificação para todos os contatos que ainda não assinaram a minuta."
@@ -395,6 +412,7 @@
             Reenviar
           </el-button>
         </el-tooltip>
+
         <el-button
           v-if="false && step === 3"
           icon="el-icon-view"
@@ -404,6 +422,7 @@
         >
           Visualizar
         </el-button>
+
         <el-button
           v-if="![0, 4].includes(step)"
           :disabled="loading"
@@ -417,6 +436,7 @@
           />
           Excluir Minuta
         </el-button>
+
         <el-button
           v-if="step !== 4"
           :disabled="loading"
@@ -429,6 +449,7 @@
         </el-button>
       </div>
     </el-dialog>
+
     <el-dialog
       :visible.sync="confirmChooseRecipientsVisible"
       :close-on-click-modal="false"
@@ -478,6 +499,7 @@
         </el-button>
       </span>
     </el-dialog>
+
     <el-dialog
       :visible.sync="signDraftVisible"
       :close-on-click-modal="false"
@@ -506,11 +528,13 @@ import { concat } from 'lodash'
 
 export default {
   name: 'JusProtocolDialog',
+
   props: {
     protocolDialogVisible: {
       type: Boolean,
       default: false
     },
+
     dispute: {
       type: Object,
       default: () => ({
@@ -575,17 +599,22 @@ export default {
       defaultSigners: 'availableSigners',
       accountEmail: 'accountEmail',
       disputeProtocol: 'getDisputeProtocol',
-      isRecovery: 'isWorkspaceRecovery'
+      isRecovery: 'isWorkspaceRecovery',
+      openDraftId: 'getOpenDraftId'
     }),
+
     disputeRoles() {
       return this.dispute.disputeRoles
     },
+
     disputeId() {
       return this.dispute.id
     },
+
     defaultsDocuments() {
       return this.defaultSigners.map(signer => this.stripDoc(signer.documentNumber))
     },
+
     availableSigners() {
       function getObjectByDoc(doc, list) {
         return list.find(item => item.documentNumber === doc) || { emails: [] }
@@ -622,6 +651,7 @@ export default {
       })
       return [...roles, ...signers].filter(({ archived }) => archived !== true)
     },
+
     visible: {
       get() {
         return this.protocolDialogVisible
@@ -630,6 +660,7 @@ export default {
         if (!value) this.$emit('update:protocolDialogVisible', value)
       }
     },
+
     title() {
       switch (this.step) {
         case 0:
@@ -641,6 +672,7 @@ export default {
         default: return 'Minuta'
       }
     },
+
     width() {
       if (this.innerWidth <= 950) return '100%'
       if (this.step === 1 && this.fullscreen === true) {
@@ -651,6 +683,7 @@ export default {
       }
       return '80%'
     },
+
     hasEmails() {
       let hasEmails = false
       if (this.availableSigners) {
@@ -660,6 +693,7 @@ export default {
       }
       return hasEmails
     },
+
     pdfUrl() {
       if (this.disputeId) {
         return 'https://api.justto.app/api/office/documents/download-signed/' + this.disputeId
@@ -667,6 +701,7 @@ export default {
 
       return ''
     },
+
     canResendNotification() {
       if (this.signers) {
         return this.signers.length > this.signers.filter(s => {
@@ -676,10 +711,12 @@ export default {
 
       return null
     },
+
     buttonSize() {
       return IS_SMALL_WINDOW ? 'mini' : 'medium'
     }
   },
+
   watch: {
     step() {
       if (Number(this.step) === 4) {
@@ -692,8 +729,10 @@ export default {
         this.getDefaultAssigners()
       }
     },
+
     visible(value) {
       if (value) {
+        this.openStoredDraft()
         this.disputeRolesFiller(this.dispute).then(() => {
           this.loading = true
           this.loadingChooseRecipients = false
@@ -709,8 +748,15 @@ export default {
         })
       }
     },
-    loading(value) { }
+
+    loading(value) { },
+
+    openDraftId: {
+      deep: true,
+      handler: 'handleDraftNeedOpen'
+    }
   },
+
   mounted() {
     window.addEventListener('resize', () => {
       this.innerWidth = window.innerWidth
@@ -720,7 +766,9 @@ export default {
       this.fullscreen = true
     }
     this.disputeRolesFiller()
+    this.handleDraftNeedOpen()
   },
+
   methods: {
     ...mapActions([
       'getDocumentModels',
@@ -731,8 +779,11 @@ export default {
       'cleanSelectedSigners',
       'cleanSelectedSigners',
       'fillerDisputeRole',
-      'getDisputeProtocol'
+      'getDisputeProtocol',
+      'saveMinimizedDraft',
+      'openStoredDraft'
     ]),
+
     disputeRolesFiller() {
       return new Promise((resolve, reject) => {
         if (!this.dispute.disputeRoles || !this.dispute.disputeRoles.length) {
@@ -742,6 +793,7 @@ export default {
         }
       })
     },
+
     getLabelSigner(role) {
       const { documentNumber, name } = role
       if (this.isDefaultSigner(documentNumber)) {
@@ -752,6 +804,7 @@ export default {
         return ''
       }
     },
+
     stripDoc(doc) {
       if (cpf.isValid(doc)) {
         return cpf.strip(doc)
@@ -761,6 +814,7 @@ export default {
         return ''
       }
     },
+
     changeDefaultSigner(role) {
       const { name, documentNumber } = role
       if (!this.isDefaultSigner(documentNumber)) {
@@ -791,13 +845,16 @@ export default {
         defaultSigner: this.isDefaultSigner(role.documentNumber)
       }
     },
+
     isDefaultSigner(doc) {
       return this.defaultsDocuments.includes(this.stripDoc(doc))
     },
+
     isValidCpfOrCnpj(value) {
       return cpf.isValid(value)
       // || cnpj.isValid(value)
     },
+
     openDocumentInNewTab() {
       const url = `https://assinador.juristas.com.br/private/documents/${this.document.signedDocument.signKey}`
       navigator.clipboard.writeText(url)
@@ -808,6 +865,7 @@ export default {
       })
       setTimeout(() => window.open(url), 1400)
     },
+
     addDocument(role, formIndex) {
       const documentForm = this.$refs['documentForm' + formIndex][0]
       documentForm.validate(valid => {
@@ -823,11 +881,13 @@ export default {
         }
       })
     },
+
     hideForms() {
       this.roles.map(r => { r.show = false })
       this.showARoleButton = false
       this.formKey += 1
     },
+
     addRole() {
       this.$refs.roleForm.validate(valid => {
         if (valid) {
@@ -843,11 +903,13 @@ export default {
         }
       })
     },
+
     showAddRole() {
       this.showARoleButton = true
       this.formKey += 1
       this.$nextTick(() => this.$refs.newRoleInput.focus())
     },
+
     addEmail(role, formIndex) {
       const emailForm = this.$refs['emailForm' + formIndex][0]
       emailForm.validate(valid => {
@@ -869,6 +931,7 @@ export default {
         }
       })
     },
+
     showAddEmail(name, formIndex) {
       this.availableSigners.map(r => {
         if (r.name === name) r.show = true
@@ -884,6 +947,7 @@ export default {
       }
       this.$forceUpdate()
     },
+
     removeEmail(email, name) {
       const index = this.roles.findIndex(r => r.name === name)
       if (index > -1) {
@@ -891,6 +955,7 @@ export default {
         this.roles[index].emails.splice(emailIndex, 1)
       }
     },
+
     clearValidate(formIndex) {
       const roleform = this.$refs.roleForm
       let documentForm
@@ -903,6 +968,7 @@ export default {
       if (documentForm && documentForm.length) documentForm[0].clearValidate()
       if (emailForm && emailForm.length) emailForm[0].clearValidate()
     },
+
     getDocument() {
       this.getDocumentByDisputeId(this.disputeId).then(document => {
         if (document) {
@@ -924,6 +990,7 @@ export default {
         this.loading = false
       })
     },
+
     getModels() {
       this.loading = true
       this.getDocumentModels().then(models => {
@@ -939,6 +1006,7 @@ export default {
         this.loading = false
       })
     },
+
     selectModel(modelId, isUnique) {
       const { disputeId } = this
 
@@ -974,6 +1042,7 @@ export default {
         this.loading = false
       })
     },
+
     confirmChooseRecipients() {
       if (!Object.keys(this.recipients).length) {
         this.$jusNotification({
@@ -998,6 +1067,7 @@ export default {
         })
       }
     },
+
     chooseRecipients() {
       this.loading = true
       this.loadingChooseRecipients = true
@@ -1024,6 +1094,7 @@ export default {
         this.recipients = {}
       })
     },
+
     resendSignersNotification() {
       this.loading = true
       this.$store.dispatch('resendSignersNotification', {
@@ -1040,6 +1111,7 @@ export default {
         this.loading = false
       })
     },
+
     backToDocument() {
       if (this.step === 4) {
         this.step = 3
@@ -1048,6 +1120,7 @@ export default {
         this.recipients = {}
       }
     },
+
     downloadDocument() {
       this.loadingDownload = true
       this.$store.dispatch('downloadDocument', {
@@ -1059,6 +1132,7 @@ export default {
         this.loadingDownload = false
       })
     },
+
     deleteDocument() {
       this.$confirm('Tem certeza que deseja excluir?', {
         confirmButtonText: 'Excluir',
@@ -1083,10 +1157,12 @@ export default {
         })
       })
     },
+
     visualizePdf() {
       this.loadingPdf = true
       this.step = 4
     },
+
     backDocumentToEditing() {
       this.$confirm('Você vai cancelar o documento já enviado para assinatura. Tem certeza que deseja voltar para edição?', {
         confirmButtonText: 'Voltar para edição',
@@ -1109,9 +1185,11 @@ export default {
         })
       })
     },
+
     changeFullscreen() {
       this.fullscreen = !this.fullscreen
     },
+
     handleTitle(title) {
       if (title.includes('_-_')) {
         const words = title.split('_-_')
@@ -1123,6 +1201,7 @@ export default {
         return [title, '']
       }
     },
+
     isThamirisSigner(signer) {
       const isThamirisSigner = this.dispute.disputeRoles.filter((role) => {
         return role.roles.includes('NEGOTIATOR')
@@ -1132,9 +1211,23 @@ export default {
       const isThamirisEmail = signer.email === this.accountEmail
       return isThamirisSigner && isThamirisEmail
     },
+
     signDraft(signer) {
       this.getDisputeProtocol({ disputeId: this.dispute.id, docNumber: signer.documentNumber })
       this.signDraftVisible = true
+    },
+
+    async handleMinimizeDraft() {
+      await this.saveMinimizedDraft(this.dispute)
+      this.visible = false
+    },
+
+    handleDraftNeedOpen() {
+      console.log('openDraftId', this.openDraftId, this.dispute.id, this.visible)
+
+      if (this.openDraftId && Number(this.openDraftId) === Number(this.dispute.id) && !this.visible) {
+        this.$emit('update:protocolDialogVisible', true)
+      }
     }
   }
 }
@@ -1146,6 +1239,9 @@ export default {
 .jus-protocol-dialog {
   .jus-protocol-dialog__header {
     padding-top: 8px;
+    display: flex;
+    justify-content: space-between;
+
     .jus-protocol-dialog__title {
       display: flex;
       align-content: center;
@@ -1157,8 +1253,13 @@ export default {
       font-size: 20px;
       // margin: 30px 8vw 0px 8vw;
     }
+
     .jus-protocol-dialog__dispute-link-icon {
       width: 16px;
+    }
+
+    .jus-protocol-dialog__header-minimize {
+      cursor: pointer;
     }
   }
   &--full {

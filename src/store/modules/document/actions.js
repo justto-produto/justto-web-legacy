@@ -15,12 +15,14 @@ const documentActions = {
   getDocumentModels({ _ }) {
     return axiosDispatch({ url: `${documentsPath}/model` })
   },
+
   createDocumentByModel({ _ }, params) {
     return axiosDispatch({
       url: `${documentsPath}/${params.modelId}/${params.disputeId}`,
       method: 'POST'
     })
   },
+
   getDocumentByDisputeId({ _ }, disputeId) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
@@ -35,6 +37,7 @@ const documentActions = {
         })
     })
   },
+
   setDocumentSigners({ _ }, params) {
     return axiosDispatch({
       url: `${documentsPath}/signer/${params.disputeId}`,
@@ -42,24 +45,28 @@ const documentActions = {
       data: params.recipients
     })
   },
+
   resendSignersNotification({ _ }, params) {
     return axiosDispatch({
       url: `${documentsPath}/resend-notification/${params.disputeId}`,
       method: 'PUT'
     })
   },
+
   deleteDocument({ _ }, disputeId) {
     return axiosDispatch({
       url: `${documentsPath}/${disputeId}`,
       method: 'DELETE'
     })
   },
+
   backDocumentToEditing({ _ }, disputeId) {
     return axiosDispatch({
       url: `${documentsPath}/${disputeId}/back-to-editing`,
       method: 'PATCH'
     })
   },
+
   addModel({ _ }, url) {
     return axiosDispatch({
       url: `${documentsPath}/model?url=${url}`,
@@ -67,6 +74,7 @@ const documentActions = {
       data: {}
     })
   },
+
   editModel({ _ }, model) {
     return axiosDispatch({
       url: `${documentsPath}/model`,
@@ -74,12 +82,14 @@ const documentActions = {
       data: model
     })
   },
+
   deleteModel({ _ }, modelId) {
     return axiosDispatch({
       url: `${documentsPath}/model/${modelId}`,
       method: 'DELETE'
     })
   },
+
   downloadDocument({ _ }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
@@ -97,20 +107,42 @@ const documentActions = {
       })
     })
   },
+
   getDocumentTypes() {
     return axiosDispatch({ url: `${documentsPath}/model/input/types` })
   },
+
   getDefaultAssigners({ _ }) {
     return axiosDispatch({
       url: `${documentsPath}/signer`,
       mutation: 'createFromDefaultSigners'
     })
   },
+
   setSelectedSigners({ commit }, signers) {
     commit('setSelectedSigners', Object.values(signers))
   },
+
   cleanSelectedSigners({ commit }) {
     commit('setSelectedSigners', [])
+  },
+
+  saveMinimizedDraft({ commit }, dispute) {
+    return Promise.all([
+      commit('setStoredDrafts', dispute)
+    ])
+  },
+
+  forgetMinimizedDraft({ commit }, id) {
+    return Promise.all([
+      commit('deleteStoredDrafts', id)
+    ])
+  },
+
+  openStoredDraft({ commit }, id = null) {
+    return Promise.all([
+      commit('setOpenDraftId', id)
+    ])
   }
 }
 
