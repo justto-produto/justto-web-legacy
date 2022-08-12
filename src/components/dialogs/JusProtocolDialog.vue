@@ -8,13 +8,18 @@
       :close-on-press-escape="false"
       :show-close="false"
       append-to-body
+      fullscreen
+      custom-class="jus-protocol-dialog"
       class="jus-protocol-dialog"
     >
       <div
         slot="title"
         class="jus-protocol-dialog__header"
       >
-        <span v-if="[3].includes(step) && document.signedDocument">
+        <span
+          v-if="[3].includes(step) && document.signedDocument"
+          class="jus-protocol-dialog__header__third-step"
+        >
           <el-link
             :underline="false"
             class="jus-protocol-dialog__title"
@@ -51,6 +56,7 @@
         </span>
 
         <span
+          v-if="[1].includes(step)"
           class="jus-protocol-dialog__header-minimize"
           @click="handleMinimizeDraft"
         >
@@ -732,6 +738,7 @@ export default {
 
     visible(value) {
       if (value) {
+        document.body.style.zoom = 0.8
         this.openStoredDraft()
         this.disputeRolesFiller(this.dispute).then(() => {
           this.loading = true
@@ -746,6 +753,8 @@ export default {
           this.roleForm.role = ''
           this.showARoleButton = false
         })
+      } else {
+        document.body.style.zoom = 1
       }
     },
 
@@ -1223,8 +1232,6 @@ export default {
     },
 
     handleDraftNeedOpen() {
-      console.log('openDraftId', this.openDraftId, this.dispute.id, this.visible)
-
       if (this.openDraftId && Number(this.openDraftId) === Number(this.dispute.id) && !this.visible) {
         this.$emit('update:protocolDialogVisible', true)
       }
@@ -1237,8 +1244,12 @@ export default {
 @import '@/styles/colors.scss';
 
 .jus-protocol-dialog {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+
   .jus-protocol-dialog__header {
-    padding-top: 8px;
+    padding-top: 0;
     display: flex;
     justify-content: space-between;
 
@@ -1261,19 +1272,26 @@ export default {
     .jus-protocol-dialog__header-minimize {
       cursor: pointer;
     }
+
+    .jus-protocol-dialog__header__third-step {
+      flex: 1;
+    }
   }
+
   &--full {
     padding: 10px;
     .el-dialog {
       .el-dialog__body {
         height: calc(100vh - 200px);
+
         @media (max-height: 780px) {
           margin: 10px;
-          height: calc(100vh - 120px);
+          height: 100%;
         }
       }
     }
   }
+
   &--large  {
     .el-dialog {
       .el-dialog__body {
@@ -1281,6 +1299,7 @@ export default {
       }
     }
   }
+
   &__fullscreen-icon {
     position: absolute;
     font-size: 22px;
@@ -1288,6 +1307,7 @@ export default {
     right: 20px;
     cursor: pointer;
   }
+
   .jus-protocol-dialog__model-choice {
     // margin: 30px;
     display: flex;
@@ -1314,6 +1334,7 @@ export default {
       }
     }
   }
+
   &__send-to {
     > div {
       margin-top: 12px;
@@ -1377,6 +1398,7 @@ export default {
       margin-left: 9px;
     }
   }
+
   .jus-protocol-dialog__status {
     display: flex;
     align-items: center;
@@ -1387,6 +1409,7 @@ export default {
       background-color: #f6f6f6;
     }
   }
+
   .jus-protocol-dialog__status-icon {
     color: $--color-text-secondary;
     display: flex;
@@ -1399,6 +1422,7 @@ export default {
       margin-bottom: 2px;
     }
   }
+
   .jus-protocol-dialog__status-role {
     display: flex;
     flex-direction: column;
@@ -1408,6 +1432,7 @@ export default {
       color: $--color-primary;
     }
   }
+
   &__confirm-recipients {
     display: flex;
     > div:last-child {
@@ -1420,26 +1445,52 @@ export default {
       margin-top: 20px;
     }
   }
+
   .el-dialog__body > div > div, .el-dialog__body > div {
     height: 100%;
     margin-bottom: 20px;
   }
+
+  & > .el-dialog__body {
+    margin: 0 !important;
+  }
+
+  & > .el-dialog__footer {
+    padding: 12px;
+
+    .dialog-footer {
+      margin: 0;
+    }
+  }
+
+  & > .el-dialog__body {
+    height: 100% !important;
+  }
+
   .el-button--danger {
     float: left;
   }
+
   iframe {
     width: 100%;
     height: 100%;
   }
+
   object {
     width: 100%;
     height: 99%;
   }
+
+  .el-dialog__header {
+    padding: 12px;
+  }
+
   .dialog-footer {
     display: flex;
     flex-direction: row;
     justify-content: center;
     margin-bottom: 18px;
+    padding-bottom: 0;
   }
 }
 .iframe-dialog {
