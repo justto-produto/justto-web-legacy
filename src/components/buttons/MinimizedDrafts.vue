@@ -83,6 +83,8 @@ export default {
   left: 0;
   margin-top: -20px;
   margin-left: 12px;
+  display: flex;
+  gap: 4px;
 
   .minimized-draft__item {
     display: flex;
