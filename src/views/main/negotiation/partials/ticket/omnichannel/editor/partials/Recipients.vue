@@ -50,6 +50,12 @@
         </el-popover>
       </span>
 
+      <i
+        v-if="type === 'whatsapp' && canAccessDialer"
+        class="text-inline-editor__icon el-icon-phone"
+        @click="callNumber"
+      />
+
       <!-- <jus-icon
         :icon="type"
         :is-active="!!type && type !== 'negotiation'"
@@ -61,22 +67,87 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
+import { isSimilarStrings } from '@/utils'
+
 export default {
   name: 'Recipients',
+
   props: {
     isReversed: {
       type: Boolean,
       default: false
     }
   },
+
   computed: {
     ...mapGetters({
       recipients: 'getEditorRecipients',
       type: 'getEditorMessageType',
       userProperties: 'userProperties',
-      usingColors: 'isOmnichannelUsingColors'
+      usingColors: 'isOmnichannelUsingColors',
+      canAccessDialer: 'canAccessDialer',
+      appInstance: 'getAppInstance',
+      ticketStatus: 'getTicketOverviewStatus'
     })
+  },
+
+  methods: {
+    ...mapActions([
+      'addCall',
+      'getTicketOverviewParties',
+      'getTicketOverviewPartyUpdated'
+    ]),
+
+    async callNumber() {
+      const number = this.recipients[0]?.value
+      const disputeId = Number(this.$route.params.id)
+      // const { ticketStatus: disputeStatus, appInstance } = this
+
+      // const parties = await .filter(({ polarity }) => (polarity === 'CLAIMANT'))
+
+      this.getTicketOverviewParties(disputeId).then(parties => {
+        parties.map(async currentParty => {
+          const { disputeRoleId } = currentParty
+
+          this.getTicketOverviewPartyUpdated({ disputeId, disputeRoleId }).then(res => {
+            const { phones } = res
+
+            for (const phone of phones) {
+              console.log(phone?.number, number, isSimilarStrings(phone?.number, number, 80))
+
+              if (isSimilarStrings(phone?.number, number, 80)) {
+                this.handleAddCall({ ...currentParty })
+                break
+              }
+            }
+          })
+        })
+      })
+
+      /* this.addCall({
+        disputeId,
+        number,
+        disputeStatus,
+        appInstance
+        // toRoleId: this.party.disputeRoleId,
+        // toRoleName: this.party.name,
+        // contacts: {
+        //   emails: this.party.emailsDto,
+        //   phones: this.party.phonesDto
+        // }
+      }).then(_ => {
+        this.$jusNotification({
+          type: 'success',
+          title: 'Yay!',
+          message: 'Sua ligação entrou na fila, assim que tiver um telefone disponível para você usar, nós emitiremos um aviso sonoro'
+        })
+      }) */
+    },
+
+    handleAddCall(party) {
+      console.log(party)
+    }
   }
 }
 </script>
