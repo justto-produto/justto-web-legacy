@@ -1,7 +1,7 @@
 <template>
   <article class="minimized-drafts">
     <div
-      v-for="id in draftsIds"
+      v-for="id in draftsIds.filter(id => Number(id) === Number($route.params.id))"
       :key="id"
       class="minimized-draft__item"
     >
