@@ -179,7 +179,9 @@ export default {
     },
 
     isCanceled() {
-      return this.occurrence?.interaction?.message?.status === 'CANCELED'
+      const shouldBeCanceled = this.value?.type === 'PHONE_CALL' && (this.$moment().diff(this.$moment(this.value?.message?.scheduledTime?.dateTime), 'days') > 0)
+
+      return this.occurrence?.interaction?.message?.status === 'CANCELED' || shouldBeCanceled
     },
 
     isWaiting() {
