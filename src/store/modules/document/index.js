@@ -5,7 +5,9 @@ import getters from './getters'
 const document = {
   state: {
     availableSigners: [],
-    selectedSigners: []
+    selectedSigners: [],
+    storedDrafts: {},
+    openDraftId: null
   },
   mutations: mutations,
   actions: actions,
