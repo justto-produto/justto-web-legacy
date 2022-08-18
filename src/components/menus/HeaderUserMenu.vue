@@ -63,6 +63,7 @@
               Configurações
             </el-dropdown-item>
           </router-link>
+
           <router-link
             v-if="isJusttoAdmin || isAdminProfile"
             to="/billing"
@@ -71,6 +72,7 @@
               Financeiro
             </el-dropdown-item>
           </router-link>
+
           <a
             v-if="workspacesList.length"
             @click.prevent="changeWorkspace"
@@ -88,6 +90,15 @@
               <JusAcademy mode="text" />
             </el-dropdown-item>
           </a>
+
+          <router-link
+            v-if="isJusttoAdmin"
+            to="/admin-panel"
+          >
+            <el-dropdown-item>
+              Painel Admin.
+            </el-dropdown-item>
+          </router-link>
 
           <a @click="logout()">
             <el-dropdown-item divided>
