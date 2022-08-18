@@ -50,33 +50,133 @@
         </el-popover>
       </span>
 
-      <!-- <jus-icon
-        :icon="type"
-        :is-active="!!type && type !== 'negotiation'"
-        class="recipients-container__icon"
-        :class="type"
-      /> -->
+      <el-popover
+        v-if="type === 'whatsapp' && recipient !== null && canAccessDialer"
+        placement="top-end"
+        title="Ligar para:"
+        width="auto"
+        trigger="click"
+        popper-class="call-current-recipient-popover"
+        :popper-options="{
+          offset: [0, 12]
+        }"
+      >
+        <div class="popover__content">
+          <div class="name">
+            {{ (recipient.toRoleName || '').toLowerCase() | resumedName }}
+          </div>
+
+          <el-button
+            type="primary"
+            size="mini"
+            @click="handleAddCall"
+          >
+            Ligar
+          </el-button>
+        </div>
+
+        <i
+          slot="reference"
+          class="text-inline-editor__icon el-icon-phone"
+        />
+      </el-popover>
     </span>
   </section>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
+import { isSimilarStrings } from '@/utils'
+
 export default {
   name: 'Recipients',
+
   props: {
     isReversed: {
       type: Boolean,
       default: false
     }
   },
+
+  data: () => ({
+    recipient: null
+  }),
+
   computed: {
     ...mapGetters({
       recipients: 'getEditorRecipients',
       type: 'getEditorMessageType',
       userProperties: 'userProperties',
-      usingColors: 'isOmnichannelUsingColors'
+      usingColors: 'isOmnichannelUsingColors',
+      canAccessDialer: 'canAccessDialer',
+      appInstance: 'getAppInstance',
+      ticketStatus: 'getTicketOverviewStatus'
     })
+  },
+
+  watch: {
+    recipients: {
+      deep: true,
+      handler: 'handleUpdateRecipients'
+    }
+  },
+
+  mounted() {
+    this.handleUpdateRecipients(this.recipients)
+  },
+
+  methods: {
+    ...mapActions([
+      'addCall',
+      'getTicketOverviewParties',
+      'getTicketOverviewPartyUpdated'
+    ]),
+
+    handleAddCall() {
+      this.addCall(this.recipient)
+    },
+
+    handlePossibleRecipient({ disputeRoleId: toRoleId }, { name: toRoleName, emails, phones }) {
+      const number = this.recipients[0]?.value
+      const disputeId = Number(this.$route.params.id)
+      const { ticketStatus: disputeStatus, appInstance } = this
+
+      this.recipient = {
+        disputeId,
+        number,
+        disputeStatus,
+        appInstance,
+        toRoleId,
+        toRoleName,
+        contacts: { emails, phones }
+      }
+    },
+
+    handleUpdateRecipients(newer) {
+      if (newer.length && newer[0].type === 'whatsapp') {
+        const number = this.recipients[0]?.value
+        const disputeId = Number(this.$route.params.id)
+
+        this.getTicketOverviewParties(disputeId).then(parties => {
+          parties.map(async currentParty => {
+            const { disputeRoleId } = currentParty
+
+            this.getTicketOverviewPartyUpdated({ disputeId, disputeRoleId }).then(res => {
+              const { phones } = res
+
+              for (const phone of phones) {
+                if (isSimilarStrings(phone?.number, number, 90)) {
+                  this.handlePossibleRecipient(currentParty, res)
+                  break
+                }
+              }
+            })
+          })
+        })
+      } else {
+        this.recipient = null
+      }
+    }
   }
 }
 </script>
@@ -97,9 +197,9 @@ export default {
     padding: 2px 6px 4px;
     border-radius: 8px;
 
-    .recipients-container__label {
-      cursor: pointer;
-    }
+    // .recipients-container__label {
+    //   cursor: pointer;
+    // }
 
     .recipients-container__icon {
       width: 16px;
@@ -107,6 +207,10 @@ export default {
       &.negotiation {
         margin-top: 2px;
       }
+    }
+
+    span {
+      cursor: pointer;
     }
   }
 
@@ -146,6 +250,39 @@ export default {
       .recipients-container__item-icon {
         color: $--color-text-secondary;
       }
+    }
+  }
+}
+
+.call-current-recipient-popover {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  top: -12px !important;
+
+  .el-popover__title {
+    margin: 0;
+    width: 100%;
+    text-align: center;
+  }
+
+  .popover__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
+    gap: 12px;
+    width: 100%;
+
+    .name {
+      text-transform: capitalize;
+    }
+
+    .el-button {
+      display: flex;
+      width: 100%;
+      justify-content: center;
     }
   }
 }
