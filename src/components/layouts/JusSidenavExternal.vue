@@ -1,6 +1,6 @@
 <template>
   <div class="jus-sidenav-external">
-    <a @click.prevent="$router.push('/login')">
+    <a @click.prevent="handleLogoClick">
       <img
         class="jus-sidenav-external__logo"
         src="@/assets/logo.svg"
@@ -23,6 +23,7 @@
     <div class="jus-sidenav-external__content">
       <slot />
     </div>
+
     <div
       v-if="showExit"
       class="jus-sidenav-external__exit"
@@ -33,29 +34,41 @@
 </template>
 
 <script>
-
 export default {
   name: 'JusSidenavexternal',
+
   props: {
     showPlans: {
       type: Boolean,
       default: false
     },
+
     showExit: {
       type: Boolean,
       default: false
+    },
+
+    redirectTo: {
+      type: String,
+      default: () => '/login'
     }
   },
+
   data() {
     return {
       modal: false,
       modalType: 1
     }
   },
+
   methods: {
     showModal(type) {
       this.modalType = type
       this.modal = true
+    },
+
+    handleLogoClick() {
+      this.$router.push(this.redirectTo)
     }
   }
 }

@@ -4,7 +4,10 @@
       :span="left"
       style="transition: width ease 1s;"
     >
-      <jus-sidenav-external show-exit>
+      <jus-sidenav-external
+        show-exit
+        :redirect-to="getCustomHome || '/'"
+      >
         <el-menu
           default-active="0"
           class="el-menu-vertical-demo"
@@ -161,8 +164,12 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['accountEmail'])
+    ...mapGetters([
+      'accountEmail',
+      'getCustomHome'
+    ])
   },
+
   created() {
     setTimeout(function() {
       this.left = 5
@@ -171,13 +178,16 @@ export default {
       this.right = 19
     }.bind(this), 1200)
   },
+
   methods: {
     changeMenuIndex(index) {
       this.menuIndex = index
     },
+
     mainButtonHandler() {
       this.$refs[`panel${this.menuIndex}`].mainButtonHandler()
     },
+
     setFilter(value) {
       this.filterTerm = value
     }
