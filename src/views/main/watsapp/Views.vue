@@ -59,14 +59,29 @@
             label="Template"
             :span="2"
           >
-            {{ template.data }}
+            <!-- <textarea
+              disabled
+              v-text="template.data"
+            /> -->
+
+            <el-input
+              :value="template.data"
+              type="textarea"
+              autosize
+              disabled
+            />
           </el-descriptions-item>
 
           <el-descriptions-item
             label="Exemplo"
             :span="2"
           >
-            {{ getMeta(template.meta) }}
+            <el-input
+              :value="getMeta(template.meta)"
+              type="textarea"
+              autosize
+              disabled
+            />
           </el-descriptions-item>
         </el-descriptions>
       </li>
@@ -126,6 +141,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import '@/styles/colors.scss';
+
 .whatsapp-views {
   width: 100%;
   padding-left: 16px;
@@ -161,6 +178,30 @@ export default {
       .el-descriptions {
         .el-descriptions__header {
           justify-content: center;
+        }
+
+        .el-descriptions__body {
+          .el-descriptions__table {
+            tbody {
+              .el-descriptions-row {
+                .el-descriptions-item__cell {
+                  textarea {
+                    width: 100%;
+                    height: 30vh;
+                    border: 0;
+                    resize: none;
+                    background-color: transparent;
+                    cursor: auto;
+                    color: $--color-text-primary;
+                  }
+
+                  &:has(textarea) {
+                    padding: 0;
+                  }
+                }
+              }
+            }
+          }
         }
       }
 
