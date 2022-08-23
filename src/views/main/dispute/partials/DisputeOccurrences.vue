@@ -1037,12 +1037,10 @@ export default {
     },
 
     isJusttineMessage(occurrence) {
-      return occurrence.interaction &&
-      occurrence.interaction.message &&
-      ['EMAIL', 'WHATSAPP', 'SMS'].includes(occurrence.interaction.message.communicationType) &&
-      occurrence.interaction.message.status !== 'PROCESSED_BY_USER' &&
-      occurrence.interaction.message.createdBy === 'system' &&
-      occurrence.interaction.direction === 'OUTBOUND'
+      return ['EMAIL', 'WHATSAPP', 'SMS'].includes(occurrence?.interaction?.message?.communicationType) &&
+      occurrence?.interaction?.message?.status !== 'PROCESSED_BY_USER' &&
+      (occurrence?.interaction?.message?.createdBy === 'system' || occurrence?.interaction?.message?.sender === 'justto') &&
+      occurrence?.interaction?.direction === 'OUTBOUND'
     },
 
     buildAvatar(occurrence) {

@@ -10,7 +10,6 @@ const EngagementTicketStatus = [
 
 const ticketsMutations = {
   setCommunicationTickets: (state, { data, payload }) => {
-    console.log('setCommunicationTickets', state.ticketsQuery.prescriptions)
     if (payload === 'nextPage') {
       data.content = state.tickets.content.concat(data.content)
     }

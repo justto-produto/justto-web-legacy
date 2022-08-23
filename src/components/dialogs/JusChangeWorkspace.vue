@@ -80,7 +80,7 @@ export default {
       getMyWorkspaces: 'myWorkspace'
     }),
 
-    goToWorkspace(workspace) {
+    goToWorkspace(workspace, specificDispute = null) {
       const loading = this.$loading({
         lock: true,
         text: 'Alterando Equipe...'
@@ -116,7 +116,11 @@ export default {
             loading.close()
           }, 1000)
 
-          window.location.replace(href.split('#')[0] + `#${this.customHome || '/negotiation'}`)
+          if (specificDispute) {
+            window.location.replace(href.split('#')[0] + `#/negotiation/${specificDispute}`)
+          } else {
+            window.location.replace(href.split('#')[0] + `#${this.customHome || '/negotiation'}`)
+          }
           window.location.reload()
         })
     },

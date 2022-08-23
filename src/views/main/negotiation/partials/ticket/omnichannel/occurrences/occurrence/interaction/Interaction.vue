@@ -169,7 +169,7 @@ export default {
         return 'WHATSAPP'
       }
 
-      if (this.interaction?.direction === 'OUTBOUND' && ['WAITING', 'PROCESSED', 'CANCELED', 'FAILED'].includes(this.interaction?.message?.status) && (this.interaction?.message?.createdBy === 'system' || this.interaction?.message?.scheduledTime?.dateTime)) {
+      if (this.interaction?.direction === 'OUTBOUND' && ['WAITING', 'CANCELED', 'FAILED'].includes(this.interaction?.message?.status) && (this.interaction?.message?.createdBy === 'system' || this.interaction?.message?.scheduledTime?.dateTime)) {
         return 'SCHEDULER'
       }
 
@@ -256,7 +256,7 @@ export default {
     isJusttineMessage() {
       return ['EMAIL', 'WHATSAPP', 'SMS'].includes(this.interaction?.message?.communicationType) &&
       this.interaction?.message?.status !== 'PROCESSED_BY_USER' &&
-      this.interaction?.message?.createdBy === 'system' &&
+      (this.interaction?.message?.createdBy === 'system' || this.interaction?.message?.sender === 'justto') &&
       this.interaction?.direction === 'OUTBOUND'
     },
 

@@ -4,6 +4,8 @@
     class="editor-container"
     :class="activeTab"
   >
+    <MinimizedDrafts />
+
     <el-tabs
       class="editor-container__tabs"
       :value="activeTab"
@@ -25,6 +27,7 @@
         </JusDragArea>
       </el-tab-pane>
     </el-tabs>
+
     <div
       v-if="!isPreNegotiation"
       class="editor-container__after-tabs"
@@ -73,6 +76,7 @@
       </div>
       <recipients class="editor-container__recipients" />
     </div>
+
     <SlideInfo
       :images="itemsSlider"
       :is-visible="isVisibleSlider"
@@ -95,7 +99,8 @@ export default {
     recipients: () => import('./partials/Recipients'),
     messages: () => import('./partials/Messages'),
     notes: () => import('./partials/Notes'),
-    SlideInfo: () => import('@/components/dialogs/SlideInfo')
+    SlideInfo: () => import('@/components/dialogs/SlideInfo'),
+    MinimizedDrafts: () => import('@/components/buttons/MinimizedDrafts')
   },
 
   mixins: [ticketPreNegotiation],
@@ -287,11 +292,16 @@ export default {
   .el-tabs__item {
     padding: 0 18px !important;
   }
+
   .el-tabs__nav-wrap:after {
     display: none;
   }
 
+  /* .minimized-drafts {
+    margin-top: -18px;
+  } */
 }
+
 .editor-container__after-tabs-align-popover {
   .editor-container__after-tabs-align-popover-span {
     font-size: 12px;
