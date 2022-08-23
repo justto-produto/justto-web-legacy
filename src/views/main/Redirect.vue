@@ -54,7 +54,7 @@ export default {
               this.$router.push({ name: 'dashboard' })
             })
           } else {
-            this.$refs.workspaceSwitcher.goToWorkspace(destinyWokspace)
+            this.$refs.workspaceSwitcher.goToWorkspace(destinyWokspace, disputeId)
           }
         })
       }
