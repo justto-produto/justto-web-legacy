@@ -14,9 +14,11 @@
           <div class="thamiris__alerts__header-icon-red" />
           <i class="el-icon-bell" />
         </div>
+
         <h1 class="thamiris__alerts__header-title">
-          Bom dia! Olha só as dicas que temos pra você :)
+          {{ greetings }}! Olha só as dicas que temos pra você :)
         </h1>
+
         <span class="thamiris__alerts__header-subtitle">
           Pegue o café e confira os alertas para ter um dia mais produtivo!
         </span>
@@ -135,6 +137,12 @@ export default {
       const porc = 55
       const x = 100 - (this.innerWidth * porc) / pattern
       return `${x}%`
+    },
+
+    greetings() {
+      const now = Number(this.$moment().format('HH'))
+
+      return (now > 17 || now < 5) ? 'Boa noite' : now < 12 ? 'Bom dia' : 'Boa tarde'
     }
   },
 
