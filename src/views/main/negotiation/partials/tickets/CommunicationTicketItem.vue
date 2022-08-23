@@ -249,7 +249,7 @@ export default {
       } else if (lastInboundInteraction?.dateTime?.dateTime) {
         const { message, dateTime, contentType } = lastInboundInteraction
 
-        if (contentType !== 'TEXT') {
+        if (['AUDIO', 'IMAGE', 'VIDEO', 'ATTACHMENT'].includes(contentType || message?.contentType)) {
           return {
             message: 'Anexo recebido.',
             dateTime: dateTime.dateTime,
