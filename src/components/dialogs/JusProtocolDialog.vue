@@ -747,7 +747,7 @@ export default {
           this.step = 0
           this.recipients = {}
           this.signers = ''
-          this.roles = JSON.parse(JSON.stringify(this.disputeRoles.filter(r => !r.documentNumber || r.documentNumber.length !== 14)))
+          this.roles = JSON.parse(JSON.stringify(this.disputeRoles))
           this.emailForm.email = {}
           this.getDocument()
           this.roleForm.role = ''
@@ -861,7 +861,6 @@ export default {
 
     isValidCpfOrCnpj(value) {
       return cpf.isValid(value)
-      // || cnpj.isValid(value)
     },
 
     openDocumentInNewTab() {
@@ -1492,7 +1491,14 @@ export default {
     margin-bottom: 18px;
     padding-bottom: 0;
   }
+
+  &.is-fullscreen {
+    .el-dialog__body {
+      overflow-y: scroll;
+    }
+  }
 }
+
 .iframe-dialog {
   width: 100%;
   height: 80vh;
