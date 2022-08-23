@@ -238,8 +238,75 @@
     </div>
 
     <div class="global-search__table">
-      Disputas:
-      {{ disputes }}
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+
+            <th>Processo</th>
+
+            <th>Workapace</th>
+
+            <th>Campanha</th>
+
+            <th>Estratégia</th>
+
+            <th>Ir para</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr
+            v-for="(dispute, index) in disputes"
+            :key="`dispute-${index}`"
+            class="has-dispute"
+          >
+            <td>{{ `#${dispute.id}` }}</td>
+
+            <td>{{ dispute.code }}</td>
+
+            <td>{{ dispute.workspaceName || '' }}</td>
+
+            <td>{{ dispute.campaignName || '' }}</td>
+
+            <td>{{ dispute.strategyName || '' }}</td>
+
+            <td class="href">
+              <router-link
+                :to="`/redirect?wid=${dispute.workspaceId}&did=${dispute.id}`"
+              >
+                <el-tooltip content="Ir para disputa">
+                  <el-button
+                    type="primary"
+                    icon="el-icon-link"
+                    size="mini"
+                    circle
+                  />
+                </el-tooltip>
+              </router-link>
+
+              <el-tooltip content="Copiar link">
+                <el-button
+                  type="secondary"
+                  icon="el-icon-copy-document"
+                  size="mini"
+                  circle
+                  @click="handleCopyLink(dispute)"
+                />
+              </el-tooltip>
+            </td>
+          </tr>
+
+          <tr v-if="disputes.length === 0">
+            <td
+              class="empty"
+              colspan="6"
+            >
+              Sem dados
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </article>
 </template>
@@ -298,15 +365,30 @@ export default {
     },
 
     search() {
+      this.isLoading = true
+
       this.getGlobalDisputes(this.form).then(({ content }) => {
         this.$set(this, 'disputes', content)
-      }).catch(error => this.$jusNotify({ error }))
+      }).catch(error => this.$jusNotify({ error })).finally(_ => {
+        this.isLoading = false
+      })
     },
 
     handleSearch() {
       clearTimeout(this.timeoutRef)
 
       this.timeoutRef = setTimeout(this.search, 250)
+    },
+
+    handleCopyLink({ id, workspaceId }) {
+      navigator.clipboard.writeText(`${location.origin}/#/redirect?wid=${workspaceId}&did=${id}`)
+
+      this.$message({
+        message: 'Copiado para a área de transferência.',
+        type: 'info',
+        center: true,
+        showClose: true
+      })
     }
   }
 }
@@ -324,9 +406,24 @@ export default {
 
 <style lang="scss">
 @import '@/styles/colors.scss';
+@import '@/styles/variables.scss';
 
 .global-search {
+  padding-bottom: 16px;
+
   .global-search__form {
+    .el-collapse {
+      .el-collapse-item {
+        .el-collapse-item__wrap {
+          border-bottom: none;
+
+          .el-collapse-item__content {
+            padding: 0;
+          }
+        }
+      }
+    }
+
     .el-form {
       .el-form-item {
         margin-bottom: 8px;
@@ -360,6 +457,46 @@ export default {
               .el-input {
                 padding-bottom: 0 !important;
               }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .global-search__table {
+    table {
+      margin-top: 16px;
+      width: 100%;
+      border-collapse: collapse;
+
+      thead {
+        tr {
+          th {
+            text-align: left;
+          }
+        }
+      }
+
+      tbody {
+        border-top: $--border-base !important;
+
+        tr {
+          border-bottom: $--border-base !important;
+
+          td.empty {
+            text-align: center;
+            padding: 16px;
+          }
+
+          td.href {
+            display: flex;
+            justify-content: space-evenly;
+          }
+
+          &.has-dispute {
+            td {
+              padding: 12px 0;
             }
           }
         }
