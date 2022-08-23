@@ -239,14 +239,23 @@ export default {
           message: this.$options.filters.capitalize(this.$tc(`interaction-types.${type}.message`)),
           dateTime: dateTime.dateTime
         }
-      } else if (lastReceivedMessage?.message) {
+      } else if (lastReceivedMessage?.message && lastReceivedMessage?.contentType === 'TEXT') {
         const { message, dateTime } = lastReceivedMessage
+
         return {
           message,
           dateTime: dateTime.dateTime
         }
       } else if (lastInboundInteraction?.dateTime?.dateTime) {
-        const { message, dateTime } = lastInboundInteraction
+        const { message, dateTime, contentType } = lastInboundInteraction
+
+        if (contentType !== 'TEXT') {
+          return {
+            message: 'Anexo recebido.',
+            dateTime: dateTime.dateTime,
+            icon: this.$tc('interaction-types.ATTACHMENT.icon')
+          }
+        }
 
         return {
           message,
