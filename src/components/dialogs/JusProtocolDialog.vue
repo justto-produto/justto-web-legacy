@@ -731,14 +731,26 @@ export default {
       } else {
         localStorage.setItem('lastStep', this.step)
       }
+
       if (Number(this.step) === 2) {
         this.getDefaultAssigners()
+      }
+
+      if (Number(this.step) === 1) {
+        document.body.style.zoom = 0.8
+      } else {
+        document.body.style.zoom = 1
       }
     },
 
     visible(value) {
       if (value) {
-        document.body.style.zoom = 0.8
+        if (Number(this.step) === 1) {
+          document.body.style.zoom = 0.8
+        } else {
+          document.body.style.zoom = 1
+        }
+
         this.openStoredDraft()
         this.disputeRolesFiller(this.dispute).then(() => {
           this.loading = true
