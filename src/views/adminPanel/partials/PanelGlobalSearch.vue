@@ -15,7 +15,7 @@
             label-position="top"
             :model="form"
           >
-            <el-form-item>
+            <!-- <el-form-item>
               <div class="form-item__container">
                 <label for="disputeIds">Workspaces:</label>
 
@@ -33,20 +33,29 @@
                     :label="item.name"
                     :value="item.id"
                   >
-                    <span style="float: left">{{ item.name }}</span>
-                    <span style="float: right; color: #8492a6; font-size: 12px">{{ item.teamName }}</span>
+                    <span>{{ item.name }}</span>
+                    <span>{{ item.teamName }}</span>
                   </el-option>
                 </el-select>
               </div>
-            </el-form-item>
+            </el-form-item> -->
 
             <el-form-item>
               <div class="form-item__container">
-                <label for="disputeIds">IDs de disputa:</label>
+                <label for="disputeIds">
+                  <span>IDs de disputa:</span>
+
+                  <el-tooltip
+                    content="Use somente números"
+                    placement="top-start"
+                  >
+                    <i class="el-icon-info" />
+                  </el-tooltip>
+                </label>
 
                 <el-select
                   id="disputeIds"
-                  v-model="form.dispute.ids"
+                  :value="form.dispute.ids"
                   name="disputeIds"
                   multiple
                   placeholder="IDs:"
@@ -54,6 +63,7 @@
                   allow-create
                   default-first-option
                   size="mini"
+                  @input="handleIDInput"
                 >
                   <el-option
                     v-for="id in form.dispute.ids"
@@ -61,8 +71,8 @@
                     :label="id"
                     :value="id"
                   >
-                    <span style="float: left">{{ id }}</span>
-                    <span style="float: right; color: #8492a6; font-size: 12px">{{ `#${id}` }}</span>
+                    <span>{{ id }}</span>
+                    <span>{{ `#${id}` }}</span>
                   </el-option>
                 </el-select>
               </div>
@@ -139,11 +149,20 @@
               </div>
 
               <div class="form-item__container">
-                <label for="personDocument">CPF/CNPJ:</label>
+                <label for="personDocument">
+                  <span>CPF/CNPJ:</span>
+
+                  <el-tooltip
+                    content="Use somente números"
+                    placement="top-start"
+                  >
+                    <i class="el-icon-info" />
+                  </el-tooltip>
+                </label>
 
                 <el-select
                   id="personDocument"
-                  v-model="form.person.documents"
+                  :value="form.person.documents"
                   name="personDocument"
                   multiple
                   placeholder="CPF/CNPJ:"
@@ -151,13 +170,17 @@
                   allow-create
                   default-first-option
                   size="mini"
+                  @input="handleDocumentNumberInput"
                 >
                   <el-option
                     v-for="doc in form.person.documents"
                     :key="doc"
                     :label="doc"
                     :value="doc"
-                  />
+                  >
+                    <span>{{ doc }}</span>
+                    <span>{{ doc | cpfCnpj }}</span>
+                  </el-option>
                 </el-select>
               </div>
             </el-form-item>
@@ -187,11 +210,20 @@
               </div>
 
               <div class="form-item__container">
-                <label for="personPhones">Telefones:</label>
+                <label for="personPhones">
+                  <span>Telefones:</span>
+
+                  <el-tooltip
+                    content="Use somente números"
+                    placement="top-start"
+                  >
+                    <i class="el-icon-info" />
+                  </el-tooltip>
+                </label>
 
                 <el-select
                   id="personPhones"
-                  v-model="form.person.phones"
+                  :value="form.person.phones"
                   name="personPhones"
                   multiple
                   placeholder="Telefones:"
@@ -199,22 +231,35 @@
                   allow-create
                   default-first-option
                   size="mini"
+                  @input="handlePhoneNumberInput"
                 >
                   <el-option
                     v-for="phone in form.person.phones"
                     :key="phone"
                     :label="phone"
                     :value="phone"
-                  />
+                  >
+                    <span>{{ phone }}</span>
+                    <span>{{ phone | phoneNumber }}</span>
+                  </el-option>
                 </el-select>
               </div>
 
               <div class="form-item__container">
-                <label for="personOabs">OABs:</label>
+                <label for="personOabs">
+                  <span>OABs:</span>
+
+                  <el-tooltip
+                    content="Use somente números e letras"
+                    placement="top-start"
+                  >
+                    <i class="el-icon-info" />
+                  </el-tooltip>
+                </label>
 
                 <el-select
                   id="personOabs"
-                  v-model="form.person.oabs"
+                  :value="form.person.oabs"
                   name="personOabs"
                   multiple
                   placeholder="OABs:"
@@ -222,13 +267,17 @@
                   allow-create
                   default-first-option
                   size="mini"
+                  @input="handleOabInput"
                 >
                   <el-option
                     v-for="oab in form.person.oabs"
                     :key="oab"
                     :label="oab"
                     :value="oab"
-                  />
+                  >
+                    <span>{{ oab }}</span>
+                    <span>{{ oab | oab }}</span>
+                  </el-option>
                 </el-select>
               </div>
             </el-form-item>
@@ -245,11 +294,9 @@
 
             <th>Processo</th>
 
+            <th>Cód. Interno</th>
+
             <th>Workapace</th>
-
-            <th>Campanha</th>
-
-            <th>Estratégia</th>
 
             <th>Ir para</th>
           </tr>
@@ -263,13 +310,11 @@
           >
             <td>{{ `#${dispute.id}` }}</td>
 
-            <td>{{ dispute.code }}</td>
+            <td>{{ dispute.code || '' }}</td>
+
+            <td>{{ dispute.externalCode || '' }}</td>
 
             <td>{{ dispute.workspaceName || '' }}</td>
-
-            <td>{{ dispute.campaignName || '' }}</td>
-
-            <td>{{ dispute.strategyName || '' }}</td>
 
             <td class="href">
               <router-link
@@ -284,16 +329,6 @@
                   />
                 </el-tooltip>
               </router-link>
-
-              <el-tooltip content="Copiar link">
-                <el-button
-                  type="secondary"
-                  icon="el-icon-copy-document"
-                  size="mini"
-                  circle
-                  @click="handleCopyLink(dispute)"
-                />
-              </el-tooltip>
             </td>
           </tr>
 
@@ -378,6 +413,34 @@ export default {
       clearTimeout(this.timeoutRef)
 
       this.timeoutRef = setTimeout(this.search, 250)
+    },
+
+    handleDocumentNumberInput(value) {
+      if (value !== this.form.person.documents) {
+        this.$set(this.form.person, 'documents', value.map(doc => doc.replace(/\D/g, '')))
+      }
+    },
+
+    handleIDInput(value) {
+      if (value !== this.form.dispute.ids) {
+        this.$set(this.form.dispute, 'ids', value.map(id => id.replace(/\D/g, '')))
+      }
+    },
+
+    handlePhoneNumberInput(value) {
+      if (value !== this.form.person.phones) {
+        this.$set(this.form.person, 'phones', value.map(phone => {
+          const fPhone = phone.replace(/\D/g, '')
+
+          return fPhone.startsWith('55') ? fPhone : `55${fPhone}`
+        }))
+      }
+    },
+
+    handleOabInput(value) {
+      if (value !== this.form.person.oabs) {
+        this.$set(this.form.person, 'oabs', value.map(oab => oab.replace(/[-/. ]/g, '')))
+      }
     },
 
     handleCopyLink({ id, workspaceId }) {
