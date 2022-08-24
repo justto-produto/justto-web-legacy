@@ -245,7 +245,7 @@
                 </el-select>
               </div>
 
-              <div class="form-item__container">
+              <!-- <div class="form-item__container">
                 <label for="personOabs">
                   <span>OABs:</span>
 
@@ -279,7 +279,7 @@
                     <span>{{ oab | oab }}</span>
                   </el-option>
                 </el-select>
-              </div>
+              </div> -->
             </el-form-item>
           </el-form>
         </el-collapse-item>
@@ -473,6 +473,7 @@ export default {
 
 .global-search {
   padding-bottom: 16px;
+  overflow-y: scroll;
 
   .global-search__form {
     .el-collapse {
@@ -528,6 +529,8 @@ export default {
   }
 
   .global-search__table {
+    overflow-y: scroll;
+
     table {
       margin-top: 16px;
       width: 100%;
