@@ -35,6 +35,10 @@
           <el-menu-item index="7">
             <i class="el-icon-chat-line-round" /> WhatsApp
           </el-menu-item>
+
+          <el-menu-item index="8">
+            <i class="el-icon-search" /> Buscar
+          </el-menu-item>
         </el-menu>
       </jus-sidenav-external>
     </el-col>
@@ -49,7 +53,7 @@
           <h1>{{ $t(`panel.${menuIndex}`) }}</h1>
           <div class="admin-panel-view__header-options">
             <el-input
-              v-if="!['6', '7'].includes(menuIndex)"
+              v-if="!['6', '7', '8'].includes(menuIndex)"
               v-model="filterTerm"
               prefix-icon="el-icon-search"
               placeholder="Buscar"
@@ -119,6 +123,11 @@
           ref="panel7"
           :filter-term="filterTerm"
         />
+
+        <PanelGlobalSearch
+          v-if="menuIndex === '8'"
+          ref="panel8"
+        />
       </el-col>
     </transition>
   </el-row>
@@ -133,6 +142,7 @@ export default {
     // Workspace: () => import('@/views/main/configurations/partials/WorkspaceList'),
     JusSidenavExternal: () => import('@/components/layouts/JusSidenavExternal'),
     PanelStrategy: () => import('./partials/Strategy/PanelStrategy'),
+    PanelGlobalSearch: () => import('./partials/PanelGlobalSearch'),
     PanelDashboard: () => import('./partials/PanelDashboard'),
     PanelWorkspace: () => import('./partials/PanelWorkspace'),
     PanelWhatsApp: () => import('@/views/main/watsapp/Views'),

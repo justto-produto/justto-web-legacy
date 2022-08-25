@@ -20,3 +20,23 @@
   color: #424242 !important;
   font-weight: 600;
 }
+
+.el-select-dropdown {
+  .el-scrollbar {
+    .el-select-dropdown__wrap {
+      .el-scrollbar__view {
+        .el-select-dropdown__item {
+          span {
+            float: left;
+
+            & + span {
+              float: right;
+              color: rgb(132, 146, 166);
+              font-size: 12px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
