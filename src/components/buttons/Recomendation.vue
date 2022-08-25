@@ -118,6 +118,35 @@
                   />
                 </span>
               </div>
+
+              <div
+                v-if="currentRecomendation.type === 'NEW_CONTACT' && currentRecomendation.properties"
+                class="popover-recomendation-container__body-item"
+              >
+                <span class="popover-recomendation-container__body-item-container">
+                  <label
+                    for="newContactParty"
+                    class="popover-recomendation-container__body-item-container-label"
+                  >
+                    Parte:
+                  </label>
+
+                  <el-select
+                    id="newContactParty"
+                    v-model="currentRecomendation.properties.ROLE_ID"
+                    placeholder="Selecionar parte"
+                    size="mini"
+                    class="popover-recomendation-container__body-item-container-value"
+                  >
+                    <el-option
+                      v-for="({ disputeRoleId, name }) in parties"
+                      :key="`${disputeRoleId}-${name}`"
+                      :label="name"
+                      :value="disputeRoleId"
+                    />
+                  </el-select>
+                </span>
+              </div>
             </div>
 
             <div class="popover-recomendation-container__footer">
@@ -134,6 +163,7 @@
               <el-button
                 type="success"
                 size="mini"
+                :disabled="disablePrimaryAction"
                 @click="handlePrimaryAction"
               >
                 {{ $t(`recomendations.${currentRecomendation.type}.buttons.primary`) }}
@@ -181,8 +211,13 @@ export default {
   computed: {
     ...mapGetters({
       recipients: 'getEditorRecipients',
-      isRecovery: 'isWorkspaceRecovery'
-    })
+      isRecovery: 'isWorkspaceRecovery',
+      parties: 'getCommonDisputeRoles'
+    }),
+
+    disablePrimaryAction() {
+      return this.currentRecomendation?.type === 'NEW_CONTACT' && !(this.currentRecomendation?.properties?.ROLE_ID)
+    }
   },
 
   mounted() {
@@ -202,8 +237,7 @@ export default {
 
     init() {
       this.getRecommendations(this.interactionId).then(res => {
-        // SAAS-4074 Mostra somente recomendações de enviar mensagem.
-        this.recomendations = res.filter(({ type }) => ['DISPUTE_MESSAGE', 'NEW_PARTY'].includes(type))
+        this.recomendations = res
       }).finally(() => {
         this.loading = false
       })
@@ -314,6 +348,10 @@ export default {
 
       .popover-recomendation-container__body-item {
         .popover-recomendation-container__body-item-container {
+          display: flex;
+          align-items: baseline;
+          gap: 8px;
+
           .popover-recomendation-container__body-item-container-label {
             font-weight: 600;
             color: $--color-secondary;
@@ -321,6 +359,14 @@ export default {
 
           .popover-recomendation-container__body-item-container-value {
             word-break: keep-all;
+
+            &.el-select {
+              flex: 1;
+
+              .el-input {
+                overflow: hidden;
+              }
+            }
           }
         }
       }
