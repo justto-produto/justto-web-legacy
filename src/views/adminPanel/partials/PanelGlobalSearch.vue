@@ -78,11 +78,20 @@
               </div>
 
               <div class="form-item__container">
-                <label for="disputeCodes">Processos:</label>
+                <label for="disputeCodes">
+                  <span>Processos:</span>
+
+                  <el-tooltip
+                    content="Use somente letras e números"
+                    placement="top-start"
+                  >
+                    <i class="el-icon-info" />
+                  </el-tooltip>
+                </label>
 
                 <el-select
                   id="disputeCodes"
-                  v-model="form.dispute.codes"
+                  :value="form.dispute.codes"
                   name="disputeCodes"
                   multiple
                   placeholder="Processos:"
@@ -90,6 +99,7 @@
                   allow-create
                   default-first-option
                   size="mini"
+                  @input="handleCodeInput"
                 >
                   <el-option
                     v-for="id in form.dispute.codes"
@@ -431,15 +441,22 @@ export default {
       if (value !== this.form.person.phones) {
         this.$set(this.form.person, 'phones', value.map(phone => {
           const fPhone = phone.replace(/\D/g, '')
+          const hasDDI = fPhone.startsWith('55') || fPhone.startsWith('+55')
 
-          return fPhone.startsWith('55') ? fPhone : `55${fPhone}`
+          return hasDDI ? fPhone : `55${fPhone}`
         }))
+      }
+    },
+
+    handleCodeInput(value) {
+      if (value !== this.form.dispute.codes) {
+        this.$set(this.form.dispute, 'codes', value.map(code => code.replace(/[^A-Za-z0-9]/g, '')))
       }
     },
 
     handleOabInput(value) {
       if (value !== this.form.person.oabs) {
-        this.$set(this.form.person, 'oabs', value.map(oab => oab.replace(/[-/. ]/g, '')))
+        this.$set(this.form.person, 'oabs', value.map(oab => oab.replace(/[^A-Za-z0-9]/g, '')))
       }
     },
 
