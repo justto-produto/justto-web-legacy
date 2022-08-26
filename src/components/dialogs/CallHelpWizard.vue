@@ -337,7 +337,8 @@ export default {
 
     handleCloseCall({ interactionId, disputeId }) {
       if (!this.contactValidityBrand) {
-        this.setValidNumberInCall({ interactionId, disputeId })
+        // TODO: SAAS-5304
+        // this.setValidNumberInCall({ interactionId, disputeId })
       }
     },
 
