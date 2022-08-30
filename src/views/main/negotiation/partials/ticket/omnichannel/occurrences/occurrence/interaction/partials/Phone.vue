@@ -53,10 +53,9 @@
         v-else
         class="phone-container__audio-component fallback"
       >
-        <i class="el-icon-document-delete phone-container__audio-component-icon" />
-        <p class="phone-container__audio-component-label">
-          Gravação não disponível
-        </p>
+        <el-tooltip content="Gravação não disponível">
+          <i class="el-icon-document-delete phone-container__audio-component-icon" />
+        </el-tooltip>
       </div>
 
       <div
@@ -102,7 +101,7 @@
         class="phone-container__editor-label"
         :class="{'invalid-audio': !hasValidAudio}"
       >
-        {{ hasActiveCall ? 'Transcreva e anote o que precisar desta ligação em andamento:' : hasValidAudio ? 'Transcreva sua conversa abaixo:' : 'Esta chamada não foi atendida' }}
+        {{ hasActiveCall ? 'Transcreva e anote o que precisar desta ligação em andamento:' : hasValidAudio ? 'Transcreva sua conversa abaixo:' : 'Chamada não foi atendida' }}
       </label>
 
       <ckeditor
@@ -395,7 +394,7 @@ export default {
   }
 
   .phone-container__audio {
-    margin: 16px 0;
+    margin: 8px 0 0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -426,7 +425,7 @@ export default {
 
         .phone-container__audio-component-icon::before {
           font-size: 28px;
-          color: $--color-primary;
+          // color: $--color-primary;
         }
 
         .phone-container__audio-component-label {
