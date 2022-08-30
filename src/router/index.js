@@ -196,6 +196,38 @@ const router = new Router({
             trackPage: true,
             title: 'Workspaces'
           }
+        },
+        {
+          name: 'relatorios',
+          path: 'reports',
+          component: () => import(/* webpackChunkName: "ReportsList" */ '@/views/main/reports/ReportsList'),
+          meta: {
+            requiresAuth: true,
+            trackPage: true,
+            title: 'Relatoórios'
+          },
+          children: [
+            {
+              name: 'managementReport',
+              path: 'management',
+              component: () => import(/* webpackChunkName: "ManagementReport" */ '@/views/main/reports/partials/Management'),
+              meta: {
+                requiresAuth: true,
+                trackPage: true,
+                title: 'Relatório Gerêncial'
+              }
+            },
+            {
+              name: 'managerialReport',
+              path: 'managerial',
+              component: () => import(/* webpackChunkName: "managerialReport" */ '@/views/main/reports/partials/Managerial'),
+              meta: {
+                requiresAuth: true,
+                trackPage: true,
+                title: 'Relatório Gestão'
+              }
+            }
+          ]
         }
       ]
     },
