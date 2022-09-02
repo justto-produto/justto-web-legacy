@@ -124,7 +124,7 @@ export default {
 
       const partiesName = this.compactedParties[{ CLAIMANT: 0, RESPONDENT: 1 }[polarity]].name
 
-      const text = `Cadastrar ${this.unknownFullName} como ${this.$tc('roles.LAWYER.' + polarity)}(${partiesName}).`
+      const text = `Cadastrar ${this.unknownFullName} como ${this.$tc('roles.LAWYER.' + polarity, this.isRecovery)}(${partiesName}).`
 
       this.$confirm(text, 'Identificar polaridade', {
         confirmButtonText: 'Sim',
