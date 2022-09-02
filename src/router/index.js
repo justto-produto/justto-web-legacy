@@ -204,7 +204,7 @@ const router = new Router({
           meta: {
             requiresAuth: true,
             trackPage: true,
-            title: 'Relatoórios'
+            title: 'Relatórios'
           },
           children: [
             {
