@@ -72,7 +72,7 @@ export default {
     followUpBtnText() {
       const plural = this.followUpDays > 1 ? 's' : ''
 
-      return this.havePhone ? 'Ligue para a parte!' : this.wasViewed ? `Visualizado à ${this.followUpDays} dia${plural}` : `${this.followUpDays} dia${plural} sem retorno da parte`
+      return this.havePhone ? 'Ligue para a parte!' : this.wasViewed ? `Visualizada há ${this.followUpDays} dia${plural}` : `${this.followUpDays} dia${plural} sem retorno da parte`
     }
   },
 
