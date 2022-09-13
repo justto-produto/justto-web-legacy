@@ -54,7 +54,7 @@
         class="phone-container__audio-component fallback"
       >
         <el-tooltip content="Gravação não disponível">
-          <i class="el-icon-document-delete phone-container__audio-component-icon" />
+          <JusIcon icon="missed-call" />
         </el-tooltip>
       </div>
 
