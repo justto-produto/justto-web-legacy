@@ -105,6 +105,7 @@ export default {
         'ACTION',
         'ATTACHMENT',
         'PHONE_CALL',
+        'TAP_WORKFLOW',
         'VISUALIZATION',
         'COMMUNICATION',
         'MANUAL_PROPOSAL',
