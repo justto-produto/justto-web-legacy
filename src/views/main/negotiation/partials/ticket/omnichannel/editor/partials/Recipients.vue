@@ -128,8 +128,8 @@ export default {
   methods: {
     ...mapActions([
       'addCall',
-      'getTicketOverviewParties',
-      'getTicketOverviewPartyUpdated'
+      'getTicketOverviewParty',
+      'getTicketOverviewPartiesTemp'
     ]),
 
     handleAddCall() {
@@ -157,11 +157,11 @@ export default {
         const number = this.recipients[0]?.value
         const disputeId = Number(this.$route.params.id)
 
-        this.getTicketOverviewParties(disputeId).then(parties => {
+        this.getTicketOverviewPartiesTemp(disputeId).then(parties => {
           parties.map(async currentParty => {
             const { disputeRoleId } = currentParty
 
-            this.getTicketOverviewPartyUpdated({ disputeId, disputeRoleId }).then(res => {
+            this.getTicketOverviewParty({ disputeId, disputeRoleId }).then(res => {
               const { phones } = res
 
               for (const phone of phones) {
