@@ -1,33 +1,39 @@
 <template>
   <main
-    v-if="$route.params.id"
     class="negotiations-container"
   >
     <Tickets
-      :class="{ 'hide-section': $route.params.id }"
+      :class="{
+        'hide-section': disputeId,
+        'full-section': !disputeId
+      }"
       class="negotiations-container__tickets"
+      :full-screen="!disputeId"
     />
 
     <section
-      v-if="$route.params.id"
-      :class="{ 'hide-section': !$route.params.id }"
+      v-if="disputeId"
+      :class="{ 'hide-section': !disputeId }"
       class="negotiations-container__ticket"
     >
-      <router-view v-if="$route.params.id" />
+      <router-view v-if="disputeId" />
       <!-- <EmptyTicket v-else /> -->
     </section>
   </main>
-
-  <Management v-else />
 </template>
 
 <script>
 export default {
   name: 'Negotiation',
   components: {
-    Tickets: () => import('./partials/tickets/Tickets'),
-    Management: () => import('@/views/main/management/Management')
+    Tickets: () => import('./partials/tickets/Tickets')
     // EmptyTicket: () => import('./partials/ticket/TicketEmpty')
+  },
+
+  computed: {
+    disputeId() {
+      return this.$route?.params?.id
+    }
   },
 
   mounted() {
@@ -47,6 +53,10 @@ export default {
   .negotiations-container__tickets {
     width: 360px;
     border-right: 1px solid $--color-light-gray;
+
+    &.full-section {
+      width: 100%;
+    }
   }
 
   .negotiations-container__ticket {

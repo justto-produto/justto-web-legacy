@@ -49,8 +49,14 @@
           {{ tickets.totalElements || 0 }} {{ $tc('labels.dispute', tickets.totalElements || 0) }}
         </div>
 
+        <TicketsTable
+          v-if="fullScreen"
+          :tab="tab.name"
+          :tickets="tickets"
+        />
+
         <ul
-          v-if="activeTab === tab.name"
+          v-else-if="activeTab === tab.name"
           class="tickets-container__list"
         >
           <component
@@ -94,8 +100,16 @@ export default {
     EngagementTicketItem: () => import('./EngagementTicketItem'),
     CommunicationTicketItem: () => import('./CommunicationTicketItem'),
     TicketsHeader: () => import('./TicketsHeader'),
-    InfiniteLoading: () => import('vue-infinite-loading')
+    InfiniteLoading: () => import('vue-infinite-loading'),
+    TicketsTable: () => import('./TicketsTable')
     // VuePerfectScrollbar: () => import('vue-perfect-scrollbar'),
+  },
+
+  props: {
+    fullScreen: {
+      type: Boolean,
+      default: false
+    }
   },
 
   computed: {
