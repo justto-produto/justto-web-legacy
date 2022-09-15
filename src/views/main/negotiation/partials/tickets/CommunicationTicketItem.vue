@@ -232,7 +232,9 @@ export default {
           }
         }
       } else if (lastInboundInteraction?.type !== 'COMMUNICATION') {
-        const { type, dateTime } = (lastInboundInteraction || {})
+        const type = lastInboundInteraction?.type
+        const dateTime = lastInboundInteraction?.dateTime
+        // const { type, dateTime } = (lastInboundInteraction || {})
 
         return {
           icon: type ? this.$tc(`interaction-types.${type}.icon`) : null,
