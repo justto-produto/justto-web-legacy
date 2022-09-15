@@ -50,6 +50,7 @@ export default {
           'LOG',
           'CLICK',
           'ACTION',
+          'TAP_WORKFLOW',
           'VISUALIZATION',
           'NEGOTIATOR_ACCESS'
         ],
