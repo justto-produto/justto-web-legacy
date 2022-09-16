@@ -49,6 +49,10 @@ const overviewActions = {
     }).finally(() => commit('decrementTicketOverviewCountGetters')))
   },
 
+  getTicketOverviewPartiesTemp({ commit }, disputeId) {
+    return axiosDispatch({ url: `${disputeApi}/${disputeId}/parties` })
+  },
+
   getTicketOverviewParty({ commit }, { disputeId, disputeRoleId }) {
     commit('incrementTicketOverviewCountGetters')
 

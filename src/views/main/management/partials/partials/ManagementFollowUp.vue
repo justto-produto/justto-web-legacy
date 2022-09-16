@@ -53,12 +53,16 @@ export default {
       return false
     },
 
+    hasUnknownParts() {
+      return this.dispute?.unknownPolarityParty || ((this.dispute?.disputeRoles || []).filter(({ party }) => (party === 'UNKNOWN')).length) > 0
+    },
+
     needFolllowUp() {
       if (this.dispute?.lastInteraction?.direction === 'OUTBOUND' && ['RUNNING'].includes(this.status)) {
         return this.$moment().diff(this.$moment(this.dispute?.lastInteraction?.createAt?.dateTime || this.dispute?.lastInteraction?.createdAt), 'hours') >= 24
       }
 
-      return this.wasViewed || this.havePhone
+      return this.hasUnknownParts || this.wasViewed || this.havePhone
     },
 
     followUpDays() {
@@ -66,13 +70,13 @@ export default {
     },
 
     followUpText() {
-      return 'Ligue para a parte e faça o acordo!'
+      return this.hasUnknownParts ? 'Disputa contém partes sem polaridade.' : 'Ligue para a parte e faça o acordo!'
     },
 
     followUpBtnText() {
       const plural = this.followUpDays > 1 ? 's' : ''
 
-      return this.havePhone ? 'Ligue para a parte!' : this.wasViewed ? `Visualizada há ${this.followUpDays} dia${plural}` : `${this.followUpDays} dia${plural} sem retorno da parte`
+      return this.hasUnknownParts ? 'Definir polaridade' : this.havePhone ? 'Ligue para a parte!' : this.wasViewed ? `Visualizada há ${this.followUpDays} dia${plural}` : `${this.followUpDays} dia${plural} sem retorno da parte`
     }
   },
 
