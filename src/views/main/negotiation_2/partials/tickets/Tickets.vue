@@ -101,7 +101,7 @@ export default {
     CommunicationTicketItem: () => import('./CommunicationTicketItem'),
     TicketsHeader: () => import('./TicketsHeader'),
     InfiniteLoading: () => import('vue-infinite-loading'),
-    TicketsTable: () => import('./TicketsTable')
+    TicketsTable: () => import('./table/TicketsTable')
     // VuePerfectScrollbar: () => import('vue-perfect-scrollbar'),
   },
 
@@ -225,7 +225,11 @@ export default {
     ...mapMutations(['setPreventFilters', 'setPreventSocket']),
 
     resetTabsScroll() {
-      this.$refs.tabs.$el.childNodes[0].childNodes[0].childNodes[2].scroll(0, 0)
+      try {
+        this.$refs.tabs.$el.childNodes[0].childNodes[0].childNodes[2].scroll(0, 0)
+      } catch (error) {
+        console.error('Erro ao Resetar Scrool.')
+      }
     },
 
     handlePreviousScroll() {
