@@ -337,8 +337,11 @@ export default {
 
     handleCloseCall({ interactionId, disputeId }) {
       if (!this.contactValidityBrand) {
-        // TODO: SAAS-5304
-        // this.setValidNumberInCall({ interactionId, disputeId })
+        this.$confirm('Oq eu pergunto aqui?', 'Fim da chamada', {
+          confirmButtonText: 'Sim',
+          cancelButtonText: 'Não',
+          center: true
+        }).then(() => this.setValidNumberInCall({ interactionId, disputeId }))
       }
     },
 
