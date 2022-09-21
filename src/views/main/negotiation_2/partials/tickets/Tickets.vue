@@ -49,11 +49,32 @@
           {{ tickets.totalElements || 0 }} {{ $tc('labels.dispute', tickets.totalElements || 0) }}
         </div>
 
-        <TicketsTable
+        <ul
           v-if="fullScreen"
-          :tab="tab.name"
-          :tickets="tickets"
-        />
+          class="tickets-container__list"
+        >
+          <TicketsTable
+            :tab="tab.name"
+            :tickets="tickets"
+          />
+
+          <infinite-loading
+            :identifier="activeTab"
+            spinner="spiral"
+            :distance="1340"
+            @infinite="infiniteHandler"
+          >
+            <div slot="no-more">
+              Fim das disputas
+            </div>
+
+            <div slot="no-results">
+              <span v-if="tickets.content.length === 0">
+                Sem disputas
+              </span>
+            </div>
+          </infinite-loading>
+        </ul>
 
         <ul
           v-else-if="activeTab === tab.name"

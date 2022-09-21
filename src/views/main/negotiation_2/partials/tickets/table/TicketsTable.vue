@@ -4,19 +4,19 @@
       v-for="ticket in content"
       :key="ticket.disputeId"
       class="table-ticket__table-body"
+      :class="{ 'table-ticket__table-body--active': isActive(ticket.disputeId) }"
+      @click="handleTicketClick(ticket)"
     >
       <TicketTableParty :ticket="ticket" />
 
       <tr>
-        <td colspan="2">
-          Message
+        <td colspan="4">
+          <TickettableMessage :ticket="ticket" />
         </td>
       </tr>
 
-      <tr>
-        <TicketTableDraft
-          :ticket="ticket"
-        />
+      <tr class="table-ticket__table-body__footer">
+        <TicketTableDraft :ticket="ticket" />
 
         <td>
           <FollowUp
@@ -25,12 +25,7 @@
           />
         </td>
 
-        <!-- <td
-          :class="{ 'communication-ticket-item-container__time--active': !ticket.visualized }"
-          class="communication-ticket-item-container__time"
-        >
-          {{ getLastInteraction(lastInboundInteraction.dateTime) }}
-        </td> -->
+        <TicketTableDate :ticket="ticket" />
       </tr>
     </tbody>
   </table>
@@ -41,8 +36,10 @@ import { getDocumentStep } from '@/utils'
 
 export default {
   components: {
-    TicketTableParty: () => import('./patials/TicketTableParty'),
-    TicketTableDraft: () => import('./patials/TicketTableDraft'),
+    TicketTableDate: () => import('./partials/TicketTableDate'),
+    TicketTableParty: () => import('./partials/TicketTableParty'),
+    TicketTableDraft: () => import('./partials/TicketTableDraft'),
+    TickettableMessage: () => import('./partials/TicketTableMessage'),
     FollowUp: () => import('@/views/main/management/partials/partials/ManagementFollowUp')
   },
 
@@ -61,16 +58,36 @@ export default {
   computed: {
     content() {
       return this.tickets?.content || []
+    },
+
+    isActive() {
+      return (id) => (Number(id) === Number(this.$route.params.id))
     }
   },
 
   methods: {
-    getDocumentStep: (hasDocument, signStatus) => getDocumentStep(hasDocument, signStatus)
+    getDocumentStep: (hasDocument, signStatus) => getDocumentStep(hasDocument, signStatus),
+
+    handleTicketClick(ticket) {
+      const { disputeId } = ticket
+
+      console.log(disputeId)
+
+      if (!this.isActive(disputeId)) {
+        this.$router.push(`negotiation2/${disputeId}`)
+        // this.$router.push({
+        //   name: 'ticket',
+        //   params: { id: disputeId }
+        // })
+      }
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+@import '@/styles/colors.scss';
+
 .table-ticket__table {
   cursor: pointer;
   width: 100%;
@@ -94,8 +111,26 @@ export default {
 
   .table-ticket__table-body {
     display: flex;
+    min-height: 80px;
     flex-direction: column;
-    padding: 18px 24px 18px 27px;
+    padding: 18px 24px 0px 27px;
+    border-bottom: 1px solid $--color-light-gray;
+
+    &:hover:not(.table-ticket__table-body--active) {
+      background-color: $--color-light-gray;
+    }
+
+    &.table-ticket__table-body--active {
+      background-color: $--color-light-gray;
+    }
+
+    .table-ticket__table-body__footer {
+      display: flex;
+
+      td {
+        flex: 1;
+      }
+    }
   }
 }
 </style>

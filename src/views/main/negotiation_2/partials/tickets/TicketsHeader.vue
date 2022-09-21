@@ -26,7 +26,7 @@
     </el-autocomplete>
 
     <TicketsFilters
-      v-if="['ticket', 'negotiation'].includes($route.name)"
+      v-if="['ticket', 'negotiation', 'negotiation2'].includes($route.name)"
       :active-tab="activeTab"
     />
   </header>
