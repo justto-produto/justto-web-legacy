@@ -12,14 +12,14 @@
       <el-radio label="TICKET">
         <jus-icon
           icon="negotiation-window"
-          :is-active="groupingType === 'TICKET'"
+          :is-active="mode === 'TICKET'"
         /> Negociação
       </el-radio>
 
       <el-radio label="MANAGEMENT">
         <jus-icon
           icon="list-app"
-          :is-active="groupingType === 'MANAGEMENT'"
+          :is-active="mode === 'MANAGEMENT'"
         /> Gerênciamento
       </el-radio>
     </el-radio-group>
