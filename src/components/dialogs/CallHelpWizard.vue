@@ -11,11 +11,11 @@
     :lock-scroll="false"
     width="40%"
     destroy-on-close
-    show-close
+    :show-close="false"
     center
   >
     <section
-      v-if="call || true"
+      v-if="visible"
       v-loading="isLoading"
       class="call-help__container"
     >
@@ -98,7 +98,7 @@
               Contato incorreto
             </el-button>
 
-            <el-tooltip content="Ao termino da contagem,  o contato será confirmado automaticamente!">
+            <el-tooltip content="Ao termino da contagem, o contato será confirmado automaticamente!">
               <el-button
                 type="success"
                 class="call-help__carousel-item-actions__correct_contact"
@@ -106,7 +106,7 @@
               >
                 Contato correto
                 <Countdown
-                  v-if="!ending"
+                  ref="countdown"
                   :end="autoValidateContactTime"
                   :stop="ending"
                 />
@@ -298,19 +298,31 @@ export default {
     call: {
       deep: true,
       handler(call, oldCall) {
-        this.autoValidateContactTime = this.$moment().add(2, 'm').format()
+        // this.autoValidateContactTime = this.$moment().add(2, 'm').format()
 
         clearTimeout(this.autocontactTimeout)
-        this.autocontactTimeout = setTimeout(() => {
-          this.next('contact')
-        }, 2 * 60 * 1000)
+        // this.autocontactTimeout = setTimeout(() => {
+        //   this.next('contact')
+        // }, 2 * 60 * 1000)
 
         // TODO: Aceitar automaticamente após 2 mim.
         this.visible = call?.status === CALL_STATUS.ACTIVE_CALL
 
         if (this.visible) {
           this.contactValidityBrand = false
+          this.showIncorrectContactForm = false
           this.$emit('queue:hide')
+
+          this.autocontactTimeout = setTimeout(() => {
+            this.next('contact')
+          }, 2 * 60 * 1000)
+
+          this.autoValidateContactTime = this.$moment().add(2, 'm').format()
+
+          this.$nextTick().then(() => {
+            console.log(this.$refs.countdown)
+            this.$refs.countdown.reset()
+          })
         }
 
         if (oldCall?.status === CALL_STATUS.COMPLETED_CALL && call === null) {

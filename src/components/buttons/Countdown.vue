@@ -108,24 +108,34 @@ export default {
   },
 
   created() {
-    if (!this.end) {
-      throw new Error("Missing prop 'end'")
-    }
-
-    const endTime = this.end
-    this.date = Math.trunc(Date.parse(endTime) / 1000)
-
-    if (!this.date) {
-      throw new Error("Invalid prop value, correct is 'end'")
-    }
-
-    interval = setInterval(() => {
-      this.now = Math.trunc(new Date().getTime() / 1000)
-    }, 1000)
+    this.init()
   },
 
   destroyed() {
     clearInterval(interval)
+  },
+
+  methods: {
+    init() {
+      if (!this.end) {
+        throw new Error("Missing prop 'end'")
+      }
+
+      const endTime = this.end
+      this.date = Math.trunc(Date.parse(endTime) / 1000)
+
+      if (!this.date) {
+        throw new Error("Invalid prop value, correct is 'end'")
+      }
+
+      interval = setInterval(() => {
+        this.now = Math.trunc(new Date().getTime() / 1000)
+      }, 1000)
+    },
+
+    reset() {
+      this.init()
+    }
   }
 }
 </script>
@@ -133,5 +143,7 @@ export default {
 <style lang="scss" scoped>
 .countdown {
   display: flex;
+  min-width: 40px;
+  justify-content: center;
 }
 </style>
