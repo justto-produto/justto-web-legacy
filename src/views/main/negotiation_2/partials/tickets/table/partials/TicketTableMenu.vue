@@ -47,7 +47,7 @@ export default {
       gap: 4px;
 
       img {
-        width: 26px;
+        width: 24px;
       }
     }
   }
