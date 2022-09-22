@@ -1,7 +1,7 @@
 <template>
   <article
     v-loading="localLoading"
-    element-loading-text="Aguarde… Estamos salvando a gravação de sua ligação."
+    element-loading-text="Aguarde..."
     class="phone-container"
   >
     <div
