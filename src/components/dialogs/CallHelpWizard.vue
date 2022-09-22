@@ -11,15 +11,15 @@
     :lock-scroll="false"
     width="40%"
     destroy-on-close
-    show-close
+    :show-close="false"
     center
   >
     <section
-      v-if="call || true"
+      v-if="visible"
       v-loading="isLoading"
       class="call-help__container"
     >
-      <div class="call-help__call">
+      <!-- <div class="call-help__call">
         <i class="el-icon-microphone el-icon-pulse" />
 
         <el-button
@@ -30,7 +30,7 @@
         >
           {{ ending ? 'Desligando' : 'Desligar' }}
         </el-button>
-      </div>
+      </div> -->
 
       <el-carousel
         ref="carousel"
@@ -93,19 +93,25 @@
           <div class="call-help__carousel-item-actions">
             <el-button
               type="danger"
-              size="small"
               @click="handleIncorrectContact"
             >
               Contato incorreto
             </el-button>
 
-            <el-button
-              type="success"
-              size="small"
-              @click="next('contact')"
-            >
-              Contato correto
-            </el-button>
+            <el-tooltip content="Ao termino da contagem, o contato será confirmado automaticamente!">
+              <el-button
+                type="success"
+                class="call-help__carousel-item-actions__correct_contact"
+                @click="next('contact')"
+              >
+                Contato correto
+                <Countdown
+                  ref="countdown"
+                  :end="autoValidateContactTime"
+                  :stop="ending"
+                />
+              </el-button>
+            </el-tooltip>
           </div>
         </el-carousel-item>
 
@@ -128,7 +134,6 @@
             <el-button
               slot="reference"
               type="danger"
-              size="small"
               @click="toggleDontRecCallForm()"
             >
               Não concordou
@@ -136,7 +141,6 @@
 
             <el-button
               type="success"
-              size="small"
               @click="close()"
             >
               Concordou
@@ -233,6 +237,10 @@ import { mapActions, mapGetters } from 'vuex'
 import { CALL_STATUS } from '@/constants/callStatus'
 
 export default {
+  components: {
+    Countdown: () => import('@/components/buttons/Countdown')
+  },
+
   props: {
     ending: {
       type: Boolean,
@@ -252,7 +260,9 @@ export default {
     contactsAddedRecent: {
       emails: [],
       phones: []
-    }
+    },
+    autoValidateContactTime: '',
+    autocontactTimeout: null
   }),
 
   computed: {
@@ -288,15 +298,36 @@ export default {
     call: {
       deep: true,
       handler(call, oldCall) {
+        // this.autoValidateContactTime = this.$moment().add(2, 'm').format()
+
+        clearTimeout(this.autocontactTimeout)
+        // this.autocontactTimeout = setTimeout(() => {
+        //   this.next('contact')
+        // }, 2 * 60 * 1000)
+
+        // TODO: Aceitar automaticamente após 2 mim.
         this.visible = call?.status === CALL_STATUS.ACTIVE_CALL
 
         if (this.visible) {
           this.contactValidityBrand = false
+          this.showIncorrectContactForm = false
           this.$emit('queue:hide')
+
+          this.autocontactTimeout = setTimeout(() => {
+            this.next('contact')
+          }, 2 * 60 * 1000)
+
+          this.autoValidateContactTime = this.$moment().add(2, 'm').format()
+
+          this.$nextTick().then(() => {
+            console.log(this.$refs.countdown)
+            this.$refs.countdown.reset()
+          })
         }
 
         if (oldCall?.status === CALL_STATUS.COMPLETED_CALL && call === null) {
-          this.handleCloseCall(oldCall)
+          // deprecated: Aconfirma validade da chamada.
+          // this.handleCloseCall(oldCall)
         }
       }
     }
@@ -315,6 +346,7 @@ export default {
       if (item === 'contact') {
         this.setValidNumberInCall(this.call)
         this.contactValidityBrand = true
+        clearTimeout(this.autocontactTimeout)
 
         // TODO: SAAS-4756 Se a chamada for agendada, Atualizar status da chamada.
         const callIsScheduled = false
@@ -336,9 +368,8 @@ export default {
     },
 
     handleCloseCall({ interactionId, disputeId }) {
-      if (!this.contactValidityBrand) {
-        // TODO: SAAS-5304
-        // this.setValidNumberInCall({ interactionId, disputeId })
+      if (interactionId && disputeId) {
+        this.setValidNumberInCall({ interactionId, disputeId })
       }
     },
 
@@ -552,6 +583,14 @@ export default {
               display: flex;
               flex-direction: row;
               justify-content: space-around;
+
+              .call-help__carousel-item-actions__correct_contact {
+                span {
+                  display: flex;
+                  align-items: center;
+                  gap: 8px;
+                }
+              }
             }
           }
         }
