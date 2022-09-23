@@ -354,6 +354,7 @@
         </div>
 
         <div class="dialog-footer__buttons">
+          <!-- Voltar para edição -->
           <el-tooltip
             v-if="document.canEdit && [3, 4].includes(step)"
             content="Volta documento para edição."
