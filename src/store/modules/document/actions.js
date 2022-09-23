@@ -143,6 +143,13 @@ const documentActions = {
     return Promise.all([
       commit('setOpenDraftId', id)
     ])
+  },
+
+  getSignerStatus({ _ }) {
+    return axiosDispatch({
+      url: 'api/office/draft/signer/status',
+      mutation: 'setSignerStatus'
+    })
   }
 }
 

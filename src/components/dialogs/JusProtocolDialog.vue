@@ -24,7 +24,7 @@
             :underline="false"
             class="jus-protocol-dialog__title"
             target="_blank"
-            @click="openDocumentInNewTab"
+            @click="downloadDocument"
           >
             <div v-if="step !== 3">
               {{ title }}
@@ -39,12 +39,6 @@
                 {{ lineTitle }}
               </div>
             </div>
-            <sup>
-              <jus-icon
-                icon="external-link"
-                class="jus-protocol-dialog__dispute-link-icon"
-              />
-            </sup>
           </el-link>
         </span>
 
@@ -626,7 +620,8 @@ export default {
       accountEmail: 'accountEmail',
       disputeProtocol: 'getDisputeProtocol',
       isRecovery: 'isWorkspaceRecovery',
-      openDraftId: 'getOpenDraftId'
+      openDraftId: 'getOpenDraftId',
+      signerServiceIsAvailable: 'getSignerServiceAvailable'
     }),
 
     disputeRoles() {
@@ -740,11 +735,6 @@ export default {
 
     buttonSize() {
       return IS_SMALL_WINDOW ? 'mini' : 'medium'
-    },
-
-    signerServiceIsAvailable() {
-      // TODO: Get descrito na task SAAS-5341
-      return false
     }
   },
 
@@ -775,6 +765,8 @@ export default {
         } else {
           document.body.style.zoom = 1
         }
+
+        this.getSignerStatus()
 
         this.openStoredDraft()
         this.disputeRolesFiller(this.dispute).then(() => {
@@ -827,7 +819,8 @@ export default {
       'fillerDisputeRole',
       'getDisputeProtocol',
       'saveMinimizedDraft',
-      'openStoredDraft'
+      'openStoredDraft',
+      'getSignerStatus'
     ]),
 
     disputeRolesFiller() {
