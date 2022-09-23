@@ -7,7 +7,8 @@ const document = {
     availableSigners: [],
     selectedSigners: [],
     storedDrafts: {},
-    openDraftId: null
+    openDraftId: null,
+    signerService: { enabled: true }
   },
   mutations: mutations,
   actions: actions,
