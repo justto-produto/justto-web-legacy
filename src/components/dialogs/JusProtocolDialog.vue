@@ -107,6 +107,7 @@
             @click="changeFullscreen"
           />
         </el-tooltip>
+
         <div v-if="step === 1">
           <iframe
             :src="document.url"
@@ -114,6 +115,7 @@
             allowfullscreen
           />
         </div>
+
         <!-- ESCOLHA DE EMAILS PARA ASSINATURA -->
         <div
           v-if="step === 2"
@@ -290,6 +292,7 @@
             </el-form-item>
           </el-form>
         </div>
+
         <!-- FEEDBACK DE ASSINATURAS -->
         <!-- TODO -->
         <div v-if="step === 3">
@@ -325,6 +328,7 @@
             </div>
           </div>
         </div>
+
         <!-- VISUALIZAÇÃO DA MINUTA -->
         <div
           v-if="false && step === 4"
@@ -344,115 +348,128 @@
         slot="footer"
         class="dialog-footer"
       >
-        <el-tooltip
-          v-if="document.canEdit && [3, 4].includes(step)"
-          content="Volta documento para edição."
-        >
-          <el-button
-            :disabled="loading"
-            type="primary"
-            icon="el-icon-refresh-left"
-            :size="buttonSize"
-            @click="backDocumentToEditing"
-          >
-            Voltar para edição
-          </el-button>
-        </el-tooltip>
-
-        <el-tooltip
-          v-if="step === 3"
-          content="Baixar minuta."
-        >
-          <el-button
-            v-loading="loadingDownload"
-            icon="el-icon-download"
-            type="primary"
-            :size="buttonSize"
-            @click="downloadDocument"
-          >
-            Baixar
-          </el-button>
-        </el-tooltip>
-
-        <el-button
-          v-if="[2, 4].includes(step)"
-          :disabled="loading"
-          :size="buttonSize"
-          plain
-          @click="backToDocument"
-        >
-          Voltar
-        </el-button>
-
-        <el-button
-          v-if="step === 1"
-          :size="buttonSize"
-          :disabled="loading"
-          type="primary"
-          @click="step = 2, hideForms()"
-        >
-          Definir assinantes da minuta
-        </el-button>
-
-        <el-button
-          v-if="step === 2"
-          :size="buttonSize"
-          :disabled="!hasEmails || loadingChooseRecipients"
-          type="primary"
-          @click="confirmChooseRecipients"
-        >
-          Enviar para Assinatura
-        </el-button>
-
-        <el-tooltip
-          v-if="canResendNotification && step === 3"
-          content="Reenvia notificação para todos os contatos que ainda não assinaram a minuta."
-        >
-          <el-button
-            :disabled="loading"
-            icon="el-icon-refresh-right"
-            type="primary"
-            :size="buttonSize"
-            @click="resendSignersNotification"
-          >
-            Reenviar
-          </el-button>
-        </el-tooltip>
-
-        <el-button
-          v-if="false && step === 3"
-          icon="el-icon-view"
-          :size="buttonSize"
-          type="primary"
-          @click="visualizePdf"
-        >
-          Visualizar
-        </el-button>
-
-        <el-button
-          v-if="![0, 4].includes(step)"
-          :disabled="loading"
-          :size="buttonSize"
-          type="danger"
-          @click="deleteDocument"
-        >
-          <i
-            class="el-icon-delete"
-            style="color: white; margin-right: 4px;"
+        <div class="dialog-footer__alerts">
+          <el-alert
+            v-if="!signerServiceIsAvailable"
+            title="O assinador digital Jurista está indisponível no momento. Faça o download do arquivo e utilize outro meio de assinatura do documento."
+            type="warning"
+            :closable="false"
+            show-icon
+            center
           />
-          Excluir Minuta
-        </el-button>
+        </div>
 
-        <el-button
-          v-if="step !== 4"
-          :disabled="loading"
-          :size="buttonSize"
-          plain
-          type="danger"
-          @click="visible = false"
-        >
-          {{ [3, 4].includes(step) ? 'Fechar' : 'Cancelar' }}
-        </el-button>
+        <div class="dialog-footer__buttons">
+          <el-tooltip
+            v-if="document.canEdit && [3, 4].includes(step)"
+            content="Volta documento para edição."
+          >
+            <el-button
+              :disabled="loading"
+              type="primary"
+              icon="el-icon-refresh-left"
+              :size="buttonSize"
+              @click="backDocumentToEditing"
+            >
+              Voltar para edição
+            </el-button>
+          </el-tooltip>
+
+          <el-tooltip
+            v-if="step === 3"
+            content="Baixar minuta."
+          >
+            <el-button
+              v-loading="loadingDownload"
+              icon="el-icon-download"
+              type="primary"
+              :size="buttonSize"
+              @click="downloadDocument"
+            >
+              Baixar
+            </el-button>
+          </el-tooltip>
+
+          <el-button
+            v-if="[2, 4].includes(step)"
+            :disabled="loading"
+            :size="buttonSize"
+            plain
+            @click="backToDocument"
+          >
+            Voltar
+          </el-button>
+
+          <el-button
+            v-if="step === 1"
+            :size="buttonSize"
+            :disabled="loading"
+            type="primary"
+            @click="step = 2, hideForms()"
+          >
+            Definir assinantes da minuta
+          </el-button>
+
+          <el-button
+            v-if="step === 2"
+            :size="buttonSize"
+            :disabled="(!hasEmails || loadingChooseRecipients)"
+            type="primary"
+            @click="confirmChooseRecipients"
+          >
+            {{ signerServiceIsAvailable ? 'Enviar para Assinatura' : 'Salvar assinantes' }}
+          </el-button>
+
+          <el-tooltip
+            v-if="canResendNotification && step === 3"
+            content="Reenvia notificação para todos os contatos que ainda não assinaram a minuta."
+          >
+            <el-button
+              :disabled="loading"
+              icon="el-icon-refresh-right"
+              type="primary"
+              :size="buttonSize"
+              @click="resendSignersNotification"
+            >
+              Reenviar
+            </el-button>
+          </el-tooltip>
+
+          <el-button
+            v-if="false && step === 3"
+            icon="el-icon-view"
+            :size="buttonSize"
+            type="primary"
+            @click="visualizePdf"
+          >
+            Visualizar
+          </el-button>
+
+          <el-button
+            v-if="![0, 4].includes(step)"
+            :disabled="loading"
+            :size="buttonSize"
+            type="danger"
+            @click="deleteDocument"
+          >
+            <i
+              class="el-icon-delete"
+              style="color: white; margin-right: 4px;"
+            />
+            Excluir Minuta
+          </el-button>
+
+          <el-button
+            v-if="step !== 4"
+            :disabled="loading"
+            :size="buttonSize"
+            plain
+            type="danger"
+            @click="visible = false"
+          >
+            {{ [3, 4].includes(step) ? 'Fechar' : 'Cancelar' }}
+          </el-button>
+        </div>
       </div>
     </el-dialog>
 
@@ -473,6 +490,7 @@
         Cada parte assinante precisa ter o CPF cadastrado e um E-MAIL selecionado. Certifique-se na
         tela anterior se todas as partes para assinatura estão corretamente preenchidas.
       </el-alert>
+
       <div
         v-for="recipient of recipients"
         :key="recipient.name"
@@ -485,6 +503,7 @@
           {{ recipient.email }}
         </div>
       </div>
+
       <span
         slot="footer"
         class="dialog-footer"
@@ -496,12 +515,13 @@
         >
           Voltar
         </el-button>
+
         <el-button
           :disabled="loadingChooseRecipients"
           type="primary"
           @click="chooseRecipients"
         >
-          Confirmar e enviar
+          {{ signerServiceIsAvailable ? 'Confirmar e enviar' : 'Confirmar e salvar' }}
         </el-button>
       </span>
     </el-dialog>
@@ -720,6 +740,11 @@ export default {
 
     buttonSize() {
       return IS_SMALL_WINDOW ? 'mini' : 'medium'
+    },
+
+    signerServiceIsAvailable() {
+      // TODO: Get descrito na task SAAS-5341
+      return false
     }
   },
 
@@ -1498,10 +1523,30 @@ export default {
 
   .dialog-footer {
     display: flex;
-    flex-direction: row;
-    justify-content: center;
+    flex-direction: column;
+    // justify-content: center;
+    gap: 16px;
     margin-bottom: 18px;
     padding-bottom: 0;
+
+    .dialog-footer__alerts {
+      display: flex;
+
+      .el-alert {
+        .el-alert__content {
+          .el-alert__title {
+            font-weight: 600;
+            font-size: 16px;
+          }
+        }
+      }
+    }
+
+    .dialog-footer__buttons {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+    }
   }
 
   &.is-fullscreen {
