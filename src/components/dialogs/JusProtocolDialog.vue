@@ -346,7 +346,7 @@
           <el-alert
             v-if="!signerServiceIsAvailable"
             title="O assinador digital Jurista está indisponível no momento. Faça o download do arquivo e utilize outro meio de assinatura do documento."
-            type="warning"
+            type="error"
             :closable="false"
             show-icon
             center
@@ -369,8 +369,9 @@
             </el-button>
           </el-tooltip>
 
+          <!-- Baixar -->
           <el-tooltip
-            v-if="step === 3"
+            v-if="step === 3 || (step === 1 && !signerServiceIsAvailable)"
             content="Baixar minuta."
           >
             <el-button
@@ -384,6 +385,7 @@
             </el-button>
           </el-tooltip>
 
+          <!-- Voltar -->
           <el-button
             v-if="[2, 4].includes(step)"
             :disabled="loading"
@@ -394,26 +396,29 @@
             Voltar
           </el-button>
 
+          <!-- Definir assinantes da minuta -->
           <el-button
-            v-if="step === 1"
+            v-if="step === 1 && signerServiceIsAvailable"
             :size="buttonSize"
-            :disabled="loading"
+            :disabled="loading || !signerServiceIsAvailable"
             type="primary"
             @click="step = 2, hideForms()"
           >
             Definir assinantes da minuta
           </el-button>
 
+          <!-- Enviar para Assinatura -->
           <el-button
             v-if="step === 2"
             :size="buttonSize"
-            :disabled="(!hasEmails || loadingChooseRecipients)"
+            :disabled="(!hasEmails || loadingChooseRecipients) || !signerServiceIsAvailable"
             type="primary"
             @click="confirmChooseRecipients"
           >
-            {{ signerServiceIsAvailable ? 'Enviar para Assinatura' : 'Salvar assinantes' }}
+            Enviar para Assinatura
           </el-button>
 
+          <!-- Reenviar -->
           <el-tooltip
             v-if="canResendNotification && step === 3"
             content="Reenvia notificação para todos os contatos que ainda não assinaram a minuta."
@@ -429,6 +434,7 @@
             </el-button>
           </el-tooltip>
 
+          <!-- Visualizar -->
           <el-button
             v-if="false && step === 3"
             icon="el-icon-view"
@@ -439,6 +445,7 @@
             Visualizar
           </el-button>
 
+          <!-- Excluir minuta -->
           <el-button
             v-if="![0, 4].includes(step)"
             :disabled="loading"
@@ -453,6 +460,7 @@
             Excluir Minuta
           </el-button>
 
+          <!-- Fechar/Cancelar -->
           <el-button
             v-if="step !== 4"
             :disabled="loading"
