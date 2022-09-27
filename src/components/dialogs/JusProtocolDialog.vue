@@ -24,7 +24,7 @@
             :underline="false"
             class="jus-protocol-dialog__title"
             target="_blank"
-            @click="openDocumentInNewTab"
+            @click="downloadDocument"
           >
             <div v-if="step !== 3">
               {{ title }}
@@ -39,12 +39,6 @@
                 {{ lineTitle }}
               </div>
             </div>
-            <sup>
-              <jus-icon
-                icon="external-link"
-                class="jus-protocol-dialog__dispute-link-icon"
-              />
-            </sup>
           </el-link>
         </span>
 
@@ -107,6 +101,7 @@
             @click="changeFullscreen"
           />
         </el-tooltip>
+
         <div v-if="step === 1">
           <iframe
             :src="document.url"
@@ -114,6 +109,7 @@
             allowfullscreen
           />
         </div>
+
         <!-- ESCOLHA DE EMAILS PARA ASSINATURA -->
         <div
           v-if="step === 2"
@@ -290,6 +286,7 @@
             </el-form-item>
           </el-form>
         </div>
+
         <!-- FEEDBACK DE ASSINATURAS -->
         <!-- TODO -->
         <div v-if="step === 3">
@@ -325,6 +322,7 @@
             </div>
           </div>
         </div>
+
         <!-- VISUALIZAÇÃO DA MINUTA -->
         <div
           v-if="false && step === 4"
@@ -344,115 +342,137 @@
         slot="footer"
         class="dialog-footer"
       >
-        <el-tooltip
-          v-if="document.canEdit && [3, 4].includes(step)"
-          content="Volta documento para edição."
-        >
-          <el-button
-            :disabled="loading"
-            type="primary"
-            icon="el-icon-refresh-left"
-            :size="buttonSize"
-            @click="backDocumentToEditing"
-          >
-            Voltar para edição
-          </el-button>
-        </el-tooltip>
-
-        <el-tooltip
-          v-if="step === 3"
-          content="Baixar minuta."
-        >
-          <el-button
-            v-loading="loadingDownload"
-            icon="el-icon-download"
-            type="primary"
-            :size="buttonSize"
-            @click="downloadDocument"
-          >
-            Baixar
-          </el-button>
-        </el-tooltip>
-
-        <el-button
-          v-if="[2, 4].includes(step)"
-          :disabled="loading"
-          :size="buttonSize"
-          plain
-          @click="backToDocument"
-        >
-          Voltar
-        </el-button>
-
-        <el-button
-          v-if="step === 1"
-          :size="buttonSize"
-          :disabled="loading"
-          type="primary"
-          @click="step = 2, hideForms()"
-        >
-          Definir assinantes da minuta
-        </el-button>
-
-        <el-button
-          v-if="step === 2"
-          :size="buttonSize"
-          :disabled="!hasEmails || loadingChooseRecipients"
-          type="primary"
-          @click="confirmChooseRecipients"
-        >
-          Enviar para Assinatura
-        </el-button>
-
-        <el-tooltip
-          v-if="canResendNotification && step === 3"
-          content="Reenvia notificação para todos os contatos que ainda não assinaram a minuta."
-        >
-          <el-button
-            :disabled="loading"
-            icon="el-icon-refresh-right"
-            type="primary"
-            :size="buttonSize"
-            @click="resendSignersNotification"
-          >
-            Reenviar
-          </el-button>
-        </el-tooltip>
-
-        <el-button
-          v-if="false && step === 3"
-          icon="el-icon-view"
-          :size="buttonSize"
-          type="primary"
-          @click="visualizePdf"
-        >
-          Visualizar
-        </el-button>
-
-        <el-button
-          v-if="![0, 4].includes(step)"
-          :disabled="loading"
-          :size="buttonSize"
-          type="danger"
-          @click="deleteDocument"
-        >
-          <i
-            class="el-icon-delete"
-            style="color: white; margin-right: 4px;"
+        <div class="dialog-footer__alerts">
+          <el-alert
+            v-if="!signerServiceIsAvailable"
+            title="O assinador digital Jurista está indisponível no momento. Faça o download do arquivo e utilize outro meio de assinatura do documento."
+            type="error"
+            :closable="false"
+            show-icon
+            center
           />
-          Excluir Minuta
-        </el-button>
+        </div>
 
-        <el-button
-          v-if="step !== 4"
-          :disabled="loading"
-          :size="buttonSize"
-          plain
-          type="danger"
-          @click="visible = false"
-        >
-          {{ [3, 4].includes(step) ? 'Fechar' : 'Cancelar' }}
-        </el-button>
+        <div class="dialog-footer__buttons">
+          <!-- Voltar para edição -->
+          <el-tooltip
+            v-if="document.canEdit && [3, 4].includes(step)"
+            content="Volta documento para edição."
+          >
+            <el-button
+              :disabled="loading"
+              type="primary"
+              icon="el-icon-refresh-left"
+              :size="buttonSize"
+              @click="backDocumentToEditing"
+            >
+              Voltar para edição
+            </el-button>
+          </el-tooltip>
+
+          <!-- Baixar -->
+          <el-tooltip
+            v-if="step === 3 || (step === 1 && !signerServiceIsAvailable)"
+            content="Baixar minuta."
+          >
+            <el-button
+              v-loading="loadingDownload"
+              icon="el-icon-download"
+              type="primary"
+              :size="buttonSize"
+              @click="downloadDocument"
+            >
+              Baixar
+            </el-button>
+          </el-tooltip>
+
+          <!-- Voltar -->
+          <el-button
+            v-if="[2, 4].includes(step)"
+            :disabled="loading"
+            :size="buttonSize"
+            plain
+            @click="backToDocument"
+          >
+            Voltar
+          </el-button>
+
+          <!-- Definir assinantes da minuta -->
+          <el-button
+            v-if="step === 1 && signerServiceIsAvailable"
+            :size="buttonSize"
+            :disabled="loading || !signerServiceIsAvailable"
+            type="primary"
+            @click="step = 2, hideForms()"
+          >
+            Definir assinantes da minuta
+          </el-button>
+
+          <!-- Enviar para Assinatura -->
+          <el-button
+            v-if="step === 2"
+            :size="buttonSize"
+            :disabled="(!hasEmails || loadingChooseRecipients) || !signerServiceIsAvailable"
+            type="primary"
+            @click="confirmChooseRecipients"
+          >
+            Enviar para Assinatura
+          </el-button>
+
+          <!-- Reenviar -->
+          <el-tooltip
+            v-if="canResendNotification && step === 3"
+            content="Reenvia notificação para todos os contatos que ainda não assinaram a minuta."
+          >
+            <el-button
+              :disabled="loading"
+              icon="el-icon-refresh-right"
+              type="primary"
+              :size="buttonSize"
+              @click="resendSignersNotification"
+            >
+              Reenviar
+            </el-button>
+          </el-tooltip>
+
+          <!-- Visualizar -->
+          <el-button
+            v-if="false && step === 3"
+            icon="el-icon-view"
+            :size="buttonSize"
+            type="primary"
+            @click="visualizePdf"
+          >
+            Visualizar
+          </el-button>
+
+          <!-- Excluir minuta -->
+          <el-button
+            v-if="![0, 4].includes(step)"
+            :disabled="loading"
+            :size="buttonSize"
+            type="danger"
+            @click="deleteDocument"
+          >
+            <i
+              class="el-icon-delete"
+              style="color: white; margin-right: 4px;"
+            />
+            Excluir Minuta
+          </el-button>
+
+          <!-- Fechar/Cancelar -->
+          <el-button
+            v-if="step !== 4"
+            :disabled="loading"
+            :size="buttonSize"
+            plain
+            type="danger"
+            @click="visible = false"
+          >
+            {{ [3, 4].includes(step) ? 'Fechar' : 'Cancelar' }}
+          </el-button>
+        </div>
       </div>
     </el-dialog>
 
@@ -473,6 +493,7 @@
         Cada parte assinante precisa ter o CPF cadastrado e um E-MAIL selecionado. Certifique-se na
         tela anterior se todas as partes para assinatura estão corretamente preenchidas.
       </el-alert>
+
       <div
         v-for="recipient of recipients"
         :key="recipient.name"
@@ -485,6 +506,7 @@
           {{ recipient.email }}
         </div>
       </div>
+
       <span
         slot="footer"
         class="dialog-footer"
@@ -496,12 +518,13 @@
         >
           Voltar
         </el-button>
+
         <el-button
           :disabled="loadingChooseRecipients"
           type="primary"
           @click="chooseRecipients"
         >
-          Confirmar e enviar
+          {{ signerServiceIsAvailable ? 'Confirmar e enviar' : 'Confirmar e salvar' }}
         </el-button>
       </span>
     </el-dialog>
@@ -606,7 +629,8 @@ export default {
       accountEmail: 'accountEmail',
       disputeProtocol: 'getDisputeProtocol',
       isRecovery: 'isWorkspaceRecovery',
-      openDraftId: 'getOpenDraftId'
+      openDraftId: 'getOpenDraftId',
+      signerServiceIsAvailable: 'getSignerServiceAvailable'
     }),
 
     disputeRoles() {
@@ -751,6 +775,8 @@ export default {
           document.body.style.zoom = 1
         }
 
+        this.getSignerStatus()
+
         this.openStoredDraft()
         this.disputeRolesFiller(this.dispute).then(() => {
           this.loading = true
@@ -802,7 +828,8 @@ export default {
       'fillerDisputeRole',
       'getDisputeProtocol',
       'saveMinimizedDraft',
-      'openStoredDraft'
+      'openStoredDraft',
+      'getSignerStatus'
     ]),
 
     disputeRolesFiller() {
@@ -1498,10 +1525,30 @@ export default {
 
   .dialog-footer {
     display: flex;
-    flex-direction: row;
-    justify-content: center;
+    flex-direction: column;
+    // justify-content: center;
+    gap: 16px;
     margin-bottom: 18px;
     padding-bottom: 0;
+
+    .dialog-footer__alerts {
+      display: flex;
+
+      .el-alert {
+        .el-alert__content {
+          .el-alert__title {
+            font-weight: 600;
+            font-size: 16px;
+          }
+        }
+      }
+    }
+
+    .dialog-footer__buttons {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+    }
   }
 
   &.is-fullscreen {

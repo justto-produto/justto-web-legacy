@@ -24,6 +24,10 @@ const documentMutations = {
 
   setOpenDraftId(state, id) {
     Vue.set(state, 'openDraftId', id)
+  },
+
+  setSignerStatus(state, status) {
+    Vue.set(state, 'signerService', status)
   }
 }
 
