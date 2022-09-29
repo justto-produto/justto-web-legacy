@@ -1,19 +1,22 @@
 <template>
-  <div>{{ tickets }}</div>
+  <pre>{{ disputes }}</pre>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   props: {
     tab: {
       type: String,
       default: 'running'
-    },
-
-    tickets: {
-      type: Object,
-      required: true
     }
+  },
+
+  computed: {
+    ...mapGetters({
+      disputes: 'disputes'
+    })
   }
 }
 </script>

@@ -17,7 +17,7 @@ export default {
 
   computed: {
     time() {
-      if (this.lastInboundInteraction.dateTime) {
+      if (this.lastInboundInteraction?.dateTime) {
         return getLastInteraction(this.lastInboundInteraction.dateTime)
       } else {
         return ''

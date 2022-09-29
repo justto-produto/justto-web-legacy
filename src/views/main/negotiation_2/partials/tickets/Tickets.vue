@@ -113,6 +113,10 @@ export default {
     }
   },
 
+  data: () => ({
+    disputeDebounce: null
+  }),
+
   computed: {
     ...mapGetters({
       tickets: 'getTickets',
@@ -190,7 +194,7 @@ export default {
     if (localStorage.getItem('TICKET_ACTIVE_TAB')) {
       this.setTicketsActiveTab(localStorage.getItem('TICKET_ACTIVE_TAB'))
     }
-
+    this.handleInitDispute()
     this.handleChangeTab({ name: this.activeTab })
   },
 
@@ -215,15 +219,25 @@ export default {
   methods: {
     ...mapActions([
       'getTickets',
-      'getTicketsNextPage',
+      'getDisputes',
       'setTicketsQuery',
-      'setTicketsActiveTab',
-      'getNearExpirations',
+      'addPrescription',
+      'getPrescriptions',
       'getNotVisualizeds',
+      'getTicketsNextPage',
+      'getNearExpirations',
+      'setTicketsActiveTab',
       'getTicketsFilteredTags'
     ]),
 
-    ...mapMutations(['setPreventFilters', 'setPreventSocket']),
+    ...mapMutations([
+      'clearDisputes',
+      'setPreventSocket',
+      'setPreventFilters',
+      'updateDisputeQuery',
+      'setDisputeHasFilters',
+      'clearDisputeQueryByTab'
+    ]),
 
     resetTabsScroll() {
       try {
@@ -262,6 +276,25 @@ export default {
       }
     },
 
+    handleInitDispute() {
+      const { query } = this.$route
+
+      if (Object.keys(query).length) {
+        this.$store.commit('clearDisputeQuery')
+        this.addPrescription(query.prescription)
+        this.updateDisputeQuery({ key: 'status', value: query.status || [] })
+        this.updateDisputeQuery({ key: 'startDate', value: query.startDate })
+        this.updateDisputeQuery({ key: 'finishDate', value: query.finishDate })
+        this.updateDisputeQuery({ key: 'transactionType', value: query.transactionType })
+        this.setDisputeHasFilters(query.disputeHasFilters)
+        console.log('setDisputesTab', query.disputeTab)
+        // this.$store.commit('setDisputesTab', query.disputeTab)
+      }
+
+      this.handleGetDisputes()
+      this.getPrescriptions()
+    },
+
     handleChangeTab(tab) {
       this.$jusSegment(`Navegação na aba ${this.$t('tickets-tabs.' + tab.name).toUpperCase()} da Negociação`)
 
@@ -271,27 +304,51 @@ export default {
         this.setTicketsQuery({ key: 'prescriptions', value: [] })
         this.setTicketsQuery({ key: 'sort', value: [] })
 
+        // Update Management Info.
+        this.clearDisputes()
+        this.clearDisputeQueryByTab()
+        this.setDisputeHasFilters(false)
+
         switch (tab.name) {
           case 'pre-negotiation':
             this.setTicketsQuery({ key: 'status', value: ['PRE_NEGOTIATION'] })
             this.setTicketsQuery({ key: 'sort', value: ['expirationDate,asc', 'id,desc'] })
+            // Management filters
+            this.updateDisputeQuery({ key: 'status', value: ['PRE_NEGOTIATION'] })
+            this.updateDisputeQuery({ key: 'sort', value: ['expirationDate,asc'] })
             break
           case 'engagement':
             this.setTicketsQuery({ key: 'status', value: ['IMPORTED', 'ENRICHED', 'ENGAGEMENT', 'PENDING'] })
             this.setTicketsQuery({ key: 'sort', value: ['expirationDate,asc', 'id,desc'] })
+            // Management Filters
+            this.updateDisputeQuery({ key: 'status', value: ['IMPORTED', 'ENRICHED', 'ENGAGEMENT', 'PENDING'] })
+            this.updateDisputeQuery({ key: 'sort', value: ['expirationDate,asc'] })
             break
           case 'running':
             this.setTicketsQuery({ key: 'status', value: ['RUNNING'] })
             this.setTicketsQuery({ key: 'sort', value: ['visualized,asc', 'lastInboundInteraction.createdAt,desc', 'expirationDate,asc', 'id,desc'] })
+            // Management Filters
+            this.updateDisputeQuery({ key: 'status', value: ['RUNNING'] })
+            this.updateDisputeQuery({ key: 'sort', value: ['visualized,asc', 'lastInboundInteraction.createdAt,desc', 'expirationDate,asc'] })
             break
           case 'accepted':
             this.setTicketsQuery({ key: 'status', value: ['ACCEPTED', 'CHECKOUT'] })
             this.setTicketsQuery({ key: 'sort', value: ['visualized,asc', 'conclusionDate,asc', 'id,desc'] })
+            // Management Filters
+            this.updateDisputeQuery({ key: 'status', value: ['ACCEPTED', 'CHECKOUT'] })
+            this.updateDisputeQuery({ key: 'sort', value: ['visualized,asc', 'conclusionDate,asc'] })
             break
           case 'finished':
             this.setTicketsQuery({ key: 'prescriptions', value: ['NEWLY_FINISHED'] })
             this.setTicketsQuery({ key: 'sort', value: ['visualized,asc', 'conclusionDate,asc', 'expirationDate,asc', 'lastReceivedMessage,asc', 'id,desc'] })
+            // Management Filters
+            this.addPrescription('NEWLY_FINISHED')
+            this.updateDisputeQuery({ key: 'status', value: [] })
+            this.updateDisputeQuery({ key: 'sort', value: ['visualized,asc', 'conclusionDate,asc', 'lastReceivedMessage,asc'] })
             break
+          default:
+            this.updateDisputeQuery({ key: 'status', value: [] })
+            this.updateDisputeQuery({ key: 'sort', value: ['id,desc'] })
         }
       } else {
         this.setPreventFilters(false)
@@ -303,6 +360,29 @@ export default {
           this.getNearExpirations()
           this.getNotVisualizeds()
         })
+      this.handleGetDisputes()
+    },
+
+    // GET Disputes logic
+    handleGetDisputes() {
+      clearTimeout(this.disputeDebounce)
+      this.disputeDebounce = setTimeout(() => {
+        this.$store.dispatch('getFilteredTags')
+        return this.getDisputes('resetPages').catch(error => {
+          if (this.$store.getters.isLoggedIn) {
+            this.$jusNotification({ error })
+          }
+        })
+        // .finally(() => {
+        //   this.$nextTick(() => {
+        //     const main = this.$el.querySelector('.el-table__body-wrapper')
+        //     if (main) {
+        //       main.scrollTop = 0
+        //     }
+        //   })
+        //   // if (this.$refs.managementTable) this.$refs.managementTable.disputeKey += 1
+        // })
+      }, 300)
     },
 
     infiniteHandler($state) {
