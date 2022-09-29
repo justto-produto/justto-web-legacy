@@ -89,7 +89,7 @@
 </template>
 
 <script>
-import sharedTicketdMethods from '../../patials/sharedTicketdMethods'
+import sharedTicketdMethods from '../../../patials/sharedTicketdMethods'
 
 export default {
   mixins: [sharedTicketdMethods],

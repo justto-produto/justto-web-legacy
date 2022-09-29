@@ -27,7 +27,7 @@
 <script>
 import { getDocumentStep } from '@/utils'
 import { mapGetters } from 'vuex'
-import sharedTicketdMethods from '../../patials/sharedTicketdMethods'
+import sharedTicketdMethods from '../../../patials/sharedTicketdMethods'
 
 export default {
   mixins: [sharedTicketdMethods],

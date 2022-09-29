@@ -1,7 +1,5 @@
 <template>
   <table class="table-ticket__table">
-    <TicketTableMenu />
-
     <tbody
       v-for="ticket in content"
       :key="ticket.disputeId"
@@ -39,7 +37,6 @@ import { getDocumentStep } from '@/utils'
 export default {
   components: {
     TicketTableDate: () => import('./partials/TicketTableDate'),
-    TicketTableMenu: () => import('./partials/TicketTableMenu'),
     TicketTableParty: () => import('./partials/TicketTableParty'),
     TicketTableDraft: () => import('./partials/TicketTableDraft'),
     TickettableMessage: () => import('./partials/TicketTableMessage'),

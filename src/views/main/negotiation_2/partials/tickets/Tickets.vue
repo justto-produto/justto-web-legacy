@@ -49,32 +49,12 @@
           {{ tickets.totalElements || 0 }} {{ $tc('labels.dispute', tickets.totalElements || 0) }}
         </div>
 
-        <ul
+        <TableIndex
           v-if="fullScreen"
           class="tickets-container__list"
-        >
-          <TicketsTable
-            :tab="tab.name"
-            :tickets="tickets"
-          />
-
-          <infinite-loading
-            :identifier="activeTab"
-            spinner="spiral"
-            :distance="1340"
-            @infinite="infiniteHandler"
-          >
-            <div slot="no-more">
-              Fim das disputas
-            </div>
-
-            <div slot="no-results">
-              <span v-if="tickets.content.length === 0">
-                Sem disputas
-              </span>
-            </div>
-          </infinite-loading>
-        </ul>
+          :tab="tab.name"
+          :tickets="tickets"
+        />
 
         <ul
           v-else-if="activeTab === tab.name"
@@ -122,7 +102,7 @@ export default {
     CommunicationTicketItem: () => import('./CommunicationTicketItem'),
     TicketsHeader: () => import('./TicketsHeader'),
     InfiniteLoading: () => import('vue-infinite-loading'),
-    TicketsTable: () => import('./table/TicketsTable')
+    TableIndex: () => import('./table/Index')
     // VuePerfectScrollbar: () => import('vue-perfect-scrollbar'),
   },
 
