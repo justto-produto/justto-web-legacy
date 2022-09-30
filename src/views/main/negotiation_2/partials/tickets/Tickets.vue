@@ -221,7 +221,6 @@ export default {
       'getTickets',
       'getDisputes',
       'setTicketsQuery',
-      'addPrescription',
       'getPrescriptions',
       'getNotVisualizeds',
       'getTicketsNextPage',
@@ -232,6 +231,7 @@ export default {
 
     ...mapMutations([
       'clearDisputes',
+      'addPrescription',
       'setPreventSocket',
       'setPreventFilters',
       'updateDisputeQuery',
@@ -518,8 +518,15 @@ export default {
   }
 
   .tickets-container__tabs {
+    height: 100%;
+
     .el-tabs__content {
       overflow: auto;
+      height: 100%;
+
+      .el-tab-pane {
+        height: 100%;
+      }
     }
   }
 
