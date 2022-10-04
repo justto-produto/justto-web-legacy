@@ -136,6 +136,7 @@ export default
   { code: '389', name: 'BANCO MERCANTIL DO BRASIL S.A' },
   { code: '392', name: 'BANCO MERCANTIL DE SAO PAULO S.A' },
   { code: '394', name: 'BANCO B.M.C. S.A' },
+  { code: '403', name: 'CORA SCD' },
   { code: '409', name: 'UNIBANCO - UNIAO DOS BANCOS BRASILEIROS' },
   { code: '412', name: 'BANCO NACIONAL DA BAHIA S.A' },
   { code: '415', name: 'BANCO NACIONAL S.A' },
