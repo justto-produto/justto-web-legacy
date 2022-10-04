@@ -101,7 +101,7 @@
         :on-error="handleChangeWorkspaceLogoError"
         :before-upload="handleChangeWorkspace"
         :headers="requestHeaders"
-        action="https://api.justto.app/api/workspaces/logo"
+        action="https://backend.justto.app/api/workspaces/logo"
         class="workspace-data-container__input-file"
         drag
       >

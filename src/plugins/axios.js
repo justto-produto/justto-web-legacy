@@ -21,7 +21,7 @@ const _axios = axios.create(config)
 _axios.CancelToken = axios.CancelToken
 _axios.isCancel = axios.isCancel
 
-_axios.defaults.baseURL = process.env.VUE_APP_BASE_URL || 'https://api.justto.app/'
+_axios.defaults.baseURL = process.env.VUE_APP_BASE_URL || 'https://backend.justto.app/'
 
 // De quando vai a request
 _axios.interceptors.request.use(
@@ -34,7 +34,7 @@ _axios.interceptors.request.use(
       }
     }
 
-    if (_axios.defaults.baseURL === 'https://api.justto.app/') {
+    if (_axios.defaults.baseURL === 'https://backend.justto.app/') {
       const { UserLanguage, UserTimeZone, UserBrowserName, UserOS } = _axios.defaults.headers.common
 
       _axios.defaults.headers.common.UserLanguage = UserLanguage || store.getters.getUserLanguage

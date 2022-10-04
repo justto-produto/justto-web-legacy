@@ -403,7 +403,7 @@ export default {
     },
 
     downloadAttachment(id) {
-      window.open(`https://api.justto.app/api/office/documents/${id}/sign`, '_blank')
+      window.open(`https://backend.justto.app/api/office/documents/${id}/sign`, '_blank')
     },
 
     checkSigner(sign, email) {
