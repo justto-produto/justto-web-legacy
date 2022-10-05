@@ -38,5 +38,5 @@ Novo sistema web da Justto que agora funciona. :heart:
 `npm run styleguide`
 
 ###### .env.local
-VUE_APP_BASE_URL=https://api.justto.app/
-BASE_URL=https://api.justto.app/
+VUE_APP_BASE_URL=https://backend.justto.app/
+BASE_URL=https://backend.justto.app/

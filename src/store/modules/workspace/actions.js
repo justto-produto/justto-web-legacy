@@ -178,7 +178,7 @@ const workspaceActions = {
   adminWorkspaces({ _ }, params) {
     return axiosDispatch({
       ...params,
-      url: params.url || `https://api.justto.app/${workspacesPath}/${params.workspaceId || ''}`
+      url: params.url || `https://backend.justto.app/${workspacesPath}/${params.workspaceId || ''}`
     })
 
     // new Promise((resolve, reject) => {

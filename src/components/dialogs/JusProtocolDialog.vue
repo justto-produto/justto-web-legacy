@@ -345,7 +345,7 @@
         <div class="dialog-footer__alerts">
           <el-alert
             v-if="!signerServiceIsAvailable"
-            title="O assinador digital Jurista está indisponível no momento. Faça o download do arquivo e utilize outro meio de assinatura do documento."
+            title="O assinador digital está indisponível no momento. Faça o download do arquivo e utilize outro meio de assinatura do documento."
             type="error"
             :closable="false"
             show-icon
@@ -726,7 +726,7 @@ export default {
 
     pdfUrl() {
       if (this.disputeId) {
-        return 'https://api.justto.app/api/office/documents/download-signed/' + this.disputeId
+        return 'https://backend.justto.app/api/office/documents/download-signed/' + this.disputeId
       }
 
       return ''
@@ -903,7 +903,7 @@ export default {
     },
 
     openDocumentInNewTab() {
-      const url = `https://assinador.juristas.com.br/private/documents/${this.document.signedDocument.signKey}`
+      const url = `https://assinador.justto.com.br/private/documents/${this.document.signedDocument.signKey}`
       navigator.clipboard.writeText(url)
       this.$jusNotification({
         title: 'Yay!',
