@@ -144,7 +144,7 @@ export default {
       this.protocolDialogVisible = true
     },
     copyDocumentURL() {
-      const url = `https://assinador.juristas.com.br/private/documents/${this.document.signedDocument.signKey}`
+      const url = `https://assinador.justto.com.br/private/documents/${this.document.signedDocument.signKey}`
       navigator.clipboard.writeText(url)
       this.$message({
         message: 'Endereço para assinatura do documento copiado para área de transferência.',
