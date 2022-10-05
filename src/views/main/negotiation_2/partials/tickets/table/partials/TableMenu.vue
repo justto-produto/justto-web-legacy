@@ -1,11 +1,12 @@
 <template>
   <article class="ticket-table-menu">
     <el-popover
+      ref="menuPopover"
       placement="bottom-end"
       trigger="click"
       popper-class="ticket-table-menu__popover"
     >
-      <MenuOptions />
+      <MenuOptions @hide="handleHide"/>
 
       <el-button
         slot="reference"
@@ -25,6 +26,14 @@
 export default {
   components: {
     MenuOptions: () => import('./MenuOptions')
+  },
+
+  methods: {
+    handleHide() {
+      if (this.$refs?.menuPopover) {
+        this.$refs.menuPopover.showPopper = false
+      }
+    }
   }
 }
 </script>
@@ -36,7 +45,8 @@ export default {
   position: absolute;
   top: 0;
   right: 0;
-  margin: 25px 0px 0 0;
+  z-index: 1;
+  margin: 3.5pc 1pc 0 0;
 
   .el-button {
     padding: 8px 0;

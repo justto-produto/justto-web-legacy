@@ -8,8 +8,6 @@
         class="ticket-table__component"
       />
     </keep-alive>
-
-    <TableMenu class="ticket-table__menu" />
   </ul>
 </template>
 
@@ -19,8 +17,7 @@ export default {
   components: {
     // InfiniteLoading: () => import('vue-infinite-loading'),
     TicketsTable: () => import('./tickets/TicketsTable'),
-    ManagementTable: () => import('./management/ManagementTable'),
-    TableMenu: () => import('./partials/TableMenu')
+    ManagementTable: () => import('./management/ManagementTable')
   },
 
   props: {

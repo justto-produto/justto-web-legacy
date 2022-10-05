@@ -5,34 +5,46 @@
     <Tickets
       :class="{
         'hide-section': disputeId,
-        'full-section': !disputeId
+        'full-section': isInFullScreen
       }"
       class="negotiations-container__tickets"
-      :full-screen="!disputeId"
+      :full-screen="isInFullScreen"
     />
 
     <section
-      v-if="disputeId"
-      :class="{ 'hide-section': !disputeId }"
+      :class="{ 'hide-section': isInFullScreen }"
       class="negotiations-container__ticket"
     >
       <router-view v-if="disputeId" />
-      <!-- <EmptyTicket v-else /> -->
+      <EmptyTicket v-else-if="!isInFullScreen" />
     </section>
+
+    <TableMenu v-if="!disputeId" />
   </main>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'Negotiation',
   components: {
-    Tickets: () => import('./partials/tickets/Tickets')
-    // EmptyTicket: () => import('./partials/ticket/TicketEmpty')
+    Tickets: () => import('./partials/tickets/Tickets'),
+    EmptyTicket: () => import('./partials/ticket/TicketEmpty'),
+    TableMenu: () => import('./partials/tickets/table/partials/TableMenu')
   },
 
   computed: {
+    ...mapGetters({
+      ticketListMode: 'getTicketListMode'
+    }),
+
     disputeId() {
       return this.$route?.params?.id
+    },
+
+    isInFullScreen() {
+      return !this.disputeId && this.ticketListMode === 'MANAGEMENT'
     }
   },
 

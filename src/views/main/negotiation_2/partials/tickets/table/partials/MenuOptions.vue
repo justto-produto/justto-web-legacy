@@ -40,7 +40,9 @@ export default {
         return this.ticketListMode
       },
       set(value) {
-        this.setAccountProperty({ TICKET_LIST_MODE: value })
+        this.setAccountProperty({ TICKET_LIST_MODE: value }).then(() => {
+          this.$emit('hide', { mode: this.mode })
+        })
       }
     }
   },
