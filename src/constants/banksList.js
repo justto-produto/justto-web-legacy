@@ -44,6 +44,7 @@ export default
   { code: '107', name: 'BANCO BBM S.A' },
   { code: '109', name: 'BANCO CREDIBANCO S.A' },
   { code: '116', name: 'BANCO B.N.L DO BRASIL S.A' },
+  { code: '133', name: 'CRESOL CONFEDERAÇÃO' },
   { code: '148', name: 'MULTI BANCO S.A' },
   { code: '151', name: 'CAIXA ECONOMICA DO ESTADO DE SAO PAULO' },
   { code: '153', name: 'CAIXA ECONOMICA DO ESTADO DO R.G.SUL' },
