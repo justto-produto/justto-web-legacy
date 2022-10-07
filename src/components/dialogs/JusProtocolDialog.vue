@@ -24,7 +24,7 @@
             :underline="false"
             class="jus-protocol-dialog__title"
             target="_blank"
-            @click="downloadDocument"
+            @click="openDocumentInNewTab"
           >
             <div v-if="step !== 3">
               {{ title }}
@@ -829,7 +829,8 @@ export default {
       'getDisputeProtocol',
       'saveMinimizedDraft',
       'openStoredDraft',
-      'getSignerStatus'
+      'getSignerStatus',
+      'getDocumentUrl'
     ]),
 
     disputeRolesFiller() {
@@ -902,15 +903,24 @@ export default {
       return cpf.isValid(value)
     },
 
-    openDocumentInNewTab() {
-      const url = `https://assinador.justto.com.br/private/documents/${this.document.signedDocument.signKey}`
-      navigator.clipboard.writeText(url)
-      this.$jusNotification({
-        title: 'Yay!',
-        message: 'URL do documento copiado!',
-        type: 'success'
-      })
-      setTimeout(() => window.open(url), 1400)
+    async openDocumentInNewTab() {
+      try {
+        const downloadUrl = await this.getDocumentUrl(this.disputeId)
+        const { origin } = new URL(downloadUrl)
+        const url = `${origin}/private/documents/${this.document.signedDocument.signKey}`
+
+        navigator.clipboard.writeText(url)
+
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'URL do documento copiado!',
+          type: 'success'
+        })
+
+        setTimeout(() => window.open(url), 1400)
+      } catch (error) {
+        this.$jusNotification({ error })
+      }
     },
 
     addDocument(role, formIndex) {
