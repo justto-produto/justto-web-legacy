@@ -21,17 +21,6 @@
             @click="setGhostMode(!ghostMode)"
           />
         </el-tooltip>
-
-        <!-- <router-link to="/">
-          <img
-            v-if="isRecovery"
-            src="@/assets/logo-small-purple.svg"
-          >
-          <img
-            v-else
-            src="@/assets/logo-small.svg"
-          >
-        </router-link> -->
       </div>
 
       <el-menu
@@ -48,40 +37,6 @@
           class="container-aside__menu-item"
           @click="menuItem.action"
         >
-          <!-- Sub Menu Collapse -->
-          <!-- <el-submenu
-            v-if="menuItem.isGroup"
-            index="menuItem.index"
-          >
-            <template slot="title">
-              <jus-icon
-                icon="management"
-              />
-
-              <el-tooltip placement="top-start">
-                <div slot="content">
-                  Definir como página inicial.
-                </div>
-              </el-tooltip>
-            </template>
-
-            <el-menu-item
-              v-for="subMenu in menuItem.childs"
-              v-show="subMenu.isVisible"
-              :key="subMenu.index"
-              :index="subMenu.index"
-              @click="subMenu.action"
-            >
-              <JusIcon
-                :icon="subMenu.icon"
-                class=""
-              />
-              <span slot="title">
-                {{ subMenu.title }}
-              </span>
-            </el-menu-item>
-          </el-submenu> -->
-
           <el-menu-item
             v-show="menuItem.isVisible"
             :index="menuItem.index"
@@ -327,7 +282,7 @@ export default {
 
     checkAcceptterms(response) {
       const key = 'LAST_ACCEPTED_DATE'
-      const lastTermDate = this.$moment('31/05/2022', 'DD/MM/YYYY')
+      const lastTermDate = this.$moment('13/10/2022', 'DD/MM/YYYY')
       let lastAcceptedDate = response[key] ? this.$moment(response[key], 'DD/MM/YYYY') : Boolean(response[key])
 
       if (!lastAcceptedDate || lastTermDate.isAfter(lastAcceptedDate, 'day')) {
