@@ -257,7 +257,7 @@ export default {
     },
 
     hasValidAudio() {
-      return ['16'].includes(String(this.audioCodeResult)) || this.hasActiveCall
+      return ['16'].includes(String(this.audioCodeResult)) || this.value?.message?.parameters?.VOICE_STATUS === 'SetUp' || this.hasActiveCall
     }
   },
 

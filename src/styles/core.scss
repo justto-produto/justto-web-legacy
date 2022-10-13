@@ -336,6 +336,14 @@ i.el-icon-delete {
   }
 }
 
+.communication-container__message {
+  span {
+    img, table {
+      max-width: 100% !important;
+    }
+  }
+}
+
 .display-break {
   flex-basis: 100%;
   height: 0;

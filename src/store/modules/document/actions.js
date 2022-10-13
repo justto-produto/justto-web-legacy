@@ -108,6 +108,12 @@ const documentActions = {
     })
   },
 
+  getDocumentUrl({ _ }, disputeId) {
+    return axiosDispatch({
+      url: `${documentsPath}/${disputeId}/draft/url`
+    })
+  },
+
   getDocumentTypes() {
     return axiosDispatch({ url: `${documentsPath}/model/input/types` })
   },
