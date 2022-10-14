@@ -130,6 +130,10 @@ const disputeMutations = {
     }
   },
 
+  addDisputeQueryPageByTicket(state) {
+    state.query.page += 1
+  },
+
   setSummaryNearExpirations(state, summarys) {
     state.summaryNearExpirations = summarys
   },
