@@ -49,11 +49,12 @@
           {{ tickets.totalElements || 0 }} {{ $tc('labels.dispute', tickets.totalElements || 0) }}
         </div>
 
-        <TableIndex
+        <ManagementTable
           v-if="fullScreen"
           class="tickets-container__list"
           :tab="tab.name"
           :tickets="tickets"
+          @infinite="infiniteHandler"
         />
 
         <ul
@@ -102,7 +103,7 @@ export default {
     CommunicationTicketItem: () => import('./CommunicationTicketItem'),
     TicketsHeader: () => import('./TicketsHeader'),
     InfiniteLoading: () => import('vue-infinite-loading'),
-    TableIndex: () => import('./table/Index')
+    ManagementTable: () => import('./table/management/ManagementTable')
     // VuePerfectScrollbar: () => import('vue-perfect-scrollbar'),
   },
 
@@ -235,6 +236,7 @@ export default {
       'setPreventSocket',
       'setPreventFilters',
       'updateDisputeQuery',
+      'addDisputeQueryPageByTicket',
       'setDisputeHasFilters',
       'clearDisputeQueryByTab'
     ]),
@@ -386,6 +388,12 @@ export default {
     },
 
     infiniteHandler($state) {
+      console.log('infiniteHandler', $state)
+      // Busca disputas da próxima página.
+      this.addDisputeQueryPageByTicket()
+      this.getDisputes('nextPage')
+
+      // Busca Tickets da próxima página.
       this.getTicketsNextPage()
         .then(response => {
           if (response.last) {
@@ -466,7 +474,7 @@ export default {
 
   .tickets-container__counter {
     text-align: center;
-
+    height: 26px;
     font-weight: 600;
     background-color: #F4EFFF;
     padding: 4px 0 6px;
@@ -525,7 +533,7 @@ export default {
       height: 100%;
 
       .el-tab-pane {
-        height: 100%;
+        height: calc(100% - 26px);
       }
     }
   }

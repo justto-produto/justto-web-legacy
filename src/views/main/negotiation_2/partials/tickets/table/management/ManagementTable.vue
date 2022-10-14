@@ -360,6 +360,22 @@
         </span>
       </transition>
     </template>
+
+    <infinite-loading
+      v-if="disputes.length >= 20"
+      slot="append"
+      :distance="335"
+      spinner="spiral"
+      force-use-infinite-wrapper=".el-table__body-wrapper"
+      @infinite="$emit('infinite', $event)"
+    >
+      <div slot="no-more">
+        Fim das disputas
+      </div>
+      <div slot="no-results">
+        Fim das disputas
+      </div>
+    </infinite-loading>
   </el-table>
 </template>
 
@@ -369,6 +385,7 @@ import { getDocumentStep } from '@/utils'
 
 export default {
   components: {
+    InfiniteLoading: () => import('vue-infinite-loading'),
     DisputeCodeLink: () => import('@/components/buttons/DisputeCodeLink'),
     JusVexatiousAlert: () => import('@/components/dialogs/JusVexatiousAlert'),
     FollowUp: () => import('@/views/main/management/partials/partials/ManagementFollowUp'),
@@ -482,11 +499,6 @@ export default {
 
 .ticket-table__container {
   min-height: 100%;
-  // height: calc(100% - 114px);
-
-  // @media (max-height: 780px) {
-  //   height: calc(100% - 93px);
-  // }
 
   .ticket-table {
     height: 100%;

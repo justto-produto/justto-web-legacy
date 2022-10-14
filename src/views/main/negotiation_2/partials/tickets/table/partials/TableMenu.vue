@@ -6,7 +6,7 @@
       trigger="click"
       popper-class="ticket-table-menu__popover"
     >
-      <MenuOptions @hide="handleHide"/>
+      <MenuOptions @hide="handleHide" />
 
       <el-button
         slot="reference"
