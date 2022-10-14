@@ -95,7 +95,7 @@
             >Termos Gerais de Contratação</a> e a
             <a
               data-testid="contract-terms"
-              href="https://justto.com.br/poilitica-privacidade/"
+              href="https://justto.com.br/politica-privacidade/"
               target="_blank"
             >Política de Privacidade</a>.
           </el-row>

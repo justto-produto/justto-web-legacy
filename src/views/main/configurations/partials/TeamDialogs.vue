@@ -53,7 +53,7 @@
               da plataforma e com a
               <a
                 target="_blank"
-                href="https://justto.com.br/poilitica-privacidade"
+                href="https://justto.com.br/politica-privacidade"
               >
                 política de privacidade
               </a>.

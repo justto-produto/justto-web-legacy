@@ -235,7 +235,7 @@
           <span class="configure-customizations__footer-info-span">
             Ao utilizar nossa plataforma você está ciente e concorda com nossa
             <a
-              href="https://justto.com.br/poilitica-privacidade"
+              href="https://justto.com.br/politica-privacidade"
               target="_blank"
             >
               politica de privacidade

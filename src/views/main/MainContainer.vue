@@ -299,7 +299,7 @@ export default {
           },
           {
             label: 'Política de privacidade',
-            href: 'https://justto.com.br/poilitica-privacidade',
+            href: 'https://justto.com.br/politica-privacidade',
             isVisible: true
           }
         ]
