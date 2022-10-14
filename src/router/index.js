@@ -376,6 +376,12 @@ router.beforeEach((to, from, next) => {
           eventBus.$emit(events.TICKET_WEB_SOCKET_DISCONNECT.callback, 'unsubscribe', from?.params?.id)
         }
 
+        if (to.name === 'negotiation2') {
+          if (!Store.getters.isJusttoAdmin) {
+            next('negotiation')
+          }
+        }
+
         if (from.name === 'negotiation2' && ['dispute', 'negotiation'].includes(to.name)) {
           router.push('negotiation2/' + to.params.id)
         }
