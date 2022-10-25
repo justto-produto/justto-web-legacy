@@ -15,17 +15,19 @@
 
       <span
         class="attachment__file"
-        @click="downloadAttachment(interaction.properties.DOCUMENT_ID)"
+        @click="downloadAttachment(occurrence)"
       >
         <span class="attachment__file-name">
           {{ occurrence.properties.FILE_NAME }}
         </span>
+
         <span
           v-if="occurrence.properties.FILE_SIZE"
           class="attachment__file-size"
         >
           {{ occurrence.properties.FILE_SIZE | sizeFormat }}
         </span>
+
         <span v-else>
           -
         </span>
@@ -36,7 +38,7 @@
       >
         <i
           class="el-icon-download"
-          @click="downloadAttachment(interaction.properties.DOCUMENT_ID)"
+          @click="downloadAttachment(occurrence)"
         />
 
         <SignAttachmentDialog
@@ -107,8 +109,12 @@ export default {
   },
 
   methods: {
-    downloadAttachment(id) {
-      window.open(`https://backend.justto.app/api/office/documents/${id}/sign`, '_blank')
+    downloadAttachment({ id, properties: { FILE_TYPE, FILE_URL } }) {
+      if (['FILE_TYPE'].includes(FILE_TYPE)) {
+        window.open(FILE_URL, '_blank')
+      } else {
+        window.open(`https://backend.justto.app/api/office/documents/${id}/sign`, '_blank')
+      }
     }
   }
 }
