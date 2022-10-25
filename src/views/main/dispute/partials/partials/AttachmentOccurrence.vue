@@ -110,11 +110,13 @@ export default {
 
   methods: {
     downloadAttachment({ id, properties: { FILE_TYPE, FILE_URL } }) {
-      if (['FILE_TYPE'].includes(FILE_TYPE)) {
-        window.open(FILE_URL, '_blank')
-      } else {
-        window.open(`https://backend.justto.app/api/office/documents/${id}/sign`, '_blank')
-      }
+      window.open(FILE_URL, '_blank')
+
+      // if (['PDF'].includes(FILE_TYPE)) {
+      //   window.open(`https://backend.justto.app/api/office/documents/${id}/sign`, '_blank')
+      // } else {
+      //   window.open(FILE_URL, '_blank')
+      // }
     }
   }
 }
