@@ -757,6 +757,7 @@ export default {
         case 10:
           return '(##) ####-####'
         case 11:
+          if (String(number[0]) === '0' && String(number[2]) === '0' && String(number[3]) === '0') return '#### ### ####'
           return '(##) #####-####'
         case 12:
           return '+## (##) ####-####'
