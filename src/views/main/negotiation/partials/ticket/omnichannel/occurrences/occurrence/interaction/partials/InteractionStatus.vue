@@ -47,6 +47,19 @@
         {{ messageSender | phoneNumber }}
       </span>
     </span>
+
+    <el-tooltip
+      v-if="direction === 'INBOUND' && isGrouping && value.message.communicationType === 'WHATSAPP'"
+      content="Baixar anexo."
+      placement="top-start"
+    >
+      <el-button
+        class="communication-container__download"
+        type="text"
+        icon="el-icon-download"
+        @click="handleDownload"
+      />
+    </el-tooltip>
   </div>
 </template>
 
@@ -160,11 +173,21 @@ export default {
     isAttachment() {
       return (this.value?.type || '').includes('ATTACHMENT')
     }
+  },
+
+  methods: {
+    handleDownload() {
+      const { message: { content } } = this.value
+
+      window.open(content, '_blank')
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+@import '@/styles/colors.scss';
+
 .interaction-container__info {
   display: flex;
   flex-direction: row;
@@ -211,6 +234,16 @@ export default {
       &.OUTBOUND {
         margin-right: 4px;
       }
+    }
+  }
+
+  .communication-container__download {
+    padding: 0;
+    color: $--color-black;
+    margin-left: 4px;
+
+    &::before {
+      content: '• ';
     }
   }
 }

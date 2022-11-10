@@ -30,6 +30,18 @@
       >
         {{ contact }}
       </span>
+
+      <el-tooltip
+        content="Baixar anexo."
+        placement="top-start"
+      >
+        <el-button
+          class="communication-container__email-download"
+          type="text"
+          icon="el-icon-download"
+          @click="handleDownload"
+        />
+      </el-tooltip>
     </div>
 
     <div
@@ -212,6 +224,12 @@ export default {
           showClose: true
         })
       }
+    },
+
+    handleDownload() {
+      const { message: { content } } = this.value
+
+      window.open(content, '_blank')
     }
   }
 }
@@ -255,6 +273,11 @@ export default {
 
     .communication-container__email-icon {
       width: 16px;
+    }
+
+    .communication-container__email-download {
+      padding: 0;
+      color: $--color-black;
     }
   }
 
