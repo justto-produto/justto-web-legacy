@@ -63,8 +63,22 @@
           />
         </el-select>
 
+        <span
+          v-if="inputValue"
+          class="client-grid__form-title"
+        >
+          Mensalidade:
+        </span>
+
+        <money
+          v-if="inputValue"
+          v-model="monthlySubscriptionFee"
+          class="el-input__inner client-grid__autocomplete"
+        />
+
         <el-button
           v-if="inputValue"
+          class="client-grid__btn"
           type="primary"
           @click.native="addClient"
         >
@@ -98,6 +112,7 @@ export default {
       dialogFormVisible: false,
       formCardIsVisible: false,
       inputValue: '',
+      monthlySubscriptionFee: 0,
       negotiationType: null
     }
   },
@@ -241,14 +256,15 @@ export default {
     addClient() {
       const name = this.inputValue
       const similarClient = this.custumerSuggestions.filter(val => val.name === name)
-      const { negotiationType } = this
+      const { negotiationType, monthlySubscriptionFee } = this
 
       if (similarClient.length) {
         this.associateCustomer(similarClient[0].id)
       } else {
         this.addCustomer({
           name,
-          negotiationType
+          negotiationType,
+          monthlySubscriptionFee
         })
       }
 
@@ -314,8 +330,16 @@ export default {
     }
 
     .client-grid__autocomplete {
-      margin-bottom: 24px;
+      margin-bottom: 16px;
       width: 100%;
+
+      .el-input {
+        overflow-x: hidden;
+      }
+    }
+
+    .client-grid__btn {
+      margin-top: 8px;
     }
   }
 }

@@ -11,6 +11,16 @@
         @hasEdition="emitEditTitle"
       />
 
+      <div>
+        <span>Mensalidade: </span>
+
+        <CurrencyInlieEditorInner
+          v-model="userDataBind.monthlySubscriptionFee"
+          is-editable
+          @change="emitEditEvent"
+        />
+      </div>
+
       <div class="jus-user-card__actions">
         <div
           v-if="isJusttoAdmin"
@@ -48,17 +58,21 @@
 
 <script>
 import { mapGetters } from 'vuex'
+
 export default {
   name: 'JusUserCard',
+
   components: {
-    JusTextEditable: () => import('@/components/JusTextEditable/JusTextEditable')
+    JusTextEditable: () => import('@/components/JusTextEditable/JusTextEditable'),
+    CurrencyInlieEditorInner: () => import('@/components/inputs/CurrencyInlieEditorInner')
   },
+
   props: {
     userData: {
       type: Object,
       required: true,
       validator: obj => Object.keys(obj)
-        .map(key => ['name', 'id', 'contractStatus'].includes(key))
+        .map(key => ['name', 'id', 'contractStatus', 'monthlySubscriptionFee'].includes(key))
     }
   },
   data() {
@@ -86,11 +100,13 @@ export default {
       }
     }
   },
+
   watch: {
     userData(current) {
       this.userDataBind = current
     }
   },
+
   methods: {
     emitEditTitle(inputValue) {
       this.userDataBind.name = inputValue

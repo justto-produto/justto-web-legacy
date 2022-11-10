@@ -153,7 +153,7 @@
             </el-row>
 
             <!-- Linha 4 -->
-            <el-row :gutter="24">
+            <!-- <el-row :gutter="24">
               <el-col :span="24">
                 <el-form-item
                   label="Mensalidade"
@@ -167,7 +167,7 @@
                   <el-form-item />
                 </el-form-item>
               </el-col>
-            </el-row>
+            </el-row> -->
 
             <div
               v-for="discount in contractDiscountList[contract.id]"
