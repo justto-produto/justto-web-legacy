@@ -49,7 +49,7 @@
     </span>
 
     <el-tooltip
-      v-if="direction === 'INBOUND' && isGrouping && value.message.communicationType === 'WHATSAPP'"
+      v-if="itsDownloadableAttachment"
       content="Baixar anexo."
       placement="top-start"
     >
@@ -172,6 +172,10 @@ export default {
 
     isAttachment() {
       return (this.value?.type || '').includes('ATTACHMENT')
+    },
+
+    itsDownloadableAttachment() {
+      return this.value?.direction === 'INBOUND' && this.isGrouping && this.value.message?.communicationType === 'WHATSAPP' && this.value.message?.contentType !== 'TEXT'
     }
   },
 

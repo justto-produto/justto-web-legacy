@@ -32,6 +32,7 @@
       </span>
 
       <el-tooltip
+        v-if="value.message.contentType !== 'TEXT'"
         content="Baixar anexo."
         placement="top-start"
       >
