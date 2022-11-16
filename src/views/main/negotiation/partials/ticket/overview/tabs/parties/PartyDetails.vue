@@ -134,6 +134,7 @@
       >
         {{ documentType }}:
       </span>
+
       <TextInlineEditor
         v-if="party.documentNumber || activeAddingData === 'documentNumber'"
         ref="documentNumber"
@@ -146,11 +147,19 @@
         @change="updateParty($event, 'documentNumber')"
         @enableEdit="enableEdit"
       />
+
       <div
         v-else-if="!isPreNegotiation"
         class="party-details__infoline-link"
       >
         <a @click="startEditing('documentNumber')">Adicionar</a>
+      </div>
+
+      <div
+        v-if="(party.documentNumber || activeAddingData === 'documentNumber') && isInvalidDocumentNumber"
+        class="party-details__has-error"
+      >
+        Documento Inválido.
       </div>
     </div>
 
@@ -317,6 +326,7 @@
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 import { isSimilarStrings } from '@/utils'
 import { isValid, strip } from '@fnando/cpf'
+import { isValid as isValidCNPJ } from '@fnando/cnpj'
 
 import brazilianStates from '@/constants/brazilianStates'
 
@@ -441,6 +451,10 @@ export default {
         ...this.resumedState.bankAccountMockup,
         email: this.firstEmail
       }
+    },
+
+    isInvalidDocumentNumber() {
+      return !isValid(this.party.documentNumber) && !isValidCNPJ(this.party.documentNumber)
     }
   },
 
@@ -990,6 +1004,12 @@ export default {
     .party-details__infoline-link {
       line-height: normal;
       margin: 3px 0 3px 24px;
+    }
+
+    .party-details__has-error {
+      font-size: 10px;
+      color: $--color-danger;
+      margin-left: 24px;
     }
 
     &--center {

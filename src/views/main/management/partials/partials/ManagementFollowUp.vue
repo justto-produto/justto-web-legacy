@@ -22,6 +22,10 @@
 </template>
 
 <script>
+import { isValid as isValidCPF } from '@fnando/cnpj'
+import { isValid as isValidCNPJ } from '@fnando/cpf'
+import { mapGetters } from 'vuex'
+
 export default {
   props: {
     dispute: {
@@ -31,6 +35,8 @@ export default {
   },
 
   computed: {
+    ...mapGetters({ isRecovery: 'isWorkspaceRecovery' }),
+
     status() {
       return this.dispute?.status || this.dispute?.disputeStatus
     },
@@ -57,12 +63,24 @@ export default {
       return this.dispute?.unknownPolarityParty || ((this.dispute?.disputeRoles || []).filter(({ party }) => (party === 'UNKNOWN')).length) > 0
     },
 
+    claimantHaveInvalidDocument() {
+      const document = this.dispute?.firstClaimantDocumentNumber || this.dispute?.plaintiff?.documentNumber
+
+      return ['PENDING'].includes(this.status) && !isValidCPF(document) && !isValidCNPJ(document)
+    },
+
+    lawyerHaveInvalidDocument() {
+      const document = this.dispute?.firstClaimantLawyerDocumentNumber || this.dispute?.lawyer?.documentNumber
+
+      return ['PENDING'].includes(this.status) && document && !isValidCPF(document) && !isValidCNPJ(document)
+    },
+
     needFolllowUp() {
       if (this.dispute?.lastInteraction?.direction === 'OUTBOUND' && ['RUNNING'].includes(this.status)) {
         return this.$moment().diff(this.$moment(this.dispute?.lastInteraction?.createAt?.dateTime || this.dispute?.lastInteraction?.createdAt), 'hours') >= 24
       }
 
-      return this.hasUnknownParts || this.wasViewed || this.havePhone
+      return this.hasUnknownParts || this.wasViewed || this.havePhone || this.lawyerHaveInvalidDocument || this.claimantHaveInvalidDocument
     },
 
     followUpDays() {
@@ -70,13 +88,13 @@ export default {
     },
 
     followUpText() {
-      return this.hasUnknownParts ? 'Disputa contém partes sem polaridade.' : 'Ligue para a parte e faça o acordo!'
+      return this.lawyerHaveInvalidDocument ? this.$tc('roles.LAWYER.CLAIMANT', this.isRecovery) + ' com documento inválido' : this.claimantHaveInvalidDocument ? this.$tc('roles.PARTY.CLAIMANT', this.isRecovery) + ' com documento inválido' : this.hasUnknownParts ? 'Disputa contém partes sem polaridade.' : 'Ligue para a parte e faça o acordo!'
     },
 
     followUpBtnText() {
       const plural = this.followUpDays > 1 ? 's' : ''
 
-      return this.hasUnknownParts ? 'Definir polaridade' : this.havePhone ? 'Ligue para a parte!' : this.wasViewed ? `Visualizada há ${this.followUpDays} dia${plural}` : `${this.followUpDays} dia${plural} sem retorno da parte`
+      return this.lawyerHaveInvalidDocument ? 'Advogado com documento inválido' : this.claimantHaveInvalidDocument ? 'Documento inválido' : this.hasUnknownParts ? 'Definir polaridade' : this.havePhone ? 'Ligue para a parte!' : this.wasViewed ? `Visualizada há ${this.followUpDays} dia${plural}` : `${this.followUpDays} dia${plural} sem retorno da parte`
     }
   },
 
