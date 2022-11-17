@@ -238,7 +238,7 @@ export default {
         if (this.workspaceId.length !== 0 && !['admin-panel'].includes(this.$route.name)) {
           this.getThamirisAlerts()
         }
-      }, 120000)
+      }, 2 * 60 * 1000)
     },
 
     handleResize({ target }) {
