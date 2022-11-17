@@ -199,12 +199,12 @@ export default {
     })
   },
 
-  requestProvide({ commit, getters: { isActiveToCall, hasCallInQueue, firstCallInQueue, isJusttoAdmin } }) {
+  requestProvide({ commit, getters: { isActiveToCall, hasCallInQueue, firstCallInQueue, workspaceProperties } }) {
     return isActiveToCall && hasCallInQueue && [CALL_STATUS.WAITING_DIALER, CALL_STATUS.ENQUEUED].includes(firstCallInQueue.status) ? axiosDispatch({
       url: `${dialerApi}/request`,
       method: 'PATCH',
       data: {
-        owner: 'JUSTTO' // isJusttoAdmin ? 'DEV' : 'JUSTTO'
+        owner: workspaceProperties?.WORKSPACE_DIALER_OWNER || 'JUSTTO' // isJusttoAdmin ? 'DEV' : 'JUSTTO'
       }
     }) : new Promise((resolve, reject) => {
       commit('clearActiveRequestInterval')
