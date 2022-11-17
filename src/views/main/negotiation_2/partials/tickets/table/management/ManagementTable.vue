@@ -479,7 +479,9 @@ export default {
   },
 
   methods: {
-    handleRowClick() {},
+    handleRowClick(row) {
+      this.$router.replace(`/negotiation2/${row.id}`)
+    },
 
     isWonDispute(disputeStatus) {
       return ['SETTLED', 'CHECKOUT', 'ACCEPTED'].includes(disputeStatus)
