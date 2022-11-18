@@ -3,7 +3,10 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-    }
+    },
+    "extensions": [
+      ".vue"
+    ]
   },
   "exclude": ["node_modules", "dist"]
 }
