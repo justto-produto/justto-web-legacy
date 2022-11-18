@@ -50,15 +50,16 @@
         </div>
 
         <ManagementTable
-          v-if="fullScreen"
+          v-show="fullScreen"
           class="tickets-container__list"
           :tab="tab.name"
           :tickets="tickets"
           @infinite="infiniteHandler"
         />
 
+        <!-- v-else-if="activeTab === tab.name" -->
         <ul
-          v-else-if="activeTab === tab.name"
+          v-show="!fullScreen && activeTab === tab.name"
           class="tickets-container__list"
         >
           <component

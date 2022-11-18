@@ -1,4 +1,4 @@
-export default ({ workspaceName, keyAccountName }) => {
+export default ({ workspaceName, keyAccountName, workspaceSubDomain }) => {
   return `<body>
     <div style="color: #343C4B !important; background-color: #FFFFFF !important; margin: -8px; font-family: Montserrat, Verdana, Geneva, Tahoma, sans-serif;">
       <div style="padding: 32px 0;text-align: center; background-color: #FAFAFA;">
@@ -24,7 +24,7 @@ export default ({ workspaceName, keyAccountName }) => {
                           Olá Financeiro, tudo bem? 
                           <br><br>
                           <p>
-                            Cliente da workspace ${workspaceName} teve seu limite de workspaces excedido.
+                            Cliente da workspace ${workspaceName}(${workspaceSubDomain}), teve seu limite de workspaces excedido.
                          </p>
                           <p>
                             Favor entrar em contato com o Key Acoount ${keyAccountName}, para verificar se teve alteração de valor de mensalidade

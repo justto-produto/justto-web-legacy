@@ -47,6 +47,19 @@
         {{ messageSender | phoneNumber }}
       </span>
     </span>
+
+    <el-tooltip
+      v-if="itsDownloadableAttachment"
+      content="Baixar anexo."
+      placement="top-start"
+    >
+      <el-button
+        class="communication-container__download"
+        type="text"
+        icon="el-icon-download"
+        @click="handleDownload"
+      />
+    </el-tooltip>
   </div>
 </template>
 
@@ -159,12 +172,26 @@ export default {
 
     isAttachment() {
       return (this.value?.type || '').includes('ATTACHMENT')
+    },
+
+    itsDownloadableAttachment() {
+      return this.value?.direction === 'INBOUND' && this.isGrouping && this.value.message?.communicationType === 'WHATSAPP' && this.value.message?.contentType !== 'TEXT'
+    }
+  },
+
+  methods: {
+    handleDownload() {
+      const { message: { content } } = this.value
+
+      window.open(content, '_blank')
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+@import '@/styles/colors.scss';
+
 .interaction-container__info {
   display: flex;
   flex-direction: row;
@@ -211,6 +238,16 @@ export default {
       &.OUTBOUND {
         margin-right: 4px;
       }
+    }
+  }
+
+  .communication-container__download {
+    padding: 0;
+    color: $--color-black;
+    margin-left: 4px;
+
+    &::before {
+      content: '• ';
     }
   }
 }

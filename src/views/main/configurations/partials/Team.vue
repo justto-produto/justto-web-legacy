@@ -347,18 +347,19 @@ export default {
             })
 
             const workspaceName = this.workspace?.teamName
+            const workspaceSubDomain = this.workspace?.subDomain
             const keyAccountName = this.workspace?.associatedKeyAccount?.name || 'Não definido'
 
             this.sendCustomEmail({
               subject: 'Limite de Workspace excedido',
               address: 'financeiro@justto.com.br',
-              content: emailTemplate({ workspaceName, keyAccountName })
+              content: emailTemplate({ workspaceName, workspaceSubDomain, keyAccountName })
             })
 
             this.sendCustomEmail({
               subject: 'Limite de Workspace excedido',
               address: 'deivid@justto.com.br',
-              content: emailTemplate({ workspaceName, keyAccountName })
+              content: emailTemplate({ workspaceName, workspaceSubDomain, keyAccountName })
             })
           }
         }).finally(resolve)

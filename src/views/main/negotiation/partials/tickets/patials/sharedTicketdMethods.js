@@ -28,7 +28,13 @@ export default {
     isSelfCause() {
       const { lawyer, plaintiff } = this.ticket
 
-      return !!(lawyer && plaintiff && (lawyer.personId === plaintiff.personId || (lawyer.documentNumber === plaintiff.documentNumber || (lawyer.oabNumber === plaintiff.oabNumber && lawyer.oabState === plaintiff.oabState))))
+      const hasLawyer = !!lawyer
+      const hasPlaintiff = !!plaintiff
+      const isSamePersonId = lawyer?.personId && plaintiff?.personId && lawyer?.personId === plaintiff?.personId
+      const isSameDocumentNumber = lawyer?.documentNumber && plaintiff?.documentNumber && lawyer?.documentNumber === plaintiff?.documentNumber
+      const isSameOab = lawyer?.oabNumber && plaintiff?.oabNumber && lawyer?.oabState && plaintiff?.oabState && (lawyer?.oabNumber === plaintiff?.oabNumber && lawyer?.oabState === plaintiff?.oabState)
+
+      return !!(hasLawyer && hasPlaintiff && (isSamePersonId || isSameDocumentNumber || isSameOab))
     },
 
     lawyerName() {

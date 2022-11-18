@@ -9,11 +9,20 @@
       class="attachment__container"
     >
       <jus-icon
+        v-if="fileType !== 'IMAGE'"
         class="attachment__icon"
         :icon="`attachment-${occurrence.properties.FILE_TYPE.toLowerCase()}`"
       />
 
+      <img
+        v-if="fileType === 'IMAGE'"
+        :src="occurrence.properties.FILE_URL"
+        :alt="occurrence.properties.FILE_NAME"
+        class="attachment__file-preview"
+      >
+
       <span
+        v-else
         class="attachment__file"
         @click="downloadAttachment(occurrence)"
       >
@@ -35,6 +44,7 @@
 
       <span
         class="attachment__file-download"
+        :class="{ 'vertical': fileType === 'IMAGE' }"
       >
         <i
           class="el-icon-download"
@@ -105,18 +115,16 @@ export default {
 
     isLengthValid() {
       return !this.occurrence?.properties?.FILE_SIZE || Number(this.occurrence?.properties?.FILE_SIZE) >= 1024
+    },
+
+    fileType() {
+      return this.occurrence?.properties?.FILE_TYPE || 'ATTACHMENT'
     }
   },
 
   methods: {
-    downloadAttachment({ id, properties: { FILE_TYPE, FILE_URL } }) {
+    downloadAttachment({ properties: { FILE_URL } }) {
       window.open(FILE_URL, '_blank')
-
-      // if (['PDF'].includes(FILE_TYPE)) {
-      //   window.open(`https://backend.justto.app/api/office/documents/${id}/sign`, '_blank')
-      // } else {
-      //   window.open(FILE_URL, '_blank')
-      // }
     }
   }
 }
@@ -161,6 +169,14 @@ export default {
       display: flex;
       gap: 8px;
       align-items: center;
+
+      &.vertical {
+        flex-direction: column;
+      }
+    }
+
+    .attachment__file-preview {
+      max-width: 98%;
     }
   }
   .attachment__deleted {

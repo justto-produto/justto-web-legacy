@@ -16,7 +16,7 @@
       class="negotiations-container__ticket"
     >
       <router-view v-if="disputeId" />
-      <EmptyTicket v-else-if="!isInFullScreen" />
+      <EmptyTicket :hidden="isInFullScreen || disputeId" />
     </section>
 
     <TableMenu v-if="!disputeId" />
@@ -65,6 +65,10 @@ export default {
   .negotiations-container__tickets {
     width: 360px;
     border-right: 1px solid $--color-light-gray;
+    -webkit-transition: width 1s ease-in-out;
+    -moz-transition: width 1s ease-in-out;
+    -o-transition: width 1s ease-in-out;
+    transition: width 1s ease-in-out;
 
     &.full-section {
       width: 100%;
@@ -72,7 +76,16 @@ export default {
   }
 
   .negotiations-container__ticket {
-    flex: 1;
+    -webkit-transition: width 1.1s ease-in-out;
+    -moz-transition: width 1.1s ease-in-out;
+    -o-transition: width 1.1s ease-in-out;
+    transition: width 1.1s ease-in-out;
+    width: calc(100% - 360px);
+    overflow: hidden;
+
+    &.hide-section {
+      width: 0;
+    }
   }
 }
 
