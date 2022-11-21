@@ -11,6 +11,18 @@
           </h2>
         </template>
       </el-result>
+
+      <el-tabs
+        v-model="selectedApp"
+        @tab-click="getTemplates"
+      >
+        <el-tab-pane
+          v-for="app in apps"
+          :key="app"
+          :label="app"
+          :name="app"
+        />
+      </el-tabs>
     </div>
 
     <ul class="whatsapp-views__templates">
@@ -95,6 +107,11 @@ import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'WhatsappViews',
 
+  data: () => ({
+    apps: ['JUSTTO', 'VillemorGol', 'MEDIATO', 'CarvalhoRodrigues', 'HelperGestao', 'CostaeVieira', 'BernardiSchnapp', 'ImoveisVillani', 'LIMAEFALCAO', 'QuantumAtivosJudiciais', 'ProSolutti'],
+    selectedApp: 'JUSTTO'
+  }),
+
   computed: {
     ...mapGetters({
       templates: 'getTemplates',
@@ -130,7 +147,7 @@ export default {
 
     async getTemplates() {
       await this.getWhatsAppWallet()
-      await this.getWhatsAppTemplates()
+      await this.getWhatsAppTemplates(this.selectedApp)
     },
 
     getMeta(text) {
@@ -154,6 +171,19 @@ export default {
       .el-result__icon {
         h2 {
           margin: 0;
+        }
+      }
+    }
+
+    .el-select {
+      width: 50%;
+
+      .el-input {
+        .el-input__inner {
+          // border-top: none;
+          // border-left: none;
+          // border-right: none;
+          // border-radius: 0;
         }
       }
     }

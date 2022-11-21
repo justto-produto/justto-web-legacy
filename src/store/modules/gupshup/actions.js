@@ -1,9 +1,10 @@
 import { axiosDispatch } from '@/utils'
 
 export default {
-  getGupShupTemplates({ _ }) {
+  getGupShupTemplates({ _ }, name = 'justto') {
     return axiosDispatch({
       url: 'api/messages/management-gupshup/templates',
+      params: { name },
       mutation: 'setTemplates'
     })
   },
