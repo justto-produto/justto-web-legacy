@@ -1,5 +1,8 @@
 <template>
-  <section class="whatsapp-views">
+  <section
+    v-loading="isLoading"
+    class="whatsapp-views"
+  >
     <div class="whatsapp-views__status">
       <el-result
         :title="wallet.status"
@@ -109,7 +112,8 @@ export default {
 
   data: () => ({
     apps: ['JUSTTO', 'VillemorGol', 'MEDIATO', 'CarvalhoRodrigues', 'HelperGestao', 'CostaeVieira', 'BernardiSchnapp', 'ImoveisVillani', 'LIMAEFALCAO', 'QuantumAtivosJudiciais', 'ProSolutti'],
-    selectedApp: 'JUSTTO'
+    selectedApp: 'JUSTTO',
+    isLoading: false
   }),
 
   computed: {
@@ -146,8 +150,10 @@ export default {
     }),
 
     async getTemplates() {
+      this.isLoading = true
       await this.getWhatsAppWallet()
       await this.getWhatsAppTemplates(this.selectedApp)
+      this.isLoading = false
     },
 
     getMeta(text) {
