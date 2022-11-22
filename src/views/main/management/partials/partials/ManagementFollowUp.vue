@@ -66,7 +66,7 @@ export default {
     claimantHaveInvalidDocument() {
       const document = this.dispute?.firstClaimantDocumentNumber || this.dispute?.plaintiff?.documentNumber
 
-      return ['PENDING'].includes(this.status) && !isValidCPF(document) && !isValidCNPJ(document)
+      return ['PENDING'].includes(this.status) && document && !isValidCPF(document) && !isValidCNPJ(document)
     },
 
     lawyerHaveInvalidDocument() {
