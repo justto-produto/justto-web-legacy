@@ -35,7 +35,7 @@
         class="whatsapp-views__templates-item"
       >
         <el-descriptions
-          :title="template.vertical"
+          :title="template.elementName"
           :column="2"
           border
         >
