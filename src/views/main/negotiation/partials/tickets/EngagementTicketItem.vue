@@ -123,6 +123,30 @@
     >
       {{ $t(`occurrence.type.${ticket.disputeStatus}`) | capitalize }}
     </div>
+
+    <div class="communication-ticket-item-container__actions">
+      <el-tooltip
+        v-if="isActive"
+        content="Fechar"
+        placement="right"
+      >
+        <el-button
+          type="secundary"
+          icon="el-icon-download"
+        />
+      </el-tooltip>
+
+      <el-tooltip
+        v-else
+        content="Abrir"
+        placement="right"
+      >
+        <el-button
+          type="primary"
+          icon="el-icon-upload2"
+        />
+      </el-tooltip>
+    </div>
   </li>
 </template>
 
@@ -203,6 +227,13 @@ export default {
 
   &:hover:not(.communication-ticket-item-container--active) {
     background-color: $--color-light-gray;
+  }
+
+  &:hover {
+    .communication-ticket-item-container__actions {
+      transition: opacity .5s;
+      opacity: 1;
+    }
   }
 
   &--active {
@@ -312,6 +343,18 @@ export default {
     bottom: 0;
     left: 0;
     margin: 4px 0px 4px 12px;
+  }
+
+  .communication-ticket-item-container__actions {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
   }
 }
 
