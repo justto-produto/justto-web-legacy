@@ -67,6 +67,7 @@
             v-for="ticket in tickets.content"
             :key="ticket.disputeId"
             :ticket="ticket"
+            @update="$emit('update', $event)"
           />
 
           <infinite-loading

@@ -14,8 +14,16 @@
     <section
       :class="{ 'hide-section': isInFullScreen }"
       class="negotiations-container__ticket"
+      :style="{ width: disputeId ? '100%' : '0px' }"
     >
-      <router-view v-if="disputeId" />
+      <router-view />
+    </section>
+
+    <section
+      :class="{ 'hide-section': isInFullScreen }"
+      class="negotiations-container__ticket"
+      :style="{ width: !disputeId ? '100%' : '0px' }"
+    >
       <EmptyTicket :hidden="isInFullScreen || disputeId" />
     </section>
 
@@ -25,14 +33,18 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import Tickets from './partials/tickets/Tickets'
+import EmptyTicket from './partials/ticket/TicketEmpty'
 
 export default {
   name: 'Negotiation',
   components: {
-    Tickets: () => import('./partials/tickets/Tickets'),
-    EmptyTicket: () => import('./partials/ticket/TicketEmpty'),
+    Tickets,
+    EmptyTicket,
     TableMenu: () => import('./partials/tickets/table/partials/TableMenu')
   },
+
+  data: () => ({ internalDisputeId: null }),
 
   computed: {
     ...mapGetters({
@@ -41,7 +53,7 @@ export default {
     }),
 
     disputeId() {
-      return this.$route?.params?.id
+      return Boolean(this.internalDisputeId) || Boolean(this.$route?.params?.id)
     },
 
     isInFullScreen() {

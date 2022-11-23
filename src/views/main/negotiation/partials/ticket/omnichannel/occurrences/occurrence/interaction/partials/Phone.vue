@@ -36,7 +36,7 @@
       v-if="mediaLink && !badStatus && !hasActiveCall"
       class="phone-container__audio"
     >
-      <AudioPlayer
+      <!-- <AudioPlayer
         v-if="hasValidAudio"
         ref="AudioPlayer"
         class="phone-container__audio-component"
@@ -47,10 +47,10 @@
         :show-next-button="false"
         :show-playback-rate="false"
         :is-loop="false"
-      />
+      /> -->
 
+      <!-- v-else -->
       <div
-        v-else
         class="phone-container__audio-component fallback"
       >
         <el-tooltip content="Gravação não disponível">
@@ -171,12 +171,12 @@
 import ckeditor from '@/utils/mixins/ckeditor'
 import { mapActions, mapGetters } from 'vuex'
 
-import AudioPlayer from '@liripeng/vue-audio-player'
+// import AudioPlayer from '@liripeng/vue-audio-player'
 
 export default {
-  components: {
-    AudioPlayer
-  },
+  // components: {
+  //   AudioPlayer
+  // },
 
   mixins: [ckeditor],
 

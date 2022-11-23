@@ -47,10 +47,14 @@ export default {
       if (!this.isActive) {
         const id = this.ticket.disputeId
 
-        this.$router.push({
+        this.$router.replace({
           name: 'ticket',
           params: { id }
         })
+        this.$emit('update', id)
+      } else {
+        this.$router.replace('/negotiation')
+        this.$emit('update')
       }
     },
     getLastInteraction(time) {
