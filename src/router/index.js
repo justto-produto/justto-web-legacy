@@ -149,32 +149,6 @@ const router = new Router({
             }
           ]
         },
-        //
-        {
-          name: 'negotiation2',
-          path: 'negotiation2/',
-          component: () => import(/* webpackChunkName: "negotiation2Index" */ '@/views/main/negotiation_2/Negotiation'),
-          meta: {
-            hideFullHeader: true,
-            requiresAuth: true,
-            trackPage: true,
-            title: 'Negociação'
-          },
-          children: [
-            {
-              name: 'ticket',
-              path: ':id',
-              component: () => import(/* webpackChunkName: "TicketIndex" */ '@/views/main/negotiation/partials/ticket/Ticket'),
-              meta: {
-                hideFullHeader: true,
-                requiresAuth: true,
-                trackPage: true,
-                title: 'Negociação'
-              }
-            }
-          ]
-        },
-        //
         {
           name: 'print',
           path: 'print',
@@ -374,16 +348,6 @@ router.beforeEach((to, from, next) => {
         }
         if (from.name === 'ticket' && from.params?.id) {
           eventBus.$emit(events.TICKET_WEB_SOCKET_DISCONNECT.callback, 'unsubscribe', from?.params?.id)
-        }
-
-        if (to.name === 'negotiation2') {
-          if (!Store.getters.isJusttoAdmin) {
-            next('negotiation')
-          }
-        }
-
-        if (from.name === 'negotiation2' && ['dispute', 'negotiation'].includes(to.name)) {
-          router.push('negotiation2/' + to.params.id)
         }
 
         if (to.name === 'onboarding' && !Store.getters.redirectNewWorkspace) {

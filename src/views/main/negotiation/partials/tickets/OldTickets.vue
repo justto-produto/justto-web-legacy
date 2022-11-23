@@ -49,17 +49,8 @@
           {{ tickets.totalElements || 0 }} {{ $tc('labels.dispute', tickets.totalElements || 0) }}
         </div>
 
-        <ManagementTable
-          v-show="fullScreen"
-          class="tickets-container__list"
-          :tab="tab.name"
-          :tickets="tickets"
-          @infinite="infiniteHandler"
-        />
-
-        <!-- v-else-if="activeTab === tab.name" -->
         <ul
-          v-show="!fullScreen && activeTab === tab.name"
+          v-if="activeTab === tab.name"
           class="tickets-container__list"
         >
           <component
@@ -103,21 +94,9 @@ export default {
     EngagementTicketItem: () => import('./EngagementTicketItem'),
     CommunicationTicketItem: () => import('./CommunicationTicketItem'),
     TicketsHeader: () => import('./TicketsHeader'),
-    InfiniteLoading: () => import('vue-infinite-loading'),
-    ManagementTable: () => import('./table/management/ManagementTable')
+    InfiniteLoading: () => import('vue-infinite-loading')
     // VuePerfectScrollbar: () => import('vue-perfect-scrollbar'),
   },
-
-  props: {
-    fullScreen: {
-      type: Boolean,
-      default: false
-    }
-  },
-
-  data: () => ({
-    disputeDebounce: null
-  }),
 
   computed: {
     ...mapGetters({
@@ -196,7 +175,7 @@ export default {
     if (localStorage.getItem('TICKET_ACTIVE_TAB')) {
       this.setTicketsActiveTab(localStorage.getItem('TICKET_ACTIVE_TAB'))
     }
-    this.handleInitDispute()
+
     this.handleChangeTab({ name: this.activeTab })
   },
 
@@ -221,33 +200,18 @@ export default {
   methods: {
     ...mapActions([
       'getTickets',
-      'getDisputes',
-      'setTicketsQuery',
-      'getPrescriptions',
-      'getNotVisualizeds',
       'getTicketsNextPage',
-      'getNearExpirations',
+      'setTicketsQuery',
       'setTicketsActiveTab',
+      'getNearExpirations',
+      'getNotVisualizeds',
       'getTicketsFilteredTags'
     ]),
 
-    ...mapMutations([
-      'clearDisputes',
-      'addPrescription',
-      'setPreventSocket',
-      'setPreventFilters',
-      'updateDisputeQuery',
-      'addDisputeQueryPageByTicket',
-      'setDisputeHasFilters',
-      'clearDisputeQueryByTab'
-    ]),
+    ...mapMutations(['setPreventFilters', 'setPreventSocket']),
 
     resetTabsScroll() {
-      try {
-        this.$refs.tabs.$el.childNodes[0].childNodes[0].childNodes[2].scroll(0, 0)
-      } catch (error) {
-        console.error('Erro ao Resetar Scrool.')
-      }
+      this.$refs.tabs.$el.childNodes[0].childNodes[0].childNodes[2].scroll(0, 0)
     },
 
     handlePreviousScroll() {
@@ -279,25 +243,6 @@ export default {
       }
     },
 
-    handleInitDispute() {
-      const { query } = this.$route
-
-      if (Object.keys(query).length) {
-        this.$store.commit('clearDisputeQuery')
-        this.addPrescription(query.prescription)
-        this.updateDisputeQuery({ key: 'status', value: query.status || [] })
-        this.updateDisputeQuery({ key: 'startDate', value: query.startDate })
-        this.updateDisputeQuery({ key: 'finishDate', value: query.finishDate })
-        this.updateDisputeQuery({ key: 'transactionType', value: query.transactionType })
-        this.setDisputeHasFilters(query.disputeHasFilters)
-        console.log('setDisputesTab', query.disputeTab)
-        // this.$store.commit('setDisputesTab', query.disputeTab)
-      }
-
-      this.handleGetDisputes()
-      this.getPrescriptions()
-    },
-
     handleChangeTab(tab) {
       this.$jusSegment(`Navegação na aba ${this.$t('tickets-tabs.' + tab.name).toUpperCase()} da Negociação`)
 
@@ -307,51 +252,27 @@ export default {
         this.setTicketsQuery({ key: 'prescriptions', value: [] })
         this.setTicketsQuery({ key: 'sort', value: [] })
 
-        // Update Management Info.
-        this.clearDisputes()
-        this.clearDisputeQueryByTab()
-        this.setDisputeHasFilters(false)
-
         switch (tab.name) {
           case 'pre-negotiation':
             this.setTicketsQuery({ key: 'status', value: ['PRE_NEGOTIATION'] })
             this.setTicketsQuery({ key: 'sort', value: ['expirationDate,asc', 'id,desc'] })
-            // Management filters
-            this.updateDisputeQuery({ key: 'status', value: ['PRE_NEGOTIATION'] })
-            this.updateDisputeQuery({ key: 'sort', value: ['expirationDate,asc'] })
             break
           case 'engagement':
             this.setTicketsQuery({ key: 'status', value: ['IMPORTED', 'ENRICHED', 'ENGAGEMENT', 'PENDING'] })
             this.setTicketsQuery({ key: 'sort', value: ['expirationDate,asc', 'id,desc'] })
-            // Management Filters
-            this.updateDisputeQuery({ key: 'status', value: ['IMPORTED', 'ENRICHED', 'ENGAGEMENT', 'PENDING'] })
-            this.updateDisputeQuery({ key: 'sort', value: ['expirationDate,asc'] })
             break
           case 'running':
             this.setTicketsQuery({ key: 'status', value: ['RUNNING'] })
             this.setTicketsQuery({ key: 'sort', value: ['visualized,asc', 'lastInboundInteraction.createdAt,desc', 'expirationDate,asc', 'id,desc'] })
-            // Management Filters
-            this.updateDisputeQuery({ key: 'status', value: ['RUNNING'] })
-            this.updateDisputeQuery({ key: 'sort', value: ['visualized,asc', 'lastInboundInteraction.createdAt,desc', 'expirationDate,asc'] })
             break
           case 'accepted':
             this.setTicketsQuery({ key: 'status', value: ['ACCEPTED', 'CHECKOUT'] })
             this.setTicketsQuery({ key: 'sort', value: ['visualized,asc', 'conclusionDate,asc', 'id,desc'] })
-            // Management Filters
-            this.updateDisputeQuery({ key: 'status', value: ['ACCEPTED', 'CHECKOUT'] })
-            this.updateDisputeQuery({ key: 'sort', value: ['visualized,asc', 'conclusionDate,asc'] })
             break
           case 'finished':
             this.setTicketsQuery({ key: 'prescriptions', value: ['NEWLY_FINISHED'] })
             this.setTicketsQuery({ key: 'sort', value: ['visualized,asc', 'conclusionDate,asc', 'expirationDate,asc', 'lastReceivedMessage,asc', 'id,desc'] })
-            // Management Filters
-            this.addPrescription('NEWLY_FINISHED')
-            this.updateDisputeQuery({ key: 'status', value: [] })
-            this.updateDisputeQuery({ key: 'sort', value: ['visualized,asc', 'conclusionDate,asc', 'lastReceivedMessage,asc'] })
             break
-          default:
-            this.updateDisputeQuery({ key: 'status', value: [] })
-            this.updateDisputeQuery({ key: 'sort', value: ['id,desc'] })
         }
       } else {
         this.setPreventFilters(false)
@@ -363,38 +284,9 @@ export default {
           this.getNearExpirations()
           this.getNotVisualizeds()
         })
-      this.handleGetDisputes()
-    },
-
-    // GET Disputes logic
-    handleGetDisputes() {
-      clearTimeout(this.disputeDebounce)
-      this.disputeDebounce = setTimeout(() => {
-        this.$store.dispatch('getFilteredTags')
-        return this.getDisputes('resetPages').catch(error => {
-          if (this.$store.getters.isLoggedIn) {
-            this.$jusNotification({ error })
-          }
-        })
-        // .finally(() => {
-        //   this.$nextTick(() => {
-        //     const main = this.$el.querySelector('.el-table__body-wrapper')
-        //     if (main) {
-        //       main.scrollTop = 0
-        //     }
-        //   })
-        //   // if (this.$refs.managementTable) this.$refs.managementTable.disputeKey += 1
-        // })
-      }, 300)
     },
 
     infiniteHandler($state) {
-      console.log('infiniteHandler', $state)
-      // Busca disputas da próxima página.
-      this.addDisputeQueryPageByTicket()
-      this.getDisputes('nextPage')
-
-      // Busca Tickets da próxima página.
       this.getTicketsNextPage()
         .then(response => {
           if (response.last) {
@@ -475,7 +367,7 @@ export default {
 
   .tickets-container__counter {
     text-align: center;
-    height: 26px;
+
     font-weight: 600;
     background-color: #F4EFFF;
     padding: 4px 0 6px;
@@ -527,15 +419,8 @@ export default {
   }
 
   .tickets-container__tabs {
-    height: 100%;
-
     .el-tabs__content {
       overflow: auto;
-      height: 100%;
-
-      .el-tab-pane {
-        height: calc(100% - 26px);
-      }
     }
   }
 

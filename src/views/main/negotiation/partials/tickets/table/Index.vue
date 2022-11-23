@@ -1,8 +1,7 @@
 <template>
   <ul class="ticket-table__container">
     <keep-alive>
-      <component
-        :is="ticketListMode === 'TICKET' ? 'TicketsTable' : 'ManagementTable'"
+      <ManagementTable
         :tab="tab.name"
         :tickets="tickets"
         class="ticket-table__component"
@@ -15,8 +14,6 @@
 import { mapGetters } from 'vuex'
 export default {
   components: {
-    // InfiniteLoading: () => import('vue-infinite-loading'),
-    TicketsTable: () => import('./tickets/TicketsTable'),
     ManagementTable: () => import('./management/ManagementTable')
   },
 
