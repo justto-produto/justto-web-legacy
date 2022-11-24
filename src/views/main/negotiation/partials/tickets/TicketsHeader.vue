@@ -29,6 +29,8 @@
       v-if="['ticket', 'negotiation'].includes($route.name)"
       :active-tab="activeTab"
     />
+
+    <HeaderUserMenu v-if="showUserMenu" />
   </header>
 </template>
 
@@ -36,13 +38,14 @@
 import events from '@/constants/negotiationEvents'
 import { eventBus } from '@/utils'
 
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'TicketsHeader',
 
   components: {
     TicketsFilters: () => import('./TicketsFilters'),
+    HeaderUserMenu: () => import('@/components/menus/HeaderUserMenu'),
     JusDisputeResume: () => import('@/components/layouts/JusDisputeResume')
   },
 
@@ -63,8 +66,14 @@ export default {
   }),
 
   computed: {
+    ...mapGetters({ ticketListMode: 'getTicketListMode' }),
+
     showFilters() {
       return (this.$route?.fullPath || '').includes('/negotiation')
+    },
+
+    showUserMenu() {
+      return !this.$route?.params?.id && this.$route.name === 'negotiation' && this.ticketListMode === 'MANAGEMENT'
     }
   },
 
