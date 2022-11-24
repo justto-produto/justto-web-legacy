@@ -165,15 +165,17 @@
       {{ $t(`occurrence.type.${ticket.disputeStatus}`) | capitalize }}
     </div>
 
-    <!-- TODO: Adicionar ícone de fechar disputa. -->
-    <div class="communication-ticket-item-container__actions">
+    <div
+      v-if="showActionButton"
+      class="communication-ticket-item-container__actions"
+    >
       <el-tooltip
         v-if="isActive"
         content="Fechar"
         placement="right"
       >
         <el-button
-          type="secundary"
+          type="primary"
           icon="el-icon-download"
         />
       </el-tooltip>
@@ -573,10 +575,6 @@ export default {
 
     &.el-button--primary {
       background: linear-gradient(90deg, rgba(255,255,255,0) 0%, $--color-primary 100%);
-    }
-
-    &.el-button--secundary {
-      background: linear-gradient(90deg, rgba(255,255,255,0) 0%, $--color-danger 100%);
     }
 
     i {

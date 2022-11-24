@@ -124,14 +124,17 @@
       {{ $t(`occurrence.type.${ticket.disputeStatus}`) | capitalize }}
     </div>
 
-    <div class="communication-ticket-item-container__actions">
+    <div
+      v-if="showActionButton"
+      class="communication-ticket-item-container__actions"
+    >
       <el-tooltip
         v-if="isActive"
         content="Fechar"
         placement="right"
       >
         <el-button
-          type="secundary"
+          type="primary"
           icon="el-icon-download"
         />
       </el-tooltip>
@@ -173,9 +176,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters({
-      activeTab: 'getTicketsActiveTab'
-    }),
+    ...mapGetters({ activeTab: 'getTicketsActiveTab' }),
 
     isActive() {
       return Number(this.$route.params?.id || '') === Number(this.ticket?.disputeId)
@@ -375,6 +376,29 @@ export default {
           font-size: 12px;
         }
       }
+    }
+  }
+}
+</style>
+
+<style lang="scss">
+@import '@/styles/colors.scss';
+
+.communication-ticket-item-container__actions {
+  .el-button {
+    height: 100%;
+    width: 100%;
+    padding: 0;
+    border: none;
+
+    &.el-button--primary {
+      background: linear-gradient(90deg, rgba(255,255,255,0) 0%, $--color-primary 100%);
+    }
+
+    i {
+      font-size: 1.25em;
+      rotate: 90deg;
+      color: white;
     }
   }
 }

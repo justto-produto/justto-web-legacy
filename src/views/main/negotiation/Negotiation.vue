@@ -22,7 +22,7 @@
     <section
       :class="{ 'hide-section': isInFullScreen }"
       class="negotiations-container__ticket"
-      :style="{ width: !disputeId ? '100%' : '0px' }"
+      :style="{ width: !disputeId && !isInFullScreen ? '100%' : '0px' }"
     >
       <EmptyTicket :hidden="isInFullScreen || disputeId" />
     </section>
