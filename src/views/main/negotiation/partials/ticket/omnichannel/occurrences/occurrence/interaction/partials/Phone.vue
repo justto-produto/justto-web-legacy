@@ -49,8 +49,8 @@
         :is-loop="false"
       />
 
+      <!-- v-else -->
       <div
-        v-else
         class="phone-container__audio-component fallback"
       >
         <el-tooltip content="Gravação não disponível">

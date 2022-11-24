@@ -123,6 +123,33 @@
     >
       {{ $t(`occurrence.type.${ticket.disputeStatus}`) | capitalize }}
     </div>
+
+    <div
+      v-if="showActionButton"
+      class="communication-ticket-item-container__actions"
+    >
+      <el-tooltip
+        v-if="isActive"
+        content="Fechar"
+        placement="right"
+      >
+        <el-button
+          type="primary"
+          icon="el-icon-download"
+        />
+      </el-tooltip>
+
+      <el-tooltip
+        v-else
+        content="Abrir"
+        placement="right"
+      >
+        <el-button
+          type="primary"
+          icon="el-icon-upload2"
+        />
+      </el-tooltip>
+    </div>
   </li>
 </template>
 
@@ -149,9 +176,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters({
-      activeTab: 'getTicketsActiveTab'
-    }),
+    ...mapGetters({ activeTab: 'getTicketsActiveTab' }),
 
     isActive() {
       return Number(this.$route.params?.id || '') === Number(this.ticket?.disputeId)
@@ -203,6 +228,13 @@ export default {
 
   &:hover:not(.communication-ticket-item-container--active) {
     background-color: $--color-light-gray;
+  }
+
+  &:hover {
+    .communication-ticket-item-container__actions {
+      transition: opacity .5s;
+      opacity: 1;
+    }
   }
 
   &--active {
@@ -313,6 +345,18 @@ export default {
     left: 0;
     margin: 4px 0px 4px 12px;
   }
+
+  .communication-ticket-item-container__actions {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+  }
 }
 
 @media (max-height: 900px) {
@@ -332,6 +376,29 @@ export default {
           font-size: 12px;
         }
       }
+    }
+  }
+}
+</style>
+
+<style lang="scss">
+@import '@/styles/colors.scss';
+
+.communication-ticket-item-container__actions {
+  .el-button {
+    height: 100%;
+    width: 100%;
+    padding: 0;
+    border: none;
+
+    &.el-button--primary {
+      background: linear-gradient(90deg, rgba(255,255,255,0) 0%, $--color-primary 100%);
+    }
+
+    i {
+      font-size: 1.25em;
+      rotate: 90deg;
+      color: white;
     }
   }
 }

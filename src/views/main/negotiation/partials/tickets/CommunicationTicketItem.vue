@@ -164,6 +164,33 @@
     >
       {{ $t(`occurrence.type.${ticket.disputeStatus}`) | capitalize }}
     </div>
+
+    <div
+      v-if="showActionButton"
+      class="communication-ticket-item-container__actions"
+    >
+      <el-tooltip
+        v-if="isActive"
+        content="Fechar"
+        placement="right"
+      >
+        <el-button
+          type="primary"
+          icon="el-icon-download"
+        />
+      </el-tooltip>
+
+      <el-tooltip
+        v-else
+        content="Abrir"
+        placement="right"
+      >
+        <el-button
+          type="primary"
+          icon="el-icon-upload2"
+        />
+      </el-tooltip>
+    </div>
   </li>
 </template>
 
@@ -301,6 +328,13 @@ export default {
     background-color: $--color-light-gray;
   }
 
+  &:hover {
+    .communication-ticket-item-container__actions {
+      transition: opacity .5s;
+      opacity: 1;
+    }
+  }
+
   &--active {
     background-color: $--color-primary-light-9;
     border-left: 6px solid $--color-primary;
@@ -313,6 +347,7 @@ export default {
   .communication-ticket-item-container__resume {
     margin: 6px 0px 6px 12px;
     flex: 1;
+    position: relative;
 
     .communication-ticket-item-container__parties {
       margin-bottom: 6px;
@@ -439,6 +474,18 @@ export default {
     height: 20px;
     z-index: -1;
   }
+
+  .communication-ticket-item-container__actions {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+  }
 }
 
 @media (max-height: 900px) {
@@ -515,6 +562,25 @@ export default {
 
     .el-step__icon {
       color: $--color-primary;
+    }
+  }
+}
+
+.communication-ticket-item-container__actions {
+  .el-button {
+    height: 100%;
+    width: 100%;
+    padding: 0;
+    border: none;
+
+    &.el-button--primary {
+      background: linear-gradient(90deg, rgba(255,255,255,0) 0%, $--color-primary 100%);
+    }
+
+    i {
+      font-size: 1.25em;
+      rotate: 90deg;
+      color: white;
     }
   }
 }

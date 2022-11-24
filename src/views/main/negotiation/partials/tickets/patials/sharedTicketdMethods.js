@@ -4,7 +4,8 @@ import { mapGetters } from 'vuex'
 export default {
   computed: {
     ...mapGetters({
-      online: 'onlineDocuments'
+      online: 'onlineDocuments',
+      showActionButton: 'showNegotiationTypeMenu'
     }),
 
     isOnline() {
@@ -47,10 +48,13 @@ export default {
       if (!this.isActive) {
         const id = this.ticket.disputeId
 
-        this.$router.push({
+        this.$router.replace({
           name: 'ticket',
           params: { id }
         })
+        this.$emit('update', id)
+      } else if (this.showActionButton) {
+        this.$router.replace('/negotiation')
       }
     },
     getLastInteraction(time) {

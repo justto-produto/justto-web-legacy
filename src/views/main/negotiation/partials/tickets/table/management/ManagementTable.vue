@@ -480,7 +480,7 @@ export default {
 
   methods: {
     handleRowClick(row) {
-      this.$router.replace(`/negotiation2/${row.id}`)
+      this.$router.replace(`/negotiation/${row.id}`)
     },
 
     isWonDispute(disputeStatus) {
