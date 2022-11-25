@@ -327,16 +327,6 @@ const router = new Router({
       }
     },
     {
-      name: 'external-login',
-      path: '/external-login',
-      component: () => import(/* webpackChunkName: "ExternalLogin" */ '@/views/external/ExternalLogin'),
-      meta: {
-        requiresAuth: false,
-        trackPage: true,
-        title: 'Justto - Login Externo'
-      }
-    },
-    {
       path: '*',
       redirect: '/'
     }
@@ -344,6 +334,7 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
+  console.log('route', to, from)
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (Store.getters.isLoggedIn) {
       if (Store.getters.hasWorkspace) {
@@ -368,16 +359,12 @@ router.beforeEach((to, from, next) => {
           next()
         } else next('login')
       }
+    } else if (to?.query['external-login'] === 'cognito') {
+      // TODO: Analizar como conseguir o Token para fazer o Login.
+      next('login')
     } else {
       next('login')
     }
-  } else if (to?.name === 'external-login') {
-    const { href } = location
-    const cognitoUrl = `https://login.justto.app/login?response_type=code&client_id=5psvk0afm23viljm2b9lrnphco&redirect_uri=${encodeURIComponent(href)}`
-
-    console.log('route', to, from)
-    console.log(cognitoUrl)
-    next()
   } else if (from.query.token) next(false)
   else next()
 
