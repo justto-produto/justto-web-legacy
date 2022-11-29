@@ -62,10 +62,11 @@
             Key Account
           </span>
 
-          <span class="workspace-data-container__form-item-input el-input el-input-group el-input-group--append">
+          <div class="workspace-data-container__form-item-input el-input el-input-group el-input-group--append">
             <el-select
               v-model="selectedKeyAccountId"
               filterable
+              class="el-input__inner select__key-account"
               style="width: 100%;"
               @input="$forceUpdate()"
             >
@@ -74,6 +75,7 @@
                 :label="'Nenhum Key Account selecionado.'"
                 disabled
               />
+
               <el-option
                 v-for="ka in workspaceKeyAccounts"
                 :key="ka.id"
@@ -82,6 +84,7 @@
                 :label="ka | buildKAName"
               />
             </el-select>
+
             <div class="workspace-data-container__form-item-input-append el-input-group__append">
               <span
                 class="el-input-group__form-item-input-append-link"
@@ -90,7 +93,7 @@
                 {{ hasAssociatedKeyAccount ? 'Alterar Key Account' : 'Associar Key Account' }}
               </span>
             </div>
-          </span>
+          </div>
         </div>
       </div>
 
@@ -397,6 +400,20 @@ export default {
         align-items: center;
         justify-content: center;
         flex-direction: column;
+      }
+    }
+  }
+
+  .workspace-data-container__form-item-input {
+    .select__key-account {
+      padding: 0;
+
+      .el-input {
+        overflow: hidden !important;
+
+        .el-input__inner {
+          border: none !important;
+        }
       }
     }
   }
