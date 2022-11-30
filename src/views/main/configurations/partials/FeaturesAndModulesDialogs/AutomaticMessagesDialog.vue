@@ -22,7 +22,7 @@
           </el-radio>
         </el-form-item>
 
-        <el-form-item>
+        <!-- <el-form-item>
           <span slot="label">
             O sistema identifica e sugere ao negociador ações automáticas que, caso aceitas pelo negociador, passarão a ser executadas automaticamente pelo sistema em situações similares.
           </span>
@@ -33,18 +33,18 @@
           >
             Permitir que o negociador decida
           </el-radio>
-        </el-form-item>
+        </el-form-item> -->
 
         <el-form-item>
-          <span slot="label">
+          <!-- <span slot="label">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus, error! Veritatis ad ex harum perspiciatis repudiandae odio culpa ut enim cum! Unde distinctio alias exercitationem a. Officiis sed quia itaque.
-          </span>
+          </span> -->
 
           <el-radio
             v-model="sendAutomaticMessage"
             label="CUSTOM"
           >
-            Permitir que o negociador decida
+            Customizar ações
           </el-radio>
         </el-form-item>
       </el-form>
@@ -119,7 +119,7 @@ export default {
       this.automaticMessagesDialogVisible = true
 
       Object.keys(this.customProperties).forEach(property => {
-        this.customProperties[property] = this.properties[property] === String(true)
+        this.customProperties[property] = !(this.properties[property] === String(false))
       })
     },
 
