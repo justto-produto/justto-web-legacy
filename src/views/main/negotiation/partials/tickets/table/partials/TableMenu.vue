@@ -46,7 +46,7 @@ export default {
   top: 0;
   right: 0;
   z-index: 1;
-  margin: 3.5pc 1pc 0 0;
+  margin: 4.5pc 1pc 0 0;
 
   .el-button {
     padding: 8px 0;

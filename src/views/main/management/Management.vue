@@ -102,7 +102,10 @@
           </el-tab-pane>
         </el-tabs>
 
-        <div class="view-management__buttons">
+        <div
+          class="view-management__buttons"
+          :class="{'show-menu-space': isTicket}"
+        >
           <!-- <el-input
             v-model="term"
             clearable
@@ -460,6 +463,12 @@ export default {
     JusLoader: () => import('@/components/others/JusLoader')
   },
 
+  inject: {
+    isTicket: {
+      default: false
+    }
+  },
+
   data() {
     return {
       loadingExport: false,
@@ -535,7 +544,10 @@ export default {
 
     activeTab: {
       get() { return this.$store.getters.disputeTab },
-      set(tab) { this.$store.commit('setDisputesTab', tab) }
+      set(tab) {
+        this.$store.commit('setDisputesTab', tab)
+        this.$emit('change:tab', tab)
+      }
     },
 
     disputesTotalLength() {
@@ -937,8 +949,13 @@ export default {
     // }
     display: flex;
 
+    &.show-menu-space {
+      margin-right: 40px;
+    }
+
     .view-management__buttons-button {
       height: 40px;
+
     }
 
     .view-management__buttons-select {
