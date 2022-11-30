@@ -34,7 +34,32 @@
             Permitir que o negociador decida
           </el-radio>
         </el-form-item>
+
+        <el-form-item>
+          <span slot="label">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus, error! Veritatis ad ex harum perspiciatis repudiandae odio culpa ut enim cum! Unde distinctio alias exercitationem a. Officiis sed quia itaque.
+          </span>
+
+          <el-radio
+            v-model="sendAutomaticMessage"
+            label="CUSTOM"
+          >
+            Permitir que o negociador decida
+          </el-radio>
+        </el-form-item>
       </el-form>
+
+      <div
+        v-if="sendAutomaticMessage === 'CUSTOM'"
+        class="el-dialog__body-container__custom-properties"
+      >
+        <el-switch
+          v-for="key in Object.keys(customProperties)"
+          :key="key"
+          v-model="customProperties[key]"
+          :active-text="$tc(`configurations.property.${key}.title`)"
+        />
+      </div>
     </span>
 
     <span
@@ -65,7 +90,16 @@ export default {
   name: 'AutomaticMessagesDialog',
   data: () => ({
     automaticMessagesDialogVisible: false,
-    sendAutomaticMessage: 'ALWAYS'
+    sendAutomaticMessage: 'ALWAYS',
+    customProperties: {
+      NOTIFY_UNANSWERED_EMAIL: true,
+      NOTIFY_UNANSWERED_WHATSAPP: true,
+      NOTIFY_OUT_OF_BUSINESS_HOURS: true,
+      SEND_COUNTEROFFER: true,
+      SEND_DISPUTE_INFO_REPLY: true,
+      DISPUTE_UNDER_ANALYSIS_REPLY: true,
+      SEND_NPS_SURVEY: true
+    }
   }),
 
   computed: {
@@ -83,6 +117,10 @@ export default {
     openFeatureDialog() {
       this.sendAutomaticMessage = this.properties.SEND_AUTOMATIC_MESSAGES || ''
       this.automaticMessagesDialogVisible = true
+
+      Object.keys(this.customProperties).forEach(property => {
+        this.customProperties[property] = this.properties[property] === String(true)
+      })
     },
 
     close() {
@@ -90,8 +128,15 @@ export default {
     },
 
     save() {
+      const { customProperties } = this
+
       this.editProperties({
-        SEND_AUTOMATIC_MESSAGES: this.sendAutomaticMessage
+        SEND_AUTOMATIC_MESSAGES: this.sendAutomaticMessage,
+        ...(Object.keys(customProperties).reduce((acc, key) => {
+          acc[key] = String(customProperties[key] === true)
+
+          return acc
+        }, {}))
       }).finally(() => this.close())
     }
   }
@@ -141,6 +186,13 @@ export default {
             }
           }
         }
+      }
+
+      .el-dialog__body-container__custom-properties {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-left: 24px;
       }
     }
   }
