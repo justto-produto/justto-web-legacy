@@ -36,9 +36,9 @@
         </el-form-item> -->
 
         <el-form-item>
-          <!-- <span slot="label">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus, error! Veritatis ad ex harum perspiciatis repudiandae odio culpa ut enim cum! Unde distinctio alias exercitationem a. Officiis sed quia itaque.
-          </span> -->
+          <span slot="label">
+            Defina quais ações que devem ser executadas automaticamente.
+          </span>
 
           <el-radio
             v-model="sendAutomaticMessage"
