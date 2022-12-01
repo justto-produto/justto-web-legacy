@@ -27,7 +27,7 @@
       <EmptyTicket :hidden="isInFullScreen || disputeId" />
     </section>
 
-    <TableMenu v-if="showNegotiationTypeMenu && !disputeId" />
+    <TableMenu v-if="showNegotiationTypeMenu && !disputeId && ticketListMode !== 'MANAGEMENT'" />
   </main>
 </template>
 

@@ -146,7 +146,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import { calcBrightness } from '@/utils'
 const _ = require('lodash')
 
@@ -190,6 +190,8 @@ export default {
   },
 
   methods: {
+    ...mapActions(['setTicketsQuery']),
+
     isDarkColor(color) {
       return calcBrightness(color) <= 175
     },
@@ -249,6 +251,9 @@ export default {
     updateTagFilters(currentTags, currentNoTags) {
       this.$store.commit('updateDisputeQuery', { key: 'tags', value: currentTags })
       this.$store.commit('updateDisputeQuery', { key: 'noTags', value: currentNoTags })
+
+      this.setTicketsQuery({ key: 'tags', value: currentTags })
+      this.setTicketsQuery({ key: 'noTags', value: currentNoTags })
       this.$emit('prescriptions:getDisputes')
     }
   }

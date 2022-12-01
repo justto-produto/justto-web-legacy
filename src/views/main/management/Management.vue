@@ -174,6 +174,11 @@
           </el-tooltip>
 
           <jus-import-dialog :dialog-visible.sync="importDialogVisible" />
+
+          <TableMenu
+            v-if="isTicket"
+            keep-original
+          />
         </div>
       </div>
 
@@ -457,7 +462,14 @@ export default {
     ManagementPrescriptions: () => import('./partials/ManagementPrescriptions'),
     JusImportDialog: () => import('@/components/dialogs/JusImportDialog'),
     JusFilterButton: () => import('@/components/buttons/JusFilterButton'),
-    JusLoader: () => import('@/components/others/JusLoader')
+    JusLoader: () => import('@/components/others/JusLoader'),
+    TableMenu: () => import('@/views/main/negotiation/partials/tickets/table/partials/TableMenu')
+  },
+
+  inject: {
+    isTicket: {
+      default: false
+    }
   },
 
   data() {
@@ -535,7 +547,10 @@ export default {
 
     activeTab: {
       get() { return this.$store.getters.disputeTab },
-      set(tab) { this.$store.commit('setDisputesTab', tab) }
+      set(tab) {
+        this.$store.commit('setDisputesTab', tab)
+        this.$emit('change:tab', tab)
+      }
     },
 
     disputesTotalLength() {
@@ -766,6 +781,8 @@ export default {
           if (this.$refs.managementTable) this.$refs.managementTable.disputeKey += 1
         })
       }, 300)
+
+      this.$emit('management:getDisputes')
     },
 
     clearSelection() {
@@ -937,8 +954,13 @@ export default {
     // }
     display: flex;
 
+    &.show-menu-space {
+      margin-right: 40px;
+    }
+
     .view-management__buttons-button {
       height: 40px;
+
     }
 
     .view-management__buttons-select {

@@ -10,6 +10,7 @@
     <template slot="title">
       <h2>Filtrar {{ $t(`tickets-tabs.${activeTab}`) }}</h2>
     </template>
+
     <div class="management-filters">
       <el-form
         v-loading="loading"
@@ -323,7 +324,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'TicketsAdvancedFilters',
@@ -457,8 +458,14 @@ export default {
       'getWorkspacePreNegotiationKeywords'
     ]),
 
+    ...mapMutations([
+      'setDisputeQuery',
+      'setDisputeHasFilters'
+    ]),
+
     canSelectPaused(_value) {
       const { onlyPaused, onlyNotPaused } = this.filters
+
       if (onlyPaused && onlyNotPaused) {
         this.filters.onlyNotPaused = false
       }
@@ -466,6 +473,7 @@ export default {
 
     canSelectNotPaused(_value) {
       const { onlyPaused, onlyNotPaused } = this.filters
+
       if (onlyPaused && onlyNotPaused) {
         this.filters.onlyPaused = false
       }
@@ -490,6 +498,7 @@ export default {
 
     applyFilters() {
       const { filters } = this
+
       if (!filters.onlyNotVisualized) delete filters.onlyNotVisualized
       if (!filters.onlyNotPaused && !filters.onlyPaused) {
         delete filters.onlyPaused
@@ -499,8 +508,15 @@ export default {
       }
       this.setTicketsFilters({ filters, hasFilters: true })
       this.advancedFiltersDialogVisible = false
+      // Sync managment
+      this.setDisputeHasFilters(true)
+      this.setDisputeQuery(filters)
+
       this.getTickets()
       this.getTicketsFilteredTags()
+
+      // TODO: Atualizar disputas.
+
       // SEGMENT TRACK
       if (filters.status) {
         if (filters.status.includes('EXPIRED')) {
@@ -525,7 +541,6 @@ export default {
       if (filters.expirationDate && filters.expirationDate.length) {
         this.$jusSegment('Filtro por data fim negociação')
       }
-      // add last filters]
     },
 
     clearFilters() {
@@ -549,6 +564,8 @@ export default {
       this.filters.hasCounterproposal = false
       this.filters.vexatiousLawyer = false
       this.setTicketsFilters({ filters, hasFilters: false })
+      this.setDisputeHasFilters(false)
+      this.setDisputeQuery(filters)
       this.advancedFiltersDialogVisible = false
       delete this.filters.onlyNotVisualized
       this.getTickets()

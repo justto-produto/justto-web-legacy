@@ -266,14 +266,14 @@ export default {
         return {
           icon: type ? this.$tc(`interaction-types.${type}.icon`) : null,
           message: this.$options.filters.capitalize(this.$tc(`interaction-types.${type}.message`)),
-          dateTime: dateTime.dateTime
+          dateTime: dateTime?.dateTime
         }
       } else if (lastReceivedMessage?.message && lastReceivedMessage?.contentType === 'TEXT') {
         const { message, dateTime } = lastReceivedMessage
 
         return {
           message,
-          dateTime: dateTime.dateTime
+          dateTime: dateTime?.dateTime
         }
       } else if (lastInboundInteraction?.dateTime?.dateTime) {
         const { message, dateTime, contentType } = lastInboundInteraction
@@ -281,14 +281,14 @@ export default {
         if (['AUDIO', 'IMAGE', 'VIDEO', 'ATTACHMENT'].includes(contentType || message?.contentType)) {
           return {
             message: 'Anexo recebido.',
-            dateTime: dateTime.dateTime,
+            dateTime: dateTime?.dateTime,
             icon: this.$tc('interaction-types.ATTACHMENT.icon')
           }
         }
 
         return {
           message,
-          dateTime: dateTime.dateTime
+          dateTime: dateTime?.dateTime
         }
       } else {
         return {

@@ -428,6 +428,12 @@ export default {
     FollowUp: () => import('./partials/ManagementFollowUp')
   },
 
+  inject: {
+    isTicket: {
+      default: false
+    }
+  },
+
   props: {
     activeTab: {
       type: String,
@@ -640,7 +646,11 @@ export default {
           window.open(`/#/management/dispute/${row.id}`, '_blank')
           this.addHighlight(row.id)
         } else {
-          this.$router.push({ name: 'dispute', params: { id: row.id } })
+          if (this.isTicket) {
+            this.$router.push({ name: 'ticket', params: { id: row.id } })
+          } else {
+            this.$router.push({ name: 'dispute', params: { id: row.id } })
+          }
         }
       }
     },

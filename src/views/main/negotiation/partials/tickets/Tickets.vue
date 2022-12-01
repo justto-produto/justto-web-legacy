@@ -6,9 +6,20 @@
     <TicketsHeader
       target-path="negotiation"
       :active-tab="activeTab"
+      @ticket:getDisputes="getDisputes()"
+    />
+
+    <Management
+      v-show="fullScreen"
+      class="tickets-container__management"
+      :tickets="tickets"
+      @infinite="infiniteHandler"
+      @change:tab="handleManagementChangeTab"
+      @management:getDisputes="getTickets()"
     />
 
     <span
+      v-if="!fullScreen"
       class="left-arrow"
       @click="handlePreviousScroll()"
     >
@@ -16,6 +27,7 @@
     </span>
 
     <span
+      v-if="!fullScreen"
       class="right-arrow"
       @click="handleNextScroll()"
     >
@@ -23,6 +35,7 @@
     </span>
 
     <el-tabs
+      v-if="!fullScreen"
       ref="tabs"
       v-model="activeTab"
       class="tickets-container__tabs"
@@ -45,17 +58,12 @@
           />
         </span>
 
-        <div class="tickets-container__counter">
+        <div
+          v-if="!fullScreen"
+          class="tickets-container__counter"
+        >
           {{ tickets.totalElements || 0 }} {{ $tc('labels.dispute', tickets.totalElements || 0) }}
         </div>
-
-        <ManagementTable
-          v-show="fullScreen"
-          class="tickets-container__list"
-          :tab="tab.name"
-          :tickets="tickets"
-          @infinite="infiniteHandler"
-        />
 
         <!-- v-else-if="activeTab === tab.name" -->
         <ul
@@ -105,7 +113,8 @@ export default {
     CommunicationTicketItem: () => import('./CommunicationTicketItem'),
     TicketsHeader: () => import('./TicketsHeader'),
     InfiniteLoading: () => import('vue-infinite-loading'),
-    ManagementTable: () => import('./table/management/ManagementTable')
+    // ManagementTable: () => import('./table/management/ManagementTable')
+    Management: () => import('@/views/main/management/Management')
     // VuePerfectScrollbar: () => import('vue-perfect-scrollbar'),
   },
 
@@ -114,6 +123,10 @@ export default {
       type: Boolean,
       default: false
     }
+  },
+
+  provide: {
+    isTicket: true
   },
 
   data: () => ({
@@ -179,6 +192,8 @@ export default {
         this.setTicketsActiveTab(value)
         this.handleChangeTab({ name: value })
         this.resetTabsScroll()
+
+        this.setDisputesTab(this.tabs.findIndex(({ name }) => name === value))
       }
     },
 
@@ -196,6 +211,7 @@ export default {
   beforeMount() {
     if (localStorage.getItem('TICKET_ACTIVE_TAB')) {
       this.setTicketsActiveTab(localStorage.getItem('TICKET_ACTIVE_TAB'))
+      this.setDisputesTab(this.tabs.findIndex(({ name }) => name === localStorage.getItem('TICKET_ACTIVE_TAB')))
     }
     this.handleInitDispute()
     this.handleChangeTab({ name: this.activeTab })
@@ -234,6 +250,7 @@ export default {
 
     ...mapMutations([
       'clearDisputes',
+      'setDisputesTab',
       'addPrescription',
       'setPreventSocket',
       'setPreventFilters',
@@ -297,6 +314,12 @@ export default {
 
       this.handleGetDisputes()
       this.getPrescriptions()
+    },
+
+    handleManagementChangeTab(tab) {
+      this.setTicketsActiveTab(this.tabs[tab].name)
+      this.handleChangeTab(this.tabs[tab])
+      this.resetTabsScroll()
     },
 
     handleChangeTab(tab) {
@@ -409,23 +432,33 @@ export default {
     handleNextTab() {
       if (this.activeTabIndex >= 0 && this.activeTabIndex < (this.tabs.length - 1)) {
         const { name } = this.tabs[this.activeTabIndex + 1]
+
         this.setTicketsActiveTab(name)
+        this.setDisputesTab(this.activeTabIndex + 1)
       } else if (this.activeTabIndex === (this.tabs.length - 1)) {
         const { name } = this.tabs[0]
+
         this.setTicketsActiveTab(name)
+        this.setDisputesTab(this.activeTabIndex - 1)
       }
     },
 
     handlePreviousTab() {
       if (this.activeTabIndex > 0 && this.activeTabIndex <= (this.tabs.length - 1)) {
         const { name } = this.tabs[this.activeTabIndex - 1]
+
         this.setTicketsActiveTab(name)
+        this.setDisputesTab(this.activeTabIndex - 1)
       } else if (this.activeTabIndex === 0) {
         const { name } = this.tabs[this.tabs.length - 1]
+
         this.setTicketsActiveTab(name)
+        this.setDisputesTab(this.tabs.length - 1)
       } else if (this.activeTabIndex === (this.tabs.length - 1)) {
         const { name } = this.tabs[0]
+
         this.setTicketsActiveTab(name)
+        this.setDisputesTab(0)
       }
     },
 
@@ -598,6 +631,43 @@ export default {
 
   .el-badge--absolute {
     right: 0;
+  }
+
+  .tickets-container__management {
+    width: calc(100vw - 58px);
+
+    .jus-main-view__container {
+      padding: 0 !important;
+
+      .jus-main-view__main-card {
+        box-shadow: none !important;
+        border: none;
+
+        .el-card__body {
+          .view-management__filters {
+            .view-management__tabs {
+              .el-tabs__header {
+                border-top: none;
+
+                .el-tabs__nav-wrap {
+                  .el-tabs__nav-scroll {
+                    .el-tabs__nav {
+                      .el-tabs__active-bar {
+                        display: none;
+                      }
+
+                      .el-tabs__item.is-active {
+                        border-bottom: solid $--color-primary 2px;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
 </style>
