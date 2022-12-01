@@ -642,6 +642,16 @@ export default {
       .jus-main-view__main-card {
         box-shadow: none !important;
         border: none;
+
+        .el-card__body {
+          .view-management__filters {
+            .view-management__tabs {
+              .el-tabs__header {
+                border-top: none;
+              }
+            }
+          }
+        }
       }
     }
   }
