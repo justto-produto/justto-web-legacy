@@ -35,7 +35,7 @@
             Filtros avançados
           </el-button>
 
-          <TicketsTagsFilters />
+          <TicketsTagsFilters @ticket:getDisputes="$emit('ticket:getDisputes', $event)" />
         </div>
       </ul>
       <el-button

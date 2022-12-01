@@ -648,6 +648,20 @@ export default {
             .view-management__tabs {
               .el-tabs__header {
                 border-top: none;
+
+                .el-tabs__nav-wrap {
+                  .el-tabs__nav-scroll {
+                    .el-tabs__nav {
+                      .el-tabs__active-bar {
+                        display: none;
+                      }
+
+                      .el-tabs__item.is-active {
+                        border-bottom: solid $--color-primary 2px;
+                      }
+                    }
+                  }
+                }
               }
             }
           }
