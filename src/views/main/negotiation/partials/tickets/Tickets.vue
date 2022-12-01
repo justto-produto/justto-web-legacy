@@ -6,6 +6,7 @@
     <TicketsHeader
       target-path="negotiation"
       :active-tab="activeTab"
+      @ticket:getDisputes="getDisputes()"
     />
 
     <Management
@@ -14,6 +15,7 @@
       :tickets="tickets"
       @infinite="infiniteHandler"
       @change:tab="handleManagementChangeTab"
+      @management:getDisputes="getTickets()"
     />
 
     <span

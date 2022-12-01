@@ -26,8 +26,9 @@
     </el-autocomplete>
 
     <TicketsFilters
-      v-if="['ticket', 'negotiation'].includes($route.name)"
+      v-if="(['ticket', 'negotiation'].includes($route.name) && ticketListMode !== 'MANAGEMENT')"
       :active-tab="activeTab"
+      @ticket:getDisputes="$emit('ticket:getDisputes')"
     />
 
     <HeaderUserMenu v-if="showUserMenu" />

@@ -90,7 +90,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
 export default {
   name: 'ManagementPrescriptions',
   components: {
@@ -155,6 +155,11 @@ export default {
     }
   },
   methods: {
+    ...mapActions([
+      'setTicketPrescription',
+      'unsetTicketPrescription'
+    ]),
+
     ...mapMutations([
       'setRecentPrescription',
       'addPrescription',
@@ -165,9 +170,11 @@ export default {
       this.$store.commit('resetDisputeQueryPage')
       if (this.hasPrescription(prescription)) {
         this.removePrescription(prescription)
+        this.unsetTicketPrescription(prescription)
       } else {
         this.addPrescription(prescription)
         this.setRecentPrescription(prescription)
+        this.setTicketPrescription(prescription)
         // SEGMENT TRACK
         const translatedPrescription = this.$t(`prescription.${prescription}`).toUpperCase()
         this.$jusSegment(`Filtro botão ${translatedPrescription}`)

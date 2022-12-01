@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapActions, mapMutations } from 'vuex'
 
 export default {
   name: 'TicketsFilters',
@@ -107,22 +107,36 @@ export default {
       'setTicketsQuery'
     ]),
 
+    ...mapMutations([
+      'updateDisputeQuery',
+      'resetDisputeQueryPage',
+      'removePrescription',
+      'setRecentPrescription',
+      'addPrescription'
+    ]),
+
     openAdvancedFiltersDialog() {
       this.$refs.advancedFilters.openDialog()
     },
 
     handlePrescriptionClick(prescription) {
       this.setTicketsQuery({ key: 'page', value: 0 })
+      this.resetDisputeQueryPage()
 
       if (this.ticketsPrescriptions.includes(prescription)) {
         this.unsetTicketPrescription(prescription)
+        this.removePrescription(prescription)
       } else {
         this.setTicketPrescription(prescription)
+        this.addPrescription(prescription)
+        this.setRecentPrescription(prescription)
         const translatedPrescription = this.$t(`prescription.${prescription}`).toUpperCase()
         this.$jusSegment(`Filtro botão ${translatedPrescription}`)
       }
+
       this.getTickets()
       this.getTicketsFilteredTags()
+      this.$emit('ticket:getDisputes')
     },
 
     buttonType(name) {

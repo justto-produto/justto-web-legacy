@@ -781,6 +781,8 @@ export default {
           if (this.$refs.managementTable) this.$refs.managementTable.disputeKey += 1
         })
       }, 300)
+
+      this.$emit('management:getDisputes')
     },
 
     clearSelection() {
