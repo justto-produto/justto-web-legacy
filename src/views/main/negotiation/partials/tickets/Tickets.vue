@@ -641,6 +641,7 @@ export default {
 
       .jus-main-view__main-card {
         box-shadow: none !important;
+        border: none;
       }
     }
   }

@@ -491,6 +491,7 @@ export default {
 
   methods: {
     ...mapActions([
+      'setTicketsFilters',
       'getCampaigns',
       'getMyStrategiesLite',
       'getRespondents',
@@ -544,6 +545,7 @@ export default {
 
       this.$store.commit('setDisputeHasFilters', true)
       this.$store.commit('setDisputeQuery', this.filters)
+      this.setTicketsFilters({ filters: this.filters, hasFilters: true })
       this.visibleFilters = false
 
       if (this.filters.status) {
@@ -597,6 +599,7 @@ export default {
       this.filters.vexatiousLawyer = false
       this.$store.commit('setDisputeHasFilters', false)
       this.$store.commit('setDisputeQuery', this.filters)
+      this.setTicketsFilters({ filters: this.filters, hasFilters: false })
       this.visibleFilters = false
       delete this.filters.onlyNotVisualized
       delete this.filters.onlyPaused
