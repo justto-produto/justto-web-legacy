@@ -102,10 +102,7 @@
           </el-tab-pane>
         </el-tabs>
 
-        <div
-          class="view-management__buttons"
-          :class="{'show-menu-space': isTicket}"
-        >
+        <div class="view-management__buttons">
           <!-- <el-input
             v-model="term"
             clearable
@@ -177,6 +174,11 @@
           </el-tooltip>
 
           <jus-import-dialog :dialog-visible.sync="importDialogVisible" />
+
+          <TableMenu
+            v-if="isTicket"
+            keep-original
+          />
         </div>
       </div>
 
@@ -460,7 +462,8 @@ export default {
     ManagementPrescriptions: () => import('./partials/ManagementPrescriptions'),
     JusImportDialog: () => import('@/components/dialogs/JusImportDialog'),
     JusFilterButton: () => import('@/components/buttons/JusFilterButton'),
-    JusLoader: () => import('@/components/others/JusLoader')
+    JusLoader: () => import('@/components/others/JusLoader'),
+    TableMenu: () => import('@/views/main/negotiation/partials/tickets/table/partials/TableMenu')
   },
 
   inject: {

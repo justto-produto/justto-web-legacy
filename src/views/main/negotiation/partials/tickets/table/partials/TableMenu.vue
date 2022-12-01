@@ -1,5 +1,8 @@
 <template>
-  <article class="ticket-table-menu">
+  <article
+    class="ticket-table-menu"
+    :class="{'keep-original': keepOriginal}"
+  >
     <el-popover
       ref="menuPopover"
       placement="bottom-end"
@@ -10,8 +13,7 @@
 
       <el-button
         slot="reference"
-        size="small"
-        type="text"
+        :type="keepOriginal ? 'default' : 'text'"
       >
         <span class="ticket-table-menu__icon">
           <jus-icon icon="omnichannel-menu" />
@@ -28,6 +30,13 @@ export default {
     MenuOptions: () => import('./MenuOptions')
   },
 
+  props: {
+    keepOriginal: {
+      type: Boolean,
+      default: false
+    }
+  },
+
   methods: {
     handleHide() {
       if (this.$refs?.menuPopover) {
@@ -41,12 +50,12 @@ export default {
 <style lang="scss" scoped>
 @import '@/styles/colors.scss';
 
-.ticket-table-menu {
+.ticket-table-menu:not(.keep-original) {
   position: absolute;
   top: 0;
   right: 0;
   z-index: 1;
-  margin: 4.5pc 1pc 0 0;
+  margin: 3.5pc 1.1pc 0 0;
 
   .el-button {
     padding: 8px 0;
@@ -59,6 +68,18 @@ export default {
       img {
         width: 24px;
       }
+    }
+  }
+}
+
+.ticket-table-menu.keep-original {
+  margin-left: 10px;
+
+  .el-button {
+    padding: 12px 20px;
+
+    img {
+      height: 15px;
     }
   }
 }

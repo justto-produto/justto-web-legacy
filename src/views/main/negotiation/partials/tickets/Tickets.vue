@@ -632,7 +632,15 @@ export default {
   }
 
   .tickets-container__management {
-    width: calc(100vw - 58px)
+    width: calc(100vw - 58px);
+
+    .jus-main-view__container {
+      padding: 0 !important;
+
+      .jus-main-view__main-card {
+        box-shadow: none !important;
+      }
+    }
   }
 }
 </style>
