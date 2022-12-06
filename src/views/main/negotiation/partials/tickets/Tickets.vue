@@ -647,7 +647,8 @@ export default {
           .view-management__filters {
             .view-management__tabs {
               .el-tabs__header {
-                border-top: none;
+                border: none;
+                margin-bottom: 0;
 
                 .el-tabs__nav-wrap {
                   .el-tabs__nav-scroll {
@@ -658,6 +659,10 @@ export default {
 
                       .el-tabs__item.is-active {
                         border-bottom: solid $--color-primary 2px;
+                      }
+
+                      .el-tabs__item:not(.is-active) {
+                        border-bottom: solid #f3f4f5 2px;
                       }
                     }
                   }

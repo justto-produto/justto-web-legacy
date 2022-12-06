@@ -60,7 +60,7 @@ export default {
     },
 
     hasUnknownParts() {
-      return this.dispute?.unknownPolarityParty || ((this.dispute?.disputeRoles || []).filter(({ party }) => (party === 'UNKNOWN')).length) > 0
+      return ['PENDING', 'ENGAGEMENT'].includes(this.status) && (this.dispute?.unknownPolarityParty || ((this.dispute?.disputeRoles || []).filter(({ party }) => (party === 'UNKNOWN')).length) > 1)
     },
 
     claimantHaveInvalidDocument() {
@@ -75,12 +75,16 @@ export default {
       return ['PENDING'].includes(this.status) && document && !isValidCPF(document) && !isValidCNPJ(document)
     },
 
+    hasNoNegotiationInterest() {
+      return ['RUNNING'].includes(this.status) && this.dispute?.properties?.NO_NEGOTIATION_INTEREST === String(true)
+    },
+
     needFolllowUp() {
       if (this.dispute?.lastInteraction?.direction === 'OUTBOUND' && ['RUNNING'].includes(this.status)) {
         return this.$moment().diff(this.$moment(this.dispute?.lastInteraction?.createAt?.dateTime || this.dispute?.lastInteraction?.createdAt), 'hours') >= 24
       }
 
-      return this.hasUnknownParts || this.wasViewed || this.havePhone || this.lawyerHaveInvalidDocument || this.claimantHaveInvalidDocument
+      return this.hasNoNegotiationInterest || this.hasUnknownParts || this.wasViewed || this.havePhone || this.lawyerHaveInvalidDocument || this.claimantHaveInvalidDocument
     },
 
     followUpDays() {
@@ -88,6 +92,8 @@ export default {
     },
 
     followUpText() {
+      if (this.hasNoNegotiationInterest) { return 'Indicativo de perda, tente reverter!' }
+
       if (this.hasUnknownParts) { return 'Disputa contém partes sem polaridade.' }
 
       if (this.wasViewed || this.havePhone) { return 'Ligue para a parte e faça o acordo!' }
@@ -101,6 +107,8 @@ export default {
 
     followUpBtnText() {
       const plural = this.followUpDays > 1 ? 's' : ''
+
+      if (this.hasNoNegotiationInterest) { return 'Indicativo de perda' }
 
       if (this.hasUnknownParts) { return 'Definir polaridade' }
 
