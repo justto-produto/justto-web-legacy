@@ -86,27 +86,36 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+
+const CUSTOM_PROPERTIES = {
+  NOTIFY_UNANSWERED_EMAIL: true,
+  NOTIFY_UNANSWERED_WHATSAPP: true,
+  NOTIFY_OUT_OF_BUSINESS_HOURS: true,
+  SEND_COUNTEROFFER: true,
+  SEND_DISPUTE_INFO_REPLY: true,
+  DISPUTE_UNDER_ANALYSIS_REPLY: true,
+  SEND_NPS_SURVEY: true
+}
+
 export default {
   name: 'AutomaticMessagesDialog',
   data: () => ({
     automaticMessagesDialogVisible: false,
-    sendAutomaticMessage: 'ALWAYS',
-    customProperties: {
-      NOTIFY_UNANSWERED_EMAIL: true,
-      NOTIFY_UNANSWERED_WHATSAPP: true,
-      NOTIFY_OUT_OF_BUSINESS_HOURS: true,
-      SEND_COUNTEROFFER: true,
-      SEND_DISPUTE_INFO_REPLY: true,
-      DISPUTE_UNDER_ANALYSIS_REPLY: true,
-      SEND_NPS_SURVEY: true
-    }
+    sendAutomaticMessage: 'ALWAYS'
   }),
 
   computed: {
     ...mapGetters({
+      isRecovery: 'isWorkspaceRecovery',
       properties: 'workspaceProperties',
       windowMode: 'getWindowMode'
-    })
+    }),
+
+    customProperties() {
+      const { NOTIFY_UNANSWERED_WHATSAPP, ...properties } = CUSTOM_PROPERTIES
+
+      return this.isRecovery ? properties : CUSTOM_PROPERTIES
+    }
   },
 
   methods: {
