@@ -76,7 +76,7 @@ export default {
     },
 
     hasNoNegotiationInterest() {
-      return ['RUNNING'].includes(this.status) && this.dispute?.properties?.NO_NEGOTIATION_INTEREST === String(true)
+      return ['RUNNING'].includes(this.status) && (this.dispute?.noNegotiationInterest || this.dispute?.properties?.NO_NEGOTIATION_INTEREST === String(true))
     },
 
     needFolllowUp() {
