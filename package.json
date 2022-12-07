@@ -24,6 +24,7 @@
     "test:server": "npx vue-cli-service test:e2e --headless --browser chrome"
   },
   "dependencies": {
+    "@aws-amplify/ui-components": "^1.9.40",
     "@ckeditor/ckeditor5-alignment": "^27.0.0",
     "@ckeditor/ckeditor5-autoformat": "^27.0.0",
     "@ckeditor/ckeditor5-block-quote": "^27.0.0",
@@ -54,6 +55,8 @@
     "@sentry/integrations": "^5.15.5",
     "@vue/ui": "^0.5.6",
     "appversion": "^1.7.1",
+    "aws-amplify": "^5.0.5",
+    "aws-amplify-vue": "^2.1.9",
     "chart.js": "^2.9.3",
     "ckeditor4-vue": "^1.1.0",
     "core-js": "^3.6.5",

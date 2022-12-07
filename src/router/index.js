@@ -300,6 +300,16 @@ const router = new Router({
       }
     },
     {
+      name: 'auth',
+      path: '/auth',
+      component: () => import(/* webpackChunkName: "ExternalAuth" */ '@/views/external/ExternalAuth'),
+      meta: {
+        requiresAuth: false,
+        trackPage: true,
+        title: 'External Auth'
+      }
+    },
+    {
       name: 'recover-account',
       path: '/recover-account',
       component: () => import(/* webpackChunkName: "recoverAccount" */ '@/views/external/RecoverAccount'),
@@ -334,7 +344,6 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  console.log('route', to, from)
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (Store.getters.isLoggedIn) {
       if (Store.getters.hasWorkspace) {
