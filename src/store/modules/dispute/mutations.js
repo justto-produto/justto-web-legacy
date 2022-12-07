@@ -188,7 +188,7 @@ const disputeMutations = {
   },
 
   setDisputesTab(state, tab) {
-    state.tab = tab
+    state.tab = String(tab)
   },
 
   clearDisputeTab(state, tab) {

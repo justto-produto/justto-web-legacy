@@ -125,7 +125,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
 const _ = require('lodash')
 
 export default {
@@ -162,6 +162,8 @@ export default {
       'setTicketsQuery',
       'getTickets'
     ]),
+
+    ...mapMutations(['updateDisputeQuery']),
 
     filterByTag(tag, command) {
       const currentTags = _.cloneDeep(this.ticketsQuery.tags || [])
@@ -216,9 +218,16 @@ export default {
     },
 
     updateTagFilters(currentTags, currentNoTags) {
+      // TIckets Tags
       this.setTicketsQuery({ key: 'tags', value: currentTags })
       this.setTicketsQuery({ key: 'noTags', value: currentNoTags })
+
+      // Management Tags
+      this.updateDisputeQuery({ key: 'tags', value: currentTags })
+      this.updateDisputeQuery({ key: 'noTags', value: currentNoTags })
       this.getTickets()
+
+      this.$emit('ticket:getDisputes')
     }
   }
 }

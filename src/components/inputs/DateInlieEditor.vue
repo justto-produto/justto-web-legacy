@@ -75,8 +75,9 @@ export default {
 
   computed: {
     newDateValue() {
-      const timestamp = Date.parse(this.value)
-      if (!isNaN(timestamp)) {
+      const timestamp = Date.parse(new Date(new Date(this.value).setHours(3)))
+
+      if (!isNaN(timestamp)) { /* Valida se a data existe. */
         return new Date(this.value)
       } else return new Date()
     },
@@ -103,7 +104,10 @@ export default {
   },
   methods: {
     enableEdit() {
-      this.model = this.newDateValue
+      if (!isNaN(Date.parse(this.value))) {
+        this.model = this.newDateValue
+      }
+
       this.isEditing = true
       this.$nextTick(() => {
         this.$forceUpdate()

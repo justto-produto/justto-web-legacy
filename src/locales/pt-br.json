@@ -570,6 +570,29 @@
     "DRAFT_NOTIFICATIONS": {
       "label": "Notificar minutagem",
       "icon": "accepted"
+    },
+    "property": {
+      "NOTIFY_UNANSWERED_EMAIL": {
+        "title": "Notificar emails sem resposta após 36 horas."
+      },
+      "NOTIFY_UNANSWERED_WHATSAPP": {
+        "title": "Notificar whatsapp sem resposta após 23 horas."
+      },
+      "NOTIFY_OUT_OF_BUSINESS_HOURS": {
+        "title": "Notificar mensagens fora do horário de atendimento."
+      },
+      "SEND_COUNTEROFFER": {
+        "title": "Responder automáticamente valor da contraproposta."
+      },
+      "SEND_DISPUTE_INFO_REPLY": {
+        "title": "Responder automáticamente informações da disputa."
+      },
+      "DISPUTE_UNDER_ANALYSIS_REPLY": {
+        "title": "Responder automáticamente disputas que estão em análise da empresa."
+      },
+      "SEND_NPS_SURVEY": {
+        "title": "Enviar formulário para avalição de NPS."
+      }
     }
   },
   "fields": {

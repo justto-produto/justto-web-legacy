@@ -260,7 +260,7 @@ export default {
         this.setTicketOverviewParty({ disputeId, data, isNew: true }).then(() => {
           this.$jusNotification({
             title: 'Yay!',
-            message: this.$options.filters.capitalize(this.$tc(`roles.LAWYER.${polarity}`, this.isRecovery)) + ' cadastrado com sucesso!',
+            message: this.$options.filters.capitalize(this.$tc(`roles.LAWYER.${party}`, this.isRecovery)) + ' cadastrado com sucesso!',
             type: 'success'
           })
           this.addedParts.push(data.name)

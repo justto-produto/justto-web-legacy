@@ -22,7 +22,7 @@
           </el-radio>
         </el-form-item>
 
-        <el-form-item>
+        <!-- <el-form-item>
           <span slot="label">
             O sistema identifica e sugere ao negociador ações automáticas que, caso aceitas pelo negociador, passarão a ser executadas automaticamente pelo sistema em situações similares.
           </span>
@@ -33,8 +33,33 @@
           >
             Permitir que o negociador decida
           </el-radio>
+        </el-form-item> -->
+
+        <el-form-item>
+          <span slot="label">
+            Defina quais ações que devem ser executadas automaticamente.
+          </span>
+
+          <el-radio
+            v-model="sendAutomaticMessage"
+            label="CUSTOM"
+          >
+            Customizar ações
+          </el-radio>
         </el-form-item>
       </el-form>
+
+      <div
+        v-if="sendAutomaticMessage === 'CUSTOM'"
+        class="el-dialog__body-container__custom-properties"
+      >
+        <el-switch
+          v-for="key in Object.keys(customProperties)"
+          :key="key"
+          v-model="customProperties[key]"
+          :active-text="$tc(`configurations.property.${key}.title`)"
+        />
+      </div>
     </span>
 
     <span
@@ -61,6 +86,17 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+
+const CUSTOM_PROPERTIES = {
+  NOTIFY_UNANSWERED_EMAIL: true,
+  NOTIFY_UNANSWERED_WHATSAPP: true,
+  NOTIFY_OUT_OF_BUSINESS_HOURS: true,
+  SEND_COUNTEROFFER: true,
+  SEND_DISPUTE_INFO_REPLY: true,
+  DISPUTE_UNDER_ANALYSIS_REPLY: true,
+  SEND_NPS_SURVEY: true
+}
+
 export default {
   name: 'AutomaticMessagesDialog',
   data: () => ({
@@ -70,9 +106,16 @@ export default {
 
   computed: {
     ...mapGetters({
+      isRecovery: 'isWorkspaceRecovery',
       properties: 'workspaceProperties',
       windowMode: 'getWindowMode'
-    })
+    }),
+
+    customProperties() {
+      const { NOTIFY_UNANSWERED_WHATSAPP, ...properties } = CUSTOM_PROPERTIES
+
+      return this.isRecovery ? properties : CUSTOM_PROPERTIES
+    }
   },
 
   methods: {
@@ -83,6 +126,10 @@ export default {
     openFeatureDialog() {
       this.sendAutomaticMessage = this.properties.SEND_AUTOMATIC_MESSAGES || ''
       this.automaticMessagesDialogVisible = true
+
+      Object.keys(this.customProperties).forEach(property => {
+        this.customProperties[property] = !(this.properties[property] === String(false))
+      })
     },
 
     close() {
@@ -90,8 +137,15 @@ export default {
     },
 
     save() {
+      const { customProperties } = this
+
       this.editProperties({
-        SEND_AUTOMATIC_MESSAGES: this.sendAutomaticMessage
+        SEND_AUTOMATIC_MESSAGES: this.sendAutomaticMessage,
+        ...(Object.keys(customProperties).reduce((acc, key) => {
+          acc[key] = String(customProperties[key] === true)
+
+          return acc
+        }, {}))
       }).finally(() => this.close())
     }
   }
@@ -141,6 +195,13 @@ export default {
             }
           }
         }
+      }
+
+      .el-dialog__body-container__custom-properties {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-left: 24px;
       }
     }
   }

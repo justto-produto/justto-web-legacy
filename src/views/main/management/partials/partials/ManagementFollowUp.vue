@@ -88,13 +88,31 @@ export default {
     },
 
     followUpText() {
-      return this.lawyerHaveInvalidDocument ? this.$tc('roles.LAWYER.CLAIMANT', this.isRecovery) + ' com documento inválido' : this.claimantHaveInvalidDocument ? this.$tc('roles.PARTY.CLAIMANT', this.isRecovery) + ' com documento inválido' : this.hasUnknownParts ? 'Disputa contém partes sem polaridade.' : 'Ligue para a parte e faça o acordo!'
+      if (this.hasUnknownParts) { return 'Disputa contém partes sem polaridade.' }
+
+      if (this.wasViewed || this.havePhone) { return 'Ligue para a parte e faça o acordo!' }
+
+      if (this.lawyerHaveInvalidDocument) { return this.$tc('roles.LAWYER.CLAIMANT', this.isRecovery) + ' com documento inválido' }
+
+      if (this.claimantHaveInvalidDocument) { return this.$tc('roles.PARTY.CLAIMANT', this.isRecovery) + ' com documento inválido' }
+
+      return 'Ligue para a parte e faça o acordo!'
     },
 
     followUpBtnText() {
       const plural = this.followUpDays > 1 ? 's' : ''
 
-      return this.lawyerHaveInvalidDocument ? 'Advogado com documento inválido' : this.claimantHaveInvalidDocument ? 'Documento inválido' : this.hasUnknownParts ? 'Definir polaridade' : this.havePhone ? 'Ligue para a parte!' : this.wasViewed ? `Visualizada há ${this.followUpDays} dia${plural}` : `${this.followUpDays} dia${plural} sem retorno da parte`
+      if (this.hasUnknownParts) { return 'Definir polaridade' }
+
+      if (this.wasViewed) { return `Visualizada há ${this.followUpDays} dia${plural}` }
+
+      if (this.havePhone) { return 'Ligue para a parte!' }
+
+      if (this.lawyerHaveInvalidDocument) { return 'Advogado com documento inválido' }
+
+      if (this.claimantHaveInvalidDocument) { return 'Documento inválido' }
+
+      return `${this.followUpDays} dia${plural} sem retorno da parte`
     }
   },
 
