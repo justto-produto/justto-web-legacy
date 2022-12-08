@@ -108,7 +108,7 @@ export default {
     followUpBtnText() {
       const plural = this.followUpDays > 1 ? 's' : ''
 
-      if (this.hasNoNegotiationInterest) { return 'Indicativo de perda' }
+      if (this.hasNoNegotiationInterest) { return 'Indicativo de perda, tente reverter!' }
 
       if (this.hasUnknownParts) { return 'Definir polaridade' }
 
