@@ -140,7 +140,6 @@
     </el-steps>
 
     <FollowUp
-      v-if="ticket.disputeStatus === 'RUNNING'"
       :dispute="ticket"
       class="communication-ticket-item-container__follow-up"
     />
