@@ -291,6 +291,20 @@ const workspaceActions = {
     })
   },
 
+  getFeatureProperties({ _ }, featureId) {
+    return axiosDispatch({
+      url: `${workspacesPath}/feature/${featureId}/properties`
+    })
+  },
+
+  saveFeatureProperties({ _ }, { featureId, properties }) {
+    return axiosDispatch({
+      url: `${workspacesPath}/feature/${featureId}/properties`,
+      method: 'PATCH',
+      data: { properties }
+    })
+  },
+
   setApiIntegrationConfiguration({ _ }, params) {
     const { featureId, payload } = params
     return axiosDispatch({

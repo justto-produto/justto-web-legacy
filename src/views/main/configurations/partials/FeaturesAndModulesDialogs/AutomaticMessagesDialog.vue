@@ -58,6 +58,7 @@
           :key="key"
           v-model="customProperties[key]"
           :active-text="$tc(`configurations.property.${key}.title`)"
+          @input="$forceUpdate()"
         />
       </div>
     </span>
@@ -120,15 +121,20 @@ export default {
 
   methods: {
     ...mapActions({
-      editProperties: 'editWorkpaceProperties'
+      editProperties: 'editWorkpaceProperties',
+      getFeatureProperties: 'getFeatureProperties',
+      saveFeatureProperties: 'saveFeatureProperties'
     }),
 
     openFeatureDialog() {
-      this.sendAutomaticMessage = this.properties.SEND_AUTOMATIC_MESSAGES || ''
+      this.sendAutomaticMessage = this.properties.SEND_AUTOMATIC_MESSAGES || 'ALWAYS'
       this.automaticMessagesDialogVisible = true
 
-      Object.keys(this.customProperties).forEach(property => {
-        this.customProperties[property] = !(this.properties[property] === String(false))
+      this.getFeatureProperties(3).then(({ properties }) => {
+        properties.forEach(({ key, value }) => {
+          this.customProperties[key] = !(value === String(false))
+          this.$forceUpdate()
+        })
       })
     },
 
@@ -139,13 +145,16 @@ export default {
     save() {
       const { customProperties } = this
 
-      this.editProperties({
-        SEND_AUTOMATIC_MESSAGES: this.sendAutomaticMessage,
-        ...(Object.keys(customProperties).reduce((acc, key) => {
-          acc[key] = String(customProperties[key] === true)
+      const properties = Object.keys(customProperties).reduce((acc, key) => {
+        acc[key] = String(customProperties[key] === true)
 
-          return acc
-        }, {}))
+        return [...acc, { key, value: String(customProperties[key] === true) }]
+      }, [])
+
+      this.editProperties({
+        SEND_AUTOMATIC_MESSAGES: this.sendAutomaticMessage
+      }).then(() => {
+        this.saveFeatureProperties({ featureId: 3, properties })
       }).finally(() => this.close())
     }
   }
