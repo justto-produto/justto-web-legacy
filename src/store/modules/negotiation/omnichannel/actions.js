@@ -1,5 +1,6 @@
 import { axiosDispatch, isSimilarStrings, buildQuery, validateCurrentId, stripHtml } from '@/utils'
 import { EditorBackup } from '@/models/message/editorBackup'
+import EDITOR_CONSTANTS from '@/constants/editor'
 
 const vue = () => document.getElementById('app')?.__vue__
 
@@ -66,6 +67,7 @@ const omnichannelActions = {
   getOccurrences({ getters }, disputeId) {
     const params = {
       ...getters.getOccurrencesFilter,
+      showScheduler: getters.getActiveTab === EDITOR_CONSTANTS.OCCURRENCES,
       type: getters.getOccurrencesFilter.type === 'LOG' ? null : getters.getOccurrencesFilter.type
     }
 
@@ -85,7 +87,12 @@ const omnichannelActions = {
     const url = `${disputeApi}/${disputeId}/occurrences${buildQuery(params)}`.slice(0, -1)
 
     return validateCurrentId(disputeId, () => axiosDispatch({
-      url, params: { resumed: false }, mutation: 'setOccurrences'
+      url,
+      params: {
+        resumed: false,
+        showScheduler: getters.getActiveTab === EDITOR_CONSTANTS.OCCURRENCES
+      },
+      mutation: 'setOccurrences'
     }))
   },
 
