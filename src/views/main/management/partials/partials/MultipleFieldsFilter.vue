@@ -74,14 +74,14 @@ export default {
       const endLine = this.model.endsWith('\n') ? '\n' : ''
       this.model = this.model.trim() + endLine
 
-      const tempModel = this.model.split('\n')
+      const tempModel = this.model?.length ? this.model.split('\n') : []
       const reId = /[0-9]+/g
       const reCode = /[^']+/g
 
       if (this.field === 'ID') {
-        this.model = tempModel.map(model => (model.match(reId).join(''))).join('\n')
+        this.model = tempModel.map(model => ((model || '').match(reId).join(''))).join('\n')
       } else if (this.field === 'CODE') {
-        this.model = tempModel.map(model => (model.match(reCode).join(''))).join('\n')
+        this.model = tempModel.map(model => ((model || '').match(reCode).join(''))).join('\n')
       }
 
       this.handleEmitInput()
