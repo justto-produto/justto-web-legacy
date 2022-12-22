@@ -83,6 +83,7 @@ const ticketsMutations = {
       }
     }
   },
+
   updateTicketItem: ({ tickets }, dispute) => {
     const ticketIndex = getTicketIndex(tickets.content, dispute.id)
     const newTicket = [
@@ -115,7 +116,11 @@ const ticketsMutations = {
     if (state.ticketsGettersCounter > 0) state.ticketsGettersCounter -= 1
   },
 
-  resetTicketsGettersCounter: (state) => Vue.set(state, 'ticketsGettersCounter', 0)
+  resetTicketsGettersCounter: (state) => Vue.set(state, 'ticketsGettersCounter', 0),
+
+  resetTicketsLastPage: state => {
+    Vue.delete(state.tickets, 'last')
+  }
 }
 
 export default ticketsMutations

@@ -782,7 +782,8 @@ export default {
         })
       }, 300)
 
-      this.$emit('management:getDisputes')
+      // Estava duplicando o GET dos Tickets na mudança de Aba.
+      // this.$emit('management:getDisputes')
     },
 
     clearSelection() {

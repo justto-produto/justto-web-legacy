@@ -28,6 +28,8 @@ const getCorrespondingTab = disputeStatus => {
 
 const overviewActions = {
   getTickets({ state, dispatch, commit }, command) {
+    if (state?.tickets?.last) return
+
     commit('incrementTicketsGettersCounter')
 
     if (command !== 'nextPage') dispatch('setTicketsQuery', { key: 'page', value: 1 })
