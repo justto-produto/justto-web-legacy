@@ -10,7 +10,7 @@
     />
 
     <Management
-      v-show="fullScreen"
+      v-if="fullScreen"
       class="tickets-container__management"
       :tickets="tickets"
       @infinite="infiniteHandler"
@@ -136,6 +136,7 @@ export default {
   computed: {
     ...mapGetters({
       tickets: 'getTickets',
+      getTicketsQuery: 'getTicketsQuery',
       hasFilters: 'getTicketsHasFilters',
       ticketsActiveTab: 'getTicketsActiveTab',
       isLoading: 'getTicketsIsLoading',
@@ -189,11 +190,12 @@ export default {
         return this.ticketsActiveTab
       },
       set(value) {
-        this.setTicketsActiveTab(value)
-        this.handleChangeTab({ name: value })
-        this.resetTabsScroll()
-
-        this.setDisputesTab(this.tabs.findIndex(({ name }) => name === value))
+        if (value !== this.ticketsActiveTab) {
+          this.setTicketsActiveTab(value)
+          this.handleChangeTab({ name: value })
+          this.resetTabsScroll()
+          this.setDisputesTab(this.tabs.findIndex(({ name }) => name === value))
+        }
       }
     },
 
@@ -255,6 +257,7 @@ export default {
       'setPreventSocket',
       'setPreventFilters',
       'updateDisputeQuery',
+      'resetTicketsLastPage',
       'addDisputeQueryPageByTicket',
       'setDisputeHasFilters',
       'clearDisputeQueryByTab'
@@ -308,7 +311,6 @@ export default {
         this.updateDisputeQuery({ key: 'finishDate', value: query.finishDate })
         this.updateDisputeQuery({ key: 'transactionType', value: query.transactionType })
         this.setDisputeHasFilters(query.disputeHasFilters)
-        console.log('setDisputesTab', query.disputeTab)
         // this.$store.commit('setDisputesTab', query.disputeTab)
       }
 
@@ -317,6 +319,8 @@ export default {
     },
 
     handleManagementChangeTab(tab) {
+      if (this.activeTab === this.tabs[tab].name) return
+
       this.setTicketsActiveTab(this.tabs[tab].name)
       this.handleChangeTab(this.tabs[tab])
       this.resetTabsScroll()
@@ -330,6 +334,8 @@ export default {
         this.setTicketsQuery({ key: 'status', value: [] })
         this.setTicketsQuery({ key: 'prescriptions', value: [] })
         this.setTicketsQuery({ key: 'sort', value: [] })
+        console.log('getTickets', 'resetTicketsLastPage')
+        this.resetTicketsLastPage()
 
         // Update Management Info.
         this.clearDisputes()
@@ -382,6 +388,7 @@ export default {
       }
 
       this.getTicketsFilteredTags()
+      console.log('getTickets', 'getTickets')
       this.getTickets()
         .then((response) => {
           this.getNearExpirations()
@@ -413,12 +420,21 @@ export default {
     },
 
     infiniteHandler($state) {
-      console.log('infiniteHandler', $state)
+      /**
+       * BUG: Chamada duplicada na mudançã de aba.
+       *
+       * O Handler da aba busca a página 0, e Handler do Infinit Scrool chama a página 1.
+       *
+       * Todas as vezes.
+       */
+
       // Busca disputas da próxima página.
       this.addDisputeQueryPageByTicket()
       this.getDisputes('nextPage')
 
       // Busca Tickets da próxima página.
+      console.log('getTickets', 'getTicketsNextPage')
+      console.log('getTickets', JSON.stringify(this.getTicketsQuery))
       this.getTicketsNextPage()
         .then(response => {
           if (response.last) {
