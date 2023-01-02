@@ -6,7 +6,7 @@ const ticketsGetters = {
   getTicketsPreventSocket: state => state.ticketsPreventSocket,
   getTicketsActiveTab: state => state.ticketsActiveTab,
   getTicketsPrescriptions: state => state.ticketsQuery.prescriptions,
-  getTicketsIsLoading: ({ ticketsGettersCounter: counter, ticketsQuery: query }) => counter > 0 && query.page <= 2
+  getTicketsIsLoading: state => state.ticketsGettersCounter > 0 && state.ticketsQuery.page <= 2
 }
 
 export default ticketsGetters

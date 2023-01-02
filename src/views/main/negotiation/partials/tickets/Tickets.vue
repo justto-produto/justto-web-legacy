@@ -314,8 +314,9 @@ export default {
         // this.$store.commit('setDisputesTab', query.disputeTab)
       }
 
-      this.handleGetDisputes()
-      this.getPrescriptions()
+      // TODO: GETs do Management.
+      // this.handleGetDisputes()
+      // this.getPrescriptions()
     },
 
     handleManagementChangeTab(tab) {
@@ -334,7 +335,6 @@ export default {
         this.setTicketsQuery({ key: 'status', value: [] })
         this.setTicketsQuery({ key: 'prescriptions', value: [] })
         this.setTicketsQuery({ key: 'sort', value: [] })
-        console.log('getTickets', 'resetTicketsLastPage')
         this.resetTicketsLastPage()
 
         // Update Management Info.
@@ -388,13 +388,12 @@ export default {
       }
 
       this.getTicketsFilteredTags()
-      console.log('getTickets', 'getTickets')
       this.getTickets()
         .then((response) => {
           this.getNearExpirations()
           this.getNotVisualizeds()
         })
-      this.handleGetDisputes()
+      // this.handleGetDisputes()
     },
 
     // GET Disputes logic
@@ -429,12 +428,9 @@ export default {
        */
 
       // Busca disputas da próxima página.
-      this.addDisputeQueryPageByTicket()
-      this.getDisputes('nextPage')
+      // this.addDisputeQueryPageByTicket()
+      // this.getDisputes('nextPage')
 
-      // Busca Tickets da próxima página.
-      console.log('getTickets', 'getTicketsNextPage')
-      console.log('getTickets', JSON.stringify(this.getTicketsQuery))
       this.getTicketsNextPage()
         .then(response => {
           if (response.last) {
