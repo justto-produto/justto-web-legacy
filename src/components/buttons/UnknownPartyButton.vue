@@ -1,5 +1,8 @@
 <template>
-  <article class="unknow-party-container">
+  <article
+    v-if="isUnknow"
+    class="unknow-party-container"
+  >
     <span class="unknow-party-container__header">
       Ajude-nos a identificar a polaridade correta. Quem {{ unknownName }} está representando?
     </span>
@@ -16,6 +19,15 @@
 
         <div> {{ item.name }} </div>
       </el-button>
+    </div>
+  </article>
+
+  <article
+    v-else
+    class="unknow-party-container"
+  >
+    <div class="unknow-party-container__resolved">
+      Polaridade já definida! <i class="el-icon-check" />
     </div>
   </article>
 </template>
@@ -86,6 +98,10 @@ export default {
         polarity: 'RESPONDENT',
         roles: ['PARTY']
       }]
+    },
+
+    isUnknow() {
+      return this.parties?.find(({ name }) => name === this.unknownFullName)?.polarity === 'UNKNOWN'
     },
 
     occurrence: {
@@ -160,6 +176,13 @@ export default {
     .unknow-party-container__body {
       display: flex;
       gap: 8px;
+    }
+
+    .unknow-party-container__resolved {
+      margin-top: 8px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 18px;
     }
   }
 </style>
