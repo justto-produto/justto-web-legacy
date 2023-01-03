@@ -101,7 +101,8 @@ export default {
     },
 
     isUnknow() {
-      return this.parties?.find(({ name }) => name === this.unknownFullName)?.polarity === 'UNKNOWN'
+      // TODO: SAAS-5493 Validar se a polaridade da parte foi resolvida.
+      return !(['CLAIMANT', 'RESPONDENT'].includes(this.parties?.find(({ name }) => name === this.unknownFullName)?.polarity))
     },
 
     occurrence: {
