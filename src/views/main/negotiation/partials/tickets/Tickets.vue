@@ -136,6 +136,7 @@ export default {
   computed: {
     ...mapGetters({
       tickets: 'getTickets',
+      userProperties: 'userProperties',
       getTicketsQuery: 'getTicketsQuery',
       hasFilters: 'getTicketsHasFilters',
       ticketsActiveTab: 'getTicketsActiveTab',
@@ -217,6 +218,10 @@ export default {
     }
     this.handleInitDispute()
     this.handleChangeTab({ name: this.activeTab })
+
+    if (this.userProperties?.PREFERRED_INTERFACE !== 'NEGOTIATION') {
+      this.setAccountProperty({ PREFERRED_INTERFACE: 'NEGOTIATION' })
+    }
   },
 
   mounted() {
@@ -246,6 +251,7 @@ export default {
       'getNotVisualizeds',
       'getTicketsNextPage',
       'getNearExpirations',
+      'setAccountProperty',
       'setTicketsActiveTab',
       'getTicketsFilteredTags'
     ]),
@@ -437,7 +443,7 @@ export default {
       console.log('getTickets', JSON.stringify(this.getTicketsQuery))
       this.getTicketsNextPage()
         .then(response => {
-          if (response.last) {
+          if (response?.last) {
             $state.complete()
           } else {
             $state.loaded()
