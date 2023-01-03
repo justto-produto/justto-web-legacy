@@ -1,8 +1,6 @@
 export default {
   methods: {
     phoneMask(value = '') {
-      console.log('phoneMask', value)
-
       const number = value?.replace(/[^\w*]/g, '').toUpperCase()
 
       switch (number.length) {

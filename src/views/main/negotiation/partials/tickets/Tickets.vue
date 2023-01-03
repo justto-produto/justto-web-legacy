@@ -136,6 +136,7 @@ export default {
   computed: {
     ...mapGetters({
       tickets: 'getTickets',
+      userProperties: 'userProperties',
       getTicketsQuery: 'getTicketsQuery',
       hasFilters: 'getTicketsHasFilters',
       ticketsActiveTab: 'getTicketsActiveTab',
@@ -217,6 +218,10 @@ export default {
     }
     this.handleInitDispute()
     this.handleChangeTab({ name: this.activeTab })
+
+    if (this.userProperties?.PREFERRED_INTERFACE !== 'NEGOTIATION') {
+      this.setAccountProperty({ PREFERRED_INTERFACE: 'NEGOTIATION' })
+    }
   },
 
   mounted() {
@@ -246,6 +251,7 @@ export default {
       'getNotVisualizeds',
       'getTicketsNextPage',
       'getNearExpirations',
+      'setAccountProperty',
       'setTicketsActiveTab',
       'getTicketsFilteredTags'
     ]),
@@ -334,7 +340,6 @@ export default {
         this.setTicketsQuery({ key: 'status', value: [] })
         this.setTicketsQuery({ key: 'prescriptions', value: [] })
         this.setTicketsQuery({ key: 'sort', value: [] })
-        console.log('getTickets', 'resetTicketsLastPage')
         this.resetTicketsLastPage()
 
         // Update Management Info.
@@ -388,7 +393,6 @@ export default {
       }
 
       this.getTicketsFilteredTags()
-      console.log('getTickets', 'getTickets')
       this.getTickets()
         .then((response) => {
           this.getNearExpirations()
@@ -421,7 +425,7 @@ export default {
 
     infiniteHandler($state) {
       /**
-       * BUG: Chamada duplicada na mudançã de aba.
+       * TODO BUG: Chamada duplicada na mudançã de aba.
        *
        * O Handler da aba busca a página 0, e Handler do Infinit Scrool chama a página 1.
        *
@@ -432,12 +436,9 @@ export default {
       this.addDisputeQueryPageByTicket()
       this.getDisputes('nextPage')
 
-      // Busca Tickets da próxima página.
-      console.log('getTickets', 'getTicketsNextPage')
-      console.log('getTickets', JSON.stringify(this.getTicketsQuery))
       this.getTicketsNextPage()
         .then(response => {
-          if (response.last) {
+          if (response?.last) {
             $state.complete()
           } else {
             $state.loaded()

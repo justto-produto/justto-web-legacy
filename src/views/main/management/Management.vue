@@ -508,7 +508,8 @@ export default {
       exportHistory: 'exportHistory',
       loadingDisputes: 'loadingDisputes',
       workspaceProperties: 'workspaceProperties',
-      getSelectedIds: 'getSelectedIds'
+      getSelectedIds: 'getSelectedIds',
+      userProperties: 'userProperties'
     }),
 
     selectedIds: {
@@ -602,6 +603,10 @@ export default {
     this.$jusSegment('Acesso tela Gerenciamento', {})
     eventBus.$on(events.TICKET_NEXT_TAB.callback, this.handleNextTab)
     eventBus.$on(events.TICKET_PREVIOUS_TAB.callback, this.handlePreviousTab)
+
+    if (this.userProperties?.PREFERRED_INTERFACE !== 'DISPUTE') {
+      this.setAccountProperty({ PREFERRED_INTERFACE: 'DISPUTE' })
+    }
   },
 
   beforeDestroy() {
@@ -617,7 +622,8 @@ export default {
       'getExportColumns',
       'getExportHistory',
       'getPrescriptions',
-      'getAccountProperty'
+      'getAccountProperty',
+      'setAccountProperty'
     ]),
 
     handleNextTab() {

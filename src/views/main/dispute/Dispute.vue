@@ -550,7 +550,8 @@ export default {
       'getMessagesBackupById',
       'loggedPersonName',
       'workspaceName',
-      'useSignature'
+      'useSignature',
+      'userProperties'
     ]),
 
     isSmall() {
@@ -979,7 +980,11 @@ export default {
     fetchData() {
       this.loadingDispute = true
       this.handleRestoreBackup()
-      this.setAccountProperty({ PREFERRED_INTERFACE: 'DISPUTE' })
+
+      if (this.userProperties?.PREFERRED_INTERFACE !== 'DISPUTE') {
+        this.setAccountProperty({ PREFERRED_INTERFACE: 'DISPUTE' })
+      }
+
       this.socketAction('subscribe', this.id)
       this.$store.commit('clearDisputeOccurrences')
       this.getTicketOverview(this.id)
