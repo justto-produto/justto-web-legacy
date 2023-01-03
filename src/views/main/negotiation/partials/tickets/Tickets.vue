@@ -320,8 +320,9 @@ export default {
         // this.$store.commit('setDisputesTab', query.disputeTab)
       }
 
-      this.handleGetDisputes()
-      this.getPrescriptions()
+      // TODO: GETs do Management.
+      // this.handleGetDisputes()
+      // this.getPrescriptions()
     },
 
     handleManagementChangeTab(tab) {
@@ -398,7 +399,7 @@ export default {
           this.getNearExpirations()
           this.getNotVisualizeds()
         })
-      this.handleGetDisputes()
+      // this.handleGetDisputes()
     },
 
     // GET Disputes logic
@@ -433,8 +434,8 @@ export default {
        */
 
       // Busca disputas da próxima página.
-      this.addDisputeQueryPageByTicket()
-      this.getDisputes('nextPage')
+      // this.addDisputeQueryPageByTicket()
+      // this.getDisputes('nextPage')
 
       this.getTicketsNextPage()
         .then(response => {
