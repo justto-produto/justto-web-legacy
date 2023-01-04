@@ -319,6 +319,11 @@
                 {{ $tc(`document.signature.status.${signer.signatureStatus}.text`) }}
                 <jus-icon :icon="$tc(`document.signature.status.${signer.signatureStatus}.icon`)" />
               </span>
+
+              <span v-else>
+                {{ $tc('document.signature.status.UNKNOWN.text') }}
+                <jus-icon :icon="$tc('document.signature.status.UNKNOWN.icon')" />
+              </span>
             </div>
           </div>
         </div>
