@@ -3,13 +3,16 @@
     <el-dialog
       :visible.sync="visible"
       :width="width"
-      :class="{ 'jus-protocol-dialog--full': fullscreen && step === 1, 'jus-protocol-dialog--large': [1, 4].includes(step) && !fullscreen }"
+      :class="{
+        'jus-protocol-dialog--full': fullscreen && step === 1,
+        'jus-protocol-dialog--large': [1, 4].includes(step) && !fullscreen
+      }"
       :close-on-click-modal="false"
       :close-on-press-escape="false"
       :show-close="false"
       append-to-body
       fullscreen
-      custom-class="jus-protocol-dialog"
+      :custom-class="`jus-protocol-dialog ${step === 3 ? 'jus-protocol-dialog--auto' : ''}`"
       class="jus-protocol-dialog"
     >
       <div
@@ -318,6 +321,11 @@
               <span v-if="signer.signatureStatus">
                 {{ $tc(`document.signature.status.${signer.signatureStatus}.text`) }}
                 <jus-icon :icon="$tc(`document.signature.status.${signer.signatureStatus}.icon`)" />
+              </span>
+
+              <span v-else>
+                {{ $tc('document.signature.status.UNKNOWN.text') }}
+                <jus-icon :icon="$tc('document.signature.status.UNKNOWN.icon')" />
               </span>
             </div>
           </div>
@@ -1340,12 +1348,16 @@ export default {
     }
   }
 
-  &--large  {
+  &--large {
     .el-dialog {
       .el-dialog__body {
         height: calc(100vh - 284px);
       }
     }
+  }
+
+  &--auto {
+    height: auto !important;
   }
 
   &__fullscreen-icon {
