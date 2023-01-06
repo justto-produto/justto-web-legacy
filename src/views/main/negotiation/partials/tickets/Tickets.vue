@@ -82,6 +82,7 @@
             :identifier="activeTab"
             spinner="spiral"
             :distance="1340"
+            force-use-infinite-wrapper
             @infinite="infiniteHandler"
           >
             <div slot="no-more">
