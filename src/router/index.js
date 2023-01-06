@@ -300,6 +300,16 @@ const router = new Router({
       }
     },
     {
+      name: 'auth',
+      path: '/auth',
+      component: () => import(/* webpackChunkName: "ExternalAuth" */ '@/views/external/ExternalAuth'),
+      meta: {
+        requiresAuth: false,
+        trackPage: true,
+        title: 'External Auth'
+      }
+    },
+    {
       name: 'recover-account',
       path: '/recover-account',
       component: () => import(/* webpackChunkName: "recoverAccount" */ '@/views/external/RecoverAccount'),
@@ -358,6 +368,9 @@ router.beforeEach((to, from, next) => {
           next()
         } else next('login')
       }
+    } else if (to?.query['external-login'] === 'cognito') {
+      // TODO: Analizar como conseguir o Token para fazer o Login.
+      next('login')
     } else {
       next('login')
     }
