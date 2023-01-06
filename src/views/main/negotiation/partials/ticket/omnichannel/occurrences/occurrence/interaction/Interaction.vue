@@ -169,7 +169,8 @@ export default {
         return 'WHATSAPP'
       }
 
-      if (this.interaction?.direction === 'OUTBOUND' && ['WAITING', 'CANCELED', 'FAILED'].includes(this.interaction?.message?.status) && (this.interaction?.message?.createdBy === 'system' || this.interaction?.message?.scheduledTime?.dateTime)) {
+      // Detecta ligações agendadas.
+      if (this.interaction?.direction === 'OUTBOUND' && this.interaction?.type === 'PHONE_CALL' && ['WAITING', 'CANCELED', 'FAILED'].includes(this.interaction?.message?.status) && (this.interaction?.message?.createdBy === 'system' || this.interaction?.message?.scheduledTime?.dateTime)) {
         return 'SCHEDULER'
       }
 

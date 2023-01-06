@@ -915,6 +915,10 @@
         "REFUSED": {
           "text": "Recusado",
           "icon": "rejected"
+        },
+        "UNKNOWN":{
+          "text": "Aguardando Assinatura",
+          "icon": "clock-alert"
         }
       }
     }

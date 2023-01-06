@@ -66,17 +66,33 @@ export default {
 
   methods: {
     ...mapActions({
-      editProperties: 'editWorkpaceProperties'
+      editProperties: 'editWorkpaceProperties',
+      getFeatureProperties: 'getFeatureProperties',
+      saveFeatureProperties: 'saveFeatureProperties'
     }),
 
     openFeatureDialog() {
       this.visible = true
 
-      this.draftNotCreatedNotification = !(this.properties?.DISABLE_DRAFT_NOT_CREATED_NOTIFICATION === 'true')
-      this.draftNotSentNotification = !(this.properties?.DISABLE_DRAFT_NOT_SENT_NOTIFICATION === 'true')
-      this.draftNotSignedNotification = !(this.properties?.DISABLE_DRAFT_NOT_SIGNED_NOTIFICATION === 'true')
-
-      this.loading = false
+      this.getFeatureProperties(10).then(({ properties }) => {
+        properties.forEach(({ key, value }) => {
+          switch (key) {
+            case 'DISABLE_DRAFT_NOT_CREATED_NOTIFICATION':
+              this.draftNotCreatedNotification = !(value === String(true))
+              break
+            case 'DISABLE_DRAFT_NOT_SENT_NOTIFICATION':
+              this.draftNotSentNotification = !(value === String(true))
+              break
+            case 'DISABLE_DRAFT_NOT_SIGNED_NOTIFICATION':
+              this.draftNotSignedNotification = !(value === String(true))
+              break
+            default:
+              break
+          }
+        })
+      }).finally(() => {
+        this.loading = false
+      })
     },
 
     handleClose(done) {
@@ -90,10 +106,20 @@ export default {
     handleSaveConfigs() {
       this.loading = true
 
-      this.editProperties({
-        DISABLE_DRAFT_NOT_CREATED_NOTIFICATION: !this.draftNotCreatedNotification,
-        DISABLE_DRAFT_NOT_SENT_NOTIFICATION: !this.draftNotSentNotification,
-        DISABLE_DRAFT_NOT_SIGNED_NOTIFICATION: !this.draftNotSignedNotification
+      this.saveFeatureProperties({
+        featureId: 10,
+        properties: [
+          {
+            key: 'DISABLE_DRAFT_NOT_CREATED_NOTIFICATION',
+            value: String(!this.draftNotCreatedNotification)
+          }, {
+            key: 'DISABLE_DRAFT_NOT_SENT_NOTIFICATION',
+            value: String(!this.draftNotSentNotification)
+          }, {
+            key: 'DISABLE_DRAFT_NOT_SIGNED_NOTIFICATION',
+            value: String(!this.draftNotSignedNotification)
+          }
+        ]
       }).then(() => {
         this.$jusNotification({
           type: 'success',

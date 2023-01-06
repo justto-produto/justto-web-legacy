@@ -164,11 +164,12 @@ export default {
 
     message() {
       const { messageId } = this.interaction.message
-      return this.fullMessages[messageId] || this.text
+
+      return this.value?.message?.contentStorage === 'ARCHIVED' ? '<i>Mensagem expurgada, entre em contato com suporte técnico caso queira ver a mensagem original!</i>' : this.fullMessages[messageId] || this.text
     },
 
     isSmallText() {
-      return this.text.length < 100
+      return this.value?.message?.contentStorage === 'ARCHIVED' || this.text.length < 100
     },
 
     canShowFullMessage() {

@@ -54,12 +54,12 @@
         >
           <el-option
             label="Cobrança"
-            value="RECEIVABLE"
+            value="COBRANCA"
           />
 
           <el-option
-            label="Passivo"
-            value="PAYABLE"
+            label="Indenizatório"
+            value="INDENIZATORIO"
           />
         </el-select>
 

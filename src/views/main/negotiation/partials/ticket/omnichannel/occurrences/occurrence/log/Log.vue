@@ -110,6 +110,7 @@ export default {
 
     text() {
       let text = this.isCanceledText(this.occurrence.description) ? this.handleCanceledText(this.occurrence.description) : this.occurrence.description
+
       if (this.occurrence?.type === 'INTERACTION' && this.occurrence?.interaction?.type === 'NEGOTIATOR_ACCESS') {
         text = 'Disputa visualizada'
       }

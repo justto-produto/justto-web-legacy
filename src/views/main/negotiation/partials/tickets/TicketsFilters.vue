@@ -50,9 +50,14 @@
         />
       </el-button>
     </el-popover>
-    <TicketsAdvancedFilters
+    <!-- <TicketsAdvancedFilters
       ref="advancedFilters"
       :active-tab="activeTab"
+    /> -->
+
+    <ManagementFilters
+      ref="managementFilters"
+      :tab-index="String(processedActiveTab)"
     />
   </div>
 </template>
@@ -63,8 +68,9 @@ import { mapGetters, mapActions, mapMutations } from 'vuex'
 export default {
   name: 'TicketsFilters',
   components: {
-    TicketsAdvancedFilters: () => import('./TicketsAdvancedFilters'),
-    TicketsTagsFilters: () => import('./TicketsTagsFilters')
+    // TicketsAdvancedFilters: () => import('./TicketsAdvancedFilters'),
+    TicketsTagsFilters: () => import('./TicketsTagsFilters'),
+    ManagementFilters: () => import('@/views/main/management/partials/ManagementFilters')
   },
   props: {
     activeTab: {
@@ -81,20 +87,22 @@ export default {
     }),
 
     processedActiveTab() {
-      switch (this.activeTab) {
-        case 'pre-negotiation':
-          return 0
-        case 'engagement':
-          return 1
-        case 'running':
-          return 2
-        case 'accepted':
-          return 3
-        case 'finished':
-          return 4
-        default:
-          return 2
-      }
+      return { 'pre-negotiation': 0, engagement: 1, running: 2, accepted: 3, finished: 4 }[this.activeTab] || 2
+
+      // switch (this.activeTab) {
+      //   case 'pre-negotiation':
+      //     return 0
+      //   case 'engagement':
+      //     return 1
+      //   case 'running':
+      //     return 2
+      //   case 'accepted':
+      //     return 3
+      //   case 'finished':
+      //     return 4
+      //   default:
+      //     return 2
+      // }
     }
   },
   methods: {
@@ -116,7 +124,11 @@ export default {
     ]),
 
     openAdvancedFiltersDialog() {
-      this.$refs.advancedFilters.openDialog()
+      // Filtro de Tickets.
+      // this.$refs.advancedFilters.openDialog()
+
+      // Filtro do Management.
+      this.$refs.managementFilters.openDialog()
     },
 
     handlePrescriptionClick(prescription) {

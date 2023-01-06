@@ -40,9 +40,15 @@ export default {
         return this.ticketListMode
       },
       set(value) {
-        this.setAccountProperty({ TICKET_LIST_MODE: value }).then(() => {
+        this.setAccountProperty({
+          TICKET_LIST_MODE: value
+        }).then(() => {
           this.$emit('hide', { mode: this.mode })
-        })
+        }).catch(error => this.$jusNotification({ error }))
+
+        this.setAccountProperty({
+          PREFERRED_INTERFACE: { MANAGEMENT: 'DISPUTE', TICKET: 'NEGOTIATION' }[value]
+        }).catch(error => this.$jusNotification({ error }))
       }
     }
   },

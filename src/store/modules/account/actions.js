@@ -190,20 +190,6 @@ const accountActions = {
       method: 'PATCH'
     })
   }
-  // getUserPreferences({ state }) {
-  //   return axiosDispatch({
-  //     url: `${accountsPath}/preferences/${state.id}`,
-  //     mutation: 'setUserPreferences',
-  //   })
-  // },
-  // updateUserPreferences({ state }, preference) {
-  //   return axiosDispatch({
-  //     url: `${accountsPath}/preferences/${state.id}`,
-  //     method: 'PATCH',
-  //     data: preference,
-  //     mutation: 'setUserPreferences',
-  //   })
-  // },
 }
 
 export default accountActions

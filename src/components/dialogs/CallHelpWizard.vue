@@ -297,15 +297,8 @@ export default {
   watch: {
     call: {
       deep: true,
-      handler(call, oldCall) {
-        // this.autoValidateContactTime = this.$moment().add(2, 'm').format()
-
+      handler(call, _oldCall) {
         clearTimeout(this.autocontactTimeout)
-        // this.autocontactTimeout = setTimeout(() => {
-        //   this.next('contact')
-        // }, 2 * 60 * 1000)
-
-        // TODO: Aceitar automaticamente após 2 mim.
         this.visible = call?.status === CALL_STATUS.ACTIVE_CALL
 
         if (this.visible) {
@@ -320,14 +313,8 @@ export default {
           this.autoValidateContactTime = this.$moment().add(2, 'm').format()
 
           this.$nextTick().then(() => {
-            console.log(this.$refs.countdown)
             this.$refs.countdown.reset()
           })
-        }
-
-        if (oldCall?.status === CALL_STATUS.COMPLETED_CALL && call === null) {
-          // deprecated: Aconfirma validade da chamada.
-          // this.handleCloseCall(oldCall)
         }
       }
     }

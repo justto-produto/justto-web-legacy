@@ -10,7 +10,7 @@
     />
 
     <Management
-      v-show="fullScreen"
+      v-if="fullScreen"
       class="tickets-container__management"
       :tickets="tickets"
       @infinite="infiniteHandler"
@@ -82,6 +82,7 @@
             :identifier="activeTab"
             spinner="spiral"
             :distance="1340"
+            force-use-infinite-wrapper
             @infinite="infiniteHandler"
           >
             <div slot="no-more">
@@ -136,6 +137,8 @@ export default {
   computed: {
     ...mapGetters({
       tickets: 'getTickets',
+      userProperties: 'userProperties',
+      getTicketsQuery: 'getTicketsQuery',
       hasFilters: 'getTicketsHasFilters',
       ticketsActiveTab: 'getTicketsActiveTab',
       isLoading: 'getTicketsIsLoading',
@@ -189,11 +192,12 @@ export default {
         return this.ticketsActiveTab
       },
       set(value) {
-        this.setTicketsActiveTab(value)
-        this.handleChangeTab({ name: value })
-        this.resetTabsScroll()
-
-        this.setDisputesTab(this.tabs.findIndex(({ name }) => name === value))
+        if (value !== this.ticketsActiveTab) {
+          this.setTicketsActiveTab(value)
+          this.handleChangeTab({ name: value })
+          this.resetTabsScroll()
+          this.setDisputesTab(this.tabs.findIndex(({ name }) => name === value))
+        }
       }
     },
 
@@ -215,6 +219,10 @@ export default {
     }
     this.handleInitDispute()
     this.handleChangeTab({ name: this.activeTab })
+
+    if (this.userProperties?.PREFERRED_INTERFACE !== 'NEGOTIATION') {
+      this.setAccountProperty({ PREFERRED_INTERFACE: 'NEGOTIATION' })
+    }
   },
 
   mounted() {
@@ -244,6 +252,7 @@ export default {
       'getNotVisualizeds',
       'getTicketsNextPage',
       'getNearExpirations',
+      'setAccountProperty',
       'setTicketsActiveTab',
       'getTicketsFilteredTags'
     ]),
@@ -255,6 +264,7 @@ export default {
       'setPreventSocket',
       'setPreventFilters',
       'updateDisputeQuery',
+      'resetTicketsLastPage',
       'addDisputeQueryPageByTicket',
       'setDisputeHasFilters',
       'clearDisputeQueryByTab'
@@ -308,15 +318,17 @@ export default {
         this.updateDisputeQuery({ key: 'finishDate', value: query.finishDate })
         this.updateDisputeQuery({ key: 'transactionType', value: query.transactionType })
         this.setDisputeHasFilters(query.disputeHasFilters)
-        console.log('setDisputesTab', query.disputeTab)
         // this.$store.commit('setDisputesTab', query.disputeTab)
       }
 
-      this.handleGetDisputes()
-      this.getPrescriptions()
+      // TODO: GETs do Management.
+      // this.handleGetDisputes()
+      // this.getPrescriptions()
     },
 
     handleManagementChangeTab(tab) {
+      if (this.activeTab === this.tabs[tab].name) return
+
       this.setTicketsActiveTab(this.tabs[tab].name)
       this.handleChangeTab(this.tabs[tab])
       this.resetTabsScroll()
@@ -330,6 +342,7 @@ export default {
         this.setTicketsQuery({ key: 'status', value: [] })
         this.setTicketsQuery({ key: 'prescriptions', value: [] })
         this.setTicketsQuery({ key: 'sort', value: [] })
+        this.resetTicketsLastPage()
 
         // Update Management Info.
         this.clearDisputes()
@@ -387,7 +400,7 @@ export default {
           this.getNearExpirations()
           this.getNotVisualizeds()
         })
-      this.handleGetDisputes()
+      // this.handleGetDisputes()
     },
 
     // GET Disputes logic
@@ -413,15 +426,21 @@ export default {
     },
 
     infiniteHandler($state) {
-      console.log('infiniteHandler', $state)
-      // Busca disputas da próxima página.
-      this.addDisputeQueryPageByTicket()
-      this.getDisputes('nextPage')
+      /**
+       * TODO BUG: Chamada duplicada na mudançã de aba.
+       *
+       * O Handler da aba busca a página 0, e Handler do Infinit Scrool chama a página 1.
+       *
+       * Todas as vezes.
+       */
 
-      // Busca Tickets da próxima página.
+      // Busca disputas da próxima página.
+      // this.addDisputeQueryPageByTicket()
+      // this.getDisputes('nextPage')
+
       this.getTicketsNextPage()
         .then(response => {
-          if (response.last) {
+          if (response?.last) {
             $state.complete()
           } else {
             $state.loaded()

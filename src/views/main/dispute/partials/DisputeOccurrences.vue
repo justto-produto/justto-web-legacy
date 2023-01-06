@@ -1099,6 +1099,9 @@ export default {
         }
         return occurrence.description
       }
+      if (occurrence?.interaction?.message?.contentStorage === 'ARCHIVED') {
+        return '<i>Mensagem expurgada, entre em contato com suporte técnico caso queira ver a mensagem original!</i>'
+      }
       if (occurrence.interaction && Object.keys(occurrence.interaction.properties).length) {
         if (occurrence.interaction.type === 'NEGOTIATOR_CHECKOUT' && occurrence.interaction.properties.BANK_INFO) {
           return '<strong>Dados bancários:</strong> <br>' + occurrence.interaction.properties.BANK_INFO.replace(/,/g, '<br>')
