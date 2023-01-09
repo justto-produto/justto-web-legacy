@@ -23,7 +23,7 @@ import '@/plugins/vueMoney'
 import '@/plugins/vueTheMask'
 import '@/plugins/shortkey'
 import '@/plugins/vueHtml2pdf'
-import '@/plugins/amplify'
+// import '@/plugins/amplify'
 
 // FILTERS
 import '@/filters/numberFormat'

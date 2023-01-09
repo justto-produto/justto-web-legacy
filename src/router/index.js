@@ -299,16 +299,16 @@ const router = new Router({
         title: 'Painel administrativo'
       }
     },
-    {
-      name: 'auth',
-      path: '/auth',
-      component: () => import(/* webpackChunkName: "ExternalAuth" */ '@/views/external/ExternalAuth'),
-      meta: {
-        requiresAuth: false,
-        trackPage: true,
-        title: 'External Auth'
-      }
-    },
+    // {
+    //   name: 'auth',
+    //   path: '/auth',
+    //   component: () => import(/* webpackChunkName: "ExternalAuth" */ '@/views/external/ExternalAuth'),
+    //   meta: {
+    //     requiresAuth: false,
+    //     trackPage: true,
+    //     title: 'External Auth'
+    //   }
+    // },
     {
       name: 'recover-account',
       path: '/recover-account',
