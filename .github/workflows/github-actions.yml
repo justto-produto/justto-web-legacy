@@ -21,18 +21,6 @@ jobs:
         uses: philip-gai/setup-aws-amplify-cli@v2
       - name: Pull amplify env
         run: amplify pull --appld ${{ secrets.AWS_AMPLIFY_APP_ID }} --envName staging
-
-      - name: Amplify Pull
-        uses: yinlinchen/amplify-preview-actions@master
-        with:
-          amplify_command: pull
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AmplifyAppId: ${{ secrets.AWS_AMPLIFY_APP_ID }}
-          BackendEnvARN: 'staging'
-          AWS_REGION: 'sa-east-1'
-
       - run: npm install --legacy-peer-deps
       - run: npm run build --legacy-peer-deps
       - uses: jakejarvis/s3-sync-action@master
