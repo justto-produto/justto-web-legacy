@@ -17,9 +17,7 @@ jobs:
         with:
           node-version: 14
           cache: 'npm'
-      - name: amplify-cli-action
-        uses: ambientlight/amplify-cli-action@0.3.0
-      - run: amplify pull --appld ${{ secrets.AWS_AMPLIFY_APP_ID }} --envName staging
+      - run: npx amplify pull --appld ${{ secrets.AWS_AMPLIFY_APP_ID }} --envName staging
       - run: npm install --legacy-peer-deps
       - run: npm run build --legacy-peer-deps
       - uses: jakejarvis/s3-sync-action@master
