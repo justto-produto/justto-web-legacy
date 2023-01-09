@@ -7,6 +7,7 @@
       />
 
       <Omnichannel :show-overview="showOverview" />
+
       <div
         v-if="width <= 1200 && showOverview"
         class="ticket-container__omnichannel-overlay"
@@ -22,6 +23,7 @@
         @toggle-show-overview="toggleShowOverview"
       />
     </section>
+
     <TicketResume />
   </section>
 </template>
