@@ -25,6 +25,7 @@ jobs:
       - name: Amplify Pull
         uses: yinlinchen/amplify-preview-actions@master
         with:
+          branch_name: 'develop'
           amplify_command: pull
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
