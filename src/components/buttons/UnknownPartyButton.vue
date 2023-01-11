@@ -73,7 +73,7 @@ export default {
           polarity: p.polarity
         }))
       } else if (this.$route.name === 'dispute') {
-        return this.dispute.disputeRoles.filter(({ roles }) => roles.includes('PARTY')).map(p => ({
+        return (this.dispute?.disputeRoles || []).filter(({ roles }) => roles.includes('PARTY')).map(p => ({
           name: p.name,
           roles: p.roles,
           polarity: p.party
