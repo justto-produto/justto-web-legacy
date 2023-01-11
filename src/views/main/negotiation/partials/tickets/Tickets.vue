@@ -65,7 +65,6 @@
           {{ tickets.totalElements || 0 }} {{ $tc('labels.dispute', tickets.totalElements || 0) }}
         </div>
 
-        <!-- v-else-if="activeTab === tab.name" -->
         <ul
           v-show="!fullScreen && activeTab === tab.name"
           class="tickets-container__list"
@@ -79,10 +78,10 @@
           />
 
           <infinite-loading
-            :identifier="activeTab"
+            :identifier="loadingIdentifier"
             spinner="spiral"
             :distance="1340"
-            force-use-infinite-wrapper
+            force-use-infinite-wrapper=".tickets-container__tabs>.el-tabs__content"
             @infinite="infiniteHandler"
           >
             <div slot="no-more">
@@ -131,7 +130,8 @@ export default {
   },
 
   data: () => ({
-    disputeDebounce: null
+    disputeDebounce: null,
+    loadingIdentifier: +new Date()
   }),
 
   computed: {
