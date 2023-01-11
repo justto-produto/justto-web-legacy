@@ -27,7 +27,7 @@
       <EmptyTicket :hidden="isInFullScreen || disputeId" />
     </section>
 
-    <TableMenu v-if="showNegotiationTypeMenu && !disputeId && ticketListMode !== 'MANAGEMENT'" />
+    <!-- <TableMenu v-if="showNegotiationTypeMenu && !disputeId && ticketListMode !== 'MANAGEMENT'" /> -->
   </main>
 </template>
 
@@ -40,8 +40,8 @@ export default {
   name: 'Negotiation',
   components: {
     Tickets,
-    EmptyTicket,
-    TableMenu: () => import('./partials/tickets/table/partials/TableMenu')
+    EmptyTicket
+    // TableMenu: () => import('./partials/tickets/table/partials/TableMenu')
   },
 
   data: () => ({ internalDisputeId: null }),
