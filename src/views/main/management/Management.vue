@@ -604,7 +604,7 @@ export default {
     eventBus.$on(events.TICKET_NEXT_TAB.callback, this.handleNextTab)
     eventBus.$on(events.TICKET_PREVIOUS_TAB.callback, this.handlePreviousTab)
 
-    if (this.userProperties?.PREFERRED_INTERFACE !== 'DISPUTE') {
+    if (this.userProperties?.PREFERRED_INTERFACE !== 'DISPUTE' && !this.isManagementAll) {
       this.setAccountProperty({ PREFERRED_INTERFACE: 'DISPUTE' })
     }
   },

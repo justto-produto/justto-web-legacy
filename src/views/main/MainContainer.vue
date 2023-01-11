@@ -121,6 +121,7 @@ export default {
       isAdminProfile: 'isAdminProfile',
       isRecovery: 'isWorkspaceRecovery',
       userPreferences: 'userPreferences',
+      preferedInterface: 'preferedInterface',
       workspaceMembersSorted: 'workspaceMembersSorted',
       areNotificationsVisible: 'areNotificationsVisible',
       areThamirisAlertsVisible: 'areThamirisAlertsVisible'
@@ -141,21 +142,23 @@ export default {
         action: () => {}
       })
 
-      itemsMenu.push({
-        index: '/negotiation',
-        title: 'Negociação',
-        icon: 'negotiation-window',
-        isVisible: true,
-        action: () => {}
-      })
-
-      itemsMenu.push({
-        index: '/management',
-        title: 'Gerenciamento',
-        icon: 'list-app',
-        isVisible: true,
-        action: () => this.setTabQuery('management')
-      })
+      if (this.userProperties?.PREFERRED_INTERFACE !== 'DISPUTE') {
+        itemsMenu.push({
+          index: '/negotiation',
+          title: 'Negociação',
+          icon: 'negotiation-window',
+          isVisible: true,
+          action: () => {}
+        })
+      } else {
+        itemsMenu.push({
+          index: '/management',
+          title: 'Gerenciamento',
+          icon: 'list-app',
+          isVisible: true,
+          action: () => this.setTabQuery('management')
+        })
+      }
 
       itemsMenu.push({
         index: '/management/all',
