@@ -48,13 +48,13 @@ const accountActions = {
     })
   },
 
-  logout({ commit }, options) {
+  logout({ commit, dispatch }, options) {
     commit('logout')
     commit('clearWorkspace')
     commit('clearDisputes')
     commit('clearDisputeTab')
     commit('clearDashboard')
-    commit('callTerminated')
+    dispatch('callTerminated')
     localStorage.removeItem('justoken')
     // eslint-disable-next-line
     delete axios.defaults.headers.common['Authorization']
