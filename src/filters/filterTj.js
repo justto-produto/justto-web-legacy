@@ -29,6 +29,23 @@ const findTJbyCode = (tjCode) => {
   }
 }
 
+const findTJVMbyCode = (tjCode) => {
+  const delaultValue = { code: '', sigla: '', name: '' }
+
+  if (!validateTJbyCode(tjCode)) return delaultValue
+
+  try {
+    const { justice, number } = Validate.load(tjCode)
+    const subcode = `${justice}${number}`
+
+    return listTj.find(({ code }) => String(code) === String(subcode)) || delaultValue
+  } catch (error) {
+    return delaultValue
+  }
+}
+
 Vue.filter('findTJbyCode', findTJbyCode)
 
 Vue.filter('validateTJbyCode', validateTJbyCode)
+
+Vue.filter('findTJVMbyCode', findTJVMbyCode)

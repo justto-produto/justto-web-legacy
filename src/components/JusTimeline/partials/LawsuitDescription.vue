@@ -1,35 +1,56 @@
 <template>
   <el-container class="lawsuit-description">
     <div class="lawsuit-description__container-info">
-      <div
-        v-if="state.date"
-        class="lawsuit-description__info"
-      >
-        <strong class="lawsuit-description__info-title">Distribuído em</strong>
-        <span class="lawsuit-description__info-text">{{ state.date }}</span>
+      <div class="lawsuit-description__info">
+        <strong
+          v-if="state.date"
+          class="lawsuit-description__info-title"
+        >
+          Distribuído em
+        </strong>
+
+        <span
+          v-if="state.date"
+          class="lawsuit-description__info-text"
+        >
+          {{ state.date }}
+        </span>
       </div>
 
-      <div
-        v-if="state.area"
-        class="lawsuit-description__info"
-      >
-        <strong class="lawsuit-description__info-title">Área</strong>
-        <span class="lawsuit-description__info-text">{{ state.area }}</span>
+      <div class="lawsuit-description__info">
+        <strong
+          v-if="state.area"
+          class="lawsuit-description__info-title"
+        >
+          Área
+        </strong>
+
+        <span
+          v-if="state.area"
+          class="lawsuit-description__info-text"
+        >
+          {{ state.area }}
+        </span>
       </div>
 
-      <div
-        v-if="state.source"
-        class="lawsuit-description__info"
-      >
+      <div class="lawsuit-description__info">
         <strong class="lawsuit-description__info-title">Origem</strong>
-        <span class="lawsuit-description__info-text">{{ state.source }}</span>
+
+        <span class="lawsuit-description__info-text">
+          {{ state.source || source }}
+        </span>
       </div>
-      <div
-        v-if="!!state.urlDocuments && state.urlDocuments.length"
-        class="lawsuit-description__info"
-      >
-        <strong class="lawsuit-description__info-title">Documentos</strong>
+
+      <div class="lawsuit-description__info">
+        <strong
+          v-if="!!state.urlDocuments && state.urlDocuments.length"
+          class="lawsuit-description__info-title"
+        >
+          Documentos
+        </strong>
+
         <el-link
+          v-if="!!state.urlDocuments && state.urlDocuments.length"
           class="lawsuit-description__info-download"
           :href="state.urlDocuments[0]"
           :underline="false"
@@ -169,6 +190,10 @@ export default {
 
     disputeParts() {
       return window.location.href.includes('/negotiation') ? this.negotiationParts : this.dispute.disputeRoles
+    },
+
+    source() {
+      return this.$options.filters.findTJVMbyCode(this.state?.code)?.sigla
     }
   },
 
@@ -377,7 +402,7 @@ export default {
       flex-direction: column;
       align-items: center;
       margin-bottom: 8px;
-      width: 25%;
+      flex: 1;
 
       .lawsuit-description__info-title {
         text-align: left;
@@ -387,6 +412,8 @@ export default {
 
       .lawsuit-description__info-text {
         text-transform: capitalize;
+        text-align: center;
+        word-break: keep-all;
         font-size: 14px;
         color: #a3a3a3;
       }
