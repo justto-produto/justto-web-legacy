@@ -15,31 +15,6 @@
             label-position="top"
             :model="form"
           >
-            <!-- <el-form-item>
-              <div class="form-item__container">
-                <label for="disputeIds">Workspaces:</label>
-
-                <el-select
-                  v-model="form.workspaceIds"
-                  multiple
-                  placeholder="Workspaces"
-                  size="mini"
-                  filterable
-                  default-first-option
-                >
-                  <el-option
-                    v-for="item in workspaces"
-                    :key="item.id"
-                    :label="item.name"
-                    :value="item.id"
-                  >
-                    <span>{{ item.name }}</span>
-                    <span>{{ item.teamName }}</span>
-                  </el-option>
-                </el-select>
-              </div>
-            </el-form-item> -->
-
             <el-form-item>
               <div class="form-item__container">
                 <label for="disputeIds">
@@ -308,6 +283,8 @@
 
             <th>Workapace</th>
 
+            <th>Status</th>
+
             <th>Ir para</th>
           </tr>
         </thead>
@@ -325,6 +302,16 @@
             <td>{{ dispute.externalCode || '' }}</td>
 
             <td>{{ dispute.workspaceName || '' }}</td>
+
+            <td>
+              <el-tag
+                :type="dispute.workspaceActive ? 'success' : 'danger'"
+                size="mini"
+                effect="dark"
+              >
+                {{ $tc(`workspace.${dispute.workspaceStatus}`) }}
+              </el-tag>
+            </td>
 
             <td class="href">
               <router-link
