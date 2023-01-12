@@ -220,9 +220,9 @@ export default {
     this.handleInitDispute()
     this.handleChangeTab({ name: this.activeTab })
 
-    // if (this.userProperties?.PREFERRED_INTERFACE !== 'NEGOTIATION') {
-    //   this.setAccountProperty({ PREFERRED_INTERFACE: 'NEGOTIATION' })
-    // }
+    if (this.userProperties?.PREFERRED_INTERFACE !== 'NEGOTIATION') {
+      this.setAccountProperty({ PREFERRED_INTERFACE: 'NEGOTIATION' })
+    }
   },
 
   mounted() {
