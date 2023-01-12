@@ -78,10 +78,10 @@
           />
 
           <infinite-loading
-            :identifier="loadingIdentifier"
+            :identifier="infiniteId"
             spinner="spiral"
-            :distance="1340"
-            force-use-infinite-wrapper=".tickets-container__tabs>.el-tabs__content"
+            :distance="10"
+            force-use-infinite-wrapper=".tickets-container__tabs .el-tabs__content"
             @infinite="infiniteHandler"
           >
             <div slot="no-more">
@@ -131,7 +131,7 @@ export default {
 
   data: () => ({
     disputeDebounce: null,
-    loadingIdentifier: +new Date()
+    infiniteId: +new Date()
   }),
 
   computed: {
@@ -272,7 +272,7 @@ export default {
 
     resetTabsScroll() {
       try {
-        this.$refs.tabs.$el.childNodes[0].childNodes[0].childNodes[2].scroll(0, 0)
+        document.querySelector('.tickets-container__tabs>.el-tabs__content').scroll(0, 0)
       } catch (error) {
         console.error('Erro ao Resetar Scrool.')
       }
@@ -394,13 +394,14 @@ export default {
         this.setPreventFilters(false)
       }
 
+      this.infiniteId += 1
+
       this.getTicketsFilteredTags()
       this.getTickets()
-        .then((response) => {
+        .then(() => {
           this.getNearExpirations()
           this.getNotVisualizeds()
         })
-      // this.handleGetDisputes()
     },
 
     // GET Disputes logic
@@ -413,15 +414,6 @@ export default {
             this.$jusNotification({ error })
           }
         })
-        // .finally(() => {
-        //   this.$nextTick(() => {
-        //     const main = this.$el.querySelector('.el-table__body-wrapper')
-        //     if (main) {
-        //       main.scrollTop = 0
-        //     }
-        //   })
-        //   // if (this.$refs.managementTable) this.$refs.managementTable.disputeKey += 1
-        // })
       }, 300)
     },
 
