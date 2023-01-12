@@ -981,9 +981,9 @@ export default {
       this.loadingDispute = true
       this.handleRestoreBackup()
 
-      // if (this.userProperties?.PREFERRED_INTERFACE !== 'DISPUTE') {
-      //   this.setAccountProperty({ PREFERRED_INTERFACE: 'DISPUTE' })
-      // }
+      if (this.userProperties?.PREFERRED_INTERFACE !== 'DISPUTE') {
+        this.setAccountProperty({ PREFERRED_INTERFACE: 'DISPUTE' })
+      }
 
       this.socketAction('subscribe', this.id)
       this.$store.commit('clearDisputeOccurrences')

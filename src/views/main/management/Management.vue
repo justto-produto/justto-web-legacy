@@ -175,10 +175,10 @@
 
           <jus-import-dialog :dialog-visible.sync="importDialogVisible" />
 
-          <!-- <TableMenu
+          <TableMenu
             v-if="isTicket"
             keep-original
-          /> -->
+          />
         </div>
       </div>
 
@@ -462,8 +462,8 @@ export default {
     ManagementPrescriptions: () => import('./partials/ManagementPrescriptions'),
     JusImportDialog: () => import('@/components/dialogs/JusImportDialog'),
     JusFilterButton: () => import('@/components/buttons/JusFilterButton'),
-    JusLoader: () => import('@/components/others/JusLoader')
-    // TableMenu: () => import('@/views/main/negotiation/partials/tickets/table/partials/TableMenu')
+    JusLoader: () => import('@/components/others/JusLoader'),
+    TableMenu: () => import('@/views/main/negotiation/partials/tickets/table/partials/TableMenu')
   },
 
   inject: {
@@ -604,9 +604,9 @@ export default {
     eventBus.$on(events.TICKET_NEXT_TAB.callback, this.handleNextTab)
     eventBus.$on(events.TICKET_PREVIOUS_TAB.callback, this.handlePreviousTab)
 
-    // if (this.userProperties?.PREFERRED_INTERFACE !== 'DISPUTE' && !this.isManagementAll) {
-    //   this.setAccountProperty({ PREFERRED_INTERFACE: 'DISPUTE' })
-    // }
+    if (this.userProperties?.PREFERRED_INTERFACE !== 'DISPUTE') {
+      this.setAccountProperty({ PREFERRED_INTERFACE: 'DISPUTE' })
+    }
   },
 
   beforeDestroy() {

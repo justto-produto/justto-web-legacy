@@ -104,7 +104,7 @@ export default {
     ]),
 
     async fetchData(id) {
-      // this.setAccountProperty({ PREFERRED_INTERFACE: 'NEGOTIATION' })
+      this.setAccountProperty({ PREFERRED_INTERFACE: 'NEGOTIATION' })
       this.socketAction('subscribe', id)
       await this.cleanRecentMessages()
       this.getTicketOverview(id).catch(error => this.$jusNotification({ error })).finally(() => {

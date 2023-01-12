@@ -479,8 +479,7 @@ export default {
       onlineDocuments: 'onlineDocuments',
       showDraft: 'getIsDraftManagementActive',
       isRecoveryStrategy: 'isWorkspaceRecovery',
-      sortQuery: 'disputeQuery',
-      userProperties: 'userProperties'
+      sortQuery: 'disputeQuery'
     }),
 
     selectedIdsComp: {
@@ -647,7 +646,7 @@ export default {
           window.open(`/#/management/dispute/${row.id}`, '_blank')
           this.addHighlight(row.id)
         } else {
-          if (this.isTicket || this.userProperties?.PREFERRED_INTERFACE !== 'DISPUTE') {
+          if (this.isTicket) {
             this.$router.push({ name: 'ticket', params: { id: row.id } })
           } else {
             this.$router.push({ name: 'dispute', params: { id: row.id } })

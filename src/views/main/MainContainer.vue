@@ -121,10 +121,8 @@ export default {
       isAdminProfile: 'isAdminProfile',
       isRecovery: 'isWorkspaceRecovery',
       userPreferences: 'userPreferences',
-      preferedInterface: 'preferedInterface',
       workspaceMembersSorted: 'workspaceMembersSorted',
       areNotificationsVisible: 'areNotificationsVisible',
-      showNegotiationTypeMenu: 'showNegotiationTypeMenu',
       areThamirisAlertsVisible: 'areThamirisAlertsVisible'
     }),
 
@@ -133,70 +131,49 @@ export default {
     },
 
     menuItems() {
-      return [
-        {
-          index: '/',
-          title: 'Dashboard',
-          icon: 'logo-justto',
-          isVisible: true,
-          action: () => {}
-        },
+      const itemsMenu = []
 
-        ...(this.showNegotiationTypeMenu ? [...(
-          this.preferedInterface === 'DISPUTE' ? [{
-            index: '/negotiation',
-            title: 'Ir para Negociação',
-            icon: 'negotiation-window',
-            isVisible: true,
-            action: () => Promise.all([
-              this.setAccountProperty({ TICKET_LIST_MODE: 'TICKET' }),
-              this.setAccountProperty({ PREFERRED_INTERFACE: 'NEGOTIATION' })
-            ])
-          }] : [{
-            index: '/negotiation',
-            title: 'Ir para Gerenciamento',
-            icon: 'negotiation-window',
-            isVisible: true,
-            action: () => Promise.all([
-              this.setAccountProperty({ TICKET_LIST_MODE: 'MANAGEMENT' }),
-              this.setAccountProperty({ PREFERRED_INTERFACE: 'DISPUTE' })
-            ])
-          }]
-        )] : [
-          // Mudança interna de interface não habilitada.
-          {
-            index: '/negotiation',
-            title: 'Negociação',
-            icon: 'negotiation-window',
-            isVisible: true,
-            action: () => {}
-          },
+      itemsMenu.push({
+        index: '/',
+        title: 'Dashboard',
+        icon: 'logo-justto',
+        isVisible: true,
+        action: () => {}
+      })
 
-          {
-            index: '/management',
-            title: 'Gerenciamento',
-            icon: 'list-app',
-            isVisible: true,
-            action: () => this.setTabQuery('management')
-          }
-        ]),
+      itemsMenu.push({
+        index: '/negotiation',
+        title: 'Negociação',
+        icon: 'negotiation-window',
+        isVisible: true,
+        action: () => {}
+      })
 
-        {
-          index: '/management/all',
-          title: 'Todas as disputas',
-          icon: 'full-folder',
-          isVisible: true,
-          action: () => this.setTabQuery('allDisputes')
-        },
+      itemsMenu.push({
+        index: '/management',
+        title: 'Gerenciamento',
+        icon: 'list-app',
+        isVisible: true,
+        action: () => this.setTabQuery('management')
+      })
 
-        {
-          index: '/import',
-          title: 'Importação',
-          icon: 'import',
-          isVisible: true,
-          action: () => {}
-        }
-      ]
+      itemsMenu.push({
+        index: '/management/all',
+        title: 'Todas as disputas',
+        icon: 'full-folder',
+        isVisible: true,
+        action: () => this.setTabQuery('allDisputes')
+      })
+
+      itemsMenu.push({
+        index: '/import',
+        title: 'Importação',
+        icon: 'import',
+        isVisible: true,
+        action: () => {}
+      })
+
+      return itemsMenu
     }
   },
 
