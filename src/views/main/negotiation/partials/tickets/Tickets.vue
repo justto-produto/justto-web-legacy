@@ -1,6 +1,6 @@
 <template>
   <nav
-    v-loading="isLoading"
+    v-loading="loading"
     class="tickets-container"
   >
     <TicketsHeader
@@ -77,23 +77,14 @@
             @update="$emit('update', $event)"
           />
 
-          <infinite-loading
-            :identifier="infiniteId"
-            spinner="spiral"
-            :distance="10"
-            force-use-infinite-wrapper=".tickets-container__tabs .el-tabs__content"
-            @infinite="infiniteHandler"
-          >
-            <div slot="no-more">
-              Fim das disputas
-            </div>
-
-            <div slot="no-results">
-              <span v-if="tickets.content.length === 0">
-                Sem disputas
-              </span>
-            </div>
-          </infinite-loading>
+          <JusScrollLoading
+            v-if="getTicketsQuery.page > 0"
+            :target="scrollTarget"
+            :loading.sync="loading"
+            :ended="Boolean(tickets?.last)"
+            :empty="Boolean(tickets.content.length === 0)"
+            @load="infiniteHandler"
+          />
         </ul>
       </el-tab-pane>
     </el-tabs>
@@ -104,18 +95,19 @@
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 import events from '@/constants/negotiationEvents'
 import { eventBus } from '@/utils'
+import EngagementTicketItem from './EngagementTicketItem'
+import CommunicationTicketItem from './CommunicationTicketItem'
+import JusScrollLoading from '@/components/others/JusScrollLoading'
 
 export default {
   name: 'Tickets',
 
   components: {
-    EngagementTicketItem: () => import('./EngagementTicketItem'),
-    CommunicationTicketItem: () => import('./CommunicationTicketItem'),
+    EngagementTicketItem,
+    CommunicationTicketItem,
     TicketsHeader: () => import('./TicketsHeader'),
-    InfiniteLoading: () => import('vue-infinite-loading'),
-    // ManagementTable: () => import('./table/management/ManagementTable')
-    Management: () => import('@/views/main/management/Management')
-    // VuePerfectScrollbar: () => import('vue-perfect-scrollbar'),
+    Management: () => import('@/views/main/management/Management'),
+    JusScrollLoading
   },
 
   props: {
@@ -131,7 +123,8 @@ export default {
 
   data: () => ({
     disputeDebounce: null,
-    infiniteId: +new Date()
+    localLoading: false,
+    scrollTarget: '.tickets-container__tabs>.el-tabs__content'
   }),
 
   computed: {
@@ -149,6 +142,16 @@ export default {
       finishedLenght: 'disputeNotVisualizedFinished',
       preventFilters: 'getTicketsPreventFilters'
     }),
+
+    loading: {
+      get() {
+        return this.isLoading || this.localLoading
+      },
+
+      set(value) {
+        this.localLoading = value
+      }
+    },
 
     tabs() {
       return [
@@ -217,9 +220,11 @@ export default {
       this.setTicketsActiveTab(localStorage.getItem('TICKET_ACTIVE_TAB'))
       this.setDisputesTab(this.tabs.findIndex(({ name }) => name === localStorage.getItem('TICKET_ACTIVE_TAB')))
     }
+
     this.handleInitDispute()
     this.handleChangeTab({ name: this.activeTab })
 
+    // TODO: Não atribuir quando tiver com disputa aberta
     if (this.userProperties?.PREFERRED_INTERFACE !== 'NEGOTIATION') {
       this.setAccountProperty({ PREFERRED_INTERFACE: 'NEGOTIATION' })
     }
@@ -272,7 +277,9 @@ export default {
 
     resetTabsScroll() {
       try {
-        document.querySelector('.tickets-container__tabs>.el-tabs__content').scroll(0, 0)
+        const target = document.querySelector(this.scrollTarget)
+
+        if (target) { target.scroll(0, 0) }
       } catch (error) {
         console.error('Erro ao Resetar Scrool.')
       }
@@ -417,7 +424,7 @@ export default {
       }, 300)
     },
 
-    infiniteHandler($state) {
+    infiniteHandler(completed) {
       /**
        * TODO BUG: Chamada duplicada na mudançã de aba.
        *
@@ -430,14 +437,18 @@ export default {
       // this.addDisputeQueryPageByTicket()
       // this.getDisputes('nextPage')
 
-      this.getTicketsNextPage()
-        .then(response => {
-          if (response?.last) {
-            $state.complete()
-          } else {
-            $state.loaded()
-          }
-        })
+      this.getTicketsNextPage().finally(completed)
+      // .then(response => {
+      //   if (response?.last) {
+      //     if ($state) {
+      //       $state.complete()
+      //     }
+      //   } else {
+      //     if ($state) {
+      //       $state.loaded()
+      //     }
+      //   }
+      // })
     },
 
     handleNextTab() {
