@@ -267,15 +267,22 @@ export default {
     })
   },
 
-  callTerminated({ commit, dispatch, getters: { getCurrentCall: { id, scheduling }, getGlobalAuthenticationObject: globalAuthenticationObject } }) {
-    if (scheduling) dispatch('updatePhoneCallStatus', scheduling.disputeMessageId)
+  callTerminated({ commit, dispatch, getters: { getCurrentCall, getGlobalAuthenticationObject: globalAuthenticationObject } }) {
+    if (getCurrentCall?.scheduling) {
+      dispatch('updatePhoneCallStatus', getCurrentCall?.scheduling?.disputeMessageId)
+    }
+
     commit('clearCallHeartbeatInterval')
     commit('clearSipStack')
-    commit('endCall', {
-      payload: {
-        id, globalAuthenticationObject
-      }
-    })
+
+    if (getCurrentCall?.id) {
+      commit('endCall', {
+        payload: {
+          id: getCurrentCall?.id,
+          globalAuthenticationObject
+        }
+      })
+    }
   },
 
   SOCKET_ADD_DIALER_DETAIL({ dispatch, getters: { isActiveToCall, getCurrentCall, isToIgnoreDialer, getDialer }, commit }, dialer) {
