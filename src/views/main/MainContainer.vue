@@ -230,7 +230,7 @@ export default {
     }),
 
     pollData() {
-      if (this.workspaceId.length !== 0 && !['admin-panel'].includes(this.$route.name)) {
+      if (this.workspaceId?.length !== 0 && !['admin-panel'].includes(this.$route.name)) {
         this.getThamirisAlerts()
       }
 
