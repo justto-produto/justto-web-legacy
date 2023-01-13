@@ -259,7 +259,7 @@ export default {
           })
         }).catch(error => {
           this.$jusNotification({ error })
-        })
+        }).finally(this.init)
       } else {
         this.$jusNotification({
           title: 'Ops!',
