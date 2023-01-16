@@ -32,8 +32,8 @@
         router
       >
         <div
-          v-for="menuItem in menuItems"
-          :key="menuItem.index"
+          v-for="(menuItem, menuItemIndex) in menuItems.filter(({ isVisible }) => isVisible)"
+          :key="`${menuItem.index}-${menuItemIndex}`"
           class="container-aside__menu-item"
           @click="menuItem.action"
         >
@@ -74,9 +74,7 @@
 
     <jusMessagePreview />
 
-    <ThamirisAlerts
-      :is-visible="areThamirisAlertsVisible"
-    />
+    <ThamirisAlerts :is-visible="areThamirisAlertsVisible" />
 
     <BuyDialerDialog />
   </el-container>
@@ -85,6 +83,9 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import { eventBus } from '@/utils'
+import { TICKET, MANAGEMENT } from '@/constants/ticketListMode'
+
+import MenuItem from '@/models/main/menuItem'
 
 export default {
   name: 'MainContainer',
@@ -121,8 +122,10 @@ export default {
       isAdminProfile: 'isAdminProfile',
       isRecovery: 'isWorkspaceRecovery',
       userPreferences: 'userPreferences',
+      ticketListMode: 'getTicketListMode',
       workspaceMembersSorted: 'workspaceMembersSorted',
       areNotificationsVisible: 'areNotificationsVisible',
+      showNegotiationTypeMenu: 'showNegotiationTypeMenu',
       areThamirisAlertsVisible: 'areThamirisAlertsVisible'
     }),
 
@@ -130,42 +133,58 @@ export default {
       return this.isJusttoAdmin || this.userPreferences?.properties?.NEGOTIATION_SCREEN === 'true'
     },
 
-    menuItems() {
-      const itemsMenu = []
+    isInNegotiation() {
+      return ['negotiation', 'ticket'].includes(this.$route.name)
+    },
 
-      itemsMenu.push({
+    menuItems() {
+      // const TABS_WITHOUT_CUSTOM_NEGOTIATION = [, ]
+
+      const basicDashboardMenuItem = new MenuItem({
         index: '/',
         title: 'Dashboard',
-        icon: 'logo-justto',
-        isVisible: true,
-        action: () => {}
+        icon: 'logo-justto'
       })
 
-      itemsMenu.push({
+      const basicNegotiationMenuItem = new MenuItem({
         index: '/negotiation',
         title: 'Negociação',
         icon: 'negotiation-window',
-        isVisible: true,
-        action: () => {}
+        isVisible: !this.showNegotiationTypeMenu
       })
 
-      itemsMenu.push({
+      const customNegotiationMenuItem = new MenuItem({
+        index: '/negotiation',
+        title: 'Negociação',
+        icon: 'negotiation-window',
+        isVisible: this.showNegotiationTypeMenu && this.ticketListMode === (this.isInNegotiation ? MANAGEMENT : TICKET),
+        action: () => { if (this.isInNegotiation) this.setAccountProperty({ TICKET_LIST_MODE: TICKET }) }
+      })
+
+      const basicManagementMenuItem = new MenuItem({
         index: '/management',
         title: 'Gerenciamento',
         icon: 'list-app',
-        isVisible: true,
+        isVisible: !this.showNegotiationTypeMenu,
         action: () => this.setTabQuery('management')
       })
 
-      itemsMenu.push({
+      const customManagementMenuItem = new MenuItem({
+        index: '/negotiation',
+        title: 'Gerenciamento',
+        icon: 'negotiation-window',
+        isVisible: this.showNegotiationTypeMenu && this.ticketListMode === (this.isInNegotiation ? TICKET : MANAGEMENT),
+        action: () => { if (this.isInNegotiation) this.setAccountProperty({ TICKET_LIST_MODE: MANAGEMENT }) }
+      })
+
+      const basicManagementAllMenuItem = new MenuItem({
         index: '/management/all',
         title: 'Todas as disputas',
         icon: 'full-folder',
-        isVisible: true,
         action: () => this.setTabQuery('allDisputes')
       })
 
-      itemsMenu.push({
+      const basicImportMenuItem = new MenuItem({
         index: '/import',
         title: 'Importação',
         icon: 'import',
@@ -173,7 +192,15 @@ export default {
         action: () => {}
       })
 
-      return itemsMenu
+      return [
+        basicDashboardMenuItem,
+        basicNegotiationMenuItem,
+        customNegotiationMenuItem,
+        basicManagementMenuItem,
+        customManagementMenuItem,
+        basicManagementAllMenuItem,
+        basicImportMenuItem
+      ]
     }
   },
 
