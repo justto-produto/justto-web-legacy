@@ -6,18 +6,49 @@
     trigger="manual"
     :placement="placement"
   >
-    <span class="bank-account__container">
+    <span
+      v-if="bankAccountDialogVisible"
+      class="bank-account__container"
+    >
       <span class="bank-account__container-person">
         para:
-        {{ account.name | firstName }}
+        {{ (account.name || '') | firstName }}
       </span>
+
       <el-form
+        v-if="account.type !== constants.PIX"
         ref="addBankForm"
         :model="account"
         :rules="addBankRules"
         label-position="top"
         @submit.native.prevent
       >
+        <el-form-item
+          label="Tipo de Conta"
+          prop="type"
+        >
+          <el-select
+            v-model="account.type"
+            :disabled="denySavingDeposit"
+            class="select-full-width"
+            size="mini"
+          >
+            <el-option
+              v-for="type in accountTypes"
+              :key="type.type"
+              :label="type.label"
+              :value="type.type"
+            />
+          </el-select>
+
+          <span
+            v-if="denySavingDeposit"
+            class="form-item-alert"
+          >
+            Disputa só aceita cadastro de conta corrente.
+          </span>
+        </el-form-item>
+
         <el-form-item
           label="Banco"
           prop="bank"
@@ -36,6 +67,7 @@
             />
           </el-select>
         </el-form-item>
+
         <el-form-item
           label="Agência"
           prop="agency"
@@ -45,6 +77,7 @@
             size="mini"
           />
         </el-form-item>
+
         <el-form-item
           label="Número do Conta"
           prop="number"
@@ -55,13 +88,31 @@
           />
         </el-form-item>
 
+        <el-form-item>
+          <el-checkbox
+            v-model="toAssociate"
+            size="mini"
+          >
+            Associar nesta disputa
+          </el-checkbox>
+        </el-form-item>
+      </el-form>
+
+      <el-form
+        v-else-if="account.type === constants.PIX"
+        ref="addBankForm"
+        :model="account"
+        :rules="addPixRules"
+        label-position="top"
+        @submit.native.prevent
+      >
         <el-form-item
           label="Tipo de Conta"
           prop="type"
         >
           <el-select
             v-model="account.type"
-            :disabled="accountTypes.length <= 1"
+            :disabled="denySavingDeposit"
             class="select-full-width"
             size="mini"
           >
@@ -72,21 +123,90 @@
               :value="type.type"
             />
           </el-select>
+
           <span
-            v-if="accountTypes.length <= 1"
+            v-if="denySavingDeposit"
             class="form-item-alert"
           >
             Disputa só aceita cadastro de conta corrente.
           </span>
         </el-form-item>
 
-        <el-form-item>
-          <el-checkbox
-            v-model="toAssociate"
+        <el-form-item
+          label="Tipo de Chave Pix"
+          prop="pixKeySelected"
+        >
+          <el-select
+            v-model="pixKeySelected"
+            class="select-full-width"
             size="mini"
           >
-            Associar nesta disputa
-          </el-checkbox>
+            <el-option
+              v-for="type in pixTypes"
+              :key="type.type"
+              :label="type.label"
+              :value="type.type"
+            />
+          </el-select>
+
+          <span
+            v-if="denySavingDeposit"
+            class="form-item-alert"
+          >
+            Disputa só aceita cadastro de conta corrente.
+          </span>
+        </el-form-item>
+
+        <el-form-item
+          v-if="pixKeySelected === constants.DOCUMENT"
+          label="CPF/CNPJ"
+          prop="document"
+        >
+          <el-input
+            v-model="account.document"
+            v-mask="['###.###.###-##', '##.###.###/####-##']"
+            size="mini"
+          />
+        </el-form-item>
+
+        <el-form-item
+          v-else-if="pixKeySelected === constants.EMAIL"
+          label="E-mail"
+          prop="email"
+        >
+          <el-input
+            v-model="account.email"
+            size="mini"
+          />
+        </el-form-item>
+
+        <el-form-item
+          v-if="pixKeySelected === constants.PHONE"
+          label="Telefone"
+          prop="number"
+        >
+          <el-input
+            v-model="account.number"
+            v-mask="['(##) ####-####', '(##) #####-####']"
+            size="mini"
+            type="tel"
+          />
+        </el-form-item>
+
+        <el-form-item
+          v-if="pixKeySelected === constants.RANDOM"
+          label="Chave aleatória"
+          prop="number"
+        >
+          <div class="el-input el-input--mini">
+            <input
+              v-model="account.number"
+              v-mask="'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX'"
+              class="el-input__inner"
+              size="mini"
+              type="tel"
+            >
+          </div>
         </el-form-item>
       </el-form>
 
@@ -115,8 +235,10 @@
 </template>
 
 <script>
-import { validateDocument } from '@/utils/validations'
+import { validateDocument, validatePhone, validatePixKeyRandom } from '@/utils/validations'
 import { mapActions, mapGetters } from 'vuex'
+import { CHECKING, SAVING, PIX } from '@/constants/bankAccountTypes'
+import { DOCUMENT, EMAIL, PHONE, RANDOM } from '@/constants/pixKeyTypes'
 
 const trigger = 'submit'
 
@@ -138,22 +260,35 @@ export default {
       agency: '',
       bank: '',
       number: '',
-      type: 'CHECKING'
+      type: CHECKING
     },
     toAssociate: true,
+    pixKeySelected: 'DOCUMENT',
     addBankRules: {
       name: [{ required: false, message: 'Campo obrigatório', trigger }],
       email: [{ type: 'email', required: false, message: 'Insira um e-mail válido', trigger }],
       document: [
-        { required: true, message: 'Campo obrigatório', trigger },
+        { required: false, message: 'Campo obrigatório', trigger },
         { validator: validateDocument, message: 'CPF/CNPJ inválido.', trigger }
       ],
+      number: [{ required: true, message: 'Campo obrigatório', trigger }],
       agency: [{ required: true, message: 'Campo obrigatório', trigger }],
       bank: [{ required: true, message: 'Campo obrigatório', trigger }],
-      number: [{ required: true, message: 'Campo obrigatório', trigger }],
       type: [{ required: true, message: 'Campo obrigatório', trigger }]
     },
-    bankAccountDialogVisible: false
+    bankAccountDialogVisible: false,
+    constants: {
+      // Tipos de conta
+      CHECKING,
+      SAVING,
+      PIX,
+
+      // Tipos de chave pix
+      DOCUMENT,
+      EMAIL,
+      PHONE,
+      RANDOM
+    }
   }),
 
   computed: {
@@ -166,13 +301,46 @@ export default {
       return Object.keys(this.account).includes('id') ? 'edit' : 'create'
     },
 
+    denySavingDeposit() {
+      return Boolean(this.ticketInfo?.denySavingDeposit)
+    },
+
     accountTypes() {
       return !this.ticketInfo?.denySavingDeposit ? [
-        { label: 'Corrente', type: 'CHECKING' },
-        { label: 'Poupança', type: 'SAVING' }
+        { label: 'Corrente', type: CHECKING },
+        { label: 'Poupança', type: SAVING },
+        { label: 'Pix', type: PIX }
       ] : [
-        { label: 'Corrente', type: 'CHECKING' }
+        { label: 'Corrente', type: CHECKING }
       ]
+    },
+
+    pixTypes() {
+      return [
+        { label: 'CPF/CNPJ', type: DOCUMENT },
+        { label: 'Telefone', type: PHONE },
+        { label: 'Email', type: EMAIL },
+        { label: 'Chave aleatória', type: RANDOM }
+      ]
+    },
+
+    addPixRules() {
+      return {
+        name: [{ required: false, message: 'Campo obrigatório', trigger }],
+        agency: [{ required: false, message: 'Campo obrigatório', trigger }],
+        bank: [{ required: false, message: 'Campo obrigatório', trigger }],
+        type: [{ required: true, message: 'Campo obrigatório', trigger }],
+        // Campos que representam chaves Pix
+        email: [{ type: 'email', required: this.pixKeySelected === EMAIL, message: 'Insira um e-mail válido', trigger }],
+        document: [
+          { required: this.pixKeySelected === DOCUMENT, message: 'Campo obrigatório', trigger },
+          { validator: validateDocument, message: 'CPF/CNPJ inválido.', trigger }
+        ],
+        number: [
+          { required: [RANDOM, PHONE].includes(this.pixKeySelected), message: 'Campo obrigatório', trigger },
+          { validator: this.pixKeySelected === RANDOM ? validatePixKeyRandom : validatePhone, message: 'Campo inválido.', trigger }
+        ]
+      }
     }
   },
 
