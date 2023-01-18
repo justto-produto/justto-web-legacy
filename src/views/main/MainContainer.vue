@@ -253,7 +253,8 @@ export default {
       setWindowGeometry: 'setWindowGeometry',
       getPreview: 'getMessageToPreview',
       getThamirisAlerts: 'getThamirisAlerts',
-      setGhostMode: 'setGhostMode'
+      setGhostMode: 'setGhostMode',
+      initTicketListModeProperty: 'initTicketListModeProperty'
     }),
 
     pollData() {
@@ -303,7 +304,7 @@ export default {
         })
 
         this.subscriptions.forEach(subscription => this.$socket.emit('subscribe', subscription))
-        this.loadAccountProperty().then(this.checkAcceptterms)
+        this.loadAccountProperty().then(this.checkAcceptterms).finally(this.initTicketListModeProperty)
       }
     },
 

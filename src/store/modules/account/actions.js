@@ -1,5 +1,6 @@
 import router from '@/router'
 import { axiosDispatch } from '@/utils'
+import * as ticketListModeTypes from '@/constants/ticketListMode'
 
 const vue = () => document.getElementById('app')?.__vue__
 
@@ -189,6 +190,47 @@ const accountActions = {
       url: `api/accounts/${accountId}/unblock`,
       method: 'PATCH'
     })
+  },
+
+  /**
+   * Calcula valor inicial da property TICKET_LIST_MODE,
+   * caso não tenha valor válido ainda.
+   *
+   * @param {*} getters
+   * @param {*} dispatch
+   * @returns
+   */
+  initTicketListModeProperty({
+    getters: {
+      userProperties: {
+        TICKET_LIST_MODE,
+        CUSTOM_HOME,
+        PREFERRED_INTERFACE
+      }
+    }
+  }, dispatch) {
+    if (Object.values(ticketListModeTypes).includes(TICKET_LIST_MODE)) return
+
+    // TODO: Validar se a property SHOW_NEGOTIATION_TYPE_MENU está habilitada na Workspace.
+
+    let mode = ticketListModeTypes.TICKET
+
+    // TODO: Mudar validações para adicionar somente MANAGEMENT se for necessário.
+    // Como o valor de mode já é TICKET, não precisa reatribuir para TICKET.
+
+    if (['/management', '/negotiation'].includes(CUSTOM_HOME)) {
+      mode = {
+        '/management': ticketListModeTypes.MANAGEMENT,
+        '/negotiation': ticketListModeTypes.TICKET
+      }[CUSTOM_HOME]
+    } else if (['DISPUTE', 'NEGOTIATION'].includes(PREFERRED_INTERFACE)) {
+      mode = {
+        DISPUTE: ticketListModeTypes.MANAGEMENT,
+        NEGOTIATION: ticketListModeTypes.TICKET
+      }[PREFERRED_INTERFACE]
+    }
+
+    dispatch('setAccountProperty', { TICKET_LIST_MODE: mode })
   }
 }
 
