@@ -79,6 +79,7 @@
     </article>
 
     <ApiIntegrationDialog
+      v-if="getFeatureIdByCode('API_INTEGRATION')"
       ref="apiIntegrationDialog"
       :feature="getFeatureIdByCode('API_INTEGRATION')"
     />
