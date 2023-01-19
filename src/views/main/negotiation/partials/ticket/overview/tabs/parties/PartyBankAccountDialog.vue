@@ -133,80 +133,116 @@
         </el-form-item>
 
         <el-form-item
-          label="Tipo de Chave Pix"
-          prop="pixKeySelected"
+          prop="document"
+          :required="pixKeySelected === constants.DOCUMENT"
+          :class="{ 'prevent-errors': pixKeySelected !== constants.DOCUMENT }"
         >
-          <el-select
+          <el-radio
+            slot="label"
             v-model="pixKeySelected"
-            class="select-full-width"
+            :label="constants.DOCUMENT"
             size="mini"
           >
-            <el-option
-              v-for="type in pixTypes"
-              :key="type.type"
-              :label="type.label"
-              :value="type.type"
-            />
-          </el-select>
+            CPF/CNPJ
+          </el-radio>
 
-          <span
-            v-if="denySavingDeposit"
-            class="form-item-alert"
-          >
-            Disputa só aceita cadastro de conta corrente.
-          </span>
-        </el-form-item>
-
-        <el-form-item
-          v-if="pixKeySelected === constants.DOCUMENT"
-          label="CPF/CNPJ"
-          prop="document"
-        >
           <el-input
+            v-if="pixKeySelected === constants.DOCUMENT"
             v-model="account.document"
             v-mask="['###.###.###-##', '##.###.###/####-##']"
             size="mini"
           />
+
+          <el-input
+            v-else
+            disabled
+            size="mini"
+          />
         </el-form-item>
 
         <el-form-item
-          v-else-if="pixKeySelected === constants.EMAIL"
-          label="E-mail"
           prop="email"
+          :required="pixKeySelected === constants.EMAIL"
+          :class="{ 'prevent-errors': pixKeySelected !== constants.EMAIL }"
         >
+          <el-radio
+            slot="label"
+            v-model="pixKeySelected"
+            :label="constants.EMAIL"
+            size="mini"
+          >
+            E-mail
+          </el-radio>
+
           <el-input
+            v-if="pixKeySelected === constants.EMAIL"
             v-model="account.email"
             size="mini"
           />
-        </el-form-item>
 
-        <el-form-item
-          v-if="pixKeySelected === constants.PHONE"
-          label="Telefone"
-          prop="number"
-        >
           <el-input
-            v-model="account.number"
-            v-mask="['(##) ####-####', '(##) #####-####']"
+            v-else
+            disabled
             size="mini"
-            type="tel"
           />
         </el-form-item>
 
         <el-form-item
-          v-if="pixKeySelected === constants.RANDOM"
-          label="Chave aleatória"
           prop="number"
+          :required="pixKeySelected === constants.PHONE"
+          :class="{ 'prevent-errors': pixKeySelected !== constants.PHONE }"
         >
-          <div class="el-input el-input--mini">
-            <input
-              v-model="account.number"
-              v-mask="'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX'"
-              class="el-input__inner"
-              size="mini"
-              type="tel"
-            >
-          </div>
+          <el-radio
+            slot="label"
+            v-model="pixKeySelected"
+            :label="constants.PHONE"
+            size="mini"
+          >
+            Telefone
+          </el-radio>
+
+          <el-input
+            v-if="pixKeySelected === constants.PHONE"
+            v-model="account.number"
+            v-mask="['(##) ####-####', '(##) #####-####']"
+            masked
+            size="mini"
+          />
+
+          <el-input
+            v-else
+            disabled
+            size="mini"
+          />
+        </el-form-item>
+
+        <el-form-item
+          prop="number"
+          :required="pixKeySelected === constants.RANDOM"
+          :class="{ 'prevent-errors': pixKeySelected !== constants.RANDOM }"
+        >
+          <el-radio
+            slot="label"
+            v-model="pixKeySelected"
+            :label="constants.RANDOM"
+            size="mini"
+          >
+            Chave aleatória
+          </el-radio>
+
+          <el-input
+            v-if="pixKeySelected === constants.RANDOM"
+            v-model="account.number"
+            v-mask="'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX'"
+            masked
+            size="mini"
+          />
+
+          <el-input
+            v-else
+            disabled
+            size="mini"
+          />
         </el-form-item>
       </el-form>
 
@@ -326,21 +362,35 @@ export default {
 
     addPixRules() {
       return {
-        name: [{ required: false, message: 'Campo obrigatório', trigger }],
-        agency: [{ required: false, message: 'Campo obrigatório', trigger }],
-        bank: [{ required: false, message: 'Campo obrigatório', trigger }],
-        type: [{ required: true, message: 'Campo obrigatório', trigger }],
+        name: [{ required: false, message: 'Obrigatório', trigger }],
+        agency: [{ required: false, message: 'Obrigatório', trigger }],
+        bank: [{ required: false, message: 'Obrigatório', trigger }],
+        type: [{ required: true, message: 'Obrigatório', trigger }],
         // Campos que representam chaves Pix
         email: [{ type: 'email', required: this.pixKeySelected === EMAIL, message: 'Insira um e-mail válido', trigger }],
         document: [
-          { required: this.pixKeySelected === DOCUMENT, message: 'Campo obrigatório', trigger },
+          { required: this.pixKeySelected === DOCUMENT, message: 'Obrigatório', trigger },
           { validator: validateDocument, message: 'CPF/CNPJ inválido.', trigger }
         ],
         number: [
-          { required: [RANDOM, PHONE].includes(this.pixKeySelected), message: 'Campo obrigatório', trigger },
-          { validator: this.pixKeySelected === RANDOM ? validatePixKeyRandom : validatePhone, message: 'Campo inválido.', trigger }
+          { required: false, message: 'Obrigatório', trigger },
+          { validator: this.handleValidateNumberField, message: 'Campo inválido.', trigger }
         ]
       }
+    },
+
+    phonePixRule() {
+      return [
+        { required: true, message: 'Obrigatório', trigger },
+        { validator: validatePhone, message: 'Campo inválido.', trigger }
+      ]
+    },
+
+    randonKeyPixRule() {
+      return [
+        { required: true, message: 'Obrigatório', trigger },
+        { validator: validatePixKeyRandom, message: 'Campo inválido.', trigger }
+      ]
     }
   },
 
@@ -349,6 +399,12 @@ export default {
       if (visible) {
         this.$delete(this.account, 'bank')
         this.$delete(this.account, 'agency')
+        this.$delete(this.account, 'number')
+      }
+    },
+
+    pixKeySelected(key) {
+      if ([RANDOM, PHONE].includes(key)) {
         this.$delete(this.account, 'number')
       }
     }
@@ -383,10 +439,20 @@ export default {
 
     emitEvent(associate) {
       this.$refs.addBankForm.validate(isValid => {
-        if (isValid) {
-          this.$emit(this.action, { account: this.account, associate })
-        }
+        console.log('validate', isValid)
+
+        // if (isValid) {
+        //   this.$emit(this.action, { account: this.account, associate })
+        // }
       })
+    },
+
+    handleValidateNumberField(rule, value, callback) {
+      if (this.pixKeySelected === RANDOM) {
+        validatePixKeyRandom(rule, value, callback)
+      } else {
+        validatePhone(rule, value, callback)
+      }
     }
   }
 }
@@ -433,6 +499,14 @@ export default {
           .form-item-alert {
             font-size: 10px;
             font-style: oblique;
+          }
+        }
+
+        &.prevent-errors {
+          .el-form-item__content {
+            .el-form-item__error {
+              display: none;
+            }
           }
         }
       }
