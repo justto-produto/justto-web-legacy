@@ -138,8 +138,6 @@ export default {
     },
 
     menuItems() {
-      // const TABS_WITHOUT_CUSTOM_NEGOTIATION = [, ]
-
       const basicDashboardMenuItem = new MenuItem({
         index: '/',
         title: 'Dashboard',
@@ -173,6 +171,7 @@ export default {
         index: '/negotiation',
         title: 'Gerenciamento',
         icon: 'negotiation-window',
+        customHome: '/management',
         isVisible: this.showNegotiationTypeMenu && this.ticketListMode === (this.isInNegotiation ? TICKET : MANAGEMENT),
         action: () => { if (this.isInNegotiation) this.setAccountProperty({ TICKET_LIST_MODE: MANAGEMENT }) }
       })

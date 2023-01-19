@@ -206,18 +206,22 @@ const accountActions = {
         TICKET_LIST_MODE,
         CUSTOM_HOME,
         PREFERRED_INTERFACE
-      }
+      }, showNegotiationTypeMenu
+    }, dispatch
+  }) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.table({ TICKET_LIST_MODE, CUSTOM_HOME, PREFERRED_INTERFACE, showNegotiationTypeMenu })
     }
-  }, dispatch) {
-    if (Object.values(ticketListModeTypes).includes(TICKET_LIST_MODE)) return
 
-    // TODO: Validar se a property SHOW_NEGOTIATION_TYPE_MENU está habilitada na Workspace.
+    // Verifica se SHOW_NEGOTIATION_TYPE_MENU está habilitado na Workapace.
+    if (!showNegotiationTypeMenu) return
+
+    // Varifica se TICKET_LIST_MODE não tem valor válido.
+    if (Object.values(ticketListModeTypes).includes(TICKET_LIST_MODE)) return
 
     let mode = ticketListModeTypes.TICKET
 
-    // TODO: Mudar validações para adicionar somente MANAGEMENT se for necessário.
-    // Como o valor de mode já é TICKET, não precisa reatribuir para TICKET.
-
+    // TODO: Revalidar lógica.
     if (['/management', '/negotiation'].includes(CUSTOM_HOME)) {
       mode = {
         '/management': ticketListModeTypes.MANAGEMENT,
@@ -230,7 +234,11 @@ const accountActions = {
       }[PREFERRED_INTERFACE]
     }
 
-    dispatch('setAccountProperty', { TICKET_LIST_MODE: mode })
+    dispatch('setAccountProperty', { TICKET_LIST_MODE: mode }).then(res => {
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('setAccountProperty', res)
+      }
+    })
   }
 }
 
