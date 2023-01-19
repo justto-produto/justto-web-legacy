@@ -185,6 +185,9 @@ export default {
 
     clickTracker(event) {
       const dialerButton = document.querySelector('.dialer__button-call')
+
+      if (Boolean(event?.path) === false) return
+
       const clickIn = event.path.includes(dialerButton) || event.path.filter(item => Array(...(item?.classList || [])).includes('dialer__button')).length > 0
 
       if (!clickIn && this.showPopover) {
