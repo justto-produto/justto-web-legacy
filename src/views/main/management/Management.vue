@@ -174,11 +174,6 @@
           </el-tooltip>
 
           <jus-import-dialog :dialog-visible.sync="importDialogVisible" />
-
-          <TableMenu
-            v-if="isTicket"
-            keep-original
-          />
         </div>
       </div>
 
@@ -462,8 +457,7 @@ export default {
     ManagementPrescriptions: () => import('./partials/ManagementPrescriptions'),
     JusImportDialog: () => import('@/components/dialogs/JusImportDialog'),
     JusFilterButton: () => import('@/components/buttons/JusFilterButton'),
-    JusLoader: () => import('@/components/others/JusLoader'),
-    TableMenu: () => import('@/views/main/negotiation/partials/tickets/table/partials/TableMenu')
+    JusLoader: () => import('@/components/others/JusLoader')
   },
 
   inject: {

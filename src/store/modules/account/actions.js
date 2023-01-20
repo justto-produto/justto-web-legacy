@@ -1,5 +1,6 @@
 import router from '@/router'
 import { axiosDispatch } from '@/utils'
+import * as ticketListModeTypes from '@/constants/ticketListMode'
 
 const vue = () => document.getElementById('app')?.__vue__
 
@@ -188,6 +189,55 @@ const accountActions = {
     return axiosDispatch({
       url: `api/accounts/${accountId}/unblock`,
       method: 'PATCH'
+    })
+  },
+
+  /**
+   * Calcula valor inicial da property TICKET_LIST_MODE,
+   * caso não tenha valor válido ainda.
+   *
+   * @param {*} getters
+   * @param {*} dispatch
+   * @returns
+   */
+  initTicketListModeProperty({
+    getters: {
+      userProperties: {
+        TICKET_LIST_MODE,
+        CUSTOM_HOME,
+        PREFERRED_INTERFACE
+      }, showNegotiationTypeMenu
+    }, dispatch
+  }) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.table({ TICKET_LIST_MODE, CUSTOM_HOME, PREFERRED_INTERFACE, showNegotiationTypeMenu })
+    }
+
+    // Verifica se SHOW_NEGOTIATION_TYPE_MENU está habilitado na Workapace.
+    if (!showNegotiationTypeMenu) return
+
+    // Varifica se TICKET_LIST_MODE não tem valor válido.
+    if (Object.values(ticketListModeTypes).includes(TICKET_LIST_MODE)) return
+
+    let mode = ticketListModeTypes.TICKET
+
+    // TODO: Revalidar lógica.
+    if (['/management', '/negotiation'].includes(CUSTOM_HOME)) {
+      mode = {
+        '/management': ticketListModeTypes.MANAGEMENT,
+        '/negotiation': ticketListModeTypes.TICKET
+      }[CUSTOM_HOME]
+    } else if (['DISPUTE', 'NEGOTIATION'].includes(PREFERRED_INTERFACE)) {
+      mode = {
+        DISPUTE: ticketListModeTypes.MANAGEMENT,
+        NEGOTIATION: ticketListModeTypes.TICKET
+      }[PREFERRED_INTERFACE]
+    }
+
+    dispatch('setAccountProperty', { TICKET_LIST_MODE: mode }).then(res => {
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('setAccountProperty', res)
+      }
     })
   }
 }

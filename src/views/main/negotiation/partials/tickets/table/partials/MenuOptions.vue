@@ -9,18 +9,18 @@
       size="small"
       class="ticket-table-menu__options-group"
     >
-      <el-radio label="TICKET">
+      <el-radio :label="TICKET">
         <jus-icon
           icon="negotiation-window"
-          :is-active="mode === 'TICKET'"
+          :is-active="mode === TICKET"
         /> Negociação
       </el-radio>
 
-      <el-radio label="MANAGEMENT">
+      <el-radio :label="MANAGEMENT">
         <jus-icon
           icon="list-app"
-          :is-active="mode === 'MANAGEMENT'"
-        /> Gerênciamento
+          :is-active="mode === MANAGEMENT"
+        /> Gerenciamento
       </el-radio>
     </el-radio-group>
   </article>
@@ -29,7 +29,14 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 
+import { TICKET, MANAGEMENT } from '@/constants/ticketListMode'
+
 export default {
+  data: () => ({
+    TICKET,
+    MANAGEMENT
+  }),
+
   computed: {
     ...mapGetters({
       ticketListMode: 'getTicketListMode'
