@@ -14,38 +14,18 @@
         }"
         class="bank-accounts__container-account"
       >
-        <span
-          class="bank-accounts__container-inner"
-          @click="handleClick(account)"
+        <BankAccountInfo
+          :account="account"
+          @click="handleClick"
         >
-          <div class="bank-accounts__account-info-title">
-            <JusIcon
-              icon="chain"
-              is-active
-            />
-            Conta {{ $t(`bank-account.type.${account.type}`) }}
-          </div>
-          <div class="bank-accounts__account-info">
-            Banco: {{ account.bank }}
-          </div>
-          <div class="bank-accounts__account-info">
-            Agência: {{ account.agency }}
-          </div>
-          <div class="bank-accounts__account-info">
-            Conta: {{ account.number }}
-          </div>
           <span class="bank-accounts__account-icons">
-            <!--<i
-              class="bank-accounts__account-icon el-icon-edit"
-              @click.stop="openBankAccountDialog(account)"
-            />-->
             <i
               v-if="!disabled"
               class="bank-accounts__account-icon el-icon-delete"
               @click.stop="removeBankAccount(account)"
             />
           </span>
-        </span>
+        </BankAccountInfo>
       </div>
     </div>
 
@@ -81,11 +61,13 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import { PIX } from '@/constants/bankAccountTypes'
 
 export default {
   name: 'PartyBankAccounts',
 
   components: {
+    BankAccountInfo: () => import('./partial/BankAccountInfo'),
     PartyBankAccountDialog: () => import('./PartyBankAccountDialog'),
     SavingsAccountAlert: () => import('@/components/dialogs/SavingsAccountAlert.vue')
   },
@@ -188,12 +170,15 @@ export default {
 
       this.createBankAccount({ disputeId, account, personId }).then(response => {
         if (associate) {
-          const baccount = response.bankAccounts.find(baccount => {
-            return baccount.agency === account.agency &&
-              baccount.document === account.document &&
-              baccount.number === account.number &&
-              baccount.bank === account.bank &&
-              baccount.type === account.type
+          const baccount = response.bankAccounts.find(bAccount => {
+            return account.type === PIX ? (bAccount.type === account.type &&
+            (bAccount.document === account.document ||
+            bAccount.email === account.email ||
+            bAccount.number === account.number)) : (bAccount.agency === account.agency &&
+              bAccount.document === account.document &&
+              bAccount.number === account.number &&
+              bAccount.bank === account.bank &&
+              bAccount.type === account.type)
           })
 
           this.linkAccount({ bankAccountId: baccount.id, personId, disputeId })
@@ -205,8 +190,8 @@ export default {
           message: 'Conta bancária <strong>criada</strong> com sucesso.',
           type: 'success'
         })
-      }).catch(err => {
-        this.$jusNotification(err)
+      }).catch(error => {
+        this.$jusNotification({ error })
       }).finally(_ => {
         this.closeBankAccountDialog()
       })

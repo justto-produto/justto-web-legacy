@@ -242,6 +242,15 @@
             size="mini"
           />
         </el-form-item>
+
+        <el-form-item>
+          <el-checkbox
+            v-model="toAssociate"
+            size="mini"
+          >
+            Associar nesta disputa
+          </el-checkbox>
+        </el-form-item>
       </el-form>
 
       <span class="bank-account__container-footer">
@@ -297,7 +306,7 @@ export default {
       type: CHECKING
     },
     toAssociate: true,
-    pixKeySelected: 'DOCUMENT',
+    pixKeySelected: '',
     addBankRules: {
       name: [{ required: false, message: 'Campo obrigatório', trigger }],
       email: [{ type: 'email', required: false, message: 'Insira um e-mail válido', trigger }],
@@ -370,7 +379,7 @@ export default {
           { required: this.pixKeySelected === DOCUMENT, message: 'Obrigatório', trigger },
           { validator: validateDocument, message: 'CPF/CNPJ inválido.', trigger }
         ],
-        number: this.pixKeySelected === RANDOM ? this.randonKeyPixRule : this.phonePixRule
+        number: this.pixKeySelected === RANDOM ? this.randonKeyPixRule : (this.pixKeySelected === PHONE ? this.phonePixRule : this.refaultPixRule)
       }
     },
 
@@ -386,6 +395,10 @@ export default {
         { required: true, message: 'Chave-aleatória é obrigatória', trigger },
         { validator: validatePixKeyRandom, message: 'Chave-aleatória inválida.', trigger }
       ]
+    },
+
+    refaultPixRule() {
+      return []
     }
   },
 
@@ -421,8 +434,10 @@ export default {
 
       this.$nextTick().then(() => {
         Object.keys(account).forEach(key => this.$set(this.account, key, account[key]))
+        this.account.document = this.$options.filters.cpfCnpj(account.document)
 
         this.$set(this.account, 'type', 'CHECKING')
+        this.$set(this, 'pixKeySelected', '')
       })
 
       if (account.document) {
@@ -439,7 +454,26 @@ export default {
     emitEvent(associate) {
       this.$refs.addBankForm.validate((isValid, error) => {
         if (isValid) {
-          this.$emit(this.action, { account: this.account, associate })
+          const account = { ...this.account }
+
+          if (account.type === PIX) {
+            if (this.pixKeySelected !== DOCUMENT) {
+              this.$delete(account, 'document')
+            }
+
+            if (this.pixKeySelected !== EMAIL) {
+              this.$delete(account, 'email')
+            }
+
+            if (![PHONE, RANDOM].includes(this.pixKeySelected)) {
+              this.$delete(account, 'number')
+            }
+          }
+
+          this.$emit(this.action, { account, associate })
+
+          this.$refs.addBankForm.clearValidate()
+          this.$refs.addBankForm.resetFields()
         } else {
           const erros = Object.values(error).reduce((acc, cur) => ([...acc, ...cur]), [])
 

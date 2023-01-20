@@ -647,7 +647,8 @@
     "unlinkDisputeBankAccounts": "desvinculada",
     "type": {
       "SAVING": "Poupança",
-      "CHECKING": "Corrente"
+      "CHECKING": "Corrente",
+      "PIX": "Pix"
     }
   },
   "member-status": {
