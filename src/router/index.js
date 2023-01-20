@@ -81,7 +81,6 @@ const router = new Router({
         {
           name: 'management',
           path: '/management',
-          redirect: '/negotiation',
           component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/management/Management'),
           meta: {
             requiresAuth: true,
