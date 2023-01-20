@@ -1,16 +1,11 @@
 const validatePixKeyRandom = (rule, value, callback) => {
-  console.log('validatePixKeyRandom', { rule, value })
+  const key = (value || '').replaceAll(/[^a-z0-9]/gi, '')
 
-  // TODO: Implementar validação.
+  if ((key && key.length === 32) || rule?.required === false) {
+    callback()
+  } else callback(new Error(rule?.message))
 
-  // TODO: Remover '-' de .value;
-  // TODO: Verificar se o tamanho de .value é 32
-
-  // if ((value && value.length > 13) || !value) {
-  //   callback()
-  // } else callback(new Error())
-
-  callback(new Error())
+  callback(new Error(rule?.message))
 }
 
 export default validatePixKeyRandom
