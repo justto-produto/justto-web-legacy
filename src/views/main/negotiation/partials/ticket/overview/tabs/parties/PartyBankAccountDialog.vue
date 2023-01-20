@@ -134,7 +134,6 @@
 
         <el-form-item
           prop="document"
-          :required="pixKeySelected === constants.DOCUMENT"
           :class="{ 'prevent-errors': pixKeySelected !== constants.DOCUMENT }"
         >
           <el-radio
@@ -162,7 +161,6 @@
 
         <el-form-item
           prop="email"
-          :required="pixKeySelected === constants.EMAIL"
           :class="{ 'prevent-errors': pixKeySelected !== constants.EMAIL }"
         >
           <el-radio
@@ -372,24 +370,21 @@ export default {
           { required: this.pixKeySelected === DOCUMENT, message: 'Obrigatório', trigger },
           { validator: validateDocument, message: 'CPF/CNPJ inválido.', trigger }
         ],
-        number: [
-          { required: false, message: 'Obrigatório', trigger },
-          { validator: this.handleValidateNumberField, message: 'Campo inválido.', trigger }
-        ]
+        number: this.pixKeySelected === RANDOM ? this.randonKeyPixRule : this.phonePixRule
       }
     },
 
     phonePixRule() {
       return [
-        { required: true, message: 'Obrigatório', trigger },
-        { validator: validatePhone, message: 'Campo inválido.', trigger }
+        { required: true, message: 'Telefone é obrigatório', trigger },
+        { validator: validatePhone, message: 'Telefone inválido.', trigger }
       ]
     },
 
     randonKeyPixRule() {
       return [
-        { required: true, message: 'Obrigatório', trigger },
-        { validator: validatePixKeyRandom, message: 'Campo inválido.', trigger }
+        { required: true, message: 'Chave-aleatória é obrigatória', trigger },
+        { validator: validatePixKeyRandom, message: 'Chave-aleatória inválida.', trigger }
       ]
     }
   },
@@ -406,6 +401,10 @@ export default {
     pixKeySelected(key) {
       if ([RANDOM, PHONE].includes(key)) {
         this.$delete(this.account, 'number')
+      }
+
+      if (this.$refs.addBankForm) {
+        this.$refs.addBankForm.clearValidate()
       }
     }
   },
@@ -438,18 +437,25 @@ export default {
     },
 
     emitEvent(associate) {
-      this.$refs.addBankForm.validate(isValid => {
-        console.log('validate', isValid)
+      this.$refs.addBankForm.validate((isValid, error) => {
+        if (isValid) {
+          this.$emit(this.action, { account: this.account, associate })
+        } else {
+          const erros = Object.values(error).reduce((acc, cur) => ([...acc, ...cur]), [])
 
-        // if (isValid) {
-        //   this.$emit(this.action, { account: this.account, associate })
-        // }
+          erros.forEach(({ message }, index) => this.$jusNotification({
+            title: 'Ops!',
+            message,
+            type: 'error',
+            offset: index * 96
+          }))
+        }
       })
     },
 
     handleValidateNumberField(rule, value, callback) {
       if (this.pixKeySelected === RANDOM) {
-        validatePixKeyRandom(rule, value, callback)
+        validatePixKeyRandom({ ...rule, message: 'Chave-aleatória inválida' }, value, callback)
       } else {
         validatePhone(rule, value, callback)
       }
