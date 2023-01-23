@@ -601,6 +601,9 @@
       },
       "NOTIFY_DISPUTE_NEGOTIATION_DONE": {
         "title": "Com negociação encerradas"
+      },
+      "NOTIFY_UNANSWERED_DISPUTE": {
+        "title": "Reenviar mensagens disputas sem resposta"
       }
     }
   },
