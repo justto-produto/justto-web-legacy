@@ -214,7 +214,18 @@ export default {
         message: 'Código do processo copiado!',
         type: 'success'
       })
-      setTimeout(() => window.open(url), 1500)
+
+      setTimeout(() => {
+        if (url) {
+          window.open(url)
+        } else {
+          this.$jusNotification({
+            title: 'Ops!',
+            message: 'Este processo não tem URL.',
+            type: 'error'
+          })
+        }
+      }, 1500)
     }
   }
 }
