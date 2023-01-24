@@ -88,6 +88,7 @@
         </span>
       </el-button>
     </el-popover>
+
     <el-dialog
       :visible.sync="editTemplateQuickReply.visible"
       append-to-body
@@ -253,6 +254,19 @@ export default {
         visibility: visible;
       }
     }
+  }
+}
+</style>
+
+<style lang="scss">
+.dispute-view__templates-popover {
+  .el-popover__title {
+    margin-bottom: 4px;
+  }
+
+  .dispute-view__templates-list {
+    max-height: 50vh;
+    overflow-y: auto;
   }
 }
 </style>
