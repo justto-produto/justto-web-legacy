@@ -2,13 +2,33 @@
   <article>
     <el-popover
       ref="quickReplyPopover"
-      title="Respostas rápidas"
       trigger="click"
       placement="top"
       popper-class="dispute-view__templates-popover"
       class="dispute-view__templates"
       @hide="openTemplateMenu(null)"
     >
+      <div class="dispute-view__title-container">
+        <span class="dispute-view__title-container__title">
+          Respostas rápidas
+        </span>
+
+        <el-input
+          v-model="filter"
+          class="dispute-view__title-container__filter"
+          size="mini"
+        >
+          <template slot="prepend">
+            Filtrar:
+          </template>
+
+          <i
+            slot="suffix"
+            class="el-input__icon el-icon-search"
+          />
+        </el-input>
+      </div>
+
       <ul
         v-if="templates.length"
         class="dispute-view__templates-list"
@@ -65,6 +85,7 @@
           </el-popover>
         </li>
       </ul>
+
       <span
         v-else
         class="dispute-view__templates-list-empty"
@@ -111,6 +132,8 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 
+import { normalizeString } from '@/utils'
+
 export default {
   components: {
     DisputeQuickReplyEditor: () => import('@/components/layouts/DisuteQuickReplyEditor')
@@ -126,12 +149,23 @@ export default {
     editTemplateQuickReply: {
       visible: false,
       template: {}
-    }
+    },
+    filter: ''
   }),
   computed: {
     ...mapGetters({
-      templates: 'quickReplyTemplates'
+      rawTemplates: 'quickReplyTemplates'
     }),
+
+    templates: {
+      get() {
+        if (this.filter) {
+          return this.rawTemplates.filter(({ template: { title } }) => normalizeString(title).includes(normalizeString(this.filter)))
+        }
+
+        return this.rawTemplates
+      }
+    },
 
     disputeId() {
       return Number(this.$route?.params?.id || '0')
@@ -264,8 +298,25 @@ export default {
     margin-bottom: 4px;
   }
 
-  .dispute-view__templates-list {
-    max-height: 50vh;
+  .dispute-view__title-container {
+    display: flex;
+    justify-content: space-between;
+
+    .dispute-view__title-container__title {
+      flex: 1;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+    }
+
+    .dispute-view__title-container__filter {
+      flex: 1;
+    }
+  }
+
+  .dispute-view__templates-list,
+  .dispute-view__templates-list-empty {
+    height: 25vh;
     overflow-y: auto;
   }
 }
