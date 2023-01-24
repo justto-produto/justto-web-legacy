@@ -282,8 +282,11 @@
     }
   },
   "actions": {
-    "REDIRECTMANAGEMENT": {
+    "REDIRECT_MANAGEMENT": {
       "name": "ir para gerenciamento"
+    },
+    "REDIRECT_TICKET": {
+      "name": "ir para negociação"
     },
     "SETTLED": {
       "name": "ganhar | aceitar acordo",
