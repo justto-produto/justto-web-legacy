@@ -239,10 +239,9 @@ export default {
           isVisible: true
         },
         {
-          // redirect
           name: this.isInDispute ? 'REDIRECT_TICKET' : 'REDIRECT_MANAGEMENT',
           icon: 'switch',
-          isVisible: true, // !this.showNegotiationTypeMenu,
+          isVisible: !this.showNegotiationTypeMenu,
           isDynamic: !this.isPaused && !this.isCanceled,
           method: () => this.redirectToManagement()
         }
