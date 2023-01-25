@@ -156,7 +156,7 @@ export default {
     },
 
     hasPrescription(prescription) {
-      return this.ticketsQuery.prescriptions.includes(prescription)
+      return (this.ticketsQuery?.prescriptions || []).includes(prescription)
     }
   }
 }

@@ -61,7 +61,8 @@ const dispute = {
     timeline: {},
     batchActionsLastUse: {},
     disputesNeedsRestart: {},
-    engagementLimitExceeded: false
+    engagementLimitExceeded: false,
+    preventFilters: false
   },
   mutations: mutations,
   actions: actions,

@@ -42,7 +42,7 @@ const disputeGetters = {
   disputeNotVisualizedPreNegotiation: (state, getters) => {
     return getters.filterSummary('PRE_NEGOTIATION', state.summaryNotVisualizeds)
   },
-  hasPrescription: state => (prescription) => state.query.prescriptions.includes(prescription),
+  hasPrescription: state => (prescription) => (state?.query?.prescriptions || []).includes(prescription),
   getRecentPrescriptions: ({ recentPrescriptions }) => {
     return Object.keys(recentPrescriptions).filter(p => moment(new Date()).diff(recentPrescriptions[p], 'days') < 1)
   },
@@ -72,7 +72,9 @@ const disputeGetters = {
 
   getNotesPagination: state => state.notesQuery,
 
-  getEngagementLimit: state => state.engagementLimitExceeded
+  getEngagementLimit: state => state.engagementLimitExceeded,
+
+  getDisputeHasPreventFiltres: state => state.preventFilters
 }
 
 export default disputeGetters
