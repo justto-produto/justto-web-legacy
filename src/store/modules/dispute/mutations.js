@@ -22,7 +22,7 @@ const disputeMutations = {
   },
 
   setDisputes(state, pageable) {
-    if (state.query.prescriptions.includes('NEED_FOLLOW_UP')) {
+    if ((state?.query?.prescriptions || []).includes('NEED_FOLLOW_UP')) {
       state.disputes = (pageable.content).sort((a, b) => {
         return a?.lastInteraction?.type === 'PHONE_CALL' && b?.lastInteraction?.type !== 'PHONE_CALL' ? 1 : 0
       })
@@ -185,6 +185,10 @@ const disputeMutations = {
 
   setDisputeHasFilters(state, bol) {
     state.hasFilters = bol
+  },
+
+  setDisputePreventFilters(state, bol) {
+    state.preventFilters = Boolean(bol)
   },
 
   setDisputesTab(state, tab) {
