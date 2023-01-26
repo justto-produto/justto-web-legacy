@@ -112,7 +112,8 @@ export default {
       activeTab: 'getActiveTab',
       isJusttoAdmin: 'isJusttoAdmin',
       userPreferences: 'userPreferences',
-      features: 'getMappedFeaturesAndModules'
+      features: 'getMappedFeaturesAndModules',
+      showNegotiationTypeMenu: 'showNegotiationTypeMenu'
     }),
 
     actionsList() {
@@ -238,9 +239,9 @@ export default {
           isVisible: true
         },
         {
-          name: 'REDIRECTMANAGEMENT',
+          name: this.isInDispute ? 'REDIRECT_TICKET' : 'REDIRECT_MANAGEMENT',
           icon: 'switch',
-          isVisible: true,
+          isVisible: !this.showNegotiationTypeMenu,
           isDynamic: !this.isPaused && !this.isCanceled,
           method: () => this.redirectToManagement()
         }

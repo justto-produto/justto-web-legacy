@@ -36,7 +36,7 @@ export default {
     ...mapGetters({ customHome: 'getCustomHome' }),
 
     isCustomHome() {
-      return this.value.index === this.customHome
+      return this.value.customHome === this.customHome
     }
   },
 
@@ -46,7 +46,7 @@ export default {
     setCustomHome() {
       this.loading = true
 
-      this.setAccountProperty({ CUSTOM_HOME: this.isCustomHome ? null : this.value.index }).then(() => this.$jusNotification({
+      this.setAccountProperty({ CUSTOM_HOME: this.isCustomHome ? null : this.value.customHome }).then(() => this.$jusNotification({
         title: 'Yay!',
         message: `Página inicial ${this.isCustomHome ? 'redefinida' : 'modificada'} com sucesso`,
         type: 'success',

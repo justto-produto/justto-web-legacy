@@ -174,11 +174,6 @@
           </el-tooltip>
 
           <jus-import-dialog :dialog-visible.sync="importDialogVisible" />
-
-          <TableMenu
-            v-if="isTicket"
-            keep-original
-          />
         </div>
       </div>
 
@@ -445,7 +440,7 @@
 
 <script>
 import { filterByTerm, eventBus } from '@/utils'
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
 import lodash from 'lodash'
 import events from '@/constants/negotiationEvents'
 
@@ -462,8 +457,7 @@ export default {
     ManagementPrescriptions: () => import('./partials/ManagementPrescriptions'),
     JusImportDialog: () => import('@/components/dialogs/JusImportDialog'),
     JusFilterButton: () => import('@/components/buttons/JusFilterButton'),
-    JusLoader: () => import('@/components/others/JusLoader'),
-    TableMenu: () => import('@/views/main/negotiation/partials/tickets/table/partials/TableMenu')
+    JusLoader: () => import('@/components/others/JusLoader')
   },
 
   inject: {
@@ -509,7 +503,8 @@ export default {
       loadingDisputes: 'loadingDisputes',
       workspaceProperties: 'workspaceProperties',
       getSelectedIds: 'getSelectedIds',
-      userProperties: 'userProperties'
+      userProperties: 'userProperties',
+      hasPreventFiltres: 'getDisputeHasPreventFiltres'
     }),
 
     selectedIds: {
@@ -625,6 +620,8 @@ export default {
       'getAccountProperty',
       'setAccountProperty'
     ]),
+
+    ...mapMutations(['setDisputePreventFilters']),
 
     handleNextTab() {
       const current = Number(this.activeTab)
@@ -801,38 +798,46 @@ export default {
         this.$refs.managementTable.clearHighlight()
         this.$refs.managementTable.showEmpty = false
       }
-      this.ufFilterValue = []
-      this.$store.commit('clearDisputes')
-      this.$store.commit('clearDisputeQueryByTab')
-      this.$store.commit('setDisputeHasFilters', false)
-      // SEGMENT TRACK
-      this.$jusSegment(`Navegação na aba ${this.$t('tab.' + tab).toUpperCase()} do Gerenciamento`)
-      switch (tab) {
-        case '0':
-          this.$store.commit('updateDisputeQuery', { key: 'status', value: ['PRE_NEGOTIATION'] })
-          this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['expirationDate,asc'] })
-          break
-        case '1':
-          this.$store.commit('updateDisputeQuery', { key: 'status', value: ['IMPORTED', 'ENRICHED', 'ENGAGEMENT', 'PENDING'] })
-          this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['expirationDate,asc'] })
-          break
-        case '2':
-          this.$store.commit('updateDisputeQuery', { key: 'status', value: ['RUNNING'] })
-          this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['visualized,asc', 'lastInboundInteraction.createdAt,desc', 'expirationDate,asc'] })
-          break
-        case '3':
-          this.$store.commit('updateDisputeQuery', { key: 'status', value: ['ACCEPTED', 'CHECKOUT'] })
-          this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['visualized,asc', 'conclusionDate,asc'] })
-          break
-        case '4':
-          this.$store.commit('addPrescription', 'NEWLY_FINISHED')
-          this.$store.commit('updateDisputeQuery', { key: 'status', value: [] })
-          this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['visualized,asc', 'conclusionDate,asc', 'lastReceivedMessage,asc'] })
-          break
-        default:
-          this.$store.commit('updateDisputeQuery', { key: 'status', value: [] })
-          this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['id,desc'] })
+
+      if (this.hasPreventFiltres) {
+        this.setDisputePreventFilters(false)
+      } else {
+        this.setDisputePreventFilters(false)
+        this.ufFilterValue = []
+        this.$store.commit('clearDisputes')
+        this.$store.commit('clearDisputeQueryByTab')
+        this.$store.commit('setDisputeHasFilters', false)
+        // SEGMENT TRACK
+        this.$jusSegment(`Navegação na aba ${this.$t('tab.' + tab).toUpperCase()} do Gerenciamento`)
+
+        switch (tab) {
+          case '0':
+            this.$store.commit('updateDisputeQuery', { key: 'status', value: ['PRE_NEGOTIATION'] })
+            this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['expirationDate,asc'] })
+            break
+          case '1':
+            this.$store.commit('updateDisputeQuery', { key: 'status', value: ['IMPORTED', 'ENRICHED', 'ENGAGEMENT', 'PENDING'] })
+            this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['expirationDate,asc'] })
+            break
+          case '2':
+            this.$store.commit('updateDisputeQuery', { key: 'status', value: ['RUNNING'] })
+            this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['visualized,asc', 'lastInboundInteraction.createdAt,desc', 'expirationDate,asc'] })
+            break
+          case '3':
+            this.$store.commit('updateDisputeQuery', { key: 'status', value: ['ACCEPTED', 'CHECKOUT'] })
+            this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['visualized,asc', 'conclusionDate,asc'] })
+            break
+          case '4':
+            this.$store.commit('addPrescription', 'NEWLY_FINISHED')
+            this.$store.commit('updateDisputeQuery', { key: 'status', value: [] })
+            this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['visualized,asc', 'conclusionDate,asc', 'lastReceivedMessage,asc'] })
+            break
+          default:
+            this.$store.commit('updateDisputeQuery', { key: 'status', value: [] })
+            this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['id,desc'] })
+        }
       }
+
       this.getDisputes()
     },
 

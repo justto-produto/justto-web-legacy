@@ -687,7 +687,8 @@ export default {
       dropLawsuitReasons: 'getDropLawsuitReasonsArray',
       userPreferences: 'userPreferences',
       isRecovery: 'isWorkspaceRecovery',
-      features: 'getMappedFeaturesAndModules'
+      features: 'getMappedFeaturesAndModules',
+      showNegotiationTypeMenu: 'showNegotiationTypeMenu'
     }),
 
     unsettledReasonsSorted() {
@@ -1369,7 +1370,9 @@ export default {
     },
 
     openNewTab() {
-      const routeData = this.$router.resolve({ name: 'dispute', params: { id: this.dispute.id } })
+      const name = this.showNegotiationTypeMenu ? 'ticket' : 'dispute'
+      const routeData = this.$router.resolve({ name, params: { id: this.dispute.id } })
+
       window.open(routeData.href, '_blank')
       this.$emit('open:newtab')
     },

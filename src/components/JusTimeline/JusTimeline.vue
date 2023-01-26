@@ -55,21 +55,28 @@
           <div class="jus-timeline__header">
             <div class="jus-timeline__header-title">
               {{ process.description || 1 }}ª Instância -
-              <el-link
-                class="jus-timeline__header-link"
-                target="_blank"
-                :underline="false"
-                @click="openProcessInNewTab(process.url, process.code)"
+              <el-tooltip
+                content="Link não disponível."
+                placement="top-end"
+                :disabled="Boolean(process.url)"
               >
-                {{ process.code }}
-                <sup>
-                  <jus-icon
-                    style="height: 0.75rem;"
-                    icon="external-link"
-                    class="data-table__dispute-link-icon"
-                  />
-                </sup>
-              </el-link>
+                <el-link
+                  class="jus-timeline__header-link"
+                  target="_blank"
+                  :underline="false"
+                  :disabled="!(process.url)"
+                  @click="openProcessInNewTab(process.url, process.code)"
+                >
+                  {{ process.code }}
+                  <sup>
+                    <jus-icon
+                      style="height: 0.75rem;"
+                      icon="external-link"
+                      class="data-table__dispute-link-icon"
+                    />
+                  </sup>
+                </el-link>
+              </el-tooltip>
             </div>
             <description
               class="jus-timeline__header-subtitle"
@@ -209,12 +216,18 @@ export default {
 
     openProcessInNewTab(url, processCode) {
       navigator.clipboard.writeText(processCode)
-      this.$jusNotification({
-        title: 'Yay!',
-        message: 'Código do processo copiado!',
-        type: 'success'
+      this.$message({
+        message: 'Copiado para a área de transferência.',
+        type: 'info',
+        center: true,
+        showClose: true
       })
-      setTimeout(() => window.open(url), 1500)
+
+      setTimeout(() => {
+        if (url) {
+          window.open(url)
+        }
+      }, 1500)
     }
   }
 }

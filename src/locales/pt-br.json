@@ -282,8 +282,11 @@
     }
   },
   "actions": {
-    "REDIRECTMANAGEMENT": {
+    "REDIRECT_MANAGEMENT": {
       "name": "ir para gerenciamento"
+    },
+    "REDIRECT_TICKET": {
+      "name": "ir para negociação"
     },
     "SETTLED": {
       "name": "ganhar | aceitar acordo",
@@ -594,13 +597,16 @@
         "title": "Enviar formulário para avalição de NPS."
       },
       "NOTIFY_DISPUTE_UNDER_ANALYSIS": {
-        "title": "Em analise pela empresa"
+        "title": "Responder automaticamente disputas em analise pela empresa"
       },
       "NOTIFY_DISPUTE_NEGOTATION_PAUSED": {
-        "title": "Com negociação suspensa"
+        "title": "Responder automaticamente disputas com negociação suspensa"
       },
       "NOTIFY_DISPUTE_NEGOTIATION_DONE": {
-        "title": "Com negociação encerradas"
+        "title": "Responder automaticamente disputas com negociação encerradas"
+      },
+      "NOTIFY_UNANSWERED_DISPUTE": {
+        "title": "Enviar mensagens para disputas sem resposta"
       }
     }
   },
