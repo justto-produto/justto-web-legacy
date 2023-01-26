@@ -56,7 +56,7 @@
             <div class="jus-timeline__header-title">
               {{ process.description || 1 }}ª Instância -
               <el-tooltip
-                content="URL não disponível."
+                content="Link não disponível."
                 placement="top-end"
                 :disabled="Boolean(process.url)"
               >
