@@ -61,7 +61,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
-import { PIX } from '@/constants/bankAccountTypes'
+import { isSameBankAccount } from '@/utils'
 
 export default {
   name: 'PartyBankAccounts',
@@ -171,14 +171,7 @@ export default {
       this.createBankAccount({ disputeId, account, personId }).then(response => {
         if (associate) {
           const baccount = response.bankAccounts.find(bAccount => {
-            return account.type === PIX ? (bAccount.type === account.type &&
-            (bAccount.document === account.document ||
-            bAccount.email === account.email ||
-            bAccount.number === account.number)) : (bAccount.agency === account.agency &&
-              bAccount.document === account.document &&
-              bAccount.number === account.number &&
-              bAccount.bank === account.bank &&
-              bAccount.type === account.type)
+            return isSameBankAccount(bAccount, account)
           })
 
           this.linkAccount({ bankAccountId: baccount.id, personId, disputeId })
@@ -202,12 +195,8 @@ export default {
 
       this.updateBankAccount({ disputeId, account, personId }).then(response => {
         if (associate) {
-          const baccount = response.bankAccounts.find(baccount => {
-            return baccount.agency === account.agency &&
-              baccount.document === account.document &&
-              baccount.number === account.number &&
-              baccount.bank === account.bank &&
-              baccount.type === account.type
+          const baccount = response.bankAccounts.find(bAccount => {
+            return isSameBankAccount(bAccount, account)
           })
 
           this.linkAccount({ bankAccountId: baccount.id, personId, disputeId })
