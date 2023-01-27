@@ -311,6 +311,21 @@
         <el-switch v-model="denySavingDeposit" />
       </div>
 
+      <div
+        v-if="!denySavingDeposit"
+        class="jus-import-feedback-card__switch"
+      >
+        <i class="el-icon-circle-check el-input__icon--success" />
+        <div class="content">
+          <div>Bloquear depósito via Pix</div>
+
+          <p>
+            Deixando <b>selecionada</b> esta opção, em caso de acordo fechado será <b>bloqueado</b> o depósito via Pix.
+          </p>
+        </div>
+        <el-switch v-model="denyPixDeposit" />
+      </div>
+
       <div class="jus-import-feedback-card__switch">
         <i class="el-icon-circle-check el-input__icon--success" />
         <div class="content">
@@ -399,6 +414,7 @@ export default {
       skipEnrichment: true,
       enrichDisputes: true,
       denySavingDeposit: false,
+      denyPixDeposit: false,
       replicates: [],
       datePickerOptions: {
         disabledDate(date) {
@@ -486,7 +502,14 @@ export default {
     },
     denySavingDeposit(value) {
       this.mappedCampaign.denySavingDeposit = value
+
+      this.denyPixDeposit = value
     },
+
+    denyPixDeposit(value) {
+      this.mappedCampaign.denyPixDeposit = value
+    },
+
     respondent(value) {
       this.mappedCampaign.respondent = value
     },
@@ -539,6 +562,7 @@ export default {
     this.contactPartyWhenInvalidLowyer = preferences.contactPartyWhenInvalidLowyer || false
     this.skipEnrichment = false
     this.denySavingDeposit = preferences.denySavingDeposit || false
+    this.denyPixDeposit = preferences.denyPixDeposit || false
 
     this.mappedCampaign.businessHoursEngagement = this.businessHoursEngagement
     this.mappedCampaign.contactPartyWhenNoLowyer = this.contactPartyWhenNoLowyer
@@ -546,6 +570,7 @@ export default {
     this.mappedCampaign.alwaysContactParty = this.alwaysContactParty
     this.mappedCampaign.skipEnrichment = this.skipEnrichment
     this.mappedCampaign.denySavingDeposit = this.denySavingDeposit
+    this.mappedCampaign.denyPixDeposit = this.denyPixDeposit
     this.mappedCampaign.paymentDeadLine = this.paymentDeadLine
     this.mappedCampaign.initialOfferPercentage = this.isWorkspaceRecovery ? 100 : this.initialOfferPercentage
 
@@ -656,11 +681,19 @@ export default {
     width: 100%;
   }
 
-  .el-card .el-input__inner {
-    border-bottom: 1px solid #dcdfe6 !important;
-    border-top: 0;
-    border-left: 0;
-    border-right: 0;
+  .el-card {
+    .el-input__inner {
+      border-bottom: 1px solid #dcdfe6 !important;
+      border-top: 0;
+      border-left: 0;
+      border-right: 0;
+    }
+
+    .el-card__body {
+      .el-date-editor.unhide {
+        width: 100% !important;
+      }
+    }
   }
 
   .el-card.hide {
