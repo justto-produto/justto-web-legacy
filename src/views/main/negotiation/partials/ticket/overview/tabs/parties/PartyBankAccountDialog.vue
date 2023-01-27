@@ -349,12 +349,10 @@ export default {
     },
 
     accountTypes() {
-      return !this.ticketInfo?.denySavingDeposit ? [
+      return [
         { label: 'Corrente', type: CHECKING },
-        { label: 'Poupança', type: SAVING },
-        { label: 'Pix', type: PIX }
-      ] : [
-        { label: 'Corrente', type: CHECKING }
+        ...(this.ticketInfo?.denySavingDeposit ? [{ label: 'Poupança', type: SAVING }] : []),
+        ...(this.ticketInfo?.denyPixDeposit ? [{ label: 'Pix', type: PIX }] : [])
       ]
     },
 
@@ -436,18 +434,13 @@ export default {
         Object.keys(account).forEach(key => this.$set(this.account, key, account[key]))
         this.account.document = this.$options.filters.cpfCnpj(account.document)
 
-        console.log(JSON.stringify(this.account))
-
-        if (account?.type === PIX) {
+        if (account?.type === PIX && this.ticketInfo?.denyPixDeposit) {
           const isRandom = account?.number > 15
           const pixKey = isRandom ? RANDOM : account?.number ? PHONE : account?.email ? EMAIL : DOCUMENT
 
           this.$set(this, 'pixKeySelected', pixKey)
 
           this.$nextTick().then(() => this.$set(this.account, 'number', account?.number || ''))
-          // this.$set(this.account, 'type', PIX)
-          // this.$set(this.account, 'email', account?.email || '')
-          // this.$set(this.account, 'document', account?.document || '')
         } else {
           this.$set(this.account, 'type', 'CHECKING')
           this.$set(this, 'pixKeySelected', '')
