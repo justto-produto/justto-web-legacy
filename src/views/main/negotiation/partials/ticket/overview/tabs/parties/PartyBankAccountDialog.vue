@@ -351,8 +351,8 @@ export default {
     accountTypes() {
       return [
         { label: 'Corrente', type: CHECKING },
-        ...(this.ticketInfo?.denySavingDeposit ? [{ label: 'Poupança', type: SAVING }] : []),
-        ...(this.ticketInfo?.denyPixDeposit ? [{ label: 'Pix', type: PIX }] : [])
+        ...(!this.ticketInfo?.denySavingDeposit ? [{ label: 'Poupança', type: SAVING }] : []),
+        ...(!this.ticketInfo?.denySavingDeposit && !this.ticketInfo?.denyPixDeposit ? [{ label: 'Pix', type: PIX }] : [])
       ]
     },
 
