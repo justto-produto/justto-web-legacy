@@ -261,5 +261,6 @@ export default
   { code: '136', name: 'UNICRED COOPERATIVA LTDA' },
   { code: '99', name: 'UNIPRIME CENTRAL - CENTRAL INT DE COOP DE CRED LTD' },
   { code: '323', name: 'MERCADO PAGO - CONTA DO MERCADO LIVRE' },
-  { code: '197', name: 'STONE PAGAMENTOS S. A.' }
+  { code: '197', name: 'STONE PAGAMENTOS S. A.' },
+  { code: '364', name: 'GERENCIANET S. A.' }
 ]
