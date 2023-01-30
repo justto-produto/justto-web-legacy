@@ -2,6 +2,7 @@
   <nav
     v-loading="loading"
     class="tickets-container"
+    :class="{ hide: isToHideTickets }"
   >
     <TicketsHeader
       target-path="negotiation"
@@ -19,7 +20,7 @@
     />
 
     <span
-      v-if="!fullScreen"
+      v-if="!fullScreen && !isToHideTickets"
       class="left-arrow"
       @click="handlePreviousScroll()"
     >
@@ -27,12 +28,18 @@
     </span>
 
     <span
-      v-if="!fullScreen"
+      v-if="!fullScreen && !isToHideTickets"
       class="right-arrow"
       @click="handleNextScroll()"
     >
       <i class="el-icon-arrow-right" />
     </span>
+
+    <i
+      :class="{ 'tickets-container__visibility-button--active': !isToHideTickets }"
+      class="tickets-container__visibility-button el-icon-arrow-right"
+      @click="setHideTicket(!isToHideTickets)"
+    />
 
     <el-tabs
       v-if="!fullScreen"
@@ -124,7 +131,8 @@ export default {
   data: () => ({
     disputeDebounce: null,
     localLoading: false,
-    scrollTarget: '.tickets-container__tabs>.el-tabs__content'
+    scrollTarget: '.tickets-container__tabs>.el-tabs__content',
+    visible: true
   }),
 
   computed: {
@@ -140,7 +148,8 @@ export default {
       interactionLength: 'disputeNotVisualizedInteration',
       newDealsLength: 'disputeNotVisualizedNewDeal',
       finishedLenght: 'disputeNotVisualizedFinished',
-      preventFilters: 'getTicketsPreventFilters'
+      preventFilters: 'getTicketsPreventFilters',
+      isToHideTickets: 'isToHideTickets'
     }),
 
     loading: {
@@ -272,7 +281,8 @@ export default {
       'resetTicketsLastPage',
       'addDisputeQueryPageByTicket',
       'setDisputeHasFilters',
-      'clearDisputeQueryByTab'
+      'clearDisputeQueryByTab',
+      'setHideTicket'
     ]),
 
     resetTabsScroll() {
@@ -548,6 +558,42 @@ export default {
     list-style: none;
     margin: 0;
     padding: 0;
+  }
+
+  .tickets-container__visibility-button {
+    cursor: pointer;
+    position: absolute;
+    top: calc(50vh - 32px);
+    right: -20px;
+    width: 20px;
+    font-size: 18px;
+    background-color: $--color-white;
+    padding: 0px;
+    height: 46px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-style: solid;
+    border-color: $--color-light-gray;
+    border-width: 2px;
+    border-radius: 0 6px 6px 0;
+    z-index: 99;
+
+    &:before {
+      display: block;
+      transform: translateY(-50%);
+      transition: .6s;
+      position: relative;
+      top: 9px;
+    }
+
+    &--active:before {
+      transform: rotate(180deg) translateY(50%) !important;
+    }
+  }
+
+  &.hide {
+    width: 0 !important;
   }
 }
 </style>

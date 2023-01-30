@@ -119,6 +119,7 @@ export default {
   align-items: center;
   padding: 12px;
   height: auto;
+  background-color: $--color-white;
 
   .ticket-header-container__title {
     flex: 1;
