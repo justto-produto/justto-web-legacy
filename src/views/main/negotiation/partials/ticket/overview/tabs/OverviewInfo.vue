@@ -236,6 +236,7 @@ export default {
       const {
         skipEnrichment,
         denySavingDeposit,
+        denyPixDeposit,
         businessHoursEngagement,
         alwaysContactParty,
         contactPartyWhenNoLawyer,
@@ -245,6 +246,7 @@ export default {
       return {
         skipEnrichment: !skipEnrichment,
         denySavingDeposit,
+        denyPixDeposit,
         businessHoursEngagement,
         alwaysContactParty,
         contactPartyWhenNoLawyer,

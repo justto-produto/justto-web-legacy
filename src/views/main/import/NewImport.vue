@@ -224,7 +224,8 @@ export default {
         contactPartyWhenNoLowyer: this.mappedCampaigns[range].contactPartyWhenNoLowyer,
         contactPartyWhenInvalidLowyer: this.mappedCampaigns[range].contactPartyWhenInvalidLowyer,
         skipEnrichment: this.mappedCampaigns[range].skipEnrichment,
-        denySavingDeposit: this.mappedCampaigns[range].denySavingDeposit
+        denySavingDeposit: this.mappedCampaigns[range].denySavingDeposit,
+        denyPixDeposit: this.mappedCampaigns[range].denyPixDeposit
       }))
     },
 

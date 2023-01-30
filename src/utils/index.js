@@ -15,6 +15,7 @@ import extractMentions from './utils/extractMentions'
 import { eventBus } from './utils/eventBus'
 import normalizeDateToISO from './utils/normalizeDateToISO'
 import isAutor from './utils/isAuthor'
+import isSameBankAccount from './utils/isSameBankAccount'
 import {
   getRoles,
   formatHtml,
@@ -56,6 +57,7 @@ export {
   isSimilarStrings,
   validateCurrentId,
   getStringInitials,
+  isSameBankAccount,
   addInvisibleStatus,
   getLastInteraction,
   getInteractionIcon,

@@ -487,7 +487,8 @@
     "neverContactParty": "nunca",
     "contactPartyWhenNoLawyer": "somente quando não houver advogado constituído",
     "contactPartyWhenInvalidLawyer": "somente quando não for possível contatar o advogado existente",
-    "contactPartyWhenInvalidLawyerOrNoLawyer": "Quando não houver advogado ou não for possível contatar o advogado existente"
+    "contactPartyWhenInvalidLawyerOrNoLawyer": "Quando não houver advogado ou não for possível contatar o advogado existente",
+    "denyPixDeposit": "Bloquear depósito via Pix"
   },
   "boolean": "sim | não",
   "ticket-status": {
@@ -653,7 +654,8 @@
     "unlinkDisputeBankAccounts": "desvinculada",
     "type": {
       "SAVING": "Poupança",
-      "CHECKING": "Corrente"
+      "CHECKING": "Corrente",
+      "PIX": "Pix"
     }
   },
   "member-status": {
