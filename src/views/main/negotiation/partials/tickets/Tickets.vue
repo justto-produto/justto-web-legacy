@@ -4,9 +4,17 @@
     class="tickets-container"
     :class="{ hide: isToHideTickets }"
   >
+    <el-button
+      v-if="showNegotiationTypeMenu && !fullScreen"
+      :icon="`el-icon-arrow-${isToHideTickets ? 'right' : 'left'}`"
+      class="tickets-container__visibility-button"
+      type="text"
+      @click="setHideTicket(!isToHideTickets)"
+    />
+
     <TicketsHeader
+      v-if="!showNegotiationTypeMenu"
       target-path="negotiation"
-      :active-tab="activeTab"
       @ticket:getDisputes="getDisputes()"
     />
 
@@ -22,6 +30,7 @@
     <span
       v-if="!fullScreen && !isToHideTickets"
       class="left-arrow"
+      :class="{ 'left-arrow-with-header': !showNegotiationTypeMenu }"
       @click="handlePreviousScroll()"
     >
       <i class="el-icon-arrow-left" />
@@ -30,16 +39,11 @@
     <span
       v-if="!fullScreen && !isToHideTickets"
       class="right-arrow"
+      :class="{ 'right-arrow-with-header': !showNegotiationTypeMenu }"
       @click="handleNextScroll()"
     >
       <i class="el-icon-arrow-right" />
     </span>
-
-    <i
-      :class="{ 'tickets-container__visibility-button--active': !isToHideTickets }"
-      class="tickets-container__visibility-button el-icon-arrow-right"
-      @click="setHideTicket(!isToHideTickets)"
-    />
 
     <el-tabs
       v-if="!fullScreen"
@@ -149,7 +153,8 @@ export default {
       newDealsLength: 'disputeNotVisualizedNewDeal',
       finishedLenght: 'disputeNotVisualizedFinished',
       preventFilters: 'getTicketsPreventFilters',
-      isToHideTickets: 'isToHideTickets'
+      isToHideTickets: 'isToHideTickets',
+      showNegotiationTypeMenu: 'showNegotiationTypeMenu'
     }),
 
     loading: {
@@ -561,35 +566,14 @@ export default {
   }
 
   .tickets-container__visibility-button {
-    cursor: pointer;
     position: absolute;
-    top: calc(50vh - 32px);
+    top: calc(50vh - 40px);
     right: -20px;
-    width: 20px;
-    font-size: 18px;
-    background-color: $--color-white;
-    padding: 0px;
-    height: 46px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-style: solid;
-    border-color: $--color-light-gray;
-    border-width: 2px;
+    padding: 12px 0;
     border-radius: 0 6px 6px 0;
+    border-color: $--color-light-gray;
+    border-width: 2px 2px 2px 0;
     z-index: 99;
-
-    &:before {
-      display: block;
-      transform: translateY(-50%);
-      transition: .6s;
-      position: relative;
-      top: 9px;
-    }
-
-    &--active:before {
-      transform: rotate(180deg) translateY(50%) !important;
-    }
   }
 
   &.hide {
@@ -610,6 +594,7 @@ export default {
     top: 0;
     cursor: pointer;
     z-index: 2;
+    margin: 12px 0 0 0;
 
     & > i {
       font-size: 18px !important;
@@ -618,14 +603,19 @@ export default {
 
   .left-arrow {
     left: 0;
-    margin: 64px 0 0 14px;
-    margin: 63px 0 0 4px;
+    margin-left: 4px;
+
+    &.left-arrow-with-header {
+      margin-top: 63px;
+    }
   }
 
   .right-arrow {
     right: 0;
-    margin: 64px 12px 0 0;
-    margin: 63px 0px 0 0;
+
+    &.right-arrow-with-header {
+      margin-top: 63px;
+    }
   }
 
   .tickets-container__tabs {
@@ -642,12 +632,10 @@ export default {
   }
 
   .el-tabs__header {
-    /*padding: 12px;*/
     padding-left: 0 !important;
     padding-right: 0 !important;
     margin: 0;
     border-bottom: 2px solid $--color-light-gray;
-    border-top: 2px solid $--color-light-gray;
 
     .el-tabs__nav-prev,
     .el-tabs__nav-next {
@@ -740,6 +728,13 @@ export default {
           }
         }
       }
+    }
+  }
+
+  .tickets-container__visibility-button {
+    i {
+      color: $--color-black;
+      font-size: 18px;
     }
   }
 }
