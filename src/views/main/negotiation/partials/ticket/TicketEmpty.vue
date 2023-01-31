@@ -65,7 +65,7 @@ export default {
   font-weight: 500;
   font-size: 40px;
   gap: 24px;
-  height: 100%;
+  height: 100vh;
 
   &__text{
     text-align: center;
