@@ -80,7 +80,8 @@ export default {
     },
 
     needFolllowUp() {
-      if (this.dispute?.lastInteraction?.direction === 'OUTBOUND' && ['RUNNING'].includes(this.status)) {
+      /* `dispute.favorite` é referente à "Aguardando análise da empresa." */
+      if (this.dispute?.favorite === false && this.dispute?.paused === false && this.dispute?.lastInteraction?.direction === 'OUTBOUND' && ['RUNNING'].includes(this.status)) {
         return this.$moment().diff(this.$moment(this.dispute?.lastInteraction?.createAt?.dateTime || this.dispute?.lastInteraction?.createdAt), 'hours') >= 24
       }
 
