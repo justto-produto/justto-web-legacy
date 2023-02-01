@@ -54,7 +54,7 @@ const NotificationMessage = {
       if (!config.title) config.title = 'Ops!'
       if (!config.position) config.position = 'bottom-right'
       config.customClass = config.type
-      config.offset = 84
+      config.offset = 84 + (config.offset || 0)
       // Notification.closeAll()
       Notification(config)
     }

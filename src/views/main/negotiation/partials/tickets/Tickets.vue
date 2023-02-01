@@ -2,10 +2,19 @@
   <nav
     v-loading="loading"
     class="tickets-container"
+    :class="{ hide: isToHideTickets }"
   >
+    <el-button
+      v-if="showNegotiationTypeMenu && !fullScreen"
+      :icon="`el-icon-arrow-${isToHideTickets ? 'right' : 'left'}`"
+      class="tickets-container__visibility-button"
+      type="text"
+      @click="setHideTicket(!isToHideTickets)"
+    />
+
     <TicketsHeader
+      v-if="!showNegotiationTypeMenu"
       target-path="negotiation"
-      :active-tab="activeTab"
       @ticket:getDisputes="getDisputes()"
     />
 
@@ -19,16 +28,18 @@
     />
 
     <span
-      v-if="!fullScreen"
+      v-if="!fullScreen && !isToHideTickets"
       class="left-arrow"
+      :class="{ 'left-arrow-with-header': !showNegotiationTypeMenu }"
       @click="handlePreviousScroll()"
     >
       <i class="el-icon-arrow-left" />
     </span>
 
     <span
-      v-if="!fullScreen"
+      v-if="!fullScreen && !isToHideTickets"
       class="right-arrow"
+      :class="{ 'right-arrow-with-header': !showNegotiationTypeMenu }"
       @click="handleNextScroll()"
     >
       <i class="el-icon-arrow-right" />
@@ -124,7 +135,8 @@ export default {
   data: () => ({
     disputeDebounce: null,
     localLoading: false,
-    scrollTarget: '.tickets-container__tabs>.el-tabs__content'
+    scrollTarget: '.tickets-container__tabs>.el-tabs__content',
+    visible: true
   }),
 
   computed: {
@@ -140,7 +152,9 @@ export default {
       interactionLength: 'disputeNotVisualizedInteration',
       newDealsLength: 'disputeNotVisualizedNewDeal',
       finishedLenght: 'disputeNotVisualizedFinished',
-      preventFilters: 'getTicketsPreventFilters'
+      preventFilters: 'getTicketsPreventFilters',
+      isToHideTickets: 'isToHideTickets',
+      showNegotiationTypeMenu: 'showNegotiationTypeMenu'
     }),
 
     loading: {
@@ -272,7 +286,8 @@ export default {
       'resetTicketsLastPage',
       'addDisputeQueryPageByTicket',
       'setDisputeHasFilters',
-      'clearDisputeQueryByTab'
+      'clearDisputeQueryByTab',
+      'setHideTicket'
     ]),
 
     resetTabsScroll() {
@@ -549,6 +564,21 @@ export default {
     margin: 0;
     padding: 0;
   }
+
+  .tickets-container__visibility-button {
+    position: absolute;
+    top: calc(50vh - 40px);
+    right: -20px;
+    padding: 12px 0;
+    border-radius: 0 6px 6px 0;
+    border-color: $--color-light-gray;
+    border-width: 2px 2px 2px 0;
+    z-index: 99;
+  }
+
+  &.hide {
+    width: 0 !important;
+  }
 }
 </style>
 
@@ -564,6 +594,7 @@ export default {
     top: 0;
     cursor: pointer;
     z-index: 2;
+    margin: 12px 0 0 0;
 
     & > i {
       font-size: 18px !important;
@@ -572,14 +603,19 @@ export default {
 
   .left-arrow {
     left: 0;
-    margin: 64px 0 0 14px;
-    margin: 63px 0 0 4px;
+    margin-left: 4px;
+
+    &.left-arrow-with-header {
+      margin-top: 63px;
+    }
   }
 
   .right-arrow {
     right: 0;
-    margin: 64px 12px 0 0;
-    margin: 63px 0px 0 0;
+
+    &.right-arrow-with-header {
+      margin-top: 63px;
+    }
   }
 
   .tickets-container__tabs {
@@ -596,12 +632,10 @@ export default {
   }
 
   .el-tabs__header {
-    /*padding: 12px;*/
     padding-left: 0 !important;
     padding-right: 0 !important;
     margin: 0;
     border-bottom: 2px solid $--color-light-gray;
-    border-top: 2px solid $--color-light-gray;
 
     .el-tabs__nav-prev,
     .el-tabs__nav-next {
@@ -694,6 +728,13 @@ export default {
           }
         }
       }
+    }
+  }
+
+  .tickets-container__visibility-button {
+    i {
+      color: $--color-black;
+      font-size: 18px;
     }
   }
 }

@@ -166,6 +166,7 @@ export default {
     position: relative;
     flex-direction: column;
     flex: 1;
+    height: 100%;
 
     .ticket-container__omnichannel-overlay {
       position: absolute;

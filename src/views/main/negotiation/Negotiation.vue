@@ -2,30 +2,46 @@
   <main
     class="negotiations-container"
   >
-    <Tickets
-      :class="{
-        'hide-section': disputeId,
-        'full-section': isInFullScreen
-      }"
-      class="negotiations-container__tickets"
-      :full-screen="isInFullScreen"
-    />
-
-    <section
-      :class="{ 'hide-section': isInFullScreen }"
-      class="negotiations-container__ticket"
-      :style="{ width: disputeId ? '100%' : '0px' }"
+    <div
+      v-if="showHeader"
+      class="negotiations-container__header"
     >
-      <router-view />
-    </section>
+      <TicketsHeader
+        target-path="negotiation"
+      />
 
-    <section
-      :class="{ 'hide-section': isInFullScreen }"
-      class="negotiations-container__ticket"
-      :style="{ width: !disputeId && !isInFullScreen ? '100%' : '0px' }"
+      <HeaderUserMenu />
+    </div>
+
+    <div
+      class="negotiations-container__body"
+      :class="{'with-header': showHeader}"
     >
-      <EmptyTicket :hidden="isInFullScreen || disputeId" />
-    </section>
+      <Tickets
+        :class="{
+          'hide-section': disputeId,
+          'full-section': isInFullScreen
+        }"
+        class="negotiations-container__tickets"
+        :full-screen="isInFullScreen"
+      />
+
+      <section
+        :class="{ 'hide-section': isInFullScreen }"
+        class="negotiations-container__ticket"
+        :style="{ width: disputeId ? '100%' : '0px' }"
+      >
+        <router-view />
+      </section>
+
+      <section
+        :class="{ 'hide-section': isInFullScreen }"
+        class="negotiations-container__ticket"
+        :style="{ width: !disputeId && !isInFullScreen ? '100%' : '0px' }"
+      >
+        <EmptyTicket :hidden="isInFullScreen || disputeId || showNegotiationTypeMenu" />
+      </section>
+    </div>
   </main>
 </template>
 
@@ -36,9 +52,12 @@ import EmptyTicket from './partials/ticket/TicketEmpty'
 
 export default {
   name: 'Negotiation',
+
   components: {
     Tickets,
-    EmptyTicket
+    EmptyTicket,
+    TicketsHeader: () => import('./partials/tickets/TicketsHeader.vue'),
+    HeaderUserMenu: () => import('@/components/menus/HeaderUserMenu')
   },
 
   data: () => ({ internalDisputeId: null }),
@@ -55,6 +74,10 @@ export default {
 
     isInFullScreen() {
       return !this.disputeId && this.ticketListMode === 'MANAGEMENT'
+    },
+
+    showHeader() {
+      return this.showNegotiationTypeMenu && (this.ticketListMode === 'TICKET' || Boolean(this.$route?.params?.id))
     }
   },
 
@@ -71,32 +94,60 @@ export default {
   display: flex;
   overflow: hidden;
   flex: 1;
+  flex-direction: column;
 
-  .negotiations-container__tickets {
-    width: 360px;
-    border-right: 1px solid $--color-light-gray;
-    -webkit-transition: width 1s ease-in-out;
-    -moz-transition: width 1s ease-in-out;
-    -o-transition: width 1s ease-in-out;
-    transition: width 1s ease-in-out;
+  .negotiations-container__header {
+    display: flex;
+    min-height: 40px !important;
+    max-height: 40px !important;
+    justify-content: space-between;
+    gap: 16px;
+    border-bottom: 1px solid $--color-light-gray;
 
-    &.full-section {
-      width: 100%;
+    .tickets-header-container {
+      width: 360px;
+
+      .management-prescriptions {
+        margin: 0;
+      }
     }
   }
 
-  .negotiations-container__ticket {
-    -webkit-transition: width 1.1s ease-in-out;
-    -moz-transition: width 1.1s ease-in-out;
-    -o-transition: width 1.1s ease-in-out;
-    transition: width 1.1s ease-in-out;
-    width: calc(100% - 360px);
-    overflow: hidden;
+  .negotiations-container__body {
+    display: flex;
+    height: 100vh;
 
-    &.hide-section {
-      width: 0;
+    .negotiations-container__tickets {
+      width: 360px;
+      border-right: 1px solid $--color-light-gray;
+      -webkit-transition: width .6s cubic-bezier(0.19, 1, 0.22, 1);
+      -moz-transition: width .6s cubic-bezier(0.19, 1, 0.22, 1);
+      -o-transition: width .6s cubic-bezier(0.19, 1, 0.22, 1);
+      transition: width .6s cubic-bezier(0.19, 1, 0.22, 1);
+
+      &.full-section {
+        width: 100%;
+      }
+    }
+
+    .negotiations-container__ticket {
+      -webkit-transition: width .6s cubic-bezier(0.19, 1, 0.22, 1);
+      -moz-transition: width .6s cubic-bezier(0.19, 1, 0.22, 1);
+      -o-transition: width .6s cubic-bezier(0.19, 1, 0.22, 1);
+      transition: width .6s cubic-bezier(0.19, 1, 0.22, 1);
+      width: calc(100% - 360px);
+      overflow: hidden;
+
+      &.hide-section {
+        width: 0;
+      }
+    }
+
+    &.with-header {
+      height: calc(100vh - 40px);
     }
   }
+
 }
 
 @media (max-width: 900px) {
@@ -114,6 +165,18 @@ export default {
     .negotiations-container__ticket {
       width: 100%;
       max-width: 100%;
+    }
+  }
+}
+</style>
+
+<style lang="scss">
+.negotiations-container {
+  .negotiations-container__header {
+    .tickets-header-container {
+      .management-prescriptions {
+        margin: 0;
+      }
     }
   }
 }

@@ -57,6 +57,7 @@ export default {
       const {
         skipEnrichment,
         denySavingDeposit,
+        denyPixDeposit,
         businessHoursEngagement
       } = this.value
 
@@ -69,6 +70,11 @@ export default {
         {
           key: 'denySavingDeposit',
           value: denySavingDeposit,
+          isEditable: false
+        },
+        {
+          key: 'denyPixDeposit',
+          value: denyPixDeposit,
           isEditable: false
         },
         {

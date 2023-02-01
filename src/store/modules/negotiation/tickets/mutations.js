@@ -120,6 +120,10 @@ const ticketsMutations = {
 
   resetTicketsLastPage: state => {
     Vue.delete(state.tickets, 'last')
+  },
+
+  setHideTicket: (state, value) => {
+    Vue.set(state, 'hideTickets', Boolean(value))
   }
 }
 

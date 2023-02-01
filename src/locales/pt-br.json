@@ -487,7 +487,8 @@
     "neverContactParty": "nunca",
     "contactPartyWhenNoLawyer": "somente quando não houver advogado constituído",
     "contactPartyWhenInvalidLawyer": "somente quando não for possível contatar o advogado existente",
-    "contactPartyWhenInvalidLawyerOrNoLawyer": "Quando não houver advogado ou não for possível contatar o advogado existente"
+    "contactPartyWhenInvalidLawyerOrNoLawyer": "Quando não houver advogado ou não for possível contatar o advogado existente",
+    "denyPixDeposit": "Bloquear depósito via Pix"
   },
   "boolean": "sim | não",
   "ticket-status": {
@@ -597,16 +598,16 @@
         "title": "Enviar formulário para avalição de NPS."
       },
       "NOTIFY_DISPUTE_UNDER_ANALYSIS": {
-        "title": "Em analise pela empresa"
+        "title": "Responder automaticamente disputas em analise pela empresa"
       },
       "NOTIFY_DISPUTE_NEGOTATION_PAUSED": {
-        "title": "Com negociação suspensa"
+        "title": "Responder automaticamente disputas com negociação suspensa"
       },
       "NOTIFY_DISPUTE_NEGOTIATION_DONE": {
-        "title": "Com negociação encerradas"
+        "title": "Responder automaticamente disputas com negociação encerradas"
       },
       "NOTIFY_UNANSWERED_DISPUTE": {
-        "title": "Reenviar mensagens disputas sem resposta"
+        "title": "Enviar mensagens para disputas sem resposta"
       }
     }
   },
@@ -653,7 +654,8 @@
     "unlinkDisputeBankAccounts": "desvinculada",
     "type": {
       "SAVING": "Poupança",
-      "CHECKING": "Corrente"
+      "CHECKING": "Corrente",
+      "PIX": "Pix"
     }
   },
   "member-status": {

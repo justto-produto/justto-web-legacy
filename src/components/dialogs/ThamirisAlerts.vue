@@ -108,6 +108,8 @@
 
 <script>
 import { mapGetters, mapActions, mapMutations } from 'vuex'
+import { MANAGEMENT } from '@/constants/ticketListMode'
+
 export default {
   props: {
     isVisible: {
@@ -124,7 +126,9 @@ export default {
 
   computed: {
     ...mapGetters({
-      notifications: 'notifications'
+      notifications: 'notifications',
+      getTicketListMode: 'getTicketListMode',
+      showNegotiationTypeMenu: 'showNegotiationTypeMenu'
     }),
 
     coffee() {
@@ -157,11 +161,17 @@ export default {
       setTicketsFilters: 'setTicketsFilters',
       setTicketsActiveTab: 'setTicketsActiveTab',
       getTickets: 'getTickets',
+      getDisputes: 'getDisputes',
       resetOccurrences: 'resetOccurrences'
     }),
 
     ...mapMutations({
-      hideThamirisAlerts: 'hideThamirisAlerts'
+      hideThamirisAlerts: 'hideThamirisAlerts',
+      setDisputeHasFilters: 'setDisputeHasFilters',
+      setDisputeQuery: 'setDisputeQuery',
+      clearDisputeQueryByTab: 'clearDisputeQueryByTab',
+      setDisputesTab: 'setDisputesTab',
+      setDisputePreventFilters: 'setDisputePreventFilters'
     }),
 
     applyFilters({ filter, tab }) {
@@ -183,12 +193,28 @@ export default {
         preventSocket: true
       })
 
+      if (this.showNegotiationTypeMenu && this.getTicketListMode === MANAGEMENT) {
+        this.clearDisputeQueryByTab()
+        this.setDisputePreventFilters(true)
+        this.setDisputeHasFilters(true)
+        this.setDisputeQuery(filter)
+
+        this.setDisputesTab({
+          'pre-negotiation': 0,
+          engagement: 1,
+          running: 2,
+          accepted: 3,
+          finished: 4
+        }[tab.toLowerCase()])
+      }
+
       this.$jusSegment('CLICK_TODO_LIST', { filter, tab })
 
       if (this.$route.name !== 'negotiation') {
         this.$router.push('/negotiation')
       } else {
         this.getTickets()
+        this.getDisputes()
       }
 
       this.closeDialog()

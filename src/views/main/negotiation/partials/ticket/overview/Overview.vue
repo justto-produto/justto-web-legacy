@@ -4,15 +4,17 @@
     class="overview-container"
     :class="{'dispute': disputeMode}"
   >
-    <i
+    <el-button
       v-if="!disputeMode"
-      :class="{ 'overview-container__button--active': isOverviewActive }"
-      class="overview-container__button el-icon-arrow-left"
+      :icon="`el-icon-arrow-${isOverviewActive ? 'right' : 'left'}`"
+      class="overview-container__button"
+      type="text"
       @click="$emit('toggle-show-overview')"
     />
 
+    <!-- TODO: Só Esconder se o SHOW_NEGOTIATION_MENU estiver ativo. -->
     <HeaderUserMenu
-      v-if="!disputeMode && isOverviewActive"
+      v-if="!showNegotiationTypeMenu && !disputeMode && isOverviewActive"
       class="overview-container__menu"
       :class="{
         'hidde-menu': (showOverview || disputeMode),
@@ -158,7 +160,8 @@ export default {
       showAssociatedContacts: 'showAssociatedContacts',
       parties: 'getTicketOverviewParties',
       metadata: 'getTicketMetadata',
-      associateContactsPropertie: 'AssociatedContactsPropertie'
+      associateContactsPropertie: 'AssociatedContactsPropertie',
+      showNegotiationTypeMenu: 'showNegotiationTypeMenu'
     }),
 
     isOverviewActive() {
@@ -283,7 +286,7 @@ export default {
 
 .overview-container {
   position: relative;
-  padding: 0 20px;
+  padding: 4px 8px 0;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -312,26 +315,13 @@ export default {
 
   .overview-container__button {
     position: absolute;
-    top: 50%;
-    left: -22px;
-    font-size: 18px;
-    background-color: $--color-white;
-    padding: 12px 0px;
-    border-style: solid;
+    top: calc(50vh - 40px);
+    left: -20px;
+    padding: 12px 0;
+    border-radius: 6px 0 0 6px;
     border-color: $--color-light-gray;
     border-width: 2px 0 2px 2px;
-    border-radius: 6px 0 0 6px;
-    &:before {
-      display: block;
-      transform: translateY(-50%);
-      transition: .6s;
-      position: relative;
-      top: 9px;
-      z-index: 99;
-    }
-    &--active:before {
-      transform: rotate(180deg) translateY(50%) !important;
-    }
+    z-index: 99;
   }
 
   &.dispute {
@@ -380,23 +370,9 @@ export default {
 @import '@/styles/colors.scss';
 
 .overview-container__button {
-  transform: translateY(-50%);
-  position: absolute;
-  top: 50%;
-  left: -18px;
-  font-size: 18px;
-  transition: .6s;
-  background-color: $--color-white;
-  padding: 12px 0px;
-  border-style: solid;
-  border-color: $--color-light-gray;
-  border-width: 2px 0 2px 2px;
-  border-radius: 6px 0 0 6px;
-  &:before {
-    transform: translateY(-50%);
-  }
-  &--active:before {
-    transform: rotate(180deg) translateY(50%) !important;
+  i {
+    color: $--color-black;
+    font-size: 18px;
   }
 }
 

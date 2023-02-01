@@ -79,11 +79,8 @@
       size="small"
       @click="assicateBankAccount()"
     >
-      <span v-if="needAssociate.length > 0">
-        Associar
-      </span>
-      <span v-else>
-        Conta associada!
+      <span>
+        {{ needAssociate.length > 0 ? 'Associar' : 'Conta associada!' }}
       </span>
     </el-button>
 
@@ -98,6 +95,7 @@
 <script>
 import communicationSendStatus from '@/utils/mixins/communicationSendStatus'
 import { mapActions, mapGetters } from 'vuex'
+import { isSameBankAccount } from '@/utils'
 
 export default {
   components: {
@@ -132,21 +130,40 @@ export default {
       return this.ticketInfo?.denySavingDeposit && this.bankAccount.type === 'SAVING'
     },
 
+    isPix() {
+      return this.bankAccount.type === 'PIX'
+    },
+
+    pixKey() {
+      return !this.isPix ? '' : this.bankAccount?.number || this.bankAccount?.email || this.bankAccount?.document
+    },
+
     isBankAccountCheckout() {
       return ['NEGOTIATOR_CHECKOUT'].includes(this.interaction.type)
     },
 
     bankAccount() {
       function extractInfo(str, token, defaultValue = '') {
-        return str.split(`${token}: `)[1].split(',')[0] || defaultValue
+        if (str.includes(token)) {
+          return (str || '').split(`${token}: `)[1].split(',')[0] || defaultValue
+        }
+        return defaultValue
       }
 
       const accountTypes = {
         Corrente: 'CHECKING',
-        Poupança: 'SAVING'
+        Poupança: 'SAVING',
+        PIX: 'PIX'
       }
 
-      return this.isBankAccountCheckout ? {
+      const isPix = accountTypes[extractInfo(this.interaction.properties.BANK_INFO, 'Tipo')] === 'PIX'
+
+      return this.isBankAccountCheckout ? (isPix ? {
+        email: extractInfo(this.interaction.properties.BANK_INFO, 'E-mail'),
+        document: extractInfo(this.interaction.properties.BANK_INFO, 'Documento'),
+        number: extractInfo(this.interaction.properties.BANK_INFO, 'Telefone'),
+        type: accountTypes[extractInfo(this.interaction.properties.BANK_INFO, 'Tipo')]
+      } : {
         name: extractInfo(this.interaction.properties.BANK_INFO, 'Nome'),
         email: extractInfo(this.interaction.properties.BANK_INFO, 'E-mail'),
         document: extractInfo(this.interaction.properties.BANK_INFO, 'Documento'),
@@ -154,12 +171,12 @@ export default {
         bank: extractInfo(this.interaction.properties.BANK_INFO, 'Banco'),
         number: extractInfo(this.interaction.properties.BANK_INFO, 'Conta'),
         type: accountTypes[extractInfo(this.interaction.properties.BANK_INFO, 'Tipo')]
-      } : {}
+      }) : {}
     },
 
     partyBankAccount() {
       return this.ticketParties.filter(partie => {
-        return partie.documentNumber === this.bankAccount.document && partie.polarity === 'CLAIMANT' && Object.keys(partie).includes('bankAccountsDto')
+        return (partie.documentNumber === this.bankAccount.document || this.bankAccount?.type === 'PIX') && partie.polarity === 'CLAIMANT' && Object.keys(partie).includes('bankAccountsDto')
       }).map(({ bankAccountsDto }) => (bankAccountsDto || []))
     },
 
@@ -183,6 +200,7 @@ export default {
     message() {
       const { PERSON_NAME, VALUE, NOTE, BANK_INFO } = this.interaction.properties
       let text = `<b>${this.interaction.type}</b>`
+
       switch (this.interaction.type) {
         case 'NEGOTIATOR_COUNTERPROSAL':
           text = `Contraproposta realizada por <b>${PERSON_NAME}</b>, no valor de <b>${VALUE}</b>`
@@ -204,7 +222,14 @@ export default {
           text = `Proposta no valor de <b>${VALUE}</b> foi aceita através do portal de negociações da JUSTTO por <b>${PERSON_NAME}</b>`
           break
         case 'NEGOTIATOR_CHECKOUT':
-          text = `<b>Dados Bancários</b>:</br>${BANK_INFO}`.replace(/,/g, '</br>')
+          if (this.isPix) {
+            text = `<b>Dados Bancários</b>:</br>
+            Tipo: Pix</br>
+            Chave: ${this.pixKey}
+            `
+          } else {
+            text = `<b>Dados Bancários</b>:</br>${BANK_INFO}`.replace(/,/g, '</br>')
+          }
           break
       }
 
@@ -259,12 +284,7 @@ export default {
       'createTicketRoleBankAccount'
     ]),
 
-    isSameBankAccount(baccount = {}, bankAccount) {
-      return baccount.agency === bankAccount.agency &&
-        baccount.number === bankAccount.number &&
-        baccount.bank === bankAccount.bank &&
-        baccount.type === bankAccount.type
-    },
+    isSameBankAccount,
 
     registerBankAccount() {
       this.$refs.partyBankAccountDialog.openBankAccountDialog(this.bankAccount)
@@ -282,19 +302,17 @@ export default {
       const { cpfCnpj } = this.$options.filters
       const disputeId = Number(this.$route.params.id)
 
-      const party = this.ticketParties.find(({ documentNumber, polarity }) => cpfCnpj(documentNumber) === cpfCnpj(account.document) && polarity === 'CLAIMANT')
-      const personId = party.person.id
+      const party = this.ticketParties.find(({ documentNumber, polarity, emailsDto }) => polarity === 'CLAIMANT' && (cpfCnpj(documentNumber) === cpfCnpj(account.document) || emailsDto.filter(({ address }) => address === this.interaction?.properties?.PERSON_EMAIL)))
+      const personId = party?.person?.id
 
-      console.table({ account, personId, disputeId })
+      this.handleCreateTicketRoleBankAccount({ account, personId, disputeId, associate })
+    },
 
+    handleCreateTicketRoleBankAccount({ account, personId, disputeId, associate }) {
       this.createTicketRoleBankAccount({ account, personId, disputeId }).then(response => {
         if (associate) {
           const baccount = response.bankAccounts.find(baccount => {
-            return baccount.agency === account.agency &&
-              baccount.document === account.document &&
-              baccount.number === account.number &&
-              baccount.bank === account.bank &&
-              baccount.type === account.type
+            return isSameBankAccount(baccount, account)
           })
 
           this.setTicketRoleBankAccount({ bankAccountId: baccount.id, personId, disputeId })
