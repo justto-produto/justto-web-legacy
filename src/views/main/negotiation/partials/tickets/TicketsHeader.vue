@@ -26,7 +26,7 @@
     </el-autocomplete>
 
     <TicketsFilters
-      v-if="(['ticket', 'negotiation'].includes($route.name) && ticketListMode !== 'MANAGEMENT')"
+      v-if="(['ticket', 'negotiation'].includes($route.name) && ticketListMode !== 'MANAGEMENT' && !isToHideTickets)"
       :active-tab="activeTab"
       @ticket:getDisputes="$emit('ticket:getDisputes')"
     />
@@ -54,10 +54,6 @@ export default {
     targetPath: {
       type: String,
       default: 'management/dispute'
-    },
-    activeTab: {
-      type: String,
-      default: 'running'
     }
   },
 
@@ -67,7 +63,11 @@ export default {
   }),
 
   computed: {
-    ...mapGetters({ ticketListMode: 'getTicketListMode' }),
+    ...mapGetters({
+      ticketListMode: 'getTicketListMode',
+      isToHideTickets: 'isToHideTickets',
+      activeTab: 'getTicketsActiveTab'
+    }),
 
     showFilters() {
       return (this.$route?.fullPath || '').includes('/negotiation')
