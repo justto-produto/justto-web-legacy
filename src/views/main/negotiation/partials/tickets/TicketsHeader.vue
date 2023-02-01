@@ -30,8 +30,6 @@
       :active-tab="activeTab"
       @ticket:getDisputes="$emit('ticket:getDisputes')"
     />
-
-    <HeaderUserMenu v-if="showUserMenu" />
   </header>
 </template>
 
@@ -46,7 +44,6 @@ export default {
 
   components: {
     TicketsFilters: () => import('./TicketsFilters'),
-    HeaderUserMenu: () => import('@/components/menus/HeaderUserMenu'),
     JusDisputeResume: () => import('@/components/layouts/JusDisputeResume')
   },
 
@@ -71,10 +68,6 @@ export default {
 
     showFilters() {
       return (this.$route?.fullPath || '').includes('/negotiation')
-    },
-
-    showUserMenu() {
-      return !this.$route?.params?.id && this.$route.name === 'negotiation' && this.ticketListMode === 'MANAGEMENT'
     }
   },
 

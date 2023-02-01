@@ -77,7 +77,7 @@ export default {
     },
 
     showHeader() {
-      return this.showNegotiationTypeMenu && (this.ticketListMode === 'TICKET' || Boolean(this.$route?.params?.id))
+      return this.showNegotiationTypeMenu
     }
   },
 
