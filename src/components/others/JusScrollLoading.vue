@@ -113,8 +113,6 @@ export default {
       const { target: { offsetHeight, scrollTop, scrollHeight } } = event
       const heightPercentage = parseInt(((offsetHeight + scrollTop) / scrollHeight) * 100)
 
-      console.log('handleEvent', JSON.parse(JSON.stringify({ offsetHeight, scrollTop, scrollHeight, heightPercentage })))
-
       if (this.reverse ? heightPercentage <= 30 : heightPercentage >= 70) {
         this.startLoading()
         this.$emit('load', this.loaded)
