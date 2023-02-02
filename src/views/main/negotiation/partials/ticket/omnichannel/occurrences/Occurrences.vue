@@ -10,11 +10,14 @@
       class="occurrences-container__occurrences"
     >
       <JusScrollLoading
+        v-if="filter.page > 1"
         :target="scrollTarget"
         :loading.sync="localLoading"
         :ended="occurrences.length >= totalOfOccurrences"
         :empty="Boolean(occurrences.length === 0)"
         reverse
+        empty-text="Sem mensagens"
+        end-text="Início das mansagens"
         @load="loadOccurrences"
       />
 
