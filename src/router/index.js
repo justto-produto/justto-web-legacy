@@ -356,6 +356,11 @@ router.beforeEach((to, from, next) => {
             }
           }
         }
+
+        if (to.name === 'management' && Store.getters?.showNegotiationTypeMenu) {
+          next('negotiation')
+        }
+
         if (from.name === 'ticket' && from.params?.id) {
           eventBus.$emit(events.TICKET_WEB_SOCKET_DISCONNECT.callback, 'unsubscribe', from?.params?.id)
         }
