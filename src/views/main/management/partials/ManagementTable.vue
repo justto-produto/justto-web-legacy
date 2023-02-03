@@ -479,7 +479,8 @@ export default {
       onlineDocuments: 'onlineDocuments',
       showDraft: 'getIsDraftManagementActive',
       isRecoveryStrategy: 'isWorkspaceRecovery',
-      sortQuery: 'disputeQuery'
+      sortQuery: 'disputeQuery',
+      showNegotiationTypeMenu: 'showNegotiationTypeMenu'
     }),
 
     selectedIdsComp: {
@@ -646,7 +647,7 @@ export default {
           window.open(`/#/management/dispute/${row.id}`, '_blank')
           this.addHighlight(row.id)
         } else {
-          if (this.isTicket) {
+          if (this.isTicket || this.showNegotiationTypeMenu) {
             this.$router.push({ name: 'ticket', params: { id: row.id } })
           } else {
             this.$router.push({ name: 'dispute', params: { id: row.id } })
