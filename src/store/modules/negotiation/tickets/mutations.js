@@ -54,9 +54,10 @@ const ticketsMutations = {
     Vue.set(ticketsQuery.prescriptions, index, prescription)
   },
 
-  unsetTicketPrescription: ({ ticketsQuery }, prescription) => {
-    const index = ticketsQuery.prescriptions.indexOf(prescription)
-    Vue.delete(ticketsQuery.prescriptions, index)
+  unsetTicketPrescription: (state, prescription) => {
+    const prescriptions = state?.ticketsQueryticketsQuery?.prescriptions || []
+
+    Vue.set(state.ticketsQuery, 'prescriptions', prescriptions.filter(item => item !== prescription))
   },
 
   setTicketsFilters: (state, filters) => {

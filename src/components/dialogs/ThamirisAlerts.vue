@@ -34,18 +34,10 @@
         </span>
       </div>
       <div class="thamiris__alerts__body">
-        <span
-          v-if="notifications.length !== 0"
-          class="thamiris__alerts__body-title"
-        >
-          Você ainda tem:
+        <span class="thamiris__alerts__body-title">
+          {{ notifications.length > 0 ? 'Você ainda tem:' : 'Você não tem alertas' }}
         </span>
-        <span
-          v-else
-          class="thamiris__alerts__body-title"
-        >
-          Você não tem alertas
-        </span>
+
         <div class="thamiris__alerts__body-items">
           <div
             v-for="notification in notifications"
@@ -59,15 +51,11 @@
               >
                 <div
                   class="thamiris__alerts__body-items-item-circle-style-al"
-                  @click="applyFilters(notification)"
+                  @click="applyFilters({ ...notification })"
                 >
                   <div class="thamiris__alerts__body-items-item-circle-style-al-num">
                     {{ handleQuantity(notification.quantity) }}
                   </div>
-
-                  <!-- <div class="thamiris__alerts__body-items-item-circle-style-al-disp">
-                    disputas
-                  </div> -->
                 </div>
               </div>
               <div
@@ -197,6 +185,7 @@ export default {
         this.clearDisputeQueryByTab()
         this.setDisputePreventFilters(true)
         this.setDisputeHasFilters(true)
+
         this.setDisputeQuery(filter)
 
         this.setDisputesTab({
