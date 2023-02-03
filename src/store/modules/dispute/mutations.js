@@ -104,8 +104,8 @@ const disputeMutations = {
   },
 
   setDisputeQuery(state, query) {
-    state.query = query
-    state.query.page = 1
+    Vue.set(state, 'query', query)
+    Vue.set(state.query, 'page', 1)
   },
 
   updateDisputeQuery(state, params) {
@@ -271,7 +271,8 @@ const disputeMutations = {
   },
 
   removePrescription(state, prescription) {
-    state.query.prescriptions.splice(state.query.prescriptions.indexOf(prescription), 1)
+    Vue.set(state.query, 'prescriptions', state.query.prescriptions.filter(item => item !== prescription))
+
     state.query.page = 1
   },
 
