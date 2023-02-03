@@ -2,32 +2,24 @@
   <section
     v-if="lastMessage.disputeId === id || localLoading"
     ref="occurrence-root"
+    v-loading="localLoading"
     class="occurrences-container"
   >
     <div
       ref="scroolContainer"
       class="occurrences-container__occurrences"
     >
-      <!-- :identifier="infiniteLoadingIdentifier"
-      :distance="1" -->
-      <infinite-loading
-        ref="infiniteLoading"
-        :identifier="infiniteLoadingIdentifier"
-        spinner="spiral"
-        direction="top"
-        @infinite="loadOccurrences"
-      >
-        <div
-          slot="no-more"
-        >
-          Início das ocorrências
-        </div>
-        <div
-          slot="no-results"
-        >
-          Início das ocorrências
-        </div>
-      </infinite-loading>
+      <JusScrollLoading
+        v-if="filter.page > 1"
+        :target="scrollTarget"
+        :loading.sync="localLoading"
+        :ended="occurrences.length >= totalOfOccurrences"
+        :empty="Boolean(occurrences.length === 0)"
+        reverse
+        empty-text="Sem mensagens"
+        end-text="Início das mansagens"
+        @load="loadOccurrences"
+      />
 
       <component
         :is="occurrence.id === null ? 'Date': 'Occurrence'"
@@ -65,18 +57,20 @@
 import { mapActions, mapGetters } from 'vuex'
 import { eventBus } from '@/utils'
 import events from '@/constants/negotiationEvents'
+import Occurrence from './occurrence/Occurrence'
 
 export default {
   components: {
     Date: () => import('./occurrence/Date'),
-    Occurrence: () => import('./occurrence/Occurrence'),
-    InfiniteLoading: () => import('vue-infinite-loading'),
-    DisputeTips: () => import('@/views/main/dispute/partials/DisputeTips')
+    Occurrence,
+    DisputeTips: () => import('@/views/main/dispute/partials/DisputeTips'),
+    JusScrollLoading: () => import('@/components/others/JusScrollLoading')
   },
 
   data: () => ({
     needScroll: false,
-    localLoading: false
+    localLoading: false,
+    scrollTarget: '.occurrences-container.omnichannel-container__occurrences'
   }),
 
   computed: {
@@ -90,7 +84,8 @@ export default {
       isPrinting: 'getExportTicketModalVisible',
       backups: 'getMessagesBackupById',
       recipients: 'getEditorRecipients',
-      autodetectRecipient: 'workspaceAutodetectRecipient'
+      autodetectRecipient: 'workspaceAutodetectRecipient',
+      totalOfOccurrences: 'getTotalOccurrences'
     }),
 
     infiniteLoadingIdentifier() {
@@ -133,6 +128,10 @@ export default {
 
     'countRendereds'() {
       this.adjustScroll()
+    },
+
+    localLoading(isLoading) {
+      console.log('localLoading', isLoading)
     }
   },
 
@@ -145,10 +144,6 @@ export default {
 
     this.resetTicket(this.id)
     this.adjustScroll(true)
-
-    if (this.$refs.infiniteLoading && this.$refs.scroolContainer) {
-      this.$refs.infiniteLoading.scrollParent = document.getElementsByClassName('occurrences-container omnichannel-container__occurrences')[0]
-    }
   },
 
   updated() {
@@ -180,21 +175,20 @@ export default {
       }
     },
 
-    loadOccurrences($state) {
+    loadOccurrences(callback) {
+      const target = document.querySelector(this.scrollTarget)
+      const scrollPosition = target?.scrollHeight - target?.scrollTop
+
       if (!this.isPrinting) {
         this.getOccurrences(this.id).then(response => {
           if (response.first) {
             this.adjustScroll(true)
+          } else if (target) {
+            target.scroll(0, document.querySelector(this.scrollTarget)?.scrollHeight - scrollPosition)
           }
 
-          if (response.last) {
-            if ($state) { $state.complete() }
-          } else {
-            if ($state) { $state.loaded() }
-          }
+          callback()
         }).finally(this.autodetectTicketRecipients)
-      } else {
-        $state.complete()
       }
     },
 

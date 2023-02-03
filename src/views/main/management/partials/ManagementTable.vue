@@ -9,7 +9,7 @@
     <el-table
       ref="disputeTable"
       :key="disputeKey"
-      v-loading="responseBoxLoading"
+      v-loading="responseBoxLoading || scrollLoading"
       :data.sync="disputes"
       :row-class-name="tableRowClassName"
       :element-loading-text="responseBoxLoading ? 'Enviando mensagem...' : 'Atualizando informações...'"
@@ -366,21 +366,16 @@
         </transition>
       </template>
 
-      <infinite-loading
-        v-if="disputes.length >= 20"
+      <JusScrollLoading
         slot="append"
-        :distance="20"
-        spinner="spiral"
-        force-use-infinite-wrapper=".el-table__body-wrapper"
-        @infinite="infiniteHandler"
-      >
-        <div slot="no-more">
-          Fim das disputas
-        </div>
-        <div slot="no-results">
-          Fim das disputas
-        </div>
-      </infinite-loading>
+        :loading.sync="scrollLoading"
+        target=".el-table__body-wrapper"
+        :ended="disputes.length >= sortQuery.total"
+        :empty="sortQuery.total === 0"
+        empty-text="Sem disputas"
+        end-text="Fim das disputas"
+        @load="infiniteHandler"
+      />
     </el-table>
 
     <jus-timeline
@@ -423,9 +418,9 @@ export default {
     JusTimeline: () => import('@/components/JusTimeline/JusTimeline'),
     JusDisputeActions: () => import('@/components/buttons/JusDisputeActions'),
     JusProtocolDialog: () => import('@/components/dialogs/JusProtocolDialog'),
-    InfiniteLoading: () => import('vue-infinite-loading'),
     JusVexatiousAlert: () => import('@/components/dialogs/JusVexatiousAlert'),
-    FollowUp: () => import('./partials/ManagementFollowUp')
+    FollowUp: () => import('./partials/ManagementFollowUp'),
+    JusScrollLoading: () => import('@/components/others/JusScrollLoading')
   },
 
   inject: {
@@ -462,6 +457,7 @@ export default {
       },
       disputeKey: 0,
       responseBoxLoading: false,
+      scrollLoading: false,
       actieTooltipDisputeId: 0,
       activeDisputeIds: [],
       canShowDialogReplyEditor: false,
@@ -683,15 +679,11 @@ export default {
       recent.forEach(dispute => this.$refs.disputeTable.toggleRowSelection(dispute))
     },
 
-    infiniteHandler($state) {
+    infiniteHandler(callback) {
       const isAllChecked = this.disputes.length === this.selectedIdsComp.length
       this.$store.commit('addDisputeQueryPage')
       this.$store.dispatch('getDisputes', 'nextPage').then(response => {
-        if (response.last) {
-          $state.complete()
-        } else {
-          $state.loaded()
-        }
+        callback()
 
         if (isAllChecked) {
           this.handleSelectionAllDisputes(response.content)

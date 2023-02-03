@@ -79,6 +79,11 @@ export default {
     loading: {
       type: Boolean,
       default: false
+    },
+
+    reverse: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -106,10 +111,9 @@ export default {
       if (Boolean(this.loading) || Boolean(this.ended)) return
 
       const { target: { offsetHeight, scrollTop, scrollHeight } } = event
-
       const heightPercentage = parseInt(((offsetHeight + scrollTop) / scrollHeight) * 100)
 
-      if (heightPercentage >= 70) {
+      if (this.reverse ? heightPercentage <= 30 : heightPercentage >= 70) {
         this.startLoading()
         this.$emit('load', this.loaded)
       }
@@ -125,7 +129,7 @@ export default {
 
     addEventListener() {
       try {
-        this.scrollTarget = document.querySelector('.tickets-container__tabs>.el-tabs__content')
+        this.scrollTarget = document.querySelector(this.target || '.tickets-container__tabs>.el-tabs__content')
 
         this.scrollTarget.addEventListener('scroll', this.debouncedCb)
       } catch (error) {
