@@ -130,8 +130,9 @@ export default {
       this.adjustScroll()
     },
 
-    localLoading(isLoading) {
-      console.log('localLoading', isLoading)
+    activeTab() {
+      this.resetTicket(this.id)
+      this.adjustScroll(true)
     }
   },
 
@@ -142,8 +143,10 @@ export default {
 
     eventBus.$on(events.TICKET_CHANGE.callback, this.resetTicket)
 
-    this.resetTicket(this.id)
-    this.adjustScroll(true)
+    this.loadOccurrences(() => {
+      this.resetTicket(this.id)
+      this.adjustScroll(true)
+    })
   },
 
   updated() {
