@@ -27,8 +27,8 @@ const accountGetters = {
   },
   preventScheduleCallsConfirmation: state => state.preventScheduleCallsConfirmation,
   isOmnichannelGrouping: state => state.preferences?.properties?.OMNICHANNEL_GROUPING_TYPE === 'GROUPED',
-  isOmnichannelUsingColors: state => state.preferences?.properties?.OMNICHANNEL_COLORING_TYPE !== 'MONOCHROME',
-  omnichannelColoringType: state => state?.properties?.OMNICHANNEL_COLORING_TYPE || 'COLORFUL',
+  isOmnichannelUsingColors: state => state?.preferences?.properties?.OMNICHANNEL_COLORING_TYPE !== 'MONOCHROME',
+  omnichannelColoringType: state => state?.preferences?.properties?.OMNICHANNEL_COLORING_TYPE || 'COLORFUL',
   useSignature: state => state.preferences?.properties?.USE_SIGNATURE === 'ENABLED',
   getCustomHome: state => state.preferences?.properties?.CUSTOM_HOME,
   getTicketListMode: (state, getters) => (getters.showNegotiationTypeMenu ? (state.preferences?.properties?.TICKET_LIST_MODE || 'TICKET') : 'TICKET')
