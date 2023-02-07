@@ -420,6 +420,14 @@ export default {
     }
   },
 
+  mounted() {
+    window.document.addEventListener('click', this.handleClick)
+  },
+
+  beforeDestroy() {
+    window.document.removeEventListener('click', this.handleClick)
+  },
+
   methods: {
     ...mapActions(['getTicketOverviewInfo']),
 
@@ -500,6 +508,13 @@ export default {
       } else {
         validatePhone(rule, value, callback)
       }
+    },
+
+    handleClick(event) {
+      const target = document.querySelector('a.bank-accounts__link')
+      const preventClose = target && event?.target === target
+
+      if (this.bankAccountDialogVisible && !preventClose) this.closeDialog()
     }
   }
 }
