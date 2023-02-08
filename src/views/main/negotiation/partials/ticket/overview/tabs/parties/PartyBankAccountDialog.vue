@@ -271,7 +271,11 @@
       </span>
     </span>
 
-    <span slot="reference">
+    <span
+      ref="reference"
+      slot="reference"
+      class="bank-account__reference"
+    >
       <slot />
     </span>
   </el-popover>
@@ -511,10 +515,11 @@ export default {
     },
 
     handleClick(event) {
-      const target = document.querySelector('a.bank-accounts__link')
-      const preventClose = target && event?.target === target
+      if (!this.bankAccountDialogVisible) return
 
-      if (this.bankAccountDialogVisible && !preventClose) this.closeDialog()
+      const preventClose = this.$refs.reference === event?.target?.parentNode
+
+      if (!preventClose) { this.closeDialog() }
     }
   }
 }
