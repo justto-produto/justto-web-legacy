@@ -191,6 +191,8 @@ export default {
         TEXT: 'whatsapp'
       }[contentType]
 
+      this.$jusSegment('QUICK_REPLY_TEMPLATE', { template })
+
       this.setMessageType(type)
       this.setEditorText(body)
       this.$emit('input', body)
