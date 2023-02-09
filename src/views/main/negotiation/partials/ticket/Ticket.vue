@@ -71,7 +71,7 @@ export default {
 
   $route: {
     deep: true,
-    handler: 'resetRecipients'
+    handler: 'resetTicket'
   },
 
   mounted() {
@@ -147,6 +147,10 @@ export default {
 
     toggleShowOverview() {
       this.showOverview = !this.showOverview
+    },
+
+    resetTicket() {
+      this.resetRecipients()
     }
   }
 }

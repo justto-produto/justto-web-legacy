@@ -11,6 +11,7 @@ const overviewActions = {
     commit('incrementTicketOverviewCountGetters')
 
     return validateCurrentId(disputeId, () => {
+      commit('resetTicketOverview')
       return new Promise((resolve, reject) => {
         axiosDispatch({
           url: `${disputeApi}/${disputeId}`,

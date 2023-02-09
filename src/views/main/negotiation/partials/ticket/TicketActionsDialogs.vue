@@ -556,6 +556,8 @@ export default {
         type: 'success',
         dangerouslyUseHTMLString: true
       })
+
+      // TODO: Melhorar esse evento.
       this.$jusSegment(message, { disputeId })
 
       this.offerDialogVisible = false
