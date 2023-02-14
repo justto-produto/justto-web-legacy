@@ -60,7 +60,7 @@ export default {
     },
 
     hasUnknownParts() {
-      return ['PENDING', 'ENGAGEMENT'].includes(this.status) && (this.dispute?.unknownPolarityParty || ((this.dispute?.disputeRoles || []).filter(({ party }) => (party === 'UNKNOWN')).length) > 1)
+      return ['PENDING'].includes(this.status) && (this.dispute?.unknownPolarityParty || ((this.dispute?.disputeRoles || []).filter(({ party }) => (party === 'UNKNOWN')).length) > 1)
     },
 
     claimantHaveInvalidDocument() {
