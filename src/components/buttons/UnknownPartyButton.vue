@@ -17,7 +17,14 @@
       >
         <JusIcon :icon="item.polarity === 'CLAIMANT' ? 'plaintff' : 'company'" />
 
-        <div> {{ item.name }} </div>
+        <div class="unknow-party-container__body__names-container">
+          <span
+            v-for="(name, indexName) in item.name.split(', ')"
+            :key="`${name}#${indexName}`"
+            class="unknow-party-container__body__name"
+            v-text="name"
+          />
+        </div>
       </el-button>
     </div>
   </article>
@@ -177,6 +184,20 @@ export default {
     .unknow-party-container__body {
       display: flex;
       gap: 8px;
+      min-width: 25%;
+
+      .unknow-party-container__body__names-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 2px;
+        .unknow-party-container__body__name {
+          gap: 0px;
+
+          &:not(:last-child):after {
+            content: ','
+          }
+        }
+      }
     }
 
     .unknow-party-container__resolved {
