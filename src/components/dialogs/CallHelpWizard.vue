@@ -6,10 +6,9 @@
     :modal="false"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
-    :modal-append-to-body="true"
+    :modal-append-to-body="false"
     :append-to-body="true"
     :lock-scroll="false"
-    width="40%"
     destroy-on-close
     :show-close="false"
     center
@@ -39,10 +38,7 @@
         arrow="never"
         indicator-position="none"
       >
-        <el-carousel-item
-          ref="carouselItemCallHelp"
-          class="call-help__carousel-item"
-        >
+        <el-carousel-item class="call-help__carousel-item">
           <h3 class="call-help__carousel-item-info">
             Se identifique e confirme com quem está falando!
           </h3>
@@ -115,7 +111,10 @@
           </div>
         </el-carousel-item>
 
-        <el-carousel-item class="call-help__carousel-item">
+        <el-carousel-item
+          ref="carouselItemCallHelp"
+          class="call-help__carousel-item"
+        >
           <h3 class="call-help__carousel-item-info">
             Informe {{ claimantName }} que a conversa está sendo gravada.
           </h3>
@@ -439,12 +438,12 @@ export default {
       this.showDontRecCallForm = !this.showDontRecCallForm
       const ref = this.$refs?.carouselItemCallHelp?.$el
 
+      console.log(ref)
+
       if (ref) {
         if (this.showDontRecCallForm) {
           const maxScroll = ref.scrollHeight + 50
-          ref.scrollTop = maxScroll
-
-          // setTimeout(() => { ref.scrollTo(0, maxScroll) }, 2 * 1000)
+          this.$nextTick().then(() => { ref.scrollTo(0, maxScroll) })
         } else {
           ref.scrollTo(0, 0)
         }
@@ -457,125 +456,135 @@ export default {
 <style lang="scss">
 @import '@/styles/colors.scss';
 
-.call-help-dialog {
-  .el-dialog__header {
-    background: #9461f7;
-    color: white;
+.el-dialog__wrapper:has(.call-help-dialog) {
+  margin: 24vh auto !important;
+  padding: 0;
+  z-index: 2004;
+  width: 50vw;
 
-    .el-dialog__title {
-      color: white;
-    }
-  }
-
-  .el-dialog__body {
+  .call-help-dialog {
     margin: 0 !important;
-    padding: 0 !important;
+    width: 100%;
 
-    .call-help__container {
-      .call-help__call {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        margin: 16px 0 8px;
-        gap: 8px;
+    .el-dialog__header {
+      background: #9461f7;
+      color: white;
+
+      .el-dialog__title {
+        color: white;
       }
+    }
 
-      .call-help__carousel {
-        padding: 0;
+    .el-dialog__body {
+      margin: 0 !important;
+      padding: 0 !important;
 
-        .el-carousel__container {
-          .el-carousel__item {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
+      .call-help__container {
+        .call-help__call {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          margin: 16px 0 8px;
+          gap: 8px;
+        }
 
-            &.call-help__carousel-item {
-              overflow-y: scroll;
-              padding: 0 24px;
-              width: 100%;
-            }
+        .call-help__carousel {
+          padding: 0;
 
-            .call-help__carousel-item-info {
-              padding: 0;
-              text-align: center;
-              word-break: keep-all;
-            }
-
-            .call-help__suggestion-balloon {
-              border: none;
-              box-shadow: 0px 3px 6px #00000029;
-              border-radius: 10px;
-              padding: 8px;
-              word-break: break-word;
-
-              .call-help__suggestion-balloon-label {
-                text-align: center;
-                margin-top: -18px;
-
-                span {
-                  padding: 0 8px;
-                  background-color: white;
-                  font-weight: 600;
-                }
-              }
-            }
-
-            .call-help__dont-rec-call {
-              margin-top: 24px;
+          .el-carousel__container {
+            .el-carousel__item {
               display: flex;
               flex-direction: column;
-              gap: 8px;
-              align-items: center;
+              gap: 16px;
 
-              border: none;
-              box-shadow: 0px 3px 6px #00000029;
-              border-radius: 10px;
-              padding: 8px;
-
-              .dont-rec-call__help {
-                margin-top: -16px;
-                background: white;
-                padding: 0 8px;
-                font-weight: 600;
+              &.call-help__carousel-item {
+                overflow-y: scroll;
+                padding: 0 24px;
+                width: 100%;
               }
 
-              .dont-rec-call__add-contact {
+              .call-help__carousel-item-info {
+                padding: 0;
+                text-align: center;
+                word-break: keep-all;
+              }
+
+              .call-help__suggestion-balloon {
+                border: none;
+                box-shadow: 0px 3px 6px #00000029;
+                border-radius: 10px;
+                padding: 8px;
+                word-break: break-word;
+
+                .call-help__suggestion-balloon-label {
+                  text-align: center;
+                  margin-top: -18px;
+
+                  span {
+                    padding: 0 8px;
+                    background-color: white;
+                    font-weight: 600;
+                  }
+                }
+              }
+
+              .call-help__dont-rec-call {
+                margin: 24px 0;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                align-items: center;
+
+                border: none;
+                box-shadow: 0px 3px 6px #00000029;
+                border-radius: 10px;
+                padding: 8px;
+
+                .dont-rec-call__help {
+                  margin-top: -16px;
+                  background: white;
+                  padding: 0 8px;
+                  font-weight: 600;
+                }
+
+                .dont-rec-call__add-contact {
+                  display: flex;
+                  flex-direction: row;
+                  gap: 4px;
+                }
+
+                /*.dont-rec-call__contacts,
+                .dont-rec-call__label-contacts {
+                  align-self: flex-start;
+                }*/
+              }
+
+              .call-help__carousel-item-incorrect-contact {
+                display: flex;
+                justify-content: space-between;
+
+                .el-select {
+                  flex: 3;
+                }
+
+                .el-button {
+                  flex: 1;
+                  height: 40px;
+                }
+              }
+
+              .call-help__carousel-item-actions {
                 display: flex;
                 flex-direction: row;
-                gap: 4px;
-              }
+                justify-content: space-around;
 
-              /*.dont-rec-call__contacts,
-              .dont-rec-call__label-contacts {
-                align-self: flex-start;
-              }*/
-            }
-
-            .call-help__carousel-item-incorrect-contact {
-              display: flex;
-              justify-content: space-between;
-
-              .el-select {
-                flex: 3;
-              }
-
-              .el-button {
-                flex: 1;
-                height: 40px;
-              }
-            }
-
-            .call-help__carousel-item-actions {
-              display: flex;
-              flex-direction: row;
-              justify-content: space-around;
-
-              .call-help__carousel-item-actions__correct_contact {
-                span {
-                  display: flex;
-                  align-items: center;
-                  gap: 8px;
+                .call-help__carousel-item-actions__correct_contact {
+                  span {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                  }
                 }
               }
             }
