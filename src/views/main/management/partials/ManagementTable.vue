@@ -121,8 +121,8 @@
             />
 
             <el-tooltip
-              v-if="scope.row.getDispueHasFirstClaimantLawyer"
-              :content="`${$options.filters.capitalize(scope.row.getDispueFirstClaimantLawyerFirstName)} está online`"
+              v-if="scope.row.getDisputeHasFirstClaimantLawyer"
+              :content="`${$options.filters.capitalize(scope.row.getDisputeFirstClaimantLawyerFirstName)} está online`"
             >
               <jus-icon
                 v-if="onlineDocuments[scope.row.getDisputeFirstClaimantLawyerDocumentNumber] === 'ONLINE'"
@@ -139,18 +139,18 @@
 
             <el-tooltip
               content="Buscar disputas com este advogado"
-              :disabled="!scope.row.getDispueHasFirstClaimantLawyer"
+              :disabled="!scope.row.getDisputeHasFirstClaimantLawyer"
               :open-delay="500"
             >
               <span
                 v-if="scope.row.getDisputeHasFirstClaimant"
                 @click="$emit('search:lawyer', { lawyer: scope.row.getFirstClaimantLawyerName })"
               >
-                {{ scope.row.getDispueFirstClaimantLawyerName | capitalize }}
+                {{ scope.row.getDisputeFirstClaimantLawyerName | capitalize }}
               </span>
             </el-tooltip>
 
-            <span v-if="!scope.row.getDispueHasFirstClaimantLawyer">-</span>
+            <span v-if="!scope.row.getDisputeHasFirstClaimantLawyer">-</span>
           </div>
         </template>
       </el-table-column>

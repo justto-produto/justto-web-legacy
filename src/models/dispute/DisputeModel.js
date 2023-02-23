@@ -158,7 +158,7 @@ export class DisputeModel {
   }
 
   get getDisputeHasLastReceivedMessage() {
-    return Boolean(this.#dtoV1?.lastReceivedMessage || this.#dtoV2?.lastReceivedMessage)
+    return Boolean(Object.keys(this.getDisputeLastReceivedMessage) > 1)
   }
 
   get getDisputeLastReceivedMessage() {
@@ -169,6 +169,22 @@ export class DisputeModel {
   get getDisputeHasLastReceivedMessageProperties() {
     return Boolean(Object.keys(this.#dtoV1?.lastReceivedMessage?.properties || {}).length) ||
       Boolean(Object.keys(this.#dtoV2?.lastReceivedMessage?.properties || {}).length)
+  }
+
+  get getDisputeLastReceivedMessageSender() {
+    return this.getDisputeLastReceivedMessage?.message?.sender
+  }
+
+  get getDisputeLastReceivedMessageHasSender() {
+    Boolean(this.getDisputeLastReceivedMessageSender)
+  }
+
+  get getDisputeLastReceivedMessageResume() {
+    return this.getDisputeLastReceivedMessage?.message?.resume || ''
+  }
+
+  get getDisputeLastReceivedMessageHasResume() {
+    return this.getDisputeLastReceivedMessageResume.length > 0
   }
 
   get getDisputeLastReceivedMessageProperties() {
@@ -209,16 +225,16 @@ export class DisputeModel {
 
   // First Claymant Lowyer getters
 
-  get getDispueFirstClaimantLawyerName() {
+  get getDisputeFirstClaimantLawyerName() {
     return this.#dtoV1?.firstClaimantLawyer || ''
   }
 
-  get getDispueFirstClaimantLawyerFirstName() {
-    return this.getDispueFirstClaimantLawyerName.split(' ')[0]
+  get getDisputeFirstClaimantLawyerFirstName() {
+    return this.getDisputeFirstClaimantLawyerName.split(' ')[0]
   }
 
-  get getDispueHasFirstClaimantLawyer() {
-    return this.getDispueFirstClaimantLawyerName.length > 0
+  get getDisputeHasFirstClaimantLawyer() {
+    return this.getDisputeFirstClaimantLawyerName.length > 0
   }
 
   get getDisputeFirstClaimantLawyerOab() {
@@ -239,6 +255,42 @@ export class DisputeModel {
 
   get getDisputeFirstClaimantLawyerStatus() {
     return this.#dtoV1?.firstClaimantLawyerStatus || 'OFFLINE'
+  }
+
+  get getDisputeLastOutboundInteraction() {
+    return this.#dtoV1?.lastOutboundInteraction || {}
+  }
+
+  get getDisputeHasLastOutboundInteraction() {
+    return Boolean(this.getDisputeLastOutboundInteraction?.id)
+  }
+
+  get getDisputeLastOutboundInteractionMessage() {
+    return this.getDisputeLastOutboundInteraction?.message || {}
+  }
+
+  get getDisputeLastNegotiatorAccess() {
+    return this.#dtoV1?.lastNegotiatorAccess || {}
+  }
+
+  get getDisputeHasLastNegotiatorAccess() {
+    return Boolean(this.getDisputeLastNegotiatorAccess?.id)
+  }
+
+  get getDisputeLastNegotiatorAccessCreatAt() {
+    return this.#dtoV1?.lastNegotiatorAccess?.createAt?.dateTime
+  }
+
+  get getDisputeLastInteraction() {
+    return this.#dtoV1?.lastInteraction
+  }
+
+  get getDisputeHasLastInteraction() {
+    return Object.keys(this.getDisputeLastInteraction) > 1
+  }
+
+  get getDisputeLastInteractionCreateAt() {
+    return this.getDisputeLastInteraction?.createAt?.dateTime
   }
 
   getDisputeProperty(property) {

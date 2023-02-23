@@ -20,11 +20,11 @@
       </span>
 
       <span
-        v-if="dispute.getDispueHasFirstClaimantLawyer"
+        v-if="dispute.getDisputeHasFirstClaimantLawyer"
         class="alert-container__first-claimant-lawyer"
       >
         <i class="icon el-icon-info" />
-        O advogado <span class="alert-container__name">{{ dispute.getDispueFirstClaimantLawyerName }}</span>
+        O advogado <span class="alert-container__name">{{ dispute.getDisputeFirstClaimantLawyerName }}</span>
         está <span class="alert-container__status">{{ dispute.getDisputeFirstClaimantLawyerStatus }}</span> no momento.
       </span>
 
@@ -75,6 +75,7 @@ export default {
       type: Boolean,
       required: true
     },
+
     dispute: {
       type: Object,
       required: true
