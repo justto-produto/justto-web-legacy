@@ -11,24 +11,27 @@
       class="dialog-reply-negotiator__alert-container"
     >
       <span
-        v-if="dispute.firstClaimant"
+        v-if="dispute.getDisputeHasFirstClaimant"
         class="alert-container__first-claimant"
       >
         <i class="icon el-icon-info" />
-        {{ isRecovery ? 'A' : 'O' }} {{ $tc('PARTY_RESPONDENT', isRecovery) }} <span class="alert-container__name">{{ dispute.firstClaimant.toLowerCase() }}</span>
-        está <span class="alert-container__status">{{ dispute.firstClaimantStatus || 'OFFLINE' }}</span> no momento.
+        {{ $tc('ARTICLE', !isRecovery).toUpperCase() }} {{ $tc('PARTY_RESPONDENT', isRecovery) }} <span class="alert-container__name">{{ dispute.getDisputeFirstClaimantName }}</span>
+        está <span class="alert-container__status">{{ dispute.getDisputeFirstClaimantStatus }}</span> no momento.
       </span>
+
       <span
-        v-if="dispute.firstClaimantLawyer"
+        v-if="dispute.getDispueHasFirstClaimantLawyer"
         class="alert-container__first-claimant-lawyer"
       >
         <i class="icon el-icon-info" />
-        O advogado <span class="alert-container__name">{{ dispute.firstClaimantLawyer }}</span>
-        está <span class="alert-container__status">{{ dispute.firstClaimantLawyerStatus || 'OFFLINE' }}</span> no momento.
+        O advogado <span class="alert-container__name">{{ dispute.getDispueFirstClaimantLawyerName }}</span>
+        está <span class="alert-container__status">{{ dispute.getDisputeFirstClaimantLawyerStatus }}</span> no momento.
       </span>
+
       <span class="alert-container__message">
         Envie uma mensagem pelo chat de comunicação da Justto.
       </span>
+
       <div class="dialog-reply-negotiator__container">
         <el-input
           v-model="messageDialogReplyEditor"
@@ -37,6 +40,7 @@
           :placeholder="`Escreva alguma coisa para ${isRecovery ? 'a' : 'o'} ${$tc('PARTY_RESPONDENT', isRecovery)}`"
           style="padding-bottom: 10px"
         />
+
         <div class="dialog-reply-negotiator__footer">
           <el-button
             size="mini"
@@ -44,6 +48,7 @@
           >
             Cancelar
           </el-button>
+
           <el-button
             type="primary"
             size="mini"

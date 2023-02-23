@@ -2,7 +2,7 @@
   <div class="management-table__container">
     <jus-protocol-dialog
       :protocol-dialog-visible.sync="protocolDialogVisible"
-      :dispute-id.sync="selectedDispute.id"
+      :dispute-id.sync="selectedDispute.getDisputeId"
       :dispute.sync="selectedDispute"
     />
 
@@ -69,7 +69,6 @@
         </template>
       </el-table-column>
 
-      <!-- TODO -->
       <el-table-column
         :sortable="false"
         prop="firstClaimant"
@@ -80,31 +79,31 @@
         <template v-slot="scope">
           <div class="first-claimant-container__cell">
             <jus-vexatious-alert
-              v-if="(scope.row.firstClaimantAlerts && scope.row.firstClaimantAlerts.length)"
-              :document-number="scope.row.firstClaimantDocumentNumber"
-              :name="scope.row.firstClaimant"
+              v-if="(scope.row.getDisputeHasFirstClaimantAlerts)"
+              :document-number="scope.row.getDisputeFirstClaimantDocumentNumber"
+              :name="scope.row.getDispueFirstClaimantName"
               style="display: flex; align-items: center;"
             />
 
             <el-tooltip
-              v-if="scope.row.firstClaimant"
+              v-if="scope.row.getDisputeHasFirstClaimant"
               class="online-icon"
-              :content="`${$options.filters.capitalize(scope.row.firstClaimant.toLowerCase().split(' ')[0])} está online`"
+              :content="`${$options.filters.capitalize(scope.row.getDisputeFirstClaimantFirstName)} está online`"
             >
               <jus-icon
-                v-if="onlineDocuments[scope.row.firstClaimantDocumentNumber] === 'ONLINE'"
+                v-if="onlineDocuments[scope.row.getDisputeFirstClaimantDocumentNumber] === 'ONLINE'"
                 icon="online"
                 style="height: 8px; width: 8px;"
               />
             </el-tooltip>
 
-            {{ scope.row.firstClaimant || '-' | capitalize }}
+            {{ scope.row.getDisputeFirstClaimantName || '-' | capitalize }}
           </div>
+
           <FollowUp :dispute="scope.row" />
         </template>
       </el-table-column>
 
-      <!-- TODO -->
       <el-table-column
         :sortable="false"
         prop="firstClaimantLawyer"
@@ -115,23 +114,24 @@
         <template v-slot="scope">
           <div class="first-claimant-container__cell">
             <jus-vexatious-alert
-              v-if="scope.row.firstClaimantLawyerAlerts && scope.row.firstClaimantLawyerAlerts.length"
-              :document-number="scope.row.firstClaimantLawyerDocumentNumber"
-              :alerts="scope.row.firstClaimantLawyerAlerts"
+              v-if="scope.row.getDisputeHasFirstClaimantLawyerAlerts"
+              :document-number="scope.row.getDisputeFirstClaimantLawyerDocumentNumber"
+              :alerts="scope.row.getDisputeFirstClaimantLawyerAlerts"
               style="display: flex;"
             />
 
             <el-tooltip
-              v-if="scope.row.firstClaimantLawyer"
-              :content="`${$options.filters.capitalize(scope.row.firstClaimantLawyer.toLowerCase().split(' ')[0])} está online`"
+              v-if="scope.row.getDispueHasFirstClaimantLawyer"
+              :content="`${$options.filters.capitalize(scope.row.getDispueFirstClaimantLawyerFirstName)} está online`"
             >
               <jus-icon
-                v-if="onlineDocuments[scope.row.firstClaimantLawyerDocumentNumber] === 'ONLINE'"
+                v-if="onlineDocuments[scope.row.getDisputeFirstClaimantLawyerDocumentNumber] === 'ONLINE'"
                 icon="online"
                 style="height: 8px; width: 8px;"
               />
+
               <jus-icon
-                v-else-if="onlineDocuments[scope.row.firstClaimantLawyerOab] === 'ONLINE'"
+                v-else-if="onlineDocuments[scope.row.getDisputeFirstClaimantLawyerOab] === 'ONLINE'"
                 icon="online"
                 style="height: 8px; width: 8px;"
               />
@@ -139,13 +139,18 @@
 
             <el-tooltip
               content="Buscar disputas com este advogado"
-              :disabled="(scope.row.firstClaimantLawyer || '-') === '-'"
+              :disabled="!scope.row.getDispueHasFirstClaimantLawyer"
               :open-delay="500"
             >
-              <div>
-                {{ scope.row.firstClaimantLawyer || '-' | capitalize }}
-              </div>
+              <span
+                v-if="scope.row.getDisputeHasFirstClaimant"
+                @click="$emit('search:lawyer', { lawyer: scope.row.getFirstClaimantLawyerName })"
+              >
+                {{ scope.row.getDispueFirstClaimantLawyerName | capitalize }}
+              </span>
             </el-tooltip>
+
+            <span v-if="!scope.row.getDispueHasFirstClaimantLawyer">-</span>
           </div>
         </template>
       </el-table-column>
@@ -348,7 +353,6 @@
         </template>
       </el-table-column>
 
-      <!-- TODO -->
       <el-table-column
         class-name="hidden-actions"
         width="1px"
@@ -585,7 +589,8 @@ export default {
 
     openActiveMessageModal(dispute) {
       this.activeDispute = dispute
-      this.canShowDialogReplyEditor = true
+
+      this.$nextTick().then(_ => { this.canShowDialogReplyEditor = true })
     },
 
     addHighlight(id) {
@@ -656,7 +661,8 @@ export default {
       if (!isCtrl && !isMeta && column.property === 'firstClaimant' && event.target.className.split(' ').includes('online-icon')) {
         this.openActiveMessageModal(row)
       } else if (!isCtrl && !isMeta && column.property === 'firstClaimantLawyer' && row.getHasFirstClaimantLawyer) {
-        this.$emit('search:lawyer', { lawyer: row.getFirstClaimantLawyerName })
+        // Implemented in text span event.
+        // this.$emit('search:lawyer', { lawyer: row.getFirstClaimantLawyerName })
       } else if (row.getDisputeId && !['IMG', 'SPAN', 'BUTTON', 'I'].includes(event.target.tagName)) {
         if (isCtrl || isMeta) {
           window.open(`/#/management/dispute/${row.getDisputeId}`, '_blank')
@@ -690,8 +696,11 @@ export default {
     },
 
     showProtocolModal(dispute) {
-      this.protocolDialogVisible = true
       this.selectedDispute = dispute
+
+      this.$nextTick().then(_ => {
+        this.protocolDialogVisible = true
+      })
     },
 
     handleSelectionAllDisputes(recent) {
@@ -764,6 +773,11 @@ export default {
       display: flex;
       justify-content: flex-start;
       align-items: center;
+
+      .void-cell {
+        flex: 1;
+        text-align: center;
+      }
     }
   }
 }

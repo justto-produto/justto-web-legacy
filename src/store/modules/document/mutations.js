@@ -15,7 +15,7 @@ const documentMutations = {
   },
 
   setStoredDrafts(state, dispute) {
-    Vue.set(state.storedDrafts, dispute?.id, dispute)
+    Vue.set(state.storedDrafts, dispute?.getDisputeId, dispute)
   },
 
   deleteStoredDrafts(state, id) {

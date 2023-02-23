@@ -876,7 +876,7 @@ export default {
     },
 
     isCanceled() {
-      return this.dispute?.getDisputeStatus === 'CANCELED'
+      return this.dispute?.getDisputeIsCanceled
     },
 
     canSettled() {

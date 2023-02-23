@@ -96,11 +96,11 @@ export class DisputeModel {
   }
 
   get getDisputeHasDealDate() {
-    return Boolean(this.#dtoV1?.disputeDealDate.dateTime)
+    return Boolean(this.#dtoV1?.disputeDealDate?.dateTime)
   }
 
   get getDisputeDealDate() {
-    return this.#dtoV1?.disputeDealDate?.dateTime | ''
+    return this.#dtoV1?.disputeDealDate?.dateTime || ''
   }
 
   get getDisputeIsWon() {
@@ -127,8 +127,16 @@ export class DisputeModel {
     return this.getDisputeStatus === 'RUNNING'
   }
 
+  get getDisputeIsCanceled() {
+    return this.getDisputeStatus === 'CANCELED'
+  }
+
   get getDisputeRoles() {
     return this.#dtoV1?.disputeRoles || []
+  }
+
+  get getDisputeHasRoles() {
+    return this.getDisputeRoles.length > 0
   }
 
   get getDisputeNextStatus() {
@@ -167,6 +175,70 @@ export class DisputeModel {
     return this.#dtoV1?.lastReceivedMessage?.properties ||
       this.#dtoV2?.lastReceivedMessage?.properties ||
       { PERSON_EMAIL: '', PERSON_NAME: '' }
+  }
+
+  // First Claymant getters
+
+  get getDisputeFirstClaimantName() {
+    return this.#dtoV1?.firstClaimant || ''
+  }
+
+  get getDisputeFirstClaimantFirstName() {
+    return this.getDisputeFirstClaimantName.split(' ')[0]
+  }
+
+  get getDisputeHasFirstClaimant() {
+    return this.getDisputeFirstClaimantName.length > 0
+  }
+
+  get getDisputeFirstClaimantDocumentNumber() {
+    return this.#dtoV1?.firstClaimantDocumentNumber || ''
+  }
+
+  get getDisputeFirstClaimantAlerts() {
+    return this.#dtoV1?.firstClaimantAlerts || []
+  }
+
+  get getDisputeHasFirstClaimantAlerts() {
+    return this.getDisputeFirstClaimantAlerts.length > 0
+  }
+
+  get getDisputeFirstClaimantStatus() {
+    return this.#dtoV1?.firstClaimantStatus || 'OFFLINE'
+  }
+
+  // First Claymant Lowyer getters
+
+  get getDispueFirstClaimantLawyerName() {
+    return this.#dtoV1?.firstClaimantLawyer || ''
+  }
+
+  get getDispueFirstClaimantLawyerFirstName() {
+    return this.getDispueFirstClaimantLawyerName.split(' ')[0]
+  }
+
+  get getDispueHasFirstClaimantLawyer() {
+    return this.getDispueFirstClaimantLawyerName.length > 0
+  }
+
+  get getDisputeFirstClaimantLawyerOab() {
+    return this.#dtoV1?.firstClaimantLawyerOab || ''
+  }
+
+  get getDisputeFirstClaimantLawyerDocumentNumber() {
+    return this.#dtoV1?.firstClaimantLawyerDocumentNumber || ''
+  }
+
+  get getDisputeFirstClaimantLawyerAlerts() {
+    return this.#dtoV1?.firstClaimantLawyerAlerts || []
+  }
+
+  get getDisputeHasFirstClaimantLawyerAlerts() {
+    return this.getDisputeFirstClaimantLawyerAlerts.length > 0
+  }
+
+  get getDisputeFirstClaimantLawyerStatus() {
+    return this.#dtoV1?.firstClaimantLawyerStatus || 'OFFLINE'
   }
 
   getDisputeProperty(property) {
