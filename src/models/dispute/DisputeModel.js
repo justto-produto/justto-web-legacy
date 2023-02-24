@@ -172,7 +172,7 @@ export class DisputeModel {
   }
 
   get getDisputeLastReceivedMessageSender() {
-    return this.getDisputeLastReceivedMessage?.message?.sender
+    return this.getDisputeLastReceivedMessage?.message?.sender || ''
   }
 
   get getDisputeLastReceivedMessageHasSender() {
