@@ -38,58 +38,54 @@ export default {
     ...mapGetters({ isRecovery: 'isWorkspaceRecovery' }),
 
     status() {
-      return this.dispute?.status || this.dispute?.disputeStatus
+      return this.dispute?.getDisputeStatus
     },
 
     havePhone() {
-      const validContacts = ((this.dispute?.disputeRoles || []).filter(({ phones, archived, dead, party }) => (
-        !archived && !dead && ['CLAIMANT'].includes(party) && (phones || []).filter(({ archived, blocked, isValid }) => (
-          !archived && !blocked && isValid
-        )).length > 0
-      )).length > 0 || (this.dispute?.lawyer?.hasPhones || this.dispute?.plaintiff?.hasPhones))
+      const validContacts = this.dispute?.getDisputeFirstClaimantHasPhones || this.dispute?.getDisputeFirstClaimantLawyerHasPhones
 
       return ['PENDING'].includes(this.status) && validContacts
     },
 
     wasViewed() {
-      if (this.dispute?.lastInteraction?.direction === 'INBOUND' && ['RUNNING'].includes(this.status) && ['VISUALIZATION', 'NEGOTIATOR_ACCESS', 'CLICK'].includes(this.dispute?.lastInteraction?.type)) {
-        return this.$moment().diff(this.$moment(this.dispute?.lastInteraction?.createAt?.dateTime || this.dispute?.lastInteraction?.createdAt), 'hours') >= 24
+      if (this.dispute?.getDisputeLastInteraction?.direction === 'INBOUND' && ['RUNNING'].includes(this.status) && ['VISUALIZATION', 'NEGOTIATOR_ACCESS', 'CLICK'].includes(this.dispute?.getDisputeLastInteraction?.type)) {
+        return this.$moment().diff(this.$moment(this.dispute?.getDisputeLastInteractionCreateAt), 'hours') >= 24
       }
 
       return false
     },
 
     hasUnknownParts() {
-      return ['PENDING'].includes(this.status) && (this.dispute?.unknownPolarityParty || ((this.dispute?.disputeRoles || []).filter(({ party }) => (party === 'UNKNOWN')).length) > 1)
+      return ['PENDING'].includes(this.status) && (this.dispute?.getDisputeHasUnknownPolarityParty)
     },
 
     claimantHaveInvalidDocument() {
-      const document = this.dispute?.firstClaimantDocumentNumber || this.dispute?.plaintiff?.documentNumber
+      const document = this.dispute?.getDisputeFirstClaimantDocumentNumber
 
       return ['PENDING'].includes(this.status) && document && !isValidCPF(document) && !isValidCNPJ(document)
     },
 
     lawyerHaveInvalidDocument() {
-      const document = this.dispute?.firstClaimantLawyerDocumentNumber || this.dispute?.lawyer?.documentNumber
+      const document = this.dispute?.firstClaimantLawyerDocumentNumber
 
       return ['PENDING'].includes(this.status) && document && !isValidCPF(document) && !isValidCNPJ(document)
     },
 
     hasNoNegotiationInterest() {
-      return ['RUNNING'].includes(this.status) && (this.dispute?.noNegotiationInterest || this.dispute?.properties?.NO_NEGOTIATION_INTEREST === String(true))
+      return this.dispute?.getDisputeIsInNegotiation && this.dispute?.getDisputeHasNoNegotiationInterest
     },
 
     needFolllowUp() {
       /* `dispute.favorite` é referente à "Aguardando análise da empresa." */
-      if (this.dispute?.favorite === false && this.dispute?.paused === false && this.dispute?.lastInteraction?.direction === 'OUTBOUND' && ['RUNNING'].includes(this.status)) {
-        return this.$moment().diff(this.$moment(this.dispute?.lastInteraction?.createAt?.dateTime || this.dispute?.lastInteraction?.createdAt), 'hours') >= 24
+      if (this.dispute?.getDisputeIsFavorite === false && this.dispute?.getDisputeIsPaused === false && this.dispute?.getDisputeLastInteraction?.direction === 'OUTBOUND' && this.dispute.getDisputeIsInNegotiation) {
+        return this.$moment().diff(this.$moment(this.dispute?.getDisputeLastInteractionCreateAt), 'hours') >= 24
       }
 
       return this.hasNoNegotiationInterest || this.hasUnknownParts || this.wasViewed || this.havePhone || this.lawyerHaveInvalidDocument || this.claimantHaveInvalidDocument
     },
 
     followUpDays() {
-      return this.$moment().diff(this.$moment(this.dispute?.lastInteraction?.createAt?.dateTime || this.dispute?.lastInteraction?.createdAt), 'days')
+      return this.$moment().diff(this.$moment(this.dispute?.getDisputeLastInteractionCreateAt), 'days')
     },
 
     followUpText() {
@@ -127,7 +123,8 @@ export default {
 
   methods: {
     handleClick() {
-      this.$router.push({ name: 'dispute', params: { id: this.dispute.id } })
+      // TODO: Rotear para 'ticket' dependendo da property.
+      this.$router.push({ name: 'dispute', params: { id: this.dispute.getDisputeId } })
     }
   }
 }

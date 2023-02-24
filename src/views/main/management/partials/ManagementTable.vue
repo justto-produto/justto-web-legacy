@@ -660,9 +660,6 @@ export default {
 
       if (!isCtrl && !isMeta && column.property === 'firstClaimant' && event.target.className.split(' ').includes('online-icon')) {
         this.openActiveMessageModal(row)
-      } else if (!isCtrl && !isMeta && column.property === 'firstClaimantLawyer' && row.getHasFirstClaimantLawyer) {
-        // Implemented in text span event.
-        // this.$emit('search:lawyer', { lawyer: row.getFirstClaimantLawyerName })
       } else if (row.getDisputeId && !['IMG', 'SPAN', 'BUTTON', 'I'].includes(event.target.tagName)) {
         if (isCtrl || isMeta) {
           window.open(`/#/management/dispute/${row.getDisputeId}`, '_blank')

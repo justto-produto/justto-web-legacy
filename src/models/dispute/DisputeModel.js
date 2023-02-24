@@ -16,6 +16,7 @@ export class DisputeModel {
       this.#dtoV1 = dispute
     }
 
+    // NÃO DEVE SER APAGADO!!
     Object.assign(this, dispute)
   }
 
@@ -28,7 +29,8 @@ export class DisputeModel {
   }
 
   get getDisputeId() {
-    return this.#dtoV1?.id
+    return this.#dtoV1?.id ||
+    this.#dtoV2?.disputeId
   }
 
   get getHashedDisputeId() {
@@ -52,7 +54,9 @@ export class DisputeModel {
   }
 
   get getDisputeStatus() {
-    return this.#dtoV1?.status || ''
+    return this.#dtoV1?.status ||
+      this.#dtoV2?.disputeStatus ||
+      ''
   }
 
   get getDisputeHasDocument() {
@@ -84,7 +88,8 @@ export class DisputeModel {
   }
 
   get getDisputeIsPaused() {
-    return Boolean(this.#dtoV1?.paused)
+    return Boolean(this.#dtoV1?.paused) ||
+      Boolean(this.#dtoV2?.paused)
   }
 
   get getDisputeIsExpired() {
@@ -116,7 +121,8 @@ export class DisputeModel {
   }
 
   get getDisputeIsFavorite() {
-    return Boolean(this.#dtoV1?.favorite)
+    return Boolean(this.#dtoV1?.favorite) ||
+      Boolean(this.#dtoV2?.favorite)
   }
 
   get getDisputeIsInPreNegotiation() {
@@ -208,7 +214,9 @@ export class DisputeModel {
   }
 
   get getDisputeFirstClaimantDocumentNumber() {
-    return this.#dtoV1?.firstClaimantDocumentNumber || ''
+    return this.#dtoV1?.firstClaimantDocumentNumber ||
+      this.#dtoV2?.plaintiff?.documentNumber ||
+      ''
   }
 
   get getDisputeFirstClaimantAlerts() {
@@ -221,6 +229,14 @@ export class DisputeModel {
 
   get getDisputeFirstClaimantStatus() {
     return this.#dtoV1?.firstClaimantStatus || 'OFFLINE'
+  }
+
+  get getDisputeFirstClaimantHasPhones() {
+    return (this.getDisputeRoles || []).filter(({ phones, archived, dead, party, roles }) => (
+      !archived && !dead && ['CLAIMANT'].includes(party) && (roles || []).includes('PARTY') && (phones || []).filter(({ archived, blocked, isValid }) => (
+        !archived && !blocked && isValid
+      ))
+    )).length > 0 || this.#dtoV2?.plaintiff?.hasPhones
   }
 
   // First Claymant Lowyer getters
@@ -242,7 +258,9 @@ export class DisputeModel {
   }
 
   get getDisputeFirstClaimantLawyerDocumentNumber() {
-    return this.#dtoV1?.firstClaimantLawyerDocumentNumber || ''
+    return this.#dtoV1?.firstClaimantLawyerDocumentNumber ||
+      this.#dtoV2?.lawyer?.documentNumber ||
+      ''
   }
 
   get getDisputeFirstClaimantLawyerAlerts() {
@@ -255,6 +273,14 @@ export class DisputeModel {
 
   get getDisputeFirstClaimantLawyerStatus() {
     return this.#dtoV1?.firstClaimantLawyerStatus || 'OFFLINE'
+  }
+
+  get getDisputeFirstClaimantLawyerHasPhones() {
+    return (this.getDisputeRoles || []).filter(({ phones, archived, dead, party, roles }) => (
+      !archived && !dead && ['CLAIMANT'].includes(party) && (roles || []).includes('LAWYER') && (phones || []).filter(({ archived, blocked, isValid }) => (
+        !archived && !blocked && isValid
+      ))
+    )).length > 0 || this.#dtoV2?.lawyer?.hasPhones
   }
 
   get getDisputeLastOutboundInteraction() {
@@ -282,7 +308,8 @@ export class DisputeModel {
   }
 
   get getDisputeLastInteraction() {
-    return this.#dtoV1?.lastInteraction
+    return this.#dtoV1?.lastInteraction ||
+      this.#dtoV2?.lastInteraction
   }
 
   get getDisputeHasLastInteraction() {
@@ -290,7 +317,18 @@ export class DisputeModel {
   }
 
   get getDisputeLastInteractionCreateAt() {
-    return this.getDisputeLastInteraction?.createAt?.dateTime
+    return this.#dtoV1?.lastInteraction?.createAt?.dateTime ||
+      this.#dtoV2?.lastInteraction?.createdAt
+  }
+
+  get getDisputeHasUnknownPolarityParty() {
+    return this.getDisputeRoles.filter(({ party }) => (party === 'UNKNOWN')).length > 0 ||
+      this.#dtoV2?.unknownPolarityParty
+  }
+
+  get getDisputeHasNoNegotiationInterest() {
+    return this.#dtoV1?.properties?.NO_NEGOTIATION_INTEREST === String(true) ||
+      Boolean(this.#dtoV2?.noNegotiationInterest)
   }
 
   getDisputeProperty(property) {

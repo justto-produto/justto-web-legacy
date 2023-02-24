@@ -113,7 +113,7 @@
     </div>
 
     <FollowUp
-      :dispute="ticket"
+      :dispute="dispute"
       class="communication-ticket-item-container__follow-up"
     />
 
@@ -158,6 +158,7 @@ import { mapGetters } from 'vuex'
 import preNegotiation from '@/utils/mixins/ticketPreNegotiation'
 
 import sharedMethods from './patials/sharedTicketdMethods'
+import { DisputeModel } from '@/models/dispute/DisputeModel'
 
 export default {
   name: 'TicketItem',
@@ -209,6 +210,10 @@ export default {
       } else {
         return this.$options.filters.capitalize(this.$tc(`dispute.status.${disputeStatus}`))
       }
+    },
+
+    dispute() {
+      return new DisputeModel({ dtoVersion: '2', ...this.ticket })
     }
   }
 }
