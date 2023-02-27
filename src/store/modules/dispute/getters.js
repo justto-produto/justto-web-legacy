@@ -1,8 +1,9 @@
 import moment from 'moment'
+import { DisputeModel } from '@/models/dispute/DisputeModel'
 
 const disputeGetters = {
   loadingDisputes: state => state.loading,
-  disputes: state => state.disputes,
+  disputes: state => state.disputes.map(d => new DisputeModel(d)),
   occurrences: state => state.occurrences,
   disputeQuery: state => state.query,
   disputeQueryTerm: state => state.query.term,

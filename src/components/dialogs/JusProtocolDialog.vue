@@ -642,11 +642,11 @@ export default {
     }),
 
     disputeRoles() {
-      return this.dispute.disputeRoles
+      return this.dispute.getDisputeRoles
     },
 
     disputeId() {
-      return this.dispute.id
+      return this.dispute.getDisputeId
     },
 
     defaultsDocuments() {
@@ -843,7 +843,7 @@ export default {
 
     disputeRolesFiller() {
       return new Promise((resolve, reject) => {
-        if (!this.dispute.disputeRoles || !this.dispute.disputeRoles.length) {
+        if (!this.dispute.getDisputeHasRoles) {
           this.fillerDisputeRole(this.dispute).then(resolve).catch(reject)
         } else {
           resolve()
@@ -1268,17 +1268,17 @@ export default {
     },
 
     isThamirisSigner(signer) {
-      const isThamirisSigner = this.dispute.disputeRoles.filter((role) => {
-        return role.roles.includes('NEGOTIATOR')
-      }).filter(t => {
-        return t.emails.filter(email => email.address === signer.email).length > 0
+      const isThamirisSigner = this.dispute.getDisputeRoles.filter((role) => {
+        return role.roles?.includes('NEGOTIATOR')
+      }).filter(role => {
+        return role.emails.filter(email => email.address === signer.email).length > 0
       }).length > 0
       const isThamirisEmail = signer.email === this.accountEmail
       return isThamirisSigner && isThamirisEmail
     },
 
     signDraft(signer) {
-      this.getDisputeProtocol({ disputeId: this.dispute.id, docNumber: signer.documentNumber })
+      this.getDisputeProtocol({ disputeId: this.dispute.getDisputeId, docNumber: signer.documentNumber })
       this.signDraftVisible = true
     },
 
@@ -1288,7 +1288,7 @@ export default {
     },
 
     handleDraftNeedOpen() {
-      if (this.openDraftId && Number(this.openDraftId) === Number(this.dispute.id) && !this.visible) {
+      if (this.openDraftId && Number(this.openDraftId) === Number(this.dispute.getDisputeId) && !this.visible) {
         this.$emit('update:protocolDialogVisible', true)
       }
     }

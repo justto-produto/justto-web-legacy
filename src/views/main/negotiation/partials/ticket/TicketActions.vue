@@ -81,6 +81,7 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex'
+import { DisputeModel } from '@/models/dispute/DisputeModel'
 
 export default {
   name: 'TicketActions',
@@ -395,7 +396,7 @@ export default {
       this.$jusSegment(`SUCCESSFUL_ACTION_${action}`, { ...this.ticket })
 
       if (['DISFAVOR', 'FAVORITE'].includes(action) && this.isJusttoAdmin) {
-        this.$refs.notifyOnCompanyAnalysis.open(action, this.ticket)
+        this.$refs.notifyOnCompanyAnalysis.open(action, new DisputeModel({ dtoVersion: '2', ...this.ticket }))
       }
     },
 

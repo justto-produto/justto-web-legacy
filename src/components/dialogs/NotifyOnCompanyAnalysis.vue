@@ -117,18 +117,18 @@ export default {
     ]),
 
     async open(action, ticket) {
-      if (Object.keys(ticket.lastReceivedMessage?.properties).length > 0) {
+      if (ticket.getDisputeHasLastReceivedMessageProperties) {
         const { PERSON_EMAIL, PERSON_NAME } = ticket.lastReceivedMessage?.properties
 
-        if (!ticket.lastReceivedMessage?.properties?.PERSON_EMAIL) {
-          close()
+        if (!ticket?.getDisputeLastReceivedMessageProperties?.PERSON_EMAIL) {
+          this.close()
           return
         } else {
           this.email = PERSON_EMAIL
           this.name = PERSON_NAME || ''
         }
       } else {
-        close()
+        this.close()
         return
       }
 
@@ -143,7 +143,7 @@ export default {
       })
 
       if (!this.message) {
-        close()
+        this.close()
         return
       }
 

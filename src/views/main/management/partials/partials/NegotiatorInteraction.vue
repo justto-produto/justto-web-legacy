@@ -1,22 +1,25 @@
 <template>
   <section class="negotiator-interaction__container">
     <slot name="condition" />
+
     <div class="negotiator-interaction__alert-container">
       <span
-        v-if="dispute.firstClaimant"
+        v-if="dispute.getDisputeHasFirstClaimant"
         class="alert-container__first-claimant"
       >
-        A parte <span class="alert-container__name">{{ dispute.firstClaimant.toLowerCase() }}</span>
-        está <span class="alert-container__status">{{ dispute.firstClaimantStatus || "OFFLINE" }}</span> no momento.
+        A parte <span class="alert-container__name">{{ dispute.getDisputeFirstClaimantName.toLowerCase() }}</span>
+        está <span class="alert-container__status">{{ dispute.getDisputeFirstClaimantStatus }}</span> no momento.
       </span>
+
       <span
-        v-if="dispute.firstClaimantLawyer"
+        v-if="dispute.getDisputeHasFirstClaimantLawyer"
         class="alert-container__first-claimant-lawyer"
       >
-        O advogado <span class="alert-container__name">{{ dispute.firstClaimantLawyer }}</span>
-        está <span class="alert-container__status">{{ dispute.firstClaimantLawyerStatus || "OFFLINE" }}</span> no momento.
+        O advogado <span class="alert-container__name">{{ dispute.getDisputeFirstClaimantLawyerName }}</span>
+        está <span class="alert-container__status">{{ dispute.getDisputeFirstClaimantLawyerStatus }}</span> no momento.
       </span>
     </div>
+
     <el-button
       v-if="!canShowReplyEditor"
       class="negotiator-interaction__reply-button"
@@ -26,6 +29,7 @@
     >
       Enviar mensagem
     </el-button>
+
     <div
       v-else
       class="negotiator-interaction__reply-container"
@@ -39,6 +43,7 @@
       >
         Expandir
       </el-button>
+
       <el-input
         v-model="messageDialogReplyEditor"
         type="textarea"
@@ -46,6 +51,7 @@
         placeholder="Escreva alguma coisa"
         style="padding-bottom: 10px"
       />
+
       <div class="reply-container__footer">
         <el-button
           size="mini"
@@ -74,6 +80,7 @@ export default {
       type: Object,
       required: true
     },
+
     dialogVisibility: {
       type: Boolean,
       required: true
@@ -102,31 +109,24 @@ export default {
       this.$emit('update:dialog-visibility', flag)
     },
     async sendMessage() {
-      const disputeId = this.dispute.id
-      const { lastReceivedMessage } = this.dispute
+      const disputeId = this.dispute.getDisputeId
+      const lastReceivedMessage = this.dispute.getDisputeLastReceivedMessage
       let email = ''
-      /**
-       * Busca email de interações recentes.
-       */
+
       if (lastReceivedMessage && lastReceivedMessage.properties && lastReceivedMessage.properties.PERSON_NAME) {
-        // TODO: Pegar o email do lastNegotiatorAccess.properties
-        email = lastReceivedMessage.properties.PERSON_NAME || ''
+        email = this.dispute.getDisputeLastReceivedMessageSender
       } else {
         await store.dispatch('getLastInteractions', disputeId).then(interactions => {
           email = interactions.length ? interactions[0].address || '' : ''
         })
       }
-      /**
-       * Busca o roleId do negociador.
-       */
-      const roleId = this.dispute.disputeRoles.find(role => {
-        return role.roleNameNegotiator
-      }).id
+
       const data = {
         message: this.messageDialogReplyEditor,
-        roleId,
+        roleId: null,
         email
       }
+
       store.dispatch('sendNegotiator', { disputeId, data }).then(() => {
         this.messageDialogReplyEditor = ''
         this.$jusNotification({

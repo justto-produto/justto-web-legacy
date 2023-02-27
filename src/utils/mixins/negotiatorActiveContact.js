@@ -22,15 +22,14 @@ export default {
     ]),
 
     async sendMessage() {
-      const disputeId = this.dispute.id
-      const { lastReceivedMessage } = this.dispute
+      const disputeId = this.dispute.getDisputeId
+      const lastReceivedMessage = this.dispute.getDisputeLastReceivedMessage
       let email = ''
       /**
        * Busca email de interações recentes.
        */
-      if (lastReceivedMessage && lastReceivedMessage.properties && lastReceivedMessage.properties.PERSON_NAME) {
-        // TODO: Pegar o email do lastNegotiatorAccess.properties
-        email = lastReceivedMessage.properties.PERSON_NAME || ''
+      if (lastReceivedMessage?.message?.sender) {
+        email = lastReceivedMessage?.message?.sender || ''
       } else {
         await this.getLastInteractions(disputeId).then((interactions) => {
           email = interactions.length ? interactions[0].address || '' : ''
@@ -39,12 +38,13 @@ export default {
       /**
        * Busca o roleId do negociador.
        */
-      const roleId = this.dispute.disputeRoles.find(role => {
+      /* const roleId = this.dispute.disputeRoles.find(role => {
+        // TODO: Buscar RoleId do usuário logado, ou mandar nulo.
         return role.roleNameNegotiator
-      }).id
+      }).id */
       const data = {
         message: this.messageDialogReplyEditor,
-        roleId,
+        roleId: null,
         email
       }
       this.showLoading()

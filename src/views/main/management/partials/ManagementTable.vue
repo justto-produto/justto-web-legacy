@@ -2,7 +2,7 @@
   <div class="management-table__container">
     <jus-protocol-dialog
       :protocol-dialog-visible.sync="protocolDialogVisible"
-      :dispute-id.sync="selectedDispute.id"
+      :dispute-id.sync="selectedDispute.getDisputeId"
       :dispute.sync="selectedDispute"
     />
 
@@ -38,10 +38,10 @@
       >
         <template v-slot="scope">
           <DisputeCodeLink
-            :code="scope.row.code"
-            :custom-style="{ fontWeight: (!scope.row.visualized && !['1'].includes(activeTab))? 'bold' : 'normal'}"
+            :code="scope.row.getDisputeCode"
+            :custom-style="{ fontWeight: (!scope.row.getDisputeVisualized && !['1'].includes(activeTab))? 'bold' : 'normal'}"
             tj-placement="bottom"
-            @hoverDisputeCode="hoverDisputeCode(scope.row.code)"
+            @hoverDisputeCode="hoverDisputeCode(scope.row.getDisputeCode)"
             @openTimeline="openTimelineModal(scope.row)"
           />
         </template>
@@ -54,16 +54,16 @@
         min-width="94px"
       >
         <template
-          v-if="scope.row.campaign"
+          v-if="scope.row.getDisputeCampaignName"
           slot-scope="scope"
         >
           <el-tooltip
             placement="top-start"
-            :value="actieTooltipDisputeId === scope.row.id"
-            :content="!!lastAccess[scope.row.id] ? lastAccess[scope.row.id].date : 'Ainda não sei quando você acessou esta disputa'"
+            :value="actieTooltipDisputeId === scope.row.getDisputeId"
+            :content="!!lastAccess[scope.row.getDisputeId] ? lastAccess[scope.row.getDisputeId].date : 'Ainda não sei quando você acessou esta disputa'"
           >
             <div>
-              {{ scope.row.campaign.name | capitalize }}
+              {{ scope.row.getDisputeCampaignName | capitalize }}
             </div>
           </el-tooltip>
         </template>
@@ -79,26 +79,27 @@
         <template v-slot="scope">
           <div class="first-claimant-container__cell">
             <jus-vexatious-alert
-              v-if="(scope.row.firstClaimantAlerts && scope.row.firstClaimantAlerts.length)"
-              :document-number="scope.row.firstClaimantDocumentNumber"
-              :name="scope.row.firstClaimant"
+              v-if="(scope.row.getDisputeHasFirstClaimantAlerts)"
+              :document-number="scope.row.getDisputeFirstClaimantDocumentNumber"
+              :name="scope.row.getDispueFirstClaimantName"
               style="display: flex; align-items: center;"
             />
 
             <el-tooltip
-              v-if="scope.row.firstClaimant"
+              v-if="scope.row.getDisputeHasFirstClaimant"
               class="online-icon"
-              :content="`${$options.filters.capitalize(scope.row.firstClaimant.toLowerCase().split(' ')[0])} está online`"
+              :content="`${$options.filters.capitalize(scope.row.getDisputeFirstClaimantFirstName)} está online`"
             >
               <jus-icon
-                v-if="onlineDocuments[scope.row.firstClaimantDocumentNumber] === 'ONLINE'"
+                v-if="onlineDocuments[scope.row.getDisputeFirstClaimantDocumentNumber] === 'ONLINE'"
                 icon="online"
                 style="height: 8px; width: 8px;"
               />
             </el-tooltip>
 
-            {{ scope.row.firstClaimant || '-' | capitalize }}
+            {{ scope.row.getDisputeFirstClaimantName || '-' | capitalize }}
           </div>
+
           <FollowUp :dispute="scope.row" />
         </template>
       </el-table-column>
@@ -113,23 +114,24 @@
         <template v-slot="scope">
           <div class="first-claimant-container__cell">
             <jus-vexatious-alert
-              v-if="scope.row.firstClaimantLawyerAlerts && scope.row.firstClaimantLawyerAlerts.length"
-              :document-number="scope.row.firstClaimantLawyerDocumentNumber"
-              :alerts="scope.row.firstClaimantLawyerAlerts"
+              v-if="scope.row.getDisputeHasFirstClaimantLawyerAlerts"
+              :document-number="scope.row.getDisputeFirstClaimantLawyerDocumentNumber"
+              :alerts="scope.row.getDisputeFirstClaimantLawyerAlerts"
               style="display: flex;"
             />
 
             <el-tooltip
-              v-if="scope.row.firstClaimantLawyer"
-              :content="`${$options.filters.capitalize(scope.row.firstClaimantLawyer.toLowerCase().split(' ')[0])} está online`"
+              v-if="scope.row.getDisputeHasFirstClaimantLawyer"
+              :content="`${$options.filters.capitalize(scope.row.getDisputeFirstClaimantLawyerFirstName)} está online`"
             >
               <jus-icon
-                v-if="onlineDocuments[scope.row.firstClaimantLawyerDocumentNumber] === 'ONLINE'"
+                v-if="onlineDocuments[scope.row.getDisputeFirstClaimantLawyerDocumentNumber] === 'ONLINE'"
                 icon="online"
                 style="height: 8px; width: 8px;"
               />
+
               <jus-icon
-                v-else-if="onlineDocuments[scope.row.firstClaimantLawyerOab] === 'ONLINE'"
+                v-else-if="onlineDocuments[scope.row.getDisputeFirstClaimantLawyerOab] === 'ONLINE'"
                 icon="online"
                 style="height: 8px; width: 8px;"
               />
@@ -137,13 +139,18 @@
 
             <el-tooltip
               content="Buscar disputas com este advogado"
-              :disabled="(scope.row.firstClaimantLawyer || '-') === '-'"
+              :disabled="!scope.row.getDisputeHasFirstClaimantLawyer"
               :open-delay="500"
             >
-              <div>
-                {{ scope.row.firstClaimantLawyer || '-' | capitalize }}
-              </div>
+              <span
+                v-if="scope.row.getDisputeHasFirstClaimant"
+                @click="$emit('search:lawyer', { lawyer: scope.row.getFirstClaimantLawyerName })"
+              >
+                {{ scope.row.getDisputeFirstClaimantLawyerName | capitalize }}
+              </span>
             </el-tooltip>
+
+            <span v-if="!scope.row.getDisputeHasFirstClaimantLawyer">-</span>
           </div>
         </template>
       </el-table-column>
@@ -157,8 +164,8 @@
         min-width="118px"
       >
         <template v-slot="scope">
-          <span v-if="scope.row.disputeUpperRange">
-            {{ scope.row.disputeUpperRange | currency }}
+          <span v-if="scope.row.getDisputeUpperRange">
+            {{ scope.row.getDisputeUpperRange | currency }}
           </span>
           <span v-else>-</span>
         </template>
@@ -173,7 +180,7 @@
         min-width="114px"
       >
         <template v-slot="scope">
-          {{ scope.row.lastOfferValue | currency }}
+          {{ scope.row.getDisputeLastOfferValue | currency }}
         </template>
       </el-table-column>
 
@@ -199,6 +206,7 @@
         </template>
 
         <template v-slot="scope">
+          <!-- TODO: Usar Getters da disputa aqui -->
           <ManagementLastInteraction
             :data="scope.row"
             @update:responseBoxLoading="responseBoxLoading = $event"
@@ -215,14 +223,14 @@
       >
         <template v-slot="scope">
           <el-button
-            v-if="isWonDispute(scope.row.status) || scope.row.hasDocument"
+            v-if="scope.row.getDisputeIsWon || scope.row.getDisputeHasDocument"
             plain
             size="mini"
             class="management-table__protocol_button"
             @click="showProtocolModal(scope.row)"
           >
             Minuta
-            <div :class="'management-table__protocol_button--step-' + getDocumentStep(scope.row.hasDocument, scope.row.signStatus)">
+            <div :class="'management-table__protocol_button--step-' + getDocumentStep(scope.row.getDisputeHasDocument, scope.row.getDisputeSignStatus)">
               <span /><span /><span />
             </div>
           </el-button>
@@ -252,18 +260,20 @@
       >
         <template v-slot="scope">
           <el-tooltip
-            v-if="scope.row.properties && scope.row.properties['PALAVRAS PRE NEGOCIACAO'] && scope.row.properties['MOTIVO PRE NEGOCIACAO']"
+            v-if="scope.row.getDisputeProperty('PALAVRAS PRE NEGOCIACAO') && scope.row.getDisputeProperty('MOTIVO PRE NEGOCIACAO')"
             :open-delay="600"
             popper-class="management-table__prenegotiation-tooltip"
           >
             <span
               slot="content"
-              v-html="scope.row.properties['MOTIVO PRE NEGOCIACAO']"
+              v-html="scope.row.getDisputeProperty('MOTIVO PRE NEGOCIACAO')"
             />
+
             <span>
-              {{ scope.row.properties['PALAVRAS PRE NEGOCIACAO'].split(',').join(', ').replace(/[\[\]]/gi, '') }}
+              {{ scope.row.getDisputeProperty('PALAVRAS PRE NEGOCIACAO').split(',').join(', ').replace(/[\[\]]/gi, '') || '-' }}
             </span>
           </el-tooltip>
+
           <span v-else>-</span>
         </template>
       </el-table-column>
@@ -279,15 +289,19 @@
         <template v-slot="scope">
           <el-tooltip content="Negociação encerra nos próximos 3 dias">
             <span
-              v-if="((scope.row.expirationDate && disputeNextToExpire(scope.row.expirationDate.dateTime)) || scope.row.disputeNextToExpire) && scope.row.status !== 'EXPIRED'"
+              v-if="((scope.row.getDisputeHasExpirationDate && disputeNextToExpire(scope.row.getDisputeExpirationDate)) || scope.row.getDisputeNextToExpire) && !(scope.row.getDisputeIsExpired)"
               data-testid="expiration-notify"
               class="management-table__expiration-icon position-relative"
             >
               <jus-icon icon="clock" />
+
               <i class="management-table__interaction-pulse el-icon-warning el-icon-pulse el-icon-primary" />
             </span>
           </el-tooltip>
-          <span v-if="scope.row.expirationDate">{{ scope.row.expirationDate.dateTime | moment('DD/MM/YY') }}</span>
+
+          <span v-if="scope.row.getDisputeHasExpirationDate">
+            {{ scope.row.getDisputeExpirationDate | moment('DD/MM/YY') }}
+          </span>
         </template>
       </el-table-column>
 
@@ -300,8 +314,8 @@
         min-width="90px"
       >
         <template v-slot="scope">
-          {{ $t('occurrence.type.' + scope.row.status) | capitalize }}
-          <span v-if="scope.row.paused">(pausada)</span>
+          {{ $t('occurrence.type.' + scope.row.getDisputeStatus) | capitalize }}
+          <span v-if="scope.row.getDisputeIsPaused">(pausada)</span>
         </template>
       </el-table-column>
 
@@ -314,9 +328,10 @@
         width="120px"
       >
         <template v-slot="scope">
-          <span v-if="scope.row.disputeDealValue && isWonDispute(scope.row.status)">
-            {{ scope.row.disputeDealValue | currency }}
+          <span v-if="scope.row.getDisputeDealValue && scope.row.getDisputeIsWon">
+            {{ scope.row.getDisputeDealValue | currency }}
           </span>
+
           <span v-else>-</span>
         </template>
       </el-table-column>
@@ -330,9 +345,10 @@
         align="center"
       >
         <template v-slot="scope">
-          <span v-if="scope.row.disputeDealDate && isWonDispute(scope.row.status)">
-            {{ scope.row.disputeDealDate.dateTime | moment('DD/MM/YY') }}
+          <span v-if="scope.row.getDisputeHasDealDate && scope.row.getDisputeIsWon">
+            {{ scope.row.getDisputeDealDate | moment('DD/MM/YY') }}
           </span>
+
           <span v-else>-</span>
         </template>
       </el-table-column>
@@ -343,10 +359,10 @@
       >
         <template v-slot="scope">
           <jus-dispute-actions
-            v-if="disputeActionsRow === scope.row.id"
+            v-if="disputeActionsRow === scope.row.getDisputeId"
             :dispute="scope.row"
             table-actions
-            @open:newtab="addHighlight(scope.row.id)"
+            @open:newtab="addHighlight(scope.row.getDisputeId)"
           />
         </template>
       </el-table-column>
@@ -359,6 +375,7 @@
               class="management-table__empty-table"
               data-testid="cases-empty-icon"
             />
+
             <h4 data-testid="cases-empty-text">
               Não foram encontradas disputas para<br>os filtros selecionados.
             </h4>
@@ -400,11 +417,11 @@ export default {
   name: 'ManagementTable',
 
   filters: {
-    counterProposal: function({ lastCounterOfferValue, disputeUpperRange, lastOfferValue }) {
-      if (lastCounterOfferValue) {
-        return lastCounterOfferValue
-      } else if (!disputeUpperRange && lastOfferValue) {
-        return lastOfferValue
+    counterProposal: function({ getDisputeLastCounterOfferValue, getDisputeUpperRange, getDisputeLastOfferValue }) {
+      if (getDisputeLastCounterOfferValue) {
+        return getDisputeLastCounterOfferValue
+      } else if (!getDisputeUpperRange && getDisputeLastOfferValue) {
+        return getDisputeLastOfferValue
       } else {
         return 0
       }
@@ -534,6 +551,7 @@ export default {
       },
       deep: true
     },
+
     loadingDisputes(value) {
       if (!value) {
         clearTimeout(this.showEmptyDebounce)
@@ -542,6 +560,7 @@ export default {
         }, 2000)
       }
     },
+
     canShowDialogReplyEditor() {
       if (!this.canShowDialogReplyEditor) {
         this.activeDispute = {}
@@ -570,7 +589,8 @@ export default {
 
     openActiveMessageModal(dispute) {
       this.activeDispute = dispute
-      this.canShowDialogReplyEditor = true
+
+      this.$nextTick().then(_ => { this.canShowDialogReplyEditor = true })
     },
 
     addHighlight(id) {
@@ -581,10 +601,6 @@ export default {
       this.activeDisputeIds = []
     },
 
-    isWonDispute(disputeStatus) {
-      return ['SETTLED', 'CHECKOUT', 'ACCEPTED'].includes(disputeStatus)
-    },
-
     hoverDisputeCode(code) {
       if (!this.disputeTimeline[code]) {
         this.getDisputeTimeline(code)
@@ -592,24 +608,26 @@ export default {
     },
 
     openTimelineModal(dispute) {
-      const { code, id } = dispute
-      if (!this.disputeTimeline[code] || this.disputeTimeline[code].lawsuits.length === 0) {
-        return
-      }
-      this.currentDisputeCode = code
+      const { getDisputeCode, getDisputeId } = dispute
+      if (!this.disputeTimeline[getDisputeCode] || this.disputeTimeline[getDisputeCode].lawsuits.length === 0) return
+
+      this.currentDisputeCode = getDisputeCode
+
       this.$nextTick(() => {
         this.disputeTimelineModal = true
-        this.addHighlight(id)
+        this.addHighlight(getDisputeId)
       })
-      this.$jusSegment('Linha do tempo visualizada pelo gerenciamento', { disputeId: dispute.id })
+
+      this.$jusSegment('Linha do tempo visualizada pelo gerenciamento', { disputeId: getDisputeId })
     },
 
     cellMouseEnter(row, column, cell, event) {
-      this.disputeActionsRow = row.id
+      this.disputeActionsRow = row.getDisputeId
+
       if (column.property !== 'code') {
         this.lastAccessTooltipTimeout = setTimeout(() => {
-          this.getDisputeLastAccess(row.id).then(() => {
-            this.actieTooltipDisputeId = row.id
+          this.getDisputeLastAccess(row.getDisputeId).then(() => {
+            this.actieTooltipDisputeId = row.getDisputeId
           })
         }, 600)
       }
@@ -620,33 +638,37 @@ export default {
       this.actieTooltipDisputeId = 0
     },
 
-    getDocumentStep: (hasDocument, signStatus) => getDocumentStep(hasDocument, signStatus),
+    getDocumentStep,
 
-    tableRowClassName({ row, rowIndex }) {
+    tableRowClassName({ row }) {
       let className = ''
-      if (!row.visualized && !this.tab1) {
+
+      if (!row.getDisputeVisualized && !this.tab1) {
         className += ' el-table__row--visualized-row'
       }
-      if (this.activeDisputeIds.includes(row.id)) {
+
+      if (this.activeDisputeIds.includes(row.getDisputeId)) {
         className += ' el-table__row--highlighted'
       }
+
       return className
     },
 
     handleRowClick(row, column, event) {
-      if (!event.ctrlKey && !event.metaKey && column.property === 'firstClaimant' && event.target.className.split(' ').includes('online-icon')) {
+      const isCtrl = event.ctrlKey
+      const isMeta = event.metaKey
+
+      if (!isCtrl && !isMeta && column.property === 'firstClaimant' && event.target.className.split(' ').includes('online-icon')) {
         this.openActiveMessageModal(row)
-      } else if (!event.ctrlKey && !event.metaKey && column.property === 'firstClaimantLawyer' && row.firstClaimantLawyer) {
-        this.$emit('search:lawyer', { lawyer: row.firstClaimantLawyer })
-      } else if (row.id && !['IMG', 'SPAN', 'BUTTON', 'I'].includes(event.target.tagName)) {
-        if (event.ctrlKey || event.metaKey) {
-          window.open(`/#/management/dispute/${row.id}`, '_blank')
-          this.addHighlight(row.id)
+      } else if (row.getDisputeId && !['IMG', 'SPAN', 'BUTTON', 'I'].includes(event.target.tagName)) {
+        if (isCtrl || isMeta) {
+          window.open(`/#/management/dispute/${row.getDisputeId}`, '_blank')
+          this.addHighlight(row.getDisputeId)
         } else {
           if (this.isTicket || this.showNegotiationTypeMenu) {
-            this.$router.push({ name: 'ticket', params: { id: row.id } })
+            this.$router.push({ name: 'ticket', params: { id: row.getDisputeId } })
           } else {
-            this.$router.push({ name: 'dispute', params: { id: row.id } })
+            this.$router.push({ name: 'dispute', params: { id: row.getDisputeId } })
           }
         }
       }
@@ -659,8 +681,8 @@ export default {
     handleSelectionChange(selected) {
       const ids = []
       for (const dispute of selected) {
-        if (dispute && dispute.id) {
-          ids.push(dispute.id)
+        if (dispute && dispute.getDisputeId) {
+          ids.push(dispute.getDisputeId)
         }
       }
       this.selectedIdsComp = ids
@@ -671,8 +693,11 @@ export default {
     },
 
     showProtocolModal(dispute) {
-      this.protocolDialogVisible = true
       this.selectedDispute = dispute
+
+      this.$nextTick().then(_ => {
+        this.protocolDialogVisible = true
+      })
     },
 
     handleSelectionAllDisputes(recent) {
@@ -745,6 +770,11 @@ export default {
       display: flex;
       justify-content: flex-start;
       align-items: center;
+
+      .void-cell {
+        flex: 1;
+        text-align: center;
+      }
     }
   }
 }

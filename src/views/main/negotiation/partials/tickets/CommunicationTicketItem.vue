@@ -140,7 +140,7 @@
     </el-steps>
 
     <FollowUp
-      :dispute="ticket"
+      :dispute="dispute"
       class="communication-ticket-item-container__follow-up"
     />
 
@@ -196,6 +196,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import { getDocumentStep } from '@/utils'
+import { DisputeModel } from '@/models/dispute/DisputeModel'
 import sharedMethods from './patials/sharedTicketdMethods'
 
 export default {
@@ -301,6 +302,10 @@ export default {
     plaintiffName() {
       const { plaintiff } = this.ticket
       return plaintiff ? plaintiff.name : 'Sem parte'
+    },
+
+    dispute() {
+      return new DisputeModel({ dtoVersion: '2', ...this.ticket })
     }
   },
 
