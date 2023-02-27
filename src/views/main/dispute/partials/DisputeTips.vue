@@ -84,7 +84,6 @@
 <script>
 import { getDocumentStep } from '@/utils'
 import { mapActions, mapGetters } from 'vuex'
-import { DisputeModel } from '@/models/dispute/DisputeModel'
 
 export default {
   name: 'DisputeTips',
@@ -114,11 +113,7 @@ export default {
     }),
 
     dispute() {
-      if (Object.keys(this.value).length > 0) {
-        return new DisputeModel(this.value)
-      }
-
-      return new DisputeModel(this.$store.getters.dispute)
+      return Object.keys(this.value).length > 0 ? this.value : this.$store.getters.dispute
     },
 
     documentStep() {

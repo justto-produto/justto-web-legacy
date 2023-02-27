@@ -56,10 +56,9 @@ const disputeActions = {
   },
 
   fillerDisputeRole({ _ }, dispute) {
-    const id = dispute?.getDisputeId || dispute?.id || dispute?.disputeId
-
+    console.log('fillerDisputeRole', dispute)
     return axiosDispatch({
-      url: `${disputesPath}/${id}/dispute-roles`,
+      url: `${disputesPath}/${dispute.getDisputeId}/dispute-roles`,
       mutation: 'fillerDisputeRole',
       payload: dispute
     })
