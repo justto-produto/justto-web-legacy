@@ -1,7 +1,6 @@
 <template>
   <div class="management-table__container">
     <jus-protocol-dialog
-      v-if="protocolDialogVisible"
       :protocol-dialog-visible.sync="protocolDialogVisible"
       :dispute-id.sync="selectedDispute.getDisputeId"
       :dispute.sync="selectedDispute"
