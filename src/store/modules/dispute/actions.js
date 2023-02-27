@@ -56,8 +56,6 @@ const disputeActions = {
   },
 
   fillerDisputeRole({ _ }, dispute) {
-    if (!dispute.getDisputeId) return Promise.resolve()
-
     return axiosDispatch({
       url: `${disputesPath}/${dispute.getDisputeId}/dispute-roles`,
       mutation: 'fillerDisputeRole',
