@@ -18,6 +18,7 @@ const disputeMutations = {
   },
 
   fillerDisputeRole(_, { data, payload }) {
+    payload.setDisputeRoles = (data?.content || [])
     Vue.set(payload, 'disputeRoles', data.content)
   },
 

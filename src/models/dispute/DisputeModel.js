@@ -137,8 +137,16 @@ export class DisputeModel {
     return this.getDisputeStatus === 'CANCELED'
   }
 
+  set setDisputeRoles(roles) {
+    if (this.#dtoV1?.disputeRoles) {
+      this.#dtoV1.disputeRoles = roles
+    } else if (this.#dtoV2?.disputeRoles) {
+      this.#dtoV2.disputeRoles = roles
+    }
+  }
+
   get getDisputeRoles() {
-    return this.#dtoV1?.disputeRoles || []
+    return this.#dtoV1?.disputeRoles || this.#dtoV2?.disputeRoles || []
   }
 
   get getDisputeHasRoles() {
