@@ -340,6 +340,6 @@ export class DisputeModel {
   }
 
   getDisputeProperty(property) {
-    return this.getProperties[property]
+    return this.getDisputeProperties[property]
   }
 }
