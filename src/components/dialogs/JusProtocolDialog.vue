@@ -67,6 +67,7 @@
         <!-- ESCOLHA DE TEMPLATE -->
         <div
           v-if="step === 0"
+          v-loading="waitingModels"
           class="jus-protocol-dialog__model-choice"
         >
           <div
@@ -627,7 +628,8 @@ export default {
         ]
       },
       isLowHeight: false,
-      innerWidth: window.innerWidth
+      innerWidth: window.innerWidth,
+      waitingModels: false
     }
   },
 
@@ -803,8 +805,6 @@ export default {
         document.body.style.zoom = 1
       }
     },
-
-    loading(value) { },
 
     openDraftId: {
       deep: true,
@@ -1035,6 +1035,8 @@ export default {
     },
 
     getDocument() {
+      this.waitingModels = true
+
       this.getDocumentByDisputeId(this.disputeId).then(document => {
         if (document) {
           this.document = document
@@ -1052,6 +1054,7 @@ export default {
         this.loading = false
         this.$jusNotification({ error })
       }).finally(() => {
+        this.waitingModels = false
         this.loading = false
       })
     },
@@ -1076,6 +1079,7 @@ export default {
       const { disputeId } = this
 
       this.loading = true
+      this.waitingModels = true
 
       this.$store.dispatch('createDocumentByModel', { disputeId, modelId }).then(doc => {
         this.document = doc
@@ -1105,6 +1109,7 @@ export default {
         this.$jusNotification({ error })
       }).finally(() => {
         this.loading = false
+        this.waitingModels = false
       })
     },
 
