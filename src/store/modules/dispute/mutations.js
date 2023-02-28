@@ -17,7 +17,7 @@ const disputeMutations = {
     state.timeline = { }
   },
 
-  fillerDisputeRole(_, { data, payload }) {
+  filterDisputeRole(_, { data, payload }) {
     payload.setDisputeRoles = (data?.content || [])
     Vue.set(payload, 'disputeRoles', data.content)
   },

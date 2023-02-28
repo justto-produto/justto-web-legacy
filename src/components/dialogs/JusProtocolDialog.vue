@@ -833,7 +833,7 @@ export default {
       'setDocumentSigners',
       'cleanSelectedSigners',
       'cleanSelectedSigners',
-      'fillerDisputeRole',
+      'filterDisputeRole',
       'getDisputeProtocol',
       'saveMinimizedDraft',
       'openStoredDraft',
@@ -844,7 +844,7 @@ export default {
     disputeRolesFiller() {
       return new Promise((resolve, reject) => {
         if (!this.dispute.getDisputeHasRoles) {
-          this.fillerDisputeRole(this.dispute).then(resolve).catch(reject)
+          this.filterDisputeRole(this.dispute).then(resolve).catch(reject)
         } else {
           resolve()
         }

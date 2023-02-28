@@ -321,7 +321,7 @@ export class DisputeModel {
   }
 
   get getDisputeHasLastInteraction() {
-    return Object.keys(this.getDisputeLastInteraction) > 1
+    return this.getDisputeLastInteraction?.direction?.length > 0
   }
 
   get getDisputeLastInteractionCreateAt() {

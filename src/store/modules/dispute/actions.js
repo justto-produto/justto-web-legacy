@@ -55,14 +55,14 @@ const disputeActions = {
     dispatch('getDisputeAttachments', id)
   },
 
-  fillerDisputeRole({ _ }, dispute) {
+  filterDisputeRole({ _ }, dispute) {
     const id = dispute?.getDisputeId || dispute?.id || dispute?.disputeId
 
     if (!id) return Promise.resolve()
 
     return axiosDispatch({
       url: `${disputesPath}/${dispute.getDisputeId}/dispute-roles`,
-      mutation: 'fillerDisputeRole',
+      mutation: 'filterDisputeRole',
       payload: dispute
     })
   },
