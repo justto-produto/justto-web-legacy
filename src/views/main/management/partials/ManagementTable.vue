@@ -662,7 +662,11 @@ export default {
         this.openActiveMessageModal(row)
       } else if (row.getDisputeId && !['IMG', 'SPAN', 'BUTTON', 'I'].includes(event.target.tagName)) {
         if (isCtrl || isMeta) {
-          window.open(`/#/management/dispute/${row.getDisputeId}`, '_blank')
+          if (this.isTicket || this.showNegotiationTypeMenu) {
+            window.open(`/#/negotiation/${row.getDisputeId}`, '_blank')
+          } else {
+            window.open(`/#/management/dispute/${row.getDisputeId}`, '_blank')
+          }
           this.addHighlight(row.getDisputeId)
         } else {
           if (this.isTicket || this.showNegotiationTypeMenu) {

@@ -357,8 +357,13 @@ router.beforeEach((to, from, next) => {
           }
         }
 
-        if (to.name === 'management' && Store.getters?.showNegotiationTypeMenu) {
-          next('negotiation')
+        if (Store.getters?.showNegotiationTypeMenu) {
+          if (to.name === 'management') {
+            next('negotiation')
+          } else if (to.name === 'dispute') {
+            // TODO: Verificar se é preciso SEMPRE redirecionar do dispute para o Ticket.
+            // next({ name: 'ticket', params: to.params })
+          }
         }
 
         if (from.name === 'ticket' && from.params?.id) {

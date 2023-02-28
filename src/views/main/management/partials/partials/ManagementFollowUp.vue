@@ -9,14 +9,9 @@
       :open-delay="500"
       class="follow-up-tooltip"
     >
-      <el-button
-        size="mini"
-        type="text"
-        class="follow-up-button"
-        @click="handleClick"
-      >
+      <div class="el-button el-tooltip follow-up-button follow-up-tooltip el-button--text el-button--mini">
         {{ followUpBtnText }}
-      </el-button>
+      </div>
     </el-tooltip>
   </article>
 </template>
@@ -35,7 +30,10 @@ export default {
   },
 
   computed: {
-    ...mapGetters({ isRecovery: 'isWorkspaceRecovery' }),
+    ...mapGetters({
+      isRecovery: 'isWorkspaceRecovery',
+      showNegotiationTypeMenu: 'showNegotiationTypeMenu'
+    }),
 
     status() {
       return this.dispute?.getDisputeStatus
@@ -123,8 +121,11 @@ export default {
 
   methods: {
     handleClick() {
-      // TODO: Rotear para 'ticket' dependendo da property.
-      this.$router.push({ name: 'dispute', params: { id: this.dispute.getDisputeId } })
+      if (this.showNegotiationTypeMenu) {
+        this.$router.push({ name: 'ticket', params: { id: this.dispute.getDisputeId } })
+      } else {
+        this.$router.push({ name: 'dispute', params: { id: this.dispute.getDisputeId } })
+      }
     }
   }
 }
@@ -136,8 +137,10 @@ export default {
 .follow-up-container {
   .follow-up-button {
     padding: 0;
+    color: $--color-secondary;
+    font-weight: bold;
 
-    span {
+    &:hover {
       color: $--color-secondary;
       font-weight: bold;
     }
