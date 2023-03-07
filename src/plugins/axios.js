@@ -4,6 +4,7 @@ import axios from 'axios'
 import store from '@/store'
 import { showUnavailableLoading } from '@/utils'
 
+const vue = () => document.getElementById('app')?.__vue__
 const AUTH_TOKEN = localStorage.justoken
 
 if (AUTH_TOKEN) {
@@ -70,6 +71,9 @@ _axios.interceptors.response.use(
   },
   function(error) {
     if (process.env.NODE_ENV === 'production') Sentry.captureException(error)
+    if ([500, 403].includes(error.response?.status)) {
+      vue().$jusSegment('REQUEST_ERROR', error)
+    }
     if (error.response?.status === 503) {
       showUnavailableLoading()
     }
