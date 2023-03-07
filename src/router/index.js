@@ -361,8 +361,7 @@ router.beforeEach((to, from, next) => {
           if (to.name === 'management') {
             next('negotiation')
           } else if (to.name === 'dispute') {
-            // TODO: Verificar se é preciso SEMPRE redirecionar do dispute para o Ticket.
-            // next({ name: 'ticket', params: to.params })
+            next({ name: 'ticket', params: to.params })
           }
         }
 
