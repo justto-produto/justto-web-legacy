@@ -198,7 +198,7 @@ const disputeActions = {
     })
   },
 
-  getDisputes({ commit, state }, command) {
+  getDisputes({ commit, state, getters: { useDisputeProjection, workspaceId } }, command) {
     return new Promise((resolve, reject) => {
       if (command !== 'nextPage') state.loading = true
       if (command === 'resetPages') commit('resetDisputeQueryPage')
@@ -207,14 +207,17 @@ const disputeActions = {
 
       const tempQuery = {
         ...state.query,
+        useDisputeProjection,
+        workspaceId,
         textSearch: undefined,
         textSearchType: undefined
       }
 
       const query = buildQuery(tempQuery, command, state.disputes.length)
+      const url = `http://localhost:3001/filter${query}`
 
       axiosDispatch({
-        url: `${disputesPath}/filter/apply${query}`,
+        url,
         method: 'POST',
         data: { textSearch, textSearchType }
       }).then(data => {
@@ -222,12 +225,14 @@ const disputeActions = {
           ...data,
           content: data.content.filter(d => !!d)
         }
+
         if (command === 'nextPage') {
           commit('addDisputes', dispute)
         } else {
           commit('setDisputes', dispute)
           commit('disputeSetHasNew', false)
         }
+
         commit('clearOnlineDocs')
         const onlineDocs = []
         dispute.content.map(dispute => {
