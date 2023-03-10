@@ -162,7 +162,9 @@ const disputeMutations = {
       page: 1,
       size: 20,
       term: '',
-      total: 0
+      total: 0,
+      textSearch: undefined,
+      textSearchType: undefined
     }
   },
 
@@ -180,7 +182,9 @@ const disputeMutations = {
       page: 1,
       size: 20,
       term: state.query.term,
-      total: 0
+      total: 0,
+      textSearch: undefined,
+      textSearchType: undefined
     }
   },
 
