@@ -334,6 +334,7 @@ export class DisputeModel {
   }
 
   get getDisputeFirstClaimantLawyerHasPhones() {
+    // TODO: Não achei
     return (this.getDisputeRoles || []).filter(({ phones, archived, dead, party, roles }) => (
       !archived && !dead && ['CLAIMANT'].includes(party) && (roles || []).includes('LAWYER') && (phones || []).filter(({ archived, blocked, isValid }) => (
         !archived && !blocked && isValid
