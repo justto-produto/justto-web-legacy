@@ -72,7 +72,7 @@ _axios.interceptors.response.use(
   function(error) {
     if (process.env.NODE_ENV === 'production') Sentry.captureException(error)
     if ([500, 403].includes(error.response?.status)) {
-      vue().$jusSegment('REQUEST_ERROR', error)
+      vue().$jusSegment('REQUEST_ERROR', { ...error })
     }
     if (error.response?.status === 503) {
       showUnavailableLoading()
