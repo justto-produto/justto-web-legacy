@@ -21,16 +21,17 @@ export class DisputeModel {
   }
 
   get getDisputeCode() {
-    return this.#dtoV1?.code || ''
+    return this.#dtoV1?.code || this.#dtoV3?.code || ''
   }
 
   get getDisputeVisualized() {
-    return Boolean(this.#dtoV1?.visualized)
+    return Boolean(this.#dtoV1?.visualized || this.#dtoV3?.visualized)
   }
 
   get getDisputeId() {
     return this.#dtoV1?.id ||
-    this.#dtoV2?.disputeId
+    this.#dtoV2?.disputeId ||
+    this.#dtoV3?.id
   }
 
   get getHashedDisputeId() {
@@ -38,58 +39,72 @@ export class DisputeModel {
   }
 
   get getDisputeCampaignName() {
-    return this.#dtoV1?.campaign?.name || ''
+    return this.#dtoV1?.campaign?.name ||
+    this.#dtoV3?.campaignName ||
+    ''
   }
 
   get getDisputeUpperRange() {
-    return Number(this.#dtoV1?.disputeUpperRange || 0)
+    return Number(this.#dtoV1?.disputeUpperRange || this.#dtoV3?.upperRange || 0)
   }
 
   get getDisputeLastOfferValue() {
-    return Number(this.#dtoV1?.lastOfferValue || 0)
+    // TODO: Não achei
+    return Number(this.#dtoV1?.lastOfferValue ||
+      this.#dtoV3?.proposalValue || 0) // Talvez não seja isso
   }
 
   get getDisputeLastCounterOfferName() {
+    // TODO: Não achei
     return this.#dtoV1?.lastCounterOfferName
   }
 
   get getDisputeStatus() {
     return this.#dtoV1?.status ||
       this.#dtoV2?.disputeStatus ||
+      this.#dtoV3?.status ||
       ''
   }
 
   get getDisputeHasDocument() {
-    return Boolean(this.#dtoV1?.hasDocument)
+    return Boolean(this.#dtoV1?.hasDocument || this.#dtoV3?.hasDraft)
   }
 
   get getDisputeSignStatus() {
+    // TODO: Não achei
     return this.#dtoV1?.signStatus
   }
 
   get getDisputeLastCounterOfferValue() {
-    return Number(this.#dtoV1?.lastCounterOfferValue || 0)
+    return Number(this.#dtoV1?.lastCounterOfferValue ||
+      this.#dtoV3?.counterproposalValue ||
+      0)
   }
 
   get getDisputeProperties() {
+    // TODO: Não achei
     return this.#dtoV1?.properties || {}
   }
 
   get getDisputeExpirationDate() {
-    return this.#dtoV1?.expirationDate?.dateTime || ''
+    return this.#dtoV1?.expirationDate?.dateTime ||
+      this.#dtoV3?.expirationDate ||
+      ''
   }
 
   get getDisputeHasExpirationDate() {
-    return Boolean(this.#dtoV1?.expirationDate?.dateTime)
+    return Boolean(this.getDisputeExpirationDate)
   }
 
   get getDisputeDisputeNextToExpire() {
+    // TODO: Não achei
     return Boolean(this.#dtoV1?.disputeNextToExpire)
   }
 
   get getDisputeIsPaused() {
     return Boolean(this.#dtoV1?.paused) ||
-      Boolean(this.#dtoV2?.paused)
+      Boolean(this.#dtoV2?.paused) ||
+      Boolean(this.#dtoV3?.paused)
   }
 
   get getDisputeIsExpired() {
@@ -97,32 +112,28 @@ export class DisputeModel {
   }
 
   get getDisputeDealValue() {
-    return this.#dtoV1?.disputeDealValue
-  }
-
-  get getDisputeHasDealDate() {
-    return Boolean(this.#dtoV1?.disputeDealDate?.dateTime)
+    return this.#dtoV1?.disputeDealValue ||
+      this.#dtoV3?.dealValue
   }
 
   get getDisputeDealDate() {
-    return this.#dtoV1?.disputeDealDate?.dateTime || ''
+    return this.#dtoV1?.disputeDealDate?.dateTime ||
+      this.#dtoV3?.dealDate ||
+      ''
+  }
+
+  get getDisputeHasDealDate() {
+    return Boolean(this.getDisputeDealDate)
   }
 
   get getDisputeIsWon() {
     return ['SETTLED', 'CHECKOUT', 'ACCEPTED'].includes(this.getDisputeStatus)
   }
 
-  get getHasFirstClaimantLawyer() {
-    return Boolean(this.#dtoV1?.firstClaimantLawyer)
-  }
-
-  get getFirstClaimantLawyerName() {
-    return this.#dtoV1?.firstClaimantLawyer
-  }
-
   get getDisputeIsFavorite() {
     return Boolean(this.#dtoV1?.favorite) ||
-      Boolean(this.#dtoV2?.favorite)
+      Boolean(this.#dtoV2?.favorite) ||
+      Boolean(this.#dtoV3?.favorite)
   }
 
   get getDisputeIsInPreNegotiation() {
@@ -146,6 +157,7 @@ export class DisputeModel {
   }
 
   get getDisputeRoles() {
+    // TODO: Não achei
     return this.#dtoV1?.disputeRoles || this.#dtoV2?.disputeRoles || []
   }
 
@@ -168,14 +180,18 @@ export class DisputeModel {
   }
 
   get getDisputeStrategyId() {
-    return this.#dtoV1?.strategyId || 0
+    return this.#dtoV1?.strategyId ||
+      this.#dtoV3?.strategyId ||
+      0
   }
 
   get getDisputeHasLastReceivedMessage() {
+    // TODO: Validar utilizando algum campo.
     return Boolean(Object.keys(this.getDisputeLastReceivedMessage) > 1)
   }
 
   get getDisputeLastReceivedMessage() {
+    // TODO: Não achei
     return this.#dtoV1?.lastReceivedMessage ||
       this.#dtoV2?.lastReceivedMessage || { properties: {} }
   }
@@ -210,7 +226,9 @@ export class DisputeModel {
   // First Claymant getters
 
   get getDisputeFirstClaimantName() {
-    return this.#dtoV1?.firstClaimant || ''
+    return this.#dtoV1?.firstClaimant ||
+      this.#dtoV3?.firstPartyName ||
+      ''
   }
 
   get getDisputeFirstClaimantFirstName() {
@@ -224,6 +242,7 @@ export class DisputeModel {
   get getDisputeFirstClaimantDocumentNumber() {
     return this.#dtoV1?.firstClaimantDocumentNumber ||
       this.#dtoV2?.plaintiff?.documentNumber ||
+      this.#dtoV3?.firstPartyDocument ||
       ''
   }
 
@@ -232,10 +251,12 @@ export class DisputeModel {
   }
 
   get getDisputeHasFirstClaimantAlerts() {
-    return this.getDisputeFirstClaimantAlerts.length > 0
+    return this.getDisputeFirstClaimantAlerts.length > 0 ||
+      this.#dtoV3?.hasVexatiousParty
   }
 
   get getDisputeFirstClaimantStatus() {
+    // TODO: Não achei
     return this.#dtoV1?.firstClaimantStatus || 'OFFLINE'
   }
 
@@ -244,13 +265,17 @@ export class DisputeModel {
       !archived && !dead && ['CLAIMANT'].includes(party) && (roles || []).includes('PARTY') && (phones || []).filter(({ archived, blocked, isValid }) => (
         !archived && !blocked && isValid
       ))
-    )).length > 0 || this.#dtoV2?.plaintiff?.hasPhones
+    )).length > 0 ||
+      this.#dtoV2?.plaintiff?.hasPhones ||
+      this.#dtoV3?.hasClaimantPhone
   }
 
   // First Claymant Lowyer getters
 
   get getDisputeFirstClaimantLawyerName() {
-    return this.#dtoV1?.firstClaimantLawyer || ''
+    return this.#dtoV1?.firstClaimantLawyer ||
+      this.#dtoV3?.firstLawyerName ||
+      ''
   }
 
   get getDisputeFirstClaimantLawyerFirstName() {
@@ -262,12 +287,14 @@ export class DisputeModel {
   }
 
   get getDisputeFirstClaimantLawyerOab() {
+    // TODO: Não achei
     return this.#dtoV1?.firstClaimantLawyerOab || ''
   }
 
   get getDisputeFirstClaimantLawyerDocumentNumber() {
     return this.#dtoV1?.firstClaimantLawyerDocumentNumber ||
       this.#dtoV2?.lawyer?.documentNumber ||
+      this.#dtoV3?.firstLawyerDocument ||
       ''
   }
 
@@ -276,14 +303,17 @@ export class DisputeModel {
   }
 
   get getDisputeHasFirstClaimantLawyerAlerts() {
-    return this.getDisputeFirstClaimantLawyerAlerts.length > 0
+    return this.getDisputeFirstClaimantLawyerAlerts.length > 0 ||
+      this.#dtoV3?.hasVexatiousLawyer
   }
 
   get getDisputeFirstClaimantLawyerStatus() {
+    // TODO: Não achei
     return this.#dtoV1?.firstClaimantLawyerStatus || 'OFFLINE'
   }
 
   get getDisputeFirstClaimantLawyerHasPhones() {
+    // TODO: Não achei
     return (this.getDisputeRoles || []).filter(({ phones, archived, dead, party, roles }) => (
       !archived && !dead && ['CLAIMANT'].includes(party) && (roles || []).includes('LAWYER') && (phones || []).filter(({ archived, blocked, isValid }) => (
         !archived && !blocked && isValid
@@ -292,14 +322,17 @@ export class DisputeModel {
   }
 
   get getDisputeLastOutboundInteraction() {
+    // TODO: Não achei
     return this.#dtoV1?.lastOutboundInteraction || {}
   }
 
   get getDisputeHasLastOutboundInteraction() {
+    // TODO: Não achei
     return Boolean(this.getDisputeLastOutboundInteraction?.id)
   }
 
   get getDisputeLastOutboundInteractionMessage() {
+    // TODO: Não achei
     return this.getDisputeLastOutboundInteraction?.message || {}
   }
 
@@ -308,35 +341,49 @@ export class DisputeModel {
   }
 
   get getDisputeHasLastNegotiatorAccess() {
-    return Boolean(this.getDisputeLastNegotiatorAccess?.id)
+    return Boolean(this.getDisputeLastNegotiatorAccess?.id) ||
+      Boolean(this.#dtoV3?.lastNegotiatorAccessUsingCpf) ||
+      Boolean(this.#dtoV3?.lastNegotiatorAccessUsingOab)
   }
 
   get getDisputeLastNegotiatorAccessCreatAt() {
+    // TODO: Não achei
     return this.#dtoV1?.lastNegotiatorAccess?.createAt?.dateTime
   }
 
+  /**
+   * Principais acessos:
+   * .direction
+   * .type
+   * .createAt
+   */
   get getDisputeLastInteraction() {
+    // TODO: Não achei
     return this.#dtoV1?.lastInteraction ||
       this.#dtoV2?.lastInteraction
   }
 
   get getDisputeHasLastInteraction() {
+    // TODO: Não achei
     return this.getDisputeLastInteraction?.direction?.length > 0
   }
 
   get getDisputeLastInteractionCreateAt() {
+    // TODO: Não achei
     return this.#dtoV1?.lastInteraction?.createAt?.dateTime ||
       this.#dtoV2?.lastInteraction?.createdAt
   }
 
   get getDisputeHasUnknownPolarityParty() {
+    // TODO: Não achei
     return this.getDisputeRoles.filter(({ party }) => (party === 'UNKNOWN')).length > 0 ||
       this.#dtoV2?.unknownPolarityParty
   }
 
   get getDisputeHasNoNegotiationInterest() {
     return this.#dtoV1?.properties?.NO_NEGOTIATION_INTEREST === String(true) ||
-      Boolean(this.#dtoV2?.noNegotiationInterest)
+      Boolean(this.#dtoV2?.noNegotiationInterest) ||
+      Boolean(this.#dtoV3?.hasNegotiationInterest)
   }
 
   getDisputeProperty(property) {

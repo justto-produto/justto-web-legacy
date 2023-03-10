@@ -214,11 +214,11 @@ const disputeActions = {
       }
 
       const query = buildQuery(tempQuery, command, state.disputes.length)
-      // const url = `http://localhost:3001/filter${query}`
+      const url = `http://localhost:3001/filter${query}`
 
       axiosDispatch({
-        url: `${disputesPath}/filter/apply${query}`,
-        // url,
+        // url: `${disputesPath}/filter/apply${query}`,
+        url,
         method: 'POST',
         data: { textSearch, textSearchType }
       }).then(data => {
