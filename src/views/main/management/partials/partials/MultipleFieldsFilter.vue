@@ -56,6 +56,11 @@ export default {
       handler: 'handleChangeModel',
       immediate: false,
       deep: true
+    },
+
+    value: {
+      deep: true,
+      handler: 'handleChangeValue'
     }
   },
 
@@ -91,6 +96,11 @@ export default {
       this.field = 'CODE'
       this.model = ''
       this.handleEmitInput()
+    },
+
+    handleChangeValue() {
+      this.field = this.value?.textSearchType || 'CODE'
+      this.model = this.value?.textSearch || ''
     }
   }
 }
