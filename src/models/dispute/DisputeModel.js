@@ -187,7 +187,7 @@ export class DisputeModel {
 
   get getDisputeHasLastReceivedMessage() {
     // TODO: Validar utilizando algum campo.
-    return Boolean(Object.keys(this.getDisputeLastReceivedMessage) > 1)
+    return Boolean(this.getDisputeLastReceivedMessage?.type)
   }
 
   get getDisputeLastReceivedMessage() {
