@@ -9,6 +9,7 @@ const disputesPath = 'api/disputes'
 const disputesV2Patch = 'api/disputes/v2'
 const documentsPath = 'api/office/documents'
 const exportPath = '/api/v2/dispute/export/request'
+const bffPath = 'api/justto-web-management-bff/v1/filter'
 
 const disputeActions = {
   SOCKET_ADD_DISPUTE({ commit, state }, disputeChanged) {
@@ -214,10 +215,9 @@ const disputeActions = {
       }
 
       const query = buildQuery(tempQuery, command, state.disputes.length)
-      const url = `http://localhost:3001/filter${query}`
+      const url = `${bffPath}${query}`
 
       axiosDispatch({
-        // url: `${disputesPath}/filter/apply${query}`,
         url,
         method: 'POST',
         data: { textSearch, textSearchType }
