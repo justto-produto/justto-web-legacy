@@ -9,7 +9,7 @@ const disputesPath = 'api/disputes'
 const disputesV2Patch = 'api/disputes/v2'
 const documentsPath = 'api/office/documents'
 const exportPath = '/api/v2/dispute/export/request'
-const bffPath = 'api/justto-web-management-bff/v1/filter'
+const bffPath = `${disputesPath}/filter/apply` // 'api/justto-web-management-bff/v1/filter'
 
 const disputeActions = {
   SOCKET_ADD_DISPUTE({ commit, state }, disputeChanged) {
