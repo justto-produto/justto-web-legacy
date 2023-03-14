@@ -186,7 +186,6 @@ export class DisputeModel {
   }
 
   get getDisputeHasLastReceivedMessage() {
-    // TODO: Validar utilizando algum campo.
     return Boolean(this.getDisputeLastReceivedMessage?.type)
   }
 
@@ -337,6 +336,7 @@ export class DisputeModel {
   }
 
   get getDisputeLastNegotiatorAccess() {
+    // TODO: Não achei
     return this.#dtoV1?.lastNegotiatorAccess || {}
   }
 
