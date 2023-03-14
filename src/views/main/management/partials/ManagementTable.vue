@@ -116,7 +116,6 @@
             <jus-vexatious-alert
               v-if="scope.row.getDisputeHasFirstClaimantLawyerAlerts"
               :document-number="scope.row.getDisputeFirstClaimantLawyerDocumentNumber"
-              :alerts="scope.row.getDisputeFirstClaimantLawyerAlerts"
               style="display: flex;"
             />
 
@@ -144,7 +143,7 @@
             >
               <span
                 v-if="scope.row.getDisputeHasFirstClaimant"
-                @click="$emit('search:lawyer', { lawyer: scope.row.getFirstClaimantLawyerName })"
+                @click="$emit('search:lawyer', { lawyer: scope.row.getDisputeFirstClaimantLawyerName })"
               >
                 {{ scope.row.getDisputeFirstClaimantLawyerName | capitalize }}
               </span>
