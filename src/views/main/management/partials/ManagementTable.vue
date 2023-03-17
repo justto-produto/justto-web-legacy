@@ -259,7 +259,7 @@
       >
         <template v-slot="scope">
           <el-tooltip
-            v-if="scope.row.getDisputeProperty('PALAVRAS PRE NEGOCIACAO') && scope.row.getDisputeProperty('MOTIVO PRE NEGOCIACAO')"
+            v-if="scope.row.getDisputePropertyPreNegotiationWords && scope.row.getDisputeProperty('MOTIVO PRE NEGOCIACAO')"
             :open-delay="600"
             popper-class="management-table__prenegotiation-tooltip"
           >
@@ -269,7 +269,7 @@
             />
 
             <span>
-              {{ scope.row.getDisputeProperty('PALAVRAS PRE NEGOCIACAO').split(',').join(', ').replace(/[\[\]]/gi, '') || '-' }}
+              {{ scope.row.getDisputePropertyPreNegotiationWords.split(',').join(', ').replace(/[\[\]]/gi, '') || '-' }}
             </span>
           </el-tooltip>
 

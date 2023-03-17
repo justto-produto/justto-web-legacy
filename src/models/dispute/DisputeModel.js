@@ -1,3 +1,5 @@
+import moment from 'moment'
+
 export class DisputeModel {
   #dtoV1
   // TODO: Mapear Ticket
@@ -49,14 +51,12 @@ export class DisputeModel {
   }
 
   get getDisputeLastOfferValue() {
-    // TODO: Não achei
     return Number(this.#dtoV1?.lastOfferValue ||
-      this.#dtoV3?.proposalValue || 0) // Talvez não seja isso
+      this.#dtoV3?.dealValue || 0)
   }
 
   get getDisputeLastCounterOfferName() {
-    // TODO: Não achei
-    return this.#dtoV1?.lastCounterOfferName
+    return this.#dtoV1?.lastCounterOfferName || this.#dtoV3?.ownerCounterproposal
   }
 
   get getDisputeStatus() {
@@ -71,8 +71,7 @@ export class DisputeModel {
   }
 
   get getDisputeSignStatus() {
-    // TODO: Não achei
-    return this.#dtoV1?.signStatus
+    return this.#dtoV1?.signStatus || this.#dtoV3?.awaitingSignature ? 'SIGNING' : (this.#dtoV3?.signedDraft ? 'SIGNED' : null)
   }
 
   get getDisputeLastCounterOfferValue() {
@@ -82,8 +81,17 @@ export class DisputeModel {
   }
 
   get getDisputeProperties() {
-    // TODO: Não achei
+    // TODO: Não utilizar
     return this.#dtoV1?.properties || {}
+  }
+
+  get getDisputePropertyPreNegotiationWords() {
+    return this.#dtoV1?.properties['PALAVRAS PRE NEGOCIACAO'] || this.#dtoV3?.prenegotiationKeywords
+  }
+
+  get getDisputePropertyPreNegotiationReason() {
+    // TODO: Não achei
+    return this.#dtoV1?.properties['MOTIVO PRE NEGOCIACAO']
   }
 
   get getDisputeExpirationDate() {
@@ -97,7 +105,10 @@ export class DisputeModel {
   }
 
   get getDisputeDisputeNextToExpire() {
-    // TODO: Não achei
+    if (this.#dtoV3?.expirationDate) {
+      return moment(this.#dtoV3?.expirationDate).diff(moment(), 'days') <= 3
+    }
+
     return Boolean(this.#dtoV1?.disputeNextToExpire)
   }
 
@@ -255,7 +266,10 @@ export class DisputeModel {
   }
 
   get getDisputeFirstClaimantStatus() {
-    // TODO: Não achei
+    if (this.#dtoV3?.lastNegotiatorAccessUsingCpf) {
+      return moment(this.#dtoV3?.lastNegotiatorAccessUsingCpf).diff(moment, 'minutes') >= 5
+    }
+
     return this.#dtoV1?.firstClaimantStatus || 'OFFLINE'
   }
 
@@ -286,8 +300,7 @@ export class DisputeModel {
   }
 
   get getDisputeFirstClaimantLawyerOab() {
-    // TODO: Não achei
-    return this.#dtoV1?.firstClaimantLawyerOab || ''
+    return this.#dtoV1?.firstClaimantLawyerOab || this.#dtoV3?.firstLawyerOab || ''
   }
 
   get getDisputeFirstClaimantLawyerDocumentNumber() {
@@ -307,17 +320,19 @@ export class DisputeModel {
   }
 
   get getDisputeFirstClaimantLawyerStatus() {
-    // TODO: Não achei
+    if (this.#dtoV3?.lastNegotiatorAccessUsingOab) {
+      return moment(this.#dtoV3?.lastNegotiatorAccessUsingOab).diff(moment, 'minutes') >= 5
+    }
+
     return this.#dtoV1?.firstClaimantLawyerStatus || 'OFFLINE'
   }
 
   get getDisputeFirstClaimantLawyerHasPhones() {
-    // TODO: Não achei
     return (this.getDisputeRoles || []).filter(({ phones, archived, dead, party, roles }) => (
       !archived && !dead && ['CLAIMANT'].includes(party) && (roles || []).includes('LAWYER') && (phones || []).filter(({ archived, blocked, isValid }) => (
         !archived && !blocked && isValid
       ))
-    )).length > 0 || this.#dtoV2?.lawyer?.hasPhones
+    )).length > 0 || this.#dtoV2?.lawyer?.hasPhones || this.#dtoV3?.hasLawyerClaimantPhone
   }
 
   get getDisputeLastOutboundInteraction() {
