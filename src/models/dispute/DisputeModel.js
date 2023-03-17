@@ -286,7 +286,8 @@ export class DisputeModel {
       ))
     )).length > 0 ||
       this.#dtoV2?.plaintiff?.hasPhones ||
-      this.#dtoV3?.hasClaimantPhone
+      this.#dtoV3?.hasClaimantPhone ||
+      this.#dtoV3?.existsPlaintiffWithValidPhone
   }
 
   // First Claymant Lowyer getters
@@ -334,7 +335,6 @@ export class DisputeModel {
   }
 
   get getDisputeFirstClaimantLawyerHasPhones() {
-    // TODO: Não achei
     return (this.getDisputeRoles || []).filter(({ phones, archived, dead, party, roles }) => (
       !archived && !dead && ['CLAIMANT'].includes(party) && (roles || []).includes('LAWYER') && (phones || []).filter(({ archived, blocked, isValid }) => (
         !archived && !blocked && isValid
@@ -382,8 +382,21 @@ export class DisputeModel {
   get getDisputeLastInteraction() {
     // TODO: Não achei
     return this.#dtoV1?.lastInteraction ||
-      this.#dtoV2?.lastInteraction
+      this.#dtoV2?.lastInteraction ||
+      {
+        id: this.#dtoV3?.lastInteractionId,
+        type: this.#dtoV3?.lastInteractionType,
+        direction: this.#dtoV3?.lastInteractionDirection,
+        createdAt: this.#dtoV3?.lastInteractionCreatedAt
+      }
   }
+
+  /**
+   * lastInteractionId        -> ID da última interação
+   * lastInteractionType      -> Tipo da última interação
+   * lastInteractionDirection -> "Direção" (sentido) da última interação
+   * lastInteractionCreatedAt -> Data da última interação
+   */
 
   get getDisputeHasLastInteraction() {
     // TODO: Não achei
@@ -393,7 +406,8 @@ export class DisputeModel {
   get getDisputeLastInteractionCreateAt() {
     // TODO: Não achei
     return this.#dtoV1?.lastInteraction?.createAt?.dateTime ||
-      this.#dtoV2?.lastInteraction?.createdAt
+      this.#dtoV2?.lastInteraction?.createdAt ||
+      this.#dtoV3?.lastInteractionCreatedAt
   }
 
   get getDisputeHasUnknownPolarityParty() {
