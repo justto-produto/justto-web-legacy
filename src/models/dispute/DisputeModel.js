@@ -71,10 +71,7 @@ export class DisputeModel {
   }
 
   get getDisputeSignStatus() {
-    if (this.#dtoV3) {
-      return this.#dtoV3?.awaitingSignature ? 'SIGNING' : (this.#dtoV3?.signedDraft ? 'SIGNED' : null)
-    }
-    return this.#dtoV1?.signStatus
+    return this.#dtoV1?.signStatus || this.#dtoV3?.awaitingSignature ? 'SIGNING' : (this.#dtoV3?.signedDraft ? 'SIGNED' : null)
   }
 
   get getDisputeLastCounterOfferValue() {

@@ -114,25 +114,25 @@ export default {
     }),
 
     dispute() {
-      return Object.keys(this.value).length > 0 ? new DisputeModel({ dtoVersion: '2', ...this.value }) : new DisputeModel({ dtoVersion: '1', ...this.$store.getters.dispute })
+      return Object.keys(this.value).length > 0 ? new DisputeModel({ ...this.value, dtoVersion: '2' }) : new DisputeModel({ ...this.$store.getters.dispute, dtoVersion: '1' })
     },
 
     documentStep() {
-      return getDocumentStep(this.dispute.getDisputeHasDocument, this.dispute.getDisputeSignStatus)
+      return getDocumentStep(this.dispute.hasDocument, this.dispute.signStatus)
     },
 
     showProtocol() {
-      return ['ACCEPTED', 'CHECKOUT', 'SETTLED'].includes(this.dispute.getDisputeStatus)
+      return ['ACCEPTED', 'CHECKOUT', 'SETTLED'].includes(this.dispute.status)
     },
 
     hasDocumentSignURL() {
-      return this.document?.signedDocument?.signKey
+      return this.document.signedDocument && this.document.signedDocument.signKey
     }
   },
 
   created() {
     if (this.documentStep >= 2) {
-      this.getDocumentByDisputeId(this.dispute.getDisputeId).then(document => {
+      this.getDocumentByDisputeId(this.dispute.id).then(document => {
         this.document = document
       })
     }
@@ -141,7 +141,7 @@ export default {
     ...mapActions(['getDocumentByDisputeId']),
     showProtocolDialog() {
       // SEGMENT TRACK
-      this.$jusSegment('Gerenciar minuta dentro do ticket view', { disputeId: this.dispute.getDisputeId })
+      this.$jusSegment('Gerenciar minuta dentro do ticket view', { disputeId: this.dispute.id })
       this.protocolDialogVisible = true
     },
     copyDocumentURL() {
