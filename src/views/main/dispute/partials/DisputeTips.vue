@@ -118,7 +118,10 @@ export default {
     },
 
     documentStep() {
-      return getDocumentStep(this.dispute.hasDocument, this.dispute.signStatus)
+      return getDocumentStep(
+        (this.dispute?.getDisputeHasDocument || this.dispute?.hasDocument),
+        (this.dispute?.getDisputeSignStatus || this.dispute.signStatus)
+      )
     },
 
     showProtocol() {
