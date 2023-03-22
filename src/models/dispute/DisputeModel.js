@@ -168,6 +168,8 @@ export class DisputeModel {
       this.#dtoV1.disputeRoles = roles
     } else if (this.#dtoV2?.disputeRoles) {
       this.#dtoV2.disputeRoles = roles
+    } else if (this.#dtoV3?.disputeRoles) {
+      this.#dtoV3.disputeRoles = roles
     }
   }
 

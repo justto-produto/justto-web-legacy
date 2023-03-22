@@ -788,14 +788,14 @@ export default {
         this.getSignerStatus()
 
         this.openStoredDraft()
-        this.disputeRolesFiller(this.dispute).then(() => {
+        this.disputeRolesFilter(this.dispute).then(({ content: roles }) => {
           this.loading = true
           this.loadingChooseRecipients = false
           this.loadingDownload = false
           this.step = 0
           this.recipients = {}
           this.signers = ''
-          this.roles = JSON.parse(JSON.stringify(this.disputeRoles))
+          this.roles = JSON.parse(JSON.stringify(roles.filter(({ archived }) => !archived) || this.disputeRoles))
           this.emailForm.email = {}
           this.getDocument()
           this.roleForm.role = ''
@@ -820,7 +820,7 @@ export default {
       this.isLowHeight = true
       this.fullscreen = true
     }
-    this.disputeRolesFiller()
+    this.disputeRolesFilter()
     this.handleDraftNeedOpen()
   },
 
@@ -841,13 +841,9 @@ export default {
       'getDocumentUrl'
     ]),
 
-    disputeRolesFiller() {
+    disputeRolesFilter() {
       return new Promise((resolve, reject) => {
-        if (!this.dispute.getDisputeHasRoles) {
-          this.filterDisputeRole(this.dispute).then(resolve).catch(reject)
-        } else {
-          resolve()
-        }
+        this.filterDisputeRole(this.dispute).then(resolve).catch(reject)
       })
     },
 
