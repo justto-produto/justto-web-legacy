@@ -118,7 +118,7 @@ export default {
       if (roles.includes('LAWYER') && !roles.includes('PARTY')) {
         return 'lawyer'
       } else if (roles.includes('PARTY') && !roles.includes('LAWYER')) {
-        return polarity === 'CLAIMANT' ? 'plaintff' : 'company'
+        return polarity === 'CLAIMANT' ? 'plaintff' : (polarity === 'RESPONDENT' ? 'company' : 'more-info')
       } else if (roles.includes('PARTY') && roles.includes('LAWYER')) {
         return 'own-cause'
       } else if (roles.includes('NEGOTIATOR')) {
@@ -171,6 +171,8 @@ export default {
 
   .party-resumed__header-avatar {
     margin-right: 10px;
+    width: 32px;
+    height: 32px;
   }
 
   .party-resumed__header-document {

@@ -7,6 +7,7 @@
     >
       {{ $tc('dispute.overview.label.contact-found', contactsMetadataCount, { count: contactsMetadataCount }) }} {{ $t('dispute.overview.label.in-the-attachments') }}
     </a>
+
     <div class="overview-parties__list">
       <el-collapse
         v-model="activeCollapseItem"
