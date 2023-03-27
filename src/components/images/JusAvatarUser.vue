@@ -191,6 +191,11 @@ export default {
     width: 1.4rem;
     height: 1.4rem;
   }
+
+  &.use-padding {
+    padding: 0.6rem;
+  }
+
   .communication-ticket-item-plaintiff-status-online {
     position: absolute;
     bottom: 0;

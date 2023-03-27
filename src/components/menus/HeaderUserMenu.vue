@@ -23,9 +23,9 @@
       >
         <span class="el-dropdown-link">
           <jus-avatar-user
-            class="md"
+            class="use-padding"
             :name="name"
-            :size="avatarSize"
+            size="md"
           />
           <div class="usermenu-container__name md">
             <div style="text-transform: capitalize;">
@@ -160,7 +160,7 @@ export default {
       return this.teamName.length > 20
     },
     avatarSize() {
-      return this.width <= 1600 ? 'mini' : 'sm'
+      return 'sm'// this.width <= 1600 ? 'mini' : 'sm'
     }
   },
 
