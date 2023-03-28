@@ -111,7 +111,8 @@ export default {
       if (Boolean(this.loading) || Boolean(this.ended)) return
 
       const { target: { offsetHeight, scrollTop, scrollHeight } } = event
-      const heightPercentage = parseInt(((offsetHeight + scrollTop) / scrollHeight) * 100)
+      const height = offsetHeight * (this.reverse ? -1 : 1)
+      const heightPercentage = parseInt(((height + scrollTop) / scrollHeight) * 100)
 
       if (this.reverse ? heightPercentage <= 30 : heightPercentage >= 70) {
         this.startLoading()

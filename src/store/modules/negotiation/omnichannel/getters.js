@@ -50,6 +50,8 @@ const omnichannelGetters = {
 
   getGroupedOccurrences: state => state.groupedOccurrences,
 
+  getOccurrencesIsInLastPage: state => state.lastPage,
+
   getGroupedOccurrencesById: state => (id) => {
     return state.groupedOccurrences[id] || []
   }

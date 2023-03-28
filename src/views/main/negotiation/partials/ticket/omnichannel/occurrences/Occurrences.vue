@@ -13,7 +13,7 @@
         v-if="filter.page > 1"
         :target="scrollTarget"
         :loading.sync="localLoading"
-        :ended="occurrences.length >= totalOfOccurrences"
+        :ended="isInLastPage"
         :empty="Boolean(occurrences.length === 0)"
         reverse
         empty-text="Sem mensagens"
@@ -85,7 +85,8 @@ export default {
       backups: 'getMessagesBackupById',
       recipients: 'getEditorRecipients',
       autodetectRecipient: 'workspaceAutodetectRecipient',
-      totalOfOccurrences: 'getTotalOccurrences'
+      totalOfOccurrences: 'getTotalOccurrences',
+      isInLastPage: 'getOccurrencesIsInLastPage'
     }),
 
     infiniteLoadingIdentifier() {
