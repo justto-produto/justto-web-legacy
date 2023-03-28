@@ -108,6 +108,7 @@
           <i class="el-icon-plus icon--white" />
         </el-button>
       </div>
+
       <el-table
         v-if="party.roles && party.roles.includes('LAWYER')"
         :data="party.oabs"
@@ -120,6 +121,7 @@
             {{ scope.row.number + '-' + scope.row.state || '' }}
           </div>
         </el-table-column>
+
         <el-table-column
           fixed="right"
           align="right"
@@ -135,6 +137,7 @@
           </template>
         </el-table-column>
       </el-table>
+
       <el-form-item
         label="Telefone"
         prop="phone"
@@ -155,6 +158,7 @@
           </el-button>
         </div>
       </el-form-item>
+
       <el-table
         :data="party.phones"
         :show-header="false"
@@ -166,6 +170,7 @@
             {{ scope.row.number | phoneNumber }}
           </div>
         </el-table-column>
+
         <el-table-column
           fixed="right"
           align="right"
@@ -198,6 +203,7 @@
           </template>
         </el-table-column>
       </el-table>
+
       <el-form-item
         label="E-mail"
         prop="email"
@@ -209,6 +215,7 @@
             @keydown.enter.native="addEmail()"
             @blur="addEmail()"
           />
+
           <el-button
             type="primary"
             data-testid="add-email"
@@ -218,6 +225,7 @@
           </el-button>
         </div>
       </el-form-item>
+
       <el-table
         :data="party.emails"
         :show-header="false"
@@ -229,6 +237,7 @@
             {{ scope.row.address }}
           </span>
         </el-table-column>
+
         <el-table-column
           fixed="right"
           align="right"
@@ -273,6 +282,7 @@
             @create="handleNewBankAccount"
           >
             <a
+              id="bankAccountRef"
               class="bank-accounts__link"
             >
               <i class="el-icon-plus icon-white" />
@@ -280,6 +290,7 @@
           </PartyBankAccountDialog>
         </a>
       </h4>
+
       <el-table
         :data="party.bankAccounts"
         :show-header="false"
@@ -291,7 +302,17 @@
             <span>
               {{ scope.row.name }}
             </span>
-            <div style="font-size: 12px;">
+
+            <div
+              v-if="scope.row.type === 'PIX'"
+              style="font-size: 12px;"
+            >
+              PIX | {{ scope.row.document || scope.row.email || scope.row.number }}
+            </div>
+
+            <div
+              v-else
+              style="font-size: 12px;">
               {{ scope.row.bank }} | {{ scope.row.agency }} | {{ scope.row.number }}
             </div>
           </section>
@@ -310,6 +331,7 @@
         </el-table-column>
       </el-table>
     </el-form>
+
     <span slot="footer">
       <el-button
         plain
@@ -317,6 +339,7 @@
       >
         Cancelar
       </el-button>
+
       <el-button
         :loading="loading"
         type="primary"
@@ -417,7 +440,9 @@ export default {
     },
 
     openTabEditBank() {
-      this.$refs.partyBankAccountDialog.openBankAccountDialog({})
+      this.$refs.partyBankAccountDialog.openBankAccountDialog({
+        name: this.party?.name || ''
+      })
     },
 
     addPhone() {
