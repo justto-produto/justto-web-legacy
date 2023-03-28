@@ -290,6 +290,7 @@
           </PartyBankAccountDialog>
         </a>
       </h4>
+
       <el-table
         :data="party.bankAccounts"
         :show-header="false"
@@ -301,7 +302,17 @@
             <span>
               {{ scope.row.name }}
             </span>
-            <div style="font-size: 12px;">
+
+            <div
+              v-if="scope.row.type === 'PIX'"
+              style="font-size: 12px;"
+            >
+              PIX | {{ scope.row.document || scope.row.email || scope.row.number }}
+            </div>
+
+            <div
+              v-else
+              style="font-size: 12px;">
               {{ scope.row.bank }} | {{ scope.row.agency }} | {{ scope.row.number }}
             </div>
           </section>
