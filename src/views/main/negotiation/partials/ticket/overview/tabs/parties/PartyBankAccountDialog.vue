@@ -272,6 +272,7 @@
     </span>
 
     <span
+      id="bankAccountRef"
       ref="reference"
       slot="reference"
       class="bank-account__reference"
@@ -517,7 +518,7 @@ export default {
     handleClick(event) {
       if (!this.bankAccountDialogVisible) return
 
-      const preventClose = this.$refs.reference === event?.target?.parentNode
+      const preventClose = this.$refs.reference?.id === event?.target?.parentNode?.id
 
       if (!preventClose) { this.closeDialog() }
     }
