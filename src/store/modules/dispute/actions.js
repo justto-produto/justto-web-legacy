@@ -208,7 +208,7 @@ const disputeActions = {
 
       const tempQuery = {
         ...state.query,
-        useDisputeProjection,
+        useDisputeProjection: !useDisputeProjection,
         workspaceId,
         textSearch: undefined,
         textSearchType: undefined

@@ -339,7 +339,7 @@ export class DisputeModel {
       !archived && !dead && ['CLAIMANT'].includes(party) && (roles || []).includes('LAWYER') && (phones || []).filter(({ archived, blocked, isValid }) => (
         !archived && !blocked && isValid
       ))
-    )).length > 0 || this.#dtoV2?.lawyer?.hasPhones || this.#dtoV3?.hasLawyerClaimantPhone
+    )).length > 0 || this.#dtoV2?.lawyer?.hasPhones || this.#dtoV3?.hasLawyersClaimantPhone
   }
 
   get getDisputeLastOutboundInteraction() {
@@ -397,7 +397,8 @@ export class DisputeModel {
   get getDisputeHasUnknownPolarityParty() {
     // TODO: Não achei
     return this.getDisputeRoles.filter(({ party }) => (party === 'UNKNOWN')).length > 0 ||
-      this.#dtoV2?.unknownPolarityParty
+      this.#dtoV2?.unknownPolarityParty ||
+      this.#dtoV3?.unknownPolarityParty
   }
 
   get getDisputeHasNoNegotiationInterest() {
