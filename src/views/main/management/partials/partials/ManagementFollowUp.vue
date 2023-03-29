@@ -64,7 +64,7 @@ export default {
     },
 
     lawyerHaveInvalidDocument() {
-      const document = this.dispute?.firstClaimantLawyerDocumentNumber
+      const document = this.dispute?.getDisputeFirstClaimantLawyerDocumentNumber
 
       return ['PENDING'].includes(this.status) && document && !isValidCPF(document) && !isValidCNPJ(document)
     },
@@ -121,11 +121,7 @@ export default {
 
   methods: {
     handleClick() {
-      if (this.showNegotiationTypeMenu) {
-        this.$router.push({ name: 'ticket', params: { id: this.dispute.getDisputeId } })
-      } else {
-        this.$router.push({ name: 'dispute', params: { id: this.dispute.getDisputeId } })
-      }
+      this.$emit('click')
     }
   }
 }

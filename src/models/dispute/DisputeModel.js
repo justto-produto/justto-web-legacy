@@ -286,7 +286,8 @@ export class DisputeModel {
       ))
     )).length > 0 ||
       this.#dtoV2?.plaintiff?.hasPhones ||
-      this.#dtoV3?.hasClaimantPhone
+      this.#dtoV3?.hasClaimantPhone ||
+      this.#dtoV3?.existsPlaintiffWithValidPhone
   }
 
   // First Claymant Lowyer getters
@@ -338,7 +339,7 @@ export class DisputeModel {
       !archived && !dead && ['CLAIMANT'].includes(party) && (roles || []).includes('LAWYER') && (phones || []).filter(({ archived, blocked, isValid }) => (
         !archived && !blocked && isValid
       ))
-    )).length > 0 || this.#dtoV2?.lawyer?.hasPhones || this.#dtoV3?.hasLawyerClaimantPhone
+    )).length > 0 || this.#dtoV2?.lawyer?.hasPhones || this.#dtoV3?.hasLawyersClaimantPhone
   }
 
   get getDisputeLastOutboundInteraction() {
@@ -372,33 +373,32 @@ export class DisputeModel {
     return this.#dtoV1?.lastNegotiatorAccess?.createAt?.dateTime
   }
 
-  /**
-   * Principais acessos:
-   * .direction
-   * .type
-   * .createAt
-   */
   get getDisputeLastInteraction() {
-    // TODO: Não achei
     return this.#dtoV1?.lastInteraction ||
-      this.#dtoV2?.lastInteraction
+      this.#dtoV2?.lastInteraction ||
+      {
+        id: this.#dtoV3?.lastInteractionId,
+        type: this.#dtoV3?.lastInteractionType,
+        direction: this.#dtoV3?.lastInteractionDirection,
+        createdAt: this.#dtoV3?.lastInteractionCreatedAt
+      }
   }
 
   get getDisputeHasLastInteraction() {
-    // TODO: Não achei
     return this.getDisputeLastInteraction?.direction?.length > 0
   }
 
   get getDisputeLastInteractionCreateAt() {
-    // TODO: Não achei
     return this.#dtoV1?.lastInteraction?.createAt?.dateTime ||
-      this.#dtoV2?.lastInteraction?.createdAt
+      this.#dtoV2?.lastInteraction?.createdAt ||
+      this.#dtoV3?.lastInteractionCreatedAt
   }
 
   get getDisputeHasUnknownPolarityParty() {
     // TODO: Não achei
     return this.getDisputeRoles.filter(({ party }) => (party === 'UNKNOWN')).length > 0 ||
-      this.#dtoV2?.unknownPolarityParty
+      this.#dtoV2?.unknownPolarityParty ||
+      this.#dtoV3?.unknownPolarityParty
   }
 
   get getDisputeHasNoNegotiationInterest() {
