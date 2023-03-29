@@ -373,14 +373,7 @@ export class DisputeModel {
     return this.#dtoV1?.lastNegotiatorAccess?.createAt?.dateTime
   }
 
-  /**
-   * Principais acessos:
-   * .direction
-   * .type
-   * .createAt
-   */
   get getDisputeLastInteraction() {
-    // TODO: Não achei
     return this.#dtoV1?.lastInteraction ||
       this.#dtoV2?.lastInteraction ||
       {
@@ -391,20 +384,11 @@ export class DisputeModel {
       }
   }
 
-  /**
-   * lastInteractionId        -> ID da última interação
-   * lastInteractionType      -> Tipo da última interação
-   * lastInteractionDirection -> "Direção" (sentido) da última interação
-   * lastInteractionCreatedAt -> Data da última interação
-   */
-
   get getDisputeHasLastInteraction() {
-    // TODO: Não achei
     return this.getDisputeLastInteraction?.direction?.length > 0
   }
 
   get getDisputeLastInteractionCreateAt() {
-    // TODO: Não achei
     return this.#dtoV1?.lastInteraction?.createAt?.dateTime ||
       this.#dtoV2?.lastInteraction?.createdAt ||
       this.#dtoV3?.lastInteractionCreatedAt
