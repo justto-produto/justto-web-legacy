@@ -65,10 +65,13 @@ const omnichannelActions = {
   },
 
   getOccurrences({ getters }, disputeId) {
+    const isLog = getters?.getOccurrencesFilter?.type === 'LOG'
+
     const params = {
       ...getters.getOccurrencesFilter,
+      ...(isLog ? { resumed: false } : {}),
       showScheduler: getters.getActiveTab === EDITOR_CONSTANTS.OCCURRENCES,
-      type: getters.getOccurrencesFilter.type === 'LOG' ? null : getters.getOccurrencesFilter.type
+      type: isLog ? null : getters.getOccurrencesFilter.type
     }
 
     const url = `${disputeApi}/${disputeId}/occurrences${buildQuery(params)}`

@@ -39,7 +39,7 @@ export default {
           this.handleSignedOut()
           break
         default:
-          console.log(authState, { authData })
+          // console.log(authState, { authData })
           break
       }
     })
