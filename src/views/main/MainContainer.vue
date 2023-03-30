@@ -41,14 +41,22 @@
             v-show="menuItem.isVisible"
             :index="menuItem.index"
           >
-            <JusIcon :icon="menuItem.icon" />
+            <JusIcon
+              :icon="menuItem.icon"
+              :type="menuItem.iconType || 'ic'"
+              svg-family="light"
+              class="menu-item__icon"
+            />
 
             <span slot="title">
               {{ menuItem.title }}
             </span>
           </el-menu-item>
 
-          <CustomHome :value="menuItem" />
+          <CustomHome
+            v-show="!isTeamSectionExpanded"
+            :value="menuItem"
+          />
         </div>
       </el-menu>
 
@@ -141,20 +149,22 @@ export default {
       const basicDashboardMenuItem = new MenuItem({
         index: '/',
         title: 'Dashboard',
-        icon: 'logo-justto'
+        icon: 'logo-menu-dark'
       })
 
       const basicNegotiationMenuItem = new MenuItem({
         index: '/negotiation',
         title: 'Negociação',
-        icon: 'negotiation-window',
+        icon: 'square-poll-horizontal',
+        iconType: 'fa',
         isVisible: !this.showNegotiationTypeMenu
       })
 
       const customNegotiationMenuItem = new MenuItem({
         index: '/negotiation',
         title: 'Negociação',
-        icon: 'negotiation-window',
+        icon: 'square-poll-horizontal',
+        iconType: 'fa',
         isVisible: this.showNegotiationTypeMenu && this.ticketListMode === (this.isInNegotiation ? MANAGEMENT : TICKET),
         action: () => { if (this.isInNegotiation) this.setAccountProperty({ TICKET_LIST_MODE: TICKET }) }
       })
@@ -162,7 +172,8 @@ export default {
       const basicManagementMenuItem = new MenuItem({
         index: '/management',
         title: 'Gerenciamento',
-        icon: 'list-app',
+        icon: 'table-tree',
+        iconType: 'fa',
         isVisible: !this.showNegotiationTypeMenu,
         action: () => this.setTabQuery('management')
       })
@@ -170,7 +181,8 @@ export default {
       const customManagementMenuItem = new MenuItem({
         index: '/negotiation',
         title: 'Gerenciamento',
-        icon: 'negotiation-window',
+        icon: 'table-tree',
+        iconType: 'fa',
         customHome: '/management',
         isVisible: this.showNegotiationTypeMenu && this.ticketListMode === (this.isInNegotiation ? TICKET : MANAGEMENT),
         action: () => { if (this.isInNegotiation) this.setAccountProperty({ TICKET_LIST_MODE: MANAGEMENT }) }
@@ -179,14 +191,17 @@ export default {
       const basicManagementAllMenuItem = new MenuItem({
         index: '/management/all',
         title: 'Todas as disputas',
-        icon: 'full-folder',
+        icon: 'box-archive',
+        iconType: 'fa',
         action: () => this.setTabQuery('allDisputes')
       })
 
       const basicImportMenuItem = new MenuItem({
         index: '/import',
         title: 'Importação',
-        icon: 'import',
+        // icon: 'import',
+        icon: 'laptop-arrow-down',
+        iconType: 'fa',
         isVisible: true,
         action: () => {}
       })
@@ -432,7 +447,7 @@ export default {
 }
 
 .container-aside {
-  background-color: $--color-white;
+  background-color: $--pg-color-blue;
   box-shadow: 0 4px 24px 0 rgba(37, 38, 94, 0.1);
   z-index: 2;
   overflow: hidden;
@@ -463,7 +478,30 @@ export default {
 
   .container-aside__menu {
     .container-aside__menu-item {
+      background-color: $--pg-color-blue;
       position: relative;
+
+      li.el-menu-item {
+        background-color: $--pg-color-blue;
+
+        .menu-item__icon {
+          width: 1.75rem;
+          filter: invert(1);
+        }
+
+        .el-tooltip {
+          background-color: transparent;
+        }
+
+        &.is-active {
+          background-color: rgba(255,255,255,.2) !important;
+          border-left-color: $--color-white !important;
+        }
+
+        &:hover {
+          background-color: rgba(255,255,255,.2) !important;
+        }
+      }
 
       .menu-item-pin {
         display: flex;
@@ -486,11 +524,14 @@ export default {
           img {
             height: 12px;
             width: 12px;
+            filter: invert(1);
           }
         }
       }
 
       &:hover {
+        background-color: $--pg-color-blue;
+
         .menu-item-pin {
           .menu-item-pin__button {
             display: block;

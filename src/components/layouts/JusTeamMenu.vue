@@ -137,6 +137,7 @@ export default {
     .jus-team-menu__title-icon {
       margin-top: 2px;
       margin-left: 2px;
+      filter: invert(1);
     }
 
     .jus-team-menu__title-input {
@@ -144,6 +145,14 @@ export default {
       border: none;
       width: 40px;
       text-align: center;
+      background-color: transparent;
+      color: $--color-white;
+      font-weight: 600;
+      text-transform: uppercase;
+
+      &::placeholder {
+        color: $--color-white;
+      }
     }
   }
 
