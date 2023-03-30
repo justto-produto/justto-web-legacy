@@ -16,10 +16,22 @@ export default {
       type: Boolean,
       default: false
     },
+
     isWhite: {
       type: Boolean,
       default: false
     },
+
+    type: {
+      type: String,
+      default: 'ic'
+    },
+
+    svgFamily: {
+      type: String,
+      default: 'regular'
+    },
+
     icon: {
       type: String,
       default: ''
@@ -28,6 +40,12 @@ export default {
   computed: {
     iconPath: function() {
       if (this.icon) {
+        if (this.type === 'fa') {
+          if (this.svgFamily) {
+            return require(`@/assets/svgs/${this.svgFamily}/${this.icon}.svg`)
+          }
+        }
+
         return require(
           '@/assets/icons/ic-' +
           this.icon +
