@@ -126,7 +126,9 @@ export default {
   &.jus-avatar-user--secondary.jus-avatar-user--recovery {
     span {
       // TODO: Validar como vai ficar quando for recovery.
-      background-color: $--pj-color-blue;
+      background-color: $--pj-color-light-blue;
+      color: white;
+      border: none;
     }
   }
 
