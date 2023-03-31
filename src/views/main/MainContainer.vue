@@ -447,7 +447,7 @@ export default {
 }
 
 .container-aside {
-  background-color: $--pg-color-blue;
+  background-color: $--pj-color-blue;
   box-shadow: 0 4px 24px 0 rgba(37, 38, 94, 0.1);
   z-index: 2;
   overflow: hidden;
@@ -478,11 +478,11 @@ export default {
 
   .container-aside__menu {
     .container-aside__menu-item {
-      background-color: $--pg-color-blue;
+      background-color: $--pj-color-blue;
       position: relative;
 
       li.el-menu-item {
-        background-color: $--pg-color-blue;
+        background-color: $--pj-color-blue;
 
         .menu-item__icon {
           width: 1.75rem;
@@ -530,7 +530,7 @@ export default {
       }
 
       &:hover {
-        background-color: $--pg-color-blue;
+        background-color: $--pj-color-blue;
 
         .menu-item-pin {
           .menu-item-pin__button {

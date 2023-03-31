@@ -34,6 +34,7 @@
               :name="member.person.name"
               :active="isActivePerson(member.person.id)"
               class="el-menu__avatar"
+              purple
             />
           </el-tooltip>
         </a>

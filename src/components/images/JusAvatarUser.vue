@@ -112,27 +112,27 @@ export default {
     height: 100%;
     font-weight: 500;
     border-radius: 50%;
-    background-color: $--pg-color-blue;
+    background-color: $--pj-color-blue;
   }
 
   &.jus-avatar-user--secondary {
     span {
       background-color: $--color-white;
-      border: solid 2px $--pg-color-blue;
-      color: $--pg-color-blue;
+      border: solid 2px $--pj-color-blue;
+      color: $--pj-color-blue;
     }
   }
 
   &.jus-avatar-user--secondary.jus-avatar-user--recovery {
     span {
       // TODO: Validar como vai ficar quando for recovery.
-      background-color: $--pg-color-blue;
+      background-color: $--pj-color-blue;
     }
   }
 
   &.jus-avatar-user--recovery {
     span {
-      background-color: $--pg-color-blue;
+      background-color: $--pj-color-blue;
     }
   }
 
@@ -143,7 +143,7 @@ export default {
   }
 
   &.jus-avatar-user--active {
-    border: 2px solid $--pg-color-blue;
+    border: 2px solid $--pj-color-blue;
     box-shadow: 0 0 8px 2px rgba(175, 175, 175, 0.4);
 
     span {
