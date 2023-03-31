@@ -5,7 +5,7 @@
       {
         'jus-avatar-user--shadow': shadow,
         'jus-avatar-user--active': active,
-        'jus-avatar-user--purple': isRecovery ? !purple : purple,
+        'jus-avatar-user--secondary': isRecovery ? !purple : purple,
         'jus-avatar-user--recovery': isRecovery,
         'jus-avatar-user--status': status,
         'jus-avatar-user--online': status === 'ONLINE',
@@ -112,24 +112,27 @@ export default {
     height: 100%;
     font-weight: 500;
     border-radius: 50%;
-    background-color: $--color-secondary;
+    background-color: $--pg-color-blue;
   }
 
-  &.jus-avatar-user--purple {
+  &.jus-avatar-user--secondary {
     span {
-      background-color: $--color-primary;
+      background-color: $--color-white;
+      border: solid 2px $--pg-color-blue;
+      color: $--pg-color-blue;
     }
   }
 
-  &.jus-avatar-user--purple.jus-avatar-user--recovery {
+  &.jus-avatar-user--secondary.jus-avatar-user--recovery {
     span {
-      background-color: $--color-danger;
+      // TODO: Validar como vai ficar quando for recovery.
+      background-color: $--pg-color-blue;
     }
   }
 
   &.jus-avatar-user--recovery {
     span {
-      background-color: $--color-success;
+      background-color: $--pg-color-blue;
     }
   }
 
@@ -140,8 +143,12 @@ export default {
   }
 
   &.jus-avatar-user--active {
-    border: 2px solid #9f6cf8;
+    border: 2px solid $--pg-color-blue;
     box-shadow: 0 0 8px 2px rgba(175, 175, 175, 0.4);
+
+    span {
+      border: solid thin #fff;
+    }
   }
 
   &.jus-avatar-user--status:after {
