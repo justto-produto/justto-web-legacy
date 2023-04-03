@@ -290,7 +290,9 @@ export default {
     },
 
     needRecomendationList() {
-      return this.unanswered.map(({ interaction: { id } }) => (id))
+      return this.unanswered
+        .filter(occurrence => Boolean(occurrence?.interaction?.id))
+        .map(({ interaction: { id } }) => (id))
     },
 
     groupedOccurrences() {
