@@ -110,7 +110,7 @@ export class DisputeModel {
 
   get getDisputeDisputeNextToExpire() {
     if (this.#dtoV3?.expirationDate) {
-      return moment(this.#dtoV3?.expirationDate).diff(moment(), 'days') <= 3
+      return moment(this.#dtoV3?.expirationDate).isBetween(moment(), moment().add(4, 'day'))
     }
 
     return Boolean(this.#dtoV1?.disputeNextToExpire)
@@ -123,7 +123,7 @@ export class DisputeModel {
   }
 
   get getDisputeIsExpired() {
-    return this.getDisputeStatus !== 'EXPIRED'
+    return this.getDisputeStatus === 'EXPIRED'
   }
 
   get getDisputeDealValue() {
