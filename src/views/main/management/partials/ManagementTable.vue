@@ -288,7 +288,7 @@
         <template v-slot="scope">
           <el-tooltip content="Negociação encerra nos próximos 3 dias">
             <span
-              v-if="((scope.row.getDisputeHasExpirationDate && disputeNextToExpire(scope.row.getDisputeExpirationDate)) || scope.row.getDisputeNextToExpire) && !(scope.row.getDisputeIsExpired)"
+              v-if="(scope.row.getDisputeHasExpirationDate && scope.row.getDisputeDisputeNextToExpire) && !(scope.row.getDisputeIsExpired)"
               data-testid="expiration-notify"
               class="management-table__expiration-icon position-relative"
             >
@@ -298,8 +298,12 @@
             </span>
           </el-tooltip>
 
-          <span v-if="scope.row.getDisputeHasExpirationDate">
-            {{ scope.row.getDisputeExpirationDate | moment('DD/MM/YY') }}
+          <div v-if="scope.row.getDisputeDisputeNextToExpire">
+            {{ 'Expira ' + $moment(scope.row.getDisputeExpirationDate).fromNow() }}
+          </div>
+
+          <span v-else-if="scope.row.getDisputeHasExpirationDate">
+            {{ scope.row.getDisputeExpirationDate | moment('L') }}
           </span>
         </template>
       </el-table-column>
@@ -755,6 +759,10 @@ export default {
           ]
         })
       }
+    },
+
+    moment() {
+      return this.$moment
     }
   }
 }
