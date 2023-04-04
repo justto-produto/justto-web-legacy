@@ -80,6 +80,7 @@ export default {
       filter: 'getOccurrencesFilter',
       isLoading: 'isOccurrencesLoading',
       occurrencesList: 'getOccurrencesList',
+      occurrencesListSorted: 'getOccurrencesListSorted',
       messageType: 'getEditorMessageType',
       isPrinting: 'getExportTicketModalVisible',
       backups: 'getMessagesBackupById',
@@ -102,7 +103,7 @@ export default {
     },
 
     occurrences() {
-      return this.occurrencesList.filter(({ disputeId }) => [null, this.id].includes(disputeId))
+      return (this.activeTab === 'OCCURRENCES' ? this.occurrencesListSorted : this.occurrencesList).filter(({ disputeId }) => [null, this.id].includes(disputeId))
     },
 
     dispute() {

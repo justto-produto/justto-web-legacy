@@ -1,4 +1,5 @@
 import { stripHtml } from '@/utils'
+import moment from 'moment'
 
 const mapTabOccurrenceType = {
   MESSAGES: ['INTERACTION', 'NOTE', 'ACTION'],
@@ -25,7 +26,11 @@ const omnichannelGetters = {
   getSelectedAttachments: state => state.editor.attachments,
 
   // OCCURRENCES
-  getOccurrencesList: state => (state.occurrences.list),
+  getOccurrencesList: state => (state?.occurrences?.list || []),
+  // Corrige ordenação bugada, com a flag `resumed: false`, das ocorrências.
+  getOccurrencesListSorted: state => (state?.occurrences?.list || []).sort((a, b) => {
+    return moment(a?.createAt?.dateTime || undefined).isBefore(b?.createAt?.dateTime || undefined) ? -1 : 1
+  }),
   getFullMessages: state => (state.occurrences.fullMessages),
   getOccurrencesSummary: state => (state.occurrences.summary),
   getTotalOccurrences: state => (state.totalOfOccurrences),
