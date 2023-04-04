@@ -162,11 +162,11 @@ export default {
     },
 
     formatedTime() {
-      const { createAt, updateAt } = this.occurrence
+      const { createAt } = this.occurrence
 
-      const format = this.getActiveTab ? 'LLL' : 'HH:mm'
+      const format = this.getActiveTab === 'OCCURRENCES' ? 'LLL' : 'HH:mm'
 
-      return this.$moment((updateAt || createAt).dateTime).format(format)
+      return this.$moment((createAt || { dateTime: undefined }).dateTime).format(format)
     },
 
     isManual() {
