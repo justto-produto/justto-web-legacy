@@ -37,7 +37,7 @@
 
       <span class="log-container__occurrence-about negotiation-occurrence-about">
         <span class="log-container__occurrence-about-time">
-          {{ time | moment('HH:mm') }}
+          {{ time | moment(activeTab ? 'LLL' : 'HH:mm') }}
         </span>
         <span v-if="status.icon">
           •
@@ -81,7 +81,8 @@ export default {
 
   computed: {
     ...mapGetters({
-      parties: 'getTicketOverviewParties'
+      parties: 'getTicketOverviewParties',
+      activeTab: 'getActiveTab'
     }),
 
     occurrence() {
