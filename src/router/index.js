@@ -359,7 +359,7 @@ router.beforeEach((to, from, next) => {
 
         if (Store.getters?.showNegotiationTypeMenu) {
           if (to.name === 'management') {
-            next('negotiation')
+            next({ name: 'negotiation' })
           } else if (to.name === 'dispute') {
             next({ name: 'ticket', params: to.params })
           }
