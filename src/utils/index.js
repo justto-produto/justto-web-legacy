@@ -16,6 +16,7 @@ import { eventBus } from './utils/eventBus'
 import normalizeDateToISO from './utils/normalizeDateToISO'
 import isAutor from './utils/isAuthor'
 import isSameBankAccount from './utils/isSameBankAccount'
+import isNumber from './utils/isNumber'
 import {
   getRoles,
   formatHtml,
@@ -36,6 +37,7 @@ import {
 export {
   uuidv4,
   isAutor,
+  isNumber,
   eventBus,
   getRoles,
   scapeHtml,
