@@ -37,7 +37,7 @@
 
       <span class="log-container__occurrence-about negotiation-occurrence-about">
         <span class="log-container__occurrence-about-time">
-          {{ time | moment(activeTab ? 'LLL' : 'HH:mm') }}
+          {{ time | moment(activeTab === 'OCCURRENCES' ? 'LLL' : 'HH:mm') }}
         </span>
         <span v-if="status.icon">
           •
@@ -127,12 +127,13 @@ export default {
     },
 
     time() {
-      if (this.occurrence?.updateAt?.dateTime) {
-        return this.occurrence?.updateAt?.dateTime
-      } else if (this.occurrence?.createAt?.dateTime) {
-        return this.occurrence?.createAt?.dateTime
-      }
-      return ''
+      return this.occurrence?.createAt?.dateTime || ''
+      // if (this.occurrence?.updateAt?.dateTime) {
+      //   return this.occurrence?.updateAt?.dateTime
+      // } else if (this.occurrence?.createAt?.dateTime) {
+      //   return this.occurrence?.createAt?.dateTime
+      // }
+      // return ''
     },
 
     status() {
