@@ -37,7 +37,7 @@
 
           <el-tooltip content="Contratos do cliente">
             <el-button
-              type="info"
+              type="primary"
               icon="el-icon-edit"
               circle
               @click="emitEditEvent"
@@ -46,7 +46,7 @@
         </div>
 
         <el-button
-          type="primary"
+          type="secondary"
           @click.native="emitSeeMore"
         >
           Ver lançamentos
