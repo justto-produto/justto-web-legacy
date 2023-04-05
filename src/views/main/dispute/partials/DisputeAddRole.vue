@@ -124,6 +124,7 @@
           >
             <el-button
               slot="append"
+              type="transparent"
               @click="addPhone()"
             >
               <i class="el-icon-plus icon--active" />
@@ -166,6 +167,7 @@
           >
             <el-button
               slot="append"
+              type="transparent"
               data-testid="add-email"
               @click="addEmail()"
             >
@@ -270,12 +272,10 @@
       </div>
     </el-form>
     <span slot="footer">
-      <el-button
-        plain
-        @click="dialogVisible = false"
-      >
+      <el-button @click="dialogVisible = false">
         Cancelar
       </el-button>
+
       <el-button
         :loading="registerLoading"
         :disabled="!secondStep"

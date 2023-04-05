@@ -44,6 +44,7 @@
             <JusIcon
               :icon="menuItem.icon"
               :type="menuItem.iconType || 'ic'"
+              size="1.75rem"
               svg-family="light"
               class="menu-item__icon"
             />

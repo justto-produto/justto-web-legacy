@@ -96,7 +96,7 @@
 
             <el-tooltip content="Ao termino da contagem, o contato será confirmado automaticamente!">
               <el-button
-                type="success"
+                type="primary"
                 class="call-help__carousel-item-actions__correct_contact"
                 @click="next('contact')"
               >
@@ -139,7 +139,7 @@
             </el-button>
 
             <el-button
-              type="success"
+              type="primary"
               @click="close()"
             >
               Concordou

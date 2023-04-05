@@ -171,6 +171,7 @@
                 >
                   <el-button
                     slot="append"
+                    type="transparent"
                     icon="el-icon-plus"
                     @click="addDocument(role, index)"
                   />
@@ -245,6 +246,7 @@
                   >
                     <el-button
                       slot="append"
+                      type="transparent"
                       icon="el-icon-plus"
                       @click="addEmail(role, index)"
                     />
@@ -283,6 +285,7 @@
               >
                 <el-button
                   slot="append"
+                  type="transparent"
                   icon="el-icon-plus"
                   @click="addRole()"
                 />
@@ -312,7 +315,7 @@
                 v-if="isThamirisSigner(signer) && !signer.signed"
                 :size="buttonSize"
                 icon="el-icon-thumb"
-                type="success"
+                type="primary"
                 style="font-weight: bold"
                 @click="signDraft(signer)"
               >

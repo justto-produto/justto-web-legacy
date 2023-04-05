@@ -37,7 +37,7 @@
               />
 
               <el-button
-                type="success"
+                type="primary"
                 size="mini"
                 @click="handleEditWorkspace(scope.row)"
               >
@@ -75,7 +75,7 @@
               />
 
               <el-button
-                type="success"
+                type="primary"
                 size="mini"
                 @click="handleEditWorkspace(scope.row)"
               >
@@ -183,7 +183,7 @@
               </el-select>
 
               <el-button
-                type="success"
+                type="primary"
                 size="mini"
                 @click="handleInviteEmail(scope.row)"
               >
@@ -194,8 +194,6 @@
 
           <el-switch
             :value="scope.row.status === 'READY'"
-            active-color="#13ce66"
-            inactive-color="#ff4949"
             @change="handleArchiveWorkspace($event, scope.row)"
           />
         </div>
@@ -538,7 +536,7 @@ export default {
     },
 
     handleArchiveWorkspace(archived, workspace) {
-      this.$confirm(`Deseja realmente <strong>${archived ? 'desativar' : 'reativar'}</strong> a workspace <strong>${workspace.name}</strong>?`, 'Atenção', {
+      this.$confirm(`Deseja realmente <strong>${archived ? 'reativar' : 'desativar'}</strong> a workspace <strong>${workspace.name}</strong>?`, 'Atenção', {
         dangerouslyUseHTMLString: true,
         confirmButtonText: 'Confirmar',
         cancelButtonText: 'Cancelar',

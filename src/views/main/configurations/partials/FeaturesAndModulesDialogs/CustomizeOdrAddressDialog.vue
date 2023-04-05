@@ -57,7 +57,7 @@
                       <el-button
                         v-if="haveDomain"
                         slot="reference"
-                        type="success"
+                        type="primary"
                         :icon="isValidDomain ? 'el-icon-check' : 'el-icon-close'"
                         size="small"
                       />
@@ -212,22 +212,22 @@
           </el-button>
 
           <el-button
-            v-loading="modalLoading"
-            :disabled="modalLoading || !isJusttoAdmin"
-            class="configure-customizations__footer-confirm"
-            type="success"
-            size="small"
-            @click.prevent="saveCustomizedConfigurations"
-          >
-            Salvar configuração
-          </el-button>
-
-          <el-button
             type="secondary"
             size="small"
             @click="handleResetEmail"
           >
             Mudar o email da empresa
+          </el-button>
+
+          <el-button
+            v-loading="modalLoading"
+            :disabled="modalLoading || !isJusttoAdmin"
+            class="configure-customizations__footer-confirm"
+            type="primary"
+            size="small"
+            @click.prevent="saveCustomizedConfigurations"
+          >
+            Salvar configuração
           </el-button>
         </div>
 

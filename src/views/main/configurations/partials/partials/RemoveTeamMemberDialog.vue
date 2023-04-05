@@ -116,7 +116,7 @@
       </el-button>
       <el-button
         v-if="hasMembers"
-        type="success"
+        type="primary"
         size="small"
         @click="handleRemoveMember()"
       >

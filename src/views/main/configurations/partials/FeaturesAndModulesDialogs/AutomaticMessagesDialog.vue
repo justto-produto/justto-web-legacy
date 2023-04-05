@@ -75,7 +75,7 @@
       </el-button>
 
       <el-button
-        type="success"
+        type="primary"
         size="small"
         @click="save()"
       >
