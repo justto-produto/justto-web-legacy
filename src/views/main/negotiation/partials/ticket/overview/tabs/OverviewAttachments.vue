@@ -56,8 +56,6 @@
             <el-switch
               :class="{ 'active': !attachment.confidential }"
               :value="attachment.confidential"
-              inactive-color="#14CC30"
-              active-color="#ADADAD"
               @input="setAttachmentConfidentiality(attachment)"
             />
 

@@ -308,6 +308,7 @@
             Deixando <b>selecionada</b> esta opção, em caso de acordo fechado será bloqueado o depósito em conta poupança e pagamento via PIX, sendo permitido somente <b>depósito em conta corrente</b>.
           </p>
         </div>
+
         <el-switch v-model="denySavingDeposit" />
       </div>
 
@@ -323,6 +324,7 @@
             Deixando <b>selecionada</b> esta opção, em caso de acordo fechado será <b>bloqueado</b> o depósito via Pix.
           </p>
         </div>
+
         <el-switch v-model="denyPixDeposit" />
       </div>
 
@@ -344,6 +346,7 @@
             >termos de uso</a>.
           </p>
         </div>
+
         <el-switch v-model="enrichDisputes" />
       </div>
     </el-card>

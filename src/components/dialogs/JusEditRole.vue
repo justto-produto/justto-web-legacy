@@ -186,10 +186,12 @@
                   v-if="scope.row.isMain"
                   icon="phone-active"
                 />
+
                 <jus-icon
                   v-else
                   icon="not-main-phone-active"
                 />
+
                 <el-switch v-model="scope.row.isMain" />
               </span>
             </el-tooltip>
@@ -253,10 +255,12 @@
                   v-if="scope.row.isMain"
                   icon="email-active"
                 />
+
                 <jus-icon
                   v-else
                   icon="not-main-email-active"
                 />
+
                 <el-switch v-model="scope.row.isMain" />
               </span>
             </el-tooltip>

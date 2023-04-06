@@ -135,6 +135,7 @@
                   class="pre-negotiation-select"
                 >
                   <el-switch v-model="workspacePreNegotiation.preNegotiation" />
+
                   <span>
                     Pré negociação
                   </span>

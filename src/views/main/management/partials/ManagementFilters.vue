@@ -210,6 +210,7 @@
                 <div>
                   <jus-icon icon="offices-tower" /> Aguardando análise da empresa
                 </div>
+
                 <el-switch
                   v-model="filters.onlyFavorite"
                   data-testid="filters-favorite"
@@ -219,6 +220,7 @@
                 <div>
                   <jus-icon icon="pause" /> Somente pausadas
                 </div>
+
                 <el-switch
                   v-model="filters.onlyPaused"
                   data-testid="filters-only-paused"
@@ -230,6 +232,7 @@
                 <div>
                   <jus-icon icon="pause" /> Somente não pausadas
                 </div>
+
                 <el-switch
                   v-model="filters.onlyNotPaused"
                   data-testid="filters-only-not-paused"
@@ -241,6 +244,7 @@
                 <div>
                   <i class="el-icon-warning-outline" /> Advogados ofensores
                 </div>
+
                 <el-switch
                   v-model="filters.vexatiousLawyer"
                   data-testid="filters-advogados-ofensores"
@@ -262,6 +266,7 @@
                 <div>
                   <jus-icon icon="eye" /> Somente não visualizadas
                 </div>
+
                 <el-switch
                   v-model="filters.onlyNotVisualized"
                   data-testid="filters-only-not-visualized"
@@ -271,6 +276,7 @@
                 <div>
                   <jus-icon icon="proposal" /> Tem contraproposta
                 </div>
+
                 <el-switch
                   v-model="filters.hasCounterproposal"
                   data-testid="filters-has-counterproposal"

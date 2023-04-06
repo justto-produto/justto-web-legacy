@@ -14,11 +14,7 @@
       </div>
 
       <div class="scheduled-calls-switch__container-body">
-        <el-switch
-          v-model="scheduledCallState"
-          inactive-color="#FF4B54"
-          active-color="#14CC30"
-        />
+        <el-switch v-model="scheduledCallState" />
 
         <span> {{ $tc('call.scheduled.available', scheduledCallState) | capitalize }} </span>
       </div>

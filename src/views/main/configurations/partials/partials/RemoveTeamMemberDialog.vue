@@ -41,8 +41,6 @@
           v-model="distributeManually"
           inactive-text="Distribuir igualmente"
           active-text="Distribuir manualmente"
-          active-color="#14CC30"
-          inactive-color="#14CC30"
         />
       </div>
 

@@ -28,8 +28,6 @@
       <el-switch
         :value="enabledScheduledCalls"
         :width="30"
-        active-color="#14CC30"
-        inactive-color="#FF4B54"
         active-icon-class="el-icon-service"
       />
       <!-- active-icon-class="el-icon-service" -->
