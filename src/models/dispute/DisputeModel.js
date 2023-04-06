@@ -110,7 +110,8 @@ export class DisputeModel {
 
   get getDisputeDisputeNextToExpire() {
     if (this.#dtoV3?.expirationDate) {
-      return moment(this.#dtoV3?.expirationDate).isBetween(moment(), moment().add(4, 'day'))
+      return moment(this.#dtoV3?.expirationDate).isBetween(moment(), moment().add(4, 'day')) &&
+      ['PRE_NEGOTIATION', 'PENDING', 'RUNNING', 'ENGAGEMENT'].includes(this.getDisputeStatus)
     }
 
     return Boolean(this.#dtoV1?.disputeNextToExpire)
