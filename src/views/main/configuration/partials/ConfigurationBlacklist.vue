@@ -148,7 +148,6 @@ export default {
       this.$confirm('Tem certeza que deseja excluir?', 'Atenção!', {
         confirmButtonText: 'Excluir',
         cancelButtonText: 'Cancelar',
-        cancelButtonClass: 'is-plain',
         confirmButtonClass: 'el-button--danger',
         beforeClose: (action, instance, done) => {
           if (action === 'confirm') {

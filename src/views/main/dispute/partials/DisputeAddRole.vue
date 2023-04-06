@@ -459,8 +459,7 @@ export default {
               this.$confirm('Já existem informações no sistema da parte a ser cadastrada. Deseja utilizar os dados existentes?', 'Parte encontrada no sistema', {
                 confirmButtonText: 'Sim, utilizar',
                 cancelButtonText: 'Não',
-                type: 'info',
-                cancelButtonClass: 'is-plain'
+                type: 'info'
               }).then(() => {
                 self.newRole.name = response.name
                 if (response.documentNumber) self.newRole.documentNumber = this.$options.filters.cpfCnpj(response.documentNumber)
@@ -585,8 +584,7 @@ export default {
           this.$confirm('Deseja iniciar o engajamento para esta parte?', 'Atenção!', {
             confirmButtonText: 'Engajar',
             cancelButtonText: 'Não',
-            type: 'info',
-            cancelButtonClass: 'is-plain'
+            type: 'info'
           }).then(() => {
             this.$store.dispatch('restartDisputeRoleEngagement', {
               disputeId: this.disputeId,

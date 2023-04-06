@@ -151,7 +151,6 @@
           />
           <el-button
             type="primary"
-            :plain="false"
             @click="addPhone()"
           >
             <i class="el-icon-plus icon--white" />
@@ -334,10 +333,7 @@
     </el-form>
 
     <span slot="footer">
-      <el-button
-        plain
-        @click="$emit('closeEdit')"
-      >
+      <el-button @click="$emit('closeEdit')">
         Cancelar
       </el-button>
 
@@ -620,8 +616,7 @@ export default {
           this.$confirm(this.$t('dispute.overview.confirm.restart.engagement.question'), 'Atenção!', {
             confirmButtonText: this.$t('dispute.overview.confirm.restart.engagement.confirm'),
             cancelButtonText: this.$t('dispute.overview.confirm.restart.engagement.cancel'),
-            type: 'warning',
-            cancelButtonClass: 'is-plain'
+            type: 'warning'
           }).then(() => this.$jusNotification({
             title: 'Cuidado!',
             message: this.$t('dispute.notification.will-not-restart'),
@@ -650,8 +645,7 @@ export default {
           this.$confirm('Você adicionou contas bancárias a esta parte. Deseja vincular estas contas a disputa?', 'Atenção', {
             confirmButtonText: 'Vincular',
             cancelButtonText: 'Cancelar',
-            type: 'warning',
-            cancelButtonClass: 'is-plain'
+            type: 'warning'
           }).then(() => {
             const bankAccounts = response.bankAccounts
             const newBankAccounts = bankAccounts.sort((accountA, accountB) => {

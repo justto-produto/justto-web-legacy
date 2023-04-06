@@ -371,7 +371,6 @@ export default {
         this.$confirm('Você será redirecionado para a criação de nova Equipe, deseja continuar?', 'Redirecionamento', {
           confirmButtonText: 'Criar nova Equipe',
           cancelButtonText: 'Cancelar',
-          cancelButtonClass: 'is-plain',
           type: 'warning'
         }).then(() => {
           this.$store.commit('redirectNewWorkspaceTrue')

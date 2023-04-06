@@ -158,7 +158,6 @@ export default {
       this.$prompt('Insira a URL (Google Docs) do documento:', 'Adicionar minuta', {
         confirmButtonText: 'Adicionar',
         cancelButtonText: 'Cancelar',
-        cancelButtonClass: 'is-plain',
         inputPattern: /.*(drive|docs)\.google\.com.*/,
         inputErrorMessage: 'URL inválida',
         beforeClose: (action, instance, done) => {
@@ -196,7 +195,6 @@ export default {
       this.$confirm('Tem certeza que deseja excluir?', 'Atenção!', {
         confirmButtonText: 'Excluir',
         cancelButtonText: 'Cancelar',
-        cancelButtonClass: 'is-plain',
         confirmButtonClass: 'el-button--danger',
         beforeClose: (action, instance, done) => {
           if (action === 'confirm') {

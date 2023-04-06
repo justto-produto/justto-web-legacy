@@ -16,7 +16,6 @@ export default {
         distinguishCancelAndClose: true,
         confirmButtonText: 'Beleza',
         cancelButtonText: 'Não exibir mais dicas',
-        cancelButtonClass: 'is-plain'
       }).catch(() => {
         this.$message({
           message: 'Ok'

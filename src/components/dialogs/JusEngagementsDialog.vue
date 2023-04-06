@@ -99,21 +99,26 @@
         <el-button
           :disabled="editDialogLoading"
           :icon="preview ? 'el-icon-edit' : 'el-icon-view'"
-          plain
           @click="preview = !preview"
         >
           {{ preview ? 'Voltar' : 'Visualizar' }}
         </el-button>
+
         <el-button
           :disabled="editDialogLoading"
-          plain
+          type="secondary"
           @click="editDialog = false"
-        >Cancelar</el-button>
+        >
+          Cancelar
+        </el-button>
+
         <el-button
           v-loading="editDialogLoading"
           type="primary"
           @click="editTemplate"
-        >Editar template</el-button>
+        >
+          Editar template
+        </el-button>
       </span>
     </el-dialog>
   </div>

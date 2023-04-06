@@ -1092,7 +1092,6 @@ export default {
               'Minuta padrão', {
                 confirmButtonText: 'OK',
                 cancelButtonText: 'Não exibir mais esta mensagem',
-                cancelButtonClass: 'is-plain',
                 dangerouslyUseHTMLString: true,
                 type: 'info'
               }
@@ -1207,8 +1206,7 @@ export default {
         confirmButtonText: 'Excluir',
         cancelButtonText: 'Cancelar',
         title: 'Atenção!',
-        type: 'warning',
-        cancelButtonClass: 'is-plain'
+        type: 'warning'
       }).then(() => {
         this.loading = true
         this.$store.dispatch('deleteDocument', this.disputeId).then(() => {
@@ -1237,8 +1235,7 @@ export default {
         confirmButtonText: 'Voltar para edição',
         cancelButtonText: 'Cancelar',
         title: 'Atenção!',
-        type: 'warning',
-        cancelButtonClass: 'is-plain'
+        type: 'warning'
       }).then(() => {
         this.loading = true
         this.$store.dispatch('backDocumentToEditing', this.disputeId).then(() => {

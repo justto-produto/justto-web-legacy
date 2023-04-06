@@ -535,7 +535,6 @@ export default {
       const options = {
         confirmButtonText: 'Continuar',
         cancelButtonText: 'Cancelar',
-        cancelButtonClass: 'is-plain',
         dangerouslyUseHTMLString: true,
         showClose: false
       }

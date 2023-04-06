@@ -522,7 +522,6 @@ export default {
         this.$confirm('Tem certeza que deseja excluir esta parte da disputa? Está ação é irreversível', 'Atenção', {
           confirmButtonText: 'Continuar',
           cancelButtonText: 'Cancelar',
-          cancelButtonClass: 'is-plain',
           showClose: false
         }).then(() => {
           this.deleteTicketOverviewParty({
@@ -794,8 +793,7 @@ export default {
           confirmButtonClass: 'confirm-action-btn',
           confirmButtonText: 'Continuar',
           cancelButtonText: 'Cancelar',
-          dangerouslyUseHTMLString: true,
-          cancelButtonClass: 'is-plain'
+          dangerouslyUseHTMLString: true
         }).then(() => this.openNamesakeDialog())
       } else {
         this.openNamesakeDialog()

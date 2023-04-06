@@ -995,8 +995,7 @@ export default {
         this.$confirm('Tem certeza que deseja excluir esta disputa? Esta ação é irreversível', 'Atenção', {
           confirmButtonText: 'Excluir',
           cancelButtonText: 'Cancelar',
-          type: 'warning',
-          cancelButtonClass: 'is-plain'
+          type: 'warning'
         }).then(() => {
           this.deleteDispute()
         })
@@ -1088,8 +1087,7 @@ export default {
           confirmButtonClass: 'confirm-action-btn',
           confirmButtonText: 'Continuar',
           cancelButtonText: 'Cancelar',
-          dangerouslyUseHTMLString: true,
-          cancelButtonClass: 'is-plain'
+          dangerouslyUseHTMLString: true
         }).then(() => { this.opeNnamesakeDialog(name, personId) })
       } else {
         this.opeNnamesakeDialog(name, personId)
@@ -1261,7 +1259,6 @@ export default {
             type: 'warning',
             confirmButtonText: 'Continuar',
             confirmButtonClass: 'edit-case-confirm-button',
-            cancelButtonClass: 'is-plain',
             showCancelButton: true,
             customClass: 'edit-case-confitm-dialog'
           }).then(() => {
@@ -1317,7 +1314,6 @@ export default {
                 this.$confirm(message, 'Atenção!', {
                   confirmButtonText: onlyResendMessaged ? 'Reenviar' : 'Reiniciar',
                   cancelButtonText: 'Cancelar',
-                  cancelButtonClass: 'is-plain',
                   type: 'warning'
                 }).then(() => {
                   this.$store.dispatch('sendDisputeAction', {
@@ -1448,8 +1444,7 @@ export default {
           this.$confirm(this.$t('dispute.overview.confirm.restart.engagement.question'), 'Atenção!', {
             confirmButtonText: this.$t('dispute.overview.confirm.restart.engagement.confirm'),
             cancelButtonText: this.$t('dispute.overview.confirm.restart.engagement.cancel'),
-            type: 'warning',
-            cancelButtonClass: 'is-plain'
+            type: 'warning'
           }).then(() => this.$jusNotification({
             title: 'Cuidado!',
             message: this.$t('dispute.notification.will-not-restart'),
@@ -1479,8 +1474,7 @@ export default {
           this.$confirm('Você adicionou contas bancárias a esta parte. Deseja vincular estas contas a disputa?', 'Atenção', {
             confirmButtonText: 'Vincular',
             cancelButtonText: 'Cancelar',
-            type: 'warning',
-            cancelButtonClass: 'is-plain'
+            type: 'warning'
           }).then(() => {
             const bankAccounts = response.bankAccounts
             const newBankAccounts = bankAccounts.sort((accountA, accountB) => {
@@ -1572,8 +1566,7 @@ export default {
         this.$confirm('Tem certeza que deseja excluir esta parte?', 'Atenção!', {
           confirmButtonText: 'Excluir',
           cancelButtonText: 'Cancelar',
-          type: 'warning',
-          cancelButtonClass: 'is-plain'
+          type: 'warning'
         }).then(() => {
           this.$emit('removeRole')
           setTimeout(() => {

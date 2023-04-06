@@ -490,7 +490,6 @@ export default {
             ]),
             confirmButtonText: 'Continuar',
             confirmButtonClass: 'edit-case-confirm-button',
-            cancelButtonClass: 'is-plain',
             showCancelButton: true,
             customClass: 'edit-case-confitm-dialog'
           }).then(this.editDispute).catch(() => {
@@ -588,7 +587,6 @@ export default {
         this.$confirm(message, 'Atenção!', {
           confirmButtonText: onlyResendMessaged ? 'Reenviar' : 'Reiniciar',
           cancelButtonText: 'Cancelar',
-          cancelButtonClass: 'is-plain',
           type: 'warning'
         }).then(() => {
           this.$store.dispatch('sendDisputeAction', {

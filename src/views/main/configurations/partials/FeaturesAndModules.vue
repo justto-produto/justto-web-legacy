@@ -175,7 +175,6 @@ export default {
         this.$confirm('Você será cobrado pelo uso dessa funcionalidade, tem certeza que deseja ativa-la?', 'Atenção', {
           confirmButtonText: 'Continuar',
           cancelButtonText: 'Cancelar',
-          cancelButtonClass: 'is-plain',
           type: 'warning'
         }).then(() => toggleConfiguration())
       } else toggleConfiguration()

@@ -12,7 +12,7 @@
     font-weight: 600;
   }
 
-  &:focus, &.el-button--default {
+  &:focus, &.el-button--default:not(.el-button--primary, .el-button--secondary) {
     background-color: $--color-white !important;
     border-color: $--pj-color-white-blue !important;
     color: $--pj-color-light-blue !important;

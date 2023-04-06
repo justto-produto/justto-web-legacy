@@ -473,8 +473,7 @@ export default {
       this.$confirm('Tem certeza que deseja remover esta equipe?', 'Atenção!', {
         confirmButtonText: 'Remover',
         cancelButtonText: 'Cancelar',
-        type: 'warning',
-        cancelButtonClass: 'is-plain'
+        type: 'warning'
       }).then(() => {
         const loading = this.$loading({ lock: true })
         this.$store.dispatch('adminWorkspaces', { method: 'delete', workspaceId }).then(() => {
@@ -494,8 +493,7 @@ export default {
       this.$confirm('Tem certeza que deseja remover este usuário da equipe?', 'Atenção!', {
         confirmButtonText: 'Remover',
         cancelButtonText: 'Cancelar',
-        type: 'warning',
-        cancelButtonClass: 'is-plain'
+        type: 'warning'
       }).then(() => {
         const loading = this.$loading({ lock: true })
         this.$store.dispatch('adminWorkspaceUsers', {

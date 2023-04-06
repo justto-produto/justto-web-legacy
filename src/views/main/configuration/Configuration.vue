@@ -684,7 +684,6 @@ export default {
       this.$confirm('Você será redirecionado para a criação de nova Equipe, deseja continuar?', 'Redirecionamento', {
         confirmButtonText: 'Criar nova Equipe',
         cancelButtonText: 'Cancelar',
-        cancelButtonClass: 'is-plain',
         type: 'warning'
       }).then(() => {
         this.$store.commit('redirectNewWorkspaceTrue')
@@ -801,7 +800,6 @@ export default {
       this.$confirm('Tem certeza que deseja excluir ' + name + ' da equipe?', 'Atenção!', {
         confirmButtonText: 'Excluir',
         cancelButtonText: 'Cancelar',
-        cancelButtonClass: 'is-plain',
         type: 'warning'
       }).then(() => {
         this.$store.dispatch('removeWorkspaceMember', id).then(() => {
