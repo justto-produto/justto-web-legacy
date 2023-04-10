@@ -35,7 +35,7 @@ export default {
   computed: {
     ...mapGetters({
       variables: 'getAvaliableVariablesToTemplate',
-      members: 'workspaceMembers'
+      members: 'workspaceMembersByDispute'
     }),
 
     editorConfig() {

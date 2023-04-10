@@ -19,6 +19,17 @@ const workspaceGetters = {
       return state.workspace.members || []
     }
   },
+  workspaceMembersByDispute: (_state, getters) => {
+    const parties = [
+      ...(getters?.dispute?.disputeRoles || []),
+      ...(getters?.getTicketOverviewParties || [])
+    ]
+      .filter(({ personId, profile }) => Boolean(personId))
+      .map(({ personId }) => personId)
+
+    return getters.workspaceMembers
+      .filter(({ personId, profile }) => (Boolean(personId) && parties.includes(personId)) || ['ADMINISTRATOR'].includes(profile))
+  },
   workspaceTeam: state => state.workspace.team,
   workspaceMembersSorted: (_state, getters) =>
     getters.workspaceMembers
