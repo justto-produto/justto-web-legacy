@@ -377,7 +377,7 @@ export default {
         &--danger { color: $--color-danger; }
 
         &--active {
-          color: $--color-primary-dark;
+          color: $--pj-color-blue;
           font-weight: 700;
         }
       }

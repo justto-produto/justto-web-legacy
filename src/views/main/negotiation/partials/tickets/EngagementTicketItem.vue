@@ -281,7 +281,7 @@ export default {
         &--danger { color: $--color-danger; }
 
         &--active {
-          color: $--color-primary-dark;
+          color: $--pj-color-blue;
           font-weight: 700;
         }
       }
@@ -298,7 +298,7 @@ export default {
       color: $--color-gray;
 
       &--active {
-        color: $--color-primary-dark;
+        color: $--pj-color-blue;
         font-weight: 700;
       }
     }

@@ -20,7 +20,6 @@
         :key="option.value"
         :label="option.value"
         size="mini"
-        border
       >
         {{ option.label }}
       </el-checkbox>

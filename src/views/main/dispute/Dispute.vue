@@ -1364,7 +1364,7 @@ export default {
 
               .ck-editor__editable {
                 background-color: #F4EFFE !important;
-                color: #9461F7;
+                color: $--color-primary;
                 text-indent: 88px;
               }
             }

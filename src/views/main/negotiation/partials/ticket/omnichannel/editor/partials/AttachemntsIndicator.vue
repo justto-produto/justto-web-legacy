@@ -14,7 +14,6 @@
         :key="attachment.id"
         :label="attachment.id"
         class="attachments-container__attach-checkbox"
-        border
       >
         <span class="attachments-container__indicator">
           <i class="el-icon-document" />
