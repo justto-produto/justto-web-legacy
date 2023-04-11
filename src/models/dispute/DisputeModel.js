@@ -95,7 +95,8 @@ export class DisputeModel {
 
   get getDisputePropertyPreNegotiationReason() {
     // TODO: Não achei
-    return this.#dtoV1?.properties['MOTIVO PRE NEGOCIACAO']
+    return this.#dtoV1?.properties['MOTIVO PRE NEGOCIACAO'] ||
+      this.#dtoV3?.motivoPreNegociacao
   }
 
   get getDisputeExpirationDate() {
@@ -210,7 +211,25 @@ export class DisputeModel {
   get getDisputeLastReceivedMessage() {
     // TODO: Não achei
     return this.#dtoV1?.lastReceivedMessage ||
-      this.#dtoV2?.lastReceivedMessage || { properties: {} }
+      this.#dtoV2?.lastReceivedMessage ||
+      {
+        createAt: {
+          dateTime: this.#dtoV3?.lastReceivedMessageCreatedAt,
+        },
+        id: this.#dtoV3?.lastReceivedMessageId,
+        message: {
+          content: this.#dtoV3?.lastReceivedMessageContent,
+          sender: this.#dtoV3?.lastReceivedMessageSenderEmail || this.#dtoV3?.lastReceivedMessageSenderName,
+          status: this.#dtoV3?.lastReceivedMessageStatus,
+          contentType: this.#dtoV3?.lastReceivedMessageContentType,
+          parameters: {
+            SENDER_NAME: this.#dtoV3?.lastReceivedMessageSenderName,
+            SENDER_EMAIL: this.#dtoV3?.lastReceivedMessageSenderEmail,
+            READ_DATE: this.#dtoV3?.lastReceivedMessageReadDate
+          }
+        },
+        properties: {}
+      }
   }
 
   get getDisputeHasLastReceivedMessageProperties() {
@@ -237,7 +256,10 @@ export class DisputeModel {
   get getDisputeLastReceivedMessageProperties() {
     return this.#dtoV1?.lastReceivedMessage?.properties ||
       this.#dtoV2?.lastReceivedMessage?.properties ||
-      { PERSON_EMAIL: '', PERSON_NAME: '' }
+      {
+        PERSON_EMAIL: this.#dtoV3?.lastReceivedMessageSenderEmail,
+        PERSON_NAME: this.#dtoV3?.lastReceivedMessageSenderName
+      }
   }
 
   // First Claymant getters
