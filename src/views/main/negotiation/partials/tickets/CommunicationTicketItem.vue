@@ -173,10 +173,9 @@
         content="Fechar"
         placement="right"
       >
-        <el-button
-          type="primary"
-          icon="el-icon-download"
-        />
+        <span class="communication-ticket-item-container__actions__label">
+          <i class="el-icon-download" />
+        </span>
       </el-tooltip>
 
       <el-tooltip
@@ -184,10 +183,9 @@
         content="Abrir"
         placement="right"
       >
-        <el-button
-          type="primary"
-          icon="el-icon-upload2"
-        />
+        <span class="communication-ticket-item-container__actions__label">
+          <i class="el-icon-upload2" />
+        </span>
       </el-tooltip>
     </div>
   </li>
@@ -571,15 +569,16 @@ export default {
 }
 
 .communication-ticket-item-container__actions {
-  .el-button {
+  .communication-ticket-item-container__actions__label {
     height: 100%;
     width: 100%;
     padding: 0;
     border: none;
-
-    &.el-button--primary {
-      background: linear-gradient(90deg, rgba(255,255,255,0) 0%, $--color-primary 100%);
-    }
+    background: $--pj-color-blue;
+    background: linear-gradient(90deg, rgba(255,255,255,0.5) 0%, $--pj-color-blue 75%, $--pj-color-blue 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
     i {
       font-size: 1.25em;
