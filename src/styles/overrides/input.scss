@@ -1,6 +1,28 @@
+@import '@/styles/colors.scss';
+
 .el-input--no-border {
   .el-input__inner[readonly="readonly"] {
     border: none;
     padding: 0;
+  }
+}
+
+.el-input {
+  overflow: auto;
+
+  .el-input__inner {
+    border-radius: 0.6rem;
+    border-width: 0.2rem;
+    border-color: #d7e5ef;
+    border-style: solid;
+    background-color: #f2f8fb4d;
+    font-weight: 500;
+  }
+
+  .el-input-group__prepend {
+    button.el-button {
+      border-width: 0.2rem !important;
+      border-style: solid !important;
+    }
   }
 }

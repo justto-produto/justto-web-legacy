@@ -12,10 +12,10 @@
       <el-button
         slot="prepend"
         icon="el-icon-search"
-        :type="isCollapsed ? 'default' : 'primary'"
-        :disabled="false"
+        :type="isCollapsed ? 'secondary' : 'primary'"
         @click="toggle()"
       />
+
       <i
         v-if="!isCollapsed"
         slot="suffix"
@@ -90,32 +90,16 @@ export default {
   .el-input__inner {
     transition: width 0.5s ease, padding 0.5s ease;
     width: 180px;
-    border-left: 0;
-
-    &:hover {
-      border-left: 1px solid $--color-text-primary;
-    }
-    &:focus {
-      border-left: 1px solid $--color-primary;
-    }
+    margin-left: 4px;
   }
+
   .el-input-group__prepend {
     border-right: 1px solid #dcdfe6;
+    border: none;
+    background-color: transparent;
 
     &:hover {
       border-color: $--color-primary;
-    }
-
-    .el-button {
-      &.el-button--primary {
-        background-color: $--color-primary;
-        color: white;
-      }
-
-      &.el-button--default {
-        background-color: white;
-        color: #424242;
-      }
     }
   }
 
@@ -125,10 +109,14 @@ export default {
       padding: 0px;
       border: 0;
     }
+
     .el-input-group__prepend {
       pointer-events: all;
+      border: none;
+      background-color: transparent;
     }
   }
+
   .el-input__icon {
     cursor: pointer;
   }
