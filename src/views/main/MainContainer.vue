@@ -52,6 +52,8 @@
         </div>
       </el-menu>
 
+      <UseDisputeProjectionSwitch v-if="isJusttoAdmin" />
+
       <JusTeamMenu
         v-if="isAdminProfile"
         :is-team-section-expanded="isTeamSectionExpanded"
@@ -97,7 +99,8 @@ export default {
     JusShortchts: () => import('@/components/others/JusShortcuts'),
     ThamirisAlerts: () => import('@/components/dialogs/ThamirisAlerts.vue'),
     BuyDialerDialog: () => import('@/components/dialogs/BuyDialerDialog'),
-    CustomHome: () => import('@/components/buttons/CustomHome')
+    CustomHome: () => import('@/components/buttons/CustomHome'),
+    UseDisputeProjectionSwitch: () => import('@/components/buttons/UseDisputeProjectionSwitch')
   },
 
   data() {
