@@ -44,5 +44,6 @@ export default {
 <style lang="scss" scoped>
 .dispute-projection__switch {
   justify-content: center;
+  margin: 8px 0;
 }
 </style>
