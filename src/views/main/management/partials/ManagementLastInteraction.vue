@@ -14,7 +14,7 @@
             is-white
           />
           Último {{ getLastInteractionTooltip(data.getDisputeLastOutboundInteraction) }}
-          em {{ data.getDisputeLastOutboundInteraction.createAt.dateTime | moment('DD/MM/YYYY [às] HH:mm') }}
+          em {{ data.getDisputeLastOutboundInteractionCreateAt | moment('DD/MM/YYYY [às] HH:mm') }}
         </strong>
       </div>
       <div v-if="data.getDisputeLastOutboundInteractionMessage.sender">

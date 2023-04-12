@@ -345,7 +345,27 @@ export class DisputeModel {
 
   get getDisputeLastOutboundInteraction() {
     // TODO: Não achei
-    return this.#dtoV1?.lastOutboundInteraction || {}
+    return this.#dtoV1?.lastOutboundInteraction || {
+      type: this.#dtoV3?.lastOutboundInteractionType,
+      id: this.#dtoV3?.lastOutboundInteractionId,
+      createAt: {
+        dateTime: this.#dtoV3?.lastOutboundInteractionDate
+      },
+      message: {
+        messageId: this.#dtoV3?.lastOutboundInteractionMessageMessageId,
+        communicationType: this.#dtoV3?.lastOutboundInteractionMessageCommunicationType,
+        sender: this.#dtoV3?.lastOutboundInteractionMessageSender,
+        receiver: this.#dtoV3?.lastOutboundInteractionMessageReceiver,
+        parameters: {
+          READ_DATE: this.#dtoV3?.lastOutboundInteractionMessageReadDate
+        }
+      }
+    }
+  }
+
+  get getDisputeLastOutboundInteractionCreateAt() {
+    return this.#dtoV1?.lastOutboundInteraction?.createAt?.dateTime ||
+      this.#dtoV3?.lastOutboundInteractionDate
   }
 
   get getDisputeHasLastOutboundInteraction() {
@@ -356,6 +376,11 @@ export class DisputeModel {
   get getDisputeLastOutboundInteractionMessage() {
     // TODO: Não achei
     return this.getDisputeLastOutboundInteraction?.message || {}
+  }
+
+  get getDisputeLastOutboundInteractionMessageReadDate() {
+    // TODO: Não achei
+    return this.getDisputeLastOutboundInteractionMessage?.parameters?.READ_DATE
   }
 
   get getDisputeLastNegotiatorAccess() {
