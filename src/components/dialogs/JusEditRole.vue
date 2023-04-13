@@ -27,7 +27,7 @@
       </el-form-item>
 
       <el-row :gutter="20">
-        <el-col :span="12">
+        <el-col :span="party.birthday ? 12 : 24">
           <el-form-item
             :rules="validateDocumentNumber"
             label="CPF/CNPJ"

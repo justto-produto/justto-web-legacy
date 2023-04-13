@@ -1,29 +1,6 @@
 <template lang="html">
   <div class="panel-user-view">
     <img src="./icon.png">
-    <!-- <el-table :data="filteredUsers" width="100%">
-      <el-table-column prop="name" label="Nome"/>
-      <el-table-column prop="status" label="Status"/>
-      <el-table-column fixed="right" align="right">
-        <template slot="header" slot-scope="scope">
-          <el-input
-            v-model="search"
-            size="mini"
-            placeholder="Buscar"/>
-        </template>
-        <template v-slot="props">
-          <el-tooltip content="Adicionar">
-            <el-button size="mini" type="" icon="el-icon-plus" />
-          </el-tooltip>
-          <el-tooltip content="Editar">
-            <el-button size="mini" type="" icon="el-icon-edit" />
-          </el-tooltip>
-          <el-tooltip content="Excluir">
-            <el-button size="mini" type="danger" plain icon="el-icon-delete" />
-          </el-tooltip>
-        </template>
-      </el-table-column>
-    </el-table> -->
   </div>
 </template>
 

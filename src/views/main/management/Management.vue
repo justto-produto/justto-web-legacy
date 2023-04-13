@@ -137,12 +137,12 @@
           <el-tooltip content="Filtrar disputas">
             <el-button
               class="view-management__buttons-button"
-              :plain="!hasFilters"
-              :type="hasFilters ? 'primary' : ''"
+              :type="hasFilters ? 'primary' : 'secondary'"
               @click="showManagementFilters"
             >
               <jus-icon
                 :is-white="hasFilters"
+                :is-active="!hasFilters"
                 icon="filter"
                 data-testid="management-filterbtn"
               />
@@ -152,12 +152,13 @@
           <el-tooltip content="Importar disputas">
             <el-button
               class="view-management__buttons-button"
-              plain
+              type="secondary"
               @click="showImportDialog"
             >
               <jus-icon
                 icon="upload-file"
-                style="width: 16px;"
+                size="16px"
+                is-active
               />
             </el-button>
           </el-tooltip>
@@ -166,7 +167,7 @@
             <el-button
               class="view-management__buttons-button"
               :disabled="disputes.length === 0"
-              plain
+              type="secondary"
               icon="el-icon-download"
               data-testid="export-disputes"
               @click="showExportDisputesDialog"
@@ -972,7 +973,6 @@ export default {
 
     .view-management__buttons-button {
       height: 40px;
-
     }
 
     .view-management__buttons-select {

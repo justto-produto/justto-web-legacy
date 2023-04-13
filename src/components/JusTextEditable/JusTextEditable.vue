@@ -6,16 +6,16 @@
       v-model="inputValue"
       @keyup.enter.native="saveChanges"
       @blur="saveChanges"
-    >
-      <el-button
-        slot="append"
-        icon="el-icon-check"
-        type="primary"
-        @click="saveChanges"
-      />
-    </el-input>
+    />
+
+    <el-button
+      v-if="isEditing"
+      icon="el-icon-check"
+      type="primary"
+      @click="saveChanges"
+    />
     <span
-      v-show="!isEditing"
+      v-else
       :class="{
         [`jus-text-editable__mask--${type}`]: type
       }"

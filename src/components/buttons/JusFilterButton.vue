@@ -7,6 +7,8 @@
     <el-input
       ref="filterInput"
       v-model="term"
+      class="el-input--no-border"
+      :class="{ 'el-input--collapsed': isCollapsed }"
       @blur="blur()"
     >
       <el-button

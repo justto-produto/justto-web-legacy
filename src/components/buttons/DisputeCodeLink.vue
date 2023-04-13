@@ -124,7 +124,7 @@ export default {
     },
 
     handleClick() {
-      if (this.status.available) {
+      if (this.status?.available) {
         this.$emit('openTimeline')
       }
     },

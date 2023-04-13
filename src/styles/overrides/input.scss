@@ -5,24 +5,99 @@
     border: none;
     padding: 0;
   }
+
+  .el-input-group__prepend, .el-input-group__append {
+    border: none !important;
+  }
+
+  &:not(.el-input--collapsed) {
+    .el-input__inner {
+      border-top-left-radius: 0.6rem !important;
+      border-bottom-left-radius: 0.6rem !important;
+      border-left-width: 0.2rem !important;
+      border-left-color: #d7e5ef !important;
+      border-left-style: solid !important;
+      background-color: #f2f8fb4d !important;
+    }
+  }
 }
 
 .el-input {
   overflow: auto;
 
-  .el-input__inner {
-    border-radius: 0.6rem;
-    border-width: 0.2rem;
-    border-color: #d7e5ef;
-    border-style: solid;
-    background-color: #f2f8fb4d;
-    font-weight: 500;
+  &.el-input-group--append {
+    .el-input-group__append {
+      border-radius: 0 0.6rem 0.6rem 0;
+      border-width: 0.2rem;
+      border-color: #d7e5ef;
+      border-style: solid;
+    }
+
+    .el-input__inner {
+      border-right: none;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
   }
 
-  .el-input-group__prepend {
+  &.el-input-group--prepend {
+    .el-input-group__prepend {
+      border-radius: 0.6rem 0 0 0.6rem;
+      border-width: 0.2rem;
+      border-color: #d7e5ef;
+      border-style: solid;
+    }
+
+    .el-input__inner {
+      border-left: none;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+  }
+
+  .el-input-group__prepend, .el-input-group__append {
     button.el-button {
       border-width: 0.2rem !important;
       border-style: solid !important;
+    }
+  }
+}
+
+.el-input > .el-input__inner, .el-date-editor.el-input__inner {
+  border-radius: 0.6rem;
+  border-width: 0.2rem;
+  border-color: #d7e5ef;
+  border-style: solid;
+  background-color: #f2f8fb4d;
+  font-weight: 500;
+}
+
+.el-input:has(.el-input__inner:hover) {
+  .el-input-group__append, .el-input-group__prepend {
+    border-color: $--color-gray;
+    transition: border-color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+    transition-delay: 0;
+  }
+}
+
+.el-input:has(.el-input__inner:focus) {
+  .el-input-group__append, .el-input-group__prepend {
+    border-color: $--pj-color-blue;
+    transition: border-color 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+    transition-delay: 0;
+  }
+}
+
+.text-inline-editor__input {
+  .el-input__inner {
+    border-radius: 0 !important;
+
+    &:hover {
+      border-color: $--color-gray;
+    }
+
+    &:focus {
+      border-color: $--pj-color-blue;
     }
   }
 }

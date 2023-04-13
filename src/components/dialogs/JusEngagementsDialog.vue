@@ -66,6 +66,7 @@
         </div>
       </el-collapse>
     </el-dialog>
+
     <el-dialog
       :visible.sync="editDialog"
       width="70%"
