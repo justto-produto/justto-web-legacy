@@ -4,7 +4,7 @@
     :title="`Contratos de ${form.customerName}`"
     :close-on-click-modal="false"
     class="contracts-modal"
-    width="50%"
+    width="75%"
   >
     <div v-loading="saving">
       <el-form
@@ -74,8 +74,6 @@
                     step-strictly
                     controls-position="right"
                   />
-
-                  <el-form-item />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -94,7 +92,6 @@
                     format="dd/MM/yyyy"
                     value-format="yyyy-MM-dd"
                   />
-                  <el-form-item />
                 </el-form-item>
               </el-col>
 
@@ -110,7 +107,6 @@
                     format="dd/MM/yyyy"
                     value-format="yyyy-MM-dd"
                   />
-                  <el-form-item />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -147,101 +143,99 @@
                       :label="plan.name"
                     />
                   </el-select>
-                  <el-form-item />
                 </el-form-item>
               </el-col>
             </el-row>
 
-            <!-- Linha 4 -->
-            <!-- <el-row :gutter="24">
-              <el-col :span="24">
-                <el-form-item
-                  label="Mensalidade"
-                >
-                  <money
-                    v-model="contract.monthlySubscriptionFee"
-                    :disabled="isContractInactive(contract)"
-                    :class="{'is-inactive': isContractInactive(contract)}"
-                    class="el-input__inner"
-                  />
-                  <el-form-item />
-                </el-form-item>
-              </el-col>
-            </el-row> -->
-
-            <div
+            <el-row
               v-for="discount in contractDiscountList[contract.id]"
               :key="`${discount.id}--${discount.minVolume}`"
+              :gutter="24"
               class="flex-row"
             >
-              <el-form-item
-                label="Volume de importações"
-              >
-                <el-input-number
-                  v-model="discount.minVolume"
-                  :min="0"
-                  step-strictly
-                  controls-position="right"
-                />
-              </el-form-item>
-              <el-form-item
-                label="Valor do desconto"
-              >
-                <money
-                  v-model="discount.value"
-                  class="el-input__inner"
-                />
-                <el-form-item />
-              </el-form-item>
-              <el-form-item>
-                <el-button
-                  icon="el-icon-edit"
-                  @click="changeDiscount({ contractId: contract.id, discountId: discount.id, discount })"
-                />
-              </el-form-item>
-              <el-form-item>
-                <el-button
-                  type="danger"
-                  @click="deleteDiscount({ contractId: contract.id, discountId: discount.id })"
-                >
-                  <i
-                    class="el-icon-delete"
-                    style="color: white"
+              <el-col :span="9">
+                <el-form-item label="Volume de importações">
+                  <el-input-number
+                    v-model="discount.minVolume"
+                    :min="0"
+                    step-strictly
+                    controls-position="right"
                   />
-                </el-button>
-              </el-form-item>
-            </div>
+                </el-form-item>
+              </el-col>
 
-            <div class="flex-row">
-              <el-form-item
-                label="Volume de importações"
-              >
-                <el-input-number
-                  v-model="discountForm.minVolume"
-                  :min="0"
-                  step-strictly
-                  controls-position="right"
-                />
-              </el-form-item>
-              <el-form-item
-                label="Valor do desconto"
-              >
-                <money
-                  v-model="discountForm.value"
-                  class="el-input__inner"
-                />
-                <el-form-item />
-              </el-form-item>
-              <el-form-item>
-                <el-button
-                  type="primary"
-                  :plain="false"
-                  @click="addDiscount({ contractId: contract.id, discount: {...discountForm, type: 'MONTHLY_SUBSCRIPTION_VALUE'} })"
-                >
-                  Adicionar desconto
-                </el-button>
-              </el-form-item>
-            </div>
+              <el-col :span="9">
+                <el-form-item label="Valor do desconto">
+                  <div class="el-input">
+                    <money
+                      v-model="discount.value"
+                      class="el-input__inner"
+                    />
+                  </div>
+                </el-form-item>
+              </el-col>
+
+              <el-col :span="3">
+                <el-form-item>
+                  <el-button
+                    icon="el-icon-edit"
+                    @click="changeDiscount({ contractId: contract.id, discountId: discount.id, discount })"
+                  />
+                </el-form-item>
+              </el-col>
+
+              <el-col :span="3">
+                <el-form-item>
+                  <el-button
+                    type="danger"
+                    @click="deleteDiscount({ contractId: contract.id, discountId: discount.id })"
+                  >
+                    <i
+                      class="el-icon-delete"
+                      style="color: white"
+                    />
+                  </el-button>
+                </el-form-item>
+              </el-col>
+            </el-row>
+
+            <el-row
+              :gutter="24"
+              class="flex-row"
+            >
+              <el-col :span="9">
+                <el-form-item label="Volume de importações">
+                  <el-input-number
+                    v-model="discountForm.minVolume"
+                    :min="0"
+                    step-strictly
+                    controls-position="right"
+                  />
+                </el-form-item>
+              </el-col>
+
+              <el-col :span="9">
+                <el-form-item label="Valor do desconto">
+                  <div class="el-input">
+                    <money
+                      v-model="discountForm.value"
+                      class="el-input__inner"
+                    />
+                  </div>
+                </el-form-item>
+              </el-col>
+
+              <el-col :span="6">
+                <el-form-item>
+                  <el-button
+                    type="primary"
+                    @click="addDiscount({ contractId: contract.id, discount: {...discountForm, type: 'MONTHLY_SUBSCRIPTION_VALUE'} })"
+                  >
+                    Adicionar desconto
+                  </el-button>
+                </el-form-item>
+              </el-col>
+            </el-row>
 
             <el-row :gutter="24">
               <el-col
@@ -297,13 +291,15 @@
                 :span="12"
               >
                 <el-form-item :label="tariffValue.label">
-                  <money
-                    v-model="contract.tariffs[getTariffIndex(contract, tariffKey)].value"
-                    :disabled="isContractInactive(contract)"
-                    :readonly="isContractInactive(contract)"
-                    :class="{'is-inactive': isContractInactive(contract)}"
-                    class="el-input__inner"
-                  />
+                  <div class="el-input">
+                    <money
+                      v-model="contract.tariffs[getTariffIndex(contract, tariffKey)].value"
+                      :disabled="isContractInactive(contract)"
+                      :readonly="isContractInactive(contract)"
+                      :class="{'is-inactive': isContractInactive(contract)}"
+                      class="el-input__inner"
+                    />
+                  </div>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -373,7 +369,6 @@
                     step-strictly
                     controls-position="right"
                   />
-                  <el-form-item />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -405,7 +400,6 @@
                     format="dd/MM/yyyy"
                     value-format="yyyy-MM-dd"
                   />
-                  <el-form-item />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -423,7 +417,6 @@
                     step-strictly
                     controls-position="right"
                   />
-                  <el-form-item />
                 </el-form-item>
               </el-col>
 
@@ -443,7 +436,6 @@
                       :label="plan.name"
                     />
                   </el-select>
-                  <el-form-item />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -454,88 +446,114 @@
                   prop="monthlySubscriptionFee"
                   label="Mensalidade"
                 >
-                  <money
-                    v-model="newContract.monthlySubscriptionFee"
-                    class="el-input__inner"
-                  />
-                  <el-form-item />
+                  <div class="el-input">
+                    <money
+                      v-model="newContract.monthlySubscriptionFee"
+                      class="el-input__inner"
+                    />
+                  </div>
                 </el-form-item>
               </el-col>
             </el-row>
 
-            <div
+            <el-row
               v-for="(discount, index) in discountsOfNewContract"
               :key="`${discount.id}--${discount.minVolume}`"
+              :gutter="24"
               class="flex-row"
             >
-              <el-form-item
-                label="Volume de importações"
-              >
-                <el-input-number
-                  v-model="discount.minVolume"
-                  :min="0"
-                  step-strictly
-                  controls-position="right"
-                />
-              </el-form-item>
-              <el-form-item
-                label="Valor do desconto"
-              >
-                <money
-                  v-model="discount.value"
-                  class="el-input__inner"
-                />
-                <el-form-item />
-              </el-form-item>
-              <el-form-item>
-                <el-button
-                  icon="el-icon-edit"
-                  @click="discountsOfNewContract[index] = { ...discountForm, type: 'MONTHLY_SUBSCRIPTION_VALUE'}"
-                />
-              </el-form-item>
-              <el-form-item>
-                <el-button
-                  type="danger"
-                  @click="discountsOfNewContract = discountsOfNewContract.filter((disc) => disc !== discount)"
+              <el-col :span="9">
+                <el-form-item
+                  label="Volume de importações"
                 >
-                  <i
-                    class="el-icon-delete"
-                    style="color: white"
+                  <el-input-number
+                    v-model="discount.minVolume"
+                    :min="0"
+                    step-strictly
+                    controls-position="right"
                   />
-                </el-button>
-              </el-form-item>
-            </div>
+                </el-form-item>
+              </el-col>
 
-            <div class="flex-row">
-              <el-form-item
-                label="Volume de importações"
-              >
-                <el-input-number
-                  v-model="discountForm.minVolume"
-                  :min="0"
-                  step-strictly
-                  controls-position="right"
-                />
-              </el-form-item>
-              <el-form-item
-                label="Valor do desconto"
-              >
-                <money
-                  v-model="discountForm.value"
-                  class="el-input__inner"
-                />
-                <el-form-item />
-              </el-form-item>
-              <el-form-item>
-                <el-button
-                  type="primary"
-                  :plain="false"
-                  @click="discountsOfNewContract.push({...discountForm, type: 'MONTHLY_SUBSCRIPTION_VALUE'})"
+              <el-col :span="9">
+                <el-form-item
+                  label="Valor do desconto"
                 >
-                  Adicionar desconto
-                </el-button>
-              </el-form-item>
-            </div>
+                  <div class="el-input">
+                    <money
+                      v-model="discount.value"
+                      class="el-input__inner"
+                    />
+                  </div>
+                </el-form-item>
+              </el-col>
+
+              <el-col :span="3">
+                <el-form-item>
+                  <el-button
+                    icon="el-icon-edit"
+                    @click="discountsOfNewContract[index] = { ...discountForm, type: 'MONTHLY_SUBSCRIPTION_VALUE'}"
+                  />
+                </el-form-item>
+              </el-col>
+
+              <el-col :span="3">
+                <el-form-item>
+                  <el-button
+                    type="danger"
+                    @click="discountsOfNewContract = discountsOfNewContract.filter((disc) => disc !== discount)"
+                  >
+                    <i
+                      class="el-icon-delete"
+                      style="color: white"
+                    />
+                  </el-button>
+                </el-form-item>
+              </el-col>
+            </el-row>
+
+            <el-row
+              :gutter="24"
+              class="flex-row"
+            >
+              <el-col :span="9">
+                <el-form-item
+                  label="Volume de importações"
+                >
+                  <el-input-number
+                    v-model="discountForm.minVolume"
+                    :min="0"
+                    step-strictly
+                    controls-position="right"
+                  />
+                </el-form-item>
+              </el-col>
+
+              <el-col :span="9">
+                <el-form-item
+                  label="Valor do desconto"
+                >
+                  <div class="el-input">
+                    <money
+                      v-model="discountForm.value"
+                      class="el-input__inner"
+                    />
+                  </div>
+                  <el-form-item />
+                </el-form-item>
+              </el-col>
+
+              <el-col :span="6">
+                <el-form-item>
+                  <el-button
+                    type="primary"
+                    @click="discountsOfNewContract.push({...discountForm, type: 'MONTHLY_SUBSCRIPTION_VALUE'})"
+                  >
+                    Adicionar desconto
+                  </el-button>
+                </el-form-item>
+              </el-col>
+            </el-row>
 
             <el-row :gutter="24">
               <el-col
@@ -589,10 +607,12 @@
                 :span="12"
               >
                 <el-form-item :label="tariffTypes[tariff.type].label">
-                  <money
-                    v-model="tariff.value"
-                    class="el-input__inner"
-                  />
+                  <div class="el-input">
+                    <money
+                      v-model="tariff.value"
+                      class="el-input__inner"
+                    />
+                  </div>
                 </el-form-item>
               </el-col>
 
@@ -969,9 +989,34 @@ export default {
 
 .flex-row {
   display: flex;
-  gap: 5px;
   width: 100%;
   align-items: flex-end;
+  margin-bottom: 40px;
+
+  .el-form-item {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0 !important;
+
+    .el-form-item__label {
+      line-height: 1em;
+      margin-bottom: 12px;
+      word-break: break-word;
+      text-align: left;
+    }
+
+    .el-form-item__content {
+      line-height: 1em;
+
+      .el-button {
+        width: 100%;
+      }
+    }
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
 
 </style>
