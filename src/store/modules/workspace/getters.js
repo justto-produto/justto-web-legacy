@@ -24,11 +24,11 @@ const workspaceGetters = {
       ...(getters?.dispute?.disputeRoles || []),
       ...(getters?.getTicketOverviewParties || [])
     ]
-      .filter(({ personId, profile }) => Boolean(personId))
-      .map(({ personId }) => personId)
+      .filter(({ personId, person }) => Boolean(personId || person?.id))
+      .map(({ personId, person }) => personId || person?.id)
 
     return getters.workspaceMembers
-      .filter(({ personId, profile }) => (Boolean(personId) && parties.includes(personId)) || ['ADMINISTRATOR'].includes(profile))
+      .filter(({ personId, profile }) => (['ADMINISTRATOR'].includes(profile) || (Boolean(personId) && parties.includes(personId))))
   },
   workspaceTeam: state => state.workspace.team,
   workspaceMembersSorted: (_state, getters) =>
