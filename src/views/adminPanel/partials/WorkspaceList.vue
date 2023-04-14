@@ -86,36 +86,6 @@
         </template>
       </el-table-column>
 
-      <!-- <el-table-column
-        prop="keyAccountId"
-        label="Key Account"
-      >
-        <template v-slot="scope">
-          <el-select
-            v-if="scope.row.id === activeRow"
-            :id="`ka-select-${scope.row.id}`"
-            :value="scope.row.keyAccountId"
-            size="small"
-            filterable
-            @change="saveKeyAccountInToWorkspace($event, scope.row)"
-          >
-            <el-option
-              v-for="keyAccount in keyAccounts"
-              :key="`key-account-${keyAccount.id}`"
-              :value="keyAccount.id"
-              :label="keyAccountTemplate(keyAccount)"
-            />
-          </el-select>
-
-          <span
-            v-else
-            :style="{cursor: 'pointer'}"
-          >
-            {{ keyAccountTemplate(findKeyAccount(scope.row.keyAccountId)) }}
-          </span>
-        </template>
-      </el-table-column> -->
-
       <el-table-column
         align="right"
         prop="archived"
@@ -157,7 +127,7 @@
             <article>
               <label for="inviteForm__email">E-mail</label>
 
-              <div class="el-input--mini">
+              <div class="el-input el-input--mini">
                 <input
                   id="inviteForm__email"
                   v-model="inviteForm.email"

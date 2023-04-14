@@ -61,6 +61,18 @@
       border-style: solid !important;
     }
   }
+
+  &:hover {
+    .el-input__inner {
+      border-color: $--color-gray !important;
+    }
+  }
+
+  &:has(.el-input__inner:focus) {
+    .el-input__inner {
+      border-color: $--pj-color-blue !important;
+    }
+  }
 }
 
 .el-input > .el-input__inner, .el-date-editor.el-input__inner {
@@ -99,5 +111,27 @@
     &:focus {
       border-color: $--pj-color-blue;
     }
+  }
+}
+
+.el-input-number {
+  &.is-controls-right {
+    span[role="button"] {
+      border-width: 0.2rem;
+      border-color: #d7e5ef;
+      background-color: transparent;
+    }
+  }
+}
+
+.el-input-number:hover {
+  .el-input-number__decrease, .el-input-number__increase, .el-input__inner {
+    border-color: $--color-gray !important;
+  }
+}
+
+.el-input-number:has(.el-input>.el-input__inner:focus) {
+  .el-input-number__decrease, .el-input-number__increase, .el-input__inner {
+    border-color: $--pj-color-blue !important;
   }
 }
