@@ -41,9 +41,17 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+@import '@/styles/colors.scss';
+
 .dispute-projection__switch {
   justify-content: center;
   margin: 8px 0;
+
+  &.is-checked {
+    .el-switch__core {
+      border: solid thin $--color-white;
+    }
+  }
 }
 </style>
