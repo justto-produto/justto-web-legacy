@@ -50,7 +50,7 @@ export default {
 
   &.is-checked {
     .el-switch__core {
-      border: solid thin $--color-white;
+      border: solid thin $--color-white !important;
     }
   }
 }

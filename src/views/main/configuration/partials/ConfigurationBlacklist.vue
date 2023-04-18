@@ -9,6 +9,7 @@
           {{ props.row }}
         </template>
       </el-table-column>
+
       <el-table-column
         align="right"
         width="400px"
@@ -17,11 +18,14 @@
           slot="header"
           class="configuration-blackList-view__column-header"
         >
-          <input
-            v-model="search"
-            class="el-input__inner"
-            placeholder="Buscar"
-          >
+          <div class="el-input">
+            <input
+              v-model="search"
+              class="el-input__inner"
+              placeholder="Buscar"
+            >
+          </div>
+
           <el-button
             type="primary"
             icon="el-icon-plus"
@@ -44,6 +48,7 @@
         </div>
       </el-table-column>
     </el-table>
+
     <el-dialog
       :close-on-click-modal="false"
       :show-close="false"
@@ -67,6 +72,7 @@
         <b>1199020</b> bloqueará Whatsapp para todos os números iniciados com <i>1199020</i>, como <i>(11) 99020 9246</i>.
         <br>
       </el-alert>
+
       <el-form
         ref="blackListForm"
         :model="blackListForm"
@@ -81,15 +87,18 @@
           <el-input v-model="blackListForm.contact" />
         </el-form-item>
       </el-form>
+
       <span slot="footer">
-        <el-button
-          plain
-          @click="blackListDialogVisible = false"
-        >Cancelar</el-button>
+        <el-button @click="blackListDialogVisible = false">
+          Cancelar
+        </el-button>
+
         <el-button
           type="primary"
           @click="addBlackList"
-        >Adicionar</el-button>
+        >
+          Adicionar
+        </el-button>
       </span>
     </el-dialog>
   </div>

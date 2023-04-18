@@ -191,13 +191,15 @@
             :label="$tc('UPPER_RANGE', isRecoveryStrategy)"
             prop="disputeUpperRange"
           >
-            <money
-              v-model="disputeForm.disputeUpperRange"
-              class="el-input__inner"
-              data-testid="bondary-input"
-              @blur.native="checkZeroUpperRange"
-              @change.native="disputeUpperRangeChangedHandler"
-            />
+            <div class="el-input">
+              <money
+                v-model="disputeForm.disputeUpperRange"
+                class="el-input__inner"
+                data-testid="bondary-input"
+                @blur.native="checkZeroUpperRange"
+                @change.native="disputeUpperRangeChangedHandler"
+              />
+            </div>
           </el-form-item>
         </el-col>
 
@@ -224,10 +226,12 @@
             label="Dano material"
             prop="materialDamage"
           >
-            <money
-              v-model="disputeForm.materialDamage"
-              class="el-input__inner"
-            />
+            <div class="el-input">
+              <money
+                v-model="disputeForm.materialDamage"
+                class="el-input__inner"
+              />
+            </div>
           </el-form-item>
         </el-col>
 
@@ -236,10 +240,12 @@
             label="Dano moral"
             prop="moralDamage"
           >
-            <money
-              v-model="disputeForm.moralDamage"
-              class="el-input__inner"
-            />
+            <div class="el-input">
+              <money
+                v-model="disputeForm.moralDamage"
+                class="el-input__inner"
+              />
+            </div>
           </el-form-item>
         </el-col>
 
@@ -248,10 +254,12 @@
             label="Valor do processo"
             prop="requestedValue"
           >
-            <money
-              v-model="disputeForm.requestedValue"
-              class="el-input__inner"
-            />
+            <div class="el-input">
+              <money
+                v-model="disputeForm.requestedValue"
+                class="el-input__inner"
+              />
+            </div>
           </el-form-item>
         </el-col>
 
@@ -260,10 +268,12 @@
             label="Valor provisionado"
             prop="provisionedValue"
           >
-            <money
-              v-model="disputeForm.provisionedValue"
-              class="el-input__inner"
-            />
+            <div class="el-input">
+              <money
+                v-model="disputeForm.provisionedValue"
+                class="el-input__inner"
+              />
+            </div>
           </el-form-item>
         </el-col>
       </el-row>

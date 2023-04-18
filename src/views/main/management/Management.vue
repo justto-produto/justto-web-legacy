@@ -103,11 +103,6 @@
         </el-tabs>
 
         <div class="view-management__buttons">
-          <!-- <el-input
-            v-model="term"
-            clearable
-            prefix-icon="el-icon-search"
-          /> -->
           <JusFilterButton
             ref="JusFilterButton"
             @getDisputes="getDisputes"

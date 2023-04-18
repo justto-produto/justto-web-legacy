@@ -27,6 +27,7 @@
             <el-button
               slot="append"
               icon="el-icon-plus"
+              type="transparent"
               native-type="submit"
               data-testid="submit-teammember"
               @click="addTeamMember('teamMembersForm')"

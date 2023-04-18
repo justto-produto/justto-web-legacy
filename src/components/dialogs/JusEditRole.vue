@@ -40,6 +40,7 @@
             />
           </el-form-item>
         </el-col>
+
         <el-col
           v-if="party.birthday"
           :span="12"
@@ -48,15 +49,17 @@
             label="Data de nascimento"
             prop="birthday"
           >
-            <DateInlieEditor
-              :value="party.birthday"
-              :is-editable="canEditBirthday"
-              :processed-date="$moment(new Date(party.birthday)).fromNow(true)"
-              :is-date-time-format="false"
-              edit-on-click
-              class="birthday-editor"
-              @change="setBirthday"
-            />
+            <div class="el-input">
+              <DateInlieEditor
+                :value="party.birthday"
+                :is-editable="canEditBirthday"
+                :processed-date="$moment(new Date(party.birthday)).fromNow(true)"
+                :is-date-time-format="false"
+                edit-on-click
+                class="el-input__inner birthday-editor"
+                @change="setBirthday"
+              />
+            </div>
           </el-form-item>
         </el-col>
       </el-row>
@@ -720,10 +723,19 @@ export default {
 
 .birthday-editor {
   .date-inline-editor__value {
-    height: 40px !important;
-    border: solid #dcdfe6 thin !important;
-    border-radius: 2px;
+    border: none !important;
     padding: 0 15px;
+
+    .date-inline-editor__icons {
+      background-image: none !important;
+      background-color: transparent !important;
+    }
+  }
+
+  .date-inline-editor__input {
+    .el-input__inner {
+      border: none !important;
+    }
   }
 }
 

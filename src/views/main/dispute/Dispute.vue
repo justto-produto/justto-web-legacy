@@ -309,6 +309,7 @@
                       type="textarea"
                       placeholder="Escreva alguma coisa"
                     />
+
                     <el-dialog
                       :visible.sync="editTemplateQuickReply.visible"
                       append-to-body

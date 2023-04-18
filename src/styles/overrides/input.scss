@@ -84,7 +84,7 @@
   font-weight: 500;
 }
 
-.el-input:has(.el-input__inner:hover) {
+.el-input:hover {
   .el-input-group__append, .el-input-group__prepend {
     border-color: $--color-gray;
     transition: border-color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
@@ -133,5 +133,16 @@
 .el-input-number:has(.el-input>.el-input__inner:focus) {
   .el-input-number__decrease, .el-input-number__increase, .el-input__inner {
     border-color: $--pj-color-blue !important;
+  }
+}
+
+.el-textarea {
+  .el-textarea__inner {
+    border-radius: 0.6rem;
+    border-width: 0.2rem;
+    border-color: #d7e5ef;
+    border-style: solid;
+    background-color: #f2f8fb4d;
+    font-weight: 500;
   }
 }

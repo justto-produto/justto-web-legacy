@@ -93,6 +93,7 @@
     >
       <div>
         <label>{{ $t('dispute.labels.note') }}:</label>
+
         <el-input
           v-model="note"
           placeholder="Insira uma nota."
@@ -205,6 +206,7 @@
           </div>
         </div>
       </div>
+
       <el-select
         v-model="unsettledType"
         v-loading="$store.state.loading"
@@ -219,8 +221,10 @@
           :value="index"
         />
       </el-select>
+
       <div style="margin: 8px 0px;">
         <label>{{ $t('dispute.labels.note') }}:</label>
+
         <el-input
           v-model="note"
           placeholder="Insira uma nota."

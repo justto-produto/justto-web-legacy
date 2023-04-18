@@ -54,13 +54,12 @@
                     popper-class="valid-domain-popover"
                   >
                     <div slot="reference">
-                      <el-button
+                      <span
                         v-if="haveDomain"
                         slot="reference"
-                        type="primary"
-                        :icon="isValidDomain ? 'el-icon-check' : 'el-icon-close'"
-                        size="small"
-                      />
+                      >
+                        <i :class="isValidDomain ? 'el-icon-check' : 'el-icon-close'" />
+                      </span>
                     </div>
                   </el-popover>
                 </template>

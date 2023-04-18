@@ -41,6 +41,7 @@
           autofocus=""
         />
       </el-form-item>
+
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item
@@ -55,6 +56,7 @@
             />
           </el-form-item>
         </el-col>
+
         <el-col :span="12">
           <el-form-item
             label="Data de nascimento"
@@ -63,6 +65,7 @@
             <el-date-picker
               v-model="roleForm.birthday"
               :disabled="!canEditBirthday"
+              class="el-input__inner"
               :clearable="false"
               format="dd/MM/yyyy"
               type="date"

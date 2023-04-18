@@ -319,12 +319,14 @@
           >
             <el-input v-model="addBankForm.name" />
           </el-form-item>
+
           <el-form-item
             label="Email"
             prop="email"
           >
             <el-input v-model="addBankForm.email" />
           </el-form-item>
+
           <el-form-item
             label="CPF ou CNPJ"
             prop="document"
@@ -334,6 +336,7 @@
               v-mask="['###.###.###-##', '##.###.###/####-##']"
             />
           </el-form-item>
+
           <el-form-item
             label="Banco"
             prop="bank"
@@ -357,12 +360,14 @@
           >
             <el-input v-model="addBankForm.agency" />
           </el-form-item>
+
           <el-form-item
             label="Número do Conta"
             prop="number"
           >
             <el-input v-model="addBankForm.number" />
           </el-form-item>
+
           <el-form-item
             label="Tipo de Conta"
             prop="type"

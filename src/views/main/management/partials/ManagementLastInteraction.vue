@@ -123,6 +123,7 @@
             >
               Expandir
             </el-button>
+
             <el-input
               v-model="message"
               type="textarea"
@@ -130,6 +131,7 @@
               placeholder="Escreva alguma coisa"
               style="padding-bottom: 10px"
             />
+
             <el-button
               size="mini"
               @click="hideResponseBox(data.getDisputeId, true)"

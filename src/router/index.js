@@ -169,6 +169,7 @@ const router = new Router({
         {
           name: 'configuration',
           path: 'configuration',
+          redirect: 'configurations',
           component: () => import(/* webpackChunkName: "configurationIndex" */ '@/views/main/configuration/Configuration'),
           meta: {
             requiresAuth: true,
