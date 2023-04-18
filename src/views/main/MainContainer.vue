@@ -156,16 +156,14 @@ export default {
       const basicNegotiationMenuItem = new MenuItem({
         index: '/negotiation',
         title: 'Negociação',
-        icon: 'square-poll-horizontal',
-        iconType: 'fa',
+        icon: 'negotiation-window',
         isVisible: !this.showNegotiationTypeMenu
       })
 
       const customNegotiationMenuItem = new MenuItem({
         index: '/negotiation',
         title: 'Negociação',
-        icon: 'square-poll-horizontal',
-        iconType: 'fa',
+        icon: 'negotiation-window',
         isVisible: this.showNegotiationTypeMenu && this.ticketListMode === (this.isInNegotiation ? MANAGEMENT : TICKET),
         action: () => { if (this.isInNegotiation) this.setAccountProperty({ TICKET_LIST_MODE: TICKET }) }
       })
@@ -173,8 +171,7 @@ export default {
       const basicManagementMenuItem = new MenuItem({
         index: '/management',
         title: 'Gerenciamento',
-        icon: 'table-tree',
-        iconType: 'fa',
+        icon: 'list-app',
         isVisible: !this.showNegotiationTypeMenu,
         action: () => this.setTabQuery('management')
       })
@@ -182,8 +179,7 @@ export default {
       const customManagementMenuItem = new MenuItem({
         index: '/negotiation',
         title: 'Gerenciamento',
-        icon: 'table-tree',
-        iconType: 'fa',
+        icon: 'negotiation-window',
         customHome: '/management',
         isVisible: this.showNegotiationTypeMenu && this.ticketListMode === (this.isInNegotiation ? TICKET : MANAGEMENT),
         action: () => { if (this.isInNegotiation) this.setAccountProperty({ TICKET_LIST_MODE: MANAGEMENT }) }
@@ -192,17 +188,14 @@ export default {
       const basicManagementAllMenuItem = new MenuItem({
         index: '/management/all',
         title: 'Todas as disputas',
-        icon: 'box-archive',
-        iconType: 'fa',
+        icon: 'full-folder',
         action: () => this.setTabQuery('allDisputes')
       })
 
       const basicImportMenuItem = new MenuItem({
         index: '/import',
         title: 'Importação',
-        // icon: 'import',
-        icon: 'laptop-arrow-down',
-        iconType: 'fa',
+        icon: 'import',
         isVisible: true,
         action: () => {}
       })
