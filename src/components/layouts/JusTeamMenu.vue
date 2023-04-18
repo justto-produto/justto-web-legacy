@@ -125,7 +125,7 @@ export default {
   display: flex;
   flex-direction: column;
   text-align: center;
-  margin-top: 32px;
+  margin-top: 8px;
 
   .jus-team-menu__title {
     cursor: pointer;
