@@ -172,7 +172,7 @@ export default {
 
       .el-dialog__footer-container__buttons {
         display: flex;
-        justify-content: center;
+        justify-content: flex-end;
 
         gap: 32px;
       }
