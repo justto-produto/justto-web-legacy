@@ -90,8 +90,11 @@
         </div>
       </el-input>
 
-      <div class="select-strategy__messages">
-        <div v-show="campaignNameDuplicated && campaignName !== ''">
+      <div
+        v-show="campaignNameDuplicated && campaignName !== ''"
+        class="select-strategy__messages"
+      >
+        <div>
           Já existe uma campanha com este nome.
           <a @click.prevent="showDuplicatedAlert(campaignName)">
             Entenda melhor.
@@ -134,8 +137,11 @@
         />
       </el-select>
 
-      <div class="select-strategy__messages">
-        <div v-show="!!strategy.id">
+      <div
+        v-show="Boolean(strategy.id)"
+        class="select-strategy__messages"
+      >
+        <div>
           <a @click.prevent="openDialogEngagement">
             Ver estratégia de engajamento das partes
           </a>
@@ -687,6 +693,7 @@ export default {
   .el-card {
     .el-input__inner {
       border-bottom: 1px solid #dcdfe6 !important;
+      border-radius: 0px;
       border-top: 0;
       border-left: 0;
       border-right: 0;
@@ -708,9 +715,9 @@ export default {
   }
 
   .select-strategy{
-    .el-input__inner {
-      border: 0 !important;
-    }
+    // .el-input__inner {
+    //   border: 0 !important;
+    // }
   }
 
   .el-input-number {
