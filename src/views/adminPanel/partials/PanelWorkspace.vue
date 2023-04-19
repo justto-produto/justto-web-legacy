@@ -254,11 +254,14 @@
             <span v-if="workspaceForm.properties.VEXATIOUS_TYPE === 'QUANTITY'">Quantas disputas uma mesma pessoa precisa ter para ser qualificado como possível ofensor?</span>
             <span v-else>Qual percentual acima da média de disputas uma pessoa precisa ter para ser qualificado como possível ofensor?</span>
           </span>
-          <money
-            v-model="workspaceForm.properties.VEXATIOUS_THRESHOLD"
-            v-bind="vexatiousTypeMask"
-            class="el-input__inner"
-          />
+
+          <div class="el-input">
+            <money
+              v-model="workspaceForm.properties.VEXATIOUS_THRESHOLD"
+              v-bind="vexatiousTypeMask"
+              class="el-input__inner"
+            />
+          </div>
         </el-form-item>
       </el-form>
       <span

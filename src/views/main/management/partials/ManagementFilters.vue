@@ -288,7 +288,7 @@
           <!-- MEIO DE INTERAÇÃO -->
           <el-col
             v-if="isInteration || isAll"
-            :span="12"
+            :span="24"
           >
             <el-form-item label="Meio de interação">
               <el-select

@@ -70,11 +70,16 @@
           Mensalidade:
         </span>
 
-        <money
+        <div
           v-if="inputValue"
-          v-model="monthlySubscriptionFee"
-          class="el-input__inner client-grid__autocomplete"
-        />
+          class="el-input"
+        >
+          <money
+            v-if="inputValue"
+            v-model="monthlySubscriptionFee"
+            class="el-input__inner client-grid__autocomplete"
+          />
+        </div>
 
         <el-button
           v-if="inputValue"

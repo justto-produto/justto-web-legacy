@@ -192,13 +192,10 @@
     </div>
 
     <div class="api-integration__footer">
-      <el-button
-        plain
-        type="primary"
-        @click="apiIntegrationDialogVisible = false"
-      >
+      <el-button @click="apiIntegrationDialogVisible = false">
         Cancelar
       </el-button>
+
       <el-button
         type="primary"
         @click.prevent="handleSaveApiIntegration"
@@ -508,7 +505,7 @@ export default {
 
   .api-integration__footer {
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
   }
 }
 </style>

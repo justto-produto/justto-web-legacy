@@ -134,7 +134,7 @@
       <h3>Valor proposto</h3>
 
       <el-row :gutter="20">
-        <el-col :span="8">
+        <el-col :span="12">
           <el-form-item
             :rules="validateLastOfferValue()"
             label="Valor"
@@ -159,7 +159,8 @@
             </el-tooltip>
           </el-form-item>
         </el-col>
-        <el-col :span="16">
+
+        <el-col :span="12">
           <el-form-item
             label="Proposto por"
             prop="lastOfferValueName"

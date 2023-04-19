@@ -19,18 +19,23 @@
     <el-form-item
       label="Limite de valor do processo para classificar como pré negociação"
     >
-      <money
-        v-model="workspacePreNegotiation.limitValue"
-        class="el-input__inner"
-        maxlength="16"
-      />
+      <div class="el-input">
+        <money
+          v-model="workspacePreNegotiation.limitValue"
+          class="el-input__inner"
+          maxlength="16"
+        />
+      </div>
     </el-form-item>
-    <el-button
-      type="primary"
-      @click.prevent="saveProperties"
-    >
-      Salvar
-    </el-button>
+
+    <el-form-item>
+      <el-button
+        type="primary"
+        @click.prevent="saveProperties"
+      >
+        Salvar
+      </el-button>
+    </el-form-item>
   </el-form>
 </template>
 
@@ -144,12 +149,9 @@ export default {
     }
   }
 
-  .pre-negotiation__form-select {
-    .el-form-item__content {
-      .el-select {
-        width: 100%;
-      }
-    }
+  .el-form-item:last-child {
+    display: flex;
+    justify-content: flex-end;
   }
 }
 </style>

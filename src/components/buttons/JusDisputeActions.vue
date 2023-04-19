@@ -86,12 +86,14 @@
               label="Valor"
               prop="lastCounterOfferValue"
             >
-              <money
-                v-model="counterOfferForm.lastCounterOfferValue"
-                class="el-input__inner"
-                data-testid="counterproposal-value-input"
-                maxlength="16"
-              />
+              <div class="el-input">
+                <money
+                  v-model="counterOfferForm.lastCounterOfferValue"
+                  class="el-input__inner"
+                  data-testid="counterproposal-value-input"
+                  maxlength="16"
+                />
+              </div>
             </el-form-item>
           </el-col>
 
@@ -206,12 +208,14 @@
               label="Valor"
               prop="lastCounterOfferValue"
             >
-              <money
-                v-model="counterOfferForm.lastCounterOfferValue"
-                class="el-input__inner"
-                data-testid="counterproposal-value-input"
-                maxlength="16"
-              />
+              <div class="el-input">
+                <money
+                  v-model="counterOfferForm.lastCounterOfferValue"
+                  class="el-input__inner"
+                  data-testid="counterproposal-value-input"
+                  maxlength="16"
+                />
+              </div>
             </el-form-item>
           </el-col>
 
@@ -341,12 +345,14 @@
               label="Valor"
               prop="lastCounterOfferValue"
             >
-              <money
-                v-model="counterOfferForm.lastCounterOfferValue"
-                class="el-input__inner"
-                data-testid="counterproposal-value-input"
-                maxlength="16"
-              />
+              <div class="el-input">
+                <money
+                  v-model="counterOfferForm.lastCounterOfferValue"
+                  class="el-input__inner"
+                  data-testid="counterproposal-value-input"
+                  maxlength="16"
+                />
+              </div>
             </el-form-item>
           </el-col>
 

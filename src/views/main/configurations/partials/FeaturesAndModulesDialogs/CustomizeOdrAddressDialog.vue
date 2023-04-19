@@ -37,6 +37,7 @@
                 <div slot="content">
                   Esta é uma configuração que exige intervenção dos times <br> de tecnologia da JUSTTO e do escritório/empresa.
                 </div>
+
                 <i class="el-icon-info" />
               </el-tooltip>
 
@@ -118,7 +119,6 @@
 
           <el-table
             :data="dnsList"
-            style="width: 100%; text-align: center;"
             size="mini"
             class="configure-customizations__form-body-table"
             border
@@ -126,7 +126,7 @@
             <el-table-column
               fixed="left"
               center
-              width="37px"
+              width="40"
             >
               <template v-slot="props">
                 <el-button
@@ -140,7 +140,6 @@
             <el-table-column
               prop="type"
               label="Type"
-              width="100px"
             >
               <template v-slot="props">
                 {{ props.row.type | uppercase }}
@@ -168,7 +167,7 @@
             <el-table-column
               fixed="right"
               center
-              width="37px"
+              width="40"
             >
               <template v-slot="props">
                 <el-tooltip
@@ -178,6 +177,7 @@
                   <el-button
                     type="text"
                     icon="el-icon-copy-document"
+                    class="is-pointer"
                     @click="copyDns(props.row)"
                   />
                 </el-tooltip>
@@ -185,18 +185,6 @@
             </el-table-column>
           </el-table>
         </div>
-
-        <!-- SAAS-4932 Hide footer editor. -->
-        <!-- <el-form-item class="configure-customizations__form-ckeditor jus-ckeditor__parent">
-          <ckeditor
-            ref="footerEditor"
-            v-model="form.emailFooter"
-            :editor="editor"
-            :disabled="!isJusttoAdmin"
-            :config="editorConfig"
-            type="classic"
-          />
-        </el-form-item> -->
       </el-form>
 
       <div class="configure-customizations__footer">
@@ -818,6 +806,8 @@ export default {
     .configure-customizations__footer-actions {
       display: flex;
       gap: 16px;
+      width: 100%;
+      justify-content: flex-end !important;
 
       .configure-customizations__footer-confirm {
         .el-loading-mask {
