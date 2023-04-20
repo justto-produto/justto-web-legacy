@@ -16,9 +16,11 @@ $--pj-color-lighter-blue: #30A9FB !default;
 $--pj-color-white-blue: #F0F9FE !default;
 $--pj-color-disabled-blue: #9ad2f9 !default;
 
-$--js-color-red: #CC4148 !default;
-$--js-color-light-red: #EC767C !default;
-$--js-color-disable-red: #FFF2F3 !default;
+$-pg-color-overlay: #19415F !default;
+
+$--pj-color-red: #CC4148 !default;
+$--pj-color-light-red: #EC767C !default;
+$--pj-color-disable-red: #FFF2F3 !default;
 
 $--color-primary: $--pj-color-blue !default;
 $--color-primary-light-1: mix($--color-white, $--color-primary, 10%) !default;
@@ -75,5 +77,3 @@ $--color-nps-detractor: #FF4B54 !default;
 $--color-negotiator-bg: #9461f74f !default;
 $--color-email-bg: $--color-info-light !default;
 $--color-whatsapp-bg: $--color-success-light-5 !default;
-
-$-pg-color-overlay: #19415F !default;

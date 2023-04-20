@@ -89,48 +89,48 @@
 
 .el-button--danger {
   color: $--color-white !important;
-  background-color: $--js-color-light-red !important;
-  border-color: $--js-color-light-red !important;
+  background-color: $--pj-color-light-red !important;
+  border-color: $--pj-color-light-red !important;
 
   &:focus {
     color: $--color-white !important;
-    background-color: $--js-color-light-red !important;
-    border-color: $--js-color-light-red !important;
+    background-color: $--pj-color-light-red !important;
+    border-color: $--pj-color-light-red !important;
   }
 
   &:hover, &:active {
     color: $--color-white !important;
-    background-color: $--js-color-red !important;
-    border-color: $--js-color-red !important;
+    background-color: $--pj-color-red !important;
+    border-color: $--pj-color-red !important;
   }
 
   &.is-disabled {
-    background-color: $--js-color-disable-red !important;
-    border-color: $--js-color-disable-red !important;
+    background-color: $--pj-color-disable-red !important;
+    border-color: $--pj-color-disable-red !important;
     color: $--color-white !important;
   }
 }
 
 .el-button--danger.is-plain {
-  color: $--js-color-light-red !important;
+  color: $--pj-color-light-red !important;
   background-color: $--color-white !important;
-  border-color: $--js-color-light-red !important;
+  border-color: $--pj-color-light-red !important;
 
   &:focus {
-    color: $--js-color-light-red !important;
+    color: $--pj-color-light-red !important;
     background-color: $--color-white !important;
-    border-color: $--js-color-light-red !important;
+    border-color: $--pj-color-light-red !important;
   }
 
   &:hover, &:active {
-    color: $--js-color-red !important;
+    color: $--pj-color-red !important;
     background-color: $--color-white !important;
-    border-color: $--js-color-red !important;
+    border-color: $--pj-color-red !important;
   }
 
   &.is-disabled {
-    color: $--js-color-disable-red !important;
-    border-color: $--js-color-disable-red !important;
+    color: $--pj-color-disable-red !important;
+    border-color: $--pj-color-disable-red !important;
   }
 }
 

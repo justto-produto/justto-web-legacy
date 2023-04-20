@@ -112,7 +112,7 @@
     </div>
 
     <div
-      v-if="!resumedState.isNamesake"
+      v-if="resumedState.isNamesake"
       class="party-details__infoline"
     >
       <el-button
