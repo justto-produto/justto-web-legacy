@@ -433,7 +433,7 @@ export default {
         value: 'Email'
       }, {
         key: 'NEGOTIATOR_ACCESS',
-        value: 'Sistema Justto'
+        value: 'Sistema ProJuris'
       }]
     },
     activeTabLabel() {

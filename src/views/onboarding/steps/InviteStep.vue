@@ -5,7 +5,7 @@
         <h2>Adicione pessoas à sua equipe</h2>
         <p>
           Adicione todos os usuários que farão parte da sua equipe (você poderá adicionar pessoas posteriormente).
-          Os convidados irão receber um e-mail para juntar-se à equipe {{ $store.state.workspaceModule.name }} no sistema da Justto.
+          Os convidados irão receber um e-mail para juntar-se à equipe {{ $store.state.workspaceModule.name }} no sistema da ProJuris.
         </p>
       </div>
       <el-form

@@ -163,7 +163,7 @@ export default {
     downloadModel() {
       // SEGMENT TRACK
       this.$jusSegment('Baixar planilha modelo')
-      const link = this.isRecovery ? 'Planilha-Modelo-Justto-cobranca.xlsx' : 'Planilha-Modelo-Justto.xlsx'
+      const link = this.isRecovery ? 'Planilha-Modelo-ProJuris-cobranca.xlsx' : 'Planilha-Modelo-ProJuris.xlsx'
       window.open(link, '_blank')
     }
   }

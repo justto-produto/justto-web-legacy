@@ -1087,7 +1087,7 @@ export default {
           const hideAlert = localStorage.getItem('jushidemodelalert')
           if (!hideAlert) {
             this.$confirm(
-              `Este é um modelo padrão disponibilizado pela Justto.
+              `Este é um modelo padrão disponibilizado pela ProJuris.
               Fique à vontade para edita-lo de acordo com suas necessidades.`,
               'Minuta padrão', {
                 confirmButtonText: 'OK',

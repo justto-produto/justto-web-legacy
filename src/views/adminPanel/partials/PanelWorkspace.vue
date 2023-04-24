@@ -209,7 +209,7 @@
           show-icon
         >
           <span slot="title">
-            Este nome <strong>IRÁ</strong> aparecer em todas as mensagens automáticas enviadas pela Justto.
+            Este nome <strong>IRÁ</strong> aparecer em todas as mensagens automáticas enviadas pela ProJuris.
           </span>
         </el-alert>
         <br>

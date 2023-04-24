@@ -220,7 +220,7 @@ export default {
     templateToEdit(current) {
       if (current) {
         this.template = current
-        if (!this.template.title) this.template.title = 'Mensagem da Justto'
+        if (!this.template.title) this.template.title = 'Mensagem da ProJuris'
       }
     },
 

@@ -264,7 +264,7 @@
                       </a>
                     </div>
                     <div v-else>
-                      <el-tooltip content="Esse usuário é um Administrador Justto e não pode ser editado ou removido.">
+                      <el-tooltip content="Esse usuário é um Administrador ProJuris e não pode ser editado ou removido.">
                         <jus-icon
                           icon="admin"
                           class="configuration-view__icon"
@@ -302,7 +302,7 @@
                 show-icon
               >
                 <span slot="title">
-                  Este nome <strong>IRÁ</strong> aparecer em todas as mensagens automáticas enviadas pela Justto.
+                  Este nome <strong>IRÁ</strong> aparecer em todas as mensagens automáticas enviadas pela ProJuris.
                 </span>
               </el-alert>
 
@@ -351,7 +351,7 @@
           class="configuration-view__minute"
         >
           <span slot="label">
-            <el-tooltip content="Somentes administradores Justto">
+            <el-tooltip content="Somentes administradores ProJuris">
               <i class="el-icon-lock" />
             </el-tooltip>
             Minuta

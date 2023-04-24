@@ -187,7 +187,7 @@
                       {{ selected.address | phoneNumber }}
                     </span>
                     <span v-else-if="messageType === 'negotiation'">
-                      Portal Justto
+                      Portal ProJuris
                     </span>
                   </span>
                 </span>
@@ -224,7 +224,7 @@
                 <el-tooltip>
                   <span slot="content">
                     <span v-if="messageType === 'negotiation'">
-                      Você está enviando mensagem para o Portal de comunicação Justto.
+                      Você está enviando mensagem para o Portal de comunicação ProJuris.
                     </span>
                     <span v-else>
                       Você está enviando um {{ messageType }}

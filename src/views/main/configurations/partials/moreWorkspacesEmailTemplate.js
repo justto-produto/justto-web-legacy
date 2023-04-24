@@ -86,7 +86,7 @@ export default ({ workspaceName, keyAccountName, workspaceSubDomain }) => {
         </table>
 
         <p style="color: #757575; margin-top: 24px;">
-          Justto Inovações Tecnológicas S.A. Copyrights © 2012 - 2021.
+          ProJuris Inovações Tecnológicas S.A. Copyrights © 2012 - 2021.
           <br>
           Todos os Direitos Reservados
         </p>

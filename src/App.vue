@@ -27,7 +27,7 @@ export default {
     ...mapMutations(['setRoute']),
 
     handleRoute(to, _from) {
-      document.title = to.meta.title + (['dispute', 'ticket'].includes(to.name) ? ` #${to.params.id}` : '') || 'Justto'
+      document.title = to.meta.title + (['dispute', 'ticket'].includes(to.name) ? ` #${to.params.id}` : '') || 'ProJuris'
       this.setRoute(to)
     }
   }

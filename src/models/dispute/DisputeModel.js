@@ -214,7 +214,7 @@ export class DisputeModel {
       this.#dtoV2?.lastReceivedMessage ||
       {
         createAt: {
-          dateTime: this.#dtoV3?.lastReceivedMessageCreatedAt,
+          dateTime: this.#dtoV3?.lastReceivedMessageCreatedAt
         },
         id: this.#dtoV3?.lastReceivedMessageId,
         message: {

@@ -16,7 +16,7 @@ const router = new Router({
       meta: {
         requiresAuth: true,
         trackPage: false,
-        title: 'Justto'
+        title: 'ProJuris'
       },
       children: [
         {
@@ -181,7 +181,7 @@ const router = new Router({
         {
           name: 'configurations',
           path: 'configurations',
-          component: () => import(/* webpackChunkName: "configurationIndex" */ '@/views/main/configurations/Configurations'),
+          component: () => import(/* webpackChunkName: "configurationsIndex" */ '@/views/main/configurations/Configurations'),
           meta: {
             hideFullHeader: true,
             requiresAuth: true,
@@ -240,7 +240,7 @@ const router = new Router({
       meta: {
         requiresAuth: false,
         trackPage: true,
-        title: 'Justto - Login'
+        title: 'ProJuris - Login'
       }
     },
     {
@@ -258,7 +258,7 @@ const router = new Router({
       meta: {
         requiresAuth: false,
         trackPage: true,
-        title: 'Justto - Cadastre-se'
+        title: 'ProJuris - Cadastre-se'
       }
     },
     {
@@ -268,7 +268,7 @@ const router = new Router({
       meta: {
         requiresAuth: false,
         trackPage: true,
-        title: 'Justto - Recuperar senha'
+        title: 'ProJuris - Recuperar senha'
       }
     },
     {
@@ -278,7 +278,7 @@ const router = new Router({
       meta: {
         requiresAuth: false,
         trackPage: true,
-        title: 'Justto - Nova senha'
+        title: 'ProJuris - Nova senha'
       }
     },
     {
@@ -318,7 +318,7 @@ const router = new Router({
       meta: {
         requiresAuth: false,
         trackPage: true,
-        title: 'Justto - Recuperar senha'
+        title: 'ProJuris - Recuperar senha'
       }
     },
     {
@@ -327,7 +327,7 @@ const router = new Router({
       component: () => import(/* webpackChunkName: "jusError" */ '@/components/layouts/JusError'),
       meta: {
         trackPage: false,
-        title: 'Justto - Ops!'
+        title: 'ProJuris - Ops!'
       }
     },
     {
@@ -335,7 +335,7 @@ const router = new Router({
       path: '/icons',
       component: () => import(/* webpackChunkName: "adminPanel" */ '@/views/icons/Icons'),
       meta: {
-        title: 'Justto - Icons'
+        title: 'ProJuris - Icons'
       }
     },
     {

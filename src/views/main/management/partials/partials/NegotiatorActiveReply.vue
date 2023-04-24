@@ -29,7 +29,7 @@
       </span>
 
       <span class="alert-container__message">
-        Envie uma mensagem pelo chat de comunicação da Justto.
+        Envie uma mensagem pelo chat de comunicação da ProJuris.
       </span>
 
       <div class="dialog-reply-negotiator__container">

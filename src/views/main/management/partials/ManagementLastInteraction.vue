@@ -58,12 +58,12 @@
           <div slot="condition">
             <span v-if="data.getDisputeHasLastNegotiatorAccess">
               <span>
-                Último acesso ao sistema Justto: <strong>{{ data.getDisputeLastNegotiatorAccessCreatAt | moment('DD/MM/YYYY [às] HH:mm') }}</strong>
+                Último acesso ao sistema ProJuris: <strong>{{ data.getDisputeLastNegotiatorAccessCreatAt | moment('DD/MM/YYYY [às] HH:mm') }}</strong>
               </span>
 
             </span>
             <span v-else>
-              Ainda não houve acesso ao sistema Justto de Negociação
+              Ainda não houve acesso ao sistema ProJuris de Negociação
             </span>
           </div>
         </negotiator-interaction>

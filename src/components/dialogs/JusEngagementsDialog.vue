@@ -15,7 +15,7 @@
         </p>
       </template>
       <p v-if="isManual">
-        Essa estratégia não possuí mensagens pré-definidas e não envia mensagens automáticas; Todas as mensagens devem ser enviadas manualmente pelo negociador usando a plataforma Justto 3DR.
+        Essa estratégia não possuí mensagens pré-definidas e não envia mensagens automáticas; Todas as mensagens devem ser enviadas manualmente pelo negociador usando a plataforma ProJuris 3DR.
       </p>
       <el-collapse
         v-else
