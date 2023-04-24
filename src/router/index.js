@@ -5,6 +5,7 @@ import Store from '@/store'
 import { eventBus } from '@/utils'
 import events from '@/constants/negotiationEvents'
 
+const vue = () => document.getElementById('app')?.__vue__
 Vue.use(Router)
 
 const router = new Router({
@@ -397,6 +398,30 @@ router.beforeEach((to, from, next) => {
 })
 
 router.afterEach((to) => {
+  console.log('location:', window.location?.origin)
+
+  if (['https://justto.app'].includes(window.location?.origin)) {
+    const message =
+    `<p>
+      Oi, só queríamos te avisar que o endereço da nossa plataforma mudou.
+      <br>
+      <br>
+      Agora você deve utilizar o nosso novo endereço <a href="acordos.projuris.com.br">acordos.projuris.com.br</a>.
+      <br>
+      <br>
+      Não esqueça de adicionar esse novo endereço aos seus favoritos para poder acessar facilmente.
+    </p>`
+
+    vue().$alert(message, 'Atenção', {
+      confirmButtonText: 'OK',
+      dangerouslyUseHTMLString: true,
+      showClose: false,
+      callback: () => {
+        window.location.replace('https://acordos.projuris.com.br')
+      }
+    })
+  }
+
   if (to.matched.some(record => record.meta.trackPage)) {
     const properties = {
       userId: Store.getters.accountEmail,
