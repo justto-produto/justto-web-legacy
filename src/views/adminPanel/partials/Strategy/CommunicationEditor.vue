@@ -161,7 +161,6 @@ export default {
   data() {
     return {
       height: 400,
-      editorDataFroala: '',
       config: {
         heightMax: 500
       },
