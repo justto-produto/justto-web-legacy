@@ -398,8 +398,6 @@ router.beforeEach((to, from, next) => {
 })
 
 router.afterEach((to) => {
-  console.log('location:', window.location?.origin)
-
   if (['https://justto.app'].includes(window.location?.origin)) {
     const message =
     `<p>
