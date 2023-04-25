@@ -214,13 +214,14 @@ export class DisputeModel {
       this.#dtoV2?.lastReceivedMessage ||
       {
         createAt: {
-          dateTime: this.#dtoV3?.lastReceivedMessageCreatedAt,
+          dateTime: this.#dtoV3?.lastReceivedMessageCreatedAt
         },
-        id: this.#dtoV3?.lastReceivedMessageId,
+        id: '' /*  */,
         message: {
           content: this.#dtoV3?.lastReceivedMessageContent,
           sender: this.#dtoV3?.lastReceivedMessageSenderEmail || this.#dtoV3?.lastReceivedMessageSenderName,
           status: this.#dtoV3?.lastReceivedMessageStatus,
+          messageId: this.#dtoV3?.lastReceivedMessageId,
           contentType: this.#dtoV3?.lastReceivedMessageContentType,
           parameters: {
             SENDER_NAME: this.#dtoV3?.lastReceivedMessageSenderName,

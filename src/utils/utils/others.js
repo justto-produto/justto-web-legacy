@@ -129,6 +129,10 @@ const approximateTime = function(lastinteractiondate) {
 }
 
 const getInteractionIcon = function(interaction) {
+  if (interaction?.message?.messageId === 10436585) {
+    console.log('getInteractionIcon', interaction)
+  }
+
   if (interaction) {
     switch (interaction.type) {
       case 'COMMUNICATION': {
