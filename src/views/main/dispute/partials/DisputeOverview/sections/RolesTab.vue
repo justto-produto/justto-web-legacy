@@ -230,7 +230,7 @@
           v-show="role.party === 'CLAIMANT'"
           class="dispute-overview-view__info-line"
         >
-          <span class="title">Portal de comunicação Justto:</span>
+          <span class="title">Portal de comunicação ProJuris:</span>
           <span
             v-if="role.party === 'CLAIMANT'"
             class="dispute-overview-view__negotiator-icon"
@@ -736,7 +736,7 @@ export default {
       } else if (!contact.address && !contact.isMobile) {
         return 'Não é possível enviar WhatsApp para números de telefones fixo'
       } else if (contact.source === 'ENRICHMENT') {
-        return 'Contato enriquecido pelo sistema Justto'
+        return 'Contato enriquecido pelo sistema ProJuris'
       } else {
         return 'Contato adicionado manualmente'
       }

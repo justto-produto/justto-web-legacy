@@ -273,8 +273,7 @@ export default {
         confirmButtonText: 'Sair da importação',
         cancelButtonText: 'Cancelar',
         title: 'Atenção!',
-        type: 'warning',
-        cancelButtonClass: 'is-plain'
+        type: 'warning'
       }).then(() => {
         next()
       })

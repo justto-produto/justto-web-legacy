@@ -61,8 +61,6 @@
           <el-switch
             v-model="attachmentDialog.confidential"
             :class="attachmentDialog.confidential ? 'inactive' : 'active'"
-            inactive-color="#14CC30"
-            active-color="#ADADAD"
           />
 
           <span>

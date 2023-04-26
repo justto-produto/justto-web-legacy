@@ -49,12 +49,16 @@
       </transition>
     </div>
     <el-button
-      :plain="showGif < 6"
-      :loading="showGif < 6"
+      :disabled="showGif < 6"
       type="primary"
       data-testid="submit"
       @click="goToManagement"
     >
+      <i
+        v-show="showGif < 6"
+        class="el-icon-loading"
+      />
+
       Continuar
     </el-button>
   </div>

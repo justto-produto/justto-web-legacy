@@ -12,6 +12,7 @@
       v-loading="searchLoading || registerLoading"
       :model="newRole"
       :rules="newRoleRules"
+      class="new-rule__form"
       label-position="top"
     >
       <el-form-item label="Parte">
@@ -28,65 +29,94 @@
           />
         </el-select>
       </el-form-item>
-      <div v-if="!secondStep">
+
+      <div
+        v-if="!secondStep"
+        class="new-rule__form__with-doc"
+      >
         <div class="dispute-add-role__search">
-          <el-form-item
-            v-if="['claimantParty', 'respondentParty'].includes(newRole.party)"
-            label="CPF/CNPJ"
-            prop="searchDocumentNumber"
-          >
-            <el-input
-              v-model="newRole.searchDocumentNumber"
-              v-mask="['###.###.###-##', '##.###.###/####-##']"
-              @keyup.enter.native="searchPerson"
-            />
-          </el-form-item>
           <el-row
-            v-else-if="newRole.party"
-            :gutter="20"
+            :gutter="8"
+            type="flex"
+            align="bottom"
           >
-            <el-col :span="12">
+            <el-col
+              v-if="['claimantParty', 'respondentParty'].includes(newRole.party)"
+              :span="21"
+            >
               <el-form-item
-                class="oab"
-                label="OAB"
-                prop="searchOabNumber"
+                label="CPF/CNPJ"
+                prop="searchDocumentNumber"
               >
                 <el-input
-                  v-model="newRole.searchOabNumber"
+                  v-model="newRole.searchDocumentNumber"
+                  v-mask="['###.###.###-##', '##.###.###/####-##']"
                   @keyup.enter.native="searchPerson"
                 />
               </el-form-item>
             </el-col>
-            <el-col :span="12">
-              <el-form-item
-                class="state"
-                label="Estado"
-                prop="searchOabState"
+
+            <el-col
+              v-else-if="newRole.party"
+              :span="21"
+            >
+              <el-row
+                :gutter="8"
+                type="flex"
+                align="bottom"
               >
-                <el-select
-                  v-model="newRole.searchOabState"
-                  autocomplete="off"
-                  filterable
-                >
-                  <el-option
-                    v-for="state in $store.state.brazilianStates"
-                    :key="state.value"
-                    :label="state.value"
-                    :value="state.value"
-                    @keyup.enter.native="searchPerson"
-                  />
-                </el-select>
-              </el-form-item>
+                <el-col :span="12">
+                  <el-form-item
+                    class="oab"
+                    label="OAB"
+                    prop="searchOabNumber"
+                  >
+                    <el-input
+                      v-model="newRole.searchOabNumber"
+                      @keyup.enter.native="searchPerson"
+                    />
+                  </el-form-item>
+                </el-col>
+
+                <el-col :span="12">
+                  <el-form-item
+                    class="state"
+                    label="Estado"
+                    prop="searchOabState"
+                  >
+                    <el-select
+                      v-model="newRole.searchOabState"
+                      autocomplete="off"
+                      filterable
+                    >
+                      <el-option
+                        v-for="state in $store.state.brazilianStates"
+                        :key="state.value"
+                        :label="state.value"
+                        :value="state.value"
+                        @keyup.enter.native="searchPerson"
+                      />
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+            </el-col>
+
+            <el-col
+              v-if="newRole.party"
+              :span="3"
+            >
+              <el-button
+                type="primary"
+                size="small"
+                @click="searchPerson"
+              >
+                <jus-icon icon="right" />
+              </el-button>
             </el-col>
           </el-row>
-          <el-button
-            v-if="newRole.party"
-            type="primary"
-            @click="searchPerson"
-          >
-            <jus-icon icon="right" />
-          </el-button>
         </div>
+
         <el-button
           v-if="newRole.party"
           type="text"
@@ -95,7 +125,11 @@
           Continuar sem documento
         </el-button>
       </div>
-      <div v-else>
+
+      <div
+        v-else
+        class="new-rule__form__without-doc"
+      >
         <el-form-item
           label="CPF/CNPJ"
           prop="documentNumber"
@@ -106,12 +140,14 @@
             :disabled="disableDocumentNumber"
           />
         </el-form-item>
+
         <el-form-item
           label="Nome"
           prop="name"
         >
           <el-input v-model="newRole.name" />
         </el-form-item>
+
         <el-form-item
           label="Telefone"
           prop="phone"
@@ -124,12 +160,14 @@
           >
             <el-button
               slot="append"
+              type="transparent"
               @click="addPhone()"
             >
               <i class="el-icon-plus icon--active" />
             </el-button>
           </el-input>
         </el-form-item>
+
         <el-table
           :data="phonesList"
           :show-header="false"
@@ -154,6 +192,7 @@
             </template>
           </el-table-column>
         </el-table>
+
         <el-form-item
           label="E-mail"
           prop="email"
@@ -166,6 +205,7 @@
           >
             <el-button
               slot="append"
+              type="transparent"
               data-testid="add-email"
               @click="addEmail()"
             >
@@ -173,6 +213,7 @@
             </el-button>
           </el-input>
         </el-form-item>
+
         <el-table
           :data="emailsList"
           :show-header="false"
@@ -199,50 +240,70 @@
             </template>
           </el-table-column>
         </el-table>
-        <div class="dispute-overview-view__oab-form">
-          <el-form-item
-            class="oab"
-            label="OAB"
-            prop="oab"
-          >
-            <el-input
-              v-model="newRole.oab"
-              @input="$forceUpdate()"
-              @keydown.enter.native="addOab(newRole.personId, newRole.oabs)"
-              @blur="addOab(newRole.personId, newRole.oabs)"
-            />
-          </el-form-item>
-          <el-form-item
-            class="state"
-            label="Estado"
-            prop="state"
-          >
-            <el-select
-              v-model="newRole.state"
-              :default-first-option="true"
-              autocomplete="off"
-              filterable
-              @input="$forceUpdate()"
-              @keydown.enter.native="addOab(newRole.personId, newRole.oabs)"
-              @change="addOab(newRole.personId, newRole.oabs)"
-              @blur="addOab(newRole.personId, newRole.oabs)"
+
+        <el-row
+          :gutter="16"
+          type="flex"
+          align="middle"
+          class="dispute-overview-view__oab-form"
+        >
+          <el-col :span="20">
+            <el-form-item
+              class="oab"
+              label="OAB"
+              prop="oab"
             >
-              <el-option
-                v-for="state in $store.state.brazilianStates"
-                :key="state.value"
-                :label="state.value"
-                :value="state.value"
+              <el-input
+                v-model="newRole.oab"
+                @input="$forceUpdate()"
+                @keydown.enter.native="addOab(newRole.personId, newRole.oabs)"
+                @blur="addOab(newRole.personId, newRole.oabs)"
               />
-            </el-select>
-          </el-form-item>
-          <el-button
-            class="button"
-            type="primary"
-            size="mini"
-            icon="el-icon-plus"
-            @click="addOab(newRole.personId, newRole.oabs)"
-          />
-        </div>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="20">
+            <el-form-item
+              class="state"
+              label="Estado"
+              prop="state"
+            >
+              <el-select
+                v-model="newRole.state"
+                :default-first-option="true"
+                autocomplete="off"
+                filterable
+                @input="$forceUpdate()"
+                @keydown.enter.native="addOab(newRole.personId, newRole.oabs)"
+                @change="addOab(newRole.personId, newRole.oabs)"
+                @blur="addOab(newRole.personId, newRole.oabs)"
+              >
+                <el-option
+                  v-for="state in $store.state.brazilianStates"
+                  :key="state.value"
+                  :label="state.value"
+                  :value="state.value"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="4">
+            <el-form-item
+              label="Ação"
+              class="hidde-label"
+            >
+              <el-button
+                class="button"
+                type="primary"
+                size="mini"
+                icon="el-icon-plus"
+                @click="addOab(newRole.personId, newRole.oabs)"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+
         <el-table
           :data="newRole.oabs"
           :show-header="false"
@@ -270,12 +331,10 @@
       </div>
     </el-form>
     <span slot="footer">
-      <el-button
-        plain
-        @click="dialogVisible = false"
-      >
+      <el-button @click="dialogVisible = false">
         Cancelar
       </el-button>
+
       <el-button
         :loading="registerLoading"
         :disabled="!secondStep"
@@ -459,8 +518,7 @@ export default {
               this.$confirm('Já existem informações no sistema da parte a ser cadastrada. Deseja utilizar os dados existentes?', 'Parte encontrada no sistema', {
                 confirmButtonText: 'Sim, utilizar',
                 cancelButtonText: 'Não',
-                type: 'info',
-                cancelButtonClass: 'is-plain'
+                type: 'info'
               }).then(() => {
                 self.newRole.name = response.name
                 if (response.documentNumber) self.newRole.documentNumber = this.$options.filters.cpfCnpj(response.documentNumber)
@@ -585,8 +643,7 @@ export default {
           this.$confirm('Deseja iniciar o engajamento para esta parte?', 'Atenção!', {
             confirmButtonText: 'Engajar',
             cancelButtonText: 'Não',
-            type: 'info',
-            cancelButtonClass: 'is-plain'
+            type: 'info'
           }).then(() => {
             this.$store.dispatch('restartDisputeRoleEngagement', {
               disputeId: this.disputeId,
@@ -616,13 +673,61 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+
     .el-form-item, .el-row {
       width: 100%;
     }
+
+    .el-row--flex {
+      .el-col {
+        display: flex;
+        justify-content: flex-end;
+
+        .el-form-item {
+          margin-bottom: 0;
+
+          .el-form-item__content {
+            line-height: 14px;
+            height: 40px;
+
+            .el-select {
+              width: 100%;
+            }
+          }
+        }
+      }
+    }
+
     .el-button {
-      margin-left: 10px;
-      margin-top: 8px;
-      padding: 9px 20px;
+      height: 40px;
+    }
+  }
+}
+
+.new-rule__form {
+  .new-rule__form__without-doc {
+    .dispute-overview-view__oab-form {
+      .el-col {
+        .el-form-item {
+          .el-form-item__content {
+            display: flex;
+
+            .el-select {
+              width: 100%;
+
+              .el-input {
+                overflow: hidden;
+              }
+            }
+          }
+
+          &.hidde-label {
+            .el-form-item__label {
+              visibility: hidden;
+            }
+          }
+        }
+      }
     }
   }
 }

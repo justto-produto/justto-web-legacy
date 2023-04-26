@@ -171,6 +171,7 @@
                 >
                   <el-button
                     slot="append"
+                    type="transparent"
                     icon="el-icon-plus"
                     @click="addDocument(role, index)"
                   />
@@ -245,6 +246,7 @@
                   >
                     <el-button
                       slot="append"
+                      type="transparent"
                       icon="el-icon-plus"
                       @click="addEmail(role, index)"
                     />
@@ -283,6 +285,7 @@
               >
                 <el-button
                   slot="append"
+                  type="transparent"
                   icon="el-icon-plus"
                   @click="addRole()"
                 />
@@ -312,7 +315,7 @@
                 v-if="isThamirisSigner(signer) && !signer.signed"
                 :size="buttonSize"
                 icon="el-icon-thumb"
-                type="success"
+                type="primary"
                 style="font-weight: bold"
                 @click="signDraft(signer)"
               >
@@ -1084,12 +1087,11 @@ export default {
           const hideAlert = localStorage.getItem('jushidemodelalert')
           if (!hideAlert) {
             this.$confirm(
-              `Este é um modelo padrão disponibilizado pela Justto.
+              `Este é um modelo padrão disponibilizado pela ProJuris.
               Fique à vontade para edita-lo de acordo com suas necessidades.`,
               'Minuta padrão', {
                 confirmButtonText: 'OK',
                 cancelButtonText: 'Não exibir mais esta mensagem',
-                cancelButtonClass: 'is-plain',
                 dangerouslyUseHTMLString: true,
                 type: 'info'
               }
@@ -1204,8 +1206,7 @@ export default {
         confirmButtonText: 'Excluir',
         cancelButtonText: 'Cancelar',
         title: 'Atenção!',
-        type: 'warning',
-        cancelButtonClass: 'is-plain'
+        type: 'warning'
       }).then(() => {
         this.loading = true
         this.$store.dispatch('deleteDocument', this.disputeId).then(() => {
@@ -1234,8 +1235,7 @@ export default {
         confirmButtonText: 'Voltar para edição',
         cancelButtonText: 'Cancelar',
         title: 'Atenção!',
-        type: 'warning',
-        cancelButtonClass: 'is-plain'
+        type: 'warning'
       }).then(() => {
         this.loading = true
         this.$store.dispatch('backDocumentToEditing', this.disputeId).then(() => {

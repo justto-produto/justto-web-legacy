@@ -20,7 +20,6 @@
         :key="option.value"
         :label="option.value"
         size="mini"
-        border
       >
         {{ option.label }}
       </el-checkbox>
@@ -53,7 +52,7 @@
 
       <el-button
         size="small"
-        type="success"
+        type="primary"
         @click="handleSaveReasons"
       >Salvar</el-button>
     </span>

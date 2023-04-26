@@ -1,45 +1,6 @@
 <template lang="html">
   <div class="panel-billing-view">
     <img src="./icon.png">
-    <!-- <el-table :data="filteredAccounts" width="100%">
-      <el-table-column type="expand" fixed="left" width="50px">
-        <template v-slot="props">
-          <el-table :data="props.row.workspaces" size="small" width="100%">
-            <el-table-column prop="name" label="Workspace"/>
-            <el-table-column prop="teamName" label="Nome de Exibição"/>
-            <el-table-column prop="status" label="Status"/>
-            <el-table-column align="right" fixed="right">
-              <template v-slot="props">
-                <el-button type="text" icon="el-icon-delete" style="color: #FF4B54"/>
-              </template>
-            </el-table-column>
-          </el-table>
-        </template>
-      </el-table-column>
-      <el-table-column prop="name" label="Nome"/>
-      <el-table-column prop="status" label="Status"/>
-      <el-table-column prop="contract" label="Contrato"/>
-      <el-table-column prop="plan" label="Plano"/>
-      <el-table-column fixed="right" align="right">
-        <template slot="header" slot-scope="scope">
-          <el-input
-            v-model="search"
-            size="mini"
-            placeholder="Buscar"/>
-        </template>
-        <template v-slot="props">
-          <el-tooltip content="Adicionar usuário">
-            <el-button size="mini" type="" plain icon="el-icon-plus" />
-          </el-tooltip>
-          <el-tooltip content="Editar">
-            <el-button size="mini" type="" plain icon="el-icon-edit" />
-          </el-tooltip>
-          <el-tooltip content="Excluir">
-            <el-button size="mini" type="danger" plain icon="el-icon-delete" />
-          </el-tooltip>
-        </template>
-      </el-table-column>
-    </el-table> -->
   </div>
 </template>
 

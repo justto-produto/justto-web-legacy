@@ -12,3 +12,13 @@
   line-height: 30px !important;
   padding: 0 !important;
 }
+
+.el-form {
+  .el-form-item {
+    .el-form-item__content {
+      .el-date-editor, .el-select, .el-input {
+        width: 100%;
+      }
+    }
+  }
+}

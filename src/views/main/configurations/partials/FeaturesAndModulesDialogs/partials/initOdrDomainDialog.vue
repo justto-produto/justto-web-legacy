@@ -67,7 +67,10 @@
       </el-form-item>
     </el-form>
 
-    <span slot="footer">
+    <span
+      slot="footer"
+      class="footer"
+    >
       <el-button
         size="mini"
         @click="handleCancel"
@@ -177,6 +180,13 @@ export default {
           }
         }
       }
+    }
+  }
+
+  .el-dialog__footer {
+    .footer {
+      display: flex;
+      justify-content: flex-end;
     }
   }
 }

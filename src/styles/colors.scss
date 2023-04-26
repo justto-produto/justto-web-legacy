@@ -8,7 +8,21 @@ $--color-gray-light-1: mix($--color-white, $--color-gray, 10%) !default;
 $--color-light-gray: #f3f4f5 !default;
 $--color-whatsapp: #075E54 !default;
 
-$--color-primary: #9461f7 !default;
+$--pj-color-darker-blue: #0A0022 !default;
+$--pj-color-dark-blue: #280BA0 !default;
+$--pj-color-blue: #0756e4 !default;
+$--pj-color-light-blue: #018EF0 !default;
+$--pj-color-lighter-blue: #30A9FB !default;
+$--pj-color-white-blue: #F0F9FE !default;
+$--pj-color-disabled-blue: #9ad2f9 !default;
+
+$-pg-color-overlay: #19415F !default;
+
+$--pj-color-red: #CC4148 !default;
+$--pj-color-light-red: #EC767C !default;
+$--pj-color-disable-red: #FFF2F3 !default;
+
+$--color-primary: $--pj-color-blue !default;
 $--color-primary-light-1: mix($--color-white, $--color-primary, 10%) !default;
 $--color-primary-light-2: mix($--color-white, $--color-primary, 20%) !default;
 $--color-primary-light-3: mix($--color-white, $--color-primary, 30%) !default;
@@ -19,7 +33,7 @@ $--color-primary-light-7: mix($--color-white, $--color-primary, 70%) !default;
 $--color-primary-light-8: mix($--color-white, $--color-primary, 80%) !default;
 $--color-primary-light-9: mix($--color-white, $--color-primary, 90%) !default;
 
-$--color-secondary: #ff9300 !default;
+$--color-secondary: $--pj-color-light-blue !default;
 $--color-secondary-light-1: mix($--color-white, $--color-secondary, 10%) !default;
 $--color-secondary-light-2: mix($--color-white, $--color-secondary, 20%) !default;
 $--color-secondary-light-3: mix($--color-white, $--color-secondary, 30%) !default;
@@ -30,7 +44,7 @@ $--color-secondary-light-7: mix($--color-white, $--color-secondary, 70%) !defaul
 $--color-secondary-light-8: mix($--color-white, $--color-secondary, 80%) !default;
 $--color-secondary-light-9: mix($--color-white, $--color-secondary, 90%) !default;
 
-$--color-primary-dark: #673EB7 !default;
+$--color-primary-dark: $--pj-color-dark-blue !default;
 $--color-success: #14CC30 !default;
 $--color-warning: #FFC900 !default;
 $--color-danger: #FF4B54 !default;
@@ -63,11 +77,3 @@ $--color-nps-detractor: #FF4B54 !default;
 $--color-negotiator-bg: #9461f74f !default;
 $--color-email-bg: $--color-info-light !default;
 $--color-whatsapp-bg: $--color-success-light-5 !default;
-
-$--pg-color-darker-blue: #0A0022 !default;
-$--pg-color-dark-blue: #280BA0 !default;
-$--pg-color-blue: #0756e4 !default;
-$--pg-color-light-blue: #30A9FB !default;
-$--pg-color-lighter-blue: #F0F9FE !default;
-
-$-pg-color-overlay: #19415F !default;

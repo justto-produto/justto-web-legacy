@@ -93,6 +93,7 @@
     >
       <div>
         <label>{{ $t('dispute.labels.note') }}:</label>
+
         <el-input
           v-model="note"
           placeholder="Insira uma nota."
@@ -205,6 +206,7 @@
           </div>
         </div>
       </div>
+
       <el-select
         v-model="unsettledType"
         v-loading="$store.state.loading"
@@ -219,8 +221,10 @@
           :value="index"
         />
       </el-select>
+
       <div style="margin: 8px 0px;">
         <label>{{ $t('dispute.labels.note') }}:</label>
+
         <el-input
           v-model="note"
           placeholder="Insira uma nota."
@@ -962,8 +966,7 @@ export default {
         confirmButtonClass: 'confirm-action-btn',
         confirmButtonText: 'Continuar',
         cancelButtonText: 'Cancelar',
-        dangerouslyUseHTMLString: true,
-        cancelButtonClass: 'is-plain'
+        dangerouslyUseHTMLString: true
       }
 
       if (action === 'UNSETTLED') {
@@ -1096,7 +1099,6 @@ export default {
             title: 'Atenção! Múltiplos negociadores',
             confirmButtonText: 'Trocar todos',
             cancelButtonText: 'Escolher negociadores de cada disputa',
-            cancelButtonClass: 'is-plain',
             distinguishCancelAndClose: true,
             customClass: 'el-message-box--lg'
           }).then(() => {

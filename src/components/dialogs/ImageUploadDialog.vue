@@ -15,53 +15,6 @@
           URL
         </template>
       </el-input>
-
-      <!-- <span>ou</span>
-
-      <article
-        ref="dragAreaElm"
-        v-loading="isAttachmentLoading"
-        :class="{
-          'jus-drag-area--dragging': isDragging
-        }"
-        class="upload-image-dialog__container-drag-area"
-        @dragenter="handleDragenter"
-      >
-        <label
-          :for="`input-file-drag-area-${_uid}`"
-          @dragover.prevent="handleDragenter"
-          @dragleave="handleDragleave"
-          @drop.prevent="handleDrop"
-        >
-          <el-card
-            :body-style="{ 'text-align': 'center'}"
-            class="el-card--dashed-hover jus-drag-area__mask"
-            shadow="never"
-          >
-            <div
-              class="jus-drag-area__mask-action"
-            />
-
-            <div>
-              <jus-icon
-                icon="upload-file"
-                is-active
-              />
-              <br>
-              <span>
-                Arraste aqui a imagem que deseja inserir!
-              </span>
-            </div>
-          </el-card>
-        </label>
-        <input
-          :id="`input-file-drag-area-${_uid}`"
-          type="file"
-          accept="image/png, image/jpeg"
-          class="jus-drag-area__input-file"
-          @change="handleDrop"
-        >
-      </article> -->
     </div>
 
     <span

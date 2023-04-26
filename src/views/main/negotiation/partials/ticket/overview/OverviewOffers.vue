@@ -281,7 +281,6 @@ export default {
         this.$confirm(`${this.$tc('UPPER_RANGE_WITH_ARTICLE', this.isRecoveryStrategy)} é de R$ ${new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2 }).format(this.upperRange)} e sua nova proposta é de R$ ${new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2 }).format(value)}. Ao continuar esta operação, você <strong>irá ${this.isRecoveryStrategy ? 'ajustar' : 'majorar'}</strong> ${this.$tc('UPPER_RANGE_WITH_ARTICLE', this.isRecoveryStrategy)}.<br> Deseja continuar?`, `Proposta ${this.isRecoveryStrategy ? 'abaixo' : 'acima'} d${this.$tc('UPPER_RANGE_WITH_ARTICLE', this.isRecoveryStrategy)}`, {
           confirmButtonText: 'Continuar e ' + (this.isRecoveryStrategy ? 'ajustar' : 'majorar'),
           cancelButtonText: 'Cancelar',
-          cancelButtonClass: 'is-plain',
           showClose: false,
           dangerouslyUseHTMLString: true
         }).then(() => {

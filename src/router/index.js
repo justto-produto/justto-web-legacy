@@ -5,6 +5,7 @@ import Store from '@/store'
 import { eventBus } from '@/utils'
 import events from '@/constants/negotiationEvents'
 
+const vue = () => document.getElementById('app')?.__vue__
 Vue.use(Router)
 
 const router = new Router({
@@ -15,7 +16,7 @@ const router = new Router({
       meta: {
         requiresAuth: true,
         trackPage: false,
-        title: 'Justto'
+        title: 'ProJuris'
       },
       children: [
         {
@@ -169,6 +170,7 @@ const router = new Router({
         {
           name: 'configuration',
           path: 'configuration',
+          redirect: 'configurations',
           component: () => import(/* webpackChunkName: "configurationIndex" */ '@/views/main/configuration/Configuration'),
           meta: {
             requiresAuth: true,
@@ -179,7 +181,7 @@ const router = new Router({
         {
           name: 'configurations',
           path: 'configurations',
-          component: () => import(/* webpackChunkName: "configurationIndex" */ '@/views/main/configurations/Configurations'),
+          component: () => import(/* webpackChunkName: "configurationsIndex" */ '@/views/main/configurations/Configurations'),
           meta: {
             hideFullHeader: true,
             requiresAuth: true,
@@ -238,7 +240,7 @@ const router = new Router({
       meta: {
         requiresAuth: false,
         trackPage: true,
-        title: 'Justto - Login'
+        title: 'ProJuris - Login'
       }
     },
     {
@@ -256,7 +258,7 @@ const router = new Router({
       meta: {
         requiresAuth: false,
         trackPage: true,
-        title: 'Justto - Cadastre-se'
+        title: 'ProJuris - Cadastre-se'
       }
     },
     {
@@ -266,7 +268,7 @@ const router = new Router({
       meta: {
         requiresAuth: false,
         trackPage: true,
-        title: 'Justto - Recuperar senha'
+        title: 'ProJuris - Recuperar senha'
       }
     },
     {
@@ -276,7 +278,7 @@ const router = new Router({
       meta: {
         requiresAuth: false,
         trackPage: true,
-        title: 'Justto - Nova senha'
+        title: 'ProJuris - Nova senha'
       }
     },
     {
@@ -316,7 +318,7 @@ const router = new Router({
       meta: {
         requiresAuth: false,
         trackPage: true,
-        title: 'Justto - Recuperar senha'
+        title: 'ProJuris - Recuperar senha'
       }
     },
     {
@@ -325,7 +327,7 @@ const router = new Router({
       component: () => import(/* webpackChunkName: "jusError" */ '@/components/layouts/JusError'),
       meta: {
         trackPage: false,
-        title: 'Justto - Ops!'
+        title: 'ProJuris - Ops!'
       }
     },
     {
@@ -333,7 +335,7 @@ const router = new Router({
       path: '/icons',
       component: () => import(/* webpackChunkName: "adminPanel" */ '@/views/icons/Icons'),
       meta: {
-        title: 'Justto - Icons'
+        title: 'ProJuris - Icons'
       }
     },
     {
@@ -396,6 +398,28 @@ router.beforeEach((to, from, next) => {
 })
 
 router.afterEach((to) => {
+  if (['https://justto.app'].includes(window.location?.origin)) {
+    const message =
+    `<p>
+      Oi, só queríamos te avisar que o endereço da nossa plataforma mudou.
+      <br>
+      <br>
+      Agora você deve utilizar o nosso novo endereço <a href="acordos.projuris.com.br">acordos.projuris.com.br</a>.
+      <br>
+      <br>
+      Não esqueça de adicionar esse novo endereço aos seus favoritos para poder acessar facilmente.
+    </p>`
+
+    vue().$alert(message, 'Atenção', {
+      confirmButtonText: 'OK',
+      dangerouslyUseHTMLString: true,
+      showClose: false,
+      callback: () => {
+        window.location.replace('https://acordos.projuris.com.br')
+      }
+    })
+  }
+
   if (to.matched.some(record => record.meta.trackPage)) {
     const properties = {
       userId: Store.getters.accountEmail,

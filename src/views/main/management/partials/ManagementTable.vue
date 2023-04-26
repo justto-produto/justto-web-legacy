@@ -611,6 +611,7 @@ export default {
     },
 
     openTimelineModal(dispute) {
+      console.log('openTimelineModal', dispute)
       const { getDisputeCode, getDisputeId } = dispute
       if (!this.disputeTimeline[getDisputeCode] || this.disputeTimeline[getDisputeCode].lawsuits.length === 0) return
 

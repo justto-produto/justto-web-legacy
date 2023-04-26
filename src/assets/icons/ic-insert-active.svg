@@ -2,7 +2,7 @@
     <g fill="none" fill-rule="evenodd">
         <path d="M-17-27H83V73H-17z"/>
         <path d="M-2-9h70v70H-2z"/>
-        <g stroke="#9461F7" stroke-width="2">
+        <g stroke="#0756e4" stroke-width="2">
             <path d="M41.174 33.292H.917M.917 1.208h65.625v32.084H47.814"/>
             <path d="M56.577 48.487l-4.14-5.463 3.718-.734a.7.7 0 0 0 .332-1.207L41.444 27.57c-.49-.442-1.272-.013-1.157.64l3.436 19.693a.7.7 0 0 0 1.183.375l2.975-2.98 3.716 6.527a.7.7 0 0 0 1 .234l3.813-2.569a.7.7 0 0 0 .167-1.003zM48.298 21.324a.857.857 0 0 0 1.385 0l5.72-7.06c.37-.507.067-1.359-.693-1.359H43.27c-.295 0-.59.2-.612.263a.848.848 0 0 0-.08 1.096l5.72 7.06zM31.538 32.976V1.208"/>
         </g>
@@ -13,7 +13,7 @@
 <svg version="1.1" id="Camada_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 68 54" style="enable-background:new 0 0 68 54;" xml:space="preserve">
 <style type="text/css">
-	.st0{fill:#9461F7;}
+	.st0{fill:#0756e4;}
 </style>
 <g>
 	<path class="st0" d="M67.5,0.2H0.9v2h29.6v30.1H0.9v2h39.4l2.4,13.8c0.2,0.8,0.9,1.4,1.8,1.4c0.4,0,0.9-0.2,1.1-0.5l2.1-2.1

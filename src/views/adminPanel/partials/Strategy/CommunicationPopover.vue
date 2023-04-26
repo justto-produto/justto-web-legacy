@@ -55,16 +55,20 @@
               @blur="handleCloseInput(data)"
             />
 
-            <div v-else-if="editInput === data.id && data.type === 'DELAY'">
+            <div
+              v-else-if="editInput === data.id && data.type === 'DELAY'"
+              style="display: flex; align-items: center; gap: 4px;"
+            >
               <span>Espera</span>
 
-              <el-input
+              <el-input-number
                 :ref="`edit-input-${data.id}`"
                 v-model="data.duration"
                 :min="1"
                 :step="1"
-                type="number"
-                class="communication-popover__delay-time-input"
+                size="mini"
+                step-strictly
+                :controls="false"
                 @keyup.native.enter="handleCloseInput(data)"
                 @blur="handleCloseInput(data)"
               />

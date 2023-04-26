@@ -1,7 +1,7 @@
 <template>
   <div class="onboarding-step-content onboarding-welcome-step">
     <h1>
-      <span v-if="name">{{ name }}, b</span><span v-else>B</span>em-vindo(a) a Justto!<br>
+      <span v-if="name">{{ name }}, b</span><span v-else>B</span>em-vindo(a) a ProJuris!<br>
       <span v-if="isGuest">
         Junte-se ao escritório {{ companyName }}.
       </span>

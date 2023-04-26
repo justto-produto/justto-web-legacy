@@ -68,6 +68,7 @@
       class="dialog-footer"
     >
       <el-button
+        type="secondary"
         size="mini"
         @click="dialogVisible = false"
       >

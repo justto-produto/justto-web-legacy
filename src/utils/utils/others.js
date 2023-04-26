@@ -1,4 +1,4 @@
-import moment from 'moment'
+import moment from 'moment/src/moment'
 
 const vue = () => document.getElementById('app')?.__vue__
 
@@ -177,17 +177,17 @@ const getLastInteractionTooltip = function(interaction) {
         }
         return 'email'
       }
-      case 'VISUALIZATION': return 'Visualização sistema Justto'
-      case 'NEGOTIATOR_ACCESS': return 'Acesso sistema Justto'
+      case 'VISUALIZATION': return 'Visualização sistema ProJuris'
+      case 'NEGOTIATOR_ACCESS': return 'Acesso sistema ProJuris'
       case 'NEGOTIATOR_PROPOSAL': return 'Proposta de acordo'
       case 'NEGOTIATOR_CHECKOUT': return 'Aceite de acordo'
       case 'NEGOTIATOR_ACCEPTED': return 'Aceite de negociação'
       case 'NEGOTIATOR_REJECTED': return 'Rejeição de acordo'
       case 'CLICK': return 'Click na mensagem'
-      default: return 'Visualização sistema Justto'
+      default: return 'Visualização sistema ProJuris'
     }
   } else {
-    return 'Visualização sistema Justto'
+    return 'Visualização sistema ProJuris'
   }
 }
 

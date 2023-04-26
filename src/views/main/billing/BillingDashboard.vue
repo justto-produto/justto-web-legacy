@@ -108,11 +108,13 @@
                 label="Valor"
                 prop="value"
               >
-                <money
-                  v-model="addTransactionForm.value"
-                  class="el-input__inner"
-                  maxlength="16"
-                />
+                <div class="el-input">
+                  <money
+                    v-model="addTransactionForm.value"
+                    class="el-input__inner"
+                    maxlength="16"
+                  />
+                </div>
               </el-form-item>
             </el-col>
             <el-col :span="12">

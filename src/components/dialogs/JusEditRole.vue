@@ -27,7 +27,7 @@
       </el-form-item>
 
       <el-row :gutter="20">
-        <el-col :span="12">
+        <el-col :span="party.birthday ? 12 : 24">
           <el-form-item
             :rules="validateDocumentNumber"
             label="CPF/CNPJ"
@@ -40,6 +40,7 @@
             />
           </el-form-item>
         </el-col>
+
         <el-col
           v-if="party.birthday"
           :span="12"
@@ -48,15 +49,17 @@
             label="Data de nascimento"
             prop="birthday"
           >
-            <DateInlieEditor
-              :value="party.birthday"
-              :is-editable="canEditBirthday"
-              :processed-date="$moment(new Date(party.birthday)).fromNow(true)"
-              :is-date-time-format="false"
-              edit-on-click
-              class="birthday-editor"
-              @change="setBirthday"
-            />
+            <div class="el-input">
+              <DateInlieEditor
+                :value="party.birthday"
+                :is-editable="canEditBirthday"
+                :processed-date="$moment(new Date(party.birthday)).fromNow(true)"
+                :is-date-time-format="false"
+                edit-on-click
+                class="el-input__inner birthday-editor"
+                @change="setBirthday"
+              />
+            </div>
           </el-form-item>
         </el-col>
       </el-row>
@@ -151,7 +154,6 @@
           />
           <el-button
             type="primary"
-            :plain="false"
             @click="addPhone()"
           >
             <i class="el-icon-plus icon--white" />
@@ -187,10 +189,12 @@
                   v-if="scope.row.isMain"
                   icon="phone-active"
                 />
+
                 <jus-icon
                   v-else
                   icon="not-main-phone-active"
                 />
+
                 <el-switch v-model="scope.row.isMain" />
               </span>
             </el-tooltip>
@@ -254,10 +258,12 @@
                   v-if="scope.row.isMain"
                   icon="email-active"
                 />
+
                 <jus-icon
                   v-else
                   icon="not-main-email-active"
                 />
+
                 <el-switch v-model="scope.row.isMain" />
               </span>
             </el-tooltip>
@@ -334,10 +340,7 @@
     </el-form>
 
     <span slot="footer">
-      <el-button
-        plain
-        @click="$emit('closeEdit')"
-      >
+      <el-button @click="$emit('closeEdit')">
         Cancelar
       </el-button>
 
@@ -620,8 +623,7 @@ export default {
           this.$confirm(this.$t('dispute.overview.confirm.restart.engagement.question'), 'Atenção!', {
             confirmButtonText: this.$t('dispute.overview.confirm.restart.engagement.confirm'),
             cancelButtonText: this.$t('dispute.overview.confirm.restart.engagement.cancel'),
-            type: 'warning',
-            cancelButtonClass: 'is-plain'
+            type: 'warning'
           }).then(() => this.$jusNotification({
             title: 'Cuidado!',
             message: this.$t('dispute.notification.will-not-restart'),
@@ -650,8 +652,7 @@ export default {
           this.$confirm('Você adicionou contas bancárias a esta parte. Deseja vincular estas contas a disputa?', 'Atenção', {
             confirmButtonText: 'Vincular',
             cancelButtonText: 'Cancelar',
-            type: 'warning',
-            cancelButtonClass: 'is-plain'
+            type: 'warning'
           }).then(() => {
             const bankAccounts = response.bankAccounts
             const newBankAccounts = bankAccounts.sort((accountA, accountB) => {
@@ -722,10 +723,19 @@ export default {
 
 .birthday-editor {
   .date-inline-editor__value {
-    height: 40px !important;
-    border: solid #dcdfe6 thin !important;
-    border-radius: 2px;
+    border: none !important;
     padding: 0 15px;
+
+    .date-inline-editor__icons {
+      background-image: none !important;
+      background-color: transparent !important;
+    }
+  }
+
+  .date-inline-editor__input {
+    .el-input__inner {
+      border: none !important;
+    }
   }
 }
 

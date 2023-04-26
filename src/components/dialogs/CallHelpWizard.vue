@@ -18,19 +18,6 @@
       v-loading="isLoading"
       class="call-help__container"
     >
-      <!-- <div class="call-help__call">
-        <i class="el-icon-microphone el-icon-pulse" />
-
-        <el-button
-          :disabled="ending"
-          type="danger"
-          :icon="ending ? 'el-icon-loading' : ''"
-          @click="$emit('call:end')"
-        >
-          {{ ending ? 'Desligando' : 'Desligar' }}
-        </el-button>
-      </div> -->
-
       <el-carousel
         ref="carousel"
         class="call-help__carousel"
@@ -96,7 +83,7 @@
 
             <el-tooltip content="Ao termino da contagem, o contato será confirmado automaticamente!">
               <el-button
-                type="success"
+                type="primary"
                 class="call-help__carousel-item-actions__correct_contact"
                 @click="next('contact')"
               >
@@ -139,7 +126,7 @@
             </el-button>
 
             <el-button
-              type="success"
+              type="primary"
               @click="close()"
             >
               Concordou

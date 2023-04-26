@@ -1,4 +1,4 @@
-import moment from 'moment'
+import moment from 'moment/src/moment'
 
 export class DisputeModel {
   #dtoV1
@@ -110,9 +110,12 @@ export class DisputeModel {
   }
 
   get getDisputeDisputeNextToExpire() {
+    if (!['PRE_NEGOTIATION', 'PENDING', 'RUNNING', 'ENGAGEMENT'].includes(this.getDisputeStatus)) {
+      return false
+    }
+
     if (this.#dtoV3?.expirationDate) {
-      return moment(this.#dtoV3?.expirationDate).isBetween(moment(), moment().add(4, 'day')) &&
-      ['PRE_NEGOTIATION', 'PENDING', 'RUNNING', 'ENGAGEMENT'].includes(this.getDisputeStatus)
+      return moment(this.#dtoV3?.expirationDate).isBetween(moment(), moment().add(4, 'day'))
     }
 
     return Boolean(this.#dtoV1?.disputeNextToExpire)
@@ -214,7 +217,7 @@ export class DisputeModel {
       this.#dtoV2?.lastReceivedMessage ||
       {
         createAt: {
-          dateTime: this.#dtoV3?.lastReceivedMessageCreatedAt,
+          dateTime: this.#dtoV3?.lastReceivedMessageCreatedAt
         },
         id: this.#dtoV3?.lastReceivedMessageId,
         message: {
