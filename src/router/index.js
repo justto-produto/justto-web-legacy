@@ -398,7 +398,7 @@ router.beforeEach((to, from, next) => {
 })
 
 router.afterEach((to) => {
-  if (['https://justto.app'].includes(window.location?.origin)) {
+  if (['justto.app'].includes(window.location?.hostname)) {
     const message =
     `<p>
       Oi, só queríamos te avisar que o endereço da nossa plataforma mudou.
@@ -413,6 +413,9 @@ router.afterEach((to) => {
     vue().$alert(message, 'Atenção', {
       confirmButtonText: 'OK',
       dangerouslyUseHTMLString: true,
+      closeOnClickModal: false,
+      closeOnPressEscape: false,
+      closeOnHashChange: false,
       showClose: false,
       callback: () => {
         window.location.replace('https://acordos.projuris.com.br')
