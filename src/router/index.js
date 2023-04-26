@@ -404,7 +404,7 @@ router.afterEach((to) => {
       Oi, só queríamos te avisar que o endereço da nossa plataforma mudou.
       <br>
       <br>
-      Agora você deve utilizar o nosso novo endereço <a href="acordos.projuris.com.br">acordos.projuris.com.br</a>.
+      Agora você deve utilizar o nosso novo endereço <a href="https://acordos.projuris.com.br">acordos.projuris.com.br</a>.
       <br>
       <br>
       Não esqueça de adicionar esse novo endereço aos seus favoritos para poder acessar facilmente.
