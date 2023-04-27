@@ -117,7 +117,7 @@
     >
       <el-button
         class="party-details__infoline-namesake-button"
-        type="warning"
+        type="secondary"
         @click="showNamesakeDialog"
       >
         <span>Tratar homônimos</span>
@@ -261,22 +261,26 @@
           placement="top"
         >
           <el-button
+            type="secondary"
             @click="removeLawyer(true)"
           >
             De todas as disputas
           </el-button>
         </el-tooltip>
+
         <el-tooltip
           :open-delay="600"
           :content="`Remover ${partName} somente desta disputa.`"
           placement="top"
         >
           <el-button
+            type="secondary"
             @click="removeLawyer(false)"
           >
             Desta disputa
           </el-button>
         </el-tooltip>
+
         <el-button
           type="primary"
           @click="chooseRemoveLawyerDialogVisible = false"
@@ -289,18 +293,17 @@
     <div class="party-details__edit">
       <el-button
         v-if="!(isNegotiator && !isJusttoAdmin)"
-        class="party-details__edit-button--danger"
-        type="text"
-        icon="el-icon-delete"
+        type="secondary"
         @click="removeParty"
       >
+        <i class="el-icon-delete colorless" />
         Excluir
       </el-button>
 
       <el-button
         v-if="!isNegotiator"
         class="party-details__edit-button"
-        type="text"
+        type="primary"
         icon="el-icon-edit"
         @click="editRoleDialogVisible = true"
       >
@@ -519,7 +522,6 @@ export default {
         this.$confirm('Tem certeza que deseja excluir esta parte da disputa? Está ação é irreversível', 'Atenção', {
           confirmButtonText: 'Continuar',
           cancelButtonText: 'Cancelar',
-          cancelButtonClass: 'is-plain',
           showClose: false
         }).then(() => {
           this.deleteTicketOverviewParty({
@@ -791,8 +793,7 @@ export default {
           confirmButtonClass: 'confirm-action-btn',
           confirmButtonText: 'Continuar',
           cancelButtonText: 'Cancelar',
-          dangerouslyUseHTMLString: true,
-          cancelButtonClass: 'is-plain'
+          dangerouslyUseHTMLString: true
         }).then(() => this.openNamesakeDialog())
       } else {
         this.openNamesakeDialog()
@@ -961,10 +962,6 @@ export default {
     display: flex;
     justify-content: space-evenly;
     margin: 16px 0 0;
-
-    .party-details__edit-button--danger {
-      color: $--color-danger;
-    }
   }
 
   .party-details__infoline {

@@ -3,29 +3,6 @@
     label-position="top"
     class="pre-negotiation__form"
   >
-    <!-- <el-form-item
-      class="pre-negotiation-form-switch"
-    >
-      <el-switch v-model="workspacePreNegotiation.preNegotiation" />
-      <span>
-        Pré negociação
-      </span>
-      <el-popover
-        popper-class="popover-info-prenegotiation"
-        placement="top"
-        width="300"
-        trigger="click"
-      >
-        <p>
-          <b>Pré negociação</b> é um recurso que busca por indicativo de baixa de processos nos casos que você importou para evitar que você negocie casos extintos. Ao detectar, o sistema irá solicitar que você confirme que deseja iniciar a negociação.
-        </p>
-        <i
-          slot="reference"
-          class="pre-negotiation-icon el-icon-warning"
-        />
-      </el-popover>
-    </el-form-item> -->
-
     <el-form-item
       label="Palavras a serem detectadas para classificar como pré negociação"
       class="pre-negotiation__form-select"
@@ -42,18 +19,23 @@
     <el-form-item
       label="Limite de valor do processo para classificar como pré negociação"
     >
-      <money
-        v-model="workspacePreNegotiation.limitValue"
-        class="el-input__inner"
-        maxlength="16"
-      />
+      <div class="el-input">
+        <money
+          v-model="workspacePreNegotiation.limitValue"
+          class="el-input__inner"
+          maxlength="16"
+        />
+      </div>
     </el-form-item>
-    <el-button
-      type="primary"
-      @click.prevent="saveProperties"
-    >
-      Salvar
-    </el-button>
+
+    <el-form-item>
+      <el-button
+        type="primary"
+        @click.prevent="saveProperties"
+      >
+        Salvar
+      </el-button>
+    </el-form-item>
   </el-form>
 </template>
 
@@ -167,12 +149,9 @@ export default {
     }
   }
 
-  .pre-negotiation__form-select {
-    .el-form-item__content {
-      .el-select {
-        width: 100%;
-      }
-    }
+  .el-form-item:last-child {
+    display: flex;
+    justify-content: flex-end;
   }
 }
 </style>

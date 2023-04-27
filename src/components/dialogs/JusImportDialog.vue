@@ -55,15 +55,15 @@
       slot="footer"
       class="dialog-footer"
     >
-      <el-button
-        plain
-        @click="closeDialog"
-      >Cancelar</el-button>
+      <el-button @click="closeDialog">Cancelar</el-button>
+
       <el-button
         :disabled="!isSuccess"
         type="primary"
         @click="startImport"
-      >Importar</el-button>
+      >
+        Importar
+      </el-button>
     </span>
   </el-dialog>
 </template>

@@ -28,7 +28,7 @@
               content="Ligar agora"
             >
               <el-button
-                type="success"
+                type="primary"
                 icon="el-icon-phone"
                 size="mini"
                 plain

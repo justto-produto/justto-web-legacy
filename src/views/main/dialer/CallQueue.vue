@@ -181,7 +181,7 @@
       </div>
     </div>
 
-    <ScheduledCallSwitch v-if="!isJusttoDev" />
+    <ScheduledCallSwitch v-if="isJusttoDev" />
 
     <ScheduledCallsQueue />
 

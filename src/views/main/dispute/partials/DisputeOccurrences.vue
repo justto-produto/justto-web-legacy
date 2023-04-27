@@ -653,7 +653,7 @@
           >
             <strong>Não foi possível exibir o conteúdo da mensagem.</strong>
             <br><br>
-            Mídias de áudio ou vídeo ainda não estão disponíveis para visualização na plataforma Justto.
+            Mídias de áudio ou vídeo ainda não estão disponíveis para visualização na plataforma ProJuris.
           </el-alert>
         </span>
         <span

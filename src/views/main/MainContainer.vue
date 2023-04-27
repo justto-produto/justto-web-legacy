@@ -41,14 +41,23 @@
             v-show="menuItem.isVisible"
             :index="menuItem.index"
           >
-            <JusIcon :icon="menuItem.icon" />
+            <JusIcon
+              :icon="menuItem.icon"
+              :type="menuItem.iconType || 'ic'"
+              size="1.75rem"
+              svg-family="light"
+              class="menu-item__icon"
+            />
 
             <span slot="title">
               {{ menuItem.title }}
             </span>
           </el-menu-item>
 
-          <CustomHome :value="menuItem" />
+          <CustomHome
+            v-show="!isTeamSectionExpanded"
+            :value="menuItem"
+          />
         </div>
       </el-menu>
 
@@ -144,7 +153,7 @@ export default {
       const basicDashboardMenuItem = new MenuItem({
         index: '/',
         title: 'Dashboard',
-        icon: 'logo-justto'
+        icon: 'logo-menu-dark'
       })
 
       const basicNegotiationMenuItem = new MenuItem({
@@ -435,7 +444,7 @@ export default {
 }
 
 .container-aside {
-  background-color: $--color-white;
+  background-color: $--pj-color-blue;
   box-shadow: 0 4px 24px 0 rgba(37, 38, 94, 0.1);
   z-index: 2;
   overflow: hidden;
@@ -466,7 +475,30 @@ export default {
 
   .container-aside__menu {
     .container-aside__menu-item {
+      background-color: $--pj-color-blue;
       position: relative;
+
+      li.el-menu-item {
+        background-color: $--pj-color-blue;
+
+        .menu-item__icon {
+          width: 1.75rem;
+          filter: invert(1);
+        }
+
+        .el-tooltip {
+          background-color: transparent;
+        }
+
+        &.is-active {
+          background-color: rgba(255,255,255,.2) !important;
+          border-left-color: $--color-white !important;
+        }
+
+        &:hover {
+          background-color: rgba(255,255,255,.2) !important;
+        }
+      }
 
       .menu-item-pin {
         display: flex;
@@ -489,11 +521,14 @@ export default {
           img {
             height: 12px;
             width: 12px;
+            filter: invert(1);
           }
         }
       }
 
       &:hover {
+        background-color: $--pj-color-blue;
+
         .menu-item-pin {
           .menu-item-pin__button {
             display: block;

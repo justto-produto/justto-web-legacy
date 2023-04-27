@@ -40,7 +40,7 @@
 
       <el-button
         size="small"
-        type="success"
+        type="primary"
         @click="handleSaveConfigs"
       >
         Salvar

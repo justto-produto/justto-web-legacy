@@ -37,7 +37,7 @@
               />
 
               <el-button
-                type="success"
+                type="primary"
                 size="mini"
                 @click="handleEditWorkspace(scope.row)"
               >
@@ -75,7 +75,7 @@
               />
 
               <el-button
-                type="success"
+                type="primary"
                 size="mini"
                 @click="handleEditWorkspace(scope.row)"
               >
@@ -85,36 +85,6 @@
           </el-popover>
         </template>
       </el-table-column>
-
-      <!-- <el-table-column
-        prop="keyAccountId"
-        label="Key Account"
-      >
-        <template v-slot="scope">
-          <el-select
-            v-if="scope.row.id === activeRow"
-            :id="`ka-select-${scope.row.id}`"
-            :value="scope.row.keyAccountId"
-            size="small"
-            filterable
-            @change="saveKeyAccountInToWorkspace($event, scope.row)"
-          >
-            <el-option
-              v-for="keyAccount in keyAccounts"
-              :key="`key-account-${keyAccount.id}`"
-              :value="keyAccount.id"
-              :label="keyAccountTemplate(keyAccount)"
-            />
-          </el-select>
-
-          <span
-            v-else
-            :style="{cursor: 'pointer'}"
-          >
-            {{ keyAccountTemplate(findKeyAccount(scope.row.keyAccountId)) }}
-          </span>
-        </template>
-      </el-table-column> -->
 
       <el-table-column
         align="right"
@@ -157,7 +127,7 @@
             <article>
               <label for="inviteForm__email">E-mail</label>
 
-              <div class="el-input--mini">
+              <div class="el-input el-input--mini">
                 <input
                   id="inviteForm__email"
                   v-model="inviteForm.email"
@@ -183,7 +153,7 @@
               </el-select>
 
               <el-button
-                type="success"
+                type="primary"
                 size="mini"
                 @click="handleInviteEmail(scope.row)"
               >
@@ -194,8 +164,6 @@
 
           <el-switch
             :value="scope.row.status === 'READY'"
-            active-color="#13ce66"
-            inactive-color="#ff4949"
             @change="handleArchiveWorkspace($event, scope.row)"
           />
         </div>
@@ -538,7 +506,7 @@ export default {
     },
 
     handleArchiveWorkspace(archived, workspace) {
-      this.$confirm(`Deseja realmente <strong>${archived ? 'desativar' : 'reativar'}</strong> a workspace <strong>${workspace.name}</strong>?`, 'Atenção', {
+      this.$confirm(`Deseja realmente <strong>${archived ? 'reativar' : 'desativar'}</strong> a workspace <strong>${workspace.name}</strong>?`, 'Atenção', {
         dangerouslyUseHTMLString: true,
         confirmButtonText: 'Confirmar',
         cancelButtonText: 'Cancelar',

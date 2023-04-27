@@ -86,12 +86,14 @@
               label="Valor"
               prop="lastCounterOfferValue"
             >
-              <money
-                v-model="counterOfferForm.lastCounterOfferValue"
-                class="el-input__inner"
-                data-testid="counterproposal-value-input"
-                maxlength="16"
-              />
+              <div class="el-input">
+                <money
+                  v-model="counterOfferForm.lastCounterOfferValue"
+                  class="el-input__inner"
+                  data-testid="counterproposal-value-input"
+                  maxlength="16"
+                />
+              </div>
             </el-form-item>
           </el-col>
 
@@ -142,7 +144,6 @@
       <span slot="footer">
         <el-button
           :disabled="modalLoading"
-          plain
           @click="settledDialogVisible = false"
         >
           Cancelar
@@ -207,12 +208,14 @@
               label="Valor"
               prop="lastCounterOfferValue"
             >
-              <money
-                v-model="counterOfferForm.lastCounterOfferValue"
-                class="el-input__inner"
-                data-testid="counterproposal-value-input"
-                maxlength="16"
-              />
+              <div class="el-input">
+                <money
+                  v-model="counterOfferForm.lastCounterOfferValue"
+                  class="el-input__inner"
+                  data-testid="counterproposal-value-input"
+                  maxlength="16"
+                />
+              </div>
             </el-form-item>
           </el-col>
 
@@ -259,7 +262,6 @@
       <span slot="footer">
         <el-button
           :disabled="modalLoading"
-          plain
           @click="chooseUnsettledDialogVisible = false"
         >
           Cancelar
@@ -306,7 +308,6 @@
       <span slot="footer">
         <el-button
           :disabled="modalLoading"
-          plain
           @click="editNegotiatorDialogVisible = false"
         >
           Cancelar
@@ -344,12 +345,14 @@
               label="Valor"
               prop="lastCounterOfferValue"
             >
-              <money
-                v-model="counterOfferForm.lastCounterOfferValue"
-                class="el-input__inner"
-                data-testid="counterproposal-value-input"
-                maxlength="16"
-              />
+              <div class="el-input">
+                <money
+                  v-model="counterOfferForm.lastCounterOfferValue"
+                  class="el-input__inner"
+                  data-testid="counterproposal-value-input"
+                  maxlength="16"
+                />
+              </div>
             </el-form-item>
           </el-col>
 
@@ -399,7 +402,6 @@
       <span slot="footer">
         <el-button
           :disabled="modalLoading"
-          plain
           @click="counterproposalDialogVisible = false"
         >
           Cancelar
@@ -490,11 +492,9 @@
           </el-col>
         </el-row>
       </el-form>
+
       <div slot="footer">
-        <el-button
-          plain
-          @click="dropLawsuitDialogVisible = false"
-        >
+        <el-button @click="dropLawsuitDialogVisible = false">
           Cancelar
         </el-button>
         <el-button
@@ -584,7 +584,6 @@
       <div slot="footer">
         <el-button
           :disabled="modalLoading"
-          plain
           @click="ticketResumeDialogVisible = false"
         >
           Cancelar
@@ -1131,7 +1130,6 @@ export default {
               this.$confirm('Esta disputa possui documento gerado, deseja exclui-lo?', 'Excluir documento', {
                 confirmButtonText: 'Continuar',
                 cancelButtonText: 'Cancelar',
-                cancelButtonClass: 'is-plain',
                 type: 'warning'
               }).then(() => {
                 this.deleteDocument(this.dispute?.getDisputeId).then(() => {
@@ -1282,7 +1280,6 @@ export default {
         this.$confirm(message.content, message.title, {
           confirmButtonText: 'Continuar',
           cancelButtonText: 'Cancelar',
-          cancelButtonClass: 'is-plain',
           dangerouslyUseHTMLString: true,
           showClose: false
         }).then(() => {
@@ -1452,7 +1449,6 @@ export default {
                 this.$confirm(winTxt, 'Atenção!', {
                   confirmButtonText: 'Continuar',
                   cancelButtonText: 'Cancelar',
-                  cancelButtonClass: 'is-plain',
                   dangerouslyUseHTMLString: true,
                   showClose: false
                 }).then(resolve).catch(e => {

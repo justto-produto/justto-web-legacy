@@ -2,7 +2,7 @@
 
 # Justto Web 2.0
 
-Novo sistema web da Justto que agora funciona. :heart:
+Novo sistema web da ProJuris que agora funciona. :heart:
 
 [:point_right: Leia a documentação antes de programar!! :point_left:](https://gitlab.com/Justto/justto-web/wikis/)
 

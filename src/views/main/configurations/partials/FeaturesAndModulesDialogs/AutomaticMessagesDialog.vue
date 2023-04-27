@@ -22,19 +22,6 @@
           </el-radio>
         </el-form-item>
 
-        <!-- <el-form-item>
-          <span slot="label">
-            O sistema identifica e sugere ao negociador ações automáticas que, caso aceitas pelo negociador, passarão a ser executadas automaticamente pelo sistema em situações similares.
-          </span>
-
-          <el-radio
-            v-model="sendAutomaticMessage"
-            label="ASK"
-          >
-            Permitir que o negociador decida
-          </el-radio>
-        </el-form-item> -->
-
         <el-form-item>
           <span slot="label">
             Defina quais ações que devem ser executadas automaticamente.
@@ -75,7 +62,7 @@
       </el-button>
 
       <el-button
-        type="success"
+        type="primary"
         size="small"
         @click="save()"
       >
@@ -221,7 +208,7 @@ export default {
   .el-dialog__footer {
     .el-dialog__footer-container {
       display: flex;
-      justify-content: space-evenly;
+      justify-content: flex-end;
     }
   }
 }

@@ -3,7 +3,8 @@
     <a @click.prevent="handleLogoClick">
       <img
         class="jus-sidenav-external__logo"
-        src="@/assets/logo.svg"
+        src="@/assets/logo-projuris-acordos.svg"
+        style="height: 120px;"
       >
     </a>
 
@@ -185,6 +186,7 @@ export default {
   }
   &__logo{
     top: 0;
+    margin-top: 0;
   }
   &__exit {
     bottom: 0;

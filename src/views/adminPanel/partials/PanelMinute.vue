@@ -19,6 +19,7 @@
             @keyup.enter.native="props.row.editing = false, editMinuteName(props.row)"
             @blur="props.row.editing = false, editMinuteName(props.row)"
           />
+
           <div
             v-show="!props.row.editing"
             class="label panel-minute-view__editable-label"
@@ -32,6 +33,7 @@
           </div>
         </template>
       </el-table-column>
+
       <el-table-column
         align="right"
         width="360px"
@@ -40,11 +42,14 @@
           slot="header"
           style="display: flex"
         >
-          <input
-            v-model="search"
-            placeholder="Buscar"
-            class="el-input__inner"
-          >
+          <div class="el-input">
+            <input
+              v-model="search"
+              placeholder="Buscar"
+              class="el-input__inner"
+            >
+          </div>
+
           <el-button
             type="primary"
             icon="el-icon-plus"
@@ -77,6 +82,7 @@
         </div>
       </el-table-column>
     </el-table>
+
     <el-dialog
       :visible.sync="editDialogVisible"
       :width="width"
@@ -158,7 +164,6 @@ export default {
       this.$prompt('Insira a URL (Google Docs) do documento:', 'Adicionar minuta', {
         confirmButtonText: 'Adicionar',
         cancelButtonText: 'Cancelar',
-        cancelButtonClass: 'is-plain',
         inputPattern: /.*(drive|docs)\.google\.com.*/,
         inputErrorMessage: 'URL inválida',
         beforeClose: (action, instance, done) => {
@@ -196,7 +201,6 @@ export default {
       this.$confirm('Tem certeza que deseja excluir?', 'Atenção!', {
         confirmButtonText: 'Excluir',
         cancelButtonText: 'Cancelar',
-        cancelButtonClass: 'is-plain',
         confirmButtonClass: 'el-button--danger',
         beforeClose: (action, instance, done) => {
           if (action === 'confirm') {

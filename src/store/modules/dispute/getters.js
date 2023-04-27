@@ -1,4 +1,4 @@
-import moment from 'moment'
+import moment from 'moment/src/moment'
 import { DisputeModel } from '@/models/dispute/DisputeModel'
 
 const disputeGetters = {

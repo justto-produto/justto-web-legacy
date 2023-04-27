@@ -187,7 +187,7 @@
                       {{ selected.address | phoneNumber }}
                     </span>
                     <span v-else-if="messageType === 'negotiation'">
-                      Portal Justto
+                      Portal ProJuris
                     </span>
                   </span>
                 </span>
@@ -224,7 +224,7 @@
                 <el-tooltip>
                   <span slot="content">
                     <span v-if="messageType === 'negotiation'">
-                      Você está enviando mensagem para o Portal de comunicação Justto.
+                      Você está enviando mensagem para o Portal de comunicação ProJuris.
                     </span>
                     <span v-else>
                       Você está enviando um {{ messageType }}
@@ -309,6 +309,7 @@
                       type="textarea"
                       placeholder="Escreva alguma coisa"
                     />
+
                     <el-dialog
                       :visible.sync="editTemplateQuickReply.visible"
                       append-to-body
@@ -1364,7 +1365,7 @@ export default {
 
               .ck-editor__editable {
                 background-color: #F4EFFE !important;
-                color: #9461F7;
+                color: $--color-primary;
                 text-indent: 88px;
               }
             }

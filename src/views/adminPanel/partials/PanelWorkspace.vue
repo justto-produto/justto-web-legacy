@@ -209,7 +209,7 @@
           show-icon
         >
           <span slot="title">
-            Este nome <strong>IRÁ</strong> aparecer em todas as mensagens automáticas enviadas pela Justto.
+            Este nome <strong>IRÁ</strong> aparecer em todas as mensagens automáticas enviadas pela ProJuris.
           </span>
         </el-alert>
         <br>
@@ -254,11 +254,14 @@
             <span v-if="workspaceForm.properties.VEXATIOUS_TYPE === 'QUANTITY'">Quantas disputas uma mesma pessoa precisa ter para ser qualificado como possível ofensor?</span>
             <span v-else>Qual percentual acima da média de disputas uma pessoa precisa ter para ser qualificado como possível ofensor?</span>
           </span>
-          <money
-            v-model="workspaceForm.properties.VEXATIOUS_THRESHOLD"
-            v-bind="vexatiousTypeMask"
-            class="el-input__inner"
-          />
+
+          <div class="el-input">
+            <money
+              v-model="workspaceForm.properties.VEXATIOUS_THRESHOLD"
+              v-bind="vexatiousTypeMask"
+              class="el-input__inner"
+            />
+          </div>
         </el-form-item>
       </el-form>
       <span
@@ -473,8 +476,7 @@ export default {
       this.$confirm('Tem certeza que deseja remover esta equipe?', 'Atenção!', {
         confirmButtonText: 'Remover',
         cancelButtonText: 'Cancelar',
-        type: 'warning',
-        cancelButtonClass: 'is-plain'
+        type: 'warning'
       }).then(() => {
         const loading = this.$loading({ lock: true })
         this.$store.dispatch('adminWorkspaces', { method: 'delete', workspaceId }).then(() => {
@@ -494,8 +496,7 @@ export default {
       this.$confirm('Tem certeza que deseja remover este usuário da equipe?', 'Atenção!', {
         confirmButtonText: 'Remover',
         cancelButtonText: 'Cancelar',
-        type: 'warning',
-        cancelButtonClass: 'is-plain'
+        type: 'warning'
       }).then(() => {
         const loading = this.$loading({ lock: true })
         this.$store.dispatch('adminWorkspaceUsers', {

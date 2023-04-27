@@ -19,6 +19,7 @@
           >
             <jus-icon :icon="dataset.icon" />
           </div>
+
           <el-tooltip content="Valor referente a todo o período desse time">
             <div
               v-if="!dataset.isGraph"
@@ -38,6 +39,7 @@
                 <span v-if="dataset.savingsPercentage">({{ dataset.savingsPercentage }}%)</span>
               </span>
             </div>
+
             <div
               v-else
               class="chart-card-view__info"
@@ -50,6 +52,7 @@
                 :percentage="dataset.data[0] | calcNps"
                 :format="(value) => `${dataset.data[0]}`"
               />
+
               <span class="progress-label">
                 nps
               </span>
@@ -86,7 +89,7 @@ export default {
               ds.width = 25
               ds.isPercentage = true
               ds.labelDark = false
-              ds.color = '#14CC30'
+              ds.color = '#0bde5e'
               break
             case 'NPS':
               ds.isGraph = true
@@ -98,7 +101,7 @@ export default {
               ds.width = 25
               ds.isPercentage = true
               ds.labelDark = false
-              ds.color = '#FF4B54'
+              ds.color = '#f76751'
               break
             case 'NPS_NEUTRAL_PERCENTAGE':
               ds.icon = 'nps-neutral-emoji'
@@ -108,25 +111,25 @@ export default {
               ds.color = '#F5F5F5'
               break
             case 'UPPER_RANGE_AVG':
-              ds.icon = 'upper-range-emoji'
-              ds.width = 50
-              ds.isPercentage = false
-              ds.labelDark = false
-              ds.color = '#FED300'
-              break
-            case 'SETTLED_DEALS_AVG':
               ds.icon = 'settled-deals-emoji'
               ds.width = 50
               ds.isPercentage = false
               ds.labelDark = false
-              ds.color = '#30A4F2'
+              ds.color = '#00cae4'
+              break
+            case 'SETTLED_DEALS_AVG':
+              ds.icon = 'upper-range-emoji'
+              ds.width = 50
+              ds.isPercentage = false
+              ds.labelDark = false
+              ds.color = '#0d5feb'
               break
             case 'SAVINGS_TOTAL':
               ds.icon = 'savings-total-emoji'
               ds.width = 100
               ds.isPercentage = false
               ds.labelDark = false
-              ds.color = '#00DBAE'
+              ds.color = '#8b5eba'
               ds.savingsPercentage = this.savingsPercentage
               break
           }
@@ -142,9 +145,9 @@ export default {
 
     colors() {
       return [
-        { color: '#FF4B54', percentage: 40 },
+        { color: '#f76751', percentage: 40 },
         { color: '#707070', percentage: 60 },
-        { color: '#14CC30', percentage: 100 }
+        { color: '#0bde5e', percentage: 100 }
       ]
     },
 
@@ -252,57 +255,4 @@ export default {
     }
   }
 }
-
-/*
-.chart-card-view {
-  display: flex;
-  flex-direction: column;
-  &__card {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    position: relative;
-    &+ .chart-card-view__card {
-      margin-top: 10px;
-    }
-  }
-  .el-card__body {
-    display: flex;
-    align-items: center;
-    padding: 5px 15px;
-  }
-  &__icon {
-    position: absolute;
-    bottom: -50px;
-    left: 0px;
-    opacity: .2;
-    font-size: 130px;
-    z-index: 1;
-    text-align: center;
-    width: 130px;
-    &.UPPER_RANGE_AVG {
-      bottom: -40px;
-    }
-    .el-icon-s-ticket {
-      font-size: 112px;
-    }
-  }
-  &__info {
-    display: flex;
-    flex-direction: column;
-    text-align: right;
-    color: $--color-white;
-    z-index: 2;
-  }
-  &__label {
-    font-size: 14px;
-  }
-  &__value {
-    font-weight: 500;
-    font-size: 28px;
-    margin-top: 4px;
-  }
-}
-*/
 </style>

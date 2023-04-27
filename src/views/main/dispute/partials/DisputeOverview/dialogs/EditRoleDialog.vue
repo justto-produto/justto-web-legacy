@@ -41,6 +41,7 @@
           autofocus=""
         />
       </el-form-item>
+
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item
@@ -55,6 +56,7 @@
             />
           </el-form-item>
         </el-col>
+
         <el-col :span="12">
           <el-form-item
             label="Data de nascimento"
@@ -63,6 +65,7 @@
             <el-date-picker
               v-model="roleForm.birthday"
               :disabled="!canEditBirthday"
+              class="el-input__inner"
               :clearable="false"
               format="dd/MM/yyyy"
               type="date"
@@ -187,10 +190,12 @@
                   v-if="scope.row.isMain"
                   icon="phone-active"
                 />
+
                 <jus-icon
                   v-else
                   icon="not-main-phone-active"
                 />
+
                 <el-switch v-model="scope.row.isMain" />
               </span>
             </el-tooltip>
@@ -248,10 +253,12 @@
                   v-if="scope.row.isMain"
                   icon="email-active"
                 />
+
                 <jus-icon
                   v-else
                   icon="not-main-email-active"
                 />
+
                 <el-switch v-model="scope.row.isMain" />
               </span>
             </el-tooltip>

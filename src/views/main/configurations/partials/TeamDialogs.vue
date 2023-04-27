@@ -21,6 +21,7 @@
         >
           <el-input v-model="newMemberForm.email" />
         </el-form-item>
+
         <el-form-item
           label="Perfil"
           prop="profile"
@@ -37,6 +38,7 @@
             />
           </el-select>
         </el-form-item>
+
         <el-form-item>
           <div class="acceptTerms">
             <el-checkbox
@@ -61,6 +63,7 @@
           </div>
         </el-form-item>
       </el-form>
+
       <span
         slot="footer"
         class="el-dialog__footer-buttons"
@@ -68,11 +71,11 @@
         <el-button
           v-loading="newMemberDialogLoading"
           size="small"
-          plain
           @click="newMemberDialogVisible = false"
         >
           Cancelar
         </el-button>
+
         <el-tooltip
           :disabled="acceptTerms"
           content="É necessário aceitar os termos de privacidade antes de convidar!"
@@ -197,7 +200,7 @@ export default {
   .el-dialog__footer {
     .el-dialog__footer-buttons {
       display: flex;
-      justify-content: center;
+      justify-content: flex-end;
       gap: 8px;
     }
   }

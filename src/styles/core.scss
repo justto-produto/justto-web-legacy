@@ -113,7 +113,7 @@ a {
   }
 }
 
-i.el-icon-delete {
+i.el-icon-delete:not(.colorless) {
   color: $--color-danger;
   &:hover { color: mix($--color-danger, $--color-white, 75%); }
 }

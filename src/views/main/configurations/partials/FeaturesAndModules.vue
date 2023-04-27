@@ -27,12 +27,6 @@
             <span>
               {{ $tc('configurations.value', feature.free) | capitalize }}
             </span>
-
-            <i
-              v-if="!feature.free"
-              class="el-icon-question icon--active icon--pointer"
-              @click="openCrispWithHelp(feature)"
-            />
           </span>
         </header>
 
@@ -175,7 +169,6 @@ export default {
         this.$confirm('Você será cobrado pelo uso dessa funcionalidade, tem certeza que deseja ativa-la?', 'Atenção', {
           confirmButtonText: 'Continuar',
           cancelButtonText: 'Cancelar',
-          cancelButtonClass: 'is-plain',
           type: 'warning'
         }).then(() => toggleConfiguration())
       } else toggleConfiguration()
@@ -190,22 +183,6 @@ export default {
       if (this.$refs[ref]) {
         this.$refs[ref].openFeatureDialog()
       }
-    },
-
-    openCrispWithHelp({ code }) {
-      const message = this.$tc(`configurations.${code}.help`)
-
-      if (window.$crisp.is('chat:closed')) {
-        window.$crisp.on('chat:opened', () => this.writeTextOnCrisp(message))
-        window.$crisp.do('chat:open')
-      } else {
-        this.writeTextOnCrisp(message)
-      }
-    },
-
-    writeTextOnCrisp(message) {
-      this.$nextTick().then(() => window.$crisp.set('message:text', [message]))
-      window.$crisp.off('chat:opened')
     }
   }
 }

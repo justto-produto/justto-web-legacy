@@ -229,42 +229,6 @@
                   </el-option>
                 </el-select>
               </div>
-
-              <!-- <div class="form-item__container">
-                <label for="personOabs">
-                  <span>OABs:</span>
-
-                  <el-tooltip
-                    content="Use somente números e letras"
-                    placement="top-start"
-                  >
-                    <i class="el-icon-info" />
-                  </el-tooltip>
-                </label>
-
-                <el-select
-                  id="personOabs"
-                  :value="form.person.oabs"
-                  name="personOabs"
-                  multiple
-                  placeholder="OABs:"
-                  filterable
-                  allow-create
-                  default-first-option
-                  size="mini"
-                  @input="handleOabInput"
-                >
-                  <el-option
-                    v-for="oab in form.person.oabs"
-                    :key="oab"
-                    :label="oab"
-                    :value="oab"
-                  >
-                    <span>{{ oab }}</span>
-                    <span>{{ oab | oab }}</span>
-                  </el-option>
-                </el-select>
-              </div> -->
             </el-form-item>
           </el-form>
         </el-collapse-item>
@@ -297,11 +261,13 @@
           >
             <td>{{ `#${dispute.id}` }}</td>
 
-            <td>{{ dispute.code || '' }}</td>
+            <td>{{ dispute.code || '-' }}</td>
 
-            <td>{{ dispute.externalCode || '' }}</td>
+            <td>
+              {{ dispute.externalCode || '-' }}
+            </td>
 
-            <td>{{ dispute.workspaceName || '' }}</td>
+            <td>{{ dispute.workspaceName || '-' }}</td>
 
             <td>
               <el-tag

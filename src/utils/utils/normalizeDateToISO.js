@@ -1,4 +1,4 @@
-import moment from 'moment'
+import moment from 'moment/src/moment'
 
 export default (stringDate) => {
   const [date, time] = stringDate.split(' ')

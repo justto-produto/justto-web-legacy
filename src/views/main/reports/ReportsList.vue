@@ -16,13 +16,6 @@
       >
         Relatório Gestão
       </el-link>
-      <!-- <el-button class="reports-container__list-item">
-        Relatório Gerencial
-      </el-button>
-
-      <el-button class="reports-container__list-item">
-        Relatório Gestão
-      </el-button> -->
     </div>
 
     <div class="reports-container__report">

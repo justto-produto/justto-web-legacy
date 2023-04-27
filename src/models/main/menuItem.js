@@ -3,6 +3,8 @@ export default class MenuItem {
     index,
     title,
     icon,
+    family,
+    iconType,
     customHome,
     isVisible = true,
     action = () => {}
@@ -10,6 +12,8 @@ export default class MenuItem {
     this.index = index
     this.title = title
     this.icon = icon
+    this.family = family || ''
+    this.iconType = iconType
     this.customHome = customHome || index
     this.isVisible = isVisible
     this.action = action

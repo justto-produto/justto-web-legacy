@@ -31,20 +31,22 @@
               >
                 <el-form-item label="Nome">
                   <el-input v-model="person.name">
-                    <el-button
+                    <span
                       slot="append"
+                      class="is-pointer"
                       @click="changeName(person, true)"
-                    >
-                      Alterar
-                    </el-button>
+                      v-text="'Alterar'"
+                    />
                   </el-input>
                 </el-form-item>
+
                 <el-form-item label="Email">
                   <el-input
                     v-model="$store.state.accountModule.email"
                     disabled
                   />
                 </el-form-item>
+
                 <el-form-item label="Nova senha">
                   <el-input
                     v-model="profileForm.newPassword"
@@ -66,14 +68,16 @@
                         />
                       </el-button>
                     </span>
-                    <el-button
+
+                    <span
                       slot="append"
+                      class="is-pointer"
                       @click="passwordModal"
-                    >
-                      Alterar
-                    </el-button>
+                      v-text="'Alterar'"
+                    />
                   </el-input>
                 </el-form-item>
+
                 <el-form-item
                   label="Contato"
                   prop="phone"
@@ -82,12 +86,12 @@
                     v-model="profileForm.phone"
                     v-mask="['(##) ####-####', '(##) #####-####']"
                   >
-                    <el-button
+                    <span
                       slot="append"
+                      class="is-pointer"
                       @click="updatePhone"
-                    >
-                      Alterar
-                    </el-button>
+                      v-text="'Alterar'"
+                    />
                   </el-input>
                 </el-form-item>
               </el-form>
@@ -106,6 +110,7 @@
             >
               <el-form label-position="top">
                 <h3>Alterar nome da Equipe</h3>
+
                 <el-alert
                   :closable="false"
                   type="info"
@@ -115,19 +120,23 @@
                     Este nome <strong>NÃO</strong> irá aparecer nas mensagens automáticas. Utilize-o para organização interna.
                   </span>
                 </el-alert>
+
                 <br>
+
                 <el-form-item label="Nome da equipe">
                   <el-input v-model="teamName">
-                    <el-button
+                    <span
                       slot="append"
+                      class="is-pointer"
                       @click.prevent="changeTeamName"
-                    >
-                      Alterar nome
-                    </el-button>
+                      v-text="'Alterar nome'"
+                    />
                   </el-input>
                 </el-form-item>
               </el-form>
+
               <br>
+
               <el-form label-position="top">
                 <h3>Configurações da Pré-Negociação</h3>
 
@@ -135,6 +144,7 @@
                   class="pre-negotiation-select"
                 >
                   <el-switch v-model="workspacePreNegotiation.preNegotiation" />
+
                   <span>
                     Pré negociação
                   </span>
@@ -171,11 +181,13 @@
                   v-if="workspacePreNegotiation.preNegotiation"
                   label="Limite de valor do processo para classificar como pré negociação"
                 >
-                  <money
-                    v-model="workspacePreNegotiation.limitValue"
-                    class="el-input__inner"
-                    maxlength="16"
-                  />
+                  <div class="el-input">
+                    <money
+                      v-model="workspacePreNegotiation.limitValue"
+                      class="el-input__inner"
+                      maxlength="16"
+                    />
+                  </div>
                 </el-form-item>
               </el-form>
 
@@ -196,12 +208,16 @@
                     <span v-if="vexatiousType === 'QUANTITY'">Quantas disputas uma mesma pessoa precisa ter para ser qualificado como possível ofensor?</span>
                     <span v-else>Qual percentual acima da média de disputas uma pessoa precisa ter para ser qualificado como possível ofensor?</span>
                   </span>
-                  <money
-                    v-model="vexatiousThreshold"
-                    v-bind="vexatiousTypeMask"
-                    class="el-input__inner"
-                  />
+
+                  <div class="el-input">
+                    <money
+                      v-model="vexatiousThreshold"
+                      v-bind="vexatiousTypeMask"
+                      class="el-input__inner"
+                    />
+                  </div>
                 </el-form-item>
+
                 <el-button
                   type="primary"
                   @click.prevent="saveProperties"
@@ -210,6 +226,7 @@
                 </el-button>
               </el-form>
             </el-col>
+
             <el-col
               :span="9"
               :offset="2"
@@ -247,7 +264,7 @@
                       </a>
                     </div>
                     <div v-else>
-                      <el-tooltip content="Esse usuário é um Administrador Justto e não pode ser editado ou removido.">
+                      <el-tooltip content="Esse usuário é um Administrador ProJuris e não pode ser editado ou removido.">
                         <jus-icon
                           icon="admin"
                           class="configuration-view__icon"
@@ -278,31 +295,36 @@
               :offset="6"
             >
               <h3>Alterar nome da empresa/escritório</h3>
+
               <el-alert
                 :closable="false"
                 type="info"
                 show-icon
               >
                 <span slot="title">
-                  Este nome <strong>IRÁ</strong> aparecer em todas as mensagens automáticas enviadas pela Justto.
+                  Este nome <strong>IRÁ</strong> aparecer em todas as mensagens automáticas enviadas pela ProJuris.
                 </span>
               </el-alert>
+
               <br>
+
               <el-form label-position="top">
                 <el-form-item label="Nome da empresa/escritório">
                   <el-input v-model="companyName">
-                    <el-button
+                    <span
                       slot="append"
+                      class="is-pointer"
                       @click.prevent="changeCompanyName"
-                    >
-                      Alterar
-                    </el-button>
+                      v-text="'Alterar'"
+                    />
                   </el-input>
                 </el-form-item>
               </el-form>
+
               <h3 class="mt40">
                 Criação de novas equipes
               </h3>
+
               <p>
                 Se o seu escritório possui mais de uma célula de negociação, você
                 pode criar uma nova equipe e se organizar melhor.
@@ -329,7 +351,7 @@
           class="configuration-view__minute"
         >
           <span slot="label">
-            <el-tooltip content="Somentes administradores Justto">
+            <el-tooltip content="Somentes administradores ProJuris">
               <i class="el-icon-lock" />
             </el-tooltip>
             Minuta
@@ -684,7 +706,6 @@ export default {
       this.$confirm('Você será redirecionado para a criação de nova Equipe, deseja continuar?', 'Redirecionamento', {
         confirmButtonText: 'Criar nova Equipe',
         cancelButtonText: 'Cancelar',
-        cancelButtonClass: 'is-plain',
         type: 'warning'
       }).then(() => {
         this.$store.commit('redirectNewWorkspaceTrue')
@@ -801,7 +822,6 @@ export default {
       this.$confirm('Tem certeza que deseja excluir ' + name + ' da equipe?', 'Atenção!', {
         confirmButtonText: 'Excluir',
         cancelButtonText: 'Cancelar',
-        cancelButtonClass: 'is-plain',
         type: 'warning'
       }).then(() => {
         this.$store.dispatch('removeWorkspaceMember', id).then(() => {

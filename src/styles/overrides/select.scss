@@ -14,6 +14,14 @@
     border-color: $--color-primary-light-8;
     background-color: $--color-primary-light-9;
   }
+
+  .el-select__tags {
+    top: calc(50% - 3px);
+  }
+
+  .el-input {
+    overflow: auto !important;
+  }
 }
 
 .el-select-dropdown.is-multiple .el-select-dropdown__item.selected {
