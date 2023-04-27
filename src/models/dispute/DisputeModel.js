@@ -212,20 +212,21 @@ export class DisputeModel {
   }
 
   get getDisputeLastReceivedMessage() {
-    // TODO: Não achei
     return this.#dtoV1?.lastReceivedMessage ||
       this.#dtoV2?.lastReceivedMessage ||
       {
         createAt: {
           dateTime: this.#dtoV3?.lastReceivedMessageCreatedAt
         },
-        id: '' /*  */,
+        type: this.#dtoV3?.lastReceivedMessageType /* TODO: Não achei */,
+        id: this.#dtoV3?.lastReceivedMessageId /* TODO: Não achei */,
         message: {
           content: this.#dtoV3?.lastReceivedMessageContent,
           sender: this.#dtoV3?.lastReceivedMessageSenderEmail || this.#dtoV3?.lastReceivedMessageSenderName,
           status: this.#dtoV3?.lastReceivedMessageStatus,
           messageId: this.#dtoV3?.lastReceivedMessageId,
           contentType: this.#dtoV3?.lastReceivedMessageContentType,
+          communicationType: this.#dtoV3?.lastReceivedMessageCommunicationType /* TODO: Não achei */,
           parameters: {
             SENDER_NAME: this.#dtoV3?.lastReceivedMessageSenderName,
             SENDER_EMAIL: this.#dtoV3?.lastReceivedMessageSenderEmail,
@@ -235,6 +236,8 @@ export class DisputeModel {
         properties: {}
       }
   }
+
+  get getDisputeLastReceivedMessageCommunicationType
 
   get getDisputeHasLastReceivedMessageProperties() {
     return Boolean(Object.keys(this.#dtoV1?.lastReceivedMessage?.properties || {}).length) ||
@@ -370,22 +373,23 @@ export class DisputeModel {
   }
 
   get getDisputeLastOutboundInteraction() {
-    // TODO: Não achei
     return this.#dtoV1?.lastOutboundInteraction || {
+      archived: false,
       type: this.#dtoV3?.lastOutboundInteractionType,
       id: this.#dtoV3?.lastOutboundInteractionId,
       createAt: {
         dateTime: this.#dtoV3?.lastOutboundInteractionDate
       },
       message: {
-        messageId: this.#dtoV3?.lastOutboundInteractionMessageMessageId,
+        messageId: this.#dtoV3?.lastOutboundInteractionMessageId,
         communicationType: this.#dtoV3?.lastOutboundInteractionMessageCommunicationType,
         sender: this.#dtoV3?.lastOutboundInteractionMessageSender,
         receiver: this.#dtoV3?.lastOutboundInteractionMessageReceiver,
         parameters: {
           READ_DATE: this.#dtoV3?.lastOutboundInteractionMessageReadDate
         }
-      }
+      },
+      properties: {}
     }
   }
 
