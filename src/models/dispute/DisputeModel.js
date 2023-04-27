@@ -237,6 +237,8 @@ export class DisputeModel {
       }
   }
 
+  get getDisputeLastReceivedMessageCommunicationType
+
   get getDisputeHasLastReceivedMessageProperties() {
     return Boolean(Object.keys(this.#dtoV1?.lastReceivedMessage?.properties || {}).length) ||
       Boolean(Object.keys(this.#dtoV2?.lastReceivedMessage?.properties || {}).length)
