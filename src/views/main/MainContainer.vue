@@ -23,6 +23,18 @@
         </el-tooltip>
       </div>
 
+      <el-tooltip
+        v-if="isJusttoAdmin"
+        :content="isRecovery ? 'Cobrança' : 'Indenizatório'"
+        placement="right"
+      >
+        <JusIcon
+          class="container-aside__workspace-type-icon"
+          :icon="isRecovery ? 'exchange' : 'coins'"
+          size="24px"
+        />
+      </el-tooltip>
+
       <el-menu
         ref="sideMenu"
         class="container-aside__menu el-menu--main-menu"
@@ -466,6 +478,12 @@ export default {
       margin-left: -4px;
       cursor: pointer;
     }
+  }
+
+  .container-aside__workspace-type-icon {
+    filter: invert(1);
+    margin: 0 auto 8px;
+    cursor: help;
   }
 
   .container-aside__team {
