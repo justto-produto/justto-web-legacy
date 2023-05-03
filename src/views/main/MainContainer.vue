@@ -27,7 +27,7 @@
         ref="sideMenu"
         class="container-aside__menu el-menu--main-menu"
         :class="{ 'container-aside__menu--collapsed': isTeamSectionExpanded }"
-        :default-active="$route.path"
+        :default-active="activeRoute"
         collapse
         router
       >
@@ -39,7 +39,7 @@
         >
           <el-menu-item
             v-show="menuItem.isVisible"
-            :index="menuItem.index"
+            :index="menuItem.refIndex || menuItem.index"
           >
             <JusIcon
               :icon="menuItem.icon"
@@ -149,6 +149,14 @@ export default {
       return ['negotiation', 'ticket'].includes(this.$route.name)
     },
 
+    activeRoute() {
+      if (this.showNegotiationTypeMenu && this.isInNegotiation) {
+        return this.ticketListMode === 'MANAGEMENT' ? '/management' : '/negotiation'
+      }
+
+      return this.$route.path
+    },
+
     menuItems() {
       const basicDashboardMenuItem = new MenuItem({
         index: '/',
@@ -167,8 +175,8 @@ export default {
         index: '/negotiation',
         title: 'Negociação',
         icon: 'negotiation-window',
-        isVisible: this.showNegotiationTypeMenu && this.ticketListMode === (this.isInNegotiation ? MANAGEMENT : TICKET),
-        action: () => { if (this.isInNegotiation) this.setAccountProperty({ TICKET_LIST_MODE: TICKET }) }
+        isVisible: this.showNegotiationTypeMenu,
+        action: () => { this.setAccountProperty({ TICKET_LIST_MODE: TICKET }) }
       })
 
       const basicManagementMenuItem = new MenuItem({
@@ -181,11 +189,12 @@ export default {
 
       const customManagementMenuItem = new MenuItem({
         index: '/negotiation',
+        refIndex: '/management',
         title: 'Gerenciamento',
-        icon: 'negotiation-window',
+        icon: 'list-app',
         customHome: '/management',
-        isVisible: this.showNegotiationTypeMenu && this.ticketListMode === (this.isInNegotiation ? TICKET : MANAGEMENT),
-        action: () => { if (this.isInNegotiation) this.setAccountProperty({ TICKET_LIST_MODE: MANAGEMENT }) }
+        isVisible: this.showNegotiationTypeMenu,
+        action: () => { this.setAccountProperty({ TICKET_LIST_MODE: MANAGEMENT }) }
       })
 
       const basicManagementAllMenuItem = new MenuItem({
