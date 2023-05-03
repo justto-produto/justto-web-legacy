@@ -221,10 +221,10 @@
         align="center"
       >
         <template v-slot="scope">
-          <el-button
+          <el-tag
             v-if="scope.row.getDisputeIsWon || scope.row.getDisputeHasDocument"
-            plain
-            size="mini"
+            effect="plain"
+            size="small"
             class="management-table__protocol_button"
             @click="showProtocolModal(scope.row)"
           >
@@ -232,7 +232,7 @@
             <div :class="'management-table__protocol_button--step-' + getDocumentStep(scope.row.getDisputeHasDocument, scope.row.getDisputeSignStatus)">
               <span /><span /><span />
             </div>
-          </el-button>
+          </el-tag>
           <span v-else>-</span>
         </template>
       </el-table-column>
