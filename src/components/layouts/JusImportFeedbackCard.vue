@@ -331,7 +331,11 @@
           </p>
         </div>
 
-        <el-switch v-model="denyPixDeposit" />
+        <el-switch
+          v-model="denyPixDeposit"
+          :disabled="!usePixAccountType"
+        />
+        <!-- TODO: Desabilitar no resto do sistema, sempre que essa feature estiver marcada. -->
       </div>
 
       <div class="jus-import-feedback-card__switch">
@@ -451,7 +455,8 @@ export default {
       'isJusttoDev',
       'errorFields',
       'isWorkspaceRecovery',
-      'getMyStrategiesLite'
+      'getMyStrategiesLite',
+      'usePixAccountType'
     ]),
 
     strategies() {
@@ -571,7 +576,7 @@ export default {
     this.contactPartyWhenInvalidLowyer = preferences.contactPartyWhenInvalidLowyer || false
     this.skipEnrichment = false
     this.denySavingDeposit = preferences.denySavingDeposit || false
-    this.denyPixDeposit = preferences.denyPixDeposit || false
+    this.denyPixDeposit = this.usePixAccountType ? (preferences.denyPixDeposit || false) : true
 
     this.mappedCampaign.businessHoursEngagement = this.businessHoursEngagement
     this.mappedCampaign.contactPartyWhenNoLowyer = this.contactPartyWhenNoLowyer

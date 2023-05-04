@@ -1,6 +1,7 @@
 export default class MenuItem {
   constructor({
     index,
+    refIndex,
     title,
     icon,
     family,
@@ -10,6 +11,7 @@ export default class MenuItem {
     action = () => {}
   }) {
     this.index = index
+    this.refIndex = refIndex || index
     this.title = title
     this.icon = icon
     this.family = family || ''

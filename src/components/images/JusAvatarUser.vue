@@ -5,8 +5,7 @@
       {
         'jus-avatar-user--shadow': shadow,
         'jus-avatar-user--active': active,
-        'jus-avatar-user--secondary': isRecovery ? !purple : purple,
-        'jus-avatar-user--recovery': isRecovery,
+        'jus-avatar-user--secondary': purple,
         'jus-avatar-user--status': status,
         'jus-avatar-user--online': status === 'ONLINE',
       }

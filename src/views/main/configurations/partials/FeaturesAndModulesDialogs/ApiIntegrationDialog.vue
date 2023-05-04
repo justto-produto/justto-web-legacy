@@ -159,6 +159,87 @@
       </el-form>
     </div>
 
+    <div class="api-integration__standart">
+      <el-checkbox
+        v-model="activeProjurisSoap"
+        class="api-integration__standart-container-checkbox"
+        @change="clearValidationDeactivateApi($event, 'formWebServiceFinch')"
+      >
+        <strong class="api-integration__standart-label">Integração com Projuris SOAP</strong>
+
+        <i :class="activeProjurisSoap ? 'el-icon-arrow-up' : 'el-icon-arrow-down'" />
+      </el-checkbox>
+
+      <el-form
+        v-if="activeProjurisSoap"
+        ref="formProjurisSoap"
+        :model="formProjurisSoap"
+        :rules="formProjurisSoapRules"
+        :disabled="modalLoading"
+        label-position="top"
+        class="api-integration__standart-container"
+      >
+        <el-form-item
+          class="api-integration__standart-container-input"
+          prop="urlProjurisSoap"
+        >
+          <el-input
+            v-model="formProjurisSoap.urlProjurisSoap"
+            :disabled="!activeProjurisSoap"
+            placeholder="http://soap.projuris.com"
+          >
+            <template slot="prepend">
+              URL
+            </template>
+          </el-input>
+        </el-form-item>
+
+        <el-form-item
+          class="api-integration__standart-container-input"
+          prop="tokenProjurisSoap"
+        >
+          <el-input
+            v-model="formProjurisSoap.tokenProjurisSoap"
+            :disabled="!activeProjurisSoap"
+          >
+            <template slot="prepend">
+              TOKEN
+            </template>
+          </el-input>
+        </el-form-item>
+
+        <el-form-item
+          class="api-integration__standart-container-input"
+          prop="usernameProjurisSoap"
+        >
+          <el-input
+            v-model="formProjurisSoap.usernameProjurisSoap"
+            placeholder="Usuário"
+            :disabled="!activeProjurisSoap"
+          >
+            <template slot="prepend">
+              <i class="el-icon-user-solid" />
+            </template>
+          </el-input>
+        </el-form-item>
+
+        <el-form-item
+          class="api-integration__standart-container-input"
+          prop="passwordProjurisSoap"
+        >
+          <el-input
+            v-model="formProjurisSoap.passwordProjurisSoap"
+            :disabled="!activeProjurisSoap"
+            placeholder="Senha"
+          >
+            <template slot="prepend">
+              <i class="el-icon-lock" />
+            </template>
+          </el-input>
+        </el-form-item>
+      </el-form>
+    </div>
+
     <div class="api-integration__search">
       <strong class="api-integration__search-title">Teste a integração</strong>
 
@@ -255,6 +336,22 @@ export default {
       urlWebServiceFinch: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
       userWebServiceFinch: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
       passwordWebServiceFinch: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
+    },
+
+    activeProjurisSoap: false,
+
+    formProjurisSoap: {
+      urlProjurisSoap: '',
+      tokenProjurisSoap: '',
+      usernameProjurisSoap: '',
+      passwordProjurisSoap: ''
+    },
+
+    formProjurisSoapRules: {
+      urlProjurisSoap: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+      tokenProjurisSoap: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+      usernameProjurisSoap: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+      passwordProjurisSoap: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
     }
   }),
 
@@ -322,18 +419,25 @@ export default {
     async saveConfiguration() {
       Promise.all([
         this.activeStandartWebhook ? this.validateForm('formStandartWebhook') : () => {},
-        this.activeWebServiceFinch ? this.validateForm('formWebServiceFinch') : () => {}
+        this.activeWebServiceFinch ? this.validateForm('formWebServiceFinch') : () => {},
+        this.activeProjurisSoap ? this.validateForm('formProjurisSoap') : () => {}
       ]).then(() => {
         const payload = new ApiConfiguration({
-          FINCH_ACTIVE: this.activeWebServiceFinch.toString(),
-          FINCH_ENDPOINT: this.formWebServiceFinch.urlWebServiceFinch,
-          FINCH_USERNAME: this.formWebServiceFinch.userWebServiceFinch,
-          FINCH_PASSWORD: this.formWebServiceFinch.passwordWebServiceFinch,
+          FINCH_ACTIVE: this.activeWebServiceFinch.toString() || '',
+          FINCH_ENDPOINT: this.formWebServiceFinch.urlWebServiceFinch || '',
+          FINCH_USERNAME: this.formWebServiceFinch.userWebServiceFinch || '',
+          FINCH_PASSWORD: this.formWebServiceFinch.passwordWebServiceFinch || '',
 
-          JUSTTO_WEBHOOK_ACTIVE: this.activeStandartWebhook.toString(),
-          JUSTTO_WEBHOOK_ENDPOINT: this.formStandartWebhook.urlStandartWebhook,
-          JUSTTO_WEBHOOK_USERNAME: this.formStandartWebhook.userStandartWebhook,
-          JUSTTO_WEBHOOK_PASSWORD: this.formStandartWebhook.passwordStandartWebhook,
+          JUSTTO_WEBHOOK_ACTIVE: this.activeStandartWebhook.toString() || '',
+          JUSTTO_WEBHOOK_ENDPOINT: this.formStandartWebhook.urlStandartWebhook || '',
+          JUSTTO_WEBHOOK_USERNAME: this.formStandartWebhook.userStandartWebhook || '',
+          JUSTTO_WEBHOOK_PASSWORD: this.formStandartWebhook.passwordStandartWebhook || '',
+
+          PROJURIS_SOAP_ACTIVE: this.activeProjurisSoap.toString() || '',
+          PROJURIS_SOAP_PASSWORD: this.formProjurisSoap?.passwordProjurisSoap || '',
+          PROJURIS_SOAP_TOKEN: this.formProjurisSoap?.tokenProjurisSoap || '',
+          PROJURIS_SOAP_URL: this.formProjurisSoap?.urlProjurisSoap || '',
+          PROJURIS_SOAP_USERNAME: this.formProjurisSoap?.usernameProjurisSoap || '',
 
           workspaceId: this.workspaceId
         })
@@ -363,39 +467,46 @@ export default {
     },
 
     fetchData() {
-      this.getApiIntegrationConfiguration(this.feature)
-        .then((data) => {
-          if (data) {
-            this.workspaceId = data.workspaceId
+      this.getApiIntegrationConfiguration(this.feature).then((data) => {
+        if (data) {
+          this.workspaceId = data.workspaceId
 
-            const obj = {
-              workspaceId: this.workspaceId
-            }
-
-            data.properties.forEach(({ key, value }) => {
-              obj[key] = value
-            })
-
-            this.activeStandartWebhook = obj.JUSTTO_WEBHOOK_ACTIVE ? obj.JUSTTO_WEBHOOK_ACTIVE : false
-            this.activeWebServiceFinch = obj.FINCH_ACTIVE ? obj.FINCH_ACTIVE : false
-
-            this.activeStandartWebhook = this.activeStandartWebhook === 'true'
-            this.activeWebServiceFinch = this.activeWebServiceFinch === 'true'
-            this.formStandartWebhook.urlStandartWebhook = obj.JUSTTO_WEBHOOK_ENDPOINT || ''
-            this.formStandartWebhook.userStandartWebhook = obj.JUSTTO_WEBHOOK_USERNAME || ''
-            this.formStandartWebhook.passwordStandartWebhook = obj.JUSTTO_WEBHOOK_PASSWORD || ''
-
-            this.formWebServiceFinch.urlWebServiceFinch = obj.FINCH_ENDPOINT || ''
-            this.formWebServiceFinch.userWebServiceFinch = obj.FINCH_USERNAME || ''
-            this.formWebServiceFinch.passwordWebServiceFinch = obj.FINCH_PASSWORD || ''
+          const obj = {
+            workspaceId: this.workspaceId
           }
-        })
+
+          data.properties.forEach(({ key, value }) => {
+            obj[key] = value
+          })
+
+          this.activeStandartWebhook = obj.JUSTTO_WEBHOOK_ACTIVE ? obj.JUSTTO_WEBHOOK_ACTIVE : false
+          this.activeWebServiceFinch = obj.FINCH_ACTIVE ? obj.FINCH_ACTIVE : false
+          this.activeProjurisSoap = obj.PROJURIS_SOAP_ACTIVE ? obj.PROJURIS_SOAP_ACTIVE : false
+
+          this.activeStandartWebhook = this.activeStandartWebhook === 'true'
+          this.activeWebServiceFinch = this.activeWebServiceFinch === 'true'
+          this.activeProjurisSoap = this.activeProjurisSoap === 'true'
+
+          this.formStandartWebhook.urlStandartWebhook = obj.JUSTTO_WEBHOOK_ENDPOINT || ''
+          this.formStandartWebhook.userStandartWebhook = obj.JUSTTO_WEBHOOK_USERNAME || ''
+          this.formStandartWebhook.passwordStandartWebhook = obj.JUSTTO_WEBHOOK_PASSWORD || ''
+
+          this.formWebServiceFinch.urlWebServiceFinch = obj.FINCH_ENDPOINT || ''
+          this.formWebServiceFinch.userWebServiceFinch = obj.FINCH_USERNAME || ''
+          this.formWebServiceFinch.passwordWebServiceFinch = obj.FINCH_PASSWORD || ''
+
+          this.formProjurisSoap.passwordProjurisSoap = obj.PROJURIS_SOAP_PASSWORD || ''
+          this.formProjurisSoap.tokenProjurisSoap = obj.PROJURIS_SOAP_TOKEN || ''
+          this.formProjurisSoap.urlProjurisSoap = obj.PROJURIS_SOAP_URL || ''
+          this.formProjurisSoap.usernameProjurisSoap = obj.PROJURIS_SOAP_USERNAME || ''
+        }
+      }).catch(error => this.handleClose(() => this.$jusNotification({ error })))
     },
 
     handleClose(done) {
       this.apiIntegrationDialogVisible = false
-      this.activeStandartWebhook = false
 
+      this.activeStandartWebhook = false
       this.formStandartWebhook = {
         urlStandartWebhook: '',
         userStandartWebhook: '',
@@ -407,6 +518,14 @@ export default {
         urlWebServiceFinch: '',
         userWebServiceFinch: '',
         passwordWebServiceFinch: ''
+      }
+
+      this.activeProjurisSoap = false
+      this.formProjurisSoap = {
+        urlProjurisSoap: '',
+        tokenProjurisSoap: '',
+        usernameProjurisSoap: '',
+        passwordProjurisSoap: ''
       }
 
       done()
