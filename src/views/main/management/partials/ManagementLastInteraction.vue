@@ -14,7 +14,7 @@
             is-white
           />
           Último {{ getLastInteractionTooltip(data.getDisputeLastOutboundInteraction) }}
-          em {{ data.getDisputeLastOutboundInteraction.createAt.dateTime | moment('DD/MM/YYYY [às] HH:mm') }}
+          em {{ data.getDisputeLastOutboundInteractionCreateAt | moment('DD/MM/YYYY [às] HH:mm') }}
         </strong>
       </div>
       <div v-if="data.getDisputeLastOutboundInteractionMessage.sender">
@@ -60,8 +60,8 @@
               <span>
                 Último acesso ao sistema ProJuris: <strong>{{ data.getDisputeLastNegotiatorAccessCreatAt | moment('DD/MM/YYYY [às] HH:mm') }}</strong>
               </span>
-
             </span>
+
             <span v-else>
               Ainda não houve acesso ao sistema ProJuris de Negociação
             </span>
