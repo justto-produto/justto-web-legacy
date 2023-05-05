@@ -60,8 +60,8 @@
               <span>
                 Último acesso ao sistema ProJuris: <strong>{{ data.getDisputeLastNegotiatorAccessCreatAt | moment('DD/MM/YYYY [às] HH:mm') }}</strong>
               </span>
-
             </span>
+
             <span v-else>
               Ainda não houve acesso ao sistema ProJuris de Negociação
             </span>
