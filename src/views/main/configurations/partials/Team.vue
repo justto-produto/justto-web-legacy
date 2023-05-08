@@ -49,6 +49,7 @@
           </div>
         </template>
       </el-table-column>
+
       <el-table-column
         prop="email"
         label="Email"
@@ -98,9 +99,24 @@
       <el-table-column
         v-if="isJustto"
         prop="personProperties"
-        label="Envio de relatórios"
         center
       >
+        <!-- slot-scope="scope" -->
+        <template
+          slot="header"
+        >
+          <div class="custom-header__reports">
+            <span>Envio de relatórios</span>
+
+            <el-switch
+              v-model="hideAdmins"
+              active-text="Mostrar admins Projuris"
+              active-value="ENABLED"
+              inactive-value="DISABLED"
+            />
+          </div>
+        </template>
+
         <el-table-column
           prop="personProperties.MANAGEMENT"
           label="Gerencial"
@@ -221,8 +237,17 @@ export default {
     ...mapGetters({
       team: 'workspaceTeam',
       isJustto: 'isJusttoAdmin',
-      workspace: 'workspace'
+      workspace: 'workspace',
+      userProperties: 'userProperties',
+      hiddeInternalAdmins: 'getHiddeInternalAdmins'
     }),
+
+    hideAdmins: {
+      get() { return this.userProperties.HIDDE_INTERNAL_ADMINS },
+      set(HIDDE_INTERNAL_ADMINS) {
+        this.setAccountProperty({ HIDDE_INTERNAL_ADMINS }).catch(error => this.$jusNotification({ error }))
+      }
+    },
 
     reportsOptions() {
       return [
@@ -255,6 +280,8 @@ export default {
     },
 
     filteredTeam() {
+      // TODO: Filtrar @justto quando hiddeInternalAdmins for true.
+
       return filterByTerm(this.searchTerm, this.team, 'name', 'email')
     },
 
@@ -286,7 +313,8 @@ export default {
       'updatePersonProfile',
       'unlockAccount',
       'sendCustomEmail',
-      'getCustomerWorkspaceCount'
+      'getCustomerWorkspaceCount',
+      'setAccountProperty'
     ]),
 
     handleUnlockUser(user) {
@@ -413,6 +441,11 @@ export default {
     gap: 12px;
     margin-top: 3px;
   }
+}
+
+.custom-header__reports {
+  display: flex;
+  justify-content: space-between;
 }
 </style>
 
