@@ -18,6 +18,7 @@
         @click.native="showFormCard"
       >
         <span>Adicionar um cliente</span>
+
         <i class="el-icon-plus client-grid__icon" />
       </el-card>
 
@@ -26,6 +27,18 @@
         shadow="always"
         class="client-grid__form-card"
       >
+        <span class="client-grid__form-title">
+          Digite o nome da Holding para buscar uma existente, ou criar uma nova.
+        </span>
+
+        <el-autocomplete
+          v-model="holdingName"
+          :fetch-suggestions="holdingQuerySearch"
+          class="client-grid__autocomplete"
+          value-key="name"
+          @input="handleHoldingName"
+        />
+
         <span class="client-grid__form-title">
           Digite o nome do cliente abaixo para buscar um existente ou criar um novo.
         </span>
@@ -118,7 +131,8 @@ export default {
       formCardIsVisible: false,
       inputValue: '',
       monthlySubscriptionFee: 0,
-      negotiationType: null
+      negotiationType: null,
+      holdingName: ''
     }
   },
 
@@ -223,6 +237,14 @@ export default {
       const results = queryString ? options.filter(this.createFilter(queryString)) : options
 
       cb(results)
+    },
+
+    holdingQuerySearch(queryString, cb) {
+      // TODO: SAAS-5714
+    },
+
+    handleHoldingName() {
+      // TODO: SAAS-5714
     },
 
     createFilter(queryString) {
