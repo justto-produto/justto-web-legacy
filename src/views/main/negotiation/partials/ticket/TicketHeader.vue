@@ -8,9 +8,19 @@
       v-if="!isInDispute"
       class="ticket-header-container__title"
     >
-      <div
-        class="ticket-header-container__process-code"
-      >
+      <div class="ticket-header-container__process-code">
+        <el-tooltip
+          class="mr8"
+          content="Fechar fechar"
+        >
+          <el-button
+            type="text"
+            @click="$router.push({ name: 'negotiation' })"
+          >
+            <i class="el-icon-back" />
+          </el-button>
+        </el-tooltip>
+
         <span>Processo:&nbsp;</span>
 
         <TicketCode

@@ -583,6 +583,7 @@ export default {
   methods: {
     ...mapActions([
       'getDisputes',
+      'setHideTicket',
       'getDisputeTimeline',
       'getDisputeLastAccess',
       'cleanDisputeLastAccess'
@@ -667,6 +668,7 @@ export default {
       } else if (row.getDisputeId && !['IMG', 'SPAN', 'BUTTON', 'I'].includes(event.target.tagName)) {
         if (isCtrl || isMeta) {
           if (this.isTicket || this.showNegotiationTypeMenu) {
+            this.setHideTicket(true)
             window.open(`/#/negotiation/${row.getDisputeId}`, '_blank')
           } else {
             window.open(`/#/management/dispute/${row.getDisputeId}`, '_blank')
@@ -674,6 +676,7 @@ export default {
           this.addHighlight(row.getDisputeId)
         } else {
           if (this.isTicket || this.showNegotiationTypeMenu) {
+            this.setHideTicket(true)
             this.$router.push({ name: 'ticket', params: { id: row.getDisputeId } })
           } else {
             this.$router.push({ name: 'dispute', params: { id: row.getDisputeId } })
