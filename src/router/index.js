@@ -301,6 +301,16 @@ const router = new Router({
         title: 'Painel administrativo'
       }
     },
+    {
+      name: 'admin-panel@2',
+      path: '/admin-panel-2',
+      component: () => import(/* webpackChunkName: "adminPanelUpdatedV2" */ '@/views/adminPanel/AdminPanelV2'),
+      meta: {
+        requiresAuth: false,
+        trackPage: true,
+        title: 'Painel administrativo'
+      }
+    },
     // {
     //   name: 'auth',
     //   path: '/auth',
