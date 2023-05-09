@@ -132,7 +132,7 @@ export default {
       inputValue: '',
       monthlySubscriptionFee: 0,
       negotiationType: null,
-      holdingName: ''
+      holdingName: 't'
     }
   },
 
@@ -166,7 +166,8 @@ export default {
       'setCustomer',
       'setWorkspaceId',
       'unlinkCustomer',
-      'updateCustomer'
+      'updateCustomer',
+      'getHolding'
     ]),
 
     init() {
@@ -193,6 +194,8 @@ export default {
             })
           })
         })
+
+        this.getHolding(this.holdingName).catch(error => this.$jusNotification({ error }))
       } else {
         this.$router.push('/management')
         this.$jusNotification({

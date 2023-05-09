@@ -162,6 +162,7 @@ const billingActions = {
   setCustomer: ({ commit }, customerData) => {
     commit('setCustomer', customerData)
   },
+
   setCustomerId: ({ commit }, customerId) => {
     commit('setCustomerId', customerId)
   },
@@ -172,17 +173,21 @@ const billingActions = {
     dispatch('getBillingDashboard')
     dispatch('getTransactions')
   },
+
   setTerm: ({ commit, dispatch }, term) => {
     commit('setTerm', term)
     dispatch('getTransactions')
   },
+
   setType: ({ commit, dispatch }, type) => {
     commit('setType', type)
     dispatch('getTransactions')
   },
+
   setWorkspaceId: ({ commit }, workspaceId) => {
     commit('setWorkspaceId', workspaceId)
   },
+
   clearTransactionsQuery: ({ commit }, rangeDate) => {
     commit('setTerm', '')
     commit('setType', '')
@@ -267,7 +272,12 @@ const billingActions = {
     }).then(({ _ }) => {
       dispatch('getContractDiscountList', contractId)
     })
-  }
+  },
+
+  getHolding: ({ _ }, name) => axiosDispatch({
+    url: `${billingPath}/holding${buildQuery({ name })}`,
+    mutation: 'setHoldings'
+  })
 }
 
 export default billingActions

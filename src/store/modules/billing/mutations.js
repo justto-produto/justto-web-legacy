@@ -23,6 +23,10 @@ const billingMutations = {
   resetTransactionsQueryPage: (state) => (state.query.page = 1),
   setContractDiscountList: (state, { data, payload }) => {
     Vue.set(state.contractDiscountList, payload, data)
+  },
+
+  setHoldings: (state, holdings) => {
+    console.log('holdings', holdings)
   }
 }
 
