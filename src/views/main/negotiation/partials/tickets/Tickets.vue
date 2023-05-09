@@ -5,7 +5,7 @@
     :class="{ hide: isToHideTickets }"
   >
     <el-button
-      v-if="showNegotiationTypeMenu && !fullScreen"
+      v-show="!fullScreen"
       :icon="`el-icon-arrow-${isToHideTickets ? 'right' : 'left'}`"
       class="tickets-container__visibility-button"
       type="text"

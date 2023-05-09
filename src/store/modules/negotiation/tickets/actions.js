@@ -72,6 +72,10 @@ const overviewActions = {
     localStorage.setItem('TICKET_ACTIVE_TAB', activeTab)
   },
 
+  setHideTicket({ commit }, hidde) {
+    commit('setHideTicket', Boolean(hidde))
+  },
+
   updateActiveTab({ state, commit }, disputeStatus) {
     const correspondingTab = getCorrespondingTab(disputeStatus)
     const isUpdate = ['ACCEPTED', 'CHECKOUT', 'SETTLED'].includes(disputeStatus) && state.tickets.content.length

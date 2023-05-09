@@ -440,22 +440,6 @@
               </el-col>
             </el-row>
 
-            <el-row :gutter="24">
-              <el-col :span="24">
-                <el-form-item
-                  prop="monthlySubscriptionFee"
-                  label="Mensalidade"
-                >
-                  <div class="el-input">
-                    <money
-                      v-model="newContract.monthlySubscriptionFee"
-                      class="el-input__inner"
-                    />
-                  </div>
-                </el-form-item>
-              </el-col>
-            </el-row>
-
             <el-row
               v-for="(discount, index) in discountsOfNewContract"
               :key="`${discount.id}--${discount.minVolume}`"
@@ -672,7 +656,6 @@ export default {
       formRules: {
         invoiceClosingDay: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
         invoiceDueDays: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
-        monthlySubscriptionFee: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
         planId: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
         startedDate: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
         status: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]

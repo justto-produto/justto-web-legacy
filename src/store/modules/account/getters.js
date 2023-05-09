@@ -32,7 +32,8 @@ const accountGetters = {
   useSignature: state => state.preferences?.properties?.USE_SIGNATURE === 'ENABLED',
   getCustomHome: state => state.preferences?.properties?.CUSTOM_HOME,
   getTicketListMode: (state, getters) => (getters.showNegotiationTypeMenu ? (state.preferences?.properties?.TICKET_LIST_MODE || 'TICKET') : 'TICKET'),
-  getAccountUseDisputeProjection: state => state.preferences?.properties?.USE_DISPUTE_PROJECTION === 'ENABLED'
+  getAccountUseDisputeProjection: state => state.preferences?.properties?.USE_DISPUTE_PROJECTION === 'ENABLED',
+  getHiddeInternalAdmins: state => state?.preferences?.properties?.HIDDE_INTERNAL_ADMINS === 'ENABLED'
 }
 
 export default accountGetters
