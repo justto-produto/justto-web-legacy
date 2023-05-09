@@ -188,7 +188,10 @@ export default {
         title: 'Negociação',
         icon: 'negotiation-window',
         isVisible: this.showNegotiationTypeMenu,
-        action: () => { this.setAccountProperty({ TICKET_LIST_MODE: TICKET }) }
+        action: () => {
+          this.setAccountProperty({ TICKET_LIST_MODE: TICKET })
+          this.setHideTicket(false)
+        }
       })
 
       const basicManagementMenuItem = new MenuItem({
@@ -206,7 +209,10 @@ export default {
         icon: 'list-app',
         customHome: '/management',
         isVisible: this.showNegotiationTypeMenu,
-        action: () => { this.setAccountProperty({ TICKET_LIST_MODE: MANAGEMENT }) }
+        action: () => {
+          this.setAccountProperty({ TICKET_LIST_MODE: MANAGEMENT })
+          this.setHideTicket(true)
+        }
       })
 
       const basicManagementAllMenuItem = new MenuItem({
@@ -286,6 +292,7 @@ export default {
       getPreview: 'getMessageToPreview',
       getThamirisAlerts: 'getThamirisAlerts',
       setGhostMode: 'setGhostMode',
+      setHideTicket: 'setHideTicket',
       initTicketListModeProperty: 'initTicketListModeProperty'
     }),
 
