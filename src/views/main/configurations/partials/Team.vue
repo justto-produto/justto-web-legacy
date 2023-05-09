@@ -24,6 +24,16 @@
       </el-button>
     </div>
 
+    <div class="team-container__filters">
+      <el-switch
+        ref="internalAdminSwitch"
+        v-model="hideAdmins"
+        active-text="Mostrar admins Projuris"
+        active-value="ENABLED"
+        inactive-value="DISABLED"
+      />
+    </div>
+
     <el-table
       :data="filteredTeam"
       class="team-container__table"
@@ -99,23 +109,17 @@
       <el-table-column
         v-if="isJustto"
         prop="personProperties"
+        label="Envio de relatórios"
         center
       >
-        <!-- slot-scope="scope" -->
+        <!-- slot-scope="scope"
         <template
           slot="header"
         >
           <div class="custom-header__reports">
             <span>Envio de relatórios</span>
-
-            <el-switch
-              v-model="hideAdmins"
-              active-text="Mostrar admins Projuris"
-              active-value="ENABLED"
-              inactive-value="DISABLED"
-            />
           </div>
-        </template>
+        </template> -->
 
         <el-table-column
           prop="personProperties.MANAGEMENT"
@@ -217,6 +221,7 @@
 import { mapActions, mapGetters } from 'vuex'
 import { filterByTerm } from '@/utils'
 import emailTemplate from './moreWorkspacesEmailTemplate'
+import { isJusttoUser } from '@/utils/validations'
 
 export default {
   name: 'Team',
@@ -245,7 +250,11 @@ export default {
     hideAdmins: {
       get() { return this.userProperties.HIDDE_INTERNAL_ADMINS },
       set(HIDDE_INTERNAL_ADMINS) {
-        this.setAccountProperty({ HIDDE_INTERNAL_ADMINS }).catch(error => this.$jusNotification({ error }))
+        this.setAccountProperty({ HIDDE_INTERNAL_ADMINS })
+          .catch(error => this.$jusNotification({ error }))
+          .finally(() => {
+            this.$refs.internalAdminSwitch.$forceUpdate()
+          })
       }
     },
 
@@ -280,9 +289,9 @@ export default {
     },
 
     filteredTeam() {
-      // TODO: Filtrar @justto quando hiddeInternalAdmins for true.
-
-      return filterByTerm(this.searchTerm, this.team, 'name', 'email')
+      return filterByTerm(this.searchTerm, this.team, 'name', 'email').filter(({ email }) => {
+        return this.hiddeInternalAdmins ? isJusttoUser(email || '') : false
+      })
     },
 
     profileOptions() {
@@ -440,6 +449,13 @@ export default {
     display: flex;
     gap: 12px;
     margin-top: 3px;
+  }
+
+  .team-container__filters {
+    display: flex;
+    justify-content: flex-end;
+    margin: 16px 8px -16px;
+    z-index: 1;
   }
 }
 
