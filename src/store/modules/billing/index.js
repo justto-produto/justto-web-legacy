@@ -24,7 +24,8 @@ const billing = {
     plans: [],
     billingDashboard: {},
     tableLoading: false,
-    contractDiscountList: {}
+    contractDiscountList: {},
+    holdings: []
   },
   mutations: mutations,
   actions: actions,

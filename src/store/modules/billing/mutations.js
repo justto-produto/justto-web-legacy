@@ -24,10 +24,7 @@ const billingMutations = {
   setContractDiscountList: (state, { data, payload }) => {
     Vue.set(state.contractDiscountList, payload, data)
   },
-
-  setHoldings: (state, holdings) => {
-    console.log('holdings', holdings)
-  }
+  setHoldings: (state, holdings) => Vue.set(state, 'holdings', holdings)
 }
 
 export default billingMutations

@@ -274,7 +274,7 @@ const billingActions = {
     })
   },
 
-  getHolding: ({ _ }, name) => axiosDispatch({
+  getHoldings: ({ _ }, name) => axiosDispatch({
     url: `${billingPath}/holding${buildQuery({ name })}`,
     mutation: 'setHoldings'
   })

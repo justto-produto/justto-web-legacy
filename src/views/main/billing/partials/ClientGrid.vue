@@ -36,7 +36,7 @@
           :fetch-suggestions="holdingQuerySearch"
           class="client-grid__autocomplete"
           value-key="name"
-          @input="handleHoldingName"
+          @input="handleHoldingChange"
         />
 
         <span class="client-grid__form-title">
@@ -132,7 +132,7 @@ export default {
       inputValue: '',
       monthlySubscriptionFee: 0,
       negotiationType: null,
-      holdingName: 't'
+      holdingName: ''
     }
   },
 
@@ -144,7 +144,8 @@ export default {
       currentCustomer: 'getCurrentCustomer',
       custumerSuggestions: 'getAllCusomers',
       plans: 'getPlans',
-      workspaceId: 'workspaceId'
+      workspaceId: 'workspaceId',
+      holdingSuggestions: 'getHoldingsList'
     }),
 
     isSuggestion() {
@@ -167,7 +168,7 @@ export default {
       'setWorkspaceId',
       'unlinkCustomer',
       'updateCustomer',
-      'getHolding'
+      'getHoldings'
     ]),
 
     init() {
@@ -195,7 +196,7 @@ export default {
           })
         })
 
-        this.getHolding(this.holdingName).catch(error => this.$jusNotification({ error }))
+        this.getHoldings(this.holdingName).catch(error => this.$jusNotification({ error }))
       } else {
         this.$router.push('/management')
         this.$jusNotification({
@@ -243,7 +244,12 @@ export default {
     },
 
     holdingQuerySearch(queryString, cb) {
-      // TODO: SAAS-5714
+      this.getHoldings(this.holdingName)
+        .then(options => {
+          const results = queryString ? options.filter(this.createFilter(queryString)) : options
+
+          cb(results)
+        }).catch(error => this.$jusNotification({ error }))
     },
 
     handleHoldingName() {
@@ -313,6 +319,12 @@ export default {
 
     handleValueChange() {
       (this.custumerSuggestions || []).forEach(({ name, negotiationType }) => {
+        if (name === this.inputValue) this.negotiationType = negotiationType
+      })
+    },
+
+    handleHoldingChange() {
+      (this.holdingSuggestions || []).forEach(({ name, negotiationType }) => {
         if (name === this.inputValue) this.negotiationType = negotiationType
       })
     }
