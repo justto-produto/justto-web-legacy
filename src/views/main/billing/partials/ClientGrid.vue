@@ -34,16 +34,21 @@
         <el-autocomplete
           v-model="holdingName"
           :fetch-suggestions="holdingQuerySearch"
+          placeholder="Digite o nome da holding"
           class="client-grid__autocomplete"
           value-key="name"
           @input="handleHoldingChange"
         />
 
-        <span class="client-grid__form-title">
+        <span
+          v-if="holdingName"
+          class="client-grid__form-title"
+        >
           Digite o nome do cliente abaixo para buscar um existente ou criar um novo.
         </span>
 
         <el-autocomplete
+          v-if="holdingName"
           v-model="inputValue"
           :fetch-suggestions="querySearch"
           placeholder="Ex.: José da Silva"
@@ -168,7 +173,8 @@ export default {
       'setWorkspaceId',
       'unlinkCustomer',
       'updateCustomer',
-      'getHoldings'
+      'getHoldings',
+      'createHolding'
     ]),
 
     init() {
@@ -252,10 +258,6 @@ export default {
         }).catch(error => this.$jusNotification({ error }))
     },
 
-    handleHoldingName() {
-      // TODO: SAAS-5714
-    },
-
     createFilter(queryString) {
       return (option) => {
         return (option.name.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
@@ -289,16 +291,32 @@ export default {
       })
     },
 
-    addClient() {
+    handleFilterHoldingByName() {
+      const index = this.holdingSuggestions.map(({ name }) => name).indexOf(this.holdingName)
+
+      return new Promise((resolve) => {
+        if (index < 0) {
+          resolve(this.createHolding(this.holdingName))
+        }
+
+        resolve(this.holdingSuggestions[index])
+      })
+    },
+
+    async addClient() {
       const name = this.inputValue
+      const holdingId = (await this.handleFilterHoldingByName())?.id
       const similarClient = this.custumerSuggestions.filter(val => val.name === name)
       const { negotiationType, monthlySubscriptionFee } = this
+
+      // TODO: Adicionar Holding à customer já existente.
 
       if (similarClient.length) {
         this.associateCustomer(similarClient[0].id)
       } else {
         this.addCustomer({
           name,
+          holdingId,
           negotiationType,
           monthlySubscriptionFee
         })
@@ -324,9 +342,7 @@ export default {
     },
 
     handleHoldingChange() {
-      (this.holdingSuggestions || []).forEach(({ name, negotiationType }) => {
-        if (name === this.inputValue) this.negotiationType = negotiationType
-      })
+      (this.holdingSuggestions || []).forEach(({ name }) => (name === this.holdingName))
     }
   }
 }

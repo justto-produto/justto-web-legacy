@@ -275,8 +275,17 @@ const billingActions = {
   },
 
   getHoldings: ({ _ }, name) => axiosDispatch({
-    url: `${billingPath}/holding${buildQuery({ name })}`,
+    url: `${billingPath}/holding`,
+    params: { name },
     mutation: 'setHoldings'
+  }),
+
+  createHolding: ({ _ }, name) => axiosDispatch({
+    method: 'POST',
+    url: `${billingPath}/holding`,
+    data: { name },
+    action: 'getHoldings',
+    response: name
   })
 }
 
