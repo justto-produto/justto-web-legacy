@@ -7,12 +7,34 @@
         class="client-grid__card"
       >
         <h1 class="client-grid__card__holding center mb0">
+          <el-autocomplete
+            v-if="isEditingHoldingName === user.id"
+            v-model="holdingName"
+            :fetch-suggestions="holdingQuerySearch"
+            placeholder="Digite o nome da holding"
+            class="client-grid__autocomplete"
+            value-key="name"
+            @select="handleChangeHoldingName(user)"
+          >
+            <i
+              slot="suffix"
+              class="el-icon-close el-input__icon"
+              @click="handleCleanHoldingEditing"
+            />
+
+            <i
+              slot="suffix"
+              class="el-icon-check el-input__icon"
+              @click="handleChangeHoldingName(user)"
+            />
+          </el-autocomplete>
+
           <JusTextEditable
+            v-else
             :value="getHoldingName(user.holdingId)"
             type="title"
             class="jus-user-card__title"
-            @isEditing="handleEnableEditExistingHolding"
-            @hasEdition="handleChangeHoldingName($event, user.holdingId)"
+            @isEditing="handleEnableEditExistingHolding(user)"
           />
         </h1>
 
@@ -155,6 +177,7 @@ export default {
       inputValue: '',
       monthlySubscriptionFee: 0,
       negotiationType: null,
+      isEditingHoldingName: false,
       holdingName: ''
     }
   },
@@ -176,7 +199,7 @@ export default {
     },
 
     getHoldingName() {
-      return (holdingId) => this.holdingSuggestions.find(({ id }) => Number(holdingId) === Number(id))?.name || 'Sem holding'
+      return (holdingId) => this.holdingSuggestions.find(({ id }) => Number(holdingId) === Number(id))?.name || ''
     }
   },
 
@@ -224,7 +247,7 @@ export default {
           })
         })
 
-        this.getHoldings(this.holdingName).catch(error => this.$jusNotification({ error }))
+        this.getHoldings('').catch(error => this.$jusNotification({ error }))
       } else {
         this.$router.push('/management')
         this.$jusNotification({
@@ -272,12 +295,10 @@ export default {
     },
 
     holdingQuerySearch(queryString, cb) {
-      this.getHoldings(this.holdingName)
-        .then(options => {
-          const results = queryString ? options.filter(this.createFilter(queryString)) : options
+      const options = this.holdingSuggestions
+      const results = queryString ? options.filter(this.createFilter(queryString)) : options
 
-          cb(results)
-        }).catch(error => this.$jusNotification({ error }))
+      cb(results)
     },
 
     createFilter(queryString) {
@@ -375,12 +396,31 @@ export default {
       (this.holdingSuggestions || []).forEach(({ name }) => (name === this.holdingName))
     },
 
-    handleEnableEditExistingHolding(name) {
-      this.holdingName = name
+    handleEnableEditExistingHolding(customer) {
+      this.isEditingHoldingName = customer.id
+      this.holdingName = this.getHoldingName(customer.holdingId)
     },
 
-    handleChangeHoldingName(name) {
-      // Buscar/Criar holding pelo nome.
+    async handleChangeHoldingName(customer) {
+      const holdingId = (await this.handleFilterHoldingByName())?.id
+
+      console.log(holdingId, customer)
+
+      this.$confirm(`Deseja realmente editar a holding do cliente${customer?.name ? ` ${customer?.name}` : ''}?`, {
+        confirmButtonText: 'Sim',
+        cancelButtonText: 'Não',
+        showClose: false
+      }).then(_ => {
+        this.updateCustomer({
+          ...customer,
+          holdingId
+        }).then(() => this.$jusNotification({ type: 'success', message: 'Holding editada com sucesso.' })).catch(error => this.$jusNotification({ error }))
+      }).finally(this.handleCleanHoldingEditing)
+    },
+
+    handleCleanHoldingEditing() {
+      this.isEditingHoldingName = false
+      this.holdingName = ''
     }
   }
 }

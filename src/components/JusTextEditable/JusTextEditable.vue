@@ -61,7 +61,9 @@ export default {
     editionHandler(evt) {
       this.isEditing = true
       this.$emit('isEditing')
-      this.$nextTick(() => this.$refs.textInput.$el.children[0].focus())
+      this.$nextTick(() => {
+        if (this.$refs?.textInput?.$el) this.$refs.textInput.$el.children[0].focus()
+      })
     },
 
     saveChanges() {
