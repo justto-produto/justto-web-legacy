@@ -24,11 +24,14 @@
       </el-button>
     </div>
 
-    <div class="team-container__filters">
+    <div
+      v-if="isJustto"
+      class="team-container__filters"
+    >
       <el-switch
         ref="internalAdminSwitch"
         v-model="hideAdmins"
-        active-text="Mostrar admins Projuris"
+        active-text="Ocultar usuários Projuris"
         active-value="ENABLED"
         inactive-value="DISABLED"
       />
@@ -105,22 +108,12 @@
         </template>
       </el-table-column>
 
-      <!-- Reports -->
       <el-table-column
         v-if="isJustto"
         prop="personProperties"
         label="Envio de relatórios"
         center
       >
-        <!-- slot-scope="scope"
-        <template
-          slot="header"
-        >
-          <div class="custom-header__reports">
-            <span>Envio de relatórios</span>
-          </div>
-        </template> -->
-
         <el-table-column
           prop="personProperties.MANAGEMENT"
           label="Gerencial"
@@ -290,7 +283,7 @@ export default {
 
     filteredTeam() {
       return filterByTerm(this.searchTerm, this.team, 'name', 'email').filter(({ email }) => {
-        return this.hiddeInternalAdmins ? isJusttoUser(email || '') : false
+        return this.hiddeInternalAdmins ? !isJusttoUser(email || '') : true
       })
     },
 
