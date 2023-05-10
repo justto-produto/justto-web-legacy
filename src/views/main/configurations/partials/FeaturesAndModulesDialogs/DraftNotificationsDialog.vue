@@ -55,9 +55,9 @@ export default {
   data: () => ({
     visible: false,
     loading: false,
-    draftNotCreatedNotification: false,
-    draftNotSentNotification: false,
-    draftNotSignedNotification: false
+    draftNotCreatedNotification: true,
+    draftNotSentNotification: true,
+    draftNotSignedNotification: true
   }),
 
   computed: {
