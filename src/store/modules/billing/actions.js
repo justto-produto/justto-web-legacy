@@ -286,6 +286,14 @@ const billingActions = {
     data: { name },
     action: 'getHoldings',
     response: name
+  }),
+
+  updateHolding: ({ _ }, { id, name }) => axiosDispatch({
+    method: 'POST',
+    url: `${billingPath}/holding/${id}`,
+    data: { name },
+    action: 'getHoldings',
+    response: name
   })
 }
 

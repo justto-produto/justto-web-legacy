@@ -1,15 +1,32 @@
 <template>
   <div class="client-grid">
     <jus-grid :columns="4">
-      <jus-user-card
+      <div
         v-for="(user, index) in custumerList"
         :key="index"
-        :user-data="user"
-        @edit-title="handleEditTitle"
-        @see-more="handleSeeMore"
-        @edit="handleEdit"
-        @close="handleClose"
-      />
+        class="client-grid__card"
+      >
+        <h1 class="client-grid__card__holding center mb0">
+          <JusTextEditable
+            :value="getHoldingName(user.holdingId)"
+            type="title"
+            class="jus-user-card__title"
+            @isEditing="handleEnableEditExistingHolding"
+            @hasEdition="handleChangeHoldingName($event, user.holdingId)"
+          />
+        </h1>
+
+        <el-divider class="mb0" />
+
+        <jus-user-card
+          :user-data="user"
+          class="client-grid__card__customer"
+          @edit-title="handleEditTitle"
+          @see-more="handleSeeMore"
+          @edit="handleEdit"
+          @close="handleClose"
+        />
+      </div>
 
       <el-card
         v-if="!formCardIsVisible"
@@ -127,7 +144,8 @@ export default {
   components: {
     JusGrid: () => import('@/components/JusGrid/JusGrid'),
     JusUserCard: () => import('@/components/JusUserCard/JusUserCard'),
-    ContractsModal: () => import('./ContractsModal')
+    ContractsModal: () => import('./ContractsModal'),
+    JusTextEditable: () => import('@/components/JusTextEditable/JusTextEditable')
   },
 
   data() {
@@ -155,6 +173,10 @@ export default {
 
     isSuggestion() {
       return this.custumerSuggestions.filter(({ name }) => (name === this.inputValue)).length > 0
+    },
+
+    getHoldingName() {
+      return (holdingId) => this.holdingSuggestions.find(({ id }) => Number(holdingId) === Number(id))?.name || 'Sem holding'
     }
   },
 
@@ -303,15 +325,23 @@ export default {
       })
     },
 
+    async handleAssssiateHolding(holdingId, client) {
+      if (client?.holdingId === holdingId) return Promise.resolve()
+
+      return this.updateCustomer({
+        ...client,
+        holdingId
+      })
+    },
+
     async addClient() {
       const name = this.inputValue
       const holdingId = (await this.handleFilterHoldingByName())?.id
       const similarClient = this.custumerSuggestions.filter(val => val.name === name)
       const { negotiationType, monthlySubscriptionFee } = this
 
-      // TODO: Adicionar Holding à customer já existente.
-
       if (similarClient.length) {
+        await this.handleAssssiateHolding(holdingId, similarClient[0])
         this.associateCustomer(similarClient[0].id)
       } else {
         this.addCustomer({
@@ -343,6 +373,14 @@ export default {
 
     handleHoldingChange() {
       (this.holdingSuggestions || []).forEach(({ name }) => (name === this.holdingName))
+    },
+
+    handleEnableEditExistingHolding(name) {
+      this.holdingName = name
+    },
+
+    handleChangeHoldingName(name) {
+      // Buscar/Criar holding pelo nome.
     }
   }
 }
@@ -399,6 +437,18 @@ export default {
     .client-grid__btn {
       margin-top: 8px;
     }
+  }
+}
+
+.client-grid__card {
+  // color: $--color-white;
+  border: solid 1px $--pj-color-light-blue;
+  border-radius: 11px 7px 7px 11px;
+
+  .client-grid__card__customer {
+    // border: solid 1px $--pj-color-light-blue;
+    border: none;
+    border-radius: 11px 7px 7px 11px;
   }
 }
 </style>
