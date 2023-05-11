@@ -1,7 +1,7 @@
 {
   "name": "justto-web",
   "version": "2.0.251",
-  "homepage": "https://justto.app",
+  "homepage": "https://acordos.projuris.com.br",
   "author": "ProJuris",
   "engines": {
     "node": "^14.18.2",

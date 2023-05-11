@@ -574,7 +574,7 @@ export default {
       if (error.response && error.response.data && error.response?.status === 412 && error.response.data.code === 'DUPLICATED_VALIDATION') {
         const { CAN_ACCESS_OTHER, OTHER_DISPUTE_ID, OTHER_NEGOTIATORS } = error.response.data.fields
         const message = CAN_ACCESS_OTHER
-          ? `Este número de processo ja está sendo usado na disputa <a target="_blank" href="https://justto.app/#/management/dispute/${OTHER_DISPUTE_ID}">#OTHER_DISPUTE_ID</a>.`
+          ? `Este número de processo ja está sendo usado na disputa <a target="_blank" href="https://acordos.projuris.com.br/#/management/dispute/${OTHER_DISPUTE_ID}">#OTHER_DISPUTE_ID</a>.`
           : `Este número de processo ja está sendo usado na disputa <b>#${OTHER_DISPUTE_ID}</b>. Você não possui acesso a essa disputa. Verifique com um negociador responsável: <b>${OTHER_NEGOTIATORS}</b>`
 
         this.$jusNotification({ title: 'Ops!', message: message, type: 'warning', dangerouslyUseHTMLString: true })

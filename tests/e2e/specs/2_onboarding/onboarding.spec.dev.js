@@ -52,7 +52,7 @@ describe('Justto.App - Onboarding', function() {
   })
   //
   // it('OnBoarding: Workspace Indisponivel', function () {
-  //   // Preenche campo de Workspace 'https://justto.app' com subdomínio 'teste-xxxxx'
+  //   // Preenche campo de Workspace 'https://acordos.projuris.com.br' com subdomínio 'teste-xxxxx'
   //
   //   cy.get('[data-testid=subdomain-form]')
   //     .clear()
@@ -69,7 +69,7 @@ describe('Justto.App - Onboarding', function() {
   // })
 
   // it('OnBoarding: Workspace Sucesso', function () {
-  //   // Preenche campo de Workspace 'https://justto.app' com subdomínio 'teste-xxxxx'
+  //   // Preenche campo de Workspace 'https://acordos.projuris.com.br' com subdomínio 'teste-xxxxx'
   //
   //   cy.get('[data-testid=subdomain-form]')
   //     .clear()
@@ -122,7 +122,7 @@ describe('Justto.App - Onboarding', function() {
   //     return randomSubdomain;
   //   }
   //
-  //   // Preenche campo de Workspace 'https://justto.app' com subdomínio 'teste-xxxxx'
+  //   // Preenche campo de Workspace 'https://acordos.projuris.com.br' com subdomínio 'teste-xxxxx'
   //   var subdomain = randomSubdomain(5);
   //   cy.get('[data-testid=name-subdomain]')
   //     .type(subdomain)
@@ -189,7 +189,7 @@ describe('Justto.App - Onboarding', function() {
   //   //   return randomSubdomain
   //   // }
   //
-  //   // // Preenche campo de Workspace 'https://justto.app' com subdomínio 'teste-xxxxx'
+  //   // // Preenche campo de Workspace 'https://acordos.projuris.com.br' com subdomínio 'teste-xxxxx'
   //   var subdomain = randomSubdomain(5)
   //   cy.get('[data-testid=name-subdomain]')
   //     .type(subdomain)
