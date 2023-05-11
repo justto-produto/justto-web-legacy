@@ -412,19 +412,22 @@ export class DisputeModel {
   }
 
   get getDisputeLastNegotiatorAccess() {
-    // TODO: Não achei
-    return this.#dtoV1?.lastNegotiatorAccess || {}
+    return this.#dtoV1?.lastNegotiatorAccess || {
+      createAt: {
+        dateTime: this.#dtoV3.partyLastAccess
+      }
+    }
   }
 
   get getDisputeHasLastNegotiatorAccess() {
     return Boolean(this.getDisputeLastNegotiatorAccess?.id) ||
-      Boolean(this.#dtoV3?.lastNegotiatorAccessUsingCpf) ||
-      Boolean(this.#dtoV3?.lastNegotiatorAccessUsingOab)
+      Boolean(this.#dtoV3?.partyLastAccess)
   }
 
   get getDisputeLastNegotiatorAccessCreatAt() {
     // TODO: Não achei
-    return this.#dtoV1?.lastNegotiatorAccess?.createAt?.dateTime
+    return this.#dtoV1?.lastNegotiatorAccess?.createAt?.dateTime ||
+      this.#dtoV3?.partyLastAccess
   }
 
   get getDisputeLastInteraction() {
