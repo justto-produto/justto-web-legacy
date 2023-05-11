@@ -23,7 +23,9 @@ const axiosDispatch = (params, drive = axios) => {
         }
       }
       if (params.action) {
-        if (params.payload) {
+        if (params.response) {
+          store.dispatch(params.action, params.response)
+        } else if (params.payload) {
           store.dispatch(params.action, { data: response.data, payload: params.payload })
         } else store.dispatch(params.action, response.data)
       }

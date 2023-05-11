@@ -14,6 +14,7 @@
       type="primary"
       @click="saveChanges"
     />
+
     <span
       v-else
       :class="{
@@ -59,8 +60,12 @@ export default {
   methods: {
     editionHandler(evt) {
       this.isEditing = true
-      this.$nextTick(() => this.$refs.textInput.$el.children[0].focus())
+      this.$emit('isEditing')
+      this.$nextTick(() => {
+        if (this.$refs?.textInput?.$el) this.$refs.textInput.$el.children[0].focus()
+      })
     },
+
     saveChanges() {
       if (this.isEditing) {
         if (!this.inputValue) {

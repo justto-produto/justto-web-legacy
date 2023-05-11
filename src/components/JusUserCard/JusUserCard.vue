@@ -1,6 +1,6 @@
 <template>
   <el-card
-    shadow="hover"
+    shadow="never"
     class="jus-user-card"
   >
     <div class="jus-user-card__wrapper">

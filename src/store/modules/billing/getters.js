@@ -9,7 +9,8 @@ const billingGetters = {
   billingDashboard: state => state.billingDashboard,
   tableLoading: state => state.tableLoading,
   currentWorkspace: state => state.query.workspaceId,
-  contractDiscountList: state => state.contractDiscountList
+  contractDiscountList: state => state.contractDiscountList,
+  getHoldingsList: state => state.holdings
 }
 
 export default billingGetters
