@@ -414,7 +414,7 @@ export class DisputeModel {
   get getDisputeLastNegotiatorAccess() {
     return this.#dtoV1?.lastNegotiatorAccess || {
       createAt: {
-        dateTime: this.#dtoV3.partyLastAccess
+        dateTime: this.#dtoV3?.partyLastAccess
       }
     }
   }
@@ -425,7 +425,6 @@ export class DisputeModel {
   }
 
   get getDisputeLastNegotiatorAccessCreatAt() {
-    // TODO: Não achei
     return this.#dtoV1?.lastNegotiatorAccess?.createAt?.dateTime ||
       this.#dtoV3?.partyLastAccess
   }
