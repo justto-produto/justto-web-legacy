@@ -1,18 +1,22 @@
 <template>
-  <el-container class="admin-panel-view">
-    <el-aside class="admin-panel-view__aside">
-      <el-menu class="admin-panel-view__menu">
+  <el-container class="new-admin-panel">
+    <el-aside class="new-admin-panel__aside">
+      <el-menu
+        class="new-admin-panel__menu"
+        :default-active="menuIndex"
+        @select="handleSelectMenuItem"
+      >
         <el-menu-item
           v-for="(item, index) in menuItems.filter(({ isVisible }) => isVisible)"
           :key="index"
-          :index="index"
-          class="admin-panel-view__menu-item"
+          :index="'' + index"
+          class="new-admin-panel__menu-item"
           @click="() => item.action()"
         >
           <i
             v-if="item.iconType === 'el'"
             :class="item.icon"
-            class="admin-panel-view__menu-item__icon"
+            class="new-admin-panel__menu-item__icon"
           />
 
           <JusIcon
@@ -20,148 +24,60 @@
             icon="logo-menu-dark"
             size="1.75rem"
             svg-family="light"
-            class="admin-panel-view__menu-item__icon"
+            class="new-admin-panel__menu-item__icon"
           />
         </el-menu-item>
       </el-menu>
+
+      <el-button
+        type="text"
+        class="new-admin-panel__exit"
+        @click="logout"
+      >
+        Sair
+      </el-button>
     </el-aside>
-  </el-container>
-  <!-- <el-row class="admin-panel-view">
-    <el-col
-      :span="left"
-      style="transition: width ease 1s;"
-    >
-      <jus-sidenav-external
-        show-exit
-        :redirect-to="getCustomHome || '/'"
-      >
-        <el-menu
-          default-active="0"
-          class="el-menu-vertical-demo"
-          background-color="#f7f7f7"
-          @select="changeMenuIndex"
-        >
-          <el-menu-item index="0">
-            <i class="el-icon-s-cooperation" /> Equipes
-          </el-menu-item>
 
-          <el-menu-item
-            v-if="havepermission.includes(accountEmail)"
-            index="3"
+    <el-container class="new-admin-panel__container">
+      <el-header class="new-admin-panel__container__header">
+        <div class="el-input">
+          <input
+            type="text"
+            class="el-input__inner"
+            placeholder="Buscar:"
           >
-            <i class="el-icon-s-operation" /> Estratégias
-          </el-menu-item>
+          <!-- Implementar Busca. -->
+        </div>
+      </el-header>
 
-          <el-menu-item
-            v-if="testers.includes(accountEmail)"
-            index="6"
-          >
-            <i class="el-icon-s-order" /> Workspaces
-          </el-menu-item>
-
-          <el-menu-item index="7">
-            <i class="el-icon-chat-line-round" /> WhatsApp
-          </el-menu-item>
-
-          <el-menu-item index="8">
-            <i class="el-icon-search" /> Buscar
-          </el-menu-item>
-        </el-menu>
-      </jus-sidenav-external>
-    </el-col>
-
-    <transition name="swiper-fade">
-      <el-col
-        v-if="right > 0"
-        :span="right"
-        class="content"
-      >
-        <div class="admin-panel-view__panel-header">
-          <h1>{{ $t(`panel.${menuIndex}`) }}</h1>
-          <div class="admin-panel-view__header-options">
-            <el-input
-              v-if="!['6', '7', '8'].includes(menuIndex)"
-              v-model="filterTerm"
-              prefix-icon="el-icon-search"
-              placeholder="Buscar"
-              size="small"
-              clearable
-            />
-            <el-button
-              v-if="['1', '2', '3', '4', '5'].includes(menuIndex)"
-              type="primary"
-              size="small"
-              icon="el-icon-plus"
-              class="admin-panel-view__header-button"
-              @click="mainButtonHandler"
-            >
-              Adicionar
-            </el-button>
-          </div>
+      <el-main class="new-admin-panel__container__main">
+        <div v-if="menuIndex === '1'">
+          Nova listagem de estratégia aqui
         </div>
 
-        <div v-if="!menuIndex" />
-
-        <panel-workspace
-          v-if="menuIndex === '0'"
-          ref="panel1"
-          :filter-term="filterTerm"
-        />
-
-        <panel-dashboard
-          v-if="menuIndex === '1'"
-          ref="panel0"
-          :filter-term="filterTerm"
-        />
-
-        <panel-user
+        <WorkspaceList
           v-if="menuIndex === '2'"
           ref="panel2"
-          :filter-term="filterTerm"
-        />
-
-        <panel-strategy
-          v-if="menuIndex === '3'"
-          ref="panel3"
-          :filter-term="filterTerm"
-          @set-filter="setFilter"
-        />
-
-        <panel-minute
-          v-if="menuIndex === '4'"
-          ref="panel4"
-          :filter-term="filterTerm"
-        />
-
-        <panel-billing
-          v-if="menuIndex === '5'"
-          ref="panel5"
-          :filter-term="filterTerm"
-        />
-
-        <WorkspaceList
-          v-if="menuIndex === '6'"
-          ref="panel6"
           class="workspace-panel"
         />
 
         <PanelWhatsApp
-          v-if="menuIndex === '7'"
-          ref="panel7"
+          v-if="menuIndex === '3'"
+          ref="panel3"
           :filter-term="filterTerm"
         />
 
         <PanelGlobalSearch
-          v-if="menuIndex === '8'"
-          ref="panel8"
+          v-if="menuIndex === '4'"
+          ref="panel4"
         />
-      </el-col>
-    </transition>
-  </el-row> -->
+      </el-main>
+    </el-container>
+  </el-container>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'AdminPanel',
@@ -169,11 +85,11 @@ export default {
     // Workspace: () => import('@/views/main/configurations/partials/WorkspaceList'),
     // JusSidenavExternal: () => import('@/components/layouts/JusSidenavExternal'),
     // PanelStrategy: () => import('./partials/Strategy/PanelStrategy'),
-    // PanelGlobalSearch: () => import('./partials/PanelGlobalSearch'),
+    PanelGlobalSearch: () => import('./partials/PanelGlobalSearch'),
     // PanelDashboard: () => import('./partials/PanelDashboard'),
     // PanelWorkspace: () => import('./partials/PanelWorkspace'),
-    // PanelWhatsApp: () => import('@/views/main/watsapp/Views'),
-    // WorkspaceList: () => import('./partials/WorkspaceList'),
+    PanelWhatsApp: () => import('@/views/main/watsapp/Views'),
+    WorkspaceList: () => import('./partials/WorkspaceList')
     // PanelBilling: () => import('./partials/PanelBilling'),
     // PanelMinute: () => import('./partials/PanelMinute'),
     // PanelUser: () => import('./partials/PanelUser')
@@ -218,44 +134,29 @@ export default {
         isVisible: this.havepermission.includes(this.accountEmail),
         iconType: 'el',
         icon: 'el-icon-s-operation',
-        action: () => {
-          // DO SOME THING
-        }
+        action: () => {}
       }, {
         isVisible: this.testers.includes(this.accountEmail),
         iconType: 'el',
         icon: 'el-icon-s-order',
-        action: () => {
-          // DO SOME THING
-        }
+        action: () => {}
       }, {
         isVisible: true,
         iconType: 'el',
         icon: 'el-icon-chat-line-round',
-        action: () => {
-          // DO SOME THING
-        }
+        action: () => {}
       }, {
         isVisible: true,
         iconType: 'el',
         icon: 'el-icon-search',
-        action: () => {
-          // DO SOME THING
-        }
+        action: () => {}
       }]
     }
   },
 
-  created() {
-    setTimeout(function() {
-      this.left = 5
-    }.bind(this), 400)
-    setTimeout(function() {
-      this.right = 19
-    }.bind(this), 1200)
-  },
-
   methods: {
+    ...mapActions(['logout']),
+
     changeMenuIndex(index) {
       this.menuIndex = index
     },
@@ -266,35 +167,46 @@ export default {
 
     setFilter(value) {
       this.filterTerm = value
+    },
+
+    handleSelectMenuItem(index) {
+      this.menuIndex = index
     }
   }
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 @import '@/styles/colors.scss';
 
-.admin-panel-view{
-  width: 58px;
-  height: 100vh;
-  padding: 9px 18px;
-  text-align: center;
-  padding-right: 0;
-  padding-left: 0;
-  background-color: $--pj-color-blue;
+.new-admin-panel{
+  display: flex;
+  width: 100vw;
+  overflow: hidden;
 
-  .admin-panel-view__aside {
-    width: 100% !important;
+  .new-admin-panel__aside {
+    width: 58px;
+    max-width: 58px;
+    height: 100vh;
+    padding: 9px 18px;
+    text-align: center;
+    padding-right: 0;
+    padding-left: 0;
+    background-color: $--pj-color-blue;
 
-    .admin-panel-view__menu {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    .new-admin-panel__menu {
       width: 100%;
       background-color: $--pj-color-blue;
 
-      .admin-panel-view__menu-item {
+      .new-admin-panel__menu-item {
         background-color: $--pj-color-blue;
         padding: 0 !important;
 
-        .admin-panel-view__menu-item__icon {
+        .new-admin-panel__menu-item__icon {
           filter: invert(1);
 
           &::before {
@@ -309,65 +221,19 @@ export default {
         }
       }
     }
+
+    .new-admin-panel__exit {
+      cursor: pointer;
+
+      span {
+        color: $--color-white !important;
+      }
+    }
+  }
+
+  .new-admin-panel__container {
+    width: 100%;
+    height: 100vh;
   }
 }
-// .admin-panel-view {
-//   height: 100%;
-//   background-color: #fff;
-//   >.el-col {
-//     height: 100%
-//   }
-
-//   &__panel-header {
-//     display: flex;
-//     justify-content: space-between;
-//   }
-
-//   &__header-options {
-//     display: flex;
-//     margin: 20px 0;
-//     margin-right: 40px;
-
-//     .admin-panel-view__header-button {
-//       margin-left: 16px;
-//     }
-//   }
-
-//   .el-col.content {
-//     h1 {
-//       margin-left: 40px;
-//     }
-//     padding: 0;
-//     display: flex;
-//     flex-direction: column;
-//   }
-
-//   .el-backtop {
-//     right: 100px !important;
-//     bottom: 30px !important;
-//   }
-
-//   .el-pagination {
-//     text-align: center;
-//     margin-top: 38px;
-//   }
-
-//   .el-select {
-//     width: 100%;
-//   }
-
-//   .workspace-panel {
-//     height: 100%;
-//     width: 100%;
-//     overflow-y: scroll;
-
-//     .workspace-container__table {
-//       height: calc(100vh - 70px) !important;
-//     }
-//   }
-
-//   .whatsapp-views {
-//     overflow-y: scroll;
-//   }
-// }
 </style>
