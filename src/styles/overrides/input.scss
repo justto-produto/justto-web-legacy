@@ -23,7 +23,7 @@
 }
 
 .el-input {
-  overflow: auto;
+  overflow: auto !important;
 
   &.el-input-group--append {
     .el-input-group__append {
