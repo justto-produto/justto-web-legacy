@@ -481,14 +481,40 @@ export default {
 }
 
 .client-grid__card {
-  // color: $--color-white;
   border: solid 1px $--pj-color-light-blue;
   border-radius: 11px 7px 7px 11px;
+  background-color: $--pj-color-light-blue;
+
+  .client-grid__card__holding {
+    background-color: transparent;
+    color: white;
+
+    .jus-text-editable {
+      .edit-icon {
+        filter: invert(1);
+      }
+    }
+
+    .client-grid__autocomplete {
+      .el-input {
+        overflow: hidden !important;
+        .el-input__inner {
+          background-color: #fff;
+        }
+
+        .el-input__suffix {
+          .el-input__icon {
+            cursor: pointer;
+          }
+        }
+      }
+    }
+  }
 
   .client-grid__card__customer {
-    // border: solid 1px $--pj-color-light-blue;
     border: none;
     border-radius: 11px 7px 7px 11px;
+    background-color: $--color-white;
   }
 }
 </style>
