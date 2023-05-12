@@ -283,19 +283,21 @@
           style="float: right;width: 16px;margin-top: 1px;margin-right: 23px;"
           @click.prevent="openTabEditBank()"
         >
-          <PartyBankAccountDialog
-            ref="partyBankAccountDialog"
-            @create="handleNewBankAccount"
+          <a
+            id="bankAccountRef"
+            class="bank-accounts__link"
           >
-            <a
-              id="bankAccountRef"
-              class="bank-accounts__link"
-            >
-              <i class="el-icon-plus icon-white" />
-            </a>
-          </PartyBankAccountDialog>
+            <i class="el-icon-plus icon-white" />
+          </a>
         </a>
       </h4>
+
+      <BankAccountInlineForm
+        v-show="showBankAccountForm"
+        ref="partyBankAccountDialog"
+        @create="handleNewBankAccount"
+        @close="event => showBankAccountForm = false"
+      />
 
       <el-table
         :data="party.bankAccounts"
@@ -365,7 +367,7 @@ import restartEngagement from '@/utils/mixins/restartEngagement'
 export default {
   components: {
     DateInlieEditor: () => import('@/components/inputs/DateInlieEditor'),
-    PartyBankAccountDialog: () => import('@/views/main/negotiation/partials/ticket/overview/tabs/parties/PartyBankAccountDialog.vue')
+    BankAccountInlineForm: () => import('@/components/forms/BankAccountInlineForm')
   },
 
   mixins: [restartEngagement],
@@ -392,6 +394,7 @@ export default {
       originalRole: {},
       bankAccountIdstoUnlink: [],
       loading: false,
+      showBankAccountForm: false,
       documentNumberHasChanged: false,
       roleRules: {
         name: [
@@ -444,7 +447,8 @@ export default {
     },
 
     openTabEditBank() {
-      this.$refs.partyBankAccountDialog.openBankAccountDialog({
+      this.showBankAccountForm = true
+      this.$refs.partyBankAccountDialog.showForm({
         name: this.party?.name || ''
       })
     },
@@ -544,11 +548,7 @@ export default {
           message: 'Conta bancária <strong>criada</strong> com sucesso.',
           type: 'success'
         })
-      }).catch(error => {
-        this.$jusNotification({ error })
-      }).finally(_ => {
-        this.closeBankAccountDialog()
-      })
+      }).catch(error => this.$jusNotification({ error })).finally(_ => this.closeBankAccountDialog())
     },
 
     removeBankData(index, id) {
@@ -557,7 +557,7 @@ export default {
     },
 
     closeBankAccountDialog() {
-      this.$refs.partyBankAccountDialog.closeDialog()
+      this.$refs.partyBankAccountDialog.hideForm()
     },
 
     handleEditRole() {
