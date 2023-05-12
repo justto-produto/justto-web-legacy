@@ -312,7 +312,8 @@
 
             <div
               v-else
-              style="font-size: 12px;">
+              style="font-size: 12px;"
+            >
               {{ scope.row.bank }} | {{ scope.row.agency }} | {{ scope.row.number }}
             </div>
           </section>
