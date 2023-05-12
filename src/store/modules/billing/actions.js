@@ -1,4 +1,4 @@
-import moment from 'moment'
+import moment from 'moment/src/moment'
 import { axiosDispatch, buildQuery } from '@/utils'
 
 const billingPath = 'api/billing'
@@ -162,6 +162,7 @@ const billingActions = {
   setCustomer: ({ commit }, customerData) => {
     commit('setCustomer', customerData)
   },
+
   setCustomerId: ({ commit }, customerId) => {
     commit('setCustomerId', customerId)
   },
@@ -172,17 +173,21 @@ const billingActions = {
     dispatch('getBillingDashboard')
     dispatch('getTransactions')
   },
+
   setTerm: ({ commit, dispatch }, term) => {
     commit('setTerm', term)
     dispatch('getTransactions')
   },
+
   setType: ({ commit, dispatch }, type) => {
     commit('setType', type)
     dispatch('getTransactions')
   },
+
   setWorkspaceId: ({ commit }, workspaceId) => {
     commit('setWorkspaceId', workspaceId)
   },
+
   clearTransactionsQuery: ({ commit }, rangeDate) => {
     commit('setTerm', '')
     commit('setType', '')
@@ -267,7 +272,29 @@ const billingActions = {
     }).then(({ _ }) => {
       dispatch('getContractDiscountList', contractId)
     })
-  }
+  },
+
+  getHoldings: ({ _ }, name) => axiosDispatch({
+    url: `${billingPath}/holding`,
+    params: { name },
+    mutation: 'setHoldings'
+  }),
+
+  createHolding: ({ _ }, name) => axiosDispatch({
+    method: 'POST',
+    url: `${billingPath}/holding`,
+    data: { name },
+    action: 'getHoldings',
+    response: name
+  }),
+
+  updateHolding: ({ _ }, { id, name }) => axiosDispatch({
+    method: 'POST',
+    url: `${billingPath}/holding/${id}`,
+    data: { name },
+    action: 'getHoldings',
+    response: name
+  })
 }
 
 export default billingActions

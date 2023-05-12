@@ -1,8 +1,8 @@
 {
   "name": "justto-web",
   "version": "2.0.251",
-  "homepage": "https://justto.app",
-  "author": "Justto",
+  "homepage": "https://acordos.projuris.com.br",
+  "author": "ProJuris",
   "engines": {
     "node": "^14.18.2",
     "npm": "^6.14.15"
@@ -10,7 +10,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve --open",
-    "build": "vue-cli-service build",
+    "build": "vue-cli-service build --mode production --report",
     "build:icons": "icon-font-generator src/assets/icons/*.svg -o public/fonts --csspath public/styles/icons.css --jsonpath src/constants/icons.json --html false --types 'ttf, woff, woff2, eot' -p ic",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
@@ -64,8 +64,6 @@
     "jssip": "^3.8.2",
     "lodash": "^4.17.19",
     "moment-timezone": "^0.5.35",
-    "monaco-editor": "^0.20.0",
-    "monaco-editor-webpack-plugin": "^3.1.0",
     "postcss-loader": "^3.0.0",
     "raw-loader": "^0.5.1",
     "register-service-worker": "^1.6.2",
@@ -81,7 +79,6 @@
     "vue-i18n": "^8.11.2",
     "vue-infinite-loading": "^2.4.5",
     "vue-moment": "^4.0.0",
-    "vue-monaco": "^1.2.2",
     "vue-perfect-scrollbar": "^0.1.0",
     "vue-quill-editor": "^3.0.6",
     "vue-router": "^3.0.6",

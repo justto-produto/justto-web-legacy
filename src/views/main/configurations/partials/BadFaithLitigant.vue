@@ -16,23 +16,30 @@
         />
       </el-select>
     </el-form-item>
+
     <el-form-item v-if="vexatiousType">
       <span slot="label">
         <span v-if="vexatiousType === 'QUANTITY'">Quantas disputas uma mesma pessoa precisa ter para ser qualificado como possível ofensor?</span>
         <span v-else>Qual percentual acima da média de disputas uma pessoa precisa ter para ser qualificado como possível ofensor?</span>
       </span>
-      <money
-        v-model="vexatiousThreshold"
-        v-bind="vexatiousTypeMask"
-        class="el-input__inner"
-      />
+
+      <div class="el-input">
+        <money
+          v-model="vexatiousThreshold"
+          v-bind="vexatiousTypeMask"
+          class="el-input__inner"
+        />
+      </div>
     </el-form-item>
-    <el-button
-      type="primary"
-      @click.prevent="saveProperties"
-    >
-      Salvar
-    </el-button>
+
+    <el-form-item>
+      <el-button
+        type="primary"
+        @click.prevent="saveProperties"
+      >
+        Salvar
+      </el-button>
+    </el-form-item>
   </el-form>
 </template>
 
@@ -100,14 +107,11 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .bad-faith-litigant__form {
-  .bad-faith-litigant__form-select {
-    .el-form-item__content {
-      .el-select {
-        width: 100%;
-      }
-    }
+  .el-form-item:last-child {
+    display: flex;
+    justify-content: flex-end;
   }
 }
 </style>

@@ -6,13 +6,13 @@
     <g fill="none" fill-rule="evenodd">
         <path d="M.688 0h23.625v24H.688z"/>
         <g fill-rule="nonzero" transform="translate(.688)">
-            <use fill="#9461F7" stroke="#424242" xlink:href="#a"/>
-            <use stroke="#9461F7" xlink:href="#a"/>
+            <use fill="#0756e4" stroke="#424242" xlink:href="#a"/>
+            <use stroke="#0756e4" xlink:href="#a"/>
         </g>
         <path d="M10.532 4.484H3.84a.715.715 0 0 0-.71.72v11.8M21.875 17.021V5.204a.715.715 0 0 0-.708-.72h-6.67"/>
         <g transform="translate(.688)">
-            <use fill="#9461F7" stroke="#424242" xlink:href="#b"/>
-            <use stroke="#9461F7" xlink:href="#b"/>
+            <use fill="#0756e4" stroke="#424242" xlink:href="#b"/>
+            <use stroke="#0756e4" xlink:href="#b"/>
         </g>
         <path stroke="#FFF" d="M12.504 13.436V.894M15.475 10.417l-2.971 3.019-2.972-3.019"/>
     </g>

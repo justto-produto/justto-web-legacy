@@ -24,6 +24,19 @@
       </el-button>
     </div>
 
+    <div
+      v-if="isJustto"
+      class="team-container__filters"
+    >
+      <el-switch
+        ref="internalAdminSwitch"
+        v-model="hideAdmins"
+        active-text="Ocultar usuários Projuris"
+        active-value="ENABLED"
+        inactive-value="DISABLED"
+      />
+    </div>
+
     <el-table
       :data="filteredTeam"
       class="team-container__table"
@@ -49,6 +62,7 @@
           </div>
         </template>
       </el-table-column>
+
       <el-table-column
         prop="email"
         label="Email"
@@ -94,7 +108,6 @@
         </template>
       </el-table-column>
 
-      <!-- Reports -->
       <el-table-column
         v-if="isJustto"
         prop="personProperties"
@@ -201,6 +214,7 @@
 import { mapActions, mapGetters } from 'vuex'
 import { filterByTerm } from '@/utils'
 import emailTemplate from './moreWorkspacesEmailTemplate'
+import { isJusttoUser } from '@/utils/validations'
 
 export default {
   name: 'Team',
@@ -221,8 +235,21 @@ export default {
     ...mapGetters({
       team: 'workspaceTeam',
       isJustto: 'isJusttoAdmin',
-      workspace: 'workspace'
+      workspace: 'workspace',
+      userProperties: 'userProperties',
+      hiddeInternalAdmins: 'getHiddeInternalAdmins'
     }),
+
+    hideAdmins: {
+      get() { return this.userProperties.HIDDE_INTERNAL_ADMINS },
+      set(HIDDE_INTERNAL_ADMINS) {
+        this.setAccountProperty({ HIDDE_INTERNAL_ADMINS })
+          .catch(error => this.$jusNotification({ error }))
+          .finally(() => {
+            this.$refs.internalAdminSwitch.$forceUpdate()
+          })
+      }
+    },
 
     reportsOptions() {
       return [
@@ -255,7 +282,9 @@ export default {
     },
 
     filteredTeam() {
-      return filterByTerm(this.searchTerm, this.team, 'name', 'email')
+      return filterByTerm(this.searchTerm, this.team, 'name', 'email').filter(({ email }) => {
+        return this.hiddeInternalAdmins ? !isJusttoUser(email || '') : true
+      })
     },
 
     profileOptions() {
@@ -286,7 +315,8 @@ export default {
       'updatePersonProfile',
       'unlockAccount',
       'sendCustomEmail',
-      'getCustomerWorkspaceCount'
+      'getCustomerWorkspaceCount',
+      'setAccountProperty'
     ]),
 
     handleUnlockUser(user) {
@@ -371,7 +401,6 @@ export default {
         this.$confirm('Você será redirecionado para a criação de nova Equipe, deseja continuar?', 'Redirecionamento', {
           confirmButtonText: 'Criar nova Equipe',
           cancelButtonText: 'Cancelar',
-          cancelButtonClass: 'is-plain',
           type: 'warning'
         }).then(() => {
           this.$store.commit('redirectNewWorkspaceTrue')
@@ -414,6 +443,18 @@ export default {
     gap: 12px;
     margin-top: 3px;
   }
+
+  .team-container__filters {
+    display: flex;
+    justify-content: flex-end;
+    margin: 16px 8px -16px;
+    z-index: 1;
+  }
+}
+
+.custom-header__reports {
+  display: flex;
+  justify-content: space-between;
 }
 </style>
 

@@ -14,7 +14,7 @@
             is-white
           />
           Último {{ getLastInteractionTooltip(data.getDisputeLastOutboundInteraction) }}
-          em {{ data.getDisputeLastOutboundInteraction.createAt.dateTime | moment('DD/MM/YYYY [às] HH:mm') }}
+          em {{ data.getDisputeLastOutboundInteractionCreateAt | moment('DD/MM/YYYY [às] HH:mm') }}
         </strong>
       </div>
       <div v-if="data.getDisputeLastOutboundInteractionMessage.sender">
@@ -58,12 +58,12 @@
           <div slot="condition">
             <span v-if="data.getDisputeHasLastNegotiatorAccess">
               <span>
-                Último acesso ao sistema Justto: <strong>{{ data.getDisputeLastNegotiatorAccessCreatAt | moment('DD/MM/YYYY [às] HH:mm') }}</strong>
+                Último acesso ao sistema ProJuris: <strong>{{ data.getDisputeLastNegotiatorAccessCreatAt | moment('DD/MM/YYYY [às] HH:mm') }}</strong>
               </span>
-
             </span>
+
             <span v-else>
-              Ainda não houve acesso ao sistema Justto de Negociação
+              Ainda não houve acesso ao sistema ProJuris de Negociação
             </span>
           </div>
         </negotiator-interaction>
@@ -123,6 +123,7 @@
             >
               Expandir
             </el-button>
+
             <el-input
               v-model="message"
               type="textarea"
@@ -130,6 +131,7 @@
               placeholder="Escreva alguma coisa"
               style="padding-bottom: 10px"
             />
+
             <el-button
               size="mini"
               @click="hideResponseBox(data.getDisputeId, true)"

@@ -34,6 +34,7 @@
               :name="member.person.name"
               :active="isActivePerson(member.person.id)"
               class="el-menu__avatar"
+              purple
             />
           </el-tooltip>
         </a>
@@ -124,7 +125,7 @@ export default {
   display: flex;
   flex-direction: column;
   text-align: center;
-  margin-top: 32px;
+  margin-top: 8px;
 
   .jus-team-menu__title {
     cursor: pointer;
@@ -137,6 +138,7 @@ export default {
     .jus-team-menu__title-icon {
       margin-top: 2px;
       margin-left: 2px;
+      filter: invert(1);
     }
 
     .jus-team-menu__title-input {
@@ -144,6 +146,14 @@ export default {
       border: none;
       width: 40px;
       text-align: center;
+      background-color: transparent;
+      color: $--color-white;
+      font-weight: 600;
+      text-transform: uppercase;
+
+      &::placeholder {
+        color: $--color-white;
+      }
     }
   }
 

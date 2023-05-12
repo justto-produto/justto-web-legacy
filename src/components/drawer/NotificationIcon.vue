@@ -112,7 +112,7 @@ export default {
       right: 0;
       margin: -2px -2px 0 0;
       font-size: 12px;
-      background-color: red;
+      background-color: $--pj-color-blue;
       border-radius: 50px;
       padding: 2px 6px;
       color: white;

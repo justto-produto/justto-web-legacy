@@ -2,6 +2,7 @@
   <img
     v-if="iconPath"
     :src="iconPath"
+    :style="{ width: size }"
     draggable="false"
     @click="$emit('click')"
     @mouseover="$emit('hover')"
@@ -16,15 +17,33 @@ export default {
       type: Boolean,
       default: false
     },
+
     isWhite: {
       type: Boolean,
       default: false
     },
+
+    type: {
+      type: String,
+      default: 'ic'
+    },
+
+    svgFamily: {
+      type: String,
+      default: 'regular'
+    },
+
     icon: {
+      type: String,
+      default: ''
+    },
+
+    size: {
       type: String,
       default: ''
     }
   },
+
   computed: {
     iconPath: function() {
       if (this.icon) {

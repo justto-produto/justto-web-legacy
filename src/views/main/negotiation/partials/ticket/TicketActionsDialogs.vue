@@ -52,7 +52,10 @@
               label="Valor:"
               prop="value"
             >
-              <div :class="{ 'el-input is-disabled': modalLoading }">
+              <div
+                class="el-input"
+                :class="{ 'is-disabled': modalLoading }"
+              >
                 <money
                   v-model="offerForm.value"
                   :disabled="modalLoading"
@@ -535,7 +538,6 @@ export default {
       const options = {
         confirmButtonText: 'Continuar',
         cancelButtonText: 'Cancelar',
-        cancelButtonClass: 'is-plain',
         dangerouslyUseHTMLString: true,
         showClose: false
       }

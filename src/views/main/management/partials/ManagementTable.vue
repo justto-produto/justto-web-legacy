@@ -221,10 +221,10 @@
         align="center"
       >
         <template v-slot="scope">
-          <el-button
+          <el-tag
             v-if="scope.row.getDisputeIsWon || scope.row.getDisputeHasDocument"
-            plain
-            size="mini"
+            effect="plain"
+            size="small"
             class="management-table__protocol_button"
             @click="showProtocolModal(scope.row)"
           >
@@ -232,7 +232,7 @@
             <div :class="'management-table__protocol_button--step-' + getDocumentStep(scope.row.getDisputeHasDocument, scope.row.getDisputeSignStatus)">
               <span /><span /><span />
             </div>
-          </el-button>
+          </el-tag>
           <span v-else>-</span>
         </template>
       </el-table-column>
@@ -288,7 +288,7 @@
         <template v-slot="scope">
           <el-tooltip content="Negociação encerra nos próximos 3 dias">
             <span
-              v-if="((scope.row.getDisputeHasExpirationDate && disputeNextToExpire(scope.row.getDisputeExpirationDate)) || scope.row.getDisputeNextToExpire) && !(scope.row.getDisputeIsExpired)"
+              v-if="(scope.row.getDisputeHasExpirationDate && scope.row.getDisputeDisputeNextToExpire) && !(scope.row.getDisputeIsExpired)"
               data-testid="expiration-notify"
               class="management-table__expiration-icon position-relative"
             >
@@ -298,8 +298,12 @@
             </span>
           </el-tooltip>
 
-          <span v-if="scope.row.getDisputeHasExpirationDate">
-            {{ scope.row.getDisputeExpirationDate | moment('DD/MM/YY') }}
+          <div v-if="scope.row.getDisputeDisputeNextToExpire">
+            {{ 'Expira ' + $moment(scope.row.getDisputeExpirationDate).fromNow() }}
+          </div>
+
+          <span v-else-if="scope.row.getDisputeHasExpirationDate">
+            {{ scope.row.getDisputeExpirationDate | moment('L') }}
           </span>
         </template>
       </el-table-column>
@@ -579,6 +583,7 @@ export default {
   methods: {
     ...mapActions([
       'getDisputes',
+      'setHideTicket',
       'getDisputeTimeline',
       'getDisputeLastAccess',
       'cleanDisputeLastAccess'
@@ -607,6 +612,7 @@ export default {
     },
 
     openTimelineModal(dispute) {
+      console.log('openTimelineModal', dispute)
       const { getDisputeCode, getDisputeId } = dispute
       if (!this.disputeTimeline[getDisputeCode] || this.disputeTimeline[getDisputeCode].lawsuits.length === 0) return
 
@@ -662,6 +668,7 @@ export default {
       } else if (row.getDisputeId && !['IMG', 'SPAN', 'BUTTON', 'I'].includes(event.target.tagName)) {
         if (isCtrl || isMeta) {
           if (this.isTicket || this.showNegotiationTypeMenu) {
+            this.setHideTicket(true)
             window.open(`/#/negotiation/${row.getDisputeId}`, '_blank')
           } else {
             window.open(`/#/management/dispute/${row.getDisputeId}`, '_blank')
@@ -669,6 +676,7 @@ export default {
           this.addHighlight(row.getDisputeId)
         } else {
           if (this.isTicket || this.showNegotiationTypeMenu) {
+            this.setHideTicket(true)
             this.$router.push({ name: 'ticket', params: { id: row.getDisputeId } })
           } else {
             this.$router.push({ name: 'dispute', params: { id: row.getDisputeId } })
@@ -755,6 +763,10 @@ export default {
           ]
         })
       }
+    },
+
+    moment() {
+      return this.$moment
     }
   }
 }

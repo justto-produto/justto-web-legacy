@@ -93,7 +93,8 @@ export default {
 
   computed: {
     ...mapGetters({
-      isGrouping: 'isOmnichannelGrouping'
+      isGrouping: 'isOmnichannelGrouping',
+      getActiveTab: 'getActiveTab'
     }),
 
     interaction() {
@@ -161,9 +162,11 @@ export default {
     },
 
     formatedTime() {
-      const { createAt, updateAt } = this.occurrence
+      const { createAt } = this.occurrence
 
-      return this.$moment((updateAt || createAt).dateTime).format('HH:mm')
+      const format = this.getActiveTab === 'OCCURRENCES' ? 'LLL' : 'HH:mm'
+
+      return this.$moment((createAt || { dateTime: undefined }).dateTime).format(format)
     },
 
     isManual() {

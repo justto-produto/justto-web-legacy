@@ -2,12 +2,9 @@
   <div class="external-view">
     <el-container>
       <el-aside
-        width="50%"
-        class="hidden-sm-and-down"
+        class="display-flex"
+        width="40%"
       >
-        <jus-sidenav-external />
-      </el-aside>
-      <el-main class="display-flex">
         <el-form
           v-if="!workspaces.length"
           ref="loginForm"
@@ -19,9 +16,10 @@
           class="external-view__form"
           @submit.native.prevent="doLogin"
         >
-          <h1 class="external-view__title">
-            Login
+          <h1 class="external-view__title center">
+            Autenticação
           </h1>
+
           <el-alert
             v-show="showError"
             :title="errorMessage"
@@ -100,6 +98,7 @@
             >Política de Privacidade</a>.
           </el-row>
         </el-form>
+
         <el-form
           v-else
           ref="workspaceForm"
@@ -152,15 +151,10 @@
             Painel administrativo
           </el-button>
         </el-form>
+      </el-aside>
+      <el-main class="hidden-sm-and-down">
+        <ProjusrisSidenavExternal />
       </el-main>
-      <!-- <el-main
-        v-else
-        class="end-of-the-world-container"
-      >
-        <span class="end-of-the-world-container__text">
-          Nosso portal está passando por dificuldades, logo resolveremos o problema!
-        </span>
-      </el-main> -->
     </el-container>
   </div>
 </template>
@@ -173,7 +167,7 @@ export default {
   name: 'Login',
 
   components: {
-    JusSidenavExternal: () => import('@/components/layouts/JusSidenavExternal')
+    ProjusrisSidenavExternal: () => import('@/components/layouts/ProjusrisSidenavExternal')
   },
 
   data() {

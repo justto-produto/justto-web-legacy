@@ -4,6 +4,7 @@
       <h1>Icones JUSTTO</h1>
       <span class="icons-header__inputs">
         <el-switch v-model="isSvg" />
+
         <el-input
           v-model="searchTerm"
           placeholder="Busque um icone"

@@ -277,10 +277,12 @@ export default {
       overflow: hidden;
       line-height: initial !important;
       border: 0;
+      border-radius: 0;
       border-bottom: 2px solid #e4e7ed;
       padding-left: 0px;
-      height: 28px;
-      line-height: 28px;
+      height: 28px !important;
+      min-height: 28px !important;
+      line-height: 28px !important;
       background-color: #FFFFFF00
     }
     .el-autocomplete {

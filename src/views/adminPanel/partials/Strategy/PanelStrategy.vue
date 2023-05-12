@@ -156,8 +156,7 @@ export default {
         confirmButtonClass: 'confirm-remove-btn',
         confirmButtonText: 'Excluir',
         cancelButtonText: 'Cancelar',
-        type: 'error',
-        cancelButtonClass: 'is-plain'
+        type: 'error'
       }).then(() => {
         this.deleteStrategy({ strategyId: strategy.id })
       })

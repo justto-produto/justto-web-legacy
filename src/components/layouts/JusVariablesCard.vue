@@ -14,13 +14,11 @@
         prefix-icon="el-icon-search"
         clearable
         class="jus-variables-card__filter-input"
-      />
-      <span
-        :class="{ 'jus-variables-card__filter-length--active': variableFilterTerm.length }"
-        class="jus-variables-card__filter-length"
       >
-        {{ filteredVariables.length }}/{{ Object.keys(variables).length }}
-      </span>
+        <span slot="append">
+          {{ filteredVariables.length }}/{{ Object.keys(variables).length }}
+        </span>
+      </el-input>
     </div>
 
     <div class="jus-variables-card__body">
@@ -110,10 +108,6 @@ export default {
 
     .jus-variables-card__title {
       margin: 8px 0;
-    }
-
-    .jus-variables-card__filter-input {
-      width: 230px;
     }
 
     .jus-variables-card__filter-length {

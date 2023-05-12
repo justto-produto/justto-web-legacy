@@ -1,10 +1,10 @@
-import moment from 'moment'
+import moment from 'moment/src/moment'
 
 const buildQuery = (q, command, disputesLength, noSort) => {
   let query = '?'
   for (const [key, value] of Object.entries(q)) {
     if (['total'].includes(key)) continue
-    if (['useDisputeProjection', 'onlyPaused'].includes(key)) {
+    if (['useDisputeProjection', 'onlyPaused', 'resumed'].includes(key)) {
       query = query + key + '=' + value + '&'
       continue
     }

@@ -23,8 +23,6 @@
         {{ signLabels[signState] }}
       </span>
 
-      <!-- v-if="(isAcceptedTab || (isFinishedTab && isSettled)) && showDraft"
-      :active="documentStep" -->
       <el-steps
         :active="signState"
         finish-status="success"
@@ -36,24 +34,6 @@
         <el-step />
         <el-step />
       </el-steps>
-
-      <!-- <el-button
-        type="text"
-        size="mini"
-        class="sign-steps"
-        @click="openDialog"
-      >
-        Assinar
-
-        <el-steps
-          :active="0"
-          finish-status="success"
-        >
-          <el-step />
-          <el-step />
-          <el-step />
-        </el-steps>
-      </el-button> -->
     </div>
 
     <el-dialog
@@ -168,7 +148,16 @@
       <span
         v-if="!loading"
         slot="footer"
+        class="sign-attachment__dialog__footer"
       >
+        <el-button
+          size="mini"
+          plain
+          @click="closeDialog"
+        >
+          Fechar
+        </el-button>
+
         <el-button
           v-if="screen === 0"
           size="mini"
@@ -217,16 +206,6 @@
         </el-button>
 
         <el-button
-          size="mini"
-          type="danger"
-          icon="el-icon-error"
-          plain
-          @click="closeDialog"
-        >
-          Fechar
-        </el-button>
-
-        <el-button
           v-if="screen >= 2"
           size="mini"
           type="primary"
@@ -235,13 +214,6 @@
         >
           Baixar
         </el-button>
-
-        <!-- <el-button
-          type="primary"
-          @click="visible = false"
-        >
-          Confirmar
-        </el-button> -->
       </span>
     </el-dialog>
   </article>
@@ -433,7 +405,10 @@ export default {
         this.setAttachmentSigners({
           signers: Object.values(this.signs),
           documentId: this.attachmentId
-        }).then(this.refreshAttachmentSign)
+        })
+          .then(this.refreshAttachmentSign)
+          .catch(error => this.$jusNotification({ error }))
+          .finally(() => { this.loading = false })
       }
     },
 

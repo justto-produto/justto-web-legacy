@@ -319,12 +319,14 @@
           >
             <el-input v-model="addBankForm.name" />
           </el-form-item>
+
           <el-form-item
             label="Email"
             prop="email"
           >
             <el-input v-model="addBankForm.email" />
           </el-form-item>
+
           <el-form-item
             label="CPF ou CNPJ"
             prop="document"
@@ -334,6 +336,7 @@
               v-mask="['###.###.###-##', '##.###.###/####-##']"
             />
           </el-form-item>
+
           <el-form-item
             label="Banco"
             prop="bank"
@@ -357,12 +360,14 @@
           >
             <el-input v-model="addBankForm.agency" />
           </el-form-item>
+
           <el-form-item
             label="Número do Conta"
             prop="number"
           >
             <el-input v-model="addBankForm.number" />
           </el-form-item>
+
           <el-form-item
             label="Tipo de Conta"
             prop="type"
@@ -995,8 +1000,7 @@ export default {
         this.$confirm('Tem certeza que deseja excluir esta disputa? Esta ação é irreversível', 'Atenção', {
           confirmButtonText: 'Excluir',
           cancelButtonText: 'Cancelar',
-          type: 'warning',
-          cancelButtonClass: 'is-plain'
+          type: 'warning'
         }).then(() => {
           this.deleteDispute()
         })
@@ -1088,8 +1092,7 @@ export default {
           confirmButtonClass: 'confirm-action-btn',
           confirmButtonText: 'Continuar',
           cancelButtonText: 'Cancelar',
-          dangerouslyUseHTMLString: true,
-          cancelButtonClass: 'is-plain'
+          dangerouslyUseHTMLString: true
         }).then(() => { this.opeNnamesakeDialog(name, personId) })
       } else {
         this.opeNnamesakeDialog(name, personId)
@@ -1261,7 +1264,6 @@ export default {
             type: 'warning',
             confirmButtonText: 'Continuar',
             confirmButtonClass: 'edit-case-confirm-button',
-            cancelButtonClass: 'is-plain',
             showCancelButton: true,
             customClass: 'edit-case-confitm-dialog'
           }).then(() => {
@@ -1317,7 +1319,6 @@ export default {
                 this.$confirm(message, 'Atenção!', {
                   confirmButtonText: onlyResendMessaged ? 'Reenviar' : 'Reiniciar',
                   cancelButtonText: 'Cancelar',
-                  cancelButtonClass: 'is-plain',
                   type: 'warning'
                 }).then(() => {
                   this.$store.dispatch('sendDisputeAction', {
@@ -1337,7 +1338,7 @@ export default {
               if (error.response && error.response.data && error.response?.status === 412 && error.response.data.code === 'DUPLICATED_VALIDATION') {
                 let message
                 if (error.response.data.fields.CAN_ACCESS_OTHER) {
-                  message = 'Este número de processo ja está sendo usado na disputa <a target="_blank" href="https://justto.app/#/management/dispute/' + error.response.data.fields.OTHER_DISPUTE_ID + '">#' + error.response.data.fields.OTHER_DISPUTE_ID + '</a>.'
+                  message = 'Este número de processo ja está sendo usado na disputa <a target="_blank" href="https://acordos.projuris.com.br/#/management/dispute/' + error.response.data.fields.OTHER_DISPUTE_ID + '">#' + error.response.data.fields.OTHER_DISPUTE_ID + '</a>.'
                 } else {
                   message = 'Este número de processo ja está sendo usado na disputa <b>#' + error.response.data.fields.OTHER_DISPUTE_ID + '</b>. Você não possui acesso a essa disputa. Verifique com um negociador responsável: <b>' + error.response.data.fields.OTHER_NEGOTIATORS + '</b>'
                 }
@@ -1448,8 +1449,7 @@ export default {
           this.$confirm(this.$t('dispute.overview.confirm.restart.engagement.question'), 'Atenção!', {
             confirmButtonText: this.$t('dispute.overview.confirm.restart.engagement.confirm'),
             cancelButtonText: this.$t('dispute.overview.confirm.restart.engagement.cancel'),
-            type: 'warning',
-            cancelButtonClass: 'is-plain'
+            type: 'warning'
           }).then(() => this.$jusNotification({
             title: 'Cuidado!',
             message: this.$t('dispute.notification.will-not-restart'),
@@ -1479,8 +1479,7 @@ export default {
           this.$confirm('Você adicionou contas bancárias a esta parte. Deseja vincular estas contas a disputa?', 'Atenção', {
             confirmButtonText: 'Vincular',
             cancelButtonText: 'Cancelar',
-            type: 'warning',
-            cancelButtonClass: 'is-plain'
+            type: 'warning'
           }).then(() => {
             const bankAccounts = response.bankAccounts
             const newBankAccounts = bankAccounts.sort((accountA, accountB) => {
@@ -1572,8 +1571,7 @@ export default {
         this.$confirm('Tem certeza que deseja excluir esta parte?', 'Atenção!', {
           confirmButtonText: 'Excluir',
           cancelButtonText: 'Cancelar',
-          type: 'warning',
-          cancelButtonClass: 'is-plain'
+          type: 'warning'
         }).then(() => {
           this.$emit('removeRole')
           setTimeout(() => {

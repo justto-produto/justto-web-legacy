@@ -13,7 +13,7 @@
         v-if="filter.page > 1"
         :target="scrollTarget"
         :loading.sync="localLoading"
-        :ended="occurrences.length >= totalOfOccurrences"
+        :ended="isInLastPage"
         :empty="Boolean(occurrences.length === 0)"
         reverse
         empty-text="Sem mensagens"
@@ -80,12 +80,14 @@ export default {
       filter: 'getOccurrencesFilter',
       isLoading: 'isOccurrencesLoading',
       occurrencesList: 'getOccurrencesList',
+      occurrencesListSorted: 'getOccurrencesListSorted',
       messageType: 'getEditorMessageType',
       isPrinting: 'getExportTicketModalVisible',
       backups: 'getMessagesBackupById',
       recipients: 'getEditorRecipients',
       autodetectRecipient: 'workspaceAutodetectRecipient',
-      totalOfOccurrences: 'getTotalOccurrences'
+      totalOfOccurrences: 'getTotalOccurrences',
+      isInLastPage: 'getOccurrencesIsInLastPage'
     }),
 
     infiniteLoadingIdentifier() {
@@ -101,7 +103,7 @@ export default {
     },
 
     occurrences() {
-      return this.occurrencesList.filter(({ disputeId }) => [null, this.id].includes(disputeId))
+      return (this.activeTab === 'OCCURRENCES' ? this.occurrencesListSorted : this.occurrencesList).filter(({ disputeId }) => [null, this.id].includes(disputeId))
     },
 
     dispute() {

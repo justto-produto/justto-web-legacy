@@ -23,9 +23,9 @@
       >
         <span class="el-dropdown-link">
           <jus-avatar-user
-            class="md"
+            class="use-padding"
             :name="name"
-            :size="avatarSize"
+            size="md"
           />
           <div class="usermenu-container__name md">
             <div style="text-transform: capitalize;">
@@ -82,15 +82,6 @@
             </el-dropdown-item>
           </a>
 
-          <a
-            href="#"
-            @click.prevent="() => {}"
-          >
-            <el-dropdown-item>
-              <JusAcademy mode="text" />
-            </el-dropdown-item>
-          </a>
-
           <router-link
             v-if="isJusttoAdmin"
             to="/admin-panel"
@@ -123,7 +114,6 @@ import { mapActions, mapGetters } from 'vuex'
 
 export default {
   components: {
-    JusAcademy: () => import('@/components/dialogs/JusAcademy'),
     JusChangeWorkspace: () => import('@/components/dialogs/JusChangeWorkspace'),
     JusEditUser: () => import('@/components/dialogs/JusEditUserDialog'),
     Notification: () => import('@/components/drawer/NotificationIcon'),
@@ -160,7 +150,7 @@ export default {
       return this.teamName.length > 20
     },
     avatarSize() {
-      return this.width <= 1600 ? 'mini' : 'sm'
+      return 'sm'// this.width <= 1600 ? 'mini' : 'sm'
     }
   },
 

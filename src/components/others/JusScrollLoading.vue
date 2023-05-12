@@ -2,7 +2,7 @@
   <el-button
     v-if="loading"
     class="jus-scroll-loading__loading"
-    type="text"
+    type="transparent"
   >
     Carregando
     <i class="el-icon-loading" />
@@ -10,7 +10,7 @@
 
   <el-button
     v-else-if="ended"
-    type="text"
+    type="transparent"
     class="jus-scroll-loading__end-btn"
   >
     {{ empty ? emptyText : endText }}
@@ -18,7 +18,7 @@
 
   <el-button
     v-else
-    type="text"
+    type="transparent"
     class="jus-scroll-loading__end-btn"
   >
     <span class="hidden-text">
@@ -111,7 +111,8 @@ export default {
       if (Boolean(this.loading) || Boolean(this.ended)) return
 
       const { target: { offsetHeight, scrollTop, scrollHeight } } = event
-      const heightPercentage = parseInt(((offsetHeight + scrollTop) / scrollHeight) * 100)
+      const height = offsetHeight * (this.reverse ? -1 : 1)
+      const heightPercentage = parseInt(((height + scrollTop) / scrollHeight) * 100)
 
       if (this.reverse ? heightPercentage <= 30 : heightPercentage >= 70) {
         this.startLoading()

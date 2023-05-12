@@ -15,7 +15,7 @@
         </p>
       </template>
       <p v-if="isManual">
-        Essa estratégia não possuí mensagens pré-definidas e não envia mensagens automáticas; Todas as mensagens devem ser enviadas manualmente pelo negociador usando a plataforma Justto 3DR.
+        Essa estratégia não possuí mensagens pré-definidas e não envia mensagens automáticas; Todas as mensagens devem ser enviadas manualmente pelo negociador usando a plataforma ProJuris 3DR.
       </p>
       <el-collapse
         v-else
@@ -66,6 +66,7 @@
         </div>
       </el-collapse>
     </el-dialog>
+
     <el-dialog
       :visible.sync="editDialog"
       width="70%"
@@ -99,21 +100,26 @@
         <el-button
           :disabled="editDialogLoading"
           :icon="preview ? 'el-icon-edit' : 'el-icon-view'"
-          plain
           @click="preview = !preview"
         >
           {{ preview ? 'Voltar' : 'Visualizar' }}
         </el-button>
+
         <el-button
           :disabled="editDialogLoading"
-          plain
+          type="secondary"
           @click="editDialog = false"
-        >Cancelar</el-button>
+        >
+          Cancelar
+        </el-button>
+
         <el-button
           v-loading="editDialogLoading"
           type="primary"
           @click="editTemplate"
-        >Editar template</el-button>
+        >
+          Editar template
+        </el-button>
       </span>
     </el-dialog>
   </div>

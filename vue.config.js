@@ -96,7 +96,7 @@ module.exports = {
   },
 
   pwa: {
-    name: 'Justto App',
+    name: 'ProJuris App',
     themeColor: '#ff9300'
   }
 }

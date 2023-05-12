@@ -11,13 +11,14 @@
             Nome da <b>equipe</b> ou <b>time</b> de negogiação
           </span>
           <el-input v-model="teamName">
-            <el-button
+            <span
               slot="append"
+              class="is-pointer"
               @click.prevent="handleChangeTeamName"
-            >
-              Alterar time
-            </el-button>
+              v-text="'Alterar time'"
+            />
           </el-input>
+
           <el-alert
             :closable="false"
             type="info"
@@ -34,14 +35,16 @@
           <span class="workspace-data-container__input-label">
             Nome da <b>empresa</b> ou <b>escritório</b>
           </span>
+
           <el-input v-model="workspaceName">
-            <el-button
+            <span
               slot="append"
+              class="is-pointer"
               @click.prevent="handleChangeWorkspaceName"
-            >
-              Alterar nome
-            </el-button>
+              v-text="'Alterar time'"
+            />
           </el-input>
+
           <el-alert
             :closable="false"
             type="info"
@@ -49,7 +52,7 @@
             class="workspace-data-container__input-alert"
           >
             <span slot="title">
-              Este nome <strong>IRÁ</strong> aparecer em todas as mensagens automáticas enviadas pela Justto.
+              Este nome <strong>IRÁ</strong> aparecer em todas as mensagens automáticas enviadas pela ProJuris.
             </span>
           </el-alert>
         </div>
@@ -87,7 +90,7 @@
 
             <div class="workspace-data-container__form-item-input-append el-input-group__append">
               <span
-                class="el-input-group__form-item-input-append-link"
+                class="el-input-group__form-item-input-append-link is-pointer"
                 @click="connectKeyAccount"
               >
                 {{ hasAssociatedKeyAccount ? 'Alterar Key Account' : 'Associar Key Account' }}
@@ -320,12 +323,6 @@ export default {
     .workspace-data-container__form-item {
       margin-top: 24px;
       &:first-child { margin-top: 0; }
-
-      .workspace-data-container__form-item-input {
-        .workspace-data-container__form-item-input-append {
-          cursor: pointer;
-        }
-      }
 
       .workspace-data-container__input-alert {
         padding: 12px 16px;

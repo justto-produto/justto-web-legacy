@@ -220,7 +220,7 @@ export default {
     },
 
     disputeLink(disputeId) {
-      return `https://justto.app/#/management/dispute/${disputeId}`
+      return `https://acordos.projuris.com.br/#/management/dispute/${disputeId}`
     },
 
     infiniteHandler($state) {

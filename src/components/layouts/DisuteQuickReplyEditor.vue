@@ -38,11 +38,13 @@
               <div>e saiba como utilizar variáveis e preview das mensagens rápidas</div>
             </div>
           </div>
+
           <SlideInfo
             :images="itemsSlider"
             :is-visible="isSlideInfoVisible"
             @close="isSlideInfoVisible = false"
           />
+
           <div>
             <el-button @click="cancel()">
               Cancelar
@@ -216,8 +218,8 @@ export default {
 <style lang="scss" scoped>
 @import '@/styles/colors.scss';
 .reply-editor__container {
-  margin: 16px 0px;
-  padding: 16px 0px;
+  margin: 0 0 16px 0;
+  padding: 0 0 16px 0;
   height: 80vh;
 
   .reply-editor__body {
@@ -237,6 +239,10 @@ export default {
         width: 100%;
         display: flex;
         justify-content: space-between;
+
+        div:not(.messages-container__hint):not(.el-dialog__wrapper) {
+          display: flex;
+        }
       }
     }
   }
@@ -253,6 +259,7 @@ export default {
   .messages-container__hint-text {
     display: flex;
     flex-direction: row;
+    word-break: break-word;
     .messages-container__hint-text-click {
       font-size: 9px;
       text-align: center;

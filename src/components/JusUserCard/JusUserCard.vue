@@ -1,6 +1,6 @@
 <template>
   <el-card
-    shadow="hover"
+    shadow="never"
     class="jus-user-card"
   >
     <div class="jus-user-card__wrapper">
@@ -37,7 +37,7 @@
 
           <el-tooltip content="Contratos do cliente">
             <el-button
-              type="info"
+              type="primary"
               icon="el-icon-edit"
               circle
               @click="emitEditEvent"
@@ -46,7 +46,7 @@
         </div>
 
         <el-button
-          type="primary"
+          type="secondary"
           @click.native="emitSeeMore"
         >
           Ver lançamentos

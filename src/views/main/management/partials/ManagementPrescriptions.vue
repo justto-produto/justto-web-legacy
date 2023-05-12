@@ -6,7 +6,6 @@
       :ref="prescription.prescription"
       :key="prescription.prescription"
       :type="buttonType(prescription.prescription)"
-      plain
       size="small"
       class="management-prescriptions__button"
       @click="handlePrescriptionClick(prescription.prescription)"

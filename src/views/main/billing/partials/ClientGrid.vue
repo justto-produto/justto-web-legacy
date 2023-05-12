@@ -1,15 +1,54 @@
 <template>
   <div class="client-grid">
     <jus-grid :columns="4">
-      <jus-user-card
+      <div
         v-for="(user, index) in custumerList"
         :key="index"
-        :user-data="user"
-        @edit-title="handleEditTitle"
-        @see-more="handleSeeMore"
-        @edit="handleEdit"
-        @close="handleClose"
-      />
+        class="client-grid__card"
+      >
+        <h1 class="client-grid__card__holding center mb0">
+          <el-autocomplete
+            v-if="isEditingHoldingName === user.id"
+            v-model="holdingName"
+            :fetch-suggestions="holdingQuerySearch"
+            placeholder="Digite o nome da holding"
+            class="client-grid__autocomplete"
+            value-key="name"
+            @select="handleChangeHoldingName(user)"
+          >
+            <i
+              slot="suffix"
+              class="el-icon-close el-input__icon"
+              @click="handleCleanHoldingEditing"
+            />
+
+            <i
+              slot="suffix"
+              class="el-icon-check el-input__icon"
+              @click="handleChangeHoldingName(user)"
+            />
+          </el-autocomplete>
+
+          <JusTextEditable
+            v-else
+            :value="getHoldingName(user.holdingId)"
+            type="title"
+            class="jus-user-card__title"
+            @isEditing="handleEnableEditExistingHolding(user)"
+          />
+        </h1>
+
+        <el-divider class="mb0" />
+
+        <jus-user-card
+          :user-data="user"
+          class="client-grid__card__customer"
+          @edit-title="handleEditTitle"
+          @see-more="handleSeeMore"
+          @edit="handleEdit"
+          @close="handleClose"
+        />
+      </div>
 
       <el-card
         v-if="!formCardIsVisible"
@@ -18,6 +57,7 @@
         @click.native="showFormCard"
       >
         <span>Adicionar um cliente</span>
+
         <i class="el-icon-plus client-grid__icon" />
       </el-card>
 
@@ -27,10 +67,27 @@
         class="client-grid__form-card"
       >
         <span class="client-grid__form-title">
+          Digite o nome da Holding para buscar uma existente, ou criar uma nova.
+        </span>
+
+        <el-autocomplete
+          v-model="holdingName"
+          :fetch-suggestions="holdingQuerySearch"
+          placeholder="Digite o nome da holding"
+          class="client-grid__autocomplete"
+          value-key="name"
+          @input="handleHoldingChange"
+        />
+
+        <span
+          v-if="holdingName"
+          class="client-grid__form-title"
+        >
           Digite o nome do cliente abaixo para buscar um existente ou criar um novo.
         </span>
 
         <el-autocomplete
+          v-if="holdingName"
           v-model="inputValue"
           :fetch-suggestions="querySearch"
           placeholder="Ex.: José da Silva"
@@ -70,11 +127,16 @@
           Mensalidade:
         </span>
 
-        <money
+        <div
           v-if="inputValue"
-          v-model="monthlySubscriptionFee"
-          class="el-input__inner client-grid__autocomplete"
-        />
+          class="el-input"
+        >
+          <money
+            v-if="inputValue"
+            v-model="monthlySubscriptionFee"
+            class="el-input__inner client-grid__autocomplete"
+          />
+        </div>
 
         <el-button
           v-if="inputValue"
@@ -104,7 +166,8 @@ export default {
   components: {
     JusGrid: () => import('@/components/JusGrid/JusGrid'),
     JusUserCard: () => import('@/components/JusUserCard/JusUserCard'),
-    ContractsModal: () => import('./ContractsModal')
+    ContractsModal: () => import('./ContractsModal'),
+    JusTextEditable: () => import('@/components/JusTextEditable/JusTextEditable')
   },
 
   data() {
@@ -113,7 +176,9 @@ export default {
       formCardIsVisible: false,
       inputValue: '',
       monthlySubscriptionFee: 0,
-      negotiationType: null
+      negotiationType: null,
+      isEditingHoldingName: false,
+      holdingName: ''
     }
   },
 
@@ -125,11 +190,16 @@ export default {
       currentCustomer: 'getCurrentCustomer',
       custumerSuggestions: 'getAllCusomers',
       plans: 'getPlans',
-      workspaceId: 'workspaceId'
+      workspaceId: 'workspaceId',
+      holdingSuggestions: 'getHoldingsList'
     }),
 
     isSuggestion() {
       return this.custumerSuggestions.filter(({ name }) => (name === this.inputValue)).length > 0
+    },
+
+    getHoldingName() {
+      return (holdingId) => this.holdingSuggestions.find(({ id }) => Number(holdingId) === Number(id))?.name || ''
     }
   },
 
@@ -147,7 +217,9 @@ export default {
       'setCustomer',
       'setWorkspaceId',
       'unlinkCustomer',
-      'updateCustomer'
+      'updateCustomer',
+      'getHoldings',
+      'createHolding'
     ]),
 
     init() {
@@ -174,6 +246,8 @@ export default {
             })
           })
         })
+
+        this.getHoldings('').catch(error => this.$jusNotification({ error }))
       } else {
         this.$router.push('/management')
         this.$jusNotification({
@@ -220,6 +294,13 @@ export default {
       cb(results)
     },
 
+    holdingQuerySearch(queryString, cb) {
+      const options = this.holdingSuggestions
+      const results = queryString ? options.filter(this.createFilter(queryString)) : options
+
+      cb(results)
+    },
+
     createFilter(queryString) {
       return (option) => {
         return (option.name.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
@@ -253,16 +334,40 @@ export default {
       })
     },
 
-    addClient() {
+    handleFilterHoldingByName() {
+      const index = this.holdingSuggestions.map(({ name }) => name).indexOf(this.holdingName)
+
+      return new Promise((resolve) => {
+        if (index < 0) {
+          resolve(this.createHolding(this.holdingName))
+        }
+
+        resolve(this.holdingSuggestions[index])
+      })
+    },
+
+    async handleAssssiateHolding(holdingId, client) {
+      if (client?.holdingId === holdingId) return Promise.resolve()
+
+      return this.updateCustomer({
+        ...client,
+        holdingId
+      })
+    },
+
+    async addClient() {
       const name = this.inputValue
+      const holdingId = (await this.handleFilterHoldingByName())?.id
       const similarClient = this.custumerSuggestions.filter(val => val.name === name)
       const { negotiationType, monthlySubscriptionFee } = this
 
       if (similarClient.length) {
+        await this.handleAssssiateHolding(holdingId, similarClient[0])
         this.associateCustomer(similarClient[0].id)
       } else {
         this.addCustomer({
           name,
+          holdingId,
           negotiationType,
           monthlySubscriptionFee
         })
@@ -285,6 +390,37 @@ export default {
       (this.custumerSuggestions || []).forEach(({ name, negotiationType }) => {
         if (name === this.inputValue) this.negotiationType = negotiationType
       })
+    },
+
+    handleHoldingChange() {
+      (this.holdingSuggestions || []).forEach(({ name }) => (name === this.holdingName))
+    },
+
+    handleEnableEditExistingHolding(customer) {
+      this.isEditingHoldingName = customer.id
+      this.holdingName = this.getHoldingName(customer.holdingId)
+    },
+
+    async handleChangeHoldingName(customer) {
+      const holdingId = (await this.handleFilterHoldingByName())?.id
+
+      console.log(holdingId, customer)
+
+      this.$confirm(`Deseja realmente editar a holding do cliente${customer?.name ? ` ${customer?.name}` : ''}?`, {
+        confirmButtonText: 'Sim',
+        cancelButtonText: 'Não',
+        showClose: false
+      }).then(_ => {
+        this.updateCustomer({
+          ...customer,
+          holdingId
+        }).then(() => this.$jusNotification({ type: 'success', message: 'Holding editada com sucesso.' })).catch(error => this.$jusNotification({ error }))
+      }).finally(this.handleCleanHoldingEditing)
+    },
+
+    handleCleanHoldingEditing() {
+      this.isEditingHoldingName = false
+      this.holdingName = ''
     }
   }
 }
@@ -341,6 +477,44 @@ export default {
     .client-grid__btn {
       margin-top: 8px;
     }
+  }
+}
+
+.client-grid__card {
+  border: solid 1px $--pj-color-light-blue;
+  border-radius: 11px 7px 7px 11px;
+  background-color: $--pj-color-light-blue;
+
+  .client-grid__card__holding {
+    background-color: transparent;
+    color: white;
+
+    .jus-text-editable {
+      .edit-icon {
+        filter: invert(1);
+      }
+    }
+
+    .client-grid__autocomplete {
+      .el-input {
+        overflow: hidden !important;
+        .el-input__inner {
+          background-color: #fff;
+        }
+
+        .el-input__suffix {
+          .el-input__icon {
+            cursor: pointer;
+          }
+        }
+      }
+    }
+  }
+
+  .client-grid__card__customer {
+    border: none;
+    border-radius: 11px 7px 7px 11px;
+    background-color: $--color-white;
   }
 }
 </style>

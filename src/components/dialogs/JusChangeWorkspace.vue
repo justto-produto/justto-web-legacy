@@ -26,10 +26,7 @@
       slot="footer"
       class="dialog-footer"
     >
-      <el-button
-        plain
-        @click="isVisible = false"
-      >
+      <el-button @click="isVisible = false">
         Cancelar
       </el-button>
       <el-button

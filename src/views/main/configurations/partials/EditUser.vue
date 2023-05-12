@@ -14,12 +14,12 @@
         <el-input
           v-model="form.name"
         >
-          <el-button
+          <span
             slot="append"
+            class="is-pointer"
             @click="editName()"
-          >
-            Alterar
-          </el-button>
+            v-text="'Alterar'"
+          />
         </el-input>
       </el-form-item>
 
@@ -62,13 +62,13 @@
               autocomplete="false"
             >
               <input slot="preppend">
-              <el-button
+
+              <span
                 slot="append"
-                :disabled="!passwordIsValid || !confirmPasswordIsValid"
+                class="is-pointer"
                 @click="editPassword()"
-              >
-                Alterar
-              </el-button>
+                v-text="'Alterar'"
+              />
             </el-input>
           </el-form-item>
         </el-col>
@@ -82,12 +82,12 @@
           v-model="form.phone"
           v-mask="['### (##) # ####-####',, '## (##) # ####-####', '(##) ####-####', '(##) #####-####']"
         >
-          <el-button
+          <span
             slot="append"
+            class="is-pointer"
             @click="editPhone()"
-          >
-            Alterar
-          </el-button>
+            v-text="'Alterar'"
+          />
         </el-input>
       </el-form-item>
     </el-form>
@@ -216,8 +216,9 @@ export default {
     },
 
     editPassword() {
+      if (!this.passwordIsValid || !this.confirmPasswordIsValid) return
+
       this.localLoading = true
-      // ['password', 'confirmPassword', 'oldPassword']
       this.$refs.editUserForm.validate(isValid => {
         const { password, oldPassword } = this.form
 

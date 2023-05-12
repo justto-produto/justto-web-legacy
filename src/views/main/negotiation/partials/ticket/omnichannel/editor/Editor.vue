@@ -37,6 +37,7 @@
           v-if="activeTab === 'MESSAGES'"
           :show-title="!haveRecipients"
         />
+
         <el-popover
           placement="bottom"
           width="305"
@@ -74,7 +75,11 @@
           </div>
         </el-popover>
       </div>
-      <recipients class="editor-container__recipients" />
+
+      <recipients
+        v-show="activeTab === 'MESSAGES'"
+        class="editor-container__recipients"
+      />
     </div>
 
     <SlideInfo

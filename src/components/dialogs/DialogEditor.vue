@@ -44,10 +44,7 @@
     />
 
     <div slot="footer">
-      <el-button
-        plain
-        @click="handleCancel"
-      >
+      <el-button @click="handleCancel">
         {{ buttonCancel }}
       </el-button>
       <el-button

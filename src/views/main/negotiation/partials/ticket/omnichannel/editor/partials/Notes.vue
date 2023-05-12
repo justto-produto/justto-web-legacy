@@ -170,7 +170,7 @@ export default {
 .notes-container {
   .ck.ck-content.ck-editor__editable {
     background-color: #F4EFFE !important;
-    color: #9461F7;
+    color: $--color-primary;
     text-indent: 80px;
   }
 }

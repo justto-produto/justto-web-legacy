@@ -6,16 +6,17 @@
       v-model="inputValue"
       @keyup.enter.native="saveChanges"
       @blur="saveChanges"
-    >
-      <el-button
-        slot="append"
-        icon="el-icon-check"
-        type="primary"
-        @click="saveChanges"
-      />
-    </el-input>
+    />
+
+    <el-button
+      v-if="isEditing"
+      icon="el-icon-check"
+      type="primary"
+      @click="saveChanges"
+    />
+
     <span
-      v-show="!isEditing"
+      v-else
       :class="{
         [`jus-text-editable__mask--${type}`]: type
       }"
@@ -59,8 +60,12 @@ export default {
   methods: {
     editionHandler(evt) {
       this.isEditing = true
-      this.$nextTick(() => this.$refs.textInput.$el.children[0].focus())
+      this.$emit('isEditing')
+      this.$nextTick(() => {
+        if (this.$refs?.textInput?.$el) this.$refs.textInput.$el.children[0].focus()
+      })
     },
+
     saveChanges() {
       if (this.isEditing) {
         if (!this.inputValue) {

@@ -23,11 +23,23 @@
         </el-tooltip>
       </div>
 
+      <el-tooltip
+        v-if="isJusttoAdmin"
+        :content="isRecovery ? 'Cobrança' : 'Indenizatório'"
+        placement="right"
+      >
+        <JusIcon
+          class="container-aside__workspace-type-icon"
+          :icon="isRecovery ? 'exchange' : 'coins'"
+          size="24px"
+        />
+      </el-tooltip>
+
       <el-menu
         ref="sideMenu"
         class="container-aside__menu el-menu--main-menu"
         :class="{ 'container-aside__menu--collapsed': isTeamSectionExpanded }"
-        :default-active="$route.path"
+        :default-active="activeRoute"
         collapse
         router
       >
@@ -39,18 +51,29 @@
         >
           <el-menu-item
             v-show="menuItem.isVisible"
-            :index="menuItem.index"
+            :index="menuItem.refIndex || menuItem.index"
           >
-            <JusIcon :icon="menuItem.icon" />
+            <JusIcon
+              :icon="menuItem.icon"
+              :type="menuItem.iconType || 'ic'"
+              size="1.75rem"
+              svg-family="light"
+              class="menu-item__icon"
+            />
 
             <span slot="title">
               {{ menuItem.title }}
             </span>
           </el-menu-item>
 
-          <CustomHome :value="menuItem" />
+          <CustomHome
+            v-show="!isTeamSectionExpanded"
+            :value="menuItem"
+          />
         </div>
       </el-menu>
+
+      <UseDisputeProjectionSwitch v-if="isJusttoAdmin" />
 
       <JusTeamMenu
         v-if="isAdminProfile"
@@ -97,7 +120,8 @@ export default {
     JusShortchts: () => import('@/components/others/JusShortcuts'),
     ThamirisAlerts: () => import('@/components/dialogs/ThamirisAlerts.vue'),
     BuyDialerDialog: () => import('@/components/dialogs/BuyDialerDialog'),
-    CustomHome: () => import('@/components/buttons/CustomHome')
+    CustomHome: () => import('@/components/buttons/CustomHome'),
+    UseDisputeProjectionSwitch: () => import('@/components/buttons/UseDisputeProjectionSwitch')
   },
 
   data() {
@@ -137,11 +161,19 @@ export default {
       return ['negotiation', 'ticket'].includes(this.$route.name)
     },
 
+    activeRoute() {
+      if (this.showNegotiationTypeMenu && this.isInNegotiation) {
+        return this.ticketListMode === 'MANAGEMENT' ? '/management' : '/negotiation'
+      }
+
+      return this.$route.path
+    },
+
     menuItems() {
       const basicDashboardMenuItem = new MenuItem({
         index: '/',
         title: 'Dashboard',
-        icon: 'logo-justto'
+        icon: 'logo-menu-dark'
       })
 
       const basicNegotiationMenuItem = new MenuItem({
@@ -155,8 +187,11 @@ export default {
         index: '/negotiation',
         title: 'Negociação',
         icon: 'negotiation-window',
-        isVisible: this.showNegotiationTypeMenu && this.ticketListMode === (this.isInNegotiation ? MANAGEMENT : TICKET),
-        action: () => { if (this.isInNegotiation) this.setAccountProperty({ TICKET_LIST_MODE: TICKET }) }
+        isVisible: this.showNegotiationTypeMenu,
+        action: () => {
+          this.setAccountProperty({ TICKET_LIST_MODE: TICKET })
+          this.setHideTicket(false)
+        }
       })
 
       const basicManagementMenuItem = new MenuItem({
@@ -169,11 +204,15 @@ export default {
 
       const customManagementMenuItem = new MenuItem({
         index: '/negotiation',
+        refIndex: '/management',
         title: 'Gerenciamento',
-        icon: 'negotiation-window',
+        icon: 'list-app',
         customHome: '/management',
-        isVisible: this.showNegotiationTypeMenu && this.ticketListMode === (this.isInNegotiation ? TICKET : MANAGEMENT),
-        action: () => { if (this.isInNegotiation) this.setAccountProperty({ TICKET_LIST_MODE: MANAGEMENT }) }
+        isVisible: this.showNegotiationTypeMenu,
+        action: () => {
+          this.setAccountProperty({ TICKET_LIST_MODE: MANAGEMENT })
+          this.setHideTicket(true)
+        }
       })
 
       const basicManagementAllMenuItem = new MenuItem({
@@ -253,6 +292,7 @@ export default {
       getPreview: 'getMessageToPreview',
       getThamirisAlerts: 'getThamirisAlerts',
       setGhostMode: 'setGhostMode',
+      setHideTicket: 'setHideTicket',
       initTicketListModeProperty: 'initTicketListModeProperty'
     }),
 
@@ -432,7 +472,7 @@ export default {
 }
 
 .container-aside {
-  background-color: $--color-white;
+  background-color: $--pj-color-blue;
   box-shadow: 0 4px 24px 0 rgba(37, 38, 94, 0.1);
   z-index: 2;
   overflow: hidden;
@@ -456,6 +496,12 @@ export default {
     }
   }
 
+  .container-aside__workspace-type-icon {
+    filter: invert(1);
+    margin: 0 auto 8px;
+    cursor: help;
+  }
+
   .container-aside__team {
     flex: 1;
     overflow: hidden;
@@ -463,7 +509,30 @@ export default {
 
   .container-aside__menu {
     .container-aside__menu-item {
+      background-color: $--pj-color-blue;
       position: relative;
+
+      li.el-menu-item {
+        background-color: $--pj-color-blue;
+
+        .menu-item__icon {
+          width: 1.75rem;
+          filter: invert(1);
+        }
+
+        .el-tooltip {
+          background-color: transparent;
+        }
+
+        &.is-active {
+          background-color: rgba(255,255,255,.2) !important;
+          border-left-color: $--color-white !important;
+        }
+
+        &:hover {
+          background-color: rgba(255,255,255,.2) !important;
+        }
+      }
 
       .menu-item-pin {
         display: flex;
@@ -486,11 +555,14 @@ export default {
           img {
             height: 12px;
             width: 12px;
+            filter: invert(1);
           }
         }
       }
 
       &:hover {
+        background-color: $--pj-color-blue;
+
         .menu-item-pin {
           .menu-item-pin__button {
             display: block;

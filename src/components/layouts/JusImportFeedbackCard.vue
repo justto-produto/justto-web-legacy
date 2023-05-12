@@ -90,8 +90,11 @@
         </div>
       </el-input>
 
-      <div class="select-strategy__messages">
-        <div v-show="campaignNameDuplicated && campaignName !== ''">
+      <div
+        v-show="campaignNameDuplicated && campaignName !== ''"
+        class="select-strategy__messages"
+      >
+        <div>
           Já existe uma campanha com este nome.
           <a @click.prevent="showDuplicatedAlert(campaignName)">
             Entenda melhor.
@@ -134,8 +137,11 @@
         />
       </el-select>
 
-      <div class="select-strategy__messages">
-        <div v-show="!!strategy.id">
+      <div
+        v-show="Boolean(strategy.id)"
+        class="select-strategy__messages"
+      >
+        <div>
           <a @click.prevent="openDialogEngagement">
             Ver estratégia de engajamento das partes
           </a>
@@ -308,6 +314,7 @@
             Deixando <b>selecionada</b> esta opção, em caso de acordo fechado será bloqueado o depósito em conta poupança e pagamento via PIX, sendo permitido somente <b>depósito em conta corrente</b>.
           </p>
         </div>
+
         <el-switch v-model="denySavingDeposit" />
       </div>
 
@@ -323,7 +330,12 @@
             Deixando <b>selecionada</b> esta opção, em caso de acordo fechado será <b>bloqueado</b> o depósito via Pix.
           </p>
         </div>
-        <el-switch v-model="denyPixDeposit" />
+
+        <el-switch
+          v-model="denyPixDeposit"
+          :disabled="!usePixAccountType"
+        />
+        <!-- TODO: Desabilitar no resto do sistema, sempre que essa feature estiver marcada. -->
       </div>
 
       <div class="jus-import-feedback-card__switch">
@@ -344,6 +356,7 @@
             >termos de uso</a>.
           </p>
         </div>
+
         <el-switch v-model="enrichDisputes" />
       </div>
     </el-card>
@@ -442,7 +455,8 @@ export default {
       'isJusttoDev',
       'errorFields',
       'isWorkspaceRecovery',
-      'getMyStrategiesLite'
+      'getMyStrategiesLite',
+      'usePixAccountType'
     ]),
 
     strategies() {
@@ -562,7 +576,7 @@ export default {
     this.contactPartyWhenInvalidLowyer = preferences.contactPartyWhenInvalidLowyer || false
     this.skipEnrichment = false
     this.denySavingDeposit = preferences.denySavingDeposit || false
-    this.denyPixDeposit = preferences.denyPixDeposit || false
+    this.denyPixDeposit = this.usePixAccountType ? (preferences.denyPixDeposit || false) : true
 
     this.mappedCampaign.businessHoursEngagement = this.businessHoursEngagement
     this.mappedCampaign.contactPartyWhenNoLowyer = this.contactPartyWhenNoLowyer
@@ -684,6 +698,7 @@ export default {
   .el-card {
     .el-input__inner {
       border-bottom: 1px solid #dcdfe6 !important;
+      border-radius: 0px;
       border-top: 0;
       border-left: 0;
       border-right: 0;
@@ -705,9 +720,9 @@ export default {
   }
 
   .select-strategy{
-    .el-input__inner {
-      border: 0 !important;
-    }
+    // .el-input__inner {
+    //   border: 0 !important;
+    // }
   }
 
   .el-input-number {

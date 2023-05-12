@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import moment from 'moment'
+import moment from 'moment/src/moment'
 import { axiosDispatch, buildQuery, extractMentions } from '@/utils'
 import { Validate } from 'validate-cnj'
 
@@ -284,7 +284,7 @@ const disputeActions = {
     })
   },
 
-  exportDisputes({ state, dispatch }, colums) {
+  exportDisputes({ state, getters, dispatch }, colums) {
     const stringColums = colums.toString()
     const ordenationQuery = {}
 
@@ -292,7 +292,11 @@ const disputeActions = {
       ...state.query,
       fileFormat: 'CSV',
       columnToExport: stringColums.split(',')
-    };
+    }
+
+    if (getters?.isAdminProfile === false && getters?.isJusttoAdmin === false) {
+      data.persons = [getters?.loggedPersonId]
+    }
 
     ['prescriptions', 'transactionType'].forEach(key => {
       if (state.query[key] && !Array.isArray(state.query[key])) {

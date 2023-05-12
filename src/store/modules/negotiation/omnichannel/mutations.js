@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import moment from 'moment'
+import moment from 'moment/src/moment'
 
 import { eventBus, getFormatedDate } from '@/utils'
 
@@ -19,7 +19,7 @@ export default {
 
   setMessageType: (state, type) => Vue.set(state.editor, 'messageType', type),
 
-  setOccurrences(state, { content, totalElements, first, number }) {
+  setOccurrences(state, { content, totalElements, first, number, last }) {
     if (first) {
       this.dispatch('autodetectTicketRecipients', {})
       Vue.set(state.occurrences, 'list', [])
@@ -58,6 +58,8 @@ export default {
 
     Vue.set(state.occurrences.filter, 'page', number + 2)
     Vue.set(state.occurrences, 'totalElements', totalElements)
+    Vue.set(state, 'lastPage', Boolean(last))
+    // TODO: Settar last aqui
     Vue.set(state, 'totalOfOccurrences', totalElements)
   },
 

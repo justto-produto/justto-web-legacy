@@ -134,7 +134,7 @@
       <h3>Valor proposto</h3>
 
       <el-row :gutter="20">
-        <el-col :span="8">
+        <el-col :span="12">
           <el-form-item
             :rules="validateLastOfferValue()"
             label="Valor"
@@ -159,7 +159,8 @@
             </el-tooltip>
           </el-form-item>
         </el-col>
-        <el-col :span="16">
+
+        <el-col :span="12">
           <el-form-item
             label="Proposto por"
             prop="lastOfferValueName"
@@ -191,13 +192,15 @@
             :label="$tc('UPPER_RANGE', isRecoveryStrategy)"
             prop="disputeUpperRange"
           >
-            <money
-              v-model="disputeForm.disputeUpperRange"
-              class="el-input__inner"
-              data-testid="bondary-input"
-              @blur.native="checkZeroUpperRange"
-              @change.native="disputeUpperRangeChangedHandler"
-            />
+            <div class="el-input">
+              <money
+                v-model="disputeForm.disputeUpperRange"
+                class="el-input__inner"
+                data-testid="bondary-input"
+                @blur.native="checkZeroUpperRange"
+                @change.native="disputeUpperRangeChangedHandler"
+              />
+            </div>
           </el-form-item>
         </el-col>
 
@@ -224,10 +227,12 @@
             label="Dano material"
             prop="materialDamage"
           >
-            <money
-              v-model="disputeForm.materialDamage"
-              class="el-input__inner"
-            />
+            <div class="el-input">
+              <money
+                v-model="disputeForm.materialDamage"
+                class="el-input__inner"
+              />
+            </div>
           </el-form-item>
         </el-col>
 
@@ -236,10 +241,12 @@
             label="Dano moral"
             prop="moralDamage"
           >
-            <money
-              v-model="disputeForm.moralDamage"
-              class="el-input__inner"
-            />
+            <div class="el-input">
+              <money
+                v-model="disputeForm.moralDamage"
+                class="el-input__inner"
+              />
+            </div>
           </el-form-item>
         </el-col>
 
@@ -248,10 +255,12 @@
             label="Valor do processo"
             prop="requestedValue"
           >
-            <money
-              v-model="disputeForm.requestedValue"
-              class="el-input__inner"
-            />
+            <div class="el-input">
+              <money
+                v-model="disputeForm.requestedValue"
+                class="el-input__inner"
+              />
+            </div>
           </el-form-item>
         </el-col>
 
@@ -260,10 +269,12 @@
             label="Valor provisionado"
             prop="provisionedValue"
           >
-            <money
-              v-model="disputeForm.provisionedValue"
-              class="el-input__inner"
-            />
+            <div class="el-input">
+              <money
+                v-model="disputeForm.provisionedValue"
+                class="el-input__inner"
+              />
+            </div>
           </el-form-item>
         </el-col>
       </el-row>
@@ -490,7 +501,6 @@ export default {
             ]),
             confirmButtonText: 'Continuar',
             confirmButtonClass: 'edit-case-confirm-button',
-            cancelButtonClass: 'is-plain',
             showCancelButton: true,
             customClass: 'edit-case-confitm-dialog'
           }).then(this.editDispute).catch(() => {
@@ -564,7 +574,7 @@ export default {
       if (error.response && error.response.data && error.response?.status === 412 && error.response.data.code === 'DUPLICATED_VALIDATION') {
         const { CAN_ACCESS_OTHER, OTHER_DISPUTE_ID, OTHER_NEGOTIATORS } = error.response.data.fields
         const message = CAN_ACCESS_OTHER
-          ? `Este número de processo ja está sendo usado na disputa <a target="_blank" href="https://justto.app/#/management/dispute/${OTHER_DISPUTE_ID}">#OTHER_DISPUTE_ID</a>.`
+          ? `Este número de processo ja está sendo usado na disputa <a target="_blank" href="https://acordos.projuris.com.br/#/management/dispute/${OTHER_DISPUTE_ID}">#OTHER_DISPUTE_ID</a>.`
           : `Este número de processo ja está sendo usado na disputa <b>#${OTHER_DISPUTE_ID}</b>. Você não possui acesso a essa disputa. Verifique com um negociador responsável: <b>${OTHER_NEGOTIATORS}</b>`
 
         this.$jusNotification({ title: 'Ops!', message: message, type: 'warning', dangerouslyUseHTMLString: true })
@@ -588,7 +598,6 @@ export default {
         this.$confirm(message, 'Atenção!', {
           confirmButtonText: onlyResendMessaged ? 'Reenviar' : 'Reiniciar',
           cancelButtonText: 'Cancelar',
-          cancelButtonClass: 'is-plain',
           type: 'warning'
         }).then(() => {
           this.$store.dispatch('sendDisputeAction', {

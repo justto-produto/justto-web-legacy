@@ -61,6 +61,9 @@ a {
 .mt40 {
   margin-top: 40px;
 }
+.mb0 {
+  margin-bottom: 0 !important;
+}
 .mb10 {
   margin-bottom: 10px;
 }
@@ -73,9 +76,19 @@ a {
 .mb40 {
   margin-bottom: 40px;
 }
+
 .ml5 {
   margin-left: 5px;
 }
+
+.mr8 {
+  margin-right: 8px !important;
+}
+
+.mr16 {
+  margin-right: 16px !important;
+}
+
 .overflow-hidden {
   overflow: hidden;
 }
@@ -113,7 +126,7 @@ a {
   }
 }
 
-i.el-icon-delete {
+i.el-icon-delete:not(.colorless) {
   color: $--color-danger;
   &:hover { color: mix($--color-danger, $--color-white, 75%); }
 }

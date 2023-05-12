@@ -80,20 +80,24 @@
             class="el-tag--new"
           >
             <i :class="`el-icon-${tagForm.icon}`" />
+
             <el-input
               v-model="tagForm.name"
               :maxlength="24"
               size="small"
               @keyup.enter.native="saveTag"
             />
+
             <el-popover
               trigger="hover"
               width="200"
               popper-class="overview-tags__edit-tag"
+              class="overview-tags__edit-tag-popover"
             >
               <div class="title">
                 Personalizar etiqueta
               </div>
+
               <div class="icon">
                 <i
                   v-for="icon in icons"
@@ -102,6 +106,7 @@
                   @click="tagForm.icon = icon"
                 />
               </div>
+
               <div class="color">
                 <el-tag
                   v-for="color in colors"
@@ -111,6 +116,7 @@
                   @click="tagForm.color = color"
                 />
               </div>
+
               <el-button
                 slot="reference"
                 type="text"
@@ -118,6 +124,7 @@
               />
             </el-popover>
           </el-tag>
+
           <div class="overview-tags__new-tag-actions">
             <el-button
               plain
@@ -729,6 +736,7 @@ export default {
     font-size: 16px;
     font-weight: 500;
     margin-bottom: 10px;
+    display: flex;
   }
   &__new-tag-form {
     padding: 10px 5px;
@@ -793,6 +801,22 @@ export default {
           .overview-tags__option {
             width: 100%;
           }
+        }
+      }
+    }
+  }
+}
+
+.overview-tags__popover {
+  div {
+    .overview-tags__new-tag-form {
+      .el-tag--new {
+        display: flex !important;
+        position: relative;
+
+        .overview-tags__edit-tag-popover {
+          position: absolute;
+          left: 100%;
         }
       }
     }

@@ -5,7 +5,7 @@
     :class="{ hide: isToHideTickets }"
   >
     <el-button
-      v-if="showNegotiationTypeMenu && !fullScreen"
+      v-show="!fullScreen"
       :icon="`el-icon-arrow-${isToHideTickets ? 'right' : 'left'}`"
       class="tickets-container__visibility-button"
       type="text"
@@ -154,7 +154,8 @@ export default {
       finishedLenght: 'disputeNotVisualizedFinished',
       preventFilters: 'getTicketsPreventFilters',
       isToHideTickets: 'isToHideTickets',
-      showNegotiationTypeMenu: 'showNegotiationTypeMenu'
+      showNegotiationTypeMenu: 'showNegotiationTypeMenu',
+      ticketListMode: 'getTicketListMode'
     }),
 
     loading: {
@@ -226,6 +227,14 @@ export default {
       const { id } = this.$route.params
 
       return this.tickets.content.findIndex((el) => Number(el.disputeId) === Number(id))
+    }
+  },
+
+  watch: {
+    ticketListMode(mode) {
+      if (mode === 'TICKET') {
+        this.handleInitTab()
+      }
     }
   },
 
@@ -351,8 +360,13 @@ export default {
     handleManagementChangeTab(tab) {
       if (this.activeTab === this.tabs[tab].name) return
 
+      console.log(this.tabs[tab])
+
       this.setTicketsActiveTab(this.tabs[tab].name)
-      this.handleChangeTab(this.tabs[tab])
+    },
+
+    handleInitTab() {
+      this.handleChangeTab({ name: this.activeTab })
       this.resetTabsScroll()
     },
 

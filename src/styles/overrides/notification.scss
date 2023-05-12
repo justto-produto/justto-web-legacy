@@ -2,6 +2,20 @@
 
 .el-notification {
   border-left-width: 4px !important;
+  padding: 1rem !important;
+  align-items: center !important;
+  border: none !important;
+  width: auto !important;
+
+  .el-notification__group {
+    .el-notification__title {
+      display: none;
+    }
+
+    .el-notification__content {
+      margin: 0 1rem 0 0;
+    }
+  }
 
   &.success{
     border-left-color: $--color-success;

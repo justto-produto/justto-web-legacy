@@ -1,4 +1,4 @@
-import moment from 'moment'
+import moment from 'moment/src/moment'
 
 export class DisputeModel {
   #dtoV1
@@ -95,7 +95,8 @@ export class DisputeModel {
 
   get getDisputePropertyPreNegotiationReason() {
     // TODO: Não achei
-    return this.#dtoV1?.properties['MOTIVO PRE NEGOCIACAO']
+    return this.#dtoV1?.properties['MOTIVO PRE NEGOCIACAO'] ||
+      this.#dtoV3?.motivoPreNegociacao
   }
 
   get getDisputeExpirationDate() {
@@ -109,8 +110,12 @@ export class DisputeModel {
   }
 
   get getDisputeDisputeNextToExpire() {
+    if (!['PRE_NEGOTIATION', 'PENDING', 'RUNNING', 'ENGAGEMENT'].includes(this.getDisputeStatus)) {
+      return false
+    }
+
     if (this.#dtoV3?.expirationDate) {
-      return moment(this.#dtoV3?.expirationDate).diff(moment(), 'days') <= 3
+      return moment(this.#dtoV3?.expirationDate).isBetween(moment(), moment().add(4, 'day'))
     }
 
     return Boolean(this.#dtoV1?.disputeNextToExpire)
@@ -123,7 +128,7 @@ export class DisputeModel {
   }
 
   get getDisputeIsExpired() {
-    return this.getDisputeStatus !== 'EXPIRED'
+    return this.getDisputeStatus === 'EXPIRED'
   }
 
   get getDisputeDealValue() {
@@ -207,9 +212,29 @@ export class DisputeModel {
   }
 
   get getDisputeLastReceivedMessage() {
-    // TODO: Não achei
     return this.#dtoV1?.lastReceivedMessage ||
-      this.#dtoV2?.lastReceivedMessage || { properties: {} }
+      this.#dtoV2?.lastReceivedMessage ||
+      {
+        createAt: {
+          dateTime: this.#dtoV3?.lastReceivedMessageCreatedAt
+        },
+        type: 'COMMUNICATION',
+        id: null /* TODO: Não achei */,
+        message: {
+          content: this.#dtoV3?.lastReceivedMessageContent,
+          sender: this.#dtoV3?.lastReceivedMessageSenderEmail || this.#dtoV3?.lastReceivedMessageSenderName,
+          status: this.#dtoV3?.lastReceivedMessageStatus,
+          messageId: this.#dtoV3?.lastReceivedMessageId,
+          contentType: this.#dtoV3?.lastReceivedMessageContentType,
+          communicationType: this.#dtoV3?.lastReceivedCommunicationType,
+          parameters: {
+            SENDER_NAME: this.#dtoV3?.lastReceivedMessageSenderName,
+            SENDER_EMAIL: this.#dtoV3?.lastReceivedMessageSenderEmail,
+            READ_DATE: this.#dtoV3?.lastReceivedMessageReadDate
+          }
+        },
+        properties: {}
+      }
   }
 
   get getDisputeHasLastReceivedMessageProperties() {
@@ -236,7 +261,10 @@ export class DisputeModel {
   get getDisputeLastReceivedMessageProperties() {
     return this.#dtoV1?.lastReceivedMessage?.properties ||
       this.#dtoV2?.lastReceivedMessage?.properties ||
-      { PERSON_EMAIL: '', PERSON_NAME: '' }
+      {
+        PERSON_EMAIL: this.#dtoV3?.lastReceivedMessageSenderEmail,
+        PERSON_NAME: this.#dtoV3?.lastReceivedMessageSenderName
+      }
   }
 
   // First Claymant getters
@@ -286,7 +314,8 @@ export class DisputeModel {
       ))
     )).length > 0 ||
       this.#dtoV2?.plaintiff?.hasPhones ||
-      this.#dtoV3?.hasClaimantPhone
+      this.#dtoV3?.hasClaimantPhone ||
+      this.#dtoV3?.existsPlaintiffWithValidPhone
   }
 
   // First Claymant Lowyer getters
@@ -338,12 +367,33 @@ export class DisputeModel {
       !archived && !dead && ['CLAIMANT'].includes(party) && (roles || []).includes('LAWYER') && (phones || []).filter(({ archived, blocked, isValid }) => (
         !archived && !blocked && isValid
       ))
-    )).length > 0 || this.#dtoV2?.lawyer?.hasPhones || this.#dtoV3?.hasLawyerClaimantPhone
+    )).length > 0 || this.#dtoV2?.lawyer?.hasPhones || this.#dtoV3?.hasLawyersClaimantPhone
   }
 
   get getDisputeLastOutboundInteraction() {
-    // TODO: Não achei
-    return this.#dtoV1?.lastOutboundInteraction || {}
+    return this.#dtoV1?.lastOutboundInteraction || {
+      archived: false,
+      type: this.#dtoV3?.lastOutboundInteractionType,
+      id: this.#dtoV3?.lastOutboundInteractionId,
+      createAt: {
+        dateTime: this.#dtoV3?.lastOutboundInteractionDate
+      },
+      message: {
+        messageId: this.#dtoV3?.lastOutboundInteractionMessageId,
+        communicationType: this.#dtoV3?.lastOutboundInteractionMessageCommunicationType,
+        sender: this.#dtoV3?.lastOutboundInteractionMessageSender,
+        receiver: this.#dtoV3?.lastOutboundInteractionMessageReceiver,
+        parameters: {
+          READ_DATE: this.#dtoV3?.lastOutboundInteractionMessageReadDate
+        }
+      },
+      properties: {}
+    }
+  }
+
+  get getDisputeLastOutboundInteractionCreateAt() {
+    return this.#dtoV1?.lastOutboundInteraction?.createAt?.dateTime ||
+      this.#dtoV3?.lastOutboundInteractionDate
   }
 
   get getDisputeHasLastOutboundInteraction() {
@@ -356,49 +406,55 @@ export class DisputeModel {
     return this.getDisputeLastOutboundInteraction?.message || {}
   }
 
-  get getDisputeLastNegotiatorAccess() {
+  get getDisputeLastOutboundInteractionMessageReadDate() {
     // TODO: Não achei
-    return this.#dtoV1?.lastNegotiatorAccess || {}
+    return this.getDisputeLastOutboundInteractionMessage?.parameters?.READ_DATE
+  }
+
+  get getDisputeLastNegotiatorAccess() {
+    return this.#dtoV1?.lastNegotiatorAccess || {
+      createAt: {
+        dateTime: this.#dtoV3?.partyLastAccess
+      }
+    }
   }
 
   get getDisputeHasLastNegotiatorAccess() {
     return Boolean(this.getDisputeLastNegotiatorAccess?.id) ||
-      Boolean(this.#dtoV3?.lastNegotiatorAccessUsingCpf) ||
-      Boolean(this.#dtoV3?.lastNegotiatorAccessUsingOab)
+      Boolean(this.#dtoV3?.partyLastAccess)
   }
 
   get getDisputeLastNegotiatorAccessCreatAt() {
-    // TODO: Não achei
-    return this.#dtoV1?.lastNegotiatorAccess?.createAt?.dateTime
+    return this.#dtoV1?.lastNegotiatorAccess?.createAt?.dateTime ||
+      this.#dtoV3?.partyLastAccess
   }
 
-  /**
-   * Principais acessos:
-   * .direction
-   * .type
-   * .createAt
-   */
   get getDisputeLastInteraction() {
-    // TODO: Não achei
     return this.#dtoV1?.lastInteraction ||
-      this.#dtoV2?.lastInteraction
+      this.#dtoV2?.lastInteraction ||
+      {
+        id: this.#dtoV3?.lastInteractionId,
+        type: this.#dtoV3?.lastInteractionType,
+        direction: this.#dtoV3?.lastInteractionDirection,
+        createdAt: this.#dtoV3?.lastInteractionCreatedAt
+      }
   }
 
   get getDisputeHasLastInteraction() {
-    // TODO: Não achei
     return this.getDisputeLastInteraction?.direction?.length > 0
   }
 
   get getDisputeLastInteractionCreateAt() {
-    // TODO: Não achei
     return this.#dtoV1?.lastInteraction?.createAt?.dateTime ||
-      this.#dtoV2?.lastInteraction?.createdAt
+      this.#dtoV2?.lastInteraction?.createdAt ||
+      this.#dtoV3?.lastInteractionCreatedAt
   }
 
   get getDisputeHasUnknownPolarityParty() {
     // TODO: Não achei
     return this.getDisputeRoles.filter(({ party }) => (party === 'UNKNOWN')).length > 0 ||
-      this.#dtoV2?.unknownPolarityParty
+      this.#dtoV2?.unknownPolarityParty ||
+      this.#dtoV3?.unknownPolarityParty
   }
 
   get getDisputeHasNoNegotiationInterest() {

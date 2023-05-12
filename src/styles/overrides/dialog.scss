@@ -46,4 +46,9 @@
   @media (max-height: 780px) {
     padding-bottom: 10px;
   }
+
+  span:has(.el-button) {
+    display: flex;
+    justify-content: flex-end;
+  }
 }

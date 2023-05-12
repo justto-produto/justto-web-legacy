@@ -161,7 +161,7 @@
               </el-button>
 
               <el-button
-                type="success"
+                type="primary"
                 size="mini"
                 :disabled="disablePrimaryAction"
                 @click="handlePrimaryAction"

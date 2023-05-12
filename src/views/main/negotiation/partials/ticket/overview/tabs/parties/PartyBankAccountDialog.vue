@@ -342,7 +342,8 @@ export default {
   computed: {
     ...mapGetters({
       banks: 'banksList',
-      ticketInfo: 'getTicketOverviewInfo'
+      ticketInfo: 'getTicketOverviewInfo',
+      usePix: 'usePixAccountType'
     }),
 
     action() {
@@ -357,7 +358,7 @@ export default {
       return [
         { label: 'Corrente', type: CHECKING },
         ...(!this.ticketInfo?.denySavingDeposit ? [{ label: 'Poupança', type: SAVING }] : []),
-        ...(!this.ticketInfo?.denySavingDeposit && !this.ticketInfo?.denyPixDeposit ? [{ label: 'Pix', type: PIX }] : [])
+        ...(!this.ticketInfo?.denySavingDeposit && this.usePix && !this.ticketInfo?.denyPixDeposit ? [{ label: 'Pix', type: PIX }] : [])
       ]
     },
 
@@ -447,7 +448,7 @@ export default {
         Object.keys(account).forEach(key => this.$set(this.account, key, account[key]))
         this.account.document = this.$options.filters.cpfCnpj(account.document)
 
-        if (account?.type === PIX && this.ticketInfo?.denyPixDeposit) {
+        if (account?.type === PIX && (this.usePix && !this.ticketInfo?.denyPixDeposit)) {
           const isRandom = account?.number > 15
           const pixKey = isRandom ? RANDOM : account?.number ? PHONE : account?.email ? EMAIL : DOCUMENT
 

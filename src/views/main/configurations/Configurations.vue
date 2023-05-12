@@ -77,6 +77,7 @@ export default {
 
   .configurations-container__user-menu {
     z-index: 10;
+    height: 40px;
     position: absolute;
     top: 0;
     right: 0;

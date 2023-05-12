@@ -28,37 +28,6 @@
         </a>
       </el-collapse-item>
     </el-collapse>
-    <!-- <label
-      for="obf"
-      class="overview-obf__label"
-    >
-      OBF:
-    </label>
-
-    <el-input
-      v-if="isEditing || value"
-      ref="obfTextarea"
-      v-model="description"
-      :autosize="{ minRows: 1, maxRows: 3}"
-      type="textarea"
-      class="overview-obf__textarea"
-      @focus="showTextarea"
-      @blur="hideTextarea"
-      @input="updateDescription"
-    />
-    <span
-      v-if="isEditing || value"
-      :class="{ 'overview-obf__textarea--shadow-hidden': isEditing }"
-      class="overview-obf__textarea--shadow"
-    />
-
-    <a
-      v-if="!isEditing && !value"
-      class="overview-obf__link"
-      @click="showTextarea"
-    >
-      Clique para adicionar
-    </a> -->
   </section>
 </template>
 

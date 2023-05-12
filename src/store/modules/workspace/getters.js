@@ -19,6 +19,17 @@ const workspaceGetters = {
       return state.workspace.members || []
     }
   },
+  workspaceMembersByDispute: (_state, getters) => {
+    const parties = [
+      ...(getters?.dispute?.disputeRoles || []),
+      ...(getters?.getTicketOverviewParties || [])
+    ]
+      .filter(({ personId, person }) => Boolean(personId || person?.id))
+      .map(({ personId, person }) => personId || person?.id)
+
+    return getters.workspaceMembers
+      .filter(({ personId, profile }) => (['ADMINISTRATOR'].includes(profile) || (Boolean(personId) && parties.includes(personId))))
+  },
   workspaceTeam: state => state.workspace.team,
   workspaceMembersSorted: (_state, getters) =>
     getters.workspaceMembers
@@ -61,7 +72,8 @@ const workspaceGetters = {
   workspaceAutodetectRecipient: state => state?.workspace?.properties?.AUTODETECT_RECIPIENT !== 'DISABLED',
   useScheduleCallBatchAction: (state) => (state?.workspace?.properties?.CAN_USE_SCHEDULE_CALL_BATCH_ACTION !== 'DISABLED'),
   showNegotiationTypeMenu: state => state?.workspace?.properties?.SHOW_NEGOTIATION_TYPE_MENU === 'ENABLED',
-  useDisputeProjection: (state, getters) => (state?.workspace?.properties?.USE_DISPUTE_PROJECTION === 'ENABLED' || getters?.getAccountUseDisputeProjection)
+  useDisputeProjection: (state, getters) => (state?.workspace?.properties?.USE_DISPUTE_PROJECTION === 'ENABLED' || getters?.getAccountUseDisputeProjection),
+  usePixAccountType: state => state?.workspace?.properties?.USE_PIX_ACCOUNT_TYPE !== 'DISABLED'
 }
 
 export default workspaceGetters

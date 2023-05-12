@@ -28,6 +28,7 @@ const omnichannelMutations = {
   activeTab: EDITOR_CONSTANTS.MESSAGES,
   countOmnichannelGetters: 0,
   totalOfOccurrences: 20,
+  lastPage: false,
   occurrences: new StateOccurrences(),
   groupedOccurrences: {},
   editor: {

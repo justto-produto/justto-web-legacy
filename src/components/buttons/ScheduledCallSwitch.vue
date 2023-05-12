@@ -14,11 +14,7 @@
       </div>
 
       <div class="scheduled-calls-switch__container-body">
-        <el-switch
-          v-model="scheduledCallState"
-          inactive-color="#FF4B54"
-          active-color="#14CC30"
-        />
+        <el-switch v-model="scheduledCallState" />
 
         <span> {{ $tc('call.scheduled.available', scheduledCallState) | capitalize }} </span>
       </div>
@@ -30,20 +26,11 @@
     v-loading="isLoading"
     class="scheduled-calls-button"
   >
-    <!-- <el-checkbox-group v-model="checkboxGroup4" size="mini" disabled> -->
-    <el-checkbox
-      v-model="scheduledCallState"
-      size="small"
-      border
-    >
-      <!-- <span>
-        Ligação automática
-      </span> -->
+    <el-checkbox v-model="scheduledCallState">
       <i
         :class="scheduledCallState ? 'el-icon-video-play' : 'el-icon-video-pause'"
       />
     </el-checkbox>
-    <!-- </el-checkbox-group> -->
   </article>
 
   <article v-else />
