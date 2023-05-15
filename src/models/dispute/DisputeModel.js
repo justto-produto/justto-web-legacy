@@ -463,6 +463,13 @@ export class DisputeModel {
       Boolean(this.#dtoV3?.hasNegotiationInterest)
   }
 
+  get getDisputeStrategyIsManual() {
+    return (this.#dtoV1?.strategyName ||
+      this.#dtoV2?.strategyName ||
+      this.#dtoV3?.strategyName ||
+      '').toLowerCase().includes('manual')
+  }
+
   getDisputeProperty(property) {
     return this.getDisputeProperties[property]
   }

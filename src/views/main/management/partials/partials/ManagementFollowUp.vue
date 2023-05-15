@@ -73,13 +73,17 @@ export default {
       return this.dispute?.getDisputeIsInNegotiation && this.dispute?.getDisputeHasNoNegotiationInterest
     },
 
+    isInManualStrategy() {
+      return this.dispute?.getDisputeStrategyIsManual
+    },
+
     needFolllowUp() {
       /* `dispute.favorite` é referente à "Aguardando análise da empresa." */
       if (this.dispute?.getDisputeIsFavorite === false && this.dispute?.getDisputeIsPaused === false && this.dispute?.getDisputeLastInteraction?.direction === 'OUTBOUND' && this.dispute.getDisputeIsInNegotiation) {
         return this.$moment().diff(this.$moment(this.dispute?.getDisputeLastInteractionCreateAt), 'hours') >= 24
       }
 
-      return this.hasNoNegotiationInterest || this.hasUnknownParts || this.wasViewed || this.havePhone || this.lawyerHaveInvalidDocument || this.claimantHaveInvalidDocument
+      return this.hasNoNegotiationInterest || this.hasUnknownParts || this.wasViewed || this.havePhone || this.lawyerHaveInvalidDocument || this.claimantHaveInvalidDocument || this.isInManualStrategy
     },
 
     followUpDays() {
@@ -96,6 +100,8 @@ export default {
       if (this.lawyerHaveInvalidDocument) { return this.$tc('roles.LAWYER.CLAIMANT', this.isRecovery) + ' com documento inválido' }
 
       if (this.claimantHaveInvalidDocument) { return this.$tc('roles.PARTY.CLAIMANT', this.isRecovery) + ' com documento inválido' }
+
+      if (this.isInManualStrategy) { return 'Disputa com estratégia manual.' }
 
       return 'Ligue para a parte e faça o acordo!'
     },
@@ -114,6 +120,8 @@ export default {
       if (this.lawyerHaveInvalidDocument) { return 'Advogado com documento inválido' }
 
       if (this.claimantHaveInvalidDocument) { return 'Documento inválido' }
+
+      if (this.isInManualStrategy) { return 'Estratégia manual' }
 
       return `${this.followUpDays} dia${plural} sem retorno da parte`
     }
