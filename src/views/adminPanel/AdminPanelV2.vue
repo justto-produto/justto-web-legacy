@@ -13,19 +13,25 @@
           class="new-admin-panel__menu-item"
           @click="() => item.action()"
         >
-          <i
-            v-if="item.iconType === 'el'"
-            :class="item.icon"
-            class="new-admin-panel__menu-item__icon"
-          />
+          <el-tooltip
+            :content="item.name"
+            :open-delay="500"
+            placement="right"
+          >
+            <i
+              v-if="item.iconType === 'el'"
+              :class="item.icon"
+              class="new-admin-panel__menu-item__icon"
+            />
 
-          <JusIcon
-            v-else
-            icon="logo-menu-dark"
-            size="1.75rem"
-            svg-family="light"
-            class="new-admin-panel__menu-item__icon"
-          />
+            <JusIcon
+              v-else
+              icon="logo-menu-dark"
+              size="1.75rem"
+              svg-family="light"
+              class="new-admin-panel__menu-item__icon"
+            />
+          </el-tooltip>
         </el-menu-item>
       </el-menu>
 
@@ -94,6 +100,7 @@ export default {
     // PanelMinute: () => import('./partials/PanelMinute'),
     // PanelUser: () => import('./partials/PanelUser')
   },
+
   data() {
     return {
       menuIndex: -1,
@@ -116,6 +123,7 @@ export default {
       ]
     }
   },
+
   computed: {
     ...mapGetters([
       'accountEmail',
@@ -124,6 +132,7 @@ export default {
 
     menuItems() {
       return [{
+        name: 'Plataforma',
         isVisible: true,
         iconType: 'ic',
         icon: 'logo-menu-dark',
@@ -131,21 +140,25 @@ export default {
           this.$router.push({ name: 'dashboard' })
         }
       }, {
+        name: 'Estratégias',
         isVisible: this.havepermission.includes(this.accountEmail),
         iconType: 'el',
         icon: 'el-icon-s-operation',
         action: () => {}
       }, {
+        name: 'Workspaces',
         isVisible: this.testers.includes(this.accountEmail),
         iconType: 'el',
         icon: 'el-icon-s-order',
         action: () => {}
       }, {
+        name: 'WhatsApp',
         isVisible: true,
         iconType: 'el',
         icon: 'el-icon-chat-line-round',
         action: () => {}
       }, {
+        name: 'Busca Global',
         isVisible: true,
         iconType: 'el',
         icon: 'el-icon-search',
