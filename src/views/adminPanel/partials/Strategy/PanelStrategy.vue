@@ -90,11 +90,13 @@ export default {
       }
     }
   },
+
   beforeMount() {
     this.getAvailableWorkspace()
     this.getAvaliableVariablesToTemplate()
     this.getStrategies()
   },
+
   methods: {
     ...mapActions([
       'setActiveStrategy',
