@@ -10,7 +10,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve --open",
-    "increment-version": "npm version patch --no-git-tag-version",
+    "increment-version": "npm version patch",
     "build": "vue-cli-service build --mode production --report",
     "build:icons": "icon-font-generator src/assets/icons/*.svg -o public/fonts --csspath public/styles/icons.css --jsonpath src/constants/icons.json --html false --types 'ttf, woff, woff2, eot' -p ic",
     "test:unit": "vue-cli-service test:unit",

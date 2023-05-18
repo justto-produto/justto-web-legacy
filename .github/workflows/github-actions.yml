@@ -17,7 +17,10 @@ jobs:
         with:
           node-version: 14
           cache: 'npm'
+      - run: git config --global user.email "dev@justto.com.br"
+      - run: git config --global user.name "GitHub Actions"
       - run: npm run increment-version
+      - run: git push
       - run: npm install --legacy-peer-deps
       - run: npm run build --legacy-peer-deps
       - uses: jakejarvis/s3-sync-action@master
