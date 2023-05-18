@@ -45,16 +45,17 @@ export default {
 
   methods: {
     handleSelectTicket() {
+      console.log('handleSelectTicket', !this.isActive, this.showActionButton)
       if (!this.isActive) {
         const id = this.ticket.disputeId
 
-        this.$router.replace({
+        this.$router.push({
           name: 'ticket',
           params: { id }
         })
         this.$emit('update', id)
       } else if (this.showActionButton) {
-        this.$router.replace('/negotiation')
+        this.$router.push({ name: 'negotiation' })
       }
     },
     getLastInteraction(time) {
