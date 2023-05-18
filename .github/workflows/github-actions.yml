@@ -17,8 +17,8 @@ jobs:
         with:
           node-version: 14
           cache: 'npm'
+      - run: npm run increment-version
       - run: npm install --legacy-peer-deps
-      - run: npm increment-version
       - run: npm run build --legacy-peer-deps
       - uses: jakejarvis/s3-sync-action@master
         with:
