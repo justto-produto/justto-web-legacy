@@ -15,7 +15,15 @@ const strategyMutations = {
   },
   setStrategies: (state, strategies) => {
     if (strategies.first) state.strategies = strategies
-    else state.strategies.content.push(...strategies.content)
+    else {
+      Vue.set(state, 'strategies', {
+        ...strategies,
+        content: [
+          ...state.strategies.content,
+          ...strategies.content
+        ]
+      })
+    }
   },
   addCommunications: (state, { response, strategyId }) => {
     const strategyIndex = findStrategyIndex(state.strategies, strategyId)

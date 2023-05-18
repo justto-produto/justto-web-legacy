@@ -10,7 +10,7 @@ const StrategyModule = {
     avaliableVariablesToTemplate: {},
     isLoadingStrategies: false,
     strategyQuery: {
-      size: 10,
+      size: 20,
       page: 1,
       name: '',
       sort: [

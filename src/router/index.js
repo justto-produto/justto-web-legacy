@@ -309,7 +309,55 @@ const router = new Router({
         requiresAuth: false,
         trackPage: true,
         title: 'Painel administrativo'
-      }
+      },
+      children: [{
+        name: 'Estratégias',
+        path: 'strategies',
+        component: () => import(/* webpackChunkName: "PanelStrategies" */ '@/views/adminPanel/partials/Strategy'),
+        meta: {
+          requiresAuth: true,
+          trackPage: true,
+          title: 'Estratégias'
+        },
+        children: [{
+          name: 'strategy',
+          path: ':id',
+          component: () => import(/* webpackChunkName: "StrategyBaseIndex" */ '@/views/adminPanel/partials/partials/StrategyBase'),
+          meta: {
+            hideFullHeader: true,
+            requiresAuth: true,
+            trackPage: true,
+            title: 'Editar Estratégia'
+          }
+        }]
+      }, {
+        name: 'Workspaces',
+        path: 'workspaces',
+        component: () => import(/* webpackChunkName: "PanelWorkspaceList" */ '@/views/adminPanel/partials/WorkspaceList'),
+        meta: {
+          requiresAuth: true,
+          trackPage: true,
+          title: 'Workspaces'
+        }
+      }, {
+        name: 'Templates WhatsApp',
+        path: 'whatsapp',
+        component: () => import(/* webpackChunkName: "PanelWhatsApp" */ '@/views/main/watsapp/Views'),
+        meta: {
+          requiresAuth: true,
+          trackPage: true,
+          title: 'Templates WhatsApp'
+        }
+      }, {
+        name: 'Busca Global',
+        path: 'search',
+        component: () => import(/* webpackChunkName: "PanelGlobalSearch" */ '@/views/adminPanel/partials/PanelGlobalSearch'),
+        meta: {
+          requiresAuth: true,
+          trackPage: true,
+          title: 'Busca Global'
+        }
+      }]
     },
     // {
     //   name: 'auth',

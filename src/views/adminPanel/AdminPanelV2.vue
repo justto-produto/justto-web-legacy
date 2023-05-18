@@ -13,19 +13,25 @@
           class="new-admin-panel__menu-item"
           @click="() => item.action()"
         >
-          <i
-            v-if="item.iconType === 'el'"
-            :class="item.icon"
-            class="new-admin-panel__menu-item__icon"
-          />
+          <el-tooltip
+            :content="item.name"
+            :open-delay="500"
+            placement="right"
+          >
+            <i
+              v-if="item.iconType === 'el'"
+              :class="item.icon"
+              class="new-admin-panel__menu-item__icon"
+            />
 
-          <JusIcon
-            v-else
-            icon="logo-menu-dark"
-            size="1.75rem"
-            svg-family="light"
-            class="new-admin-panel__menu-item__icon"
-          />
+            <JusIcon
+              v-else
+              icon="logo-menu-dark"
+              size="1.75rem"
+              svg-family="light"
+              class="new-admin-panel__menu-item__icon"
+            />
+          </el-tooltip>
         </el-menu-item>
       </el-menu>
 
@@ -51,26 +57,9 @@
       </el-header>
 
       <el-main class="new-admin-panel__container__main">
-        <div v-if="menuIndex === '1'">
-          Nova listagem de estratégia aqui
-        </div>
-
-        <WorkspaceList
-          v-if="menuIndex === '2'"
-          ref="panel2"
-          class="workspace-panel"
-        />
-
-        <PanelWhatsApp
-          v-if="menuIndex === '3'"
-          ref="panel3"
-          :filter-term="filterTerm"
-        />
-
-        <PanelGlobalSearch
-          v-if="menuIndex === '4'"
-          ref="panel4"
-        />
+        <transition name="fade">
+          <router-view />
+        </transition>
       </el-main>
     </el-container>
   </el-container>
@@ -81,22 +70,9 @@ import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'AdminPanel',
-  components: {
-    // Workspace: () => import('@/views/main/configurations/partials/WorkspaceList'),
-    // JusSidenavExternal: () => import('@/components/layouts/JusSidenavExternal'),
-    // PanelStrategy: () => import('./partials/Strategy/PanelStrategy'),
-    PanelGlobalSearch: () => import('./partials/PanelGlobalSearch'),
-    // PanelDashboard: () => import('./partials/PanelDashboard'),
-    // PanelWorkspace: () => import('./partials/PanelWorkspace'),
-    PanelWhatsApp: () => import('@/views/main/watsapp/Views'),
-    WorkspaceList: () => import('./partials/WorkspaceList')
-    // PanelBilling: () => import('./partials/PanelBilling'),
-    // PanelMinute: () => import('./partials/PanelMinute'),
-    // PanelUser: () => import('./partials/PanelUser')
-  },
+
   data() {
     return {
-      menuIndex: -1,
       left: 12,
       right: 0,
       filterTerm: '',
@@ -116,6 +92,7 @@ export default {
       ]
     }
   },
+
   computed: {
     ...mapGetters([
       'accountEmail',
@@ -124,6 +101,7 @@ export default {
 
     menuItems() {
       return [{
+        name: 'Plataforma',
         isVisible: true,
         iconType: 'ic',
         icon: 'logo-menu-dark',
@@ -131,26 +109,48 @@ export default {
           this.$router.push({ name: 'dashboard' })
         }
       }, {
+        name: 'Estratégias',
         isVisible: this.havepermission.includes(this.accountEmail),
         iconType: 'el',
         icon: 'el-icon-s-operation',
-        action: () => {}
+        action: () => { this.$router.push({ path: '/admin-panel-2/strategies' }) }
       }, {
+        name: 'Workspaces',
         isVisible: this.testers.includes(this.accountEmail),
         iconType: 'el',
         icon: 'el-icon-s-order',
-        action: () => {}
+        action: () => {
+          this.$router.push({ path: '/admin-panel-2/workspaces' })
+        }
       }, {
+        name: 'WhatsApp',
         isVisible: true,
         iconType: 'el',
         icon: 'el-icon-chat-line-round',
-        action: () => {}
+        action: () => {
+          this.$router.push({ path: '/admin-panel-2/whatsapp' })
+        }
       }, {
+        name: 'Busca Global',
         isVisible: true,
         iconType: 'el',
         icon: 'el-icon-search',
-        action: () => {}
+        action: () => {
+          this.$router.push({ path: '/admin-panel-2/search' })
+        }
       }]
+    },
+
+    menuIndex: {
+      get() {
+        return {
+          '/admin-panel-2/strategies': '1',
+          '/admin-panel-2/workspaces': '2',
+          '/admin-panel-2/whatsapp': '3',
+          '/admin-panel-2/search': '4'
+        }[this.$route.path] || '-1'
+      },
+      set(value) {}
     }
   },
 
@@ -158,7 +158,7 @@ export default {
     ...mapActions(['logout']),
 
     changeMenuIndex(index) {
-      this.menuIndex = index
+      this.menuIndex = String(index)
     },
 
     mainButtonHandler() {
@@ -170,7 +170,7 @@ export default {
     },
 
     handleSelectMenuItem(index) {
-      this.menuIndex = index
+      this.menuIndex = String(index)
     }
   }
 }

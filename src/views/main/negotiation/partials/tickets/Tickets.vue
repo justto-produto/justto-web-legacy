@@ -454,30 +454,7 @@ export default {
     },
 
     infiniteHandler(completed) {
-      /**
-       * TODO BUG: Chamada duplicada na mudançã de aba.
-       *
-       * O Handler da aba busca a página 0, e Handler do Infinit Scrool chama a página 1.
-       *
-       * Todas as vezes.
-       */
-
-      // Busca disputas da próxima página.
-      // this.addDisputeQueryPageByTicket()
-      // this.getDisputes('nextPage')
-
       this.getTicketsNextPage().finally(completed)
-      // .then(response => {
-      //   if (response?.last) {
-      //     if ($state) {
-      //       $state.complete()
-      //     }
-      //   } else {
-      //     if ($state) {
-      //       $state.loaded()
-      //     }
-      //   }
-      // })
     },
 
     handleNextTab() {
