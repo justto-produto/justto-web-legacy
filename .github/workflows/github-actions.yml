@@ -17,6 +17,8 @@ jobs:
         with:
           node-version: 14
           cache: 'npm'
+      - name: Update version in package.json
+        uses: maks-stupak/gh-action-bump-version@v7.1.5        
       - run: npm install --legacy-peer-deps
       - run: npm run build --legacy-peer-deps
       - uses: jakejarvis/s3-sync-action@master
