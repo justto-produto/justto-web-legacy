@@ -55,6 +55,10 @@
             Meu perfil
           </div>
 
+          <div class="usermenu-container__version">
+            Versão {{ appVersion }}
+          </div>
+
           <router-link
             v-if="showConfigs"
             to="/configurations"
@@ -264,7 +268,8 @@ export default {
   }
 
   &__version {
-    margin: 6px 20px 12px 20px;
+    margin: 4px auto 8px;
+    text-align: center;
     color: $--color-text-secondary;
     font-size: 12px;
   }
