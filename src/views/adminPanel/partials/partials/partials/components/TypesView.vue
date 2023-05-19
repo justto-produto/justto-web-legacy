@@ -1,18 +1,17 @@
 <template>
-  <article class="workspaces-view__container">
-    <p class="workspace-view__title">
-      Workspaces:
+  <article class="types-view__container">
+    <p class="types-view__title">
+      Tipos:
     </p>
 
-    <div class="workspaces-view__items">
+    <div class="types-view__items">
       <el-tag
-        v-for="item in workspaces"
-        :key="`workspace#${item.id}`"
+        v-for="type in types"
+        :key="`type#${type}`"
         size="small"
-        effect="plain"
-        class="workspaces-view__item"
+        class="types-view__item"
       >
-        {{ item.name }}
+        {{ $tc(`strategyTypes.${type}`) }}
       </el-tag>
     </div>
   </article>
@@ -21,7 +20,7 @@
 <script>
 export default {
   props: {
-    workspaces: {
+    types: {
       type: Array,
       required: true
     }
@@ -32,29 +31,30 @@ export default {
 <style lang="scss" scoped>
 @import '@/styles/colors.scss';
 
-.workspaces-view__container {
+.types-view__container {
   display: flex;
   flex-direction: column;
   gap: 8px;
   border-radius: 4px;
   padding: 4px 4px 8px;
   font-weight: 500;
-  background-color: $--color-primary-light-9;
+  background-color: $--pj-color-disabled-blue;
 
-  .workspace-view__title {
+  .types-view__title {
     margin: 0;
     text-align: center;
   }
 
-  .workspaces-view__items {
+  .types-view__items {
     display: flex;
     flex-wrap: wrap;
     gap: 4px;
     justify-content: center;
 
-    .workspaces-view__item {
+    .types-view__item {
       flex: 1;
       text-align: center;
+      text-transform: uppercase;
     }
   }
 }

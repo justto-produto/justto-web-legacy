@@ -1,44 +1,9 @@
 <template>
   <article
+    :class="{'strategy-item__container__active': isActive}"
     class="strategy-item__container prevent-select"
     @click="openStrategy(strategy)"
   >
-    <!-- <div class="strategy-item__actions">
-      <el-tooltip
-        content="ID da Estratégia."
-        placement="right"
-      >
-        <el-button
-          type="text"
-          class="strategy-item__action strategy-item__actions__id"
-        >
-          #{{ strategy.id }}
-        </el-button>
-      </el-tooltip>
-
-      <el-tooltip
-        :content="`Estratégia está ${strategy.privateStrategy ? 'privada' : 'pública'}`"
-        placement="right"
-      >
-        <el-button
-          type="text"
-          :icon="strategy.privateStrategy ? 'el-icon-lock' : 'el-icon-unlock'"
-          class="strategy-item__action"
-        />
-      </el-tooltip>
-
-      <el-tooltip
-        :content="`Estratégia está ${strategy.active ? 'ativa' : 'inativa'}`"
-        placement="right"
-      >
-        <el-button
-          type="text"
-          :icon="strategy.active ? 'el-icon-open' : 'el-icon-turn-off'"
-          class="strategy-item__action"
-        />
-      </el-tooltip>
-    </div> -->
-
     <div class="strategy-item__body">
       <div class="strategy-item__body__title">
         <span class="strategy-item__body__name">
@@ -57,29 +22,9 @@
       />
     </div>
 
-    <!-- <div class="strategy-item__actions">
-      <el-tooltip
-        content="Copiar estratégia"
-        placement="right"
-      >
-        <el-button
-          type="text"
-          icon="el-icon-copy-document"
-          class="strategy-item__action"
-        />
-      </el-tooltip>
-
-      <el-tooltip
-        content="Apagar estratégia"
-        placement="right"
-      >
-        <el-button
-          type="text"
-          icon="el-icon-delete"
-          class="strategy-item__action"
-        />
-      </el-tooltip>
-    </div> -->
+    <i
+      class="el-icon-edit strategy-item__edit pointer"
+    />
   </article>
 </template>
 
@@ -88,14 +33,20 @@ export default {
   name: 'StrategyItem',
 
   components: {
-    TypesView: () => import('./partials/TypesView'),
-    WorkspacesView: () => import('./partials/WorkspacesView')
+    TypesView: () => import('./components/TypesView'),
+    WorkspacesView: () => import('./components/WorkspacesView')
   },
 
   props: {
     strategy: {
       type: Object,
       required: true
+    }
+  },
+
+  computed: {
+    isActive() {
+      return Number(this.strategy?.id || -2) === Number(this.$route?.params?.id || -1)
     }
   },
 
@@ -108,6 +59,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '@/styles/colors.scss';
+
 .strategy-item__container {
   display: flex;
   justify-content: space-between;
@@ -116,6 +69,7 @@ export default {
   border-radius: 1rem;
   padding: 0.5rem;
   cursor: pointer;
+  position: relative;
 
   .strategy-item__body {
     display: flex;
@@ -161,8 +115,23 @@ export default {
     }
   }
 
-  &:hover {
-    border-color: blue;
+  .strategy-item__edit {
+    visibility: hidden;
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 9px 1px 0 0;
+  }
+
+  &.strategy-item__container__active, &:hover {
+    border-color: transparent;
+    -webkit-box-shadow: 0px 0px 8px 0px rgba(1,142,240,1);
+    -moz-box-shadow: 0px 0px 8px 0px rgba(1,142,240,1);
+    box-shadow: 0px 0px 8px 0px rgba(1,142,240,1);
+
+    .strategy-item__edit {
+      visibility: visible;
+    }
   }
 }
 </style>

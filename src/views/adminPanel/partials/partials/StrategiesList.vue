@@ -76,8 +76,8 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  padding: 0 4px;
-  gap: 8px;
+  padding: 8px;
+  gap: 12px;
   overflow-y: auto;
 
   .strategies-list__item {
