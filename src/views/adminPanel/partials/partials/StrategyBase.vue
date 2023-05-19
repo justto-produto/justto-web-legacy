@@ -1,17 +1,12 @@
 <template>
   <article class="strategy-conrainer">
     <div class="strategy-conrainer__triggers" />
-    <StrategyDetails class="strategy-conrainer__details" />
   </article>
 </template>
 
 <script>
 export default {
-  name: 'StrategyBase',
-
-  components: {
-    StrategyDetails: () => import('./partials/StrategyDetails')
-  }
+  name: 'StrategyBase'
 }
 </script>
 
@@ -20,6 +15,7 @@ export default {
   display: flex;
   height: 100%;
   width: 100%;
+  position: relative;
 
   .strategy-conrainer__triggers {
     flex: 2;

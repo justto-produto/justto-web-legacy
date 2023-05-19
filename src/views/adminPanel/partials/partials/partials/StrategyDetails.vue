@@ -5,19 +5,6 @@
     </h3>
 
     <div class="strategy-details__actions">
-      <!-- <el-tooltip
-        content="ID da Estratégia."
-        placement="bottom-start"
-      >
-        <el-button
-          type="secondary"
-          circle
-          class="strategy-item__action strategy-item__actions__id"
-        >
-          #{{ strategy.id }}
-        </el-button>
-      </el-tooltip> -->
-
       <el-tooltip
         :content="`Estratégia está ${strategy.privateStrategy ? 'privada' : 'pública'}`"
         placement="bottom-start"
@@ -66,20 +53,93 @@
         />
       </el-tooltip>
     </div>
+
+    <div class="strategy-details__form">
+      <el-form
+        ref="form"
+        :model="form"
+        label-position="top"
+      >
+        <el-form-item label="Workspaces">
+          <el-select
+            v-model="form.strategies"
+            placeholder="Selecione as Workspaces"
+            multiple
+            filterable
+          >
+            <el-option
+              v-for="item in workspaces"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            />
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="Tipos">
+          <el-select
+            v-model="form.types"
+            filterable
+            multiple
+            placeholder="Selecione tipos"
+          >
+            <el-option
+              v-for="(type, index) in defaultStrategyTypes"
+              :key="index"
+              :label="$t(`strategyTypes.${type}`).toUpperCase()"
+              :value="type"
+            />
+          </el-select>
+        </el-form-item>
+      </el-form>
+    </div>
   </article>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 
+const defaultStrategyTypes = ['COMMUNICATION', 'PAYMENT', 'RECOVERY', 'OBLIGATION', 'DISCOUNT', 'MULTI_PARTY_NEGOTIATION', 'LEGAL_MKT']
+
 export default {
   name: 'StrategyDetails',
 
+  data: () => ({
+    form: {
+      strategies: [],
+      types: []
+    },
+
+    defaultStrategyTypes
+  }),
+
   computed: {
-    ...mapGetters(['getStrategiesById']),
+    ...mapGetters({
+      getStrategy: 'getStrategiesById',
+      workspaces: 'getAvailableWorkspaces'
+    }),
 
     strategy() {
-      return this.getStrategiesById(this.$route?.params?.id || -1)
+      return this.getStrategy(this.$route?.params?.id || -1)
+    }
+  },
+
+  watch: {
+    '$route.params.id': {
+      deep: true,
+      handler: 'handlePopulateForm'
+    }
+  },
+
+  mounted() {
+    this.handlePopulateForm()
+  },
+
+  methods: {
+    async handlePopulateForm() {
+      await this.$nextTick()
+      this.form.strategies = (this.strategy?.workspaces || []).map(({ id }) => id)
+      this.form.types = this.strategy?.types || []
     }
   }
 }
@@ -108,6 +168,12 @@ export default {
     .el-button {
       margin: 0;
     }
+  }
+
+  .strategy-details__form {
+    display: flex;
+    flex-direction: column;
+    padding: 0 4px;
   }
 }
 </style>

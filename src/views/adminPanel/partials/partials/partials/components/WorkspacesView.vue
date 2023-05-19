@@ -4,25 +4,72 @@
       Workspaces:
     </p>
 
-    <div class="workspaces-view__items">
+    <el-select
+      v-if="active"
+      :value="workspaces.map(w => w.id)"
+      multiple
+      filterable
+      @change="handleEditStrategies"
+    >
+      <el-option
+        v-for="(item, key) in allWorkspaces"
+        :key="`$${key}#{item.id}#${item.teamName}`"
+        :label="item.teamName"
+        :value="item.id"
+      />
+    </el-select>
+
+    <div
+      v-else
+      class="workspaces-view__items"
+    >
       <el-tag
         v-for="item in workspaces"
         :key="`workspace#${item.id}`"
         size="small"
         class="workspaces-view__item"
       >
-        {{ item.name }}
+        {{ item.teamName }}
       </el-tag>
     </div>
   </article>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   props: {
     workspaces: {
       type: Array,
       required: true
+    },
+
+    active: {
+      type: Boolean,
+      default: false
+    }
+  },
+
+  computed: {
+    ...mapGetters({
+      availableWorkspaces: 'getAvailableWorkspaces'
+    }),
+
+    allWorkspaces() {
+      const ids = this.availableWorkspaces.map(({ id }) => id)
+
+      return [
+        ...this.availableWorkspaces,
+        ...this.workspaces.filter(w => !ids.includes(w.id))
+      ]
+    }
+  },
+
+  methods: {
+    handleEditStrategies(strategiesIds) {
+      const strategies = this.availableWorkspaces.filter(({ id }) => strategiesIds.includes(id))
+
+      this.$emit('edit', strategies)
     }
   }
 }
@@ -38,7 +85,6 @@ export default {
   border-radius: 4px;
   padding: 4px 4px 8px;
   font-weight: 500;
-  background-color: $--pj-color-disabled-blue;
 
   .workspace-view__title {
     margin: 0;

@@ -114,8 +114,6 @@ export default {
       const height = offsetHeight * (this.reverse ? -1 : 1)
       const heightPercentage = parseInt(((height + scrollTop) / scrollHeight) * 100)
 
-      console.log({ heightPercentage })
-
       if (this.reverse ? heightPercentage <= 30 : heightPercentage >= 70) {
         this.startLoading()
         this.$emit('load', this.loaded)

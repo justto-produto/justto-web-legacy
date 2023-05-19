@@ -9,10 +9,13 @@ const strategyMutations = {
     const strategyIndex = findStrategyIndex(state.strategies, strategyId)
     state.strategies.content.splice(strategyIndex, 1)
   },
+
   updateStrategy: (state, strategyData) => {
     const strategyIndex = findStrategyIndex(state.strategies, strategyData.id)
-    state.strategies.content[strategyIndex] = strategyData
+
+    Vue.set(state.strategies.content, strategyIndex, strategyData)
   },
+
   setStrategies: (state, strategies) => {
     if (strategies.first) state.strategies = strategies
     else {

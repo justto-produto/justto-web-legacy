@@ -4,7 +4,26 @@
       Tipos:
     </p>
 
-    <div class="types-view__items">
+    <el-select
+      v-if="active"
+      :value="types"
+      filterable
+      multiple
+      placeholder="Selecione tipos"
+      @change="handleEdit"
+    >
+      <el-option
+        v-for="(type, index) in defaultStrategyTypes"
+        :key="index"
+        :label="$t(`strategyTypes.${type}`).toUpperCase()"
+        :value="type"
+      />
+    </el-select>
+
+    <div
+      v-else
+      class="types-view__items"
+    >
       <el-tag
         v-for="type in types"
         :key="`type#${type}`"
@@ -18,11 +37,26 @@
 </template>
 
 <script>
+const defaultStrategyTypes = ['COMMUNICATION', 'PAYMENT', 'RECOVERY', 'OBLIGATION', 'DISCOUNT', 'MULTI_PARTY_NEGOTIATION', 'LEGAL_MKT']
+
 export default {
   props: {
     types: {
       type: Array,
       required: true
+    },
+
+    active: {
+      type: Boolean,
+      default: false
+    }
+  },
+
+  data: () => ({ defaultStrategyTypes }),
+
+  methods: {
+    handleEdit(types) {
+      this.$emit('edit', types)
     }
   }
 }
@@ -38,7 +72,6 @@ export default {
   border-radius: 4px;
   padding: 4px 4px 8px;
   font-weight: 500;
-  background-color: $--pj-color-disabled-blue;
 
   .types-view__title {
     margin: 0;

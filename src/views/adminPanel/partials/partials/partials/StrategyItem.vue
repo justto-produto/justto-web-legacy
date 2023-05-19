@@ -13,12 +13,16 @@
 
       <WorkspacesView
         :workspaces="strategy.workspaces || []"
+        :active="isActive"
         class="strategy-item__body__workspaces"
+        @edit="handleEditWorkspaces"
       />
 
       <TypesView
         :types="strategy.types || []"
+        :active="isActive"
         class="strategy-item__body__types"
+        @edit="handleEditTypes"
       />
     </div>
 
@@ -29,6 +33,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 export default {
   name: 'StrategyItem',
 
@@ -51,8 +56,30 @@ export default {
   },
 
   methods: {
+    ...mapActions(['updateStrategy']),
+
     openStrategy({ id }) {
       this.$router.push(`/admin-panel-2/strategies/${id}`)
+    },
+
+    handleEditWorkspaces(workspaces) {
+      const strategy = { ...this.strategy, workspaces }
+
+      this.handleEditStrategy(strategy)
+    },
+
+    handleEditTypes(types) {
+      const strategy = { ...this.strategy, types }
+
+      this.handleEditStrategy(strategy)
+    },
+
+    handleEditStrategy(strategy) {
+      this.updateStrategy(strategy).then(() => this.$jusNotification({
+        type: 'success',
+        message: 'Ação executada com sucesso!'
+      })).catch(error => this.$jusNotification({ error }))
+      this.$jusSegment('EDIT_STRATEGY', { strategy })
     }
   }
 }

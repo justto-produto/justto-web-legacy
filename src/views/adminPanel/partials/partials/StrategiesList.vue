@@ -72,7 +72,6 @@ export default {
 
 <style lang="scss" scoped>
 .strategies-list__container {
-  position: relative;
   display: flex;
   flex-direction: column;
   align-items: stretch;
