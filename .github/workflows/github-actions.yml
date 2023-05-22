@@ -32,10 +32,12 @@ jobs:
         run: |
           git config --global user.email "dev@justto.com.br"
           git config --global user.name "GitHub Actions"
-      - name: Incrementar versão
-        run: npm run increment-version
-      - name: Realizar push
-        run: git push
+      - name: Incrementar Versão
+        run: |
+          git stash push --include-untracked
+          npm run increment-version
+          git push
+          git stash pop
 
   Deploy:
     name: Deploy
