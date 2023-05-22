@@ -17,10 +17,6 @@ jobs:
         with:
           node-version: 14
           cache: 'npm'
-      - run: git config --global user.email "dev@justto.com.br"
-      - run: git config --global user.name "GitHub Actions"
-      - run: npm run increment-version
-      - run: git push
       - run: npm install --legacy-peer-deps
       - run: npm run build --legacy-peer-deps
       - uses: jakejarvis/s3-sync-action@master
@@ -32,6 +28,14 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: 'sa-east-1'
           SOURCE_DIR: 'dist'
+      - name: Configurar usuário Git
+        run: |
+          git config --global user.email "dev@justto.com.br"
+          git config --global user.name "GitHub Actions"
+      - name: Incrementar versão
+        run: npm run increment-version
+      - name: Realizar push
+        run: git push
 
   Deploy:
     name: Deploy
