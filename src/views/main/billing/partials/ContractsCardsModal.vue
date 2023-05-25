@@ -46,6 +46,7 @@
               <el-button
                 type="primary"
                 size="mini"
+                @click="handleEditContract(contract)"
               >
                 Editar
               </el-button>
@@ -56,6 +57,7 @@
 
       <NewContractDialog
         v-if="isFormVisible"
+        ref="editContract"
         :plans="plans"
         :customer="form"
       />
@@ -199,12 +201,15 @@ export default {
       'changeContractDiscount',
       'deleteContractDiscount'
     ]),
+
     changeHasWorkspaceValue(newValue) {
       this.hasWorkspace = newValue
     },
+
     changeAllFilteredContracts(newValue) {
       this.allFilteredContracts = newValue
     },
+
     resetNewContract(here) {
       const tariffs = []
       Object.keys(TARIFF_TYPES).map(key => tariffs.push(new TariffModel({ type: key })))
@@ -358,6 +363,10 @@ export default {
             message: 'Desconto deletado com sucesso.'
           })
         })
+    },
+
+    handleEditContract(contract) {
+      this.$refs.editContract.handleOpenDialog(contract)
     }
   }
 }
@@ -435,95 +444,4 @@ export default {
     }
   }
 }
-// .contracts-modal {
-//   .el-dialog {
-//     max-height: 100%;
-//     overflow: auto;
-//   }
-
-//   .contract-modal__flag {
-//     margin-left: 8px;
-//   }
-
-//   .el-row {
-//     display: flex;
-//     flex-wrap: wrap;
-//     justify-content: space-between;
-
-//     &::before,
-//     &::after {
-//       display: none;
-//     }
-
-//     &:last-child {
-//       margin-bottom: 0;
-//     }
-
-//     .el-col {
-//       .el-form-item__content {
-//         & > * {
-//           width: 100%;
-//         }
-//       }
-//     }
-//   }
-// }
-
-// .is-inactive {
-//   background-color: #f6f6f6;
-//   border-color: #e4e7ed;
-//   color: #424242;
-
-//   cursor: not-allowed;
-//   &:hover {
-//     border-color: #e4e7ed;
-//   }
-// }
-
-// .transition-none {
-//   transition: none !important;
-// }
-
-// .custom_input_number {
-//   -moz-appearance: textfield;
-//   appearance: textfield;
-// }
-// .custom_input_number::-webkit-outer-spin-button,
-// .custom_input_number::-webkit-inner-spin-button {
-//   -webkit-appearance: none;
-//   margin: 0;
-// }
-
-// .flex-row {
-//   display: flex;
-//   width: 100%;
-//   align-items: flex-end;
-//   margin-bottom: 40px;
-
-//   .el-form-item {
-//     display: flex;
-//     flex-direction: column;
-//     margin-bottom: 0 !important;
-
-//     .el-form-item__label {
-//       line-height: 1em;
-//       margin-bottom: 12px;
-//       word-break: break-word;
-//       text-align: left;
-//     }
-
-//     .el-form-item__content {
-//       line-height: 1em;
-
-//       .el-button {
-//         width: 100%;
-//       }
-//     }
-//   }
-
-//   &:last-child {
-//     margin-bottom: 0;
-//   }
-// }
-
 </style>

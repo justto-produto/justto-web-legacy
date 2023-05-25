@@ -134,7 +134,8 @@
             >
               <div class="el-input">
                 <el-checkbox
-                  :value="workspaceId === form.workspaceId"
+                  :value="haveExclusiveContract"
+                  :disabled="disableExclusiveOption"
                   label="Exclusivo desta workspace"
                   border
                   class="el-input__inner"
@@ -215,6 +216,7 @@ export default {
       tariffs: [],
       statusActive: false
     },
+    contract: {},
     tariffTypes: TARIFF_TYPES,
     discountsOfNewContract: [],
     formRules: {
@@ -232,7 +234,11 @@ export default {
     contractStatus: self => self.$t('billing.contract.status'),
 
     haveExclusiveContract() {
-      return false
+      return this.workspaceId === this.form.workspaceId
+    },
+
+    disableExclusiveOption() {
+      return this.contract?.id && this.contract?.workspaceId === this.workspaceId
     },
 
     contractDate() {
@@ -241,7 +247,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(['addContract']),
+    ...mapActions(['addContract', 'updateContract', 'getContracts']),
 
     restoreForm() {
       this.form = {
@@ -263,8 +269,12 @@ export default {
       }
     },
 
-    handleOpenDialog() {
-      this.restoreForm()
+    populateForm(contract) {
+      this.form = { ...contract }
+    },
+
+    handleOpenDialog(contract) {
+      contract?.id ? this.populateForm(contract) : this.restoreForm()
 
       this.visible = true
       this.saving = false
@@ -304,12 +314,16 @@ export default {
 
       const customerId = this.customer.customerId
       const contract = this.form
+      const toEdit = Boolean(contract?.id)
+      const method = toEdit ? this.updateContract : this.addContract
 
-      this.addContract({ customerId, contract }).then(_ => {
+      method({ customerId, contract }).then(async _ => {
+        await this.getContracts()
+
         this.$jusNotification({
           type: 'success',
           title: 'Yay!',
-          message: 'Contrato adicionado com sucesso.'
+          message: `Contrato ${toEdit ? 'editado' : 'criado'}  com sucesso.`
         })
 
         this.handleCancel()
@@ -317,32 +331,8 @@ export default {
         this.$jusNotification({ error })
       }).finally(() => {
         this.saving = false
+        this.$emit('reload')
       })
-      // const {
-      //   form: { customerId },
-      //   newContract
-      // } = this
-
-      // this.addContract({
-      //   customerId,
-      //   contract: newContract
-      // }).then((res) => {
-      //   Promise.all(
-      //     this.discountsOfNewContract.map((discount) => this.addDiscount({ contractId: res.id, discount }))
-      //   ).then((res) => {
-      //     this.$jusNotification({
-      //       type: 'success',
-      //       title: 'Yay!',
-      //       message: 'Contrato adicionado com sucesso.'
-      //     })
-      //   })
-      // }).catch(error => {
-      //   this.$jusNotification({ error })
-      // }).finally(() => {
-      //   this.saving = false
-      // })
-
-      //
     }
   }
 }
