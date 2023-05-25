@@ -52,6 +52,35 @@
               </el-button>
             </el-descriptions-item>
           </el-descriptions>
+
+          <el-descriptions
+            v-if="contract.tariffType === 'FRANCHISE'"
+            title="Valores por franquia"
+            :column="1"
+          >
+            <el-descriptions-item>
+              <EditFranchiseValues
+                :contract="contract"
+                :customer="form"
+              />
+            </el-descriptions-item>
+          </el-descriptions>
+
+          <el-descriptions
+            v-if="contract.tariffType === 'VOLUMETRY'"
+            title="Valores por volume"
+            :column="1"
+          >
+            <el-descriptions-item>
+              <el-button
+                type="primary"
+                size="mini"
+                @click="handleEditContract(contract)"
+              >
+                Editar
+              </el-button>
+            </el-descriptions-item>
+          </el-descriptions>
         </div>
       </div>
 
@@ -75,7 +104,8 @@ export default {
   name: 'ContractsCardsModal',
 
   components: {
-    NewContractDialog: () => import('./partials/NewContractDialog')
+    NewContractDialog: () => import('./partials/NewContractDialog'),
+    EditFranchiseValues: () => import('./partials/EditFranchiseValues')
   },
 
   props: {
@@ -407,6 +437,10 @@ export default {
           }
 
           .contract-card__data {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+
             .el-descriptions {
               .el-descriptions__header { margin: 0; }
 

@@ -41,11 +41,11 @@
 
           <el-col :span="12">
             <el-form-item
-              prop="tarrif_type"
+              prop="tariffType"
               label="Tipo do Contrato"
             >
               <el-select
-                v-model="form.tarrif_type"
+                v-model="form.tariffType"
                 placeholder="Selecione..."
               >
                 <el-option
@@ -167,6 +167,25 @@
             </el-form-item>
           </el-col>
         </el-row>
+
+        <!-- TODO: Campos do plano Full. -->
+
+        <el-row>
+          <el-col :span="24">
+            <el-form-item
+              prop="note"
+              label="Nota"
+            >
+              <div class="el-input">
+                <textarea
+                  v-model="form.note"
+                  class="el-textarea__inner"
+                  rows="4"
+                />
+              </div>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
 
       <span slot="footer">
@@ -200,7 +219,6 @@
 </template>
 
 <script>
-import { TARIFF_TYPES } from '@/constants/billing'
 import { mapActions, mapGetters } from 'vuex'
 
 export default {
@@ -223,15 +241,13 @@ export default {
     saving: false,
     form: {},
     contract: {},
-    tariffTypes: TARIFF_TYPES,
-    discountsOfNewContract: [],
     formRules: {
       invoiceClosingDay: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
       invoiceDueDays: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
       planId: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
       startedDate: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
       status: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
-      tarrif_type: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
+      tariffType: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
     }
   }),
 
@@ -273,13 +289,14 @@ export default {
         grossValueTax: null,
         tariffs: [],
         statusActive: false,
-        tarrif_type: ''
+        tariffType: '',
+        note: ''
       }
     },
 
     populateForm(contract) {
       this.form = {
-        tarrif_type: '',
+        tariffType: '',
         ...contract
       }
     },
@@ -353,6 +370,8 @@ export default {
 @import '@/styles/colors.scss';
 
 .new-contract-dialog {
+  border: solid lightgray 0.2rem;
+
   .el-dialog__header {
     span {
       h2, h3 {
