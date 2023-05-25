@@ -8,7 +8,7 @@
       custom-class="new-contract-dialog"
     >
       <span slot="title">
-        <h2>Criar contrato de <span class="upper">{{ customer.customerName }}</span> em <span class="upper">{{ contractDate | moment('LL') }}</span></h2>
+        <h2>Criar contrato de <span class="upper">{{ customer.customerName }}</span> em <span class="upper">{{ contractDate | moment('L') }}</span></h2>
         <h3>com mensalidade de {{ customer.monthlySubscriptionFee | currency }}</h3>
       </span>
 

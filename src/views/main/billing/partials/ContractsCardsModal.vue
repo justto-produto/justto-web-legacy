@@ -6,31 +6,60 @@
     class="contracts-modal"
     width="75%"
   >
-    <el-row
-      v-loading="saving"
-      :gutter="16"
-      type="flex"
-      justify="space-between"
-      class="contracts-cards-container"
-    >
-      <el-col
-        v-if="creatingNewContract"
-        class="new-contract-card__container contract-card"
+    <article class="contracts-cards-container">
+      <div
+        v-for="contract in filteredContracts"
+        :key="`contract#${contract.id}`"
+        class="contract-card__container"
       >
-        NOVO CONTRATO
-      </el-col>
+        <div class="contract-card__title">
+          <h4>Contrato de {{ form.customerName }} {{ ((contract.updateAt && contract.updateAt.dateTime) || (contract.createAt && contract.createAt.dateTime)) | moment('L') }} &#60;{{ !contract.workspaceId ? 'COMPARTILHADO' : 'EXCLUSIVO' }}&#62;</h4>
+          <h4>com mensalidade de {{ form.monthlySubscriptionFee | currency }}</h4>
+        </div>
 
-      <el-col
-        :span="6"
-        class="new-contract-card__btn"
-      >
-        <NewContractDialog
-          v-if="isFormVisible"
-          :plans="plans"
-          :customer="form"
-        />
-      </el-col>
-    </el-row>
+        <div class="contract-card__data">
+          <el-descriptions
+            title="Dados do contrato"
+            :column="1"
+          >
+            <el-descriptions-item label="Contrato">
+              {{ $tc(`billing.contract.status.${contract.status}`) }}
+            </el-descriptions-item>
+
+            <el-descriptions-item label="Fechamento">
+              {{ `no ${contract.invoiceClosingDay ? contract.invoiceClosingDay+'º' : 'último' } dia do més` }}
+            </el-descriptions-item>
+
+            <el-descriptions-item label="Plano">
+              {{ planNameById(contract.planId) }}
+            </el-descriptions-item>
+
+            <el-descriptions-item label="Faturamento">
+              {{ `${contract.invoiceDueDays} dias após fechamento` }}
+            </el-descriptions-item>
+
+            <el-descriptions-item label="Iniciado em">
+              {{ contract.createAt.dateTime | moment('L') }}
+            </el-descriptions-item>
+
+            <el-descriptions-item>
+              <el-button
+                type="primary"
+                size="mini"
+              >
+                Editar
+              </el-button>
+            </el-descriptions-item>
+          </el-descriptions>
+        </div>
+      </div>
+
+      <NewContractDialog
+        v-if="isFormVisible"
+        :plans="plans"
+        :customer="form"
+      />
+    </article>
   </el-dialog>
 </template>
 
@@ -41,7 +70,7 @@ import { ContractModel } from '@/models/billing/Contract.model'
 import { TariffModel } from '@/models/billing/Tariff.model'
 
 export default {
-  name: 'ContractsModal',
+  name: 'ContractsCardsModal',
 
   components: {
     NewContractDialog: () => import('./partials/NewContractDialog')
@@ -57,6 +86,7 @@ export default {
       default: false
     }
   },
+
   data() {
     return {
       discountForm: {},
@@ -78,6 +108,7 @@ export default {
       creatingNewContract: false
     }
   },
+
   computed: {
     ...mapGetters({
       clientData: 'getCurrentCustomer',
@@ -115,8 +146,13 @@ export default {
 
     haveContracts() {
       return this.filteredContracts.length > 0
+    },
+
+    planNameById() {
+      return id => (this.plans.find(p => p.id === id).name || 'Não encontrado')
     }
   },
+
   watch: {
     clientData(current) {
       this.form = current
@@ -148,10 +184,12 @@ export default {
       this.isFormVisible = true
     }
   },
+
   beforeMount() {
     this.form = this.clientData
     this.resetNewContract()
   },
+
   methods: {
     ...mapActions([
       'addContract',
@@ -326,6 +364,77 @@ export default {
 </script>
 
 <style lang="scss">
+@import '@/styles/colors.scss';
+
+.contracts-modal {
+  div[role="dialog"] {
+    .el-dialog__body {
+      .contracts-cards-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        justify-content: flex-start;
+        align-items: stretch;
+
+        .contract-card__container {
+          border: solid lightgray 2px;
+          border-radius: 8px;
+          padding: 8px;
+          display: flex;
+          flex: 1;
+          flex-direction: column;
+          gap: 16px;
+
+          .contract-card__title {
+            h4 {
+              margin: 0;
+              font-weight: 600;
+            }
+
+            h4 + h4 {
+              font-weight: normal;
+              text-indent: 0.5rem;
+            }
+          }
+
+          .contract-card__data {
+            .el-descriptions {
+              .el-descriptions__header { margin: 0; }
+
+              .el-descriptions__body {
+                padding-left: 0.5rem;
+
+                .el-descriptions__table {
+                  tbody {
+                    .el-descriptions-row {
+                      .el-descriptions-item {
+                        padding: 0;
+
+                        .el-descriptions-item__container {
+                          .el-descriptions-item__label {
+                            margin: 0;
+
+                            &::after {
+                              content: '\00a0';
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        span:has(.el-button) {
+          display: flex;
+        }
+      }
+    }
+  }
+}
 // .contracts-modal {
 //   .el-dialog {
 //     max-height: 100%;
