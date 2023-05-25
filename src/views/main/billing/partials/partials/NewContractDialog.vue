@@ -20,7 +20,7 @@
         class="new-contract__form"
       >
         <el-row :gutter="16">
-          <el-col :span="24">
+          <el-col :span="12">
             <el-form-item
               prop="planId"
               label="Plano"
@@ -34,6 +34,28 @@
                   :key="index"
                   :value="plan.id"
                   :label="plan.name"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="12">
+            <el-form-item
+              prop="tarrif_type"
+              label="Tipo do Contrato"
+            >
+              <el-select
+                v-model="form.tarrif_type"
+                placeholder="Selecione..."
+              >
+                <el-option
+                  value="FRANCHISE"
+                  label="Franquia"
+                />
+
+                <el-option
+                  value="VOLUMETRY"
+                  label="Volumetria"
                 />
               </el-select>
             </el-form-item>
@@ -199,23 +221,7 @@ export default {
   data: () => ({
     visible: false,
     saving: false,
-    form: {
-      planId: null,
-      status: '',
-      invoiceDueDays: 0,
-      startedDate: '',
-      inactivatedDate: '',
-      invoiceClosingDay: 0,
-      workspaceId: null,
-      archived: false,
-      invoiceDay: 0,
-      onlendingFee: 0,
-      hasDiscounts: false,
-      customerId: null,
-      grossValueTax: null,
-      tariffs: [],
-      statusActive: false
-    },
+    form: {},
     contract: {},
     tariffTypes: TARIFF_TYPES,
     discountsOfNewContract: [],
@@ -224,7 +230,8 @@ export default {
       invoiceDueDays: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
       planId: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
       startedDate: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
-      status: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
+      status: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+      tarrif_type: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
     }
   }),
 
@@ -265,12 +272,16 @@ export default {
         customerId: null,
         grossValueTax: null,
         tariffs: [],
-        statusActive: false
+        statusActive: false,
+        tarrif_type: ''
       }
     },
 
     populateForm(contract) {
-      this.form = { ...contract }
+      this.form = {
+        tarrif_type: '',
+        ...contract
+      }
     },
 
     handleOpenDialog(contract) {
