@@ -4,7 +4,7 @@
     :title="`Contratos de ${form.customerName}`"
     :close-on-click-modal="false"
     class="contracts-modal"
-    width="75%"
+    width="70%"
   >
     <article class="contracts-cards-container">
       <div
@@ -18,53 +18,17 @@
         </div>
 
         <div class="contract-card__data">
-          <el-descriptions
-            title="Dados do contrato"
-            :column="1"
-          >
-            <el-descriptions-item label="Contrato">
-              {{ $tc(`billing.contract.status.${contract.status}`) }}
-            </el-descriptions-item>
+          <NewContractDialog
+            ref="editContract"
+            :plans="plans"
+            :customer="form"
+            :contract="contract"
+          />
 
-            <el-descriptions-item label="Fechamento">
-              {{ `no ${contract.invoiceClosingDay ? contract.invoiceClosingDay+'º' : 'último' } dia do més` }}
-            </el-descriptions-item>
-
-            <el-descriptions-item label="Plano">
-              {{ planNameById(contract.planId) }}
-            </el-descriptions-item>
-
-            <el-descriptions-item label="Faturamento">
-              {{ `${contract.invoiceDueDays} dias após fechamento` }}
-            </el-descriptions-item>
-
-            <el-descriptions-item label="Iniciado em">
-              {{ contract.createAt.dateTime | moment('L') }}
-            </el-descriptions-item>
-
-            <el-descriptions-item>
-              <el-button
-                type="primary"
-                size="mini"
-                @click="handleEditContract(contract)"
-              >
-                Editar
-              </el-button>
-            </el-descriptions-item>
-          </el-descriptions>
-
-          <el-descriptions
-            v-if="contract.tariffType === 'FRANCHISE'"
-            title="Valores por franquia"
-            :column="1"
-          >
-            <el-descriptions-item>
-              <EditFranchiseValues
-                :contract="contract"
-                :customer="form"
-              />
-            </el-descriptions-item>
-          </el-descriptions>
+          <EditTariffsForm
+            :contract="contract"
+            :customer="form"
+          />
 
           <el-descriptions
             v-if="contract.tariffType === 'VOLUMETRY'"
@@ -83,19 +47,12 @@
           </el-descriptions>
         </div>
       </div>
-
-      <NewContractDialog
-        v-if="isFormVisible"
-        ref="editContract"
-        :plans="plans"
-        :customer="form"
-      />
     </article>
   </el-dialog>
 </template>
 
 <script>
-import { CONTRACT_STATUS, TARIFF_TYPES } from '@/constants/billing'
+import { CONTRACT_STATUS, TARIFF_TYPES, FRANCHISE_TARIFF_TYPES } from '@/constants/billing'
 import { mapActions, mapGetters } from 'vuex'
 import { ContractModel } from '@/models/billing/Contract.model'
 import { TariffModel } from '@/models/billing/Tariff.model'
@@ -105,7 +62,7 @@ export default {
 
   components: {
     NewContractDialog: () => import('./partials/NewContractDialog'),
-    EditFranchiseValues: () => import('./partials/EditFranchiseValues')
+    EditTariffsForm: () => import('./partials/EditTariffsForm')
   },
 
   props: {
@@ -133,6 +90,7 @@ export default {
         status: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
       },
       tariffTypes: TARIFF_TYPES,
+      franchiseTariffTypes: FRANCHISE_TARIFF_TYPES,
       newContract: {},
       allFilteredContracts: {},
       hasWorkspace: false,
@@ -180,8 +138,10 @@ export default {
       return this.filteredContracts.length > 0
     },
 
-    planNameById() {
-      return id => (this.plans.find(p => p.id === id).name || 'Não encontrado')
+    contractTariffByKey() {
+      return (contract, key) => {
+        return (contract.tariffs || []).find(({ type }) => type === key) || { type: key, value: 0, volumeLimit: 0 }
+      }
     }
   },
 
@@ -413,7 +373,7 @@ export default {
         flex-wrap: wrap;
         gap: 16px;
         justify-content: flex-start;
-        align-items: stretch;
+        align-items: flex-start;
 
         .contract-card__container {
           border: solid lightgray 2px;
@@ -423,6 +383,7 @@ export default {
           flex: 1;
           flex-direction: column;
           gap: 16px;
+          min-width: 49%;
 
           .contract-card__title {
             h4 {

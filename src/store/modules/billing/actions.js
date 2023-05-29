@@ -122,7 +122,8 @@ const billingActions = {
         inactivatedDate,
         invoiceClosingDay,
         monthlySubscriptionFee
-      }
+      },
+      action: 'getContracts'
     }).then(() => dispatch('getMyCusomers'))
   },
 

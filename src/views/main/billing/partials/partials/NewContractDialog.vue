@@ -1,221 +1,246 @@
 <template>
-  <span>
-    <el-dialog
-      :visible.sync="visible"
-      width="75%"
-      modal-append-to-body
-      append-to-body
-      custom-class="new-contract-dialog"
-    >
-      <span slot="title">
-        <h2>Criar contrato de <span class="upper">{{ customer.customerName }}</span> em <span class="upper">{{ contractDate | moment('L') }}</span></h2>
-        <h3>com mensalidade de {{ customer.monthlySubscriptionFee | currency }}</h3>
-      </span>
-
-      <el-form
-        ref="form"
-        v-loading="saving"
-        :model="form"
-        :rules="formRules"
-        class="new-contract__form"
-      >
-        <el-row :gutter="16">
-          <el-col :span="12">
-            <el-form-item
-              prop="planId"
-              label="Plano"
-            >
-              <el-select
-                v-model="form.planId"
-                placeholder="Plano"
-              >
-                <el-option
-                  v-for="(plan, index) in plans"
-                  :key="index"
-                  :value="plan.id"
-                  :label="plan.name"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="12">
-            <el-form-item
-              prop="tariffType"
-              label="Tipo do Contrato"
-            >
-              <el-select
-                v-model="form.tariffType"
-                placeholder="Selecione..."
-              >
-                <el-option
-                  value="FRANCHISE"
-                  label="Franquia"
-                />
-
-                <el-option
-                  value="VOLUMETRY"
-                  label="Volumetria"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
-
-        <el-row :gutter="16">
-          <el-col :span="12">
-            <el-form-item
-              prop="status"
-              label="Status"
-            >
-              <el-select
-                v-model="form.status"
-                placeholder="Ex.: Ativo"
-              >
-                <el-option
-                  v-for="(status, key, index) in contractStatus"
-                  :key="index"
-                  :label="status"
-                  :value="key"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="12">
-            <el-form-item
-              prop="invoiceDueDays"
-              label="Dias para vencimento da fatura"
-              class="flex-item"
-            >
-              <el-input-number
-                v-model="form.invoiceDueDays"
-                :min="0"
-                :max="90"
-                :step="1"
-                step-strictly
-                controls-position="right"
-              />
-            </el-form-item>
-          </el-col>
-        </el-row>
-
-        <el-row :gutter="16">
-          <el-col :span="12">
-            <el-form-item
-              prop="startedDate"
-              label="Início da vigência"
-            >
-              <el-date-picker
-                v-model="form.startedDate"
-                placeholder="Início da vigência"
-                type="date"
-                format="dd/MM/yyyy"
-                value-format="yyyy-MM-dd"
-              />
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="12">
-            <el-form-item
-              label="Data do churn"
-            >
-              <el-date-picker
-                v-model="form.inactivatedDate"
-                placeholder="Data do churn"
-                type="date"
-                format="dd/MM/yyyy"
-                value-format="yyyy-MM-dd"
-              />
-            </el-form-item>
-          </el-col>
-        </el-row>
-
-        <el-row :gutter="16">
-          <el-col :span="12">
-            <el-form-item
-              prop="invoiceClosingDay"
-              label="Dia de fechamento"
-              class="flex-item"
-            >
-              <el-input-number
-                v-model="form.invoiceClosingDay"
-                :min="0"
-                :max="31"
-                step-strictly
-                controls-position="right"
-              />
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="12">
-            <el-form-item
-              prop="workspaceId"
-              label="Exclusivo"
-              class="flex-item"
-            >
-              <div class="el-input">
-                <el-checkbox
-                  :value="haveExclusiveContract"
-                  :disabled="disableExclusiveOption"
-                  label="Exclusivo desta workspace"
-                  border
-                  class="el-input__inner"
-                  @change="handleExclusive"
-                />
-              </div>
-            </el-form-item>
-          </el-col>
-        </el-row>
-
-        <!-- TODO: Campos do plano Full. -->
-
-        <el-row>
-          <el-col :span="24">
-            <el-form-item
-              prop="note"
-              label="Nota"
-            >
-              <div class="el-input">
-                <textarea
-                  v-model="form.note"
-                  class="el-textarea__inner"
-                  rows="4"
-                />
-              </div>
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-form>
-
-      <span slot="footer">
-        <el-button @click="handleCancel">
-          Cancelar
-        </el-button>
-
-        <el-button
-          type="primary"
-          :disabled="saving"
-          @click="handleSave"
+  <el-form
+    v-if="visible"
+    ref="form"
+    v-loading="saving"
+    :model="form"
+    :rules="formRules"
+    class="new-contract__form"
+  >
+    <el-row :gutter="16">
+      <el-col :span="12">
+        <el-form-item
+          prop="planId"
+          label="Plano"
         >
-          <i
-            v-show="saving"
-            class="el-icon-loading"
-          />
-          Salvar
-        </el-button>
-      </span>
-    </el-dialog>
+          <el-select
+            v-model="form.planId"
+            placeholder="Plano"
+          >
+            <el-option
+              v-for="(plan, index) in plans"
+              :key="index"
+              :value="plan.id"
+              :label="plan.name"
+            />
+          </el-select>
+        </el-form-item>
+      </el-col>
 
-    <el-button
-      v-show="!visible"
-      type="secondary"
-      icon="el-icon-plus"
-      @click="handleOpenDialog"
-    >
-      Criar novo contrato
-    </el-button>
-  </span>
+      <el-col :span="12">
+        <el-form-item
+          prop="tariffType"
+          label="Tipo do Contrato"
+        >
+          <el-select
+            v-model="form.tariffType"
+            placeholder="Selecione..."
+          >
+            <el-option
+              value="FRANCHISE"
+              label="Franquia"
+            />
+
+            <el-option
+              value="VOLUMETRY"
+              label="Volumetria"
+            />
+          </el-select>
+        </el-form-item>
+      </el-col>
+    </el-row>
+
+    <el-row :gutter="16">
+      <el-col :span="12">
+        <el-form-item
+          prop="status"
+          label="Status"
+        >
+          <el-select
+            v-model="form.status"
+            placeholder="Ex.: Ativo"
+          >
+            <el-option
+              v-for="(status, key, index) in contractStatus"
+              :key="index"
+              :label="status"
+              :value="key"
+            />
+          </el-select>
+        </el-form-item>
+      </el-col>
+
+      <el-col :span="12">
+        <el-form-item
+          prop="invoiceDueDays"
+          label="Dias para vencimento da fatura"
+          class="flex-item"
+        >
+          <el-input-number
+            v-model="form.invoiceDueDays"
+            :min="0"
+            :max="90"
+            :step="1"
+            step-strictly
+            controls-position="right"
+          />
+        </el-form-item>
+      </el-col>
+    </el-row>
+
+    <el-row :gutter="16">
+      <el-col :span="12">
+        <el-form-item
+          prop="startedDate"
+          label="Início da vigência"
+        >
+          <el-date-picker
+            v-model="form.startedDate"
+            placeholder="Início da vigência"
+            type="date"
+            format="dd/MM/yyyy"
+            value-format="yyyy-MM-dd"
+          />
+        </el-form-item>
+      </el-col>
+
+      <el-col :span="12">
+        <el-form-item
+          label="Data do churn"
+        >
+          <el-date-picker
+            v-model="form.inactivatedDate"
+            placeholder="Data do churn"
+            type="date"
+            format="dd/MM/yyyy"
+            value-format="yyyy-MM-dd"
+          />
+        </el-form-item>
+      </el-col>
+    </el-row>
+
+    <el-row :gutter="16">
+      <el-col :span="12">
+        <el-form-item
+          prop="invoiceClosingDay"
+          label="Dia de fechamento"
+          class="flex-item"
+        >
+          <el-input-number
+            v-model="form.invoiceClosingDay"
+            :min="0"
+            :max="31"
+            step-strictly
+            controls-position="right"
+          />
+        </el-form-item>
+      </el-col>
+
+      <el-col :span="12">
+        <el-form-item
+          prop="workspaceId"
+          label="Exclusivo"
+          class="flex-item"
+        >
+          <div class="el-input">
+            <el-checkbox
+              :value="haveExclusiveContract"
+              :disabled="disableExclusiveOption"
+              label="Exclusivo desta workspace"
+              border
+              class="el-input__inner"
+              @change="handleExclusive"
+            />
+          </div>
+        </el-form-item>
+      </el-col>
+    </el-row>
+
+    <el-row>
+      <el-col :span="24">
+        <el-form-item
+          prop="note"
+          label="Nota"
+        >
+          <div class="el-input">
+            <textarea
+              v-model="form.note"
+              class="el-textarea__inner"
+              rows="4"
+            />
+          </div>
+        </el-form-item>
+      </el-col>
+    </el-row>
+
+    <el-row :gutter="16">
+      <el-col :span="24">
+        <el-form-item>
+          <el-button @click="handleCancel">
+            Cancelar
+          </el-button>
+
+          <el-button
+            type="primary"
+            :disabled="saving"
+            @click="handleSave"
+          >
+            <i
+              v-show="saving"
+              class="el-icon-loading"
+            />
+            Salvar
+          </el-button>
+        </el-form-item>
+      </el-col>
+    </el-row>
+  </el-form>
+
+  <el-descriptions
+    v-else
+    title="Dados do contrato"
+    :column="1"
+  >
+    <el-descriptions-item label="Contrato">
+      {{ $tc(`billing.contract.status.${contract.status}`) }}
+    </el-descriptions-item>
+
+    <el-descriptions-item label="Fechamento">
+      {{ `no ${contract.invoiceClosingDay ? contract.invoiceClosingDay+'º' : 'último' } dia do més` }}
+    </el-descriptions-item>
+
+    <el-descriptions-item label="Plano">
+      {{ planNameById(contract.planId) }}
+    </el-descriptions-item>
+
+    <el-descriptions-item label="Faturamento">
+      {{ `${contract.invoiceDueDays} dias após fechamento` }}
+    </el-descriptions-item>
+
+    <el-descriptions-item label="Iniciado em">
+      {{ contract.createAt.dateTime | moment('L') }}
+    </el-descriptions-item>
+
+    <el-descriptions-item>
+      <el-button
+        v-if="contract.id"
+        type="primary"
+        size="mini"
+        @click="handleOpenDialog"
+      >
+        Editar
+      </el-button>
+
+      <el-button
+        v-else
+        type="secondary"
+        icon="el-icon-plus"
+        @click="handleOpenDialog"
+      >
+        Criar novo contrato
+      </el-button>
+    </el-descriptions-item>
+  </el-descriptions>
 </template>
 
 <script>
@@ -233,6 +258,11 @@ export default {
     customer: {
       type: Object,
       required: true
+    },
+
+    contract: {
+      type: Object,
+      required: true
     }
   },
 
@@ -240,7 +270,6 @@ export default {
     visible: false,
     saving: false,
     form: {},
-    contract: {},
     formRules: {
       invoiceClosingDay: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
       invoiceDueDays: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
@@ -266,6 +295,10 @@ export default {
 
     contractDate() {
       return this.form?.updateAt?.dateTime || this.form?.createAt?.dateTime || new Date().toISOString()
+    },
+
+    planNameById() {
+      return id => (this.plans.find(p => p.id === id)?.name || 'Não encontrado')
     }
   },
 
@@ -294,15 +327,15 @@ export default {
       }
     },
 
-    populateForm(contract) {
+    populateForm() {
       this.form = {
         tariffType: '',
-        ...contract
+        ...this.contract
       }
     },
 
-    handleOpenDialog(contract) {
-      contract?.id ? this.populateForm(contract) : this.restoreForm()
+    handleOpenDialog() {
+      this.contract?.id ? this.populateForm() : this.restoreForm()
 
       this.visible = true
       this.saving = false
@@ -369,76 +402,49 @@ export default {
 <style lang="scss">
 @import '@/styles/colors.scss';
 
-.new-contract-dialog {
-  border: solid lightgray 0.2rem;
+.new-contract__form {
+  .el-row {
+    .el-col {
+      .flex-item {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
 
-  .el-dialog__header {
-    span {
-      h2, h3 {
-        font-weight: 700;
-        color: $--color-black;
+        .el-form-item__content {
+          width: 100%;
+
+          div { width: 100%; }
+        }
       }
 
-      h2 {
-        margin-bottom: 0;
-      }
+      .el-form-item {
+        .el-form-item__content {
+          .el-select, .el-date-editor {
+            overflow-y: hidden !important;
 
-      h3 {
-        margin-top: 0;
-      }
-
-      .upper {
-        text-transform: uppercase;
-      }
-    }
-  }
-
-  .el-dialog__body {
-    .new-contract__form {
-      .el-row {
-        .el-col {
-          .flex-item {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-
-            .el-form-item__content {
-              width: 100%;
-
-              div { width: 100%; }
+            .el-input {
+              overflow-y: hidden !important;
             }
           }
 
-          .el-form-item {
-            .el-form-item__content {
-              .el-select, .el-date-editor {
-                overflow-y: hidden !important;
+          .el-form-item__error {
+            top: unset !important;
+            bottom: 0 !important;
+            right: unset !important;
+            left: 0 !important;
+          }
+        }
 
-                .el-input {
-                  overflow-y: hidden !important;
-                }
-              }
-
-              .el-form-item__error {
-                top: unset !important;
-                bottom: 0 !important;
-                right: unset !important;
-                left: 0 !important;
-              }
+        &.is-required {
+          .el-form-item__label {
+            &::before {
+              display: none;
             }
 
-            &.is-required {
-              .el-form-item__label {
-                &::before {
-                  display: none;
-                }
-
-                &::after {
-                  content: "*";
-                  color: $--pj-color-red;
-                  margin-left: 4px;
-                }
-              }
+            &::after {
+              content: "*";
+              color: $--pj-color-red;
+              margin-left: 4px;
             }
           }
         }

@@ -23,23 +23,23 @@ export const TARIFF_TYPES = Object.freeze({
 
 export const FRANCHISE_TARIFF_TYPES = Object.freeze({
   IMPORTED_DISPUTE_LIMITED: {
-    label: 'Importação',
+    label: 'Limete de Importação',
     defaultValue: 0
   },
   INTERACTION_LIMITED: {
-    label: 'Interação',
+    label: 'Limite de Interação',
     defaultValue: 12
   },
   DISPUTE_ACCEPTED_LIMITED: {
-    label: 'Disputa aceita',
+    label: 'Limite de Disputa aceita',
     defaultValue: 18
   },
   SETTLED_DISPUTE_LIMITED: {
-    label: 'Acordo fechado',
+    label: 'Limite de Acordo fechado',
     defaultValue: 300
   },
   LAWSUIT_DROPPED_LIMITED: {
-    label: 'Pré negociação',
+    label: 'Limite de Pré negociação',
     defaultValue: 3
   }
 })
