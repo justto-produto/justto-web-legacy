@@ -5,6 +5,7 @@
     v-loading="saving"
     :model="form"
     :rules="formRules"
+    size="mini"
     class="new-contract__form"
   >
     <el-row :gutter="16">
@@ -50,7 +51,11 @@
       </el-col>
     </el-row>
 
-    <el-row :gutter="16">
+    <el-row
+      :gutter="16"
+      type="flex"
+      align="bottom"
+    >
       <el-col :span="12">
         <el-form-item
           prop="status"
@@ -142,13 +147,14 @@
           label="Exclusivo"
           class="flex-item"
         >
-          <div class="el-input">
+          <div class="el-input el-input--mini">
             <el-checkbox
               :value="haveExclusiveContract"
               :disabled="disableExclusiveOption"
-              label="Exclusivo desta workspace"
+              label="Exclusivo"
               border
-              class="el-input__inner"
+              size="mini"
+              class="el-input__inner checkbox--mini"
               @change="handleExclusive"
             />
           </div>
@@ -162,7 +168,7 @@
           prop="note"
           label="Nota"
         >
-          <div class="el-input">
+          <div class="el-textarea">
             <textarea
               v-model="form.note"
               class="el-textarea__inner"
@@ -414,10 +420,16 @@ export default {
           width: 100%;
 
           div { width: 100%; }
+
+          .checkbox--mini {
+            border-radius: 0.6rem;
+          }
         }
       }
 
       .el-form-item {
+        .el-form-item__label { line-height: 1.5rem; }
+
         .el-form-item__content {
           .el-select, .el-date-editor {
             overflow-y: hidden !important;
