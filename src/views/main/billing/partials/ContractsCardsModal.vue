@@ -18,7 +18,7 @@
         </div>
 
         <div class="contract-card__data">
-          <NewContractDialog
+          <EditContractForm
             ref="editContract"
             :plans="plans"
             :customer="form"
@@ -61,7 +61,7 @@ export default {
   name: 'ContractsCardsModal',
 
   components: {
-    NewContractDialog: () => import('./partials/NewContractDialog'),
+    EditContractForm: () => import('./partials/EditContractForm'),
     EditTariffsForm: () => import('./partials/EditTariffsForm')
   },
 
@@ -148,20 +148,6 @@ export default {
   watch: {
     clientData(current) {
       this.form = current
-      this.form.contracts.map(contract => {
-        const types = Object.keys(TARIFF_TYPES)
-
-        types.map(type => {
-          const tariffAlreadyExists = contract.tariffs.filter(tariff => tariff.type === type).length > 0
-
-          if (!tariffAlreadyExists) {
-            contract.tariffs.push({
-              type,
-              value: 0
-            })
-          }
-        })
-      })
 
       this.openNewContract()
     },

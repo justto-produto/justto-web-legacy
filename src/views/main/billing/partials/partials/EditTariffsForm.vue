@@ -5,6 +5,7 @@
       ref="form"
       v-loading="saving"
       :model="form"
+      size="mini"
       class="contract__form"
     >
       <el-row :gutter="16">
@@ -34,47 +35,43 @@
       <el-row
         v-if="form.tariffType === 'FRANCHISE'"
         :gutter="16"
+        class="mb10"
       >
         <el-col
-          v-for="(tariffValue, tariffKey, tariffCount) in franchiseTariffTypes"
-          :key="tariffCount"
+          v-for="(tariff, tIndex) in franchiseTariffsOnForm"
+          :key="`edit-tariff#${tIndex}`"
           :span="24"
         >
           <el-form-item
-            :label="tariffValue.label"
-            class="flex-item"
+            :label="franchiseTariffTypes[tariff.type].label"
+            class="flex-item small-label"
           >
-            <el-form
-              :inline="true"
-              :model="form.tariffs[getTariffIndex(tariffKey)]"
-            >
-              <el-row :gutter="16">
-                <el-col :span="12">
-                  <el-form-item label="Franquia">
-                    <el-input-number
-                      v-model="form.tariffs[getTariffIndex(tariffKey)].volumeLimit"
-                      controls-position="right"
-                      type="number"
-                    />
-                  </el-form-item>
-                </el-col>
-
-                <el-col :span="12">
-                  <el-form-item label="Valor Adicional">
-                    <div class="el-input">
-                      <money
-                        v-model="form.tariffs[getTariffIndex(tariffKey)].value"
-                        :disabled="isContractInactive"
-                        :readonly="isContractInactive"
-                        :class="{'is-inactive': isContractInactive}"
-                        class="el-input__inner"
-                      />
-                    </div>
-                  </el-form-item>
-                </el-col>
-              </el-row>
-            </el-form>
+            <SingleTariffForm
+              v-model="form.tariffs[getTariffIndex(tariff.type)]"
+              :contract-inactive="isContractInactive"
+              @delete="handleRemoveTariff(getTariffIndex(tariff.type))"
+            />
           </el-form-item>
+        </el-col>
+
+        <el-col
+          v-if="contract.tariffType === 'FRANCHISE' && franchiseTariffsNotOnForm.length"
+          :span="24"
+        >
+          <TariffTypeDropdown
+            :tariffs="franchiseTariffsNotOnForm"
+            @command="handleAddTariff"
+          />
+        </el-col>
+
+        <el-col
+          v-else-if="contract.tariffType === 'VOLUMETRY' && volumetryTariffsNotOnForm.length"
+          :span="24"
+        >
+          <TariffTypeDropdown
+            :tariffs="volumetryTariffsNotOnForm"
+            @command="handleAddTariff"
+          />
         </el-col>
       </el-row>
 
@@ -100,7 +97,7 @@
 
       <el-row>
         <el-col>
-          <el-form-item>
+          <el-form-item class="flex-end">
             <el-button @click="handleCancel">
               Cancelar
             </el-button>
@@ -114,6 +111,7 @@
                 v-show="saving"
                 class="el-icon-loading"
               />
+
               Salvar
             </el-button>
           </el-form-item>
@@ -121,61 +119,17 @@
       </el-row>
     </el-form>
 
-    <el-descriptions
+    <FranchiseTariffsDescription
       v-else-if="contract.tariffType === 'FRANCHISE'"
-      title="Valores por franquia"
-      :column="1"
-    >
-      <el-descriptions-item
-        v-for="(tariffValue, tariffKey, tariffCount) in franchiseTariffTypes"
-        :key="tariffCount"
-        :label="tariffValue.label"
-      >
-        <span v-if="getTariffByKey(tariffKey).value > 0">
-          {{ getTariffByKey(tariffKey).value | currency }} acima de {{ getTariffByKey(tariffKey).volumeLimit || 1 }} casos.
-        </span>
+      :tariffs="filteredFranchiseTariffs"
+      @click="open"
+    />
 
-        <span v-else> não cobrado.</span>
-      </el-descriptions-item>
-
-      <el-descriptions-item>
-        <el-button
-          type="primary"
-          size="mini"
-          @click="open"
-        >
-          Editar
-        </el-button>
-      </el-descriptions-item>
-    </el-descriptions>
-
-    <el-descriptions
+    <VolumetryTariffsDescription
       v-else-if="contract.tariffType === 'VOLUMETRY'"
-      title="`Valores por volume"
-      :column="1"
-    >
-      <el-descriptions-item
-        v-for="(tariffValue, tariffKey, tariffCount) in volumetryTariffTypes"
-        :key="tariffCount"
-        :label="tariffValue.label"
-      >
-        <span v-if="getTariffByKey(tariffKey).value > 0">
-          {{ getTariffByKey(tariffKey).value | currency }} acima de {{ getTariffByKey(tariffKey).volumeLimit || 1 }} casos.
-        </span>
-
-        <span v-else> não cobrado.</span>
-      </el-descriptions-item>
-
-      <el-descriptions-item>
-        <el-button
-          type="primary"
-          size="mini"
-          @click="open"
-        >
-          Editar
-        </el-button>
-      </el-descriptions-item>
-    </el-descriptions>
+      :tariffs="filteredVolumetryTariffs"
+      @click="open"
+    />
   </article>
 </template>
 
@@ -185,6 +139,13 @@ import { mapActions } from 'vuex'
 
 export default {
   name: 'EditTariffsForm',
+
+  components: {
+    SingleTariffForm: () => import('./partials/SingleTariffForm'),
+    TariffTypeDropdown: () => import('./partials/TariffTypeDropdown'),
+    FranchiseTariffsDescription: () => import('./partials/FranchiseTariffsDescription'),
+    VolumetryTariffsDescription: () => import('./partials/VolumetryTariffsDescription')
+  },
 
   props: {
     contract: {
@@ -206,7 +167,9 @@ export default {
       tariffs: []
     },
     franchiseTariffTypes: FRANCHISE_TARIFF_TYPES,
-    volumetryTariffTypes: TARIFF_TYPES
+    franchiseTariffKeys: Object.keys(FRANCHISE_TARIFF_TYPES),
+    volumetryTariffTypes: TARIFF_TYPES,
+    volumetryTariffKeys: Object.keys(TARIFF_TYPES)
   }),
 
   computed: {
@@ -216,6 +179,36 @@ export default {
 
     contractDate() {
       return this.contract?.updateAt?.dateTime || this.contract?.createAt?.dateTime || new Date().toISOString()
+    },
+
+    filteredTariffs() { return (this.contract.tariffs || []).filter(({ value }) => Boolean(value)) },
+
+    filteredFranchiseTariffs() {
+      return (this.contract.tariffs || []).filter(({ value, type }) => (Boolean(value) && this.franchiseTariffKeys.includes(type)))
+    },
+
+    filteredVolumetryTariffs() {
+      return (this.contract.tariffs || []).filter(({ value, type }) => (Boolean(value) && this.volumetryTariffKeys.includes(type)))
+    },
+
+    haveTariffs() {
+      return this.filteredTariffs.length > 0
+    },
+
+    franchiseTariffsOnForm() {
+      return this.form.tariffs.filter(({ type }) => this.franchiseTariffKeys.includes(type))
+    },
+
+    franchiseTariffsNotOnForm() {
+      return this.franchiseTariffKeys.filter(key => !this.franchiseTariffsOnForm.map(({ type }) => type).includes(key))
+    },
+
+    volumetryTariffsOnForm() {
+      return this.form.tariffs.filter(({ type }) => this.volumetryTariffKeys.includes(type))
+    },
+
+    volumetryTariffsNotOnForm() {
+      return this.volumetryTariffKeys.filter(key => !this.volumetryTariffsOnForm.map(({ type }) => type).includes(key))
     },
 
     getTariffByKey() {
@@ -230,7 +223,9 @@ export default {
   },
 
   methods: {
-    ...mapActions(['updateContract']),
+    ...mapActions([
+      'updateContract'
+    ]),
 
     populateForm() {
       ['tariffType', 'tariffs'].forEach(key => {
@@ -239,28 +234,8 @@ export default {
     },
 
     populateTariffs() {
-      const types = Object.keys({
-        ...FRANCHISE_TARIFF_TYPES,
-        ...TARIFF_TYPES
-      })
-
-      const tariffs = []
-
-      types.map(type => {
-        const tariffAlreadyExists = this.form.tariffs.filter(tariff => tariff.type === type).length > 0
-
-        if (!tariffAlreadyExists) {
-          tariffs.push({
-            type,
-            value: 0,
-            volumeLimit: 0
-          })
-        }
-      })
-
       this.form.tariffs = [
-        ...(this.form.tariffs || []),
-        ...tariffs
+        ...(this.form.tariffs || [])
       ]
     },
 
@@ -301,8 +276,6 @@ export default {
           ...this.form
         }
       }).then(async _ => {
-        await this.getContracts()
-
         this.$jusNotification({
           type: 'success',
           title: 'Yay!',
@@ -325,6 +298,18 @@ export default {
       })
 
       return tariffIndex
+    },
+
+    handleAddTariff(tariffType) {
+      this.form.tariffs.push({
+        type: tariffType,
+        value: 0,
+        volumeLimit: 1
+      })
+    },
+
+    handleRemoveTariff(index) {
+      this.form.tariffs.splice(index, 1)
     }
   }
 }
@@ -370,6 +355,21 @@ export default {
             }
           }
         }
+
+        &.small-label {
+          .el-form-item__label {
+            font-size: 1rem !important;
+          }
+        }
+      }
+
+      .el-form-item.flex-end {
+        margin: 0;
+
+        .el-form-item__content {
+          display: flex;
+          justify-content: flex-end;
+        }
       }
     }
   }
@@ -379,6 +379,20 @@ export default {
       .el-form-item.flex-item > .el-form-item__label {
         font-weight: 600;
         font-size: 1.25rem;
+      }
+    }
+  }
+
+  .el-descriptions {
+    .el-descriptions__body {
+      .el-descriptions__table {
+        tbody {
+          .el-descriptions-row {
+            .el-descriptions-item {
+              .el-descriptions-item__container {}
+            }
+          }
+        }
       }
     }
   }

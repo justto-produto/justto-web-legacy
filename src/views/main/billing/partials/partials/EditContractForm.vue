@@ -247,7 +247,7 @@
 import { mapActions, mapGetters } from 'vuex'
 
 export default {
-  name: 'NewContractDialog',
+  name: 'EditContractForm',
 
   props: {
     plans: {
