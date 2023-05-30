@@ -5,7 +5,7 @@
     size="mini"
     class="tariff-inline__form"
   >
-    <el-row :gutter="16">
+    <el-row :gutter="8">
       <el-col :span="10">
         <el-form-item label="Franquia">
           <el-input-number

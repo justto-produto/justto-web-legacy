@@ -8,7 +8,7 @@
     size="mini"
     class="new-contract__form"
   >
-    <el-row :gutter="16">
+    <el-row :gutter="8">
       <el-col :span="12">
         <el-form-item
           prop="planId"
@@ -52,7 +52,7 @@
     </el-row>
 
     <el-row
-      :gutter="16"
+      :gutter="8"
       type="flex"
       align="bottom"
     >
@@ -93,7 +93,7 @@
       </el-col>
     </el-row>
 
-    <el-row :gutter="16">
+    <el-row :gutter="8">
       <el-col :span="12">
         <el-form-item
           prop="startedDate"
@@ -124,7 +124,11 @@
       </el-col>
     </el-row>
 
-    <el-row :gutter="16">
+    <el-row
+      :gutter="8"
+      type="flex"
+      align="bottom"
+    >
       <el-col :span="12">
         <el-form-item
           prop="invoiceClosingDay"
@@ -144,7 +148,7 @@
       <el-col :span="12">
         <el-form-item
           prop="workspaceId"
-          label="Exclusivo"
+          label="Exclusivo desta workspace"
           class="flex-item"
         >
           <div class="el-input el-input--mini">
@@ -158,6 +162,42 @@
               @change="handleExclusive"
             />
           </div>
+        </el-form-item>
+      </el-col>
+    </el-row>
+
+    <el-row
+      v-if="form.planId === 6"
+      :gutter="8"
+    >
+      <el-col :span="12">
+        <el-form-item
+          label="Percentual de repasse"
+          class="flex-item"
+        >
+          <el-input-number
+            v-model="form.onlendingFee"
+            :min="0"
+            :max="100"
+            step-strictly
+            controls-position="right"
+          />
+        </el-form-item>
+      </el-col>
+
+      <el-col :span="12">
+        <el-form-item
+          label="Taxas sobre valor bruto"
+          class="flex-item"
+        >
+          <el-input-number
+            v-model="form.grossValueTax"
+            :min="0"
+            :max="100"
+            :precision="3"
+            :step="0.1"
+            controls-position="right"
+          />
         </el-form-item>
       </el-col>
     </el-row>
@@ -179,9 +219,9 @@
       </el-col>
     </el-row>
 
-    <el-row :gutter="16">
+    <el-row :gutter="8">
       <el-col :span="24">
-        <el-form-item>
+        <el-form-item class="flex-end">
           <el-button @click="handleCancel">
             Cancelar
           </el-button>
@@ -325,7 +365,7 @@ export default {
         onlendingFee: 0,
         hasDiscounts: false,
         customerId: null,
-        grossValueTax: null,
+        grossValueTax: 0,
         tariffs: [],
         statusActive: false,
         tariffType: '',
@@ -428,7 +468,10 @@ export default {
       }
 
       .el-form-item {
-        .el-form-item__label { line-height: 1.5rem; }
+        .el-form-item__label {
+          line-height: 1.5rem;
+          text-align: start;
+        }
 
         .el-form-item__content {
           .el-select, .el-date-editor {
@@ -459,6 +502,11 @@ export default {
               margin-left: 4px;
             }
           }
+        }
+
+        &.flex-end {
+          display: flex;
+          justify-content: flex-end;
         }
       }
     }

@@ -8,7 +8,7 @@
       size="mini"
       class="contract__form"
     >
-      <el-row :gutter="16">
+      <el-row :gutter="8">
         <el-col :span="24">
           <el-form-item
             prop="tariffType"
@@ -34,7 +34,7 @@
 
       <el-row
         v-if="form.tariffType === 'FRANCHISE'"
-        :gutter="16"
+        :gutter="8"
         class="mb10"
       >
         <el-col
@@ -77,7 +77,7 @@
 
       <el-row
         v-else-if="form.tariffType === 'VOLUMETRY'"
-        :gutter="16"
+        :gutter="8"
       >
         <el-col
           v-for="(tariffValue, tariffKey, tariffCount) in volumetryTariffTypes"
