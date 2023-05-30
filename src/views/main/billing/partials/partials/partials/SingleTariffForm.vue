@@ -6,7 +6,10 @@
     class="tariff-inline__form"
   >
     <el-row :gutter="8">
-      <el-col :span="10">
+      <el-col
+        v-if="isFranchise"
+        :span="10"
+      >
         <el-form-item label="Franquia">
           <el-input-number
             v-model="value.volumeLimit"
@@ -19,7 +22,7 @@
         </el-form-item>
       </el-col>
 
-      <el-col :span="10">
+      <el-col :span="isFranchise ? 10 : 20">
         <el-form-item label="Valor Adicional">
           <div class="el-input el-input--mini">
             <money
@@ -57,6 +60,17 @@ export default {
     contractInactive: {
       type: Boolean,
       required: true
+    },
+
+    type: {
+      type: String,
+      default: 'FRANCHISE'
+    }
+  },
+
+  computed: {
+    isFranchise() {
+      return this.type === 'FRANCHISE'
     }
   }
 }

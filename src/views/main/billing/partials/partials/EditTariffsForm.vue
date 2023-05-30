@@ -55,21 +55,11 @@
         </el-col>
 
         <el-col
-          v-if="contract.tariffType === 'FRANCHISE' && franchiseTariffsNotOnForm.length"
+          v-if="franchiseTariffsNotOnForm.length"
           :span="24"
         >
           <TariffTypeDropdown
             :tariffs="franchiseTariffsNotOnForm"
-            @command="handleAddTariff"
-          />
-        </el-col>
-
-        <el-col
-          v-else-if="contract.tariffType === 'VOLUMETRY' && volumetryTariffsNotOnForm.length"
-          :span="24"
-        >
-          <TariffTypeDropdown
-            :tariffs="volumetryTariffsNotOnForm"
             @command="handleAddTariff"
           />
         </el-col>
@@ -78,20 +68,34 @@
       <el-row
         v-else-if="form.tariffType === 'VOLUMETRY'"
         :gutter="8"
+        class="mb10"
       >
         <el-col
-          v-for="(tariffValue, tariffKey, tariffCount) in volumetryTariffTypes"
-          :key="tariffCount"
-          :span="12"
+          v-for="(tariff, tIndex) in volumetryTariffsOnForm"
+          :key="`edit-tariff#${tIndex}`"
+          :span="24"
         >
-          <el-form-item :label="tariffValue.label">
-            <div class="el-input">
-              <money
-                v-model="tariffValue.value"
-                class="el-input__inner"
-              />
-            </div>
+          <el-form-item
+            :label="volumetryTariffTypes[tariff.type].label"
+            class="flex-item small-label"
+          >
+            <SingleTariffForm
+              v-model="form.tariffs[getTariffIndex(tariff.type)]"
+              :contract-inactive="isContractInactive"
+              :type="form.tariffType"
+              @delete="handleRemoveTariff(getTariffIndex(tariff.type))"
+            />
           </el-form-item>
+        </el-col>
+
+        <el-col
+          v-if="volumetryTariffsNotOnForm.length"
+          :span="24"
+        >
+          <TariffTypeDropdown
+            :tariffs="volumetryTariffsNotOnForm"
+            @command="handleAddTariff"
+          />
         </el-col>
       </el-row>
 

@@ -30,7 +30,7 @@
             :customer="form"
           />
 
-          <el-descriptions
+          <!-- <el-descriptions
             v-if="contract.tariffType === 'VOLUMETRY'"
             title="Valores por volume"
             :column="1"
@@ -44,7 +44,7 @@
                 Editar
               </el-button>
             </el-descriptions-item>
-          </el-descriptions>
+          </el-descriptions> -->
         </div>
       </div>
     </article>

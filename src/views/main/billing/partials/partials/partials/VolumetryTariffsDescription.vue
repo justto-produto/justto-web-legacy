@@ -1,6 +1,6 @@
 <template>
   <el-descriptions
-    title="Valores por franquia"
+    title="Valores por volume"
     :column="1"
   >
     <el-descriptions-item
@@ -45,7 +45,9 @@ export default {
   }),
 
   computed: {
-    haveTariffs: () => (this.tariffs.length > 0)
+    haveTariffs() {
+      return this.tariffs.length > 0
+    }
   }
 }
 </script>
