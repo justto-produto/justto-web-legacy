@@ -13,7 +13,15 @@
         class="contract-card__container"
       >
         <div class="contract-card__title">
-          <h4>Contrato de {{ form.customerName }} {{ ((contract.updateAt && contract.updateAt.dateTime) || (contract.createAt && contract.createAt.dateTime)) | moment('L') }} &#60;{{ !contract.workspaceId ? 'COMPARTILHADO' : 'EXCLUSIVO' }}&#62;</h4>
+          <h4>
+            Contrato de {{ form.customerName }} {{ ((contract.updateAt && contract.updateAt.dateTime) || (contract.createAt && contract.createAt.dateTime)) | moment('L') }}
+            <el-tag
+              v-if="!contract.workspaceId"
+              size="mini"
+            >
+              exclusivo
+            </el-tag>
+          </h4>
           <h4>com mensalidade de {{ form.monthlySubscriptionFee | currency }}</h4>
         </div>
 
@@ -37,6 +45,10 @@
           />
         </div>
       </div>
+
+      <el-button type="primary">
+        Adicionar contrato
+      </el-button>
     </article>
   </el-dialog>
 </template>

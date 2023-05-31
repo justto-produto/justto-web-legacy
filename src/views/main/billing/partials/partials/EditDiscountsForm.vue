@@ -65,7 +65,7 @@
     v-else
     v-loading="loading"
     :discounts="discounts"
-    @click="() => { visible = true }"
+    @click="handleenableEdit"
   />
 </template>
 
@@ -123,7 +123,7 @@ export default {
     ]),
 
     handleUpdateDiscountsList() {
-      this.form.discounts = [...this.discounts]
+      this.form.discounts = [...this.discountsById[this.contract?.id]]
     },
 
     handleShowLoading() {
@@ -180,6 +180,8 @@ export default {
     },
 
     handleRemoveDiscount(index) {
+      console.log('handleRemoveDiscount', index)
+
       if (this.form.discounts[index]?.id) {
         this.handleShowLoading()
 
@@ -187,12 +189,17 @@ export default {
           contractId: this.contract.id,
           discountId: this.form.discounts[index]?.id
         })
-          .then(this.handleUpdateDiscountsList)
           .catch(error => this.$jusNotification({ error }))
           .finally(() => { this.loading = false })
-      } else {
-        this.form.discounts.splice(index, 1)
       }
+
+      this.form.discounts.splice(index, 1)
+    },
+
+    async handleenableEdit() {
+      await this.init()
+
+      this.visible = true
     }
   }
 }
@@ -215,11 +222,9 @@ export default {
               .el-col {
                 .el-form-item {
                   width: 100% !important;
-                  line-height: 0;
 
                   .el-form-item__label {
                     font-weight: normal !important;
-                    line-height: 1.5rem;
                   }
 
                   .el-form-item__content {
