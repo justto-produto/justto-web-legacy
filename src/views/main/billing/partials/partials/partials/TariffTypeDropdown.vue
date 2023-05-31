@@ -6,8 +6,9 @@
     <el-button
       type="primary"
       size="mini"
+      icon="el-icon-plus"
     >
-      Adicionar franquia
+      Adicionar tarifa
     </el-button>
 
     <el-dropdown-menu slot="dropdown">

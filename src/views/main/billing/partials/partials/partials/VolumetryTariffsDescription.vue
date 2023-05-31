@@ -19,6 +19,7 @@
       <el-button
         type="primary"
         size="mini"
+        icon="el-icon-edit"
         @click="$emit('click', $event)"
       >
         {{ haveTariffs ? "Editar" : "Cadastrar" }}

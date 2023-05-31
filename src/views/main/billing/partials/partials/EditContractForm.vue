@@ -272,6 +272,7 @@
         v-if="contract.id"
         type="primary"
         size="mini"
+        icon="el-icon-edit"
         @click="handleOpenDialog"
       >
         Editar

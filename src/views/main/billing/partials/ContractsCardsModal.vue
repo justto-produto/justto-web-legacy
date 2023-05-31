@@ -30,21 +30,11 @@
             :customer="form"
           />
 
-          <!-- <el-descriptions
-            v-if="contract.tariffType === 'VOLUMETRY'"
-            title="Valores por volume"
-            :column="1"
-          >
-            <el-descriptions-item>
-              <el-button
-                type="primary"
-                size="mini"
-                @click="handleEditContract(contract)"
-              >
-                Editar
-              </el-button>
-            </el-descriptions-item>
-          </el-descriptions> -->
+          <EditDiscountsForm
+            v-if="contract.tariffType !== 'FRANCHISE'"
+            :contract="contract"
+            :customer="form"
+          />
         </div>
       </div>
     </article>
@@ -62,7 +52,8 @@ export default {
 
   components: {
     EditContractForm: () => import('./partials/EditContractForm'),
-    EditTariffsForm: () => import('./partials/EditTariffsForm')
+    EditTariffsForm: () => import('./partials/EditTariffsForm'),
+    EditDiscountsForm: () => import('./partials/EditDiscountsForm')
   },
 
   props: {
