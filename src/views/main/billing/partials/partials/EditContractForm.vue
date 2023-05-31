@@ -243,7 +243,7 @@
   </el-form>
 
   <el-descriptions
-    v-else
+    v-else-if="contract.id"
     title="Dados do contrato"
     :column="1"
   >
@@ -269,7 +269,6 @@
 
     <el-descriptions-item>
       <el-button
-        v-if="contract.id"
         type="primary"
         size="mini"
         icon="el-icon-edit"
@@ -277,14 +276,21 @@
       >
         Editar
       </el-button>
+    </el-descriptions-item>
+  </el-descriptions>
 
+  <el-descriptions
+    v-else
+    title="Novo contrato"
+    :column="1"
+  >
+    <el-descriptions-item>
       <el-button
-        v-else
         type="secondary"
         icon="el-icon-plus"
         @click="handleOpenDialog"
       >
-        Criar novo contrato
+        Editar novo contrato
       </el-button>
     </el-descriptions-item>
   </el-descriptions>

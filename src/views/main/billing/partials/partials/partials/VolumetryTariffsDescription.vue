@@ -8,7 +8,7 @@
       :key="`tariff#${tIndex}`"
       :label="vomumetryTariffTypes[tariff.type].label"
     >
-      {{ tariff.value | currency }}
+      {{ tariff.value | currency }}.
     </el-descriptions-item>
 
     <el-descriptions-item v-if="!haveTariffs">
