@@ -97,9 +97,11 @@ const workspaceMutations = {
   },
   setApiIntegrationConfiguration: (state, payload) => {
     if (payload.payload) payload = payload.payload
+
     payload.properties.forEach(({ key, value }) => {
       payload[key] = value
     })
+
     Vue.set(state.workspace, 'apiIntegrationConfiguration', new ApiConfiguration(payload))
   },
 
