@@ -12,60 +12,75 @@ export class ClientModel {
    * @type {Array<ContractModel>}
    * @private
    */
-  _contracts
+  #contracts
   /**
    * @type {number}
    * @private
    */
-  _customerId
+  #customerId
   /**
    * @type {string}
    * @private
    */
-  _customerName
+  #customerName
   /**
    * @type {Array<any>}
    * @private
    */
-  _transactions
+  #transactions
+  /**
+   * @type {Number}
+   * @private
+   */
+  #monthlySubscriptionFee
 
   constructor({
     contracts = [],
     customerId,
     customerName,
-    transactions
+    transactions,
+    monthlySubscriptionFee
   }) {
-    this._contracts = contracts
-    this._customerId = customerId
-    this._customerName = customerName
-    this._transactions = transactions
+    this.#contracts = contracts
+    this.#customerId = customerId
+    this.#customerName = customerName
+    this.#transactions = transactions
+    this.#monthlySubscriptionFee = monthlySubscriptionFee || 0
   }
 
   get contracts() {
-    return this._contracts
+    return this.#contracts
   }
 
   set contracts(value) {
-    this._contracts = value
+    this.#contracts = value
   }
 
   get customerId() {
-    return this._customerId
+    return this.#customerId
   }
 
   get customerName() {
-    return this._customerName
+    return this.#customerName || ''
   }
 
   set customerName(value) {
-    this._customerName = value
+    this.#customerName = value
   }
 
   get transactions() {
-    return this._transactions
+    return this.#transactions
   }
 
   set transactions(value) {
-    this._transactions = value
+    this.#transactions = value
+  }
+
+  get monthlySubscriptionFee() {
+    return this.#monthlySubscriptionFee || 0
+  }
+
+  set monthlySubscriptionFee(value) {
+    this.#monthlySubscriptionFee = value
   }
 }

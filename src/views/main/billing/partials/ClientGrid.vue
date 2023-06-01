@@ -149,7 +149,7 @@
       </el-card>
     </jus-grid>
 
-    <ContractsModal
+    <ContractsCardsModal
       :client-data="currentCustomer"
       :plans="plans"
       :visible="dialogFormVisible"
@@ -166,7 +166,8 @@ export default {
   components: {
     JusGrid: () => import('@/components/JusGrid/JusGrid'),
     JusUserCard: () => import('@/components/JusUserCard/JusUserCard'),
-    ContractsModal: () => import('./ContractsModal'),
+    // ContractsModal: () => import('./ContractsModal'),
+    ContractsCardsModal: () => import('./ContractsCardsModal'),
     JusTextEditable: () => import('@/components/JusTextEditable/JusTextEditable')
   },
 

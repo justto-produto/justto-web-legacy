@@ -274,11 +274,13 @@
             <el-row>
               <el-col>
                 <el-form-item label="Nota">
-                  <textarea
-                    v-model="contract.note"
-                    class="el-textarea__inner"
-                    rows="4"
-                  />
+                  <div class="el-input">
+                    <textarea
+                      v-model="contract.note"
+                      class="el-textarea__inner"
+                      rows="4"
+                    />
+                  </div>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -770,8 +772,6 @@ export default {
       contract.tariffs.map((tariff, index) => {
         if (tariff.type === tariffType) return (tariffIndex = index)
       })
-
-      // console.table({ tariffIndex, tariffType })
 
       return tariffIndex
     },

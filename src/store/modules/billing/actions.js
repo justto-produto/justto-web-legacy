@@ -56,6 +56,7 @@ const billingActions = {
       planId,
       status,
       tariffs,
+      tariffType,
       startedDate,
       workspaceId,
       onlendingFee,
@@ -73,6 +74,7 @@ const billingActions = {
         planId,
         status,
         tariffs,
+        tariffType,
         startedDate,
         workspaceId,
         onlendingFee,
@@ -93,6 +95,7 @@ const billingActions = {
       planId,
       status,
       tariffs,
+      tariffType,
       startedDate,
       workspaceId,
       onlendingFee,
@@ -110,6 +113,7 @@ const billingActions = {
         planId,
         status,
         tariffs,
+        tariffType,
         startedDate,
         workspaceId,
         onlendingFee,
@@ -118,7 +122,8 @@ const billingActions = {
         inactivatedDate,
         invoiceClosingDay,
         monthlySubscriptionFee
-      }
+      },
+      action: 'getContracts'
     }).then(() => dispatch('getMyCusomers'))
   },
 
