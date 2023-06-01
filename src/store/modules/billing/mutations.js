@@ -1,14 +1,14 @@
 import Vue from 'vue'
 const billingMutations = {
   setAllCustomers: (state, customers) => (state.allCustomers = customers.content),
-  setMyCustomers: (state, customers) => (state.myCustomers = customers),
+  setMyCustomers: (state, customers) => Vue.set(state, 'myCustomers', customers),
   setCustomer: (state, customerData) => {
-    state.currentCustomer.customerId = customerData.id
-    state.currentCustomer.customerName = customerData.name
-    state.currentCustomer.contracts = customerData.contracts
+    Vue.set(state.currentCustomer, 'customerId', customerData.id)
+    Vue.set(state.currentCustomer, 'customerName', customerData.name)
+    Vue.set(state.currentCustomer, 'contracts', customerData.contracts)
   },
   setCustomerId: (state, customerId) => (state.currentCustomer.customerId = customerId),
-  setContracts: (state, contracts) => (state.currentCustomer.contracts = contracts),
+  setContracts: (state, contracts) => Vue.set(state.currentCustomer, 'contracts', contracts),
   setPlans: (state, plans) => (state.plans = plans),
   setBillingDashboard: (state, billingDashboard) => (state.billingDashboard = billingDashboard),
   setTransactions: (state, transactions) => (state.currentCustomer.transactions = transactions),
