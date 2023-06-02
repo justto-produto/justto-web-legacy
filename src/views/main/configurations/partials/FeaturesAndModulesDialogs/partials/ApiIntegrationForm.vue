@@ -2,16 +2,24 @@
   <article class="api-integration__container">
     <el-row class="api-integration__fields">
       <el-col
-        v-for="field in fields"
-        :key="field.key"
+        v-for="(fieldValue, fieldKey) in fields"
+        v-show="!fieldKey.includes('_ACTIVE')"
+        :key="fieldKey"
         :span="24"
         class="api-integration__field"
       >
-        {{ field }}
+        {{ fieldKey }} {{ fieldValue }}
       </el-col>
     </el-row>
 
-    <InitialIntegrationForm @submit="handleInitIntegration" />
+    <InitialIntegrationForm
+      v-if="!hasFields"
+      @submit="handleVerifyIntegrationType"
+    />
+
+    <SelectIntegrationTypeDialog
+      ref="selectTypeDialog"
+    />
   </article>
 </template>
 
@@ -20,28 +28,58 @@ export default {
   name: 'ApiIntegrationForm',
 
   components: {
-    InitialIntegrationForm: () => import('./partials/InitialIntegrationForm')
+    InitialIntegrationForm: () => import('./partials/InitialIntegrationForm'),
+    SelectIntegrationTypeDialog: () => import('./partials/SelectIntegrationTypeDialog')
   },
 
   data: () => ({
-    fields: []
+    fields: {}
   }),
+
+  computed: {
+    hasFields() {
+      return this.fields?.FINCH_ACTIVE || this.fields?.PROJURIS_SOAP_ACTIVE || this.fields?.JUSTTO_WEBHOOK_ACTIVE
+    }
+  },
 
   methods: {
     handleVerifyIntegrationType(url) {
       const urlLowerCase = url.toLowerCase()
       const isProjurisSoapActive = urlLowerCase.includes('projuris')
       const isFinchActive = urlLowerCase.includes('finch')
-
       const type = isProjurisSoapActive ? 'PROJURIS_SOAP' : isFinchActive ? 'FINCH' : 'JUSTTO_WEBHOOK'
 
-      // TODO: Confirmar se o tipo está correto.
-      // TODO: Caso não esteja, perguntar qual o tipo correto.
-
-      this.handleInitIntegration(url, type)
+      this.handleConfimDetectionType(type).then(_ => {
+        this.handleInitIntegration({ url, type })
+      }).catch(_ => {
+        this.$refs.selectTypeDialog.open(this.handleSelectIntegrationType, { url, type })
+      })
     },
 
-    handleInitIntegration(url, type) {
+    handleSelectIntegrationType({ url, action, type }) {
+      switch (action) {
+        case 'cancel':
+          this.handleVerifyIntegrationType(url)
+          break
+        case 'select':
+          this.handleInitIntegration({ url, type })
+          break
+        default:
+          break
+      }
+    },
+
+    handleConfimDetectionType(type) {
+      return this.$confirm(`Esta é uma integração com ${this.$tc('integration-types.' + type)}?`, {
+        confirmButtonText: 'Sim',
+        cancelButtonText: 'Não',
+        showClose: false,
+        closeOnClickModal: false,
+        closeOnPressEscape: false
+      })
+    },
+
+    handleInitIntegration({ url, type }) {
       switch (type) {
         case 'PROJURIS_SOAP':
           this.handleInitProjurisIntegration(url)

@@ -30,12 +30,12 @@ const trigger = 'blur'
 const validateURL = (_rule, value, callback) => {
   if (typeof value !== 'string' || value.trim().length === 0) callback(new Error('URL inválida.'))
 
-  const urlRule = '^(https?:\\/\\/)?([a-z\\d.-]+\\.[a-z]{2,})(:[\\d]+)?([\\/\\w.-]*)*\\/?$'
-
   try {
-    const pattern = new RegExp(urlRule, 'i')
+    const url = new URL(value)
 
-    pattern.test(value) ? callback() : callback(new Error('URL inválida.'))
+    console.log(url)
+
+    callback()
   } catch (error) { callback(error) }
 }
 
