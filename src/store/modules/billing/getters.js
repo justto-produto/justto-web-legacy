@@ -10,7 +10,11 @@ const billingGetters = {
   tableLoading: state => state.tableLoading,
   currentWorkspace: state => state.query.workspaceId,
   contractDiscountList: state => state.contractDiscountList,
-  getHoldingsList: state => state.holdings
+  getHoldingsList: state => state.holdings,
+  cusomersMappedById: state => state.myCustomers.reduce((acc, cur) => {
+    acc[cur.id] = cur
+    return acc
+  }, {})
 }
 
 export default billingGetters

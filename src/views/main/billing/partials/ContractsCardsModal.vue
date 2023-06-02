@@ -29,7 +29,7 @@
               </el-tag>
             </h4>
 
-            <h4>com mensalidade de {{ form.monthlySubscriptionFee | currency }}</h4>
+            <h4>com mensalidade de {{ cusomersMap[contract.customerId].monthlySubscriptionFee | currency }}</h4>
           </div>
 
           <div class="contract-card__data">
@@ -121,7 +121,8 @@ export default {
     ...mapGetters({
       clientData: 'getCurrentCustomer',
       workspaceId: 'currentWorkspace',
-      contractDiscountList: 'contractDiscountList'
+      contractDiscountList: 'contractDiscountList',
+      cusomersMap: 'cusomersMappedById'
     }),
 
     contractStatus: self => self.$t('billing.contract.status'),
@@ -251,8 +252,6 @@ export default {
                     line-height: 1.5rem;
                   }
                 }
-
-                .el-collapse-item__arrow { display: none; }
               }
             }
 
