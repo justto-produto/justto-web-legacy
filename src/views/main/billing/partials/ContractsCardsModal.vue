@@ -7,7 +7,10 @@
     width="50%"
   >
     <article class="contracts-cards-container">
-      <el-collapse v-model="contractsVisibleList">
+      <el-collapse
+        v-if="filteredContracts.length"
+        v-model="contractsVisibleList"
+      >
         <el-collapse-item
           v-for="(contract, cIndex) in filteredContracts"
           :key="`contract#${cIndex}`"
@@ -29,7 +32,9 @@
               </el-tag>
             </h4>
 
-            <h4>com mensalidade de {{ cusomersMap[contract.customerId].monthlySubscriptionFee | currency }}</h4>
+            <h4 v-if="contract.customerId">
+              com mensalidade de {{ cusomersMap[contract.customerId].monthlySubscriptionFee | currency }}
+            </h4>
           </div>
 
           <div class="contract-card__data">
