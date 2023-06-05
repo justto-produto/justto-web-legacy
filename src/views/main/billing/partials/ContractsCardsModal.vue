@@ -32,8 +32,8 @@
               </el-tag>
             </h4>
 
-            <h4 v-if="contract.customerId">
-              com mensalidade de {{ cusomersMap[contract.customerId].monthlySubscriptionFee | currency }}
+            <h4>
+              com mensalidade de {{ form.monthlySubscriptionFee | currency }}
             </h4>
           </div>
 
