@@ -33,7 +33,7 @@
             </h4>
 
             <h4>
-              com mensalidade de {{ form.monthlySubscriptionFee | currency }}
+              com mensalidade de {{ cusomersMap[form.customerId].monthlySubscriptionFee | currency }}
             </h4>
           </div>
 
