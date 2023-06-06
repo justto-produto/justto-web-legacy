@@ -23,7 +23,10 @@
             class="contract-card__title"
           >
             <h4>
-              Contrato de {{ form.customerName }} {{ ((contract.updateAt && contract.updateAt.dateTime) || (contract.createAt && contract.createAt.dateTime)) | moment('L') }}
+              <span>
+                Contrato de {{ form.customerName }} {{ contract.startedDate | moment('L') }}
+              </span>
+
               <el-tag
                 v-if="contract.workspaceId"
                 size="mini"
