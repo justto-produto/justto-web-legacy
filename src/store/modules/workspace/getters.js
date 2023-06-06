@@ -72,7 +72,7 @@ const workspaceGetters = {
   workspaceAutodetectRecipient: state => state?.workspace?.properties?.AUTODETECT_RECIPIENT !== 'DISABLED',
   useScheduleCallBatchAction: (state) => (state?.workspace?.properties?.CAN_USE_SCHEDULE_CALL_BATCH_ACTION !== 'DISABLED'),
   showNegotiationTypeMenu: state => state?.workspace?.properties?.SHOW_NEGOTIATION_TYPE_MENU !== 'DISABLED',
-  useDisputeProjection: (state, getters) => (state?.workspace?.properties?.USE_DISPUTE_PROJECTION === 'ENABLED' || getters?.getAccountUseDisputeProjection),
+  useDisputeProjection: (state, getters) => (state?.workspace?.properties?.USE_DISPUTE_PROJECTION !== 'DISABLED' || getters?.getAccountUseDisputeProjection),
   usePixAccountType: state => state?.workspace?.properties?.USE_PIX_ACCOUNT_TYPE !== 'DISABLED'
 }
 
