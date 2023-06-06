@@ -1,29 +1,58 @@
 <template>
   <article class="api-integration__container">
-    <el-row class="api-integration__fields">
-      <el-col
-        v-for="(fieldValue, fieldKey) in fields"
-        v-show="!fieldKey.includes('_ACTIVE')"
-        :key="fieldKey"
-        :span="24"
-        class="api-integration__field"
-      >
-        {{ fieldKey }} {{ fieldValue }}
-      </el-col>
-    </el-row>
+    <el-form
+      :model="fields"
+      class="api-integration__form"
+    >
+      <el-row class="api-integration__fields">
+        <el-col
+          v-for="(fieldValue, fieldKey) in fields"
+          v-show="!fieldKey.includes('_ACTIVE')"
+          :key="fieldKey"
+          :span="24"
+          class="api-integration__field"
+        >
+          <el-form-item :label="buildTitleByKey(fieldKey)">
+            <el-input
+              v-if="!fieldKey.includes('_ACTIVE')"
+              v-model="fields[fieldKey]"
+              :disabled="disable"
+              :prefix-icon="buildIconByKey(fieldKey)"
+            />
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+      <el-form-item class="actions">
+        <el-button @click="handleClose">
+          Fechar
+        </el-button>
+
+        <el-button
+          v-if="disable"
+          type="secondary"
+        >
+          Resetar
+        </el-button>
+
+        <el-button type="primary">
+          Salvar
+        </el-button>
+      </el-form-item>
+    </el-form>
 
     <InitialIntegrationForm
       v-if="!hasFields"
       @submit="handleVerifyIntegrationType"
     />
 
-    <SelectIntegrationTypeDialog
-      ref="selectTypeDialog"
-    />
+    <SelectIntegrationTypeDialog ref="selectTypeDialog" />
   </article>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'ApiIntegrationForm',
 
@@ -37,12 +66,55 @@ export default {
   }),
 
   computed: {
+    ...mapGetters({
+      configurations: 'getApiIntegrationConfiguration'
+    }),
+
     hasFields() {
       return this.fields?.FINCH_ACTIVE || this.fields?.PROJURIS_SOAP_ACTIVE || this.fields?.JUSTTO_WEBHOOK_ACTIVE
+    },
+
+    disable() {
+      return (this.configurations?.properties || []).filter(({ key = '', value = '' }) => (key.includes('_ACTIVE') && value === String(true))).length > 0
     }
   },
 
+  mounted() {
+    this.init()
+  },
+
   methods: {
+    init() {
+      const getKey = (options, search) => options.find(({ key }) => (key === search)).value || ''
+
+      const type = (this.configurations?.properties || []).find(({ key = '', value = '' }) => (key.includes('_ACTIVE') && value === String(true)))
+
+      switch (type) {
+        case 'PROJURIS_SOAP_ACTIVE':
+          this.handleInitProjurisIntegration({
+            url: getKey(this.configurations?.properties, 'PROJURIS_SOAP_URL'),
+            token: getKey(this.configurations?.properties, 'PROJURIS_SOAP_TOKEN'),
+            password: getKey(this.configurations?.properties, 'PROJURIS_SOAP_PASSWORD'),
+            usename: getKey(this.configurations?.properties, 'PROJURIS_SOAP_USERNAME')
+          })
+          break
+        case 'FINCH_ACTIVE':
+          this.initFinchIntegration({
+            url: getKey(this.configurations?.properties, 'FINCH_ENDPOINT'),
+            password: getKey(this.configurations?.properties, 'FINCH_PASSWORD'),
+            usename: getKey(this.configurations?.properties, 'FINCH_USERNAME')
+          })
+          break
+        default:
+          this.initJusttoIntegration({
+            url: getKey(this.configurations?.properties, 'JUSTTO_WEBHOOK_ENDPOINT'),
+            password: getKey(this.configurations?.properties, 'JUSTTO_WEBHOOK_PASSWORD'),
+            usename: getKey(this.configurations?.properties, 'JUSTTO_WEBHOOK_USERNAME')
+          })
+          break
+      }
+    },
+
     handleVerifyIntegrationType(url) {
       const urlLowerCase = url.toLowerCase()
       const isProjurisSoapActive = urlLowerCase.includes('projuris')
@@ -93,36 +165,104 @@ export default {
       }
     },
 
-    handleInitProjurisIntegration(url) {
+    handleInitProjurisIntegration({ url, token = '', password = '', usename = '' }) {
       this.fields = {
         PROJURIS_SOAP_ACTIVE: true,
-        PROJURIS_SOAP_PASSWORD: '',
-        PROJURIS_SOAP_TOKEN: '',
+        PROJURIS_SOAP_PASSWORD: password,
+        PROJURIS_SOAP_TOKEN: token,
         PROJURIS_SOAP_URL: url,
-        PROJURIS_SOAP_USERNAME: ''
+        PROJURIS_SOAP_USERNAME: usename
       }
     },
 
-    initFinchIntegration(url) {
+    initFinchIntegration({ url, password = '', usename = '' }) {
       this.fields = {
         FINCH_ACTIVE: true,
         FINCH_ENDPOINT: url,
-        FINCH_USERNAME: '',
-        FINCH_PASSWORD: ''
+        FINCH_USERNAME: usename,
+        FINCH_PASSWORD: password
       }
     },
 
-    initJusttoIntegration(url) {
+    initJusttoIntegration({ url, password = '', usename = '' }) {
       this.fields = {
         JUSTTO_WEBHOOK_ACTIVE: true,
         JUSTTO_WEBHOOK_ENDPOINT: url,
-        JUSTTO_WEBHOOK_USERNAME: '',
-        JUSTTO_WEBHOOK_PASSWORD: ''
+        JUSTTO_WEBHOOK_USERNAME: usename,
+        JUSTTO_WEBHOOK_PASSWORD: password
       }
+    },
+
+    buildIconByKey(key) {
+      if (['JUSTTO_WEBHOOK_ENDPOINT', 'FINCH_ENDPOINT', 'PROJURIS_SOAP_URL'].includes(key)) {
+        return 'el-icon-link'
+      } else if (['JUSTTO_WEBHOOK_USERNAME', 'FINCH_USERNAME', 'PROJURIS_SOAP_USERNAME'].includes(key)) {
+        return 'el-icon-user'
+      } else if (['JUSTTO_WEBHOOK_PASSWORD', 'FINCH_PASSWORD', 'PROJURIS_SOAP_PASSWORD'].includes(key)) {
+        return 'el-icon-lock'
+      } else if (['PROJURIS_SOAP_TOKEN'].includes(key)) {
+        return 'el-icon-connection'
+      }
+
+      return 'el-icon-open'
+    },
+
+    buildTitleByKey(key) {
+      if (['JUSTTO_WEBHOOK_ENDPOINT', 'FINCH_ENDPOINT', 'PROJURIS_SOAP_URL'].includes(key)) {
+        return 'URL'
+      } else if (['JUSTTO_WEBHOOK_USERNAME', 'FINCH_USERNAME', 'PROJURIS_SOAP_USERNAME'].includes(key)) {
+        return 'USERNAME'
+      } else if (['JUSTTO_WEBHOOK_PASSWORD', 'FINCH_PASSWORD', 'PROJURIS_SOAP_PASSWORD'].includes(key)) {
+        return 'PASSWORD'
+      } else if (['PROJURIS_SOAP_TOKEN'].includes(key)) {
+        return 'TOKEN'
+      }
+
+      return key
+    },
+
+    handleClose() {
+      this.$emit('close')
     }
   }
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+.api-integration__container {
+  .api-integration__fields {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    .api-integration__field {
+      .el-form-item {
+        margin: 0;
+
+        .el-form-item__label {
+          line-height: unset;
+
+          &::after { content: ':'; }
+        }
+
+        .el-form-item__content {
+          line-height: unset;
+        }
+      }
+    }
+  }
+
+  .api-integration__form .actions .el-form-item__content:last-child {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+
+      &:after, &:before {
+        display: none;
+      }
+
+      .el-button {
+        margin: 0;
+      }
+  }
+}
 </style>

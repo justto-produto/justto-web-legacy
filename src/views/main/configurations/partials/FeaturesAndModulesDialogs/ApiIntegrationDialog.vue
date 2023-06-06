@@ -9,11 +9,20 @@
     destroy-on-close
     :before-close="handleClose"
   >
-    <ApiIntegrationForm />
+    <el-skeleton
+      v-if="loading"
+      animated
+    />
+    <ApiIntegrationForm
+      v-else
+      @close="closeFeatureDialog"
+    />
   </el-dialog>
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
   name: 'ApiIntegrationDialog',
 
@@ -29,13 +38,30 @@ export default {
   },
 
   data: () => ({
-    apiIntegrationDialogVisible: false
+    apiIntegrationDialogVisible: false,
+    loading: false
   }),
 
   methods: {
+    ...mapActions(['getApiIntegrationConfiguration']),
+
     async openFeatureDialog() {
-      // await this.fetchData()
+      await this.fetchData()
       this.apiIntegrationDialogVisible = true
+    },
+
+    fetchData() {
+      this.loading = true
+
+      this.getApiIntegrationConfiguration(this.feature).then(() => {}).catch(error => this.handleClose(() => {
+        this.$jusNotification({ error })
+      })).finally(() => {
+        this.loading = false
+      })
+    },
+
+    closeFeatureDialog() {
+      this.apiIntegrationDialogVisible = false
     },
 
     handleClose(fn) {
