@@ -172,7 +172,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import { calcBrightness } from '@/utils'
 
 export default {
@@ -191,6 +191,10 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      getWorkspacetags: 'workspaceTags'
+    }),
+
     placement() {
       return this.$store.getters.windowHeight >= 580 ? 'bottom' : this.$store.getters.windowHeight >= 520 ? 'left' : 'top'
     },
@@ -216,7 +220,7 @@ export default {
       }
     },
     workspaceTags() {
-      return this.$store.getters.workspaceTags.filter(t => {
+      return (this.getWorkspacetags || []).filter(t => {
         return !this.disputeTags.map(t => t.id).includes(t.id)
       })
     },
