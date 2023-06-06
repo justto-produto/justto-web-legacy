@@ -150,7 +150,6 @@
     </jus-grid>
 
     <ContractsCardsModal
-      :client-data="currentCustomer"
       :plans="plans"
       :visible="dialogFormVisible"
     />
