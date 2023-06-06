@@ -1,6 +1,7 @@
 <template>
   <article class="api-integration__container">
     <el-form
+      v-if="hasFields"
       :model="fields"
       class="api-integration__form"
     >
@@ -23,7 +24,10 @@
         </el-col>
       </el-row>
 
-      <el-form-item class="actions">
+      <el-form-item
+        v-if="Object.keys(fields).length"
+        class="actions"
+      >
         <el-button @click="handleClose">
           Fechar
         </el-button>
@@ -31,18 +35,22 @@
         <el-button
           v-if="disable"
           type="secondary"
+          @click="handleReset"
         >
           Resetar
         </el-button>
 
-        <el-button type="primary">
+        <el-button
+          type="primary"
+          @click="handleSave"
+        >
           Salvar
         </el-button>
       </el-form-item>
     </el-form>
 
     <InitialIntegrationForm
-      v-if="!hasFields"
+      v-else
       @submit="handleVerifyIntegrationType"
     />
 
@@ -51,7 +59,8 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import ApiConfiguration from '@/models/configurations/ApiConfiguration'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'ApiIntegrationForm',
@@ -67,7 +76,8 @@ export default {
 
   computed: {
     ...mapGetters({
-      configurations: 'getApiIntegrationConfiguration'
+      configurations: 'getApiIntegrationConfiguration',
+      workspaceId: 'workspaceId'
     }),
 
     hasFields() {
@@ -84,10 +94,15 @@ export default {
   },
 
   methods: {
-    init() {
-      const getKey = (options, search) => options.find(({ key }) => (key === search)).value || ''
+    ...mapActions([
+      'setApiIntegrationConfiguration',
+      'resetApiIntegrationConsiguration'
+    ]),
 
-      const type = (this.configurations?.properties || []).find(({ key = '', value = '' }) => (key.includes('_ACTIVE') && value === String(true)))
+    init() {
+      const getKey = (options = [], search) => options.find(({ key }) => (key === search))?.value || ''
+
+      const type = (this?.configurations?.properties || []).find(({ key = '', value = '' }) => (key.includes('_ACTIVE') && value === 'true'))?.key
 
       switch (type) {
         case 'PROJURIS_SOAP_ACTIVE':
@@ -105,12 +120,14 @@ export default {
             usename: getKey(this.configurations?.properties, 'FINCH_USERNAME')
           })
           break
-        default:
+        case 'JUSTTO_WEBHOOK_ACTIVE':
           this.initJusttoIntegration({
             url: getKey(this.configurations?.properties, 'JUSTTO_WEBHOOK_ENDPOINT'),
             password: getKey(this.configurations?.properties, 'JUSTTO_WEBHOOK_PASSWORD'),
             usename: getKey(this.configurations?.properties, 'JUSTTO_WEBHOOK_USERNAME')
           })
+          break
+        default:
           break
       }
     },
@@ -223,6 +240,24 @@ export default {
 
     handleClose() {
       this.$emit('close')
+    },
+
+    handleReset() {
+      // TODO: Adicionar confirmação.
+      this.resetApiIntegrationConsiguration()
+    },
+
+    handleSave() {
+      this.setApiIntegrationConfiguration({
+        featureId: 6,
+        payload: new ApiConfiguration({
+          ...this.fields,
+          workspaceId: this.workspaceId
+        })
+      })
+
+      // TODO: Adicionar confirmação
+      // TODO: Adicionar loading + handler de erro.
     }
   }
 }

@@ -53,7 +53,7 @@ export default {
     fetchData() {
       this.loading = true
 
-      this.getApiIntegrationConfiguration(this.feature).then(() => {}).catch(error => this.handleClose(() => {
+      this.getApiIntegrationConfiguration(this.feature).catch(error => this.handleClose(() => {
         this.$jusNotification({ error })
       })).finally(() => {
         this.loading = false
