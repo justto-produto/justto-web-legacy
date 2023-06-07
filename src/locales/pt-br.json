@@ -939,5 +939,10 @@
         }
       }
     }
+  },
+  "integration-types": {
+    "PROJURIS_SOAP": "Projuris Empresas",
+    "FINCH": "Webservices da finch",
+    "JUSTTO_WEBHOOK": "Webhook padrão do Projuris Acordos"
   }
 }

@@ -17,6 +17,8 @@ export default class ApiConfiguration {
   }) {
     this.workspaceId = workspaceId
 
+    // debugger
+
     this.properties = [
       { key: 'FINCH_ACTIVE', value: FINCH_ACTIVE || 'false' },
       { key: 'JUSTTO_WEBHOOK_ACTIVE', value: JUSTTO_WEBHOOK_ACTIVE || 'false' },

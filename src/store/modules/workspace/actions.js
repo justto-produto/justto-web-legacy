@@ -316,6 +316,20 @@ const workspaceActions = {
     })
   },
 
+  resetApiIntegrationConsiguration({ dispatch, getters: { workspaceId } }) {
+    return dispatch('setApiIntegrationConfiguration', {
+      featureId: 6,
+      payload: {
+        workspaceId,
+        properties: [
+          { key: 'FINCH_ACTIVE', value: 'false' },
+          { key: 'JUSTTO_WEBHOOK_ACTIVE', value: 'false' },
+          { key: 'PROJURIS_SOAP_ACTIVE', value: 'false' }
+        ]
+      }
+    })
+  },
+
   /**
     * Função que testa a integração configurada na workspace
     * @param  {[Number]} disputeId Id da disputa que será enviada para teste
