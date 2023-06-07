@@ -357,6 +357,16 @@ const router = new Router({
           trackPage: true,
           title: 'Busca Global'
         }
+      }, {
+        name: 'Onboarding',
+        path: 'onboarding',
+        component: () => import(/* webpackChunkName: "onboarding" */ '@/views/onboarding/Onboarding'),
+        meta: {
+          hideLeftMenu: true,
+          requiresAuth: true,
+          trackPage: true,
+          title: 'Onboarding'
+        }
       }]
     },
     // {

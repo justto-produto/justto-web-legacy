@@ -138,6 +138,14 @@ export default {
         action: () => {
           this.$router.push({ path: '/admin-panel-2/search' })
         }
+      }, {
+        name: 'Criar Workspace',
+        isVisible: true,
+        iconType: 'el',
+        icon: 'el-icon-circle-plus-outline',
+        action: () => {
+          this.$router.push({ path: '/admin-panel-2/onboarding' })
+        }
       }]
     },
 

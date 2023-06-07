@@ -1,12 +1,14 @@
 <template>
   <el-row class="onboarding-view">
     <el-col
+      v-if="!hideLeftMenu"
       :md="left"
       class="hidden-sm-and-down"
       style="transition: width ease 1s;"
     >
       <jus-sidenav-external />
     </el-col>
+
     <transition name="swiper-fade">
       <el-col
         v-if="right > 0"
@@ -138,6 +140,9 @@ export default {
       }
 
       return ''
+    },
+    hideLeftMenu() {
+      return this.$route?.meta?.hideLeftMenu
     }
   },
 

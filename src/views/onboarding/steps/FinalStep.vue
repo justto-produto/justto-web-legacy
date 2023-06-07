@@ -64,7 +64,8 @@ export default {
               localStorage.setItem('jusworkspace', JSON.stringify(currentWorkspace.workspace))
               localStorage.setItem('jusprofile', currentWorkspace.profile)
               localStorage.setItem('jusperson', JSON.stringify(currentWorkspace.person))
-              this.$router.go('/import')
+              // FIXME: Não está redirecionando para a página de importação.
+              this.$router.push({ name: 'import' })
             })
             .catch(() => {
               this.showError = true
