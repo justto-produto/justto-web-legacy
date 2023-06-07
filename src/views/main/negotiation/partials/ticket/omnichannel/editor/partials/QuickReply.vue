@@ -64,7 +64,7 @@
             </div>
             <div
               class="dispute-view__templates-item-option"
-              @click="resetQuickReplyTemplate({ templateId: template.template.referenceTemplateId, disputeId: id }); openTemplateMenu(null)"
+              @click="resetQuickReplyTemplate({ templateId: template.template.referenceTemplateId, disputeId }); openTemplateMenu(null)"
             >
               <i class="icon el-icon-refresh-left" /> Restaurar
             </div>
