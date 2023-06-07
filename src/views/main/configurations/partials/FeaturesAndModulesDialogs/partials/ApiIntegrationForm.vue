@@ -1,9 +1,13 @@
 <template>
-  <article class="api-integration__container">
+  <article
+    v-loading="loading"
+    class="api-integration__container"
+  >
     <el-form
       v-if="hasFields"
       :model="fields"
       class="api-integration__form"
+      autocomplete="off"
     >
       <el-row class="api-integration__fields">
         <el-col
@@ -17,8 +21,11 @@
             <el-input
               v-if="!fieldKey.includes('_ACTIVE')"
               v-model="fields[fieldKey]"
+              :show-password="fieldKey.includes('_PASSWORD')"
               :disabled="disable"
               :prefix-icon="buildIconByKey(fieldKey)"
+              autocomplete="off"
+              auto-complete="off"
             />
           </el-form-item>
         </el-col>
@@ -37,10 +44,11 @@
           type="secondary"
           @click="handleReset"
         >
-          Resetar
+          Editar
         </el-button>
 
         <el-button
+          v-else
           type="primary"
           @click="handleSave"
         >
@@ -70,8 +78,16 @@ export default {
     SelectIntegrationTypeDialog: () => import('./partials/SelectIntegrationTypeDialog')
   },
 
+  props: {
+    feature: {
+      required: true,
+      type: Number
+    }
+  },
+
   data: () => ({
-    fields: {}
+    fields: {},
+    loading: false
   }),
 
   computed: {
@@ -89,12 +105,23 @@ export default {
     }
   },
 
+  watch: {
+    hasFields(has) {
+      if (has) {
+        const form = document.querySelector('.el-form.api-integration__form')
+
+        if (form) form.setAttribute('autocomplete', 'off')
+      }
+    }
+  },
+
   mounted() {
     this.init()
   },
 
   methods: {
     ...mapActions([
+      'getFeatureProperties',
       'setApiIntegrationConfiguration',
       'resetApiIntegrationConsiguration'
     ]),
@@ -109,21 +136,21 @@ export default {
           this.handleInitProjurisIntegration({
             url: getKey(this.configurations?.properties, 'PROJURIS_SOAP_URL'),
             token: getKey(this.configurations?.properties, 'PROJURIS_SOAP_TOKEN'),
-            password: getKey(this.configurations?.properties, 'PROJURIS_SOAP_PASSWORD'),
+            password: '******',
             usename: getKey(this.configurations?.properties, 'PROJURIS_SOAP_USERNAME')
           })
           break
         case 'FINCH_ACTIVE':
           this.initFinchIntegration({
             url: getKey(this.configurations?.properties, 'FINCH_ENDPOINT'),
-            password: getKey(this.configurations?.properties, 'FINCH_PASSWORD'),
+            password: '******',
             usename: getKey(this.configurations?.properties, 'FINCH_USERNAME')
           })
           break
         case 'JUSTTO_WEBHOOK_ACTIVE':
           this.initJusttoIntegration({
             url: getKey(this.configurations?.properties, 'JUSTTO_WEBHOOK_ENDPOINT'),
-            password: getKey(this.configurations?.properties, 'JUSTTO_WEBHOOK_PASSWORD'),
+            password: '******',
             usename: getKey(this.configurations?.properties, 'JUSTTO_WEBHOOK_USERNAME')
           })
           break
@@ -171,13 +198,13 @@ export default {
     handleInitIntegration({ url, type }) {
       switch (type) {
         case 'PROJURIS_SOAP':
-          this.handleInitProjurisIntegration(url)
+          this.handleInitProjurisIntegration({ url })
           break
         case 'FINCH':
-          this.initFinchIntegration(url)
+          this.initFinchIntegration({ url })
           break
         default:
-          this.initJusttoIntegration(url)
+          this.initJusttoIntegration({ url })
           break
       }
     },
@@ -243,21 +270,64 @@ export default {
     },
 
     handleReset() {
-      // TODO: Adicionar confirmação.
-      this.resetApiIntegrationConsiguration()
+      this.$confirm('Deseja realmente reiniciar a configuração?', {
+        confirmButtonText: 'Sim',
+        cancelButtonText: 'Não',
+        showClose: false,
+        closeOnClickModal: false,
+        closeOnPressEscape: false
+      }).then(() => {
+        this.loading = true
+
+        this.resetApiIntegrationConsiguration().then(() => {
+          this.$jusNotification({
+            type: 'success',
+            title: 'Yay!',
+            message: 'Resetado com sucesso!'
+          })
+
+          this.fields = {}
+
+          this.$nextTick().then(this.handleRefresh)
+        }).catch(error => this.$jusNotification({
+          error
+        })).finally(() => { this.loading = false })
+      })
     },
 
     handleSave() {
+      this.loading = true
+
+      const fields = Object.keys(this.fields).reduce((payload, key) => {
+        if (this.fields[key] !== '******') payload[key] = String(this.fields[key])
+
+        return payload
+      }, {})
       this.setApiIntegrationConfiguration({
-        featureId: 6,
+        featureId: this.feature,
         payload: new ApiConfiguration({
-          ...this.fields,
+          ...fields,
           workspaceId: this.workspaceId
         })
-      })
+      }).then(() => {
+        this.$jusNotification({
+          type: 'success',
+          title: 'Yay!',
+          message: 'Salvo com sucesso!'
+        })
 
-      // TODO: Adicionar confirmação
-      // TODO: Adicionar loading + handler de erro.
+        this.fields = {}
+
+        this.$nextTick().then(this.handleRefresh)
+      }).catch(error => this.$jusNotification({
+        error
+      })).finally(() => { this.loading = false })
+    },
+
+    handleRefresh() {
+      this.getFeatureProperties(this.feature).then(this.init).catch(error => this.$jusNotification({
+        error
+      })).finally(() => { this.loading = false })
     }
   }
 }

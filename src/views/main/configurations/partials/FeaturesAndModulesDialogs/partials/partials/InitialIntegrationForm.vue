@@ -33,9 +33,11 @@ const validateURL = (_rule, value, callback) => {
   try {
     const url = new URL(value)
 
-    console.log(url)
-
-    callback()
+    if (['http:', 'https:'].includes(url.protocol)) {
+      callback()
+    } else {
+      callback(new Error('URL inválida.'))
+    }
   } catch (error) { callback(error) }
 }
 

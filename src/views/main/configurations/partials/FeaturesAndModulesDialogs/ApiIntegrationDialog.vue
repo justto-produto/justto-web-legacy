@@ -13,9 +13,12 @@
       v-if="loading"
       animated
     />
+
     <ApiIntegrationForm
       v-else
+      :feature="feature"
       @close="closeFeatureDialog"
+      @reset="fetchData"
     />
   </el-dialog>
 </template>
