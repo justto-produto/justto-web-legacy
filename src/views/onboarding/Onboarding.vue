@@ -13,6 +13,7 @@
       <el-col
         v-if="right > 0"
         :md="right"
+        :span="hideLeftMenu ? right : 24"
       >
         <swiper
           ref="swiper"
