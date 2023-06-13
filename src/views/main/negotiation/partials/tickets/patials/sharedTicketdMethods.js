@@ -1,7 +1,32 @@
 import { getLastInteraction } from '@/utils'
 import { mapGetters } from 'vuex'
 
+function debounce(func, wait, immediate) {
+  let timeout
+
+  return function() {
+    const context = this
+    const args = arguments
+    const later = function() {
+      timeout = null
+
+      if (!immediate) func.apply(context, args)
+    }
+
+    const callNow = immediate && !timeout
+    clearTimeout(timeout)
+    timeout = setTimeout(later, wait)
+    if (callNow) func.apply(context, args)
+  }
+}
+
 export default {
+  data() {
+    const handleClick = debounce(this.handleSelectTicket, 500)
+
+    return { handleClick }
+  },
+
   computed: {
     ...mapGetters({
       online: 'onlineDocuments',
@@ -46,6 +71,7 @@ export default {
   methods: {
     handleSelectTicket() {
       console.log('handleSelectTicket', !this.isActive, this.showActionButton)
+
       if (!this.isActive) {
         const id = this.ticket.disputeId
 
@@ -58,6 +84,7 @@ export default {
         this.$router.push({ name: 'negotiation' })
       }
     },
+
     getLastInteraction(time) {
       return getLastInteraction(time)
     }
