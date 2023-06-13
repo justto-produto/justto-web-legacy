@@ -1033,6 +1033,12 @@ export default {
       if (emailForm && emailForm.length) emailForm[0].clearValidate()
     },
 
+    updateDocument() {
+      this.getDocumentByDisputeId(this.disputeId).then(document => {
+        if (document) { this.document = document }
+      }).catch(error => this.$jusNotification({ error }))
+    },
+
     getDocument() {
       this.waitingModels = true
 
@@ -1160,6 +1166,7 @@ export default {
         this.loading = false
         this.loadingChooseRecipients = false
         this.recipients = {}
+        this.updateDocument()
       })
     },
 
@@ -1216,7 +1223,6 @@ export default {
             type: 'success'
           })
           this.step = 0
-          // this.getDocument()
         }).catch(error => {
           this.$jusNotification({ error })
         }).finally(() => {
