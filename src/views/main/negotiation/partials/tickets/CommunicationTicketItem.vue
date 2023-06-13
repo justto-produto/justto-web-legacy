@@ -2,7 +2,7 @@
   <li
     :class="{ 'communication-ticket-item-container--active': isActive }"
     class="communication-ticket-item-container"
-    @click="handleSelectTicket"
+    @click="handleClick"
   >
     <div class="communication-ticket-item-container__resume">
       <div class="communication-ticket-item-container__parties">
