@@ -98,6 +98,8 @@
     <ThamirisAlerts :is-visible="areThamirisAlertsVisible" />
 
     <BuyDialerDialog />
+
+    <HelpIndicator v-if="showHelpIndicator" />
   </el-container>
 </template>
 
@@ -118,7 +120,8 @@ export default {
     JusShortchts: () => import('@/components/others/JusShortcuts'),
     ThamirisAlerts: () => import('@/components/dialogs/ThamirisAlerts.vue'),
     BuyDialerDialog: () => import('@/components/dialogs/BuyDialerDialog'),
-    CustomHome: () => import('@/components/buttons/CustomHome')
+    CustomHome: () => import('@/components/buttons/CustomHome'),
+    HelpIndicator: () => import('@/components/others/HelpIndicator')
   },
 
   data() {
@@ -232,6 +235,10 @@ export default {
         basicManagementAllMenuItem,
         basicImportMenuItem
       ]
+    },
+
+    showHelpIndicator() {
+      return Boolean(this.$route?.meta?.requiresAuth)
     }
   },
 
