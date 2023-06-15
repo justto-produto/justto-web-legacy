@@ -56,9 +56,13 @@ export default {
   },
 
   methods: {
-    ...mapActions(['updateStrategy']),
+    ...mapActions([
+      'updateStrategy',
+      'setActiveStrategy'
+    ]),
 
     openStrategy({ id }) {
+      this.setActiveStrategy(id)
       this.$router.push(`/admin-panel-2/strategies/${id}`)
     },
 
