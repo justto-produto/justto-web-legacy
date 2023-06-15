@@ -45,4 +45,12 @@
   .el-select {
     width: 100%;
   }
+
+  @media screen and (max-width: 991px) {
+    .el-container {
+      .el-aside {
+        width: 100% !important;
+      }
+    }
+  }
 }
