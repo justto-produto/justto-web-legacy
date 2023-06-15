@@ -12,7 +12,7 @@
         rel="noopener noreferrer"
         class="help-indicator__popover-link"
       >
-        Posso ajudar?
+        Abrir chamado?
       </a>
 
       <img
