@@ -1,6 +1,8 @@
 const strategyGetters = {
   activeStrategy: state => state.activeStrategy,
   getStrategies: state => state?.strategies || { content: [] },
+  activeStrategyModel: state => (state?.strategies?.content || []).find(({ id }) => id === state.activeStrategy),
+  activeStrategyById: state => (strategyId) => (state?.strategies?.content || []).find(({ id }) => id === strategyId),
   getAvailableWorkspaces: state => state.availableWorkspaces,
   getAvaliableVariablesToTemplate: state => state.avaliableVariablesToTemplate,
   getStrategiesLoadingStatus: state => state.isLoadingStrategies,

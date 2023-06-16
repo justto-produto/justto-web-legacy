@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapMutations } from 'vuex'
 export default {
   name: 'StrategyItem',
 
@@ -58,7 +58,10 @@ export default {
   methods: {
     ...mapActions(['updateStrategy']),
 
+    ...mapMutations(['setActiveStrategy']),
+
     openStrategy({ id }) {
+      this.setActiveStrategy(id)
       this.$router.push(`/admin-panel-2/strategies/${id}`)
     },
 
@@ -68,7 +71,7 @@ export default {
       this.handleEditStrategy(strategy)
     },
 
-    handleEditTypes(types) {
+    handleEditTypes(types = []) {
       const strategy = { ...this.strategy, types }
 
       this.handleEditStrategy(strategy)
