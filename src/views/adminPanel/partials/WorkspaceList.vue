@@ -1,9 +1,9 @@
 <template>
   <section
-    v-loading="isLoading"
     class="workspace-container"
   >
     <el-table
+      v-loading="isLoading"
       :data="filteredWorkspaces"
       style="width: 100%"
       height="95vh"
@@ -378,20 +378,14 @@ export default {
     init() {
       this.isLoading = true
 
-      // Promise.all([
-      //   this.myWorkspace(),
-      //   this.getPortifolios(),
-      //   this.getWorkspaceKeyAccounts()
-      // ]).then(() => {}).finally(() => {
-      //   this.isLoading = false
-      // })
-
-      this.adminWorkspaces({ method: 'get', params: { size: 99999 } }).then(({ content: workspaces }) => {
+      this.adminWorkspaces({
+        params: { size: 99999 },
+        headers: { Workspace: null }
+      }).then(({ content: workspaces }) => {
         this.$set(this, 'workspaces', [])
         this.workspaces = workspaces
-        this.isLoading = false
       }).finally(() => {
-        this.isLoading = false
+        this.$nextTick().then(() => { this.isLoading = false })
       })
     },
 
