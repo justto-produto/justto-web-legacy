@@ -55,7 +55,7 @@ const strategyMutations = {
       triggers.communicationsTypeSummary[communicationType] -= 1
     }
   },
-  setActiveStrategy: (state, activeStrategy) => (state.activeStrategy = activeStrategy),
+  setActiveStrategy: (state, activeStrategy) => Vue.set(state, 'activeStrategy', activeStrategy),
   setAvailableWorkspace: (state, availableWorkspaces) => (state.availableWorkspaces = availableWorkspaces),
   setAvaliableVariablesToTemplate: (state, variables) => (state.avaliableVariablesToTemplate = variables),
   setFilterTerm: (state, term) => (state.strategyQuery.name = term),

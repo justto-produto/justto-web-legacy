@@ -3,7 +3,7 @@
     <StrategyTriggers
       v-if="hasStrategy"
       :strategy-id="strategyId"
-      :triggers="activeStrategyModel.triggers"
+      :triggers="strategy.triggers"
       class="strategy-conrainer__triggers"
       @edit-communication="handleEditCommunoication"
     />
@@ -21,19 +21,23 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['activeStrategyModel']),
+    ...mapGetters(['strategy', 'activeStrategyById']),
 
     strategyId() {
       return Number(this.$route?.params?.id)
     },
 
+    strategy() {
+      return this.activeStrategyById(this.strategyId)
+    },
+
     hasStrategy() {
-      return Boolean(this.activeStrategyModel?.id)
+      return Boolean(this.strategy?.id)
     }
   },
 
   mounted() {
-    this.setActiveStrategy(Number(this.$route?.params?.id))
+    this.setActiveStrategy(this.strategyId)
   },
 
   methods: {

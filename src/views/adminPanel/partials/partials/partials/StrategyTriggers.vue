@@ -181,7 +181,6 @@ export default {
       const type = {}
       Object.assign(type, STRATEGY_COMMUNICATION_TYPES)
       delete type.EMAIL_CNA
-      delete type.WHATSAPP
       delete type.UNKNOW
 
       return Object.values(type)
