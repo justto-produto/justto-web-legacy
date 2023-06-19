@@ -129,7 +129,7 @@ export default {
     TextInlineEditor: () => import('@/components/inputs/TextInlineEditor'),
     EngagementLimitDialog: () => import('@/components/dialogs/EngagementLimitDialog'),
     AssociateContactsModal: () => import('@/components/dialogs/AssociateContactsModal'),
-    EditDisputeDialog: () => import('@/views/main/dispute/partials/DisputeOverview/dialogs/EditDisputeDialog')
+    EditDisputeDialog: () => import('@/components/dialogs/EditDisputeDialog')
   },
 
   mixins: [preNegotiation, restartEngagement],
