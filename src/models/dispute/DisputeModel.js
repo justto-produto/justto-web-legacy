@@ -127,6 +127,10 @@ export class DisputeModel {
     return this.getDisputeStatus === 'EXPIRED'
   }
 
+  get getDisputeIsPending() {
+    return ['PENDING', 'ENGAGEMENT', 'ENRICHED', 'IMPORTED'].includes(this.getDisputeStatus)
+  }
+
   get getDisputeDealValue() {
     return this.#dtoV1?.disputeDealValue ||
       this.#dtoV3?.dealValue
@@ -463,7 +467,8 @@ export class DisputeModel {
     return (this.#dtoV1?.strategyName ||
       this.#dtoV2?.strategyName ||
       this.#dtoV3?.strategyName ||
-      '').toLowerCase().includes('manual')
+      '').toLowerCase().includes('manual') &&
+      this.getDisputeIsPending// TODO: Disputa pendente
   }
 
   getDisputeProperty(property) {
