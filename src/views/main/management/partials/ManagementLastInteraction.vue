@@ -415,7 +415,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '@/styles/colors.scss';
+@import '~projuris-acordos-theme/src/common/colors.scss';
 
 .last-interactions-table {
   .last-interactions-table__interaction-pulse {

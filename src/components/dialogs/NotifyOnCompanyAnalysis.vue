@@ -218,7 +218,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '@/styles/colors.scss';
+@import '~projuris-acordos-theme/src/common/colors.scss';
 
 .dialog-actions__increase-alert {
   .el-dialog__body {

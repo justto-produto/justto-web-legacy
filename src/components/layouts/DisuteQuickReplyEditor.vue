@@ -216,7 +216,7 @@ export default {
 </style>
 
 <style lang="scss" scoped>
-@import '@/styles/colors.scss';
+@import '~projuris-acordos-theme/src/common/colors.scss';
 .reply-editor__container {
   margin: 0 0 16px 0;
   padding: 0 0 16px 0;

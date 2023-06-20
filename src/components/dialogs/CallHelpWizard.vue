@@ -441,7 +441,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '@/styles/colors.scss';
+@import '~projuris-acordos-theme/src/common/colors.scss';
 
 .el-dialog__wrapper:has(.call-help-dialog) {
   margin: 24vh auto !important;

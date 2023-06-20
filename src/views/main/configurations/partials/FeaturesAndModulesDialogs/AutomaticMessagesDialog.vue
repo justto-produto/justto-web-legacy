@@ -152,7 +152,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '@/styles/colors.scss';
+@import '~projuris-acordos-theme/src/common/colors.scss';
 
 .automatic-messages-dialog {
   .el-dialog__header {

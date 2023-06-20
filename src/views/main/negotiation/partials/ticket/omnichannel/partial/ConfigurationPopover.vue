@@ -24,7 +24,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '@/styles/colors.scss';
+@import '~projuris-acordos-theme/src/common/colors.scss';
 
 .omnichannel-container__configuration {
   .el-popover__reference-wrapper {

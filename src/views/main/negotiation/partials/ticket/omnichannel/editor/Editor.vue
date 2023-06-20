@@ -225,7 +225,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/styles/colors.scss';
+@import '~projuris-acordos-theme/src/common/colors.scss';
 
 .editor-container {
   border-top: 2px solid $--color-light-gray;
@@ -234,7 +234,7 @@ export default {
 </style>
 
 <style lang="scss">
-@import '@/styles/colors.scss';
+@import '~projuris-acordos-theme/src/common/colors.scss';
 .editor-container {
   .el-tabs__header {
     margin-bottom: 0px !important;

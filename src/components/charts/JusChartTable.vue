@@ -243,7 +243,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '@/styles/colors.scss';
+@import '~projuris-acordos-theme/src/common/colors.scss';
 .jus-chart-table {
   .el-table {
     .header th {

@@ -82,7 +82,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '@/styles/colors.scss';
+@import '~projuris-acordos-theme/src/common/colors.scss';
 
 .notification__drawer__list-item {
   padding: 8px 2%;

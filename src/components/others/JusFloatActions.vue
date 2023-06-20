@@ -54,7 +54,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '@/styles/colors.scss';
+@import '~projuris-acordos-theme/src/common/colors.scss';
 
 .float-actions {
   background: linear-gradient(to right, transparent 0%, rgba(246,246,246,1) 24px);
