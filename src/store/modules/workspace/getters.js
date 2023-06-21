@@ -27,8 +27,9 @@ const workspaceGetters = {
       .filter(({ personId, person }) => Boolean(personId || person?.id))
       .map(({ personId, person }) => personId || person?.id)
 
-    return getters.workspaceMembers
-      .filter(({ personId, profile }) => (['ADMINISTRATOR'].includes(profile) || (Boolean(personId) && parties.includes(personId))))
+    const members = getters.workspaceMembers.filter(({ personId, profile }) => (['ADMINISTRATOR'].includes(profile) || (Boolean(personId) && parties.includes(personId))))
+
+    return [...members, ...getters.proJuntosAdmins]
   },
   workspaceTeam: state => state.workspace.team,
   workspaceMembersSorted: (_state, getters) =>
@@ -73,7 +74,8 @@ const workspaceGetters = {
   useScheduleCallBatchAction: (state) => (state?.workspace?.properties?.CAN_USE_SCHEDULE_CALL_BATCH_ACTION !== 'DISABLED'),
   showNegotiationTypeMenu: state => state?.workspace?.properties?.SHOW_NEGOTIATION_TYPE_MENU !== 'DISABLED',
   useDisputeProjection: (state, getters) => (state?.workspace?.properties?.USE_DISPUTE_PROJECTION !== 'DISABLED' || getters?.getAccountUseDisputeProjection),
-  usePixAccountType: state => state?.workspace?.properties?.USE_PIX_ACCOUNT_TYPE !== 'DISABLED'
+  usePixAccountType: state => state?.workspace?.properties?.USE_PIX_ACCOUNT_TYPE !== 'DISABLED',
+  proJuntosAdmins: state => JSON.parse(`[${(state?.workspace?.properties?.PROJUNTTOS_ADMIN || '')}]`)
 }
 
 export default workspaceGetters
