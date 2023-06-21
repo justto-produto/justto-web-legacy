@@ -107,7 +107,7 @@ export default {
 
   components: {
     COMMUNICATION: () => import('./partials/Communication'),
-    ATTACHMENT: () => import('@/views/main/dispute/partials/partials/AttachmentOccurrence'),
+    ATTACHMENT: () => import('@/components/others/AttachmentOccurrence'),
     NEGOTIATOR: () => import('./partials/Negotiator'),
     SCHEDULER: () => import('./partials/Scheduler'),
     PHONE: () => import('./partials/Phone.vue'),

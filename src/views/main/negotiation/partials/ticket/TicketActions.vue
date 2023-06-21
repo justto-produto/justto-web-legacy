@@ -238,13 +238,6 @@ export default {
           method: (_action) => (window.open(`/#/print/negotiation/${this.$route.params.id}?tab=${this.activeTab}`, '_blank')),
           isElementIcon: true,
           isVisible: true
-        },
-        {
-          name: this.isInDispute ? 'REDIRECT_TICKET' : 'REDIRECT_MANAGEMENT',
-          icon: 'switch',
-          isVisible: !this.showNegotiationTypeMenu,
-          isDynamic: !this.isPaused && !this.isCanceled,
-          method: () => this.redirectToManagement()
         }
       ].filter(action => {
         if (this.isPaused) {

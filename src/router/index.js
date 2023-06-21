@@ -119,7 +119,8 @@ const router = new Router({
         {
           name: 'dispute',
           path: 'management/dispute/:id',
-          component: () => import(/* webpackChunkName: "managementDisputeIndex" */ '@/views/main/dispute/Dispute'),
+          redirect: ({ params: { id } }) => (`negotiation/${id}`),
+          // component: () => import(/* webpackChunkName: "managementDisputeIndex" */ '@/views/main/dispute/Dispute'),
           meta: {
             requiresAuth: true,
             trackPage: true,
@@ -430,8 +431,6 @@ router.beforeEach((to, from, next) => {
         if (Store.getters?.showNegotiationTypeMenu) {
           if (to.name === 'management') {
             next({ name: 'negotiation' })
-          } else if (to.name === 'dispute') {
-            next({ name: 'ticket', params: to.params })
           }
         }
 
