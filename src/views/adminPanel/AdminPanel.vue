@@ -163,13 +163,15 @@ export default {
         'kelvin@justto.com.br',
         'josewilliam@justto.com.br',
         'daniel@justto.com.br',
-        'deivid@justto.com.br'
+        'deivid@justto.com.br',
+        'simone.barreiros@justto.com.br'
       ],
       testers: [
         'lucas@justto.com.br',
         'josewilliam@justto.com.br',
         'daniel@justto.com.br',
-        'deivid@justto.com.br'
+        'deivid@justto.com.br',
+        'simone.barreiros@justto.com.br'
       ]
     }
   },
