@@ -186,7 +186,6 @@ export default {
               'data-mention': modelAttributeValue.id,
               src: modelAttributeValue.id,
               ...(isMemberMention ? {
-                // style: 'color: #9461f7;',
                 class: 'justto-mention',
                 'account-id': modelAttributeValue.accountId
               } : {})
