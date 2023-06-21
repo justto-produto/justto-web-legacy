@@ -383,7 +383,7 @@ export default {
 </style>
 
 <style lang="scss" scoped>
-  @import '@/styles/colors';
+  @import '~projuris-acordos-theme/src/common/colors';
 
   .messages-container {
     padding: 6px;

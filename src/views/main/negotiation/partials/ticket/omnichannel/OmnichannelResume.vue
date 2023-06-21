@@ -86,7 +86,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/styles/colors';
+@import '~projuris-acordos-theme/src/common/colors';
 
 .omnichannel-resume__container {
   .omnichannel-resume__container-list {

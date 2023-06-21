@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import moment from 'moment/src/moment'
+import moment from 'moment'
 
 const vue = () => document.getElementById('app')?.__vue__
 

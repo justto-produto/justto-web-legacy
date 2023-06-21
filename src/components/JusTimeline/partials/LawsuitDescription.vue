@@ -380,7 +380,7 @@ export default {
 </style>
 
 <style lang="scss" scoped>
-@import "@/styles/colors.scss";
+@import '~projuris-acordos-theme/src/common/colors.scss';
 
 .lawsuit-description {
   width: 100%;

@@ -153,7 +153,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '@/styles/colors';
+@import '~projuris-acordos-theme/src/common/colors';
 
 .export-ticket-modal {
   position: relative;

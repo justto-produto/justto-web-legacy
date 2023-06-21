@@ -529,7 +529,7 @@ export default {
 
 <style lang="scss">
 @import '~projuris-acordos-theme/src/common/colors.scss';
-@import '@/styles/variables.scss';
+@import '~projuris-acordos-theme/src/common/var.scss';
 
 .bank-account__popover {
   border-width: 2px;

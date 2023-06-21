@@ -31,7 +31,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/styles/variables.scss';
+@import '~projuris-acordos-theme/src/common/var.scss';
 
 .reports-container {
   display: flex;

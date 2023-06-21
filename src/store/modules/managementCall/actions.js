@@ -6,7 +6,7 @@ import { CALL_STATUS } from '@/constants/callStatus'
 import { publishWebsocket } from '@/utils/utils/others'
 
 import JsSIP from 'jssip'
-import moment from 'moment/src/moment'
+import moment from 'moment'
 import getStats from 'getstats'
 
 const vue = () => document.getElementById('app')?.__vue__

@@ -1,12 +1,9 @@
 @import url('https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700,900');
 @import './keyboard/main.scss';
 @import './ckeditor.scss';
-// @import './variables.scss';
 @import '~projuris-acordos-theme/lib/index.css';
-// TODO: Falta puxar asvariáveis para o tema.
-@import '~projuris-acordos-theme/src/common/var.scss';
+@import '~projuris-acordos-theme/src/common/var.scss';;
 @import '~projuris-acordos-theme/src/common/colors.scss';
-
 
 html {
   font-size: 14px;

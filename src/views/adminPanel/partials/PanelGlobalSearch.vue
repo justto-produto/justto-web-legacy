@@ -439,7 +439,7 @@ export default {
 
 <style lang="scss">
 @import '~projuris-acordos-theme/src/common/colors.scss';
-@import '@/styles/variables.scss';
+@import '~projuris-acordos-theme/src/common/var.scss';
 
 .global-search {
   padding-bottom: 16px;

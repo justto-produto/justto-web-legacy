@@ -1,5 +1,5 @@
 import { stripHtml } from '@/utils'
-import moment from 'moment/src/moment'
+import moment from 'moment'
 
 const mapTabOccurrenceType = {
   MESSAGES: ['INTERACTION', 'NOTE', 'ACTION'],

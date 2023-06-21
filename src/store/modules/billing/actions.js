@@ -1,4 +1,4 @@
-import moment from 'moment/src/moment'
+import moment from 'moment'
 import { axiosDispatch, buildQuery } from '@/utils'
 
 const billingPath = 'api/billing'

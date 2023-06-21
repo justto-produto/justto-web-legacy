@@ -182,7 +182,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/styles/colors';
+@import '~projuris-acordos-theme/src/common/colors';
 
 .recipients-container {
   display: flex;
@@ -233,7 +233,7 @@ export default {
 </style>
 
 <style lang="scss">
-@import '@/styles/colors';
+@import '~projuris-acordos-theme/src/common/colors';
 
 .recipients-popover {
   padding: 12px;
