@@ -60,7 +60,7 @@ export default {
 
   components: {
     PartyResumed: () => import('./parties/PartyResumed'),
-    DisputeAddRole: () => import('@/views/main/dispute/partials/DisputeAddRole')
+    DisputeAddRole: () => import('@/components/dialogs/DisputeAddRole')
   },
 
   mixins: [preNegotiation],

@@ -63,7 +63,7 @@ export default {
   components: {
     Date: () => import('./occurrence/Date'),
     Occurrence,
-    DisputeTips: () => import('@/views/main/dispute/partials/DisputeTips'),
+    DisputeTips: () => import('@/components/layouts/DisputeTips'),
     JusScrollLoading: () => import('@/components/others/JusScrollLoading')
   },
 
