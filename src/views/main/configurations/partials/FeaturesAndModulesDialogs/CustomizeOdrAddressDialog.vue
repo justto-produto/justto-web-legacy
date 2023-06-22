@@ -10,214 +10,316 @@
       width="80%"
       custom-class="configure-customizations"
     >
-      <el-form
-        ref="form"
-        :v-if="configureCustomizationsDialogVisible"
-        :model="form"
-        :rules="rulesCustomizations"
-        :disabled="modalLoading"
-        label-position="top"
-        class="configure-customizations__form"
+      <el-tabs
+        v-model="activeTab"
+        type="border-card"
       >
-        <div class="configure-customizations__form-header">
-          <div class="configure-customizations__form-header-item">
-            <el-form-item
-              class="configure-customizations__form-header-item-input"
-              prop="email"
-            >
-              <label class="configure-customizations__form-header-item-input-label">
-                Email para envio das mensagens
-              </label>
-
-              <el-tooltip
-                placement="right"
-                effect="dark"
-                :open-delay="500"
-              >
-                <div slot="content">
-                  Esta é uma configuração que exige intervenção dos times <br> de tecnologia da JUSTTO e do escritório/empresa.
-                </div>
-
-                <i class="el-icon-info" />
-              </el-tooltip>
-
-              <el-input
-                v-model="form.email"
-                :disabled="!isJusttoAdmin"
-                size="small"
-              >
-                <template slot="append">
-                  <el-popover
-                    placement="right"
-                    trigger="hover"
-                    :open-delay="500"
-                    :content="validTooltipText"
-                    popper-class="valid-domain-popover"
-                  >
-                    <div slot="reference">
-                      <span
-                        v-if="haveDomain"
-                        slot="reference"
-                      >
-                        <i :class="isValidDomain ? 'el-icon-check' : 'el-icon-close'" />
-                      </span>
-                    </div>
-                  </el-popover>
-                </template>
-              </el-input>
-            </el-form-item>
-          </div>
-
-          <div class="configure-customizations__form-header-item">
-            <el-form-item
-              class="configure-customizations__form-header-item-input"
-              prop="link"
-            >
-              <label
-                class="configure-customizations__form-header-item-input-label"
-              >
-                Link para portal de negociações
-              </label>
-              <el-tooltip
-                placement="right"
-                effect="dark"
-                :open-delay="500"
-              >
-                <div slot="content">
-                  Exige intervenção da equipe de tecnologia para <br> criar um novo endereço na internet com o certificado.
-                </div>
-                <i class="el-icon-info" />
-              </el-tooltip>
-              <el-input
-                v-model="form.link"
-                disabled
-                size="small"
-              />
-            </el-form-item>
-          </div>
-        </div>
-
-        <div class="configure-customizations__form-body">
-          <div class="configure-customizations__form-body-actions">
-            <el-button
-              type="secondary"
-              icon="el-icon-s-promotion"
-              size="mini"
-              @click="handleSendByEmail"
-            >
-              Enviar por e-mail
-            </el-button>
-
-            <el-button
-              type="primary"
-              size="mini"
-              @click="handleUpdateDomains"
-            >
-              Verificar se os registros foram inseridos
-            </el-button>
-          </div>
-
-          <el-table
-            :data="dnsList"
-            size="mini"
-            class="configure-customizations__form-body-table"
-            border
+        <el-tab-pane
+          label="Email"
+          name="email"
+        >
+          <el-form
+            ref="form"
+            :v-if="configureCustomizationsDialogVisible"
+            :model="form"
+            :rules="rulesCustomizations"
+            :disabled="modalLoading"
+            label-position="top"
+            class="configure-customizations__form"
           >
-            <el-table-column
-              fixed="left"
-              center
-              width="40"
-            >
-              <template v-slot="props">
-                <el-button
-                  type="text"
-                  :class="{danger: !props.row.valid, success: props.row.valid}"
-                  :icon="props.row.valid ? 'el-icon-check' : 'el-icon-close'"
-                />
-              </template>
-            </el-table-column>
-
-            <el-table-column
-              prop="type"
-              label="Type"
-            >
-              <template v-slot="props">
-                {{ props.row.type | uppercase }}
-              </template>
-            </el-table-column>
-
-            <el-table-column
-              prop="host"
-              label="Host"
-            >
-              <template v-slot="props">
-                {{ props.row.host }}
-              </template>
-            </el-table-column>
-
-            <el-table-column
-              prop="data"
-              label="Value"
-            >
-              <template v-slot="props">
-                {{ props.row.data }}
-              </template>
-            </el-table-column>
-
-            <el-table-column
-              fixed="right"
-              center
-              width="40"
-            >
-              <template v-slot="props">
-                <el-tooltip
-                  content="Copiar"
-                  :open-delay="500"
+            <div class="configure-customizations__form-header">
+              <div class="configure-customizations__form-header-item">
+                <el-form-item
+                  class="configure-customizations__form-header-item-input"
+                  prop="email"
                 >
-                  <el-button
-                    type="text"
-                    icon="el-icon-copy-document"
-                    class="is-pointer"
-                    @click="copyDns(props.row)"
+                  <label class="configure-customizations__form-header-item-input-label">
+                    Email para envio das mensagens
+                  </label>
+
+                  <el-tooltip
+                    placement="right"
+                    effect="dark"
+                    :open-delay="500"
+                  >
+                    <div slot="content">
+                      Esta é uma configuração que exige intervenção dos times <br> de tecnologia da JUSTTO e do escritório/empresa.
+                    </div>
+
+                    <i class="el-icon-info" />
+                  </el-tooltip>
+
+                  <el-input
+                    v-model="form.email"
+                    :disabled="!isJusttoAdmin"
+                    size="small"
+                  >
+                    <template slot="append">
+                      <el-popover
+                        placement="top-end"
+                        trigger="hover"
+                        :open-delay="500"
+                        :content="validTooltipText"
+                        popper-class="valid-domain-popover"
+                      >
+                        <div slot="reference">
+                          <span
+                            v-if="haveDomain"
+                            slot="reference"
+                          >
+                            <i :class="isValidDomain ? 'el-icon-check' : 'el-icon-close'" />
+                          </span>
+                        </div>
+                      </el-popover>
+                    </template>
+                  </el-input>
+                </el-form-item>
+              </div>
+
+              <div class="configure-customizations__form-header-item">
+                <el-form-item
+                  class="configure-customizations__form-header-item-input"
+                  prop="link"
+                >
+                  <label
+                    class="configure-customizations__form-header-item-input-label"
+                  >
+                    Link para portal de negociações
+                  </label>
+
+                  <el-tooltip
+                    placement="right"
+                    effect="dark"
+                    :open-delay="500"
+                  >
+                    <div slot="content">
+                      Exige intervenção da equipe de tecnologia para <br> criar um novo endereço na internet com o certificado.
+                    </div>
+                    <i class="el-icon-info" />
+                  </el-tooltip>
+
+                  <el-input
+                    v-model="form.link"
+                    disabled
+                    size="small"
+                  >
+                    <template slot="append">
+                      <el-popover
+                        placement="top-end"
+                        trigger="hover"
+                        :open-delay="500"
+                        :content="validTooltipDomainText"
+                        popper-class="valid-domain-popover"
+                      >
+                        <div slot="reference">
+                          <span
+                            v-if="haveDomain"
+                            slot="reference"
+                          >
+                            <i :class="isValidDomain ? 'el-icon-check' : 'el-icon-close'" />
+                          </span>
+                        </div>
+                      </el-popover>
+                    </template>
+                  </el-input>
+                </el-form-item>
+              </div>
+            </div>
+
+            <div class="configure-customizations__form-body">
+              <div class="configure-customizations__form-body-actions">
+                <el-button
+                  type="secondary"
+                  icon="el-icon-s-promotion"
+                  size="mini"
+                  @click="handleSendByEmail"
+                >
+                  Enviar por e-mail
+                </el-button>
+
+                <el-button
+                  type="primary"
+                  size="mini"
+                  @click="handleUpdateDomains"
+                >
+                  Verificar se os registros foram inseridos
+                </el-button>
+              </div>
+
+              <el-table
+                :data="dnsList"
+                size="mini"
+                class="configure-customizations__form-body-table"
+                border
+              >
+                <el-table-column
+                  fixed="left"
+                  center
+                  width="40"
+                >
+                  <template v-slot="props">
+                    <el-button
+                      type="text"
+                      :class="{danger: !props.row.valid, success: props.row.valid}"
+                      :icon="props.row.valid ? 'el-icon-check' : 'el-icon-close'"
+                    />
+                  </template>
+                </el-table-column>
+
+                <el-table-column
+                  prop="type"
+                  label="Type"
+                >
+                  <template v-slot="props">
+                    {{ props.row.type | uppercase }}
+                  </template>
+                </el-table-column>
+
+                <el-table-column
+                  prop="host"
+                  label="Host"
+                >
+                  <template v-slot="props">
+                    {{ props.row.host }}
+                  </template>
+                </el-table-column>
+
+                <el-table-column
+                  prop="data"
+                  label="Value"
+                >
+                  <template v-slot="props">
+                    {{ props.row.data }}
+                  </template>
+                </el-table-column>
+
+                <el-table-column
+                  fixed="right"
+                  center
+                  width="40"
+                >
+                  <template v-slot="props">
+                    <el-tooltip
+                      content="Copiar"
+                      :open-delay="500"
+                    >
+                      <el-button
+                        type="text"
+                        icon="el-icon-copy-document"
+                        class="is-pointer"
+                        @click="copyDns(props.row)"
+                      />
+                    </el-tooltip>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </div>
+
+            <div class="configure-customizations__footer">
+              <div class="configure-customizations__footer-actions">
+                <el-button
+                  class="configure-customizations__footer-cancel"
+                  size="small"
+                  plain
+                  @click="closeFeatureDialog()"
+                >
+                  Cancelar
+                </el-button>
+
+                <el-button
+                  type="secondary"
+                  size="small"
+                  @click="handleResetEmail"
+                >
+                  Mudar o email da empresa
+                </el-button>
+
+                <el-button
+                  v-loading="modalLoading"
+                  :disabled="modalLoading || !isJusttoAdmin"
+                  class="configure-customizations__footer-confirm"
+                  type="primary"
+                  size="small"
+                  @click.prevent="saveCustomizedConfigurations"
+                >
+                  Salvar configuração
+                </el-button>
+              </div>
+            </div>
+          </el-form>
+        </el-tab-pane>
+
+        <el-tab-pane
+          label="WhatsApp"
+          name="whatsapp"
+        >
+          <el-form
+            :model="whatsAppForm"
+            class="configure-customizations__form"
+          >
+            <div class="configure-customizations__form-header">
+              <div class="configure-customizations__form-header-item">
+                <el-form-item
+                  class="configure-customizations__form-header-item-input"
+                  prop="CUSTOM_WHATSAPP_APP_NAME"
+                >
+                  <label class="configure-customizations__form-header-item-input-label">
+                    Nome do aplicativo:
+                  </label>
+
+                  <el-input
+                    v-model="whatsAppForm.CUSTOM_WHATSAPP_APP_NAME"
+                    size="small"
                   />
-                </el-tooltip>
-              </template>
-            </el-table-column>
-          </el-table>
-        </div>
-      </el-form>
+                </el-form-item>
+              </div>
+
+              <div class="configure-customizations__form-header-item">
+                <el-form-item
+                  class="configure-customizations__form-header-item-input"
+                  prop="CUSTOM_WHATSAPP_NUMBER"
+                >
+                  <label class="configure-customizations__form-header-item-input-label">
+                    Número de contato:
+                  </label>
+
+                  <el-input
+                    v-model="whatsAppForm.CUSTOM_WHATSAPP_NUMBER"
+                    v-mask="['55 (##) ####-####', '55 (##) #####-####']"
+                    size="small"
+                  />
+                </el-form-item>
+              </div>
+            </div>
+
+            <div class="configure-customizations__footer">
+              <div class="configure-customizations__footer-actions">
+                <el-button
+                  class="configure-customizations__footer-cancel"
+                  size="small"
+                  plain
+                  @click="closeFeatureDialog()"
+                >
+                  Cancelar
+                </el-button>
+
+                <el-button
+                  v-loading="modalLoading"
+                  :disabled="modalLoading || !isJusttoAdmin"
+                  class="configure-customizations__footer-confirm"
+                  type="primary"
+                  size="small"
+                  @click.prevent="saveCustomizedWhatsApp"
+                >
+                  Salvar configuração
+                </el-button>
+              </div>
+            </div>
+          </el-form>
+        </el-tab-pane>
+      </el-tabs>
 
       <div class="configure-customizations__footer">
-        <div class="configure-customizations__footer-actions">
-          <el-button
-            class="configure-customizations__footer-cancel"
-            size="small"
-            plain
-            @click="closeFeatureDialog()"
-          >
-            Cancelar
-          </el-button>
-
-          <el-button
-            type="secondary"
-            size="small"
-            @click="handleResetEmail"
-          >
-            Mudar o email da empresa
-          </el-button>
-
-          <el-button
-            v-loading="modalLoading"
-            :disabled="modalLoading || !isJusttoAdmin"
-            class="configure-customizations__footer-confirm"
-            type="primary"
-            size="small"
-            @click.prevent="saveCustomizedConfigurations"
-          >
-            Salvar configuração
-          </el-button>
-        </div>
-
         <div class="configure-customizations__footer-info">
           <span class="configure-customizations__footer-info-span">
             Ao utilizar nossa plataforma você está ciente e concorda com nossa
@@ -316,11 +418,17 @@ export default {
     configureCustomizationsDialogVisible: false,
     configureNewDomainDialogVisible: false,
     modalLoading: false,
+    activeTab: 'email',
     form: {
       email: '',
       link: '',
       emailFooter: '',
       emailFooterId: null
+    },
+
+    whatsAppForm: {
+      CUSTOM_WHATSAPP_APP_NAME: '',
+      CUSTOM_WHATSAPP_NUMBER: ''
     },
 
     newDomainForm: {
@@ -358,7 +466,11 @@ export default {
     },
 
     validTooltipText() {
-      return `Este email está com o domínio ${this.isValidDomain ? 'válido' : 'inválido'}.` // e autorizado
+      return `Este email está com o domínio ${this.isValidDomain ? 'válido' : 'inválido'}.`
+    },
+
+    validTooltipDomainText() {
+      return `Este domínio está ${this.isValidDomain ? 'válido' : 'inválido'}.`
     },
 
     dnsList() {
@@ -390,6 +502,18 @@ export default {
       }).finally(() => {
         this.modalLoading = false
       })
+    },
+
+    saveCustomizedWhatsApp() {
+      this.modalLoading = true
+
+      this.editProperties({
+        ...this.whatsAppForm
+      }).then(() => this.$jusNotification({
+        title: 'Yay!',
+        message: 'Configurações salvas com sucesso',
+        type: 'success'
+      })).catch(error => this.$jusNotification({ error })).finally(() => { this.modalLoading = false })
     },
 
     validateForm(ref) {
@@ -467,11 +591,23 @@ export default {
           ...this.properties,
           CUSTOM_EMAIL_SENDER: (this.form.email || this.properties.CUSTOM_EMAIL_SENDER)
         })
+
+        this.resetWhatsAppFormInfo()
+
         this.searchTemplete()
       } else {
         this.newDomainForm.domain = this.form.email.split('@')[1]
         this.configureNewDomainDialogVisible = true
       }
+    },
+
+    resetWhatsAppFormInfo() {
+      this.whatsAppForm = {
+        CUSTOM_WHATSAPP_APP_NAME: this.properties.CUSTOM_WHATSAPP_APP_NAME || '',
+        CUSTOM_WHATSAPP_NUMBER: this.properties.CUSTOM_WHATSAPP_NUMBER || ''
+      }
+
+      console.log({ ...this.whatsAppForm })
     },
 
     handleUpdateDomains() {
@@ -660,6 +796,11 @@ export default {
               }
             }
           }
+
+          &.el-form-item {
+            margin: 0 !important;
+            width: 100% !important;
+          }
         }
 
         &.flex-row {
@@ -748,7 +889,7 @@ export default {
   font-size: 12px;
 
   .popper__arrow::after {
-    border-right-color: $--color-black !important;
+    border-top-color: $--color-black !important;
   }
 }
 </style>
@@ -764,6 +905,7 @@ export default {
     .configure-customizations__form-header {
       display: flex;
       flex-direction: row;
+      gap: 16px;
 
       .configure-customizations__form-header-item {
         width: 50%;
