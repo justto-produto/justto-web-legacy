@@ -17,6 +17,10 @@ jobs:
         with:
           node-version: 14
           cache: 'npm'
+      - name: webfactory/ssh-agent
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.PRIVATE_KEY_DEVJUSTTO }}
       - run: npm install --legacy-peer-deps
       - run: npm run build --legacy-peer-deps
       - uses: jakejarvis/s3-sync-action@master

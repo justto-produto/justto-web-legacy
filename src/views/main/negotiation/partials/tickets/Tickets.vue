@@ -522,7 +522,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/styles/colors.scss';
+@import '~projuris-acordos-theme/src/common/colors.scss';
 
 .tickets-container {
   display: flex;
@@ -574,7 +574,7 @@ export default {
 </style>
 
 <style lang="scss">
-@import '@/styles/colors.scss';
+@import '~projuris-acordos-theme/src/common/colors.scss';
 
 .tickets-container {
   position: relative;

@@ -144,7 +144,7 @@ export default {
 </script>
 
 <style lang="scss" scopped>
-@import '@/styles/colors.scss';
+@import '~projuris-acordos-theme/src/common/colors.scss';
 
 .strategy-communication__popover-header {
   display: flex;

@@ -234,7 +234,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '@/styles/colors.scss';
+@import '~projuris-acordos-theme/src/common/colors.scss';
 
 @mixin selected-tag($--border-color, $--icon-url) {
   border: 2px solid $--border-color;

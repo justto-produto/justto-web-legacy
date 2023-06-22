@@ -108,7 +108,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '@/styles/colors.scss';
+@import '~projuris-acordos-theme/src/common/colors.scss';
 
 .dialog-reply-negotiator__alert-container {
   display: flex;

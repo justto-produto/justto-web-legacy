@@ -218,7 +218,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/styles/colors.scss';
+@import '~projuris-acordos-theme/src/common/colors.scss';
 
 .communication-ticket-item-container {
   position: relative;
@@ -385,7 +385,7 @@ export default {
 </style>
 
 <style lang="scss">
-@import '@/styles/colors.scss';
+@import '~projuris-acordos-theme/src/common/colors.scss';
 
 .communication-ticket-item-container__actions {
   .communication-ticket-item-container__actions__label {

@@ -438,8 +438,8 @@ export default {
 </style>
 
 <style lang="scss">
-@import '@/styles/colors.scss';
-@import '@/styles/variables.scss';
+@import '~projuris-acordos-theme/src/common/colors.scss';
+@import '~projuris-acordos-theme/src/common/var.scss';
 
 .global-search {
   padding-bottom: 16px;

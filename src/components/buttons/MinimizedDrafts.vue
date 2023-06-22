@@ -75,7 +75,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/styles/colors.scss';
+@import '~projuris-acordos-theme/src/common/colors.scss';
 
 .minimized-drafts {
   position: absolute;
@@ -116,7 +116,7 @@ export default {
 </style>
 
 <style lang="scss">
-@import '@/styles/colors.scss';
+@import '~projuris-acordos-theme/src/common/colors.scss';
 
 .minimized-drafts {
   .minimized-draft__item {

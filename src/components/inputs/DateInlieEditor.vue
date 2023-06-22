@@ -139,7 +139,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/styles/colors.scss';
+@import '~projuris-acordos-theme/src/common/colors.scss';
 
 .date-inline-editor {
   .date-inline-editor__value {

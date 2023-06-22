@@ -115,7 +115,7 @@ export default {
 </style>
 
 <style lang="scss">
-@import '@/styles/colors.scss';
+@import '~projuris-acordos-theme/src/common/colors.scss';
 
 .popover-inline-editor__popper-class {
   padding: 6px 0;

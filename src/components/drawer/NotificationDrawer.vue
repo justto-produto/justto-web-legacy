@@ -291,7 +291,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '@/styles/colors.scss';
+@import '~projuris-acordos-theme/src/common/colors.scss';
 
 .notification-popover .popper__arrow::after {
   border-bottom-color: $--color-primary !important;
@@ -368,7 +368,7 @@ export default {
 </style>
 
 <style lang="scss">
-@import '@/styles/colors.scss';
+@import '~projuris-acordos-theme/src/common/colors.scss';
 
 .notification__drawer {
   margin: -8px;

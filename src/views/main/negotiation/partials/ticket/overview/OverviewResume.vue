@@ -77,7 +77,7 @@ export default {
 </style>
 
 <style lang="scss" scoped>
-@import '@/styles/colors';
+@import '~projuris-acordos-theme/src/common/colors';
 
 .overview-resume__container {
   margin: 8px 16px;

@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import moment from 'moment/src/moment'
+import moment from 'moment'
 import Notification from '@/models/notifications/Notification'
 
 function setValueThamirisAlert(state, value) {

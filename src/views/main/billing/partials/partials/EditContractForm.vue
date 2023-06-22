@@ -453,7 +453,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '@/styles/colors.scss';
+@import '~projuris-acordos-theme/src/common/colors.scss';
 
 .new-contract__form {
   .el-row {
