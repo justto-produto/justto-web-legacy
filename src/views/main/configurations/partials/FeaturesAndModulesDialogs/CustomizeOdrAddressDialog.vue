@@ -508,7 +508,8 @@ export default {
       this.modalLoading = true
 
       this.editProperties({
-        ...this.whatsAppForm
+        ...this.whatsAppForm,
+        CUSTOM_WHATSAPP_NUMBER: this.whatsAppForm.CUSTOM_WHATSAPP_NUMBER.replace(/\D/g, '')
       }).then(() => this.$jusNotification({
         title: 'Yay!',
         message: 'Configurações salvas com sucesso',
@@ -606,8 +607,6 @@ export default {
         CUSTOM_WHATSAPP_APP_NAME: this.properties.CUSTOM_WHATSAPP_APP_NAME || '',
         CUSTOM_WHATSAPP_NUMBER: this.properties.CUSTOM_WHATSAPP_NUMBER || ''
       }
-
-      console.log({ ...this.whatsAppForm })
     },
 
     handleUpdateDomains() {
