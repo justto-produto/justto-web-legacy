@@ -267,6 +267,16 @@
                     Nome do aplicativo:
                   </label>
 
+                  <el-tooltip
+                    placement="right"
+                    :open-delay="500"
+                  >
+                    <div slot="content">
+                      Nome cadastrado no Gupshup.
+                    </div>
+                    <i class="el-icon-info" />
+                  </el-tooltip>
+
                   <el-input
                     v-model="whatsAppForm.CUSTOM_WHATSAPP_APP_NAME"
                     size="small"
