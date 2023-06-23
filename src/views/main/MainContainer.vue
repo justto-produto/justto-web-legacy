@@ -416,37 +416,6 @@ export default {
 
     toggleExpandTeamSection() {
       this.isTeamSectionExpanded = !this.isTeamSectionExpanded
-    },
-
-    setTour() {
-      const tour = this.$shepherd({
-        useModalOverlay: false
-      })
-
-      const { setAccountProperty, userPreferences } = this
-
-      tour.addStep({
-        text: 'Ao clicar aqui você acessará o Dashboard operacional.',
-        id: 'JUSTTO_DASHBOARD_ICON',
-        attachTo: { element: document.querySelector('.container-aside__menu-item'), on: 'right' },
-        buttons: [
-          {
-            action() {
-              const TOUR_STEPS_COMPLETED = userPreferences?.properties?.TOUR_STEPS_COMPLETED || ''
-
-              setAccountProperty({
-                TOUR_STEPS_COMPLETED: [...(TOUR_STEPS_COMPLETED.split(',')), 'JUSTTO_DASHBOARD_ICON'].join(',')
-              })
-
-              return this.complete()
-            },
-            classes: 'el-button el-button--secondary el-button--mini',
-            text: 'Entendi'
-          }
-        ]
-      })
-
-      tour.start()
     }
   }
 }
@@ -455,7 +424,6 @@ export default {
 
 <style lang="scss">
 @import '~projuris-acordos-theme/src/common/colors.scss';
-@import '~shepherd.js/dist/css/shepherd.css';
 
 .terms-confirm {
   width: 50vw;
