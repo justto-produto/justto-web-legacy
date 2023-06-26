@@ -17,7 +17,7 @@
         :empty="Boolean(occurrences.length === 0)"
         reverse
         empty-text="Sem mensagens"
-        end-text="Início das mansagens"
+        end-text="Início das mensagens"
         @load="loadOccurrences"
       />
 
