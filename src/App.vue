@@ -3,6 +3,7 @@
     <transition name="fade">
       <router-view />
     </transition>
+
     <audio
       id="globalAudio"
       controls
@@ -14,8 +15,13 @@
 
 <script>
 import { mapMutations } from 'vuex'
+import cookies from '@/utils/mixins/cookies'
+
 export default {
   name: 'App',
+
+  mixins: [cookies],
+
   watch: {
     $route: {
       deep: true,
