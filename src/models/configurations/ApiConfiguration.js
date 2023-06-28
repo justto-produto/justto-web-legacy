@@ -46,11 +46,11 @@ export default class ApiConfiguration {
     if (PROJURIS_SOAP_ACTIVE === 'true') {
       this.properties.push({ key: 'PROJURIS_SOAP_TOKEN', value: PROJURIS_SOAP_TOKEN })
       this.properties.push({ key: 'PROJURIS_SOAP_URL', value: PROJURIS_SOAP_URL })
-      this.properties.push({ key: 'PROJURIS_SOAP_USERNAME', value: PROJURIS_SOAP_USERNAME })
+      // this.properties.push({ key: 'PROJURIS_SOAP_USERNAME', value: PROJURIS_SOAP_USERNAME })
 
-      if (PROJURIS_SOAP_PASSWORD !== '******') {
-        this.properties.push({ key: 'PROJURIS_SOAP_PASSWORD', value: PROJURIS_SOAP_PASSWORD })
-      }
+      // if (PROJURIS_SOAP_PASSWORD !== '******') {
+      //   this.properties.push({ key: 'PROJURIS_SOAP_PASSWORD', value: PROJURIS_SOAP_PASSWORD })
+      // }
     }
   }
 }

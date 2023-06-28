@@ -2,9 +2,12 @@
   <article
     v-loading="loading"
     class="api-integration__container"
+    :show-close="false"
+    :close-on-click-modal="false"
+    :close-on-press-escape="false"
   >
     <el-form
-      v-if="hasFields"
+      v-if="hasFields && !disable"
       :model="fields"
       class="api-integration__form"
       autocomplete="off"
@@ -22,7 +25,7 @@
               v-if="!fieldKey.includes('_ACTIVE')"
               v-model="fields[fieldKey]"
               :show-password="fieldKey.includes('_PASSWORD')"
-              :disabled="disable"
+              :disabled="disable || isNotEditable(fieldKey)"
               :prefix-icon="buildIconByKey(fieldKey)"
               autocomplete="off"
               auto-complete="off"
@@ -57,9 +60,25 @@
       </el-form-item>
     </el-form>
 
+    <FinchConfigView
+      v-else-if="disable && fields.FINCH_ACTIVE"
+      :fields="fields"
+    />
+
+    <JusttoWebhookConfigView
+      v-else-if="disable && fields.JUSTTO_WEBHOOK_ACTIVE"
+      :fields="fields"
+    />
+
+    <ProjurisSoapConfigView
+      v-else-if="disable && fields.PROJURIS_SOAP_ACTIVE"
+      :fields="fields"
+    />
+
     <InitialIntegrationForm
       v-else
       @submit="handleVerifyIntegrationType"
+      @cancel="handleClose"
     />
 
     <SelectIntegrationTypeDialog ref="selectTypeDialog" />
@@ -68,14 +87,17 @@
 
 <script>
 import ApiConfiguration from '@/models/configurations/ApiConfiguration'
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'ApiIntegrationForm',
 
   components: {
     InitialIntegrationForm: () => import('./partials/InitialIntegrationForm'),
-    SelectIntegrationTypeDialog: () => import('./partials/SelectIntegrationTypeDialog')
+    SelectIntegrationTypeDialog: () => import('./partials/SelectIntegrationTypeDialog'),
+    FinchConfigView: () => import('./partials/FinchConfigView'),
+    JusttoWebhookConfigView: () => import('./partials/JusttoWebhookConfigView'),
+    ProjurisSoapConfigView: () => import('./partials/ProjurisSoapConfigView')
   },
 
   props: {
@@ -85,16 +107,21 @@ export default {
     }
   },
 
-  data: () => ({
-    fields: {},
-    loading: false
-  }),
+  data: () => ({ loading: false }),
 
   computed: {
     ...mapGetters({
       configurations: 'getApiIntegrationConfiguration',
-      workspaceId: 'workspaceId'
+      workspaceId: 'workspaceId',
+      getFields: 'getApiIntegrationFields'
     }),
+
+    fields: {
+      get() { return this.getFields },
+      set(value) {
+        this.setIntegrationFields(value)
+      }
+    },
 
     hasFields() {
       return this.fields?.FINCH_ACTIVE || this.fields?.PROJURIS_SOAP_ACTIVE || this.fields?.JUSTTO_WEBHOOK_ACTIVE
@@ -102,6 +129,10 @@ export default {
 
     disable() {
       return (this.configurations?.properties || []).filter(({ key = '', value = '' }) => (key.includes('_ACTIVE') && value === String(true))).length > 0
+    },
+
+    isNotEditable() {
+      return (field) => ['PROJURIS_SOAP_URL'].includes(field)
     }
   },
 
@@ -125,6 +156,8 @@ export default {
       'setApiIntegrationConfiguration',
       'resetApiIntegrationConsiguration'
     ]),
+
+    ...mapMutations(['setIntegrationFields']),
 
     init() {
       const getKey = (options = [], search) => options.find(({ key }) => (key === search))?.value || ''
@@ -186,13 +219,15 @@ export default {
     },
 
     handleConfimDetectionType(type) {
-      return this.$confirm(`Esta é uma integração com ${this.$tc('integration-types.' + type)}?`, {
-        confirmButtonText: 'Sim',
-        cancelButtonText: 'Não',
-        showClose: false,
-        closeOnClickModal: false,
-        closeOnPressEscape: false
-      })
+      // return this.$confirm(`Esta é uma integração com ${this.$tc('integration-types.' + type)}?`, {
+      //   confirmButtonText: 'Sim',
+      //   cancelButtonText: 'Não',
+      //   showClose: false,
+      //   closeOnClickModal: false,
+      //   closeOnPressEscape: false
+      // })
+
+      return Promise.resolve(type)
     },
 
     handleInitIntegration({ url, type }) {
@@ -209,13 +244,11 @@ export default {
       }
     },
 
-    handleInitProjurisIntegration({ url, token = '', password = '', usename = '' }) {
+    handleInitProjurisIntegration({ url, token = '' }) {
       this.fields = {
         PROJURIS_SOAP_ACTIVE: true,
-        PROJURIS_SOAP_PASSWORD: password,
         PROJURIS_SOAP_TOKEN: token,
-        PROJURIS_SOAP_URL: url,
-        PROJURIS_SOAP_USERNAME: usename
+        PROJURIS_SOAP_URL: url
       }
     },
 
