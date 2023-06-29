@@ -40,6 +40,7 @@
               type="transparent"
               class="is-pointer"
               icon="el-icon-copy-document"
+              @click="copyToClipboard(fields.PROJURIS_SOAP_URL)"
             />
           </el-input>
         </main>
@@ -125,7 +126,15 @@ export default {
     },
 
     handleAddWebhook() {
-      this.webhooks = [...this.webhooks, 'http://webhook']
+      this.$prompt('Adicione abaixo os endereços dos sistemas que deseja receber eventos de disputas desta workspace.', 'Adicionar webhook', {
+        confirmButtonText: 'Adicionar',
+        cancelButtonText: 'Cancelar',
+        inputPattern: /^(?:(?:https?|ftp):\/\/)?(?:www\.)?[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,}(?:\/[^\s]*)?$/,
+        inputErrorMessage: 'URL inválida'
+      }).then(({ value }) => {
+        // TODO: Salvar URL na API.
+        this.webhooks = [...this.webhooks, value]
+      })
     },
 
     handleRemoveWebhook(index) {
