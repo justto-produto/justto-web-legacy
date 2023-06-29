@@ -1,9 +1,9 @@
 <template>
   <el-dialog
     :visible.sync="apiIntegrationDialogVisible"
-    append-to-body
     width="40%"
     class="api-integration"
+    append-to-body
     destroy-on-close
     :before-close="handleClose"
     :show-close="false"
