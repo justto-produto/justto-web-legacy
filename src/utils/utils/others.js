@@ -266,6 +266,16 @@ const publishWebsocket = (channel, event, object, globalAuthenticationObject) =>
   return 'PUBLISHED'
 }
 
+const copyToClipboard = (text) => {
+  navigator.clipboard.writeText(text)
+  vue().$message({
+    message: 'Copiado para a área de transferência.',
+    type: 'info',
+    center: true,
+    showClose: true
+  })
+}
+
 export {
   getRoles,
   formatHtml,
@@ -281,5 +291,6 @@ export {
   getInteractionIcon,
   getTracktitleByAction,
   getLastInteractionTooltip,
-  publishWebsocket
+  publishWebsocket,
+  copyToClipboard
 }
