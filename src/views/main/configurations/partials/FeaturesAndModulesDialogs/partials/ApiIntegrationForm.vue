@@ -7,7 +7,7 @@
     :close-on-press-escape="false"
   >
     <el-form
-      v-if="hasFields && !disable"
+      v-if="hasFields && (!disable || !useBFF)"
       :model="fields"
       class="api-integration__form"
       autocomplete="off"
@@ -61,17 +61,17 @@
     </el-form>
 
     <FinchConfigView
-      v-else-if="disable && fields.FINCH_ACTIVE"
+      v-else-if="useBFF && disable && fields.FINCH_ACTIVE"
       :fields="fields"
     />
 
     <JusttoWebhookConfigView
-      v-else-if="disable && fields.JUSTTO_WEBHOOK_ACTIVE"
+      v-else-if="useBFF && disable && fields.JUSTTO_WEBHOOK_ACTIVE"
       :fields="fields"
     />
 
     <ProjurisSoapConfigView
-      v-else-if="disable && fields.PROJURIS_SOAP_ACTIVE"
+      v-else-if="useBFF && disable && fields.PROJURIS_SOAP_ACTIVE"
       :fields="fields"
     />
 
@@ -113,7 +113,8 @@ export default {
     ...mapGetters({
       configurations: 'getApiIntegrationConfiguration',
       workspaceId: 'workspaceId',
-      getFields: 'getApiIntegrationFields'
+      getFields: 'getApiIntegrationFields',
+      useBFF: 'useIntegrationBff'
     }),
 
     fields: {
