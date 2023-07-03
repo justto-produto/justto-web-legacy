@@ -29,6 +29,7 @@ import pluginsModule from './modules/plugins'
 import notifications from './modules/notifications'
 import dialerModule from './modules/dialer'
 import gupShupModule from './modules/gupshup'
+import integrationModule from './modules/integration'
 
 // CONSTANTS
 import banksList from '@/constants/banksList'
@@ -130,6 +131,7 @@ export default new Vuex.Store({
     configurationsModule,
     notifications,
     dialerModule,
-    gupShupModule
+    gupShupModule,
+    integrationModule
   }
 })
