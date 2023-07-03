@@ -153,6 +153,7 @@ export default {
 
   methods: {
     ...mapActions([
+      'detectIntegration',
       'getFeatureProperties',
       'setApiIntegrationConfiguration',
       'resetApiIntegrationConsiguration'
@@ -194,16 +195,9 @@ export default {
     },
 
     handleVerifyIntegrationType(url) {
-      const urlLowerCase = url.toLowerCase()
-      const isProjurisSoapActive = urlLowerCase.includes('projuris')
-      const isFinchActive = urlLowerCase.includes('finch')
-      const type = isProjurisSoapActive ? 'PROJURIS_SOAP' : isFinchActive ? 'FINCH' : 'JUSTTO_WEBHOOK'
-
-      this.handleConfimDetectionType(type).then(_ => {
+      this.detectIntegration(url).then(({ url, type }) => {
         this.handleInitIntegration({ url, type })
-      }).catch(_ => {
-        this.$refs.selectTypeDialog.open(this.handleSelectIntegrationType, { url, type })
-      })
+      }).catch(error => this.$jusNotification({ error }))
     },
 
     handleSelectIntegrationType({ url, action, type }) {
@@ -217,18 +211,6 @@ export default {
         default:
           break
       }
-    },
-
-    handleConfimDetectionType(type) {
-      // return this.$confirm(`Esta é uma integração com ${this.$tc('integration-types.' + type)}?`, {
-      //   confirmButtonText: 'Sim',
-      //   cancelButtonText: 'Não',
-      //   showClose: false,
-      //   closeOnClickModal: false,
-      //   closeOnPressEscape: false
-      // })
-
-      return Promise.resolve(type)
     },
 
     handleInitIntegration({ url, type }) {
