@@ -27,8 +27,8 @@ import { mapGetters } from 'vuex'
 export default {
   computed: {
     ...mapGetters({
-      configurations: 'getApiIntegrationConfiguration',
-      fields: 'getApiIntegrationFields'
+      configurations: 'getIntegrationConfigsList',
+      fields: 'getIntegrationConfigs'
     }),
 
     hasFields() {
@@ -36,7 +36,7 @@ export default {
     },
 
     disable() {
-      return (this.configurations?.properties || []).filter(({ key = '', value = '' }) => (key.includes('_ACTIVE') && value === String(true))).length > 0
+      return (this.configurations || []).filter(({ key = '', value = '' }) => (key.includes('_ACTIVE') && value === String(true))).length > 0
     },
 
     state() {

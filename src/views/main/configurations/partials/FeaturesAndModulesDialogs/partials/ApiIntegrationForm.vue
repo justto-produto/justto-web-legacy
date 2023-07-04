@@ -281,13 +281,13 @@ export default {
 
     buildTitleByKey(key) {
       if (['JUSTTO_WEBHOOK_ENDPOINT', 'FINCH_ENDPOINT', 'PROJURIS_SOAP_URL'].includes(key)) {
-        return 'URL'
+        return 'Endereço configurado'
       } else if (['JUSTTO_WEBHOOK_USERNAME', 'FINCH_USERNAME', 'PROJURIS_SOAP_USERNAME'].includes(key)) {
         return 'USERNAME'
       } else if (['JUSTTO_WEBHOOK_PASSWORD', 'FINCH_PASSWORD', 'PROJURIS_SOAP_PASSWORD'].includes(key)) {
         return 'PASSWORD'
       } else if (['PROJURIS_SOAP_TOKEN'].includes(key)) {
-        return 'TOKEN'
+        return 'Forneça o token de acesso para prosseguir'
       }
 
       return key

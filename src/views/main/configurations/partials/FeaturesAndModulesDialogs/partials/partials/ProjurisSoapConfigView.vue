@@ -65,8 +65,7 @@ export default {
 
   methods: {
     handleResetField() {
-      // TODO: Resetar properties.
-      console.log('Under construction.')
+      this.$emit('reset')
     },
 
     handleOpenWebhook() {
