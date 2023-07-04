@@ -29,7 +29,15 @@
               :prefix-icon="buildIconByKey(fieldKey)"
               autocomplete="off"
               auto-complete="off"
-            />
+            >
+              <el-button
+                v-if="fieldKey.includes('_URL')"
+                slot="append"
+                type="transparent"
+                icon="el-icon-delete"
+                @click="handleReset"
+              />
+            </el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -73,6 +81,7 @@
     <ProjurisSoapConfigView
       v-else-if="useBFF && disable && fields.PROJURIS_SOAP_ACTIVE"
       :fields="fields"
+      @reset="handleReset"
     />
 
     <InitialIntegrationForm
@@ -86,7 +95,6 @@
 </template>
 
 <script>
-import ApiConfiguration from '@/models/configurations/ApiConfiguration'
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 
 export default {
@@ -111,16 +119,17 @@ export default {
 
   computed: {
     ...mapGetters({
-      configurations: 'getApiIntegrationConfiguration',
+      configurations: 'getIntegrationConfigsList',
       workspaceId: 'workspaceId',
-      getFields: 'getApiIntegrationFields',
+      getFields: 'getIntegrationConfigs',
       useBFF: 'useIntegrationBff'
     }),
 
     fields: {
       get() { return this.getFields },
       set(value) {
-        this.setIntegrationFields(value)
+        console.log('fields', value)
+        this.setIntegrationConfigs(value)
       }
     },
 
@@ -129,7 +138,7 @@ export default {
     },
 
     disable() {
-      return (this.configurations?.properties || []).filter(({ key = '', value = '' }) => (key.includes('_ACTIVE') && value === String(true))).length > 0
+      return (this.configurations || []).filter(({ key = '', value = '' }) => (key.includes('_ACTIVE') && value === String(true))).length > 0
     },
 
     isNotEditable() {
@@ -155,38 +164,41 @@ export default {
     ...mapActions([
       'detectIntegration',
       'getFeatureProperties',
+      'getIntegrationConfigs',
+      'saveIntegrationConfigs',
       'setApiIntegrationConfiguration',
-      'resetApiIntegrationConsiguration'
+      'resetIntegrationConfigs'
     ]),
 
-    ...mapMutations(['setIntegrationFields']),
+    ...mapMutations(['setIntegrationConfigs']),
 
     init() {
       const getKey = (options = [], search) => options.find(({ key }) => (key === search))?.value || ''
 
-      const type = (this?.configurations?.properties || []).find(({ key = '', value = '' }) => (key.includes('_ACTIVE') && value === 'true'))?.key
+      const type = (this?.configurations || []).find(({ key = '', value = '' }) => (key.includes('_ACTIVE') && value === 'true'))?.key
 
+      this.getIntegrationConfigs()
       switch (type) {
         case 'PROJURIS_SOAP_ACTIVE':
           this.handleInitProjurisIntegration({
-            url: getKey(this.configurations?.properties, 'PROJURIS_SOAP_URL'),
-            token: getKey(this.configurations?.properties, 'PROJURIS_SOAP_TOKEN'),
+            url: getKey(this.configurations, 'PROJURIS_SOAP_URL'),
+            token: getKey(this.configurations, 'PROJURIS_SOAP_TOKEN'),
             password: '******',
-            usename: getKey(this.configurations?.properties, 'PROJURIS_SOAP_USERNAME')
+            usename: getKey(this.configurations, 'PROJURIS_SOAP_USERNAME')
           })
           break
         case 'FINCH_ACTIVE':
           this.initFinchIntegration({
-            url: getKey(this.configurations?.properties, 'FINCH_ENDPOINT'),
+            url: getKey(this.configurations, 'FINCH_ENDPOINT'),
             password: '******',
-            usename: getKey(this.configurations?.properties, 'FINCH_USERNAME')
+            usename: getKey(this.configurations, 'FINCH_USERNAME')
           })
           break
         case 'JUSTTO_WEBHOOK_ACTIVE':
           this.initJusttoIntegration({
-            url: getKey(this.configurations?.properties, 'JUSTTO_WEBHOOK_ENDPOINT'),
+            url: getKey(this.configurations, 'JUSTTO_WEBHOOK_ENDPOINT'),
             password: '******',
-            usename: getKey(this.configurations?.properties, 'JUSTTO_WEBHOOK_USERNAME')
+            usename: getKey(this.configurations, 'JUSTTO_WEBHOOK_USERNAME')
           })
           break
         default:
@@ -295,7 +307,7 @@ export default {
       }).then(() => {
         this.loading = true
 
-        this.resetApiIntegrationConsiguration().then(() => {
+        this.resetIntegrationConfigs().then(() => {
           this.$jusNotification({
             type: 'success',
             title: 'Yay!',
@@ -319,13 +331,7 @@ export default {
 
         return payload
       }, {})
-      this.setApiIntegrationConfiguration({
-        featureId: this.feature,
-        payload: new ApiConfiguration({
-          ...fields,
-          workspaceId: this.workspaceId
-        })
-      }).then(() => {
+      this.saveIntegrationConfigs({ ...fields }).then(() => {
         this.$jusNotification({
           type: 'success',
           title: 'Yay!',
@@ -341,7 +347,7 @@ export default {
     },
 
     handleRefresh() {
-      this.getFeatureProperties(this.feature).then(this.init).catch(error => this.$jusNotification({
+      this.getIntegrationConfigs().then(this.init).catch(error => this.$jusNotification({
         error
       })).finally(() => { this.loading = false })
     }
