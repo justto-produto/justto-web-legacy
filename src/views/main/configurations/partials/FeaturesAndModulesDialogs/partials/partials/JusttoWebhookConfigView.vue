@@ -91,22 +91,30 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import { copyToClipboard } from '@/utils'
 
 export default {
   data: () => ({
     dialogVisible: false,
-    loading: false,
-    webhooks: []
+    loading: false
   }),
 
   computed: {
-    ...mapGetters({ fields: 'getApiIntegrationFields' })
+    ...mapGetters({
+      fields: 'getIntegrationConfigs',
+      webhooks: 'getIntegrationWebhooks'
+    })
   },
 
   methods: {
+    ...mapActions([
+      'saveIntegrationWebhooks',
+      'getIntegrationWebhooks'
+    ]),
+
     copyToClipboard,
+
     open() {
       this.loading = true
       this.dialogVisible = true
@@ -121,8 +129,7 @@ export default {
     },
 
     handlePopulateWebhooks() {
-      // TODO: Buscar webhook já cadastrados.
-      return Promise.resolve()
+      return this.getIntegrationWebhooks()
     },
 
     handleAddWebhook() {
@@ -132,13 +139,18 @@ export default {
         inputPattern: /^(?:(?:https?|ftp):\/\/)?(?:www\.)?[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,}(?:\/[^\s]*)?$/,
         inputErrorMessage: 'URL inválida'
       }).then(({ value }) => {
-        // TODO: Salvar URL na API.
-        this.webhooks = [...this.webhooks, value]
+        this.handleSaveWebhooks([...this.webhooks, value])
       })
     },
 
     handleRemoveWebhook(index) {
-      this.webhooks.splice(index, 1)
+      this.handleSaveWebhooks(this.webhooks.filter((_, wIndex) => wIndex !== index))
+    },
+
+    handleSaveWebhooks(webhook = []) {
+      return this.saveIntegrationWebhooks(webhook)
+        .then(() => this.$jusNotification({ type: 'success', message: 'Sucesso.' }))
+        .catch(error => this.$jusNotification({ error }))
     }
   }
 }

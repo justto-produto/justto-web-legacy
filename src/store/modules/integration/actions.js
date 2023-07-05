@@ -21,12 +21,31 @@ export default {
     })
   },
 
+  saveIntegrationWebhooks({ getters: { useIntegrationBff } }, webhooks) {
+    return axiosDispatch({
+      method: 'POST',
+      url: `${integrationPath}/webhooks`,
+      params: { useIntegrationBff },
+      data: { webhooks },
+      mutation: 'setIntegrationWebhooks'
+    })
+  },
+
   getIntegrationConfigs({ getters: { useIntegrationBff } }) {
     return axiosDispatch({
       method: 'GET',
       url: `${integrationPath}/config`,
       params: { useIntegrationBff },
       mutation: 'setIntegrationConfigs'
+    })
+  },
+
+  getIntegrationWebhooks({ getters: { useIntegrationBff } }) {
+    return axiosDispatch({
+      method: 'GET',
+      url: `${integrationPath}/webhooks`,
+      params: { useIntegrationBff },
+      mutation: 'setIntegrationWebhooks'
     })
   },
 
