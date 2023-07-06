@@ -23,7 +23,8 @@
       </el-button>
     </el-result>
 
-    <JusttoWebhookConfigView ref="webhook" />
+    <IntegrationWebhookConfig ref="webhook" />
+    <IntegrationImportPolicyConfig ref="import" />
   </article>
 </template>
 
@@ -32,7 +33,8 @@ export default {
   name: 'ProjurisSoapConfigView',
 
   components: {
-    JusttoWebhookConfigView: () => import('./JusttoWebhookConfigView')
+    IntegrationWebhookConfig: () => import('./IntegrationWebhookConfig'),
+    IntegrationImportPolicyConfig: () => import('./IntegrationImportPolicyConfig')
   },
 
   props: {
@@ -69,13 +71,11 @@ export default {
     },
 
     handleOpenWebhook() {
-      // TODO: Abrir dialog de configuração de Webhooks.
       this.$refs.webhook.open()
     },
 
     handleOpenImportPolicy() {
-      // TODO: Abrir dialog de política de importação.
-      console.log('Under construction.')
+      this.$refs.import.open()
     }
   }
 

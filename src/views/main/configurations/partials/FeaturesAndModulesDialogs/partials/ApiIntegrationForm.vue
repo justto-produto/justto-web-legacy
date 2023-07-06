@@ -68,16 +68,6 @@
       </el-form-item>
     </el-form>
 
-    <FinchConfigView
-      v-else-if="useBFF && disable && fields.FINCH_ACTIVE"
-      :fields="fields"
-    />
-
-    <JusttoWebhookConfigView
-      v-else-if="useBFF && disable && fields.JUSTTO_WEBHOOK_ACTIVE"
-      :fields="fields"
-    />
-
     <ProjurisSoapConfigView
       v-else-if="useBFF && disable && fields.PROJURIS_SOAP_ACTIVE"
       :fields="fields"
@@ -103,8 +93,6 @@ export default {
   components: {
     InitialIntegrationForm: () => import('./partials/InitialIntegrationForm'),
     SelectIntegrationTypeDialog: () => import('./partials/SelectIntegrationTypeDialog'),
-    FinchConfigView: () => import('./partials/FinchConfigView'),
-    JusttoWebhookConfigView: () => import('./partials/JusttoWebhookConfigView'),
     ProjurisSoapConfigView: () => import('./partials/ProjurisSoapConfigView')
   },
 
