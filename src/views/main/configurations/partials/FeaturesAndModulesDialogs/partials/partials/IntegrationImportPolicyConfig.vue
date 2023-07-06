@@ -1,7 +1,8 @@
 <template>
   <el-dialog
+    v-if="dialogVisible"
     :visible.sync="dialogVisible"
-    width="40%"
+    width="60%"
     append-to-body
     destroy-on-close
     custom-class="import-config__modal"
@@ -22,18 +23,24 @@
       v-loading="loading"
       class="import-config__body"
     >
-      <span>Configure as políticas de importações para as integrações desta workspace</span>
+      <span>Configure as políticas de importações para as integrações desta workspace:</span>
 
       <el-tabs
+        v-model="tab"
         type="border-card"
-        @tab-click="handleTabClick"
       >
-        <el-tab-pane label="Políticas de alçada e limites de negociações">
-          Políticas de alçada e limites de negociações
+        <el-tab-pane
+          name="politicaNegociacao"
+          label="Políticas de alçada e limites de negociações"
+        >
+          <FormularioPoliticaNegociacao ref="politicaNegociacao" />
         </el-tab-pane>
 
-        <el-tab-pane label="Mapeamento de estratégias">
-          Mapeamento de estratégias
+        <el-tab-pane
+          name="mapearEstrategias"
+          label="Mapeamento de estratégias"
+        >
+          <FormularioMapearEstrategias ref="mapearEstrategias" />
         </el-tab-pane>
       </el-tabs>
     </article>
@@ -42,41 +49,54 @@
       slot="footer"
       class="dialog-footer"
     >
-      <el-button @click="close">Voltar</el-button>
+      <el-button
+        @click="close"
+      >
+        Voltar
+      </el-button>
+
+      <el-button
+        type="primary"
+        size="mini"
+        @click="save"
+      >
+        Salvar
+      </el-button>
     </span>
   </el-dialog>
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
 import { copyToClipboard } from '@/utils'
 
 export default {
-  data: () => ({
-    dialogVisible: false,
-    loading: false
-  }),
-
-  computed: {
-    ...mapGetters({})
+  components: {
+    FormularioMapearEstrategias: () => import('./partials/FormularioMapearEstrategias'),
+    FormularioPoliticaNegociacao: () => import('./partials/FormularioPoliticaNegociacao')
   },
 
-  methods: {
-    ...mapActions([]),
+  data: () => ({
+    dialogVisible: false,
+    loading: false,
+    tab: 'politicaNegociacao'
+  }),
 
+  methods: {
     copyToClipboard,
 
     open() {
       this.dialogVisible = true
-      this.loading = false
+    },
+
+    save() {
+      this.$refs[this.tab].save()
+        .then(this.close)
+        .catch(error => this.$jusNotification({ error }))
     },
 
     close() {
+      console.log('close')
       this.dialogVisible = false
-    },
-
-    handleTabClick(event) {
-      console.log('handleTabClick', event)
     }
   }
 }
