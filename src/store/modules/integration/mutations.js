@@ -7,5 +7,9 @@ export default {
 
   setIntegrationWebhooks(state, { webhooks }) {
     Vue.set(state, 'webhooks', webhooks)
+  },
+
+  setIntegrationEstrategias(state, { estrategias }) {
+    Vue.set(state, 'estrategias', estrategias)
   }
 }

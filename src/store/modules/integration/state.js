@@ -1,4 +1,5 @@
 export default {
   configs: {},
-  webhooks: []
+  webhooks: [],
+  estrategias: []
 }

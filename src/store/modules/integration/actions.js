@@ -1,6 +1,6 @@
 import { axiosDispatch } from '@/utils'
 
-const integrationPath = '/api/gestao-integracao-bff/v1/integration'
+const integrationPath = 'http://localhost:3001/api/gestao-integracao-bff/v1/integration'
 
 export default {
   detectIntegration({ getters: { useIntegrationBff } }, url) {
@@ -31,6 +31,16 @@ export default {
     })
   },
 
+  saveIntegrationEstrategias({ getters: { useIntegrationBff } }, estrategias) {
+    return axiosDispatch({
+      method: 'POST',
+      url: `${integrationPath}/estrategias`,
+      params: { useIntegrationBff },
+      data: { estrategias },
+      mutation: 'setIntegrationEstrategias'
+    })
+  },
+
   getIntegrationConfigs({ getters: { useIntegrationBff } }) {
     return axiosDispatch({
       method: 'GET',
@@ -46,6 +56,15 @@ export default {
       url: `${integrationPath}/webhooks`,
       params: { useIntegrationBff },
       mutation: 'setIntegrationWebhooks'
+    })
+  },
+
+  getIntegrationEstrategias({ getters: { useIntegrationBff } }) {
+    return axiosDispatch({
+      method: 'GET',
+      url: `${integrationPath}/estrategias`,
+      params: { useIntegrationBff },
+      mutation: 'setIntegrationEstrategias'
     })
   },
 

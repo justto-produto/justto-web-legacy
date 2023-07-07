@@ -13,15 +13,19 @@
       stripe
       border
     >
-      <el-table-column
-        prop="date"
-        label="Estratégia"
-      />
+      <el-table-column label="Estratégia">
+        <template slot-scope="scope">
+          {{ scope.row.estrategia.nome }}
+        </template>
+      </el-table-column>
 
-      <el-table-column
-        prop="name"
-        label="Descrição"
-      />
+      <el-table-column label="Descrição">
+        <template slot-scope="scope">
+          <!--  -->
+
+          {{ descricao(scope.row.descricoes) }}
+        </template>
+      </el-table-column>
     </el-table>
 
     <footer class="mapear-estrategiar__rodape">
@@ -40,16 +44,23 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
 export default {
   components: {
     DialogMapearEstrategia: () => import('./DialogMapearEstrategia')
   },
 
-  data: () => ({
-    estrategias: []
-  }),
+  computed: {
+    ...mapGetters({ estrategias: 'getIntegrationEstrategias' }),
+
+    descricao() {
+      return (descricoes = []) => (descricoes.map(({ campo, operador, valor }) => `${campo.nome} ${operador} ${valor}`).join('; ')) + '.'
+    }
+  },
 
   methods: {
+    ...mapActions({ salvarEstrategias: 'saveIntegrationEstrategias' }),
+
     save() {
       return Promise.resolve()
     },
@@ -58,8 +69,13 @@ export default {
       this.$refs.mapearEstrategia.open(this.mapearEstrategia)
     },
 
-    mapearEstrategia({ estrategia, descricao }) {
-      console.log(estrategia, descricao)
+    mapearEstrategia(estrategia) {
+      this.salvarEstrategias([...this.estrategias, estrategia])
+        .then(() => this.jusNotification({
+          type: 'success',
+          messae: 'Mapeamento salvo com sucesso!'
+        }))
+        .catch(error => this.jusNotification({ error }))
     }
   }
 }
