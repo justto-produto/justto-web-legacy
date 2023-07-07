@@ -37,14 +37,28 @@
           Descrição:
         </span>
 
-        <ul class="formulario-estrategia__item-body">
-          <li
-            v-for="(descricao, index) in formulario.descricoes"
-            :key="index"
-          >
-            {{ descricao.campo.nome }} {{ descricao.operador }} {{ descricao.valor }}
-          </li>
-        </ul>
+        <el-table
+          :data="formulario.descricoes"
+          style="width: 100%"
+          size="mini"
+          stripe
+          border
+        >
+          <el-table-column
+            label="Nome"
+            prop="campo.nome"
+          />
+
+          <el-table-column
+            label="Operador"
+            prop="operador"
+          />
+
+          <el-table-column
+            label="Valor"
+            prop="valor"
+          />
+        </el-table>
       </div>
 
       <div class="formulario-estrategia__item inline-form-item">

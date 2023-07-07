@@ -21,8 +21,6 @@
 
       <el-table-column label="Descrição">
         <template slot-scope="scope">
-          <!--  -->
-
           {{ descricao(scope.row.descricoes) }}
         </template>
       </el-table-column>
@@ -71,11 +69,11 @@ export default {
 
     mapearEstrategia(estrategia) {
       this.salvarEstrategias([...this.estrategias, estrategia])
-        .then(() => this.jusNotification({
+        .then(() => this.$jusNotification({
           type: 'success',
           messae: 'Mapeamento salvo com sucesso!'
         }))
-        .catch(error => this.jusNotification({ error }))
+        .catch(error => this.$jusNotification({ error }))
     }
   }
 }
