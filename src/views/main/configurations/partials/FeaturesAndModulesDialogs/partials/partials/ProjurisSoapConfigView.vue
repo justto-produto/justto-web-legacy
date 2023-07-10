@@ -23,6 +23,15 @@
       </el-button>
     </el-result>
 
+    <footer class="config-view__footer">
+      <el-button
+        size="mini"
+        @click="$emit('close')"
+      >
+        Fechar
+      </el-button>
+    </footer>
+
     <IntegrationWebhookConfig ref="webhook" />
     <IntegrationImportPolicyConfig ref="import" />
   </article>
@@ -100,6 +109,12 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+  }
+
+  .config-view__footer {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
   }
 }
 </style>

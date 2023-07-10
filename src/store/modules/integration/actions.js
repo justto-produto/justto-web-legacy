@@ -21,6 +21,15 @@ export default {
     })
   },
 
+  salvarIntegracaoPreNegociacao({ getters: { useIntegrationBff } }, data) {
+    return axiosDispatch({
+      method: 'POST',
+      url: `${integrationPath}/preNegociacao`,
+      params: { useIntegrationBff },
+      data
+    })
+  },
+
   saveIntegrationWebhooks({ getters: { useIntegrationBff } }, webhooks) {
     return axiosDispatch({
       method: 'POST',
@@ -65,6 +74,15 @@ export default {
       url: `${integrationPath}/estrategias`,
       params: { useIntegrationBff },
       mutation: 'setIntegrationEstrategias'
+    })
+  },
+
+  buscarIntegracaoPreNegociacao({ getters: { useIntegrationBff } }) {
+    return axiosDispatch({
+      method: 'GET',
+      url: `${integrationPath}/preNegociacao`,
+      params: { useIntegrationBff },
+      mutation: 'setIntegrationPreNegociacao'
     })
   },
 

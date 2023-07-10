@@ -72,6 +72,7 @@
       v-else-if="useBFF && disable && fields.PROJURIS_SOAP_ACTIVE"
       :fields="fields"
       @reset="handleReset"
+      @close="handleClose"
     />
 
     <InitialIntegrationForm

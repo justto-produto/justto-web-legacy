@@ -42,6 +42,13 @@
         >
           <FormularioMapearEstrategias ref="mapearEstrategias" />
         </el-tab-pane>
+
+        <el-tab-pane
+          name="regrasPreNegociacao"
+          label="Regras de Pré Negociação"
+        >
+          <FormularioRegrasPreNegociacao ref="regrasPreNegociacao" />
+        </el-tab-pane>
       </el-tabs>
     </article>
 
@@ -72,7 +79,8 @@ import { copyToClipboard } from '@/utils'
 export default {
   components: {
     FormularioMapearEstrategias: () => import('./partials/FormularioMapearEstrategias'),
-    FormularioPoliticaNegociacao: () => import('./partials/FormularioPoliticaNegociacao')
+    FormularioPoliticaNegociacao: () => import('./partials/FormularioPoliticaNegociacao'),
+    FormularioRegrasPreNegociacao: () => import('./partials/FormularioRegrasPreNegociacao')
   },
 
   data: () => ({
@@ -90,8 +98,25 @@ export default {
 
     save() {
       this.$refs[this.tab].save()
-        .then(this.close)
+        .then(this.next)
         .catch(error => this.$jusNotification({ error }))
+    },
+
+    next() {
+      switch (this.tab) {
+        case 'politicaNegociacao':
+          this.tab = 'mapearEstrategias'
+          break
+        case 'mapearEstrategias':
+          this.tab = 'regrasPreNegociacao'
+          break
+        default:
+          this.$jusNotification({
+            message: 'Configurações de integração salvas com sucesso!',
+            type: 'success'
+          })
+          this.close()
+      }
     },
 
     close() {
