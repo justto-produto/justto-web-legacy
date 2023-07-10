@@ -264,7 +264,7 @@
     </el-descriptions-item>
 
     <el-descriptions-item label="Iniciado em">
-      {{ contract.createAt.dateTime | moment('L') }}
+      {{ contract.startedDate | moment('L') }}
     </el-descriptions-item>
 
     <el-descriptions-item>
