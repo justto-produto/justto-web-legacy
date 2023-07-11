@@ -1,6 +1,6 @@
 import { axiosDispatch } from '@/utils'
 
-const integrationPath = 'http://localhost:3001/api/gestao-integracao-bff/v1/integration'
+const integrationPath = '/api/gestao-integracao-bff/v1/integration'
 
 export default {
   detectIntegration({ getters: { useIntegrationBff } }, url) {
@@ -12,12 +12,15 @@ export default {
     })
   },
 
-  saveIntegrationConfigs({ getters: { useIntegrationBff } }, data) {
+  saveIntegrationConfigs({ getters: { useIntegrationBff, workspaceId } }, data) {
     return axiosDispatch({
       method: 'POST',
       url: `${integrationPath}/config`,
       params: { useIntegrationBff },
-      data
+      data: {
+        ...data,
+        workspaceId
+      }
     })
   },
 
