@@ -186,7 +186,7 @@ i.el-icon-delete:not(.colorless) {
 }
 
 .is-pointer {
-  cursor: pointer;
+  cursor: pointer !important;
 }
 
 * {
@@ -371,4 +371,8 @@ i.el-icon-delete:not(.colorless) {
   -webkit-user-select: none; /* Safari */
   -ms-user-select: none; /* IE 10 and IE 11 */
   user-select: none; /* Standard syntax */
+}
+
+.auto-width {
+  width: auto !important;
 }

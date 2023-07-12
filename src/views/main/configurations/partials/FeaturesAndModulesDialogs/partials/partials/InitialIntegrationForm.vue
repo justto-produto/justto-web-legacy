@@ -6,20 +6,26 @@
     status-icon
     class="new-integration__form"
   >
+    <el-form-item>
+      <span slot="label">
+        Informe o endereço (URL) do sistema que deseja integrar
+      </span>
+    </el-form-item>
+
     <el-form-item prop="url">
-      <el-input v-model="form.url">
-        <span slot="prepend">
-          URL
-        </span>
-      </el-input>
+      <el-input v-model="form.url" />
     </el-form-item>
 
     <el-form-item>
+      <el-button @click="handleCancel">
+        Cancelar
+      </el-button>
+
       <el-button
         type="primary"
         @click="handleSubmit"
       >
-        Avançar
+        Continuar
       </el-button>
     </el-form-item>
   </el-form>
@@ -61,6 +67,11 @@ export default {
 
         this.$emit('submit', this.form.url)
       })
+    },
+
+    handleCancel() {
+      this.$refs.form.resetFields()
+      this.$emit('cancel')
     }
   }
 }

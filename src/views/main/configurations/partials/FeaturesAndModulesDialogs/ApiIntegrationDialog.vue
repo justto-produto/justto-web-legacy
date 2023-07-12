@@ -1,14 +1,17 @@
 <template>
   <el-dialog
-    :close-on-click-modal="false"
     :visible.sync="apiIntegrationDialogVisible"
-    append-to-body
-    title="API de integrações"
     width="40%"
     class="api-integration"
+    append-to-body
     destroy-on-close
     :before-close="handleClose"
+    :show-close="false"
+    :close-on-click-modal="false"
+    :close-on-press-escape="false"
   >
+    <ApiIntegrationTitle slot="title" />
+
     <el-skeleton
       v-if="loading"
       animated
@@ -30,7 +33,8 @@ export default {
   name: 'ApiIntegrationDialog',
 
   components: {
-    ApiIntegrationForm: () => import('./partials/ApiIntegrationForm')
+    ApiIntegrationForm: () => import('./partials/ApiIntegrationForm'),
+    ApiIntegrationTitle: () => import('./partials/ApiIntegrationTitle')
   },
 
   props: {
