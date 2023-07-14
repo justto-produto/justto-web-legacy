@@ -236,6 +236,18 @@
       <!-- class="party-details__infoline-data" -->
     </div>
 
+    <div
+      v-if="!isNegotiator && showAddress"
+      class="party-details__infoline"
+    >
+      <span class="party-details__infoline-label">Endereços:</span>
+      <PartyAddress
+        v-for="(address, index) in party.addresses"
+        :key="index"
+        :address="address"
+      />
+    </div>
+
     <!-- Dialog para exclusão de parte cascateda ou não -->
     <el-dialog
       :close-on-click-modal="false"
@@ -351,7 +363,8 @@ export default {
     PartyContacts: () => import('./PartyContacts'),
     LawyerDetail: () => import('@/components/others/LawyerDetail'),
     WarningLGPD: () => import('@/components/dialogs/WarningLGPD'),
-    JusEditRole: () => import('@/components/dialogs/JusEditRole')
+    JusEditRole: () => import('@/components/dialogs/JusEditRole'),
+    PartyAddress: () => import('./PartyAddress')
   },
 
   mixins: [preNegotiation, restartEngagement],
@@ -376,7 +389,8 @@ export default {
     ...mapGetters({
       ticketStatus: 'getTicketOverviewStatus',
       isJusttoAdmin: 'isJusttoAdmin',
-      isRecovery: 'isWorkspaceRecovery'
+      isRecovery: 'isWorkspaceRecovery',
+      showAddress: 'usePartyAddress'
     }),
 
     disputeId() {

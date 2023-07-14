@@ -54,8 +54,10 @@ const overviewActions = {
     return axiosDispatch({ url: `${disputeApi}/${disputeId}/parties` })
   },
 
-  getTicketOverviewParty({ commit }, { disputeId, disputeRoleId }) {
+  getTicketOverviewParty({ commit, dispatch, getters: { usePartyAddress } }, { disputeId, disputeRoleId }) {
     commit('incrementTicketOverviewCountGetters')
+
+    if (usePartyAddress) dispatch('getTicketOverviewPartyAddress', { disputeId, disputeRoleId })
 
     return validateCurrentId(disputeId, () => axiosDispatch({
       url: `${disputeApi}/${disputeId}/parties/${disputeRoleId}`,
@@ -351,6 +353,35 @@ const overviewActions = {
       method: 'PATCH',
       mutation: 'setAttachmentConfidentiality',
       payload: { id }
+    })
+  },
+
+  getTicketOverviewPartyAddress({ commit }, { disputeId, disputeRoleId }) {
+    // FIXME: Mock
+    commit('setTicketOverviewPartyAddress', {
+      data: [{
+        documento: '38225002083',
+        tipoLogradouro: 'Rua',
+        logradouro: 'Acre',
+        numero: '43',
+        complemento: '',
+        bairro: 'Umuarana',
+        cidade: 'Ubatuba',
+        uf: 'SP',
+        cep: '11680-000'
+      }, {
+        documento: '38225002083',
+        tipoLogradouro: 'Avenida',
+        logradouro: 'Dr. Januario Miraglia',
+        numero: '1100',
+        complemento: 'Apartamento 12',
+        bairro: 'Capivari',
+        cidade: 'Campos do Jordão',
+        uf: 'SP',
+        cep: '12460-000'
+      }],
+
+      payload: { disputeId, disputeRoleId }
     })
   }
 }

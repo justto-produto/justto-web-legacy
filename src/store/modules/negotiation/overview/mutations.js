@@ -238,6 +238,12 @@ const overviewMutations = {
         Vue.set(party.person, 'namesake', false)
       }
     })
+  },
+
+  setTicketOverviewPartyAddress: (state, { data: address, payload: { disputeRoleId } }) => {
+    const partyToSet = findPartyById(state.ticketOverviewParties, disputeRoleId)
+
+    Vue.set(partyToSet, 'addresses', address)
   }
 }
 
