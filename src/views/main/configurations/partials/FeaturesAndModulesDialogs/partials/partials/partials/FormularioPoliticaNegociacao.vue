@@ -11,7 +11,7 @@
       <span>Expirar disputas</span>
 
       <el-input-number
-        v-model="form.PROJURIS_SOAP_DIAS_EXPIRAR"
+        v-model="form.PROJURIS_SOAP_DIAS_PARA_EXPIRAR"
         controls-position="right"
         :min="1"
         size="mini"
@@ -44,12 +44,12 @@
       >
         <el-option
           label="Perda provável"
-          value="PERDA_PROVAVEL"
+          value="perdaProvavel"
         />
 
         <el-option
           label="Danos materiais"
-          value="DANOS_MATERIAIS"
+          value="danosMateriais"
         />
       </el-select>
     </el-form-item>
@@ -62,7 +62,7 @@ import { mapActions, mapGetters } from 'vuex'
 export default {
   data: () => ({
     form: {
-      PROJURIS_SOAP_DIAS_EXPIRAR: 1,
+      PROJURIS_SOAP_DIAS_PARA_EXPIRAR: 1,
       PROJURIS_SOAP_PORCENTAGEM_ALCADA_MAXIMA: 75,
       PROJURIS_SOAP_VALOR_BASE: ''
     }
@@ -79,19 +79,37 @@ export default {
   methods: {
     ...mapActions([
       'saveIntegrationConfigs',
-      'getIntegrationConfigs'
+      'getIntegrationConfigs',
+      'buscarIntegracaoDataLimite',
+      'salvarIntegracaoDataLimite',
+      'buscarIntegracaoSugestaoAlcada',
+      'salvarIntegracaoSugestaoAlcada'
     ]),
 
     init() {
+      this.buscarIntegracaoDataLimite()
+      this.buscarIntegracaoSugestaoAlcada().then(configs => {
+        if (Object.entries(configs).length) {
+          const [[valorBase, porcentagemAlcadaMaxima]] = Object.entries(configs)
+
+          this.form.PROJURIS_SOAP_PORCENTAGEM_ALCADA_MAXIMA = porcentagemAlcadaMaxima || 75
+          this.form.PROJURIS_SOAP_VALOR_BASE = valorBase || ''
+        }
+      })
+
       this.getIntegrationConfigs().then(configs => {
-        this.form.PROJURIS_SOAP_DIAS_EXPIRAR = configs?.PROJURIS_SOAP_DIAS_EXPIRAR || 1
-        this.form.PROJURIS_SOAP_PORCENTAGEM_ALCADA_MAXIMA = configs?.PROJURIS_SOAP_PORCENTAGEM_ALCADA_MAXIMA || 75
-        this.form.PROJURIS_SOAP_VALOR_BASE = configs?.PROJURIS_SOAP_VALOR_BASE || ''
+        this.form.PROJURIS_SOAP_DIAS_PARA_EXPIRAR = configs?.PROJURIS_SOAP_DIAS_PARA_EXPIRAR || 1
       }).catch(error => this.$jusNotification({ error }))
     },
 
     save() {
-      return this.saveIntegrationConfigs(this.form)
+      // TODO: Salvar dados da alçada máxima na mesma promise.
+      return Promise.all([
+        this.salvarIntegracaoDataLimite(this.form?.PROJURIS_SOAP_DIAS_PARA_EXPIRAR || 1),
+        this.salvarIntegracaoSugestaoAlcada({
+          [this.form?.PROJURIS_SOAP_VALOR_BASE]: this.form?.PROJURIS_SOAP_PORCENTAGEM_ALCADA_MAXIMA || 75
+        })
+      ])
     }
   }
 }

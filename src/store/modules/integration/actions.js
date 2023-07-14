@@ -95,5 +95,37 @@ export default {
       url: `${integrationPath}/reset`,
       params: { useIntegrationBff }
     })
+  },
+
+  buscarIntegracaoDataLimite({ getters: { useIntegrationBff } }) {
+    return axiosDispatch({
+      url: `${integrationPath}/data-limite`,
+      params: { useIntegrationBff }
+    })
+  },
+
+  salvarIntegracaoDataLimite({ getters: { useIntegrationBff } }, diasParaExpirar) {
+    return axiosDispatch({
+      method: 'POST',
+      url: `${integrationPath}/data-limite`,
+      params: { useIntegrationBff },
+      data: { diasParaExpirar }
+    })
+  },
+
+  buscarIntegracaoSugestaoAlcada({ getters: { useIntegrationBff } }) {
+    return axiosDispatch({
+      url: `${integrationPath}/sugestao-alcada`,
+      params: { useIntegrationBff }
+    })
+  },
+
+  salvarIntegracaoSugestaoAlcada({ getters: { useIntegrationBff } }, data) {
+    return axiosDispatch({
+      method: 'POST',
+      url: `${integrationPath}/sugestao-alcada`,
+      params: { useIntegrationBff },
+      data
+    })
   }
 }
