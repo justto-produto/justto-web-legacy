@@ -21,7 +21,7 @@
 
       <el-table-column label="Descrição">
         <template slot-scope="scope">
-          {{ descricao(scope.row.descricoes) }}
+          {{ descricao(scope.row.condicoes) }}
         </template>
       </el-table-column>
     </el-table>
@@ -52,7 +52,7 @@ export default {
     ...mapGetters({ estrategias: 'getIntegrationEstrategias' }),
 
     descricao() {
-      return (descricoes = []) => (descricoes.map(({ campo, operador, valor }) => `${campo.nome} ${operador} ${valor}`).join('; ')) + '.'
+      return (condicoes = []) => (condicoes.map(({ campo, operador, valor }) => `${campo.nome} ${operador} ${valor}`).join('; ')) + '.'
     }
   },
 
