@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Store from '@/store'
+import EDITOR_TABS from '@/constants/editor'
 
 import { eventBus } from '@/utils'
 import events from '@/constants/negotiationEvents'
@@ -436,6 +437,8 @@ router.beforeEach((to, from, next) => {
 
         if (from.name === 'ticket' && from.params?.id) {
           eventBus.$emit(events.TICKET_WEB_SOCKET_DISCONNECT.callback, 'unsubscribe', from?.params?.id)
+          // TODO: Resetar aba de tickets
+          Store.commit('setOmnichannelActiveTab', EDITOR_TABS.MESSAGES)
         }
 
         if (to.name === 'onboarding' && !Store.getters.redirectNewWorkspace) {
