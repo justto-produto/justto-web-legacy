@@ -7,19 +7,19 @@
     </el-form-item>
 
     <el-checkbox
-      v-model="form.PROJURIS_SOAP_PRE_NEGOCIAR_SEM_ALCADA"
+      v-model="form.semAlcada"
       label="Sem alçada"
       border
     />
 
     <el-checkbox
-      v-model="form.PROJURIS_SOAP_PRE_NEGOCIAR_ADVOGADO_CONTUMAZ"
+      v-model="form.advogadoContumaz"
       label="Advogado contumaz"
       border
     />
 
     <el-checkbox
-      v-model="form.PROJURIS_SOAP_PRE_NEGOCIAR_SEM_ESTRATEGIA"
+      v-model="form.semEstrategia"
       label="Sem estratégia"
       border
     />
@@ -31,9 +31,9 @@ import { mapActions } from 'vuex'
 export default {
   data: () => ({
     form: {
-      PROJURIS_SOAP_PRE_NEGOCIAR_SEM_ALCADA: false,
-      PROJURIS_SOAP_PRE_NEGOCIAR_ADVOGADO_CONTUMAZ: false,
-      PROJURIS_SOAP_PRE_NEGOCIAR_SEM_ESTRATEGIA: false
+      semAlcada: false,
+      advogadoContumaz: false,
+      semEstrategia: false
     }
   }),
 
@@ -49,9 +49,9 @@ export default {
 
     init() {
       this.buscarIntegracaoPreNegociacao().then(({ preNegociacao }) => {
-        this.form.PROJURIS_SOAP_PRE_NEGOCIAR_SEM_ALCADA = preNegociacao?.PROJURIS_SOAP_PRE_NEGOCIAR_SEM_ALCADA || false
-        this.form.PROJURIS_SOAP_PRE_NEGOCIAR_ADVOGADO_CONTUMAZ = preNegociacao?.PROJURIS_SOAP_PRE_NEGOCIAR_ADVOGADO_CONTUMAZ || false
-        this.form.PROJURIS_SOAP_PRE_NEGOCIAR_SEM_ESTRATEGIA = preNegociacao?.PROJURIS_SOAP_PRE_NEGOCIAR_SEM_ESTRATEGIA || false
+        this.form.semAlcada = preNegociacao?.semAlcada || false
+        this.form.advogadoContumaz = preNegociacao?.advogadoContumaz || false
+        this.form.semEstrategia = preNegociacao?.semEstrategia || false
       }).catch(error => this.$jusNotification({ error }))
     },
 
