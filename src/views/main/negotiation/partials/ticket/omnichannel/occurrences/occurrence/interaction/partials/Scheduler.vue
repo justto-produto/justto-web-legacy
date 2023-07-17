@@ -77,7 +77,16 @@
     >
       <jus-icon icon="clock" />
 
-      Mensagem agendada para {{ scheduledTime | moment('DD/MM[ às ]HH:mm') }} que ainda não foi entregue.
+      Mensagem <strong>AGENDADA</strong> para {{ scheduledTime | moment('DD/MM[ às ]HH:mm') }} que ainda não foi entregue.
+    </p>
+
+    <p
+      v-else
+      class="scheduler-container__alert"
+    >
+      <i class="el-icon-circle-check" />
+
+      Mensagem automática foi <strong>ENVIADA</strong> em {{ scheduledTime | moment('LLL') }}.
     </p>
   </section>
 </template>

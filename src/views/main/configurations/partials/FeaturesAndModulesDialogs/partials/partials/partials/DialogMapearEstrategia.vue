@@ -38,7 +38,7 @@
         </span>
 
         <el-table
-          :data="formulario.descricoes"
+          :data="formulario.condicoes"
           style="width: 100%"
           size="mini"
           stripe
@@ -170,7 +170,7 @@ export default {
 
     formulario: {
       estrategia: { id: null, nome: '' },
-      descricoes: []
+      condicoes: []
     },
 
     descricao: {
@@ -237,7 +237,7 @@ export default {
       this.acao = () => {}
       this.formulario = {
         estrategia: { id: null, nome: '' },
-        descricoes: []
+        condicoes: []
       }
       this.descricao = {
         campo: { nome: '', tipo: '' },
@@ -247,7 +247,7 @@ export default {
     },
 
     encontrarDescricao() {
-      this.formulario.descricoes = [
+      this.formulario.condicoes = [
         {
           campo: { nome: 'valorAlcada', tipo: 'number' },
           operador: '<=',
@@ -268,7 +268,7 @@ export default {
     },
 
     adicionarDescricao() {
-      this.formulario.descricoes.push(this.descricao)
+      this.formulario.condicoes.push(this.descricao)
       this.descricao = {
         campo: { nome: '', tipo: '' },
         operador: '',
