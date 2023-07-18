@@ -15,5 +15,9 @@ export default {
 
   setIntegrationPreNegociacao(state, { preNegociacao }) {
     Vue.set(state, 'preNegociacao', preNegociacao)
+  },
+
+  setUrlIntegracaoReceberEventos(state, url) {
+    Vue.set(state, 'urlIntegracaoReceberEventos', url)
   }
 }

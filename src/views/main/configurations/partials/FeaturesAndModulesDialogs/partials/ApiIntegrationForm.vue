@@ -116,10 +116,7 @@ export default {
 
     fields: {
       get() { return this.getFields },
-      set(value) {
-        console.log('fields', value)
-        this.setIntegrationConfigs(value)
-      }
+      set(value) { this.setIntegrationConfigs(value) }
     },
 
     hasFields() {
