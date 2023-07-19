@@ -3,5 +3,6 @@ export default {
   getIntegrationConfigsList: state => Object.entries(state.configs).map(([key, value]) => ({ key, value })),
   getIntegrationWebhooks: state => state.webhooks,
   getIntegrationEstrategias: state => state.estrategias,
-  getIntegrationPreNegociacao: state => state.preNegociacao
+  getIntegrationPreNegociacao: state => state.preNegociacao,
+  getUrlIntegracaoReceberEventos: state => state.urlIntegracaoReceberEventos
 }

@@ -31,7 +31,7 @@
 
         <main>
           <el-input
-            :value="fields.PROJURIS_SOAP_URL"
+            :value="url"
             size="mini"
             disabled
           >
@@ -40,7 +40,7 @@
               type="transparent"
               class="is-pointer"
               icon="el-icon-copy-document"
-              @click="copyToClipboard(fields.PROJURIS_SOAP_URL)"
+              @click="copyToClipboard(url)"
             />
           </el-input>
         </main>
@@ -103,12 +103,14 @@ export default {
   computed: {
     ...mapGetters({
       fields: 'getIntegrationConfigs',
-      webhooks: 'getIntegrationWebhooks'
+      webhooks: 'getIntegrationWebhooks',
+      url: 'getUrlIntegracaoReceberEventos'
     })
   },
 
   methods: {
     ...mapActions([
+      'getUrlIntegracaoReceberEventos',
       'saveIntegrationWebhooks',
       'getIntegrationWebhooks'
     ]),
@@ -119,7 +121,9 @@ export default {
       this.loading = true
       this.dialogVisible = true
 
-      this.handlePopulateWebhooks().finally(() => {
+      this.handlePopulateWebhooks().then(([url, { webhooks }]) => {
+        console.log(url, webhooks)
+      }).finally(() => {
         this.loading = false
       })
     },
@@ -129,7 +133,10 @@ export default {
     },
 
     handlePopulateWebhooks() {
-      return this.getIntegrationWebhooks()
+      return Promise.all([
+        this.getUrlIntegracaoReceberEventos(),
+        this.getIntegrationWebhooks()
+      ])
     },
 
     handleAddWebhook() {

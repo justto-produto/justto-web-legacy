@@ -1,6 +1,6 @@
 import { axiosDispatch } from '@/utils'
 
-const integrationPath = '/api/gestao-integracao-bff/v1/integration'
+const integrationPath = 'http://localhost:3001/api/gestao-integracao-bff/v1/integration'
 
 export default {
   detectIntegration({ getters: { useIntegrationBff } }, url) {
@@ -59,6 +59,13 @@ export default {
       url: `${integrationPath}/config`,
       params: { useIntegrationBff },
       mutation: 'setIntegrationConfigs'
+    })
+  },
+
+  getUrlIntegracaoReceberEventos({ _ }) {
+    return axiosDispatch({
+      url: `${integrationPath}/url-receber-eventos`,
+      mutation: 'setUrlIntegracaoReceberEventos'
     })
   },
 
