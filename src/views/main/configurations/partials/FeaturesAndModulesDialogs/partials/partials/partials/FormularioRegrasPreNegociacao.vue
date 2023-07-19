@@ -47,16 +47,14 @@ export default {
       'buscarIntegracaoPreNegociacao'
     ]),
 
-    init() {
-      this.buscarIntegracaoPreNegociacao().then(({ preNegociacao }) => {
-        this.form.semAlcada = preNegociacao?.semAlcada || false
-        this.form.advogadoContumaz = preNegociacao?.advogadoContumaz || false
-        this.form.semEstrategia = preNegociacao?.semEstrategia || false
-      }).catch(error => this.$jusNotification({ error }))
+    async init() {
+      try {
+        this.form = await this.buscarIntegracaoPreNegociacao()
+      } catch (error) { this.$jusNotification({ error }) }
     },
 
     save() {
-      return this.salvarIntegracaoPreNegociacao({ preNegociacao: this.form })
+      return this.salvarIntegracaoPreNegociacao({ ...this.form })
     }
   }
 }

@@ -13,7 +13,7 @@ export default {
     Vue.set(state, 'estrategias', estrategias)
   },
 
-  setIntegrationPreNegociacao(state, { preNegociacao }) {
+  setIntegrationPreNegociacao(state, preNegociacao) {
     Vue.set(state, 'preNegociacao', preNegociacao)
   },
 
