@@ -1,6 +1,6 @@
 import { axiosDispatch } from '@/utils'
 
-const integrationPath = 'http://localhost:3001/api/gestao-integracao-bff/v1/integration'
+const integrationPath = '/api/gestao-integracao-bff/v1/integration'
 
 export default {
   detectIntegration({ getters: { useIntegrationBff } }, url) {
