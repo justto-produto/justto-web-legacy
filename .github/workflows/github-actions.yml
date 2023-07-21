@@ -32,16 +32,16 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: 'sa-east-1'
           SOURCE_DIR: 'dist'
-      - name: Configurar usuário Git
-        run: |
-          git config --global user.email "dev@justto.com.br"
-          git config --global user.name "GitHub Actions"
-      - name: Incrementar Versão
-        run: |
-          git stash push --include-untracked
-          npm run increment-version
-          git push
-          git stash pop
+      # - name: Configurar usuário Git
+      #   run: |
+      #     git config --global user.email "dev@justto.com.br"
+      #     git config --global user.name "GitHub Actions"
+      # - name: Incrementar Versão
+      #   run: |
+      #     git stash push --include-untracked
+      #     npm run increment-version
+      #     git push
+      #     git stash pop
 
   Deploy:
     name: Deploy
