@@ -36,16 +36,6 @@
           :precision="0"
         />
       </div>
-      <!-- <el-input-number
-        v-model="form.PROJURIS_SOAP_PORCENTAGEM_ALCADA_MAXIMA"
-        controls-position="right"
-        :min="1"
-        :max="100"
-        :step="1"
-        size="mini"
-        step-strictly
-        label="%"
-      /> -->
 
       <span>do valor</span>
 
