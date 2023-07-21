@@ -43,13 +43,13 @@ export default {
     })
   },
 
-  saveIntegrationEstrategias({ getters: { useIntegrationBff } }, estrategias) {
+  saveIntegrationEstrategias({ getters: { useIntegrationBff } }, data) {
     return axiosDispatch({
       method: 'POST',
       url: `${integrationPath}/estrategias`,
       params: { useIntegrationBff },
-      data: { estrategias },
-      mutation: 'setIntegrationEstrategias'
+      data,
+      action: 'getIntegrationEstrategias'
     })
   },
 

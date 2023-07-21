@@ -10,7 +10,9 @@ export default {
   },
 
   setIntegrationEstrategias(state, { estrategias }) {
-    Vue.set(state, 'estrategias', estrategias)
+    if (Array.isArray(estrategias)) {
+      Vue.set(state, 'estrategias', estrategias)
+    }
   },
 
   setIntegrationPreNegociacao(state, preNegociacao) {

@@ -24,7 +24,19 @@
       label="Defina abaixo qual deve ser a política máxima negociada"
       class="politica-negociacao__form-item"
     >
-      <el-input-number
+      <div
+        class="el-input el-input--mini auto-width"
+      >
+        <MoneyInput
+          v-model="form.PROJURIS_SOAP_PORCENTAGEM_ALCADA_MAXIMA"
+          class="el-input__inner"
+          decimal="."
+          suffix=" %"
+          prefix=""
+          :precision="0"
+        />
+      </div>
+      <!-- <el-input-number
         v-model="form.PROJURIS_SOAP_PORCENTAGEM_ALCADA_MAXIMA"
         controls-position="right"
         :min="1"
@@ -33,7 +45,7 @@
         size="mini"
         step-strictly
         label="%"
-      />
+      /> -->
 
       <span>do valor</span>
 
@@ -58,8 +70,13 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import { Money } from 'v-money'
 
 export default {
+  components: {
+    MoneyInput: Money
+  },
+
   data: () => ({
     form: {
       PROJURIS_SOAP_DIAS_PARA_EXPIRAR: 1,
