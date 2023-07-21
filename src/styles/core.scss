@@ -2,7 +2,7 @@
 @import './keyboard/main.scss';
 @import './ckeditor.scss';
 @import '~projuris-acordos-theme/lib/index.css';
-@import '~projuris-acordos-theme/src/common/var.scss';;
+@import '~projuris-acordos-theme/src/common/var.scss';
 @import '~projuris-acordos-theme/src/common/colors.scss';
 
 html {
@@ -17,7 +17,7 @@ html {
 body, html, #app {
   height: 100%;
   margin: 0;
-  background-color: $--background-color-white;
+  background-color: $--color-white;
 }
 h1 {
   font-size: 24px;

@@ -268,7 +268,11 @@ export default {
     },
 
     adicionarDescricao() {
-      this.formulario.condicoes.push(this.descricao)
+      this.formulario.condicoes.push({
+        ...this.descricao,
+        valor: String(this.descricao.valor)
+      })
+
       this.descricao = {
         campo: { nome: '', tipo: '' },
         operador: '',

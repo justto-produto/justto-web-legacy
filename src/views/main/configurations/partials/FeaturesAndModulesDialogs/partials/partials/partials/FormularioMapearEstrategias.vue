@@ -14,15 +14,29 @@
       border
     >
       <el-table-column label="Estratégia">
-        <template slot-scope="scope">
+        <span slot-scope="scope">
           {{ scope.row.estrategia.nome }}
-        </template>
+        </span>
       </el-table-column>
 
       <el-table-column label="Descrição">
-        <template slot-scope="scope">
+        <span slot-scope="scope">
           {{ descricao(scope.row.condicoes) }}
-        </template>
+        </span>
+      </el-table-column>
+
+      <el-table-column
+        fixed="right"
+        width="64"
+      >
+        <el-button
+          slot-scope="scope"
+          type="danger"
+          icon="el-icon-delete"
+          circle
+          plain
+          @click="removerEstrategia(scope.row)"
+        />
       </el-table-column>
     </el-table>
 
@@ -43,6 +57,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+
 export default {
   components: {
     DialogMapearEstrategia: () => import('./DialogMapearEstrategia')
@@ -56,8 +71,15 @@ export default {
     }
   },
 
+  mounted() {
+    this.buscarEstrategias()
+  },
+
   methods: {
-    ...mapActions({ salvarEstrategias: 'saveIntegrationEstrategias' }),
+    ...mapActions({
+      buscarEstrategias: 'getIntegrationEstrategias',
+      salvarEstrategias: 'saveIntegrationEstrategias'
+    }),
 
     save() {
       return Promise.resolve()
@@ -68,12 +90,21 @@ export default {
     },
 
     mapearEstrategia(estrategia) {
-      this.salvarEstrategias([...this.estrategias, estrategia])
-        .then(() => this.$jusNotification({
-          type: 'success',
-          messae: 'Mapeamento salvo com sucesso!'
-        }))
-        .catch(error => this.$jusNotification({ error }))
+      this.salvarEstrategias({
+        estrategias: [...this.estrategias, estrategia]
+      }).then(() => this.$jusNotification({
+        type: 'success',
+        messae: 'Mapeamento salvo com sucesso!'
+      })).catch(error => this.$jusNotification({ error }))
+    },
+
+    removerEstrategia(estrategia) {
+      this.estrategias.splice(this.estrategias.indexOf(estrategia), 1)
+
+      this.salvarEstrategias({ estrategias: this.estrategias }).then(() => this.$jusNotification({
+        type: 'success',
+        messae: 'Mapeamento salvo com sucesso!'
+      })).catch(error => this.$jusNotification({ error }))
     }
   }
 }
