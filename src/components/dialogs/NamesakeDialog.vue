@@ -16,6 +16,18 @@
       class="namesake-dialog__namesake"
     >
       <div class="namesake-dialog__namesake-filters">
+        <div class="namesake-dialog__namesake-filters-name">
+          <label for="namesakeFilterCitySelect">Nome:</label>
+
+          <div class="el-input el-input--small">
+            <input
+              v-model="nameFilter"
+              type="text"
+              class="el-input__inner"
+            >
+          </div>
+        </div>
+
         <div class="namesake-dialog__namesake-filters-city">
           <label for="namesakeFilterCitySelect">Cidade:</label>
           <el-select
@@ -112,10 +124,13 @@
 
 <script>
 import { mapActions } from 'vuex'
+import { normalizeString } from '@/utils'
+
 export default {
   data: () => ({
     ufFilter: null,
     cityFilter: null,
+    nameFilter: '',
     visible: false,
     currentName: '',
     isLoading: false,
@@ -135,15 +150,13 @@ export default {
     },
 
     filteredNamesakeList() {
-      if (this.ufFilter && this.cityFilter) {
-        return this.namesakeList.filter(namesake => namesake.uf === this.ufFilter && namesake.city === this.cityFilter)
-      } else if (this.ufFilter) {
-        return this.namesakeList.filter(namesake => namesake.uf === this.ufFilter)
-      } else if (this.cityFilter) {
-        return this.namesakeList.filter(namesake => namesake.city === this.cityFilter)
-      } else {
-        return this.namesakeList || []
-      }
+      return (this.namesakeList || []).filter(({ uf, city, name }) => {
+        const ufFilter = this.ufFilter ? uf === this.ufFilter : true
+        const cityFilter = this.cityFilter ? city === this.cityFilter : true
+        const nameFilter = this.nameFilter.length ? normalizeString(name).includes(normalizeString(this.nameFilter)) : true
+
+        return ufFilter && cityFilter && nameFilter
+      })
     },
 
     ufList() {
@@ -243,8 +256,10 @@ export default {
         display: flex;
         gap: 16px;
 
-        .namesake-dialog__namesake-filters-city {
-          width: 60%;
+        .namesake-dialog__namesake-filters-name,
+        .namesake-dialog__namesake-filters-city,
+        .namesake-dialog__namesake-filters-uf {
+          flex: 1;
 
           label {
             font-weight: 600;
@@ -256,17 +271,8 @@ export default {
           }
         }
 
-        .namesake-dialog__namesake-filters-uf {
-          width: 40%;
-
-          label {
-            font-weight: 600;
-            color: $--color-text-secondary;
-          }
-
-          .el-select {
-            width: 100%;
-          }
+        .namesake-dialog__namesake-filters-name {
+          flex: 2;
         }
       }
 
