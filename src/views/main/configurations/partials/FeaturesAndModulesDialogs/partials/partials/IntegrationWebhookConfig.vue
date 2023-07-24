@@ -46,6 +46,20 @@
         </main>
       </div>
 
+      <div class="webhook-config__tipo-disputa">
+        <main>
+          <el-switch
+            v-model="integracaoTipoDeDisputas"
+            active-text="Processo"
+            active-value="PROCESSO"
+            inactive-text="Procon"
+            inactive-value="PROCON"
+            class="webhook-config__url__switch"
+            @change="open"
+          />
+        </main>
+      </div>
+
       <div class="webhook-config__list">
         <header>
           Adicione abaixo os endereços dos sistemas que deseja receber eventos de disputas desta workspace. Seus callbacks irão receber um JSON contendo a disputa inteira.
@@ -97,7 +111,8 @@ import { copyToClipboard } from '@/utils'
 export default {
   data: () => ({
     dialogVisible: false,
-    loading: false
+    loading: false,
+    integracaoTipoDeDisputas: 'PROCESSO'
   }),
 
   computed: {
@@ -121,9 +136,7 @@ export default {
       this.loading = true
       this.dialogVisible = true
 
-      this.handlePopulateWebhooks().then(([url, { webhooks }]) => {
-        console.log(url, webhooks)
-      }).finally(() => {
+      this.handlePopulateWebhooks().finally(() => {
         this.loading = false
       })
     },
@@ -134,7 +147,7 @@ export default {
 
     handlePopulateWebhooks() {
       return Promise.all([
-        this.getUrlIntegracaoReceberEventos(),
+        this.getUrlIntegracaoReceberEventos({ tipo: this.integracaoTipoDeDisputas }),
         this.getIntegrationWebhooks()
       ])
     },
@@ -182,7 +195,7 @@ export default {
     .webhook-config__body {
       display: flex;
       flex-direction: column;
-      gap: 2rem;
+      gap: 1rem;
       .webhook-config__url,
       .webhook-config__list {
         display: flex;
@@ -199,6 +212,10 @@ export default {
           display: flex;
           justify-content: center;
         }
+      }
+
+      .webhook-config__tipo-disputa {
+        text-align: center;
       }
     }
   }
