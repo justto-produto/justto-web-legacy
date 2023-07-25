@@ -32,6 +32,9 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: 'sa-east-1'
           SOURCE_DIR: 'dist'
+      - name: Git Status
+        run: |
+          git status
       # - name: Configurar usuário Git
       #   run: |
       #     git config --global user.email "dev@justto.com.br"
