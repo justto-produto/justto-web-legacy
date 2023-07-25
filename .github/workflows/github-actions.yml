@@ -32,6 +32,9 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: 'sa-east-1'
           SOURCE_DIR: 'dist'
+      - name: Ignora package-lock.json
+        run: |
+          git update-index --assume-unchanged package-lock.json
       - name: Git Status
         run: |
           git status
