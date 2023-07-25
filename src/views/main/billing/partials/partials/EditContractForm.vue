@@ -244,7 +244,7 @@
 
   <el-descriptions
     v-else-if="contract.id"
-    title="Dados do contrato"
+    :title="`Dados do contrato #${contract.id}`"
     :column="1"
   >
     <el-descriptions-item label="Contrato">
