@@ -101,7 +101,7 @@
         class="phone-container__editor-label"
         :class="{'invalid-audio': !hasValidAudio}"
       >
-        {{ hasActiveCall ? 'Transcreva e anote o que precisar desta ligação em andamento:' : hasValidAudio ? 'Transcreva sua conversa abaixo:' : 'Chamada não foi atendida' }}
+        {{ hasActiveCall ? 'Anote o que precisar desta ligação em andamento:' : hasValidAudio ? 'Anote sobre sua conversa abaixo:' : 'Chamada não foi atendida' }}
       </label>
 
       <ckeditor
