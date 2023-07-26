@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     :visible.sync="dialogVisible"
-    width="40%"
+    width="60%"
     append-to-body
     destroy-on-close
     custom-class="webhook-config__modal"
@@ -24,6 +24,20 @@
     >
       <span>Configure as chamadas webhooks entre os sistemas.</span>
 
+      <div class="webhook-config__tipo-disputa">
+        <main>
+          <el-switch
+            v-model="integracaoTipoDeDisputas"
+            active-text="Processo"
+            active-value="PROCESSO"
+            inactive-text="Procon"
+            inactive-value="PROCON"
+            class="webhook-config__url__switch"
+            @change="open"
+          />
+        </main>
+      </div>
+
       <div class="webhook-config__url">
         <header>
           Utilize o enderego abaixo para configurar o envio de eventos do Projuris Empresa que sero recebidos aqui no Projuris Acordos:
@@ -43,20 +57,6 @@
               @click="copyToClipboard(url)"
             />
           </el-input>
-        </main>
-      </div>
-
-      <div class="webhook-config__tipo-disputa">
-        <main>
-          <el-switch
-            v-model="integracaoTipoDeDisputas"
-            active-text="Processo"
-            active-value="PROCESSO"
-            inactive-text="Procon"
-            inactive-value="PROCON"
-            class="webhook-config__url__switch"
-            @change="open"
-          />
         </main>
       </div>
 
@@ -136,9 +136,9 @@ export default {
       this.loading = true
       this.dialogVisible = true
 
-      this.handlePopulateWebhooks().finally(() => {
+      this.handlePopulateWebhooks().finally(() => setTimeout(() => {
         this.loading = false
-      })
+      }, 500))
     },
 
     close() {
