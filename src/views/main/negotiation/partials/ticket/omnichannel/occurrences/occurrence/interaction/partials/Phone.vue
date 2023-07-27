@@ -130,7 +130,7 @@
           icon="el-icon-edit"
           @click="enabledEditor = !enabledEditor"
         >
-          Editar transcrição da conversa
+          Editar anotações da conversa
         </el-button>
 
         <el-button
