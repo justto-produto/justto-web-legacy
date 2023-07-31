@@ -89,7 +89,7 @@
             icon="el-icon-plus"
             @click="handleAddWebhook"
           >
-            Adicionar webhook
+            Adicionar recebimentos de eventos
           </el-button>
         </footer>
       </div>
@@ -153,7 +153,7 @@ export default {
     },
 
     handleAddWebhook() {
-      this.$prompt('Adicione abaixo os endereços dos sistemas que deseja receber eventos de disputas desta workspace.', 'Adicionar webhook', {
+      this.$prompt('Adicione abaixo os endereços dos sistemas que deseja receber eventos de disputas desta workspace.', 'Adicionar recebimentos de eventos', {
         confirmButtonText: 'Adicionar',
         cancelButtonText: 'Cancelar',
         inputPattern: /^(?:(?:https?|ftp):\/\/)?(?:www\.)?[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,}(?:\/[^\s]*)?$/,
