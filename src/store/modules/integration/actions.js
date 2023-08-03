@@ -38,8 +38,8 @@ export default {
       method: 'POST',
       url: `${integrationPath}/webhooks`,
       params: { useIntegrationBff },
-      data: { webhooks },
-      mutation: 'setIntegrationWebhooks'
+      data: webhooks,
+      action: 'getIntegrationWebhooks'
     })
   },
 

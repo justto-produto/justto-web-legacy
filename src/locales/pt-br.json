@@ -609,6 +609,13 @@
       "NOTIFY_UNANSWERED_DISPUTE": {
         "title": "Enviar mensagens para disputas sem resposta"
       }
+    },
+    "authorization": {
+      "type": {
+        "API_KEY": "Autenticação por Chave da API",
+        "BEARER_TOKEN": "Autenticação por Token",
+        "BASIC_AUTH": "Autenticação Básica"
+      }
     }
   },
   "fields": {
