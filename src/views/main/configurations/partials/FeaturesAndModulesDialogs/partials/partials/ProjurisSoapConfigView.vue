@@ -61,8 +61,8 @@ export default {
         icon: 'power-plug',
         callback: this.handleResetField
       }, {
-        title: 'Webhook',
-        subTitle: 'Configurar chamadas webhook.',
+        title: 'Automação',
+        subTitle: 'Configurar chamadas para envio e recebmento de dados.',
         icon: 'webhook',
         callback: this.handleOpenWebhook
       }, {

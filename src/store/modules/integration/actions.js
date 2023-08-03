@@ -1,6 +1,6 @@
 import { axiosDispatch } from '@/utils'
 
-const integrationPath = '/api/gestao-integracao-bff/v1/integration'
+const integrationPath = 'http://localhost:3001/api/gestao-integracao-bff/v1/integration'
 
 export default {
   detectIntegration({ getters: { useIntegrationBff } }, url) {
@@ -38,8 +38,8 @@ export default {
       method: 'POST',
       url: `${integrationPath}/webhooks`,
       params: { useIntegrationBff },
-      data: { webhooks },
-      mutation: 'setIntegrationWebhooks'
+      data: webhooks,
+      action: 'getIntegrationWebhooks'
     })
   },
 

@@ -5,8 +5,10 @@ export default {
     Vue.set(state, 'configs', configs)
   },
 
-  setIntegrationWebhooks(state, { webhooks }) {
-    Vue.set(state, 'webhooks', webhooks)
+  setIntegrationWebhooks(state, webhooks) {
+    if (Array.isArray(webhooks)) {
+      Vue.set(state, 'webhooks', webhooks)
+    }
   },
 
   setIntegrationEstrategias(state, { estrategias }) {

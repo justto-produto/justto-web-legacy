@@ -94,7 +94,10 @@ export default {
     ]),
 
     init() {
-      this.buscarIntegracaoDataLimite()
+      this.buscarIntegracaoDataLimite().then(({ dataLimite }) => {
+        this.form.PROJURIS_SOAP_DIAS_PARA_EXPIRAR = dataLimite || 1
+      }).catch(error => this.$jusNotification({ error }))
+
       this.buscarIntegracaoSugestaoAlcada().then(configs => {
         if (Object.entries(configs).length) {
           const [[valorBase, porcentagemAlcadaMaxima]] = Object.entries(configs)
@@ -102,15 +105,10 @@ export default {
           this.form.PROJURIS_SOAP_PORCENTAGEM_ALCADA_MAXIMA = porcentagemAlcadaMaxima || 75
           this.form.PROJURIS_SOAP_VALOR_BASE = valorBase || ''
         }
-      })
-
-      this.getIntegrationConfigs().then(configs => {
-        this.form.PROJURIS_SOAP_DIAS_PARA_EXPIRAR = configs?.PROJURIS_SOAP_DIAS_PARA_EXPIRAR || 1
       }).catch(error => this.$jusNotification({ error }))
     },
 
     save() {
-      // TODO: Salvar dados da alçada máxima na mesma promise.
       return Promise.all([
         this.salvarIntegracaoDataLimite(this.form?.PROJURIS_SOAP_DIAS_PARA_EXPIRAR || 1),
         this.salvarIntegracaoSugestaoAlcada({

@@ -69,8 +69,9 @@
           <el-input
             v-for="(webhook, index) in webhooks"
             :key="index"
-            v-model="webhooks[index]"
+            v-model="webhooks[index].url"
             size="mini"
+            readonly
           >
             <el-button
               slot="append"
@@ -101,6 +102,8 @@
     >
       <el-button @click="close">Voltar</el-button>
     </span>
+
+    <DialogAdicionarWebhook ref="adicionarWebhook" />
   </el-dialog>
 </template>
 
@@ -109,6 +112,10 @@ import { mapGetters, mapActions } from 'vuex'
 import { copyToClipboard } from '@/utils'
 
 export default {
+  components: {
+    DialogAdicionarWebhook: () => import('./partials/DialogAdicionarWebhook')
+  },
+
   data: () => ({
     dialogVisible: false,
     loading: false,
@@ -153,13 +160,8 @@ export default {
     },
 
     handleAddWebhook() {
-      this.$prompt('Adicione abaixo os endereços dos sistemas que deseja receber eventos de disputas desta workspace.', 'Adicionar recebimentos de eventos', {
-        confirmButtonText: 'Adicionar',
-        cancelButtonText: 'Cancelar',
-        inputPattern: /^(?:(?:https?|ftp):\/\/)?(?:www\.)?[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,}(?:\/[^\s]*)?$/,
-        inputErrorMessage: 'URL inválida'
-      }).then(({ value }) => {
-        this.handleSaveWebhooks([...this.webhooks, value])
+      this.$refs.adicionarWebhook.open(webhook => {
+        this.handleSaveWebhooks([...this.webhooks, webhook])
       })
     },
 
