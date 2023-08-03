@@ -66,33 +66,90 @@
         </header>
 
         <main>
-          <el-input
-            v-for="(webhook, index) in webhooks"
-            :key="index"
-            v-model="webhooks[index].url"
-            size="mini"
-            readonly
+          <el-table
+            :data="webhooks"
+            class="w100"
           >
-            <el-button
-              slot="append"
-              type="transparent"
-              class="is-pointer"
-              icon="el-icon-delete"
-              @click="handleRemoveWebhook(index)"
-            />
-          </el-input>
-        </main>
+            <el-table-column type="expand">
+              <el-row
+                slot-scope="props"
+                :gutter="20"
+              >
+                <el-col
+                  v-if="!Object.keys(props.row).includes('authType')"
+                  :offset="1"
+                  :span="23"
+                >
+                  Autenticação não definida.
+                </el-col>
 
-        <footer>
-          <el-button
-            type="primary"
-            size="mini"
-            icon="el-icon-plus"
-            @click="handleAddWebhook"
-          >
-            Adicionar recebimentos de eventos
-          </el-button>
-        </footer>
+                <el-col
+                  v-else
+                  :offset="1"
+                  :span="23"
+                >
+                  <el-row>
+                    <el-col>
+                      {{ $tc(`configurations.authorization.type.${props.row.authType}`) }}
+                    </el-col>
+
+                    <el-col v-if="props.row.username">
+                      Username:
+                      <el-tag size="mini">
+                        {{ props.row.username }}
+                      </el-tag>
+                    </el-col>
+
+                    <el-col v-if="props.row.username">
+                      Senha:
+                      <el-tag size="mini">
+                        {{ '*'.repeat(props.row.password.length) }}
+                      </el-tag>
+                    </el-col>
+
+                    <el-col v-if="props.row.token">
+                      Token:
+                      <el-tag size="mini">
+                        {{ props.row.token }}
+                      </el-tag>
+                    </el-col>
+                  </el-row>
+                </el-col>
+              </el-row>
+            </el-table-column>
+
+            <el-table-column
+              label="URL"
+              prop="url"
+            />
+
+            <el-table-column
+              fixed="right"
+              width="135"
+            >
+              <span slot="header">
+                <el-button
+                  type="primary"
+                  size="mini"
+                  icon="el-icon-plus"
+                  class="float-right"
+                  @click="handleAddWebhook"
+                >
+                  Adicionar
+                </el-button>
+              </span>
+
+              <span slot-scope="scope">
+                <span
+                  class="is-pointer float-right"
+                  @click="handleRemoveWebhook(scope.$index)"
+                >
+                  <i class="el-icon-delete" />
+                </span>
+              </span>
+            </el-table-column>
+          </el-table>
+        </main>
       </div>
     </article>
 
