@@ -2,7 +2,7 @@
 @import './keyboard/main.scss';
 @import './ckeditor.scss';
 @import '~projuris-acordos-theme/lib/index.css';
-@import '~projuris-acordos-theme/src/common/var.scss';;
+@import '~projuris-acordos-theme/src/common/var.scss';
 @import '~projuris-acordos-theme/src/common/colors.scss';
 
 html {
@@ -17,7 +17,7 @@ html {
 body, html, #app {
   height: 100%;
   margin: 0;
-  background-color: $--background-color-white;
+  background-color: $--color-white;
 }
 h1 {
   font-size: 24px;
@@ -186,7 +186,11 @@ i.el-icon-delete:not(.colorless) {
 }
 
 .is-pointer {
-  cursor: pointer;
+  cursor: pointer !important;
+}
+
+.float-right {
+  float: right !important;
 }
 
 * {
@@ -371,4 +375,8 @@ i.el-icon-delete:not(.colorless) {
   -webkit-user-select: none; /* Safari */
   -ms-user-select: none; /* IE 10 and IE 11 */
   user-select: none; /* Standard syntax */
+}
+
+.auto-width {
+  width: auto !important;
 }

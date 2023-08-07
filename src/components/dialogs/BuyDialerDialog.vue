@@ -20,7 +20,7 @@
       </p>
 
       <p>
-        Caso queira, pode adquirir discadores dedicados para você ou para seu time. O valor unitário é de R$ 80,00 por mês por discador. Os valores irão ser debitados em sua fatura da JUSTTO.
+        Caso queira, pode adquirir discadores dedicados para você ou para seu time. O valor unitário é de R$ 100,00 por mês por discador. Os valores irão ser debitados em sua fatura da JUSTTO.
       </p>
 
       <p>

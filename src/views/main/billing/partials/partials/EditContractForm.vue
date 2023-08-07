@@ -244,7 +244,7 @@
 
   <el-descriptions
     v-else-if="contract.id"
-    title="Dados do contrato"
+    :title="`Dados do contrato #${contract.id}`"
     :column="1"
   >
     <el-descriptions-item label="Contrato">
@@ -264,7 +264,7 @@
     </el-descriptions-item>
 
     <el-descriptions-item label="Iniciado em">
-      {{ contract.createAt.dateTime | moment('L') }}
+      {{ contract.startedDate | moment('L') }}
     </el-descriptions-item>
 
     <el-descriptions-item>

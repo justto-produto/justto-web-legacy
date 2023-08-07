@@ -162,11 +162,13 @@ export default {
     },
 
     formatedTime() {
-      const { createAt } = this.occurrence
+      const createAt = this.occurrence?.createAt?.dateTime
+
+      const scheduledTime = this.occurrence?.interaction?.message?.scheduledTime?.dateTime
 
       const format = this.getActiveTab === 'OCCURRENCES' ? 'LLL' : 'HH:mm'
 
-      return this.$moment((createAt || { dateTime: undefined }).dateTime).format(format)
+      return this.$moment(scheduledTime || createAt || undefined).format(format)
     },
 
     isManual() {

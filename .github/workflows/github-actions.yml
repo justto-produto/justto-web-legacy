@@ -32,6 +32,10 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: 'sa-east-1'
           SOURCE_DIR: 'dist'
+      # WANING: Caso precise voltrar a trackear o package-lock.json, descomente as linhas abaixo
+      # - name: Ignora package-lock.json
+      #   run: |
+      #     git update-index --no-assume-unchanged package-lock.json
       - name: Configurar usuário Git
         run: |
           git config --global user.email "dev@justto.com.br"
@@ -41,7 +45,6 @@ jobs:
           git stash push --include-untracked
           npm run increment-version
           git push
-          git stash pop
 
   Deploy:
     name: Deploy
