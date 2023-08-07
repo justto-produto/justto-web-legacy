@@ -233,7 +233,6 @@
         :account-mockup="bankAccountMockup"
         @validateOpen="validateDocumentNumber"
       />
-      <!-- class="party-details__infoline-data" -->
     </div>
 
     <div
@@ -241,11 +240,19 @@
       class="party-details__infoline"
     >
       <span class="party-details__infoline-label">Endereços:</span>
+
       <PartyAddress
         v-for="(address, index) in party.addresses"
         :key="index"
         :address="address"
       />
+
+      <h5
+        v-if="party.addresses && party.addresses.length === 0"
+        class="mt0 mb0"
+      >
+        Nenhum endereço encontrado.
+      </h5>
     </div>
 
     <!-- Dialog para exclusão de parte cascateda ou não -->
