@@ -33,6 +33,7 @@
               />
             </transition>
           </swiper-slide>
+
           <swiper-slide v-if="!isGuest">
             <transition name="el-fade-in-linear">
               <team-name-step
@@ -41,6 +42,13 @@
               />
             </transition>
           </swiper-slide>
+
+          <swiper-slide>
+            <transition name="el-fade-in-linear">
+              <EnrichmentStep @Enriquecimento:addressEnrichment="handleEnrichment" />
+            </transition>
+          </swiper-slide>
+
           <swiper-slide v-if="!isGuest">
             <transition name="el-fade-in-linear">
               <invite-step
@@ -49,6 +57,7 @@
               />
             </transition>
           </swiper-slide>
+
           <swiper-slide>
             <transition name="el-fade-in-linear">
               <final-step
@@ -85,6 +94,7 @@
 
 <script>
 import { uuidv4 } from '@/utils'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'Onboarding',
@@ -93,7 +103,8 @@ export default {
     WelcomeStep: () => import('./steps/WelcomeStep'),
     TeamNameStep: () => import('./steps/TeamNameStep'),
     InviteStep: () => import('./steps/InviteStep'),
-    FinalStep: () => import('./steps/FinalStep')
+    FinalStep: () => import('./steps/FinalStep'),
+    EnrichmentStep: () => import('./steps/EnrichmentStep')
   },
   data() {
     return {
@@ -112,6 +123,8 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['workspaceId']),
+
     isGuest() {
       return !!this.$route.query.invitedBy
     },
@@ -121,8 +134,10 @@ export default {
           case 0:
             return 'welcome'
           case 1:
-            return 'final'
+            return 'enrichment'
           case 2:
+            return 'final'
+          case 3:
             return 'final'
         }
       } else {
@@ -132,10 +147,12 @@ export default {
           case 1:
             return 'teamname'
           case 2:
-            return 'invite'
+            return 'enrichment'
           case 3:
-            return 'final'
+            return 'invite'
           case 4:
+            return 'final'
+          case 5:
             return 'final'
         }
       }
@@ -161,7 +178,13 @@ export default {
   },
 
   methods: {
-    updateProgress(progress) {
+    ...mapActions([
+      'showLoading',
+      'hideLoading',
+      'editCustomWorkpaceProperties'
+    ]),
+
+    updateProgress(progress = 0) {
       this.progressPercentage = Math.round((progress * 100) * 0.2) / 0.2
     },
 
@@ -180,7 +203,7 @@ export default {
 
     createSubdomain(responseObj) {
       if (!this.$store.getters.creatingWorkspace) {
-        this.$store.dispatch('showLoading')
+        this.showLoading()
 
         Object.assign(this.responses, responseObj)
 
@@ -205,18 +228,29 @@ export default {
               })
             }).catch(error => {
               this.$jusNotification({ error })
-            }).finally(() => {
-              this.$store.dispatch('hideLoading')
-            })
+            }).finally(this.hideLoading)
           })
         }).catch(error => {
           this.$jusNotification({ error })
-        }).finally(() => {
-          this.$store.dispatch('hideLoading')
-        })
+        }).finally(this.hideLoading)
       } else {
         this.$refs.swiper.swiper.slideNext(800)
       }
+    },
+
+    handleEnrichment(addressEnrichment) {
+      this.showLoading()
+
+      this.editCustomWorkpaceProperties({
+        workspaceId: this.workspaceId,
+        properties: {
+          ENRICH_ADDRESS: addressEnrichment ? 'ENABLED' : 'DISABLED'
+        }
+      }).then(() => {
+        this.$refs.swiper.swiper.slideNext(800)
+      }).catch(error => {
+        this.$jusNotification({ error })
+      }).finally(this.hideLoading)
     }
   }
 }

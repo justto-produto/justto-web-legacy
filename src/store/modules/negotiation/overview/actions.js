@@ -5,6 +5,7 @@ const disputeApiLegacy = '/api/disputes'
 const officeApi = '/api/office'
 const spiderApi = '/api/spider'
 const fusionRunnerApi = '/api/fusion-runner'
+const fusionApi = '/api/fusion'
 
 const overviewActions = {
   getTicketOverview({ commit, dispatch }, disputeId) {
@@ -356,33 +357,14 @@ const overviewActions = {
     })
   },
 
-  getTicketOverviewPartyAddress({ commit }, { disputeId, disputeRoleId }) {
-    // FIXME: Mock
-    commit('setTicketOverviewPartyAddress', {
-      data: [{
-        documento: '38225002083',
-        tipoLogradouro: 'Rua',
-        logradouro: 'Acre',
-        numero: '43',
-        complemento: '',
-        bairro: 'Umuarana',
-        cidade: 'Ubatuba',
-        uf: 'SP',
-        cep: '11680-000'
-      }, {
-        documento: '38225002083',
-        tipoLogradouro: 'Avenida',
-        logradouro: 'Dr. Januario Miraglia',
-        numero: '1100',
-        complemento: 'Apartamento 12',
-        bairro: 'Capivari',
-        cidade: 'Campos do Jordão',
-        uf: 'SP',
-        cep: '12460-000'
-      }],
+  getTicketOverviewPartyAddress({ getters }, { disputeId, disputeRoleId }) {
+    const document = getters.getTicketOverviewParties.find(p => p.disputeRoleId === disputeRoleId)?.documentNumber
 
-      payload: { disputeId, disputeRoleId }
-    })
+    return document ? axiosDispatch({
+      url: `${fusionApi}/person/${document}/address`,
+      mutation: 'setTicketOverviewPartyAddress',
+      payload: { disputeRoleId }
+    }) : Promise.reject(new Error('Documento não encontrado'))
   }
 }
 
