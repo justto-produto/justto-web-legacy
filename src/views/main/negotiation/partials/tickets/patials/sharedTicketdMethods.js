@@ -70,8 +70,6 @@ export default {
 
   methods: {
     handleSelectTicket() {
-      console.log('handleSelectTicket', !this.isActive, this.showActionButton)
-
       if (!this.isActive) {
         const id = this.ticket.disputeId
 

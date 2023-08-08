@@ -203,8 +203,8 @@ export default {
       dontUseTablePlugin: true,
       useMentionPlugin: true,
       showEditor: false,
-      audioCodeResult: '',
-      localLoading: false
+      localLoading: false,
+      isLinkOk: false
     }
   },
 
@@ -257,7 +257,7 @@ export default {
     },
 
     hasValidAudio() {
-      return ['16'].includes(String(this.audioCodeResult)) || this.value?.message?.parameters?.VOICE_STATUS === 'SetUp' || this.hasActiveCall
+      return this.isLinkOk || this.hasActiveCall
     }
   },
 
@@ -333,29 +333,40 @@ export default {
       })
     },
 
-    handleInitCall() {
+    async handleInitCall() {
       if (this.value?.message?.parameters?.PHONE_CALL_ID) {
         this.localLoading = true
 
-        return new Promise((resolve) => {
-          if (this.value?.message?.parameters?.VOICE_CODE_RESULT) {
-            resolve(this.value?.message?.parameters?.VOICE_CODE_RESULT)
-          } else if (this.value?.disputeMessageId) {
-            this.handleUpdateCallStatus().then(({ voiceCodeResult }) => resolve(voiceCodeResult))
-          } else { resolve('') }
-        }).then(voiceCodeResult => {
-          this.audioCodeResult = voiceCodeResult
-        }).finally(() => {
-          this.localLoading = false
-          this.$nextTick().then(() => {
-            if (this.$refs.AudioPlayer) {
-              this.$refs.AudioPlayer.$forceUpdate()
-            }
-          })
+        ;[0, 1000, 60000, 60000].forEach(async(time, index, array) => {
+          await new Promise(resolve => setTimeout(resolve, time))
+
+          const stop = await this.requestCallInfos()
+
+          if (index === array.length - 1 || stop) {
+            this.localLoading = false
+
+            this.$nextTick().then(() => {
+              if (this.$refs.AudioPlayer) {
+                this.$refs.AudioPlayer.$forceUpdate()
+              }
+            })
+          }
+
+          if (stop) return Promise.resolve()
         })
       }
 
       return Promise.resolve()
+    },
+
+    requestCallInfos() {
+      return new Promise(resolve => {
+        fetch(this.mediaLink).then(response => {
+          this.isLinkOk = response.ok
+        }).catch(() => {}).finally(() => {
+          resolve(this.isLinkOk)
+        })
+      })
     },
 
     handleUpdateCallStatus() {
