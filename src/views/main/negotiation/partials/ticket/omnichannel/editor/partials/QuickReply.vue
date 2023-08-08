@@ -92,6 +92,7 @@
       >
         Não há templates para esta estratégia
       </span>
+
       <el-button
         slot="reference"
         size="mini"
@@ -101,6 +102,7 @@
           class="dispute-view__templates-button-icon"
           icon="zap"
         />
+
         <span
           v-if="showTitle"
           class="dispute-view__templates-button-text"
@@ -138,12 +140,14 @@ export default {
   components: {
     DisputeQuickReplyEditor: () => import('@/components/layouts/DisuteQuickReplyEditor')
   },
+
   props: {
     showTitle: {
       type: Boolean,
       default: false
     }
   },
+
   data: () => ({
     activeTemplateMenu: null,
     editTemplateQuickReply: {
@@ -152,6 +156,7 @@ export default {
     },
     filter: ''
   }),
+
   computed: {
     ...mapGetters({
       rawTemplates: 'quickReplyTemplates'
@@ -171,10 +176,12 @@ export default {
       return Number(this.$route?.params?.id || '0')
     }
   },
+
   methods: {
     ...mapActions([
       'setEditorText',
       'setMessageType',
+      'setEditorSubject',
       'getQuickReplyTemplates',
       'resetQuickReplyTemplate',
       'archiveQuickReplyTemplate'
@@ -186,14 +193,17 @@ export default {
 
     setTemplate(template) {
       const { contentType, body } = template.parsed
+      const subject = template.template.subject
       const type = {
         HTML: 'email',
         TEXT: 'whatsapp'
       }[contentType]
 
       this.$jusSegment('QUICK_REPLY_TEMPLATE', { template })
+      console.log('QUICK_REPLY_TEMPLATE', { type, subject, template })
 
       this.setMessageType(type)
+      if (type === 'email') this.setEditorSubject(subject)
       this.setEditorText(body)
       this.$emit('input', body)
       this.hideMainPopover()

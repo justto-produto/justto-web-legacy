@@ -33,6 +33,7 @@ const omnichannelMutations = {
   groupedOccurrences: {},
   editor: {
     messageText: '',
+    messageSubject: '',
     recentMessages: [],
     noteText: '',
     messageType: 'email',

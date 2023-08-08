@@ -15,6 +15,8 @@ export default {
 
   setEditorText: (state, text) => Vue.set(state.editor, 'messageText', text),
 
+  setEditorSubject: (state, subject) => Vue.set(state.editor, 'messageSubject', subject),
+
   setNoteEditorText: (state, text) => Vue.set(state.editor, 'noteText', text),
 
   setMessageType: (state, type) => Vue.set(state.editor, 'messageType', type),
