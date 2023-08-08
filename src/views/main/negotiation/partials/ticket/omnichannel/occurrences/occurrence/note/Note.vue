@@ -215,3 +215,11 @@ article {
   }
 }
 </style>
+
+<style lang="scss">
+  .note-container__body {
+    img {
+      max-width: 20vw !important;
+    }
+  }
+</style>
