@@ -40,7 +40,12 @@ const omnichannelActions = {
 
   setEditorText: ({ dispatch, commit }, message) => {
     commit('setEditorText', message)
+    if (!message) dispatch('setEditorSubject', '')
     dispatch('setEditorBackup')
+  },
+
+  setEditorSubject: ({ dispatch, commit }, subject) => {
+    commit('setEditorSubject', subject)
   },
 
   setNoteEditorText: ({ commit, dispatch }, note) => {
@@ -236,7 +241,8 @@ const omnichannelActions = {
       getEditorTextScaped: messageText,
       getEditorRecipients: recipients,
       getEditorText: messageEmail,
-      getEditorMessageType: type
+      getEditorMessageType: type,
+      getEditorSubject: subject
     } = getters
 
     const roleId = negotiators[0].disputeRoleId
@@ -254,6 +260,8 @@ const omnichannelActions = {
         externalIdentification,
         inReplyTo
       }
+
+      if (subject) data.subject = subject
 
       return new Promise((resolve, reject) => {
         dispatch('sendemail', data).then(res => {
