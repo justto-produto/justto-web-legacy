@@ -1,7 +1,6 @@
 <template>
   <section class="jus-team-menu">
     <span class="jus-team-menu__title">
-      <!-- <span>TIME</span> -->
       <input
         v-model="search"
         type="text"
@@ -14,8 +13,6 @@
         :icon="isTeamSectionExpanded ? 'arrow-down' : 'arrow-up'"
         @click="$emit('toggle-expand-team-section')"
       />
-
-      <!-- <i class="el-icon-search" /> -->
     </span>
 
     <vue-perfect-scrollbar>

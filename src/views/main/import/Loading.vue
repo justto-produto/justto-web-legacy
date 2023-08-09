@@ -7,7 +7,10 @@
           v-show="showGif > 0"
           class="import-loading-view__gif"
         >
-          <img src="@/assets/gifs/strategy.gif">
+          <img
+            src="@/assets/gifs/strategy.gif"
+            alt="Estratégia"
+          >
           <h3>Campanha<br>configurada</h3>
         </div>
       </transition>
@@ -16,7 +19,10 @@
           v-show="showGif > 1"
           class="import-loading-view__gif"
         >
-          <img src="@/assets/gifs/search.gif">
+          <img
+            src="@/assets/gifs/search.gif"
+            alt="Enriquecimento de dados"
+          >
           <h3>Enriquecimento<br>de dados</h3>
         </div>
       </transition>
@@ -25,7 +31,10 @@
           v-show="showGif > 2"
           class="import-loading-view__gif"
         >
-          <img src="@/assets/gifs/message.gif">
+          <img
+            src="@/assets/gifs/message.gif"
+            alt="Envio de mensagens"
+          >
           <h3>Envio de<br>mensagens</h3>
         </div>
       </transition>
@@ -34,7 +43,11 @@
           v-show="showGif > 3"
           class="import-loading-view__gif"
         >
-          <img src="@/assets/gifs/send.gif">
+          <img
+            src="@/assets/gifs/send.gif"
+            alt="Comece a negociar"
+          >
+
           <h3>Comece a<br>negociar</h3>
         </div>
       </transition>
@@ -43,7 +56,11 @@
           v-show="showGif > 4"
           class="import-loading-view__gif"
         >
-          <img src="@/assets/gifs/deal.gif">
+          <img
+            src="@/assets/gifs/deal.gif"
+            alt="Feche acordos"
+          >
+
           <h3>Feche<br>acordos</h3>
         </div>
       </transition>

@@ -32,12 +32,6 @@
         slot="reference"
         @click="openGrouped"
       >
-        <!-- <JusIcon
-          v-if="!isOmnichannelGrouping"
-          icon="running"
-          :style="{ width: '16px' }"
-        /> -->
-
         <span>
           (+{{ occurrences.length }})
         </span>

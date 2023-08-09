@@ -12,7 +12,6 @@
       @click="$emit('toggle-show-overview')"
     />
 
-    <!-- TODO: Só Esconder se o SHOW_NEGOTIATION_MENU estiver ativo. -->
     <HeaderUserMenu
       v-if="!showNegotiationTypeMenu && !disputeMode && isOverviewActive"
       class="overview-container__menu"

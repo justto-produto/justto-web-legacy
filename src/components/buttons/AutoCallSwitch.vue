@@ -30,7 +30,6 @@
         :width="30"
         active-icon-class="el-icon-service"
       />
-      <!-- active-icon-class="el-icon-service" -->
     </div>
   </el-tooltip>
 </template>

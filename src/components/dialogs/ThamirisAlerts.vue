@@ -23,12 +23,18 @@
           Pegue o café e confira os alertas para ter um dia mais produtivo!
         </span>
       </div>
+
       <!-- Usado um css branco para poder deixar o cabeçalho laranja -->
       <div class="thamiris__alerts__shadow">
-        <img :src="coffee">
+        <img
+          :src="coffee"
+          alt="Alertas"
+        >
+
         <h1 class="thamiris__alerts__shadow-title">
           Bom dia! Olha só as dicas que temos pra você :)
         </h1>
+
         <span class="thamiris__alerts__shadow-subtitle">
           Pegue o café e confira os alertas para ter um dia mais produtivo!
         </span>
@@ -62,7 +68,10 @@
                 v-else
                 class="thamiris__alerts__body-items-item-circle-img"
               >
-                <img src="https://storage.googleapis.com/justto_app/conteudos/Componente-27-1.png">
+                <img
+                  src="https://storage.googleapis.com/justto_app/conteudos/Componente-27-1.png"
+                  alt="Completo"
+                >
               </div>
             </div>
             <div

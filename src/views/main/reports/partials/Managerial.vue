@@ -1,7 +1,8 @@
 <template>
   <iframe
     src="https://datastudio.google.com/embed/reporting/dfc525b5-6407-43f7-93e5-13de85185987/page/p_tupwqk8loc"
-    frameborder="0"
+    style="border: none;"
+    title="Dashboard Gerencial"
     allowfullscreen
   />
 </template>

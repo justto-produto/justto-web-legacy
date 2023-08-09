@@ -47,6 +47,7 @@
             <span>
               Eu, {{ personName }}, estou ciente que ao cadastrar uma nova pessoa no time, esta pessoa irá ter acesso as disputas da minha conta e estou de acordo com os
               <a
+                rel="noopener noreferrer"
                 target="_blank"
                 href="https://justto.com.br/termos-de-uso"
               >
@@ -54,6 +55,7 @@
               </a>
               da plataforma e com a
               <a
+                rel="noopener noreferrer"
                 target="_blank"
                 href="https://justto.com.br/politica-privacidade"
               >

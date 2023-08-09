@@ -4,6 +4,7 @@
       <img
         class="jus-sidenav-external__logo"
         src="@/assets/logo-projuris-acordos.svg"
+        alt="ProJuris Acordos"
         style="height: 120px;"
       >
     </a>

@@ -25,9 +25,6 @@
         :config="editorConfig"
         type="classic"
       />
-      <!-- <div class="dialog-actions__increase-alert-body-text">
-        <div v-html="message" />
-      </div> -->
     </article>
 
     <div

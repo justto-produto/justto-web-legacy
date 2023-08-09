@@ -6,6 +6,7 @@
           <img
             class="overview-resume__container-row-item-image"
             src="@/assets/logo-small.svg"
+            alt="Logo"
           >
           <div class="overview-resume__container-row-item-info">
             <div class="overview-resume__container-row-item-info-primary">

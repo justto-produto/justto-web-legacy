@@ -3,11 +3,6 @@
     v-loading
     class="redirect-container"
   >
-    <!-- <el-skeleton
-      :rows="12"
-      class="redirect-container__skeleton"
-    /> -->
-
     <jusChangeWorkspace ref="workspaceSwitcher" />
   </section>
 </template>

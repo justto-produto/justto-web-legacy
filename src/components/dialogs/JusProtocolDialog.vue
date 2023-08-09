@@ -109,7 +109,8 @@
         <div v-if="step === 1">
           <iframe
             :src="document.url"
-            frameborder="0"
+            title="Edição de minuta."
+            style="border: none;"
             allowfullscreen
           />
         </div>
@@ -295,7 +296,6 @@
         </div>
 
         <!-- FEEDBACK DE ASSINATURAS -->
-        <!-- TODO -->
         <div v-if="step === 3">
           <div
             v-for="(signer, index) in signers"
@@ -333,19 +333,6 @@
               </span>
             </div>
           </div>
-        </div>
-
-        <!-- VISUALIZAÇÃO DA MINUTA -->
-        <div
-          v-if="false && step === 4"
-          v-loading="loadingPdf"
-        >
-          <object
-            ref="pdfView"
-            :data="pdfUrl"
-            type="application/pdf"
-            @load="loadingPdf = false"
-          />
         </div>
       </div>
 
@@ -550,9 +537,10 @@
       width="100%"
     >
       <iframe
-        class="iframe-dialog"
         :src="disputeProtocol.urlToSign"
-        frameborder="0"
+        title="Assinar minuta."
+        class="iframe-dialog"
+        style="border: none;"
         allowfullscreen
       />
     </el-dialog>

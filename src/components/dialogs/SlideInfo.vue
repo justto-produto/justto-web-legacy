@@ -34,6 +34,7 @@
         >
           <img
             :src="item.src"
+            :alt="item.title"
             class="info__caurosel__item-img"
           >
         </el-carousel-item>

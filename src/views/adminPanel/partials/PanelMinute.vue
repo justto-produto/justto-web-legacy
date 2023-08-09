@@ -100,7 +100,8 @@
       />
       <iframe
         :src="editDialogUrl"
-        frameborder="0"
+        title="Editar minuta"
+        style="border: none;"
       />
       <JusVariablesCard :variables="types" />
     </el-dialog>

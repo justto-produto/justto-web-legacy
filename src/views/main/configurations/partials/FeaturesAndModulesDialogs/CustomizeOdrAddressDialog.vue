@@ -336,6 +336,7 @@
             <a
               href="https://justto.com.br/politica-privacidade"
               target="_blank"
+              rel="noopener noreferrer"
             >
               politica de privacidade
             </a>

@@ -55,6 +55,13 @@
             :src="url"
             :type="type"
           >
+          <track
+            label="Legendas"
+            kind="subtitles"
+            rclang="pt-br"
+            default
+          >
+          Seu browser não suporta o elemento <code>video</code>.
         </video>
       </JusMediaPlayer>
     </div>
@@ -80,7 +87,10 @@
       v-if="contentType === 'IMAGE'"
       class="whatsapp-container__image"
     >
-      <img :src="url">
+      <img
+        :src="url"
+        alt="Imagem recebida."
+      >
     </div>
 
     <div

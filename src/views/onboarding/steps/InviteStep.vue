@@ -43,6 +43,7 @@
               <img
                 data-testid="check-teammember"
                 src="@/assets/icons/ic-check.svg"
+                alt="Convidado adicionado com sucesso"
               >
               <span class="member-email">
                 {{ member.email }}
@@ -64,6 +65,7 @@
               <img
                 class="remove-member"
                 src="@/assets/icons/ic-error.svg"
+                alt="Remover convidado"
                 @click="removeTeamMember(member)"
               >
             </div>

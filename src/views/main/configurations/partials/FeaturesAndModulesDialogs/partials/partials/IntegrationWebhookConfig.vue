@@ -62,7 +62,7 @@
 
       <div class="webhook-config__list">
         <header>
-          Adicione abaixo os endereços dos sistemas que deseja receber eventos de disputas desta workspace. Seus callbacks irão receber um JSON contendo a disputa inteira.
+          Adicione abaixo os endereços dos sistemas que desejam receber eventos das disputas desta workspace. Seus callbacks irão receber um JSON contendo a disputa inteira.
         </header>
 
         <main>

@@ -63,14 +63,6 @@
       trigger="click"
     >
       <div class="jus-tags-filter__tags-popover-container">
-        <!-- <div class="el-input el-input--small">
-          <input
-            v-model="tagsFilterText"
-            type="text"
-            class="el-input__inner"
-            placeholder="Filtrar tags"
-          >
-        </div> -->
         <el-input
           v-model="tagsFilterText"
           prefix-icon="el-icon-search"

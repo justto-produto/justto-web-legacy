@@ -1,6 +1,9 @@
 <template lang="html">
   <div class="panel-billing-view">
-    <img src="./icon.png">
+    <img
+      src="./icon.png"
+      alt="Em Desenvolvimento"
+    >
   </div>
 </template>
 

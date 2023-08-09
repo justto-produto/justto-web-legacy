@@ -1,5 +1,4 @@
 <template>
-  <!-- v-if="show" -->
   <div
     class="jus-import-feedback-card"
     :class="{'extra-margin-top': showReplicate}"
@@ -335,7 +334,6 @@
           v-model="denyPixDeposit"
           :disabled="!usePixAccountType"
         />
-        <!-- TODO: Desabilitar no resto do sistema, sempre que essa feature estiver marcada. -->
       </div>
 
       <div class="jus-import-feedback-card__switch">
@@ -351,6 +349,7 @@
             <br>
             Ao ativar você está de acordo com os nossos
             <a
+              rel="noopener noreferrer"
               href="http://https://justto.com.br/termos-de-uso"
               target="_blank"
             >termos de uso</a>.

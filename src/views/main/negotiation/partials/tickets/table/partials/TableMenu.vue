@@ -17,7 +17,6 @@
       >
         <span class="ticket-table-menu__icon">
           <jus-icon icon="omnichannel-menu" />
-          <!-- <i class="el-icon-caret-bottom" /> -->
         </span>
       </el-button>
     </el-popover>

@@ -183,8 +183,6 @@
         </template>
       </el-table-column>
 
-      <!-- label="Interações" -->
-
       <el-table-column
         v-if="tab2 || tab3 || tab4"
         min-width="140px"
@@ -205,7 +203,6 @@
         </template>
 
         <template v-slot="scope">
-          <!-- TODO: Usar Getters da disputa aqui -->
           <ManagementLastInteraction
             :data="scope.row"
             @update:responseBoxLoading="responseBoxLoading = $event"

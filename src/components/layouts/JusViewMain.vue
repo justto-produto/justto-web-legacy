@@ -3,10 +3,6 @@
     :class="{'fullScreen': fullScreen}"
     class="jus-main-view"
   >
-    <!-- TITLE SLOT -->
-    <!-- <div v-if="this.$slots['title']" class="jus-main-view__title">
-      <slot name="title"/>
-    </div> -->
     <div
       v-loading="loadingContainer"
       :element-loading-text="loadingContainerText"

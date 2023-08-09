@@ -168,38 +168,6 @@
           />
         </div>
       </el-table-column>
-
-      <!-- <el-table-column
-        align="right"
-        prop="portifolios"
-        class-name="portifolios-column"
-      >
-        <template
-          v-if="!hideSearch"
-          slot="header"
-        >
-          <div class="el-input el-input--mini">
-            <input
-              v-model="search"
-              placeholder="Pesquise aqui"
-              class="el-input__inner"
-              @input="$forceUpdate()"
-            >
-          </div>
-        </template>
-
-        <template v-slot="scope">
-          <el-tag
-            v-for="tag in scope.row.portifolios"
-            :key="tag.id"
-            size="mini"
-          >
-            {{ portifolioById(tag.id).name }}
-          </el-tag>
-
-          <a v-if="scope.row.portifolios.length === 0">Ver tipos de carteira</a>
-        </template>
-      </el-table-column> -->
     </el-table>
 
     <el-dialog

@@ -18,7 +18,6 @@
       v-if="isAccepted"
       class="overview-offers__proposal overview-offers__proposal--accepted"
     >
-      <!-- <JusIcon icon="ticket-accepted" /> -->
       <div overview-offers__proposal>
         <div class="overview-offers__proposal-container">
           <div>&nbsp;</div>
