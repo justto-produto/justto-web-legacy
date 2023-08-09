@@ -237,6 +237,8 @@
 
     <div class="global-search__table">
       <table>
+        <caption>{{ '' }}</caption>
+
         <thead>
           <tr>
             <th>ID</th>

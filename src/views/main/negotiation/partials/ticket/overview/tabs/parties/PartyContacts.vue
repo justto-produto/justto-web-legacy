@@ -56,7 +56,6 @@
           </el-popover>
         </el-tooltip>
 
-        <!-- :content="blocks[contact.id]" -->
         <el-popover
           v-if="contact.blocked || party.optOutType"
           :open-delay="500"
@@ -64,7 +63,6 @@
           trigger="hover"
         >
           <div>
-            <!-- {{ blocks[contact.id] || $tc(`blocked.phone.${contact.blockedType || party.optOutType || 'UNKNOW'}`) }} -->
             {{ getBlockText(contact) }}
           </div>
 

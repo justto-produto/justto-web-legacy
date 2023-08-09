@@ -756,10 +756,7 @@ export default {
     },
 
     allowDrop(_draggingNode, _dropNode, type) {
-      if (type === 'prev') {
-        return true
-      }
-      return false
+      return type === 'prev'
     },
 
     getDisputes() {
@@ -839,8 +836,9 @@ export default {
 
     showExportDisputesDialog() {
       this.exportDisputesDialog = true
+
       this.getAccountProperty('JUS_EXPORT_COLUMNS').then(res => {
-        if (res && res.JUS_EXPORT_COLUMNS) {
+        if (res?.JUS_EXPORT_COLUMNS) {
           const columns = res.JUS_EXPORT_COLUMNS.split(',')
           this.exportedColumns = this.columnsList.filter(item => columns.includes(item.key))
           this.$nextTick(() => {

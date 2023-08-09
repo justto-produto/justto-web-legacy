@@ -179,7 +179,6 @@
             </el-form-item>
           </el-col>
 
-          <!-- TODO: INTERAÇÃO -->
           <el-col
             v-if="[2, 3, 4, 9].includes(Number(tabIndex))"
             :span="[2, 4].includes(Number(tabIndex)) ? 24 : 12"

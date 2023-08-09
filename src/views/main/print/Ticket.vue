@@ -4,16 +4,8 @@
       :ticket="ticket"
       :ticket-parties="ticketParties"
     />
-    <OmnichannelResume />
 
-    <!-- <el-button
-      id="print-button"
-      circle
-      type="primary"
-      icon="el-icon-printer"
-      class="print-button"
-      @click="handlePrint()"
-    /> -->
+    <OmnichannelResume />
   </div>
 </template>
 

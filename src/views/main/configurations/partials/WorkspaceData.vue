@@ -115,7 +115,9 @@
           v-if="imageUrl"
           :src="imageUrl"
           class="workspace-data-container__input-file-image"
+          alt="Logo da empresa"
         >
+
         <span
           v-else
           class="workspace-data-container__input-file-icon"

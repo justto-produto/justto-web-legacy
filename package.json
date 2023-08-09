@@ -21,7 +21,9 @@
     "serve:prod": "vue-cli-service serve --open --mode production",
     "styleguide": "vue-styleguidist server --open",
     "styleguide:build": "vue-styleguidist build",
-    "test:server": "npx vue-cli-service test:e2e --headless --browser chrome"
+    "test:server": "npx vue-cli-service test:e2e --headless --browser chrome",
+    "sonar:update-version": "node sync-sonar-version.js",
+    "sonar": "npm run sonar:update-version && sonar-scanner"
   },
   "dependencies": {
     "@ckeditor/ckeditor5-alignment": "^27.0.0",
@@ -110,6 +112,7 @@
     "eslint-plugin-vue": "^6.2.2",
     "sass": "^1.32.8",
     "sass-loader": "^8.0.2",
+    "sonarqube-scanner": "^3.0.1",
     "vue-cli-plugin-axios": "0.0.4",
     "vue-cli-plugin-element": "^1.0.1",
     "vue-cli-plugin-i18n": "^1.0.1",

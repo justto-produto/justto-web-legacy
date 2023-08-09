@@ -309,7 +309,6 @@
             <el-row :gutter="24">
               <el-col>
                 <el-form-item>
-                  <!-- v-model="contract.workspaceId" -->
                   <el-switch
                     :value="contract.workspaceId === workspaceId"
                     active-text="Exclusivo desta workspace"

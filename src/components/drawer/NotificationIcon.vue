@@ -21,23 +21,6 @@
         <i class="el-icon-bell" />
       </div>
     </el-popover>
-    <!-- <el-tooltip
-      content="Notificações"
-      :open-delay="200"
-    >
-      <div
-        class="notification__icon"
-        @click="toggle()"
-      >
-        <div
-          v-if="qtdNotifications !== 0"
-          class="notification__icon__counter el-icon-pulse"
-        >
-          {{ qtdNotifications }}
-        </div>
-        <i class="el-icon-bell" />
-      </div>
-    </el-tooltip> -->
   </div>
 </template>
 

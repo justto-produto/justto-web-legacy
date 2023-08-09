@@ -43,7 +43,6 @@
       class="text-inline-editor__input"
       @blur="handleBlur"
     />
-    <!-- @keyup.native.enter="escaping = false;$event.target.blur()" -->
   </div>
 </template>
 

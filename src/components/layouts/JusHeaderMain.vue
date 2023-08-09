@@ -7,11 +7,15 @@
       class="jus-header-main__back el-icon-arrow-left"
       @click="$router.push('/negotiation')"
     />
+
     <TicketsHeader class="jus-header-main__search" />
+
     <img
       class="jus-header-main__logo"
-      src="@/assets/logo-small.svg"
+      src="@/assets/logo-projuris-acordos.svg"
+      alt="ProJuris Acordos"
     >
+
     <HeaderUserMenu
       v-if="!isTicketMode"
       class="jus-header-main__menu"
@@ -111,13 +115,8 @@ export default {
 
     .jus-header-main__logo {
       display: inline-block;
+      height: 120px !important;
     }
   }
 }
-
-// @media (max-height: 900px) {
-//   .jus-header-main {
-//     height: 40px !important;
-//   }
-// }
 </style>

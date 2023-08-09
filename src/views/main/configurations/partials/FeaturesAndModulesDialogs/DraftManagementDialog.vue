@@ -6,7 +6,6 @@
     append-to-body
     width="75%"
   >
-    <!-- <span>Gestão de minutas</span> -->
     <Draft />
   </el-dialog>
 </template>

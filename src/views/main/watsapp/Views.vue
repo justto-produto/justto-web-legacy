@@ -74,11 +74,6 @@
             label="Template"
             :span="2"
           >
-            <!-- <textarea
-              disabled
-              v-text="template.data"
-            /> -->
-
             <el-input
               :value="template.data"
               type="textarea"

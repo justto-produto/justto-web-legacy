@@ -50,10 +50,6 @@
         />
       </el-button>
     </el-popover>
-    <!-- <TicketsAdvancedFilters
-      ref="advancedFilters"
-      :active-tab="activeTab"
-    /> -->
 
     <ManagementFilters
       ref="managementFilters"
@@ -88,21 +84,6 @@ export default {
 
     processedActiveTab() {
       return { 'pre-negotiation': 0, engagement: 1, running: 2, accepted: 3, finished: 4 }[this.activeTab] || 2
-
-      // switch (this.activeTab) {
-      //   case 'pre-negotiation':
-      //     return 0
-      //   case 'engagement':
-      //     return 1
-      //   case 'running':
-      //     return 2
-      //   case 'accepted':
-      //     return 3
-      //   case 'finished':
-      //     return 4
-      //   default:
-      //     return 2
-      // }
     }
   },
   methods: {

@@ -15,14 +15,9 @@
           <img
             slot="reference"
             src="https://blog.maxieduca.com.br/wp-content/uploads/2020/02/Repert%C3%B3rio.gif"
+            alt="Recomendação"
             class="recomendation-icon el-icon-swing"
           >
-          <!-- <span slot="reference">
-            <JusIcon
-              icon="recomendation-lamp"
-              class="el-icon-pulse"
-            />
-          </span> -->
 
           <div
             v-if="currentRecomendation !== null"

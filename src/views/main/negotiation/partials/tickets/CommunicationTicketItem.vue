@@ -144,12 +144,6 @@
       class="communication-ticket-item-container__follow-up"
     />
 
-    <!-- <JusIcon
-      v-if="isOnline"
-      class="communication-ticket-item-container__online"
-      icon="online"
-    /> -->
-
     <span
       :class="{ 'communication-ticket-item-container__time--active': !ticket.visualized }"
       class="communication-ticket-item-container__time"

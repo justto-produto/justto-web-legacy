@@ -1,7 +1,8 @@
 <template>
   <iframe
     src="https://datastudio.google.com/embed/reporting/bd7283fc-5c62-4ce0-b834-b6af01713c39/page/p_s4mc6x4moc"
-    frameborder="0"
+    style="border: none;"
+    title="Dashboard de Gestão"
     allowfullscreen
   />
 </template>

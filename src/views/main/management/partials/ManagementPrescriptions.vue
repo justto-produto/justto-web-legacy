@@ -45,21 +45,6 @@
 
         {{ prescription.description | capitalize }}
       </span>
-      <!-- <el-button
-        v-for="prescription in hiddenPrescriptions"
-        v-show="prescription.tabs.includes(parseInt(activeTab, 10))"
-        :ref="prescription.prescription"
-        :key="prescription.prescription"
-        :type="buttonType(prescription.prescription)"
-        plain
-        size="small"
-        class="management-prescriptions__button"
-        @click="handlePrescriptionClick(prescription.prescription)"
-      >
-        <div>
-          {{ prescription.description | capitalize }}
-        </div>
-      </el-button> -->
 
       <el-button
         slot="reference"

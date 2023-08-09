@@ -62,14 +62,6 @@
         v-if="hasValidAudio"
         class="phone-container__audio-buttons"
       >
-        <!-- <el-button
-          class="phone-container__audio-buttons-share"
-          icon="el-icon-refresh"
-          size="mini"
-          circle
-          @click="handleUpdateCallStatus"
-        /> -->
-
         <el-button
           class="phone-container__audio-buttons-share"
           icon="el-icon-share"

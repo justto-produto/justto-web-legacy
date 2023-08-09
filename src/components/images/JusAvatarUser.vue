@@ -15,6 +15,7 @@
     <img
       v-if="showAvatar"
       :src="avatarSrc"
+      alt="Usuário"
     >
     <span v-else>
       {{ nameInitials }}

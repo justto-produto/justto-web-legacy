@@ -3,6 +3,7 @@
     v-if="iconPath"
     :src="iconPath"
     :style="{ width: size }"
+    alt=""
     draggable="false"
     @click="$emit('click')"
     @mouseover="$emit('hover')"

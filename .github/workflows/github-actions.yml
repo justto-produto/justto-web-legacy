@@ -45,6 +45,9 @@ jobs:
           git stash push --include-untracked
           npm run increment-version
           git push
+      - name: Sincroniza dados com o Sonar
+        run: |
+          npm run sonar
 
   Deploy:
     name: Deploy

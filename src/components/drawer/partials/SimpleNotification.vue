@@ -24,8 +24,6 @@
       </div>
     </span>
 
-    <!-- <div class="display-break" /> -->
-
     <span class="notification__drawer__list-item-date">
       {{ parseDate(notification.createdAt) }}
     </span>

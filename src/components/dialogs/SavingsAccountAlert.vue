@@ -35,14 +35,6 @@
       >
         Fechar
       </el-button>
-
-      <!-- <el-button
-        type="primary"
-        size="small"
-        @click="save()"
-      >
-        Adicionar conta
-      </el-button> -->
     </div>
   </el-dialog>
 </template>

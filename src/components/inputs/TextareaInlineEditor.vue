@@ -32,7 +32,6 @@
       @blur="handleBlur"
       @keyup.native.esc="$refs.textareaInput.$emit('blur', 'cancel')"
     />
-    <!-- @keyup.native.enter="$refs.textareaInput.$emit('blur', 'confirm')" -->
   </div>
 </template>
 
