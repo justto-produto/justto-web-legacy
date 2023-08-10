@@ -45,10 +45,11 @@ jobs:
           git stash push --include-untracked
           npm run increment-version
           git push
-      - name: Sincroniza dados com o Sonar
-        run: |
-          export NODE_OPTIONS="--max-old-space-size=8192"
-          npm run sonar
+      # - name: Sincroniza dados com o Sonar
+      #   run: |
+      #     sudo sysctl -w vm.max_map_count=262144
+      #     export NODE_OPTIONS="--max-old-space-size=8192"
+      #     npm run sonar
 
   Deploy:
     name: Deploy
