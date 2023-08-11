@@ -329,7 +329,7 @@ export default {
       if (this.value?.message?.parameters?.PHONE_CALL_ID) {
         this.localLoading = true
 
-        ;[0, 1000, 3000, 30000, 30000, 30000].forEach(async(time, index, array) => {
+        ;[0, 1000, 3000, 3000, 3000, 3000].forEach(async(time, index, array) => {
           await new Promise(resolve => setTimeout(resolve, time))
 
           const stop = await this.requestCallInfos()
