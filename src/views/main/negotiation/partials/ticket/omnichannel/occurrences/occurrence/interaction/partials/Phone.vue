@@ -328,23 +328,14 @@ export default {
     async handleInitCall() {
       if (this.value?.message?.parameters?.PHONE_CALL_ID) {
         this.localLoading = true
-
-        ;[0, 1000, 3000, 3000, 3000, 3000].forEach(async(time, index, array) => {
-          await new Promise(resolve => setTimeout(resolve, time))
-
-          const stop = await this.requestCallInfos()
-
-          if (index === array.length - 1 || stop) {
-            this.localLoading = false
-
-            this.$nextTick().then(() => {
-              if (this.$refs.AudioPlayer) {
-                this.$refs.AudioPlayer.$forceUpdate()
-              }
-            })
-          }
-
-          if (stop) return Promise.resolve()
+        this.requestCallInfos().then(() => {
+          this.$nextTick().then(() => {
+            if (this.$refs.AudioPlayer) {
+              this.$refs.AudioPlayer.$forceUpdate()
+            }
+          })
+        }).finally(() => {
+          this.localLoading = false
         })
       }
 
@@ -353,11 +344,8 @@ export default {
 
     requestCallInfos() {
       return new Promise(resolve => {
-        fetch(this.mediaLink).then(response => {
-          this.isLinkOk = response.ok
-        }).catch(() => {}).finally(() => {
-          resolve(this.isLinkOk)
-        })
+        this.isLinkOk = ['16'].includes(String(this.audioCodeResult)) || this.value?.message?.parameters?.VOICE_STATUS === 'SetUp' || this.hasActiveCall
+        resolve(this.isLinkOk)
       })
     },
 
