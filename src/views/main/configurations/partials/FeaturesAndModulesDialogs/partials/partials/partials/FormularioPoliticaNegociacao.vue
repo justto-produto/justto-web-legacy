@@ -24,36 +24,63 @@
       label="Defina abaixo qual deve ser a política máxima negociada"
       class="politica-negociacao__form-item"
     >
-      <div
-        class="el-input el-input--mini auto-width"
+      <el-collapse
+        v-model="tipoDePolitica"
+        accordion
+        @change="atualizarTipoDePolitica"
       >
-        <MoneyInput
-          v-model="form.PROJURIS_SOAP_PORCENTAGEM_ALCADA_MAXIMA"
-          class="el-input__inner"
-          decimal="."
-          suffix=" %"
-          prefix=""
-          :precision="0"
-        />
-      </div>
+        <el-collapse-item
+          title="Política de alçada proporcional à valor da disputa"
+          name="proporcional"
+        >
+          <article class="display-flex">
+            <div class="el-input el-input--mini auto-width">
+              <MoneyInput
+                v-model="form.PROJURIS_SOAP_PORCENTAGEM_ALCADA_MAXIMA"
+                class="el-input__inner"
+                decimal="."
+                suffix=" %"
+                prefix=""
+                :precision="0"
+              />
+            </div>
 
-      <span>do valor</span>
+            <span>do valor</span>
 
-      <el-select
-        v-model="form.PROJURIS_SOAP_VALOR_BASE"
-        size="mini"
-        class="auto-width"
-      >
-        <el-option
-          label="Perda provável"
-          value="perdaProvavel"
-        />
+            <el-select
+              v-model="form.PROJURIS_SOAP_VALOR_BASE"
+              size="mini"
+              class="auto-width"
+            >
+              <el-option
+                label="Perda provável"
+                value="perdaProvavel"
+              />
 
-        <el-option
-          label="Danos materiais"
-          value="danosMateriais"
-        />
-      </el-select>
+              <el-option
+                label="Danos materiais"
+                value="danosMateriais"
+              />
+            </el-select>
+          </article>
+        </el-collapse-item>
+
+        <el-collapse-item
+          title="Política de alçada customizada"
+          name="customizada"
+        >
+          <article class="display-flex">
+            <span class="mr8">Nome da política: </span>
+
+            <div class="el-input el-input--mini auto-width">
+              <input
+                v-model="form.PROJURIS_SOAP_ESTRATEGIA_PERSONALIZADA"
+                class="el-input__inner"
+              >
+            </div>
+          </article>
+        </el-collapse-item>
+      </el-collapse>
     </el-form-item>
   </el-form>
 </template>
@@ -71,8 +98,11 @@ export default {
     form: {
       PROJURIS_SOAP_DIAS_PARA_EXPIRAR: 1,
       PROJURIS_SOAP_PORCENTAGEM_ALCADA_MAXIMA: 75,
-      PROJURIS_SOAP_VALOR_BASE: ''
-    }
+      PROJURIS_SOAP_VALOR_BASE: '',
+      PROJURIS_SOAP_ESTRATEGIA_PERSONALIZADA: ''
+    },
+
+    tipoDePolitica: 'proporcional'
   }),
 
   computed: {
@@ -104,6 +134,8 @@ export default {
 
           this.form.PROJURIS_SOAP_PORCENTAGEM_ALCADA_MAXIMA = porcentagemAlcadaMaxima || 75
           this.form.PROJURIS_SOAP_VALOR_BASE = valorBase || ''
+
+          this.tipoDePolitica = valorBase === 'customized' ? 'customizada' : 'proporcional'
         }
       }).catch(error => this.$jusNotification({ error }))
     },
@@ -111,10 +143,22 @@ export default {
     save() {
       return Promise.all([
         this.salvarIntegracaoDataLimite(this.form?.PROJURIS_SOAP_DIAS_PARA_EXPIRAR || 1),
-        this.salvarIntegracaoSugestaoAlcada({
+
+        this.form.PROJURIS_SOAP_VALOR_BASE === 'nomeAlcadaCustomizada' ? this.salvarIntegracaoSugestaoAlcada({
+          [this.form?.PROJURIS_SOAP_VALOR_BASE]: this.form?.PROJURIS_SOAP_ESTRATEGIA_PERSONALIZADA || ''
+        }) : this.salvarIntegracaoSugestaoAlcada({
           [this.form?.PROJURIS_SOAP_VALOR_BASE]: this.form?.PROJURIS_SOAP_PORCENTAGEM_ALCADA_MAXIMA || 75
         })
       ])
+    },
+
+    atualizarTipoDePolitica(tipo) {
+      if (tipo === 'customizada') {
+        this.form.PROJURIS_SOAP_VALOR_BASE = 'nomeAlcadaCustomizada'
+      } else {
+        this.form.PROJURIS_SOAP_VALOR_BASE = ''
+        this.form.PROJURIS_SOAP_ESTRATEGIA_PERSONALIZADA = ''
+      }
     }
   }
 }
