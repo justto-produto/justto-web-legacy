@@ -196,7 +196,7 @@ export default {
       useMentionPlugin: true,
       showEditor: false,
       localLoading: false,
-      isLinkOk: false
+      audioCodeResult: ''
     }
   },
 
@@ -246,6 +246,10 @@ export default {
       set(value) {
         this.showEditor = value
       }
+    },
+
+    isLinkOk() {
+      return ['16'].includes(String(this.audioCodeResult)) || this.value?.message?.parameters?.VOICE_STATUS === 'SetUp' || this.hasActiveCall
     },
 
     hasValidAudio() {
@@ -328,7 +332,9 @@ export default {
     async handleInitCall() {
       if (this.value?.message?.parameters?.PHONE_CALL_ID) {
         this.localLoading = true
-        this.requestCallInfos().then(() => {
+        this.requestCallInfos().then(voiceCodeResult => {
+          this.audioCodeResult = voiceCodeResult
+
           this.$nextTick().then(() => {
             if (this.$refs.AudioPlayer) {
               this.$refs.AudioPlayer.$forceUpdate()
@@ -343,9 +349,12 @@ export default {
     },
 
     requestCallInfos() {
-      return new Promise(resolve => {
-        this.isLinkOk = ['16'].includes(String(this.audioCodeResult)) || this.value?.message?.parameters?.VOICE_STATUS === 'SetUp' || this.hasActiveCall
-        resolve(this.isLinkOk)
+      return new Promise((resolve) => {
+        if (this.value?.message?.parameters?.VOICE_CODE_RESULT) {
+          resolve(this.value?.message?.parameters?.VOICE_CODE_RESULT)
+        } else if (this.value?.disputeMessageId) {
+          this.handleUpdateCallStatus().then(({ voiceCodeResult }) => resolve(voiceCodeResult))
+        } else { resolve('') }
       })
     },
 
