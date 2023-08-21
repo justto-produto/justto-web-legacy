@@ -141,7 +141,7 @@
     "enum": "órgão (tj, procon etc.)"
   },
   "disputeObjectAttribute": {
-    "value": "valor da ação"
+    "value": "valor do processo"
   },
   "email": {
     "address": "email"
