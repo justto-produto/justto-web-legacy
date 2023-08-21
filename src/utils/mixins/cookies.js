@@ -18,6 +18,7 @@ export default {
       tag('p', {}, [
         tag('span', {}, 'Nós armazenamos dados temporariamente para melhorar a experiência de navegação e recomendar conteúdo de seu interesse. Ao utilizar nossos serviços, você concorda com tal monitoramento. ')
       ]),
+
       tag('button', {
         class: 'el-button el-button--default el-button--medium el-button--secondary font-weight-600 medium-btn',
         type: 'button'
@@ -42,7 +43,7 @@ export default {
 
   methods: {
     acceptCookies() {
-      this.setCookie('acceptedCookies', true, 7)
+      this.setCookie('acceptedCookies', true, 400)
 
       if (this.notificationInstance) {
         this.notificationInstance.close()
