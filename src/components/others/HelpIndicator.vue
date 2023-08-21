@@ -7,7 +7,7 @@
       popper-class="help-indicator__popover"
     >
       <a
-        href="https://enterprise.movidesk.com/Account/Login"
+        :href="href"
         target="_blank"
         rel="noopener noreferrer"
         class="help-indicator__popover-link"
@@ -19,7 +19,8 @@
         slot="reference"
         :src="justtinePath"
         alt="Suporte"
-        class="help-indicator__img"
+        class="help-indicator__img is-pointer"
+        @click="window.open(href, '_blank')"
       >
     </el-popover>
 
@@ -33,9 +34,12 @@
 
 <script>
 const justtinePath = require('@/assets/justtine/profile.png')
+const href = 'https://enterprise.movidesk.com/Account/Login'
 
 export default {
   data: () => ({
+    href,
+    window,
     justtinePath,
     visible: true
   })
