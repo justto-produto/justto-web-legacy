@@ -127,6 +127,21 @@
               Duplicar disputas
             </el-radio-button>
           </el-radio-group>
+
+          <span v-if="duplicatedActionToDo === 'IGNORE'">
+            <strong>Nenhum campo será atualizado.</strong>
+          </span>
+
+          <span v-else-if="duplicatedActionToDo === 'UPDATE'">
+            <strong>Os seguintes campos serão atualizados:</strong>
+
+            <ul>
+              <li>Dados da parte</li>
+              <li>Alçada máxima</li>
+              <li>Estratégia na plataforma</li>
+              <li>Descrição</li>
+            </ul>
+          </span>
         </div>
 
         <a @click="handleValidateDisputes">
