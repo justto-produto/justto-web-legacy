@@ -81,6 +81,15 @@
     </p>
 
     <p
+      v-else-if="isFailed"
+      class="scheduler-container__alert"
+    >
+      <i class="el-icon-close" />
+
+      Mensagem automática em <strong>FALHA</strong>.
+    </p>
+
+    <p
       v-else
       class="scheduler-container__alert"
     >
@@ -191,6 +200,10 @@ export default {
       const shouldBeCanceled = this.value?.type === 'PHONE_CALL' && (this.$moment().diff(this.$moment(this.value?.message?.scheduledTime?.dateTime), 'days') > 0)
 
       return this.occurrence?.interaction?.message?.status === 'CANCELED' || shouldBeCanceled
+    },
+
+    isFailed() {
+      return this.occurrence?.interaction?.message?.status === 'FAILED'
     },
 
     isWaiting() {
