@@ -3,12 +3,12 @@
     <span class="api-integration__text">
       <span class="api-integration__text-title">{{ state.title }}</span>
 
-      <span
+      <p
         v-if="state.subtitle"
         class="api-integration__text-subtitle"
       >
         {{ state.subtitle }}
-      </span>
+      </p>
     </span>
 
     <span />
