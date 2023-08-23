@@ -222,7 +222,7 @@ const getTracktitleByAction = function(action, batch) {
 }
 
 const getFormatedDate = (occurrence, customFormat = 'YYYY-MM-DD') => {
-  const date = (occurrence.updateAt?.dateTime || occurrence.createAt?.dateTime).replace('T', ' ').replace('Z', '')
+  const date = (occurrence?.updateAt?.dateTime || occurrence?.createAt?.dateTime || '').replace('T', ' ').replace('Z', '')
 
   if (typeof customFormat === 'string') {
     return moment(date).format(customFormat)

@@ -138,9 +138,9 @@ export default {
 
     workspaceTags() {
       return this.filteredTags.map(t => {
-        if (this.ticketsQuery.tags && this.ticketsQuery.tags.includes(t.id)) {
+        if (Array.isArray(this.ticketsQuery?.tags) && this.ticketsQuery?.tags.includes(t.id)) {
           t.activeType = 'inclusive'
-        } else if (this.ticketsQuery.noTags && this.ticketsQuery.noTags.includes(t.id)) {
+        } else if (Array.isArray(this.ticketsQuery?.noTags) && this.ticketsQuery?.noTags.includes(t.id)) {
           t.activeType = 'exclusive'
         } else {
           t.activeType = ''
