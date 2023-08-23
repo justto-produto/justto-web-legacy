@@ -25,7 +25,6 @@
               v-if="!fieldKey.includes('_ACTIVE')"
               v-model="fields[fieldKey]"
               :show-password="fieldKey.includes('_PASSWORD')"
-              :disabled="disable || isNotEditable(fieldKey)"
               :prefix-icon="buildIconByKey(fieldKey)"
               autocomplete="off"
               auto-complete="off"
@@ -71,7 +70,7 @@
     <ProjurisSoapConfigView
       v-else-if="useBFF && disable && fields.PROJURIS_SOAP_ACTIVE"
       :fields="fields"
-      @reset="handleReset"
+      @reset="handleEdit"
       @close="handleClose"
     />
 
@@ -104,7 +103,10 @@ export default {
     }
   },
 
-  data: () => ({ loading: false }),
+  data: () => ({
+    loading: false,
+    forceEdit: false
+  }),
 
   computed: {
     ...mapGetters({
@@ -120,11 +122,11 @@ export default {
     },
 
     hasFields() {
-      return this.fields?.FINCH_ACTIVE || this.fields?.PROJURIS_SOAP_ACTIVE || this.fields?.JUSTTO_WEBHOOK_ACTIVE
+      return this.forceEdit || this.fields?.FINCH_ACTIVE || this.fields?.PROJURIS_SOAP_ACTIVE || this.fields?.JUSTTO_WEBHOOK_ACTIVE
     },
 
     disable() {
-      return (this.configurations || []).filter(({ key = '', value = '' }) => (key.includes('_ACTIVE') && value === String(true))).length > 0
+      return !this.forceEdit && (this.configurations || []).filter(({ key = '', value = '' }) => (key.includes('_ACTIVE') && value === String(true))).length > 0
     },
 
     isNotEditable() {
@@ -280,6 +282,7 @@ export default {
     },
 
     handleClose() {
+      this.forceEdit = false
       this.$emit('close')
     },
 
@@ -292,6 +295,7 @@ export default {
         closeOnPressEscape: false
       }).then(() => {
         this.loading = true
+        this.forceEdit = false
 
         this.resetIntegrationConfigs().then(() => {
           this.$jusNotification({
@@ -311,6 +315,7 @@ export default {
 
     handleSave() {
       this.loading = true
+      this.forceEdit = false
 
       const fields = Object.keys(this.fields).reduce((payload, key) => {
         if (this.fields[key] !== '******') payload[key] = String(this.fields[key])
@@ -336,6 +341,11 @@ export default {
       this.getIntegrationConfigs().then(this.init).catch(error => this.$jusNotification({
         error
       })).finally(() => { this.loading = false })
+    },
+
+    handleEdit() {
+      console.log('handleEdit')
+      this.forceEdit = true
     }
   }
 }
