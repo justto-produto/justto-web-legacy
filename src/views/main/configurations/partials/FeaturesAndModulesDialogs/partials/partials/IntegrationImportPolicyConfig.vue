@@ -25,10 +25,7 @@
     >
       <span>Configure as políticas de importações para as integrações desta workspace:</span>
 
-      <el-tabs
-        v-model="tab"
-        type="border-card"
-      >
+      <el-tabs v-model="tab">
         <el-tab-pane
           name="politicaNegociacao"
           label="Políticas de alçada e limites de negociações"
