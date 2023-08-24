@@ -95,7 +95,14 @@ export default {
 
     save() {
       this.$refs[this.tab].save()
-        .then(this.next)
+        .then(() => {
+          this.next()
+          this.$jusNotification({
+            type: 'success',
+            title: 'Yay!',
+            message: 'Salvo com sucesso!'
+          })
+        })
         .catch(error => this.$jusNotification({ error }))
     },
 

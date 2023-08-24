@@ -50,15 +50,14 @@
         </el-button>
 
         <el-button
-          v-if="disable"
+          v-if="disable || forceEdit"
           type="secondary"
           @click="handleReset"
         >
-          Editar
+          Resetar
         </el-button>
 
         <el-button
-          v-else
           type="primary"
           @click="handleSave"
         >
