@@ -119,6 +119,13 @@ const accountActions = {
     })
   },
 
+  getAllAccountProperties({ _ }) {
+    return axiosDispatch({
+      url: `${accountsPath}/my/property`,
+      method: 'GET'
+    })
+  },
+
   loadAccountProperty({ _ }) {
     return axiosDispatch({
       url: `${accountsPath}/my/property`,

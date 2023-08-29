@@ -239,6 +239,7 @@
           </p>
         </div>
         <el-card
+          v-loading="scrollLoading"
           shadow="never"
           class="view-management__export-dialog-card"
         >
@@ -246,6 +247,7 @@
             :data="exportHistory.content"
             :row-class-name="exportHistoryRowClass"
             height="150"
+            class="view-management__export-dialog-table"
             empty-text="Você ainda não realizou exportações..."
           >
             <el-table-column
@@ -268,6 +270,7 @@
                 </el-tooltip>
               </template>
             </el-table-column>
+
             <el-table-column
               label="Requisição"
               align="center"
@@ -277,6 +280,7 @@
                 <span>{{ exportDateTime(scope.row.requestedAt) }}</span>
               </template>
             </el-table-column>
+
             <el-table-column
               label="Conclusão"
               align="center"
@@ -296,6 +300,7 @@
                 </span>
               </template>
             </el-table-column>
+
             <el-table-column
               width="40"
               align="center"
@@ -317,23 +322,20 @@
                 </el-tooltip>
               </template>
             </el-table-column>
-            <infinite-loading
-              v-if="exportHistory.totalElements >= 10"
+
+            <JusScrollLoading
               slot="append"
-              :distance="10"
-              spinner="spiral"
-              force-use-infinite-wrapper=".el-table__body-wrapper"
-              @infinite="infiniteHandler"
-            >
-              <div slot="no-more">
-                Fim do historico
-              </div>
-              <div slot="no-results">
-                Fim do historico
-              </div>
-            </infinite-loading>
+              :loading.sync="scrollLoading"
+              target=".view-management__export-dialog-table>.el-table__body-wrapper"
+              :ended="exportHistory.last"
+              :empty="!(exportHistory.content && exportHistory.content.length > 0)"
+              empty-text="Fim do historico"
+              end-text="Fim do historico"
+              @load="infiniteHandler"
+            />
           </el-table>
         </el-card>
+
         <div class="view-management__export-dialog-titles">
           <span class="view-management__export-dialog-title">
             Nova exportação
@@ -353,6 +355,7 @@
             }}
           </p>
         </div>
+
         <el-card
           v-show="isExportingProtocol"
           shadow="never"
@@ -363,6 +366,7 @@
             <p>Os documentos serão enviadas para seu email assim que estiverem prontos</p>
           </div>
         </el-card>
+
         <el-card
           v-show="!isExportingProtocol"
           shadow="never"
@@ -384,6 +388,7 @@
               clearable
             />
           </div>
+
           <el-tree
             ref="tree"
             :data="columns"
@@ -406,6 +411,7 @@
               />
             </span>
           </el-tree>
+
           <a
             class="view-management__export-dialog-link"
             @click="showAllNodesHandler"
@@ -413,6 +419,7 @@
             {{ showAllNodesButton }}
           </a>
         </el-card>
+
         <span slot="footer">
           <el-button
             :disabled="loadingExport"
@@ -446,7 +453,7 @@ export default {
   name: 'Management',
 
   components: {
-    InfiniteLoading: () => import('vue-infinite-loading'),
+    JusScrollLoading: () => import('@/components/others/JusScrollLoading'),
     ManagementFilters: () => import('./partials/ManagementFilters'),
     ManagementTable: () => import('./partials/ManagementTable'),
     ManagementActions: () => import('./partials/ManagementActions'),
@@ -479,7 +486,8 @@ export default {
       isExportingProtocol: false,
       filteredBrazilianStates: [],
       ufFilterValue: [],
-      exportedColumns: []
+      exportedColumns: [],
+      scrollLoading: false
     }
   },
 
@@ -500,7 +508,8 @@ export default {
       workspaceProperties: 'workspaceProperties',
       getSelectedIds: 'getSelectedIds',
       userProperties: 'userProperties',
-      hasPreventFiltres: 'getDisputeHasPreventFiltres'
+      hasPreventFiltres: 'getDisputeHasPreventFiltres',
+      workspaceId: 'workspaceId'
     }),
 
     selectedIds: {
@@ -614,7 +623,8 @@ export default {
       'getExportHistory',
       'getPrescriptions',
       'getAccountProperty',
-      'setAccountProperty'
+      'setAccountProperty',
+      'getAllAccountProperties'
     ]),
 
     ...mapMutations(['setDisputePreventFilters']),
@@ -837,10 +847,13 @@ export default {
     showExportDisputesDialog() {
       this.exportDisputesDialog = true
 
-      this.getAccountProperty('JUS_EXPORT_COLUMNS').then(res => {
-        if (res?.JUS_EXPORT_COLUMNS) {
-          const columns = res.JUS_EXPORT_COLUMNS.split(',')
+      this.getAllAccountProperties().then(res => {
+        const key = Object.keys(res).includes(`JUS_EXPORT_COLUMNS_${this.workspaceId}`) ? `JUS_EXPORT_COLUMNS_${this.workspaceId}` : 'JUS_EXPORT_COLUMNS'
+
+        if (Object.keys(res).includes(key)) {
+          const columns = res[key].split(',')
           this.exportedColumns = this.columnsList.filter(item => columns.includes(item.key))
+
           this.$nextTick(() => {
             this.$refs.tree.setCheckedKeys(columns)
             this.checkedNodes = columns.length
@@ -849,6 +862,7 @@ export default {
           this.$refs.tree.setCheckedKeys(this.columns.map(c => c.key))
         }
       })
+
       this.getExportHistory()
       this.$nextTick(() => {
         this.handlerChangeTree('', { checkedKeys: this.$refs.tree.getCheckedKeys() })
@@ -910,14 +924,8 @@ export default {
       }
     },
 
-    infiniteHandler($state) {
-      this.getExportHistory('isInfinit').then(response => {
-        if (response.last) {
-          $state.complete()
-        } else {
-          $state.loaded()
-        }
-      })
+    infiniteHandler(callback) {
+      this.getExportHistory('isInfinit').then(callback)
     },
 
     showImportDialog() {
@@ -951,13 +959,6 @@ export default {
     justify-content: space-between;
   }
   &__buttons {
-    // .el-input + button {
-    //   margin-left: 10px;
-    // }
-    // .el-input {
-    //   width: 180px;
-    //   vertical-align: middle;
-    // }
     display: flex;
 
     &.show-menu-space {
@@ -1129,7 +1130,6 @@ export default {
   .finished-row {
     color: $--color-success;
     color: #28ac5c;
-    // font-weight: bold;
   }
   .failed-row {
     color: $--color-danger;

@@ -292,7 +292,14 @@ const disputeMutations = {
 
   setExportHistory: (state, history) => Vue.set(state, 'exportHistory', history),
 
-  pushExportHistory: (state, history) => (state.exportHistory.content.push(...history.content)),
+  pushExportHistory: (state, history) => {
+    Vue.set(state.exportHistory, 'empty', history.empty)
+    Vue.set(state.exportHistory, 'last', history.last)
+    Vue.set(state.exportHistory, 'content', [
+      ...state.exportHistory.content,
+      ...history.content
+    ])
+  },
 
   addExportHistoryPage: (state) => (state.exportHistoryPage += 1),
 

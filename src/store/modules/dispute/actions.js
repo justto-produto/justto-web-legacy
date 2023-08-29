@@ -330,7 +330,7 @@ const disputeActions = {
     const query = buildQuery(ordenationQuery)
 
     dispatch('setAccountProperty', {
-      JUS_EXPORT_COLUMNS: stringColums
+      [`JUS_EXPORT_COLUMNS_${getters.workspaceId}`]: stringColums
     })
 
     return axiosDispatch({
