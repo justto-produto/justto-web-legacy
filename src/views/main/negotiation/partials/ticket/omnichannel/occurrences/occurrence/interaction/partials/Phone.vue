@@ -249,7 +249,7 @@ export default {
     },
 
     isLinkOk() {
-      return ['16'].includes(String(this.audioCodeResult)) || this.value?.message?.parameters?.VOICE_STATUS === 'SetUp' || this.hasActiveCall
+      return ['16'].includes(String(this.audioCodeResult)) || ['Answered', 'SetUp'].includes(this.value?.message?.parameters?.VOICE_STATUS) || this.hasActiveCall
     },
 
     hasValidAudio() {
