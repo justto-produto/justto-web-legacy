@@ -290,13 +290,13 @@ const disputeMutations = {
     state.partyAnalysis[analysis.payload] = analysis.data
   },
 
-  setExportHistory: (state, history) => (state.exportHistory = history),
+  setExportHistory: (state, history) => Vue.set(state, 'exportHistory', history),
 
   pushExportHistory: (state, history) => (state.exportHistory.content.push(...history.content)),
 
   addExportHistoryPage: (state) => (state.exportHistoryPage += 1),
 
-  resetExportHistoryPage: (state) => (state.exportHistoryPage = 0),
+  resetExportHistoryPage: (state) => Vue.set(state, 'exportHistoryPage', 0),
 
   setPrescriptionsList: (state, prescriptions) => (state.prescriptionsList = prescriptions),
 
