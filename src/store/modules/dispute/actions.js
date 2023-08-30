@@ -330,7 +330,7 @@ const disputeActions = {
     const query = buildQuery(ordenationQuery)
 
     dispatch('setAccountProperty', {
-      JUS_EXPORT_COLUMNS: stringColums
+      [`JUS_EXPORT_COLUMNS_${getters.workspaceId}`]: stringColums
     })
 
     return axiosDispatch({
@@ -370,8 +370,8 @@ const disputeActions = {
   },
 
   getExportHistory({ commit, state }, command) {
-    if (command) commit('addExportHistoryPage')
-    else commit('resetExportHistoryPage')
+    commit(command ? 'addExportHistoryPage' : 'resetExportHistoryPage')
+
     axiosDispatch({
       url: `${disputesPath}/my/exports?size=10&page=${state.exportHistoryPage}`,
       mutation: command ? 'pushExportHistory' : 'setExportHistory'
