@@ -55,7 +55,11 @@ const dispute = {
     statuses: {},
     respondents: [],
     partyAnalysis: {},
-    exportHistory: {},
+    exportHistory: {
+      content: [],
+      empty: false,
+      last: false
+    },
     exportHistoryPage: 0,
     prescriptionsList: [],
     timeline: {},

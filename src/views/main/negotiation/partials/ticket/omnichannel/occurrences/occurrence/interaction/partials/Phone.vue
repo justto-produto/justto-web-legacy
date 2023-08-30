@@ -36,21 +36,20 @@
       v-if="mediaLink && !badStatus && !hasActiveCall"
       class="phone-container__audio"
     >
-      <AudioPlayer
+      <audio
         v-if="hasValidAudio"
-        ref="AudioPlayer"
+        controls
         class="phone-container__audio-component"
-        :audio-list="[mediaLink]"
-        theme-color="#9461f7"
-        :show-volume-button="false"
-        :show-prev-button="false"
-        :show-next-button="false"
-        :show-playback-rate="false"
-        :is-loop="false"
-      />
+      >
+        <source
+          :src="mediaLink"
+          type="audio/wav"
+        >
+        <em>Seu navegador não suporta o elemento audio.</em>
+      </audio>
 
-      <!-- v-else -->
       <div
+        v-else
         class="phone-container__audio-component fallback"
       >
         <el-tooltip content="Gravação não disponível">
@@ -62,13 +61,15 @@
         v-if="hasValidAudio"
         class="phone-container__audio-buttons"
       >
-        <el-button
-          class="phone-container__audio-buttons-share"
-          icon="el-icon-share"
-          size="mini"
-          circle
-          @click="shareAudio"
-        />
+        <el-tooltip content="Copiar link">
+          <el-button
+            class="phone-container__audio-buttons-share"
+            icon="el-icon-share"
+            size="mini"
+            circle
+            @click="shareAudio"
+          />
+        </el-tooltip>
       </div>
     </div>
 
@@ -163,13 +164,7 @@
 import ckeditor from '@/utils/mixins/ckeditor'
 import { mapActions, mapGetters } from 'vuex'
 
-import AudioPlayer from '@liripeng/vue-audio-player'
-
 export default {
-  components: {
-    AudioPlayer
-  },
-
   mixins: [ckeditor],
 
   props: {
