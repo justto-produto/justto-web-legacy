@@ -65,6 +65,7 @@
     "projuris-acordos-theme": "git+ssh://git@github.com/justto-produto/projuris-acordos-web-theme.git",
     "raw-loader": "^0.5.1",
     "register-service-worker": "^1.6.2",
+    "sheetclip": "^0.3.0",
     "v-money": "^0.8.1",
     "validate-cnj": "^1.0.16",
     "vue": "^2.7.14",
