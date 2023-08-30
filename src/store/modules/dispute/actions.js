@@ -372,7 +372,6 @@ const disputeActions = {
   getExportHistory({ commit, state }, command) {
     commit(command ? 'addExportHistoryPage' : 'resetExportHistoryPage')
 
-    console.log('exportHistoryPage', state.exportHistoryPage)
     axiosDispatch({
       url: `${disputesPath}/my/exports?size=10&page=${state.exportHistoryPage}`,
       mutation: command ? 'pushExportHistory' : 'setExportHistory'
