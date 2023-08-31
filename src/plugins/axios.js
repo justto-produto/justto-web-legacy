@@ -1,4 +1,3 @@
-import * as Sentry from '@sentry/browser'
 import Vue from 'vue'
 import axios from 'axios'
 import store from '@/store'
@@ -70,7 +69,6 @@ _axios.interceptors.response.use(
     return response
   },
   function(error) {
-    if (process.env.NODE_ENV === 'production') Sentry.captureException(error)
     if ([500, 403].includes(error.response?.status)) {
       vue().$jusSegment('REQUEST_ERROR', { ...error })
     }
