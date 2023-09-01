@@ -56,7 +56,7 @@ export default {
 
   data: () => ({
     searchTerm: '',
-    debounce: setTimeout()
+    debounce: null
   }),
 
   computed: {
