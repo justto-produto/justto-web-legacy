@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import ApiConfiguration from '@/models/configurations/ApiConfiguration'
+import { setLocalWorkspace } from '@/utils'
 
 const workspaceMutations = {
   redirectNewWorkspaceTrue(state) {
@@ -21,16 +22,16 @@ const workspaceMutations = {
         profile,
         preNegotiation
       }
-      localStorage.setItem('jusworkspace', JSON.stringify(state.workspace))
+      setLocalWorkspace(state.workspace)
     }
   },
   setTeamName(state, { payload }) {
     Vue.set(state.workspace, 'teamName', payload)
-    localStorage.setItem('jusworkspace', JSON.stringify(state.workspace))
+    setLocalWorkspace(state.workspace)
   },
   updateWorkspaceLogoUrl: (state, logoUrl) => {
     Vue.set(state.workspace, 'logoUrl', logoUrl)
-    localStorage.setItem('jusworkspace', JSON.stringify(state.workspace))
+    setLocalWorkspace(state.workspace)
   },
   setProfile(state, profile) {
     if (profile) {

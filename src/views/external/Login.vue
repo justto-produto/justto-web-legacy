@@ -160,6 +160,7 @@
 </template>
 
 <script>
+import { setLocalWorkspace, validateLocalWorkspace } from '@/utils'
 import { isJusttoUser } from '@/utils/validations'
 import { mapActions } from 'vuex'
 
@@ -210,7 +211,12 @@ export default {
   },
 
   beforeMount() {
-    if (this.$store.getters.isLoggedIn) {
+    if (
+      Object.keys(localStorage).includes('jusworkspace') &&
+      !validateLocalWorkspace()
+    ) {
+      this.getMyWorkspaces()
+    } else if (this.$store.getters.isLoggedIn) {
       this.$store.dispatch('logout')
     }
 
@@ -348,18 +354,22 @@ export default {
       })
     },
 
-    getMembersAndRedirect(response) {
+    async getMembersAndRedirect(response) {
       // SEGMENT TRACK
       this.$jusSegment('Seleção de Workspace', {
         workspace: response.workspace.name,
         team: response.workspace.teamName
       })
-      if (response.workspace) this.$store.commit('setWorkspace', response.workspace)
+      if (response.workspace) await setLocalWorkspace(response.workspace)
+      await this.$nextTick()
       if (response.profile) this.$store.commit('setProfile', response.profile)
+      await this.$nextTick()
       if (response.person) {
         this.$store.commit('setLoggedPerson', response.person)
 
         const isJustto = response.person.emails?.find(({ address, archived }) => (!archived && isJusttoUser(address))) !== undefined
+
+        await this.$nextTick()
 
         this.$store.dispatch('getWorkspaceMembers')
           .then(() => {
