@@ -36,6 +36,7 @@ import {
 } from './utils/others'
 
 import {
+  getLocalWorkspace,
   setLocalWorkspace,
   resetLocalWorkspace,
   validateLocalWorkspace
@@ -68,6 +69,7 @@ export {
   validateCurrentId,
   getStringInitials,
   isSameBankAccount,
+  getLocalWorkspace,
   setLocalWorkspace,
   addInvisibleStatus,
   getLastInteraction,

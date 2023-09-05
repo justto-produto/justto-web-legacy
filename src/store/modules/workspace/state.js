@@ -1,4 +1,6 @@
-const workspace = JSON.parse(localStorage.getItem('jusworkspace')) || {}
+import { getLocalWorkspace } from '@/utils'
+
+const workspace = getLocalWorkspace()
 const profile = localStorage.getItem('jusprofile') || ''
 
 export default {

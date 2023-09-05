@@ -1,35 +1,46 @@
+import Vue from 'vue'
+
 const setLocalWorkspace = async(workspace) => {
-  if (!workspace?.id) return Promise.resolve()
+  console.log('setLocalWorkspace', workspace)
+  if (!workspace?.id) return Promise.reject(new Error('Workspace ID is required'))
 
   return new Promise(resolve => {
-    console.log('setLocalWorkspace', workspace)
-
     sessionStorage.setItem('jusworkspace', JSON.stringify(workspace.id))
-    localStorage.setItem('jusworkspace', JSON.stringify(workspace))
-    // eslint-disable-next-line
-    axios.defaults.headers.common['Workspace'] = workspace.subDomain
+    localStorage.setItem(`jusworkspace_${workspace.id}`, JSON.stringify(workspace))
+
+    // eslint-disable-next-line no-undef
+    Vue.set(axios.defaults.headers.common, 'Workspace', workspace.subDomain)
 
     resolve()
   })
 }
 
 const resetLocalWorkspace = () => {
-  localStorage.removeItem('jusworkspace')
+  const id = sessionStorage.getItem('jusworkspace')
+
+  localStorage.removeItem(`jusworkspace_${id}`)
   sessionStorage.removeItem('jusworkspace')
 }
 
 const validateLocalWorkspace = () => {
-  console.log('validateLocalWorkspace')
-  if (!Object.keys(localStorage).includes('jusworkspace')) return false
+  const id = sessionStorage.getItem('jusworkspace')
 
-  const workspace = JSON.parse(localStorage.getItem('jusworkspace'))
+  if (Boolean(id) === false) return false
+  if (!Object.keys(localStorage).includes(`jusworkspace_${id}`)) return false
 
-  console.log('validateLocalWorkspace', workspace?.id, sessionStorage.getItem('jusworkspace'), String(workspace?.id) === String(sessionStorage.getItem('jusworkspace')))
+  const workspace = getLocalWorkspace()
 
   return String(workspace?.id) === String(sessionStorage.getItem('jusworkspace'))
 }
 
+const getLocalWorkspace = () => {
+  const id = sessionStorage.getItem('jusworkspace')
+
+  return JSON.parse(localStorage.getItem(`jusworkspace_${id}`) || '{}')
+}
+
 export {
+  getLocalWorkspace,
   setLocalWorkspace,
   resetLocalWorkspace,
   validateLocalWorkspace

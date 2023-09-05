@@ -160,7 +160,7 @@
 </template>
 
 <script>
-import { setLocalWorkspace, validateLocalWorkspace } from '@/utils'
+import { validateLocalWorkspace } from '@/utils'
 import { isJusttoUser } from '@/utils/validations'
 import { mapActions } from 'vuex'
 
@@ -211,10 +211,9 @@ export default {
   },
 
   beforeMount() {
-    if (
-      Object.keys(localStorage).includes('jusworkspace') &&
-      !validateLocalWorkspace()
-    ) {
+    const hasWorkspaces = Object.keys(localStorage).filter(key => key.startsWith('jusworkspace')).length > 0
+
+    if (hasWorkspaces && !validateLocalWorkspace()) {
       this.getMyWorkspaces()
     } else if (this.$store.getters.isLoggedIn) {
       this.$store.dispatch('logout')
@@ -360,7 +359,7 @@ export default {
         workspace: response.workspace.name,
         team: response.workspace.teamName
       })
-      if (response.workspace) await setLocalWorkspace(response.workspace)
+      if (response.workspace) await this.$store.commit('setWorkspace', response.workspace)
       await this.$nextTick()
       if (response.profile) this.$store.commit('setProfile', response.profile)
       await this.$nextTick()

@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import { setLocalWorkspace } from '@/utils'
 import { mapGetters } from 'vuex'
 export default {
   props: {
@@ -47,6 +48,7 @@ export default {
   methods: {
     readyWorkspace: function() {
       this.showError = false
+
       this.$store.dispatch('readyWorkspace', this.workspace.subDomain)
         .then(() => {
           // eslint-disable-next-line
@@ -60,11 +62,11 @@ export default {
                   return true
                 }
               })
+
               this.$store.commit('setWorkspace', currentWorkspace.workspace)
-              localStorage.setItem('jusworkspace', JSON.stringify(currentWorkspace.workspace))
+              setLocalWorkspace(currentWorkspace.workspace)
               localStorage.setItem('jusprofile', currentWorkspace.profile)
               localStorage.setItem('jusperson', JSON.stringify(currentWorkspace.person))
-              // FIXME: Não está redirecionando para a página de importação.
               this.$router.push({ name: 'import' })
             })
             .catch(() => {

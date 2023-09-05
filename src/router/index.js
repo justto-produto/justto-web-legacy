@@ -7,6 +7,13 @@ import { eventBus, validateLocalWorkspace } from '@/utils'
 import events from '@/constants/negotiationEvents'
 
 const vue = () => document.getElementById('app')?.__vue__
+const originalPush = Router.prototype.push
+
+Router.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(() => {})
+}
+
+Vue.use(Router)
 Vue.use(Router)
 
 const router = new Router({
@@ -420,6 +427,7 @@ router.beforeEach((to, from, next) => {
     if (!validateLocalWorkspace()) {
       next('login')
     } else if (Store.getters.isLoggedIn) {
+      console.log('hasWorkspace', Store.getters.hasWorkspace)
       if (Store.getters.hasWorkspace) {
         if (to.name === 'workspaces') {
           if (!Store.getters.isJusttoAdmin) {
