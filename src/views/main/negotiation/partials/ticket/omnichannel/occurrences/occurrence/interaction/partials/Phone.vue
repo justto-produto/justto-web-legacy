@@ -86,64 +86,66 @@
       </div>
     </div>
 
-    <div
-      v-if="mediaLink && !badStatus"
-      class="phone-container__editor jus-ckeditor__parent"
+    <CallTextContent
+      v-if="mediaLink && hasValidAudio"
+      class="phone-container__editor"
+      :note.sync="editorText"
+      :resume="audio.resumo"
+      :transcription="audio.correcao"
     >
-      <label
-        class="phone-container__editor-label"
-        :class="{'invalid-audio': !hasValidAudio}"
-      >
-        {{ hasActiveCall ? 'Anote o que precisar desta ligação em andamento:' : hasValidAudio ? 'Anote sobre sua conversa abaixo:' : 'Chamada não foi atendida' }}
-      </label>
-
-      <ckeditor
-        v-if="enabledEditor"
-        ref="callTextEditor"
-        v-model="editorText"
-        :editor="editor"
-        :config="editorConfig"
-        class="phone-container__editor-editor"
-        type="classic"
-      />
-
-      <em
-        v-else-if="hasValidAudio"
-        v-html="editorText"
-      />
-
       <div
-        v-if="hasValidAudio"
-        class="phone-container__editor-switch"
-        :class="{'right': enabledEditor}"
+        v-if="mediaLink && !badStatus"
+        class="phone-container__editor jus-ckeditor__parent"
       >
-        <el-button
-          v-if="!enabledEditor"
-          type="text"
-          icon="el-icon-edit"
-          @click="enabledEditor = !enabledEditor"
-        >
-          Editar anotações da conversa
-        </el-button>
-
-        <el-button
+        <ckeditor
           v-if="enabledEditor"
-          size="mini"
-          @click="enabledEditor = !enabledEditor"
-        >
-          Cancelar
-        </el-button>
+          ref="callTextEditor"
+          v-model="editorText"
+          :editor="editor"
+          :config="editorConfig"
+          class="phone-container__editor-editor"
+          type="classic"
+        />
 
-        <el-button
-          v-if="enabledEditor"
-          type="primary"
-          size="mini"
-          @click="saveMassageContent()"
+        <div
+          v-else-if="hasValidAudio"
+          class="phone-container__editor-preview"
+          v-html="editorText"
+        />
+
+        <div
+          v-if="hasValidAudio"
+          class="phone-container__editor-switch"
+          :class="{'right': enabledEditor}"
         >
-          Salvar
-        </el-button>
+          <el-button
+            v-if="!enabledEditor"
+            type="text"
+            icon="el-icon-edit"
+            @click="enabledEditor = !enabledEditor"
+          >
+            Editar anotações da conversa
+          </el-button>
+
+          <el-button
+            v-if="enabledEditor"
+            size="mini"
+            @click="enabledEditor = !enabledEditor"
+          >
+            Cancelar
+          </el-button>
+
+          <el-button
+            v-if="enabledEditor"
+            type="primary"
+            size="mini"
+            @click="saveMassageContent()"
+          >
+            Salvar
+          </el-button>
+        </div>
       </div>
-    </div>
+    </CallTextContent>
 
     <div
       v-if="badStatus"
@@ -165,6 +167,10 @@ import ckeditor from '@/utils/mixins/ckeditor'
 import { mapActions, mapGetters } from 'vuex'
 
 export default {
+  components: {
+    CallTextContent: () => import('./partials/CallTextContent')
+  },
+
   mixins: [ckeditor],
 
   props: {
@@ -191,7 +197,13 @@ export default {
       useMentionPlugin: true,
       showEditor: false,
       localLoading: false,
-      audioCodeResult: ''
+      audioCodeResult: '',
+      audio: {
+        situacao: '',
+        transcricao: '',
+        correcao: '',
+        resumo: ''
+      }
     }
   },
 
@@ -282,8 +294,10 @@ export default {
 
   methods: {
     ...mapActions([
+      'getCallMedia',
       'getCallStatus',
       'updateCallStatus',
+      'getCallGenerateMedia',
       'setInteractionMessageContent'
     ]),
 
@@ -327,6 +341,7 @@ export default {
     async handleInitCall() {
       if (this.value?.message?.parameters?.PHONE_CALL_ID) {
         this.localLoading = true
+
         this.requestCallInfos().then(voiceCodeResult => {
           this.audioCodeResult = voiceCodeResult
 
@@ -336,11 +351,59 @@ export default {
             }
           })
         }).finally(() => {
-          this.localLoading = false
+          this.handleGetCallInfos(() => { this.localLoading = false })
         })
       }
 
       return Promise.resolve()
+    },
+
+    handleGetCallInfos(callback) {
+      this.getCallMedia({
+        disputeId: this.$route.params.id,
+        url: this.mediaLink
+      }).then(callInfo => {
+        this.audio = callInfo
+
+        switch (callInfo.situacao) {
+          case 'SEM_ARQUIVO':
+          case 'ERRO':
+            this.audioCodeResult = 0
+            callback()
+            break
+          case 'CORRIGIDO':
+            this.audioCodeResult = 16
+            callback()
+            break
+          case 'INDISPONIVEL':
+            this.handleRequestTranscription(callback)
+            break
+          case 'RECEBIDO':
+          case 'TRANSCRITO':
+          default:
+            setTimeout(() => {
+              this.handleGetCallInfos(callback)
+            }, 500)
+            break
+        }
+      }).catch(error => {
+        this.$jusNotification({ error })
+        callback()
+      })
+    },
+
+    handleRequestTranscription(callback) {
+      this.getCallGenerateMedia({
+        disputeId: this.$route.params.id,
+        url: this.mediaLink
+      }).then(() => {
+        setTimeout(() => {
+          this.handleGetCallInfos(callback)
+        }, 500)
+      }).catch(error => {
+        this.$jusNotification({ error })
+        callback()
+      })
     },
 
     requestCallInfos() {
@@ -482,6 +545,16 @@ export default {
       &.invalid-audio {
         text-align: center;
       }
+    }
+
+    .phone-container__editor-preview {
+      font-size: 1em;
+      padding: 8px;
+      border-radius: 8px;
+      color: $--color-text-primary;
+      background-color: $--color-email-bg;
+      max-height: 300px;
+      overflow-y: auto;
     }
 
     .phone-container__editor-switch.right {
