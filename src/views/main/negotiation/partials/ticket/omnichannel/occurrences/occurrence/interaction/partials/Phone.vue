@@ -87,16 +87,13 @@
     </div>
 
     <CallTextContent
-      v-if="mediaLink && hasValidAudio"
+      v-if="mediaLink && hasValidAudio && useCallTrancription"
       class="phone-container__editor"
       :note.sync="editorText"
       :resume="audio.resumo"
       :transcription="audio.correcao"
     >
-      <div
-        v-if="mediaLink && !badStatus"
-        class="phone-container__editor jus-ckeditor__parent"
-      >
+      <div class="phone-container__editor jus-ckeditor__parent">
         <ckeditor
           v-if="enabledEditor"
           ref="callTextEditor"
@@ -146,6 +143,66 @@
         </div>
       </div>
     </CallTextContent>
+
+    <div
+      v-if="mediaLink && !badStatus && !useCallTrancription"
+      class="phone-container__editor jus-ckeditor__parent"
+    >
+      <label
+        class="phone-container__editor-label"
+        :class="{'invalid-audio': !hasValidAudio}"
+      >
+        {{ hasActiveCall ? 'Anote o que precisar desta ligação em andamento:' : hasValidAudio ? 'Anote sobre sua conversa abaixo:' : 'Chamada não foi atendida' }}
+      </label>
+
+      <ckeditor
+        v-if="enabledEditor"
+        ref="callTextEditor"
+        v-model="editorText"
+        :editor="editor"
+        :config="editorConfig"
+        class="phone-container__editor-editor"
+        type="classic"
+      />
+
+      <em
+        v-else-if="hasValidAudio"
+        class="phone-container__editor-notes"
+        v-html="editorText"
+      />
+
+      <div
+        v-if="hasValidAudio"
+        class="phone-container__editor-switch"
+        :class="{'right': enabledEditor}"
+      >
+        <el-button
+          v-if="!enabledEditor"
+          type="text"
+          icon="el-icon-edit"
+          @click="enabledEditor = !enabledEditor"
+        >
+          Editar anotações da conversa
+        </el-button>
+
+        <el-button
+          v-if="enabledEditor"
+          size="mini"
+          @click="enabledEditor = !enabledEditor"
+        >
+          Cancelar
+        </el-button>
+
+        <el-button
+          v-if="enabledEditor"
+          type="primary"
+          size="mini"
+          @click="saveMassageContent()"
+        >
+          Salvar
+        </el-button>
+      </div>
+    </div>
 
     <div
       v-if="badStatus"
@@ -209,7 +266,8 @@ export default {
 
   computed: {
     ...mapGetters({
-      currentCall: 'getCurrentCall'
+      currentCall: 'getCurrentCall',
+      useCallTrancription: 'useCallTrancription'
     }),
 
     contact() {
