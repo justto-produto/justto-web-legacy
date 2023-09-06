@@ -1,7 +1,7 @@
 // https://justto.atlassian.net/browse/SAAS-4522
 import { Call } from '@/models/managementCall/currentCall'
 import { ScheduledCallModel } from '@/models/managementCall/scheduledCallInfo'
-import { axiosDispatch } from '@/utils'
+import { axiosDispatch, buildQuery } from '@/utils'
 import { CALL_STATUS } from '@/constants/callStatus'
 import { publishWebsocket } from '@/utils/utils/others'
 
@@ -14,6 +14,7 @@ const DEFAULT_JUSTTO_MANAGEMENT_CALL = "{'currentCall':null,'callQueue':[],'appI
 const dialerApi = 'api/dialer'
 const disputeApi = 'api/disputes/v2'
 const legacyDisputeApi = 'api/disputes'
+const transcricaoApi = 'api/transcricao-audio/v1'
 
 export default {
   activeAppToCall({ commit, getters: { hasOtherTabActive, isActiveToCall } }, active = false) {
@@ -463,6 +464,29 @@ export default {
   getCallStatus({ _ }, callId) {
     return axiosDispatch({
       url: `${dialerApi}/call/${callId}`
+    })
+  },
+
+  getCallMedia({ getters: { workspaceSubdomain: subdomain } }, { disputeId, url }) {
+    return axiosDispatch({
+      url: `${transcricaoApi}/media${buildQuery({
+        disputeId,
+        url,
+        subdomain
+      })}`
+    })
+  },
+
+  getCallGenerateMedia({ getters: { workspaceSubdomain: subdomain } }, { disputeId, url }) {
+    return axiosDispatch({
+      method: 'POST',
+      url: `${transcricaoApi}/media/processar`,
+      data: {
+        disputeId,
+        url,
+        subdomain,
+        tentativas: 0
+      }
     })
   }
 }
