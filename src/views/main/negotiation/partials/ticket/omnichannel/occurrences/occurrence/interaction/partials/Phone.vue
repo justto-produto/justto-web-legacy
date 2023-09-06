@@ -409,7 +409,11 @@ export default {
             }
           })
         }).finally(() => {
-          this.handleGetCallInfos(() => { this.localLoading = false })
+          if (this.useCallTrancription) {
+            this.handleGetCallInfos(() => { this.localLoading = false })
+          } else {
+            this.localLoading = false
+          }
         })
       }
 
