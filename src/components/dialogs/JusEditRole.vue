@@ -179,9 +179,18 @@
         :show-header="false"
         fit
         class="el-table--list"
+        align="left"
       >
-        <el-table-column>
+        <el-table-column align="left">
           <div slot-scope="scope">
+            <el-tooltip
+              v-if="!scope.row.id"
+              placement="left"
+              content="Contato recém adicionado, ainda não está salvo."
+            >
+              <i class="el-icon-info" />
+            </el-tooltip>
+
             {{ scope.row.number | phoneNumber }}
           </div>
         </el-table-column>
@@ -211,6 +220,7 @@
                 <el-switch v-model="scope.row.isMain" />
               </span>
             </el-tooltip>
+
             <a
               style="margin-left: 5px;"
               @click.prevent="removePhone(scope.$index)"
@@ -260,6 +270,14 @@
       >
         <el-table-column>
           <span slot-scope="scope">
+            <el-tooltip
+              v-if="!scope.row.id"
+              placement="left"
+              content="Contato recém adicionado, ainda não está salvo."
+            >
+              <i class="el-icon-info" />
+            </el-tooltip>
+
             {{ scope.row.address }}
           </span>
         </el-table-column>
@@ -348,6 +366,7 @@
             </div>
           </section>
         </el-table-column>
+
         <el-table-column
           fixed="right"
           align="right"
@@ -516,13 +535,15 @@ export default {
     addMultiplesPhone() {
       return new Promise((resolve, reject) => {
         let hasAnyValid = false
-        const phones = this.splitString(this.inputMultiplePhones).filter(phone => phoneValidator(phone, { country: 'BRA' }))
+        const phones = this.splitString(this.inputMultiplePhones).filter(phone => {
+          return phoneValidator(phone, { country: 'BRA' }).isValid
+        }).map(phone => phoneValidator(phone, { country: 'BRA' }).phoneNumber)
 
         if (phones.length) {
           const tag = this.$createElement
           this.$confirm(tag('div', {}, [
-            tag('p', {}, 'Os números abaixo serão adicionados:'),
-            tag('ul', {}, phones.map(phone => tag('li', {}, phone)))
+            tag('p', {}, `Os ${phones.length} contatos abaixo serão adicionados:`),
+            tag('ul', {}, phones.map(phone => tag('li', {}, this.$options.filters.phoneNumber(phone))))
           ]), 'Atenção!', {
             confirmButtonText: 'Adicionar',
             cancelButtonText: 'Cancelar',
@@ -534,6 +555,10 @@ export default {
               hasAnyValid = true
               this.party.phone = phone
               this.addPhone()
+            })
+            this.$message({
+              type: 'success',
+              message: phones.length > 1 ? `${phones.length} contatos foram adicionados com sucesso.` : `${phones.length} contato foi adicionado com sucesso.`
             })
           }).catch(() => {
             this.$jusNotification({
@@ -581,19 +606,34 @@ export default {
     addMultiplesEmails() {
       return new Promise((resolve, reject) => {
         let hasAnyValid = false
+        const emails = this.splitString(this.inputMultipleEmails).filter(email => EmailValidator.validate(email))
 
-        this.splitString(this.inputMultipleEmails).map(email => {
-          if (EmailValidator.validate(email)) {
+        const tag = this.$createElement
+        this.$confirm(tag('div', {}, [
+          tag('p', {}, `Os ${emails.length} contatos abaixo serão adicionados:`),
+          tag('ul', {}, emails.map(email => tag('li', {}, this.$options.filters.phoneOrEmail(email))))
+        ]), 'Atenção!', {
+          confirmButtonText: 'Adicionar',
+          cancelButtonText: 'Cancelar',
+          closeOnClickModal: false,
+          showClose: false,
+          closeOnPressEscape: false
+        }).then(() => {
+          emails.map(email => {
             hasAnyValid = true
             this.party.email = email
             this.addEmail()
-          } else {
-            this.$jusNotification({
-              title: 'Atenção!',
-              message: 'O e-mail ' + email + ' é inválido.',
-              type: 'warning'
-            })
-          }
+          })
+          this.$message({
+            type: 'success',
+            message: emails.length > 1 ? `${emails.length} contatos foram adicionados com sucesso.` : `${emails.length} contato foi adicionado com sucesso.`
+          })
+        }).catch(() => {
+          this.$jusNotification({
+            title: 'Atenção!',
+            message: 'Nenhum número foi adicionado.',
+            type: 'warning'
+          })
         })
 
         this.inputMultipleEmails = ''
