@@ -79,6 +79,7 @@
             @blur="addOab(party.personId, party.oabs)"
           />
         </el-form-item>
+
         <el-form-item
           class="state"
           label="Estado"
@@ -102,6 +103,7 @@
             />
           </el-select>
         </el-form-item>
+
         <el-button
           class="button"
           style="height: 40px; margin-top: 30px;"
@@ -147,11 +149,22 @@
       >
         <div class="flex-row">
           <el-input
+            v-show="showInputMultiple"
+            ref="multiplePhones"
+            v-model="inputMultiplePhones"
+            type="textarea"
+            :autosize="{ minRows: 1 }"
+          />
+
+          <el-input
+            v-show="!showInputMultiple"
+            ref="singlePhone"
             v-model="party.phone"
             v-mask="['(##) ####-####', '(##) #####-####']"
             @keydown.enter.native="addPhone()"
-            @blur="addPhone()"
+            @input="$forceUpdate()"
           />
+
           <el-button
             type="primary"
             @click="addPhone()"
@@ -166,9 +179,18 @@
         :show-header="false"
         fit
         class="el-table--list"
+        align="left"
       >
-        <el-table-column>
+        <el-table-column align="left">
           <div slot-scope="scope">
+            <el-tooltip
+              v-if="!scope.row.id"
+              placement="left"
+              content="Contato recém adicionado, ainda não está salvo."
+            >
+              <i class="el-icon-info" />
+            </el-tooltip>
+
             {{ scope.row.number | phoneNumber }}
           </div>
         </el-table-column>
@@ -198,6 +220,7 @@
                 <el-switch v-model="scope.row.isMain" />
               </span>
             </el-tooltip>
+
             <a
               style="margin-left: 5px;"
               @click.prevent="removePhone(scope.$index)"
@@ -214,10 +237,19 @@
       >
         <div class="flex-row">
           <el-input
+            v-show="showInputMultiple"
+            ref="multipleEmails"
+            v-model="inputMultipleEmails"
+            type="textarea"
+            :autosize="{ minRows: 1 }"
+          />
+
+          <el-input
+            v-show="!showInputMultiple"
+            ref="singleEmail"
             v-model="party.email"
             data-testid="input-email"
             @keydown.enter.native="addEmail()"
-            @blur="addEmail()"
           />
 
           <el-button
@@ -238,6 +270,14 @@
       >
         <el-table-column>
           <span slot-scope="scope">
+            <el-tooltip
+              v-if="!scope.row.id"
+              placement="left"
+              content="Contato recém adicionado, ainda não está salvo."
+            >
+              <i class="el-icon-info" />
+            </el-tooltip>
+
             {{ scope.row.address }}
           </span>
         </el-table-column>
@@ -326,6 +366,7 @@
             </div>
           </section>
         </el-table-column>
+
         <el-table-column
           fixed="right"
           align="right"
@@ -360,6 +401,8 @@
 
 <script>
 import { mapActions } from 'vuex'
+import { phone as phoneValidator } from 'phone'
+import * as EmailValidator from 'email-validator'
 import { validateName, validateDocument, validatePhone } from '@/utils/validations'
 
 import restartEngagement from '@/utils/mixins/restartEngagement'
@@ -411,7 +454,10 @@ export default {
         ],
         oab: [{ required: false, message: 'Campo obrigatório', trigger: 'submit' }],
         state: [{ required: false, message: 'Campo obrigatório', trigger: 'submit' }]
-      }
+      },
+      showInputMultiple: false,
+      inputMultiplePhones: '',
+      inputMultipleEmails: ''
     }
   },
 
@@ -430,6 +476,14 @@ export default {
 
   mounted() {
     this.originalRole = { ...this.party }
+
+    document.addEventListener('keydown', this.onKeyDown)
+    document.addEventListener('keyup', this.onKeyUp)
+  },
+
+  beforeDestroy() {
+    document.removeEventListener('keydown', this.onKeyDown)
+    document.removeEventListener('keyup', this.onKeyUp)
   },
 
   methods: {
@@ -453,20 +507,94 @@ export default {
       })
     },
 
+    splitString(string) {
+      const list = []
+      const separators = ['\n', '\t', '\r', ';', ',', '|', '\\', '/', '&']
+      let currentWord = ''
+
+      for (let i = 0; i < string.length; i++) {
+        const char = string[i]
+
+        if (separators.includes(char)) {
+          if (currentWord !== '') {
+            list.push(currentWord)
+          }
+          currentWord = ''
+        } else {
+          currentWord += char
+        }
+      }
+
+      if (currentWord !== '') {
+        list.push(currentWord)
+      }
+
+      return list
+    },
+
+    addMultiplesPhone() {
+      return new Promise((resolve, reject) => {
+        let hasAnyValid = false
+        const phones = this.splitString(this.inputMultiplePhones).filter(phone => {
+          return phoneValidator(phone, { country: 'BRA' }).isValid
+        }).map(phone => phoneValidator(phone, { country: 'BRA' }).phoneNumber)
+
+        if (phones.length) {
+          const tag = this.$createElement
+          this.$confirm(tag('div', {}, [
+            tag('p', {}, `Os ${phones.length} contatos abaixo serão adicionados:`),
+            tag('ul', {}, phones.map(phone => tag('li', {}, this.$options.filters.phoneNumber(phone))))
+          ]), 'Atenção!', {
+            confirmButtonText: 'Adicionar',
+            cancelButtonText: 'Cancelar',
+            closeOnClickModal: false,
+            showClose: false,
+            closeOnPressEscape: false
+          }).then(() => {
+            phones.map(phone => {
+              hasAnyValid = true
+              this.party.phone = phone
+              this.addPhone()
+            })
+            this.$message({
+              type: 'success',
+              message: phones.length > 1 ? `${phones.length} contatos foram adicionados com sucesso.` : `${phones.length} contato foi adicionado com sucesso.`
+            })
+          }).catch(() => {
+            this.$jusNotification({
+              title: 'Atenção!',
+              message: 'Nenhum número foi adicionado.',
+              type: 'warning'
+            })
+          })
+        }
+
+        this.inputMultiplePhones = ''
+
+        if (hasAnyValid) resolve()
+        else reject(new Error('Nenhum número válido foi adicionado.'))
+      })
+    },
+
     addPhone() {
       let isValid = true
+
       this.party.phone = this.party.phone.trim()
       this.$refs.party.validateField('phone', errorMessage => {
         if (errorMessage || !this.party.phone) isValid = false
       })
+
       if (isValid) {
         const self = this
+
         this.party.phone = this.party.phone.replace(/ /g, '').replace(/\D/g, '')
-        const isDuplicated = this.party.phones.findIndex(p => {
+        const duplicatedIndex = this.party.phones.findIndex(p => {
           const number = p.number.startsWith('55') ? p.number.replace('55', '') : p.number
           return number === self.party.phone
         })
-        if (isDuplicated < 0) this.party.phones.push({ number: this.party.phone, isMain: true })
+
+        if (duplicatedIndex < 0) this.party.phones.push({ number: this.party.phone, isMain: true })
+
         this.party.phone = ''
       }
     },
@@ -475,16 +603,60 @@ export default {
       this.party.phones.splice(index, 1)
     },
 
+    addMultiplesEmails() {
+      return new Promise((resolve, reject) => {
+        let hasAnyValid = false
+        const emails = this.splitString(this.inputMultipleEmails).filter(email => EmailValidator.validate(email))
+
+        const tag = this.$createElement
+        this.$confirm(tag('div', {}, [
+          tag('p', {}, `Os ${emails.length} contatos abaixo serão adicionados:`),
+          tag('ul', {}, emails.map(email => tag('li', {}, this.$options.filters.phoneOrEmail(email))))
+        ]), 'Atenção!', {
+          confirmButtonText: 'Adicionar',
+          cancelButtonText: 'Cancelar',
+          closeOnClickModal: false,
+          showClose: false,
+          closeOnPressEscape: false
+        }).then(() => {
+          emails.map(email => {
+            hasAnyValid = true
+            this.party.email = email
+            this.addEmail()
+          })
+          this.$message({
+            type: 'success',
+            message: emails.length > 1 ? `${emails.length} contatos foram adicionados com sucesso.` : `${emails.length} contato foi adicionado com sucesso.`
+          })
+        }).catch(() => {
+          this.$jusNotification({
+            title: 'Atenção!',
+            message: 'Nenhum número foi adicionado.',
+            type: 'warning'
+          })
+        })
+
+        this.inputMultipleEmails = ''
+
+        if (hasAnyValid) resolve()
+        else reject(new Error('Nenhum e-mail válido foi adicionado.'))
+      })
+    },
+
     addEmail() {
       let isValid = true
+
       this.party.email = this.party.email.trim()
       this.$refs.party.validateField('email', errorMessage => {
         if (errorMessage || !this.party.email) isValid = false
       })
+
       if (isValid) {
         const self = this
-        const isDuplicated = this.party.emails.findIndex(e => e.address === self.party.email)
-        if (isDuplicated < 0) this.party.emails.push({ address: this.party.email, isMain: true })
+        const duplicatedIndex = this.party.emails.findIndex(e => e.address === self.party.email)
+
+        if (duplicatedIndex < 0) this.party.emails.push({ address: this.party.email, isMain: true })
+
         this.party.email = ''
       }
     },
@@ -704,6 +876,44 @@ export default {
         })
       }
       return [...changed.newPhones, ...changed.newEmails]
+    },
+
+    onKeyUp(event) {
+      if (event.keyCode === 17) {
+        let ref = null
+
+        if (this.$refs?.multiplePhones?.focused) {
+          this.addMultiplesPhone().then(_ => this.$jusNotification({
+            title: 'Yay!',
+            message: 'Os números foram adicionados com sucesso.',
+            type: 'success'
+          }))
+
+          if (this.$refs?.singlePhone) ref = this.$refs.singlePhone
+        } else if (this.$refs?.multipleEmails?.focused) {
+          this.addMultiplesEmails().then(_ => this.$jusNotification({
+            title: 'Yay!',
+            message: 'Os e-mails foram adicionados com sucesso.',
+            type: 'success'
+          }))
+
+          if (this.$refs?.singleEmail) ref = this.$refs.singleEmail
+        }
+
+        this.showInputMultiple = false
+        if (ref) this.$nextTick(ref.focus)
+      }
+    },
+
+    onKeyDown(event) {
+      if (event.keyCode === 17) {
+        this.showInputMultiple = true
+
+        this.$nextTick(() => {
+          if (this.$refs?.multiplePhones && this.$refs?.singlePhone?.focused) this.$refs.multiplePhones.focus()
+          if (this.$refs?.multipleEmails && this.$refs?.singleEmail?.focused) this.$refs.multipleEmails.focus()
+        })
+      }
     }
   }
 }
