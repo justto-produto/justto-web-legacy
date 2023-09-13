@@ -87,7 +87,7 @@
     </div>
 
     <div
-      v-if="['INDISPONIVEL'].includes(audio.situacao)"
+      v-if="['INDISPONIVEL'].includes(audio.situacao) && hasValidAudio"
       class="phone-container__bad-status"
     >
       <el-button
