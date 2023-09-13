@@ -86,8 +86,21 @@
       </div>
     </div>
 
+    <div
+      v-if="['INDISPONIVEL'].includes(audio.situacao)"
+      class="phone-container__bad-status"
+    >
+      <el-button
+        type="secondary"
+        size="mini"
+        @click="handleRequestTranscription(closeLoading)"
+      >
+        Transcrever áudio
+      </el-button>
+    </div>
+
     <CallTextContent
-      v-if="mediaLink && hasValidAudio && useCallTrancription"
+      v-else-if="mediaLink && hasValidAudio && useCallTrancription"
       class="phone-container__editor"
       :note.sync="editorText"
       :resume="audio.resumo"
@@ -202,6 +215,15 @@
           Salvar
         </el-button>
       </div>
+    </div>
+
+    <div
+      v-if="audio.situacao === 'SEM_ARQUIVO'"
+      class="phone-container__bad-status"
+    >
+      <label class="phone-container__bad-status-label">
+        Chamada indisponível
+      </label>
     </div>
 
     <div
@@ -410,9 +432,9 @@ export default {
           })
         }).finally(() => {
           if (this.useCallTrancription) {
-            this.handleGetCallInfos(() => { this.localLoading = false })
+            this.handleGetCallInfos(this.closeLoading)
           } else {
-            this.localLoading = false
+            this.closeLoading()
           }
         })
       }
@@ -438,14 +460,15 @@ export default {
             callback()
             break
           case 'INDISPONIVEL':
-            this.handleRequestTranscription(callback)
+            callback()
+            // this.handleRequestTranscription(callback)
             break
           case 'RECEBIDO':
           case 'TRANSCRITO':
           default:
             setTimeout(() => {
               this.handleGetCallInfos(callback)
-            }, 500)
+            }, 30 * 1000)
             break
         }
       }).catch(error => {
@@ -476,6 +499,10 @@ export default {
           this.handleUpdateCallStatus().then(({ voiceCodeResult }) => resolve(voiceCodeResult))
         } else { resolve('') }
       })
+    },
+
+    closeLoading() {
+      this.localLoading = false
     },
 
     handleUpdateCallStatus() {
