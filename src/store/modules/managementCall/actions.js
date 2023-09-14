@@ -485,7 +485,7 @@ export default {
         disputeId,
         url,
         subdomain,
-        tentativas: 0
+        tentativas: 1
       }
     })
   }
