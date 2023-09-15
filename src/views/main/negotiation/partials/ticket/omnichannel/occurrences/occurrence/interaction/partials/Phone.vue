@@ -87,13 +87,13 @@
     </div>
 
     <div
-      v-if="['INDISPONIVEL'].includes(audio.situacao) && hasValidAudio"
+      v-else-if="('INDISPONIVEL' === audio.situacao || ('SEM_ARQUIVO' === audio.situacao && callWasRecently)) && hasValidAudio"
       class="phone-container__bad-status"
     >
       <el-button
         type="secondary"
         size="mini"
-        @click="handleRequestTranscription(closeLoading)"
+        @click="() => { localLoading = true; handleRequestTranscription(closeLoading)}"
       >
         Transcrever áudio
       </el-button>
@@ -165,7 +165,7 @@
         class="phone-container__editor-label"
         :class="{'invalid-audio': !hasValidAudio}"
       >
-        {{ hasActiveCall ? 'Anote o que precisar desta ligação em andamento:' : hasValidAudio ? 'Anote sobre sua conversa abaixo:' : 'Chamada não foi atendida' }}
+        {{ hasActiveCall ? 'Anote o que precisar desta ligação em andamento:' : hasValidAudio ? 'Anote sobre sua conversa abaixo:' : 'Chamada não foi atendida.' }}
       </label>
 
       <ckeditor
@@ -218,16 +218,16 @@
     </div>
 
     <div
-      v-if="audio.situacao === 'SEM_ARQUIVO'"
+      v-else-if="(audio.situacao === 'SEM_ARQUIVO' || !hasValidAudio) && !hasActiveCall"
       class="phone-container__bad-status"
     >
       <label class="phone-container__bad-status-label">
-        Chamada indisponível
+        Chamada não foi atendida.
       </label>
     </div>
 
     <div
-      v-if="badStatus"
+      v-else-if="badStatus"
       class="phone-container__bad-status"
     >
       <label class="phone-container__bad-status-label">
@@ -282,7 +282,8 @@ export default {
         transcricao: '',
         correcao: '',
         resumo: ''
-      }
+      },
+      transcriptionWatcher: null
     }
   },
 
@@ -335,8 +336,16 @@ export default {
       }
     },
 
+    callWasRecently() {
+      const createdDiff = this.$moment().diff(this.$moment(this.occurrence?.createAt?.dateTime), 'minutes')
+
+      return createdDiff < 5
+    },
+
     isLinkOk() {
-      return ['16'].includes(String(this.audioCodeResult)) || ['Answered', 'SetUp'].includes(this.value?.message?.parameters?.VOICE_STATUS) || this.hasActiveCall
+      const voiceStatus = this.value?.message?.parameters?.VOICE_STATUS
+
+      return ['16'].includes(String(this.audioCodeResult)) || voiceStatus === 'Answered' || (voiceStatus === 'SetUp' && this.callWasRecently) || this.hasActiveCall
     },
 
     hasValidAudio() {
@@ -351,7 +360,9 @@ export default {
       if (had && !have) {
         this.localLoading = true
 
-        setTimeout(this.handleInitCall, (60 * 1000))
+        setTimeout(() => {
+          this.handleInitCall()
+        }, (90 * 1000))
       }
     }
   },
@@ -370,6 +381,10 @@ export default {
     this.showEditor = this.enabledEditor
 
     this.handleInitCall()
+  },
+
+  beforeDestroy() {
+    clearTimeout(this.transcriptionWatcher)
   },
 
   methods: {
@@ -461,12 +476,11 @@ export default {
             break
           case 'INDISPONIVEL':
             callback()
-            // this.handleRequestTranscription(callback)
             break
           case 'RECEBIDO':
           case 'TRANSCRITO':
           default:
-            setTimeout(() => {
+            this.transcriptionWatcher = setTimeout(() => {
               this.handleGetCallInfos(callback)
             }, 30 * 1000)
             break
@@ -474,7 +488,7 @@ export default {
       }).catch(error => {
         this.$jusNotification({ error })
         callback()
-      })
+      }).finally(this.handleUpdateCallStatus)
     },
 
     handleRequestTranscription(callback) {
@@ -484,7 +498,7 @@ export default {
       }).then(() => {
         setTimeout(() => {
           this.handleGetCallInfos(callback)
-        }, 500)
+        }, 5 * 1000)
       }).catch(error => {
         this.$jusNotification({ error })
         callback()

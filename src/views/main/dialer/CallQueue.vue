@@ -10,13 +10,13 @@
       <audio
         id="ringAudio"
         ref="ringAudio"
-        src="https://s3.sa-east-1.amazonaws.com/novo.justto.app/notification-new-dialer.mp3"
+        src="https://s3.sa-east-1.amazonaws.com/justto.app/discador/notification-new-dialer.mp3"
         loop
       />
 
       <audio
         ref="endAudio"
-        src="https://storage.googleapis.com/justto_app/audio/CallEndTuTuTu.mp3"
+        src="https://s3.sa-east-1.amazonaws.com/justto.app/discador/CallEndTuTuTu.mp3"
         loop
       />
 

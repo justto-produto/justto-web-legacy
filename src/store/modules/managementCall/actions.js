@@ -171,7 +171,7 @@ export default {
       url: `api/dialer/${dialerId}/call/${callId}/heartbeat`,
       method: 'PATCH'
     }).catch(error => {
-      this.$jusNotification({ error })
+      vue().$jusNotification({ error })
       dispatch('endCall', { dialerId, callId })
     })
   },
@@ -214,18 +214,16 @@ export default {
     })
   },
 
-  answerCurrentCall({ state, commit, dispatch, getters: { isJusttoAdmin, hasSipSession, getDialer: { id: dialerId }, getCurrentCall: { id: callId } } }, acceptedCall) {
+  answerCurrentCall({ state, commit, getters: { hasSipSession, getDialer: { id: dialerId }, getCurrentCall: { id: callId } } }, acceptedCall) {
     return new Promise((resolve) => {
       if (state.currentCall && hasSipSession) {
-        const callOptions = {
-          mediaConstraints: {
-            audio: true, // only audio calls
-            video: false
-          }
-        }
-
         if (acceptedCall) {
-          state.sipConnection.session.answer(callOptions)
+          state.sipConnection.session.answer({
+            mediaConstraints: {
+              audio: true, // only audio calls
+              video: false
+            }
+          })
         } else {
           state.sipConnection.session.terminate()
         }
@@ -268,20 +266,21 @@ export default {
     })
   },
 
-  callTerminated({ commit, dispatch, getters: { getCurrentCall, getGlobalAuthenticationObject: globalAuthenticationObject } }) {
-    if (getCurrentCall?.scheduling) {
+  callTerminated({ commit, dispatch, getters: { getCurrentCall, getDialer: { id: dialerId }, getGlobalAuthenticationObject: globalAuthenticationObject } }) {
+    const scheduling = getCurrentCall?.scheduling
+    const callId = getCurrentCall?.id
+
+    if (scheduling) {
       dispatch('updatePhoneCallStatus', getCurrentCall?.scheduling?.disputeMessageId)
     }
 
     commit('clearCallHeartbeatInterval')
     commit('clearSipStack')
 
-    if (getCurrentCall?.id) {
-      commit('endCall', {
-        payload: {
-          id: getCurrentCall?.id,
-          globalAuthenticationObject
-        }
+    if (callId) {
+      dispatch('endCall', {
+        dialerId,
+        callId
       })
     }
   },
@@ -485,7 +484,7 @@ export default {
         disputeId,
         url,
         subdomain,
-        tentativas: 0
+        tentativas: 1
       }
     })
   }
