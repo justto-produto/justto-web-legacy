@@ -266,9 +266,10 @@ export default {
     })
   },
 
-  callTerminated({ commit, dispatch, getters: { getCurrentCall, getDialer: { id: dialerId }, getGlobalAuthenticationObject: globalAuthenticationObject } }) {
+  callTerminated({ commit, dispatch, getters: { getCurrentCall, getDialer, getGlobalAuthenticationObject: globalAuthenticationObject } }) {
     const scheduling = getCurrentCall?.scheduling
     const callId = getCurrentCall?.id
+    const dialerId = getDialer?.id
 
     if (scheduling) {
       dispatch('updatePhoneCallStatus', getCurrentCall?.scheduling?.disputeMessageId)
