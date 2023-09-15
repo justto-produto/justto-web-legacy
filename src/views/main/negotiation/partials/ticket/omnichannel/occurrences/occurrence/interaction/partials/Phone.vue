@@ -87,7 +87,7 @@
     </div>
 
     <div
-      v-else-if="('INDISPONIVEL' === audio.situacao || ('SEM_ARQUIVO' === audio.situacao && callWasToday)) && hasValidAudio"
+      v-else-if="('INDISPONIVEL' === audio.situacao || ('SEM_ARQUIVO' === audio.situacao && callWasRecently)) && hasValidAudio"
       class="phone-container__bad-status"
     >
       <el-button
@@ -336,16 +336,16 @@ export default {
       }
     },
 
-    callWasToday() {
-      const createdDiff = this.$moment().diff(this.$moment(this.occurrence?.createAt?.dateTime), 'days')
+    callWasRecently() {
+      const createdDiff = this.$moment().diff(this.$moment(this.occurrence?.createAt?.dateTime), 'minutes')
 
-      return createdDiff < 1
+      return createdDiff < 5
     },
 
     isLinkOk() {
       const voiceStatus = this.value?.message?.parameters?.VOICE_STATUS
 
-      return ['16'].includes(String(this.audioCodeResult)) || voiceStatus === 'Answered' || (voiceStatus === 'SetUp' && this.callWasToday) || this.hasActiveCall
+      return ['16'].includes(String(this.audioCodeResult)) || voiceStatus === 'Answered' || (voiceStatus === 'SetUp' && this.callWasRecently) || this.hasActiveCall
     },
 
     hasValidAudio() {
@@ -362,7 +362,6 @@ export default {
 
         setTimeout(() => {
           this.handleInitCall()
-          this.handleRequestTranscription(() => {})
         }, (90 * 1000))
       }
     }
@@ -467,9 +466,6 @@ export default {
 
         switch (callInfo.situacao) {
           case 'SEM_ARQUIVO':
-            if (!this.callWasToday) this.audioCodeResult = 0
-            callback()
-            break
           case 'ERRO':
             this.audioCodeResult = 0
             callback()
@@ -492,7 +488,7 @@ export default {
       }).catch(error => {
         this.$jusNotification({ error })
         callback()
-      })
+      }).finally(this.handleUpdateCallStatus)
     },
 
     handleRequestTranscription(callback) {
@@ -502,7 +498,7 @@ export default {
       }).then(() => {
         setTimeout(() => {
           this.handleGetCallInfos(callback)
-        }, 500)
+        }, 5 * 1000)
       }).catch(error => {
         this.$jusNotification({ error })
         callback()
