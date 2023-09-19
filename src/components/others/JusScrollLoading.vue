@@ -99,11 +99,11 @@ export default {
   },
 
   mounted() {
-    this.addEventListener()
+    this.addEvent()
   },
 
   beforeDestroy() {
-    this.removeEventListener()
+    this.removeEvent()
   },
 
   methods: {
@@ -128,7 +128,7 @@ export default {
       this.$emit('update:loading', false)
     },
 
-    addEventListener() {
+    addEvent() {
       try {
         this.scrollTarget = document.querySelector(this.target || '.tickets-container__tabs>.el-tabs__content')
 
@@ -138,13 +138,13 @@ export default {
       }
     },
 
-    removeEventListener() {
+    removeEvent() {
       this.scrollTarget.removeEventListener('scroll', this.debouncedCb)
     },
 
     async resetScrollTarget() {
-      await this.removeEventListener()
-      await this.addEventListener()
+      await this.removeEvent()
+      await this.addEvent()
     }
   }
 }
