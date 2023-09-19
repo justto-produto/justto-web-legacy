@@ -90,9 +90,9 @@ export default {
   setTimeoutDialerDetail(state) {
     Vue.set(state, 'timeoutDialerDetail', setTimeout(() => {
       if (state.callQueue.length > 0) {
-        Vue.set(state.callQueue[0], 'status', CALL_STATUS.ENQUEUED)
+        Vue.set(state.callQueue[0], 'status', CALL_STATUS.WAITING_NEW_CALL)
       }
-    }))
+    }, 0))
   },
 
   clearTimeoutDialerDetail(state) {
@@ -105,7 +105,7 @@ export default {
   },
 
   setCallHeartbeatInterval(state) {
-    const interval = ((state.dialer?.keepAlive?.timeout || 10) * 1000) / 4
+    const interval = ((state.dialer?.keepAlive?.timeout || 10) * 1000) / 2
 
     Vue.set(state, 'callHeartbeatInterval', setInterval(() => this.dispatch('sendHeartBeat'), interval))
   },

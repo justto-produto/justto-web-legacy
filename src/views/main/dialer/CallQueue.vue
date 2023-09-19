@@ -317,11 +317,14 @@ export default {
     },
 
     remove(id) {
-      const { ACTIVE_CALL, RECEIVING_CALL } = CALL_STATUS
-      const hasDialer = [ACTIVE_CALL, RECEIVING_CALL].includes(this.currentCall?.status)
+      const { ACTIVE_CALL, RECEIVING_CALL, WAITING_NEW_CALL, WAITING_DIALER_DETAIL, WAITING_DIALER } = CALL_STATUS
+      const hasCallActive = [ACTIVE_CALL, RECEIVING_CALL].includes(this.currentCall?.status)
+      const hasDialerActive = [WAITING_NEW_CALL, WAITING_DIALER_DETAIL, WAITING_DIALER].includes(this.dialer?.status)
+      const callIsEnqueued = this.currentCall?.status === CALL_STATUS.ENQUEUED
 
-      if (id === this.currentCall?.id && hasDialer) {
-        this.hangUpCall()
+      if (id === this.currentCall?.id && !callIsEnqueued) {
+        if (hasDialerActive) { /* TODO: Chamar API para liberar o Discador. */ }
+        if (hasCallActive) this.hangUpCall()
       } else {
         this.removeCall({ callId: id })
       }
@@ -334,8 +337,9 @@ export default {
         dialerId: this.dialer.id,
         callId: this.currentCall.id
       }).then(() => {
-        const audio = this.$refs.endAudio
+        if (this.$refs?.ringAudio) this.$refs.ringAudio.pause()
 
+        const audio = this.$refs.endAudio
         audio.play()
         this.endingCall = false
 
