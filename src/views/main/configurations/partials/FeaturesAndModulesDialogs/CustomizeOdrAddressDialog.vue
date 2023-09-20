@@ -598,7 +598,7 @@ export default {
         title: 'Yay!',
         message: 'Configurações salvas com sucesso',
         type: 'success'
-      })).catch(error => this.$jusNotification({ error })).finally(() => { this.modalLoading = false })
+      })).catch(error => this.$jusNotification({ error })).finally(this.closeFeatureDialog)
     },
 
     saveCustomizedDialer() {
@@ -611,7 +611,7 @@ export default {
         title: 'Yay!',
         message: 'Configurações salvas com sucesso',
         type: 'success'
-      })).catch(error => this.$jusNotification({ error })).finally(() => { this.modalLoading = false })
+      })).catch(error => this.$jusNotification({ error })).finally(this.closeFeatureDialog)
     },
 
     validateForm(ref) {
