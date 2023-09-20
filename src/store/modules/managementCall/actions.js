@@ -156,6 +156,9 @@ export default {
       url: `api/dialer/${dialerId}/call/${callId}`,
       method: 'DELETE',
       mutation: 'endCall',
+      params: {
+        subdomain: getters.workspaceSubdomain
+      },
       payload: {
         id: Number(callId),
         globalAuthenticationObject: getters.getGlobalAuthenticationObject
