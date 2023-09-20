@@ -425,7 +425,8 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (!validateLocalWorkspace()) {
-      next('login')
+      sessionStorage.setItem('redirect', to.fullPath)
+      next('login') // Não tem Workspace na sessionStorage
     } else if (Store.getters.isLoggedIn) {
       console.log('hasWorkspace', Store.getters.hasWorkspace)
       if (Store.getters.hasWorkspace) {

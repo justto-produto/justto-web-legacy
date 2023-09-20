@@ -75,7 +75,7 @@ _axios.interceptors.response.use(
     if (error.response?.status === 503) {
       showUnavailableLoading()
     }
-    if (error.response?.status === 401 && error.response.data.code !== 'INVALID_CREDENTIALS') {
+    if (error.response?.status === 401 && error.response.data.code !== 'INVALID_CREDENTIALS' && vue().$route?.name !== 'login') {
       store.dispatch('logout')
     }
     return Promise.reject(error)

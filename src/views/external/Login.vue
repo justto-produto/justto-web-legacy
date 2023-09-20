@@ -373,11 +373,17 @@ export default {
         this.$store.dispatch('getWorkspaceMembers')
           .then(() => {
             this.getAccountProperty('CUSTOM_HOME').then(({ CUSTOM_HOME }) => {
+              const sessionRedirect = sessionStorage.getItem('redirect')
+              sessionStorage.removeItem('redirect')
+
               if (Object.keys(localStorage).includes('jusredirect')) {
                 this.showLoading = false
                 const redirect = JSON.parse(localStorage.getItem('jusredirect'))
                 const params = new URLSearchParams(redirect).toString()
+
                 this.$router.push(`/redirect?${params}`)
+              } else if (sessionRedirect) {
+                this.$router.push(sessionRedirect)
               } else if (CUSTOM_HOME) {
                 this.$router.push(CUSTOM_HOME)
               } else if (response.profile === 'ADMINISTRATOR' && !isJustto) {

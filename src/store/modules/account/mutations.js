@@ -11,7 +11,6 @@ const accountMutations = {
 
     // eslint-disable-next-line
     axios.defaults.headers.common['Authorization'] = token
-    console.log('setToken', 'removeItem')
     localStorage.removeItem('justoken')
     localStorage.setItem('justoken', token)
   },
