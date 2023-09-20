@@ -325,6 +325,8 @@ export default {
     dragTag(event, strData) {
       const data = JSON.parse(strData)
 
+      if (!event?.dataTransfer) return
+
       event.dataTransfer.setData('data', JSON.stringify({
         ...data,
         tag: {
@@ -335,6 +337,8 @@ export default {
     },
 
     dropTag(event, column, index) {
+      if (!event?.dataTransfer) return
+
       const data = JSON.parse(event.dataTransfer.getData('data'))
 
       this.columns.find(element => {

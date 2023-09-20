@@ -87,14 +87,85 @@
     </div>
 
     <div
-      v-if="mediaLink && !badStatus"
+      v-else-if="('INDISPONIVEL' === audio.situacao || ('SEM_ARQUIVO' === audio.situacao && callWasRecently)) && hasValidAudio"
+      class="phone-container__bad-status"
+    >
+      <el-button
+        type="secondary"
+        size="mini"
+        @click="() => { localLoading = true; handleRequestTranscription(closeLoading)}"
+      >
+        Transcrever áudio
+      </el-button>
+    </div>
+
+    <CallTextContent
+      v-else-if="mediaLink && hasValidAudio && useCallTrancription"
+      class="phone-container__editor"
+      :note.sync="editorText"
+      :resume="audio.resumo"
+      :transcription="audio.correcao"
+    >
+      <div class="phone-container__editor jus-ckeditor__parent">
+        <ckeditor
+          v-if="enabledEditor"
+          ref="callTextEditor"
+          v-model="editorText"
+          :editor="editor"
+          :config="editorConfig"
+          class="phone-container__editor-editor"
+          type="classic"
+        />
+
+        <div
+          v-else-if="hasValidAudio"
+          class="phone-container__editor-preview"
+          v-html="editorText"
+        />
+
+        <div
+          v-if="hasValidAudio"
+          class="phone-container__editor-switch"
+          :class="{'right': enabledEditor}"
+        >
+          <el-button
+            v-if="!enabledEditor"
+            type="text"
+            icon="el-icon-edit"
+            @click="enabledEditor = !enabledEditor"
+          >
+            Editar anotações da conversa
+          </el-button>
+
+          <el-button
+            v-if="enabledEditor"
+            size="mini"
+            @click="enabledEditor = !enabledEditor"
+          >
+            Cancelar
+          </el-button>
+
+          <el-button
+            v-if="enabledEditor"
+            type="primary"
+            size="mini"
+            @click="saveMassageContent()"
+          >
+            Salvar
+          </el-button>
+        </div>
+      </div>
+    </CallTextContent>
+
+    <div
+      v-if="mediaLink && !badStatus && !useCallTrancription"
       class="phone-container__editor jus-ckeditor__parent"
     >
       <label
         class="phone-container__editor-label"
         :class="{'invalid-audio': !hasValidAudio}"
       >
-        {{ hasActiveCall ? 'Anote o que precisar desta ligação em andamento:' : hasValidAudio ? 'Anote sobre sua conversa abaixo:' : 'Chamada não foi atendida' }}
+        {{ hasActiveCall ? 'Anote o que precisar desta ligação em andamento:' : hasValidAudio ? 'Anote sobre sua conversa abaixo:' : 'Chamada não foi atendida.' }}
       </label>
 
       <ckeditor
@@ -109,6 +180,7 @@
 
       <em
         v-else-if="hasValidAudio"
+        class="phone-container__editor-notes"
         v-html="editorText"
       />
 
@@ -146,7 +218,16 @@
     </div>
 
     <div
-      v-if="badStatus"
+      v-else-if="(audio.situacao === 'SEM_ARQUIVO' || !hasValidAudio) && !hasActiveCall"
+      class="phone-container__bad-status"
+    >
+      <label class="phone-container__bad-status-label">
+        Chamada não foi atendida.
+      </label>
+    </div>
+
+    <div
+      v-else-if="badStatus"
       class="phone-container__bad-status"
     >
       <label class="phone-container__bad-status-label">
@@ -165,6 +246,10 @@ import ckeditor from '@/utils/mixins/ckeditor'
 import { mapActions, mapGetters } from 'vuex'
 
 export default {
+  components: {
+    CallTextContent: () => import('./partials/CallTextContent')
+  },
+
   mixins: [ckeditor],
 
   props: {
@@ -191,13 +276,21 @@ export default {
       useMentionPlugin: true,
       showEditor: false,
       localLoading: false,
-      audioCodeResult: ''
+      audioCodeResult: '',
+      audio: {
+        situacao: '',
+        transcricao: '',
+        correcao: '',
+        resumo: ''
+      },
+      transcriptionWatcher: null
     }
   },
 
   computed: {
     ...mapGetters({
-      currentCall: 'getCurrentCall'
+      currentCall: 'getCurrentCall',
+      useCallTrancription: 'useCallTrancription'
     }),
 
     contact() {
@@ -243,8 +336,16 @@ export default {
       }
     },
 
+    callWasRecently() {
+      const createdDiff = this.$moment().diff(this.$moment(this.occurrence?.createAt?.dateTime), 'minutes')
+
+      return createdDiff < 5
+    },
+
     isLinkOk() {
-      return ['16'].includes(String(this.audioCodeResult)) || ['Answered', 'SetUp'].includes(this.value?.message?.parameters?.VOICE_STATUS) || this.hasActiveCall
+      const voiceStatus = this.value?.message?.parameters?.VOICE_STATUS
+
+      return ['16'].includes(String(this.audioCodeResult)) || voiceStatus === 'Answered' || (voiceStatus === 'SetUp' && this.callWasRecently) || this.hasActiveCall
     },
 
     hasValidAudio() {
@@ -259,7 +360,9 @@ export default {
       if (had && !have) {
         this.localLoading = true
 
-        setTimeout(this.handleInitCall, (60 * 1000))
+        setTimeout(() => {
+          this.handleInitCall()
+        }, (90 * 1000))
       }
     }
   },
@@ -280,10 +383,16 @@ export default {
     this.handleInitCall()
   },
 
+  beforeDestroy() {
+    clearTimeout(this.transcriptionWatcher)
+  },
+
   methods: {
     ...mapActions([
+      'getCallMedia',
       'getCallStatus',
       'updateCallStatus',
+      'getCallGenerateMedia',
       'setInteractionMessageContent'
     ]),
 
@@ -327,6 +436,7 @@ export default {
     async handleInitCall() {
       if (this.value?.message?.parameters?.PHONE_CALL_ID) {
         this.localLoading = true
+
         this.requestCallInfos().then(voiceCodeResult => {
           this.audioCodeResult = voiceCodeResult
 
@@ -336,11 +446,63 @@ export default {
             }
           })
         }).finally(() => {
-          this.localLoading = false
+          if (this.useCallTrancription) {
+            this.handleGetCallInfos(this.closeLoading)
+          } else {
+            this.closeLoading()
+          }
         })
       }
 
       return Promise.resolve()
+    },
+
+    handleGetCallInfos(callback) {
+      this.getCallMedia({
+        disputeId: this.$route.params.id,
+        url: this.mediaLink
+      }).then(callInfo => {
+        this.audio = callInfo
+
+        switch (callInfo.situacao) {
+          case 'SEM_ARQUIVO':
+          case 'ERRO':
+            this.audioCodeResult = 0
+            callback()
+            break
+          case 'CORRIGIDO':
+            this.audioCodeResult = 16
+            callback()
+            break
+          case 'INDISPONIVEL':
+            callback()
+            break
+          case 'RECEBIDO':
+          case 'TRANSCRITO':
+          default:
+            this.transcriptionWatcher = setTimeout(() => {
+              this.handleGetCallInfos(callback)
+            }, 30 * 1000)
+            break
+        }
+      }).catch(error => {
+        this.$jusNotification({ error })
+        callback()
+      }).finally(this.handleUpdateCallStatus)
+    },
+
+    handleRequestTranscription(callback) {
+      this.getCallGenerateMedia({
+        disputeId: this.$route.params.id,
+        url: this.mediaLink
+      }).then(() => {
+        setTimeout(() => {
+          this.handleGetCallInfos(callback)
+        }, 5 * 1000)
+      }).catch(error => {
+        this.$jusNotification({ error })
+        callback()
+      })
     },
 
     requestCallInfos() {
@@ -351,6 +513,10 @@ export default {
           this.handleUpdateCallStatus().then(({ voiceCodeResult }) => resolve(voiceCodeResult))
         } else { resolve('') }
       })
+    },
+
+    closeLoading() {
+      this.localLoading = false
     },
 
     handleUpdateCallStatus() {
@@ -482,6 +648,16 @@ export default {
       &.invalid-audio {
         text-align: center;
       }
+    }
+
+    .phone-container__editor-preview {
+      font-size: 1em;
+      padding: 8px;
+      border-radius: 8px;
+      color: $--color-text-primary;
+      background-color: $--color-email-bg;
+      max-height: 300px;
+      overflow-y: auto;
     }
 
     .phone-container__editor-switch.right {

@@ -529,7 +529,7 @@ export default {
   flex-direction: column;
 
   .tickets-container__tabs {
-    overflow: hidden;
+    overflow-x: hidden !important;
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -611,6 +611,7 @@ export default {
 
   .tickets-container__tabs {
     height: 100%;
+    overflow-x: hidden !important;
 
     .el-tabs__content {
       overflow: auto;

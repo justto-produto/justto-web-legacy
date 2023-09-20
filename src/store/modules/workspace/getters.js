@@ -77,6 +77,7 @@ const workspaceGetters = {
   useIntegrationBff: state => state?.workspace?.properties?.USE_INTEGRATION_BFF === 'ENABLED',
   usePixAccountType: state => state?.workspace?.properties?.USE_PIX_ACCOUNT_TYPE !== 'DISABLED',
   usePartyAddress: state => state?.workspace?.properties?.ENRICH_ADDRESS === 'ENABLED',
+  useCallTrancription: state => state?.workspace?.properties?.USE_CALL_TRANSCRIPTION === 'ENABLED',
   proJuntosAdmins: state => JSON.parse(`[${(state?.workspace?.properties?.PROJUNTTOS_ADMIN || '')}]`)
 }
 

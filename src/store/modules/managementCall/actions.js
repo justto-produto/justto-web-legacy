@@ -1,7 +1,7 @@
 // https://justto.atlassian.net/browse/SAAS-4522
 import { Call } from '@/models/managementCall/currentCall'
 import { ScheduledCallModel } from '@/models/managementCall/scheduledCallInfo'
-import { axiosDispatch } from '@/utils'
+import { axiosDispatch, buildQuery } from '@/utils'
 import { CALL_STATUS } from '@/constants/callStatus'
 import { publishWebsocket } from '@/utils/utils/others'
 
@@ -14,6 +14,7 @@ const DEFAULT_JUSTTO_MANAGEMENT_CALL = "{'currentCall':null,'callQueue':[],'appI
 const dialerApi = 'api/dialer'
 const disputeApi = 'api/disputes/v2'
 const legacyDisputeApi = 'api/disputes'
+const transcricaoApi = 'api/transcricao-audio/v1'
 
 export default {
   activeAppToCall({ commit, getters: { hasOtherTabActive, isActiveToCall } }, active = false) {
@@ -155,6 +156,9 @@ export default {
       url: `api/dialer/${dialerId}/call/${callId}`,
       method: 'DELETE',
       mutation: 'endCall',
+      params: {
+        subdomain: getters.workspaceSubdomain
+      },
       payload: {
         id: Number(callId),
         globalAuthenticationObject: getters.getGlobalAuthenticationObject
@@ -170,7 +174,7 @@ export default {
       url: `api/dialer/${dialerId}/call/${callId}/heartbeat`,
       method: 'PATCH'
     }).catch(error => {
-      this.$jusNotification({ error })
+      vue().$jusNotification({ error })
       dispatch('endCall', { dialerId, callId })
     })
   },
@@ -213,18 +217,16 @@ export default {
     })
   },
 
-  answerCurrentCall({ state, commit, dispatch, getters: { isJusttoAdmin, hasSipSession, getDialer: { id: dialerId }, getCurrentCall: { id: callId } } }, acceptedCall) {
+  answerCurrentCall({ state, commit, getters: { hasSipSession, getDialer: { id: dialerId }, getCurrentCall: { id: callId } } }, acceptedCall) {
     return new Promise((resolve) => {
       if (state.currentCall && hasSipSession) {
-        const callOptions = {
-          mediaConstraints: {
-            audio: true, // only audio calls
-            video: false
-          }
-        }
-
         if (acceptedCall) {
-          state.sipConnection.session.answer(callOptions)
+          state.sipConnection.session.answer({
+            mediaConstraints: {
+              audio: true, // only audio calls
+              video: false
+            }
+          })
         } else {
           state.sipConnection.session.terminate()
         }
@@ -267,20 +269,22 @@ export default {
     })
   },
 
-  callTerminated({ commit, dispatch, getters: { getCurrentCall, getGlobalAuthenticationObject: globalAuthenticationObject } }) {
-    if (getCurrentCall?.scheduling) {
+  callTerminated({ commit, dispatch, getters: { getCurrentCall, getDialer, getGlobalAuthenticationObject: globalAuthenticationObject } }) {
+    const scheduling = getCurrentCall?.scheduling
+    const callId = getCurrentCall?.id
+    const dialerId = getDialer?.id
+
+    if (scheduling) {
       dispatch('updatePhoneCallStatus', getCurrentCall?.scheduling?.disputeMessageId)
     }
 
     commit('clearCallHeartbeatInterval')
     commit('clearSipStack')
 
-    if (getCurrentCall?.id) {
-      commit('endCall', {
-        payload: {
-          id: getCurrentCall?.id,
-          globalAuthenticationObject
-        }
+    if (callId) {
+      dispatch('endCall', {
+        dialerId,
+        callId
       })
     }
   },
@@ -463,6 +467,29 @@ export default {
   getCallStatus({ _ }, callId) {
     return axiosDispatch({
       url: `${dialerApi}/call/${callId}`
+    })
+  },
+
+  getCallMedia({ getters: { workspaceSubdomain: subdomain } }, { disputeId, url }) {
+    return axiosDispatch({
+      url: `${transcricaoApi}/media${buildQuery({
+        disputeId,
+        url,
+        subdomain
+      })}`
+    })
+  },
+
+  getCallGenerateMedia({ getters: { workspaceSubdomain: subdomain } }, { disputeId, url }) {
+    return axiosDispatch({
+      method: 'POST',
+      url: `${transcricaoApi}/media/processar`,
+      data: {
+        disputeId,
+        url,
+        subdomain,
+        tentativas: 1
+      }
     })
   }
 }

@@ -343,6 +343,7 @@ export default {
   .communication-ticket-item-container__resume {
     margin: 6px 0px 6px 12px;
     flex: 1;
+    width: 100%;
     position: relative;
 
     .communication-ticket-item-container__parties {
