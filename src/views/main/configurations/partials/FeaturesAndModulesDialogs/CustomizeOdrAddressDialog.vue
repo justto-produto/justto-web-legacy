@@ -255,6 +255,7 @@
         >
           <el-form
             :model="whatsAppForm"
+            :disabled="!haveAccess"
             class="configure-customizations__form"
           >
             <div class="configure-customizations__form-header">
@@ -334,6 +335,7 @@
         >
           <el-form
             :model="dialerForm"
+            :disabled="!haveAccess"
             class="configure-customizations__form"
           >
             <div class="configure-customizations__form-header">
@@ -531,7 +533,8 @@ export default {
     ...mapGetters({
       properties: 'workspaceProperties',
       isJusttoAdmin: 'isJusttoAdmin',
-      workspaceId: 'workspaceId'
+      workspaceId: 'workspaceId',
+      accountEmail: 'accountEmail'
     }),
 
     haveDomain() {
@@ -556,6 +559,10 @@ export default {
         this.currentDomain?.dns?.dkim1,
         this.currentDomain?.dns?.dkim2
       ] : []
+    },
+
+    haveAccess() {
+      return ['deivid@justto.com.br', 'lucas@justto.com.br'].includes(this.accountEmail)
     }
   },
 
