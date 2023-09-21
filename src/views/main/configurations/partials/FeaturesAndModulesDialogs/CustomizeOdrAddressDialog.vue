@@ -255,6 +255,7 @@
         >
           <el-form
             :model="whatsAppForm"
+            :disabled="!haveAccess"
             class="configure-customizations__form"
           >
             <div class="configure-customizations__form-header">
@@ -320,6 +321,69 @@
                   type="primary"
                   size="small"
                   @click.prevent="saveCustomizedWhatsApp"
+                >
+                  Salvar configuração
+                </el-button>
+              </div>
+            </div>
+          </el-form>
+        </el-tab-pane>
+
+        <el-tab-pane
+          label="Discador"
+          name="discador"
+        >
+          <el-form
+            :model="dialerForm"
+            :disabled="!haveAccess"
+            class="configure-customizations__form"
+          >
+            <div class="configure-customizations__form-header">
+              <div class="configure-customizations__form-header-item">
+                <el-form-item
+                  class="configure-customizations__form-header-item-input"
+                  prop="WORKSPACE_DIALER_OWNER"
+                >
+                  <label class="configure-customizations__form-header-item-input-label">
+                    Nome do discador:
+                  </label>
+
+                  <el-tooltip
+                    placement="right"
+                    :open-delay="500"
+                  >
+                    <div slot="content">
+                      Nome cadastrado na Code7.
+                    </div>
+                    <i class="el-icon-info" />
+                  </el-tooltip>
+
+                  <el-input
+                    v-model="dialerForm.WORKSPACE_DIALER_OWNER"
+                    size="small"
+                  />
+                </el-form-item>
+              </div>
+            </div>
+
+            <div class="configure-customizations__footer">
+              <div class="configure-customizations__footer-actions">
+                <el-button
+                  class="configure-customizations__footer-cancel"
+                  size="small"
+                  plain
+                  @click="closeFeatureDialog()"
+                >
+                  Cancelar
+                </el-button>
+
+                <el-button
+                  v-loading="modalLoading"
+                  :disabled="modalLoading || !isJusttoAdmin"
+                  class="configure-customizations__footer-confirm"
+                  type="primary"
+                  size="small"
+                  @click.prevent="saveCustomizedDialer"
                 >
                   Salvar configuração
                 </el-button>
@@ -442,6 +506,10 @@ export default {
       CUSTOM_WHATSAPP_NUMBER: ''
     },
 
+    dialerForm: {
+      WORKSPACE_DIALER_OWNER: ''
+    },
+
     newDomainForm: {
       domain: '',
       mail_cname: '',
@@ -465,7 +533,8 @@ export default {
     ...mapGetters({
       properties: 'workspaceProperties',
       isJusttoAdmin: 'isJusttoAdmin',
-      workspaceId: 'workspaceId'
+      workspaceId: 'workspaceId',
+      accountEmail: 'accountEmail'
     }),
 
     haveDomain() {
@@ -490,6 +559,10 @@ export default {
         this.currentDomain?.dns?.dkim1,
         this.currentDomain?.dns?.dkim2
       ] : []
+    },
+
+    haveAccess() {
+      return ['deivid@justto.com.br', 'lucas@justto.com.br'].includes(this.accountEmail)
     }
   },
 
@@ -525,7 +598,20 @@ export default {
         title: 'Yay!',
         message: 'Configurações salvas com sucesso',
         type: 'success'
-      })).catch(error => this.$jusNotification({ error })).finally(() => { this.modalLoading = false })
+      })).catch(error => this.$jusNotification({ error })).finally(this.closeFeatureDialog)
+    },
+
+    saveCustomizedDialer() {
+      this.modalLoading = true
+
+      this.editProperties({
+        ...this.dialerForm,
+        WORKSPACE_DIALER_OWNER: this.dialerForm.WORKSPACE_DIALER_OWNER
+      }).then(() => this.$jusNotification({
+        title: 'Yay!',
+        message: 'Configurações salvas com sucesso',
+        type: 'success'
+      })).catch(error => this.$jusNotification({ error })).finally(this.closeFeatureDialog)
     },
 
     validateForm(ref) {
@@ -605,6 +691,7 @@ export default {
         })
 
         this.resetWhatsAppFormInfo()
+        this.resetDialerFormInfo()
 
         this.searchTemplete()
       } else {
@@ -617,6 +704,12 @@ export default {
       this.whatsAppForm = {
         CUSTOM_WHATSAPP_APP_NAME: this.properties.CUSTOM_WHATSAPP_APP_NAME || '',
         CUSTOM_WHATSAPP_NUMBER: this.properties.CUSTOM_WHATSAPP_NUMBER || ''
+      }
+    },
+
+    resetDialerFormInfo() {
+      this.dialerForm = {
+        WORKSPACE_DIALER_OWNER: this.properties.WORKSPACE_DIALER_OWNER || ''
       }
     },
 
