@@ -3,8 +3,8 @@ import { isJusttoUser } from '@/utils/validations'
 const accountGetters = {
   userPreferences: state => state.preferences,
   userProperties: state => state.preferences?.properties || {},
-  accountToken: state => state.token,
-  isLoggedIn: state => !!state.token,
+  accountToken: state => localStorage.getItem('justoken'),
+  isLoggedIn: state => Boolean(localStorage.getItem('justoken')),
   accountId: state => state.id,
   accountEmail: state => state.email,
   isJusttoAdmin: state => isJusttoUser(state.email),

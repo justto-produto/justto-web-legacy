@@ -383,7 +383,7 @@ export default {
 
                 this.$router.push(`/redirect?${params}`)
               } else if (sessionRedirect) {
-                this.$router.push(sessionRedirect)
+                this.$router.push(JSON.parse(sessionRedirect))
               } else if (CUSTOM_HOME) {
                 this.$router.push(CUSTOM_HOME)
               } else if (response.profile === 'ADMINISTRATOR' && !isJustto) {
