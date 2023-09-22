@@ -298,9 +298,9 @@ export default {
 
           this.autoValidateContactTime = this.$moment().add(2, 'm').format()
 
-          this.$nextTick().then(() => {
-            this.$refs.countdown.reset()
-          })
+          setTimeout(() => this.$nextTick().then(() => {
+            if (this.$refs.countdown) this.$refs.countdown.reset()
+          }), 500)
         }
       }
     }
