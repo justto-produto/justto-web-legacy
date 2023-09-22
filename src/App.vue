@@ -39,8 +39,11 @@ export default {
       'syncWorkspace'
     ]),
 
-    handleRoute(to, _from) {
-      document.title = `${this.workspaceTeamName} - ` + to.meta.title + (['dispute', 'ticket'].includes(to.name) ? ` #${to.params.id}` : '') || 'ProJuris'
+    handleRoute(to, from) {
+      const prefix = this.workspaceTeamName ? `[${this.workspaceTeamName.trim()}] ` : ''
+      const sufix = (['dispute', 'ticket'].includes(to.name) ? ` #${to.params.id}` : '')
+
+      document.title = prefix + to.meta.title + sufix
       this.setRoute(to)
     }
   }

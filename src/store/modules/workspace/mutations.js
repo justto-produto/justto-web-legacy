@@ -12,7 +12,6 @@ const workspaceMutations = {
   setWorkspace(state, workspace) {
     return new Promise((resolve, reject) => {
       if (workspace) {
-        console.log('setWorkspace', workspace)
         setLocalWorkspace(workspace).then(() => {
           // eslint-disable-next-line
           axios.defaults.headers.common['Workspace'] = workspace.subDomain

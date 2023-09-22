@@ -1,7 +1,6 @@
 import Vue from 'vue'
 
 const setLocalWorkspace = async(workspace) => {
-  console.log('setLocalWorkspace', workspace)
   if (!workspace?.id) return Promise.reject(new Error('Workspace ID is required'))
 
   return new Promise(resolve => {

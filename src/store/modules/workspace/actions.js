@@ -8,7 +8,10 @@ const workspaceActions = {
   myWorkspace() {
     return axiosDispatch({
       url: `${workspacesPath}/my`,
-      headers: { Workspace: '' },
+      headers: {
+        Workspace: '',
+        Authorization: localStorage.getItem('justoken')
+      },
       mutation: 'setUserWorkspaces'
     })
   },

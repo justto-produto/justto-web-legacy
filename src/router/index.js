@@ -14,7 +14,6 @@ Router.prototype.push = function push(location) {
 }
 
 Vue.use(Router)
-Vue.use(Router)
 
 const router = new Router({
   routes: [
@@ -445,6 +444,10 @@ router.beforeEach((to, from, next) => {
           if (to.name === 'management') {
             next({ name: 'negotiation' })
           }
+        }
+
+        if (from.name === 'login') {
+          Store.dispatch('myAccount')
         }
 
         if (from.name === 'ticket' && from.params?.id) {
