@@ -283,7 +283,8 @@ export default {
       answerCurrentCall: 'answerCurrentCall',
       removeCall: 'SOCKET_REMOVE_CALL',
       callTerminated: 'callTerminated',
-      endCall: 'endCall'
+      endCall: 'endCall',
+      leaveDialer: 'leaveDialer'
     }),
 
     answerCall(answer) {
@@ -317,11 +318,23 @@ export default {
     },
 
     remove(id) {
-      const { ACTIVE_CALL, RECEIVING_CALL } = CALL_STATUS
-      const hasDialer = [ACTIVE_CALL, RECEIVING_CALL].includes(this.currentCall?.status)
+      const { ACTIVE_CALL, RECEIVING_CALL, COMPLETED_CALL } = CALL_STATUS
+      const callIsEnqueued = this.currentCall?.status === CALL_STATUS.ENQUEUED
+      const hasCallActive = [ACTIVE_CALL, RECEIVING_CALL, COMPLETED_CALL].includes(this.currentCall?.status) && Number.isInteger(this.currentCall?.id)
+      const hasDialerActive = !callIsEnqueued && !hasCallActive
+      const dialerId = this.dialer?.id
 
-      if (id === this.currentCall?.id && hasDialer) {
-        this.hangUpCall()
+      if (id === this.currentCall?.id && !callIsEnqueued) {
+        if (hasCallActive) {
+          this.hangUpCall()
+        }
+
+        if (hasDialerActive) {
+          this.leaveDialer({
+            dialerId,
+            callId: this.currentCall?.id
+          })
+        }
       } else {
         this.removeCall({ callId: id })
       }
@@ -334,8 +347,9 @@ export default {
         dialerId: this.dialer.id,
         callId: this.currentCall.id
       }).then(() => {
-        const audio = this.$refs.endAudio
+        if (this.$refs?.ringAudio) this.$refs.ringAudio.pause()
 
+        const audio = this.$refs.endAudio
         audio.play()
         this.endingCall = false
 
