@@ -83,11 +83,11 @@ export default {
 
   computed: {
     resumo() {
-      return (this.resume ?? '')
+      return (this.resume ?? '').replaceAll('\n', '<br />')
     },
 
     transcricao() {
-      return (this.transcription ?? '')
+      return (this.transcription ?? '').replaceAll('\n', '<br />')
     },
 
     nota: {
