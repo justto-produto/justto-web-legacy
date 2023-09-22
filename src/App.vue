@@ -14,13 +14,17 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 import cookies from '@/utils/mixins/cookies'
 
 export default {
   name: 'App',
 
   mixins: [cookies],
+
+  computed: {
+    ...mapGetters(['workspaceTeamName'])
+  },
 
   watch: {
     $route: {
@@ -30,10 +34,13 @@ export default {
   },
 
   methods: {
-    ...mapMutations(['setRoute']),
+    ...mapMutations([
+      'setRoute',
+      'syncWorkspace'
+    ]),
 
     handleRoute(to, _from) {
-      document.title = to.meta.title + (['dispute', 'ticket'].includes(to.name) ? ` #${to.params.id}` : '') || 'ProJuris'
+      document.title = `${this.workspaceTeamName} - ` + to.meta.title + (['dispute', 'ticket'].includes(to.name) ? ` #${to.params.id}` : '') || 'ProJuris'
       this.setRoute(to)
     }
   }
