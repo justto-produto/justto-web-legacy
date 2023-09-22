@@ -151,7 +151,7 @@ export default {
     commit('setRequestProvideNewInterval')
   },
 
-  leaveDialer({ commit, dispatch, getters: { getGlobalAuthenticationObject } }, { dialerId, callId }) {
+  leaveDialer({ state, commit, dispatch, getters: { getGlobalAuthenticationObject } }, { dialerId, callId }) {
     return axiosDispatch({
       url: `api/dialer/${dialerId}/call`,
       method: 'DELETE',
@@ -161,6 +161,10 @@ export default {
         globalAuthenticationObject: getGlobalAuthenticationObject
       }
     }).finally(() => {
+      if (state?.sipConnection?.session) {
+        state.sipConnection.session.terminate()
+      }
+
       dispatch('callTerminated')
       commit('clearCallHeartbeatInterval')
       commit('clearSipStack')
@@ -307,7 +311,7 @@ export default {
   },
 
   SOCKET_ADD_DIALER_DETAIL({ dispatch, getters: { isActiveToCall, getCurrentCall, isToIgnoreDialer, getDialer }, commit }, dialer) {
-    const acceptDialer = isActiveToCall && !isToIgnoreDialer && getCurrentCall && !getDialer
+    const acceptDialer = isActiveToCall && !isToIgnoreDialer && getCurrentCall && !(getDialer?.name)
 
     if (acceptDialer) {
       commit('addDialerDetail', dialer)
@@ -455,6 +459,7 @@ export default {
     if (isActiveToCall) {
       commit('addDialerDetail', { id: dialerId })
       commit('clearActiveRequestInterval')
+      commit('setCurrentCallStatus', CALL_STATUS.WAITING_DIALER_DETAIL)
       dispatch('getDialerDetails', { dialerId })
     }
   },
