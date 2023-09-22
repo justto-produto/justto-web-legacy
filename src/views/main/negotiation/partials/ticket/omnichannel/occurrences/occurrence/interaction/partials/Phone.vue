@@ -2,6 +2,7 @@
   <article
     v-loading="localLoading"
     element-loading-text="Aguarde..."
+    element-loading-spinner="el-icon-info"
     class="phone-container"
   >
     <div

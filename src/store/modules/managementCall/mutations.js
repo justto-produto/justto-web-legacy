@@ -24,7 +24,7 @@ export default {
   },
 
   endCall(state, { payload: { id, globalAuthenticationObject } }) {
-    if (state.currentCall && state.currentCall.id === id) {
+    if (state?.currentCall?.id === id) {
       Vue.set(state.currentCall, 'status', CALL_STATUS.COMPLETED_CALL)
     }
 
@@ -32,7 +32,7 @@ export default {
 
     Vue.set(state, 'callQueue', remainingCalls)
     Vue.set(state, 'dialer', null)
-    Vue.set(state, 'currentCall', (state.callQueue[0] || null))
+    Vue.set(state, 'currentCall', (remainingCalls[0] || null))
 
     this.commit('clearCallHeartbeatInterval')
 

@@ -151,14 +151,27 @@ export default {
     commit('setRequestProvideNewInterval')
   },
 
-  endCall({ commit, getters, dispatch }, { dialerId, callId }) {
+  leaveDialer({ commit, dispatch, getters: { getGlobalAuthenticationObject } }, { dialerId, callId }) {
+    return axiosDispatch({
+      url: `api/dialer/${dialerId}/call`,
+      method: 'DELETE',
+      mutation: 'endCall',
+      payload: {
+        id: callId,
+        globalAuthenticationObject: getGlobalAuthenticationObject
+      }
+    }).finally(() => {
+      dispatch('callTerminated')
+      commit('clearCallHeartbeatInterval')
+      commit('clearSipStack')
+    })
+  },
+
+  endCall({ commit, getters }, { dialerId, callId }) {
     return axiosDispatch({
       url: `api/dialer/${dialerId}/call/${callId}`,
       method: 'DELETE',
       mutation: 'endCall',
-      params: {
-        subdomain: getters.workspaceSubdomain
-      },
       payload: {
         id: Number(callId),
         globalAuthenticationObject: getters.getGlobalAuthenticationObject
@@ -179,21 +192,23 @@ export default {
     })
   },
 
-  requestDialerCall({ commit, dispatch, getters: { getGlobalAuthenticationObject } }, requestCallCommand) {
-    commit('setCurrentCallStatus', CALL_STATUS.WAITING_NEW_CALL)
+  requestDialerCall({ commit, dispatch, getters: { getGlobalAuthenticationObject, getCurrentCall } }, requestCallCommand) {
+    if (getCurrentCall?.status !== CALL_STATUS.COMPLETED_CALL) {
+      commit('setCurrentCallStatus', CALL_STATUS.WAITING_NEW_CALL)
 
-    return axiosDispatch({
-      url: `api/disputes/${requestCallCommand.disputeId}/dialer/${requestCallCommand.dialerId}/call`,
-      method: 'POST',
-      data: requestCallCommand,
-      mutation: 'setCallDetail',
-      payload: { globalAuthenticationObject: getGlobalAuthenticationObject }
-    }).catch(() => {
-      commit('addDialerDetail', null)
-      commit('setCurrentCallStatus', CALL_STATUS.WAITING_DIALER)
-      commit('clearSipStack')
-      dispatch('startDialerRequester')
-    })
+      return axiosDispatch({
+        url: `api/disputes/${requestCallCommand.disputeId}/dialer/${requestCallCommand.dialerId}/call`,
+        method: 'POST',
+        data: requestCallCommand,
+        mutation: 'setCallDetail',
+        payload: { globalAuthenticationObject: getGlobalAuthenticationObject }
+      }).catch(() => {
+        commit('addDialerDetail', null)
+        commit('setCurrentCallStatus', CALL_STATUS.WAITING_DIALER)
+        commit('clearSipStack')
+        dispatch('startDialerRequester')
+      })
+    }
   },
 
   getDialerDetails({ _ }, { dialerId }) {
@@ -217,7 +232,9 @@ export default {
     })
   },
 
-  answerCurrentCall({ state, commit, getters: { hasSipSession, getDialer: { id: dialerId }, getCurrentCall: { id: callId } } }, acceptedCall) {
+  answerCurrentCall({ state, commit, getters: { hasSipSession, getDialer, getCurrentCall: { id: callId } } }, acceptedCall) {
+    if (!getDialer?.id) return Promise.resolve(false)
+
     return new Promise((resolve) => {
       if (state.currentCall && hasSipSession) {
         if (acceptedCall) {
@@ -231,12 +248,12 @@ export default {
           state.sipConnection.session.terminate()
         }
 
-        commit('answerCurrentCall', { acceptedCall, dialerId, callId })
+        commit('answerCurrentCall', { acceptedCall, dialerId: getDialer.id, callId })
 
         resolve(acceptedCall)
       } else {
         resolve(false)
-        commit('answerCurrentCall', { acceptedCall: false, dialerId, callId })
+        commit('answerCurrentCall', { acceptedCall: false, dialerId: getDialer.id, callId })
       }
     })
   },
@@ -281,7 +298,7 @@ export default {
     commit('clearCallHeartbeatInterval')
     commit('clearSipStack')
 
-    if (callId) {
+    if (Number.isInteger(callId)) {
       dispatch('endCall', {
         dialerId,
         callId
@@ -293,8 +310,8 @@ export default {
     const acceptDialer = isActiveToCall && !isToIgnoreDialer && getCurrentCall && !getDialer
 
     if (acceptDialer) {
-      commit('setCurrentCallStatus', CALL_STATUS.WAITING_NEW_CALL)
       commit('addDialerDetail', dialer)
+      commit('setCurrentCallStatus', CALL_STATUS.WAITING_NEW_CALL)
       commit('clearTimeoutDialerDetail')
       commit('clearActiveRequestInterval')
 
@@ -436,6 +453,7 @@ export default {
 
   SOCKET_AVAILABLE_DIALER({ commit, dispatch, getters: { isActiveToCall } }, { dialerId }) {
     if (isActiveToCall) {
+      commit('addDialerDetail', { id: dialerId })
       commit('clearActiveRequestInterval')
       dispatch('getDialerDetails', { dialerId })
     }

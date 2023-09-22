@@ -283,7 +283,8 @@ export default {
       answerCurrentCall: 'answerCurrentCall',
       removeCall: 'SOCKET_REMOVE_CALL',
       callTerminated: 'callTerminated',
-      endCall: 'endCall'
+      endCall: 'endCall',
+      leaveDialer: 'leaveDialer'
     }),
 
     answerCall(answer) {
@@ -317,14 +318,23 @@ export default {
     },
 
     remove(id) {
-      const { ACTIVE_CALL, RECEIVING_CALL, WAITING_NEW_CALL, WAITING_DIALER_DETAIL, WAITING_DIALER } = CALL_STATUS
-      const hasCallActive = [ACTIVE_CALL, RECEIVING_CALL].includes(this.currentCall?.status)
-      const hasDialerActive = [WAITING_NEW_CALL, WAITING_DIALER_DETAIL, WAITING_DIALER].includes(this.dialer?.status)
+      const { ACTIVE_CALL, RECEIVING_CALL, COMPLETED_CALL } = CALL_STATUS
       const callIsEnqueued = this.currentCall?.status === CALL_STATUS.ENQUEUED
+      const hasCallActive = [ACTIVE_CALL, RECEIVING_CALL, COMPLETED_CALL].includes(this.currentCall?.status) && Number.isInteger(this.currentCall?.id)
+      const hasDialerActive = !callIsEnqueued && !hasCallActive
+      const dialerId = this.dialer?.id
 
       if (id === this.currentCall?.id && !callIsEnqueued) {
-        if (hasDialerActive) { /* TODO: Chamar API para liberar o Discador. */ }
-        if (hasCallActive) this.hangUpCall()
+        if (hasCallActive) {
+          this.hangUpCall()
+        }
+
+        if (hasDialerActive) {
+          this.leaveDialer({
+            dialerId,
+            callId: this.currentCall?.id
+          })
+        }
       } else {
         this.removeCall({ callId: id })
       }
