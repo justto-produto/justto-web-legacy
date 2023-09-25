@@ -253,6 +253,7 @@ export default
   { code: '755', name: 'BANCO MERRILL LYNCH S.A' },
   { code: '757', name: 'BANCO KEB DO BRASIL S.A' },
   { code: '735', name: 'BANCO NEON' },
+  { code: '536', name: 'BANCO NEON' },
   { code: '260', name: 'NUBANK' },
   { code: '102', name: 'XP INVESTIMENTOS' },
   { code: '336', name: 'BANCO C6 S.A' },
