@@ -1,5 +1,5 @@
 <template>
-  <li
+  <div
     :class="{ 'communication-ticket-item-container--active': isActive }"
     class="communication-ticket-item-container"
     @click="handleClick"
@@ -148,7 +148,7 @@
         </span>
       </el-tooltip>
     </div>
-  </li>
+  </div>
 </template>
 
 <script>
