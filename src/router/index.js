@@ -465,7 +465,13 @@ router.beforeEach((to, from, next) => {
         } else next('login')
       }
     } else {
-      if (from.name === 'login') window.location.reload()
+      if (from.name === 'login') {
+        vue().$jusNotification({
+          message: 'Tente novamente!',
+          type: 'warning'
+        })
+        window.location.reload()
+      }
       next('login')
     }
   } else if (from.query.token) next(false)
