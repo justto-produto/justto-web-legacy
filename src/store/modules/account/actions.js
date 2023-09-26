@@ -1,5 +1,5 @@
 import router from '@/router'
-import { axiosDispatch } from '@/utils'
+import { axiosDispatch, resetLocalWorkspace } from '@/utils'
 import * as ticketListModeTypes from '@/constants/ticketListMode'
 
 const vue = () => document.getElementById('app')?.__vue__
@@ -51,6 +51,7 @@ const accountActions = {
 
   logout({ commit, dispatch }, options) {
     commit('logout')
+    resetLocalWorkspace()
     commit('clearWorkspace')
     commit('clearDisputes')
     commit('clearDisputeTab')

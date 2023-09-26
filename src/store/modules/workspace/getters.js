@@ -1,9 +1,9 @@
-import { getStringInitials } from '@/utils'
+import { getLocalWorkspace, getStringInitials } from '@/utils'
 
 const workspaceGetters = {
   workspace: state => state.workspace,
   hasWorkspace: state => {
-    return state.workspace.status !== '' && state.workspace.status !== 'CREATING'
+    return getLocalWorkspace()?.status !== '' && getLocalWorkspace()?.status !== 'CREATING'
   },
   creatingWorkspace: state => state.workspace.status === 'CREATING',
   workspaceId: state => state.workspace.id,

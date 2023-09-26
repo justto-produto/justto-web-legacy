@@ -3,10 +3,16 @@ import Router from 'vue-router'
 import Store from '@/store'
 import EDITOR_TABS from '@/constants/editor'
 
-import { eventBus } from '@/utils'
+import { eventBus, validateLocalWorkspace } from '@/utils'
 import events from '@/constants/negotiationEvents'
 
 const vue = () => document.getElementById('app')?.__vue__
+const originalPush = Router.prototype.push
+
+Router.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(() => {})
+}
+
 Vue.use(Router)
 
 const router = new Router({
@@ -417,7 +423,12 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (Store.getters.isLoggedIn) {
+    if (!validateLocalWorkspace()) {
+      const { name, params, query } = to
+
+      sessionStorage.setItem('redirect', JSON.stringify({ name, params, query }))
+      next('login') // Não tem Workspace na sessionStorage
+    } else if (Store.getters.isLoggedIn) {
       if (Store.getters.hasWorkspace) {
         if (to.name === 'workspaces') {
           if (!Store.getters.isJusttoAdmin) {
@@ -433,6 +444,10 @@ router.beforeEach((to, from, next) => {
           if (to.name === 'management') {
             next({ name: 'negotiation' })
           }
+        }
+
+        if (from.name === 'login') {
+          Store.dispatch('myAccount')
         }
 
         if (from.name === 'ticket' && from.params?.id) {
