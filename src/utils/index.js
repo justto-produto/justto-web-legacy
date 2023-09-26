@@ -35,6 +35,13 @@ import {
   getLastInteractionTooltip
 } from './utils/others'
 
+import {
+  getLocalWorkspace,
+  setLocalWorkspace,
+  resetLocalWorkspace,
+  validateLocalWorkspace
+} from './utils/manageLocalWorkspace'
+
 export {
   uuidv4,
   isAutor,
@@ -62,12 +69,16 @@ export {
   validateCurrentId,
   getStringInitials,
   isSameBankAccount,
+  getLocalWorkspace,
+  setLocalWorkspace,
   addInvisibleStatus,
   getLastInteraction,
   getInteractionIcon,
   normalizeDateToISO,
+  resetLocalWorkspace,
   getTracktitleByAction,
   registerServiceWorker,
+  validateLocalWorkspace,
   showUnavailableLoading,
   getLastInteractionTooltip
 }

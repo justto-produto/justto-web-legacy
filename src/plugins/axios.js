@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import axios from 'axios'
 import store from '@/store'
-import { showUnavailableLoading } from '@/utils'
+import { getLocalWorkspace, showUnavailableLoading } from '@/utils'
 
 const vue = () => document.getElementById('app')?.__vue__
 const AUTH_TOKEN = localStorage.justoken
@@ -26,7 +26,7 @@ _axios.defaults.baseURL = process.env.VUE_APP_BASE_URL || 'https://backend.justt
 // De quando vai a request
 _axios.interceptors.request.use(
   function(config) {
-    const storageWorkspace = JSON.parse(localStorage.getItem('jusworkspace'))
+    const storageWorkspace = getLocalWorkspace()
 
     if (store.getters.isLoggedIn && store.getters.hasWorkspace && storageWorkspace && storageWorkspace.subDomain) {
       if (config.headers.common.Workspace !== storageWorkspace.subDomain) {
@@ -41,6 +41,7 @@ _axios.interceptors.request.use(
       _axios.defaults.headers.common.UserTimeZone = UserTimeZone || store.getters.getUserTimeZone
       _axios.defaults.headers.common.UserBrowserName = UserBrowserName || store.getters.getUserBrowserName
       _axios.defaults.headers.common.UserOS = UserOS || store.getters.getUserOS
+      _axios.defaults.headers.common.Authorization = localStorage.getItem('justoken')
     }
 
     return config

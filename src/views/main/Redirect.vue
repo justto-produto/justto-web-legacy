@@ -8,6 +8,7 @@
 </template>
 
 <script>
+import { getLocalWorkspace } from '@/utils'
 import { mapActions } from 'vuex'
 
 export default {
@@ -23,11 +24,11 @@ export default {
   mounted() {
     const { wid: workspaceId, did: disputeId } = this.$route.query
 
-    if (!localStorage.getItem('jusworkspace')) {
+    if (!localStorage.getItem(`jusworkspace_${workspaceId}`)) {
       localStorage.setItem('jusredirect', JSON.stringify(this.$route.query))
       this.$router.push('login')
     } else {
-      const jusWorkspace = JSON.parse(localStorage.getItem('jusworkspace'))
+      const jusWorkspace = getLocalWorkspace()
 
       // TODO: Dry Run SAAS-4441
       if (Number(jusWorkspace.id) === Number(workspaceId) && Number(disputeId)) {

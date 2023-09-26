@@ -160,6 +160,7 @@
 </template>
 
 <script>
+import { validateLocalWorkspace } from '@/utils'
 import { isJusttoUser } from '@/utils/validations'
 import { mapActions } from 'vuex'
 
@@ -210,7 +211,11 @@ export default {
   },
 
   beforeMount() {
-    if (this.$store.getters.isLoggedIn) {
+    const hasWorkspaces = Object.keys(localStorage).filter(key => key.startsWith('jusworkspace')).length > 0
+
+    if (hasWorkspaces && !validateLocalWorkspace()) {
+      this.getMyWorkspaces()
+    } else if (this.$store.getters.isLoggedIn) {
       this.$store.dispatch('logout')
     }
 
@@ -348,27 +353,37 @@ export default {
       })
     },
 
-    getMembersAndRedirect(response) {
+    async getMembersAndRedirect(response) {
       // SEGMENT TRACK
       this.$jusSegment('Seleção de Workspace', {
         workspace: response.workspace.name,
         team: response.workspace.teamName
       })
-      if (response.workspace) this.$store.commit('setWorkspace', response.workspace)
+      if (response.workspace) await this.$store.commit('setWorkspace', response.workspace)
+      await this.$nextTick()
       if (response.profile) this.$store.commit('setProfile', response.profile)
+      await this.$nextTick()
       if (response.person) {
         this.$store.commit('setLoggedPerson', response.person)
 
         const isJustto = response.person.emails?.find(({ address, archived }) => (!archived && isJusttoUser(address))) !== undefined
 
+        await this.$nextTick()
+
         this.$store.dispatch('getWorkspaceMembers')
           .then(() => {
             this.getAccountProperty('CUSTOM_HOME').then(({ CUSTOM_HOME }) => {
+              const sessionRedirect = sessionStorage.getItem('redirect')
+              sessionStorage.removeItem('redirect')
+
               if (Object.keys(localStorage).includes('jusredirect')) {
                 this.showLoading = false
                 const redirect = JSON.parse(localStorage.getItem('jusredirect'))
                 const params = new URLSearchParams(redirect).toString()
+
                 this.$router.push(`/redirect?${params}`)
+              } else if (sessionRedirect) {
+                this.$router.push(JSON.parse(sessionRedirect))
               } else if (CUSTOM_HOME) {
                 this.$router.push(CUSTOM_HOME)
               } else if (response.profile === 'ADMINISTRATOR' && !isJustto) {

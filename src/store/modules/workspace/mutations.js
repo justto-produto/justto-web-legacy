@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import ApiConfiguration from '@/models/configurations/ApiConfiguration'
+import { getLocalWorkspace, resetLocalWorkspace, setLocalWorkspace } from '@/utils'
 
 const workspaceMutations = {
   redirectNewWorkspaceTrue(state) {
@@ -9,28 +10,32 @@ const workspaceMutations = {
     state.redirectNewWorkspace = false
   },
   setWorkspace(state, workspace) {
-    if (workspace) {
-      // eslint-disable-next-line
-      axios.defaults.headers.common['Workspace'] = workspace.subDomain
-      const members = workspace.members ? workspace.members : state.workspace.members
-      const profile = workspace.profile ? workspace.profile : state.workspace.profile
-      const preNegotiation = workspace.preNegotiation || state.workspace.preNegotiation
-      state.workspace = {
-        ...workspace,
-        members,
-        profile,
-        preNegotiation
+    return new Promise((resolve, reject) => {
+      if (workspace) {
+        setLocalWorkspace(workspace).then(() => {
+          // eslint-disable-next-line
+          axios.defaults.headers.common['Workspace'] = workspace.subDomain
+          const members = workspace.members ? workspace.members : state.workspace.members
+          const profile = workspace.profile ? workspace.profile : state.workspace.profile
+          const preNegotiation = workspace.preNegotiation || state.workspace.preNegotiation
+          Vue.set(state, 'workspace', {
+            ...workspace,
+            ...getLocalWorkspace(),
+            members,
+            profile,
+            preNegotiation
+          })
+        }).finally(resolve)
       }
-      localStorage.setItem('jusworkspace', JSON.stringify(state.workspace))
-    }
+    })
   },
   setTeamName(state, { payload }) {
     Vue.set(state.workspace, 'teamName', payload)
-    localStorage.setItem('jusworkspace', JSON.stringify(state.workspace))
+    setLocalWorkspace(state.workspace)
   },
   updateWorkspaceLogoUrl: (state, logoUrl) => {
     Vue.set(state.workspace, 'logoUrl', logoUrl)
-    localStorage.setItem('jusworkspace', JSON.stringify(state.workspace))
+    setLocalWorkspace(state.workspace)
   },
   setProfile(state, profile) {
     if (profile) {
@@ -55,7 +60,8 @@ const workspaceMutations = {
         keywords: []
       }
     }
-    localStorage.removeItem('jusworkspace')
+
+    resetLocalWorkspace()
     localStorage.removeItem('jusprofile')
     localStorage.removeItem('jusperson')
   },
