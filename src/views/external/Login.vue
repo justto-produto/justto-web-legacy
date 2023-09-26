@@ -394,6 +394,7 @@ export default {
                 route = '/negotiation'
               }
 
+              console.log('LOGIN', route)
               this.showLoading = true
               this.$router.push(route).then(event => {
                 console.log('LOGIN', event)
