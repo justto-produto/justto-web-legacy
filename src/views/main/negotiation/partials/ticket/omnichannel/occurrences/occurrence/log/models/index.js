@@ -5,6 +5,10 @@ class SummaryVM {
     this.personName = personName
     this.disputeRoleId = disputeRoleId
   }
+
+  get getType() {
+    return this.type
+  }
 }
 
 class SummaryMessage {
@@ -16,6 +20,10 @@ class SummaryMessage {
     this.createdBy = createdBy
     this.messageId = messageId
     this.communicationType = communicationType
+  }
+
+  get getMessageId() {
+    return this.messageId
   }
 }
 
