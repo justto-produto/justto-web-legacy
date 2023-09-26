@@ -152,6 +152,7 @@
           </el-button>
         </el-form>
       </el-aside>
+
       <el-main class="hidden-sm-and-down">
         <ProjusrisSidenavExternal />
       </el-main>
@@ -370,31 +371,43 @@ export default {
 
         await this.$nextTick()
 
+        this.showLoading = true
         this.$store.dispatch('getWorkspaceMembers')
           .then(() => {
             this.getAccountProperty('CUSTOM_HOME').then(({ CUSTOM_HOME }) => {
               const sessionRedirect = sessionStorage.getItem('redirect')
               sessionStorage.removeItem('redirect')
 
+              let route = '/negotiation'
+
               if (Object.keys(localStorage).includes('jusredirect')) {
-                this.showLoading = false
                 const redirect = JSON.parse(localStorage.getItem('jusredirect'))
                 const params = new URLSearchParams(redirect).toString()
 
-                this.$router.push(`/redirect?${params}`)
+                route = `/redirect?${params}`
               } else if (sessionRedirect) {
-                this.$router.push(JSON.parse(sessionRedirect))
+                route = JSON.parse(sessionRedirect)
               } else if (CUSTOM_HOME) {
-                this.$router.push(CUSTOM_HOME)
+                route = CUSTOM_HOME
               } else if (response.profile === 'ADMINISTRATOR' && !isJustto) {
-                this.$router.push('/')
+                route = '/'
               } else {
-                this.$router.push('/negotiation')
+                route = '/negotiation'
               }
+
+              this.showLoading = true
+              this.$router.push(route).then(event => {}).catch(error => {
+                console.error('LOGIN', error)
+              }).finally(() => {
+                this.showLoading = false
+              })
             })
           }).catch(error => {
             console.error(error)
             this.mountError()
+            this.workspaces = []
+          }).finally(() => {
+            this.showLoading = false
           })
       } else {
         this.$router.push('/')

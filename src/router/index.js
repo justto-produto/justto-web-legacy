@@ -464,10 +464,14 @@ router.beforeEach((to, from, next) => {
           next()
         } else next('login')
       }
-    } else if (to?.query['external-login'] === 'cognito') {
-      // TODO: Analizar como conseguir o Token para fazer o Login.
-      next('login')
     } else {
+      if (from.name === 'login') {
+        vue().$jusNotification({
+          message: 'Tente novamente!',
+          type: 'warning'
+        })
+        window.location.reload()
+      }
       next('login')
     }
   } else if (from.query.token) next(false)
