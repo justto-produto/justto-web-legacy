@@ -152,6 +152,7 @@
           </el-button>
         </el-form>
       </el-aside>
+
       <el-main class="hidden-sm-and-down">
         <ProjusrisSidenavExternal />
       </el-main>
@@ -407,6 +408,7 @@ export default {
           }).catch(error => {
             console.error(error)
             this.mountError()
+            this.workspaces = []
           }).finally(() => {
             this.showLoading = false
           })
