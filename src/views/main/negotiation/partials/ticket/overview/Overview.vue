@@ -175,9 +175,7 @@ export default {
   beforeMount() {
     const id = this.$route.params.id
 
-    window.addEventListener('resize', event => {
-      this.innerWidth = event.target.innerWidth
-    })
+    window.addEventListener('resize', this.handleUpdateInnerWidth)
 
     if (this.disputeMode) {
       const { getTicketMetadata, getAssociatedContacts, setDisputeProperty } = this
@@ -201,7 +199,7 @@ export default {
   },
 
   beforeDestroy() {
-    window.removeEventListener('resize')
+    window.removeEventListener('resize', this.handleUpdateInnerWidth)
   },
 
   methods: {
@@ -217,6 +215,10 @@ export default {
       'getTicketOverviewParties',
       'getDisputeTimeline'
     ]),
+
+    handleUpdateInnerWidth(event) {
+      this.innerWidth = event.target.innerWidth
+    },
 
     openTimelineModal() {
       this.showTimelineModal = true

@@ -512,9 +512,7 @@ export default {
       const separators = ['\n', '\t', '\r', ';', ',', '|', '\\', '/', '&']
       let currentWord = ''
 
-      for (let i = 0; i < string.length; i++) {
-        const char = string[i]
-
+      for (const char of string) {
         if (separators.includes(char)) {
           if (currentWord !== '') {
             list.push(currentWord)

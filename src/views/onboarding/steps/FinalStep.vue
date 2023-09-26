@@ -54,9 +54,7 @@ export default {
           this.$store.dispatch('myWorkspace')
             .then(response => {
               const currentWorkspace = response.find(w => {
-                if (w.workspace &&
-                  w.workspace.subDomain &&
-                  w.workspace.subDomain === this.workspace.subDomain) {
+                if (w?.workspace?.subDomain && w?.workspace?.subDomain === this.workspace.subDomain) {
                   return true
                 }
               })
@@ -64,7 +62,6 @@ export default {
               localStorage.setItem('jusworkspace', JSON.stringify(currentWorkspace.workspace))
               localStorage.setItem('jusprofile', currentWorkspace.profile)
               localStorage.setItem('jusperson', JSON.stringify(currentWorkspace.person))
-              // FIXME: Não está redirecionando para a página de importação.
               this.$router.push({ name: 'import' })
             })
             .catch(() => {

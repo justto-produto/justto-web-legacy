@@ -7,7 +7,6 @@ const accountMutations = {
     delete axios.defaults.headers.common['Authorization']
 
     Vue.set(state, 'token', token)
-    // if (token) state.token = token
 
     // eslint-disable-next-line
     axios.defaults.headers.common['Authorization'] = token

@@ -5,12 +5,20 @@ class OccurrenceFilter {
     this.size = size || 20
     this.sort = sort || ['createdAt,desc']
   }
+
+  get getPage() {
+    return this.page
+  }
 }
 class OccurrenceSummary {
   constructor(sms, email, whatsapp) {
     this.SMS = sms || {}
     this.EMAIL = email || {}
     this.WHATSAPP = whatsapp || {}
+  }
+
+  get getSMS() {
+    return this.SMS
   }
 }
 export class StateOccurrences {
@@ -21,6 +29,10 @@ export class StateOccurrences {
     this.fullMessages = fullMessages || {}
     this.renderedCounts = renderedCounts || 0
     this.totalElements = totalElements || this.totalElements
+  }
+
+  get getFilter() {
+    return this.filter
   }
 }
 

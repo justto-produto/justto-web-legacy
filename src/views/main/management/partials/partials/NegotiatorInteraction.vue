@@ -113,7 +113,7 @@ export default {
       const lastReceivedMessage = this.dispute.getDisputeLastReceivedMessage
       let email = ''
 
-      if (lastReceivedMessage && lastReceivedMessage.properties && lastReceivedMessage.properties.PERSON_NAME) {
+      if (lastReceivedMessage?.properties?.PERSON_NAME) {
         email = this.dispute.getDisputeLastReceivedMessageSender
       } else {
         await store.dispatch('getLastInteractions', disputeId).then(interactions => {

@@ -573,11 +573,11 @@ export default {
         this.$jusSegment('Filtro por status com contraproposta')
       }
 
-      if (this.filters.importingDate && this.filters.importingDate.length) {
+      if (this.filters?.importingDate?.length) {
         this.$jusSegment('Filtro por data importação')
       }
 
-      if (this.filters.expirationDate && this.filters.expirationDate.length) {
+      if (this.filters?.expirationDate?.length) {
         this.$jusSegment('Filtro por data fim negociação')
       }
     },
