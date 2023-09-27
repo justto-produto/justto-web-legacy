@@ -10,11 +10,14 @@
 <script>
 import { getLocalWorkspace } from '@/utils'
 import { mapActions } from 'vuex'
+import goToWorkspace from '@/utils/mixins/goToWorkspace'
 
 export default {
   components: {
     jusChangeWorkspace: () => import('@/components/dialogs/JusChangeWorkspace.vue')
   },
+
+  mixins: [goToWorkspace],
 
   beforeMount() {
     localStorage.removeItem('jusredirect')
@@ -26,7 +29,10 @@ export default {
 
     if (!localStorage.getItem(`jusworkspace_${workspaceId}`)) {
       localStorage.setItem('jusredirect', JSON.stringify(this.$route.query))
-      this.$router.push('login')
+
+      // Alterar equipe.
+
+      this.redirectToWorkspace(workspaceId, disputeId)
     } else {
       const jusWorkspace = getLocalWorkspace()
 
@@ -34,31 +40,35 @@ export default {
       if (Number(jusWorkspace.id) === Number(workspaceId) && Number(disputeId)) {
         this.$router.push(`negotiation/${disputeId}`)
       } else {
-        this.myWorkspace().then(res => {
-          const destinyWokspace = res.find(({ workspace: { id } }) => Number(id) === Number(workspaceId))
-
-          if (!destinyWokspace || !Number(disputeId)) {
-            this.$confirm('Você não possui privilégios para visualizar esta página!', 'Warning', {
-              closeOnPressEscape: false,
-              closeOnClickModal: false,
-              confirmButtonText: 'OK',
-              showCancelButton: false,
-              showClose: false,
-              type: 'warning',
-              center: true
-            }).then(() => {
-              this.$router.push({ name: 'dashboard' })
-            })
-          } else {
-            this.$refs.workspaceSwitcher.goToWorkspace(destinyWokspace, disputeId)
-          }
-        })
+        this.redirectToWorkspace(workspaceId, disputeId)
       }
     }
   },
 
   methods: {
-    ...mapActions(['myWorkspace', 'resetOccurrences'])
+    ...mapActions(['myWorkspace', 'resetOccurrences']),
+
+    redirectToWorkspace(workspaceId, disputeId) {
+      this.myWorkspace().then(res => {
+        const destinyWokspace = res.find(({ workspace: { id } }) => Number(id) === Number(workspaceId))
+
+        if (!destinyWokspace || !Number(disputeId)) {
+          this.$confirm('Você não possui privilégios para visualizar esta página!', 'Warning', {
+            closeOnPressEscape: false,
+            closeOnClickModal: false,
+            confirmButtonText: 'OK',
+            showCancelButton: false,
+            showClose: false,
+            type: 'warning',
+            center: true
+          }).then(() => {
+            this.$router.push({ name: 'dashboard' })
+          })
+        } else {
+          this.goToWorkspace(destinyWokspace, disputeId)
+        }
+      })
+    }
   }
 }
 </script>

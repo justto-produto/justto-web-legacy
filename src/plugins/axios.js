@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import axios from 'axios'
 import store from '@/store'
-import { getLocalWorkspace, showUnavailableLoading } from '@/utils'
+import { getLocalWorkspace, showUnavailableLoading, token } from '@/utils'
 
 const vue = () => document.getElementById('app')?.__vue__
 const AUTH_TOKEN = localStorage.justoken
@@ -77,7 +77,16 @@ _axios.interceptors.response.use(
       showUnavailableLoading()
     }
     if (error.response?.status === 401 && error.response.data.code !== 'INVALID_CREDENTIALS') {
-      store.dispatch('logout')
+      const authorization = (localStorage.getItem('justoken') ?? '').replace('Bearer ', '')
+
+      if (vue().$route.name === 'login' && authorization) {
+        if (token.isTokenExpired(authorization)) {
+          vue().$jusSegment('EXPIRED_TOKEN', { authorization })
+          store.dispatch('logout')
+        }
+      } else {
+        store.dispatch('logout')
+      }
     }
     return Promise.reject(error)
   }
