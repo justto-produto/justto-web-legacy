@@ -32,7 +32,8 @@ const NotificationMessage = {
               break
             case 401:
               config.type = 'warning'
-              config.message = message + '.'
+              config.message = 'Autenticação necessária.'
+              // config.message = message + '.'
               break
             case 404:
               config.message = NOTFOUND + TRY
