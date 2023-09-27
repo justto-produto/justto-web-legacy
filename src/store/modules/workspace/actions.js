@@ -95,14 +95,18 @@ const workspaceActions = {
     })
   },
 
-  getWorkspaceMembers({ _ }) {
-    return axiosDispatch({
-      url: `${workspacesPath}/members?size=999&`,
-      mutation: 'setWorkspaceMembers',
-      headers: {
-        Authorization: localStorage.getItem('justoken')
-      }
-    })
+  getWorkspaceMembers({ getters }) {
+    if (getters.workspaceSubdomain) {
+      return axiosDispatch({
+        url: `${workspacesPath}/members?size=999&`,
+        mutation: 'setWorkspaceMembers',
+        headers: {
+          Authorization: localStorage.getItem('justoken')
+        }
+      })
+    } else {
+      return Promise.resolve()
+    }
   },
 
   getWorkspaceTeam({ _ }) {
