@@ -17,6 +17,7 @@ import normalizeDateToISO from './utils/normalizeDateToISO'
 import isAutor from './utils/isAuthor'
 import isSameBankAccount from './utils/isSameBankAccount'
 import isNumber from './utils/isNumber'
+import token from './utils/token'
 import {
   getRoles,
   formatHtml,
@@ -43,6 +44,7 @@ import {
 } from './utils/manageLocalWorkspace'
 
 export {
+  token,
   uuidv4,
   isAutor,
   isNumber,

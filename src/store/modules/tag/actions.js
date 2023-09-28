@@ -1,12 +1,16 @@
 import { axiosDispatch, buildQuery } from '@/utils'
 
 const tagActions = {
-  getWorkspaceTags() {
-    return axiosDispatch({
-      url: 'api/workspaces/tags',
-      mutation: 'setWorkspaceTags',
-      params: { size: 9999, sort: 'id,asc' }
-    })
+  getWorkspaceTags({ getters }) {
+    if (getters.workspaceSubdomain) {
+      return axiosDispatch({
+        url: 'api/workspaces/tags',
+        mutation: 'setWorkspaceTags',
+        params: { size: 9999, sort: 'id,asc' }
+      })
+    } else {
+      return Promise.resolve()
+    }
   },
   getDisputeTags({ _ }, disputeId) {
     return axiosDispatch({

@@ -428,7 +428,7 @@ router.beforeEach((to, from, next) => {
 
       sessionStorage.setItem('redirect', JSON.stringify({ name, params, query }))
       next('login') // Não tem Workspace na sessionStorage
-    } else if (Store.getters.isLoggedIn) {
+    } else if (localStorage.getItem('justoken')) {
       if (Store.getters.hasWorkspace) {
         if (to.name === 'workspaces') {
           if (!Store.getters.isJusttoAdmin) {
