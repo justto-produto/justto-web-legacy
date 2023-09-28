@@ -40,7 +40,10 @@ const billingActions = {
     axiosDispatch({
       url: `${billingPath}/customer/${customerData.id}`,
       method: 'patch',
-      data: customerData
+      data: {
+        ...customerData,
+        contracts: (customerData?.contracts || []).map(contract => ({ ...contract, tariffs: [] }))
+      }
     }).then(() => dispatch('getMyCusomers')),
 
   getContracts: ({ state }) => {

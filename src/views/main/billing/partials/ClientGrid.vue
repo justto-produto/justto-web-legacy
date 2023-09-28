@@ -404,8 +404,6 @@ export default {
     async handleChangeHoldingName(customer) {
       const holdingId = (await this.handleFilterHoldingByName())?.id
 
-      console.log(holdingId, customer)
-
       this.$confirm(`Deseja realmente editar a holding do cliente${customer?.name ? ` ${customer?.name}` : ''}?`, {
         confirmButtonText: 'Sim',
         cancelButtonText: 'Não',
