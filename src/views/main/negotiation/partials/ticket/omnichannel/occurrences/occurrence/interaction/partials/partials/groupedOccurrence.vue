@@ -84,7 +84,6 @@ export default {
   methods: {
     ...mapActions([
       'getGroupedOccurrences',
-      'getGroupedOccurrencesByOccurrenceId',
       'resetGroupedOccurrencesByOccurrenceId'
     ]),
 

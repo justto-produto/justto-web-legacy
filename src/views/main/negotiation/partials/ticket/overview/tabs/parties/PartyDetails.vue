@@ -644,7 +644,6 @@ export default {
               return !newEmail.archived && newEmail.isValid && (this.emailsList.find(({ address }) => address === newEmail.address) === undefined)
             }) // Filtra e-mails para serem adicionados na parte.
 
-            // TODO: Refatorar isso.
             if (isValid(res.documentNumber)) {
               const resDocument = strip(res.documentNumber)
               const partyDocument = strip(this.party.documentNumber)
@@ -838,15 +837,6 @@ export default {
 
     handleRestartEngagement() {
       this.setRestartDisputeFlag(this.disputeId)
-      // TODO: Salva flag de reinício da disputa.
-
-      // this.verifyRestartEngagement({
-      //   status: this.ticketStatus,
-      //   party: this.party.polarity,
-      //   name: this.party.name,
-      //   disputeId: Number(this.$route.params.id),
-      //   disputeRoleId: this.party.disputeRoleId
-      // })
     },
 
     updateDisputeRoleField(disputeRole, { field, value }) {

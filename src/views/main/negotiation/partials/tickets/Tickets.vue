@@ -80,13 +80,16 @@
           v-show="!fullScreen && activeTab === tab.name"
           class="tickets-container__list"
         >
-          <component
-            :is="tab.component"
+          <li
             v-for="ticket in tickets.content"
             :key="ticket.disputeId"
-            :ticket="ticket"
-            @update="$emit('update', $event)"
-          />
+          >
+            <component
+              :is="tab.component"
+              :ticket="ticket"
+              @update="$emit('update', $event)"
+            />
+          </li>
 
           <JusScrollLoading
             v-if="getTicketsQuery.page > 0"

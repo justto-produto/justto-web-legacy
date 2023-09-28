@@ -14,6 +14,10 @@ class EditorBackup {
     this.disputeId = disputeId || ''
     this.contacts = contacts || []
   }
+
+  get getMessage() {
+    return this.message
+  }
 }
 
 export { EditorBackup }

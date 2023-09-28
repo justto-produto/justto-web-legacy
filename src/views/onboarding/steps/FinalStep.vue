@@ -56,9 +56,7 @@ export default {
           this.$store.dispatch('myWorkspace')
             .then(response => {
               const currentWorkspace = response.find(w => {
-                if (w.workspace &&
-                  w.workspace.subDomain &&
-                  w.workspace.subDomain === this.workspace.subDomain) {
+                if (w?.workspace?.subDomain && w?.workspace?.subDomain === this.workspace.subDomain) {
                   return true
                 }
               })

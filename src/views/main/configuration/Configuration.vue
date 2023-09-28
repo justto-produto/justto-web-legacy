@@ -661,7 +661,9 @@ export default {
       this.profileForm.phone = this.profileForm.phone.substr(2)
     } else {
       // eslint-disable-next-line no-self-assign
-      this.profileForm.phone = this.profileForm.phone
+      const phone = this.profileForm.phone
+
+      this.profileForm.phone = phone
     }
     this.workspacePreNegotiation.preNegotiation = this.workspaceProperties.PRE_NEGOTIATION && this.workspaceProperties.PRE_NEGOTIATION === 'true'
 

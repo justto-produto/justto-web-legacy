@@ -161,48 +161,53 @@ const omnichannelActions = {
     }
   },
 
+  addRecipientCallback({ commit, dispatch, getters }, recipient) {
+    const { type, value } = recipient
+    const { getEditorMessageType } = getters
+
+    if (getEditorMessageType !== type && value) dispatch('setMessageType', type)
+    if (type === 'whatsapp') commit('resetRecipients')
+    if (value) commit('setRecipients', recipient)
+
+    dispatch('setEditorBackup')
+
+    return Promise.resolve()
+  },
+
+  verifyAddRecipient({ getters }, recipient) {
+    const { type } = recipient
+    const { getEditorMessageType } = getters
+    const oldType = vue().$tc('negotiation.ticket.recipient.message-type.' + getEditorMessageType)
+    const newType = vue().$tc('negotiation.ticket.recipient.message-type.' + type)
+    const message = `<p>Detectamos uma mudança no tipo de contato do destinatário: <b>${oldType}</b> para <b>${newType}</b>!</p>
+    <br>
+    <p>Desera realmente continuar?</p>`
+
+    return vue().$confirm(message, 'Atenção!', {
+      customClass: 'confirm-change-recipent-type',
+      dangerouslyUseHTMLString: true,
+      confirmButtonText: 'Confirmar',
+      cancelButtonText: 'Cancelar',
+      closeOnPressEscape: false,
+      closeOnClickModal: false,
+      showClose: false,
+      center: true
+    })
+  },
+
   addRecipient({ commit, dispatch, getters }, recipient) {
     const { type, value, autodetected } = recipient
     const { getEditorMessageType, getEditorRecipients } = getters
 
     if (getEditorRecipients.find(el => el.value === value)) {
-      if (!autodetected) {
-        commit('removeRecipient', value)
-      }
+      if (!autodetected) commit('removeRecipient', value)
 
       return Promise.resolve()
     } else {
-      const callback = () => {
-        if (getEditorMessageType !== type && value) dispatch('setMessageType', type)
-        if (type === 'whatsapp') commit('resetRecipients')
-        if (value) commit('setRecipients', recipient)
-
-        dispatch('setEditorBackup')
-
-        return Promise.resolve()
-      }
       if (getEditorMessageType !== type && getEditorRecipients.length && !autodetected) {
-        const oldType = vue().$tc('negotiation.ticket.recipient.message-type.' + getEditorMessageType)
-        const newType = vue().$tc('negotiation.ticket.recipient.message-type.' + type)
-        const message = `<p>Detectamos uma mudança no tipo de contato do destinatário: <b>${oldType}</b> para <b>${newType}</b>!</p>
-        <br>
-        <p>Desera realmente continuar?</p>`
-
-        vue().$confirm(message, 'Atenção!', {
-          customClass: 'confirm-change-recipent-type',
-          dangerouslyUseHTMLString: true,
-          confirmButtonText: 'Confirmar',
-          cancelButtonText: 'Cancelar',
-          closeOnPressEscape: false,
-          closeOnClickModal: false,
-          showClose: false,
-          center: true
-        }).then(callback).catch(() => {
-          // TODO: SAAS-5197 Ação adicional ao não mudar de destinatário.
-          return Promise.resolve()
-        })
+        dispatch('verifyAddRecipient', recipient).then(() => dispatch('addRecipientCallback', recipient)).catch(() => { return Promise.resolve() })
       } else {
-        callback()
+        dispatch('addRecipientCallback', recipient)
       }
     }
 
@@ -411,18 +416,6 @@ const omnichannelActions = {
       mutation: 'setGroupedOccurrencesById',
       payload: { parentId }
     })
-  },
-
-  getGroupedOccurrencesByOccurrenceId({ state, commit }, id) {
-    // TODO: SAAS-5036 Implementar GET das Ocorrências agrupadas aqui.
-    commit('setGroupedOccurrencesById', {
-      data: {
-        content: state.occurrences.list.filter(({ id: occId }) => occId === id)
-      },
-      payload: id
-    })
-
-    return Promise.resolve()
   },
 
   resetGroupedOccurrencesByOccurrenceId({ commit }, id) {

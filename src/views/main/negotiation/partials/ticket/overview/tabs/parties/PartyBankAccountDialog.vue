@@ -372,6 +372,9 @@ export default {
     },
 
     addPixRules() {
+      const isRandomKey = this.pixKeySelected === RANDOM
+      const isPhoneKey = this.pixKeySelected === PHONE
+
       return {
         name: [{ required: false, message: 'Obrigatório', trigger }],
         agency: [{ required: false, message: 'Obrigatório', trigger }],
@@ -383,7 +386,7 @@ export default {
           { required: this.pixKeySelected === DOCUMENT, message: 'Obrigatório', trigger },
           { validator: validateDocument, message: 'CPF/CNPJ inválido.', trigger }
         ],
-        number: this.pixKeySelected === RANDOM ? this.randonKeyPixRule : (this.pixKeySelected === PHONE ? this.phonePixRule : this.refaultPixRule)
+        number: isRandomKey ? this.randonKeyPixRule : (isPhoneKey ? this.phonePixRule : this.refaultPixRule)
       }
     },
 
@@ -437,6 +440,20 @@ export default {
   methods: {
     ...mapActions(['getTicketOverviewInfo']),
 
+    setPixAccountType(account) {
+      const isRandom = account?.number > 15
+
+      if (isRandom) {
+        this.$set(this, 'pixKeySelected', RANDOM)
+      } else if (account?.number) {
+        this.$set(this, 'pixKeySelected', PHONE)
+      } else if (account?.email) {
+        this.$set(this, 'pixKeySelected', EMAIL)
+      } else {
+        this.$set(this, 'pixKeySelected', DOCUMENT)
+      }
+    },
+
     async openBankAccountDialog(account) {
       if (!Object.keys(this.ticketInfo).length) {
         await this.getTicketOverviewInfo(this.$route.params.id)
@@ -449,10 +466,7 @@ export default {
         this.account.document = this.$options.filters.cpfCnpj(account.document)
 
         if (account?.type === PIX && (this.usePix && !this.ticketInfo?.denyPixDeposit)) {
-          const isRandom = account?.number > 15
-          const pixKey = isRandom ? RANDOM : account?.number ? PHONE : account?.email ? EMAIL : DOCUMENT
-
-          this.$set(this, 'pixKeySelected', pixKey)
+          this.setPixAccountType(account)
 
           this.$nextTick().then(() => this.$set(this.account, 'number', account?.number || ''))
         } else {

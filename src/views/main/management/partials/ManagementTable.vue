@@ -663,21 +663,12 @@ export default {
       if (!isCtrl && !isMeta && column.property === 'firstClaimant' && event.target.className.split(' ').includes('online-icon')) {
         this.openActiveMessageModal(row)
       } else if (row.getDisputeId && !['IMG', 'SPAN', 'BUTTON', 'I'].includes(event.target.tagName)) {
+        this.setHideTicket(true)
         if (isCtrl || isMeta) {
-          if (this.isTicket || this.showNegotiationTypeMenu) {
-            this.setHideTicket(true)
-            window.open(`/#/negotiation/${row.getDisputeId}`, '_blank')
-          } else {
-            window.open(`/#/management/dispute/${row.getDisputeId}`, '_blank')
-          }
+          window.open(`/#/negotiation/${row.getDisputeId}`, '_blank')
           this.addHighlight(row.getDisputeId)
         } else {
-          if (this.isTicket || this.showNegotiationTypeMenu) {
-            this.setHideTicket(true)
-            this.$router.push({ name: 'ticket', params: { id: row.getDisputeId } })
-          } else {
-            this.$router.push({ name: 'dispute', params: { id: row.getDisputeId } })
-          }
+          this.$router.push({ name: 'ticket', params: { id: row.getDisputeId } })
         }
       }
     },
@@ -689,7 +680,7 @@ export default {
     handleSelectionChange(selected) {
       const ids = []
       for (const dispute of selected) {
-        if (dispute && dispute.getDisputeId) {
+        if (dispute?.getDisputeId) {
           ids.push(dispute.getDisputeId)
         }
       }
@@ -725,13 +716,7 @@ export default {
     },
 
     handleHeaderClick(column, _event) {
-      switch (column.label) {
-        case 'Interações':
-          this.handleInteractionsSort()
-          break
-        default:
-          break
-      }
+      if (column.label === 'Interações') this.handleInteractionsSort()
     },
 
     async invertSort(key) {
@@ -755,7 +740,7 @@ export default {
         this.updateDisputeQuery({
           key: 'sort',
           value: [
-            ...this.sortQuery?.sort,
+            ...(this.sortQuery?.sort || []),
             'lastInboundInteraction.createdAt,asc'
           ]
         })

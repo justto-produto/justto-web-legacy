@@ -60,8 +60,7 @@ const accountActions = {
     localStorage.removeItem('justoken')
     // eslint-disable-next-line
     delete axios.defaults.headers.common['Authorization']
-    if (options && options.redirect === false) {
-    } else router.push('/login')
+    if (options?.redirect !== false) router.push('/login')
   },
 
   forgotPassword({ _ }, email) {
@@ -229,7 +228,6 @@ const accountActions = {
 
     let mode = ticketListModeTypes.TICKET
 
-    // TODO: Revalidar lógica.
     if (['/management', '/negotiation'].includes(CUSTOM_HOME)) {
       mode = {
         '/management': ticketListModeTypes.MANAGEMENT,

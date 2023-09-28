@@ -7,16 +7,6 @@ const dashboardGetters = {
     return {}
   },
   getNpsSummary: state => {
-    // const dataset = state.chartsDatasets.find(({ name }) => name === 'WORKSPACE_SUMMARIES')
-    // return {
-    //   ...dataset,
-    //   datasets: [
-    //     { label: 'NPS_DETRACTOR_PERCENTAGE', data: [60] },
-    //     { label: 'NPS_PASSIVE_PERCENTAGE', data: [20] },
-    //     { label: 'NPS_PROMOTER_PERCENTAGE', data: [20] },
-    //     ...dataset.datasets
-    //   ]
-    // }
     return {
       name: 'WORKSPACE_SUMMARIES',
       data: {

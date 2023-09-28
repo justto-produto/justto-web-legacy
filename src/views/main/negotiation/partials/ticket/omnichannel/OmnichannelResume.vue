@@ -38,8 +38,13 @@ export default {
       const isOutbound = occurrece?.interaction?.direction === 'OUTBOUND' || ['ATTACHMENT', 'MANUAL'].includes((occurrece?.interaction?.type || '_').split('_')[0])
       const isLog = ['LOG'].includes(occurrece?.type) || logTypes.includes(occurrece?.interaction?.type)
 
-      return isLog ? 'log' : isOutbound ? 'outbound' : 'inbound'
+      if (isLog) return 'log'
+
+      if (isOutbound) return 'outbound'
+
+      return 'inbound'
     },
+
     willBreak({ id }) {
       // Calcula o tamanho da página.
       const maxHeight = document.querySelector('.content-wrapper')?.offsetHeight

@@ -320,11 +320,6 @@ export default {
         this.setValidNumberInCall(this.call)
         this.contactValidityBrand = true
         clearTimeout(this.autocontactTimeout)
-
-        // TODO: SAAS-4756 Se a chamada for agendada, Atualizar status da chamada.
-        const callIsScheduled = false
-
-        if (callIsScheduled) this.updatePhoneCallStatus(true)
       }
 
       this.$refs.carousel.next()
@@ -333,11 +328,6 @@ export default {
     handleIncorrectContact() {
       this.showIncorrectContactForm = !this.showIncorrectContactForm
       this.contactValidityBrand = true
-
-      // TODO: SAAS-4756 Se a chamada for agendada, Atualizar status da chamada.
-      const callIsScheduled = false
-
-      if (callIsScheduled) this.updatePhoneCallStatus(true)
     },
 
     handleCloseCall({ interactionId, disputeId }) {

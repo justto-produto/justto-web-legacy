@@ -61,7 +61,6 @@ export default {
     Vue.set(state.occurrences.filter, 'page', number + 2)
     Vue.set(state.occurrences, 'totalElements', totalElements)
     Vue.set(state, 'lastPage', Boolean(last))
-    // TODO: Settar last aqui
     Vue.set(state, 'totalOfOccurrences', totalElements)
   },
 
@@ -145,7 +144,6 @@ export default {
       const nextIndex = state.occurrences.list.length
       Vue.set(state.occurrences.list, nextIndex, occurrence)
 
-      // TODO: Procurar uma solução melhor.
       eventBus.$emit('NEGOTIATION_WEBSOCKET_NEW_OCCURRENCE', {})
     } else {
       const occurrenceIndex = state.occurrences.list.findIndex(({ id }) => (id === occurrence?.id))
@@ -179,13 +177,7 @@ export default {
     const { recipients } = state.editor
     const has = recipients.filter(el => el.value === recipient.value).length > 0
 
-    if (recipient?.autodetected && has) {
-      /*
-        TODO: Bug: A API está sendo chamanda mulltipllas vezes e isso adiciona e remove o contato logo em seguida.
-
-        Esse IF deve não fazer nada quando o contato vier da autodetecção e já existir.
-      */
-    } else if (has) {
+    if (recipient?.autodetected && has) { return true } else if (has) {
       Vue.set(state.editor, 'recipients', recipients.filter(el => el.value !== recipient.value))
     } else {
       Vue.set(state.editor, 'recipients', [...recipients, recipient])
@@ -193,7 +185,7 @@ export default {
   },
 
   removeRecipient: (state, value) => {
-    const items = state.editor.recipients.filter(el => !(el.value === value))
+    const items = state.editor.recipients.filter(el => el.value !== value)
 
     Vue.set(state.editor, 'recipients', items)
   },

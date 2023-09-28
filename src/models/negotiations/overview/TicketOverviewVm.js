@@ -2,6 +2,10 @@ class StrategyVm {
   constructor(strategy) {
     Object.keys(strategy).forEach(key => (this[key] = strategy[key]))
   }
+
+  get getIsObrigacaoFazer() {
+    return this.isObrigacaoFazer
+  }
 }
 
 export default class DisputeOverviewVm {
@@ -43,5 +47,9 @@ export default class DisputeOverviewVm {
       isManual: manualStrategy
     })
     this.lastReceivedMessage = lastReceivedMessage || {}
+  }
+
+  get getDisputeId() {
+    return this.disputeId
   }
 }

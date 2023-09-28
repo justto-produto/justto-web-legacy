@@ -78,16 +78,17 @@ export default {
 
     status() {
       const defaultMessage = 'Até este momento, não conseguimos capturar este processo.'
+      const timeline = this.disputeTimeline ?? {}
 
-      if (this.disputeTimeline && this.disputeTimeline[this.code]) {
-        if (this.disputeTimeline[this.code].lawsuits.length) {
+      if (timeline[this.code]) {
+        if (timeline[this.code].lawsuits.length) {
           return {
             available: true,
             icon: 'el-icon-info',
             text: 'Abrir Timeline da disputa.'
           }
-        } else if (this.disputeTimeline[this.code].error) {
-          switch (this.disputeTimeline[this.code].error?.code) {
+        } else if (timeline[this.code].error) {
+          switch (timeline[this.code].error?.code) {
             case 20:
             case 21:
               return {
@@ -99,14 +100,14 @@ export default {
               return {
                 available: false,
                 icon: 'el-icon-question',
-                text: this.disputeTimeline[this.code].error?.description || defaultMessage
+                text: timeline[this.code].error?.description || defaultMessage
               }
           }
         } else {
           return {
             available: false,
             icon: 'el-icon-error',
-            text: this.disputeTimeline[this.code].isValid ? defaultMessage : 'Número CNJ inválido'
+            text: timeline[this.code].isValid ? defaultMessage : 'Número CNJ inválido'
           }
         }
       } else {

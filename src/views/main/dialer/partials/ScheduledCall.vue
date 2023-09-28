@@ -1,5 +1,5 @@
 <template>
-  <li
+  <article
     v-loading="loading"
     class="call"
   >
@@ -54,7 +54,7 @@
         </div>
       </div>
     </div>
-  </li>
+  </article>
 </template>
 
 <script>

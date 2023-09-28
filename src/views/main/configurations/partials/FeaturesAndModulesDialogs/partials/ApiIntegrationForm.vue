@@ -160,7 +160,7 @@ export default {
     ...mapMutations(['setIntegrationConfigs']),
 
     init() {
-      const getKey = (options = [], search) => options.find(({ key }) => (key === search))?.value || ''
+      const getKey = (options, search) => (options ?? []).find(({ key }) => (key === search))?.value || ''
 
       const type = (this?.configurations || []).find(({ key = '', value = '' }) => (key.includes('_ACTIVE') && value === 'true'))?.key
 

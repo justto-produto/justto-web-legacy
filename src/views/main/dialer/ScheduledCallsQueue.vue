@@ -45,12 +45,15 @@
         :disabled="!scheduledCallQueue.length"
       >
         <ul class="scheduled-call_list">
-          <call
+          <li
             v-for="(call, callIndex) in scheduledCallQueue"
             :key="`scheduledCall#${callIndex}`"
-            v-model="scheduledCallQueue[callIndex]"
-            class="scheduled-call_list-item"
-          />
+          >
+            <call
+              v-model="scheduledCallQueue[callIndex]"
+              class="scheduled-call_list-item"
+            />
+          </li>
         </ul>
       </el-collapse-item>
     </el-collapse>

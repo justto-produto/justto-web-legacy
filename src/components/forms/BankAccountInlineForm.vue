@@ -315,6 +315,17 @@ export default {
     },
 
     addPixRules() {
+      const isRandom = this.pixKeySelected === RANDOM
+      const isPhone = this.pixKeySelected === PHONE
+
+      let number = this.refaultPixRule
+
+      if (isRandom) {
+        number = this.randonKeyPixRule
+      } else if (isPhone) {
+        number = this.phonePixRule
+      }
+
       return {
         name: [{ required: false, message: 'Obrigatório', trigger }],
         agency: [{ required: false, message: 'Obrigatório', trigger }],
@@ -326,7 +337,7 @@ export default {
           { required: this.pixKeySelected === DOCUMENT, message: 'Obrigatório', trigger },
           { validator: validateDocument, message: 'CPF/CNPJ inválido.', trigger }
         ],
-        number: this.pixKeySelected === RANDOM ? this.randonKeyPixRule : (this.pixKeySelected === PHONE ? this.phonePixRule : this.refaultPixRule)
+        number
       }
     },
 
@@ -364,31 +375,48 @@ export default {
   methods: {
     ...mapActions(['getTicketOverviewInfo']),
 
-    async showForm(account) {
+    setPixKeyType(account) {
+      const isRandom = account?.number > 15
+
+      if (isRandom) {
+        this.$set(this, 'pixKeySelected', RANDOM)
+      } else if (account?.number) {
+        this.$set(this, 'pixKeySelected', PHONE)
+      } else if (account?.email) {
+        this.$set(this, 'pixKeySelected', EMAIL)
+      } else {
+        this.$set(this, 'pixKeySelected', DOCUMENT)
+      }
+    },
+
+    cleanAccount() {
       this.$delete(this.account, 'bank')
       this.$delete(this.account, 'agency')
       this.$delete(this.account, 'number')
+    },
+
+    handleProcessAccounts(account) {
+      Object.keys(account).forEach(key => this.$set(this.account, key, account[key]))
+      this.account.document = this.$options.filters.cpfCnpj(account.document)
+
+      if (account?.type === PIX && (this.usePix && !this.ticketInfo?.denyPixDeposit)) {
+        this.setPixKeyType(account)
+
+        this.$nextTick().then(() => this.$set(this.account, 'number', account?.number || ''))
+      } else {
+        this.$set(this.account, 'type', 'CHECKING')
+        this.$set(this, 'pixKeySelected', '')
+      }
+    },
+
+    async showForm(account) {
+      this.cleanAccount()
 
       if (!Object.keys(this.ticketInfo).length) {
         await this.getTicketOverviewInfo(this.$route.params.id)
       }
 
-      this.$nextTick().then(() => {
-        Object.keys(account).forEach(key => this.$set(this.account, key, account[key]))
-        this.account.document = this.$options.filters.cpfCnpj(account.document)
-
-        if (account?.type === PIX && (this.usePix && !this.ticketInfo?.denyPixDeposit)) {
-          const isRandom = account?.number > 15
-          const pixKey = isRandom ? RANDOM : account?.number ? PHONE : account?.email ? EMAIL : DOCUMENT
-
-          this.$set(this, 'pixKeySelected', pixKey)
-
-          this.$nextTick().then(() => this.$set(this.account, 'number', account?.number || ''))
-        } else {
-          this.$set(this.account, 'type', 'CHECKING')
-          this.$set(this, 'pixKeySelected', '')
-        }
-      })
+      this.$nextTick().then(() => this.handleProcessAccounts(account))
 
       if (account.document) {
         const { cpfCnpj } = this.$options.filters

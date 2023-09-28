@@ -26,6 +26,10 @@ class Call {
     this.contacts = contacts || { emails: [], phones: [] }
     this.scheduling = scheduling
   }
+
+  get isScheduled() {
+    return Boolean(this.scheduling)
+  }
 }
 
 export { Call }

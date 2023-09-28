@@ -120,7 +120,7 @@ export default {
     documentStep() {
       return getDocumentStep(
         (this.dispute?.getDisputeHasDocument || this.dispute?.hasDocument),
-        (this.dispute?.getDisputeSignStatus || this.dispute.signStatus)
+        (this.dispute?.getDisputeSignStatus || this.dispute?.signStatus)
       )
     },
 
@@ -129,7 +129,7 @@ export default {
     },
 
     hasDocumentSignURL() {
-      return this.document.signedDocument && this.document.signedDocument.signKey
+      return this.document?.signedDocument?.signKey
     }
   },
 

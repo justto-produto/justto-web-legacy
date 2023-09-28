@@ -79,7 +79,7 @@ const ticketsMutations = {
     const ticketIndex = getTicketIndex(tickets.content, disputeRole.disputeId)
     if (ticketIndex >= 0) {
       const ticket = tickets.content[ticketIndex]
-      if (ticket && ticket.plaintiff && ticket.plaintiff.documentNumber === disputeRole.documentNumber) {
+      if (ticket?.plaintiff?.documentNumber && ticket?.plaintiff?.documentNumber === disputeRole.documentNumber) {
         Vue.set(ticket.plaintiff, 'name', disputeRole.name)
       }
     }

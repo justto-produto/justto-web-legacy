@@ -78,13 +78,13 @@ export default {
         properties.forEach(({ key, value }) => {
           switch (key) {
             case 'DISABLE_DRAFT_NOT_CREATED_NOTIFICATION':
-              this.draftNotCreatedNotification = !(value === String(true))
+              this.draftNotCreatedNotification = (value !== String(true))
               break
             case 'DISABLE_DRAFT_NOT_SENT_NOTIFICATION':
-              this.draftNotSentNotification = !(value === String(true))
+              this.draftNotSentNotification = (value !== String(true))
               break
             case 'DISABLE_DRAFT_NOT_SIGNED_NOTIFICATION':
-              this.draftNotSignedNotification = !(value === String(true))
+              this.draftNotSignedNotification = (value !== String(true))
               break
             default:
               break
