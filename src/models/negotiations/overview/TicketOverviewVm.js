@@ -3,7 +3,7 @@ class StrategyVm {
     Object.keys(strategy).forEach(key => (this[key] = strategy[key]))
   }
 
-  get isObrigacaoFazer() {
+  get getIsObrigacaoFazer() {
     return this.isObrigacaoFazer
   }
 }
