@@ -494,39 +494,49 @@ export default {
 
   watch: {
     businessHoursEngagement(value) {
+      // eslint-disable-next-line vue/no-mutating-props
       this.mappedCampaign.businessHoursEngagement = value
     },
     contactPartyWhenNoLowyer(value) {
+      // eslint-disable-next-line vue/no-mutating-props
       this.mappedCampaign.contactPartyWhenNoLowyer = value
     },
     alwaysContactParty(value) {
+      // eslint-disable-next-line vue/no-mutating-props
       this.mappedCampaign.alwaysContactParty = value
     },
     contactPartyWhenInvalidLowyer(value) {
+      // eslint-disable-next-line vue/no-mutating-props
       this.mappedCampaign.contactPartyWhenInvalidLowyer = value
     },
 
     enrichDisputes(enrich) {
+      // eslint-disable-next-line vue/no-mutating-props
       this.mappedCampaign.skipEnrichment = !enrich
     },
 
     skipEnrichment(value) {
+      // eslint-disable-next-line vue/no-mutating-props
       this.mappedCampaign.skipEnrichment = value
     },
     denySavingDeposit(value) {
+      // eslint-disable-next-line vue/no-mutating-props
       this.mappedCampaign.denySavingDeposit = value
 
       this.denyPixDeposit = value
     },
 
     denyPixDeposit(value) {
+      // eslint-disable-next-line vue/no-mutating-props
       this.mappedCampaign.denyPixDeposit = value
     },
 
     respondent(value) {
+      // eslint-disable-next-line vue/no-mutating-props
       this.mappedCampaign.respondent = value
     },
     campaignName(value) {
+      // eslint-disable-next-line vue/no-mutating-props
       this.mappedCampaign.name = value
 
       if (value) {
@@ -549,21 +559,27 @@ export default {
       if ([null, undefined].includes(value.communications)) {
         this.strategy.communications = []
       }
+      // eslint-disable-next-line vue/no-mutating-props
       this.mappedCampaign.strategy = value.name
+      // eslint-disable-next-line vue/no-mutating-props
       this.mappedCampaign.strategyId = value.id
     },
     deadline(value) {
+      // eslint-disable-next-line vue/no-mutating-props
       this.mappedCampaign.deadline = {
         dateTime: this.$moment(value).endOf('day').format('YYYY-MM-DD[T]HH:mm:ss[Z]')
       }
     },
     negotiatorIds(value) {
+      // eslint-disable-next-line vue/no-mutating-props
       this.mappedCampaign.negotiatorIds = value
     },
     paymentDeadLine(value) {
+      // eslint-disable-next-line vue/no-mutating-props
       this.mappedCampaign.paymentDeadLine = value
     },
     initialOfferPercentage(value) {
+      // eslint-disable-next-line vue/no-mutating-props
       this.mappedCampaign.initialOfferPercentage = value
     }
   },
@@ -577,14 +593,23 @@ export default {
     this.denySavingDeposit = preferences.denySavingDeposit || false
     this.denyPixDeposit = this.usePixAccountType ? (preferences.denyPixDeposit || false) : true
 
+    // eslint-disable-next-line vue/no-mutating-props
     this.mappedCampaign.businessHoursEngagement = this.businessHoursEngagement
+    // eslint-disable-next-line vue/no-mutating-props
     this.mappedCampaign.contactPartyWhenNoLowyer = this.contactPartyWhenNoLowyer
+    // eslint-disable-next-line vue/no-mutating-props
     this.mappedCampaign.contactPartyWhenInvalidLowyer = this.contactPartyWhenInvalidLowyer
+    // eslint-disable-next-line vue/no-mutating-props
     this.mappedCampaign.alwaysContactParty = this.alwaysContactParty
+    // eslint-disable-next-line vue/no-mutating-props
     this.mappedCampaign.skipEnrichment = this.skipEnrichment
+    // eslint-disable-next-line vue/no-mutating-props
     this.mappedCampaign.denySavingDeposit = this.denySavingDeposit
+    // eslint-disable-next-line vue/no-mutating-props
     this.mappedCampaign.denyPixDeposit = this.denyPixDeposit
+    // eslint-disable-next-line vue/no-mutating-props
     this.mappedCampaign.paymentDeadLine = this.paymentDeadLine
+    // eslint-disable-next-line vue/no-mutating-props
     this.mappedCampaign.initialOfferPercentage = this.isWorkspaceRecovery ? 100 : this.initialOfferPercentage
 
     this.campaignName = this.mappedCampaign.campaign || ''

@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-mutating-props -->
 <template>
   <el-dialog
     :close-on-click-modal="false"
@@ -72,6 +73,7 @@ export default {
 
   methods: {
     openDialogEditor() {
+      // eslint-disable-next-line vue/no-mutating-props
       this.lgpdDialogVisible = true
     }
   }

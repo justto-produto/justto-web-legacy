@@ -1,4 +1,4 @@
-const validateZero = (rule, value, callback) => {
+const validateZero = (_rule, value, callback) => {
   if (value && value >= 0) {
     callback()
   } else {

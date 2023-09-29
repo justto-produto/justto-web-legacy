@@ -2,7 +2,7 @@ import Vue from 'vue'
 import store from '@/store'
 
 const JusSegment = {
-  install(Vue, options) {
+  install(Vue) {
     function SegmentLog(event, properties) {
       this.event = event
       this.properties = properties

@@ -19,20 +19,16 @@ import cookies from '@/utils/mixins/cookies'
 
 export default {
   name: 'App',
-
   mixins: [cookies],
-
   computed: {
     ...mapGetters(['workspaceTeamName'])
   },
-
   watch: {
     $route: {
       deep: true,
       handler: 'handleRoute'
     }
   },
-
   methods: {
     ...mapMutations([
       'setRoute',
@@ -48,5 +44,10 @@ export default {
     }
   }
 }
-
 </script>
+
+<style lang="scss" scoped>
+  #app {
+    height: 100vh;
+  }
+</style>

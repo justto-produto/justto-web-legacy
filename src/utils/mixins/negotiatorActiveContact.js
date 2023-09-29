@@ -35,13 +35,6 @@ export default {
           email = interactions.length ? interactions[0].address || '' : ''
         })
       }
-      /**
-       * Busca o roleId do negociador.
-       */
-      /* const roleId = this.dispute.disputeRoles.find(role => {
-        // TODO: Buscar RoleId do usuário logado, ou mandar nulo.
-        return role.roleNameNegotiator
-      }).id */
       const data = {
         message: this.messageDialogReplyEditor,
         roleId: null,

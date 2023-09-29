@@ -1,4 +1,4 @@
-const validateObjectEmail = (rule, value, callback) => {
+const validateObjectEmail = (_rule, value, callback) => {
   const email = value[Object.keys(value)[0]]
 
   if (email) {

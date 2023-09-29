@@ -168,6 +168,7 @@ export class DisputeModel {
     return this.getDisputeStatus === 'CANCELED'
   }
 
+  // eslint-disable-next-line accessor-pairs
   set setDisputeRoles(roles) {
     if (this.#dtoV1?.disputeRoles) {
       this.#dtoV1.disputeRoles = roles

@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-mutating-props -->
 <template>
   <!-- Dialog para edição de parte -->
   <el-dialog
@@ -551,6 +552,7 @@ export default {
           }).then(() => {
             phones.map(phone => {
               hasAnyValid = true
+              // eslint-disable-next-line vue/no-mutating-props
               this.party.phone = phone
               this.addPhone()
             })
@@ -577,6 +579,7 @@ export default {
     addPhone() {
       let isValid = true
 
+      // eslint-disable-next-line vue/no-mutating-props
       this.party.phone = this.party.phone.trim()
       this.$refs.party.validateField('phone', errorMessage => {
         if (errorMessage || !this.party.phone) isValid = false
@@ -585,19 +588,23 @@ export default {
       if (isValid) {
         const self = this
 
+        // eslint-disable-next-line vue/no-mutating-props
         this.party.phone = this.party.phone.replace(/ /g, '').replace(/\D/g, '')
         const duplicatedIndex = this.party.phones.findIndex(p => {
           const number = p.number.startsWith('55') ? p.number.replace('55', '') : p.number
           return number === self.party.phone
         })
 
+        // eslint-disable-next-line vue/no-mutating-props
         if (duplicatedIndex < 0) this.party.phones.push({ number: this.party.phone, isMain: true })
 
+        // eslint-disable-next-line vue/no-mutating-props
         this.party.phone = ''
       }
     },
 
     removePhone(index) {
+      // eslint-disable-next-line vue/no-mutating-props
       this.party.phones.splice(index, 1)
     },
 
@@ -619,6 +626,7 @@ export default {
         }).then(() => {
           emails.map(email => {
             hasAnyValid = true
+            // eslint-disable-next-line vue/no-mutating-props
             this.party.email = email
             this.addEmail()
           })
@@ -644,6 +652,7 @@ export default {
     addEmail() {
       let isValid = true
 
+      // eslint-disable-next-line vue/no-mutating-props
       this.party.email = this.party.email.trim()
       this.$refs.party.validateField('email', errorMessage => {
         if (errorMessage || !this.party.email) isValid = false
@@ -653,13 +662,16 @@ export default {
         const self = this
         const duplicatedIndex = this.party.emails.findIndex(e => e.address === self.party.email)
 
+        // eslint-disable-next-line vue/no-mutating-props
         if (duplicatedIndex < 0) this.party.emails.push({ address: this.party.email, isMain: true })
 
+        // eslint-disable-next-line vue/no-mutating-props
         this.party.email = ''
       }
     },
 
     removeEmail(index) {
+      // eslint-disable-next-line vue/no-mutating-props
       this.party.emails.splice(index, 1)
     },
 
@@ -670,20 +682,25 @@ export default {
       })
       if (isValid) {
         const self = this
+        // eslint-disable-next-line vue/no-mutating-props
         this.party.oab = this.party.oab.replace(/ /g, '')
         const isDuplicated = this.party.oabs.findIndex(o => o.number === self.party.oab && o.state === self.party.state)
         if (isDuplicated < 0) {
+          // eslint-disable-next-line vue/no-mutating-props
           this.party.oabs.push({
             number: this.party.oab,
             state: this.party.state
           })
         }
+        // eslint-disable-next-line vue/no-mutating-props
         this.party.oab = ''
+        // eslint-disable-next-line vue/no-mutating-props
         this.party.state = ''
       }
     },
 
     removeOab(index) {
+      // eslint-disable-next-line vue/no-mutating-props
       this.party.oabs.splice(index, 1)
     },
 
@@ -723,6 +740,7 @@ export default {
 
     removeBankData(index, id) {
       this.bankAccountIdstoUnlink.push(id)
+      // eslint-disable-next-line vue/no-mutating-props
       this.party.bankAccounts.splice(index, 1)
     },
 

@@ -1,4 +1,4 @@
-const validateName = (rule, value, callback) => {
+const validateName = (_rule, value, callback) => {
   // const validName = /^[^!@#$%*&(){}[\]/|\\_<>?¢£¬§=+]+$/g
   // && value.match(validName)
 

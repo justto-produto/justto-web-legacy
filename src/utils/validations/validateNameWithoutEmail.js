@@ -1,4 +1,4 @@
-const validateNameWithoutEmail = (rule, value, callback) => {
+const validateNameWithoutEmail = (_rule, value, callback) => {
   const haveDot = value.includes('.')
   const haveAt = value.includes('@')
   const haveComma = value.includes('-')
