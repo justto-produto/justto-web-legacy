@@ -3,10 +3,20 @@
   "env": {
     "node": true
   },
-  "extends": ["plugin:vue/recommended", "@vue/standard", "plugin:vue/strongly-recommended"],
+  "extends": [
+    "plugin:vue/recommended",
+    "@vue/standard",
+    "plugin:vue/strongly-recommended"
+  ],
   "rules": {
-    "space-before-function-paren": ["error", "never"],
-    "comma-dangle": ["warn", "never"],
+    "space-before-function-paren": [
+      "error",
+      "never"
+    ],
+    "comma-dangle": [
+      "warn",
+      "never"
+    ],
     "no-var": "error",
     "dot-notation": "warn",
     "prefer-const":"warn",
@@ -17,12 +27,10 @@
       "warn",
       {
         "singleline": 1,
-        "multiline": {
-          "max": 1,
-          "allowFirstLine": false
-        }
+        "multiline": 1
       }
     ],
+    "vue/multi-word-component-names": 0,
     "vue/no-duplicate-attributes": [
       "error",
       {
@@ -54,6 +62,6 @@
     "vue/no-v-html": "off"
   },
   "parserOptions": {
-    "parser": "babel-eslint"
+    "parser": "@babel/eslint-parser"
   }
 }

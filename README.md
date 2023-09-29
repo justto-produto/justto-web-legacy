@@ -19,11 +19,11 @@ Novo sistema web da ProJuris que agora funciona. :heart:
 ### Como rodar via prompt
 
 ###### Instale as dependências
-`npm install`
+`yarn install`
 
 ###### Para subir servidor de desenvolvimento:
 
-`npm run serve`
+`yarn serve`
 
 ###### Acesse:
 
@@ -31,11 +31,11 @@ Novo sistema web da ProJuris que agora funciona. :heart:
 
 ###### Para build:
 
-`npm run build`
+`yarn build`
 
 ###### Para styleguide:
 
-`npm run styleguide`
+`yarn styleguide`
 
 ###### .env.local
 VUE_APP_BASE_URL=https://backend.justto.app/
