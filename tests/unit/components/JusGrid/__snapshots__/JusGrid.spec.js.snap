@@ -1,8 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`Components > JusGrid renders correctly 1`] = `
-<div
-  class="jus-grid"
-  style="grid-template-columns: repeat(1, 1fr); grid-template-rows: repeat(auto-fit, auto); gap: 24px;"
-/>
-`;
