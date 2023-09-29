@@ -122,7 +122,7 @@ export default {
 
       this.getFeatureProperties(3).then(({ properties }) => {
         properties.forEach(({ key, value }) => {
-          this.customProperties[key] = !(value === String(false))
+          this.customProperties[key] = (value !== String(false))
           this.$forceUpdate()
         })
       })

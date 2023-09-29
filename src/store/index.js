@@ -63,7 +63,15 @@ export default new Vuex.Store({
     windowHeight: state => state.windowHeight,
     getWindowHeight: state => state.window.height,
     getWindowWidth: state => state.window.width,
-    getWindowMode: state => (state.window.width <= 900 ? 'mobile' : state.window.width <= 1200 ? 'tablet' : 'desktop'),
+    getWindowMode: state => {
+      if (!state.window.width) return 'desktop'
+
+      if (state.window.width <= 900) return 'mobile'
+
+      if (state.window.width <= 1200) return 'tablet'
+
+      return 'desktop'
+    },
     getDisputeStatus: state => {
       return state.disputeModule?.dispute?.status || state.negotiationOverviewModule?.ticketOverview?.status || ''
     },

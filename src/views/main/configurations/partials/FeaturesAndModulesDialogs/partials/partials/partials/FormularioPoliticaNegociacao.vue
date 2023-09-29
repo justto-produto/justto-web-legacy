@@ -129,13 +129,21 @@ export default {
       }).catch(error => this.$jusNotification({ error }))
 
       this.buscarIntegracaoSugestaoAlcada().then(configs => {
-        if (Object.entries(configs).length) {
-          const [[valorBase, porcentagemAlcadaMaxima]] = Object.entries(configs)
+        if (configs.nomeAlcadaCustomizada) {
+          this.tipoDePolitica = 'customizada'
+          this.form.PROJURIS_SOAP_ESTRATEGIA_PERSONALIZADA = configs.nomeAlcadaCustomizada
+        } else if (Object.entries(configs?.percentuais).length) {
+          const { danosMateriais, perdaProvavel } = configs.percentuais
 
-          this.form.PROJURIS_SOAP_PORCENTAGEM_ALCADA_MAXIMA = porcentagemAlcadaMaxima || 75
-          this.form.PROJURIS_SOAP_VALOR_BASE = valorBase || ''
+          if (danosMateriais) {
+            this.form.PROJURIS_SOAP_VALOR_BASE = 'danosMateriais'
+            this.form.PROJURIS_SOAP_PORCENTAGEM_ALCADA_MAXIMA = danosMateriais || 75
+          } else {
+            this.form.PROJURIS_SOAP_PORCENTAGEM_ALCADA_MAXIMA = perdaProvavel || 75
+            this.form.PROJURIS_SOAP_VALOR_BASE = 'perdaProvavel'
+          }
 
-          this.tipoDePolitica = valorBase === 'customized' ? 'customizada' : 'proporcional'
+          this.tipoDePolitica = 'proporcional'
         }
       }).catch(error => this.$jusNotification({ error }))
     },
@@ -144,10 +152,12 @@ export default {
       return Promise.all([
         this.salvarIntegracaoDataLimite(this.form?.PROJURIS_SOAP_DIAS_PARA_EXPIRAR || 1),
 
-        this.form.PROJURIS_SOAP_VALOR_BASE === 'nomeAlcadaCustomizada' ? this.salvarIntegracaoSugestaoAlcada({
-          [this.form?.PROJURIS_SOAP_VALOR_BASE]: this.form?.PROJURIS_SOAP_ESTRATEGIA_PERSONALIZADA || ''
+        this.tipoDePolitica === 'customizada' ? this.salvarIntegracaoSugestaoAlcada({
+          nomeAlcadaCustomizada: this.form?.PROJURIS_SOAP_ESTRATEGIA_PERSONALIZADA || ''
         }) : this.salvarIntegracaoSugestaoAlcada({
-          [this.form?.PROJURIS_SOAP_VALOR_BASE]: this.form?.PROJURIS_SOAP_PORCENTAGEM_ALCADA_MAXIMA || 75
+          percentuais: {
+            [this.form?.PROJURIS_SOAP_VALOR_BASE]: this.form?.PROJURIS_SOAP_PORCENTAGEM_ALCADA_MAXIMA || 75
+          }
         })
       ])
     },

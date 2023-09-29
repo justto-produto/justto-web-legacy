@@ -86,7 +86,7 @@ export default {
     },
 
     collapseTitle() {
-      const isPlural = !(this.scheduledCallQueue?.length === 1)
+      const isPlural = this.scheduledCallQueue?.length > 1
       return `${this.scheduledCallQueue?.length || 0} ${isPlural ? 'ligações agendadas' : 'ligação agendada'}`
     },
 

@@ -80,7 +80,7 @@ export default {
       this.model = this.model.trim() + endLine
 
       const tempModel = this.model?.length ? this.model.split('\n') : []
-      const reId = /[0-9]+/g
+      const reId = /\d+/g
       const reCode = /[^']+/g
 
       if (this.field === 'ID') {
