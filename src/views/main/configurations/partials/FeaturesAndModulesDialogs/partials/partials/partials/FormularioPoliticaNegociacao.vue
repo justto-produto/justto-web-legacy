@@ -148,6 +148,33 @@ export default {
       }).catch(error => this.$jusNotification({ error }))
     },
 
+    buscarIntegracaoSugestaoAlcadaPercentuais() {
+      this.buscarIntegracaoSugestaoAlcada().then(configs => {
+        if (Object.entries(configs?.percentuais).length) {
+          const { danosMateriais, perdaProvavel } = configs.percentuais
+
+          if (danosMateriais) {
+            this.form.PROJURIS_SOAP_VALOR_BASE = 'danosMateriais'
+            this.form.PROJURIS_SOAP_PORCENTAGEM_ALCADA_MAXIMA = danosMateriais || 75
+          } else {
+            this.form.PROJURIS_SOAP_PORCENTAGEM_ALCADA_MAXIMA = perdaProvavel || 75
+            this.form.PROJURIS_SOAP_VALOR_BASE = 'perdaProvavel'
+          }
+
+          this.tipoDePolitica = 'proporcional'
+        }
+      }).catch(error => this.$jusNotification({ error }))
+    },
+
+    buscarIntegracaoSugestaoAlcadaAlcadaCustomizada() {
+      this.buscarIntegracaoSugestaoAlcada().then(configs => {
+        if (configs.nomeAlcadaCustomizada) {
+          this.tipoDePolitica = 'customizada'
+          this.form.PROJURIS_SOAP_ESTRATEGIA_PERSONALIZADA = configs.nomeAlcadaCustomizada
+        }
+      }).catch(error => this.$jusNotification({ error }))
+    },
+
     save() {
       return Promise.all([
         this.salvarIntegracaoDataLimite(this.form?.PROJURIS_SOAP_DIAS_PARA_EXPIRAR || 1),
@@ -165,9 +192,13 @@ export default {
     atualizarTipoDePolitica(tipo) {
       if (tipo === 'customizada') {
         this.form.PROJURIS_SOAP_VALOR_BASE = 'nomeAlcadaCustomizada'
+
+        this.buscarIntegracaoSugestaoAlcadaAlcadaCustomizada()
       } else {
         this.form.PROJURIS_SOAP_VALOR_BASE = ''
         this.form.PROJURIS_SOAP_ESTRATEGIA_PERSONALIZADA = ''
+
+        this.buscarIntegracaoSugestaoAlcadaPercentuais()
       }
     }
   }
