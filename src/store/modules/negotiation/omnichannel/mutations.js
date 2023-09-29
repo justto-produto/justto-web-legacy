@@ -177,7 +177,9 @@ export default {
     const { recipients } = state.editor
     const has = recipients.filter(el => el.value === recipient.value).length > 0
 
-    if (recipient?.autodetected && has) { return true } else if (has) {
+    if (recipient?.autodetected && has) {
+      return true
+    } else if (has) {
       Vue.set(state.editor, 'recipients', recipients.filter(el => el.value !== recipient.value))
     } else {
       Vue.set(state.editor, 'recipients', [...recipients, recipient])
@@ -186,7 +188,7 @@ export default {
 
   removeRecipient: (state, value) => {
     const items = state.editor.recipients.filter(el => el.value !== value)
-
+    
     Vue.set(state.editor, 'recipients', items)
   },
 
