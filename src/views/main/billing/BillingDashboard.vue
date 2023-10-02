@@ -8,7 +8,7 @@
       slot="main"
       class="billing-view__slot-main"
     >
-      <JusButtonBack
+      <jus-button-back
         v-if="isJusttoAdmin"
         to="/billing"
         class="billing-view__back-button"
@@ -176,8 +176,7 @@ export default {
   components: {
     JusDataTable: () => import('@/components/tables/JusDataTable'),
     JusFinancialCard: () => import('@/components/JusFinancialCard/JusFinancialCard'),
-    JusGrid: () => import('@/components/JusGrid/JusGrid'),
-    JusButtonBack: () => import('@/components/buttons/JusButtonBack')
+    JusGrid: () => import('@/components/JusGrid/JusGrid')
   },
   data() {
     return {

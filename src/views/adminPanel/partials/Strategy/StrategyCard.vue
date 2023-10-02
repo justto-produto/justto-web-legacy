@@ -157,13 +157,12 @@
 
 <script>
 import { JusTextEditable } from '@/components/JusTextEditable'
-import StrategyCommunication from './StrategyCommunication'
 
 export default {
   name: 'PanelStrategy',
   components: {
     JusTextEditable,
-    StrategyCommunication
+    StrategyCommunication: () => import('./StrategyCommunication')
   },
   props: {
     strategy: {

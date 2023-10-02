@@ -125,7 +125,6 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-// import ckeditor from '@/utils/mixins/ckeditor'
 import CKEditor from 'ckeditor4-vue'
 
 export default {
@@ -135,8 +134,6 @@ export default {
     ckeditor: CKEditor.component,
     JusVariablesCard: () => import('@/components/layouts/JusVariablesCard')
   },
-
-  // mixins: [ckeditor],
 
   props: {
     templateToEdit: {

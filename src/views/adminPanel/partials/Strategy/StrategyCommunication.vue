@@ -83,7 +83,7 @@ export default {
   props: {
     triggers: {
       type: Object,
-      default: () => []
+      default: () => {}
     },
     strategyId: {
       type: Number,

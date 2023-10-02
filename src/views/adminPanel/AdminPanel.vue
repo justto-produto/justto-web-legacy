@@ -162,14 +162,14 @@ export default {
         'michelle@justto.com.br',
         'kelvin@justto.com.br',
         'josewilliam@justto.com.br',
-        'daniel@justto.com.br',
+        'guilherme.cunha@justto.com.br',
         'deivid@justto.com.br',
         'simone.barreiros@justto.com.br'
       ],
       testers: [
         'lucas@justto.com.br',
         'josewilliam@justto.com.br',
-        'daniel@justto.com.br',
+        'guilherme.cunha@justto.com.br',
         'deivid@justto.com.br',
         'simone.barreiros@justto.com.br'
       ]

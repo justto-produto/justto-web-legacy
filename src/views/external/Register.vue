@@ -111,8 +111,7 @@
 export default {
   name: 'Register',
   components: {
-    JusSidenavExternal: () => import('@/components/layouts/JusSidenavExternal'),
-    JusButtonBack: () => import('@/components/buttons/JusButtonBack')
+    JusSidenavExternal: () => import('@/components/layouts/JusSidenavExternal')
   },
   data() {
     return {
