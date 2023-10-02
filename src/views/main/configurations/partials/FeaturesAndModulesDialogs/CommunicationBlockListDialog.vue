@@ -17,7 +17,7 @@ import { mapActions } from 'vuex'
 export default {
   name: 'CommunicationBlockListDialog',
   components: {
-    ConfigurationBlacklist: () => import('@/views/main/configuration/partials/ConfigurationBlacklist')
+    ConfigurationBlacklist: () => import('@/views/main/configurations/partials/Blacklist')
   },
   data: () => ({
     communicationBlockListDialogVisible: false

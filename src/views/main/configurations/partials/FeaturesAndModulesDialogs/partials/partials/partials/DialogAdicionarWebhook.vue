@@ -39,7 +39,7 @@
         v-model="formulario.authType"
       >
         <el-tab-pane
-          :label="this.$tc(`configurations.authorization.type.${authTypes.BASIC_AUTH}`)"
+          :label="$tc(`configurations.authorization.type.${authTypes.BASIC_AUTH}`)"
           :name="authTypes.BASIC_AUTH"
         >
           <el-row :gutter="24">
@@ -64,7 +64,7 @@
         </el-tab-pane>
 
         <el-tab-pane
-          :label="this.$tc(`configurations.authorization.type.${authTypes.API_KEY}`)"
+          :label="$tc(`configurations.authorization.type.${authTypes.API_KEY}`)"
           :name="authTypes.API_KEY"
         >
           <el-form-item
@@ -76,7 +76,7 @@
         </el-tab-pane>
 
         <el-tab-pane
-          :label="this.$tc(`configurations.authorization.type.${authTypes.BEARER_TOKEN}`)"
+          :label="$tc(`configurations.authorization.type.${authTypes.BEARER_TOKEN}`)"
           :name="authTypes.BEARER_TOKEN"
         >
           <el-form-item
