@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-mutating-props -->
 <template>
   <article class="party-details">
     <!-- Dialog de warning para LGPD -->

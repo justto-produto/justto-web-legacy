@@ -1,21 +1,19 @@
 <template>
   <article class="reports-container">
     <div class="reports-container__list">
-      <el-link
+      <el-button
         class="el-button reports-container__list-item"
-        href="/#/reports/management"
-        :underline="false"
+        @click="goToReport('management')"
       >
         Relatório Gerencial
-      </el-link>
+      </el-button>
 
-      <el-link
+      <el-button
         class="el-button reports-container__list-item"
-        href="/#/reports/managerial"
-        :underline="false"
+        @click="goToReport('managerial')"
       >
         Relatório Gestão
-      </el-link>
+      </el-button>
     </div>
 
     <div class="reports-container__report">
@@ -26,7 +24,12 @@
 
 <script>
 export default {
-
+  name: 'Reports',
+  methods: {
+    goToReport(report) {
+      this.$router.push(`/reports/${report}`)
+    }
+  }
 }
 </script>
 
