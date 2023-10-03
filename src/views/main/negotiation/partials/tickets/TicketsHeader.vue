@@ -13,7 +13,7 @@
       popper-class="tickets-header-container__popover"
       placeholder="Busque sua disputa..."
     >
-      <template v-slot="{ item }">
+      <template #default="{ item }">
         <JusDisputeResume
           v-if="item.id"
           :dispute="item"

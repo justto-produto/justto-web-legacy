@@ -11,21 +11,21 @@
       label="Data"
       width="75"
     >
-      <template v-slot="scope">
+      <template #default="scope">
         <span>{{ scope.row.occurredDate | moment('DD/MM/YY') }}</span>
       </template>
     </el-table-column>
     <el-table-column
       label="Lançamento"
     >
-      <template v-slot="scope">
+      <template #default="scope">
         <span v-html="transactionResume(scope.row)" />
       </template>
     </el-table-column>
     <el-table-column
       label="Nota"
     >
-      <template v-slot="scope">
+      <template #default="scope">
         <span>{{ transactionTableNote(scope.row.note, scope.row.type) }}</span>
       </template>
     </el-table-column>
@@ -33,7 +33,7 @@
       label="Tipo"
       width="110"
     >
-      <template v-slot="scope">
+      <template #default="scope">
         <span>{{ $t(`transactions.${scope.row.type}`) | capitalize }}</span>
       </template>
     </el-table-column>
@@ -42,7 +42,7 @@
       :label="$tc('PARTY_RESPONDENT', isWorkspaceRecovery)"
       width="160"
     >
-      <template v-slot="scope">
+      <template #default="scope">
         <span>{{ scope.row.respondent || '-' }}</span>
       </template>
     </el-table-column>
@@ -51,7 +51,7 @@
       label="Processo"
       width="130"
     >
-      <template v-slot="scope">
+      <template #default="scope">
         <span>{{ scope.row.code || '-' }}</span>
       </template>
     </el-table-column>
@@ -59,7 +59,7 @@
       label="#ID"
       width="90"
     >
-      <template v-slot="scope">
+      <template #default="scope">
         <span class="data-table__dispute-link">
           <el-tooltip
             :disabled="!scope.row.disputeArchived"
@@ -92,7 +92,7 @@
       label="ID Interno"
       width="100"
     >
-      <template v-slot="scope">
+      <template #default="scope">
         <span>{{ scope.row.externalId || '-' }}</span>
       </template>
     </el-table-column>
@@ -100,7 +100,7 @@
       label="Valor"
       width="120"
     >
-      <template v-slot="scope">
+      <template #default="scope">
         <span>{{ scope.row.value | currency }}</span>
       </template>
     </el-table-column>
@@ -108,7 +108,7 @@
       class-name="data-table__hidden-actions"
       width="1px"
     >
-      <template v-slot="scope">
+      <template #default="scope">
         <JusFloatActions
           :actions="availableActions"
           :scope="scope.row"

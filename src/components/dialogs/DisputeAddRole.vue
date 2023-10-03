@@ -175,7 +175,7 @@
           class="el-table--list"
         >
           <el-table-column>
-            <template v-slot="scope">
+            <template #default="scope">
               {{ scope.row.number | phoneNumber }}
             </template>
           </el-table-column>
@@ -185,7 +185,7 @@
             width="48px"
             class-name="visible"
           >
-            <template v-slot="scope">
+            <template #default="scope">
               <a @click.prevent="removePhone(scope.$index)">
                 <jus-icon icon="trash" />
               </a>
@@ -221,7 +221,7 @@
           class="el-table--list"
         >
           <el-table-column>
-            <template v-slot="scope">
+            <template #default="scope">
               <span>
                 {{ scope.row.address }}
               </span>
@@ -233,7 +233,7 @@
             width="48px"
             class-name="visible"
           >
-            <template v-slot="scope">
+            <template #default="scope">
               <a @click.prevent="removeEmail(scope.$index)">
                 <jus-icon icon="trash" />
               </a>

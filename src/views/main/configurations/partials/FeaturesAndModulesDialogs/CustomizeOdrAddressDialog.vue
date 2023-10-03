@@ -157,7 +157,7 @@
                   center
                   width="40"
                 >
-                  <template v-slot="props">
+                  <template #default="props">
                     <el-button
                       type="text"
                       :class="{danger: !props.row.valid, success: props.row.valid}"
@@ -170,7 +170,7 @@
                   prop="type"
                   label="Type"
                 >
-                  <template v-slot="props">
+                  <template #default="props">
                     {{ props.row.type | uppercase }}
                   </template>
                 </el-table-column>
@@ -179,7 +179,7 @@
                   prop="host"
                   label="Host"
                 >
-                  <template v-slot="props">
+                  <template #default="props">
                     {{ props.row.host }}
                   </template>
                 </el-table-column>
@@ -188,7 +188,7 @@
                   prop="data"
                   label="Value"
                 >
-                  <template v-slot="props">
+                  <template #default="props">
                     {{ props.row.data }}
                   </template>
                 </el-table-column>
@@ -198,7 +198,7 @@
                   center
                   width="40"
                 >
-                  <template v-slot="props">
+                  <template #default="props">
                     <el-tooltip
                       content="Copiar"
                       :open-delay="500"

@@ -45,7 +45,7 @@
         prop="name"
         label="Nome"
       >
-        <template v-slot="scope">
+        <template #default="scope">
           <TextInlineEditorInner
             v-if="scope.row.personName || activeAddingData === 'name' + scope.row.id"
             :ref="'name' + scope.row.id"
@@ -67,7 +67,7 @@
         prop="email"
         label="Email"
       >
-        <template v-slot="scope">
+        <template #default="scope">
           <span class="show-right-icon">
             {{ scope.row.email }}
             <i
@@ -82,7 +82,7 @@
         prop="profile"
         label="Perfil"
       >
-        <template v-slot="scope">
+        <template #default="scope">
           <PopoverInlineEditor
             v-model="scope.row.profile"
             :width="180"
@@ -96,7 +96,7 @@
         prop="status"
         label="Status"
       >
-        <template v-slot="scope">
+        <template #default="scope">
           <span
             :class="{
               'team-container__table-status--danger': ['blocked', 'inactive'].includes(scope.row.status),
@@ -118,7 +118,7 @@
           prop="personProperties.MANAGEMENT"
           label="Gerencial"
         >
-          <template v-slot="scope">
+          <template #default="scope">
             <PopoverInlineEditor
               v-model="scope.row.personProperties.MANAGEMENT"
               :width="180"
@@ -132,7 +132,7 @@
           prop="personProperties.EXPIRED"
           label="Expiradas"
         >
-          <template v-slot="scope">
+          <template #default="scope">
             <PopoverInlineEditor
               v-model="scope.row.personProperties.EXPIRED"
               :width="180"
@@ -146,7 +146,7 @@
           prop="personProperties.NPS"
           label="NPS"
         >
-          <template v-slot="scope">
+          <template #default="scope">
             <PopoverInlineEditor
               v-model="scope.row.personProperties.NPS"
               :width="180"
@@ -160,7 +160,7 @@
           prop="personProperties.MANAGER"
           label="Gestão"
         >
-          <template v-slot="scope">
+          <template #default="scope">
             <PopoverInlineEditor
               v-model="scope.row.personProperties.MANAGER"
               :width="180"
@@ -172,7 +172,7 @@
       </el-table-column>
 
       <el-table-column width="80px">
-        <template v-slot="scope">
+        <template #default="scope">
           <i
             class="el-icon-delete team-container__table-action"
             @click="handleRemoveMember(scope.row.personId, scope.row.personName)"

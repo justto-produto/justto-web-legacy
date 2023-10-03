@@ -14,7 +14,7 @@
         prop="name"
         label="Workspace"
       >
-        <template v-slot="scope">
+        <template #default="scope">
           {{ scope.row.name }}
 
           <el-popover
@@ -52,7 +52,7 @@
         prop="teamName"
         label="Equipe"
       >
-        <template v-slot="scope">
+        <template #default="scope">
           {{ scope.row.teamName }}
 
           <el-popover

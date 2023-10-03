@@ -23,7 +23,7 @@
         prop="keyAccountId"
         label="Key Account"
       >
-        <template v-slot="scope">
+        <template #default="scope">
           <el-select
             v-if="scope.row.id === activeRow"
             :id="`ka-select-${scope.row.id}`"
@@ -68,7 +68,7 @@
           </div>
         </template>
 
-        <template v-slot="scope">
+        <template #default="scope">
           <el-tag
             v-for="tag in scope.row.portifolios"
             :key="tag.id"

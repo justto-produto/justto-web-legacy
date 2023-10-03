@@ -202,12 +202,12 @@
 
         <div>
           Resposta via:
-          <jus-icon :icon="responseRow.getDisputeLastReceivedMessage.message.communicationType.toLowerCase()" />
+          <jus-icon :icon="answerVia" />
 
-          <b>{{ responseRow.getDisputeLastReceivedMessage.message.communicationType.toLowerCase() | capitalize }}</b>
+          <b>{{ answerVia | capitalize }}</b>
         </div>
         <div>
-          Destinatário: <b>{{ responseRow.getDisputeLastReceivedMessageSender | phoneNumber }}</b>
+          Destinatário: <b>{{ responseRow?.getDisputeLastReceivedMessageSender ?? '' | phoneNumber }}</b>
         </div>
 
         <quill-editor
@@ -215,7 +215,7 @@
           ref="messageEditor"
           v-model="richMessage"
           v-loading="responseBoxLoading"
-          :class="{ 'show-toolbar': responseRow.getDisputeLastReceivedMessage.message.communicationType === 'EMAIL' }"
+          :class="{ 'show-toolbar': answerIcon === 'email' }"
           :options="editorOptions"
         />
       </div>
@@ -319,6 +319,10 @@ export default {
           ]
         }
       }
+    },
+
+    answerVia() {
+      return (this.responseRow?.getDisputeLastReceivedMessage?.message?.communicationType ?? '').toLowerCase()
     }
   },
 

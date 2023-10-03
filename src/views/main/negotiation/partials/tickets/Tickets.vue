@@ -124,15 +124,15 @@ export default {
     JusScrollLoading
   },
 
+  provide: {
+    isTicket: true
+  },
+
   props: {
     fullScreen: {
       type: Boolean,
       default: false
     }
-  },
-
-  provide: {
-    isTicket: true
   },
 
   data: () => ({

@@ -9,7 +9,7 @@
       class="jus-main-view__container"
     >
       <!-- LEFT CARD SLOT -->
-      <div v-if="this.$slots['left-card']">
+      <div v-if="$slots['left-card']">
         <el-card
           :style="{width: leftCardWidth + 'px'}"
           class="jus-main-view__left-card"
@@ -26,7 +26,7 @@
         <slot name="main" />
       </el-card>
       <!-- RIGHT CARD SLOT -->
-      <div v-if="this.$slots['right-card']">
+      <div v-if="$slots['right-card']">
         <el-card
           :class="{'jus-main-view__zero-width': rightCardCollapsed}"
           :style="{width: rightCardWidth + 'px'}"

@@ -36,7 +36,7 @@
         class-name="management-table__row-code"
         prop="code"
       >
-        <template v-slot="scope">
+        <template #default="scope">
           <DisputeCodeLink
             :code="scope.row.getDisputeCode"
             :custom-style="{ fontWeight: (!scope.row.getDisputeVisualized && !['1'].includes(activeTab))? 'bold' : 'normal'}"
@@ -76,7 +76,7 @@
         class-name="text-ellipsis first-claimant-container"
         :label="$tc('fields.claimantParty', isRecoveryStrategy)"
       >
-        <template v-slot="scope">
+        <template #default="scope">
           <div class="first-claimant-container__cell">
             <jus-vexatious-alert
               v-if="(scope.row.getDisputeHasFirstClaimantAlerts)"
@@ -111,7 +111,7 @@
         :label="$tc('fields.claimantLawyer', isRecoveryStrategy)"
         min-width="154px"
       >
-        <template v-slot="scope">
+        <template #default="scope">
           <div class="first-claimant-container__cell">
             <jus-vexatious-alert
               v-if="scope.row.getDisputeHasFirstClaimantLawyerAlerts"
@@ -162,7 +162,7 @@
         prop="disputeUpperRange"
         min-width="118px"
       >
-        <template v-slot="scope">
+        <template #default="scope">
           <span v-if="scope.row.getDisputeUpperRange">
             {{ scope.row.getDisputeUpperRange | currency }}
           </span>
@@ -178,7 +178,7 @@
         align="center"
         min-width="114px"
       >
-        <template v-slot="scope">
+        <template #default="scope">
           {{ scope.row.getDisputeLastOfferValue | currency }}
         </template>
       </el-table-column>
@@ -189,7 +189,7 @@
         align="center"
         label="Interações"
       >
-        <template v-slot:header>
+        <template #header>
           <div class="is-pointer">
             Interações
             <i
@@ -202,7 +202,7 @@
           </div>
         </template>
 
-        <template v-slot="scope">
+        <template #default="scope">
           <ManagementLastInteraction
             :data="scope.row"
             @update:responseBoxLoading="responseBoxLoading = $event"
@@ -217,7 +217,7 @@
         class-name="management-table__row-actions"
         align="center"
       >
-        <template v-slot="scope">
+        <template #default="scope">
           <el-tag
             v-if="scope.row.getDisputeIsWon || scope.row.getDisputeHasDocument"
             effect="plain"
@@ -242,7 +242,7 @@
         prop="lastCounterOfferValue"
         min-width="120px"
       >
-        <template v-slot="scope">
+        <template #default="scope">
           {{ scope.row | counterProposal | currency }}
         </template>
       </el-table-column>
@@ -254,7 +254,7 @@
         prop=""
         min-width="140px"
       >
-        <template v-slot="scope">
+        <template #default="scope">
           <el-tooltip
             v-if="scope.row.getDisputePropertyPreNegotiationWords && scope.row.getDisputeProperty('MOTIVO PRE NEGOCIACAO')"
             :open-delay="600"
@@ -282,7 +282,7 @@
         align="center"
         width="136px"
       >
-        <template v-slot="scope">
+        <template #default="scope">
           <el-tooltip content="Negociação encerra nos próximos 3 dias">
             <span
               v-if="(scope.row.getDisputeHasExpirationDate && scope.row.getDisputeDisputeNextToExpire) && !(scope.row.getDisputeIsExpired)"
@@ -313,7 +313,7 @@
         align="center"
         min-width="90px"
       >
-        <template v-slot="scope">
+        <template #default="scope">
           {{ $t('occurrence.type.' + scope.row.getDisputeStatus) | capitalize }}
           <span v-if="scope.row.getDisputeIsPaused">(pausada)</span>
         </template>
@@ -327,7 +327,7 @@
         align="center"
         width="120px"
       >
-        <template v-slot="scope">
+        <template #default="scope">
           <span v-if="scope.row.getDisputeDealValue && scope.row.getDisputeIsWon">
             {{ scope.row.getDisputeDealValue | currency }}
           </span>
@@ -344,7 +344,7 @@
         min-width="118px"
         align="center"
       >
-        <template v-slot="scope">
+        <template #default="scope">
           <span v-if="scope.row.getDisputeHasDealDate && scope.row.getDisputeIsWon">
             {{ scope.row.getDisputeDealDate | moment('DD/MM/YY') }}
           </span>
@@ -357,7 +357,7 @@
         class-name="hidden-actions"
         width="1px"
       >
-        <template v-slot="scope">
+        <template #default="scope">
           <jus-dispute-actions
             v-if="disputeActionsRow === scope.row.getDisputeId"
             :dispute="scope.row"

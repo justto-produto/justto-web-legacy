@@ -134,7 +134,7 @@
           width="48px"
           class-name="visible"
         >
-          <template v-slot="scope">
+          <template #default="scope">
             <a
               @click.prevent="removeOab(scope.$index)"
             >
@@ -202,7 +202,7 @@
           width="114px"
           class-name="visible slot-scope"
         >
-          <template v-slot="scope">
+          <template #default="scope">
             <el-tooltip
               :open-delay="500"
               :content="scope.row.isMain ? 'Este número receberá mensagens automáticas' : 'Este número não recberá mensagens automáticas'"
@@ -289,7 +289,7 @@
           width="114px"
           class-name="visible slot-scope"
         >
-          <template v-slot="scope">
+          <template #default="scope">
             <el-tooltip
               :open-delay="500"
               :content="scope.row.isMain ? 'Este e-mail receberá mensagens automáticas' : 'Este e-mail não recberá mensagens automáticas'"
@@ -374,7 +374,7 @@
           width="48px"
           class-name="visible"
         >
-          <template v-slot="scope">
+          <template #default="scope">
             <a @click.prevent="removeBankData(scope.$index, scope.row.id)">
               <jus-icon icon="trash" />
             </a>
