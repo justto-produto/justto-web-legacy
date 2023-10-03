@@ -78,6 +78,23 @@ export default {
     CampaignStep: () => import('./partials/CampaignStep')
   },
 
+  beforeRouteLeave(to, _from, next) {
+    if (to.path === '/import/loading') {
+      next()
+    } else if (this.$store.getters.hasImportsFile && to.path !== '/login') {
+      this.$confirm('Tem certeza que deseja sair? Todos os dados serão perdidos.', {
+        confirmButtonText: 'Sair da importação',
+        cancelButtonText: 'Cancelar',
+        title: 'Atenção!',
+        type: 'warning'
+      }).then(() => {
+        next()
+      })
+    } else {
+      next()
+    }
+  },
+
   data() {
     return {
       uploadId: undefined,
@@ -262,23 +279,6 @@ export default {
       ) {
         return true
       } else return false
-    }
-  },
-
-  beforeRouteLeave(to, from, next) {
-    if (to.path === '/import/loading') {
-      next()
-    } else if (this.$store.getters.hasImportsFile && to.path !== '/login') {
-      this.$confirm('Tem certeza que deseja sair? Todos os dados serão perdidos.', {
-        confirmButtonText: 'Sair da importação',
-        cancelButtonText: 'Cancelar',
-        title: 'Atenção!',
-        type: 'warning'
-      }).then(() => {
-        next()
-      })
-    } else {
-      next()
     }
   }
 }

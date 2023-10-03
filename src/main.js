@@ -1,5 +1,7 @@
+import 'systemjs-webpack-interop/auto-public-path'
 import Vue from 'vue'
 import App from '@/App.vue'
+import singleSpaVue from 'single-spa-vue'
 import router from './router'
 import store from './store'
 import { registerServiceWorker } from '@/utils'
@@ -21,7 +23,7 @@ import '@/plugins/vueMoney'
 import '@/plugins/vueTheMask'
 import '@/plugins/shortkey'
 import '@/plugins/vueHtml2pdf'
-// import '@/plugins/amplify'
+import '@/plugins/ckEditor'
 
 // FILTERS
 import '@/filters/numberFormat'
@@ -58,30 +60,51 @@ Vue.config.productionTip = false
 registerServiceWorker()
 
 if (store.getters.workspaceSubdomain) {
-  // eslint-disable-next-line
+  // eslint-disable-next-line no-undef, dot-notation
   axios.defaults.headers.common['Workspace'] = store.getters.workspaceSubdomain
 }
 
-if (store.getters.isLoggedIn) {
-  store.dispatch('myAccount')
-    .then(responses => {
-      store.dispatch('getWorkspaceMembers')
-      store.dispatch('getWorkspaceTags')
-    }).catch(() => {
-      store.commit('logout')
-    }).finally(() => {
-      initVue()
-    })
-} else {
-  initVue()
-}
-
-function initVue() {
-  new Vue({
+const vueLifecycles = singleSpaVue({
+  Vue,
+  appOptions: {
+    render(h) {
+      return h(App, {
+        props: {
+          // single-spa props are available on the "this" object. Forward them to your component as needed.
+          // https://single-spa.js.org/docs/building-applications#lifecycle-props
+          // if you uncomment these, remember to add matching prop definitions for them in your App.vue file.
+          /*
+          name: this.name,
+          mountParcel: this.mountParcel,
+          singleSpa: this.singleSpa,
+          */
+        }
+      })
+    },
     router,
     store,
-    i18n,
-    render: h => h(App)
-  }).$mount('#app')
+    i18n
+  }
+})
+
+const init = (props) => vueLifecycles.mount(props).then(() => {
   validateWorkspace()
-}
+})
+
+export const bootstrap = vueLifecycles.bootstrap
+export const mount = (props) => Promise.resolve().then(() => {
+  if (store.getters.isLoggedIn) {
+    store.dispatch('myAccount')
+      .then(() => {
+        store.dispatch('getWorkspaceMembers')
+        store.dispatch('getWorkspaceTags')
+      }).catch(() => {
+        store.commit('logout')
+      }).finally(() => {
+        return init(props)
+      })
+  } else {
+    return init(props)
+  }
+})
+export const unmount = vueLifecycles.unmount

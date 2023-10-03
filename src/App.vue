@@ -35,7 +35,7 @@ export default {
       'syncWorkspace'
     ]),
 
-    handleRoute(to, from) {
+    handleRoute(to) {
       const prefix = this.workspaceTeamName ? `[${this.workspaceTeamName.trim()}] ` : ''
       const sufix = (['dispute', 'ticket'].includes(to.name) ? ` #${to.params.id}` : '')
 
