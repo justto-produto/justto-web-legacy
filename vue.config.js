@@ -1,8 +1,6 @@
-/* eslint-disable indent */
 process.env.VUE_APP_VERSION = require('./package.json').version
 const { defineConfig } = require('@vue/cli-service')
 const path = require('path')
-const CompressionPlugin = require('compression-webpack-plugin')
 const { CKEditorTranslationsPlugin } = require('@ckeditor/ckeditor5-dev-translations')
 const { styles } = require('@ckeditor/ckeditor5-dev-utils')
 
@@ -22,17 +20,11 @@ module.exports = defineConfig({
       // chunkLoadingGlobal: `webpackJsonp_${name}`
     },
     plugins: [
-      new CompressionPlugin(),
       new CKEditorTranslationsPlugin({
         language: 'pt-BR',
         translationsOutputFile: /app/
       })
     ],
-    // resolve: {
-    //   alias: {
-    //     moment: 'moment/src/moment'
-    //   }
-    // }
   },
   devServer: {
     headers: {
@@ -73,20 +65,14 @@ module.exports = defineConfig({
         }
       })
   },
-  // baseUrl: undefined,
   // outputDir: undefined,
   // assetsDir: undefined,
   // runtimeCompiler: undefined,
-  // productionSourceMap: false,
   // parallel: false,
-  // css: {
-  //   sourceMap: true,
-  //   loaderOptions: {
-  //     css: {
-  //       // localIdentName: '[hash:base64:5]',
-  //     }
-  //   }
-  // },
+  productionSourceMap: false,
+  css: {
+    sourceMap: true
+  },
   pwa: {
     name: 'ProJuris App',
     themeColor: '#ff9300'
