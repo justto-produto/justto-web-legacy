@@ -40,8 +40,8 @@
           </div>
 
           <SlideInfo
+            v-model="isSlideInfoVisible"
             :images="itemsSlider"
-            :is-visible="isSlideInfoVisible"
             @close="isSlideInfoVisible = false"
           />
 

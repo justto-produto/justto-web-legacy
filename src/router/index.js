@@ -327,7 +327,6 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  next()
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (!validateLocalWorkspace()) {
       const { name, params, query } = to

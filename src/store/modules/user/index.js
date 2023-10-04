@@ -1,4 +1,3 @@
-import actions from './actions'
 import getters from './getters'
 import mutations from './mutations'
 
@@ -37,7 +36,6 @@ const UserModule = {
     },
     workspaces: []
   },
-  actions,
   getters,
   mutations
 }

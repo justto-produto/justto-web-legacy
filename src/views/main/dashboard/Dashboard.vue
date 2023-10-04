@@ -354,8 +354,7 @@ export default {
           ]
         })
         for (const key in filters) {
-          // eslint-disable-next-line no-prototype-builtins
-          if (filters.hasOwnProperty(key)) {
+          if (Object.prototype.hasOwnProperty.call(filters, key)) {
             this.$store.commit('updateDisputeQuery', { key, value: filters[key] })
           }
         }

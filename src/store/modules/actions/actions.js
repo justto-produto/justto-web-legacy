@@ -3,7 +3,7 @@ import { axiosDispatch } from '@/utils'
 const disputesPath = 'api/disputes'
 
 const actionsActions = {
-  getOutcomeReasons({ _ }, action) {
+  getOutcomeReasons(_, action) {
     return axiosDispatch({
       url: `${disputesPath}/outcome-reasons/${action}`,
       mutation: 'setOutcomeReasons',
@@ -11,7 +11,7 @@ const actionsActions = {
     })
   },
 
-  getDropLawsuitReasons({ _ }, _payload) {
+  getDropLawsuitReasons(_, _payload) {
     const url = `${disputesPath}/outcome-reasons/CANCELED`
     return axiosDispatch({
       url,
@@ -19,7 +19,7 @@ const actionsActions = {
     })
   },
 
-  setTicketVisualized({ _ }, params) {
+  setTicketVisualized(_, params) {
     const { disputeId } = params
 
     return axiosDispatch({
@@ -31,7 +31,7 @@ const actionsActions = {
     })
   },
 
-  enrichTicket({ _ }, disputeId) {
+  enrichTicket(_, disputeId) {
     return axiosDispatch({
       url: `api/fusion-runner/enrich/${disputeId}`,
       method: 'PATCH'
@@ -57,14 +57,14 @@ const actionsActions = {
     })
   },
 
-  resendMessages({ _ }, disputeId) {
+  resendMessages(_, disputeId) {
     return axiosDispatch({
       url: `api/messages/resend/${disputeId}`,
       method: 'PUT'
     })
   },
 
-  cancelMessages({ _ }, disputeId) {
+  cancelMessages(_, disputeId) {
     return axiosDispatch({
       url: `${disputesPath}/${disputeId}/cancel-messages`,
       method: 'PUT'
@@ -142,7 +142,7 @@ const actionsActions = {
     })
   },
 
-  deleteTicket({ _ }, { disputeId, reason }) {
+  deleteTicket(_, { disputeId, reason }) {
     return axiosDispatch({
       url: `${disputesPath}/${disputeId}/${reason}`,
       method: 'DELETE',

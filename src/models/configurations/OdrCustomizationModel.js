@@ -10,8 +10,11 @@ export default class OdrCustomizationModel {
     return Number(this.emailFooterId) === 3054
   }
 
-  // eslint-disable-next-line accessor-pairs
   set emailFooterTemplate({ body }) {
     this.emailFooter = body
+  }
+
+  get emailFooterTemplate() {
+    return this.emailFooter
   }
 }

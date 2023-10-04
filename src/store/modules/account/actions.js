@@ -14,7 +14,7 @@ const accountActions = {
     })
   },
 
-  register({ _ }, loginForm) {
+  register(_, loginForm) {
     return axiosDispatch({
       url: `${accountsPath}/register`,
       method: 'POST',
@@ -22,16 +22,16 @@ const accountActions = {
     })
   },
 
-  activate({ _ }, token) {
+  activate(_, token) {
     return axiosDispatch({
       url: `${accountsPath}/activate/${token}`,
       method: 'PUT'
     })
   },
 
-  login({ _ }, credentials) {
-    // eslint-disable-next-line
-    delete axios.defaults.headers.common['Workspace']
+  login(_, credentials) {
+    // eslint-disable-next-line no-undef
+    delete axios.defaults.headers.common.Workspace
     return axiosDispatch({
       url: `${accountsPath}/token`,
       method: 'POST',
@@ -40,7 +40,7 @@ const accountActions = {
     })
   },
 
-  refreshToken({ _ }) {
+  refreshToken() {
     return axiosDispatch({
       url: `${accountsPath}/refresh-token`,
       mutation: 'setToken'
@@ -58,19 +58,19 @@ const accountActions = {
     commit('clearDashboard')
     dispatch('callTerminated')
     localStorage.removeItem('justoken')
-    // eslint-disable-next-line
-    delete axios.defaults.headers.common['Authorization']
+    // eslint-disable-next-line no-undef
+    delete axios.defaults.headers.common.Authorization
     if (options?.redirect !== false) router.push('/login')
   },
 
-  forgotPassword({ _ }, email) {
+  forgotPassword(_, email) {
     return axiosDispatch({
       url: `${accountsPath}/reset-password?email=${email}`,
       method: 'PUT'
     })
   },
 
-  resetPassword({ _ }, data) {
+  resetPassword(_, data) {
     return axiosDispatch({
       url: `${accountsPath}/new-password/${data.token}`,
       method: 'PUT',
@@ -78,7 +78,7 @@ const accountActions = {
     })
   },
 
-  updatePassword({ _ }, form) {
+  updatePassword(_, form) {
     return axiosDispatch({
       url: `${accountsPath}/my/password`,
       method: 'PATCH',
@@ -86,7 +86,7 @@ const accountActions = {
     })
   },
 
-  ensureWorkspaceAccesss({ _ }, workspaceId) {
+  ensureWorkspaceAccesss(_, workspaceId) {
     return axiosDispatch({
       url: `${accountsPath}/workspaces/ensure-workspace-accesss/${workspaceId}`,
       method: 'PATCH',
@@ -94,7 +94,7 @@ const accountActions = {
     })
   },
 
-  createWorkpace({ _ }, object) {
+  createWorkpace(_, object) {
     return axiosDispatch({
       url: `${accountsPath}/workspaces`,
       method: 'POST',
@@ -103,7 +103,7 @@ const accountActions = {
     })
   },
 
-  setAccountProperty({ _ }, data) {
+  setAccountProperty(_, data) {
     return axiosDispatch({
       url: `${accountsPath}/my/property`,
       method: 'PUT',
@@ -112,21 +112,21 @@ const accountActions = {
     })
   },
 
-  getAccountProperty({ _ }, property) {
+  getAccountProperty(_, property) {
     return axiosDispatch({
       url: `${accountsPath}/my/property/${property}`,
       method: 'GET'
     })
   },
 
-  getAllAccountProperties({ _ }) {
+  getAllAccountProperties() {
     return axiosDispatch({
       url: `${accountsPath}/my/property`,
       method: 'GET'
     })
   },
 
-  loadAccountProperty({ _ }) {
+  loadAccountProperty() {
     return axiosDispatch({
       url: `${accountsPath}/my/property`,
       method: 'GET',
@@ -192,7 +192,7 @@ const accountActions = {
     commit('setAccountName', { name })
   },
 
-  unlockAccount({ _ }, accountId) {
+  unlockAccount(_, accountId) {
     return axiosDispatch({
       url: `api/accounts/${accountId}/unblock`,
       method: 'PATCH'

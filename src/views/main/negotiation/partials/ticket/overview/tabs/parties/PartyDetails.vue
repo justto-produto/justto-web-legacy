@@ -1,12 +1,12 @@
-<!-- eslint-disable vue/no-mutating-props -->
 <template>
   <article class="party-details">
     <!-- Dialog de warning para LGPD -->
     <WarningLGPD
-      :lgpd-dialog-visible="LGPDWarningDialogVisible"
+      v-model="LGPDWarningDialogVisible"
       :is-phone-number="selectContactObj.type === 'whatsapp' || selectContactObj.type === 'sms'"
       :party-name="party.name"
-      @click="(ok) => handleLgpdWarning(ok)"
+      @confirm="handleLgpdWarning"
+      @close="LGPDWarningDialogVisible = false"
     />
 
     <JusEditRole
@@ -734,11 +734,9 @@ export default {
       })
     },
 
-    handleLgpdWarning(ok) {
-      if (ok) {
-        const { value, key, type } = this.selectContactObj
-        this.selectContact(value, key, true, type)
-      }
+    handleLgpdWarning() {
+      const { value, key, type } = this.selectContactObj
+      this.selectContact(value, key, true, type)
       this.LGPDWarningDialogVisible = false
     },
 

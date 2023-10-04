@@ -3,18 +3,18 @@ import { axiosDispatch } from '@/utils'
 const campaignsPath = 'api/campaigns'
 
 const campaignActions = {
-  getCampaigns({ _ }) {
+  getCampaigns() {
     return axiosDispatch({
       url: 'api/disputes/campaigns',
       mutation: 'setCampaigns'
     })
   },
-  getCampaignByName({ _ }, name) {
+  getCampaignByName(_, name) {
     return axiosDispatch({
       url: `${campaignsPath}/search?name=${name}`
     })
   },
-  createCampaign({ _ }, campaign) {
+  createCampaign(_, campaign) {
     return axiosDispatch({
       url: `${campaignsPath}`,
       method: 'POST',

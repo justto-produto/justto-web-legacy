@@ -10,9 +10,9 @@ const document = {
     openDraftId: null,
     signerService: { enabled: true }
   },
-  mutations: mutations,
-  actions: actions,
-  getters: getters
+  mutations,
+  actions,
+  getters
 }
 
 export default document

@@ -3,13 +3,13 @@ import Vue from 'vue'
 const accountMutations = {
   setToken(state, resp) {
     const token = resp.token
-    // eslint-disable-next-line
-    delete axios.defaults.headers.common['Authorization']
+    // eslint-disable-next-line no-undef
+    delete axios.defaults.headers.common.Authorization
 
     Vue.set(state, 'token', token)
 
-    // eslint-disable-next-line
-    axios.defaults.headers.common['Authorization'] = token
+    // eslint-disable-next-line no-undef
+    axios.defaults.headers.common.Authorization = token
     localStorage.removeItem('justoken')
     localStorage.setItem('justoken', token)
   },

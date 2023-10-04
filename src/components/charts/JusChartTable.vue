@@ -205,26 +205,13 @@ export default {
       if (cell.textContent) {
         const statusIndex = row.statusIndex
         const columnProperty = column.property
-        // let columnLabel = column.label
-        // let cellIndex = cell.cellIndex
-        // let columnIndex = column.index
-        // if (statusIndex === 4) {
-        //   let status = []
-        //   let datasetFilter = this.data.datasets.filter(d => d.label.toUpperCase() === columnLabel.toUpperCase())[0]
-        //   statusFilters = { status: status.concat(this.data.filter[0].status, this.data.filter[1].status, this.data.filter[2].status, this.data.filter[3].status) }
-        //   datasetFilters = { ...datasetFilter.filter[0], ...datasetFilter.filter[1], ...datasetFilter.filter[2], ...datasetFilter.filter[3] }
-        // } else {
         const statusFilters = this.data.filter[statusIndex]
         const datasetFilters = row[columnProperty + 'Filter']
-        // }
-        // let datasetFilters = this.data.datasets[columnIndex] ? this.data.datasets[columnIndex].filter[cellIndex] : null
-        // if (columnIndex !== undefined && (datasetFilters || statusFilters)) {
         const filters = Object.assign(statusFilters || {}, datasetFilters || {})
         this.$store.commit('clearDisputeQuery')
         this.$store.commit('updateDisputeQuery', { key: 'status', value: [] })
         for (const key in filters) {
-          // eslint-disable-next-line no-prototype-builtins
-          if (filters.hasOwnProperty(key)) {
+          if (Object.prototype.hasOwnProperty.call(filters, key)) {
             this.$store.commit('updateDisputeQuery', { key, value: filters[key] })
           }
         }

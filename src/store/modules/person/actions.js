@@ -8,16 +8,16 @@ const personActions = {
   SOCKET_REFRESH_PERSON_STATUS({ commit }, document) {
     commit('setOnlineDocs', [document])
   },
-  getPerson({ _ }, id) {
+  getPerson(_, id) {
     return axiosDispatch({ url: `${personsPath}/${id}` })
   },
-  refreshPerson({ _ }, id) {
+  refreshPerson(_, id) {
     return axiosDispatch({
       url: `${personsPath}/${id}`,
       mutation: 'setLoggedPerson'
     })
   },
-  setMainPhone({ _ }, params) {
+  setMainPhone(_, params) {
     return axiosDispatch({
       url: `${personsPath}/${params.personId}/phones/main`,
       method: 'POST',
@@ -40,7 +40,7 @@ const personActions = {
 
   changePersonName({ commit }, params) {
     return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
+      // eslint-disable-next-line no-undef
       axios.put(`${personsPath}/${params.person.id}/name`, {
         name: params.person.name
       }).then(response => {
@@ -73,20 +73,20 @@ const personActions = {
       dispatch('getWorkspaceTeam')
     })
   },
-  searchPersonByDocument({ _ }, params) {
+  searchPersonByDocument(_, params) {
     return axiosDispatch({ url: `api/spider/person/${params.document}` })
   },
-  searchPersonByOab({ _ }, params) {
+  searchPersonByOab(_, params) {
     return axiosDispatch({ url: `api/spider/lawyer/${params.oabNumber}/${params.oabState}` })
   },
-  enrichPerson({ _ }, personId) {
+  enrichPerson(_, personId) {
     return axiosDispatch({
       url: `api/fusion-runner/enrich/person/${personId}`,
       method: 'PATCH'
     })
   },
 
-  setPersonProperties({ _ }, { properties, personId }) {
+  setPersonProperties(_, { properties, personId }) {
     return axiosDispatch({
       url: `${disputesPath}/person/${personId}/properties`,
       method: 'PUT',

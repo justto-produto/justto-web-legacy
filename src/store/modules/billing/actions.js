@@ -243,7 +243,7 @@ const billingActions = {
     })
   },
 
-  getContractDiscountList: ({ _ }, contractId) => {
+  getContractDiscountList: (_, contractId) => {
     return axiosDispatch({
       url: `${billingPath}/contract/${contractId}/discount`,
       mutation: 'setContractDiscountList',
@@ -257,7 +257,7 @@ const billingActions = {
       method: 'POST',
       data: discount,
       payload: discount
-    }).then(({ _ }) => {
+    }).then(() => {
       dispatch('getContractDiscountList', contractId)
     })
   },
@@ -268,7 +268,7 @@ const billingActions = {
       method: 'PATCH',
       data: discount,
       payload: discount
-    }).then(({ _ }) => {
+    }).then(() => {
       dispatch('getContractDiscountList', contractId)
     })
   },
@@ -277,18 +277,18 @@ const billingActions = {
     return axiosDispatch({
       url: `${billingPath}/contract/${contractId}/discount/${discountId}`,
       method: 'DELETE'
-    }).then(({ _ }) => {
+    }).then(() => {
       dispatch('getContractDiscountList', contractId)
     })
   },
 
-  getHoldings: ({ _ }, name) => axiosDispatch({
+  getHoldings: (_, name) => axiosDispatch({
     url: `${billingPath}/holding`,
     params: { name },
     mutation: 'setHoldings'
   }),
 
-  createHolding: ({ _ }, name) => axiosDispatch({
+  createHolding: (_, name) => axiosDispatch({
     method: 'POST',
     url: `${billingPath}/holding`,
     data: { name },
@@ -296,7 +296,7 @@ const billingActions = {
     response: name
   }),
 
-  updateHolding: ({ _ }, { id, name }) => axiosDispatch({
+  updateHolding: (_, { id, name }) => axiosDispatch({
     method: 'POST',
     url: `${billingPath}/holding/${id}`,
     data: { name },

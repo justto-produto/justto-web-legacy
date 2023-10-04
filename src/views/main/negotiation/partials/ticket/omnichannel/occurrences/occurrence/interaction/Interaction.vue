@@ -82,10 +82,11 @@
 
     <!-- Dialog de warning para LGPD -->
     <WarningLGPD
-      :lgpd-dialog-visible="LGPDWarningDialogVisible"
+      v-model="LGPDWarningDialogVisible"
       :is-phone-number="messageType === 'whatsapp' || messageType === 'sms'"
       :party-name="personName"
-      @click="(ok) => handleLgpdWarning(ok)"
+      @confirm="handleLgpdWarning"
+      @close="LGPDWarningDialogVisible = false"
     />
   </section>
 </template>
@@ -303,10 +304,8 @@ export default {
   methods: {
     ...mapActions(['addRecipient', 'verifyRecipient']),
 
-    handleLgpdWarning(ok) {
-      if (ok) {
-        this.reply()
-      }
+    handleLgpdWarning() {
+      this.reply()
       this.LGPDWarningDialogVisible = false
     },
 

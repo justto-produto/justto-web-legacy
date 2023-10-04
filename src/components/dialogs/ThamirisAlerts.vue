@@ -1,4 +1,3 @@
-<!-- eslint-disable vue/no-mutating-props -->
 <template>
   <el-dialog
     ref="thamiresalerts"
@@ -110,7 +109,7 @@ import { MANAGEMENT } from '@/constants/ticketListMode'
 
 export default {
   props: {
-    isVisible: {
+    value: {
       type: Boolean,
       required: true
     }
@@ -128,6 +127,11 @@ export default {
       getTicketListMode: 'getTicketListMode',
       showNegotiationTypeMenu: 'showNegotiationTypeMenu'
     }),
+
+    isVisible: {
+      get() { return this.value },
+      set() { this.$emit('close') }
+    },
 
     coffee() {
       return require('@/assets/img/coffee.png')
@@ -164,7 +168,6 @@ export default {
     }),
 
     ...mapMutations({
-      hideThamirisAlerts: 'hideThamirisAlerts',
       setDisputeHasFilters: 'setDisputeHasFilters',
       setDisputeQuery: 'setDisputeQuery',
       clearDisputeQueryByTab: 'clearDisputeQueryByTab',
@@ -220,7 +223,7 @@ export default {
     },
 
     closeDialog() {
-      this.hideThamirisAlerts()
+      this.$emit('close')
     },
 
     handleQuantity(num) {

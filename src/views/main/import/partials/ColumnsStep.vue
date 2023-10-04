@@ -336,7 +336,7 @@ export default {
       }))
     },
 
-    dropTag(event, column, index) {
+    dropTag(event, column) {
       if (!event?.dataTransfer) return
 
       const data = JSON.parse(event.dataTransfer.getData('data'))
@@ -424,8 +424,7 @@ export default {
     getColumnTitle(id) {
       let title = ''
       for (const tagList in this.tags) {
-        // eslint-disable-next-line no-prototype-builtins
-        if (this.tags.hasOwnProperty(tagList)) {
+        if (Object.prototype.hasOwnProperty.call(this.tags, tagList)) {
           if (this.tags[tagList] && this.tags[tagList].tags) {
             this.tags[tagList].tags.map(tag => {
               if (tag.id === id) {

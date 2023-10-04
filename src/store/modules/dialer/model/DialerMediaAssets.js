@@ -1,5 +1,3 @@
-// eslint-disable-next-line no-unused-vars
-
 /**
  * DialerMediaAssets is a model container to storage all assets to feature
  * @class

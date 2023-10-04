@@ -60,8 +60,8 @@ Vue.config.productionTip = false
 registerServiceWorker()
 
 if (store.getters.workspaceSubdomain) {
-  // eslint-disable-next-line no-undef, dot-notation
-  axios.defaults.headers.common['Workspace'] = store.getters.workspaceSubdomain
+  // eslint-disable-next-line no-undef
+  axios.defaults.headers.common.Workspace = store.getters.workspaceSubdomain
 }
 
 const vueLifecycles = singleSpaVue({

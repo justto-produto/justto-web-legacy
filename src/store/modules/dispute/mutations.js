@@ -54,8 +54,7 @@ const disputeMutations = {
   },
 
   setDisputeProperties(state, disputeProperties) {
-    // eslint-disable-next-line no-prototype-builtins
-    if (disputeProperties.hasOwnProperty('ENRICHED')) {
+    if (Object.prototype.hasOwnProperty.call(disputeProperties, 'ENRICHED')) {
       disputeProperties.ENRIQUECIDO = disputeProperties.ENRICHED ? 'SIM' : 'NÃO'
       delete disputeProperties.ENRICHED
     }

@@ -42,9 +42,9 @@ const tagModule = {
       'success'
     ]
   },
-  mutations: mutations,
-  actions: actions,
-  getters: getters
+  mutations,
+  actions,
+  getters
 }
 
 export default tagModule

@@ -403,8 +403,9 @@
 
     <negotiator-activeReply
       v-if="Object.keys(activeDispute).length"
-      :visible.sync="canShowDialogReplyEditor"
+      v-model="canShowDialogReplyEditor"
       :dispute="activeDispute"
+      @close="canShowDialogReplyEditor = false"
     />
   </div>
 </template>

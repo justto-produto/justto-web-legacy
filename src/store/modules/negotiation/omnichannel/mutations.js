@@ -39,7 +39,7 @@ export default {
     }).filter(el => el !== false)
 
     const toInsert = content.map(occurrence => {
-      const exists = state.occurrences.list.filter(({ createAt, id }, index) => {
+      const exists = state.occurrences.list.filter(({ createAt, id }) => {
         return occurrence.id === id && occurrence.createAt.dateTime === createAt.dateTime
       }).length === 0
 
@@ -188,7 +188,7 @@ export default {
 
   removeRecipient: (state, value) => {
     const items = state.editor.recipients.filter(el => el.value !== value)
-    
+
     Vue.set(state.editor, 'recipients', items)
   },
 

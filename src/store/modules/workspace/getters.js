@@ -2,7 +2,7 @@ import { getLocalWorkspace, getStringInitials } from '@/utils'
 
 const workspaceGetters = {
   workspace: state => state.workspace,
-  hasWorkspace: state => {
+  hasWorkspace: () => {
     return getLocalWorkspace()?.status !== '' && getLocalWorkspace()?.status !== 'CREATING'
   },
   creatingWorkspace: state => state.workspace.status === 'CREATING',

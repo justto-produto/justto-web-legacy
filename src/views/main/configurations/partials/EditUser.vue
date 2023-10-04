@@ -180,7 +180,7 @@ export default {
         updatePerson: true,
         accountId: this.accountId,
         name: this.form.name
-      }).then(({ _ }) => {
+      }).then(() => {
         this.changeLoggedPersonName(this.form.name)
         this.changeAccountName(this.form.name)
         this.$jusSegment('Nome do usuário alterado na edição')

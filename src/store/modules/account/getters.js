@@ -3,8 +3,8 @@ import { isJusttoUser } from '@/utils/validations'
 const accountGetters = {
   userPreferences: state => state.preferences,
   userProperties: state => state.preferences?.properties || {},
-  accountToken: state => localStorage.getItem('justoken'),
-  isLoggedIn: state => Boolean(localStorage?.justoken),
+  accountToken: () => localStorage.getItem('justoken'),
+  isLoggedIn: () => Boolean(localStorage?.justoken),
   accountId: state => state.id,
   accountEmail: state => state.email,
   isJusttoAdmin: state => isJusttoUser(state.email),
@@ -14,7 +14,7 @@ const accountGetters = {
   },
   canMakeScheduledCalls: state => state?.preferences?.properties?.AVAILABLE_SCHEDULED_CALLS === 'AVAILABLE',
   preferedInterface: state => state?.preferences?.properties?.PREFERRED_INTERFACE || 'NEGOTIATION',
-  getGlobalAuthenticationObject(state, getters) {
+  getGlobalAuthenticationObject(_state, getters) {
     return {
       headers: {
         Authorization: getters.accountToken,

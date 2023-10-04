@@ -12,20 +12,20 @@ const documentsPath = 'api/office/documents'
  */
 
 const documentActions = {
-  getDocumentModels({ _ }) {
+  getDocumentModels() {
     return axiosDispatch({ url: `${documentsPath}/model` })
   },
 
-  createDocumentByModel({ _ }, params) {
+  createDocumentByModel(_, params) {
     return axiosDispatch({
       url: `${documentsPath}/${params.modelId}/${params.disputeId}`,
       method: 'POST'
     })
   },
 
-  getDocumentByDisputeId({ _ }, disputeId) {
+  getDocumentByDisputeId(_, disputeId) {
     return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
+      // eslint-disable-next-line no-undef
       axios.get(`${documentsPath}/${disputeId}`)
         .then(response => {
           if (response?.status === 204) {
@@ -38,7 +38,7 @@ const documentActions = {
     })
   },
 
-  setDocumentSigners({ _ }, params) {
+  setDocumentSigners(_, params) {
     return axiosDispatch({
       url: `${documentsPath}/signer/${params.disputeId}`,
       method: 'POST',
@@ -46,28 +46,28 @@ const documentActions = {
     })
   },
 
-  resendSignersNotification({ _ }, params) {
+  resendSignersNotification(_, params) {
     return axiosDispatch({
       url: `${documentsPath}/resend-notification/${params.disputeId}`,
       method: 'PUT'
     })
   },
 
-  deleteDocument({ _ }, disputeId) {
+  deleteDocument(_, disputeId) {
     return axiosDispatch({
       url: `${documentsPath}/${disputeId}`,
       method: 'DELETE'
     })
   },
 
-  backDocumentToEditing({ _ }, disputeId) {
+  backDocumentToEditing(_, disputeId) {
     return axiosDispatch({
       url: `${documentsPath}/${disputeId}/back-to-editing`,
       method: 'PATCH'
     })
   },
 
-  addModel({ _ }, url) {
+  addModel(_, url) {
     return axiosDispatch({
       url: `${documentsPath}/model?url=${url}`,
       method: 'POST',
@@ -75,7 +75,7 @@ const documentActions = {
     })
   },
 
-  editModel({ _ }, model) {
+  editModel(_, model) {
     return axiosDispatch({
       url: `${documentsPath}/model`,
       method: 'PUT',
@@ -83,16 +83,16 @@ const documentActions = {
     })
   },
 
-  deleteModel({ _ }, modelId) {
+  deleteModel(_, modelId) {
     return axiosDispatch({
       url: `${documentsPath}/model/${modelId}`,
       method: 'DELETE'
     })
   },
 
-  downloadDocument({ _ }, params) {
+  downloadDocument(_, params) {
     return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
+      // eslint-disable-next-line no-undef
       axios.get(`${documentsPath}/download-signed/${params.disputeId}`, {
         responseType: 'arraybuffer'
       }).then(response => {
@@ -108,7 +108,7 @@ const documentActions = {
     })
   },
 
-  getDocumentUrl({ _ }, disputeId) {
+  getDocumentUrl(_, disputeId) {
     return axiosDispatch({
       url: `${documentsPath}/${disputeId}/draft/url`
     })
@@ -118,7 +118,7 @@ const documentActions = {
     return axiosDispatch({ url: `${documentsPath}/model/input/types` })
   },
 
-  getDefaultAssigners({ _ }) {
+  getDefaultAssigners() {
     return axiosDispatch({
       url: `${documentsPath}/signer`,
       mutation: 'createFromDefaultSigners'
@@ -151,7 +151,7 @@ const documentActions = {
     ])
   },
 
-  getSignerStatus({ _ }) {
+  getSignerStatus() {
     return axiosDispatch({
       url: 'api/office/draft/signer/status',
       mutation: 'setSignerStatus'

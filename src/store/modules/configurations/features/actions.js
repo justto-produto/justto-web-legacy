@@ -5,20 +5,20 @@ const disputesV2Api = 'api/disputes/v2'
 const sendgridWhitelabelDomainsApi = 'api/email/domain'
 
 export default {
-  getOutcomeReasonsConfig({ _ }, type) {
+  getOutcomeReasonsConfig(_, type) {
     return axiosDispatch({
       url: `${disputesApi}/outcome-reasons/${type}`,
       mutation: 'setOutcomeReasons'
     })
   },
 
-  getDefaultOutcomeReasons({ _ }, type) {
+  getDefaultOutcomeReasons(_, type) {
     return axiosDispatch({
       url: `${disputesV2Api}/outcome-reasons/default/${type}`
     })
   },
 
-  setOutcomeReasons({ _ }, { type, reasons }) {
+  setOutcomeReasons(_, { type, reasons }) {
     return axiosDispatch({
       method: 'PATCH',
       url: `${disputesV2Api}/outcome-reasons/${type}`,
@@ -26,19 +26,19 @@ export default {
     })
   },
 
-  getAutenticatedDomains({ _ }) {
+  getAutenticatedDomains() {
     return axiosDispatch({
       url: `${sendgridWhitelabelDomainsApi}/authentication`
     })
   },
 
-  getSendgridDomains({ _ }) {
+  getSendgridDomains() {
     return axiosDispatch({
       url: `${sendgridWhitelabelDomainsApi}/sendgrid/whitelabel/domains`
     })
   },
 
-  sendDnsEmail({ _ }, data) {
+  sendDnsEmail(_, data) {
     return axiosDispatch({
       url: `${sendgridWhitelabelDomainsApi}/authentication/dns-email`,
       data,
@@ -46,7 +46,7 @@ export default {
     })
   },
 
-  setSendgridDomains({ _ }, data) {
+  setSendgridDomains(_, data) {
     return axiosDispatch({
       method: 'POST',
       data,

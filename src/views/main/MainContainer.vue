@@ -95,7 +95,10 @@
 
     <jusMessagePreview />
 
-    <ThamirisAlerts :is-visible="areThamirisAlertsVisible" />
+    <ThamirisAlerts
+      v-model="areThamirisAlertsVisible"
+      @close="hideThamirisAlerts"
+    />
 
     <BuyDialerDialog />
 
@@ -104,7 +107,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapActions, mapMutations } from 'vuex'
 import { eventBus } from '@/utils'
 import { TICKET, MANAGEMENT } from '@/constants/ticketListMode'
 
@@ -294,6 +297,10 @@ export default {
       setGhostMode: 'setGhostMode',
       setHideTicket: 'setHideTicket',
       initTicketListModeProperty: 'initTicketListModeProperty'
+    }),
+
+    ...mapMutations({
+      hideThamirisAlerts: 'hideThamirisAlerts'
     }),
 
     pollData() {

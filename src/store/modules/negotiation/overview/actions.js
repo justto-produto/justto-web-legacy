@@ -25,7 +25,7 @@ const overviewActions = {
     })
   },
 
-  getContactBlockReason({ _ }, { disputeId, blockedType, addressType, contactId }) {
+  getContactBlockReason(_, { disputeId, blockedType, addressType, contactId }) {
     return validateCurrentId(disputeId, () => {
       return axiosDispatch({
         url: `${disputeApiLegacy}/${disputeId}/contact/${blockedType}/${addressType}/${contactId}`
@@ -51,7 +51,7 @@ const overviewActions = {
     }).finally(() => commit('decrementTicketOverviewCountGetters')))
   },
 
-  getTicketOverviewPartiesTemp({ commit }, disputeId) {
+  getTicketOverviewPartiesTemp(_, disputeId) {
     return axiosDispatch({ url: `${disputeApi}/${disputeId}/parties` })
   },
 
@@ -67,48 +67,48 @@ const overviewActions = {
     }).finally(() => commit('decrementTicketOverviewCountGetters')))
   },
 
-  getTicketOverviewPartyUpdated({ _ }, { disputeId, disputeRoleId }) {
+  getTicketOverviewPartyUpdated(_, { disputeId, disputeRoleId }) {
     return axiosDispatch({
       url: `${disputeApi}/${disputeId}/parties/${disputeRoleId}`
     })
   },
 
-  getTicketOverviewProperties({ _ }, disputeId) {
+  getTicketOverviewProperties(_, disputeId) {
     return validateCurrentId(disputeId, () => axiosDispatch({
       url: `${disputeApi}/${disputeId}/properties`,
       mutation: 'setTicketOverviewProperties'
     }))
   },
 
-  getTicketOverviewAttachments({ _ }, disputeId) {
+  getTicketOverviewAttachments(_, disputeId) {
     return validateCurrentId(disputeId, () => axiosDispatch({
       url: `${officeApi}/disputes/${disputeId}/attachments`,
       mutation: 'setTicketOverviewAttachments'
     }))
   },
 
-  getLastTicketOffers({ _ }, disputeId) {
+  getLastTicketOffers(_, disputeId) {
     return validateCurrentId(disputeId, () => axiosDispatch({
       url: `${disputeApi}/${disputeId}/last-dispute-offer`,
       mutation: 'setLastTicketOffers'
     }))
   },
 
-  getTicketMetadata({ _ }, disputeId) {
+  getTicketMetadata(_, disputeId) {
     return validateCurrentId(disputeId, () => axiosDispatch({
       url: `${officeApi}/documents/dispute/${disputeId}/metadata`,
       mutation: 'setTicketMetadata'
     }))
   },
 
-  getAssociatedContacts({ _ }, disputeId) {
+  getAssociatedContacts(_, disputeId) {
     return validateCurrentId(disputeId, () => axiosDispatch({
       url: `${disputeApi}/${disputeId}/properties`,
       mutation: 'setAssociatedContacts'
     }))
   },
 
-  setTicketOverview({ _ }, params) {
+  setTicketOverview(_, params) {
     const { data, disputeId } = params
     return validateCurrentId(disputeId, () => axiosDispatch({
       url: `${disputeApi}/${disputeId}`,
@@ -119,7 +119,7 @@ const overviewActions = {
     }))
   },
 
-  setTicketOverviewDefendantProposal({ _ }, params) {
+  setTicketOverviewDefendantProposal(_, params) {
     const { data, disputeId, polarityObjectKey } = params
     return validateCurrentId(disputeId, () => axiosDispatch({
       url: `${disputeApi}/${disputeId}`,
@@ -133,7 +133,7 @@ const overviewActions = {
     }))
   },
 
-  setTicketOverviewInfo({ _ }, params) {
+  setTicketOverviewInfo(_, params) {
     const { data, disputeId } = params
     return validateCurrentId(disputeId, () => axiosDispatch({
       url: `${disputeApi}/${disputeId}/info`,
@@ -161,7 +161,7 @@ const overviewActions = {
     }))
   },
 
-  deleteTicketOverviewParty({ _ }, { disputeId, roleId, cancelPropagation = false }) {
+  deleteTicketOverviewParty(_, { disputeId, roleId, cancelPropagation = false }) {
     return validateCurrentId(disputeId, () => axiosDispatch({
       url: `${disputeApiLegacy}/${disputeId}/role/${roleId}`,
       method: 'DELETE',
@@ -171,7 +171,7 @@ const overviewActions = {
     }))
   },
 
-  setTicketOverviewPartyPolarity({ _ }, params) {
+  setTicketOverviewPartyPolarity(_, params) {
     const { disputeId, roleId, rolePolarity } = params
 
     return validateCurrentId(disputeId, () => axiosDispatch({
@@ -282,7 +282,7 @@ const overviewActions = {
     }).finally(() => commit('decrementTicketOverviewCountGetters'))
   },
 
-  setTicketOverviewPartyContact({ _ }, params) {
+  setTicketOverviewPartyContact(_, params) {
     const { disputeId, roleId, contactType, contactData } = params
 
     return validateCurrentId(disputeId, () => axiosDispatch({
@@ -294,7 +294,7 @@ const overviewActions = {
     }))
   },
 
-  deleteTicketOverviewPartyContact({ _ }, params) {
+  deleteTicketOverviewPartyContact(_, params) {
     const { disputeId, roleId, contactId, contactType } = params
 
     return validateCurrentId(disputeId, () => axiosDispatch({
@@ -315,7 +315,7 @@ const overviewActions = {
     })
   },
 
-  favoriteTicket({ _ }, disputeId) {
+  favoriteTicket(_, disputeId) {
     return validateCurrentId(disputeId, () => axiosDispatch({
       url: `${disputeApiLegacy}/${disputeId}/favorite`,
       method: 'PUT',
@@ -324,7 +324,7 @@ const overviewActions = {
     }))
   },
 
-  disfavorTicket({ _ }, disputeId) {
+  disfavorTicket(_, disputeId) {
     return validateCurrentId(disputeId, () => axiosDispatch({
       url: `${disputeApiLegacy}/${disputeId}/disfavor`,
       method: 'PUT',
@@ -333,13 +333,13 @@ const overviewActions = {
     }))
   },
 
-  searchNamesakeTicketOptions({ _ }, name) {
+  searchNamesakeTicketOptions(_, name) {
     return axiosDispatch({
       url: `${spiderApi}/search/name/${name}`
     })
   },
 
-  setNamesakeTicketOptions({ _ }, { personId, document, disputeId }) {
+  setNamesakeTicketOptions(_, { personId, document, disputeId }) {
     return axiosDispatch({
       url: `${fusionRunnerApi}/set-document/person/${personId}/${document}/${disputeId}`,
       method: 'PATCH',
@@ -348,7 +348,7 @@ const overviewActions = {
     })
   },
 
-  setTicketOverviewAttachmentConfidentiality({ _ }, { disputeId, attach: { id, confidential } }) {
+  setTicketOverviewAttachmentConfidentiality(_, { disputeId, attach: { id, confidential } }) {
     return axiosDispatch({
       url: `${officeApi}/disputes/${disputeId}/attachment/${id}/confidential/${!confidential}`,
       method: 'PATCH',
@@ -357,7 +357,7 @@ const overviewActions = {
     })
   },
 
-  getTicketOverviewPartyAddress({ getters }, { disputeId, disputeRoleId }) {
+  getTicketOverviewPartyAddress({ getters }, { disputeRoleId }) {
     const document = getters.getTicketOverviewParties.find(p => p.disputeRoleId === disputeRoleId)?.documentNumber
 
     return document ? axiosDispatch({

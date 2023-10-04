@@ -43,7 +43,7 @@ const disputeActions = {
     }, 1000)
   },
 
-  getLastInteractions({ _ }, disputeId) {
+  getLastInteractions(_, disputeId) {
     return axiosDispatch({
       url: `${disputesPath}/${disputeId}/interaction`,
       mutation: 'setLastInteractions'
@@ -56,7 +56,7 @@ const disputeActions = {
     dispatch('getDisputeAttachments', id)
   },
 
-  filterDisputeRole({ _ }, dispute) {
+  filterDisputeRole(_, dispute) {
     const id = dispute?.getDisputeId || dispute?.id || dispute?.disputeId
 
     if (!id) return Promise.resolve()
@@ -71,7 +71,7 @@ const disputeActions = {
   getDispute({ commit, dispatch }, id) {
     return new Promise((resolve, reject) => {
       commit('clearDispute')
-      // eslint-disable-next-line
+      // eslint-disable-next-line no-undef
       axios.get(`${disputesPath}/${id}/vm`)
         .then(response => {
           const onlineDocs = []
@@ -126,7 +126,7 @@ const disputeActions = {
   },
 
   // TODO: Duplicar pro Store do Negotiation
-  linkDisputeBankAccounts({ _ }, { bankAccountId, disputeId }) {
+  linkDisputeBankAccounts(_, { bankAccountId, disputeId }) {
     return axiosDispatch({
       url: `${disputesPath}/${disputeId}/bank-accounts/${bankAccountId}`,
       method: 'POST'
@@ -134,16 +134,16 @@ const disputeActions = {
   },
 
   // TODO: Duplicar pro Store do Negotiation
-  unlinkDisputeBankAccounts({ _ }, { bankAccountId, disputeId }) {
+  unlinkDisputeBankAccounts(_, { bankAccountId, disputeId }) {
     return axiosDispatch({
       url: `${disputesPath}/${disputeId}/bank-accounts/${bankAccountId}`,
       method: 'DELETE'
     })
   },
 
-  getDisputeDTO({ _ }, id) {
+  getDisputeDTO(_, id) {
     return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
+      // eslint-disable-next-line no-undef
       axios.get(`${disputesPath}/${id}`)
         .then(response => {
           resolve(response.data)
@@ -161,7 +161,7 @@ const disputeActions = {
     })
   },
 
-  putDisputeProperties({ _ }, { disputeId, data }) {
+  putDisputeProperties(_, { disputeId, data }) {
     return axiosDispatch({
       url: `${disputesPath}/${disputeId}/properties`,
       method: 'PUT',
@@ -182,7 +182,7 @@ const disputeActions = {
     commit('hideLoadingAttachments')
   },
 
-  uploadAttachment({ commit }, { disputeId, formData, confidential }) {
+  uploadAttachment(_, { disputeId, formData, confidential }) {
     return axiosDispatch({
       url: `api/office/disputes/${disputeId}/attachment`,
       method: 'post',
@@ -191,7 +191,7 @@ const disputeActions = {
     })
   },
 
-  deleteAttachment({ commit, dispatch }, { disputeId, documentId }) {
+  deleteAttachment({ commit }, { disputeId, documentId }) {
     commit('showLoadingAttachments')
     return axiosDispatch({
       url: `api/office/disputes/${disputeId}/attachment/${documentId}`,
@@ -261,9 +261,9 @@ const disputeActions = {
     })
   },
 
-  searchDisputes({ _ }, params) {
+  searchDisputes(_, params) {
     return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
+      // eslint-disable-next-line no-undef
       axios.get(`${disputesPath}/search?${params.key}=${params.value}`).then(response => {
         resolve(response.data)
       }).catch(error => {
@@ -272,9 +272,9 @@ const disputeActions = {
     })
   },
 
-  getExportColumns({ _ }) {
+  getExportColumns() {
     return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
+      // eslint-disable-next-line no-undef
       axios.get(`${disputesPath}/columns/to-export`)
         .then(response => {
           resolve(response.data)
@@ -378,7 +378,7 @@ const disputeActions = {
     })
   },
 
-  editRole({ _ }, { disputeId, disputeRole }) {
+  editRole(_, { disputeId, disputeRole }) {
     return axiosDispatch({
       url: `${disputesPath}/${disputeId}/dispute-roles`,
       method: 'PUT',
@@ -386,9 +386,9 @@ const disputeActions = {
     })
   },
 
-  removeRole({ commit }, role) {
+  removeRole(_, role) {
     return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
+      // eslint-disable-next-line no-undef
       axios.delete(`${disputesPath}/${role.disputeId}/role/${role.roleId}`, { disputeId: role.disputeId, id: role.roleId })
         .then(response => {
           resolve(response.data)
@@ -399,9 +399,9 @@ const disputeActions = {
     })
   },
 
-  setDisputeparty({ commit }, params) {
+  setDisputeparty(_, params) {
     return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
+      // eslint-disable-next-line no-undef
       axios.patch(`${disputesPath}/${params.disputeId}/dispute-roles/${params.disputeRoleId}/${params.disputeParty}`)
         .then(response => {
           resolve(response.data)
@@ -414,7 +414,7 @@ const disputeActions = {
 
   getNotVisualizeds({ commit }) {
     return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
+      // eslint-disable-next-line no-undef
       axios.get(`${disputesPath}/summary/not-visualized`)
         .then(response => {
           commit('setSummaryNotVisualizeds', response.data)
@@ -428,7 +428,7 @@ const disputeActions = {
 
   getNearExpirations({ commit }) {
     return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
+      // eslint-disable-next-line no-undef
       axios.get(`${disputesPath}/summary/near-expiration`)
         .then(response => {
           commit('setSummaryNearExpirations', response.data)
@@ -440,9 +440,9 @@ const disputeActions = {
     })
   },
 
-  editCaseReason({ commit }, params) {
+  editCaseReason(_, params) {
     return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
+      // eslint-disable-next-line no-undef
       axios.put(`${disputesPath}/${params.disputeId}/update-reason`, {
         reason: params.reasonValue
       })
@@ -457,7 +457,7 @@ const disputeActions = {
 
   getDisputeStatuses({ commit }, status) {
     return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
+      // eslint-disable-next-line no-undef
       axios.get(`${disputesPath}/outcome-reasons/${status}`)
         .then(response => {
           commit('setDisputeStatuses', { label: status, value: response.data })
@@ -487,7 +487,7 @@ const disputeActions = {
     })
   },
 
-  sendDisputeNote({ _ }, data) {
+  sendDisputeNote(_, data) {
     const { note } = data
 
     return axiosDispatch({
@@ -497,9 +497,9 @@ const disputeActions = {
     })
   },
 
-  deleteDisputeNote({ commit }, noteId) {
+  deleteDisputeNote(_, noteId) {
     return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
+      // eslint-disable-next-line no-undef
       axios.delete(`${disputesPath}/note/${noteId}`)
         .then(response => {
           resolve(response.data)
@@ -510,9 +510,9 @@ const disputeActions = {
     })
   },
 
-  editDisputeNote({ commit }, note) {
+  editDisputeNote(_, note) {
     return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
+      // eslint-disable-next-line no-undef
       axios.put(`${disputesPath}/note/${note.activeOccurrence.id}`, {
         note: note.newNoteContent,
         disputeId: note.activeOccurrence.disputeId
@@ -531,22 +531,22 @@ const disputeActions = {
       let request
       if (params.action === 'restart-engagement' || params.action === 'renegotiate') {
         dispatch('validateEngageLimit', params.disputeId)
-        // eslint-disable-next-line
+        // eslint-disable-next-line no-undef
         request = axios.patch(`${disputesPath}/${params.disputeId}/${params.action}`)
       } else if (params.action === 'resend-messages') {
-        // eslint-disable-next-line
+        // eslint-disable-next-line no-undef
         request = axios.put('api/messages/resend/' + params.disputeId)
       } else if (params.action === 'settled' && params.value) {
-        // eslint-disable-next-line
+        // eslint-disable-next-line no-undef
         request = axios.put(`api/disputes/${params.disputeId}/settled?value=${params.value}`, params.body)
       } else if (params.action === 'enrich') {
-        // eslint-disable-next-line
+        // eslint-disable-next-line no-undef
         request = axios.patch('api/fusion-runner/enrich/' + params.disputeId)
       } else if (params.action === 'edit-negotiators') {
-        // eslint-disable-next-line
+        // eslint-disable-next-line no-undef
         request = axios.put(`${disputesPath}/${params.disputeId}/negotiators`, { negotiatorsId: params.negotiatorsId })
       } else {
-        // eslint-disable-next-line
+        // eslint-disable-next-line no-undef
         request = axios.put(`${disputesPath}/${params.disputeId}/${params.action}`, params.body)
       }
       request
@@ -569,10 +569,10 @@ const disputeActions = {
     })
   },
 
-  restartEngagementByContact({ commit, dispatch }, params) {
+  restartEngagementByContact({ dispatch }, params) {
     return new Promise((resolve, reject) => {
       dispatch('validateEngageLimit', params.disputeId)
-      // eslint-disable-next-line
+      // eslint-disable-next-line no-undef
       axios.patch(`/api/messages/engagement/${params.disputeId}/address/${params.contact}`)
         .then(response => {
           resolve(response.data)
@@ -582,16 +582,16 @@ const disputeActions = {
     })
   },
 
-  validateEngageLimit({ _ }, disputeId) {
+  validateEngageLimit(_, disputeId) {
     return axiosDispatch({
       url: `${disputesPath}/${disputeId}/communications/engage-limit-reached`,
       mutation: 'handleEngageLimit'
     })
   },
 
-  editDispute({ commit }, dispute) {
+  editDispute(_, dispute) {
     return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
+      // eslint-disable-next-line no-undef
       axios.put(`${disputesPath}/${dispute.id}/update`, dispute)
         .then(response => {
           resolve(response.data)
@@ -601,9 +601,9 @@ const disputeActions = {
     })
   },
 
-  editDisputeOffer({ commit }, params) {
+  editDisputeOffer(_, params) {
     return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
+      // eslint-disable-next-line no-undef
       axios.post(`${disputesPath}/${params.disputeId}/offer`, {
         attribute: { id: params.objectId },
         role: { id: params.roleId },
@@ -617,9 +617,9 @@ const disputeActions = {
     })
   },
 
-  editNegotiators({ commit }, negotiators) {
+  editNegotiators(_, negotiators) {
     return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
+      // eslint-disable-next-line no-undef
       axios.put(`${disputesPath}/${negotiators.disputeId}/negotiators`, { negotiatorsId: negotiators.negotiators })
         .then(response => {
           resolve(response.data)
@@ -630,9 +630,9 @@ const disputeActions = {
     })
   },
 
-  editDisputeReason({ commit }, params) {
+  editDisputeReason(_, params) {
     return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
+      // eslint-disable-next-line no-undef
       axios.put(`${disputesPath}/${params.disputeId}/update-reason/`, params.body)
         .then(response => {
           resolve(response.data)
@@ -642,9 +642,9 @@ const disputeActions = {
     })
   },
 
-  removeDispute({ commit }, params) {
+  removeDispute(_, params) {
     return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
+      // eslint-disable-next-line no-undef
       axios.delete(`${disputesPath}/${params.disputeId}/${params.reason}`)
         .then(response => {
           resolve(response.data)
@@ -654,7 +654,7 @@ const disputeActions = {
     })
   },
 
-  disputeSetVisualized({ _ }, params) {
+  disputeSetVisualized(_, params) {
     const { disputeId } = params
 
     delete params.disputeId
@@ -668,7 +668,7 @@ const disputeActions = {
 
   getDisputeOccurrences({ commit, state }, disputeId) {
     return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
+      // eslint-disable-next-line no-undef
       axios.get(`${disputesPath}/${disputeId}/occurrences?size=${state.occurrencesSize}&sort=createdAt,desc&sort=id,desc`)
         .then(response => {
           commit('setDisputeOccurrences', response.data.content)
@@ -681,7 +681,7 @@ const disputeActions = {
 
   getDisputeCommunications({ commit, state }, disputeId) {
     return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
+      // eslint-disable-next-line no-undef
       axios.get(`${disputesPath}/${disputeId}/occurrences/type/INTERACTION?size=${state.occurrencesSize}&sort=createdAt,desc&sort=id,desc`)
         .then(response => {
           commit('setDisputeOccurrences', response.data.content)
@@ -700,7 +700,7 @@ const disputeActions = {
         sort: state.notesQuery.sort
       }
 
-      // eslint-disable-next-line
+      // eslint-disable-next-line no-undef
       axios.get(`${disputesPath}/${disputeId}/occurrences/type/NOTE${buildQuery(query)}`)
         .then(response => {
           commit('setDisputeOccurrences', response.data.content)
@@ -712,9 +712,9 @@ const disputeActions = {
     })
   },
 
-  loadDisputeOccurrences({ commit }, disputeId) {
+  loadDisputeOccurrences(_, disputeId) {
     return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
+      // eslint-disable-next-line no-undef
       axios.put(`${disputesPath}/${disputeId}/occurrences/load`)
         .then(response => {
           resolve(response.data)
@@ -724,7 +724,7 @@ const disputeActions = {
     })
   },
 
-  getRespondents({ _ }, name = '') {
+  getRespondents(_, name = '') {
     return axiosDispatch({
       url: `${disputesPath}/respondent-names`,
       params: { name },
@@ -732,9 +732,9 @@ const disputeActions = {
     })
   },
 
-  newDisputeRole({ commit }, params) {
+  newDisputeRole(_, params) {
     return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
+      // eslint-disable-next-line no-undef
       axios.post(`${disputesPath}/${params.disputeId}/dispute-roles`, params.role)
         .then(response => {
           resolve(response.data)
@@ -744,9 +744,9 @@ const disputeActions = {
     })
   },
 
-  sendDisputeCounterProposal({ commit }, params) {
+  sendDisputeCounterProposal(_, params) {
     return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
+      // eslint-disable-next-line no-undef
       axios.post(`${disputesPath}/${params.disputeId}/counterproposal`, {
         attribute: { id: params.objectId },
         role: { id: params.roleId },
@@ -765,7 +765,7 @@ const disputeActions = {
 
   getMessageSummary({ commit }, messageId) {
     return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
+      // eslint-disable-next-line no-undef
       axios.get(`${disputesPath}/interactions/sent-message-summary/${messageId}`)
         .then(response => {
           commit('setRespondents', response.data)
@@ -776,7 +776,7 @@ const disputeActions = {
     })
   },
 
-  getDisputePartyAnalysis({ commit }, documentNumber) {
+  getDisputePartyAnalysis(_, documentNumber) {
     return axiosDispatch({
       url: `${disputesPath}/party/analisis/${documentNumber}`,
       mutation: 'addPartyAnalysis',
@@ -784,7 +784,7 @@ const disputeActions = {
     })
   },
 
-  getNegotiators({ state, commit, dispatch }, params) {
+  getNegotiators({ state }, params) {
     const { textSearch, textSearchType } = state.query
     const query = {
       ...state.query,
@@ -804,7 +804,7 @@ const disputeActions = {
     mutation: 'setPrescriptionsList'
   }),
 
-  addPhoneToDisputeRole({ _ }, { disputeId, disputeRoleId, value }) {
+  addPhoneToDisputeRole(_, { disputeId, disputeRoleId, value }) {
     return axiosDispatch({
       url: `${disputesPath}/${disputeId}/dispute-roles/${disputeRoleId}/add-phone`,
       method: 'PUT',
@@ -813,7 +813,7 @@ const disputeActions = {
     })
   },
 
-  addEmailToDisputeRole({ _ }, { disputeId, disputeRoleId, value }) {
+  addEmailToDisputeRole(_, { disputeId, disputeRoleId, value }) {
     return axiosDispatch({
       url: `${disputesPath}/${disputeId}/dispute-roles/${disputeRoleId}/add-email`,
       method: 'PUT',
@@ -822,7 +822,7 @@ const disputeActions = {
     })
   },
 
-  addOabToDisputeRole({ _ }, { disputeId, disputeRoleId, number, state }) {
+  addOabToDisputeRole(_, { disputeId, disputeRoleId, number, state }) {
     return axiosDispatch({
       url: `${disputesPath}/${disputeId}/dispute-roles/${disputeRoleId}/add-oab`,
       method: 'PUT',
@@ -831,7 +831,7 @@ const disputeActions = {
     })
   },
 
-  setDisputeProperty({ _ }, { disputeId, key, value }) {
+  setDisputeProperty(_, { disputeId, key, value }) {
     return axiosDispatch({
       url: `${disputesPath}/${disputeId}/properties/${key}`,
       method: 'PUT',
@@ -840,7 +840,7 @@ const disputeActions = {
     })
   },
 
-  getDisputeMetadata({ _ }, disputeId) {
+  getDisputeMetadata(_, disputeId) {
     return axiosDispatch({
       url: `api/office/documents/dispute/${disputeId}/metadata`,
       mutation: 'setDisputeMetadata'
@@ -865,7 +865,7 @@ const disputeActions = {
     })
   },
 
-  putWorkspacePreNegotiationKeywords({ _ }, keywords) {
+  putWorkspacePreNegotiationKeywords(_, keywords) {
     return axiosDispatch({
       url: `${disputesPath}/pre-negotiation/keywords`,
       method: 'PUT',
@@ -873,14 +873,14 @@ const disputeActions = {
     })
   },
 
-  getWorkspacePreNegotiationKeywords({ _ }) {
+  getWorkspacePreNegotiationKeywords() {
     return axiosDispatch({
       url: `${disputesPath}/pre-negotiation/keywords`,
       mutation: 'setPreNegotiationKeywords'
     })
   },
 
-  putPreNegotiationLimitValue({ _ }, value) {
+  putPreNegotiationLimitValue(_, value) {
     return axiosDispatch({
       url: `${disputesPath}/pre-negotiation/limit-value`,
       method: 'PUT',
@@ -888,7 +888,7 @@ const disputeActions = {
     })
   },
 
-  getPreNegotiationLimitValue({ _ }) {
+  getPreNegotiationLimitValue() {
     return axiosDispatch({
       url: `${disputesPath}/pre-negotiation/limit-value`,
       mutation: 'setPreNegotiationLimitValue'
@@ -906,13 +906,13 @@ const disputeActions = {
     }
   },
 
-  getAttachmentSignInfo({ _ }, documentId) {
+  getAttachmentSignInfo(_, documentId) {
     return axiosDispatch({
       url: `${documentsPath}/draft/${documentId}`
     })
   },
 
-  setAttachmentSigners({ _ }, { signers, documentId }) {
+  setAttachmentSigners(_, { signers, documentId }) {
     return axiosDispatch({
       url: `${documentsPath}/${documentId}/sign`,
       method: 'POST',
@@ -920,14 +920,14 @@ const disputeActions = {
     })
   },
 
-  deleteSignedAttachment({ _ }, documentId) {
+  deleteSignedAttachment(_, documentId) {
     return axiosDispatch({
       url: `${documentsPath}/${documentId}/sign`,
       method: 'DELETE'
     })
   },
 
-  setDisputeClassificationsDetails({ _ }, { parentId, data }) {
+  setDisputeClassificationsDetails(_, { parentId, data }) {
     return axiosDispatch({
       method: 'POST',
       url: `/api/dispute-classifications/${parentId}/dispute-classifications-detail`,

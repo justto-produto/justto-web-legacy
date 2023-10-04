@@ -13,8 +13,8 @@ const workspaceMutations = {
     return new Promise((resolve, reject) => {
       if (workspace) {
         setLocalWorkspace(workspace).then(() => {
-          // eslint-disable-next-line
-          axios.defaults.headers.common['Workspace'] = workspace.subDomain
+          // eslint-disable-next-line no-undef
+          axios.defaults.headers.common.Workspace = workspace.subDomain
           const members = workspace.members ? workspace.members : state.workspace.members
           const profile = workspace.profile ? workspace.profile : state.workspace.profile
           const preNegotiation = workspace.preNegotiation || state.workspace.preNegotiation

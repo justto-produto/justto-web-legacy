@@ -31,14 +31,14 @@ const strategyActions = {
     mutation: 'setAvailableWorkspace'
   }),
 
-  addStrategy: ({ _ }, strategy) => axiosDispatch({
+  addStrategy: (_, strategy) => axiosDispatch({
     url: `${strategyPath}`,
     method: 'POST',
     data: strategy,
     mutation: 'addStrategy'
   }),
 
-  cloneStrategy: ({ _ }, { strategyClone, originId }) => axiosDispatch({
+  cloneStrategy: (_, { strategyClone, originId }) => axiosDispatch({
     url: `${strategyPath}/${originId}/clone`,
     method: 'POST',
     data: strategyClone,
@@ -57,12 +57,12 @@ const strategyActions = {
     method: 'DELETE'
   }).then(() => commit('deleteStrategy', { strategyId })),
 
-  getStrategyAvailableWorkspaces: ({ _ }, strategyId) => axiosDispatch({
+  getStrategyAvailableWorkspaces: (_, strategyId) => axiosDispatch({
     url: `${strategyPath}/${strategyId}/workspace/available`,
     mutation: 'setStrategyAvailableWorkspaces'
   }),
 
-  getAvaliableVariablesToTemplate: ({ _ }) => axiosDispatch({
+  getAvaliableVariablesToTemplate: () => axiosDispatch({
     url: `${strategyPath}/template/variable`,
     mutation: 'setAvaliableVariablesToTemplate'
   }),
@@ -76,13 +76,13 @@ const strategyActions = {
     return response
   }),
 
-  editCommunication: ({ _ }, { communication, strategyId }) => axiosDispatch({
+  editCommunication: (_, { communication, strategyId }) => axiosDispatch({
     url: `${strategyPath}/${strategyId}/communication/${communication.id}`,
     method: 'PATCH',
     data: communication
   }),
 
-  sortCommunications: ({ _ }, { sortedIds, strategyId }) => axiosDispatch({
+  sortCommunications: (_, { sortedIds, strategyId }) => axiosDispatch({
     url: `${strategyPath}/${strategyId}/communication/sort`,
     method: 'PATCH',
     data: sortedIds
@@ -93,11 +93,11 @@ const strategyActions = {
     method: 'DELETE'
   }).then(() => commit('deleteCommunication', { communicationId, strategyId, trigger })),
 
-  getCommunicationTemplate: ({ _ }, { communicationId, strategyId }) => axiosDispatch({
+  getCommunicationTemplate: (_, { communicationId, strategyId }) => axiosDispatch({
     url: `${strategyPath}/${strategyId}/communication/${communicationId}/template`
   }),
 
-  changeCommunicationTemplate: ({ _ }, { template, communicationId, strategyId }) => axiosDispatch({
+  changeCommunicationTemplate: (_, { template, communicationId, strategyId }) => axiosDispatch({
     url: `${strategyPath}/${strategyId}/communication/${communicationId}/template`,
     method: 'PUT',
     data: template

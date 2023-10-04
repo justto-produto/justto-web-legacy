@@ -23,7 +23,7 @@ export default {
     }
   },
 
-  addCall({ commit, dispatch, getters: { isActiveToCall, getAppInstance, getGlobalAuthenticationObject, hasOtherTabActive } }, callRequester) {
+  addCall({ commit, dispatch, getters: { isActiveToCall, getGlobalAuthenticationObject, hasOtherTabActive } }, callRequester) {
     if (isActiveToCall || !hasOtherTabActive) {
       if (!hasOtherTabActive) {
         commit('setActiveAppToCall', true)
@@ -89,27 +89,27 @@ export default {
     })
   },
 
-  setScheduledCallsRequester({ commit, dispatch, getters: { canMakeScheduledCalls } }) {
+  setScheduledCallsRequester({ commit, dispatch }) {
     commit('setScheduledCallsRequester', () => dispatch('getPhoneCalls'))
     dispatch('setAutomaticScheduledCallMaker')
 
     return Promise.resolve()
   },
 
-  getPhoneCalls({ _ }) {
+  getPhoneCalls() {
     return axiosDispatch({
       url: `${legacyDisputeApi}/phone-calls`,
       mutation: 'setScheduledCallsState'
     })
   },
 
-  getPhoneCallInfo({ _ }, disputeMessageId) {
+  getPhoneCallInfo(_, disputeMessageId) {
     return axiosDispatch({
       url: `${legacyDisputeApi}/phone-calls/${disputeMessageId}`
     })
   },
 
-  updatePhoneCallStatus({ _ }, communicationMessageId) {
+  updatePhoneCallStatus(_, communicationMessageId) {
     return axiosDispatch({
       url: `${legacyDisputeApi}/phone-calls/${communicationMessageId}/done`,
       method: 'PATCH',
@@ -117,7 +117,7 @@ export default {
     })
   },
 
-  unschedulePhoneCallStatus({ _ }, communicationMessageId) {
+  unschedulePhoneCallStatus(_, communicationMessageId) {
     return axiosDispatch({
       url: `${legacyDisputeApi}/phone-calls/${communicationMessageId}/canceled`,
       method: 'PATCH',
@@ -125,7 +125,7 @@ export default {
     })
   },
 
-  startManagementCall({ commit, dispatch, getters: { getAppInstance } }) {
+  startManagementCall({ commit, getters: { getAppInstance } }) {
     const { appInstance, currentCall } = JSON.parse(localStorage.getItem('JUSTTO_MANAGEMENT_CALL') || DEFAULT_JUSTTO_MANAGEMENT_CALL)
 
     if (appInstance !== getAppInstance) {
@@ -209,7 +209,7 @@ export default {
     }
   },
 
-  getDialerDetails({ _ }, { dialerId }) {
+  getDialerDetails(_, { dialerId }) {
     return axiosDispatch({
       url: `api/dialer/${dialerId}/detail`,
       mutation: 'setTimeoutDialerDetail'
@@ -223,7 +223,7 @@ export default {
       data: {
         owner: workspaceProperties?.WORKSPACE_DIALER_OWNER || 'JUSTTO' // isJusttoAdmin ? 'DEV' : 'JUSTTO'
       }
-    }) : new Promise((resolve, reject) => {
+    }) : new Promise((resolve) => {
       commit('clearActiveRequestInterval')
       commit('clearTimeoutDialerDetail')
       resolve()
@@ -256,7 +256,7 @@ export default {
     })
   },
 
-  responseCallStatus({ _ }, { appInstance }) {
+  responseCallStatus(_, { appInstance }) {
     const vue = document.getElementById('app').__vue__
     // TODO usar publishWebsocket
     vue.$socket.emit('RESPONSE_CALL_STATUS', { appInstance })
@@ -269,7 +269,7 @@ export default {
     })
   },
 
-  setValidNumberInCall({ _ }, { interactionId, disputeId }) {
+  setValidNumberInCall(_, { interactionId, disputeId }) {
     return interactionId ? axiosDispatch({
       url: `${disputeApi}/${disputeId}/interaction/${interactionId}/last-inbound`,
       method: 'PATCH'
@@ -326,7 +326,7 @@ export default {
 
       commit('setSipStack', phone)
 
-      phone.on('connected', function(e) {
+      phone.on('connected', function() {
         const requestDialerCommand = {
           phoneNumber: getCurrentCall.number,
           dialerId: dialer.id,
@@ -471,14 +471,14 @@ export default {
     }
   },
 
-  updateCallStatus({ _ }, disputeMessageId) {
+  updateCallStatus(_, disputeMessageId) {
     return axiosDispatch({
       method: 'PATCH',
       url: `${legacyDisputeApi}/phone-calls/${disputeMessageId}`
     })
   },
 
-  getCallStatus({ _ }, callId) {
+  getCallStatus(_, callId) {
     return axiosDispatch({
       url: `${dialerApi}/call/${callId}`
     })

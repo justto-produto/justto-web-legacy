@@ -1,5 +1,4 @@
 /* eslint-disable camelcase */
-// eslint-disable-next-line no-unused-vars
 
 /**
  * RequestMemberStatusCommand is a command to set new status to logged user

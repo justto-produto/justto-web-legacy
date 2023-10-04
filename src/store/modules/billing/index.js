@@ -27,9 +27,9 @@ const billing = {
     contractDiscountList: {},
     holdings: []
   },
-  mutations: mutations,
-  actions: actions,
-  getters: getters
+  mutations,
+  actions,
+  getters
 }
 
 export default billing

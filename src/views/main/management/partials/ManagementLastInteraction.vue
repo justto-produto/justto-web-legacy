@@ -244,8 +244,9 @@
     </el-dialog>
 
     <negotiator-activeReply
-      :visible.sync="canShowDialogReplyEditor"
+      v-model="canShowDialogReplyEditor"
       :dispute="data"
+      @close="canShowDialogReplyEditor = false"
     />
   </div>
 </template>

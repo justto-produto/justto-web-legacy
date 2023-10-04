@@ -1,7 +1,8 @@
 import { axiosDispatch } from '@/utils/'
-import axios from 'axios'
 
 const dialerPath = 'https://api-webphone.mozaik.cloud/v1'
+
+// eslint-disable-next-line no-undef
 const dialerAdapter = axios.create({
   baseURL: dialerPath,
   headers: {}
@@ -28,7 +29,7 @@ const dialerActions = {
     commit('setBuyDialerVisible', true)
   },
 
-  dialerLogin({ _ }, loginRequest) {
+  dialerLogin(_, loginRequest) {
     return axiosDispatch({
       url: `${dialerPath}/webphone/auth`,
       method: 'POST',

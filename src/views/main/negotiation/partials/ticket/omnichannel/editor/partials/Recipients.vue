@@ -22,12 +22,12 @@
         >
           <ul class="recipients-container__list">
             <li
-              v-for="(recipient, recipientIndex) in recipients.slice(1)"
+              v-for="(recipientItem, recipientIndex) in recipients.slice(1)"
               :key="`recipient-${recipientIndex}`"
               class="recipients-container__list-item"
             >
               <i class="recipients-container__item-icon el-icon-caret-right" />
-              {{ recipient.value }}
+              {{ recipientItem.value }}
             </li>
           </ul>
 

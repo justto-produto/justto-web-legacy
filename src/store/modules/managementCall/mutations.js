@@ -138,7 +138,7 @@ export default {
     Vue.set(state, 'appInstance', appInstance)
   },
 
-  setRequestProvide(state, { appInstance }) {
+  setRequestProvide(state) {
     Vue.set(state.currentCall, 'status', CALL_STATUS.WAITING_DIALER)
   },
 

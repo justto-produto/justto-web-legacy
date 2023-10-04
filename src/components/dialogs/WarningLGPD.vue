@@ -1,4 +1,3 @@
-<!-- eslint-disable vue/no-mutating-props -->
 <template>
   <el-dialog
     :close-on-click-modal="false"
@@ -31,14 +30,14 @@
       <el-button
         :disabled="modalLoading"
         plain
-        @click="$emit('click', false)"
+        @click="lgpdDialogVisible = false"
       >
         Cancelar
       </el-button>
       <el-button
         :loading="modalLoading"
         type="primary"
-        @click="$emit('click', true)"
+        @click="$emit('confirm')"
       >
         Continuar
       </el-button>
@@ -51,7 +50,7 @@ export default {
   name: 'WarningLGPD',
 
   props: {
-    lgpdDialogVisible: {
+    value: {
       type: Boolean,
       default: false
     },
@@ -71,10 +70,10 @@ export default {
     }
   },
 
-  methods: {
-    openDialogEditor() {
-      // eslint-disable-next-line vue/no-mutating-props
-      this.lgpdDialogVisible = true
+  computed: {
+    lgpdDialogVisible: {
+      get() { return this.value },
+      set() { this.$emit('close') }
     }
   }
 }

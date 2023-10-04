@@ -23,7 +23,7 @@ const workspaceActions = {
     })
   },
 
-  verifyAvailability({ _ }, subDomain) {
+  verifyAvailability(_, subDomain) {
     return axiosDispatch({
       url: `${workspacesPath}/sub-domain-availability`,
       method: 'PUT',
@@ -42,7 +42,7 @@ const workspaceActions = {
     })
   },
 
-  editCustomWorkpaceProperties({ _ }, { properties, workspaceId }) {
+  editCustomWorkpaceProperties(_, { properties, workspaceId }) {
     return axiosDispatch({
       url: `${workspacesPath}/${workspaceId}/properties`,
       method: 'PUT',
@@ -67,7 +67,7 @@ const workspaceActions = {
     })
   },
 
-  changeTeamName({ _ }, data) {
+  changeTeamName(_, data) {
     return axiosDispatch({
       url: `${workspacesPath}/teamName`,
       method: 'patch',
@@ -88,7 +88,7 @@ const workspaceActions = {
     })
   },
 
-  readyWorkspace({ _ }, workspace) {
+  readyWorkspace(_, workspace) {
     return axiosDispatch({
       url: `${workspacesPath}/ready/${workspace}`,
       method: 'PUT'
@@ -109,25 +109,25 @@ const workspaceActions = {
     }
   },
 
-  getWorkspaceTeam({ _ }) {
+  getWorkspaceTeam() {
     return axiosDispatch({
       url: '/api/accounts?size=999&sort=personName,asc',
       mutation: 'setWorkspaceTeam'
     })
   },
 
-  getWorkspaces({ _ }) {
+  getWorkspaces() {
     return axiosDispatch({ url: `${workspacesPath}?size=9999` })
   },
 
-  getPortifolio({ _ }) {
+  getPortifolio() {
     return axiosDispatch({
       url: `${workspacesPath}/portifolio`,
       mutation: 'setPortifolio'
     })
   },
 
-  removeWorkspaceMember({ _ }, id) {
+  removeWorkspaceMember(_, id) {
     return axiosDispatch({
       url: `${workspacesPath}/members/${id}`,
       method: 'DELETE',
@@ -135,7 +135,7 @@ const workspaceActions = {
     })
   },
 
-  getFeaturesAndModules({ _ }) {
+  getFeaturesAndModules() {
     return axiosDispatch({
       url: `${workspacesPath}/feature?sort=description,asc`,
       mutation: 'setFeaturesAndModules'
@@ -162,7 +162,7 @@ const workspaceActions = {
     })
   },
 
-  syncInbox({ _ }, object) {
+  syncInbox(_, object) {
     return axiosDispatch({
       url: `${workspacesPath}/inboxes`,
       method: 'POST',
@@ -170,14 +170,14 @@ const workspaceActions = {
     })
   },
 
-  getMyStrategies({ _ }) {
+  getMyStrategies() {
     return axiosDispatch({
       url: 'api/workspaces/strategies',
       mutation: 'setImportedStrategies'
     })
   },
 
-  patchBlackList({ _ }, blackList) {
+  patchBlackList(_, blackList) {
     return axiosDispatch({
       url: `${workspacesPath}/blacklist`,
       method: 'patch',
@@ -185,7 +185,7 @@ const workspaceActions = {
     })
   },
 
-  adminWorkspaces({ _ }, params) {
+  adminWorkspaces(_, params) {
     return axiosDispatch({
       ...params,
       url: params.url || `https://backend.justto.app/${workspacesPath}/${params.workspaceId || ''}`
@@ -200,7 +200,7 @@ const workspaceActions = {
     // })
   },
 
-  adminWorkspaceUsers({ _ }, params) {
+  adminWorkspaceUsers(_, params) {
     return new Promise((resolve, reject) => {
       const headers = {}
       if (params.headers && Object.keys(params.headers).length) {
@@ -225,7 +225,7 @@ const workspaceActions = {
     })
   },
 
-  getWorkspaceKeyAccounts({ _ }) {
+  getWorkspaceKeyAccounts() {
     return axiosDispatch({
       url: 'api/accounts/workspaces/keyAccount',
       mutation: 'setWorkspaceKeyAccounts'
@@ -239,14 +239,14 @@ const workspaceActions = {
     })
   },
 
-  getPortifolios({ _ }) {
+  getPortifolios() {
     return axiosDispatch({
       url: `${workspacesPath}/portifolio`,
       mutation: 'setPortifolio'
     })
   },
 
-  createPortifolioAndInsert({ _ }, { name, workspaceId }) {
+  createPortifolioAndInsert(_, { name, workspaceId }) {
     return axiosDispatch({
       url: `${workspacesPath}/portifolio`,
       method: 'POST',
@@ -256,13 +256,13 @@ const workspaceActions = {
     })
   },
 
-  getPortifolioAssociated({ _ }, workspaceId) {
+  getPortifolioAssociated(_, workspaceId) {
     return axiosDispatch({
       url: `${workspacesPath}/portifolio/associateds/${workspaceId}`
     })
   },
 
-  setPortifolioToWorkspace({ _ }, { workspaceId, portifolioId }) {
+  setPortifolioToWorkspace(_, { workspaceId, portifolioId }) {
     return axiosDispatch({
       url: `api/${portifolioId}/workspace/${workspaceId}`,
       method: 'PUT',
@@ -271,14 +271,14 @@ const workspaceActions = {
     })
   },
 
-  associatePortifolioToWorkspace({ _ }, { portifolioId, workspaceId }) {
+  associatePortifolioToWorkspace(_, { portifolioId, workspaceId }) {
     return axiosDispatch({
       url: `${workspacesPath}/portifolio/${portifolioId}/workspace/${workspaceId}`,
       method: 'PUT'
     })
   },
 
-  disassociatePortifolioToWorkspace({ _ }, { portifolioId, workspaceId }) {
+  disassociatePortifolioToWorkspace(_, { portifolioId, workspaceId }) {
     return axiosDispatch({
       url: `${workspacesPath}/portifolio/${portifolioId}/workspace/${workspaceId}`,
       method: 'DELETE'
@@ -294,20 +294,20 @@ const workspaceActions = {
     })
   },
 
-  getApiIntegrationConfiguration({ _ }, featureId) {
+  getApiIntegrationConfiguration(_, featureId) {
     return axiosDispatch({
       url: `${workspacesPath}/feature/${featureId}/properties`,
       mutation: 'setApiIntegrationConfiguration'
     })
   },
 
-  getFeatureProperties({ _ }, featureId) {
+  getFeatureProperties(_, featureId) {
     return axiosDispatch({
       url: `${workspacesPath}/feature/${featureId}/properties`
     })
   },
 
-  saveFeatureProperties({ _ }, { featureId, properties }) {
+  saveFeatureProperties(_, { featureId, properties }) {
     return axiosDispatch({
       url: `${workspacesPath}/feature/${featureId}/properties`,
       method: 'PATCH',
@@ -315,7 +315,7 @@ const workspaceActions = {
     })
   },
 
-  setApiIntegrationConfiguration({ _ }, params) {
+  setApiIntegrationConfiguration(_, params) {
     const { featureId, payload } = params
     return axiosDispatch({
       url: `${workspacesPath}/feature/${featureId}/properties`,
@@ -344,14 +344,14 @@ const workspaceActions = {
     * Função que testa a integração configurada na workspace
     * @param  {[Number]} disputeId Id da disputa que será enviada para teste
   */
-  testApiIntegration({ _ }, disputeId) {
+  testApiIntegration(_, disputeId) {
     return axiosDispatch({
       url: `api/dispute-websocket/test/publish-dispute/${disputeId}`,
       method: 'put'
     })
   },
 
-  getCustomerWorkspaceCount({ _ }, workspaceId) {
+  getCustomerWorkspaceCount(_, workspaceId) {
     return axiosDispatch({
       url: `${workspaceUsageApi}/${workspaceId}/count`
     })

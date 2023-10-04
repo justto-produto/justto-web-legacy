@@ -1,6 +1,5 @@
 import mutations from './mutations'
 import actions from './actions'
-import getters from './getters'
 
 const socketModule = {
   state: {
@@ -11,9 +10,8 @@ const socketModule = {
       message: ''
     }
   },
-  mutations: mutations,
-  actions: actions,
-  getters: getters
+  mutations,
+  actions
 }
 
 export default socketModule

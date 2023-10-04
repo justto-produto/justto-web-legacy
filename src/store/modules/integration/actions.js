@@ -62,7 +62,7 @@ export default {
     })
   },
 
-  getUrlIntegracaoReceberEventos({ _ }, { tipo = 'PROCESSO' }) {
+  getUrlIntegracaoReceberEventos(_, { tipo = 'PROCESSO' }) {
     return axiosDispatch({
       url: `${integrationPath}/url-receber-eventos`,
       params: { tipo },

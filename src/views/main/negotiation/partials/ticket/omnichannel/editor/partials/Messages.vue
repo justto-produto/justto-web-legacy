@@ -214,7 +214,7 @@ export default {
       'setSignature'
     ]),
 
-    openFullScreenEditor(_) {
+    openFullScreenEditor() {
       this.$refs.fullScreenEditor.openDialogEditor(this.showCKEditor ? this.editorText : this.editorTextScaped)
     },
 
@@ -278,7 +278,7 @@ export default {
       })
     },
 
-    send(_) {
+    send() {
       this.localLoading = true
       const { id } = this.$route.params
 

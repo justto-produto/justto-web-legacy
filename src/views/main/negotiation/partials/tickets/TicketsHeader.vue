@@ -114,7 +114,7 @@ export default {
       }
     },
 
-    focusOnSearch(_) {
+    focusOnSearch() {
       if (this.$refs.searchInput) {
         this.$refs.searchInput.focus()
       }

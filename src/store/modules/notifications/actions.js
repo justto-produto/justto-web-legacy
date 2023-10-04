@@ -10,7 +10,7 @@ function getMemberName({ workspaceMembers }, fromAccountId) {
 }
 
 const actionsNotifications = {
-  getThamirisAlerts({ _ }) {
+  getThamirisAlerts() {
     return axiosDispatch({
       url: `${urlBase}/todo/list`,
       mutation: 'setNotifications',
@@ -35,7 +35,7 @@ const actionsNotifications = {
     })
   },
 
-  getMentionsSummary({ _ }) {
+  getMentionsSummary() {
     return axiosDispatch({
       url: `${mentionsUrl}/summary`,
       mutation: 'setMentionsSummary',
@@ -47,7 +47,7 @@ const actionsNotifications = {
     commit('setNotificationsVisible', visibility)
   },
 
-  setMentionReaded({ _ }, mentionId) {
+  setMentionReaded(_, mentionId) {
     return axiosDispatch({
       url: `${mentionsUrl}/${mentionId}/read`,
       method: 'PATCH',
@@ -55,8 +55,6 @@ const actionsNotifications = {
       mutation: 'setMentionReaded'
     })
   },
-
-  SOCKET_ADD_NOTIFICATIONS({ _ }, notification) {},
 
   SOCKET_NOTIFY_MENTION_SUMMARY({ dispatch }, _mention) {
     dispatch('getMentionsSummary')

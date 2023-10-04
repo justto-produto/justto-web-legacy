@@ -3,11 +3,11 @@ import { axiosDispatch, extractMentions } from '@/utils'
 const messagesPath = 'api/messages'
 
 const messageActions = {
-  canSendWhatsapp({ _ }, phone) {
+  canSendWhatsapp(_, phone) {
     return axiosDispatch({ url: `api/messages/can-send/${phone}` })
   },
 
-  sendwhatsapp({ _ }, data) {
+  sendwhatsapp(_, data) {
     return axiosDispatch({
       url: `${messagesPath}/send/whatsapp`,
       method: 'post',
@@ -15,7 +15,7 @@ const messageActions = {
     })
   },
 
-  sendemail({ _ }, data) {
+  sendemail(_, data) {
     return axiosDispatch({
       url: `${messagesPath}/send/email`,
       method: 'post',
@@ -23,7 +23,7 @@ const messageActions = {
     })
   },
 
-  sendNegotiator({ _ }, params) {
+  sendNegotiator(_, params) {
     const { disputeId, data } = params
     return axiosDispatch({
       url: `api/negotiations/${disputeId}/messages`,
@@ -33,20 +33,20 @@ const messageActions = {
     })
   },
 
-  getOccurrenceMessage({ _ }, messageId) {
+  getOccurrenceMessage(_, messageId) {
     return axiosDispatch({
       url: `${messagesPath}/${messageId}`
     })
   },
 
-  getQuickReplyTemplates({ _ }, disputeId) {
+  getQuickReplyTemplates(_, disputeId) {
     return axiosDispatch({
       url: `${messagesPath}/quick-reply/${disputeId}`,
       mutation: 'setQuickReplyTemplates'
     })
   },
 
-  editQuickReplyTemplate({ commit }, { template, disputeId }) {
+  editQuickReplyTemplate(_, { template, disputeId }) {
     return axiosDispatch({
       url: `${messagesPath}/quick-reply/${disputeId}/template`,
       method: 'PUT',
@@ -69,7 +69,7 @@ const messageActions = {
     }).then(() => commit('archiveQuickReplyTemplate', templateId))
   },
 
-  editTemplate({ _ }, { template, disputeId }) {
+  editTemplate(_, { template, disputeId }) {
     return axiosDispatch({
       url: `${messagesPath}/quick-reply/${disputeId}/template`,
       method: 'put',
@@ -77,7 +77,7 @@ const messageActions = {
     })
   },
 
-  getMessageToPreview({ _ }, { template, disputeId }) {
+  getMessageToPreview(_, { template, disputeId }) {
     return axiosDispatch({
       url: `${messagesPath}/quick-reply/preview/${disputeId}`,
       method: 'POST',
@@ -95,7 +95,7 @@ const messageActions = {
     })
   },
 
-  requestBuyDialers({ _ }, data) {
+  requestBuyDialers(_, data) {
     return axiosDispatch({
       url: `${messagesPath}/email/send`,
       method: 'POST',
@@ -103,7 +103,7 @@ const messageActions = {
     })
   },
 
-  sendCustomEmail({ _ }, data) {
+  sendCustomEmail(_, data) {
     return axiosDispatch({
       url: `${messagesPath}/email/send`,
       method: 'POST',

@@ -83,8 +83,8 @@
     </div>
 
     <SlideInfo
+      v-model="isVisibleSlider"
       :images="itemsSlider"
-      :is-visible="isVisibleSlider"
       @close="isVisibleSlider = false"
     />
   </section>

@@ -44,7 +44,7 @@ const omnichannelActions = {
     dispatch('setEditorBackup')
   },
 
-  setEditorSubject: ({ dispatch, commit }, subject) => {
+  setEditorSubject: ({ commit }, subject) => {
     commit('setEditorSubject', subject)
   },
 
@@ -104,7 +104,7 @@ const omnichannelActions = {
     }))
   },
 
-  getFullMessage({ _ }, messageId) {
+  getFullMessage(_, messageId) {
     if (messageId) {
       return axiosDispatch({
         url: `${messagesPath}/${messageId}`,
@@ -117,14 +117,14 @@ const omnichannelActions = {
 
   cleanRecentMessages: ({ commit }) => commit('cleanRecentMessages'),
 
-  deleteTicketNote: ({ _ }, id) => axiosDispatch({
+  deleteTicketNote: (_, id) => axiosDispatch({
     url: `api/disputes/note/${id}`,
     method: 'DELETE',
     mutation: 'removeTicketNote',
     payload: { id }
   }),
 
-  saveTicketNote({ _ }, params) {
+  saveTicketNote(_, params) {
     const { disputeId, id, note } = params
 
     return validateCurrentId(disputeId, () => axiosDispatch({
@@ -134,7 +134,7 @@ const omnichannelActions = {
     }))
   },
 
-  getSummaryOccurrecies({ getters, commit }, { disputeId, communicationType, summaryRoleId, summaryOccurrenceId }) {
+  getSummaryOccurrecies({ getters }, { disputeId, communicationType, summaryRoleId, summaryOccurrenceId }) {
     const keys = getters.getOccurrencesSummaryKeys
 
     const payload = {
@@ -155,7 +155,6 @@ const omnichannelActions = {
       }))
     } else {
       return new Promise((resolve) => {
-        // commit('cleanSumary', payload)
         resolve()
       })
     }
@@ -214,7 +213,7 @@ const omnichannelActions = {
     dispatch('setEditorBackup')
   },
 
-  verifyRecipient({ _ }, recipient) {
+  verifyRecipient(_, recipient) {
     const { value, disputeId } = recipient
     const params = {
       adress: value
@@ -350,7 +349,7 @@ const omnichannelActions = {
     commit('toggleExportTicketModalVisible', visible)
   },
 
-  replyNps({ _ }, { disputeId, disputeRoleId, data, occurrenceId }) {
+  replyNps(_, { disputeId, disputeRoleId, data, occurrenceId }) {
     return axiosDispatch({
       url: `${disputeApi}/${disputeId}/nps/${disputeRoleId}/response`,
       method: 'PATCH',
@@ -367,13 +366,13 @@ const omnichannelActions = {
     })
   },
 
-  getRecommendations({ _ }, interactionId) {
+  getRecommendations(_, interactionId) {
     return axiosDispatch({
       url: `api/rpa/recommendation/interaction/${interactionId}`
     })
   },
 
-  executeRecommendation({ _ }, recommendation) {
+  executeRecommendation(_, recommendation) {
     return axiosDispatch({
       url: 'api/rpa/recommendation/action/execute',
       method: 'POST',
@@ -381,7 +380,7 @@ const omnichannelActions = {
     })
   },
 
-  setInteractionMessageContent({ _ }, { disputeId, content, communicationMessageId }) {
+  setInteractionMessageContent(_, { disputeId, content, communicationMessageId }) {
     return axiosDispatch({
       url: `api/disputes/${disputeId}/communications/${communicationMessageId}`,
       method: 'PATCH',
@@ -408,7 +407,7 @@ const omnichannelActions = {
     }))
   },
 
-  getGroupedOccurrences({ _ }, { disputeId, occurrences, parentId }) {
+  getGroupedOccurrences(_, { disputeId, occurrences, parentId }) {
     const url = `${disputeApi}/${disputeId}/occurrences${buildQuery({ id: occurrences })}`
 
     return axiosDispatch({
@@ -428,7 +427,7 @@ const omnichannelActions = {
     Object.keys(getGroupedOccurrences).forEach(id => commit('deleteGroupedOccurrencesById', id))
   },
 
-  autodetectTicketRecipients({ state: { editor: { recipients } }, getters: { workspaceAutodetectRecipient, getEditorRecipients, getCurrentRoute: { params: { id } } }, dispatch }) {
+  autodetectTicketRecipients({ getters: { workspaceAutodetectRecipient, getEditorRecipients, getCurrentRoute: { params: { id } } }, dispatch }) {
     if (workspaceAutodetectRecipient && !getEditorRecipients.length) {
       axiosDispatch({
         url: `${disputeApi}/${id}/messages/last-inbound`

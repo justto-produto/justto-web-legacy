@@ -1,4 +1,3 @@
-<!-- eslint-disable vue/no-mutating-props -->
 <template>
   <el-dialog
     ref="slideInfo"
@@ -80,7 +79,7 @@
 <script>
 export default {
   props: {
-    isVisible: {
+    value: {
       type: Boolean,
       required: true
     },
@@ -100,6 +99,10 @@ export default {
     }
   },
   computed: {
+    isVisible: {
+      get() { return this.value },
+      set() { this.$emit('close') }
+    },
     currentTitle() {
       return this.images.filter((_item, index) => index === this.currentIndex)[0].title
     },

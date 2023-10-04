@@ -9,9 +9,9 @@ const personModule = {
     loggedPerson: person,
     onlineDocuments: {}
   },
-  mutations: mutations,
-  actions: actions,
-  getters: getters
+  mutations,
+  actions,
+  getters
 }
 
 export default personModule

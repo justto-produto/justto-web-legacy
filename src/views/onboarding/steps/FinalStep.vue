@@ -51,8 +51,8 @@ export default {
 
       this.$store.dispatch('readyWorkspace', this.workspace.subDomain)
         .then(() => {
-          // eslint-disable-next-line
-          delete axios.defaults.headers.common['Workspace']
+          // eslint-disable-next-line no-undef
+          delete axios.defaults.headers.common.Workspace
           this.$store.dispatch('myWorkspace')
             .then(response => {
               const currentWorkspace = response.find(w => {

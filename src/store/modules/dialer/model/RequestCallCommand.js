@@ -1,5 +1,4 @@
 /* eslint-disable camelcase */
-// eslint-disable-next-line no-unused-vars
 
 /**
  * RequestCallCommand is a command for create new call in voice server

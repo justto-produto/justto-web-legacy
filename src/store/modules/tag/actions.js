@@ -12,14 +12,14 @@ const tagActions = {
       return Promise.resolve()
     }
   },
-  getDisputeTags({ _ }, disputeId) {
+  getDisputeTags(_, disputeId) {
     return axiosDispatch({
       url: `/api/disputes/${disputeId}/tags`,
       mutation: 'setDisputeTags',
       params: { size: 9999, sort: 'id,desc' }
     })
   },
-  editDisputeTags({ _ }, params) {
+  editDisputeTags(_, params) {
     return axiosDispatch({
       method: 'patch',
       url: `/api/disputes/${params.disputeId}/tags`,
@@ -59,7 +59,7 @@ const tagActions = {
       mutation: 'setFilteredTags'
     })
   },
-  deleteTag({ _ }, tagId) {
+  deleteTag(_, tagId) {
     return axiosDispatch({
       url: `/api/workspaces/tags/${tagId}`,
       method: 'DELETE'

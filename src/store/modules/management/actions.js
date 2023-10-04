@@ -10,7 +10,7 @@ const managementActions = {
     commit('setSelectedIds', ids)
   },
 
-  getGlobalDisputes({ _ }, data) {
+  getGlobalDisputes(_, data) {
     return axiosDispatch({
       url: `${disputesPath}/management/filter`,
       method: 'POST',

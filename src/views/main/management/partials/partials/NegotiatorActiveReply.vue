@@ -1,11 +1,9 @@
-<!-- eslint-disable vue/no-mutating-props -->
 <template>
   <el-dialog
     title="Enviar mensagem para"
     :visible.sync="visible"
     width="50%"
     append-to-body
-    :before-close="handleClose"
   >
     <div
       v-loading="isLoading"
@@ -45,7 +43,7 @@
         <div class="dialog-reply-negotiator__footer">
           <el-button
             size="mini"
-            @click="handleShowDialogReplyEditor(false)"
+            @click="visible = false"
           >
             Cancelar
           </el-button>
@@ -72,7 +70,7 @@ export default {
   mixins: [negotiatorActiveContact],
 
   props: {
-    visible: {
+    value: {
       type: Boolean,
       required: true
     },
@@ -92,17 +90,11 @@ export default {
   computed: {
     ...mapGetters({
       isRecovery: 'isWorkspaceRecovery'
-    })
-  },
+    }),
 
-  methods: {
-    async handleClose(done) {
-      await this.handleVisibilityEditor(false)
-      done()
-    },
-
-    handleVisibilityEditor(flag) {
-      this.$emit('update:visible', flag)
+    visible: {
+      get() { return this.value },
+      set() { this.$emit('close') }
     }
   }
 }

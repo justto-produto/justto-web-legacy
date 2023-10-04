@@ -1,6 +1,4 @@
 /* eslint-disable camelcase */
-// eslint-disable-next-line no-unused-vars
-
 /**
  * DialerUserModel is a representation of user to authentication in dialer server
  * @class

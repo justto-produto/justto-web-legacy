@@ -64,7 +64,7 @@ export default {
     return state?.scheduledCalls || []
   },
 
-  hasScheduledCallInQueuedtoCall(state, getters) {
+  hasScheduledCallInQueuedtoCall(_state, getters) {
     return getters.getCallQueue.filter(({ scheduling }) => !!scheduling).length > 0
   }
 }

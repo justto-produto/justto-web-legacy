@@ -3,7 +3,7 @@ import { axiosDispatch } from '@/utils'
 const negotiatorApi = 'api/disputes/negotiator'
 
 export default {
-  getDisputesByMemberId({ _ }, personId) {
+  getDisputesByMemberId(_, personId) {
     return axiosDispatch({
       url: `${negotiatorApi}/${personId}/associated`,
       mutation: 'setDisputeSumaryByNegotiator',
@@ -11,7 +11,7 @@ export default {
     })
   },
 
-  distributeMemberDisputes({ _ }, data) {
+  distributeMemberDisputes(_, data) {
     return axiosDispatch({
       url: `${negotiatorApi}/replace`,
       method: 'PATCH',

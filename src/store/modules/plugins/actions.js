@@ -3,7 +3,7 @@ const pluginsAction = {
     commit('setImageUploadVisibility', visibility || !showImageUploadDialog)
   },
 
-  saveImageInBucket({ _ }, { file }) {
+  saveImageInBucket() {
     return new Promise((resolve) => {
       setTimeout(() => resolve({ url: 'https://storage.googleapis.com/justto_app/emails/logo-justto-email.png' }), 1000)
     })

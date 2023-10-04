@@ -85,7 +85,7 @@ export default {
           return JSON.parse(this.occurrence?.properties?.GROUPED_OCCURRENCES.replace(/'/g, '"'))
         }
         return []
-      } catch (_) {
+      } catch (_error) {
         return []
       }
     },

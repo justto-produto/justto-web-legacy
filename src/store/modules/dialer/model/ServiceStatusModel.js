@@ -1,5 +1,4 @@
 /* eslint-disable camelcase */
-// eslint-disable-next-line no-unused-vars
 
 /**
  * ServiceStatusModel is a representation of voice server state service

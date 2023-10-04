@@ -1,8 +1,8 @@
-import acts from './actions'
+import actions from './actions'
 import getters from './getters'
 import mutations from './mutations'
 
-const actions = {
+const actionsModule = {
   state: {
     outcomeReasons: {
       UNSETTLED: {},
@@ -10,9 +10,9 @@ const actions = {
     },
     dropLawsuitReasons: {}
   },
-  actions: acts,
+  actions,
   getters,
   mutations
 }
 
-export default actions
+export default actionsModule

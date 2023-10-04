@@ -1,7 +1,7 @@
 import { axiosDispatch } from '@/utils'
 
 const dashboardActions = {
-  getDashboard({ state, commit }, chartName) {
+  getDashboard({ state }, chartName) {
     let url = 'api/disputes/dashboard?'
     if (chartName) {
       url += `chartName=${chartName}&`

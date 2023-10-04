@@ -13,9 +13,9 @@ const dashboardModule = {
     ],
     selectedMemberId: null
   },
-  mutations: mutations,
-  actions: actions,
-  getters: getters
+  mutations,
+  actions,
+  getters
 }
 
 export default dashboardModule

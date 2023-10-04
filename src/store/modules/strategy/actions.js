@@ -3,14 +3,14 @@ import { axiosDispatch } from '@/utils'
 const strategiesPath = 'api/strategies/v1'
 
 const strategyActions = {
-  getMyStrategiesLite({ _ }) {
+  getMyStrategiesLite() {
     return axiosDispatch({
       url: `${strategiesPath}`,
       mutation: 'setImportedStrategiesLite'
     })
   },
 
-  getStrategyEngagementLite({ _ }, strategyId) {
+  getStrategyEngagementLite(_, strategyId) {
     return axiosDispatch({
       url: `${strategiesPath}/${strategyId}/communications`,
       mutation: 'setStrategyCommunication',
@@ -18,7 +18,7 @@ const strategyActions = {
     })
   },
 
-  getStrategyCommunicationTemplate({ _ }, { strategyId, comunicationId }) {
+  getStrategyCommunicationTemplate(_, { strategyId, comunicationId }) {
     return axiosDispatch({
       url: `${strategiesPath}/${strategyId}/communications/${comunicationId}/template`,
       mutation: 'setStrategyCommunicationTemplate',
@@ -26,7 +26,7 @@ const strategyActions = {
     })
   },
 
-  editStrategyTemplate({ _ }, params) {
+  editStrategyTemplate(_, params) {
     return axiosDispatch({
       url: 'api/templates/',
       method: 'PUT',
@@ -34,7 +34,7 @@ const strategyActions = {
     })
   },
 
-  createStrategyTemplate({ _ }, params) {
+  createStrategyTemplate(_, params) {
     return axiosDispatch({
       url: 'api/templates/',
       method: 'POST',
@@ -42,7 +42,7 @@ const strategyActions = {
     })
   },
 
-  getStrategyTemplate({ _ }, templateId) {
+  getStrategyTemplate(_, templateId) {
     return axiosDispatch({
       url: `api/templates/${templateId}`
     })

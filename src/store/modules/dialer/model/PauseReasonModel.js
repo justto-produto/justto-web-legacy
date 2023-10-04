@@ -1,5 +1,3 @@
-// eslint-disable-next-line no-unused-vars
-
 /**
  * PauseReasonModel is a representation of reason to pause a call
  * @class

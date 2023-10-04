@@ -8,7 +8,7 @@ const importActions = {
   },
   getImportsColumns({ commit, state, dispatch }) {
     return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
+      // eslint-disable-next-line no-undef
       axios.get(`${importsPath}/${state.file.id}/columns`)
         .then(response => {
           if (response?.status === 204) {
@@ -35,7 +35,7 @@ const importActions = {
       data: map
     })
   },
-  uploadImportFile({ _ }, file) {
+  uploadImportFile(_, file) {
     return axiosDispatch({
       url: `${importsPath}/upload`,
       method: 'POST',

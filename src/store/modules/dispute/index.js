@@ -68,9 +68,9 @@ const dispute = {
     engagementLimitExceeded: false,
     preventFilters: false
   },
-  mutations: mutations,
-  actions: actions,
-  getters: getters
+  mutations,
+  actions,
+  getters
 }
 
 export default dispute

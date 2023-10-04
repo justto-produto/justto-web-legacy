@@ -32,7 +32,6 @@ export default {
   },
   mounted() {
     const options = Object.assign({}, this.options)
-    const self = this
     if (!this.filterable) delete options.onClick
     const annotation = this.annotation ? [{
       type: 'line',
@@ -58,14 +57,6 @@ export default {
         enabled: true,
         content: this.annotation,
         yAdjust: this.getMax() < 24 ? 11 : 0
-      }
-    }] : []
-    // eslint-disable-next-line
-    const sufix = this.sufix ? [{
-      ticks: {
-        callback: (value, index, values) => {
-          return value ? `${value} ${self.sufix}` : value
-        }
       }
     }] : []
     this.renderChart(this.data, Object.assign(options, {
@@ -100,8 +91,8 @@ export default {
       const data = chart.data
       if (data.datasets.length && data.datasets.length) {
         return data.datasets.map(function(dataset, i) {
-          // eslint-disable-next-line
-          let fill = Chart.helpers.getValueAtIndexOrDefault(data.datasets[i].borderColor, i, chart.options.elements.arc.borderColor)
+          // eslint-disable-next-line no-undef
+          const fill = Chart.helpers.getValueAtIndexOrDefault(data.datasets[i].borderColor, i, chart.options.elements.arc.borderColor)
           return {
             text: dataset.label,
             fillStyle: fill,
