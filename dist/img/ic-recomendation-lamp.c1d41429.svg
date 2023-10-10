@@ -1,0 +1,12 @@
+<svg id="Componente_45_1" data-name="Componente 45 – 1" xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 19 19">
+  <circle id="Elipse_676" data-name="Elipse 676" cx="9.5" cy="9.5" r="9.5" fill="#ff9300"/>
+  <path id="Caminho_13983" data-name="Caminho 13983" d="M809.573,509.536a4.481,4.481,0,0,0-4.992,1.643,3.76,3.76,0,0,0,.522,4.873,1.707,1.707,0,0,1,.414.728c.222.8.429,1.6.584,2.414.215,1.124.713,1.561,2.024,1.479.025,0,.051,0,.077,0h.46a1.4,1.4,0,0,0,1.594-1.172c.224-.908.42-1.821.665-2.724a1.752,1.752,0,0,1,.416-.727,3.92,3.92,0,0,0,1.172-2.445A3.969,3.969,0,0,0,809.573,509.536Zm1.38,5.531a4.823,4.823,0,0,0-1.172,2.473c-.043.237-.143.313-.4.3-.383-.019-.767-.005-1.151-.005-.409,0-.819-.008-1.228,0-.2.005-.306-.04-.333-.241-.03-.221-.11-.436-.15-.657a3.065,3.065,0,0,0-.869-1.65,2.879,2.879,0,0,1,.161-4.174,3.578,3.578,0,0,1,4.594-.183A2.829,2.829,0,0,1,810.952,515.067Z" transform="translate(-798.717 -504.635)" fill="#fff"/>
+  <g id="Grupo_39859" data-name="Grupo 39859" transform="translate(2.277 3.39)">
+    <rect id="Retângulo_2790" data-name="Retângulo 2790" width="1.577" height="0.597" rx="0.299" transform="matrix(-0.917, -0.399, 0.399, -0.917, 1.581, 3.754)" fill="#fff"/>
+    <rect id="Retângulo_2791" data-name="Retângulo 2791" width="1.577" height="0.597" rx="0.299" transform="translate(3.572 1.564) rotate(-132.671)" fill="#fff"/>
+    <rect id="Retângulo_2792" data-name="Retângulo 2792" width="1.577" height="0.597" rx="0.299" transform="translate(1.665 6.291) rotate(168.363)" fill="#fff"/>
+    <rect id="Retângulo_2793" data-name="Retângulo 2793" width="1.577" height="0.597" rx="0.299" transform="matrix(0.917, -0.399, 0.399, 0.917, 12.627, 3.207)" fill="#fff"/>
+    <rect id="Retângulo_2794" data-name="Retângulo 2794" width="1.577" height="0.597" rx="0.299" transform="translate(10.435 1.159) rotate(-47.329)" fill="#fff"/>
+    <rect id="Retângulo_2795" data-name="Retângulo 2795" width="1.577" height="0.597" rx="0.299" transform="translate(12.902 5.706) rotate(11.637)" fill="#fff"/>
+  </g>
+</svg>

@@ -1,0 +1,2 @@
+"use strict";(self["webpackChunk_projuris_justto_web"]=self["webpackChunk_projuris_justto_web"]||[]).push([[8443],{68620:function(t,n,i){i.r(n),i.d(n,{default:function(){return o}});var s=function(){var t=this,n=t._self._c;return n("jus-view-main",[n("div",{staticClass:"billing-client-list",attrs:{slot:"main"},slot:"main"},[n("client-grid")],1)])},e=[],l={name:"BillingCLientList",components:{ClientGrid:()=>i.e(8282).then(i.bind(i,18282))}},u=l,r=i(1001),a=(0,r.Z)(u,s,e,!1,null,null,null),o=a.exports}}]);
+//# sourceMappingURL=billingClientList.js.map

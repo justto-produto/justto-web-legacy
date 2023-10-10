@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="32.25" height="29.398" viewBox="0 0 32.25 29.398">
+  <defs>
+    <clipPath id="clip-path">
+      <rect y="6" width="32.25" height="17.25" fill="none"/>
+    </clipPath>
+    <clipPath id="clip-path-2">
+      <rect y="-2" width="16.593" height="11.428" fill="none"/>
+    </clipPath>
+  </defs>
+  <g id="Grupo_3080" data-name="Grupo 3080" transform="translate(-538.9 -515.18)">
+    <g id="Grupo_de_rolagem_1" data-name="Grupo de rolagem 1" transform="translate(538.9 521.328)" clip-path="url(#clip-path)" style="isolation: isolate">
+      <path id="Caminho_1625" data-name="Caminho 1625" d="M16.883,9.8a.516.516,0,0,1-.717.049S14.784,8.5,14.692,8.418a.388.388,0,0,0-.077-.054c-1.477-.689-7.277,5.476-6.288,6.521l1.484,1.45a.516.516,0,0,1-.033.726L4.386,22.549a.613.613,0,0,1-.372.174.467.467,0,0,1-.355-.13C1.234,20.212-2.74,17.9,7.377,7.609,17.36-2.556,19.88.96,22.343,3.631a.519.519,0,0,1-.049.711L16.883,9.8Z" transform="translate(16.197 -0.444) rotate(45)" fill="none" stroke="#000" stroke-width="1" fill-rule="evenodd"/>
+    </g>
+    <g id="Grupo_de_rolagem_2" data-name="Grupo de rolagem 2" transform="translate(546.453 517.18)" clip-path="url(#clip-path-2)" style="isolation: isolate">
+      <g id="Grupo_3076" data-name="Grupo 3076" transform="translate(0.707 1.465)">
+        <g id="Grupo_3079" data-name="Grupo 3079" transform="translate(0 0)">
+          <line id="Linha_13" data-name="Linha 13" x2="8.17" y2="7.554" fill="none" stroke="#000" stroke-linecap="round" stroke-width="1"/>
+        </g>
+      </g>
+      <path id="Icon_open-arrow-thick-top" data-name="Icon open-arrow-thick-top" d="M2.153.1.165,3.748l1.45.065.275,6.247,1.338-.071.01-.233L3.064,3.878l1.45.065Z" transform="matrix(0.766, 0.643, -0.643, 0.766, 13.198, -0.18)"/>
+    </g>
+  </g>
+</svg>

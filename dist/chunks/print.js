@@ -1,0 +1,2 @@
+"use strict";(self["webpackChunk_projuris_justto_web"]=self["webpackChunk_projuris_justto_web"]||[]).push([[6740],{23279:function(u,r,t){t.r(r),t.d(r,{default:function(){return i}});var e=function(){var u=this,r=u._self._c;return r("router-view")},n=[],s=t(1001),l={},o=(0,s.Z)(l,e,n,!1,null,null,null),i=o.exports}}]);
+//# sourceMappingURL=print.js.map

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="44px" height="40px" viewBox="0 0 44 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
+    <title>thin-0141_rotate_back_revert_undo</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Picons" transform="translate(-470.000000, -944.000000)">
+            <g id="thin-0141_rotate_back_revert_undo" transform="translate(466.000000, 940.000000)">
+                <g id="Group" transform="translate(4.000000, 4.000000)" stroke="#000000" stroke-width="2">
+                    <polyline id="Shape" points="32.2614 25.6164 38.5758 21.7392 42.5224 28.167"></polyline>
+                    <path d="M38.5758,21.7392 C37.6928,32.112 28.614,39.7132 18.2416,38.8298 C7.8688,37.9468 0.1766,28.8218 1.0596,18.4496 C1.9426,8.0772 11.0668,0.3846 21.4396,1.2676 C26.5314,1.7014 30.9768,4.12 34.0798,7.6974" id="Shape"></path>
+                </g>
+                <polygon id="Rectangle-path" points="0 0.002 48 0.002 48 48.002 0 48.002"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>
