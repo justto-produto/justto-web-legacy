@@ -358,7 +358,6 @@ export default {
       'favoriteTicket',
       'disfavorTicket',
       'setAccountProperty',
-      'loadAccountProperty',
       'resetRecipients'
     ]),
 

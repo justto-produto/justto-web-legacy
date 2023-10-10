@@ -25,13 +25,16 @@ module.exports = defineConfig({
         translationsOutputFile: /app/
       })
     ],
+    // devContentSecurityPolicy: "connect-src 'self' ws://localhost:8080/ws 'unsafe-eval'"
   },
   devServer: {
     headers: {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
-      'Access-Control-Allow-Headers': 'X-Requested-With, content-type, Authorization'
-    }
+      'Access-Control-Allow-Headers': 'X-Requested-With, content-type, Authorization',
+      // 'Content-Security-Policy': "connect-src 'self' localhost:* ws://localhost:* ws://localhost:8080/ws ws://localhost:9000/ws 'unsafe-eval'"
+    },
+    allowedHosts: 'auto'
   },
   pluginOptions: {
     i18n: {

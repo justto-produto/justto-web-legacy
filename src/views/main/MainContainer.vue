@@ -246,7 +246,7 @@ export default {
   },
 
   watch: {
-    workspace(_workspace) {
+    workspace() {
       this.subscribe()
     }
   },
@@ -282,6 +282,7 @@ export default {
 
   sockets: {
     reconnect() {
+      console.log('LOOP ROOT')
       this.subscribe()
     }
   },

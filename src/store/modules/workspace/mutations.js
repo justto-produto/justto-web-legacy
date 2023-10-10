@@ -10,7 +10,7 @@ const workspaceMutations = {
     state.redirectNewWorkspace = false
   },
   setWorkspace(state, workspace) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       if (workspace) {
         setLocalWorkspace(workspace).then(() => {
           // eslint-disable-next-line no-undef

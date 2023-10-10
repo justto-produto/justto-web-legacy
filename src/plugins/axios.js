@@ -13,7 +13,9 @@ if (AUTH_TOKEN) {
 const config = {
   baseURL: process.env.VUE_APP_BASE_URL || location.origin,
   timeout: 60 * 11000,
-  headers: {}
+  headers: {
+    'Content-Security-Policy': 'connect-src https: localhost:* ws://localhost:*'
+  }
 }
 
 const _axios = axios.create(config)

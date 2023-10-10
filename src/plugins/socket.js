@@ -10,5 +10,10 @@ Vue.use(new VueSocketIO({
     actionPrefix: 'SOCKET_',
     mutationPrefix: 'SOCKET_'
   },
-  options: { path: '/websocket' }
+  options: {
+    path: '/websocket',
+    // headers: {
+    //   'Content-Security-Policy': 'connect-src "self" https: localhost:* ws://localhost:* ws://localhost/ws "unsafe-eval"'
+    // }
+  }
 }))

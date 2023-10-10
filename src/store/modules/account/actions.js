@@ -104,6 +104,7 @@ const accountActions = {
   },
 
   setAccountProperty(_, data) {
+    console.log('LOOP 2')
     return axiosDispatch({
       url: `${accountsPath}/my/property`,
       method: 'PUT',
@@ -127,6 +128,7 @@ const accountActions = {
   },
 
   loadAccountProperty() {
+    console.log('LOOP')
     return axiosDispatch({
       url: `${accountsPath}/my/property`,
       method: 'GET',

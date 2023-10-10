@@ -176,7 +176,6 @@ export default {
       'startServerStatus',
       'changeServerStatus',
       'setAccountProperty',
-      'loadAccountProperty',
       'refreshServiceStatus',
       'startDialerRequester',
       'availableServerStatus',
