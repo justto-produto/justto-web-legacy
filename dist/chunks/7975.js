@@ -1,2 +1,0 @@
-"use strict";(self["webpackChunk_projuris_justto_web"]=self["webpackChunk_projuris_justto_web"]||[]).push([[7975],{87975:function(n,e,t){t.r(e),t.d(e,{default:function(){return c}});var r=function(){var n=this,e=n._self._c;return e("span")},u=[],a={methods:{open(){return this.$confirm("Data limite para negociação excedida.<br>Deseja continuar?","Disputa expirada",{dangerouslyUseHTMLString:!0,confirmButtonText:"Continuar",cancelButtonText:"Cancelar",type:"warning",center:!0})}}},i=a,o=t(1001),s=(0,o.Z)(i,r,u,!1,null,null,null),c=s.exports}}]);
-//# sourceMappingURL=7975.js.map

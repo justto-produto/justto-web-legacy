@@ -415,8 +415,6 @@ export default {
       this.showDontRecCallForm = !this.showDontRecCallForm
       const ref = this.$refs?.carouselItemCallHelp?.$el
 
-      console.log(ref)
-
       if (ref) {
         if (this.showDontRecCallForm) {
           const maxScroll = ref.scrollHeight + 50
