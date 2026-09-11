@@ -4,10 +4,14 @@ on:
     branches:
       - develop
       - hml
+  workflow_dispatch:
 
 jobs:
   Build:
     name: Build
+    permissions:
+      id-token: write
+      contents: write
     env:
       VUE_APP_BASE_URL: https://backend.justto.app/
     runs-on: ubuntu-latest
@@ -23,13 +27,16 @@ jobs:
           ssh-private-key: ${{ secrets.PRIVATE_KEY_DEVJUSTTO }}
       - run: npm install --legacy-peer-deps
       - run: npm run build --legacy-peer-deps
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::247761945410:role/GithubActionRole
+          aws-region: sa-east-1
       - uses: jakejarvis/s3-sync-action@master
         with:
           args: --acl public-read
         env:
           AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: 'sa-east-1'
           SOURCE_DIR: 'dist'
       # WANING: Caso precise voltrar a trackear o package-lock.json, descomente as linhas abaixo
@@ -54,16 +61,22 @@ jobs:
   Deploy:
     name: Deploy
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     needs:
       - Build
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::247761945410:role/GithubActionRole
+          aws-region: sa-east-1
       - name: invalidate cloudfront distribution and wait for completion
         uses: muratiger/invalidate-cloudfront-and-wait-for-completion-action@master
         env:
           DISTRIBUTION_ID: EJYYUXY5TOF5J
           PATHS: '/*'
           AWS_REGION: 'sa-east-1'
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
